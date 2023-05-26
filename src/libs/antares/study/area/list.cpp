@@ -52,10 +52,12 @@ namespace // anonymous
 static bool AreaListLoadThermalDataFromFile(AreaList& list, const Clob& filename)
 {
     // Reset to 0
-    list.each([](Data::Area& area) {
-        area.thermal.unsuppliedEnergyCost = 0.;
-        area.thermal.spilledEnergyCost = 0.;
-    });
+    list.each(
+      [](Data::Area& area)
+      {
+          area.thermal.unsuppliedEnergyCost = 0.;
+          area.thermal.spilledEnergyCost = 0.;
+      });
 
     IniFile ini;
     // Try to load the file
@@ -152,18 +154,22 @@ static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString&
 {
     Clob data;
     data << "[unserverdenergycost]\n";
-    list.each([&](const Data::Area& area) {
-        // 0 values are skipped
-        if (!Math::Zero(area.thermal.unsuppliedEnergyCost))
-            data << area.id << " = " << area.thermal.unsuppliedEnergyCost << '\n';
-    });
+    list.each(
+      [&](const Data::Area& area)
+      {
+          // 0 values are skipped
+          if (!Math::Zero(area.thermal.unsuppliedEnergyCost))
+              data << area.id << " = " << area.thermal.unsuppliedEnergyCost << '\n';
+      });
 
     data << "\n[spilledenergycost]\n";
-    list.each([&](const Data::Area& area) {
-        // 0 values are skipped
-        if (!Math::Zero(area.thermal.spilledEnergyCost))
-            data << area.id << " = " << area.thermal.spilledEnergyCost << '\n';
-    });
+    list.each(
+      [&](const Data::Area& area)
+      {
+          // 0 values are skipped
+          if (!Math::Zero(area.thermal.spilledEnergyCost))
+              data << area.id << " = " << area.thermal.spilledEnergyCost << '\n';
+      });
 
     IO::File::Stream file;
     if (file.openRW(filename))
@@ -477,7 +483,6 @@ Area* AreaList::add(Area* a)
     }
     return a;
 }
-
 Area* AreaListAddFromName(AreaList& list, const AnyString& name, uint nbParallelYears)
 {
     // Initializing names
@@ -497,10 +502,14 @@ Area* AreaListAddFromNames(AreaList& list,
 {
     if (!name || !lname)
         return nullptr;
+    if (CheckForbiddenCharacterInAreaName(name))
+    {
+        logs.error() << "character '*' is forbidden in area name: `" << name << "`";
+        return nullptr;
+    }
     // Look up
     if (!AreaListLFind(&list, lname.c_str()))
     {
-        // Creating the area
         Area* area = new Area(name, lname, nbParallelYears);
         // Adding it
         Area* ret = list.add(area);
@@ -573,12 +582,14 @@ bool AreaList::loadListFromFile(const AnyString& filename)
 
 void AreaList::saveLinkListToBuffer(Yuni::Clob& buffer) const
 {
-    each([&](const Data::Area& area) {
-        buffer << area.id << '\n';
-        auto end = area.links.end();
-        for (auto i = area.links.begin(); i != end; ++i)
-            buffer << '\t' << (i->second)->with->id << '\n';
-    });
+    each(
+      [&](const Data::Area& area)
+      {
+          buffer << area.id << '\n';
+          auto end = area.links.end();
+          for (auto i = area.links.begin(); i != end; ++i)
+              buffer << '\t' << (i->second)->with->id << '\n';
+      });
 }
 
 bool AreaList::saveListToFile(const AnyString& filename) const
@@ -619,17 +630,19 @@ bool AreaList::preloadAndMarkAsModifiedAllInvalidatedAreas(uint* invalidateCount
 {
     bool ret = true;
     uint count = 0;
-    each([&](const Data::Area& area) {
-        if (area.invalidateJIT)
-        {
-            logs.info() << "Preparing the area " << area.name;
-            // invalidating all data belonging to the area
-            ret = area.forceReload(true) && ret;
-            // marking the area as modified to force the incremental save
-            area.markAsModified();
-            ++count;
-        }
-    });
+    each(
+      [&](const Data::Area& area)
+      {
+          if (area.invalidateJIT)
+          {
+              logs.info() << "Preparing the area " << area.name;
+              // invalidating all data belonging to the area
+              ret = area.forceReload(true) && ret;
+              // marking the area as modified to force the incremental save
+              area.markAsModified();
+              ++count;
+          }
+      });
     if (invalidateCount)
         *invalidateCount = count;
     return ret;
@@ -719,11 +732,13 @@ bool AreaList::saveToFolder(const AnyString& folder) const
     ret = AreaListSaveThermalDataToFile(*this, buffer) && ret;
 
     // Save all areas
-    each([&](const Data::Area& area) {
-        logs.info() << "Exporting the area " << (area.index + 1) << '/' << areas.size() << ": "
-                    << area.name;
-        ret = AreaListSaveToFolderSingleArea(area, buffer, folder) && ret;
-    });
+    each(
+      [&](const Data::Area& area)
+      {
+          logs.info() << "Exporting the area " << (area.index + 1) << '/' << areas.size() << ": "
+                      << area.name;
+          ret = AreaListSaveToFolderSingleArea(area, buffer, folder) && ret;
+      });
 
     // Hydro
     // The hydro files must be saved after the area has been invalidated
@@ -811,8 +826,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Fatal hors hydro - Misc Gen.
     buffer.clear() << study.folderInput << SEP << "misc-gen" << SEP << "miscgen-" << area.id
                    << ".txt";
-    ret = area.miscGen.loadFromCSVFile(buffer, fhhMax, HOURS_PER_YEAR, Matrix<>::optFixedSize)
-          && ret;
+    ret
+      = area.miscGen.loadFromCSVFile(buffer, fhhMax, HOURS_PER_YEAR, Matrix<>::optFixedSize) && ret;
 
     // Check misc gen
     {
@@ -874,7 +889,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             buffer.clear() << study.folderInput << SEP << "solar" << SEP << "series";
             ret = DataSeriesSolarLoadFromFolder(study, area.solar.series, area.id, buffer.c_str())
-                && ret;
+                  && ret;
         }
 
         ++options.progressTicks;
@@ -953,65 +968,65 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     if (!ini.open(buffer))
         return false;
 
-    ini.each([&](const IniFile::Section& section) {
-        for (auto* p = section.firstProperty; p; p = p->next)
-        {
-            bool value = p->value.to<bool>();
-            CString<30, false> tmp;
-            tmp = p->key;
-            tmp.toLower();
-            if (tmp == "non-dispatchable-power")
-            {
-                if (value)
-                    area.nodalOptimization |= anoNonDispatchPower;
-                continue;
-            }
-            if (tmp == "dispatchable-hydro-power")
-            {
-                if (value)
-                    area.nodalOptimization |= anoDispatchHydroPower;
-                continue;
-            }
-            if (tmp == "other-dispatchable-power")
-            {
-                if (value)
-                    area.nodalOptimization |= anoOtherDispatchPower;
-                continue;
-            }
-            if (tmp == "filter-synthesis")
-            {
-                area.filterSynthesis = stringIntoDatePrecision(p->value);
-                continue;
-            }
-            if (tmp == "filter-year-by-year")
-            {
-                area.filterYearByYear = stringIntoDatePrecision(p->value);
-                continue;
-            }
-            if (tmp == "spread-unsupplied-energy-cost")
-            {
-                if (!p->value.to<double>(area.spreadUnsuppliedEnergyCost))
-                {
-                    area.spreadUnsuppliedEnergyCost = 0.;
-                    logs.warning()
-                      << area.name << ": invalid spread for unsupplied energy cost";
-                }
-                continue;
-            }
-            if (tmp == "spread-spilled-energy-cost")
-            {
-                if (!p->value.to<double>(area.spreadSpilledEnergyCost))
-                {
-                    area.spreadSpilledEnergyCost = 0.;
-                    logs.warning()
-                      << area.name << ": invalid spread for spilled energy cost";
-                }
-                continue;
-            }
+    ini.each(
+      [&](const IniFile::Section& section)
+      {
+          for (auto* p = section.firstProperty; p; p = p->next)
+          {
+              bool value = p->value.to<bool>();
+              CString<30, false> tmp;
+              tmp = p->key;
+              tmp.toLower();
+              if (tmp == "non-dispatchable-power")
+              {
+                  if (value)
+                      area.nodalOptimization |= anoNonDispatchPower;
+                  continue;
+              }
+              if (tmp == "dispatchable-hydro-power")
+              {
+                  if (value)
+                      area.nodalOptimization |= anoDispatchHydroPower;
+                  continue;
+              }
+              if (tmp == "other-dispatchable-power")
+              {
+                  if (value)
+                      area.nodalOptimization |= anoOtherDispatchPower;
+                  continue;
+              }
+              if (tmp == "filter-synthesis")
+              {
+                  area.filterSynthesis = stringIntoDatePrecision(p->value);
+                  continue;
+              }
+              if (tmp == "filter-year-by-year")
+              {
+                  area.filterYearByYear = stringIntoDatePrecision(p->value);
+                  continue;
+              }
+              if (tmp == "spread-unsupplied-energy-cost")
+              {
+                  if (!p->value.to<double>(area.spreadUnsuppliedEnergyCost))
+                  {
+                      area.spreadUnsuppliedEnergyCost = 0.;
+                      logs.warning() << area.name << ": invalid spread for unsupplied energy cost";
+                  }
+                  continue;
+              }
+              if (tmp == "spread-spilled-energy-cost")
+              {
+                  if (!p->value.to<double>(area.spreadSpilledEnergyCost))
+                  {
+                      area.spreadSpilledEnergyCost = 0.;
+                      logs.warning() << area.name << ": invalid spread for spilled energy cost";
+                  }
+                  continue;
+              }
 
-            logs.warning() << buffer << ": Unknown property '" << p->key << "'";
-        }
-    });
+              logs.warning() << buffer << ": Unknown property '" << p->key << "'";
+          }
+      });
 
     return ret;
 }
@@ -1118,15 +1133,17 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
 
     // Load all nodes
     uint indx = 0;
-    each([&](Data::Area& area) {
-        // Progression
-        options.logMessage.clear()
-          << "Loading the area " << (++indx) << '/' << areas.size() << ": " << area.name;
-        logs.info() << options.logMessage;
+    each(
+      [&](Data::Area& area)
+      {
+          // Progression
+          options.logMessage.clear()
+            << "Loading the area " << (++indx) << '/' << areas.size() << ": " << area.name;
+          logs.info() << options.logMessage;
 
-        // Load a single area
-        ret = AreaListLoadFromFolderSingleArea(pStudy, this, area, buffer, options) && ret;
-    });
+          // Load a single area
+          ret = AreaListLoadFromFolderSingleArea(pStudy, this, area, buffer, options) && ret;
+      });
 
     // update nameid set
     updateNameIDSet();
@@ -1212,10 +1229,12 @@ void AreaListEnsureDataLoadTimeSeries(AreaList* l)
     /* Asserts */
     assert(l);
 
-    l->each([&](Data::Area& area) {
-        if (!area.load.series)
-            area.load.series = new DataSeriesLoad();
-    });
+    l->each(
+      [&](Data::Area& area)
+      {
+          if (!area.load.series)
+              area.load.series = new DataSeriesLoad();
+      });
 }
 
 void AreaListEnsureDataLoadPrepro(AreaList* l)
@@ -1223,10 +1242,12 @@ void AreaListEnsureDataLoadPrepro(AreaList* l)
     /* Asserts */
     assert(l);
 
-    l->each([&](Data::Area& area) {
-        if (!area.load.prepro)
-            area.load.prepro = new Antares::Data::Load::Prepro();
-    });
+    l->each(
+      [&](Data::Area& area)
+      {
+          if (!area.load.prepro)
+              area.load.prepro = new Antares::Data::Load::Prepro();
+      });
 }
 
 void AreaListEnsureDataSolarTimeSeries(AreaList* l)
@@ -1234,10 +1255,12 @@ void AreaListEnsureDataSolarTimeSeries(AreaList* l)
     /* Asserts */
     assert(l);
 
-    l->each([&](Data::Area& area) {
-        if (!area.solar.series)
-            area.solar.series = new DataSeriesSolar();
-    });
+    l->each(
+      [&](Data::Area& area)
+      {
+          if (!area.solar.series)
+              area.solar.series = new DataSeriesSolar();
+      });
 }
 
 void AreaListEnsureDataSolarPrepro(AreaList* l)
@@ -1245,10 +1268,12 @@ void AreaListEnsureDataSolarPrepro(AreaList* l)
     /* Asserts */
     assert(l);
 
-    l->each([&](Data::Area& area) {
-        if (!area.solar.prepro)
-            area.solar.prepro = new Antares::Data::Solar::Prepro();
-    });
+    l->each(
+      [&](Data::Area& area)
+      {
+          if (!area.solar.prepro)
+              area.solar.prepro = new Antares::Data::Solar::Prepro();
+      });
 }
 
 void AreaListEnsureDataWindTimeSeries(AreaList* l)
@@ -1256,10 +1281,12 @@ void AreaListEnsureDataWindTimeSeries(AreaList* l)
     /* Asserts */
     assert(l);
 
-    l->each([&](Data::Area& area) {
-        if (!area.wind.series)
-            area.wind.series = new DataSeriesWind();
-    });
+    l->each(
+      [&](Data::Area& area)
+      {
+          if (!area.wind.series)
+              area.wind.series = new DataSeriesWind();
+      });
 }
 
 void AreaListEnsureDataWindPrepro(AreaList* l)
@@ -1267,10 +1294,12 @@ void AreaListEnsureDataWindPrepro(AreaList* l)
     /* Asserts */
     assert(l);
 
-    l->each([&](Data::Area& area) {
-        if (!area.wind.prepro)
-            area.wind.prepro = new Antares::Data::Wind::Prepro();
-    });
+    l->each(
+      [&](Data::Area& area)
+      {
+          if (!area.wind.prepro)
+              area.wind.prepro = new Antares::Data::Wind::Prepro();
+      });
 }
 
 void AreaListEnsureDataHydroTimeSeries(AreaList* l)
@@ -1278,10 +1307,12 @@ void AreaListEnsureDataHydroTimeSeries(AreaList* l)
     /* Asserts */
     assert(l);
 
-    l->each([&](Data::Area& area) {
-        if (!area.hydro.series)
-            area.hydro.series = new DataSeriesHydro();
-    });
+    l->each(
+      [&](Data::Area& area)
+      {
+          if (!area.hydro.series)
+              area.hydro.series = new DataSeriesHydro();
+      });
 }
 
 void AreaListEnsureDataHydroPrepro(AreaList* l)
@@ -1289,10 +1320,12 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
     /* Asserts */
     assert(l);
 
-    l->each([&](Data::Area& area) {
-        if (!area.hydro.prepro)
-            area.hydro.prepro = new PreproHydro();
-    });
+    l->each(
+      [&](Data::Area& area)
+      {
+          if (!area.hydro.prepro)
+              area.hydro.prepro = new PreproHydro();
+      });
 }
 
 void AreaListEnsureDataThermalTimeSeries(AreaList* l)
@@ -1369,6 +1402,11 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
     if (!oldid || !newName || !newid || areas.empty())
         return false;
 
+    if (CheckForbiddenCharacterInAreaName(newName))
+    {
+        logs.error() << "character '*' is forbidden in area name: `" << newName << "`";
+        return false;
+    }
     // Detaching the area from the list
     Area* area;
     {
@@ -1395,26 +1433,28 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
     areas[area->id] = area;
 
     // We have to update all links connected to this area
-    each([&](Data::Area& a) {
-        auto* link = a.findLinkByID(oldid);
-        if (!link)
-            return;
+    each(
+      [&](Data::Area& a)
+      {
+          auto* link = a.findLinkByID(oldid);
+          if (!link)
+              return;
 
 #ifndef NDEBUG
-        uint oldCount = (uint)a.links.size();
+          uint oldCount = (uint)a.links.size();
 #endif
-        // Renaming the entry
+          // Renaming the entry
 
-        link->forceReload(true);
-        link->markAsModified();
+          link->forceReload(true);
+          link->markAsModified();
 
-        link->detach();
-        a.links[link->with->id] = link;
+          link->detach();
+          a.links[link->with->id] = link;
 
 #ifndef NDEBUG
-        assert(oldCount == a.links.size() && "We must have the same number of items in the list");
+          assert(oldCount == a.links.size() && "We must have the same number of items in the list");
 #endif
-    });
+      });
 
     area->buildLinksIndexes();
 
@@ -1426,31 +1466,33 @@ void AreaListDeleteLinkFromAreaPtr(AreaList* list, const Area* a)
     if (!list || !a)
         return;
 
-    list->each([&](Data::Area& area) {
-        if (!area.links.empty())
-            return;
-        bool mustLoop = false;
-        do
-        {
-            mustLoop = false;
-            // Foreach link from this area
-            auto end = area.links.end();
-            for (auto i = area.links.begin(); i != end; ++i)
-            {
-                AreaLink* lnk = i->second;
+    list->each(
+      [&](Data::Area& area)
+      {
+          if (!area.links.empty())
+              return;
+          bool mustLoop = false;
+          do
+          {
+              mustLoop = false;
+              // Foreach link from this area
+              auto end = area.links.end();
+              for (auto i = area.links.begin(); i != end; ++i)
+              {
+                  AreaLink* lnk = i->second;
 
-                // The link must be destroyed if attached to the given area
-                if ((lnk->from == a) || (lnk->with == a))
-                {
-                    // The reference to this link will be removed and the link will be freed
-                    AreaLinkRemove(lnk);
-                    // Let's start again
-                    mustLoop = true;
-                    break;
-                }
-            }
-        } while (mustLoop);
-    });
+                  // The link must be destroyed if attached to the given area
+                  if ((lnk->from == a) || (lnk->with == a))
+                  {
+                      // The reference to this link will be removed and the link will be freed
+                      AreaLinkRemove(lnk);
+                      // Let's start again
+                      mustLoop = true;
+                      break;
+                  }
+              }
+          } while (mustLoop);
+      });
 }
 
 bool AreaList::forceReload(bool reload) const
@@ -1469,43 +1511,45 @@ void AreaList::resizeAllTimeseriesNumbers(uint n)
 
 void AreaList::fixOrientationForAllInterconnections(BindConstList& bindingconstraints)
 {
-    each([&](Data::Area& area) {
-        bool mustLoop;
-        // for each link from this area
-        do
-        {
-            // Nothing to do if the area does not have any links
-            if (area.links.empty())
-                break;
+    each(
+      [&](Data::Area& area)
+      {
+          bool mustLoop;
+          // for each link from this area
+          do
+          {
+              // Nothing to do if the area does not have any links
+              if (area.links.empty())
+                  break;
 
-            // By default, we don't have to loop forever
-            mustLoop = false;
+              // By default, we don't have to loop forever
+              mustLoop = false;
 
-            // Foreach link...
-            auto end = area.links.end();
-            for (auto i = area.links.begin(); i != end; ++i)
-            {
-                // Reference to the link
-                auto& link = *(i->second);
-                // Asserts
-                assert(&link);
-                assert(link.from);
-                assert(link.with);
+              // Foreach link...
+              auto end = area.links.end();
+              for (auto i = area.links.begin(); i != end; ++i)
+              {
+                  // Reference to the link
+                  auto& link = *(i->second);
+                  // Asserts
+                  assert(&link);
+                  assert(link.from);
+                  assert(link.with);
 
-                if ((link.from)->id > (link.with)->id)
-                {
-                    // Reversing the link
-                    link.reverse();
-                    // Updating the binding constraints
-                    bindingconstraints.reverseWeightSign(&link);
-                    // Since the iterators have been compromised, we have to restart the iteration
-                    // through the links
-                    mustLoop = true;
-                    break;
-                }
-            }
-        } while (mustLoop);
-    });
+                  if ((link.from)->id > (link.with)->id)
+                  {
+                      // Reversing the link
+                      link.reverse();
+                      // Updating the binding constraints
+                      bindingconstraints.reverseWeightSign(&link);
+                      // Since the iterators have been compromised, we have to restart the iteration
+                      // through the links
+                      mustLoop = true;
+                      break;
+                  }
+              }
+          } while (mustLoop);
+      });
 }
 
 bool AreaList::remove(const AnyString& id)
@@ -1582,11 +1626,13 @@ void AreaList::removeLoadTimeseries()
 
 void AreaList::removeHydroTimeseries()
 {
-    each([&](Data::Area& area) {
-        area.hydro.series->ror.reset(1, HOURS_PER_YEAR);
-        area.hydro.series->storage.reset(1, DAYS_PER_YEAR);
-        area.hydro.series->count = 1;
-    });
+    each(
+      [&](Data::Area& area)
+      {
+          area.hydro.series->ror.reset(1, HOURS_PER_YEAR);
+          area.hydro.series->storage.reset(1, DAYS_PER_YEAR);
+          area.hydro.series->count = 1;
+      });
 }
 
 void AreaList::removeSolarTimeseries()
@@ -1601,10 +1647,12 @@ void AreaList::removeWindTimeseries()
 
 void AreaList::removeThermalTimeseries()
 {
-    each([&](Data::Area& area) {
-        area.thermal.list.each(
-          [&](Data::ThermalCluster& cluster) { cluster.series->series.reset(1, HOURS_PER_YEAR); });
-    });
+    each(
+      [&](Data::Area& area)
+      {
+          area.thermal.list.each([&](Data::ThermalCluster& cluster)
+                                 { cluster.series->series.reset(1, HOURS_PER_YEAR); });
+      });
 }
 
 } // namespace Data

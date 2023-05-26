@@ -589,35 +589,37 @@ void Study::performTransformationsBeforeLaunchingSimulation()
 #endif
 
     // ForEach area
-    areas.each([&](Data::Area& area) {
-        if (not parameters.geographicTrimming)
-        {
-            // reset filtering
-            area.filterSynthesis = (uint)filterAll;
-            area.filterYearByYear = (uint)filterAll;
-        }
+    areas.each(
+      [&](Data::Area& area)
+      {
+          if (not parameters.geographicTrimming)
+          {
+              // reset filtering
+              area.filterSynthesis = (uint)filterAll;
+              area.filterYearByYear = (uint)filterAll;
+          }
 
-        // Informations about time-series for the load
-        auto& matrix = area.load.series->series;
-        auto& dsmvalues = area.reserves[fhrDSM];
+          // Informations about time-series for the load
+          auto& matrix = area.load.series->series;
+          auto& dsmvalues = area.reserves[fhrDSM];
 
-        // Adding DSM values
-        for (uint timeSeries = 0; timeSeries < matrix.width; ++timeSeries)
-        {
-            auto& perHour = matrix[timeSeries];
-            for (uint h = 0; h < matrix.height; ++h)
-            {
-                perHour[h] += dsmvalues[h];
-                // MBO - 13/05/2014 - #20
-                // Starting v4.5 load can be negative
-                /*if (perHour[h] < 0.)
-                {
-                        logs.warning() << area.id << ", hour " << h << ": `load - dsm` can not be
-                negative. Reset to 0"; perHour[h] = 0.;
-                }*/
-            }
-        }
-    });
+          // Adding DSM values
+          for (uint timeSeries = 0; timeSeries < matrix.width; ++timeSeries)
+          {
+              auto& perHour = matrix[timeSeries];
+              for (uint h = 0; h < matrix.height; ++h)
+              {
+                  perHour[h] += dsmvalues[h];
+                  // MBO - 13/05/2014 - #20
+                  // Starting v4.5 load can be negative
+                  /*if (perHour[h] < 0.)
+                  {
+                          logs.warning() << area.id << ", hour " << h << ": `load - dsm` can not be
+                  negative. Reset to 0"; perHour[h] = 0.;
+                  }*/
+              }
+          }
+      });
 }
 
 // This function is a helper. It should be completed when adding new formats
@@ -935,7 +937,11 @@ bool Study::areaRename(Area* area, AreaName newName)
     // A name must not be empty
     if (not area or newName.empty())
         return false;
-
+    if (CheckForbiddenCharacterInAreaName(newName))
+    {
+        logs.error() << "character '*' is forbidden in area name: `" << newName << "`";
+        return false;
+    }
     String beautifyname;
     BeautifyName(beautifyname, newName);
     if (beautifyname.empty())
@@ -1124,14 +1130,16 @@ void Study::destroyAllWindTSGeneratorData()
 
 void Study::destroyAllThermalTSGeneratorData()
 {
-    areas.each([&](Data::Area& area) {
-        auto pend = area.thermal.list.end();
-        for (auto j = area.thermal.list.begin(); j != pend; ++j)
-        {
-            ThermalCluster& cluster = *(j->second);
-            FreeAndNil(cluster.prepro);
-        }
-    });
+    areas.each(
+      [&](Data::Area& area)
+      {
+          auto pend = area.thermal.list.end();
+          for (auto j = area.thermal.list.begin(); j != pend; ++j)
+          {
+              ThermalCluster& cluster = *(j->second);
+              FreeAndNil(cluster.prepro);
+          }
+      });
 }
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
@@ -1340,28 +1348,30 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         String linkname;
         String areaname;
 
-        areas.each([&](const Area& area) {
-            if (areaname.size() < area.id.size())
-                areaname = area.id;
+        areas.each(
+          [&](const Area& area)
+          {
+              if (areaname.size() < area.id.size())
+                  areaname = area.id;
 
-            auto end = area.links.end();
-            for (auto i = area.links.begin(); i != end; ++i)
-            {
-                auto& link = *(i->second);
-                uint len = link.from->id.size() + link.with->id.size();
-                len += output ? 3 : 1;
-                if (len > linkname.size())
-                {
-                    linkname.clear();
-                    linkname << i->second->from->id;
-                    if (output)
-                        linkname << " - "; // 3
-                    else
-                        linkname << SEP;
-                    linkname << i->second->with->id;
-                }
-            }
-        });
+              auto end = area.links.end();
+              for (auto i = area.links.begin(); i != end; ++i)
+              {
+                  auto& link = *(i->second);
+                  uint len = link.from->id.size() + link.with->id.size();
+                  len += output ? 3 : 1;
+                  if (len > linkname.size())
+                  {
+                      linkname.clear();
+                      linkname << i->second->from->id;
+                      if (output)
+                          linkname << " - "; // 3
+                      else
+                          linkname << SEP;
+                      linkname << i->second->with->id;
+                  }
+              }
+          });
 
         String filename;
         filename << studyfolder << SEP << "output" << SEP;
@@ -1410,17 +1420,21 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         // /input/hydro/common/capacity/maxcapacityexpectation_languedocroussillon.txt
         // or even constraints
 
-        areas.each([&](const Area& area) {
-            if (areaname.size() < area.id.size())
-                areaname = area.id;
-            auto& cname = clustername;
-            cname.clear();
+        areas.each(
+          [&](const Area& area)
+          {
+              if (areaname.size() < area.id.size())
+                  areaname = area.id;
+              auto& cname = clustername;
+              cname.clear();
 
-            area.thermal.list.each([&](const Cluster& cluster) {
-                if (cluster.id().size() > cname.size())
-                    cname = cluster.id();
-            });
-        });
+              area.thermal.list.each(
+                [&](const Cluster& cluster)
+                {
+                    if (cluster.id().size() > cname.size())
+                        cname = cluster.id();
+                });
+          });
 
         String filename;
 
