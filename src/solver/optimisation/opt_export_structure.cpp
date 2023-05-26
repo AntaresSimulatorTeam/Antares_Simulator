@@ -71,7 +71,12 @@ const std::initializer_list<std::string>& getNames<ExportStructConstraintsDict>(
       "MaxPompage",
       "NiveauxPays",
       "EquivalenceStockFinal",
-      "ExpressionStockFinal"};
+      "ExpressionStockFinal",
+      "DureeMinDeMarche",
+      "DureeMinDArret",
+      "PMaxDesGroupesEnMarcheDuPalierThermique",
+      "PMinDesGroupesEnMarcheDuPalierThermique",
+      "GroupesQuiDemarrentEtQuiSArretentDuPalierThermique"};
     return s_exportStructConstraintsNames;
 }
 template<>

@@ -70,7 +70,12 @@ enum class ExportStructConstraintsDict : unsigned char
     MaxPompage,
     NiveauxPays,
     EquivalenceStockFinal,
-    ExpressionStockFinal
+    ExpressionStockFinal,
+    DureeMinDeMarche,
+    DureeMinDArret,
+    PMaxDesGroupesEnMarcheDuPalierThermique,
+    PMinDesGroupesEnMarcheDuPalierThermique,
+    GroupesQuiDemarrentEtQuiSArretentDuPalierThermique
 };
 enum class ExportStructTimeStepDict : unsigned char
 {

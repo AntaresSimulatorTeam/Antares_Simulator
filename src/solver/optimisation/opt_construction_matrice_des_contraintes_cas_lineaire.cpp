@@ -351,10 +351,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             //  std::string NomDeLaContrainte = "fict_load::" + std::to_string(timeStepInYear + 1)
             //                                  + "::" + problemeHebdo->NomsDesPays[pays];
             constraint_full_name.clear();
-            constraint_full_name = BuildName(
-              Enum::toString(Enum::ExportStructConstraintsDict::ChargesFictives),
-              location_identifier(zone, Enum::ExportStructLocationDict::area),
-              time_identifier(timeStepInYear + 1, Enum::ExportStructTimeStepDict::hour));
+            constraint_full_name
+              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::ChargesFictives),
+                          location_identifier(zone, Enum::ExportStructLocationDict::area),
+                          time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<', constraint_full_name);
         }
@@ -556,10 +556,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             // std::string NomDeLaContrainte
             //   = "bc::hourly::" + std::to_string(timeStepInYear + 1)
             //     + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
-            std::string constraint_full_name = BuildName(
-              MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante,
-              Enum::toString(Enum::ExportStructBindingConstraintType::hourly),
-              time_identifier(timeStepInYear + 1, Enum::ExportStructTimeStepDict::hour));
+            std::string constraint_full_name
+              = BuildName(MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante,
+                          Enum::toString(Enum::ExportStructBindingConstraintType::hourly),
+                          time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre,
@@ -669,7 +669,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             std::string constraint_full_name
               = BuildName(MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante,
                           Enum::toString(Enum::ExportStructBindingConstraintType::daily),
-                          time_identifier(jour + 1, Enum::ExportStructTimeStepDict::day));
+                          time_identifier(jour, Enum::ExportStructTimeStepDict::day));
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre,
@@ -684,7 +684,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     if (nombreDePasDeTempsPourUneOptimisation > nombreDePasDeTempsDUneJournee)
     {
-        int semaine = 0;
+        int semaine = problemeHebdo->weekInTheYear;
         CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES* CorrespondanceCntNativesCntOptimHebdomadaires
           = problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires[semaine];
         for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
@@ -768,7 +768,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             CorrespondanceCntNativesCntOptimHebdomadaires
               ->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
-            // TODO check semaine value
             // std::string NomDeLaContrainte
             //   = std::string("bc::weekly::")
             //     + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
@@ -839,13 +838,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 }
             }
 
-            // TODO no timestep, temp value -1
             problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays]
               = ProblemeAResoudre->NombreDeContraintes;
-            std::string constraint_full_name
-              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::EnergieHydraulique),
-                          location_identifier(zone, Enum::ExportStructLocationDict::area),
-                          time_identifier(-1, Enum::ExportStructTimeStepDict::hour));
+            std::string constraint_full_name = BuildName(
+              Enum::toString(Enum::ExportStructConstraintsDict::EnergieHydraulique),
+              location_identifier(zone, Enum::ExportStructLocationDict::area),
+              time_identifier(problemeHebdo->weekInTheYear, Enum::ExportStructTimeStepDict::week));
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=', constraint_full_name);
@@ -1007,10 +1005,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays]
               = ProblemeAResoudre->NombreDeContraintes;
-            std::string constraint_full_name
-              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::MinEnergieHydraulique),
-                          location_identifier(zone, Enum::ExportStructLocationDict::area),
-                          "weekly");
+            std::string constraint_full_name = BuildName(
+              Enum::toString(Enum::ExportStructConstraintsDict::MinEnergieHydraulique),
+              location_identifier(zone, Enum::ExportStructLocationDict::area),
+              time_identifier(problemeHebdo->weekInTheYear, Enum::ExportStructTimeStepDict::week));
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>', constraint_full_name);
@@ -1037,11 +1035,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays]
               = ProblemeAResoudre->NombreDeContraintes;
-
-            std::string constraint_full_name
-              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::MaxEnergieHydraulique),
-                          location_identifier(zone, Enum::ExportStructLocationDict::area),
-                          "weekly");
+            // TODO
+            std::string constraint_full_name = BuildName(
+              Enum::toString(Enum::ExportStructConstraintsDict::MaxEnergieHydraulique),
+              location_identifier(zone, Enum::ExportStructLocationDict::area),
+              time_identifier(problemeHebdo->weekInTheYear, Enum::ExportStructTimeStepDict::week));
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<', constraint_full_name);
@@ -1071,10 +1069,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             problemeHebdo->NumeroDeContrainteMaxPompage[pays]
               = ProblemeAResoudre->NombreDeContraintes;
 
-            std::string constraint_full_name
-              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::MaxPompage),
-                          location_identifier(zone, Enum::ExportStructLocationDict::area),
-                          "weekly");
+            std::string constraint_full_name = BuildName(
+              Enum::toString(Enum::ExportStructConstraintsDict::MaxPompage),
+              location_identifier(zone, Enum::ExportStructLocationDict::area),
+              time_identifier(problemeHebdo->weekInTheYear, Enum::ExportStructTimeStepDict::week));
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<', constraint_full_name);
@@ -1147,7 +1145,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 std::string constraint_full_name = BuildName(
                   Enum::toString(Enum::ExportStructConstraintsDict::NiveauxPays),
                   Enum::toString(Enum::ExportStructBindingConstraintType::hourly),
-                  time_identifier(timeStepInYear + 1, Enum::ExportStructTimeStepDict::hour));
+                  time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
 
                 // std::string NomDeLaContrainte = "hydro_level::" + std::to_string(timeStepInYear +
                 // 1)
@@ -1189,13 +1187,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             problemeHebdo->NumeroDeContrainteEquivalenceStockFinal[pays]
               = ProblemeAResoudre->NombreDeContraintes;
 
-            std::string constraint_full_name
-              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::EquivalenceStockFinal),
-                          location_identifier(zone, Enum::ExportStructLocationDict::area),
-                          "weekly");
+            std::string constraint_full_name = BuildName(
+              Enum::toString(Enum::ExportStructConstraintsDict::EquivalenceStockFinal),
+              location_identifier(zone, Enum::ExportStructLocationDict::area),
+              time_identifier(problemeHebdo->weekInTheYear, Enum::ExportStructTimeStepDict::week));
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=', constraint_full_name);
         }
         if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue)
         /*  expression constraint : - StockFinal +sum (stocklayers) = 0*/
@@ -1223,13 +1221,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             problemeHebdo->NumeroDeContrainteExpressionStockFinal[pays]
               = ProblemeAResoudre->NombreDeContraintes;
 
-            std::string constraint_full_name
-              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::ExpressionStockFinal),
-                          location_identifier(zone, Enum::ExportStructLocationDict::area),
-                          "weekly");
+            std::string constraint_full_name = BuildName(
+              Enum::toString(Enum::ExportStructConstraintsDict::ExpressionStockFinal),
+              location_identifier(zone, Enum::ExportStructLocationDict::area),
+              time_identifier(problemeHebdo->weekInTheYear, Enum::ExportStructTimeStepDict::week));
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=', constraint_full_name);
         }
     }
 

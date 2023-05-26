@@ -118,12 +118,17 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
-                        // std::string constraint_full_name = BuildName(
-                        //   Enum::toString(Enum::ExportStructConstraintsDict::BilansPays),
-                        //   location_identifier(zone, Enum::ExportStructLocationDict::area),
-                        //   time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
-                        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
+                        std::string constraint_full_name = BuildName(
+                          Enum::toString(Enum::ExportStructConstraintsDict::
+                                           PMaxDesGroupesEnMarcheDuPalierThermique),
+                          location_identifier(zone, Enum::ExportStructLocationDict::area),
+                          time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
+                        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre,
+                                                                           Pi,
+                                                                           Colonne,
+                                                                           nombreDeTermes,
+                                                                           '<',
+                                                                           constraint_full_name);
                     }
                 }
                 else
@@ -164,8 +169,17 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
-                        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
+                        std::string constraint_full_name = BuildName(
+                          Enum::toString(Enum::ExportStructConstraintsDict::
+                                           PMinDesGroupesEnMarcheDuPalierThermique),
+                          location_identifier(zone, Enum::ExportStructLocationDict::area),
+                          time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
+                        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre,
+                                                                           Pi,
+                                                                           Colonne,
+                                                                           nombreDeTermes,
+                                                                           '>',
+                                                                           constraint_full_name);
                     }
                 }
                 else
@@ -260,6 +274,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
+                        const auto& zone = problemeHebdo->NomsDesPays[pays];
+                        int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                        std::string constraint_full_name = BuildName(
+                          Enum::toString(Enum::ExportStructConstraintsDict::
+                                           GroupesQuiDemarrentEtQuiSArretentDuPalierThermique),
+                          location_identifier(zone, Enum::ExportStructLocationDict::area),
+                          time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
                     }
@@ -324,8 +345,18 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
-                        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
+                        int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                        const auto& zone = problemeHebdo->NomsDesPays[pays];
+                        std::string constraint_full_name = BuildName(
+                          Enum::toString(Enum::ExportStructConstraintsDict::DureeMinDeMarche),
+                          location_identifier(zone, Enum::ExportStructLocationDict::area),
+                          time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
+                        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre,
+                                                                           Pi,
+                                                                           Colonne,
+                                                                           nombreDeTermes,
+                                                                           '<',
+                                                                           constraint_full_name);
                     }
                 }
                 else
@@ -419,8 +450,18 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                           ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
                           = ProblemeAResoudre->NombreDeContraintes;
 
-                        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
+                        int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                        const auto& zone = problemeHebdo->NomsDesPays[pays];
+                        std::string constraint_full_name = BuildName(
+                          Enum::toString(Enum::ExportStructConstraintsDict::DureeMinDeMarche),
+                          location_identifier(zone, Enum::ExportStructLocationDict::area),
+                          time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
+                        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre,
+                                                                           Pi,
+                                                                           Colonne,
+                                                                           nombreDeTermes,
+                                                                           '>',
+                                                                           constraint_full_name);
                     }
                 }
                 else
@@ -506,6 +547,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                           ->NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
                           = ProblemeAResoudre->NombreDeContraintes;
 
+                        int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                        const auto& zone = problemeHebdo->NomsDesPays[pays];
+                        std::string constraint_full_name = BuildName(
+                          Enum::toString(Enum::ExportStructConstraintsDict::DureeMinDArret),
+                          location_identifier(zone, Enum::ExportStructLocationDict::area),
+                          time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
                     }
