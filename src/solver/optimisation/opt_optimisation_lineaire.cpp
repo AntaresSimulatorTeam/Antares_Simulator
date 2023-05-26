@@ -78,7 +78,7 @@ bool OPT_OptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adq
 
 OptimisationHebdo:
     int DernierPdtDeLIntervalle;
-    for (int pdtHebdo = 0, numeroDeLIntervalle = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps;
+    for (uint pdtHebdo = 0, numeroDeLIntervalle = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps;
          pdtHebdo = DernierPdtDeLIntervalle, numeroDeLIntervalle++)
     {
         int PremierPdtDeLIntervalle = pdtHebdo;
@@ -124,17 +124,14 @@ OptimisationHebdo:
 
     if (optimizationNumber == PREMIERE_OPTIMISATION)
     {
-        if (!problemeHebdo->OptimisationAvecCoutsDeDemarrage)
-        {
-            OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(problemeHebdo);
-        }
-        else if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+        if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
         {
             OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(problemeHebdo);
         }
         else
-            printf("BUG: l'indicateur problemeHebdo->OptimisationAvecCoutsDeDemarrage doit etre "
-                   "initialise a true ou false\n");
+        {
+            OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(problemeHebdo);
+        }
 
         optimizationNumber = DEUXIEME_OPTIMISATION;
 

@@ -140,7 +140,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
             for (auto i = area.thermal.mustrunList.begin(); i != end; ++i)
             {
                 auto& cluster = *(i->second);
-                auto& series = cluster.series->series;
+                auto& series = cluster.series->timeSeries;
                 uint tsIndex = static_cast<uint>(PtChro.ThermiqueParPalier[cluster.areaWideIndex]);
                 if (tsIndex >= series.width)
                     tsIndex = 0;
@@ -172,7 +172,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
                 if (!cluster.mustrunOrigin)
                     continue;
 
-                auto& series = cluster.series->series;
+                auto& series = cluster.series->timeSeries;
                 uint tsIndex = static_cast<uint>(PtChro.ThermiqueParPalier[cluster.areaWideIndex]);
                 if (tsIndex >= series.width)
                     tsIndex = 0;
@@ -181,14 +181,6 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
                 for (uint h = 0; h != series.height; ++h)
                     adq[h] += column[h];
             }
-        }
-
-        for (uint j = 0; j != area.thermal.clusterCount(); ++j)
-        {
-            Data::ThermalCluster* cluster = area.thermal.clusters[j];
-            cluster->unitCountLastHour[numSpace] = 0;
-            cluster->productionLastHour[numSpace] = 0.;
-            cluster->pminOfAGroup[numSpace] = 0.;
         }
     }
 }

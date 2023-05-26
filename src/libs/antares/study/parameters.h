@@ -548,6 +548,4 @@ bool StringToStudyMode(StudyMode& mode, Yuni::CString<20, false> text);
 
 } // namespace Antares::Data
 
-#include "parameters.hxx"
-
 #endif // __ANTARES_LIBS_STUDY_PARAMETERS_H__

@@ -543,7 +543,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         }
     }
 
-    for (int j = 0; j < problem.NombreDePasDeTemps; ++j, ++indx)
+    for (uint j = 0; j < problem.NombreDePasDeTemps; ++j, ++indx)
     {
         VALEURS_DE_NTC_ET_RESISTANCES* ntc = problem.ValeursDeNTC[j];
         assert(NULL != ntc);
@@ -633,7 +633,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                              + scratchpad.mustrunSum[indx];
 
                 area.renewable.list.each([&](const RenewableCluster& cluster) {
-                    assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
+                    assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
                     mustRunGen += cluster.valueAtTimeStep(
                       tsIndex.RenouvelableParPalier[cluster.areaWideIndex], (uint)indx);
                 });
@@ -649,16 +649,16 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
             area.thermal.list.each([&](const Data::ThermalCluster& cluster) {
                 assert((uint)tsIndex.ThermiqueParPalier[cluster.areaWideIndex]
-                       < cluster.series->series.width);
-                assert((uint)indx < cluster.series->series.height);
-                assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
+                       < cluster.series->timeSeries.width);
+                assert((uint)indx < cluster.series->timeSeries.height);
+                assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
 
                 auto& Pt
                   = *problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout[cluster.index];
                 auto& PtValGen = *ValeursGenereesParPays[numSpace][k];
 
                 Pt.PuissanceDisponibleDuPalierThermique[j]
-                  = cluster.series->series[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][indx];
+                  = cluster.series->timeSeries[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][indx];
 
                 Pt.CoutHoraireDeProductionDuPalierThermique[j]
                   = cluster.getMarketBidCost(tsIndex.ThermiqueParPalier[cluster.areaWideIndex],
@@ -1002,7 +1002,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                (char*)problem.ReserveJMoins1[k]->ReserveHoraireJMoins1,
                pasDeTempsSizeDouble);
     }
-    for (int j = 0; j < problem.NombreDePasDeTemps; ++j)
+    for (unsigned int j = 0; j < problem.NombreDePasDeTemps; ++j)
     {
         memcpy((char*)problem.ConsommationsAbattuesRef[j]->ConsommationAbattueDuPays,
                (char*)problem.ConsommationsAbattues[j]->ConsommationAbattueDuPays,

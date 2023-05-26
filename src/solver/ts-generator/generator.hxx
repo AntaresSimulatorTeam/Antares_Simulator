@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_SOLVER_TIME_SERIES_GENERATOR_HXX__
-#define __ANTARES_SOLVER_TIME_SERIES_GENERATOR_HXX__
+#ifndef __ANTARES_SOLVER_timeSeries_GENERATOR_HXX__
+#define __ANTARES_SOLVER_timeSeries_GENERATOR_HXX__
 
 #include "../aleatoire/alea_fonctions.h"
 #include <antares/logs.h>
@@ -162,4 +162,4 @@ inline void DestroyAll(Data::Study& study)
 } // namespace Solver
 } // namespace Antares
 
-#endif // __ANTARES_SOLVER_TIME_SERIES_GENERATOR_HXX__
+#endif // __ANTARES_SOLVER_timeSeries_GENERATOR_HXX__

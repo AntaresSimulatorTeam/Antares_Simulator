@@ -282,7 +282,6 @@ source_group(study\\UI FILES ${SRC_STUDY_UI})
 
 set(SRC_STUDY_PARAMETERS
 	study/parameters.h
-	study/parameters.hxx
 	study/parameters.cpp
 	study/parameters/adq-patch-params.h
 	study/parameters/adq-patch-params.cpp
@@ -303,9 +302,9 @@ source_group("study\\finder" FILES ${SRC_STUDY_FINDER})
 
 set(SRC_STUDY_BINDING_CONSTRAINT
 	study/constraint.h
-	study/constraint/constraint.h
-	study/constraint/constraint.hxx
-	study/constraint/constraint.cpp
+	study/binding_constraint/BindingConstraint.h
+	study/binding_constraint/BindingConstraint.hxx
+	study/binding_constraint/BindingConstraint.cpp
 	)
 source_group("study\\constraint" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
 

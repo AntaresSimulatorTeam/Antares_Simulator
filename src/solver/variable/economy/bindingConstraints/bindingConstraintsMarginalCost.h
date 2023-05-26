@@ -27,7 +27,7 @@
 #pragma once
 
 #include "../../variable.h"
-#include "antares/study/constraint/constraint.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
 
 namespace Antares
 {
@@ -93,7 +93,7 @@ struct VCardBindingConstMarginCost
     Marginal cost associated to binding constraints :
     Suppose that the BC is hourly,
     - if binding constraint is not saturated (rhs is not reached) for a given hour, the value is 0;
-    - if binding constraint is saturated (rhs is reached), the value is the total benefit (€/MW) for
+    - if binding constraint is saturated (rhs is reached), the value is the total benefit (ï¿½/MW) for
    the system that would result in increasing the BC's rhs of 1 MW.
 */
 template<class NextT = Container::EndOfList>
