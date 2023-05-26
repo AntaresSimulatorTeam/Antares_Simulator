@@ -41,7 +41,9 @@ class StudyList(object):
         assert (res.returncode == 0), "The exec failed for study: " + str(self.path)
 
     def get_memory(self):
-        return int(search_patern_in_file(self.out_file, "Maximum(.*): (.*)"))
+        memory = int(search_patern_in_file(self.out_file, "Maximum(.*): (.*)"))
+        os.remove(self.out_file) # clean file after we get data
+        return memory
 
     def create_json(self):
         return { 'peak_memory_mb' : self.get_memory() / 1024 } # convert to Mb
@@ -98,5 +100,11 @@ if len(sys.argv) < 2:
 solver_path = sys.argv[1]
 if not os.path.isfile(solver_path):
     raise Exception("Invalid solver path, file not found")
+
+
+# change current directory to the script directory
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
 
 main(solver_path)
