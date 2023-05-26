@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import configparser
 import subprocess
 import datetime
@@ -90,6 +91,9 @@ def main(solver_path):
     with open("results.json", "w") as f:
         f.write(json.dumps(results))
 
+
+if len(sys.argv) < 2:
+    raise Exception("Not enough arguments, need solver path")
 
 solver_path = sys.argv[1]
 if not os.path.isfile(solver_path):
