@@ -62,10 +62,13 @@ class StudyList(object):
         return dict(config.items('durations_ms'))
 
 
-# list of studies to run, needs a unique name and a path to a valid study
-study_list = []
-study_list.append(StudyList("short", "../resources/Antares_Simulator_Tests/short-tests/001 One node - passive/"))
-study_list.append(StudyList("medium", "../resources/Antares_Simulator_Tests/medium-tests/043 Multistage study-8-Kirchhoff"))
+def read_study_list():
+    study_list = []
+    with open("studiesToBenchmark.json", "r") as f:
+        studies = json.load(f)
+        for name in studies:
+            study_list.append(StudyList(name, studies[name]))
+    return study_list
 
 
 def main(solver_path):
@@ -76,6 +79,7 @@ def main(solver_path):
     date = datetime.datetime.now()
     results["date"] = date.strftime("%x %X")
 
+    study_list = read_study_list()
     # Execution and results for each study
     for studies in study_list:
         studies.run_metrics(solver_path)
@@ -87,4 +91,8 @@ def main(solver_path):
         f.write(json.dumps(results))
         print(json.dumps(results))
 
-main(sys.argv[1])
+solver_path = sys.argv[1]
+if not os.path.isfile(solver_path):
+    raise Exception("Invalid solver path, file not found")
+
+main(solver_path)
