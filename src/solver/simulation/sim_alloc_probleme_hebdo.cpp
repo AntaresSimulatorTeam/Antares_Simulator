@@ -52,10 +52,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
 
     problem.CoefficientEcretementPMaxHydraulique = std::vector<double>(nbPays);
 
-    problem.BruitSurCoutHydraulique = std::vector<std::vector<double>>(nbPays);
-
-    for (uint p = 0; p < nbPays; ++p)
-        problem.BruitSurCoutHydraulique[p] = std::vector<double>(8784);
+    problem.BruitSurCoutHydraulique.assign(nbPays, std::vector<double>(8784));
 
     problem.NomsDesPays = std::vector<const char*>(nbPays);
     problem.PaysExtremiteDeLInterconnexion = std::vector<int>(linkCount);
@@ -83,9 +80,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.NumeroDeContrainteExpressionStockFinal = std::vector<int>(nbPays);
 
     problem.NumeroDeVariableStockFinal = std::vector<int>(nbPays);
-    problem.NumeroDeVariableDeTrancheDeStock = new int*[nbPays];
-    for (uint p = 0; p < nbPays; ++p)
-        problem.NumeroDeVariableDeTrancheDeStock[p] = new int[100];
+    problem.NumeroDeVariableDeTrancheDeStock.assign(nbPays, std::vector<int>(100));
 
     problem.ValeursDeNTC = new VALEURS_DE_NTC_ET_RESISTANCES*[NombreDePasDeTemps];
     problem.ValeursDeNTCRef = new VALEURS_DE_NTC_ET_RESISTANCES*[NombreDePasDeTemps];
@@ -871,10 +866,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     delete problem.CoutsMarginauxDesContraintesDeReserveParZone;
     delete problem.ReserveJMoins1;
-
-    for (uint p = 0; p < nbPays; ++p)
-        delete problem.NumeroDeVariableDeTrancheDeStock[p];
-    delete problem.NumeroDeVariableDeTrancheDeStock;
 
     delete problem.coutOptimalSolution1;
     delete problem.coutOptimalSolution2;

@@ -590,7 +590,7 @@ struct PROBLEME_HEBDO
     std::vector<int> NumeroDeContrainteExpressionStockFinal;
 
     std::vector<int> NumeroDeVariableStockFinal;
-    int** NumeroDeVariableDeTrancheDeStock;
+    std::vector<std::vector<int>> NumeroDeVariableDeTrancheDeStock;
 
     bool YaDeLaReserveJmoins1 = false;
 
