@@ -280,7 +280,7 @@ struct PALIERS_THERMIQUES
     double* PmaxDUnGroupeDuPalierThermique;
     int* DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
     int* DureeMinimaleDArretDUnGroupeDuPalierThermique;
-    const char** NomsDesPaliersThermiques;
+    std::vector<std::string> NomsDesPaliersThermiques;
 };
 
 struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
