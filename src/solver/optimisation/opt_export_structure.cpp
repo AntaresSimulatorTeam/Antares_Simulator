@@ -44,14 +44,14 @@ template<>
 const std::initializer_list<std::string>& getNames<ExportStructDict>()
 {
     static std::initializer_list<std::string> s_exportStructDictNames{
-      "ValeurDeNTCOrigineVersExtremite",
-      "PalierThermique",
-      "ProdHyd",
-      "DefaillancePositive",
-      "DefaillanceNegative",
-      "BilansPays",
-      "CoutOrigineVersExtremiteDeLInterconnexion",
-      "CoutExtremiteVersOrigineDeLInterconnexion",
+      "NTCValueOriginToDestination",
+      "ThermalCluster",
+      "HydProd",
+      "PositiveUnsuppliedEnergy",
+      "NegativeUnsuppliedEnergy",
+      "AreaBalance",
+      "IntercoCostOriginToDestination",
+      "IntercoCostDestinationToOrigin",
       "CorrespondanceVarNativesVarOptim"};
     return s_exportStructDictNames;
 }
