@@ -57,19 +57,19 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     for (uint p = 0; p < nbPays; ++p)
         problem.BruitSurCoutHydraulique[p] = std::vector<double>(8784);
 
-    problem.NomsDesPays =  new const char*[nbPays];
-    problem.PaysExtremiteDeLInterconnexion = new int[linkCount];
-    problem.PaysOrigineDeLInterconnexion = new int[linkCount];
+    problem.NomsDesPays = std::vector<const char*>(nbPays);
+    problem.PaysExtremiteDeLInterconnexion = std::vector<int>(linkCount);
+    problem.PaysOrigineDeLInterconnexion = std::vector<int>(linkCount);
     problem.CoutDeTransport = new COUTS_DE_TRANSPORT*[linkCount];
-    problem.IndexDebutIntercoOrigine = new int[nbPays];
-    problem.IndexDebutIntercoExtremite = new int[nbPays];
-    problem.IndexSuivantIntercoOrigine = new int[linkCount];
-    problem.IndexSuivantIntercoExtremite = new int[linkCount];
-    problem.NumeroDeJourDuPasDeTemps = new int[NombreDePasDeTemps];
+    problem.IndexDebutIntercoOrigine = std::vector<int>(nbPays);
+    problem.IndexDebutIntercoExtremite = std::vector<int>(nbPays);
+    problem.IndexSuivantIntercoOrigine = std::vector<int>(linkCount);
+    problem.IndexSuivantIntercoExtremite = std::vector<int>(linkCount);
+    problem.NumeroDeJourDuPasDeTemps = std::vector<int>(NombreDePasDeTemps);
     problem.NumeroDIntervalleOptimiseDuPasDeTemps
-      = new int[NombreDePasDeTemps];
-    problem.NbGrpCourbeGuide = new int[NombreDePasDeTemps];
-    problem.NbGrpOpt = new int[NombreDePasDeTemps];
+      = std::vector<int>(NombreDePasDeTemps);
+    problem.NbGrpCourbeGuide = std::vector<int>(NombreDePasDeTemps);
+    problem.NbGrpOpt = std::vector<int>(NombreDePasDeTemps);
     problem.CoutDeDefaillancePositive = new double[nbPays];
     problem.CoutDeDefaillanceNegative = new double[nbPays];
     problem.CoutDeDefaillanceEnReserve = new double[nbPays];
@@ -588,18 +588,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     auto& study = *Data::Study::Current::Get();
 
     uint nbPays = study.areas.size();
-
-    delete problem.NomsDesPays;
-    delete problem.PaysExtremiteDeLInterconnexion;
-    delete problem.PaysOrigineDeLInterconnexion;
-    delete problem.IndexDebutIntercoOrigine;
-    delete problem.IndexDebutIntercoExtremite;
-    delete problem.IndexSuivantIntercoOrigine;
-    delete problem.IndexSuivantIntercoExtremite;
-    delete problem.NumeroDeJourDuPasDeTemps;
-    delete problem.NumeroDIntervalleOptimiseDuPasDeTemps;
-    delete problem.NbGrpCourbeGuide;
-    delete problem.NbGrpOpt;
 
     for (uint k = 0; k < problem.NombreDePasDeTemps; k++)
     {

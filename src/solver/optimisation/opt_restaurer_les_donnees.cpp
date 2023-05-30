@@ -36,7 +36,7 @@
 
 void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int optimizationNumber)
 {
-    const int* NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
+    const std::vector<int>& NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
     const int DernierPasDeTemps = problemeHebdo->NombreDePasDeTemps;
 
     for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)

@@ -41,8 +41,8 @@ double OPT_CalculerAireMaxPminJour(int PremierPdt,
                                    int DernierPdt,
                                    int MUTetMDT,
                                    int NombreDePasDeTemps,
-                                   int* NbGrpCourbeGuide,
-                                   int* NbGrpOpt)
+                                   std::vector<int>& NbGrpCourbeGuide,
+                                   std::vector<int>& NbGrpOpt)
 {
     double Cout = 0.0;
     int NbMx = 0;
@@ -96,8 +96,8 @@ double OPT_CalculerAireMaxPminJour(int PremierPdt,
 void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeHebdo)
 {
     int NombreDePasDeTemps = problemeHebdo->NombreDePasDeTemps;
-    int* NbGrpCourbeGuide = problemeHebdo->NbGrpCourbeGuide;
-    int* NbGrpOpt = problemeHebdo->NbGrpOpt;
+    std::vector<int>& NbGrpCourbeGuide = problemeHebdo->NbGrpCourbeGuide;
+    std::vector<int>& NbGrpOpt = problemeHebdo->NbGrpOpt;
 
     for (int Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
     {

@@ -504,12 +504,12 @@ struct PROBLEME_HEBDO
     bool WaterValueAccurate = false;
     bool OptimisationAvecCoutsDeDemarrage = false;
     int NombreDePays = 0;
-    const char** NomsDesPays = nullptr;
+    std::vector<const char*> NomsDesPays;
     int NombreDePaliersThermiques = 0;
 
     int NombreDInterconnexions = 0;
-    int* PaysOrigineDeLInterconnexion = nullptr;
-    int* PaysExtremiteDeLInterconnexion = nullptr;
+    std::vector<int> PaysOrigineDeLInterconnexion;
+    std::vector<int> PaysExtremiteDeLInterconnexion;
     COUTS_DE_TRANSPORT** CoutDeTransport = nullptr;
 
     VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTC = nullptr;
@@ -517,10 +517,10 @@ struct PROBLEME_HEBDO
 
     unsigned int NombreDePasDeTemps = 0;
     unsigned int NombreDePasDeTempsRef = 0;
-    int* NumeroDeJourDuPasDeTemps = nullptr;
+    std::vector<int> NumeroDeJourDuPasDeTemps;
 
     int NombreDePasDeTempsPourUneOptimisation = 0;
-    int* NumeroDIntervalleOptimiseDuPasDeTemps = nullptr;
+    std::vector<int> NumeroDIntervalleOptimiseDuPasDeTemps;
     int NombreDeJours = 0;
 
     int NombreDePasDeTempsDUneJournee = 0;
@@ -573,10 +573,10 @@ struct PROBLEME_HEBDO
 
     RESERVE_JMOINS1** ReserveJMoins1 = nullptr;
 
-    int* IndexDebutIntercoOrigine = nullptr;
-    int* IndexSuivantIntercoOrigine = nullptr;
-    int* IndexDebutIntercoExtremite = nullptr;
-    int* IndexSuivantIntercoExtremite = nullptr;
+    std::vector<int> IndexDebutIntercoOrigine;
+    std::vector<int> IndexSuivantIntercoOrigine;
+    std::vector<int> IndexDebutIntercoExtremite;
+    std::vector<int> IndexSuivantIntercoExtremite;
 
     bool Expansion = false;
 
@@ -699,8 +699,8 @@ struct PROBLEME_HEBDO
 
 public:
     /* Unknown status */
-    int* NbGrpCourbeGuide = nullptr; // ?
-    int* NbGrpOpt = nullptr;         // ?
+    std::vector<int> NbGrpCourbeGuide; // ?
+    std::vector<int> NbGrpOpt;         // ?
 
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = nullptr;
 

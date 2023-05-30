@@ -79,7 +79,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
 
     int NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
 
-    const int* NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
+    const std::vector<int>& NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
     const int* NumeroDeContrainteEnergieHydraulique
       = problemeHebdo->NumeroDeContrainteEnergieHydraulique;
     const int* NumeroDeContrainteMinEnergieHydraulique
@@ -88,9 +88,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
       = problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique;
     const int* NumeroDeContrainteMaxPompage = problemeHebdo->NumeroDeContrainteMaxPompage;
 
-    const std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue
+    const std::vector<bool>& DefaillanceNegativeUtiliserConsoAbattue
       = problemeHebdo->DefaillanceNegativeUtiliserConsoAbattue;
-    const std::vector<bool> DefaillanceNegativeUtiliserPMinThermique
+    const std::vector<bool>& DefaillanceNegativeUtiliserPMinThermique
       = problemeHebdo->DefaillanceNegativeUtiliserPMinThermique;
 
     for (int i = 0; i < ProblemeAResoudre->NombreDeContraintes; i++)
