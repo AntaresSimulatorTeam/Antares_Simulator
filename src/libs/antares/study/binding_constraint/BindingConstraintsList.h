@@ -159,8 +159,6 @@ public:
     }
     void resizeAllTimeseriesNumbers(unsigned nb_years);
 
-    std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>> timeSeriesNumbers;
-
     void fixTSNumbersWhenWidthIsOne();
 
     static std::vector<std::shared_ptr<BindingConstraint>> LoadBindingConstraint(EnvForLoading env);
@@ -168,6 +166,7 @@ public:
     template<class ListBindingConstraints>
     [[nodiscard]] static unsigned int NumberOfTimeseries(const ListBindingConstraints &list, const std::string &group_name);
 
+    std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>> timeSeriesNumbers;
 
 private:
     bool internalSaveToFolder(Data::BindingConstraintSaver::EnvForSaving& env) const;
@@ -179,7 +178,7 @@ private:
 
     [[nodiscard]] Yuni::uint64 timeSeriesNumberMemoryUsage() const;
 
-    bool checkTimeSeriesWidthConsistency() const;
+    [[nodiscard]] bool checkTimeSeriesWidthConsistency() const;
 };
 
 struct WhoseNameContains final
