@@ -380,8 +380,8 @@ void ISimulation<Impl>::run()
         ImplementationType::variables.simulationEnd();
 
         // Export ts-numbers into output
-        BindingConstraintsTimeSeriesNumbersWriter time_seris_writer(pResultWriter);
-        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, time_seris_writer);
+        BindingConstraintsTimeSeriesNumbersWriter time_series_writer(pResultWriter);
+        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, time_series_writer);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
