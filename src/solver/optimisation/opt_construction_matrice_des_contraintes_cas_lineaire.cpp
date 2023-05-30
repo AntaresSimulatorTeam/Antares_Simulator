@@ -69,7 +69,7 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
                                         timeStepInYear, // TODO[FOM] remove
                                         pays,
                                         palier);
-                const auto& zone = Study::Current::Get()->areas[pays]->name.c_str();
+                const auto& zone = problemeHebdo.NomsDesPays[pays];
                 RenameZoneVariable(problemeHebdo.ProblemeAResoudre,
                                    var,
                                    Enum::ExportStructDict::PalierThermique,
@@ -122,7 +122,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             int nombreDeTermes = 0;
 
             int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
-            const auto& zone = study->areas[pays]->name.c_str();
+            const auto& zone = problemeHebdo->NomsDesPays[pays];
 
             while (interco >= 0)
             {
@@ -144,11 +144,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           interco);
                     }
                     const auto origin
-                      = study->areas[problemeHebdo->PaysOrigineDeLInterconnexion[interco]]
-                          ->name.c_str();
+                      = problemeHebdo
+                          ->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
                     const auto extremite
-                      = study->areas[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]]
-                          ->name.c_str();
+                      = problemeHebdo
+                          ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
                     RenameLinkVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite,
@@ -180,11 +180,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           interco);
                     }
                     const auto origin
-                      = study->areas[problemeHebdo->PaysOrigineDeLInterconnexion[interco]]
-                          ->name.c_str();
+                      = problemeHebdo
+                          ->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
                     const auto extremite
-                      = study->areas[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]]
-                          ->name.c_str();
+                      = problemeHebdo
+                          ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
                     RenameLinkVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite,
@@ -316,7 +316,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                                        Enum::ExportStructDict::ProdHyd,
                                        timeStepInYear,
                                        Enum::ExportStructTimeStepDict::hour,
-                                       study->areas[pays]->name.c_str());
+                                       problemeHebdo->NomsDesPays[pays]);
                 }
             }
 
@@ -334,7 +334,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                                             Enum::ExportStructDict::DefaillanceNegative,
                                             timeStepInYear, // TODO[FOM] remove
                                             pays);
-                    const auto& zone = study->areas[pays]->name.c_str();
+                    const auto& zone = problemeHebdo->NomsDesPays[pays];
                     RenameZoneVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::DefaillanceNegative,
@@ -362,9 +362,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
             const std::string origin
-              = study->areas[problemeHebdo->PaysOrigineDeLInterconnexion[interco]]->name.c_str();
+              = problemeHebdo->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
             const std::string extremite
-              = study->areas[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]]->name.c_str();
+              = problemeHebdo->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
 
             const COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
             if (CoutDeTransport->IntercoGereeAvecDesCouts)
@@ -788,7 +788,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const auto& zone = study->areas[pays]->name.c_str();
+        const auto& zone = problemeHebdo->NomsDesPays[pays];
         bool presenceHydro
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable;
         bool TurbEntreBornes
@@ -858,7 +858,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         {
             if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
                 continue;
-            const auto& zone = study->areas[pays]->name.c_str();
+            const auto& zone = problemeHebdo->NomsDesPays[pays];
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 CorrespondanceVarNativesVarOptim
@@ -920,7 +920,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
                 continue;
 
-            const auto& zone = study->areas[pays]->name.c_str();
+            const auto& zone = problemeHebdo->NomsDesPays[pays];
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 CorrespondanceVarNativesVarOptim
@@ -986,7 +986,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable;
         const bool TurbEntreBornes
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
-        const auto& zone = study->areas[pays]->name.c_str();
+        const auto& zone = problemeHebdo->NomsDesPays[pays];
 
         if (presenceHydro && (TurbEntreBornes || presencePompage))
         {
@@ -1050,7 +1050,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const auto& zone = study->areas[pays]->name.c_str();
+        const auto& zone = problemeHebdo->NomsDesPays[pays];
         if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable)
         {
             int nombreDeTermes = 0;
@@ -1162,7 +1162,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     /* For each area with ad hoc properties, two possible sets of two additional constraints */
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const auto& zone = study->areas[pays]->name.c_str();
+        const auto& zone = problemeHebdo->NomsDesPays[pays];
         if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue
             && problemeHebdo->CaracteristiquesHydrauliques[pays]->DirectLevelAccess)
         /*  equivalence constraint : StockFinal- Niveau[T]= 0*/
