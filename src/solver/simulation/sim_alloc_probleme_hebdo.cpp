@@ -52,7 +52,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
 
     problem.CoefficientEcretementPMaxHydraulique = new double[nbPays];
 
-    problem.BruitSurCoutHydraulique =  (double**)MemAlloc(nbPays * sizeof(double*));
+    problem.BruitSurCoutHydraulique = new double*[nbPays];
 
     for (uint p = 0; p < nbPays; ++p)
         problem.BruitSurCoutHydraulique[p] = new double[8784];
@@ -428,7 +428,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         problem.CaracteristiquesHydrauliques[k]->NiveauHoraireInf
           = new double[NombreDePasDeTemps];
         problem.CaracteristiquesHydrauliques[k]->ApportNaturelHoraire
-          = new double[NombreDePasDeTemps];
+          = new double[NombreDePasDeTemps]();
         problem.CaracteristiquesHydrauliques[k]->MingenHoraire
           = new double[NombreDePasDeTemps];
 
@@ -449,7 +449,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive
           = new double[NombreDePasDeTemps];
         problem.ResultatsHoraires[k].ValeursHorairesDENS
-          = new double[NombreDePasDeTemps]; // adq patch
+          = new double[NombreDePasDeTemps](); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesLmrViolations
           = new int[NombreDePasDeTemps](); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR
@@ -483,7 +483,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         problem.ResultatsHoraires[k].CoutsMarginauxHoraires
           = new double[NombreDePasDeTemps];
         problem.ResultatsHoraires[k].niveauxHoraires
-          = new double[NombreDePasDeTemps];
+          = new double[NombreDePasDeTemps]();
         problem.ResultatsHoraires[k].valeurH2oHoraire
           = new double[NombreDePasDeTemps];
         problem.ResultatsHoraires[k].debordementsHoraires
