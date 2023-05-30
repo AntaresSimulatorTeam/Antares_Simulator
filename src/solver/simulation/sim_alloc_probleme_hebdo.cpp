@@ -79,10 +79,10 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.NumeroDeContrainteMaxPompage = std::vector<int>(nbPays);
     problem.NumeroDeContrainteDeSoldeDEchange = std::vector<int>(nbPays);
 
-    problem.NumeroDeContrainteEquivalenceStockFinal = new int[nbPays];
-    problem.NumeroDeContrainteExpressionStockFinal = new int[nbPays];
+    problem.NumeroDeContrainteEquivalenceStockFinal = std::vector<int>(nbPays);
+    problem.NumeroDeContrainteExpressionStockFinal = std::vector<int>(nbPays);
 
-    problem.NumeroDeVariableStockFinal = new int[nbPays];
+    problem.NumeroDeVariableStockFinal = std::vector<int>(nbPays);
     problem.NumeroDeVariableDeTrancheDeStock = new int*[nbPays];
     for (uint p = 0; p < nbPays; ++p)
         problem.NumeroDeVariableDeTrancheDeStock[p] = new int[100];
@@ -872,9 +872,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     delete problem.CoutsMarginauxDesContraintesDeReserveParZone;
     delete problem.ReserveJMoins1;
 
-    delete problem.NumeroDeContrainteEquivalenceStockFinal;
-    delete problem.NumeroDeContrainteExpressionStockFinal;
-    delete problem.NumeroDeVariableStockFinal;
     for (uint p = 0; p < nbPays; ++p)
         delete problem.NumeroDeVariableDeTrancheDeStock[p];
     delete problem.NumeroDeVariableDeTrancheDeStock;

@@ -586,11 +586,11 @@ struct PROBLEME_HEBDO
     std::vector<int> NumeroDeContrainteMaxPompage;
     std::vector<int> NumeroDeContrainteDeSoldeDEchange;
 
-    int* NumeroDeContrainteEquivalenceStockFinal = nullptr;
-    int* NumeroDeContrainteExpressionStockFinal = nullptr;
+    std::vector<int> NumeroDeContrainteEquivalenceStockFinal;
+    std::vector<int> NumeroDeContrainteExpressionStockFinal;
 
-    int* NumeroDeVariableStockFinal = nullptr;
-    int** NumeroDeVariableDeTrancheDeStock = nullptr;
+    std::vector<int> NumeroDeVariableStockFinal;
+    int** NumeroDeVariableDeTrancheDeStock;
 
     bool YaDeLaReserveJmoins1 = false;
 
