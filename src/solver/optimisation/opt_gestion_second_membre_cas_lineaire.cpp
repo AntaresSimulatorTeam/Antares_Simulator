@@ -164,12 +164,12 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
-            const COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
-            if (CoutDeTransport->IntercoGereeAvecDesCouts)
+            if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
+                    CoutDeTransport.IntercoGereeAvecDesCouts)
             {
                 int cnt = CorrespondanceCntNativesCntOptim
                             ->NumeroDeContrainteDeDissociationDeFlux[interco];
-                if (CoutDeTransport->IntercoGereeAvecLoopFlow)
+                if (CoutDeTransport.IntercoGereeAvecLoopFlow)
                     SecondMembre[cnt] = problemeHebdo->ValeursDeNTC[pdtHebdo]
                                           ->ValeurDeLoopFlowOrigineVersExtremite[interco];
                 else

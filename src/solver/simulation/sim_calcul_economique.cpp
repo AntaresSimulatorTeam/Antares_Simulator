@@ -357,26 +357,26 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
         if (lnk->useHurdlesCost)
         {
-            COUTS_DE_TRANSPORT* couts = problem.CoutDeTransport[k];
-            couts->IntercoGereeAvecDesCouts = true;
+            COUTS_DE_TRANSPORT& couts = problem.CoutDeTransport[k];
+            couts.IntercoGereeAvecDesCouts = true;
             const double* direct
               = ((const double*)((void*)lnk->parameters[fhlHurdlesCostDirect])) + PasDeTempsDebut;
             const double* indirect
               = ((const double*)((void*)lnk->parameters[fhlHurdlesCostIndirect])) + PasDeTempsDebut;
-            memcpy(couts->CoutDeTransportOrigineVersExtremite, direct, pasDeTempsSizeDouble);
-            memcpy(couts->CoutDeTransportOrigineVersExtremiteRef, direct, pasDeTempsSizeDouble);
-            memcpy(couts->CoutDeTransportExtremiteVersOrigine, indirect, pasDeTempsSizeDouble);
-            memcpy(couts->CoutDeTransportExtremiteVersOrigineRef, indirect, pasDeTempsSizeDouble);
+            memcpy(&couts.CoutDeTransportOrigineVersExtremite[0], direct, pasDeTempsSizeDouble);
+            memcpy(&couts.CoutDeTransportOrigineVersExtremiteRef[0], direct, pasDeTempsSizeDouble);
+            memcpy(&couts.CoutDeTransportExtremiteVersOrigine[0], indirect, pasDeTempsSizeDouble);
+            memcpy(&couts.CoutDeTransportExtremiteVersOrigineRef[0], indirect, pasDeTempsSizeDouble);
         }
         else
-            problem.CoutDeTransport[k]->IntercoGereeAvecDesCouts = false;
+            problem.CoutDeTransport[k].IntercoGereeAvecDesCouts = false;
 
         if (lnk->useLoopFlow)
         {
-            problem.CoutDeTransport[k]->IntercoGereeAvecLoopFlow = true;
+            problem.CoutDeTransport[k].IntercoGereeAvecLoopFlow = true;
         }
         else
-            problem.CoutDeTransport[k]->IntercoGereeAvecLoopFlow = false;
+            problem.CoutDeTransport[k].IntercoGereeAvecLoopFlow = false;
     }
 
     if (studyruntime.bindingConstraintCount)

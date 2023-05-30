@@ -55,8 +55,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             NombreDeVariables++;
 
-            const COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
-            if (CoutDeTransport->IntercoGereeAvecDesCouts)
+            if (problemeHebdo->CoutDeTransport[interco].IntercoGereeAvecDesCouts)
             {
                 CorrespondanceVarNativesVarOptim
                   ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[interco]

@@ -474,11 +474,11 @@ struct COUTS_DE_TRANSPORT
 {
     bool IntercoGereeAvecDesCouts;
     bool IntercoGereeAvecLoopFlow;
-    double* CoutDeTransportOrigineVersExtremite;
-    double* CoutDeTransportExtremiteVersOrigine;
+    std::vector<double> CoutDeTransportOrigineVersExtremite;
+    std::vector<double> CoutDeTransportExtremiteVersOrigine;
 
-    double* CoutDeTransportOrigineVersExtremiteRef;
-    double* CoutDeTransportExtremiteVersOrigineRef;
+    std::vector<double> CoutDeTransportOrigineVersExtremiteRef;
+    std::vector<double> CoutDeTransportExtremiteVersOrigineRef;
 
 };
 
@@ -510,7 +510,7 @@ struct PROBLEME_HEBDO
     int NombreDInterconnexions = 0;
     std::vector<int> PaysOrigineDeLInterconnexion;
     std::vector<int> PaysExtremiteDeLInterconnexion;
-    COUTS_DE_TRANSPORT** CoutDeTransport = nullptr;
+    mutable std::vector<COUTS_DE_TRANSPORT> CoutDeTransport;
 
     VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTC = nullptr;
     VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTCRef = nullptr;

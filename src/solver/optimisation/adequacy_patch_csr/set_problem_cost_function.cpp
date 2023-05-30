@@ -96,7 +96,6 @@ void HourlyCSRProblem::setQuadraticCost()
 void HourlyCSRProblem::setLinearCost()
 {
     int var;
-    const COUTS_DE_TRANSPORT* TransportCost;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim
       = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
@@ -120,7 +119,8 @@ void HourlyCSRProblem::setLinearCost()
         }
         const double coeff
           = problemeHebdo_->adequacyPatchRuntimeData->hurdleCostCoefficients[Interco];
-        TransportCost = problemeHebdo_->CoutDeTransport[Interco];
+
+        const COUTS_DE_TRANSPORT& TransportCost = problemeHebdo_->CoutDeTransport[Interco];
         // flow
         var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
@@ -133,11 +133,11 @@ void HourlyCSRProblem::setLinearCost()
                 ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
-            if (!TransportCost->IntercoGereeAvecDesCouts)
+            if (!TransportCost.IntercoGereeAvecDesCouts)
                 problemeAResoudre_.CoutLineaire[var] = 0;
             else
                 problemeAResoudre_.CoutLineaire[var]
-                  = TransportCost->CoutDeTransportOrigineVersExtremite[triggeredHour] * coeff;
+                  = TransportCost.CoutDeTransportOrigineVersExtremite[triggeredHour] * coeff;
             logs.debug() << var << ". Linear C = " << problemeAResoudre_.CoutLineaire[var];
         }
 
@@ -145,11 +145,11 @@ void HourlyCSRProblem::setLinearCost()
                 ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
-            if (!TransportCost->IntercoGereeAvecDesCouts)
+            if (!TransportCost.IntercoGereeAvecDesCouts)
                 problemeAResoudre_.CoutLineaire[var] = 0;
             else
                 problemeAResoudre_.CoutLineaire[var]
-                  = TransportCost->CoutDeTransportExtremiteVersOrigine[triggeredHour] * coeff;
+                  = TransportCost.CoutDeTransportExtremiteVersOrigine[triggeredHour] * coeff;
             logs.debug() << var << ". Linear C = " << problemeAResoudre_.CoutLineaire[var];
         }
     }

@@ -59,13 +59,13 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
     {
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
-            COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
-            if (CoutDeTransport->IntercoGereeAvecDesCouts)
+            if (COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
+                    CoutDeTransport.IntercoGereeAvecDesCouts)
             {
-                CoutDeTransport->CoutDeTransportOrigineVersExtremite[pdt]
-                  = CoutDeTransport->CoutDeTransportOrigineVersExtremiteRef[pdt];
-                CoutDeTransport->CoutDeTransportExtremiteVersOrigine[pdt]
-                  = CoutDeTransport->CoutDeTransportExtremiteVersOrigineRef[pdt];
+                CoutDeTransport.CoutDeTransportOrigineVersExtremite[pdt]
+                  = CoutDeTransport.CoutDeTransportOrigineVersExtremiteRef[pdt];
+                CoutDeTransport.CoutDeTransportExtremiteVersOrigine[pdt]
+                  = CoutDeTransport.CoutDeTransportExtremiteVersOrigineRef[pdt];
             }
         }
     }

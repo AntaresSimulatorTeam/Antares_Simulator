@@ -249,7 +249,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
             int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
-            const COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
+            const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
 
             AdequacyPatch::setNTCbounds(Xmax[var], Xmin[var], ValeursDeNTC, interco, problemeHebdo, adqPatchParams);
 
@@ -276,12 +276,12 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             adresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[interco]);
             AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
 
-            if (CoutDeTransport->IntercoGereeAvecDesCouts)
+            if (CoutDeTransport.IntercoGereeAvecDesCouts)
             {
                 var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[interco];
 
-                if (CoutDeTransport->IntercoGereeAvecLoopFlow)
+                if (CoutDeTransport.IntercoGereeAvecLoopFlow)
                     Xmax[var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[interco]
                                 - ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[interco];
                 else
@@ -299,7 +299,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
                 var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[interco];
-                if (CoutDeTransport->IntercoGereeAvecLoopFlow)
+                if (CoutDeTransport.IntercoGereeAvecLoopFlow)
                     Xmax[var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[interco]
                                 + ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[interco];
                 else

@@ -57,7 +57,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.NomsDesPays = std::vector<const char*>(nbPays);
     problem.PaysExtremiteDeLInterconnexion = std::vector<int>(linkCount);
     problem.PaysOrigineDeLInterconnexion = std::vector<int>(linkCount);
-    problem.CoutDeTransport = new COUTS_DE_TRANSPORT*[linkCount];
+    problem.CoutDeTransport = std::vector<COUTS_DE_TRANSPORT>(linkCount);
     problem.IndexDebutIntercoOrigine = std::vector<int>(nbPays);
     problem.IndexDebutIntercoExtremite = std::vector<int>(nbPays);
     problem.IndexSuivantIntercoOrigine = std::vector<int>(linkCount);
@@ -266,17 +266,15 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
 
     for (uint k = 0; k < linkCount; ++k)
     {
-        problem.CoutDeTransport[k] = new COUTS_DE_TRANSPORT;
-        problem.CoutDeTransport[k]->IntercoGereeAvecDesCouts = false;
-        problem.CoutDeTransport[k]->CoutDeTransportOrigineVersExtremite
-          = new double[NombreDePasDeTemps];
-        problem.CoutDeTransport[k]->CoutDeTransportExtremiteVersOrigine
-          = new double[NombreDePasDeTemps];
-
-        problem.CoutDeTransport[k]->CoutDeTransportOrigineVersExtremiteRef
-          = new double[NombreDePasDeTemps];
-        problem.CoutDeTransport[k]->CoutDeTransportExtremiteVersOrigineRef
-          = new double[NombreDePasDeTemps];
+        problem.CoutDeTransport[k].IntercoGereeAvecDesCouts = false;
+        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremite
+            .assign(NombreDePasDeTemps, 0.);
+        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigine
+            .assign(NombreDePasDeTemps, 0.);
+        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremiteRef
+            .assign(NombreDePasDeTemps, 0.);
+        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigineRef
+            .assign(NombreDePasDeTemps, 0.);
     }
 
     problem.CorrespondanceCntNativesCntOptimJournalieres
@@ -674,17 +672,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     delete problem.CorrespondanceVarNativesVarOptim;
     delete problem.CorrespondanceCntNativesCntOptim;
     delete problem.VariablesDualesDesContraintesDeNTC;
-
-    for (int k = 0; k < (int)study.runtime->interconnectionsCount(); k++)
-    {
-        delete problem.CoutDeTransport[k]->CoutDeTransportOrigineVersExtremite;
-        delete problem.CoutDeTransport[k]->CoutDeTransportExtremiteVersOrigine;
-
-        delete problem.CoutDeTransport[k]->CoutDeTransportOrigineVersExtremiteRef;
-        delete problem.CoutDeTransport[k]->CoutDeTransportExtremiteVersOrigineRef;
-        delete problem.CoutDeTransport[k];
-    }
-    delete problem.CoutDeTransport;
 
     for (int k = 0; k < 7; k++)
     {

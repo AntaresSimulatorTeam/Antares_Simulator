@@ -92,7 +92,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
-            const COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
+            const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
 
             int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
@@ -100,21 +100,21 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 ProblemeAResoudre->CoutLineaire[var] = 0.0;
             }
 
-            if (CoutDeTransport->IntercoGereeAvecDesCouts)
+            if (CoutDeTransport.IntercoGereeAvecDesCouts)
             {
                 var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[interco];
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     ProblemeAResoudre->CoutLineaire[var]
-                      = CoutDeTransport->CoutDeTransportOrigineVersExtremite[pdtHebdo];
+                      = CoutDeTransport.CoutDeTransportOrigineVersExtremite[pdtHebdo];
                 }
                 var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[interco];
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     ProblemeAResoudre->CoutLineaire[var]
-                      = CoutDeTransport->CoutDeTransportExtremiteVersOrigine[pdtHebdo];
+                      = CoutDeTransport.CoutDeTransportExtremiteVersOrigine[pdtHebdo];
                 }
             }
         }

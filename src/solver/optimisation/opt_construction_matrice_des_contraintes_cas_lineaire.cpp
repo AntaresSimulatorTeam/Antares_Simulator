@@ -385,8 +385,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
-            const COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
-            if (CoutDeTransport->IntercoGereeAvecDesCouts)
+            if (problemeHebdo->CoutDeTransport[interco].IntercoGereeAvecDesCouts)
             {
                 int nombreDeTermes = 0;
                 var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
