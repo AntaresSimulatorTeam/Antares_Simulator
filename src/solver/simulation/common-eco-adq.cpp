@@ -304,7 +304,7 @@ void PrepareRandomNumbers(Data::Study& study,
         }
         problem.CoutDeDefaillanceNegative[area.index] = area.thermal.spilledEnergyCost + alea;
 
-        auto noise = problem.BruitSurCoutHydraulique[area.index];
+        auto& noise = problem.BruitSurCoutHydraulique[area.index];
         switch (study.parameters.power.fluctuations)
         {
         case Data::lssFreeModulations:
