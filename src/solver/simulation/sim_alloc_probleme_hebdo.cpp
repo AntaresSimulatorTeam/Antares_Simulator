@@ -73,11 +73,11 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.CoutDeDefaillancePositive = std::vector<double>(nbPays);
     problem.CoutDeDefaillanceNegative = std::vector<double>(nbPays);
     problem.CoutDeDefaillanceEnReserve = std::vector<double>(nbPays);
-    problem.NumeroDeContrainteEnergieHydraulique = new int[nbPays];
-    problem.NumeroDeContrainteMinEnergieHydraulique = new int[nbPays];
-    problem.NumeroDeContrainteMaxEnergieHydraulique = new int[nbPays];
-    problem.NumeroDeContrainteMaxPompage = new int[nbPays];
-    problem.NumeroDeContrainteDeSoldeDEchange = new int[nbPays];
+    problem.NumeroDeContrainteEnergieHydraulique = std::vector<int>(nbPays);
+    problem.NumeroDeContrainteMinEnergieHydraulique = std::vector<int>(nbPays);
+    problem.NumeroDeContrainteMaxEnergieHydraulique = std::vector<int>(nbPays);
+    problem.NumeroDeContrainteMaxPompage = std::vector<int>(nbPays);
+    problem.NumeroDeContrainteDeSoldeDEchange = std::vector<int>(nbPays);
 
     problem.NumeroDeContrainteEquivalenceStockFinal = new int[nbPays];
     problem.NumeroDeContrainteExpressionStockFinal = new int[nbPays];
@@ -871,12 +871,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     delete problem.CoutsMarginauxDesContraintesDeReserveParZone;
     delete problem.ReserveJMoins1;
-
-    delete problem.NumeroDeContrainteEnergieHydraulique;
-    delete problem.NumeroDeContrainteMinEnergieHydraulique;
-    delete problem.NumeroDeContrainteMaxEnergieHydraulique;
-    delete problem.NumeroDeContrainteMaxPompage;
-    delete problem.NumeroDeContrainteDeSoldeDEchange;
 
     delete problem.NumeroDeContrainteEquivalenceStockFinal;
     delete problem.NumeroDeContrainteExpressionStockFinal;

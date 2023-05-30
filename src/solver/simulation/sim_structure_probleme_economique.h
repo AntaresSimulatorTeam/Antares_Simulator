@@ -580,12 +580,11 @@ struct PROBLEME_HEBDO
 
     bool Expansion = false;
 
-    int* NumeroDeContrainteEnergieHydraulique = nullptr;
-    int* NumeroDeContrainteMinEnergieHydraulique = nullptr;
-    int* NumeroDeContrainteMaxEnergieHydraulique = nullptr;
-    int* NumeroDeContrainteMaxPompage = nullptr;
-
-    int* NumeroDeContrainteDeSoldeDEchange = nullptr;
+    std::vector<int> NumeroDeContrainteEnergieHydraulique;
+    std::vector<int> NumeroDeContrainteMinEnergieHydraulique;
+    std::vector<int> NumeroDeContrainteMaxEnergieHydraulique;
+    std::vector<int> NumeroDeContrainteMaxPompage;
+    std::vector<int> NumeroDeContrainteDeSoldeDEchange;
 
     int* NumeroDeContrainteEquivalenceStockFinal = nullptr;
     int* NumeroDeContrainteExpressionStockFinal = nullptr;
