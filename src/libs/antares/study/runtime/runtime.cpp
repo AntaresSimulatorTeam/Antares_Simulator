@@ -370,7 +370,6 @@ void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& lis
             rti.operatorType = '?';
             rti.linkCount = 0;
             rti.timeSeries.clear();
-            //rti.bounds.clear();
             break;
         }
         case BindingConstraint::opMax:
