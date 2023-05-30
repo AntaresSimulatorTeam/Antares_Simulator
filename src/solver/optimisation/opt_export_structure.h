@@ -54,7 +54,8 @@ enum class ExportStructDict : unsigned char
     BilansPays,
     CoutOrigineVersExtremiteDeLInterconnexion,
     CoutExtremiteVersOrigineDeLInterconnexion,
-    CorrespondanceVarNativesVarOptim
+    CorrespondanceVarNativesVarOptim,
+    DispatchableProduction
 };
 enum class ExportStructConstraintsDict : unsigned char
 {

@@ -52,7 +52,8 @@ const std::initializer_list<std::string>& getNames<ExportStructDict>()
       "AreaBalance",
       "IntercoCostOriginToDestination",
       "IntercoCostDestinationToOrigin",
-      "CorrespondanceVarNativesVarOptim"};
+      "CorrespondanceVarNativesVarOptim",
+      "DispatchableProduction"};
     return s_exportStructDictNames;
 }
 template<>

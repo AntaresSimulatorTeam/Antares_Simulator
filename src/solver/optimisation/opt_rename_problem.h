@@ -20,13 +20,13 @@ void RenameZoneVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                         Antares::Data::Enum::ExportStructTimeStepDict time_step_type,
                         const std::string& zone);
 
-void RenameZoneVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
-                        int var,
-                        Antares::Data::Enum::ExportStructDict structDict,
-                        int ts,
-                        Antares::Data::Enum::ExportStructTimeStepDict time_step_type,
-                        const std::string& zone,
-                        int palier);
+void RenameThermalClusterVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
+                                  int var,
+                                  Antares::Data::Enum::ExportStructDict structDict,
+                                  int ts,
+                                  Antares::Data::Enum::ExportStructTimeStepDict time_step_type,
+                                  const std::string& zone,
+                                  int palier);
 
 std::string BuildName(const std::string& name,
                       const std::string& location,

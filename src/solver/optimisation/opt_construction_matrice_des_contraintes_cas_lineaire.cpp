@@ -70,13 +70,13 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
                                         pays,
                                         palier);
                 const auto& zone = problemeHebdo.NomsDesPays[pays];
-                RenameZoneVariable(problemeHebdo.ProblemeAResoudre,
-                                   var,
-                                   Enum::ExportStructDict::PalierThermique,
-                                   timeStepInYear,
-                                   Enum::ExportStructTimeStepDict::hour,
-                                   zone,
-                                   palier);
+                RenameThermalClusterVariable(problemeHebdo.ProblemeAResoudre,
+                                             var,
+                                             Enum::ExportStructDict::PalierThermique,
+                                             timeStepInYear,
+                                             Enum::ExportStructTimeStepDict::hour,
+                                             zone,
+                                             palier);
             }
         }
     }

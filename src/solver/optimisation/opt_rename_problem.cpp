@@ -20,23 +20,6 @@ void RenameLinkVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
     }
 }
 
-void RenameZoneVariable_(PROBLEME_ANTARES_A_RESOUDRE* problem,
-                         int var,
-                         const std::string& varname,
-                         int ts,
-                         Antares::Data::Enum::ExportStructTimeStepDict time_step_type,
-                         const std::string& zone)
-{
-    auto nvars = problem->NombreDeVariables;
-    if (nvars > var)
-    {
-        auto full_name = BuildName(
-          varname,
-          location_identifier(zone, Antares::Data::Enum::ExportStructLocationDict::area),
-          time_identifier(ts, time_step_type));
-        strcpy(problem->NomDesVariables[var], full_name.c_str());
-    }
-}
 void RenameZoneVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                         int var,
                         Antares::Data::Enum::ExportStructDict structDict,
@@ -44,20 +27,38 @@ void RenameZoneVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                         Antares::Data::Enum::ExportStructTimeStepDict time_step_type,
                         const std::string& zone)
 {
-    RenameZoneVariable_(
-      problem, var, Antares::Data::Enum::toString(structDict), ts, time_step_type, zone);
+    auto nvars = problem->NombreDeVariables;
+    if (nvars > var)
+    {
+        auto full_name = BuildName(
+          Antares::Data::Enum::toString(structDict),
+          location_identifier(zone, Antares::Data::Enum::ExportStructLocationDict::area),
+          time_identifier(ts, time_step_type));
+        strcpy(problem->NomDesVariables[var], full_name.c_str());
+    }
 }
-void RenameZoneVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
-                        int var,
-                        Antares::Data::Enum::ExportStructDict structDict,
-                        int ts,
-                        Antares::Data::Enum::ExportStructTimeStepDict time_step_type,
-                        const std::string& zone,
-                        int palier)
+void RenameThermalClusterVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
+                                  int var,
+                                  Antares::Data::Enum::ExportStructDict structDict,
+                                  int ts,
+                                  Antares::Data::Enum::ExportStructTimeStepDict time_step_type,
+                                  const std::string& zone,
+                                  int palier)
 {
-    const auto palier_name
-      = Antares::Data::Enum::toString(structDict) + "<" + std::to_string(palier) + ">";
-    RenameZoneVariable_(problem, var, palier_name, ts, time_step_type, zone);
+    auto nvars = problem->NombreDeVariables;
+
+    if (nvars > var)
+    {
+        const auto location
+          = location_identifier(zone, Antares::Data::Enum::ExportStructLocationDict::area)
+            + SEPARATOR + Antares::Data::Enum::toString(structDict) + "<" + std::to_string(palier)
+            + ">";
+        auto full_name = BuildName(Antares::Data::Enum::toString(
+                                     Antares::Data::Enum::ExportStructDict::DispatchableProduction),
+                                   location,
+                                   time_identifier(ts, time_step_type));
+        strcpy(problem->NomDesVariables[var], full_name.c_str());
+    }
 }
 
 std::string BuildName(const std::string& name,
