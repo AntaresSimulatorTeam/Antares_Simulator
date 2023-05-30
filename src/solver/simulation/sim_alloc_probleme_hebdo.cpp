@@ -50,12 +50,12 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.DefaillanceNegativeUtiliserHydro = std::vector<bool>(nbPays);
     problem.DefaillanceNegativeUtiliserConsoAbattue = std::vector<bool>(nbPays);
 
-    problem.CoefficientEcretementPMaxHydraulique = new double[nbPays];
+    problem.CoefficientEcretementPMaxHydraulique = std::vector<double>(nbPays);
 
-    problem.BruitSurCoutHydraulique = new double*[nbPays];
+    problem.BruitSurCoutHydraulique = std::vector<std::vector<double>>(nbPays);
 
     for (uint p = 0; p < nbPays; ++p)
-        problem.BruitSurCoutHydraulique[p] = new double[8784];
+        problem.BruitSurCoutHydraulique[p] = std::vector<double>(8784);
 
     problem.NomsDesPays =  new const char*[nbPays];
     problem.PaysExtremiteDeLInterconnexion = new int[linkCount];
@@ -874,7 +874,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
             delete problem.ResultatsHoraires[k].ProductionThermique[j];
         }
         delete problem.ResultatsHoraires[k].ProductionThermique;
-        delete problem.BruitSurCoutHydraulique[k];
     }
     delete problem.PaliersThermiquesDuPays;
     delete problem.CaracteristiquesHydrauliques;
@@ -900,10 +899,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     for (uint p = 0; p < nbPays; ++p)
         delete problem.NumeroDeVariableDeTrancheDeStock[p];
     delete problem.NumeroDeVariableDeTrancheDeStock;
-
-    delete problem.CoefficientEcretementPMaxHydraulique;
-
-    delete problem.BruitSurCoutHydraulique;
 
     delete problem.coutOptimalSolution1;
     delete problem.coutOptimalSolution2;

@@ -548,8 +548,7 @@ struct PROBLEME_HEBDO
     std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue;
 
     char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
-
-    double** BruitSurCoutHydraulique = nullptr;
+    std::vector<std::vector<double>> BruitSurCoutHydraulique;
 
     int NombreDeContraintesCouplantes = 0;
     CONTRAINTES_COUPLANTES** MatriceDesContraintesCouplantes = nullptr;
@@ -605,7 +604,7 @@ struct PROBLEME_HEBDO
     std::shared_ptr<AdequacyPatchRuntimeData> adequacyPatchRuntimeData;
 
     /* Hydro management */
-    double* CoefficientEcretementPMaxHydraulique = nullptr;
+    std::vector<double> CoefficientEcretementPMaxHydraulique;
     bool hydroHotStart = false;
     double* previousSimulationFinalLevel = nullptr;
     computeTimeStepLevel computeLvl_object;

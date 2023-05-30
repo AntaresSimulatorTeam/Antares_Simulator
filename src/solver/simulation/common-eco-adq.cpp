@@ -304,7 +304,7 @@ void PrepareRandomNumbers(Data::Study& study,
         }
         problem.CoutDeDefaillanceNegative[area.index] = area.thermal.spilledEnergyCost + alea;
 
-        auto* noise = problem.BruitSurCoutHydraulique[area.index];
+        auto noise = problem.BruitSurCoutHydraulique[area.index];
         switch (study.parameters.power.fluctuations)
         {
         case Data::lssFreeModulations:
@@ -321,7 +321,7 @@ void PrepareRandomNumbers(Data::Study& study,
         case Data::lssMinimizeRamping:
         case Data::lssMinimizeExcursions:
         {
-            (void)::memset(noise, 0, 8784 * sizeof(double));
+            std::fill(noise.begin(), noise.end(), 0);
 
             auto& penalty = *(problem.CaracteristiquesHydrauliques[area.index]);
             double rnd = randomForYear.pHydroCosts_rampingOrExcursion[indexArea];
@@ -336,7 +336,7 @@ void PrepareRandomNumbers(Data::Study& study,
         case Data::lssUnknown:
         {
             assert(false && "invalid power fluctuations");
-            (void)::memset(noise, 0, 8784 * sizeof(double));
+            std::fill(noise.begin(), noise.end(), 0);
 
             auto& penalty = *(problem.CaracteristiquesHydrauliques[area.index]);
             penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations = 1e-4;
