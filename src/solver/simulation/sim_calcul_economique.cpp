@@ -198,7 +198,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         problem.previousSimulationFinalLevel[i] = -1.;
 
-        if (problem.previousYearFinalLevels)
+        if (!problem.previousYearFinalLevels.empty())
             problem.previousYearFinalLevels[i] = -1.;
 
         problem.CaracteristiquesHydrauliques[i]->WeeklyWaterValueStateRegular = 0.;

@@ -145,7 +145,7 @@ private:
             double* randomReservoirLevel = nullptr;
 
             if (hydroHotStart && firstSetParallelWithAPerformedYearWasRun)
-                randomReservoirLevel = state[numSpace].problemeHebdo->previousYearFinalLevels;
+                randomReservoirLevel = &state[numSpace].problemeHebdo->previousYearFinalLevels[0];
             else
                 randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 

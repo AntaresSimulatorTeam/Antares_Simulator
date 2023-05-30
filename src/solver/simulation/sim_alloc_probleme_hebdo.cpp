@@ -46,40 +46,47 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     const uint linkCount = study.runtime->interconnectionsCount();
     const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
 
-    problem.DefaillanceNegativeUtiliserPMinThermique = std::vector<bool>(nbPays);
-    problem.DefaillanceNegativeUtiliserHydro = std::vector<bool>(nbPays);
-    problem.DefaillanceNegativeUtiliserConsoAbattue = std::vector<bool>(nbPays);
+    problem.DefaillanceNegativeUtiliserPMinThermique.assign(nbPays, false);
+    problem.DefaillanceNegativeUtiliserHydro.assign(nbPays, false);
+    problem.DefaillanceNegativeUtiliserConsoAbattue.assign(nbPays, false);
 
-    problem.CoefficientEcretementPMaxHydraulique = std::vector<double>(nbPays);
+    problem.CoefficientEcretementPMaxHydraulique.assign(nbPays, 0.);
 
     problem.BruitSurCoutHydraulique.assign(nbPays, std::vector<double>(8784));
 
     problem.NomsDesPays = std::vector<const char*>(nbPays);
-    problem.PaysExtremiteDeLInterconnexion = std::vector<int>(linkCount);
-    problem.PaysOrigineDeLInterconnexion = std::vector<int>(linkCount);
+
+    problem.PaysExtremiteDeLInterconnexion.assign(linkCount, 0);
+    problem.PaysOrigineDeLInterconnexion.assign(linkCount, 0);
+
     problem.CoutDeTransport = std::vector<COUTS_DE_TRANSPORT>(linkCount);
-    problem.IndexDebutIntercoOrigine = std::vector<int>(nbPays);
-    problem.IndexDebutIntercoExtremite = std::vector<int>(nbPays);
-    problem.IndexSuivantIntercoOrigine = std::vector<int>(linkCount);
-    problem.IndexSuivantIntercoExtremite = std::vector<int>(linkCount);
-    problem.NumeroDeJourDuPasDeTemps = std::vector<int>(NombreDePasDeTemps);
-    problem.NumeroDIntervalleOptimiseDuPasDeTemps
-      = std::vector<int>(NombreDePasDeTemps);
-    problem.NbGrpCourbeGuide = std::vector<int>(NombreDePasDeTemps);
-    problem.NbGrpOpt = std::vector<int>(NombreDePasDeTemps);
-    problem.CoutDeDefaillancePositive = std::vector<double>(nbPays);
-    problem.CoutDeDefaillanceNegative = std::vector<double>(nbPays);
-    problem.CoutDeDefaillanceEnReserve = std::vector<double>(nbPays);
-    problem.NumeroDeContrainteEnergieHydraulique = std::vector<int>(nbPays);
-    problem.NumeroDeContrainteMinEnergieHydraulique = std::vector<int>(nbPays);
-    problem.NumeroDeContrainteMaxEnergieHydraulique = std::vector<int>(nbPays);
-    problem.NumeroDeContrainteMaxPompage = std::vector<int>(nbPays);
-    problem.NumeroDeContrainteDeSoldeDEchange = std::vector<int>(nbPays);
 
-    problem.NumeroDeContrainteEquivalenceStockFinal = std::vector<int>(nbPays);
-    problem.NumeroDeContrainteExpressionStockFinal = std::vector<int>(nbPays);
+    // was previously set to -1 with a loop, now use assign
+    problem.IndexDebutIntercoOrigine.assign(nbPays, -1);
+    problem.IndexDebutIntercoExtremite.assign(nbPays, -1);
 
-    problem.NumeroDeVariableStockFinal = std::vector<int>(nbPays);
+    problem.IndexSuivantIntercoOrigine.assign(linkCount, 0);
+    problem.IndexSuivantIntercoExtremite.assign(linkCount, 0);
+
+    problem.NumeroDeJourDuPasDeTemps.assign(NombreDePasDeTemps, 0);
+    problem.NumeroDIntervalleOptimiseDuPasDeTemps.assign(NombreDePasDeTemps, 0);
+    problem.NbGrpCourbeGuide.assign(NombreDePasDeTemps, 0);
+    problem.NbGrpOpt.assign(NombreDePasDeTemps, 0);
+
+    problem.CoutDeDefaillancePositive.assign(nbPays, 0);
+    problem.CoutDeDefaillanceNegative.assign(nbPays, 0);
+    problem.CoutDeDefaillanceEnReserve.assign(nbPays, 0);
+
+    problem.NumeroDeContrainteEnergieHydraulique.assign(nbPays, 0);
+    problem.NumeroDeContrainteMinEnergieHydraulique.assign(nbPays, 0);
+    problem.NumeroDeContrainteMaxEnergieHydraulique.assign(nbPays, 0);
+    problem.NumeroDeContrainteMaxPompage.assign(nbPays, 0);
+    problem.NumeroDeContrainteDeSoldeDEchange.assign(nbPays, 0);
+
+    problem.NumeroDeContrainteEquivalenceStockFinal.assign(nbPays, 0);
+    problem.NumeroDeContrainteExpressionStockFinal.assign(nbPays, 0);
+
+    problem.NumeroDeVariableStockFinal.assign(nbPays, 0);
     problem.NumeroDeVariableDeTrancheDeStock.assign(nbPays, std::vector<int>(100));
 
     problem.ValeursDeNTC = new VALEURS_DE_NTC_ET_RESISTANCES*[NombreDePasDeTemps];
@@ -98,19 +105,19 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
       = new CONTRAINTES_COUPLANTES*[study.runtime->bindingConstraintCount];
     problem.PaliersThermiquesDuPays = new PALIERS_THERMIQUES*[nbPays];
     problem.CaracteristiquesHydrauliques = new ENERGIES_ET_PUISSANCES_HYDRAULIQUES*[nbPays];
-    problem.previousSimulationFinalLevel = new double[nbPays];
+    problem.previousSimulationFinalLevel.assign(nbPays, 0.);
 
     problem.ShortTermStorage.resize(nbPays);
 
-    problem.previousYearFinalLevels = nullptr;
+    problem.previousYearFinalLevels.resize(0);
     if (problem.hydroHotStart)
     {
-        for (uint i = 0; i != nbPays; i++)
+        for (uint i = 0; i <= nbPays; i++)
         {
             auto& area = *(study.areas[i]);
             if (area.hydro.reservoirManagement)
             {
-                problem.previousYearFinalLevels = new double[nbPays];
+                problem.previousYearFinalLevels.assign(nbPays, 0.);
                 break;
             }
         }
@@ -121,12 +128,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
 
     problem.ReserveJMoins1 = new RESERVE_JMOINS1*[nbPays];
     problem.ResultatsHoraires.resize(nbPays);
-
-    for (uint p = 0; p != nbPays; ++p)
-    {
-        problem.IndexDebutIntercoOrigine[p] = -1;
-        problem.IndexDebutIntercoExtremite[p] = -1;
-    }
 
     for (uint k = 0; k < NombreDePasDeTemps; k++)
     {
@@ -847,9 +848,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     }
     delete problem.PaliersThermiquesDuPays;
     delete problem.CaracteristiquesHydrauliques;
-    delete problem.previousSimulationFinalLevel;
-    if (problem.previousYearFinalLevels)
-        delete problem.previousYearFinalLevels;
 
     delete problem.CoutsMarginauxDesContraintesDeReserveParZone;
     delete problem.ReserveJMoins1;
