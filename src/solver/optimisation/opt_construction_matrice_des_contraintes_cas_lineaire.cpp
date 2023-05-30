@@ -70,13 +70,16 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
                                         pays,
                                         palier);
                 const auto& zone = problemeHebdo.NomsDesPays[pays];
+                const auto& palier_name = PaliersThermiquesDuPays->NomsDesPaliersThermiques[index];
+                // =
+                // Study::Current::Get()->areas[pays]->thermal.clusters.at(palier)->name().c_str();
                 RenameThermalClusterVariable(problemeHebdo.ProblemeAResoudre,
                                              var,
                                              Enum::ExportStructDict::PalierThermique,
                                              timeStepInYear,
                                              Enum::ExportStructTimeStepDict::hour,
                                              zone,
-                                             palier);
+                                             palier_name);
             }
         }
     }

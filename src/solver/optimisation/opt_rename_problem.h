@@ -26,7 +26,7 @@ void RenameThermalClusterVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                                   int ts,
                                   Antares::Data::Enum::ExportStructTimeStepDict time_step_type,
                                   const std::string& zone,
-                                  int palier);
+                                  const std::string& palier_name);
 
 std::string BuildName(const std::string& name,
                       const std::string& location,

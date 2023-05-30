@@ -84,8 +84,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.OptimisationAvecCoutsDeDemarrage
       = (study.parameters.unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucMILP);
 
-    problem.OptimisationAuPasHebdomadaire
-      = (parameters.simplexOptimizationRange == Data::sorWeek);
+    problem.OptimisationAuPasHebdomadaire = (parameters.simplexOptimizationRange == Data::sorWeek);
 
     switch (parameters.power.fluctuations)
     {
@@ -128,8 +127,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable
           = area.hydro.reservoirManagement && area.scratchpad[numSpace].pumpHasMod
-              && area.hydro.pumpingEfficiency > 0.
-              && problem.CaracteristiquesHydrauliques[i]->PresenceDHydrauliqueModulable;
+            && area.hydro.pumpingEfficiency > 0.
+            && problem.CaracteristiquesHydrauliques[i]->PresenceDHydrauliqueModulable;
 
         problem.CaracteristiquesHydrauliques[i]->PumpingRatio = area.hydro.pumpingEfficiency;
 
@@ -138,13 +137,12 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         problem.CaracteristiquesHydrauliques[i]->TurbinageEntreBornes
           = area.hydro.reservoirManagement
-              && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
+            && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
 
         problem.CaracteristiquesHydrauliques[i]->SuiviNiveauHoraire
-          = area.hydro.reservoirManagement
-              && (problem.OptimisationAuPasHebdomadaire == true)
-              && (!area.hydro.useHeuristicTarget
-                  || problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable);
+          = area.hydro.reservoirManagement && (problem.OptimisationAuPasHebdomadaire == true)
+            && (!area.hydro.useHeuristicTarget
+                || problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable);
 
         problem.CaracteristiquesHydrauliques[i]->DirectLevelAccess = false;
         problem.CaracteristiquesHydrauliques[i]->AccurateWaterValue = false;
@@ -259,6 +257,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
               = (pbPalier.PmaxDUnGroupeDuPalierThermique[l] < cluster.minStablePower)
                   ? pbPalier.PmaxDUnGroupeDuPalierThermique[l]
                   : cluster.minStablePower;
+            pbPalier.NomsDesPaliersThermiques[l] = cluster.name().c_str();
         }
 
         NombrePaliers += area.thermal.list.size();
@@ -598,11 +597,13 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 mustRunGen = scratchpad.miscGenSum[indx] + ror[tsFatalIndex][indx]
                              + scratchpad.mustrunSum[indx];
 
-                area.renewable.list.each([&](const RenewableCluster& cluster) {
-                    assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
-                    mustRunGen += cluster.valueAtTimeStep(
-                      tsIndex.RenouvelableParPalier[cluster.areaWideIndex], (uint)indx);
-                });
+                area.renewable.list.each(
+                  [&](const RenewableCluster& cluster)
+                  {
+                      assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
+                      mustRunGen += cluster.valueAtTimeStep(
+                        tsIndex.RenouvelableParPalier[cluster.areaWideIndex], (uint)indx);
+                  });
             }
 
             assert(
@@ -613,28 +614,31 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
               = +scratchpad.ts.load[tsIndex.Consommation][indx]
                 - problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k];
 
-            area.thermal.list.each([&](const Data::ThermalCluster& cluster) {
-                assert((uint)tsIndex.ThermiqueParPalier[cluster.areaWideIndex]
-                       < cluster.series->series.width);
-                assert((uint)indx < cluster.series->series.height);
-                assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
+            area.thermal.list.each(
+              [&](const Data::ThermalCluster& cluster)
+              {
+                  assert((uint)tsIndex.ThermiqueParPalier[cluster.areaWideIndex]
+                         < cluster.series->series.width);
+                  assert((uint)indx < cluster.series->series.height);
+                  assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
 
-                auto& Pt
-                  = *problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout[cluster.index];
-                auto& PtValGen = *ValeursGenereesParPays[numSpace][k];
+                  auto& Pt
+                    = *problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout[cluster.index];
+                  auto& PtValGen = *ValeursGenereesParPays[numSpace][k];
 
-                Pt.PuissanceDisponibleDuPalierThermique[j]
-                  = cluster.series->series[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][indx];
+                  Pt.PuissanceDisponibleDuPalierThermique[j]
+                    = cluster.series
+                        ->series[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][indx];
 
-                Pt.CoutHoraireDeProductionDuPalierThermique[j]
-                  = cluster.marketBidCost * cluster.modulation[thermalModulationMarketBid][indx]
-                    + PtValGen.AleaCoutDeProductionParPalier[cluster.areaWideIndex];
+                  Pt.CoutHoraireDeProductionDuPalierThermique[j]
+                    = cluster.marketBidCost * cluster.modulation[thermalModulationMarketBid][indx]
+                      + PtValGen.AleaCoutDeProductionParPalier[cluster.areaWideIndex];
 
-                Pt.PuissanceMinDuPalierThermique[j]
-                  = (Pt.PuissanceDisponibleDuPalierThermique[j] < cluster.PthetaInf[indx])
-                      ? Pt.PuissanceDisponibleDuPalierThermique[j]
-                      : cluster.PthetaInf[indx];
-            });
+                  Pt.PuissanceMinDuPalierThermique[j]
+                    = (Pt.PuissanceDisponibleDuPalierThermique[j] < cluster.PthetaInf[indx])
+                        ? Pt.PuissanceDisponibleDuPalierThermique[j]
+                        : cluster.PthetaInf[indx];
+              });
 
             if (problem.CaracteristiquesHydrauliques[k]->PresenceDHydrauliqueModulable > 0)
             {

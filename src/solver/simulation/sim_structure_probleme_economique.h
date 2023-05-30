@@ -65,7 +65,6 @@ struct CORRESPONDANCES_DES_VARIABLES
     int* NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
     int* NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
     int* NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
-
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES
@@ -84,7 +83,6 @@ struct CORRESPONDANCES_DES_CONTRAINTES
     int* NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne;
 
     int* NumeroDeContrainteDesNiveauxPays;
-
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
@@ -205,7 +203,6 @@ struct ALL_MUST_RUN_GENERATION
 struct SOLDE_MOYEN_DES_ECHANGES
 {
     double* SoldeMoyenDuPays;
-
 };
 
 struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
@@ -227,7 +224,6 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 
     int* NombreMaxDeGroupesEnMarcheDuPalierThermique;
     int* NombreMinDeGroupesEnMarcheDuPalierThermique;
-
 };
 
 struct PALIERS_THERMIQUES
@@ -249,6 +245,7 @@ struct PALIERS_THERMIQUES
     double* PmaxDUnGroupeDuPalierThermique;
     int* DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
     int* DureeMinimaleDArretDUnGroupeDuPalierThermique;
+    const char** NomsDesPaliersThermiques;
 };
 
 struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
@@ -401,7 +398,6 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
     double* NombreDeGroupesQuiSArretentDuPalier;
 
     double* NombreDeGroupesQuiTombentEnPanneDuPalier;
-
 };
 
 struct RESULTATS_HORAIRES
@@ -444,7 +440,6 @@ struct COUTS_DE_TRANSPORT
 
     double* CoutDeTransportOrigineVersExtremiteRef;
     double* CoutDeTransportExtremiteVersOrigineRef;
-
 };
 
 struct VARIABLES_DUALES_INTERCONNEXIONS
@@ -456,7 +451,6 @@ struct COUTS_MARGINAUX_ZONES_DE_RESERVE
 {
     double* CoutsMarginauxHorairesDeLaReserveParZone = nullptr;
 };
-
 
 struct PROBLEME_HEBDO
 {
@@ -507,7 +501,8 @@ struct PROBLEME_HEBDO
     bool* DefaillanceNegativeUtiliserHydro = nullptr;
     bool* DefaillanceNegativeUtiliserConsoAbattue = nullptr;
 
-    char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
+    char TypeDOptimisation
+      = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
 
     double** BruitSurCoutHydraulique = nullptr;
 
@@ -529,8 +524,10 @@ struct PROBLEME_HEBDO
 
     CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim = nullptr;
     CORRESPONDANCES_DES_CONTRAINTES** CorrespondanceCntNativesCntOptim = nullptr;
-    CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES** CorrespondanceCntNativesCntOptimJournalieres = nullptr;
-    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES** CorrespondanceCntNativesCntOptimHebdomadaires = nullptr;
+    CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES** CorrespondanceCntNativesCntOptimJournalieres
+      = nullptr;
+    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES** CorrespondanceCntNativesCntOptimHebdomadaires
+      = nullptr;
 
     RESERVE_JMOINS1** ReserveJMoins1 = nullptr;
 

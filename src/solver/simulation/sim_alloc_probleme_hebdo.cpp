@@ -409,6 +409,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (int*)MemAlloc(nbPaliers * sizeof(int));
         problem.PaliersThermiquesDuPays[k]->DureeMinimaleDArretDUnGroupeDuPalierThermique
           = (int*)MemAlloc(nbPaliers * sizeof(int));
+        problem.PaliersThermiquesDuPays[k]->NomsDesPaliersThermiques
+          = (const char**)MemAlloc(nbPaliers * sizeof(char*));
 
         problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimise
           = (double*)MemAllocMemset(7 * sizeof(double));
@@ -450,9 +452,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositive
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
         problem.ResultatsHoraires[k]->ValeursHorairesDENS
-          = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double)); // adq patch
+          = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));       // adq patch
         problem.ResultatsHoraires[k]->ValeursHorairesLmrViolations
-          = (int*)MemAllocMemset(NombreDePasDeTemps * sizeof(int)); // adq patch
+          = (int*)MemAllocMemset(NombreDePasDeTemps * sizeof(int));       // adq patch
         problem.ResultatsHoraires[k]->ValeursHorairesSpilledEnergyAfterCSR
           = (double*)MemAllocMemset(NombreDePasDeTemps * sizeof(double)); // adq patch
         problem.ResultatsHoraires[k]->ValeursHorairesDtgMrgCsr
@@ -751,6 +753,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(
           problem.PaliersThermiquesDuPays[k]->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique);
         MemFree(problem.PaliersThermiquesDuPays[k]->DureeMinimaleDArretDUnGroupeDuPalierThermique);
+        MemFree(problem.PaliersThermiquesDuPays[k]->NomsDesPaliersThermiques);
 
         MemFree(problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimise);
         MemFree(problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParJour);

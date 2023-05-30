@@ -43,7 +43,7 @@ void RenameThermalClusterVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                                   int ts,
                                   Antares::Data::Enum::ExportStructTimeStepDict time_step_type,
                                   const std::string& zone,
-                                  int palier)
+                                  const std::string& palier_name)
 {
     auto nvars = problem->NombreDeVariables;
 
@@ -51,8 +51,7 @@ void RenameThermalClusterVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
     {
         const auto location
           = location_identifier(zone, Antares::Data::Enum::ExportStructLocationDict::area)
-            + SEPARATOR + Antares::Data::Enum::toString(structDict) + "<" + std::to_string(palier)
-            + ">";
+            + SEPARATOR + Antares::Data::Enum::toString(structDict) + "<" + palier_name + ">";
         auto full_name = BuildName(Antares::Data::Enum::toString(
                                      Antares::Data::Enum::ExportStructDict::DispatchableProduction),
                                    location,
