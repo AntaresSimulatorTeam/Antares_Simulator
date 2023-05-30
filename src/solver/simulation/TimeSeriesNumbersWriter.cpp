@@ -2,13 +2,13 @@
 // Created by marechaljas on 17/03/23.
 //
 
-#include "TimeSeriesNumbersWriter.h"
+#include "BindingConstraintsTimeSeriesNumbersWriter.h"
 #include <cstdint>
 #include <filesystem>
 #include <utility>
 
 namespace Antares::Solver::Simulation {
-TimeSeriesNumbersWriter::TimeSeriesNumbersWriter(std::shared_ptr<Antares::Solver::IResultWriter> writer)
+BindingConstraintsTimeSeriesNumbersWriter::BindingConstraintsTimeSeriesNumbersWriter(std::shared_ptr<Antares::Solver::IResultWriter> writer)
 : writer_(std::move(writer))
 {
 
@@ -45,7 +45,7 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer,
     writer->addEntryFromBuffer(path.c_str(), buffer);
 }
 
-void TimeSeriesNumbersWriter::write(const Data::BindingConstraintsList &list) {
+void BindingConstraintsTimeSeriesNumbersWriter::write(const Data::BindingConstraintsList &list) {
     for (auto const& [group, timeSeries]: list.TimeSeriesNumbers()) {
         genericStoreTimeseriesNumbers(writer_,
                                       timeSeries.timeseriesNumbers,

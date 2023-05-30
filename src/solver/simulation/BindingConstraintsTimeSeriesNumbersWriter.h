@@ -10,11 +10,11 @@
 #include "antares/study/binding_constraint/BindingConstraintsList.h"
 
 namespace Antares::Solver::Simulation {
-class TimeSeriesNumbersWriter: public ITimeSeriesNumbersWriter {
+class BindingConstraintsTimeSeriesNumbersWriter: public ITimeSeriesNumbersWriter {
 
 public:
-    explicit TimeSeriesNumbersWriter(std::shared_ptr<Antares::Solver::IResultWriter> resultWriter);
-    ~TimeSeriesNumbersWriter() override = default;
+    explicit BindingConstraintsTimeSeriesNumbersWriter(std::shared_ptr<Antares::Solver::IResultWriter> resultWriter);
+    BindingConstraintsTimeSeriesNumbersWriter() = default;
     void write(const Data::BindingConstraintsList &list) override;
 
 private:
