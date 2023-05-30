@@ -108,7 +108,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.NumberOfShortTermStorages = study.runtime->shortTermStorageCount;
 
-    problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraint.size();
+    problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraints.size();
 
     problem.ExportMPS = study.parameters.include.exportMPS;
     problem.ExportStructure = study.parameters.include.exportStructure;
@@ -220,9 +220,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.PaysExtremiteDeLInterconnexion[i] = link.with->index;
     }
 
-    for (uint i = 0; i < study.runtime->bindingConstraint.size(); ++i)
+    for (uint i = 0; i < study.runtime->bindingConstraints.size(); ++i)
     {
-        BindingConstraintRTI& bc = study.runtime->bindingConstraint[i];
+        BindingConstraintRTI& bc = study.runtime->bindingConstraints[i];
 
         PtMat = problem.MatriceDesContraintesCouplantes[i];
         PtMat->NombreDInterconnexionsDansLaContrainteCouplante = bc.linkCount;
@@ -330,10 +330,10 @@ void SIM_InitialisationResultats()
 
 void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int PasDeTempsDebut,
                                const StudyRuntimeInfos &studyruntime, const uint weekFirstDay, int pasDeTemps) {
-    const auto constraintCount = studyruntime.bindingConstraint.size();
+    const auto constraintCount = studyruntime.bindingConstraints.size();
     for (uint k = 0; k != constraintCount; ++k)
     {
-        auto& bc = studyruntime.bindingConstraint[k];
+        auto& bc = studyruntime.bindingConstraints[k];
         assert(bc.timeSeries.width && "Invalid constraint data width");
         //If there is only one TS, always select it.
         const auto ts_number = bc.timeSeries.width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc.group];
