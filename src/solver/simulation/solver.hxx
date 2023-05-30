@@ -44,7 +44,7 @@
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
-#include "TimeSeriesNumbersWriter.h"
+#include "BindingConstraintsTimeSeriesNumbersWriter.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -380,7 +380,7 @@ void ISimulation<Impl>::run()
         ImplementationType::variables.simulationEnd();
 
         // Export ts-numbers into output
-        TimeSeriesNumbersWriter time_seris_writer(pResultWriter);
+        BindingConstraintsTimeSeriesNumbersWriter time_seris_writer(pResultWriter);
         TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, time_seris_writer);
 
         // Spatial clusters
