@@ -331,14 +331,14 @@ void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& lis
         logs.info() << "Optimizing " << bindingConstraintCount << " binding constraints";
     }
 
-    bindingConstraint.clear();
-    bindingConstraint.resize(bindingConstraintCount);
+    bindingConstraints.clear();
+    bindingConstraints.resize(bindingConstraintCount);
 
     unsigned index = 0;
     list.eachEnabled([this, &index, &bindingConstraintCount](const BindingConstraint& constraint) {
         assert(index < bindingConstraintCount and "Not enough slots for binding constraints");
 
-        auto& rti = bindingConstraint[index];
+        auto& rti = bindingConstraints[index];
         rti.type = constraint.type();
         switch (constraint.operatorType())
         {
@@ -361,8 +361,8 @@ void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& lis
         {
             CopyBCData<BindingConstraint::columnInferior>(rti, constraint);
             ++index;
-            bindingConstraint[index].type = constraint.type();
-            CopyBCData<BindingConstraint::columnSuperior>(bindingConstraint[index], constraint);
+            bindingConstraints[index].type = constraint.type();
+            CopyBCData<BindingConstraint::columnSuperior>(bindingConstraints[index], constraint);
             break;
         }
         case BindingConstraint::opUnknown:
@@ -484,7 +484,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
     logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
     logs.info() << "     short-term storages: " << shortTermStorageCount;
-    logs.info() << "     binding constraints: " << bindingConstraint.size();
+    logs.info() << "     binding constraints: " << bindingConstraints.size();
     logs.info() << "     geographic trimming:" << (gd.geographicTrimming ? "true" : "false");
     logs.info() << "     memory : " << ((study.memoryUsage()) / 1024 / 1024) << "Mo";
     logs.info();
@@ -504,8 +504,8 @@ static bool isBindingConstraintTypeInequality(const Data::BindingConstraintRTI& 
 
 std::vector<uint> StudyRuntimeInfos::getIndicesForInequalityBindingConstraints() const
 {
-    const auto firstBC = bindingConstraint.begin();
-    const auto lastBC = bindingConstraint.end();
+    const auto firstBC = bindingConstraints.begin();
+    const auto lastBC = bindingConstraints.end();
 
     std::vector<uint> indices;
     for (auto bc = firstBC; bc < lastBC; bc++)

@@ -100,7 +100,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
     problem.VariablesDualesDesContraintesDeNTC
       = new VARIABLES_DUALES_INTERCONNEXIONS*[NombreDePasDeTemps];
     problem.MatriceDesContraintesCouplantes
-      = new CONTRAINTES_COUPLANTES*[study.runtime->bindingConstraint.size()];
+      = new CONTRAINTES_COUPLANTES*[study.runtime->bindingConstraints.size()];
     problem.PaliersThermiquesDuPays = new PALIERS_THERMIQUES*[nbPays];
     problem.CaracteristiquesHydrauliques = new ENERGIES_ET_PUISSANCES_HYDRAULIQUES*[nbPays];
     problem.previousSimulationFinalLevel = new double[nbPays];
@@ -249,7 +249,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDeDissociationDeFlux
           = new int[linkCount];
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesContraintesCouplantes
-          = new int[study.runtime->bindingConstraint.size()];
+          = new int[study.runtime->bindingConstraints.size()];
 
         problem.CorrespondanceCntNativesCntOptim[k]
           ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche
@@ -289,7 +289,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
           = new CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES;
         problem.CorrespondanceCntNativesCntOptimJournalieres[k]
           ->NumeroDeContrainteDesContraintesCouplantes
-          = new int[study.runtime->bindingConstraint.size()];
+          = new int[study.runtime->bindingConstraints.size()];
     }
 
     problem.CorrespondanceCntNativesCntOptimHebdomadaires
@@ -300,10 +300,10 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
           = new CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES;
         problem.CorrespondanceCntNativesCntOptimHebdomadaires[k]
           ->NumeroDeContrainteDesContraintesCouplantes
-          = new int[study.runtime->bindingConstraint.size()];
+          = new int[study.runtime->bindingConstraints.size()];
     }
 
-    const auto& bindingConstraintCount = study.runtime->bindingConstraint.size();
+    const auto& bindingConstraintCount = study.runtime->bindingConstraints.size();
     problem.ResultatsContraintesCouplantes
         = new RESULTATS_CONTRAINTES_COUPLANTES[bindingConstraintCount];
 
@@ -311,9 +311,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
     {
         problem.MatriceDesContraintesCouplantes[k] = new CONTRAINTES_COUPLANTES;
 
-        assert(k < study.runtime->bindingConstraint.size());
-        assert(study.runtime->bindingConstraint[k].linkCount < 50000000);
-        assert(study.runtime->bindingConstraint[k].clusterCount < 50000000);
+        assert(k < study.runtime->bindingConstraints.size());
+        assert(study.runtime->bindingConstraints[k].linkCount < 50000000);
+        assert(study.runtime->bindingConstraints[k].clusterCount < 50000000);
 
         problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante
           = new double[NombreDePasDeTemps];
@@ -321,24 +321,24 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
           = new double[NombreDePasDeTemps];
 
         problem.MatriceDesContraintesCouplantes[k]->NumeroDeLInterconnexion
-          = new int[study.runtime->bindingConstraint[k].linkCount];
+          = new int[study.runtime->bindingConstraints[k].linkCount];
         problem.MatriceDesContraintesCouplantes[k]->PoidsDeLInterconnexion
-          = new double[study.runtime->bindingConstraint[k].linkCount];
+          = new double[study.runtime->bindingConstraints[k].linkCount];
         problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLInterco
-          = new int[study.runtime->bindingConstraint[k].linkCount];
+          = new int[study.runtime->bindingConstraints[k].linkCount];
 
         problem.MatriceDesContraintesCouplantes[k]->NumeroDuPalierDispatch
-          = new int[study.runtime->bindingConstraint[k].clusterCount];
+          = new int[study.runtime->bindingConstraints[k].clusterCount];
         problem.MatriceDesContraintesCouplantes[k]->PoidsDuPalierDispatch
-          = new double[study.runtime->bindingConstraint[k].clusterCount];
+          = new double[study.runtime->bindingConstraints[k].clusterCount];
         problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLePalierDispatch
-          = new int[study.runtime->bindingConstraint[k].clusterCount];
+          = new int[study.runtime->bindingConstraints[k].clusterCount];
         problem.MatriceDesContraintesCouplantes[k]->PaysDuPalierDispatch
-          = new int[study.runtime->bindingConstraint[k].clusterCount];
+          = new int[study.runtime->bindingConstraints[k].clusterCount];
 
         // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
         unsigned int nbTimeSteps;
-        switch (study.runtime->bindingConstraint[k].type)
+        switch (study.runtime->bindingConstraints[k].type)
         {
             using namespace Antares::Data;
         case BindingConstraint::typeHourly:
@@ -705,7 +705,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     }
     delete[] problem.CorrespondanceCntNativesCntOptimHebdomadaires;
 
-    for (int k = 0; k < (int)study.runtime->bindingConstraint.size(); k++)
+    for (int k = 0; k < (int)study.runtime->bindingConstraints.size(); k++)
     {
         delete[] problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante;
         delete[] problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplanteRef;
