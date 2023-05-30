@@ -46,9 +46,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     const uint linkCount = study.runtime->interconnectionsCount();
     const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
 
-    problem.DefaillanceNegativeUtiliserPMinThermique = new bool[nbPays];
-    problem.DefaillanceNegativeUtiliserHydro = new bool[nbPays];
-    problem.DefaillanceNegativeUtiliserConsoAbattue = new bool[nbPays];
+    problem.DefaillanceNegativeUtiliserPMinThermique = std::vector<bool>(nbPays);
+    problem.DefaillanceNegativeUtiliserHydro = std::vector<bool>(nbPays);
+    problem.DefaillanceNegativeUtiliserConsoAbattue = std::vector<bool>(nbPays);
 
     problem.CoefficientEcretementPMaxHydraulique = new double[nbPays];
 
@@ -900,10 +900,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     for (uint p = 0; p < nbPays; ++p)
         delete problem.NumeroDeVariableDeTrancheDeStock[p];
     delete problem.NumeroDeVariableDeTrancheDeStock;
-
-    delete problem.DefaillanceNegativeUtiliserConsoAbattue;
-    delete problem.DefaillanceNegativeUtiliserHydro;
-    delete problem.DefaillanceNegativeUtiliserPMinThermique;
 
     delete problem.CoefficientEcretementPMaxHydraulique;
 

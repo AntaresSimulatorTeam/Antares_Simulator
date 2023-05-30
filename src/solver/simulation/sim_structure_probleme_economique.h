@@ -543,9 +543,9 @@ struct PROBLEME_HEBDO
 
     /* Optimization problem */
     int NbTermesContraintesPourLesCoutsDeDemarrage = 0;
-    bool* DefaillanceNegativeUtiliserPMinThermique = nullptr;
-    bool* DefaillanceNegativeUtiliserHydro = nullptr;
-    bool* DefaillanceNegativeUtiliserConsoAbattue = nullptr;
+    std::vector<bool> DefaillanceNegativeUtiliserPMinThermique;
+    std::vector<bool> DefaillanceNegativeUtiliserHydro;
+    std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue;
 
     char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
 
