@@ -70,9 +70,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
       = std::vector<int>(NombreDePasDeTemps);
     problem.NbGrpCourbeGuide = std::vector<int>(NombreDePasDeTemps);
     problem.NbGrpOpt = std::vector<int>(NombreDePasDeTemps);
-    problem.CoutDeDefaillancePositive = new double[nbPays];
-    problem.CoutDeDefaillanceNegative = new double[nbPays];
-    problem.CoutDeDefaillanceEnReserve = new double[nbPays];
+    problem.CoutDeDefaillancePositive = std::vector<double>(nbPays);
+    problem.CoutDeDefaillanceNegative = std::vector<double>(nbPays);
+    problem.CoutDeDefaillanceEnReserve = std::vector<double>(nbPays);
     problem.NumeroDeContrainteEnergieHydraulique = new int[nbPays];
     problem.NumeroDeContrainteMinEnergieHydraulique = new int[nbPays];
     problem.NumeroDeContrainteMaxEnergieHydraulique = new int[nbPays];
@@ -872,9 +872,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     delete problem.CoutsMarginauxDesContraintesDeReserveParZone;
     delete problem.ReserveJMoins1;
 
-    delete problem.CoutDeDefaillancePositive;
-    delete problem.CoutDeDefaillanceNegative;
-    delete problem.CoutDeDefaillanceEnReserve;
     delete problem.NumeroDeContrainteEnergieHydraulique;
     delete problem.NumeroDeContrainteMinEnergieHydraulique;
     delete problem.NumeroDeContrainteMaxEnergieHydraulique;

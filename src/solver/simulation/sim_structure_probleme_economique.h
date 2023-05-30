@@ -530,9 +530,9 @@ struct PROBLEME_HEBDO
 
     CONSOMMATIONS_ABATTUES** ConsommationsAbattuesRef = nullptr;
 
-    double* CoutDeDefaillancePositive = nullptr;
-    double* CoutDeDefaillanceNegative = nullptr;
-    double* CoutDeDefaillanceEnReserve = nullptr;
+    std::vector<double> CoutDeDefaillancePositive;
+    std::vector<double> CoutDeDefaillanceNegative;
+    std::vector<double> CoutDeDefaillanceEnReserve;
 
     PALIERS_THERMIQUES** PaliersThermiquesDuPays = nullptr;
     ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques = nullptr;
