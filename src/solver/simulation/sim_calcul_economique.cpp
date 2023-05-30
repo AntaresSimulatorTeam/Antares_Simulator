@@ -338,11 +338,11 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
         //If there is only one TS, always select it.
         const auto ts_number = bc.timeSeries.width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc.group];
         auto& timeSeries = bc.timeSeries;
+        double const* column = timeSeries[ts_number];
         switch (bc.type)
         {
             case BindingConstraint::typeHourly:
             {
-                double const* column = timeSeries[ts_number];
                 problem.MatriceDesContraintesCouplantes[constraintIndex]
                         ->SecondMembreDeLaContrainteCouplante[pasDeTemps]
                         = column[PasDeTempsDebut + pasDeTemps];
@@ -356,7 +356,6 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
             {
                 assert(timeSeries.width && "Invalid constraint data width");
                 assert(weekFirstDay + 6 < timeSeries.height && "Invalid constraint data height");
-                double const* column = timeSeries[ts_number];
 
                 double* sndMember
                         = problem.MatriceDesContraintesCouplantes[constraintIndex]->SecondMembreDeLaContrainteCouplante;
@@ -374,7 +373,6 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
                 assert(timeSeries.width && "Invalid constraint data width");
                 assert(weekFirstDay + 6 < timeSeries.height && "Invalid constraint data height");
 
-                double const* column = timeSeries[ts_number];
                 double sum = 0;
                 for (unsigned day = 0; day != 7; ++day)
                     sum += column[weekFirstDay + day];
