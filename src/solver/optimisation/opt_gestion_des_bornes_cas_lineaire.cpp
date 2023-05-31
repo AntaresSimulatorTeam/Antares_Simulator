@@ -242,7 +242,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC = problemeHebdo.ValeursDeNTC[pdtHebdo];
+        VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo->ValeursDeNTC[pdtHebdo];
         const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
           = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
 

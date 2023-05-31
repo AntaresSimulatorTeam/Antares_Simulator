@@ -50,7 +50,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 {
     for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; i++)
     {
-        auto& ntcValues = *(problem.ValeursDeNTC[i]);
+        auto& ntcValues = problem.ValeursDeNTC[i];
         uint decalPasDeTemps = PasDeTempsDebut + i;
 
         for (uint j = 0; j < study.areas.size(); ++j)
@@ -106,7 +106,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; ++i)
     {
         const uint indx = i + PasDeTempsDebut;
-        auto& ntcValues = *(problem.ValeursDeNTC[i]);
+        auto& ntcValues = problem.ValeursDeNTC[i];
         assert(&ntcValues);
 
         for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)

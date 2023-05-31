@@ -131,6 +131,22 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
 
     for (uint k = 0; k < NombreDePasDeTemps; k++)
     {
+        problem.ValeursDeNTC[k].ValeurDeNTCOrigineVersExtremite.assign(linkCount, 0.);
+        problem.ValeursDeNTC[k].ValeurDeNTCExtremiteVersOrigine.assign(linkCount, 0.);
+        problem.ValeursDeNTC[k].ValeurDeLoopFlowOrigineVersExtremite.assign(linkCount, 0.);
+        problem.ValeursDeNTC[k].ValeurDuFlux.assign(linkCount, 0.);
+        problem.ValeursDeNTC[k].ValeurDuFluxUp.assign(linkCount, 0.);
+        problem.ValeursDeNTC[k].ValeurDuFluxDown.assign(linkCount, 0.);
+        problem.ValeursDeNTC[k].ResistanceApparente.assign(linkCount, 0.);
+
+        problem.ValeursDeNTCRef[k].ValeurDeNTCOrigineVersExtremite.assign(linkCount, 0.);
+        problem.ValeursDeNTCRef[k].ValeurDeNTCExtremiteVersOrigine.assign(linkCount, 0.);
+        problem.ValeursDeNTCRef[k].ValeurDeLoopFlowOrigineVersExtremite.assign(linkCount, 0.);
+        problem.ValeursDeNTCRef[k].ValeurDuFlux.assign(linkCount, 0.);
+        problem.ValeursDeNTCRef[k].ValeurDuFluxUp.assign(linkCount, 0.);
+        problem.ValeursDeNTCRef[k].ValeurDuFluxDown.assign(linkCount, 0.);
+        problem.ValeursDeNTCRef[k].ResistanceApparente.assign(linkCount, 0.);
+
         problem.ConsommationsAbattues[k]
           = new CONSOMMATIONS_ABATTUES;
         problem.ConsommationsAbattuesRef[k]

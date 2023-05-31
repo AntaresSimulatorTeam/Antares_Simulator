@@ -287,11 +287,11 @@ public:
         const int tsIndex = NumeroChroniquesTireesParInterconnexion[numSpace][state.link->index]
                               .TransmissionCapacities;
         // CONG. PROB +
-        if (state.ntc->ValeurDuFlux[state.link->index]
+        if (state.ntc.ValeurDuFlux[state.link->index]
             > +linkDirectCapa.entry[tsIndex][state.hourInTheYear] - 10e-6)
             pValuesForTheCurrentYear[numSpace][0].hour[state.hourInTheYear] += 100.0 * ratio;
         // CONG. PROB -
-        if (state.ntc->ValeurDuFlux[state.link->index]
+        if (state.ntc.ValeurDuFlux[state.link->index]
             < -linkIndirectCapa.entry[tsIndex][state.hourInTheYear] + 10e-6)
             pValuesForTheCurrentYear[numSpace][1].hour[state.hourInTheYear] += 100.0 * ratio;
 

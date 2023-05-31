@@ -337,7 +337,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
     auto& studyruntime = *study.runtime;
     const uint nbPays = study.areas.size();
     const size_t pasDeTempsSizeDouble = problem.NombreDePasDeTemps * sizeof(double);
-    const size_t sizeOfIntercoDouble = sizeof(double) * studyruntime.interconnectionsCount();
 
     const uint weekFirstDay = study.calendar.hours[PasDeTempsDebut].dayYear;
 
@@ -546,8 +545,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
     for (uint j = 0; j < problem.NombreDePasDeTemps; ++j, ++indx)
     {
         VALEURS_DE_NTC_ET_RESISTANCES& ntc = problem.ValeursDeNTC[j];
-        assert(NULL != ntc);
-
         {
             uint linkCount = studyruntime.interconnectionsCount();
             for (uint k = 0; k != linkCount; ++k)
@@ -566,15 +563,12 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             }
         }
 
-        memcpy((char*)problem.ValeursDeNTCRef[j].ValeurDeNTCOrigineVersExtremite,
-               (char*)ntc.ValeurDeNTCOrigineVersExtremite,
-               sizeOfIntercoDouble);
-        memcpy((char*)problem.ValeursDeNTCRef[j].ValeurDeNTCExtremiteVersOrigine,
-               (char*)ntc.ValeurDeNTCExtremiteVersOrigine,
-               sizeOfIntercoDouble);
-        memcpy((char*)problem.ValeursDeNTCRef[j].ValeurDeLoopFlowOrigineVersExtremite,
-               (char*)ntc.ValeurDeLoopFlowOrigineVersExtremite,
-               sizeOfIntercoDouble);
+        problem.ValeursDeNTCRef[j].ValeurDeNTCOrigineVersExtremite
+            = ntc.ValeurDeNTCOrigineVersExtremite;
+        problem.ValeursDeNTCRef[j].ValeurDeNTCExtremiteVersOrigine
+            = ntc.ValeurDeNTCExtremiteVersOrigine;
+        problem.ValeursDeNTCRef[j].ValeurDeLoopFlowOrigineVersExtremite
+            = ntc.ValeurDeLoopFlowOrigineVersExtremite;
 
         {
             const uint constraintCount = studyruntime.bindingConstraintCount;

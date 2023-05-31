@@ -512,7 +512,7 @@ struct PROBLEME_HEBDO
     std::vector<int> PaysExtremiteDeLInterconnexion;
     mutable std::vector<COUTS_DE_TRANSPORT> CoutDeTransport;
 
-    std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTC;
+    mutable std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTC;
     std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTCRef;
 
     unsigned int NombreDePasDeTemps = 0;

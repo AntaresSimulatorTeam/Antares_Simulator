@@ -271,8 +271,8 @@ bool Adequacy::year(Progression::Task& progression,
 
             for (uint hw = 0; hw != nbHoursInAWeek; ++hw)
             {
-                auto* ntc = pProblemesHebdo[numSpace]->ValeursDeNTC[hw];
-                memset(ntc->ValeurDuFlux, 0, sizeof(double) * runtime.interconnectionsCount());
+                auto& ntc = pProblemesHebdo[numSpace]->ValeursDeNTC[hw];
+                ntc.ValeurDuFlux.resize(runtime.interconnectionsCount(), 0);
             }
 
             for (uint ar = 0; ar != nbAreas; ++ar)

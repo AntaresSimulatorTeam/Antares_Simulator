@@ -227,7 +227,7 @@ public:
         // Flow assessed over all MC years (linear)
         if (state.link->useHurdlesCost)
         {
-            const double flowLinear = state.ntc->ValeurDuFlux[state.link->index];
+            const double flowLinear = state.ntc.ValeurDuFlux[state.link->index];
 
             if (state.link->useLoopFlow)
             {

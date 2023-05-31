@@ -171,7 +171,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                             ->NumeroDeContrainteDeDissociationDeFlux[interco];
                 if (CoutDeTransport.IntercoGereeAvecLoopFlow)
                     SecondMembre[cnt] = problemeHebdo->ValeursDeNTC[pdtHebdo]
-                                          ->ValeurDeLoopFlowOrigineVersExtremite[interco];
+                                          .ValeurDeLoopFlowOrigineVersExtremite[interco];
                 else
                     SecondMembre[cnt] = 0.;
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;

@@ -50,7 +50,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* p
     for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i] = nullptr;
 
-    VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo.ValeursDeNTC[PdtHebdo];
+    VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo->ValeursDeNTC[PdtHebdo];
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
       = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 

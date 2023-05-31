@@ -112,7 +112,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
       = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
     double* Xmin = problemeAResoudre_.Xmin;
     double* Xmax = problemeAResoudre_.Xmax;
-    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC = problemeHebdo_.ValeursDeNTC[triggeredHour];
+    VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo_->ValeursDeNTC[triggeredHour];
 
     // variables bounds: transmissin flows (flow, direct_direct and flow_indirect). For links
     // between nodes of type 2. Set hourly bounds for links between nodes of type 2, depending on
