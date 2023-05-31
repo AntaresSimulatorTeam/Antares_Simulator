@@ -9,35 +9,35 @@ void RenameLinkVariable(PROBLEME_ANTARES_A_RESOUDRE* problem_hebdo,
                         int var,
                         Antares::Data::Enum::ExportStructDict structDict,
                         int ts,
-                        Antares::Data::Enum::ExportStructTimeStepDict time_step_type,
+                        Antares::Data::Enum::ExportStructTimeStepDict timeStepType,
                         const std::string& origin,
-                        const std::string& extremite);
+                        const std::string& destination);
 
 void RenameZoneVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                         int var,
                         Antares::Data::Enum::ExportStructDict structDict,
                         int ts,
-                        Antares::Data::Enum::ExportStructTimeStepDict time_step_type,
+                        Antares::Data::Enum::ExportStructTimeStepDict timeStepType,
                         const std::string& zone);
 
 void RenameThermalClusterVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                                   int var,
                                   Antares::Data::Enum::ExportStructDict structDict,
                                   int ts,
-                                  Antares::Data::Enum::ExportStructTimeStepDict time_step_type,
+                                  Antares::Data::Enum::ExportStructTimeStepDict timeStepType,
                                   const std::string& zone,
-                                  const std::string& palier_name);
+                                  const std::string& namePalier);
 
 std::string BuildName(const std::string& name,
                       const std::string& location,
-                      const std::string& time_identifier);
-inline std::string time_identifier(int time_step,
-                                   Antares::Data::Enum::ExportStructTimeStepDict time_step_type)
+                      const std::string& timeIdentifier);
+inline std::string TimeIdentifier(int timeStep,
+                                  Antares::Data::Enum::ExportStructTimeStepDict timeStepType)
 {
-    return Antares::Data::Enum::toString(time_step_type) + "<" + std::to_string(time_step) + ">";
+    return Antares::Data::Enum::toString(timeStepType) + "<" + std::to_string(timeStep) + ">";
 }
-inline std::string location_identifier(const std::string& location,
-                                       Antares::Data::Enum::ExportStructLocationDict location_type)
+inline std::string LocationIdentifier(const std::string& location,
+                                      Antares::Data::Enum::ExportStructLocationDict locationType)
 {
-    return Antares::Data::Enum::toString(location_type) + "<" + location + ">";
+    return Antares::Data::Enum::toString(locationType) + "<" + location + ">";
 }
