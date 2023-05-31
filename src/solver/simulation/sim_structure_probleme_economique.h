@@ -106,15 +106,15 @@ typedef struct
 
 struct VALEURS_DE_NTC_ET_RESISTANCES
 {
-    double* ValeurDeNTCOrigineVersExtremite;
-    double* ValeurDeNTCExtremiteVersOrigine;
-    double* ValeurDeLoopFlowOrigineVersExtremite;
-    double* ValeurDuFlux;
+    std::vector<double> ValeurDeNTCOrigineVersExtremite;
+    std::vector<double> ValeurDeNTCExtremiteVersOrigine;
+    std::vector<double> ValeurDeLoopFlowOrigineVersExtremite;
+    std::vector<double> ValeurDuFlux;
 
-    double* ValeurDuFluxUp;
-    double* ValeurDuFluxDown;
+    std::vector<double> ValeurDuFluxUp;
+    std::vector<double> ValeurDuFluxDown;
 
-    double* ResistanceApparente;
+    std::vector<double> ResistanceApparente;
 };
 
 struct TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE
@@ -512,7 +512,7 @@ struct PROBLEME_HEBDO
     std::vector<int> PaysExtremiteDeLInterconnexion;
     mutable std::vector<COUTS_DE_TRANSPORT> CoutDeTransport;
 
-    VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTC = nullptr;
+    std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTC;
     VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTCRef = nullptr;
 
     unsigned int NombreDePasDeTemps = 0;

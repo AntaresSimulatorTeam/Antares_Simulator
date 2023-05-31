@@ -232,7 +232,7 @@ public:
             if (state.link->useLoopFlow)
             {
                 const double loopFlow = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]
-                                          ->ValeurDeLoopFlowOrigineVersExtremite[state.link->index];
+                                          .ValeurDeLoopFlowOrigineVersExtremite[state.link->index];
                 if (flowLinear - loopFlow > 0.)
                 {
                     const double hurdleCostDirect

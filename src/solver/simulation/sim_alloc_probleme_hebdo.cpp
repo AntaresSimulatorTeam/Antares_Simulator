@@ -89,7 +89,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.NumeroDeVariableStockFinal.assign(nbPays, 0);
     problem.NumeroDeVariableDeTrancheDeStock.assign(nbPays, std::vector<int>(100));
 
-    problem.ValeursDeNTC = new VALEURS_DE_NTC_ET_RESISTANCES*[NombreDePasDeTemps];
+    problem.ValeursDeNTC = std::vector<VALEURS_DE_NTC_ET_RESISTANCES>(NombreDePasDeTemps);
     problem.ValeursDeNTCRef = new VALEURS_DE_NTC_ET_RESISTANCES*[NombreDePasDeTemps];
     problem.ConsommationsAbattues = new CONSOMMATIONS_ABATTUES*[NombreDePasDeTemps];
     problem.ConsommationsAbattuesRef = new CONSOMMATIONS_ABATTUES*[NombreDePasDeTemps];
@@ -131,8 +131,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
 
     for (uint k = 0; k < NombreDePasDeTemps; k++)
     {
-        problem.ValeursDeNTC[k]
-          = new VALEURS_DE_NTC_ET_RESISTANCES;
         problem.ValeursDeNTCRef[k]
           = new VALEURS_DE_NTC_ET_RESISTANCES;
         problem.ConsommationsAbattues[k]
@@ -149,17 +147,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
           = new CORRESPONDANCES_DES_CONTRAINTES;
         problem.VariablesDualesDesContraintesDeNTC[k]
           = new VARIABLES_DUALES_INTERCONNEXIONS;
-        problem.ValeursDeNTC[k]->ResistanceApparente
-          = new double[linkCount];
-        problem.ValeursDeNTC[k]->ValeurDeNTCExtremiteVersOrigine
-          = new double[linkCount];
-        problem.ValeursDeNTC[k]->ValeurDeNTCOrigineVersExtremite
-          = new double[linkCount];
-        problem.ValeursDeNTC[k]->ValeurDeLoopFlowOrigineVersExtremite
-          = new double[linkCount];
-        problem.ValeursDeNTC[k]->ValeurDuFlux = new double[linkCount];
-        problem.ValeursDeNTC[k]->ValeurDuFluxUp = new double[linkCount];
-        problem.ValeursDeNTC[k]->ValeurDuFluxDown = new double[linkCount];
         problem.ValeursDeNTCRef[k]->ResistanceApparente
           = new double[linkCount];
         problem.ValeursDeNTCRef[k]->ValeurDeNTCExtremiteVersOrigine
@@ -592,7 +579,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         delete problem.ValeursDeNTC[k]->ValeurDuFlux;
         delete problem.ValeursDeNTC[k]->ValeurDuFluxUp;
         delete problem.ValeursDeNTC[k]->ValeurDuFluxDown;
-        delete problem.ValeursDeNTC[k];
         delete problem.ConsommationsAbattues[k]->ConsommationAbattueDuPays;
         delete problem.ConsommationsAbattues[k];
         delete problem.ValeursDeNTCRef[k]->ResistanceApparente;
@@ -664,7 +650,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         delete problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion;
         delete problem.VariablesDualesDesContraintesDeNTC[k];
     }
-    delete problem.ValeursDeNTC;
     delete problem.ConsommationsAbattues;
     delete problem.ValeursDeNTCRef;
     delete problem.ConsommationsAbattuesRef;
