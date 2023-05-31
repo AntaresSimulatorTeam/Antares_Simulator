@@ -279,6 +279,8 @@ public:
     PartRenewable renewable;
     //@}
 
+    ShortTermStorage::STStorageInput shortTermStorage;
+
     //! \name Interconnections
     //@{
     //! All connections with this area
@@ -649,7 +651,7 @@ public:
     /*!
     ** \brief Fix all invalid orientations
     */
-    void fixOrientationForAllInterconnections(BindConstList& bindingconstraints);
+    void fixOrientationForAllInterconnections(BindingConstraintsList& bindingconstraints);
 
     //! Remove all load timeseries
     void removeLoadTimeseries();

@@ -41,18 +41,18 @@ namespace Economy
 struct VCardTimeSeriesValuesLoad
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "LOAD";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "MWh";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Load generation, thoughout all MC years";
     }
@@ -202,8 +202,8 @@ public:
         (void)::memcpy(
           pValuesForTheCurrentYear[numSpace].hour,
           pArea->load.series
-            ->series[NumeroChroniquesTireesParPays[numSpace][pArea->index]->Consommation],
-          sizeof(double) * pArea->load.series->series.height);
+            ->timeSeries[NumeroChroniquesTireesParPays[numSpace][pArea->index]->Consommation],
+          sizeof(double) * pArea->load.series->timeSeries.height);
 
         // Next variable
         NextType::yearBegin(year, numSpace);
@@ -269,6 +269,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

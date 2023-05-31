@@ -100,11 +100,16 @@ public:
     void estimateMemoryUsage(StudyMemoryUsage&) const;
     //@}
 
+    /*!
+    ** \brief Check TS number for Minimum Generation and logs error if necessary
+    */
+    void checkMinGenTsNumber(Study& s, const AreaName& areaID);
+
 public:
     /*!
     ** \brief Run-of-the-river - ROR (MW)
     **
-    ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
+
     ** (it was DAYS_PER_YEAR before 3.9)
     */
     Matrix<double, Yuni::sint32> ror;
@@ -116,6 +121,13 @@ public:
     ** This matrix is not used in `adequation` mode.
     */
     Matrix<double, Yuni::sint32> storage;
+
+    /*!
+    ** \brief Minimum Generation (MW)
+    **
+    ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
+    */
+    Matrix<double, Yuni::sint32> mingen;
 
     /*!
     ** \brief The number of time-series

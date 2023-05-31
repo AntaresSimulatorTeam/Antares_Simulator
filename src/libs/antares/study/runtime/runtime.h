@@ -171,6 +171,8 @@ public:
     uint thermalPlantTotalCount;
     uint thermalPlantTotalCountMustRun;
 
+    uint shortTermStorageCount = 0;
+
     //! Override enable/disable TS generation per cluster
     bool thermalTSRefresh = false;
 
@@ -192,7 +194,7 @@ public:
     bool quadraticOptimizationHasFailed;
 
 private:
-    void initializeBindingConstraints(BindConstList& list);
+    void initializeBindingConstraints(BindingConstraintsList& list);
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
     //! Prepare all thermal clusters in 'must-run' mode
     void initializeThermalClustersInMustRunMode(Study& study) const;

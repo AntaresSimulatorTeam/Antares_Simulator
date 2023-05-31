@@ -43,12 +43,33 @@ using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
 
+static void shortTermStorageLevelsRHS(
+    const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
+    int numberOfAreas,
+    double* SecondMembre,
+    const CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim,
+    int hourInTheYear)
+{
+    for (int areaIndex = 0; areaIndex < numberOfAreas; areaIndex++)
+    {
+        for (auto& storage : shortTermStorageInput[areaIndex])
+        {
+            const int clusterGlobalIndex = storage.clusterGlobalIndex;
+            const int cnt
+              = CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[clusterGlobalIndex];
+            SecondMembre[cnt] = storage.series->inflows[hourInTheYear];
+        }
+    }
+}
+
 void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
                                                      int PremierPdtDeLIntervalle,
                                                      int DernierPdtDeLIntervalle,
                                                      int NumeroDeLIntervalle,
                                                      const int optimizationNumber)
 {
+    int weekFirstHour = problemeHebdo->weekInTheYear * 168;
+
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     double* SecondMembre = ProblemeAResoudre->SecondMembre;
@@ -103,7 +124,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             }
 
             double* adresseDuResultat
-              = &(problemeHebdo->ResultatsHoraires[pays]->CoutsMarginauxHoraires[pdtHebdo]);
+              = &(problemeHebdo->ResultatsHoraires[pays].CoutsMarginauxHoraires[pdtHebdo]);
             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = adresseDuResultat;
 
             cnt = CorrespondanceCntNativesCntOptim
@@ -132,6 +153,13 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
 
             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
         }
+
+        int hourInTheYear = weekFirstHour + pdtHebdo;
+        shortTermStorageLevelsRHS(problemeHebdo->ShortTermStorage,
+                                  problemeHebdo->NombreDePays,
+                                  ProblemeAResoudre->SecondMembre,
+                                  CorrespondanceCntNativesCntOptim,
+                                  hourInTheYear);
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {

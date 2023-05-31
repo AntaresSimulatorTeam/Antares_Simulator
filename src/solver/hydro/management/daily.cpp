@@ -66,17 +66,17 @@ struct DebugData
     using MaxPowerType = Matrix<double, double>::ColumnType;
     using ReservoirLevelType = Matrix<double>::ColumnType;
 
-    std::array<double, 366> OPP;
-    std::array<double, 366> DailyTargetGen;
+    std::array<double, 366> OPP{0};
+    std::array<double, 366> DailyTargetGen{0};
 
-    std::array<double, 365> OVF;
-    std::array<double, 365> DEV;
-    std::array<double, 365> VIO;
-    std::array<double, 12> deviationMax;
-    std::array<double, 12> violationMax;
-    std::array<double, 12> WASTE;
-    std::array<double, 12> CoutTotal;
-    std::array<double, 12> previousMonthWaste;
+    std::array<double, 365> OVF{0};
+    std::array<double, 365> DEV{0};
+    std::array<double, 365> VIO{0};
+    std::array<double, 12> deviationMax{0};
+    std::array<double, 12> violationMax{0};
+    std::array<double, 12> WASTE{0};
+    std::array<double, 12> CoutTotal{0};
+    std::array<double, 12> previousMonthWaste{0};
 
     Solver::IResultWriter::Ptr pWriter;
     const PerArea& data;
@@ -214,6 +214,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
 
     auto& inflowsmatrix = area.hydro.series->storage;
+
     auto tsIndex = (uint)ptchro.Hydraulique;
     auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
 
@@ -378,6 +379,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             for (uint day = firstDay; day != endDay; ++day)
             {
                 problem.TurbineMax[dayMonth] = maxP[day] * maxE[day];
+                problem.TurbineMin[dayMonth] = data.dailyMinGen[day];
                 problem.TurbineCible[dayMonth] = dailyTargetGen[day];
                 dayMonth++;
             }
@@ -455,7 +457,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             uint dayMonth = 0;
             for (uint day = firstDay; day != endDay; ++day)
             {
-                problem.TurbineMax[dayMonth] = maxP[day] * maxE[day] / reservoirCapacity;
+                problem.TurbineMax[dayMonth] = maxP[day] * maxE[day] / reservoirCapacity;       
+                problem.TurbineMin[dayMonth] = data.dailyMinGen[day] / reservoirCapacity;
 
                 problem.TurbineCible[dayMonth]
                   = (dailyTargetGen[day] + wasteFromPreviousMonth / daysPerMonth)

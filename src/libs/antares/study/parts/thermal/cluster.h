@@ -115,7 +115,6 @@ public:
     static const char* GroupName(enum ThermalDispatchableGroup grp);
 
     explicit ThermalCluster(Data::Area* parent);
-    explicit ThermalCluster(Data::Area* parent, uint nbParallelYears);
 
     ThermalCluster() = delete;
     ~ThermalCluster();
@@ -208,6 +207,10 @@ public:
     //@}
 
     bool doWeGenerateTS(bool globalTSgeneration) const;
+
+    // Check & correct availability timeseries for thermal availability
+    // Only applies if time-series are ready-made
+    void checkAndCorrectAvailability();
 
     /*!
     ** \brief The group ID
@@ -345,27 +348,6 @@ public:
     ** 8760 (HOURS_PER_YEAR) array
     */
     double* productionCost;
-
-    /*!
-    ** \brief The number of units used the last hour in the simulation
-    **
-    ** \warning This variable is only valid when used from the solver
-    */
-    uint* unitCountLastHour;
-
-    /*!
-    ** \brief The production of the last hour in the simulation
-    **
-    ** \warning This variable is only valid when used from the solver
-    */
-    double* productionLastHour;
-    /*!
-    ** \brief The minimum power of a group of the cluster
-    **
-    ** \warning This variable is only valid when used from the solver
-    ** \Field pminDUnGroupeDuPalierThermique of the PALIERS_THERMIQUES structure
-    */
-    double* pminOfAGroup;
 
     LocalTSGenerationBehavior tsGenBehavior = LocalTSGenerationBehavior::useGlobalParameter;
 

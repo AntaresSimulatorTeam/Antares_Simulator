@@ -308,7 +308,7 @@ bool CBuilder::deletePreviousConstraints()
     logs.info() << "Deleting previously built network constraints (with prefix  " << pPrefixDelete
                 << ")";
 
-    // Data::BindConstList::iterator it = pStudy->bindingConstraints.begin();
+    // Data::BindingConstraintsList::iterator it = pStudy->bindingConstraints.begin();
     pStudy->bindingConstraints.removeConstraintsWhoseNameConstains(pPrefixDelete);
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)

@@ -54,7 +54,7 @@ class AreaScratchpad;
 class Parameters;
 
 class BindingConstraint;
-class BindConstList;
+class BindingConstraintsList;
 
 class StudyRuntimeInfos;
 

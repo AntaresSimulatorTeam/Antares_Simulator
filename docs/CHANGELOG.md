@@ -1,6 +1,47 @@
 Antares Changelog
 =================
 
+v8.6.0-rc6 (05/2023)
+--------------------
+## Format improvement
+ * Add bool for initial level optimization in short-term storage (#1312)
+
+## Fixes
+ * Fix memory errors detected by valfgrind (#1302)
+ * Hydro min power : correction on checks (#1308)
+
+## Code quality
+ * Simplify if/else (#1309)
+ * Fix a few compilation warnings (int -> uint) (#1301)
+ * Remove parameters.hxx, fix Parameters::memoryUsage (#1299)
+
+v8.6.0-rc5 (05/2023)
+--------------------
+## New features
+* Short-term storage (#1163). Cycles are planned for the next release.
+* Minimal generation for hydraulic (#1273, RTE/RTE-i/Redstork)
+* Make LMR optional with new option (#1247)
+
+## Bug fixes
+* Fix empty ROR & STORAGE in output using the TS-Generator (#1293)
+
+## For developers
+* Bumped OR-Tools 9.2 -> 9.5. CMake 3.18+ is required for build if building OR-Tools, and XPRESS 9.0 for execution (previously 8.13).
+* Code quality improvements
+
+v8.6.0-rc4 (03/2023)
+--------------------
+Re-publish
+
+v8.6.0-rc3 (03/2023)
+--------------------
+Re-publish
+
+v8.6.0-rc2 (03/2023)
+--------------------
+* Max number of columns in an output file (#1159)
+* Remove doc from UI/package, publish it as a separate PDF (#1233)
+
 v8.6.0-rc1 (03/2023)
 --------------------
 

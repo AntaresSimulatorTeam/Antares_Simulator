@@ -30,12 +30,11 @@
 
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
 #include "../utils/optimization_statistics.h"
-#include <memory>
 #include "../../libs/antares/study/fwd.h"
 #include "../../libs/antares/study/study.h"
-#include "sim_constants.h"
+#include <vector>
+#include <optional>
 #include <memory>
-#include <yuni/core/math.h>
 
 class AdequacyPatchRuntimeData;
 
@@ -65,6 +64,13 @@ struct CORRESPONDANCES_DES_VARIABLES
     int* NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
     int* NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
     int* NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
+
+    struct
+    {
+        int* InjectionVariable;
+        int* WithdrawalVariable;
+        int* LevelVariable;
+    } SIM_ShortTermStorage;
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES
@@ -83,6 +89,8 @@ struct CORRESPONDANCES_DES_CONTRAINTES
     int* NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne;
 
     int* NumeroDeContrainteDesNiveauxPays;
+
+    int* ShortTermStorageLevelConstraint;
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
@@ -149,6 +157,32 @@ struct CONTRAINTES_COUPLANTES
     int* OffsetTemporelSurLePalierDispatch;
     const char* NomDeLaContrainteCouplante;
 };
+
+namespace ShortTermStorage
+{
+struct PROPERTIES
+{
+    double reservoirCapacity;
+    double injectionNominalCapacity;
+    double withdrawalNominalCapacity;
+    double efficiency;
+    std::optional<double> initialLevel;
+
+    std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
+
+    int clusterGlobalIndex;
+};
+
+using AREA_INPUT = std::vector<::ShortTermStorage::PROPERTIES>; // index is local
+
+struct RESULTS
+{
+    // Index is the number of the STS in the area
+    std::vector<double> level;      // MWh
+    std::vector<double> injection;  // MWh
+    std::vector<double> withdrawal; // MWh
+};
+} // namespace ShortTermStorage
 
 struct RESULTATS_CONTRAINTES_COUPLANTES
 {
@@ -285,6 +319,7 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     double* NiveauHoraireInf;
 
     double* ApportNaturelHoraire;
+    double* MingenHoraire; /*Minimum Hourly Hydro-Storage Generation*/
     double NiveauInitialReservoir;
     double TailleReservoir;
     double PumpingRatio;
@@ -428,7 +463,9 @@ struct RESULTATS_HORAIRES
     double* debordementsHoraires;
 
     double* CoutsMarginauxHoraires;
-    PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique;
+    PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique; // index is pdtHebdo
+
+    std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
 };
 
 struct COUTS_DE_TRANSPORT
@@ -454,8 +491,8 @@ struct COUTS_MARGINAUX_ZONES_DE_RESERVE
 
 struct PROBLEME_HEBDO
 {
-    uint weekInTheYear = 0;
-    uint year = 0;
+    unsigned int weekInTheYear = 0;
+    unsigned int year = 0;
 
     /* Business problem */
     bool OptimisationAuPasHebdomadaire = false;
@@ -474,8 +511,8 @@ struct PROBLEME_HEBDO
     VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTC = nullptr;
     VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTCRef = nullptr;
 
-    int NombreDePasDeTemps = 0;
-    int NombreDePasDeTempsRef = 0;
+    unsigned int NombreDePasDeTemps = 0;
+    unsigned int NombreDePasDeTempsRef = 0;
     int* NumeroDeJourDuPasDeTemps = nullptr;
 
     int NombreDePasDeTempsPourUneOptimisation = 0;
@@ -495,6 +532,11 @@ struct PROBLEME_HEBDO
 
     PALIERS_THERMIQUES** PaliersThermiquesDuPays = nullptr;
     ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques = nullptr;
+
+    int NumberOfShortTermStorages = 0;
+    // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;
+    std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
+
     /* Optimization problem */
     int NbTermesContraintesPourLesCoutsDeDemarrage = 0;
     bool* DefaillanceNegativeUtiliserPMinThermique = nullptr;
@@ -568,7 +610,7 @@ struct PROBLEME_HEBDO
     computeTimeStepLevel computeLvl_object;
 
     /* Results */
-    RESULTATS_HORAIRES** ResultatsHoraires = nullptr;
+    std::vector<RESULTATS_HORAIRES> ResultatsHoraires;
     VARIABLES_DUALES_INTERCONNEXIONS** VariablesDualesDesContraintesDeNTC = nullptr;
 
     double* coutOptimalSolution1 = nullptr;

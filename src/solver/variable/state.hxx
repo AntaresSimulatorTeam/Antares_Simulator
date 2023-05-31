@@ -79,12 +79,12 @@ inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace
     {
     case Data::stdmEconomy:
     {
-        hourlyResults = problemeHebdo->ResultatsHoraires[areaIndex];
+        hourlyResults = &problemeHebdo->ResultatsHoraires[areaIndex];
         break;
     }
     case Data::stdmAdequacy:
     {
-        hourlyResults = problemeHebdo->ResultatsHoraires[areaIndex];
+        hourlyResults = &problemeHebdo->ResultatsHoraires[areaIndex];
         break;
     }
     case Data::stdmUnknown:

@@ -100,49 +100,6 @@ namespace Antares
 {
 namespace Data
 {
-Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
- Cluster(parent),
- groupID(thermalDispatchGrpOther1),
- mustrun(false),
- mustrunOrigin(false),
- nominalCapacityWithSpinning(0.),
- minStablePower(0.),
- minUpTime(1),
- minDownTime(1),
- spinning(0.),
- forcedVolatility(0.),
- plannedVolatility(0.),
- forcedLaw(thermalLawUniform),
- plannedLaw(thermalLawUniform),
- marginalCost(0.),
- spreadCost(0.),
- fixedCost(0.),
- startupCost(0.),
- marketBidCost(0.),
- groupMinCount(0),
- groupMaxCount(0),
- annuityInvestment(0),
- PthetaInf(HOURS_PER_YEAR, 0),
- prepro(nullptr),
- productionCost(nullptr),
- unitCountLastHour(nullptr),
- productionLastHour(nullptr),
- pminOfAGroup(nullptr)
-{
-    // assert
-    assert(parent and "A parent for a thermal dispatchable cluster can not be null");
-
-    unitCountLastHour = new uint[nbParallelYears];
-    productionLastHour = new double[nbParallelYears];
-    pminOfAGroup = new double[nbParallelYears];
-    for (uint numSpace = 0; numSpace < nbParallelYears; ++numSpace)
-    {
-        unitCountLastHour[numSpace] = 0;
-        productionLastHour[numSpace] = 0.;
-        pminOfAGroup[numSpace] = 0.;
-    }
-}
-
 Data::ThermalCluster::ThermalCluster(Area* parent) :
  Cluster(parent),
  groupID(thermalDispatchGrpOther1),
@@ -167,10 +124,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  annuityInvestment(0),
  PthetaInf(HOURS_PER_YEAR, 0),
  prepro(nullptr),
- productionCost(nullptr),
- unitCountLastHour(nullptr),
- productionLastHour(nullptr),
- pminOfAGroup(nullptr)
+ productionCost(nullptr)
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");
@@ -181,13 +135,6 @@ Data::ThermalCluster::~ThermalCluster()
     delete[] productionCost;
     delete prepro;
     delete series;
-
-    if (unitCountLastHour)
-        delete[] unitCountLastHour;
-    if (productionLastHour)
-        delete[] productionLastHour;
-    if (pminOfAGroup)
-        delete[] pminOfAGroup;
 }
 
 uint ThermalCluster::groupId() const
@@ -273,8 +220,8 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     prepro->copyFrom(*cluster.prepro);
     // timseries
 
-    series->series = cluster.series->series;
-    cluster.series->series.unloadFromMemory();
+    series->timeSeries = cluster.series->timeSeries;
+    cluster.series->timeSeries.unloadFromMemory();
     series->timeseriesNumbers.clear();
 
     // The parent must be invalidated to make sure that the clusters are really
@@ -408,7 +355,7 @@ void Data::ThermalCluster::calculationOfSpinning()
     {
         logs.debug() << "  Calculation of spinning... " << parentArea->name << "::" << pName;
 
-        auto& ts = series->series;
+        auto& ts = series->timeSeries;
         // The formula
         // const double s = 1. - cluster.spinning / 100.; */
 
@@ -432,7 +379,7 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
         logs.debug() << "  Calculation of spinning (reverse)... " << parentArea->name
                      << "::" << pName;
 
-        auto& ts = series->series;
+        auto& ts = series->timeSeries;
         // The formula
         // const double s = 1. - cluster.spinning / 100.;
 
@@ -730,6 +677,36 @@ bool ThermalCluster::doWeGenerateTS(bool globalTSgeneration) const
 unsigned int ThermalCluster::precision() const
 {
     return 0;
+}
+
+void ThermalCluster::checkAndCorrectAvailability()
+{
+    const auto PmaxDUnGroupeDuPalierThermique = nominalCapacityWithSpinning;
+    const auto PminDUnGroupeDuPalierThermique = (nominalCapacityWithSpinning < minStablePower)
+                                                  ? nominalCapacityWithSpinning
+                                                  : minStablePower;
+
+    bool condition = false;
+    bool report = false;
+
+    for (uint y = 0; y != series->timeSeries.height; ++y)
+    {
+        for (uint x = 0; x != series->timeSeries.width; ++x)
+        {
+            auto rightpart = PminDUnGroupeDuPalierThermique
+                             * ceil(series->timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
+            condition = rightpart > series->timeSeries.entry[x][y];
+            if (condition)
+            {
+                series->timeSeries.entry[x][y] = rightpart;
+                report = true;
+            }
+        }
+    }
+
+    if (report)
+        logs.warning() << "Area : " << parentArea->name << " cluster name : " << name()
+                       << " available power lifted to match Pmin and Pnom requirements";
 }
 
 } // namespace Data

@@ -24,34 +24,36 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARAMETERS_HXX__
-#define __ANTARES_LIBS_STUDY_PARAMETERS_HXX__
+#pragma once
+#include <vector>
+#include <string>
 
-namespace Antares
+namespace Antares::Data::ShortTermStorage
 {
-namespace Data
+class Series
 {
-inline Yuni::uint64 Parameters::memoryUsage() const
-{
-    return 0;
-}
+public:
+    // check if series values are valid
+    bool validate() const;
 
-inline bool Parameters::isTSGeneratedByPrepro(const TimeSeries ts) const
-{
-    return (timeSeriesToGenerate & ts);
-}
+    // load all series files with folder path
+    bool loadFromFolder(const std::string& folder);
+    void fillDefaultSeriesIfEmpty();
 
-inline bool Parameters::economy() const
-{
-    return mode == stdmEconomy;
-}
+    std::vector<double> maxInjectionModulation;
+    std::vector<double> maxWithdrawalModulation;
+    std::vector<double> inflows;
+    std::vector<double> lowerRuleCurve;
+    std::vector<double> upperRuleCurve;
+private:
+    bool validateSizes() const;
+    bool validateMaxInjection() const;
+    bool validateMaxWithdrawal() const;
+    bool validateRuleCurves() const;
+    bool validateUpperRuleCurve() const;
+    bool validateLowerRuleCurve() const;
+};
 
-inline bool Parameters::adequacy() const
-{
-    return mode == stdmAdequacy;
-}
+bool loadFile(const std::string& folder, std::vector<double>& vect);
 
-} // namespace Data
-} // namespace Antares
-
-#endif // __ANTARES_LIBS_STUDY_PARAMETERS_H__
+} // namespace Antares::Data::ShortTermStorage

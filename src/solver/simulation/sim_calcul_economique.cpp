@@ -39,6 +39,36 @@ using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
 
+static void importShortTermStorages(
+  const AreaList& areas,
+  std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
+{
+    int clusterGlobalIndex = 0;
+    for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
+    {
+        ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
+        int storageIndex = 0;
+        for (auto st : areas[areaIndex]->shortTermStorage.storagesByIndex)
+        {
+            ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][storageIndex];
+            toInsert.clusterGlobalIndex = clusterGlobalIndex;
+
+            // Properties
+            toInsert.reservoirCapacity = st->properties.reservoirCapacity.value();
+            toInsert.efficiency = st->properties.efficiencyFactor;
+            toInsert.injectionNominalCapacity = st->properties.injectionNominalCapacity.value();
+            toInsert.withdrawalNominalCapacity = st->properties.withdrawalNominalCapacity.value();
+            toInsert.initialLevel = st->properties.initialLevel;
+
+            toInsert.series = st->series;
+
+            // TODO add missing properties, or use the same struct
+            storageIndex++;
+            clusterGlobalIndex++;
+        }
+    }
+}
+
 void SIM_InitialisationProblemeHebdo(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      int NombreDePasDeTemps,
@@ -74,6 +104,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.NombreDePays = study.areas.size();
 
     problem.NombreDInterconnexions = study.runtime->interconnectionsCount();
+
+    problem.NumberOfShortTermStorages = study.runtime->shortTermStorageCount;
 
     problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraintCount;
 
@@ -175,6 +207,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         assert(area.hydro.intraDailyModulation >= 1. && "Intra-daily modulation must be >= 1.0");
         problem.CoefficientEcretementPMaxHydraulique[i] = area.hydro.intraDailyModulation;
     }
+
+    importShortTermStorages(study.areas, problem.ShortTermStorage);
 
     for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
     {
@@ -508,7 +542,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         }
     }
 
-    for (int j = 0; j < problem.NombreDePasDeTemps; ++j, ++indx)
+    for (uint j = 0; j < problem.NombreDePasDeTemps; ++j, ++indx)
     {
         VALEURS_DE_NTC_ET_RESISTANCES* ntc = problem.ValeursDeNTC[j];
         assert(NULL != ntc);
@@ -597,13 +631,11 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 mustRunGen = scratchpad.miscGenSum[indx] + ror[tsFatalIndex][indx]
                              + scratchpad.mustrunSum[indx];
 
-                area.renewable.list.each(
-                  [&](const RenewableCluster& cluster)
-                  {
-                      assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
-                      mustRunGen += cluster.valueAtTimeStep(
-                        tsIndex.RenouvelableParPalier[cluster.areaWideIndex], (uint)indx);
-                  });
+                area.renewable.list.each([&](const RenewableCluster& cluster) {
+                    assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
+                    mustRunGen += cluster.valueAtTimeStep(
+                      tsIndex.RenouvelableParPalier[cluster.areaWideIndex], (uint)indx);
+                });
             }
 
             assert(
@@ -614,31 +646,28 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
               = +scratchpad.ts.load[tsIndex.Consommation][indx]
                 - problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k];
 
-            area.thermal.list.each(
-              [&](const Data::ThermalCluster& cluster)
-              {
-                  assert((uint)tsIndex.ThermiqueParPalier[cluster.areaWideIndex]
-                         < cluster.series->series.width);
-                  assert((uint)indx < cluster.series->series.height);
-                  assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
+            area.thermal.list.each([&](const Data::ThermalCluster& cluster) {
+                assert((uint)tsIndex.ThermiqueParPalier[cluster.areaWideIndex]
+                       < cluster.series->timeSeries.width);
+                assert((uint)indx < cluster.series->timeSeries.height);
+                assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
 
-                  auto& Pt
-                    = *problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout[cluster.index];
-                  auto& PtValGen = *ValeursGenereesParPays[numSpace][k];
+                auto& Pt
+                  = *problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout[cluster.index];
+                auto& PtValGen = *ValeursGenereesParPays[numSpace][k];
 
-                  Pt.PuissanceDisponibleDuPalierThermique[j]
-                    = cluster.series
-                        ->series[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][indx];
+                Pt.PuissanceDisponibleDuPalierThermique[j]
+                  = cluster.series->timeSeries[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][indx];
 
-                  Pt.CoutHoraireDeProductionDuPalierThermique[j]
-                    = cluster.marketBidCost * cluster.modulation[thermalModulationMarketBid][indx]
-                      + PtValGen.AleaCoutDeProductionParPalier[cluster.areaWideIndex];
+                Pt.CoutHoraireDeProductionDuPalierThermique[j]
+                  = cluster.marketBidCost * cluster.modulation[thermalModulationMarketBid][indx]
+                    + PtValGen.AleaCoutDeProductionParPalier[cluster.areaWideIndex];
 
-                  Pt.PuissanceMinDuPalierThermique[j]
-                    = (Pt.PuissanceDisponibleDuPalierThermique[j] < cluster.PthetaInf[indx])
-                        ? Pt.PuissanceDisponibleDuPalierThermique[j]
-                        : cluster.PthetaInf[indx];
-              });
+                Pt.PuissanceMinDuPalierThermique[j]
+                  = (Pt.PuissanceDisponibleDuPalierThermique[j] < cluster.PthetaInf[indx])
+                      ? Pt.PuissanceDisponibleDuPalierThermique[j]
+                      : cluster.PthetaInf[indx];
+            });
 
             if (problem.CaracteristiquesHydrauliques[k]->PresenceDHydrauliqueModulable > 0)
             {
@@ -668,6 +697,16 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 uint tsIndex = (*NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
                 auto& inflowsmatrix = area.hydro.series->storage;
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
+                {
+                auto& mingenmatrix = area.hydro.series->mingen;
+                auto const& srcmingen
+                      = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
+                    for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)
+                    {
+                        problem.CaracteristiquesHydrauliques[k]->MingenHoraire[j]
+                          = srcmingen[PasDeTempsDebut + j];
+                    }
+                }
 
                 if (area.hydro.reservoirManagement)
                 {
@@ -960,7 +999,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                (char*)problem.ReserveJMoins1[k]->ReserveHoraireJMoins1,
                pasDeTempsSizeDouble);
     }
-    for (int j = 0; j < problem.NombreDePasDeTemps; ++j)
+    for (unsigned int j = 0; j < problem.NombreDePasDeTemps; ++j)
     {
         memcpy((char*)problem.ConsommationsAbattuesRef[j]->ConsommationAbattueDuPays,
                (char*)problem.ConsommationsAbattues[j]->ConsommationAbattueDuPays,

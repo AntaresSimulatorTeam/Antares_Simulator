@@ -589,37 +589,35 @@ void Study::performTransformationsBeforeLaunchingSimulation()
 #endif
 
     // ForEach area
-    areas.each(
-      [&](Data::Area& area)
-      {
-          if (not parameters.geographicTrimming)
-          {
-              // reset filtering
-              area.filterSynthesis = (uint)filterAll;
-              area.filterYearByYear = (uint)filterAll;
-          }
+    areas.each([&](Data::Area& area) {
+        if (not parameters.geographicTrimming)
+        {
+            // reset filtering
+            area.filterSynthesis = (uint)filterAll;
+            area.filterYearByYear = (uint)filterAll;
+        }
 
-          // Informations about time-series for the load
-          auto& matrix = area.load.series->series;
-          auto& dsmvalues = area.reserves[fhrDSM];
+        // Informations about time-series for the load
+        auto& matrix = area.load.series->timeSeries;
+        auto& dsmvalues = area.reserves[fhrDSM];
 
-          // Adding DSM values
-          for (uint timeSeries = 0; timeSeries < matrix.width; ++timeSeries)
-          {
-              auto& perHour = matrix[timeSeries];
-              for (uint h = 0; h < matrix.height; ++h)
-              {
-                  perHour[h] += dsmvalues[h];
-                  // MBO - 13/05/2014 - #20
-                  // Starting v4.5 load can be negative
-                  /*if (perHour[h] < 0.)
-                  {
-                          logs.warning() << area.id << ", hour " << h << ": `load - dsm` can not be
-                  negative. Reset to 0"; perHour[h] = 0.;
-                  }*/
-              }
-          }
-      });
+        // Adding DSM values
+        for (uint timeSeries = 0; timeSeries < matrix.width; ++timeSeries)
+        {
+            auto& perHour = matrix[timeSeries];
+            for (uint h = 0; h < matrix.height; ++h)
+            {
+                perHour[h] += dsmvalues[h];
+                // MBO - 13/05/2014 - #20
+                // Starting v4.5 load can be negative
+                /*if (perHour[h] < 0.)
+                {
+                        logs.warning() << area.id << ", hour " << h << ": `load - dsm` can not be
+                negative. Reset to 0"; perHour[h] = 0.;
+                }*/
+            }
+        }
+    });
 }
 
 // This function is a helper. It should be completed when adding new formats

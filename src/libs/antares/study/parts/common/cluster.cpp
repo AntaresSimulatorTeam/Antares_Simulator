@@ -63,7 +63,7 @@ int Cluster::saveDataSeriesToFolder(const AnyString& folder) const
         {
             int ret = 1;
             buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
-            ret = series->series.saveToCSVFile(buffer, precision()) && ret;
+            ret = series->timeSeries.saveToCSVFile(buffer, precision()) && ret;
 
             return ret;
         }
@@ -81,10 +81,10 @@ int Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
         int ret = 1;
         buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
                        << s.inputExtension;
-        ret = series->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+        ret = series->timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
 
         if (s.usedByTheSolver && s.parameters.derated)
-            series->series.averageTimeseries();
+            series->timeSeries.averageTimeseries();
 
         series->timeseriesNumbers.clear();
 
@@ -114,7 +114,7 @@ void Cluster::reset()
     if (not series)
         series = new DataSeriesCommon();
 
-    series->series.reset(1, HOURS_PER_YEAR);
+    series->timeSeries.reset(1, HOURS_PER_YEAR);
 }
 
 bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const

@@ -107,6 +107,8 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         // statistics
         r.thermalPlantTotalCount += area.thermal.list.size();
         r.thermalPlantTotalCountMustRun += area.thermal.mustrunList.size();
+
+        r.shortTermStorageCount += area.shortTermStorage.count();
     }
 }
 
@@ -326,7 +328,7 @@ BindingConstraintRTI::~BindingConstraintRTI()
     delete[] clusterIndex;
 }
 
-void StudyRuntimeInfos::initializeBindingConstraints(BindConstList& list)
+void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& list)
 {
     // Calculating the total number of binding constraints
     bindingConstraintCount = 0;
@@ -446,7 +448,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     mode = gd.mode;
     thermalPlantTotalCount = 0;
     thermalPlantTotalCountMustRun = 0;
-
     // Calendar
     logs.info() << "Generating calendar informations";
     if (study.usedByTheSolver)
@@ -504,6 +505,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "     links: " << interconnectionsCount();
     logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
     logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
+    logs.info() << "     short-term storages: " << shortTermStorageCount;
     logs.info() << "     binding constraints: " << bindingConstraintCount;
     logs.info() << "     geographic trimming:" << (gd.geographicTrimming ? "true" : "false");
     logs.info() << "     memory : " << ((study.memoryUsage()) / 1024 / 1024) << "Mo";

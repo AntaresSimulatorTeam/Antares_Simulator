@@ -144,7 +144,7 @@ protected:
             assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
             report.captions[0][report.data.columnIndex] = report.variableCaption;
-            report.captions[1][report.data.columnIndex] = VCardT::Unit();
+            report.captions[1][report.data.columnIndex] = report.variableUnit;
             report.captions[2][report.data.columnIndex]
               = (report.variableCaption == "LOLP") ? "values" : "EXP";
 
@@ -196,7 +196,7 @@ private:
 
         // Caption
         report.captions[0][report.data.columnIndex] = report.variableCaption;
-        report.captions[1][report.data.columnIndex] = VCardT::Unit();
+        report.captions[1][report.data.columnIndex] = report.variableUnit;
         report.captions[2][report.data.columnIndex]
           = (report.variableCaption == "LOLP") ? "values" : "EXP";
         // Precision
@@ -225,30 +225,6 @@ private:
         // Next column index
         ++report.data.columnIndex;
     }
-
-    /*
-    template<uint Size, class VCardT, int PrecisionT>
-    void InternalExportValuesMC(SurveyResults& report, const double* array) const
-    {
-            if (!(PrecisionT & Category::annual))
-                    return;
-            assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
-
-            // Caption
-            report.captions[0][report.data.columnIndex] = report.variableCaption;
-            report.captions[1][report.data.columnIndex] = VCardT::Unit();
-            report.captions[2][report.data.columnIndex] = "EXP";
-            // Precision
-            report.precision[report.data.columnIndex] =
-    Solver::Variable::PrecisionToPrintfFormat<VCardT::decimal>::Value();
-
-            (void)::memcpy(report.matrix.values[report.data.columnIndex], array, report.data.nbYears
-    * sizeof(double));
-
-            // Next column index
-            ++report.data.columnIndex;
-    }
-    */
 
 }; // class Average
 

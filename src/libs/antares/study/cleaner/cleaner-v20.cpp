@@ -97,6 +97,8 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
     e.add(buffer);
     buffer.clear() << "input/hydro/series/" << id << "/mod.txt";
     e.add(buffer);
+    buffer.clear() << "input/hydro/series/" << id << "/mingen.txt";
+    e.add(buffer);    
     buffer.clear() << "input/hydro/allocation/" << id << ".ini";
     p.add(buffer);
     buffer.clear() << "input/hydro/prepro/" << id;

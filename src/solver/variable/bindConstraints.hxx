@@ -28,7 +28,7 @@
 
 #include <vector>
 #include <utility>
-#include "antares/study/constraint/constraint.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
 
 namespace Antares::Solver::Variable
 {

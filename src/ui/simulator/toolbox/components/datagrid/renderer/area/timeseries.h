@@ -148,7 +148,7 @@ public:
 protected:
     virtual void internalAreaChanged(Antares::Data::Area* area)
     {
-        matrix((area && Data::Study::Current::Valid()) ? &(area->load.series->series) : NULL);
+        matrix((area && Data::Study::Current::Valid()) ? &(area->load.series->timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -186,7 +186,7 @@ public:
 protected:
     virtual void internalAreaChanged(Antares::Data::Area* area)
     {
-        matrix((area && Data::Study::Current::Valid()) ? &(area->solar.series->series) : NULL);
+        matrix((area && Data::Study::Current::Valid()) ? &(area->solar.series->timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -224,7 +224,7 @@ public:
 protected:
     virtual void internalAreaChanged(Antares::Data::Area* area)
     {
-        matrix((area && Data::Study::Current::Valid()) ? &(area->wind.series->series) : NULL);
+        matrix((area && Data::Study::Current::Valid()) ? &(area->wind.series->timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -296,6 +296,39 @@ protected:
     virtual void internalAreaChanged(Antares::Data::Area* area)
     {
         matrix((area && Data::Study::Current::Valid()) ? &(area->hydro.series->storage) : NULL);
+        Renderer::ARendererArea::internalAreaChanged(area);
+    }
+};
+
+
+class TimeSeriesHydroMinGen final : public ATimeSeries
+{
+public:
+    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
+
+    TimeSeriesHydroMinGen(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
+     ATimeSeries(control, notifier)
+    {
+    }
+    ~TimeSeriesHydroMinGen() override
+    {
+        destroyBoundEvents();
+    }
+
+    Date::Precision precision() override
+    {
+        return Date::hourly;
+    }
+
+    uint maxHeightResize() const override
+    {
+        return HOURS_PER_YEAR;
+    }
+
+private:
+    void internalAreaChanged(Antares::Data::Area* area) override
+    {
+        matrix((area && Data::Study::Current::Valid()) ? &(area->hydro.series->mingen) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -387,7 +420,7 @@ public:
 protected:
     void internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster)
     {
-        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->series) : NULL);
+        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->timeSeries) : NULL);
     }
 
     void onStudyClosed() override;
@@ -408,7 +441,7 @@ public:
 private:
     void internalRenewableClusterChanged(Antares::Data::RenewableCluster* cluster)
     {
-        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->series) : NULL);
+        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->timeSeries) : NULL);
     }
 
     void onStudyClosed() override;

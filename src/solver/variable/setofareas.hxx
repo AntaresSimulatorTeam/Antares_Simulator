@@ -202,12 +202,6 @@ inline void SetsOfAreas<NextT>::hourForEachLink(State& state)
 }
 
 template<class NextT>
-inline void SetsOfAreas<NextT>::hourForEachThermalCluster(State& state)
-{
-    (void)state;
-}
-
-template<class NextT>
 inline void SetsOfAreas<NextT>::hourEnd(State& state, uint hourInTheYear)
 {
     (void)state;

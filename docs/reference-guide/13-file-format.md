@@ -1,7 +1,6 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
-
-## v8.6.0
+## v8.7.0
 ### Input
 #### Scenarized RHS for binding constraints
 - For each binding constraint, file **input/bindingconstraints/&lt;id&gt;.txt** is split into 3 files:
@@ -22,6 +21,12 @@ This line is not mandatory for every group & MC year. If absent, the TS number w
 - 0 &lt;= MC Year &lt; generaldata.ini/general.nbyears
 - 1 &lt;=TS number &lt;= number of columns for the group
 
+### Output
+#### Scenarized RHS for binding constraints
+Add directory **bindingconstraints** to output directory **ts-numbers**. For every binding constraint group, add a file **ts-numbers/bindingconstraints/&lt;group&gt;.txt** containing the TS numbers used for that group.
+
+## v8.6.0
+### Input
 #### Short-term storage
 * Add directories **input/st-storage/clusters** and **input/st-storage/series**
 * For each area, add directory **input/st-storage/clusters/&lt;area id&gt;/list.ini**
@@ -31,9 +36,9 @@ This line is not mandatory for every group & MC year. If absent, the TS number w
     * `efficiency` [double] in range 0-1
     * `reservoircapacity` [double] &gt; 0
     * `initiallevel` [double] in range 0-1
-    * `withdrawalnominalcapacity` [double] in range 0-1
-    * `injectionnominalcapacity` [double] in range 0-1
-    * `storagecycle` [int] in range 24-168
+    * `withdrawalnominalcapacity` [double] &gt; 0
+    * `injectionnominalcapacity` [double] &gt; 0
+    * `initialleveloptim` [bool]
 
 * For each short-term-storage object, add the corresponding time-series in directory **input/st-storage/series/&lt;area id&gt;/&lt;STS id&gt;**. All of these files contain 8760 rows and 1 column.
     * **PMAX-injection.txt** All entries must be in range 0-1
@@ -48,20 +53,19 @@ In files **input/thermal/cluster/area/list.ini** add properties `nh3`, `nox`, `p
 #### Adequacy patch
 In file **settings/generaldata.ini**, in section `adequacy patch` add property `enable-first-step` [bool]. Default value = `true` Enable or disable DENS column
 
+#### Hydro Pmin
+For each area, new file added **input/hydro/series/&lt;area&gt;/mingen.txt**. This file has one or more columns, and 8760 rows. The number of columns may be 1, or identical to the number of columns in existing file **mod.txt**.
 
 ### Output
-#### Scenarized RHS for binding constraints
-Add directory **bindingconstraints** to output directory **ts-numbers**. For every binding constraint group, add a file **ts-numbers/bindingconstraints/&lt;group&gt;.txt** containing the TS numbers used for that group.
-
 #### Short-term storage
 * For every short-term storage group, add 3 columns in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
     * `ST-<group id>-withdrawal`
     * `ST-<group id>-injection`
     * `ST-<group id>-level`
-* For every area, add file **ST-details-&lt;period&gt;.txt** (mc-all & mc-ind) containing the same columns, but this time for every short-term storage object.
+* For every area, add file **details-STstorage-&lt;period&gt;.txt** (mc-all & mc-ind) containing the same columns, but this time for every short-term storage object.
 
 #### Pollutant emission factors
-In files **economy/mc-all/areas/** add column: CO2 EMIS. One colum for every pollutants: CO2, NH3, NOX, PM2\_5, PM5, PM10, NMVOC, OP1, OP2, OP3, OP4, OP5
+In files **economy/mc-all/areas/** add column: CO2 EMIS. One colum for every pollutant: CO2, NH3, NOX, PM2\_5, PM5, PM10, NMVOC, OP1, OP2, OP3, OP4, OP5
 
 ## v8.5.2
 ### Input
@@ -111,9 +115,9 @@ If property `output/result-format` is set to `zip`, all results are stored in a 
 MPS files of first optimization used to be overwritten by MPS files of second optimization. Not anymore.
 Now user can choose to print :
 * no MPS file,
-* MPS files related to the first opimization (named **problem-&lt;week&gt;-&lt;year&gt;--optim-nb-1.txt**),
-* MPS files related to the second opimization (named **problem-&lt;week&gt;-&lt;year&gt;--optim-nb-2.txt**),
-* MPS files related to the both opimizations.
+* MPS files related to the first optimization (named **problem-&lt;week&gt;-&lt;year&gt;--optim-nb-1.txt**),
+* MPS files related to the second optimization (named **problem-&lt;week&gt;-&lt;year&gt;--optim-nb-2.txt**),
+* MPS files related to the both optimizations.
 
 In the **generaldata.ini** input file, corresponding values for **include-exportmps** are : **none**, **optim-1**, **optim-2**, **both-optims**.
 
@@ -122,7 +126,7 @@ Compatibility with existing values is maintained (**true** = **both-optims**, **
 ### Marginal price of a binding constraint
 #### Input
 In the context of the addition of a new output variable (marginal price associated to a binding constraint), file **input/bindingconstraints/bindingconstraints.ini** get 2 new parameters for each binding constraint.
-They constrol which marginal price time granularity is printed, either regarding year by year or synthesis results.
+They control which marginal price time granularity is printed, either regarding year by year or synthesis results.
 
 * `filter-year-by-year`. Default value = hourly, daily, weekly, monthly, annual
 * `filter-synthesis`. Default value = hourly, daily, weekly, monthly, annual
@@ -211,7 +215,7 @@ adequacy-patch-mode = outside
 ### Output
 * If `include-adq-patch` is set to `true`, add column `DENS` in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
 * Add `Profit by plant` column in files **details-&lt;period&gt;.txt** (mc-all & mc-ind)
-* If `include-split-exported-mps` is set to `true`, create splitted MPS files in the output folder
+* If `include-split-exported-mps` is set to `true`, create split MPS files in the output folder
 * Add file **time_measurement.txt**, containing performance data
 
 NOTE: **period** can be any of the following

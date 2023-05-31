@@ -27,6 +27,8 @@
 #ifndef __SOLVER_VARIABLE_STATE_H__
 #define __SOLVER_VARIABLE_STATE_H__
 
+#include <vector>
+#include <array>
 #include <yuni/yuni.h>
 #include "constants.h"
 #include <antares/study/fwd.h>
@@ -37,23 +39,44 @@
 
 namespace Antares::Solver::Variable
 {
+class ThermalState
+{
+public:
+    explicit ThermalState(const Data::AreaList& areas);
+
+    class StateForAnArea
+    {
+    public:
+        void initializeFromArea(const Data::Area& area);
+        //! Thermal production for thermal clusters for the current hour in the year
+        std::vector<double> thermalClustersProductions;
+
+        //! The operating cost for all clusters at the current hour (production level*production
+        //! cost + NP Cost)
+        std::vector<double> thermalClustersOperatingCost;
+
+        //! Number of units turned ON by cluster for the current hour in the year with the ucMILP
+        //! (accurate) unit commitment mode
+        std::vector<uint> numberOfUnitsONbyCluster;
+
+        //! Minimum power of all clusters for the current hour in the year
+        std::vector<double> PMinOfClusters;
+
+        std::vector<unsigned int> unitCountLastHour;
+        std::vector<double> productionLastHour;
+        std::vector<double> pminOfAGroup;
+    };
+
+    StateForAnArea& operator[](size_t areaIndex);
+
+private:
+    std::vector<StateForAnArea> thermal;
+};
+
 class State
 {
 public:
-    //! \name Constructor
-    //@{
-    /*!
-    ** \brief Default constructor
-    */
     explicit State(Data::Study& s);
-    //@}
-    //! \name Destructor
-    //@{
-    /*!
-    ** \brief Default Destructor
-    */
-    //	~State();
-    //@}
 
     /*!
     ** \brief Initialize some variables according an area index
@@ -70,17 +93,7 @@ public:
     **
     ** \param areaWideIndex Index of the thermal cluster for the current area
     */
-    void initFromThermalClusterIndex(const unsigned int areaWideIndex, uint numSpace);
-
-    /*!
-    ** \brief Initialize some variable according a renewable cluster index
-    **
-    ** We assume here that the variables related to an area
-    ** are properly initialized.
-    **
-    ** \param areaWideIndex Index of the renewable cluster for the current area
-    */
-    void initFromRenewableClusterIndex(const unsigned int areaWideIndex, uint numSpace);
+    void initFromThermalClusterIndex(const unsigned int areaWideIndex);
 
     /*!
     ** \brief End the year by smoothing the thermal units run
@@ -90,7 +103,29 @@ public:
     **
     ** \param areaWideIndex Index of the thermal cluster for the current area
     */
-    void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex, uint numSpace);
+
+    void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex);
+
+private:
+    /*!
+    ** \brief Initialize some variable according a thermal cluster index
+    **
+    ** Called in initFromAreaIndex to split code
+    **
+    ** \param areaWideIndex Index of the thermal cluster for the current area
+    */
+    void initFromThermalClusterIndexProduction(const unsigned int areaWideIndex);
+
+    void yearEndBuildThermalClusterCalculateStartupCosts(
+      const uint& maxDurationON,
+      const std::array<uint, Variable::maxHoursInAYear>& ON_min,
+      const std::array<uint, Variable::maxHoursInAYear>& ON_opt,
+      const Data::ThermalCluster* currentCluster);
+
+    std::array<uint, Variable::maxHoursInAYear> computeEconomicallyOptimalNbClustersONforEachHour(
+      const uint& maxDurationON,
+      const std::array<uint, Variable::maxHoursInAYear>& ON_min,
+      const std::array<uint, Variable::maxHoursInAYear>& ON_max) const;
 
     /*!
     ** \brief Smooth the thermal units run after resolutions
@@ -100,30 +135,7 @@ public:
     */
     void yearEndSmoothDispatchedUnitsCount(const unsigned int areaWideIndex, uint numSpace);
 
-    /*!
-    ** \brief Computes the minimal number of units on in the cluster
-    **
-    **
-    **
-    */
-    uint computeMinNumberOfUnitsOn(Data::ThermalCluster* cluster, int t, uint numSpace);
-
-    /*!
-    ** \brief Computes the maximal number of units on in the cluster
-    **
-    **
-    **
-    */
-    uint computeMaxNumberOfUnitsOn(Data::ThermalCluster* cluster);
-
-    /*!
-    ** \brief Computes the production, fixed and start-up costs, assuming
-    ** that thermalClusterDispatchedUnitsCountForYear has been built
-    **
-    ** \param areaWideIndex Index of the thermal cluster for the current area
-    */
-    void yearEndComputeThermalClusterCosts(const unsigned int areaWideIndex);
-
+public:
     /*!
     ** \brief Reset internal data
     */
@@ -134,7 +146,6 @@ public:
     */
     void yearEndResetThermal();
 
-public:
     //! Current year
     unsigned int year;
     //! Current week for current year (zero-based)
@@ -148,8 +159,10 @@ public:
 
     //! The current area
     Data::Area* area;
-    //! The current thermal cluster
+
+    //! The current thermal cluster (used in yearEndBuildForEachThermalCluster functions)
     Data::ThermalCluster* thermalCluster;
+
     //! The current renewable cluster
     Data::RenewableCluster* renewableCluster;
     //! The Scratchpad for the current area
@@ -170,24 +183,6 @@ public:
     RESULTATS_HORAIRES* hourlyResults;
     //! NTC Values
     VALEURS_DE_NTC_ET_RESISTANCES* ntc;
-    //! Thermal production for the current thermal cluster for the current hour in the year
-    double thermalClusterProduction;
-    //! Thermal available production for the current thermal cluster for the current hour in the
-    //! year
-    double thermalClusterAvailableProduction;
-    //! The operating cost for the current cluster of the current hour (production level*production
-    //! cost + NP Cost)
-    double thermalClusterOperatingCost;
-    //! The non propostional cost for the current cluster of the current hour (startupCost *
-    //! (newUnitCount - previousUnitCount)) + (fixed cost * newUnitCount) - MBO - 13/05/2014 - #21
-    double thermalClusterNonProportionalCost;
-    //! Number of groups turned ON by cluster for the current hour in the year with the ucMILP
-    //! (accurate) unit commitment mode
-    uint thermalClusterNumberON;
-    //! Minimum power of a group of the cluster for the current hour in the year
-    double thermalClusterPMinOfAGroup;
-    //! Minimum power of the cluster for the current hour in the year
-    double thermalClusterPMinOfTheCluster;
 
     //! Thermal production for the current thermal cluster for the whole year
     double thermalClusterProductionForYear[Variable::maxHoursInAYear];
@@ -219,6 +214,8 @@ public:
     Data::UnitCommitmentMode unitCommitmentMode;
     //! Reference to the original study
     Data::Study& study;
+    // Thermal data, used to compute overall cost, etc.
+    ThermalState thermal;
     //! Index of the state in the state vector
     unsigned int numSpace;
     /*!

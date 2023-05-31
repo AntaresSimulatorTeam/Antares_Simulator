@@ -57,14 +57,14 @@ void HourlyCSRProblem::setBoundsOnENS()
 
             problemeAResoudre_.Xmin[var] = -belowThisThresholdSetToZero;
             problemeAResoudre_.Xmax[var]
-              = problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDENS[triggeredHour]
+              = problemeHebdo_->ResultatsHoraires[area].ValeursHorairesDENS[triggeredHour]
                 + belowThisThresholdSetToZero;
 
             problemeAResoudre_.X[var] = problemeHebdo_->ResultatsHoraires[area]
-                                          ->ValeursHorairesDeDefaillancePositive[triggeredHour];
+                                          .ValeursHorairesDeDefaillancePositive[triggeredHour];
 
             AdresseDuResultat = &(problemeHebdo_->ResultatsHoraires[area]
-                                    ->ValeursHorairesDeDefaillancePositive[triggeredHour]);
+                                    .ValeursHorairesDeDefaillancePositive[triggeredHour]);
 
             problemeAResoudre_.AdresseOuPlacerLaValeurDesVariablesOptimisees[var]
               = AdresseDuResultat;
@@ -92,10 +92,10 @@ void HourlyCSRProblem::setBoundsOnSpilledEnergy()
             problemeAResoudre_.Xmax[var] = LINFINI_ANTARES;
 
             problemeAResoudre_.X[var] = problemeHebdo_->ResultatsHoraires[area]
-                                          ->ValeursHorairesDeDefaillanceNegative[triggeredHour];
+                                          .ValeursHorairesDeDefaillanceNegative[triggeredHour];
 
             double* AdresseDuResultat = &(problemeHebdo_->ResultatsHoraires[area]
-                                            ->ValeursHorairesSpilledEnergyAfterCSR[triggeredHour]);
+                                            .ValeursHorairesSpilledEnergyAfterCSR[triggeredHour]);
 
             problemeAResoudre_.AdresseOuPlacerLaValeurDesVariablesOptimisees[var]
               = AdresseDuResultat;
