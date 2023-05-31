@@ -124,7 +124,7 @@ bool Adequacy::simplexIsRequired(uint hourInTheYear, uint numSpace) const
             auto& valgen = *ValeursGenereesParPays[numSpace][k];
 
             double quantity
-              = pProblemesHebdo[numSpace]->ConsommationsAbattues[j]->ConsommationAbattueDuPays[k]
+              = pProblemesHebdo[numSpace]->ConsommationsAbattues[j].ConsommationAbattueDuPays[k]
                 - valgen.HydrauliqueModulableQuotidien[dayInTheYear] / 24.;
 
             if (quantity > 0.)
@@ -182,10 +182,10 @@ bool Adequacy::year(Progression::Task& progression,
                 {
                     double& conso = pProblemesHebdo[numSpace]
                                       ->ConsommationsAbattues[hw]
-                                      ->ConsommationAbattueDuPays[ar];
+                                      .ConsommationAbattueDuPays[ar];
                     double& conso2 = pProblemesHebdo[numSpace]
                                        ->ConsommationsAbattuesRef[hw]
-                                       ->ConsommationAbattueDuPays[ar];
+                                       .ConsommationAbattueDuPays[ar];
                     double stratReserve
                       = area.reserves[Data::fhrStrategicReserve][hw + hourInTheYear];
                     assert(ar < state.resSpilled.width);
@@ -311,7 +311,7 @@ bool Adequacy::year(Progression::Task& progression,
                       = +valgen.HydrauliqueModulableQuotidien[dayInTheYear] / 24.
                         - pProblemesHebdo[numSpace]
                             ->ConsommationsAbattues[j]
-                            ->ConsommationAbattueDuPays[k];
+                            .ConsommationAbattueDuPays[k];
                 }
             }
 

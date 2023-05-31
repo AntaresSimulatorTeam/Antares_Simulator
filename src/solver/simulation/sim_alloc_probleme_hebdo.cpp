@@ -91,8 +91,10 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
 
     problem.ValeursDeNTC = std::vector<VALEURS_DE_NTC_ET_RESISTANCES>(NombreDePasDeTemps);
     problem.ValeursDeNTCRef = std::vector<VALEURS_DE_NTC_ET_RESISTANCES>(NombreDePasDeTemps);
-    problem.ConsommationsAbattues = new CONSOMMATIONS_ABATTUES*[NombreDePasDeTemps];
-    problem.ConsommationsAbattuesRef = new CONSOMMATIONS_ABATTUES*[NombreDePasDeTemps];
+
+    problem.ConsommationsAbattues = std::vector<CONSOMMATIONS_ABATTUES>(NombreDePasDeTemps);
+    problem.ConsommationsAbattuesRef = std::vector<CONSOMMATIONS_ABATTUES>(NombreDePasDeTemps);
+
     problem.AllMustRunGeneration = new ALL_MUST_RUN_GENERATION*[NombreDePasDeTemps];
     problem.SoldeMoyenHoraire = new SOLDE_MOYEN_DES_ECHANGES*[NombreDePasDeTemps];
     problem.CorrespondanceVarNativesVarOptim
@@ -147,10 +149,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         problem.ValeursDeNTCRef[k].ValeurDuFluxDown.assign(linkCount, 0.);
         problem.ValeursDeNTCRef[k].ResistanceApparente.assign(linkCount, 0.);
 
-        problem.ConsommationsAbattues[k]
-          = new CONSOMMATIONS_ABATTUES;
-        problem.ConsommationsAbattuesRef[k]
-          = new CONSOMMATIONS_ABATTUES;
         problem.AllMustRunGeneration[k]
           = new ALL_MUST_RUN_GENERATION;
         problem.SoldeMoyenHoraire[k]
@@ -161,10 +159,10 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
           = new CORRESPONDANCES_DES_CONTRAINTES;
         problem.VariablesDualesDesContraintesDeNTC[k]
           = new VARIABLES_DUALES_INTERCONNEXIONS;
-        problem.ConsommationsAbattues[k]->ConsommationAbattueDuPays
-          = new double[nbPays];
-        problem.ConsommationsAbattuesRef[k]->ConsommationAbattueDuPays
-          = new double[nbPays];
+
+        problem.ConsommationsAbattues[k].ConsommationAbattueDuPays.assign(nbPays, 0.);
+        problem.ConsommationsAbattuesRef[k].ConsommationAbattueDuPays.assign(nbPays, 0.);
+
         problem.AllMustRunGeneration[k]->AllMustRunGenerationOfArea
           = new double[nbPays];
         problem.SoldeMoyenHoraire[k]->SoldeMoyenDuPays
@@ -574,10 +572,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     for (uint k = 0; k < problem.NombreDePasDeTemps; k++)
     {
-        delete problem.ConsommationsAbattues[k]->ConsommationAbattueDuPays;
-        delete problem.ConsommationsAbattues[k];
-        delete problem.ConsommationsAbattuesRef[k]->ConsommationAbattueDuPays;
-        delete problem.ConsommationsAbattuesRef[k];
         delete problem.AllMustRunGeneration[k]->AllMustRunGenerationOfArea;
         delete problem.AllMustRunGeneration[k];
         delete problem.SoldeMoyenHoraire[k]->SoldeMoyenDuPays;
@@ -637,8 +631,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         delete problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion;
         delete problem.VariablesDualesDesContraintesDeNTC[k];
     }
-    delete problem.ConsommationsAbattues;
-    delete problem.ConsommationsAbattuesRef;
     delete problem.AllMustRunGeneration;
     delete problem.SoldeMoyenHoraire;
     delete problem.CorrespondanceVarNativesVarOptim;

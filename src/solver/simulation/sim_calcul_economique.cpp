@@ -637,7 +637,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
               !Math::NaN(problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k])
               && "NaN detected for 'AllMustRunGeneration', probably from miscGenSum/mustrunSum");
 
-            problem.ConsommationsAbattues[j]->ConsommationAbattueDuPays[k]
+            problem.ConsommationsAbattues[j].ConsommationAbattueDuPays[k]
               = +scratchpad.ts.load[tsIndex.Consommation][indx]
                 - problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k];
 
@@ -996,8 +996,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
     }
     for (unsigned int j = 0; j < problem.NombreDePasDeTemps; ++j)
     {
-        memcpy((char*)problem.ConsommationsAbattuesRef[j]->ConsommationAbattueDuPays,
-               (char*)problem.ConsommationsAbattues[j]->ConsommationAbattueDuPays,
-               nbPays * sizeof(double));
+        problem.ConsommationsAbattuesRef[j].ConsommationAbattueDuPays
+            = problem.ConsommationsAbattues[j].ConsommationAbattueDuPays;
     }
 }

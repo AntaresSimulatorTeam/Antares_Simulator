@@ -226,7 +226,7 @@ struct LEVEL_FLEX_DOWN_NODE
 
 struct CONSOMMATIONS_ABATTUES
 {
-    double* ConsommationAbattueDuPays;
+    std::vector<double> ConsommationAbattueDuPays;
 };
 
 struct ALL_MUST_RUN_GENERATION
@@ -526,9 +526,8 @@ struct PROBLEME_HEBDO
     int NombreDePasDeTempsDUneJournee = 0;
     int NombreDePasDeTempsDUneJourneeRef = 0;
 
-    CONSOMMATIONS_ABATTUES** ConsommationsAbattues = nullptr;
-
-    CONSOMMATIONS_ABATTUES** ConsommationsAbattuesRef = nullptr;
+    mutable std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattues;
+    std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattuesRef;
 
     std::vector<double> CoutDeDefaillancePositive;
     std::vector<double> CoutDeDefaillanceNegative;

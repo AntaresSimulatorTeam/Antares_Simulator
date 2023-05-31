@@ -107,14 +107,14 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         const CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim
           = problemeHebdo->CorrespondanceCntNativesCntOptim[pdtJour];
 
-        const CONSOMMATIONS_ABATTUES* ConsommationsAbattues
+        const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
           = problemeHebdo->ConsommationsAbattues[pdtHebdo];
         const ALL_MUST_RUN_GENERATION* AllMustRunGeneration
           = problemeHebdo->AllMustRunGeneration[pdtHebdo];
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             int cnt = CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesBilansPays[pays];
-            SecondMembre[cnt] = -ConsommationsAbattues->ConsommationAbattueDuPays[pays];
+            SecondMembre[cnt] = -ConsommationsAbattues.ConsommationAbattueDuPays[pays];
 
             bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
             bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
@@ -137,11 +137,11 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                 MaxAllMustRunGeneration = AllMustRunGeneration->AllMustRunGenerationOfArea[pays];
 
             double MaxMoinsConsommationBrute = 0.0;
-            if (-(ConsommationsAbattues->ConsommationAbattueDuPays[pays]
+            if (-(ConsommationsAbattues.ConsommationAbattueDuPays[pays]
                   + AllMustRunGeneration->AllMustRunGenerationOfArea[pays])
                 > 0.0)
                 MaxMoinsConsommationBrute
-                  = -(ConsommationsAbattues->ConsommationAbattueDuPays[pays]
+                  = -(ConsommationsAbattues.ConsommationAbattueDuPays[pays]
                       + AllMustRunGeneration->AllMustRunGenerationOfArea[pays]);
 
             SecondMembre[cnt] = DefaillanceNegativeUtiliserConsoAbattue[pays]

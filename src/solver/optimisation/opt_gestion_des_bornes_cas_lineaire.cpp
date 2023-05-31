@@ -113,12 +113,12 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
           = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
         const ALL_MUST_RUN_GENERATION* AllMustRunGeneration
           = problemeHebdo->AllMustRunGeneration[pdtHebdo];
-        const CONSOMMATIONS_ABATTUES* ConsommationsAbattues
+        const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
           = problemeHebdo->ConsommationsAbattues[pdtHebdo];
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            double ResidualLoadInArea = ConsommationsAbattues->ConsommationAbattueDuPays[pays];
+            double ResidualLoadInArea = ConsommationsAbattues.ConsommationAbattueDuPays[pays];
 
             if (reserveJm1 && opt1)
             {

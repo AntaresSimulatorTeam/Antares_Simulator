@@ -47,7 +47,7 @@ double calculateQuadraticCost(const PROBLEME_HEBDO* problemeHebdo, const AdqPatc
     if (priceTakingOrder == AdqPatchPTO::isLoad)
     {
         priceTakingOrders
-          = problemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[area]
+          = problemeHebdo->ConsommationsAbattues[hour].ConsommationAbattueDuPays[area]
             + problemeHebdo->AllMustRunGeneration[hour]->AllMustRunGenerationOfArea[area];
     }
     else // AdqPatchPTO::isDens

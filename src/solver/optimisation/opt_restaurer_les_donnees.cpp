@@ -72,13 +72,13 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
 
     for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
     {
-        const CONSOMMATIONS_ABATTUES* ConsommationsAbattuesRef
+        const CONSOMMATIONS_ABATTUES& ConsommationsAbattuesRef
           = problemeHebdo->ConsommationsAbattuesRef[pdt];
-        CONSOMMATIONS_ABATTUES* ConsommationsAbattues = problemeHebdo->ConsommationsAbattues[pdt];
+        CONSOMMATIONS_ABATTUES& ConsommationsAbattues = problemeHebdo->ConsommationsAbattues[pdt];
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            ConsommationsAbattues->ConsommationAbattueDuPays[pays]
-              = ConsommationsAbattuesRef->ConsommationAbattueDuPays[pays];
+            ConsommationsAbattues.ConsommationAbattueDuPays[pays]
+              = ConsommationsAbattuesRef.ConsommationAbattueDuPays[pays];
         }
     }
 
