@@ -545,7 +545,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
     for (uint j = 0; j < problem.NombreDePasDeTemps; ++j, ++indx)
     {
-        VALEURS_DE_NTC_ET_RESISTANCES* ntc = problem.ValeursDeNTC[j];
+        VALEURS_DE_NTC_ET_RESISTANCES& ntc = problem.ValeursDeNTC[j];
         assert(NULL != ntc);
 
         {
@@ -560,20 +560,20 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 assert((uint)tsIndex < lnk.directCapacities.width);
                 assert((uint)tsIndex < lnk.indirectCapacities.width);
 
-                ntc->ValeurDeNTCOrigineVersExtremite[k] = lnk.directCapacities[tsIndex][indx];
-                ntc->ValeurDeNTCExtremiteVersOrigine[k] = lnk.indirectCapacities[tsIndex][indx];
-                ntc->ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][indx];
+                ntc.ValeurDeNTCOrigineVersExtremite[k] = lnk.directCapacities[tsIndex][indx];
+                ntc.ValeurDeNTCExtremiteVersOrigine[k] = lnk.indirectCapacities[tsIndex][indx];
+                ntc.ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][indx];
             }
         }
 
-        memcpy((char*)problem.ValeursDeNTCRef[j]->ValeurDeNTCOrigineVersExtremite,
-               (char*)ntc->ValeurDeNTCOrigineVersExtremite,
+        memcpy((char*)problem.ValeursDeNTCRef[j].ValeurDeNTCOrigineVersExtremite,
+               (char*)ntc.ValeurDeNTCOrigineVersExtremite,
                sizeOfIntercoDouble);
-        memcpy((char*)problem.ValeursDeNTCRef[j]->ValeurDeNTCExtremiteVersOrigine,
-               (char*)ntc->ValeurDeNTCExtremiteVersOrigine,
+        memcpy((char*)problem.ValeursDeNTCRef[j].ValeurDeNTCExtremiteVersOrigine,
+               (char*)ntc.ValeurDeNTCExtremiteVersOrigine,
                sizeOfIntercoDouble);
-        memcpy((char*)problem.ValeursDeNTCRef[j]->ValeurDeLoopFlowOrigineVersExtremite,
-               (char*)ntc->ValeurDeLoopFlowOrigineVersExtremite,
+        memcpy((char*)problem.ValeursDeNTCRef[j].ValeurDeLoopFlowOrigineVersExtremite,
+               (char*)ntc.ValeurDeLoopFlowOrigineVersExtremite,
                sizeOfIntercoDouble);
 
         {

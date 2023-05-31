@@ -513,7 +513,7 @@ struct PROBLEME_HEBDO
     mutable std::vector<COUTS_DE_TRANSPORT> CoutDeTransport;
 
     std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTC;
-    VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTCRef = nullptr;
+    std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTCRef;
 
     unsigned int NombreDePasDeTemps = 0;
     unsigned int NombreDePasDeTempsRef = 0;

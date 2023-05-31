@@ -117,7 +117,7 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
                      != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
                 double ValueOfFlow
-                  = problemeHebdo_->ValeursDeNTC[triggeredHour]->ValeurDuFlux[Interco];
+                  = problemeHebdo_->ValeursDeNTC[triggeredHour].ValeurDuFlux[Interco];
                 SecondMembre[Cnt] -= ValueOfFlow * Poids;
             }
         }

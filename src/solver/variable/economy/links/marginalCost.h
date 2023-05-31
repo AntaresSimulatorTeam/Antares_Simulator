@@ -235,11 +235,11 @@ public:
         // This value should be reset to zero if  (flow_lowerbound) < flow < (flow_upperbound) (with
         // signed values)
         double flow
-          = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]->ValeurDuFlux[state.link->index];
+          = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek].ValeurDuFlux[state.link->index];
         double flow_lowerbound = -state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]
-                                    ->ValeurDeNTCExtremiteVersOrigine[state.link->index];
+                                    .ValeurDeNTCExtremiteVersOrigine[state.link->index];
         double flow_upperbound = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]
-                                   ->ValeurDeNTCOrigineVersExtremite[state.link->index];
+                                   .ValeurDeNTCOrigineVersExtremite[state.link->index];
 
         if (flow - 0.001 > flow_lowerbound && flow + 0.001 < flow_upperbound)
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 0.;

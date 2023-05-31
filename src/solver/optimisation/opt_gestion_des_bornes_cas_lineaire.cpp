@@ -242,7 +242,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC = problemeHebdo->ValeursDeNTC[pdtHebdo];
+        VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC = problemeHebdo.ValeursDeNTC[pdtHebdo];
         const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
           = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
 
@@ -273,7 +273,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                     ->VariableDualeParInterconnexion[interco]);
             AdresseOuPlacerLaValeurDesCoutsReduits[var] = adresseDuResultat;
 
-            adresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[interco]);
+            adresseDuResultat = &(ValeursDeNTC.ValeurDuFlux[interco]);
             AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
 
             if (CoutDeTransport.IntercoGereeAvecDesCouts)
@@ -282,10 +282,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                         ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[interco];
 
                 if (CoutDeTransport.IntercoGereeAvecLoopFlow)
-                    Xmax[var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[interco]
-                                - ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[interco];
+                    Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco]
+                                - ValeursDeNTC.ValeurDeLoopFlowOrigineVersExtremite[interco];
                 else
-                    Xmax[var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[interco];
+                    Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco];
 
                 Xmax[var] += 0.01;
                 TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -300,10 +300,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                 var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[interco];
                 if (CoutDeTransport.IntercoGereeAvecLoopFlow)
-                    Xmax[var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[interco]
-                                + ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[interco];
+                    Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco]
+                                + ValeursDeNTC.ValeurDeLoopFlowOrigineVersExtremite[interco];
                 else
-                    Xmax[var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[interco];
+                    Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco];
 
                 Xmax[var] += 0.01;
                 TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;

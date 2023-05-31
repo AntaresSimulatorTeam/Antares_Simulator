@@ -182,7 +182,7 @@ public:
     //@{
     RESULTATS_HORAIRES* hourlyResults;
     //! NTC Values
-    VALEURS_DE_NTC_ET_RESISTANCES* ntc;
+    VALEURS_DE_NTC_ET_RESISTANCES& ntc;
 
     //! Thermal production for the current thermal cluster for the whole year
     double thermalClusterProductionForYear[Variable::maxHoursInAYear];
