@@ -76,7 +76,8 @@ enum class ExportStructConstraintsDict : unsigned char
     MinStopTime,
     PMaxOfRunningThermalClusterGroups,
     PMinOfRunningThermalClusterGroups,
-    StartingAndStopingThermalClusterGroups
+    StartingAndStopingThermalClusterGroups,
+    ShortTermStorageLevel
 };
 enum class ExportStructTimeStepDict : unsigned char
 {

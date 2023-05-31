@@ -92,8 +92,8 @@ static void shortTermStorageBalance(
     for (const auto& storage : shortTermStorageInput)
     {
         const int clusterGlobalIndex = storage.clusterGlobalIndex;
-        if (const int varInjection
-            = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
+        if (const int varInjection = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
+                                       .InjectionVariable[clusterGlobalIndex];
             varInjection >= 0)
         {
             Pi[nombreDeTermes] = 1.0;
@@ -101,8 +101,8 @@ static void shortTermStorageBalance(
             nombreDeTermes++;
         }
 
-        if (const int varWithdrawal
-            = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
+        if (const int varWithdrawal = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
+                                        .WithdrawalVariable[clusterGlobalIndex];
             varWithdrawal >= 0)
         {
             Pi[nombreDeTermes] = -1.0;
@@ -120,7 +120,8 @@ static void shortTermStorageLevels(
   double* Pi,
   int* Colonne,
   int nombreDePasDeTempsPourUneOptimisation,
-  int pdt)
+  int pdt,
+  const std::string& area)
 {
     const auto& VarOptim_current = CorrespondanceVarNativesVarOptim[pdt];
     // Cycle over the simulation period
@@ -131,7 +132,8 @@ static void shortTermStorageLevels(
         int nombreDeTermes = 0;
         const int clusterGlobalIndex = storage.clusterGlobalIndex;
         // L[h+1] - L[h] - efficiency * injection[h] + withdrawal[h] = inflows[h]
-        if (const int varLevel_next = VarOptim_next->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
+        if (const int varLevel_next
+            = VarOptim_next->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
             varLevel_next >= 0)
         {
             Pi[nombreDeTermes] = 1.0;
@@ -139,7 +141,8 @@ static void shortTermStorageLevels(
             nombreDeTermes++;
         }
 
-        if (const int varLevel = VarOptim_current->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
+        if (const int varLevel
+            = VarOptim_current->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
             varLevel >= 0)
         {
             Pi[nombreDeTermes] = -1.0;
@@ -166,8 +169,13 @@ static void shortTermStorageLevels(
         }
         CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[clusterGlobalIndex]
           = ProblemeAResoudre->NombreDeContraintes;
+
+        const auto ConstraintFullName
+          = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::ShortTermStorageLevel),
+                      location_identifier(area, Enum::ExportStructLocationDict::area),
+                      time_identifier(pdt1, Enum::ExportStructTimeStepDict::hour));
         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=', ConstraintFullName);
     }
 }
 
@@ -442,9 +450,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             CorrespondanceCntNativesCntOptim->NumeroDeContraintePourEviterLesChargesFictives[pays]
               = ProblemeAResoudre->NombreDeContraintes;
 
-            // TODO check  why +1 was added to timeStepInYear
-            //  std::string NomDeLaContrainte = "fict_load::" + std::to_string(timeStepInYear + 1)
-            //                                  + "::" + problemeHebdo->NomsDesPays[pays];
             constraint_full_name.clear();
             constraint_full_name
               = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::FictiveLoads),
@@ -461,7 +466,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                                    Pi,
                                    Colonne,
                                    nombreDePasDeTempsPourUneOptimisation,
-                                   pdt);
+                                   pdt,
+                                   zone);
         }
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)

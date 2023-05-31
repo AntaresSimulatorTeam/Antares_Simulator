@@ -77,7 +77,8 @@ const std::initializer_list<std::string>& getNames<ExportStructConstraintsDict>(
       "MinStopTime",
       "PMaxOfRunningThermalClusterGroups",
       "PMinOfRunningThermalClusterGroups",
-      "StartingAndStopingThermalClusterGroups"};
+      "StartingAndStopingThermalClusterGroups",
+      "ShortTermStorageLevel"};
     return s_exportStructConstraintsNames;
 }
 template<>
