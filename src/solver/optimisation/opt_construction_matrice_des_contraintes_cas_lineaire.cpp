@@ -68,8 +68,6 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
                                         palier);
                 const auto& zone = problemeHebdo.NomsDesPays[pays];
                 const auto& palier_name = PaliersThermiquesDuPays->NomsDesPaliersThermiques[index];
-                // =
-                // Study::Current::Get()->areas[pays]->thermal.clusters.at(palier)->name().c_str();
                 RenameThermalClusterVariable(problemeHebdo.ProblemeAResoudre,
                                              var,
                                              Enum::ExportStructDict::PalierThermique,
@@ -664,9 +662,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               ->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
 
-            // std::string NomDeLaContrainte
-            //   = "bc::hourly::" + std::to_string(timeStepInYear + 1)
-            //     + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
             std::string constraint_full_name
               = BuildName(MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante,
                           Enum::toString(Enum::ExportStructBindingConstraintType::hourly),
@@ -774,9 +769,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               ->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
 
-            // std::string NomDeLaContrainte
-            //   = "bc::daily::" + std::to_string(jour + 1)
-            //     + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
             std::string constraint_full_name
               = BuildName(MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante,
                           Enum::toString(Enum::ExportStructBindingConstraintType::daily),
@@ -879,9 +871,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             CorrespondanceCntNativesCntOptimHebdomadaires
               ->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
-            // std::string NomDeLaContrainte
-            //   = std::string("bc::weekly::")
-            //     + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
             std::string constraint_full_name
               = BuildName(MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante,
                           Enum::toString(Enum::ExportStructBindingConstraintType::weekly),
@@ -1146,7 +1135,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays]
               = ProblemeAResoudre->NombreDeContraintes;
-            // TODO
             std::string constraint_full_name = BuildName(
               Enum::toString(Enum::ExportStructConstraintsDict::MaxHydroPower),
               location_identifier(zone, Enum::ExportStructLocationDict::area),
@@ -1257,10 +1245,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                   Enum::toString(Enum::ExportStructConstraintsDict::AreaHydroLevel),
                   Enum::toString(Enum::ExportStructBindingConstraintType::hourly),
                   time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
-
-                // std::string NomDeLaContrainte = "hydro_level::" + std::to_string(timeStepInYear +
-                // 1)
-                //                                 + "::" + problemeHebdo->NomsDesPays[pays];
 
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                   ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=', constraint_full_name);
