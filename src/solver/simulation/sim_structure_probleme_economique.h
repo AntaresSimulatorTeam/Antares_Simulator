@@ -236,8 +236,7 @@ struct ALL_MUST_RUN_GENERATION
 
 struct SOLDE_MOYEN_DES_ECHANGES
 {
-    double* SoldeMoyenDuPays;
-
+    std::vector<double> SoldeMoyenDuPays;
 };
 
 struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
@@ -553,7 +552,7 @@ struct PROBLEME_HEBDO
     CONTRAINTES_COUPLANTES** MatriceDesContraintesCouplantes = nullptr;
     RESULTATS_CONTRAINTES_COUPLANTES* ResultatsContraintesCouplantes = nullptr;
 
-    SOLDE_MOYEN_DES_ECHANGES** SoldeMoyenHoraire = nullptr; // Used for quadratic opt
+    std::vector<SOLDE_MOYEN_DES_ECHANGES> SoldeMoyenHoraire; // Used for quadratic opt
     /* Implementation details : I/O, error management, etc. */
     bool ReinitOptimisation = false;
 
