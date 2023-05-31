@@ -111,7 +111,7 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
     {
         const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
           = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
-        const ALL_MUST_RUN_GENERATION* AllMustRunGeneration
+        const ALL_MUST_RUN_GENERATION& AllMustRunGeneration
           = problemeHebdo->AllMustRunGeneration[pdtHebdo];
         const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
           = problemeHebdo->ConsommationsAbattues[pdtHebdo];
@@ -130,9 +130,9 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
             Xmin[var] = 0.0;
 
             double MaxAllMustRunGenerationOfArea = 0.;
-            if (AllMustRunGeneration->AllMustRunGenerationOfArea[pays] > 0.)
+            if (AllMustRunGeneration.AllMustRunGenerationOfArea[pays] > 0.)
                 MaxAllMustRunGenerationOfArea
-                  = AllMustRunGeneration->AllMustRunGenerationOfArea[pays];
+                  = AllMustRunGeneration.AllMustRunGenerationOfArea[pays];
 
             ResidualLoadInArea += MaxAllMustRunGenerationOfArea;
             if (ResidualLoadInArea >= 0.)

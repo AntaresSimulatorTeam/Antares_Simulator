@@ -611,7 +611,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             }
 
             uint tsFatalIndex = (uint)tsIndex.Hydraulique < ror.width ? tsIndex.Hydraulique : 0;
-            double& mustRunGen = problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k];
+            double& mustRunGen = problem.AllMustRunGeneration[j].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
                 mustRunGen = scratchpad.ts.wind[tsIndex.Eolien][indx]
@@ -634,12 +634,12 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             }
 
             assert(
-              !Math::NaN(problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k])
+              !Math::NaN(problem.AllMustRunGeneration[j].AllMustRunGenerationOfArea[k])
               && "NaN detected for 'AllMustRunGeneration', probably from miscGenSum/mustrunSum");
 
             problem.ConsommationsAbattues[j].ConsommationAbattueDuPays[k]
               = +scratchpad.ts.load[tsIndex.Consommation][indx]
-                - problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k];
+                - problem.AllMustRunGeneration[j].AllMustRunGenerationOfArea[k];
 
             area.thermal.list.each([&](const Data::ThermalCluster& cluster) {
                 assert((uint)tsIndex.ThermiqueParPalier[cluster.areaWideIndex]

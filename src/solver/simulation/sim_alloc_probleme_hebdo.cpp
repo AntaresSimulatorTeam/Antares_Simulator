@@ -95,7 +95,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.ConsommationsAbattues = std::vector<CONSOMMATIONS_ABATTUES>(NombreDePasDeTemps);
     problem.ConsommationsAbattuesRef = std::vector<CONSOMMATIONS_ABATTUES>(NombreDePasDeTemps);
 
-    problem.AllMustRunGeneration = new ALL_MUST_RUN_GENERATION*[NombreDePasDeTemps];
+    problem.AllMustRunGeneration = std::vector<ALL_MUST_RUN_GENERATION>(NombreDePasDeTemps);
     problem.SoldeMoyenHoraire = new SOLDE_MOYEN_DES_ECHANGES*[NombreDePasDeTemps];
     problem.CorrespondanceVarNativesVarOptim
       = new CORRESPONDANCES_DES_VARIABLES*[NombreDePasDeTemps];
@@ -149,8 +149,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         problem.ValeursDeNTCRef[k].ValeurDuFluxDown.assign(linkCount, 0.);
         problem.ValeursDeNTCRef[k].ResistanceApparente.assign(linkCount, 0.);
 
-        problem.AllMustRunGeneration[k]
-          = new ALL_MUST_RUN_GENERATION;
         problem.SoldeMoyenHoraire[k]
           = new SOLDE_MOYEN_DES_ECHANGES;
         problem.CorrespondanceVarNativesVarOptim[k]
@@ -163,8 +161,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         problem.ConsommationsAbattues[k].ConsommationAbattueDuPays.assign(nbPays, 0.);
         problem.ConsommationsAbattuesRef[k].ConsommationAbattueDuPays.assign(nbPays, 0.);
 
-        problem.AllMustRunGeneration[k]->AllMustRunGenerationOfArea
-          = new double[nbPays];
+        problem.AllMustRunGeneration[k].AllMustRunGenerationOfArea.assign(nbPays, 0.);
+
         problem.SoldeMoyenHoraire[k]->SoldeMoyenDuPays
           = new double[nbPays];
 
@@ -572,8 +570,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     for (uint k = 0; k < problem.NombreDePasDeTemps; k++)
     {
-        delete problem.AllMustRunGeneration[k]->AllMustRunGenerationOfArea;
-        delete problem.AllMustRunGeneration[k];
         delete problem.SoldeMoyenHoraire[k]->SoldeMoyenDuPays;
         delete problem.SoldeMoyenHoraire[k];
         delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDeLInterconnexion;
@@ -631,7 +627,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         delete problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion;
         delete problem.VariablesDualesDesContraintesDeNTC[k];
     }
-    delete problem.AllMustRunGeneration;
     delete problem.SoldeMoyenHoraire;
     delete problem.CorrespondanceVarNativesVarOptim;
     delete problem.CorrespondanceCntNativesCntOptim;

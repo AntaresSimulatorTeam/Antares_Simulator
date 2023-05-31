@@ -231,7 +231,7 @@ struct CONSOMMATIONS_ABATTUES
 
 struct ALL_MUST_RUN_GENERATION
 {
-    double* AllMustRunGenerationOfArea;
+    std::vector<double> AllMustRunGenerationOfArea;
 };
 
 struct SOLDE_MOYEN_DES_ECHANGES
@@ -594,7 +594,7 @@ struct PROBLEME_HEBDO
     bool YaDeLaReserveJmoins1 = false;
 
     std::vector<double> previousYearFinalLevels;
-    ALL_MUST_RUN_GENERATION** AllMustRunGeneration = nullptr;
+    std::vector<ALL_MUST_RUN_GENERATION> AllMustRunGeneration;
 
     OptimizationStatistics optimizationStatistics[2];
 
