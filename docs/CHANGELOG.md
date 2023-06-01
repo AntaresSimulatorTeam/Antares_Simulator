@@ -1,7 +1,16 @@
 Antares Changelog
 =================
 
-v8.6.0-rc6 (05/2023)
+8.6.0-rc7 (05/2023)
+--------------------
+## Bugfixes
+* @ github/develop ST storage : fix a bug on time series (#1315)
+* [FIX] delete [] (#1314)
+
+## Improvements
+*  Use ISO8601 for date format in the logs (#1303)
+
+8.6.0-rc6 (05/2023)
 --------------------
 ## Format improvement
  * Add bool for initial level optimization in short-term storage (#1312)
