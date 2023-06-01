@@ -51,9 +51,6 @@ using namespace Antares;
 #else
 #define SNPRINTF snprintf
 #endif
-// #TODO check mps var max size
-#define MAX_VAR_NAME 200
-#define MAX_CNT_NAME 200
 
 void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                                                  int NbTermes)
