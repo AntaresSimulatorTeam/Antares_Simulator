@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file) {
     auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
     fs::create_directories(working_tmp_dir);
 
-    study.resultWriter = std::make_shared<ImmediateFileResultWriter>(working_tmp_dir.c_str());
+    study.resultWriter = std::make_shared<ImmediateFileResultWriter>(working_tmp_dir.string().c_str());
     fs::path bc_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "TestGroup.txt";
 
     Simulation::BindingConstraintsTimeSeriesNumbersWriter timeSeriesWriter(study.resultWriter);
@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group) {
     auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
     fs::create_directories(working_tmp_dir);
 
-    study.resultWriter = std::make_shared<ImmediateFileResultWriter>(working_tmp_dir.c_str());
+    study.resultWriter = std::make_shared<ImmediateFileResultWriter>(working_tmp_dir.string().c_str());
 
     initializeStudy(study);
     TimeSeriesNumbers::Generate(study);
@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
     auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
     fs::create_directories(working_tmp_dir);
 
-    study.resultWriter = std::make_shared<ImmediateFileResultWriter>(working_tmp_dir.c_str());
+    study.resultWriter = std::make_shared<ImmediateFileResultWriter>(working_tmp_dir.string().c_str());
 
     initializeStudy(study);
     TimeSeriesNumbers::Generate(study);
@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
     fs::path test1_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "test1.txt";
     BOOST_CHECK_EQUAL(fs::exists(test1_path), true);
     Matrix<Yuni::uint32> out;
-    out.loadFromCSVFile(test1_path.c_str());
+    out.loadFromCSVFile(test1_path.string());
     BOOST_CHECK_EQUAL(series[0][0]+1, out[0][0]);
     BOOST_CHECK_EQUAL(series[0][1]+1, out[0][1]);
     BOOST_CHECK_EQUAL(series[1][0]+1, out[1][0]);

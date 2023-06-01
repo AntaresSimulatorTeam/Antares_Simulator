@@ -26,7 +26,7 @@ namespace // anonymous
 } // anonymous namespace
 
 // TODO : remove duplication
-static void genericStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer,
+static void genericStoreTimeseriesNumbers(const Solver::IResultWriter::Ptr& writer,
                                           const Matrix<Yuni::uint32>& timeseriesNumbers,
                                           const std::string& id,
                                           const std::string& directory)
@@ -42,7 +42,7 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer,
                                    predicate, // predicate
                                    true);     // save even if all coeffs are zero
 
-    writer->addEntryFromBuffer(path.c_str(), buffer);
+    writer->addEntryFromBuffer(path.string(), buffer);
 }
 
 void BindingConstraintsTimeSeriesNumbersWriter::write(const Data::BindingConstraintsList &list) {
