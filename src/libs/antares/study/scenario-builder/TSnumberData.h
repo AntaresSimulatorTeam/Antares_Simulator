@@ -311,7 +311,7 @@ inline CString<512, false> ntcTSNumberData::get_prefix() const
 }
 
 // =================================
-// Transmission capacities ...
+// Binding Constraints ...
 // =================================
 
 class BindingConstraintsTSNumberData : public TSNumberData

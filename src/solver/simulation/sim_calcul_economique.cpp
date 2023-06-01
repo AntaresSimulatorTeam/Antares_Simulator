@@ -108,7 +108,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.NumberOfShortTermStorages = study.runtime->shortTermStorageCount;
 
-    problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraint.size();
+    problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraints.size();
 
     problem.ExportMPS = study.parameters.include.exportMPS;
     problem.ExportStructure = study.parameters.include.exportStructure;
@@ -220,9 +220,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.PaysExtremiteDeLInterconnexion[i] = link.with->index;
     }
 
-    for (uint i = 0; i < study.runtime->bindingConstraint.size(); ++i)
+    for (uint i = 0; i < study.runtime->bindingConstraints.size(); ++i)
     {
-        BindingConstraintRTI& bc = study.runtime->bindingConstraint[i];
+        BindingConstraintRTI& bc = study.runtime->bindingConstraints[i];
 
         PtMat = problem.MatriceDesContraintesCouplantes[i];
         PtMat->NombreDInterconnexionsDansLaContrainteCouplante = bc.linkCount;
@@ -329,26 +329,26 @@ void SIM_InitialisationResultats()
 }
 
 void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int PasDeTempsDebut,
-                               const StudyRuntimeInfos &studyruntime, const uint weekFirstDay, int pasDeTemps) {
-    const auto constraintCount = studyruntime.bindingConstraint.size();
-    for (uint k = 0; k != constraintCount; ++k)
+                               const StudyRuntimeInfos &studyRuntimeInfos, const uint weekFirstDay, int pasDeTemps) {
+    const auto constraintCount = studyRuntimeInfos.bindingConstraints.size();
+    for (unsigned constraintIndex = 0; constraintIndex != constraintCount; ++constraintIndex)
     {
-        auto& bc = studyruntime.bindingConstraint[k];
+        auto& bc = studyRuntimeInfos.bindingConstraints[constraintIndex];
         assert(bc.timeSeries.width && "Invalid constraint data width");
         //If there is only one TS, always select it.
         const auto ts_number = bc.timeSeries.width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc.group];
         auto& timeSeries = bc.timeSeries;
+        double const* column = timeSeries[ts_number];
         switch (bc.type)
         {
             case BindingConstraint::typeHourly:
             {
-                double const* column = timeSeries[ts_number];
-                problem.MatriceDesContraintesCouplantes[k]
+                problem.MatriceDesContraintesCouplantes[constraintIndex]
                         ->SecondMembreDeLaContrainteCouplante[pasDeTemps]
                         = column[PasDeTempsDebut + pasDeTemps];
-                problem.MatriceDesContraintesCouplantes[k]
+                problem.MatriceDesContraintesCouplantes[constraintIndex]
                         ->SecondMembreDeLaContrainteCouplanteRef[pasDeTemps]
-                        = problem.MatriceDesContraintesCouplantes[k]
+                        = problem.MatriceDesContraintesCouplantes[constraintIndex]
                         ->SecondMembreDeLaContrainteCouplante[pasDeTemps];
                 break;
             }
@@ -356,16 +356,15 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
             {
                 assert(timeSeries.width && "Invalid constraint data width");
                 assert(weekFirstDay + 6 < timeSeries.height && "Invalid constraint data height");
-                double const* column = timeSeries[ts_number];
 
                 double* sndMember
-                        = problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante;
-                double* sndMemberRef = problem.MatriceDesContraintesCouplantes[k]
+                        = problem.MatriceDesContraintesCouplantes[constraintIndex]->SecondMembreDeLaContrainteCouplante;
+                double* sndMemberRef = problem.MatriceDesContraintesCouplantes[constraintIndex]
                         ->SecondMembreDeLaContrainteCouplanteRef;
-                for (uint d = 0; d != 7; ++d)
+                for (unsigned day = 0; day != 7; ++day)
                 {
-                    sndMember[d] = column[weekFirstDay + d];
-                    sndMemberRef[d] = sndMember[d];
+                    sndMember[day] = column[weekFirstDay + day];
+                    sndMemberRef[day] = sndMember[day];
                 }
                 break;
             }
@@ -374,14 +373,13 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
                 assert(timeSeries.width && "Invalid constraint data width");
                 assert(weekFirstDay + 6 < timeSeries.height && "Invalid constraint data height");
 
-                double const* column = timeSeries[ts_number];
                 double sum = 0;
-                for (uint d = 0; d != 7; ++d)
-                    sum += column[weekFirstDay + d];
+                for (unsigned day = 0; day != 7; ++day)
+                    sum += column[weekFirstDay + day];
 
-                problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante[0]
+                problem.MatriceDesContraintesCouplantes[constraintIndex]->SecondMembreDeLaContrainteCouplante[0]
                         = sum;
-                problem.MatriceDesContraintesCouplantes[k]
+                problem.MatriceDesContraintesCouplantes[constraintIndex]
                         ->SecondMembreDeLaContrainteCouplanteRef[0]
                         = sum;
                 break;

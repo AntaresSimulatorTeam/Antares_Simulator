@@ -105,7 +105,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
     problem.VariablesDualesDesContraintesDeNTC
       = (VARIABLES_DUALES_INTERCONNEXIONS**)MemAlloc(NombreDePasDeTemps * sizeof(void*));
     problem.MatriceDesContraintesCouplantes
-      = (CONTRAINTES_COUPLANTES**)MemAlloc(study.runtime->bindingConstraint.size() * sizeof(void*));
+      = (CONTRAINTES_COUPLANTES**)MemAlloc(study.runtime->bindingConstraints.size() * sizeof(void*));
     problem.PaliersThermiquesDuPays = (PALIERS_THERMIQUES**)MemAlloc(nbPays * sizeof(void*));
     problem.CaracteristiquesHydrauliques
       = (ENERGIES_ET_PUISSANCES_HYDRAULIQUES**)MemAlloc(nbPays * sizeof(void*));
@@ -258,7 +258,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDeDissociationDeFlux
           = (int*)MemAlloc(linkCount * sizeof(int));
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesContraintesCouplantes
-          = (int*)MemAlloc(study.runtime->bindingConstraint.size() * sizeof(int));
+          = (int*)MemAlloc(study.runtime->bindingConstraints.size() * sizeof(int));
 
         problem.CorrespondanceCntNativesCntOptim[k]
           ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche
@@ -299,7 +299,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
             sizeof(CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES));
         problem.CorrespondanceCntNativesCntOptimJournalieres[k]
           ->NumeroDeContrainteDesContraintesCouplantes
-          = (int*)MemAlloc(study.runtime->bindingConstraint.size() * sizeof(int));
+          = (int*)MemAlloc(study.runtime->bindingConstraints.size() * sizeof(int));
     }
 
     problem.CorrespondanceCntNativesCntOptimHebdomadaires
@@ -311,10 +311,10 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
             sizeof(CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES));
         problem.CorrespondanceCntNativesCntOptimHebdomadaires[k]
           ->NumeroDeContrainteDesContraintesCouplantes
-          = (int*)MemAlloc(study.runtime->bindingConstraint.size() * sizeof(int));
+          = (int*)MemAlloc(study.runtime->bindingConstraints.size() * sizeof(int));
     }
 
-    const auto& bindingConstraintCount = study.runtime->bindingConstraint.size();
+    const auto& bindingConstraintCount = study.runtime->bindingConstraints.size();
     problem.ResultatsContraintesCouplantes = (RESULTATS_CONTRAINTES_COUPLANTES*)MemAlloc(
       bindingConstraintCount * sizeof(RESULTATS_CONTRAINTES_COUPLANTES));
 
@@ -323,9 +323,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         problem.MatriceDesContraintesCouplantes[k]
           = (CONTRAINTES_COUPLANTES*)MemAlloc(sizeof(CONTRAINTES_COUPLANTES));
 
-        assert(k < study.runtime->bindingConstraint.size());
-        assert(study.runtime->bindingConstraint[k].linkCount < 50000000);
-        assert(study.runtime->bindingConstraint[k].clusterCount < 50000000);
+        assert(k < study.runtime->bindingConstraints.size());
+        assert(study.runtime->bindingConstraints[k].linkCount < 50000000);
+        assert(study.runtime->bindingConstraints[k].clusterCount < 50000000);
 
         problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
@@ -333,24 +333,24 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
 
         problem.MatriceDesContraintesCouplantes[k]->NumeroDeLInterconnexion
-          = (int*)MemAlloc(study.runtime->bindingConstraint[k].linkCount * sizeof(int));
+          = (int*)MemAlloc(study.runtime->bindingConstraints[k].linkCount * sizeof(int));
         problem.MatriceDesContraintesCouplantes[k]->PoidsDeLInterconnexion
-          = (double*)MemAlloc(study.runtime->bindingConstraint[k].linkCount * sizeof(double));
+          = (double*)MemAlloc(study.runtime->bindingConstraints[k].linkCount * sizeof(double));
         problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLInterco
-          = (int*)MemAlloc(study.runtime->bindingConstraint[k].linkCount * sizeof(int));
+          = (int*)MemAlloc(study.runtime->bindingConstraints[k].linkCount * sizeof(int));
 
         problem.MatriceDesContraintesCouplantes[k]->NumeroDuPalierDispatch
-          = (int*)MemAlloc(study.runtime->bindingConstraint[k].clusterCount * sizeof(int));
+          = (int*)MemAlloc(study.runtime->bindingConstraints[k].clusterCount * sizeof(int));
         problem.MatriceDesContraintesCouplantes[k]->PoidsDuPalierDispatch
-          = (double*)MemAlloc(study.runtime->bindingConstraint[k].clusterCount * sizeof(double));
+          = (double*)MemAlloc(study.runtime->bindingConstraints[k].clusterCount * sizeof(double));
         problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLePalierDispatch
-          = (int*)MemAlloc(study.runtime->bindingConstraint[k].clusterCount * sizeof(int));
+          = (int*)MemAlloc(study.runtime->bindingConstraints[k].clusterCount * sizeof(int));
         problem.MatriceDesContraintesCouplantes[k]->PaysDuPalierDispatch
-          = (int*)MemAlloc(study.runtime->bindingConstraint[k].clusterCount * sizeof(int));
+          = (int*)MemAlloc(study.runtime->bindingConstraints[k].clusterCount * sizeof(int));
 
         // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
         unsigned int nbTimeSteps;
-        switch (study.runtime->bindingConstraint[k].type)
+        switch (study.runtime->bindingConstraints[k].type)
         {
             using namespace Antares::Data;
         case BindingConstraint::typeHourly:
@@ -732,7 +732,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     }
     MemFree(problem.CorrespondanceCntNativesCntOptimHebdomadaires);
 
-    for (int k = 0; k < (int)study.runtime->bindingConstraint.size(); k++)
+    for (int k = 0; k < (int)study.runtime->bindingConstraints.size(); k++)
     {
         MemFree(problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante);
         MemFree(problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplanteRef);

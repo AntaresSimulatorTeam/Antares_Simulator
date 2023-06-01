@@ -7,7 +7,7 @@
 #include <fstream>
 #include "timeseries-numbers.h"
 #include "immediate_file_writer.h"
-#include "TimeSeriesNumbersWriter.h"
+#include "BindingConstraintsTimeSeriesNumbersWriter.h"
 
 using namespace Antares::Solver;
 using namespace Antares::Data;
@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file) {
     study.resultWriter = std::make_shared<ImmediateFileResultWriter>(working_tmp_dir.c_str());
     fs::path bc_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "TestGroup.txt";
 
-    Simulation::TimeSeriesNumbersWriter timeSeriesWriter(study.resultWriter);
+    Simulation::BindingConstraintsTimeSeriesNumbersWriter timeSeriesWriter(study.resultWriter);
 
     initializeStudy(study);
     TimeSeriesNumbers::Generate(study);
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group) {
     initializeStudy(study);
     TimeSeriesNumbers::Generate(study);
 
-    Simulation::TimeSeriesNumbersWriter time_series_writer(study.resultWriter);
+    Simulation::BindingConstraintsTimeSeriesNumbersWriter time_series_writer(study.resultWriter);
     TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, time_series_writer);
 
     fs::path test1_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "test1.txt";
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
     series[1][1] = 3;
     study.bindingConstraints.timeSeriesNumbers["test1"].timeseriesNumbers = series;
 
-    Simulation::TimeSeriesNumbersWriter time_series_writer(study.resultWriter);
+    Simulation::BindingConstraintsTimeSeriesNumbersWriter time_series_writer(study.resultWriter);
     TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, time_series_writer);
 
     fs::path test1_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "test1.txt";
