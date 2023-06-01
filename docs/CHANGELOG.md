@@ -1,7 +1,16 @@
 Antares Changelog
 =================
 
-v8.6.0-rc6 (05/2023)
+8.6.0-rc7 (06/2023)
+--------------------
+## Bugfixes
+* Fix a bug on time ST storage time-series (#1315)
+* Fix a bug in adequacy study mode (#1314)
+
+## Improvements
+*  Use ISO8601 for date format in the logs (#1303)
+
+8.6.0-rc6 (05/2023)
 --------------------
 ## Format improvement
  * Add bool for initial level optimization in short-term storage (#1312)
