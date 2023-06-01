@@ -556,9 +556,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
 
-                    const auto& zone = problemeHebdo->NomsDesPays[pays];
+                    const auto &zone= problemeHebdo->NomsDesPays[pays];
                     const auto& namePalier
-                      = PaliersThermiquesDuPays->NomsDesPaliersThermiques[index];
+                      = PaliersThermiquesDuPays->NomsDesPaliersThermiques
+                          [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
                     RenameThermalClusterVariable(
                       ProblemeAResoudre,
                       var,
