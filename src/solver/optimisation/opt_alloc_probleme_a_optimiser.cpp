@@ -104,22 +104,8 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
       = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
     ProblemeAResoudre->Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
 
-    // ProblemeAResoudre->NomDesVariables.resize(ProblemeAResoudre->NombreDeVariables);
-    ProblemeAResoudre->NomDesVariables
-      = (char**)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(char*));
-    for (int i(0); i < ProblemeAResoudre->NombreDeVariables; i++)
-    {
-        ProblemeAResoudre->NomDesVariables[i] = (char*)MemAllocMemset(MAX_VAR_NAME * sizeof(char));
-    }
-    // ProblemeAResoudre->NomDesContraintes.resize(ProblemeAResoudre->NombreDeContraintes);
-
-    ProblemeAResoudre->NomDesContraintes
-      = (char**)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(char*));
-    for (int i(0); i < ProblemeAResoudre->NombreDeContraintes; i++)
-    {
-        ProblemeAResoudre->NomDesContraintes[i]
-          = (char*)MemAllocMemset(MAX_CNT_NAME * sizeof(char));
-    }
+    ProblemeAResoudre->NomDesVariables.resize(ProblemeAResoudre->NombreDeVariables);
+    ProblemeAResoudre->NomDesContraintes.resize(ProblemeAResoudre->NombreDeContraintes);
 }
 
 void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
@@ -147,18 +133,8 @@ void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
     MemFree(ProblemeAResoudre->Pi);
     MemFree(ProblemeAResoudre->Colonne);
 
-    // ProblemeAResoudre->NomDesVariables.clear();
-    for (int i(0); i < ProblemeAResoudre->NombreDeVariables; i++)
-    {
-        MemFree(ProblemeAResoudre->NomDesVariables[i]);
-    }
-    MemFree(ProblemeAResoudre->NomDesVariables);
-    // ProblemeAResoudre->NomDesContraintes.clear();
-    for (int i(0); i < ProblemeAResoudre->NombreDeContraintes; i++)
-    {
-        MemFree(ProblemeAResoudre->NomDesContraintes[i]);
-    }
-    MemFree(ProblemeAResoudre->NomDesContraintes);
+    ProblemeAResoudre->NomDesVariables.clear();
+    ProblemeAResoudre->NomDesContraintes.clear();
 }
 
 static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int mxPaliers)

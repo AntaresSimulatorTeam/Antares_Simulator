@@ -56,7 +56,7 @@ void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
         }
     }
     ProblemeAResoudre->NombreDeTermesDesLignes[nombreDeContraintes] = NombreDeTermesDeLaContrainte;
-    strcpy(ProblemeAResoudre->NomDesContraintes[nombreDeContraintes], NomDeLaContrainte.c_str());
+    ProblemeAResoudre->NomDesContraintes[nombreDeContraintes] = NomDeLaContrainte;
 
     ProblemeAResoudre->Sens[nombreDeContraintes] = SensContrainte;
     nombreDeContraintes++;

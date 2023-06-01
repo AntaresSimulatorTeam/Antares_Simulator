@@ -16,7 +16,7 @@ void RenameLinkVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
           Antares::Data::Enum::toString(structDict),
           LocationIdentifier(location, Antares::Data::Enum::ExportStructLocationDict::link),
           TimeIdentifier(ts, timeStepType));
-        strcpy(problem->NomDesVariables[var], fullName.c_str());
+        problem->NomDesVariables[var] = fullName;
     }
 }
 
@@ -34,7 +34,7 @@ void RenameZoneVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
           = BuildName(Antares::Data::Enum::toString(structDict),
                       LocationIdentifier(zone, Antares::Data::Enum::ExportStructLocationDict::area),
                       TimeIdentifier(ts, timeStepType));
-        strcpy(problem->NomDesVariables[var], fullName.c_str());
+        problem->NomDesVariables[var] = fullName;
     }
 }
 void RenameThermalClusterVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
@@ -56,7 +56,7 @@ void RenameThermalClusterVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                                     Antares::Data::Enum::ExportStructDict::DispatchableProduction),
                                   location,
                                   TimeIdentifier(ts, timeStepType));
-        strcpy(problem->NomDesVariables[var], fullName.c_str());
+        problem->NomDesVariables[var] = fullName;
     }
 }
 

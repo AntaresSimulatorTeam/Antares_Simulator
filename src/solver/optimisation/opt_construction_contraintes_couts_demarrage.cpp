@@ -274,7 +274,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                           LocationIdentifier(zone, Enum::ExportStructLocationDict::area),
                           TimeIdentifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=', constraintFullName);
                     }
                 }
                 else
