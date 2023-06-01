@@ -1,7 +1,7 @@
 Antares Changelog
 =================
 
-8.6.0-rc7 (05/2023)
+8.6.0-rc7 (06/2023)
 --------------------
 ## Bugfixes
 * @ github/develop ST storage : fix a bug on time series (#1315)
