@@ -4,8 +4,8 @@ Antares Changelog
 8.6.0-rc7 (06/2023)
 --------------------
 ## Bugfixes
-* @ github/develop ST storage : fix a bug on time series (#1315)
-* [FIX] delete [] (#1314)
+* Fix a bug on time ST storage time-series (#1315)
+* Fix a bug in adequacy study mode (#1314)
 
 ## Improvements
 *  Use ISO8601 for date format in the logs (#1303)
