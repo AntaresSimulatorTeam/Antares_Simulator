@@ -61,12 +61,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     int* Colonne = ProblemeAResoudre->Colonne;
 
     int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
-    auto study = Study::Current::Get();
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-        const auto& zone = study->areas[pays]->name.c_str();
+        const auto& zone = problemeHebdo->NomsDesPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
