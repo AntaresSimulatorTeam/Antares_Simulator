@@ -80,8 +80,8 @@ static void shortTermStorageBalance(
     for (const auto& storage : shortTermStorageInput)
     {
         const int clusterGlobalIndex = storage.clusterGlobalIndex;
-        if (const int varInjection = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
-                                       .InjectionVariable[clusterGlobalIndex];
+        if (const int varInjection
+            = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
             varInjection >= 0)
         {
             Pi[nombreDeTermes] = 1.0;
@@ -89,8 +89,8 @@ static void shortTermStorageBalance(
             nombreDeTermes++;
         }
 
-        if (const int varWithdrawal = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
-                                        .WithdrawalVariable[clusterGlobalIndex];
+        if (const int varWithdrawal
+            = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
             varWithdrawal >= 0)
         {
             Pi[nombreDeTermes] = -1.0;
@@ -120,8 +120,7 @@ static void shortTermStorageLevels(
         int nombreDeTermes = 0;
         const int clusterGlobalIndex = storage.clusterGlobalIndex;
         // L[h+1] - L[h] - efficiency * injection[h] + withdrawal[h] = inflows[h]
-        if (const int varLevel_next
-            = VarOptim_next->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
+        if (const int varLevel_next = VarOptim_next->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
             varLevel_next >= 0)
         {
             Pi[nombreDeTermes] = 1.0;
@@ -129,8 +128,7 @@ static void shortTermStorageLevels(
             nombreDeTermes++;
         }
 
-        if (const int varLevel
-            = VarOptim_current->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
+        if (const int varLevel = VarOptim_current->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
             varLevel >= 0)
         {
             Pi[nombreDeTermes] = -1.0;

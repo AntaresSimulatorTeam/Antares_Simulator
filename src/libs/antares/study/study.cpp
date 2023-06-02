@@ -1128,16 +1128,14 @@ void Study::destroyAllWindTSGeneratorData()
 
 void Study::destroyAllThermalTSGeneratorData()
 {
-    areas.each(
-      [&](Data::Area& area)
-      {
-          auto pend = area.thermal.list.end();
-          for (auto j = area.thermal.list.begin(); j != pend; ++j)
-          {
-              ThermalCluster& cluster = *(j->second);
-              FreeAndNil(cluster.prepro);
-          }
-      });
+    areas.each([&](Data::Area& area) {
+        auto pend = area.thermal.list.end();
+        for (auto j = area.thermal.list.begin(); j != pend; ++j)
+        {
+            ThermalCluster& cluster = *(j->second);
+            FreeAndNil(cluster.prepro);
+        }
+    });
 }
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
@@ -1346,30 +1344,28 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         String linkname;
         String areaname;
 
-        areas.each(
-          [&](const Area& area)
-          {
-              if (areaname.size() < area.id.size())
-                  areaname = area.id;
+        areas.each([&](const Area& area) {
+            if (areaname.size() < area.id.size())
+                areaname = area.id;
 
-              auto end = area.links.end();
-              for (auto i = area.links.begin(); i != end; ++i)
-              {
-                  auto& link = *(i->second);
-                  uint len = link.from->id.size() + link.with->id.size();
-                  len += output ? 3 : 1;
-                  if (len > linkname.size())
-                  {
-                      linkname.clear();
-                      linkname << i->second->from->id;
-                      if (output)
-                          linkname << " - "; // 3
-                      else
-                          linkname << SEP;
-                      linkname << i->second->with->id;
-                  }
-              }
-          });
+            auto end = area.links.end();
+            for (auto i = area.links.begin(); i != end; ++i)
+            {
+                auto& link = *(i->second);
+                uint len = link.from->id.size() + link.with->id.size();
+                len += output ? 3 : 1;
+                if (len > linkname.size())
+                {
+                    linkname.clear();
+                    linkname << i->second->from->id;
+                    if (output)
+                        linkname << " - "; // 3
+                    else
+                        linkname << SEP;
+                    linkname << i->second->with->id;
+                }
+            }
+        });
 
         String filename;
         filename << studyfolder << SEP << "output" << SEP;
@@ -1418,21 +1414,17 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         // /input/hydro/common/capacity/maxcapacityexpectation_languedocroussillon.txt
         // or even constraints
 
-        areas.each(
-          [&](const Area& area)
-          {
-              if (areaname.size() < area.id.size())
-                  areaname = area.id;
-              auto& cname = clustername;
-              cname.clear();
+        areas.each([&](const Area& area) {
+            if (areaname.size() < area.id.size())
+                areaname = area.id;
+            auto& cname = clustername;
+            cname.clear();
 
-              area.thermal.list.each(
-                [&](const Cluster& cluster)
-                {
-                    if (cluster.id().size() > cname.size())
-                        cname = cluster.id();
-                });
-          });
+            area.thermal.list.each([&](const Cluster& cluster) {
+                if (cluster.id().size() > cname.size())
+                    cname = cluster.id();
+            });
+        });
 
         String filename;
 

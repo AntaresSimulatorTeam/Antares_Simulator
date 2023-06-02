@@ -116,7 +116,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.OptimisationAvecCoutsDeDemarrage
       = (study.parameters.unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucMILP);
 
-    problem.OptimisationAuPasHebdomadaire = (parameters.simplexOptimizationRange == Data::sorWeek);
+    problem.OptimisationAuPasHebdomadaire
+      = (parameters.simplexOptimizationRange == Data::sorWeek);
 
     switch (parameters.power.fluctuations)
     {
@@ -159,8 +160,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable
           = area.hydro.reservoirManagement && area.scratchpad[numSpace].pumpHasMod
-            && area.hydro.pumpingEfficiency > 0.
-            && problem.CaracteristiquesHydrauliques[i]->PresenceDHydrauliqueModulable;
+              && area.hydro.pumpingEfficiency > 0.
+              && problem.CaracteristiquesHydrauliques[i]->PresenceDHydrauliqueModulable;
 
         problem.CaracteristiquesHydrauliques[i]->PumpingRatio = area.hydro.pumpingEfficiency;
 
@@ -169,12 +170,13 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         problem.CaracteristiquesHydrauliques[i]->TurbinageEntreBornes
           = area.hydro.reservoirManagement
-            && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
+              && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
 
         problem.CaracteristiquesHydrauliques[i]->SuiviNiveauHoraire
-          = area.hydro.reservoirManagement && (problem.OptimisationAuPasHebdomadaire == true)
-            && (!area.hydro.useHeuristicTarget
-                || problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable);
+          = area.hydro.reservoirManagement
+              && (problem.OptimisationAuPasHebdomadaire == true)
+              && (!area.hydro.useHeuristicTarget
+                  || problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable);
 
         problem.CaracteristiquesHydrauliques[i]->DirectLevelAccess = false;
         problem.CaracteristiquesHydrauliques[i]->AccurateWaterValue = false;

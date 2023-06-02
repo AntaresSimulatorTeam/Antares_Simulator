@@ -543,8 +543,7 @@ struct PROBLEME_HEBDO
     bool* DefaillanceNegativeUtiliserHydro = nullptr;
     bool* DefaillanceNegativeUtiliserConsoAbattue = nullptr;
 
-    char TypeDOptimisation
-      = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
+    char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
 
     double** BruitSurCoutHydraulique = nullptr;
 
@@ -566,10 +565,8 @@ struct PROBLEME_HEBDO
 
     CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim = nullptr;
     CORRESPONDANCES_DES_CONTRAINTES** CorrespondanceCntNativesCntOptim = nullptr;
-    CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES** CorrespondanceCntNativesCntOptimJournalieres
-      = nullptr;
-    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES** CorrespondanceCntNativesCntOptimHebdomadaires
-      = nullptr;
+    CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES** CorrespondanceCntNativesCntOptimJournalieres = nullptr;
+    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES** CorrespondanceCntNativesCntOptimHebdomadaires = nullptr;
 
     RESERVE_JMOINS1** ReserveJMoins1 = nullptr;
 

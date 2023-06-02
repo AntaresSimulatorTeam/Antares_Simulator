@@ -214,7 +214,7 @@ RESOLUTION:
 
     Probleme.TypeDePricing = PRICING_STEEPEST_EDGE;
 
-    Probleme.FaireDuScaling = (PremierPassage ? OUI_SPX : NON_SPX);
+    Probleme.FaireDuScaling = ( PremierPassage ? OUI_SPX : NON_SPX );
 
     Probleme.StrategieAntiDegenerescence = AGRESSIF;
 
@@ -231,7 +231,7 @@ RESOLUTION:
     Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits;
 
 #ifndef NDEBUG
-    Probleme.AffichageDesTraces = (PremierPassage ? OUI_SPX : NON_SPX);
+    Probleme.AffichageDesTraces = ( PremierPassage ? OUI_SPX : NON_SPX );
 #else
     Probleme.AffichageDesTraces = NON_SPX;
 #endif
