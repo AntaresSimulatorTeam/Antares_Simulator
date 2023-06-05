@@ -90,7 +90,14 @@ bool STStorageInput::loadSeriesFromFolder(const std::string& folder) const
 bool STStorageInput::saveToFolder(const std::string& folder) const
 {
     return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [&folder](auto& cluster) {
-        return cluster->save(folder);
+        return cluster->saveProperties(folder);
+    });
+}
+
+bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
+{
+    return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [&folder](auto& cluster) {
+        return cluster->saveSeries(folder);
     });
 }
 

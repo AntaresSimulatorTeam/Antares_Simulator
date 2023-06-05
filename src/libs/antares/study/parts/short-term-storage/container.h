@@ -44,6 +44,7 @@ public:
     std::size_t count() const;
 
     bool saveToFolder(const std::string& folder) const;
+    bool saveDataSeriesToFolder(const std::string& folder) const;
 
 
     std::vector<STStorageCluster*> storagesByIndex;

@@ -36,7 +36,6 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-
 bool Series::loadFromFolder(const std::string& folder)
 {
     bool ret = true;
@@ -113,6 +112,28 @@ void Series::fillDefaultSeriesIfEmpty()
     fillIfEmpty(inflows, 0.0);
     fillIfEmpty(lowerRuleCurve, 0.0);
     fillIfEmpty(upperRuleCurve, 1.0);
+}
+
+bool Series::saveToFolder(const std::string& folder) const
+{
+    bool ret = true;
+#define SEP Yuni::IO::Separator
+    ret = writeVectorToFile(folder + SEP + "PMAX-injection.txt", maxInjectionModulation) && ret;
+    ret = writeVectorToFile(folder + SEP + "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
+    ret = writeVectorToFile(folder + SEP + "inflows.txt", inflows) && ret;
+    ret = writeVectorToFile(folder + SEP + "lower-rule-curve.txt", lowerRuleCurve) && ret;
+    ret = writeVectorToFile(folder + SEP + "upper-rule-curve.txt", upperRuleCurve) && ret;
+#undef SEP
+    return ret;
+}
+
+bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
+{
+    std::ofstream fout(path);
+    for (const auto& x : vect)
+        fout << x << std::endl;
+
+    return true;
 }
 
 bool Series::validate() const

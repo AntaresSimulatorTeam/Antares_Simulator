@@ -42,7 +42,8 @@ public:
 
     bool loadSeries(const std::string& folder) const;
 
-    bool save(const std::string& path) const;
+    bool saveProperties(const std::string& path) const;
+    bool saveSeries(const std::string& path) const;
 
     std::string id;
 
