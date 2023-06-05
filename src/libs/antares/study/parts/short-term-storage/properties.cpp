@@ -132,6 +132,8 @@ bool Properties::saveToFolder(const std::string& folder) const
 
     const std::string pathIni(folder + SEP + "list.ini");
 
+    logs.debug() << "saving file " << pathIni;
+
     IniFile ini;
     IniFile::Section* s = ini.addSection(this->name);
 
@@ -153,7 +155,7 @@ bool Properties::saveToFolder(const std::string& folder) const
         if (it.second == this->group)
             s->add("group",  it.first);
 
-    return true;
+    return ini.save(pathIni);
 }
 
 bool Properties::validate()

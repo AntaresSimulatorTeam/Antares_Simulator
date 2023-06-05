@@ -274,4 +274,19 @@ BOOST_AUTO_TEST_CASE(check_container_properties_empty_file)
     removeIniFile();
 }
 
+BOOST_AUTO_TEST_CASE(check_file_creation)
+{
+    createIniFile();
+
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+
+    removeIniFile();
+
+    BOOST_CHECK(container.saveToFolder(folder));
+
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+
+    removeIniFile();
+}
+
 BOOST_AUTO_TEST_SUITE_END()
