@@ -305,6 +305,19 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
         buffer.clear() << folder << SEP << "input" << SEP << "renewables" << SEP << "series";
         ret = area.renewable.list.saveDataSeriesToFolder(buffer) && ret;
     }
+
+    // Short term storage
+    {
+        buffer.clear() << folder << "input" << SEP << "st-storage" << SEP << "clusters"
+            << SEP << area.id;
+
+        ret = area.renewable.list.saveToFolder(buffer) && ret;
+
+        buffer.clear() << folder << "input" << SEP << "st-storage" << SEP << "series"
+            << SEP << area.id;
+
+        /* ret = area.renewable.list.saveDataSeriesToFolder(buffer) && ret; */
+    }
     return ret;
 }
 

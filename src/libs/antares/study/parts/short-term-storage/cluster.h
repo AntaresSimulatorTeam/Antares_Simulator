@@ -42,6 +42,8 @@ public:
 
     bool loadSeries(const std::string& folder) const;
 
+    bool save(const std::string& path) const;
+
     std::string id;
 
     std::shared_ptr<Series> series = std::make_shared<Series>();

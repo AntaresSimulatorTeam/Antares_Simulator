@@ -54,6 +54,8 @@ class Properties
 public:
     bool validate();
     bool loadKey(const IniFile::Property* p);
+    bool saveToFolder(const std::string& folder) const;
+
     // Not optional   Injection nominal capacity, >= 0
     std::optional<double> injectionNominalCapacity;
     // Not optional   Withdrawal nominal capacity, >= 0

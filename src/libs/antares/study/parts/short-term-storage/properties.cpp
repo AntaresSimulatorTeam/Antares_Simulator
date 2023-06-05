@@ -30,6 +30,8 @@
 
 #include "properties.h"
 
+#define SEP Yuni::IO::Separator
+
 namespace Antares::Data::ShortTermStorage
 {
 const std::map<std::string, enum Group> Properties::ST_STORAGE_PROPERTY_GROUP_ENUM
@@ -117,6 +119,41 @@ bool Properties::loadKey(const IniFile::Property* p)
     }
 
     return false;
+}
+
+bool Properties::saveToFolder(const std::string& folder) const
+{
+    // Make sure the folder is created
+    if (!Yuni::IO::Directory::Create(folder))
+    {
+        logs.error() << "Folder creation for short term storage failed, path: " << folder;
+        return false;
+    }
+
+    const std::string pathIni(folder + SEP + "list.ini");
+
+    IniFile ini;
+    IniFile::Section* s = ini.addSection(this->name);
+
+    if (this->injectionNominalCapacity.has_value())
+        s->add("injectionnominalcapacity", this->injectionNominalCapacity.value());
+    if (this->withdrawalNominalCapacity.has_value())
+        s->add("withdrawalnominalcapacity", this->withdrawalNominalCapacity.value());
+    if (this->reservoirCapacity.has_value())
+        s->add("reservoircapacity", this->reservoirCapacity.value());
+    if (this->initialLevel.has_value())
+        s->add("initiallevel", this->initialLevel.value());
+
+    s->add("efficiency", this->efficiencyFactor);
+    s->add("name", this->name);
+    s->add("storagecycle", this->cycleDuration);
+    s->add("initialleveloptim", this->initialLevelOptim);
+
+    for (auto& it : ST_STORAGE_PROPERTY_GROUP_ENUM)
+        if (it.second == this->group)
+            s->add("group",  it.first);
+
+    return true;
 }
 
 bool Properties::validate()

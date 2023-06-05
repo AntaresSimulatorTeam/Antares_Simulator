@@ -87,6 +87,14 @@ bool STStorageInput::loadSeriesFromFolder(const std::string& folder) const
     return ret;
 }
 
+bool STStorageInput::saveToFolder(const std::string& folder)
+{
+    return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [&folder](auto& cluster) {
+        return cluster->save(folder);
+    });
+
+}
+
 std::size_t STStorageInput::count() const
 {
     return storagesByIndex.size();

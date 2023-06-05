@@ -76,4 +76,9 @@ bool STStorageCluster::loadSeries(const std::string& folder) const
     return ret;
 }
 
+bool STStorageCluster::save(const std::string& path) const
+{
+    return properties.saveToFolder(path);
+}
+
 } // namespace Antares::Data::ShortTermStorage

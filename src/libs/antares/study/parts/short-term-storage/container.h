@@ -43,6 +43,9 @@ public:
     // Number of ST storages
     std::size_t count() const;
 
+    bool saveToFolder(const std::string& folder);
+
+
     std::vector<STStorageCluster*> storagesByIndex;
     std::map<std::string, STStorageCluster> storagesById;
 };
