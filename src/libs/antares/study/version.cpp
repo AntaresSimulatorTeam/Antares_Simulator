@@ -76,6 +76,8 @@ const char* VersionToCStr(const Version v)
     {
     case versionFutur:
         return ">8.6";
+    case version870:
+        return "8.7";
     case version860:
         return "8.6";
     case version850:
