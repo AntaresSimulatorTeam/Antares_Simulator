@@ -377,9 +377,6 @@ void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& lis
         }
         ++index;
     });
-
-    logs.debug() << "Releasing " << (list.memoryUsage() / 1024) << "Ko unused";
-    list.clear();
 }
 
 StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
