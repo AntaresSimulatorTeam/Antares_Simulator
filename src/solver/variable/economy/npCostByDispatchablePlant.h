@@ -220,7 +220,7 @@ public:
         NextType::initializeFromArea(study, area);
     }
 
-    uint getMaxNumberColumns() const
+    size_t getMaxNumberColumns() const
     {
         return pSize * ResultsType::count;
     }
@@ -351,7 +351,7 @@ public:
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    unsigned int pSize;
+    size_t pSize;
     unsigned int pNbYearsParallel;
 
 }; // class NonProportionalCostByDispatchablePlant
