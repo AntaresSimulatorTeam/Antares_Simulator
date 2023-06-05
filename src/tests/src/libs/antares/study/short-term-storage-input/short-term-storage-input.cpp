@@ -143,11 +143,11 @@ struct Fixture
     Fixture() = default;
     ~Fixture()
     {
-        std::filesystem::remove(folder + SEP + "PMAX-injection.txt");
-        std::filesystem::remove(folder + SEP + "PMAX-withdrawal.txt");
-        std::filesystem::remove(folder + SEP + "inflows.txt");
-        std::filesystem::remove(folder + SEP + "lower-rule-curve.txt");
-        std::filesystem::remove(folder + SEP + "upper-rule-curve.txt");
+        /* std::filesystem::remove(folder + SEP + "PMAX-injection.txt"); */
+        /* std::filesystem::remove(folder + SEP + "PMAX-withdrawal.txt"); */
+        /* std::filesystem::remove(folder + SEP + "inflows.txt"); */
+        /* std::filesystem::remove(folder + SEP + "lower-rule-curve.txt"); */
+        /* std::filesystem::remove(folder + SEP + "upper-rule-curve.txt"); */
     }
 
     std::string folder = getFolder();
@@ -274,7 +274,7 @@ BOOST_AUTO_TEST_CASE(check_container_properties_empty_file)
     removeIniFile();
 }
 
-BOOST_AUTO_TEST_CASE(check_file_creation)
+BOOST_AUTO_TEST_CASE(check_file_save)
 {
     createIniFile();
 
@@ -287,6 +287,14 @@ BOOST_AUTO_TEST_CASE(check_file_creation)
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
 
     removeIniFile();
+}
+
+BOOST_AUTO_TEST_CASE(check_series_save)
+{
+    resizeFillVectors(series, 123456.789, 8760);
+
+    series.saveToFolder(folder);
+
 }
 
 BOOST_AUTO_TEST_SUITE_END()

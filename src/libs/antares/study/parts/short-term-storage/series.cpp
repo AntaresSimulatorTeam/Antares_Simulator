@@ -27,8 +27,8 @@
 #include <yuni/io/file.h>
 #include <antares/logs.h>
 #include <antares/constants.h>
-#include <antares/array/array1d.h>
 
+#include <iomanip> 
 #include <fstream>
 
 #include "series.h"
@@ -116,6 +116,7 @@ void Series::fillDefaultSeriesIfEmpty()
 
 bool Series::saveToFolder(const std::string& folder) const
 {
+    logs.debug() << "Saving series into folder: " << folder;
     bool ret = true;
 #define SEP Yuni::IO::Separator
     ret = writeVectorToFile(folder + SEP + "PMAX-injection.txt", maxInjectionModulation) && ret;
@@ -129,7 +130,11 @@ bool Series::saveToFolder(const std::string& folder) const
 
 bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
 {
+    logs.notice() << vect[0];
+
     std::ofstream fout(path);
+    fout << std::setprecision(10);
+
     for (const auto& x : vect)
         fout << x << std::endl;
 
