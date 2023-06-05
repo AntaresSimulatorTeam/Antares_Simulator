@@ -247,13 +247,15 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(EnvForLoading &env, Bi
                         << BindingConstraint::OperatorToShortCString(bindingConstraint->pOperator) << ") " << bindingConstraint->pComments;
 
         // 0 is BindingConstraint::opLess
-        int columnNumber = BindingConstraint::Column::columnInferior;
-        if (bindingConstraint->operatorType() == BindingConstraint::opGreater)
+        int columnNumber;
+        if (bindingConstraint->operatorType() == BindingConstraint::opLess)
+            columnNumber = BindingConstraint::Column::columnInferior;
+        else if (bindingConstraint->operatorType() == BindingConstraint::opGreater)
             columnNumber = BindingConstraint::Column::columnSuperior;
         else if (bindingConstraint->operatorType() == BindingConstraint::opEquality)
             columnNumber = BindingConstraint::Column::columnEquality;
         else
-            assert(false && "Cannot load time series of type other that eq/gt/lt");
+            logs.error("Cannot load time series of type other that eq/gt/lt");
 
         bindingConstraint->timeSeries.pasteToColumn(0, intermediate[columnNumber]);
         return true;
