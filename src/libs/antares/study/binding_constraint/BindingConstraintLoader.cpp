@@ -233,9 +233,10 @@ BindingConstraintLoader::loadTimeSeries(EnvForLoading &env, BindingConstraint::O
 bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(EnvForLoading &env, BindingConstraint *bindingConstraint) const {
     env.buffer.clear() << env.folder << IO::Separator << bindingConstraint->pID << ".txt";
     Matrix<> intermediate;
+    const int height = (bindingConstraint->pType == BindingConstraint::typeHourly) ? 8784 : 366;
     if (intermediate.loadFromCSVFile(env.buffer,
                                      BindingConstraint::columnMax,
-                                     (bindingConstraint->pType == BindingConstraint::typeHourly) ? 8784 : 366,
+                                     height,
                                      Matrix<>::optImmediate | Matrix<>::optFixedSize,
                                      &env.matrixBuffer))
     {
@@ -257,6 +258,7 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(EnvForLoading &env, Bi
         else
             logs.error("Cannot load time series of type other that eq/gt/lt");
 
+        bindingConstraint->timeSeries.resize(1, height);
         bindingConstraint->timeSeries.pasteToColumn(0, intermediate[columnNumber]);
         return true;
     }
