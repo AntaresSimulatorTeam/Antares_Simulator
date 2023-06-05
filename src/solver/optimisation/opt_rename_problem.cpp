@@ -37,13 +37,32 @@ void RenameZoneVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
         problem->NomDesVariables[var] = fullName;
     }
 }
+void RenameZoneVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
+                        int var,
+                        Antares::Data::Enum::ExportStructDict structDict,
+                        int ts,
+                        Antares::Data::Enum::ExportStructTimeStepDict timeStepType,
+                        const std::string& zone,
+                        int layerIndex)
+{
+    auto nvars = problem->NombreDeVariables;
+    if (nvars > var)
+    {
+        auto fullName
+          = BuildName(Antares::Data::Enum::toString(structDict),
+                      LocationIdentifier(zone, Antares::Data::Enum::ExportStructLocationDict::area)
+                        + SEPARATOR + "Layer<" + std::to_string(layerIndex) + ">",
+                      TimeIdentifier(ts, timeStepType));
+        problem->NomDesVariables[var] = fullName;
+    }
+}
 void RenameThermalClusterVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                                   int var,
                                   Antares::Data::Enum::ExportStructDict structDict,
                                   int ts,
                                   Antares::Data::Enum::ExportStructTimeStepDict timeStepType,
                                   const std::string& zone,
-                                  const std::string& namePalier)
+                                  const std::string& clusterName)
 {
     auto nvars = problem->NombreDeVariables;
 
@@ -51,11 +70,34 @@ void RenameThermalClusterVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
     {
         const auto location
           = LocationIdentifier(zone, Antares::Data::Enum::ExportStructLocationDict::area)
-            + SEPARATOR + Antares::Data::Enum::toString(structDict) + "<" + namePalier + ">";
+            + SEPARATOR + Antares::Data::Enum::toString(structDict) + "<" + clusterName + ">";
         auto fullName = BuildName(Antares::Data::Enum::toString(
                                     Antares::Data::Enum::ExportStructDict::DispatchableProduction),
                                   location,
                                   TimeIdentifier(ts, timeStepType));
+        problem->NomDesVariables[var] = fullName;
+    }
+}
+void RenameShortTermStorageVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
+                                    int var,
+                                    Antares::Data::Enum::ExportStructDict structDict,
+                                    int ts,
+                                    Antares::Data::Enum::ExportStructTimeStepDict timeStepType,
+                                    const std::string& zone,
+                                    const std::string& shortTermStorageName)
+{
+    auto nvars = problem->NombreDeVariables;
+
+    if (nvars > var)
+    {
+        const auto location
+          = LocationIdentifier(zone, Antares::Data::Enum::ExportStructLocationDict::area)
+            + SEPARATOR + Antares::Data::Enum::toString(structDict) + "<" + shortTermStorageName
+            + ">";
+        auto fullName = BuildName(
+          Antares::Data::Enum::toString(Antares::Data::Enum::ExportStructDict::ShortTermStorage),
+          location,
+          TimeIdentifier(ts, timeStepType));
         problem->NomDesVariables[var] = fullName;
     }
 }

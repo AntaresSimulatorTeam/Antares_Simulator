@@ -49,13 +49,24 @@ enum class ExportStructDict : unsigned char
     ValeurDeNTCOrigineVersExtremite,
     PalierThermique,
     ProdHyd,
+    ProdHydALaBaisse,
+    ProdHydALaHausse,
+    Pompage,
+    NiveauHydro,
+    Debordement,
+    StockFinal,
+    TrancheDeStock,
     DefaillancePositive,
     DefaillanceNegative,
     BilansPays,
     CoutOrigineVersExtremiteDeLInterconnexion,
     CoutExtremiteVersOrigineDeLInterconnexion,
     CorrespondanceVarNativesVarOptim,
-    DispatchableProduction
+    DispatchableProduction,
+    ShortTermStorage,
+    ShortTermStorageInjection,
+    ShortTermStorageWithdrawal,
+    ShortTermStorageLevel
 };
 enum class ExportStructConstraintsDict : unsigned char
 {

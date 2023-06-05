@@ -47,13 +47,24 @@ const std::initializer_list<std::string>& getNames<ExportStructDict>()
       "NTCValueOriginToDestination",
       "ThermalCluster",
       "HydProd",
+      "HydProdDown",
+      "HydProdUp",
+      "Pumping",
+      "HydroLevel",
+      "Overflow",
+      "FinalStorage"
+      "LayerStorage"
       "PositiveUnsuppliedEnergy",
       "NegativeUnsuppliedEnergy",
       "AreaBalance",
       "IntercoCostOriginToDestination",
       "IntercoCostDestinationToOrigin",
       "CorrespondanceVarNativesVarOptim",
-      "DispatchableProduction"};
+      "DispatchableProduction",
+      "ShortTermStorage"
+      "ShortTermStorageInjection",
+      "ShortTermStorageWithdrawal",
+      "ShortTermStorageLevel"};
     return s_exportStructDictNames;
 }
 template<>
