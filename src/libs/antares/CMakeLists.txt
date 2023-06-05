@@ -596,3 +596,9 @@ target_link_libraries(libantares-core
         result_writer
 	)
 
+if(WIN32)
+	target_link_libraries(libantares-core
+		PRIVATE
+			wsock32
+			ws2_32)
+endif()

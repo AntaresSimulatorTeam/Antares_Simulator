@@ -1,7 +1,4 @@
 #define BOOST_TEST_MODULE test save scenario - builder.dat
-
-#define WIN32_LEAN_AND_MEAN
-
 #include <boost/test/included/unit_test.hpp>
 
 #include <string>
