@@ -169,6 +169,7 @@ struct PROPERTIES
     std::optional<double> initialLevel;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
+    std::vector<double> spreadOnInjectionWithdrawal;
 
     int clusterGlobalIndex;
 };

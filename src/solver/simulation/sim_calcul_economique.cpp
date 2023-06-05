@@ -32,6 +32,7 @@
 #include "simulation.h"
 #include "sim_structure_probleme_economique.h"
 #include "sim_extern_variables_globales.h"
+#include "sim_st_storage_draw_spread.h"
 #include "adequacy_patch_runtime_data.h"
 #include <antares/emergency.h>
 
@@ -61,6 +62,10 @@ static void importShortTermStorages(
             toInsert.initialLevel = st->properties.initialLevel;
 
             toInsert.series = st->series;
+
+            // The spread is the same for all ST storages and all MC years. This may lead to multiple solutions
+            // if similar ST storages exist within an area.
+            SIM_drawSpreadOnShortTermStorage(toInsert.spreadOnInjectionWithdrawal);
 
             // TODO add missing properties, or use the same struct
             storageIndex++;

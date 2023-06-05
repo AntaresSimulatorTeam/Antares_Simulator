@@ -11,6 +11,8 @@ set(SRC_SIMULATION
 		sim_structure_probleme_economique.h
 		sim_variables_globales.cpp
 		sim_constants.h
+        sim_st_storage_draw_spread.h
+        sim_st_storage_draw_spread.cpp
 		simulation.h
 		solver.h
 		solver.hxx
