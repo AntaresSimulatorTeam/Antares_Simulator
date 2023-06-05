@@ -76,6 +76,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             const int palier
               = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
+            const auto& clusterName = PaliersThermiquesDuPays->NomsDesPaliersThermiques[index];
+
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
@@ -93,6 +95,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
+                        RenameThermalClusterVariable(problemeHebdo->ProblemeAResoudre,
+                                                     var,
+                                                     Enum::ExportStructDict::PalierThermique,
+                                                     timeStepInYear,
+                                                     Enum::ExportStructTimeStepDict::hour,
+                                                     zone,
+                                                     clusterName);
                     }
                 }
                 else
@@ -108,6 +117,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = -pmaxDUnGroupeDuPalierThermique;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
+                        RenameThermalClusterVariable(
+                          problemeHebdo->ProblemeAResoudre,
+                          var,
+                          Enum::ExportStructDict::NombreDeGroupesEnMarcheDuPalierThermique,
+                          timeStepInYear,
+                          Enum::ExportStructTimeStepDict::hour,
+                          zone,
+                          clusterName);
                     }
                 }
                 else
@@ -140,6 +157,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
+                        RenameThermalClusterVariable(problemeHebdo->ProblemeAResoudre,
+                                                     var,
+                                                     Enum::ExportStructDict::PalierThermique,
+                                                     timeStepInYear,
+                                                     Enum::ExportStructTimeStepDict::hour,
+                                                     zone,
+                                                     clusterName);
                     }
                 }
                 else
@@ -155,6 +179,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = -pminDUnGroupeDuPalierThermique;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
+                        RenameThermalClusterVariable(
+                          problemeHebdo->ProblemeAResoudre,
+                          var,
+                          Enum::ExportStructDict::NombreDeGroupesEnMarcheDuPalierThermique,
+                          timeStepInYear,
+                          Enum::ExportStructTimeStepDict::hour,
+                          zone,
+                          clusterName);
                     }
                 }
                 else
@@ -183,14 +215,17 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const auto& zone = problemeHebdo->NomsDesPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             const int palier
               = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+            const auto& clusterName = PaliersThermiquesDuPays->NomsDesPaliersThermiques[index];
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
+                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 CorrespondanceVarNativesVarOptim
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
@@ -211,6 +246,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
+                        RenameThermalClusterVariable(
+                          problemeHebdo->ProblemeAResoudre,
+                          var,
+                          Enum::ExportStructDict::NombreDeGroupesEnMarcheDuPalierThermique,
+                          timeStepInYear,
+                          Enum::ExportStructTimeStepDict::hour,
+                          zone,
+                          clusterName);
                     }
                 }
                 else
@@ -226,6 +269,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = -1;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
+                        RenameThermalClusterVariable(
+                          problemeHebdo->ProblemeAResoudre,
+                          var,
+                          Enum::ExportStructDict::NombreDeGroupesEnMarcheDuPalierThermique,
+                          timeStepInYear,
+                          Enum::ExportStructTimeStepDict::hour,
+                          zone,
+                          clusterName);
                     }
                 }
                 else
@@ -241,6 +292,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = -1;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
+                        RenameThermalClusterVariable(
+                          problemeHebdo->ProblemeAResoudre,
+                          var,
+                          Enum::ExportStructDict::NombreDeGroupesQuiDemarrentDuPalierThermique,
+                          timeStepInYear,
+                          Enum::ExportStructTimeStepDict::hour,
+                          zone,
+                          clusterName);
                     }
                 }
                 else
@@ -256,6 +315,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = 1;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
+                        RenameThermalClusterVariable(
+                          problemeHebdo->ProblemeAResoudre,
+                          var,
+                          Enum::ExportStructDict::NombreDeGroupesQuiSArretentDuPalierThermique,
+                          timeStepInYear,
+                          Enum::ExportStructTimeStepDict::hour,
+                          zone,
+                          clusterName);
                     }
                 }
                 else
@@ -266,7 +333,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     if (nombreDeTermes > 0)
                     {
                         const auto& zone = problemeHebdo->NomsDesPays[pays];
-                        int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                         std::string constraintFullName = BuildName(
                           Enum::toString(Enum::ExportStructConstraintsDict::
                                            StartingAndStopingThermalClusterGroups),
@@ -286,14 +352,17 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const auto& zone = problemeHebdo->NomsDesPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             const int palier
               = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+            const auto& clusterName = PaliersThermiquesDuPays->NomsDesPaliersThermiques[index];
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
+                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
@@ -312,6 +381,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
+                        RenameThermalClusterVariable(
+                          problemeHebdo->ProblemeAResoudre,
+                          var,
+                          Enum::ExportStructDict::NombreDeGroupesQuiTombentEnPanneDuPalierThermique,
+                          timeStepInYear,
+                          Enum::ExportStructTimeStepDict::hour,
+                          zone,
+                          clusterName);
                     }
                 }
                 else
@@ -327,6 +404,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = -1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
+                        RenameThermalClusterVariable(
+                          problemeHebdo->ProblemeAResoudre,
+                          var,
+                          Enum::ExportStructDict::NombreDeGroupesQuiSArretentDuPalierThermique,
+                          timeStepInYear,
+                          Enum::ExportStructTimeStepDict::hour,
+                          zone,
+                          clusterName);
                     }
                 }
                 else
@@ -336,7 +421,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
-                        int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                         const auto& zone = problemeHebdo->NomsDesPays[pays];
                         std::string constraintFullName = BuildName(
                           Enum::toString(Enum::ExportStructConstraintsDict::MinRunTime),
@@ -356,6 +440,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const auto& zone = problemeHebdo->NomsDesPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
@@ -365,9 +450,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 continue;
             const int palier
               = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+            const auto& clusterName = PaliersThermiquesDuPays->NomsDesPaliersThermiques[index];
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
+                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
@@ -385,6 +472,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
+                        RenameThermalClusterVariable(
+                          problemeHebdo->ProblemeAResoudre,
+                          var,
+                          Enum::ExportStructDict::NombreDeGroupesEnMarcheDuPalierThermique,
+                          timeStepInYear,
+                          Enum::ExportStructTimeStepDict::hour,
+                          zone,
+                          clusterName);
                     }
                 }
                 else
@@ -407,6 +502,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                             Pi[nombreDeTermes] = -1.0;
                             Colonne[nombreDeTermes] = var;
                             nombreDeTermes++;
+                            RenameThermalClusterVariable(
+                              problemeHebdo->ProblemeAResoudre,
+                              var,
+                              Enum::ExportStructDict::NombreDeGroupesQuiDemarrentDuPalierThermique,
+                              timeStepInYear,
+                              Enum::ExportStructTimeStepDict::hour,
+                              zone,
+                              clusterName);
                         }
                     }
                     else
@@ -423,6 +526,15 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                             Pi[nombreDeTermes] = 1.0;
                             Colonne[nombreDeTermes] = var;
                             nombreDeTermes++;
+                            RenameThermalClusterVariable(
+                              problemeHebdo->ProblemeAResoudre,
+                              var,
+                              Enum::ExportStructDict::
+                                NombreDeGroupesQuiTombentEnPanneDuPalierThermique,
+                              timeStepInYear,
+                              Enum::ExportStructTimeStepDict::hour,
+                              zone,
+                              clusterName);
                         }
                     }
                     else
@@ -437,8 +549,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                           ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
                           = ProblemeAResoudre->NombreDeContraintes;
 
-                        int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                        const auto& zone = problemeHebdo->NomsDesPays[pays];
                         std::string constraintFullName = BuildName(
                           Enum::toString(Enum::ExportStructConstraintsDict::MinRunTime),
                           LocationIdentifier(zone, Enum::ExportStructLocationDict::area),
@@ -457,6 +567,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const auto& zone = problemeHebdo->NomsDesPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
@@ -464,9 +575,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
               = PaliersThermiquesDuPays->DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
             const int palier
               = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+            const auto& clusterName = PaliersThermiquesDuPays->NomsDesPaliersThermiques[index];
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
+                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
@@ -494,6 +607,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
+                        RenameThermalClusterVariable(
+                          problemeHebdo->ProblemeAResoudre,
+                          var,
+                          Enum::ExportStructDict::NombreDeGroupesEnMarcheDuPalierThermique,
+                          timeStepInYear,
+                          Enum::ExportStructTimeStepDict::hour,
+                          zone,
+                          clusterName);
                     }
                 }
                 else
@@ -517,6 +638,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                             Pi[nombreDeTermes] = 1.0;
                             Colonne[nombreDeTermes] = var;
                             nombreDeTermes++;
+                            RenameThermalClusterVariable(
+                              problemeHebdo->ProblemeAResoudre,
+                              var,
+                              Enum::ExportStructDict::NombreDeGroupesQuiSArretentDuPalierThermique,
+                              timeStepInYear,
+                              Enum::ExportStructTimeStepDict::hour,
+                              zone,
+                              clusterName);
                         }
                     }
                     else
@@ -530,8 +659,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                           ->NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
                           = ProblemeAResoudre->NombreDeContraintes;
 
-                        int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                        const auto& zone = problemeHebdo->NomsDesPays[pays];
                         std::string constraintFullName = BuildName(
                           Enum::toString(Enum::ExportStructConstraintsDict::MinStopTime),
                           LocationIdentifier(zone, Enum::ExportStructLocationDict::area),

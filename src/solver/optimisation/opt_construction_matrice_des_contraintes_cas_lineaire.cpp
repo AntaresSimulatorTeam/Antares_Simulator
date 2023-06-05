@@ -126,6 +126,7 @@ static void shortTermStorageLevels(
   int* Colonne,
   int nombreDePasDeTempsPourUneOptimisation,
   int pdt,
+  int timeStepInYear,
   const std::string& area)
 {
     const auto& VarOptim_current = CorrespondanceVarNativesVarOptim[pdt];
@@ -146,7 +147,7 @@ static void shortTermStorageLevels(
             RenameShortTermStorageVariable(ProblemeAResoudre,
                                            varLevel_next,
                                            Enum::ExportStructDict::ShortTermStorageLevel,
-                                           pdt1,
+                                           timeStepInYear,
                                            Enum::ExportStructTimeStepDict::hour,
                                            area,
                                            storage.name);
@@ -161,7 +162,7 @@ static void shortTermStorageLevels(
             RenameShortTermStorageVariable(ProblemeAResoudre,
                                            varLevel,
                                            Enum::ExportStructDict::ShortTermStorageLevel,
-                                           pdt1,
+                                           timeStepInYear,
                                            Enum::ExportStructTimeStepDict::hour,
                                            area,
                                            storage.name);
@@ -177,7 +178,7 @@ static void shortTermStorageLevels(
             RenameShortTermStorageVariable(ProblemeAResoudre,
                                            varInjection,
                                            Enum::ExportStructDict::ShortTermStorageInjection,
-                                           pdt1,
+                                           timeStepInYear,
                                            Enum::ExportStructTimeStepDict::hour,
                                            area,
                                            storage.name);
@@ -193,7 +194,7 @@ static void shortTermStorageLevels(
             RenameShortTermStorageVariable(ProblemeAResoudre,
                                            varWithdrawal,
                                            Enum::ExportStructDict::ShortTermStorageWithdrawal,
-                                           pdt1,
+                                           timeStepInYear,
                                            Enum::ExportStructTimeStepDict::hour,
                                            area,
                                            storage.name);
@@ -204,7 +205,7 @@ static void shortTermStorageLevels(
         const auto constraintFullName
           = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::ShortTermStorageLevel),
                       LocationIdentifier(area, Enum::ExportStructLocationDict::area),
-                      TimeIdentifier(pdt1, Enum::ExportStructTimeStepDict::hour));
+                      TimeIdentifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=', constraintFullName);
     }
@@ -447,6 +448,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                                    Colonne,
                                    nombreDePasDeTempsPourUneOptimisation,
                                    pdt,
+                                   timeStepInYear,
                                    zone);
         }
 

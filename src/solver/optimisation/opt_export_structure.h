@@ -48,6 +48,10 @@ enum class ExportStructDict : unsigned char
 {
     ValeurDeNTCOrigineVersExtremite,
     PalierThermique,
+    NombreDeGroupesEnMarcheDuPalierThermique,
+    NombreDeGroupesQuiDemarrentDuPalierThermique,
+    NombreDeGroupesQuiSArretentDuPalierThermique,
+    NombreDeGroupesQuiTombentEnPanneDuPalierThermique,
     ProdHyd,
     ProdHydALaBaisse,
     ProdHydALaHausse,

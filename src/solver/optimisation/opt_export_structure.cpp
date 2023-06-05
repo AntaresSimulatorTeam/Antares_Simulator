@@ -46,6 +46,10 @@ const std::initializer_list<std::string>& getNames<ExportStructDict>()
     static std::initializer_list<std::string> s_exportStructDictNames{
       "NTCValueOriginToDestination",
       "ThermalCluster",
+      "NumberOfRunningThermalClusterGroups",
+      "NumberOfStartingThermalClusterGroups",
+      "NumberOfStoppingThermalClusterGroups",
+      "NumberOfBreakingDownThermalClusterGroups",
       "HydProd",
       "HydProdDown",
       "HydProdUp",
@@ -88,7 +92,7 @@ const std::initializer_list<std::string>& getNames<ExportStructConstraintsDict>(
       "MinStopTime",
       "PMaxOfRunningThermalClusterGroups",
       "PMinOfRunningThermalClusterGroups",
-      "StartingAndStopingThermalClusterGroups",
+      "StartingAndStoppingThermalClusterGroups",
       "ShortTermStorageLevel"};
     return s_exportStructConstraintsNames;
 }
