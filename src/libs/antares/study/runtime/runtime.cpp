@@ -162,14 +162,14 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
     rti.timeSeries.resize(b.TimeSeries().width, b.TimeSeries().height);
     rti.timeSeries.copyFrom(b.TimeSeries());
 
-    rti.linkWeight.reserve(rti.linkCount);
-    rti.linkOffset.reserve(rti.linkCount);
-    rti.linkIndex.reserve(rti.linkCount);
+    rti.linkWeight.resize(rti.linkCount);
+    rti.linkOffset.resize(rti.linkCount);
+    rti.linkIndex.resize(rti.linkCount);
 
-    rti.clusterWeight.reserve(rti.linkCount);
-    rti.clusterOffset.reserve(rti.linkCount);
-    rti.clusterIndex.reserve(rti.linkCount);
-    rti.clustersAreaIndex.reserve(rti.linkCount);
+    rti.clusterWeight.resize(rti.clusterCount);
+    rti.clusterOffset.resize(rti.clusterCount);
+    rti.clusterIndex.resize(rti.clusterCount);
+    rti.clustersAreaIndex.resize(rti.clusterCount);
 
     b.initLinkArrays(rti.linkWeight,
                      rti.clusterWeight,
