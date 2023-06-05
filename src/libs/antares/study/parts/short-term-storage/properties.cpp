@@ -123,13 +123,6 @@ bool Properties::loadKey(const IniFile::Property* p)
 
 bool Properties::saveToFolder(const std::string& folder) const
 {
-    // Make sure the folder is created
-    if (!Yuni::IO::Directory::Create(folder))
-    {
-        logs.error() << "Folder creation for short term storage failed, path: " << folder;
-        return false;
-    }
-
     const std::string pathIni(folder + SEP + "list.ini");
 
     logs.debug() << "saving file " << pathIni;

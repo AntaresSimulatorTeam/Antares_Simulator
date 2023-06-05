@@ -311,12 +311,17 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
         buffer.clear() << folder << "input" << SEP << "st-storage" << SEP << "clusters"
             << SEP << area.id;
 
-        ret = area.renewable.list.saveToFolder(buffer) && ret;
+        // Make sure the folder is created
+        if (IO::Directory::Create(buffer))
+            ret = area.shortTermStorage.saveToFolder(buffer.c_str()) && ret;
+        else
+            logs.warning() << "Folder creation for short term storage failed, path: " << folder;
+
 
         buffer.clear() << folder << "input" << SEP << "st-storage" << SEP << "series"
             << SEP << area.id;
 
-        /* ret = area.renewable.list.saveDataSeriesToFolder(buffer) && ret; */
+        /* ret = area.shortTermStorage.saveDataSeriesToFolder(buffer) && ret; */
     }
     return ret;
 }
