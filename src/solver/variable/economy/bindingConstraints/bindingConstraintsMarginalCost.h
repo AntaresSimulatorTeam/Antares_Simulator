@@ -175,7 +175,7 @@ public:
         nbCount_ = bcCount;
     }
 
-    uint getMaxNumberColumns() const
+    size_t getMaxNumberColumns() const
     {
         return nbCount_ * ResultsType::count;
     }

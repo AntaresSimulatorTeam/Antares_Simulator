@@ -137,7 +137,7 @@ public:
     */
     void initializeFromStudy(Data::Study& study);
 
-    uint getMaxNumberColumns() const;
+    size_t getMaxNumberColumns() const;
 
     /*!
     ** \brief Initialize the variable with a specific area
