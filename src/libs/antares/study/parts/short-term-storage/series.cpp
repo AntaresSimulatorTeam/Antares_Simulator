@@ -131,7 +131,7 @@ bool Series::saveToFolder(const std::string& folder) const
 bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
 {
     std::ofstream fout(path);
-    fout << std::setprecision(10);
+    fout << std::setprecision(14);
 
     for (const auto& x : vect)
         fout << x << std::endl;

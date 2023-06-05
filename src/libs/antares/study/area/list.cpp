@@ -321,7 +321,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
         buffer.clear() << folder << "input" << SEP << "st-storage" << SEP << "series"
             << SEP << area.id;
 
-        /* ret = area.shortTermStorage.saveDataSeriesToFolder(buffer) && ret; */
+        ret = area.shortTermStorage.saveDataSeriesToFolder(buffer.c_str()) && ret;
     }
     return ret;
 }

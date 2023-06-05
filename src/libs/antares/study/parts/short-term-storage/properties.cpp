@@ -144,9 +144,9 @@ bool Properties::saveToFolder(const std::string& folder) const
     s->add("storagecycle", this->cycleDuration);
     s->add("initialleveloptim", this->initialLevelOptim);
 
-    for (auto& it : ST_STORAGE_PROPERTY_GROUP_ENUM)
-        if (it.second == this->group)
-            s->add("group",  it.first);
+    for (const auto& [key, value] : ST_STORAGE_PROPERTY_GROUP_ENUM)
+        if (value == this->group)
+            s->add("group",  key);
 
     return ini.save(pathIni);
 }
