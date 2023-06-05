@@ -291,10 +291,13 @@ BOOST_AUTO_TEST_CASE(check_file_save)
 
 BOOST_AUTO_TEST_CASE(check_series_save)
 {
-    resizeFillVectors(series, 123456.789, 8760);
+    resizeFillVectors(series, 0.123456789, 8760);
 
-    series.saveToFolder(folder);
+    BOOST_CHECK(series.saveToFolder(folder));
+    resizeFillVectors(series, 0, 0);
 
+    BOOST_CHECK(series.loadFromFolder(folder));
+    BOOST_CHECK(series.validate());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

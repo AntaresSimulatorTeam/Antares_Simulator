@@ -28,7 +28,7 @@
 #include <antares/logs.h>
 #include <antares/constants.h>
 
-#include <iomanip> 
+#include <iomanip>
 #include <fstream>
 
 #include "series.h"
