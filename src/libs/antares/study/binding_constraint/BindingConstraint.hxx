@@ -112,7 +112,7 @@ inline std::string BindingConstraint::timeSeriesFileName(const Env &env) const {
         case BindingConstraint::opEquality:
             return std::string() + env.folder.c_str() + Yuni::IO::Separator + name().c_str() + "_eq" + ".txt";
         default:
-            assert(false && "Cannot load/save time series of type other that eq/gt/lt");
+            logs.error("Cannot load/save time series of type other that eq/gt/lt");
             return "";
     }
 }
