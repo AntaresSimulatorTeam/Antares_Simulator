@@ -59,6 +59,7 @@ static void importShortTermStorages(
             toInsert.injectionNominalCapacity = st->properties.injectionNominalCapacity.value();
             toInsert.withdrawalNominalCapacity = st->properties.withdrawalNominalCapacity.value();
             toInsert.initialLevel = st->properties.initialLevel;
+            toInsert.name = st->properties.name;
 
             toInsert.series = st->series;
 

@@ -171,6 +171,7 @@ struct PROPERTIES
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
 
     int clusterGlobalIndex;
+    std::string name;
 };
 
 using AREA_INPUT = std::vector<::ShortTermStorage::PROPERTIES>; // index is local
