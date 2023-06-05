@@ -2,6 +2,7 @@
 // Created by marechaljas on 13/03/23.
 //
 #define BOOST_TEST_MODULE constraints
+
 #include <boost/test/unit_test.hpp>
 #include <fstream>
 #include "antares/study/constraint.h"
@@ -141,7 +142,7 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type) {
     }
     gt.close();
 
-    const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+    const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 2);

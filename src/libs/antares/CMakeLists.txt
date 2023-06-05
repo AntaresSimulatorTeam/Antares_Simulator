@@ -596,3 +596,4 @@ target_link_libraries(libantares-core
         result_writer
 	)
 
+import_std_libs(libantares-core)

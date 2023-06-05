@@ -28,11 +28,11 @@ endif()
 
 
 # Storing test-sc-builder-file-read-line under the folder Unit-tests in the IDE
+add_test(NAME sc-builder-file-read-line COMMAND test-sc-builder-file-read-line)
+set_property(TEST sc-builder-file-read-line PROPERTY LABELS unit)
 set_target_properties(test-sc-builder-file-read-line PROPERTIES FOLDER Unit-tests/sc-builder)
 
-add_test(NAME sc-builder-file-read-line COMMAND test-sc-builder-file-read-line)
 
-set_property(TEST sc-builder-file-read-line PROPERTY LABELS unit)
 
 # ====================================
 # Tests on saving scenario-builder

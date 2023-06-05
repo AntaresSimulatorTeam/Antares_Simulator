@@ -2,6 +2,7 @@
 // Created by marechaljas on 07/04/23.
 //
 #define BOOST_TEST_MODULE timeSeries
+#define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/included/unit_test.hpp>
 #include "antares/study.h"
@@ -78,9 +79,9 @@ struct Fixture {
         expected_equality_series.fillColumn(2, 0.9);
         expected_equality_series[0][8763] = 1;
 
-        expected_lower_bound_series.saveToCSVFile((working_tmp_dir / "dummy_name_lt.txt").c_str());
-        expected_upper_bound_series.saveToCSVFile((working_tmp_dir / "dummy_name_gt.txt").c_str());
-        expected_equality_series.saveToCSVFile((working_tmp_dir / "dummy_name_eq.txt").c_str());
+        expected_lower_bound_series.saveToCSVFile((working_tmp_dir / "dummy_name_lt.txt").string());
+        expected_upper_bound_series.saveToCSVFile((working_tmp_dir / "dummy_name_gt.txt").string());
+        expected_equality_series.saveToCSVFile((working_tmp_dir / "dummy_name_eq.txt").string());
     };
     Study study;
     StudyLoadOptions options;
@@ -94,7 +95,7 @@ struct Fixture {
 BOOST_FIXTURE_TEST_SUITE(BC_TimeSeries, Fixture)
 
 BOOST_AUTO_TEST_CASE(load_binding_constraints_timeseries) {
-    bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+    bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
     BOOST_CHECK_EQUAL(loading_ok, true);
     CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries(), expected_equality_series);
 
@@ -109,7 +110,7 @@ BOOST_AUTO_TEST_CASE(load_binding_constraints_timeseries) {
                     << "group = dummy_group\n";
         constraints.close();
     }
-    loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+    loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
     BOOST_CHECK_EQUAL(loading_ok, true);
     CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries(), expected_lower_bound_series);
 
@@ -124,7 +125,7 @@ BOOST_AUTO_TEST_CASE(load_binding_constraints_timeseries) {
                     << "group = dummy_group\n";
         constraints.close();
     }
-    loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+    loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
     BOOST_CHECK_EQUAL(loading_ok, true);
     CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries(), expected_upper_bound_series);
 }
@@ -144,8 +145,8 @@ BOOST_AUTO_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_of_t
         Matrix values;
         values.resize(5, 8784);
         values.fill(0.42);
-        values.saveToCSVFile((working_tmp_dir / "dummy_name_2_eq.txt").c_str());
-        auto loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+        values.saveToCSVFile((working_tmp_dir / "dummy_name_2_eq.txt").string());
+        auto loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
         BOOST_CHECK_EQUAL(loading_ok, false);
 }
 
@@ -164,8 +165,8 @@ BOOST_AUTO_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_of_t
     Matrix values;
     values.resize(3, 8784);
     values.fill(0.42);
-    values.saveToCSVFile((working_tmp_dir / "dummy_name_2_eq.txt").c_str());
-    auto loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+    values.saveToCSVFile((working_tmp_dir / "dummy_name_2_eq.txt").string());
+    auto loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
     BOOST_CHECK_EQUAL(loading_ok, true);
 }
 
@@ -179,7 +180,7 @@ BOOST_AUTO_TEST_CASE(Check_empty_file_interpreted_as_all_zeroes) {
         ofs.close();
     }
 
-    bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+    bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
     BOOST_CHECK_EQUAL(loading_ok, true);
     auto expectation = Matrix(1, 8784);
     expectation.fill(0);
@@ -194,7 +195,7 @@ BOOST_AUTO_TEST_CASE(Check_missing_file) {
         std::filesystem::remove(file_name);
     }
 
-    bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+    bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 0);
 }
