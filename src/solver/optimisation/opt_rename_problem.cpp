@@ -9,7 +9,7 @@ void RenameLinkVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                         const std::string& destination)
 {
     auto nvars = problem->NombreDeVariables;
-    if (nvars > var && problem->NomDesVariables[var][0] == '\0')
+    if (nvars > var && problem->NomDesVariables[var].empty())
     {
         const auto location = origin + ZONE_SEPARATOR + destination;
         auto fullName = BuildName(
@@ -71,6 +71,7 @@ void RenameThermalClusterVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
         const auto location
           = LocationIdentifier(zone, Antares::Data::Enum::ExportStructLocationDict::area)
             + SEPARATOR + Antares::Data::Enum::toString(structDict) + "<" + clusterName + ">";
+
         auto fullName = BuildName(Antares::Data::Enum::toString(
                                     Antares::Data::Enum::ExportStructDict::DispatchableProduction),
                                   location,

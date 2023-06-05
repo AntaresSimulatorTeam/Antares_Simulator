@@ -56,8 +56,8 @@ const std::initializer_list<std::string>& getNames<ExportStructDict>()
       "Pumping",
       "HydroLevel",
       "Overflow",
-      "FinalStorage"
-      "LayerStorage"
+      "FinalStorage",
+      "LayerStorage",
       "PositiveUnsuppliedEnergy",
       "NegativeUnsuppliedEnergy",
       "AreaBalance",
@@ -65,7 +65,7 @@ const std::initializer_list<std::string>& getNames<ExportStructDict>()
       "IntercoCostDestinationToOrigin",
       "CorrespondanceVarNativesVarOptim",
       "DispatchableProduction",
-      "ShortTermStorage"
+      "ShortTermStorage",
       "ShortTermStorageInjection",
       "ShortTermStorageWithdrawal",
       "ShortTermStorageLevel"};
