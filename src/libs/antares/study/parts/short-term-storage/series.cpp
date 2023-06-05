@@ -130,8 +130,6 @@ bool Series::saveToFolder(const std::string& folder) const
 
 bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
 {
-    logs.notice() << vect[0];
-
     std::ofstream fout(path);
     fout << std::setprecision(10);
 

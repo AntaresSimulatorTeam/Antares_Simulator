@@ -143,11 +143,11 @@ struct Fixture
     Fixture() = default;
     ~Fixture()
     {
-        /* std::filesystem::remove(folder + SEP + "PMAX-injection.txt"); */
-        /* std::filesystem::remove(folder + SEP + "PMAX-withdrawal.txt"); */
-        /* std::filesystem::remove(folder + SEP + "inflows.txt"); */
-        /* std::filesystem::remove(folder + SEP + "lower-rule-curve.txt"); */
-        /* std::filesystem::remove(folder + SEP + "upper-rule-curve.txt"); */
+        std::filesystem::remove(folder + SEP + "PMAX-injection.txt");
+        std::filesystem::remove(folder + SEP + "PMAX-withdrawal.txt");
+        std::filesystem::remove(folder + SEP + "inflows.txt");
+        std::filesystem::remove(folder + SEP + "lower-rule-curve.txt");
+        std::filesystem::remove(folder + SEP + "upper-rule-curve.txt");
     }
 
     std::string folder = getFolder();
