@@ -206,7 +206,7 @@ bool BindingConstraintLoader::loadTimeSeries(EnvForLoading &env, BindingConstrai
     if (env.version >= version870)
         return loadTimeSeries(env, bindingConstraint->operatorType(), bindingConstraint);
 
-    return loadTimeSeriesLegacyStudies(env, nullptr);
+    return loadTimeSeriesLegacyStudies(env, bindingConstraint);
 }
 
 bool
