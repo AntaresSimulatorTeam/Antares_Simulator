@@ -307,25 +307,20 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
     }
 
     // Short term storage
-    {
-        buffer.clear() << folder << "input" << SEP << "st-storage" << SEP << "clusters"
-            << SEP << area.id;
+    buffer.clear() << folder << SEP << "input" << SEP << "st-storage";
 
-        // Make sure the folder is created
-        if (IO::Directory::Create(buffer))
-            ret = area.shortTermStorage.saveToFolder(buffer.c_str()) && ret;
-        else
-            logs.warning() << "Folder creation for short term storage failed, path: " << folder;
+    IO::Directory::Create(buffer);
 
+    buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "clusters"
+        << SEP << area.id;
 
-        buffer.clear() << folder << "input" << SEP << "st-storage" << SEP << "series"
-            << SEP << area.id;
+    ret = area.shortTermStorage.saveToFolder(buffer.c_str()) && ret;
 
-        if (IO::Directory::Create(buffer))
-            ret = area.shortTermStorage.saveDataSeriesToFolder(buffer.c_str()) && ret;
-        else
-            logs.warning() << "Folder creation for short term storage failed, path: " << folder;
-    }
+    buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "series"
+        << SEP << area.id;
+
+    ret = area.shortTermStorage.saveDataSeriesToFolder(buffer.c_str()) && ret;
+
     return ret;
 }
 

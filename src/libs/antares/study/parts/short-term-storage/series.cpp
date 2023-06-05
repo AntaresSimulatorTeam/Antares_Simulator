@@ -117,8 +117,14 @@ void Series::fillDefaultSeriesIfEmpty()
 bool Series::saveToFolder(const std::string& folder) const
 {
     logs.debug() << "Saving series into folder: " << folder;
-    bool ret = true;
 #define SEP Yuni::IO::Separator
+    if (!Yuni::IO::Directory::Create(folder))
+    {
+        logs.warning() << "Couldn't create dir: " << folder;
+        return false;
+    }
+
+    bool ret = true;
     ret = writeVectorToFile(folder + SEP + "PMAX-injection.txt", maxInjectionModulation) && ret;
     ret = writeVectorToFile(folder + SEP + "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
     ret = writeVectorToFile(folder + SEP + "inflows.txt", inflows) && ret;
@@ -136,7 +142,7 @@ bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
         fout << std::setprecision(14);
 
         for (const auto& x : vect)
-        fout << x << std::endl;
+            fout << x << std::endl;
     }
     catch (...)
     {

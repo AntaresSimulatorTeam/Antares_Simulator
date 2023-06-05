@@ -125,6 +125,13 @@ bool Properties::saveToFolder(const std::string& folder) const
 {
     const std::string pathIni(folder + SEP + "list.ini");
 
+    // Make sure the folder is created
+    if (!Yuni::IO::Directory::Create(folder))
+    {
+        logs.warning() << "Couldn't create dir for sts: " << folder;
+        return false;
+    }
+
     logs.debug() << "saving file " << pathIni;
 
     IniFile ini;
