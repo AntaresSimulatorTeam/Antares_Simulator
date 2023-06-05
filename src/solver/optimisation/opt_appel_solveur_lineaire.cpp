@@ -99,7 +99,7 @@ char** VectorOfStringToCharPP(std::vector<std::string>& in, std::vector<char*>& 
     std::transform(in.begin(),
                    in.end(),
                    std::back_inserter(pointerVec),
-                   [](std::string& str) { return str.data(); });
+                   [](std::string& str) { return str.empty() ? nullptr : str.data(); });
     return pointerVec.data();
 }
 bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
