@@ -311,9 +311,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
     // save sts in list.ini for this area
     buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "clusters"
         << SEP << area.id;
-    IO::Directory::Create(buffer);
     ret = area.shortTermStorage.saveToFolder(buffer.c_str()) && ret;
-
 
     // save the series files
     buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "series"
@@ -951,16 +949,13 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             area.thermal.list.enableMustrunForEveryone();
     }
 
-    // create the input/st-storage/series/ directory if it's doesn't exist
-    buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series";
-    IO::Directory::Create(buffer);
-
     // Short term storage
     if (study.header.version >= 860)
     {
         buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series"
             << SEP << area.id;
-          ret = area.shortTermStorage.loadSeriesFromFolder(buffer.c_str()) && ret;
+
+        ret = area.shortTermStorage.loadSeriesFromFolder(buffer.c_str()) && ret;
         ret = area.shortTermStorage.validate() && ret;
     }
 
@@ -1122,20 +1117,24 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         }
     }
 
-    // create the input/st-storage/clusters/ directory if it doesn't exist
-    buffer.clear() << pStudy.folderInput << SEP << "st-storage";
-    IO::Directory::Create(buffer);
-
     // Short term storage data, specific to areas
     if (pStudy.header.version >= 860)
     {
         logs.info() << "Loading short term storage clusters...";
+        buffer.clear() << pStudy.folderInput << SEP << "st-storage";
 
-        for (const auto& [id, area] : areas)
+        if (IO::Directory::Exists(buffer))
         {
-            buffer.clear() << pStudy.folderInput << SEP << "st-storage" << SEP << "clusters"
-                << SEP << area->id;
-            ret = area->shortTermStorage.createSTStorageClustersFromIniFile(buffer.c_str()) && ret;
+            for (const auto& [id, area] : areas)
+            {
+                buffer.clear() << pStudy.folderInput << SEP << "st-storage" << SEP << "clusters" << SEP << area->id;
+                ret = area->shortTermStorage.createSTStorageClustersFromIniFile(buffer.c_str())
+                      && ret;
+            }
+        }
+        else
+        {
+            logs.info() << "Short term storage not found, skipping";
         }
     }
 
