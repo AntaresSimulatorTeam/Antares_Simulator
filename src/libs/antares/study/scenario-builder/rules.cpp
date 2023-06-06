@@ -308,6 +308,14 @@ bool Rules::readLink(const AreaName::Vector& splitKey, String value, bool update
     return true;
 }
 
+bool Rules::readBindingConstraints(const AreaName::Vector &splitKey, String value) {
+    std::string group_name = splitKey[1].c_str();
+    auto year = std::stoi(splitKey[2].c_str());
+    auto tsNumber = fromStringToTSnumber(value);
+    binding_constraints.setData(group_name, year, tsNumber);
+    return true;
+}
+
 bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool updaterMode = false)
 {
     if (splitKey.size() <= 2)
@@ -388,14 +396,6 @@ void Rules::sendWarningsForDisabledClusters()
           << " not found: it may be disabled, though given TS numbers in sc builder for year(s) :";
         logs.warning() << listYears;
     }
-}
-
-bool Rules::readBindingConstraints(const AreaName::Vector &splitKey, String value) {
-    std::string group_name = splitKey[1].c_str();
-    auto year = std::stoi(splitKey[2].c_str());
-    auto tsNumber = fromStringToTSnumber(value);
-    binding_constraints.setData(group_name, year, tsNumber);
-    return true;
 }
 
 } // namespace ScenarioBuilder
