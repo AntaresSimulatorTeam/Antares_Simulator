@@ -4,44 +4,57 @@
 
 const std::string SEPARATOR = "::";
 const std::string ZONE_SEPARATOR = "$$";
+class VariableNamer
+{
+private:
+    PROBLEME_ANTARES_A_RESOUDRE* problem;
+    int timeStep = 0;
+    std::string origin;
+    std::string destination;
+    std::string area;
 
-void RenameLinkVariable(PROBLEME_ANTARES_A_RESOUDRE* problem_hebdo,
-                        int var,
-                        Antares::Data::Enum::ExportStructDict structDict,
-                        int ts,
-                        Antares::Data::Enum::ExportStructTimeStepDict timeStepType,
-                        const std::string& origin,
-                        const std::string& destination);
+public:
+    VariableNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : problem(problem)
+    {
+    }
+    void SetTimeStep(int ts)
+    {
+        timeStep = ts;
+    }
+    void SetAreaName(const std::string& areaName)
+    {
+        area = areaName;
+    }
+    std::string AreaName() const
+    {
+        return area;
+    }
+    void SetOrigin(const std::string& linkOrigin)
+    {
+        origin = linkOrigin;
+    }
+    void SetDestination(const std::string& linkDestination)
+    {
+        destination = linkDestination;
+    }
+    int TimeStep() const
+    {
+        return timeStep;
+    }
+    void SetLinkVariableName(int var, Antares::Data::Enum::ExportStructDict structDict);
 
-void RenameAreaVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
-                        int var,
-                        Antares::Data::Enum::ExportStructDict structDict,
-                        int ts,
-                        Antares::Data::Enum::ExportStructTimeStepDict timeStepType,
-                        const std::string& zone);
-void RenameAreaVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
-                        int var,
-                        Antares::Data::Enum::ExportStructDict structDict,
-                        int ts,
-                        Antares::Data::Enum::ExportStructTimeStepDict timeStepType,
-                        const std::string& zone,
-                        int layerIndex);
+    void SetAreaVariableName(int var, Antares::Data::Enum::ExportStructDict structDict);
+    void SetAreaVariableName(int var,
+                             Antares::Data::Enum::ExportStructDict structDict,
+                             int layerIndex);
 
-void RenameThermalClusterVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
-                                  int var,
-                                  Antares::Data::Enum::ExportStructDict structDict,
-                                  int ts,
-                                  Antares::Data::Enum::ExportStructTimeStepDict timeStepType,
-                                  const std::string& zone,
-                                  const std::string& clusterName);
-void RenameShortTermStorageVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
-                                    int var,
-                                    Antares::Data::Enum::ExportStructDict structDict,
-                                    int ts,
-                                    Antares::Data::Enum::ExportStructTimeStepDict timeStepType,
-                                    const std::string& zone,
-                                    const std::string& shortTermStorageName);
-
+    void SetThermalClusterVariableName(int var,
+                                       Antares::Data::Enum::ExportStructDict structDict,
+                                       const std::string& clusterName);
+    void SetShortTermStorageVariableName(int var,
+                                         Antares::Data::Enum::ExportStructDict structDict,
+                                         const std::string& shortTermStorageName);
+};
 std::string BuildName(const std::string& name,
                       const std::string& location,
                       const std::string& timeIdentifier);

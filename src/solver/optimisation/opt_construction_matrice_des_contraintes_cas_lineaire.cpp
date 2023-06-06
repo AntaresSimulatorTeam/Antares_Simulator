@@ -42,7 +42,7 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
                    int& nombreDeTermes,
                    double* Pi,
                    int* Colonne,
-                   int timeStepInYear)
+                   VariableNamer& variableNamer)
 {
     const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo.PaliersThermiquesDuPays[pays];
 
@@ -57,15 +57,10 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
             Colonne[nombreDeTermes] = var;
             nombreDeTermes++;
 
-            const auto& area = problemeHebdo.NomsDesPays[pays];
+            variableNamer.SetAreaName(problemeHebdo.NomsDesPays[pays]);
             const auto& clusterName = PaliersThermiquesDuPays->NomsDesPaliersThermiques[index];
-            RenameThermalClusterVariable(problemeHebdo.ProblemeAResoudre,
-                                         var,
-                                         Enum::ExportStructDict::DispatchableProduction,
-                                         timeStepInYear,
-                                         Enum::ExportStructTimeStepDict::hour,
-                                         area,
-                                         clusterName);
+            variableNamer.SetThermalClusterVariableName(
+              var, Enum::ExportStructDict::DispatchableProduction, clusterName);
         }
     }
 }
@@ -77,8 +72,7 @@ static void shortTermStorageBalance(
   int& nombreDeTermes,
   double* Pi,
   int* Colonne,
-  const std::string& area,
-  int ts)
+  VariableNamer& variableNamer)
 {
     for (const auto& storage : shortTermStorageInput)
     {
@@ -90,13 +84,8 @@ static void shortTermStorageBalance(
             Pi[nombreDeTermes] = 1.0;
             Colonne[nombreDeTermes] = varInjection;
             nombreDeTermes++;
-            RenameShortTermStorageVariable(ProblemeAResoudre,
-                                           varInjection,
-                                           Enum::ExportStructDict::ShortTermStorageInjection,
-                                           ts,
-                                           Enum::ExportStructTimeStepDict::hour,
-                                           area,
-                                           storage.name);
+            variableNamer.SetShortTermStorageVariableName(
+              varInjection, Enum::ExportStructDict::ShortTermStorageInjection, storage.name);
         }
 
         if (const int varWithdrawal
@@ -106,13 +95,8 @@ static void shortTermStorageBalance(
             Pi[nombreDeTermes] = -1.0;
             Colonne[nombreDeTermes] = varWithdrawal;
             nombreDeTermes++;
-            RenameShortTermStorageVariable(ProblemeAResoudre,
-                                           varWithdrawal,
-                                           Enum::ExportStructDict::ShortTermStorageWithdrawal,
-                                           ts,
-                                           Enum::ExportStructTimeStepDict::hour,
-                                           area,
-                                           storage.name);
+            variableNamer.SetShortTermStorageVariableName(
+              varWithdrawal, Enum::ExportStructDict::ShortTermStorageWithdrawal, storage.name);
         }
     }
 }
@@ -126,8 +110,7 @@ static void shortTermStorageLevels(
   int* Colonne,
   int nombreDePasDeTempsPourUneOptimisation,
   int pdt,
-  int timeStepInYear,
-  const std::string& area)
+  VariableNamer& variableNamer)
 {
     const auto& VarOptim_current = CorrespondanceVarNativesVarOptim[pdt];
     // Cycle over the simulation period
@@ -144,13 +127,8 @@ static void shortTermStorageLevels(
             Pi[nombreDeTermes] = 1.0;
             Colonne[nombreDeTermes] = varLevel_next;
             nombreDeTermes++;
-            RenameShortTermStorageVariable(ProblemeAResoudre,
-                                           varLevel_next,
-                                           Enum::ExportStructDict::ShortTermStorageLevel,
-                                           timeStepInYear,
-                                           Enum::ExportStructTimeStepDict::hour,
-                                           area,
-                                           storage.name);
+            variableNamer.SetShortTermStorageVariableName(
+              varLevel_next, Enum::ExportStructDict::ShortTermStorageLevel, storage.name);
         }
 
         if (const int varLevel = VarOptim_current->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
@@ -159,13 +137,8 @@ static void shortTermStorageLevels(
             Pi[nombreDeTermes] = -1.0;
             Colonne[nombreDeTermes] = varLevel;
             nombreDeTermes++;
-            RenameShortTermStorageVariable(ProblemeAResoudre,
-                                           varLevel,
-                                           Enum::ExportStructDict::ShortTermStorageLevel,
-                                           timeStepInYear,
-                                           Enum::ExportStructTimeStepDict::hour,
-                                           area,
-                                           storage.name);
+            variableNamer.SetShortTermStorageVariableName(
+              varLevel, Enum::ExportStructDict::ShortTermStorageLevel, storage.name);
         }
 
         if (const int varInjection
@@ -175,13 +148,8 @@ static void shortTermStorageLevels(
             Pi[nombreDeTermes] = -1.0 * storage.efficiency;
             Colonne[nombreDeTermes] = varInjection;
             nombreDeTermes++;
-            RenameShortTermStorageVariable(ProblemeAResoudre,
-                                           varInjection,
-                                           Enum::ExportStructDict::ShortTermStorageInjection,
-                                           timeStepInYear,
-                                           Enum::ExportStructTimeStepDict::hour,
-                                           area,
-                                           storage.name);
+            variableNamer.SetShortTermStorageVariableName(
+              varInjection, Enum::ExportStructDict::ShortTermStorageInjection, storage.name);
         }
 
         if (const int varWithdrawal
@@ -191,21 +159,16 @@ static void shortTermStorageLevels(
             Pi[nombreDeTermes] = 1.0;
             Colonne[nombreDeTermes] = varWithdrawal;
             nombreDeTermes++;
-            RenameShortTermStorageVariable(ProblemeAResoudre,
-                                           varWithdrawal,
-                                           Enum::ExportStructDict::ShortTermStorageWithdrawal,
-                                           timeStepInYear,
-                                           Enum::ExportStructTimeStepDict::hour,
-                                           area,
-                                           storage.name);
+            variableNamer.SetShortTermStorageVariableName(
+              varWithdrawal, Enum::ExportStructDict::ShortTermStorageWithdrawal, storage.name);
         }
         CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[clusterGlobalIndex]
           = ProblemeAResoudre->NombreDeContraintes;
 
-        const auto constraintFullName
-          = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::ShortTermStorageLevel),
-                      LocationIdentifier(area, Enum::ExportStructLocationDict::area),
-                      TimeIdentifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
+        const auto constraintFullName = BuildName(
+          Enum::toString(Enum::ExportStructConstraintsDict::ShortTermStorageLevel),
+          LocationIdentifier(variableNamer.AreaName(), Enum::ExportStructLocationDict::area),
+          TimeIdentifier(variableNamer.TimeStep(), Enum::ExportStructTimeStepDict::hour));
         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=', constraintFullName);
     }
@@ -233,13 +196,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
+    VariableNamer variableNamer(ProblemeAResoudre);
 
     // For now only variable are exported, can't define name for constraints export
     int nvars = ProblemeAResoudre->NombreDeVariables;
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-
+        variableNamer.SetTimeStep(timeStepInYear);
         CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
         CorrespondanceCntNativesCntOptim = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
 
@@ -249,6 +213,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
             const auto& area = problemeHebdo->NomsDesPays[pays];
+            variableNamer.SetAreaName(area);
 
             while (interco >= 0)
             {
@@ -265,13 +230,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     const auto destination
                       = problemeHebdo
                           ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-                    RenameLinkVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       origin,
-                                       destination);
+                    variableNamer.SetOrigin(origin);
+                    variableNamer.SetDestination(destination);
+                    variableNamer.SetLinkVariableName(
+                      var, Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite);
                 }
                 interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
             }
@@ -291,13 +253,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     const auto destination
                       = problemeHebdo
                           ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-                    RenameLinkVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       origin,
-                                       destination);
+                    variableNamer.SetOrigin(origin);
+                    variableNamer.SetDestination(destination);
+                    variableNamer.SetLinkVariableName(
+                      var, Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite);
                 }
                 interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
             }
@@ -308,21 +267,16 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           nombreDeTermes,
                           Pi,
                           Colonne,
-                          timeStepInYear);
+                          variableNamer);
 
+            variableNamer.SetAreaName(area);
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays];
             if (var >= 0)
             {
                 Pi[nombreDeTermes] = -1.0;
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
-
-                RenameAreaVariable(ProblemeAResoudre,
-                                   var,
-                                   Enum::ExportStructDict::ProdHyd,
-                                   timeStepInYear,
-                                   Enum::ExportStructTimeStepDict::hour,
-                                   area);
+                variableNamer.SetAreaVariableName(var, Enum::ExportStructDict::ProdHyd);
             }
 
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[pays];
@@ -331,12 +285,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Pi[nombreDeTermes] = 1.0;
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
-                RenameAreaVariable(ProblemeAResoudre,
-                                   var,
-                                   Enum::ExportStructDict::Pompage,
-                                   timeStepInYear,
-                                   Enum::ExportStructTimeStepDict::hour,
-                                   area);
+                variableNamer.SetAreaVariableName(var, Enum::ExportStructDict::Pompage);
             }
 
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[pays];
@@ -346,12 +295,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
 
-                RenameAreaVariable(ProblemeAResoudre,
-                                   var,
-                                   Enum::ExportStructDict::DefaillancePositive,
-                                   timeStepInYear,
-                                   Enum::ExportStructTimeStepDict::hour,
-                                   area);
+                variableNamer.SetAreaVariableName(var, Enum::ExportStructDict::DefaillancePositive);
             }
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[pays];
             if (var >= 0)
@@ -360,12 +304,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
 
-                RenameAreaVariable(ProblemeAResoudre,
-                                   var,
-                                   Enum::ExportStructDict::DefaillanceNegative,
-                                   timeStepInYear,
-                                   Enum::ExportStructTimeStepDict::hour,
-                                   area);
+                variableNamer.SetAreaVariableName(var, Enum::ExportStructDict::DefaillanceNegative);
             }
 
             shortTermStorageBalance(ProblemeAResoudre,
@@ -374,8 +313,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                                     nombreDeTermes,
                                     Pi,
                                     Colonne,
-                                    area,
-                                    timeStepInYear);
+                                    variableNamer);
 
             CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesBilansPays[pays]
               = ProblemeAResoudre->NombreDeContraintes;
@@ -395,8 +333,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           nombreDeTermes,
                           Pi,
                           Colonne,
-                          timeStepInYear);
-
+                          variableNamer);
+            variableNamer.SetAreaName(area);
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays];
             if (var >= 0)
             {
@@ -404,12 +342,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
 
-                RenameAreaVariable(ProblemeAResoudre,
-                                   var,
-                                   Enum::ExportStructDict::ProdHyd,
-                                   timeStepInYear,
-                                   Enum::ExportStructTimeStepDict::hour,
-                                   problemeHebdo->NomsDesPays[pays]);
+                variableNamer.SetAreaVariableName(var, Enum::ExportStructDict::ProdHyd);
             }
 
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[pays];
@@ -420,12 +353,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 nombreDeTermes++;
 
                 const auto& area = problemeHebdo->NomsDesPays[pays];
-                RenameAreaVariable(ProblemeAResoudre,
-                                   var,
-                                   Enum::ExportStructDict::DefaillanceNegative,
-                                   timeStepInYear,
-                                   Enum::ExportStructTimeStepDict::hour,
-                                   area);
+                variableNamer.SetAreaVariableName(var, Enum::ExportStructDict::DefaillanceNegative);
             }
 
             CorrespondanceCntNativesCntOptim->NumeroDeContraintePourEviterLesChargesFictives[pays]
@@ -448,8 +376,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                                    Colonne,
                                    nombreDePasDeTempsPourUneOptimisation,
                                    pdt,
-                                   timeStepInYear,
-                                   area);
+                                   variableNamer);
         }
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
@@ -459,6 +386,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             const std::string destination
               = problemeHebdo->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
 
+            variableNamer.SetOrigin(origin);
+            variableNamer.SetDestination(destination);
             const COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
             if (CoutDeTransport->IntercoGereeAvecDesCouts)
             {
@@ -484,14 +413,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
 
-                    RenameLinkVariable(
-                      ProblemeAResoudre,
-                      var,
-                      Enum::ExportStructDict::CoutOrigineVersExtremiteDeLInterconnexion,
-                      timeStepInYear,
-                      Enum::ExportStructTimeStepDict::hour,
-                      origin,
-                      destination);
+                    variableNamer.SetLinkVariableName(
+                      var, Enum::ExportStructDict::CoutOrigineVersExtremiteDeLInterconnexion);
                 }
                 var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[interco];
@@ -501,14 +424,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
 
-                    RenameLinkVariable(
-                      ProblemeAResoudre,
-                      var,
-                      Enum::ExportStructDict::CoutExtremiteVersOrigineDeLInterconnexion,
-                      timeStepInYear,
-                      Enum::ExportStructTimeStepDict::hour,
-                      origin,
-                      destination);
+                    variableNamer.SetLinkVariableName(
+                      var, Enum::ExportStructDict::CoutExtremiteVersOrigineDeLInterconnexion);
                 }
 
                 CorrespondanceCntNativesCntOptim->NumeroDeContrainteDeDissociationDeFlux[interco]
@@ -571,13 +488,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     const auto destination
                       = problemeHebdo
                           ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-                    RenameLinkVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       origin,
-                                       destination);
+                    variableNamer.SetOrigin(origin);
+                    variableNamer.SetDestination(destination);
+                    variableNamer.SetLinkVariableName(
+                      var, Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite);
                 }
             }
 
@@ -614,20 +528,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
 
-                    const auto& area = problemeHebdo->NomsDesPays[pays];
+                    variableNamer.SetAreaName(problemeHebdo->NomsDesPays[pays]);
                     const auto& clusterName
                       = PaliersThermiquesDuPays->NomsDesPaliersThermiques
                           [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
-                    RenameThermalClusterVariable(ProblemeAResoudre,
-                                                 var,
-                                                 Enum::ExportStructDict::DispatchableProduction,
-                                                 timeStepInYear,
-                                                 Enum::ExportStructTimeStepDict::hour,
-                                                 area,
-                                                 clusterName);
+                    variableNamer.SetThermalClusterVariableName(
+                      var, Enum::ExportStructDict::DispatchableProduction, clusterName);
                 }
             }
-
             CorrespondanceCntNativesCntOptim
               ->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
@@ -691,23 +599,21 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                             ->NumeroDeVariableDeLInterconnexion[interco];
                     if (var >= 0)
                     {
-                        int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                        variableNamer.SetTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
                         Pi[nombreDeTermes] = poids;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        const auto origin
+                        const auto& origin
                           = problemeHebdo
                               ->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
-                        const auto destination
+                        const auto& destination
                           = problemeHebdo
                               ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-                        RenameLinkVariable(ProblemeAResoudre,
-                                           var,
-                                           Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite,
-                                           timeStepInYear,
-                                           Enum::ExportStructTimeStepDict::hour,
-                                           origin,
-                                           destination);
+
+                        variableNamer.SetOrigin(origin);
+                        variableNamer.SetDestination(destination);
+                        variableNamer.SetLinkVariableName(
+                          var, Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite);
                     }
                 }
             }
@@ -745,18 +651,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
 
-                        int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                        const auto& area = problemeHebdo->NomsDesPays[pays];
+                        variableNamer.SetTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+                        variableNamer.SetAreaName(problemeHebdo->NomsDesPays[pays]);
                         const auto& clusterName
                           = PaliersThermiquesDuPays->NomsDesPaliersThermiques
                               [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
-                        RenameThermalClusterVariable(ProblemeAResoudre,
-                                                     var,
-                                                     Enum::ExportStructDict::DispatchableProduction,
-                                                     timeStepInYear,
-                                                     Enum::ExportStructTimeStepDict::hour,
-                                                     area,
-                                                     clusterName);
+                        variableNamer.SetThermalClusterVariableName(
+                          var, Enum::ExportStructDict::DispatchableProduction, clusterName);
                     }
                 }
             }
@@ -824,20 +725,17 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Pi[nombreDeTermes] = poids;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                        variableNamer.SetTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
                         const auto origin
                           = problemeHebdo
                               ->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
                         const auto destination
                           = problemeHebdo
                               ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-                        RenameLinkVariable(ProblemeAResoudre,
-                                           var,
-                                           Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite,
-                                           timeStepInYear,
-                                           Enum::ExportStructTimeStepDict::hour,
-                                           origin,
-                                           destination);
+                        variableNamer.SetOrigin(origin);
+                        variableNamer.SetDestination(destination);
+                        variableNamer.SetLinkVariableName(
+                          var, Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite);
                     }
                 }
             }
@@ -875,18 +773,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Pi[nombreDeTermes] = poids;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                        const auto& area = problemeHebdo->NomsDesPays[pays];
+                        variableNamer.SetTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+                        variableNamer.SetAreaName(problemeHebdo->NomsDesPays[pays]);
                         const auto& clusterName
                           = PaliersThermiquesDuPays->NomsDesPaliersThermiques
                               [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
-                        RenameThermalClusterVariable(ProblemeAResoudre,
-                                                     var,
-                                                     Enum::ExportStructDict::DispatchableProduction,
-                                                     timeStepInYear,
-                                                     Enum::ExportStructTimeStepDict::hour,
-                                                     area,
-                                                     clusterName);
+                        variableNamer.SetThermalClusterVariableName(
+                          var, Enum::ExportStructDict::DispatchableProduction, clusterName);
                     }
                 }
             }
@@ -912,6 +805,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const auto& area = problemeHebdo->NomsDesPays[pays];
+        variableNamer.SetAreaName(area);
         bool presenceHydro
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable;
         bool TurbEntreBornes
@@ -926,7 +820,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             {
                 for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
                 {
-                    int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                    variableNamer.SetTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
                     var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                             ->NumeroDeVariablesDeLaProdHyd[pays];
 
@@ -935,12 +829,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        RenameAreaVariable(ProblemeAResoudre,
-                                           var,
-                                           Enum::ExportStructDict::ProdHyd,
-                                           timeStepInYear,
-                                           Enum::ExportStructTimeStepDict::hour,
-                                           area);
+                        variableNamer.SetAreaVariableName(var, Enum::ExportStructDict::ProdHyd);
                     }
                     var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                             ->NumeroDeVariablesDePompage[pays];
@@ -951,12 +840,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Pi[nombreDeTermes] *= -1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        RenameAreaVariable(ProblemeAResoudre,
-                                           var,
-                                           Enum::ExportStructDict::Pompage,
-                                           timeStepInYear,
-                                           Enum::ExportStructTimeStepDict::hour,
-                                           area);
+                        variableNamer.SetAreaVariableName(var, Enum::ExportStructDict::Pompage);
                     }
                 }
             }
@@ -964,7 +848,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             {
                 for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
                 {
-                    int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                    variableNamer.SetTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
                     var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                             ->NumeroDeVariablesDeLaProdHyd[pays];
                     if (var >= 0)
@@ -972,12 +856,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        RenameAreaVariable(ProblemeAResoudre,
-                                           var,
-                                           Enum::ExportStructDict::ProdHyd,
-                                           timeStepInYear,
-                                           Enum::ExportStructTimeStepDict::hour,
-                                           area);
+                        variableNamer.SetAreaVariableName(var, Enum::ExportStructDict::ProdHyd);
                     }
                 }
             }
@@ -1003,9 +882,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
                 continue;
             const auto& area = problemeHebdo->NomsDesPays[pays];
+            variableNamer.SetAreaName(area);
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                variableNamer.SetTimeStep(timeStepInYear);
                 CorrespondanceVarNativesVarOptim
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
                 int nombreDeTermes = 0;
@@ -1015,12 +896,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameAreaVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::ProdHyd,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       area);
+
+                    variableNamer.SetAreaVariableName(var, Enum::ExportStructDict::ProdHyd);
                 }
                 int pdt1 = pdt + 1;
                 if (pdt1 >= nombreDePasDeTempsPourUneOptimisation)
@@ -1033,12 +910,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = -1.0;
                     Colonne[nombreDeTermes] = var1;
                     nombreDeTermes++;
-                    RenameAreaVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::ProdHyd,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       area);
+                    variableNamer.SetAreaVariableName(var, Enum::ExportStructDict::ProdHyd);
                 }
 
                 if (int var2 = CorrespondanceVarNativesVarOptim
@@ -1048,12 +920,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = -1.0;
                     Colonne[nombreDeTermes] = var2;
                     nombreDeTermes++;
-                    RenameAreaVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::ProdHydALaBaisse,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       area);
+                    variableNamer.SetAreaVariableName(var,
+                                                      Enum::ExportStructDict::ProdHydALaBaisse);
                 }
 
                 if (int var3 = CorrespondanceVarNativesVarOptim
@@ -1063,12 +931,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var3;
                     nombreDeTermes++;
-                    RenameAreaVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::ProdHydALaHausse,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       area);
+                    variableNamer.SetAreaVariableName(var,
+                                                      Enum::ExportStructDict::ProdHydALaHausse);
                 }
 
                 std::string constraintFullName = BuildName(
@@ -1089,9 +953,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 continue;
 
             const auto& area = problemeHebdo->NomsDesPays[pays];
+            variableNamer.SetAreaName(area);
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                variableNamer.SetTimeStep(timeStepInYear);
                 CorrespondanceVarNativesVarOptim
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
                 int nombreDeTermes = 0;
@@ -1101,12 +967,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameAreaVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::ProdHyd,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       area);
+                    variableNamer.SetAreaVariableName(var, Enum::ExportStructDict::ProdHyd);
                 }
                 int var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[0]
                              ->NumeroDeVariablesVariationHydALaBaisse[pays];
@@ -1115,12 +976,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = -1.0;
                     Colonne[nombreDeTermes] = var1;
                     nombreDeTermes++;
-                    RenameAreaVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::ProdHydALaBaisse,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       area);
+                    variableNamer.SetAreaVariableName(var,
+                                                      Enum::ExportStructDict::ProdHydALaBaisse);
                 }
                 std::string constraintFullName = BuildName(
                   Enum::toString(
@@ -1136,12 +993,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameAreaVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::ProdHyd,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       area);
+                    variableNamer.SetAreaVariableName(var, Enum::ExportStructDict::ProdHyd);
                 }
                 var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[0]
                          ->NumeroDeVariablesVariationHydALaHausse[pays];
@@ -1150,12 +1002,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = -1.0;
                     Colonne[nombreDeTermes] = var1;
                     nombreDeTermes++;
-                    RenameAreaVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::ProdHydALaHausse,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       area);
+                    variableNamer.SetAreaVariableName(var,
+                                                      Enum::ExportStructDict::ProdHydALaHausse);
                 }
                 constraintFullName.clear();
                 constraintFullName = BuildName(
@@ -1179,13 +1027,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         const bool TurbEntreBornes
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
         const auto& area = problemeHebdo->NomsDesPays[pays];
-
+        variableNamer.SetAreaName(area);
         if (presenceHydro && (TurbEntreBornes || presencePompage))
         {
             int nombreDeTermes = 0;
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                variableNamer.SetTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
                 var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                         ->NumeroDeVariablesDeLaProdHyd[pays];
                 if (var >= 0)
@@ -1193,12 +1041,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameAreaVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::ProdHyd,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       area);
+                    variableNamer.SetAreaVariableName(var, Enum::ExportStructDict::ProdHyd);
                 }
             }
 
@@ -1222,7 +1065,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             int nombreDeTermes = 0;
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                variableNamer.SetTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
                 var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                         ->NumeroDeVariablesDeLaProdHyd[pays];
                 if (var >= 0)
@@ -1230,12 +1073,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameAreaVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::ProdHyd,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       area);
+                    variableNamer.SetAreaVariableName(var, Enum::ExportStructDict::ProdHyd);
                 }
             }
 
@@ -1261,7 +1099,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             int nombreDeTermes = 0;
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                variableNamer.SetTimeStep( problemeHebdo->weekInTheYear * 168 + pdt);
                 var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                         ->NumeroDeVariablesDePompage[pays];
                 if (var >= 0)
@@ -1269,12 +1107,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameAreaVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::Pompage,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       area);
+                    variableNamer.SetAreaVariableName(var, Enum::ExportStructDict::Pompage);
                 }
             }
 
@@ -1299,10 +1132,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         CorrespondanceCntNativesCntOptim = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
 
         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-
+variableNamer.SetTimeStep(timeStepInYear);
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             const auto& area = problemeHebdo->NomsDesPays[pays];
+            variableNamer.SetAreaName(area);
             if (problemeHebdo->CaracteristiquesHydrauliques[pays]->SuiviNiveauHoraire)
             {
                 int nombreDeTermes = 0;
@@ -1313,12 +1147,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameAreaVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::NiveauHydro,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       area);
+                    variableNamer.SetAreaVariableName(
+                                        var,
+                                        Enum::ExportStructDict::NiveauHydro);
                 }
 
                 if (pdt > 0)
@@ -1330,12 +1161,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Pi[nombreDeTermes] = -1.0;
                         Colonne[nombreDeTermes] = var1;
                         nombreDeTermes++;
-                        RenameAreaVariable(ProblemeAResoudre,
-                                           var,
-                                           Enum::ExportStructDict::NiveauHydro,
-                                           timeStepInYear,
-                                           Enum::ExportStructTimeStepDict::hour,
-                                           area);
+                        variableNamer.SetAreaVariableName(
+                                            var,
+                                            Enum::ExportStructDict::NiveauHydro);
                     }
                 }
 
@@ -1345,12 +1173,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameAreaVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::ProdHyd,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       area);
+                    variableNamer.SetAreaVariableName(
+                                        var,
+                                        Enum::ExportStructDict::ProdHyd);
                 }
 
                 var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[pays];
@@ -1361,12 +1186,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] *= -1;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameAreaVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::Pompage,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       area);
+                    variableNamer.SetAreaVariableName(
+                                        var,
+                                        Enum::ExportStructDict::Pompage);
                 }
 
                 var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeDebordement[pays];
@@ -1375,12 +1197,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameAreaVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::Debordement,
-                                       timeStepInYear,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       area);
+                    variableNamer.SetAreaVariableName(
+                                        var,
+                                        Enum::ExportStructDict::Debordement);
                 }
 
                 CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesNiveauxPays[pays]
@@ -1403,7 +1222,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     {
         const auto& week = problemeHebdo->weekInTheYear;
         const auto& area = problemeHebdo->NomsDesPays[pays];
+        variableNamer.SetAreaName(area);
         int lastTimeStepOfTheWeek = week * 168 + nombreDePasDeTempsPourUneOptimisation - 1;
+        variableNamer.SetTimeStep(lastTimeStepOfTheWeek);
         if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue
             && problemeHebdo->CaracteristiquesHydrauliques[pays]->DirectLevelAccess)
         /*  equivalence constraint : StockFinal- Niveau[T]= 0*/
@@ -1415,12 +1236,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Pi[nombreDeTermes] = 1.0;
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
-                RenameAreaVariable(ProblemeAResoudre,
-                                   var,
-                                   Enum::ExportStructDict::StockFinal,
-                                   lastTimeStepOfTheWeek,
-                                   Enum::ExportStructTimeStepDict::hour,
-                                   area);
+                variableNamer.SetAreaVariableName(
+                                    var,
+                                    Enum::ExportStructDict::StockFinal);
             }
             var = problemeHebdo
                     ->CorrespondanceVarNativesVarOptim[nombreDePasDeTempsPourUneOptimisation - 1]
@@ -1430,12 +1248,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Pi[nombreDeTermes] = -1.0;
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
-                RenameAreaVariable(ProblemeAResoudre,
-                                   var,
-                                   Enum::ExportStructDict::NiveauHydro,
-                                   lastTimeStepOfTheWeek,
-                                   Enum::ExportStructTimeStepDict::hour,
-                                   area);
+                variableNamer.SetAreaVariableName(
+                                    var,
+                                    Enum::ExportStructDict::NiveauHydro);
             }
             problemeHebdo->NumeroDeContrainteEquivalenceStockFinal[pays]
               = ProblemeAResoudre->NombreDeContraintes;
@@ -1458,12 +1273,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Pi[nombreDeTermes] = -1.0;
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
-                RenameAreaVariable(ProblemeAResoudre,
-                                   var,
-                                   Enum::ExportStructDict::StockFinal,
-                                   lastTimeStepOfTheWeek,
-                                   Enum::ExportStructTimeStepDict::hour,
-                                   area);
+                variableNamer.SetAreaVariableName(
+                                    var,
+                                    Enum::ExportStructDict::StockFinal);
             }
             for (int layerindex = 0; layerindex < 100; layerindex++)
             {
@@ -1474,13 +1286,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameAreaVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::TrancheDeStock,
-                                       lastTimeStepOfTheWeek,
-                                       Enum::ExportStructTimeStepDict::hour,
-                                       area,
-                                       layerindex);
+                    variableNamer.SetAreaVariableName(
+                                        var,
+                                        Enum::ExportStructDict::TrancheDeStock,
+                                        layerindex);
                 }
             }
 
