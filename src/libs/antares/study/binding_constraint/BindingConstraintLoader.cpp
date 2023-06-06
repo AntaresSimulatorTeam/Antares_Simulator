@@ -150,6 +150,7 @@ BindingConstraintLoader::load(EnvForLoading env) {
     if (bc->operatorType() == BindingConstraint::opBoth) {
         auto greater_bc = std::make_shared<BindingConstraint>();
         greater_bc->copyFrom(bc.get());
+        greater_bc->name(bc->pID); //Need the same id to load time series file properly
         bc->operatorType(BindingConstraint::opLess);
         greater_bc->operatorType(BindingConstraint::opGreater);
         if (loadTimeSeries(env, bc.get()) && loadTimeSeries(env, greater_bc.get())) {

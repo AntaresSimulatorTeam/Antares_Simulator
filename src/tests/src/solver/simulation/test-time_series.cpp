@@ -41,7 +41,7 @@ void CheckEqual(const Matrix<Ta>& a, const Matrix<Tb>& b) {
 
 struct Fixture {
     Fixture() {
-
+        study.header.version = version870;
         auto tmp_dir = fs::temp_directory_path();
         working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
         fs::create_directories(working_tmp_dir);
@@ -79,9 +79,9 @@ struct Fixture {
         expected_equality_series.fillColumn(2, 0.9);
         expected_equality_series[0][8763] = 1;
 
-        expected_lower_bound_series.saveToCSVFile((working_tmp_dir / "dummy_name_lt.txt").string());
-        expected_upper_bound_series.saveToCSVFile((working_tmp_dir / "dummy_name_gt.txt").string());
-        expected_equality_series.saveToCSVFile((working_tmp_dir / "dummy_name_eq.txt").string());
+        expected_lower_bound_series.saveToCSVFile((working_tmp_dir / "dummy_id_lt.txt").string());
+        expected_upper_bound_series.saveToCSVFile((working_tmp_dir / "dummy_id_gt.txt").string());
+        expected_equality_series.saveToCSVFile((working_tmp_dir / "dummy_id_eq.txt").string());
     };
     Study study;
     StudyLoadOptions options;
@@ -97,6 +97,7 @@ BOOST_FIXTURE_TEST_SUITE(BC_TimeSeries, Fixture)
 BOOST_AUTO_TEST_CASE(load_binding_constraints_timeseries) {
     bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
     BOOST_CHECK_EQUAL(loading_ok, true);
+    BOOST_CHECK_EQUAL(bindingConstraints.size(), 1);
     CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries(), expected_equality_series);
 
     {
@@ -145,7 +146,7 @@ BOOST_AUTO_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_of_t
         Matrix values;
         values.resize(5, 8784);
         values.fill(0.42);
-        values.saveToCSVFile((working_tmp_dir / "dummy_name_2_eq.txt").string());
+        values.saveToCSVFile((working_tmp_dir / "dummy_id_2_eq.txt").string());
         auto loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
         BOOST_CHECK_EQUAL(loading_ok, false);
 }
@@ -165,15 +166,15 @@ BOOST_AUTO_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_of_t
     Matrix values;
     values.resize(3, 8784);
     values.fill(0.42);
-    values.saveToCSVFile((working_tmp_dir / "dummy_name_2_eq.txt").string());
+    values.saveToCSVFile((working_tmp_dir / "dummy_id_2_eq.txt").string());
     auto loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
     BOOST_CHECK_EQUAL(loading_ok, true);
 }
 
 BOOST_AUTO_TEST_CASE(Check_empty_file_interpreted_as_all_zeroes) {
-    std::vector file_names = {working_tmp_dir / "dummy_name_lt.txt",
-                              working_tmp_dir / "dummy_name_gt.txt",
-                              working_tmp_dir / "dummy_name_eq.txt"};
+    std::vector file_names = {working_tmp_dir / "dummy_id_lt.txt",
+                              working_tmp_dir / "dummy_id_gt.txt",
+                              working_tmp_dir / "dummy_id_eq.txt"};
     for (auto file_name: file_names) {
         std::ofstream ofs;
         ofs.open(file_name, std::ofstream::out | std::ofstream::trunc);
@@ -188,9 +189,9 @@ BOOST_AUTO_TEST_CASE(Check_empty_file_interpreted_as_all_zeroes) {
 }
 
 BOOST_AUTO_TEST_CASE(Check_missing_file) {
-    std::vector file_names = {working_tmp_dir / "dummy_name_lt.txt",
-                              working_tmp_dir / "dummy_name_gt.txt",
-                              working_tmp_dir / "dummy_name_eq.txt"};
+    std::vector file_names = {working_tmp_dir / "dummy_id_lt.txt",
+                              working_tmp_dir / "dummy_id_gt.txt",
+                              working_tmp_dir / "dummy_id_eq.txt"};
     for (auto file_name: file_names) {
         std::filesystem::remove(file_name);
     }

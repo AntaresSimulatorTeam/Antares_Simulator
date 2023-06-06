@@ -183,29 +183,29 @@ bool BindingConstraintsList::loadFromFolder(Study &study,
     return !hasError;
 }
 
-    bool BindingConstraintsList::checkTimeSeriesWidthConsistency() const {
-        bool hasError = false;
-        std::map<std::string, unsigned, std::less<>> timeSeriesCountByGroup;
-        for(const auto& bc: this->pList) {
-            auto count = timeSeriesCountByGroup[bc->group()];
-            auto width = bc->TimeSeries().width;
-            if (count == 0) {
-                timeSeriesCountByGroup[bc->group()] = width;
-                continue;
-            }
-            if (count != width) {
-                logs.error() << "Inconsistent time series width for constraint of the same group. Group at fault: "
-                             << bc->group()
-                             << " .Previous width was " << count
-                             << " new constraint " << bc->name()
-                             << " found with width of " << width;
-                hasError = true;
-            }
+bool BindingConstraintsList::checkTimeSeriesWidthConsistency() const {
+    bool hasError = false;
+    std::map<std::string, unsigned, std::less<>> timeSeriesCountByGroup;
+    for(const auto& bc: this->pList) {
+        auto count = timeSeriesCountByGroup[bc->group()];
+        auto width = bc->TimeSeries().width;
+        if (count == 0) {
+            timeSeriesCountByGroup[bc->group()] = width;
+            continue;
         }
-        return hasError;
+        if (count != width) {
+            logs.error() << "Inconsistent time series width for constraint of the same group. Group at fault: "
+                         << bc->group()
+                         << " .Previous width was " << count
+                         << " new constraint " << bc->name()
+                         << " found with width of " << width;
+            hasError = true;
+        }
     }
+    return hasError;
+}
 
-    void BindingConstraintsList::initializeTsNumbers() {
+void BindingConstraintsList::initializeTsNumbers() {
     for (const auto& bc: pList) {
         timeSeriesNumbers[bc->group()] = {};
     }
