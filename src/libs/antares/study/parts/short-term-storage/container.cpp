@@ -91,6 +91,7 @@ bool STStorageInput::saveToFolder(const std::string& folder) const
 {
     // create empty list.ini if there's no sts in this area
     Yuni::IO::File::CreateEmptyFile(folder + SEP + "list.ini");
+    logs.notice() << "created empty ini: " << folder + SEP + "list.ini";
 
     return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [&folder](auto& storage) {
         return storage->saveProperties(folder);
