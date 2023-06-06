@@ -475,15 +475,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     // until NombreDePays, check if it's expected behavior
                     // I added the next line to keep the same behavior as before
                     int pays = problemeHebdo->NombreDePays;
-
-                    // if (exportStructure)
-                    // {
-                    //     OPT_Export_add_variable(varname,
-                    //                             var,
-                    //                             Enum::ExportStructDict::DefaillanceNegative,
-                    //                             timeStepInYear, // TODO[FOM] remove
-                    //                             pays);
-                    // }
                 }
                 var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[interco];
