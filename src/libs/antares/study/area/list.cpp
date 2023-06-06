@@ -327,7 +327,6 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
 
     buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "series"
         << SEP << area.id;
-    IO::Directory::Create(buffer);
 
     ret = area.shortTermStorage.saveDataSeriesToFolder(buffer.c_str()) && ret;
 
