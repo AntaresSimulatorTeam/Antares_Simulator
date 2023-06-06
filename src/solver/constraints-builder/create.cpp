@@ -163,8 +163,8 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
                                   0); // vocabulary is not so obvious here (less or greater)
                 ret = constraint != nullptr;
                 state->secondMember.resizeWithoutDataLost(
-                  constraint->TimeSeries().width, constraint->TimeSeries().height, 0);
-                constraint->TimeSeries() = state->secondMember;
+                        constraint->RHSTimeSeries().width, constraint->RHSTimeSeries().height, 0);
+                constraint->RHSTimeSeries() = state->secondMember;
 
                 // iterate the counter
                 ++nSubCount;
@@ -179,8 +179,8 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
                                   0); // vocabulary is not so obvious here (less or greater)
                 ret = constraint != nullptr;
                 state->secondMember.resizeWithoutDataLost(
-                        constraint->TimeSeries().width, constraint->TimeSeries().height, 0);
-                constraint->TimeSeries() = state->secondMember;
+                        constraint->RHSTimeSeries().width, constraint->RHSTimeSeries().height, 0);
+                constraint->RHSTimeSeries() = state->secondMember;
             }
         }
         ++nCount;
@@ -217,8 +217,8 @@ std::shared_ptr<Antares::Data::BindingConstraint> CBuilder::addConstraint(const 
     // second members
     if (!Math::Zero(secondMember))
     {
-        constraint->TimeSeries().fill(secondMember);
-        constraint->TimeSeries().markAsModified();
+        constraint->RHSTimeSeries().fill(secondMember);
+        constraint->RHSTimeSeries().markAsModified();
     }
 
     // mark all values as modified

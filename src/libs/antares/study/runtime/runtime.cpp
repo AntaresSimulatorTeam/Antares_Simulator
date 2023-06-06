@@ -159,8 +159,8 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
     assert(rti.linkCount < 50000000 and "Seems a bit large...");    // arbitrary value
     assert(rti.clusterCount < 50000000 and "Seems a bit large..."); // arbitrary value
 
-    rti.timeSeries.resize(b.TimeSeries().width, b.TimeSeries().height);
-    rti.timeSeries.copyFrom(b.TimeSeries());
+    rti.rhsTimeSeries.resize(b.RHSTimeSeries().width, b.RHSTimeSeries().height);
+    rti.rhsTimeSeries.copyFrom(b.RHSTimeSeries());
 
     rti.linkWeight.resize(rti.linkCount);
     rti.linkOffset.resize(rti.linkCount);
@@ -369,7 +369,7 @@ void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& lis
         {
             rti.operatorType = '?';
             rti.linkCount = 0;
-            rti.timeSeries.clear();
+            rti.rhsTimeSeries.clear();
             break;
         }
         case BindingConstraint::opMax:

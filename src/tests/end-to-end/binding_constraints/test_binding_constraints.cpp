@@ -185,8 +185,8 @@ auto prepare(Study::Ptr pStudy, double rhs, BindingConstraint::Type type, Bindin
     BC->mutateTypeWithoutCheck(type);
     BC->operatorType(op);
     auto& ts_numbers = pStudy->bindingConstraints.timeSeriesNumbers[BC->group()];
-    BC->TimeSeries().resize(1, 8760);
-    BC->TimeSeries().fill(rhs);
+    BC->RHSTimeSeries().resize(1, 8760);
+    BC->RHSTimeSeries().fill(rhs);
     pStudy->bindingConstraints.resizeAllTimeseriesNumbers(1);
     ts_numbers.timeseriesNumbers.fill(0);
     return std::pair(BC, link);
@@ -355,9 +355,9 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts__Binding_Constraints_Hourly)
 
     //Add one TS
     auto& ts_numbers = pStudy->bindingConstraints.timeSeriesNumbers[BC->group()];
-    BC->TimeSeries().resize(2, 8760);
-    BC->TimeSeries().fillColumn(0, rhs_ts1);
-    BC->TimeSeries().fillColumn(1, rhs_ts2);
+    BC->RHSTimeSeries().resize(2, 8760);
+    BC->RHSTimeSeries().fillColumn(0, rhs_ts1);
+    BC->RHSTimeSeries().fillColumn(1, rhs_ts2);
     pStudy->bindingConstraints.resizeAllTimeseriesNumbers(2);
     ts_numbers.timeseriesNumbers.fill(0);
     //Create scenario rules
@@ -399,8 +399,8 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts__Binding_Constraints_Hourly)
 
     //Add one TS
     auto& ts_numbers = pStudy->bindingConstraints.timeSeriesNumbers[BC->group()];
-    BC->TimeSeries().resize(1, 8760);
-    BC->TimeSeries().fillColumn(0, rhs_ts1);
+    BC->RHSTimeSeries().resize(1, 8760);
+    BC->RHSTimeSeries().fillColumn(0, rhs_ts1);
     pStudy->bindingConstraints.resizeAllTimeseriesNumbers(nbYears);
     ts_numbers.timeseriesNumbers.fill(0);
     //Create scenario rules

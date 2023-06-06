@@ -72,7 +72,7 @@ void BindingConstraintsList::resizeAllTimeseriesNumbers(unsigned int nb_years) {
 void BindingConstraintsList::fixTSNumbersWhenWidthIsOne() {
     std::map<std::string, bool, std::less<>> groupOfOneTS;
     std::for_each(pList.begin(), pList.end(), [&groupOfOneTS](auto bc) {
-        auto hasOneTs = bc->TimeSeries().width == 1;
+        auto hasOneTs = bc->RHSTimeSeries().width == 1;
         if (groupOfOneTS[bc->group()] && !hasOneTs) {
             assert(false && ("Group of binding constraints mixing 1TS and N TS group:" + bc->group()).c_str());
         }
@@ -113,7 +113,7 @@ bool BindingConstraintsList::rename(BindingConstraint *bc, const AnyString &newn
         return false;
     }
     bc->name(name);
-    JIT::Invalidate(bc->TimeSeries().jit);
+    JIT::Invalidate(bc->RHSTimeSeries().jit);
     return true;
 }
 
@@ -188,7 +188,7 @@ bool BindingConstraintsList::checkTimeSeriesWidthConsistency() const {
     std::map<std::string, unsigned, std::less<>> timeSeriesCountByGroup;
     for(const auto& bc: this->pList) {
         auto count = timeSeriesCountByGroup[bc->group()];
-        auto width = bc->TimeSeries().width;
+        auto width = bc->RHSTimeSeries().width;
         if (count == 0) {
             timeSeriesCountByGroup[bc->group()] = width;
             continue;

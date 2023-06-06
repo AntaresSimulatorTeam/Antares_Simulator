@@ -214,11 +214,11 @@ bool
 BindingConstraintLoader::loadTimeSeries(EnvForLoading &env, BindingConstraint::Operator operatorType,
                                         BindingConstraint *bindingConstraint) const {
     env.buffer.clear() << bindingConstraint->timeSeriesFileName(env);
-    bool load_ok = bindingConstraint->timeSeries.loadFromCSVFile(env.buffer,
-                                                            1,
+    bool load_ok = bindingConstraint->RHSTimeSeries_.loadFromCSVFile(env.buffer,
+                                                                     1,
                                           (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8784 : 366,
-                                                            Matrix<>::optImmediate,
-                                                            &env.matrixBuffer);
+                                                                     Matrix<>::optImmediate,
+                                                                     &env.matrixBuffer);
     if (load_ok)
     {
         logs.info() << " loaded time series for `" << bindingConstraint->name() << "` (" << BindingConstraint::TypeToCString(bindingConstraint->type()) << ", "
@@ -259,8 +259,8 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(EnvForLoading &env, Bi
         else
             logs.error("Cannot load time series of type other that eq/gt/lt");
 
-        bindingConstraint->timeSeries.resize(1, height);
-        bindingConstraint->timeSeries.pasteToColumn(0, intermediate[columnNumber]);
+        bindingConstraint->RHSTimeSeries_.resize(1, height);
+        bindingConstraint->RHSTimeSeries_.pasteToColumn(0, intermediate[columnNumber]);
         return true;
     }
 

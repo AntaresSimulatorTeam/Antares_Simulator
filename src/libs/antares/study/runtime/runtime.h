@@ -84,9 +84,9 @@ public:
     std::vector<long> clustersAreaIndex;
     std::string name;
     std::string group;
-    Matrix<> timeSeries;
+    Matrix<> rhsTimeSeries;
 
-    const Matrix<>& TimeSeries() const { return timeSeries; }
+    const Matrix<>& RHSTimeSeries() const { return rhsTimeSeries; }
 };
 
 /*!

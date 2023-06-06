@@ -99,9 +99,9 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 1);
 
     auto constraint = (*bindingConstraints.begin());
-    BOOST_CHECK_CLOSE(constraint->TimeSeries()[0][0], 0.2, 0.0001);
-    BOOST_CHECK_CLOSE(constraint->TimeSeries()[1][30], 0.4, 0.0001);
-    BOOST_CHECK_CLOSE(constraint->TimeSeries()[2][8783], 0.6, 0.0001);
+    BOOST_CHECK_CLOSE(constraint->RHSTimeSeries()[0][0], 0.2, 0.0001);
+    BOOST_CHECK_CLOSE(constraint->RHSTimeSeries()[1][30], 0.4, 0.0001);
+    BOOST_CHECK_CLOSE(constraint->RHSTimeSeries()[2][8783], 0.6, 0.0001);
 }
 
 BOOST_AUTO_TEST_CASE(BC_load_range_type) {
@@ -153,14 +153,14 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type) {
     auto bc_gt = *(bindingConstraints.begin());
 
     BOOST_CHECK(bc_lt->operatorType() == BindingConstraint::opLess);
-    BOOST_CHECK_CLOSE(bc_lt->TimeSeries()[0][0], 0.2, 0.0001);
-    BOOST_CHECK_CLOSE(bc_lt->TimeSeries()[1][30], 0.4, 0.0001);
-    BOOST_CHECK_CLOSE(bc_lt->TimeSeries()[2][8783], 0.6, 0.0001);
+    BOOST_CHECK_CLOSE(bc_lt->RHSTimeSeries()[0][0], 0.2, 0.0001);
+    BOOST_CHECK_CLOSE(bc_lt->RHSTimeSeries()[1][30], 0.4, 0.0001);
+    BOOST_CHECK_CLOSE(bc_lt->RHSTimeSeries()[2][8783], 0.6, 0.0001);
 
     BOOST_CHECK(bc_gt->operatorType() == BindingConstraint::opGreater);
-    BOOST_CHECK_CLOSE(bc_gt->TimeSeries()[0][0], 0.4, 0.0001);
-    BOOST_CHECK_CLOSE(bc_gt->TimeSeries()[1][30], 0.6, 0.0001);
-    BOOST_CHECK_CLOSE(bc_gt->TimeSeries()[2][8783], 0.8, 0.0001);
+    BOOST_CHECK_CLOSE(bc_gt->RHSTimeSeries()[0][0], 0.4, 0.0001);
+    BOOST_CHECK_CLOSE(bc_gt->RHSTimeSeries()[1][30], 0.6, 0.0001);
+    BOOST_CHECK_CLOSE(bc_gt->RHSTimeSeries()[2][8783], 0.8, 0.0001);
 }
 
 BOOST_AUTO_TEST_CASE(BC_load_legacy) {
@@ -204,9 +204,9 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy) {
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 1);
 
     auto bc_lt = (*bindingConstraints.begin());
-    BOOST_CHECK_CLOSE(bc_lt->TimeSeries()[0][0], 0.2, 0.0001);
-    BOOST_CHECK_CLOSE(bc_lt->TimeSeries()[0][30], 0.2, 0.0001);
-    BOOST_CHECK_CLOSE(bc_lt->TimeSeries()[0][8783], 0.2, 0.0001);
+    BOOST_CHECK_CLOSE(bc_lt->RHSTimeSeries()[0][0], 0.2, 0.0001);
+    BOOST_CHECK_CLOSE(bc_lt->RHSTimeSeries()[0][30], 0.2, 0.0001);
+    BOOST_CHECK_CLOSE(bc_lt->RHSTimeSeries()[0][8783], 0.2, 0.0001);
 }
 
 BOOST_AUTO_TEST_CASE(BC_load_legacy_range) {
@@ -252,11 +252,11 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_range) {
     auto bc_lt = *(++bindingConstraints.begin());
     auto bc_gt = *(bindingConstraints.begin());
 
-    BOOST_CHECK_CLOSE(bc_lt->TimeSeries()[0][0], 0.2, 0.0001);
-    BOOST_CHECK_CLOSE(bc_lt->TimeSeries()[0][30], 0.2, 0.0001);
-    BOOST_CHECK_CLOSE(bc_lt->TimeSeries()[0][8783], 0.2, 0.0001);
+    BOOST_CHECK_CLOSE(bc_lt->RHSTimeSeries()[0][0], 0.2, 0.0001);
+    BOOST_CHECK_CLOSE(bc_lt->RHSTimeSeries()[0][30], 0.2, 0.0001);
+    BOOST_CHECK_CLOSE(bc_lt->RHSTimeSeries()[0][8783], 0.2, 0.0001);
 
-    BOOST_CHECK_CLOSE(bc_gt->TimeSeries()[0][0], 0.4, 0.0001);
-    BOOST_CHECK_CLOSE(bc_gt->TimeSeries()[0][30], 0.4, 0.0001);
-    BOOST_CHECK_CLOSE(bc_gt->TimeSeries()[0][8783], 0.4, 0.0001);
+    BOOST_CHECK_CLOSE(bc_gt->RHSTimeSeries()[0][0], 0.4, 0.0001);
+    BOOST_CHECK_CLOSE(bc_gt->RHSTimeSeries()[0][30], 0.4, 0.0001);
+    BOOST_CHECK_CLOSE(bc_gt->RHSTimeSeries()[0][8783], 0.4, 0.0001);
 }
