@@ -944,7 +944,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        // const auto zone = problemeHebdo->NomsDesPays[pays];
                         RenameZoneVariable(ProblemeAResoudre,
                                            var,
                                            Enum::ExportStructDict::ProdHyd,
