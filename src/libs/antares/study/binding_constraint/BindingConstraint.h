@@ -206,8 +206,8 @@ public:
     bool skipped() const;
 
     //Ref to prevent copy. const ref to prevent modification.
-    const Matrix<>& TimeSeries() const;
-    Matrix<>& TimeSeries();
+    const Matrix<>& RHSTimeSeries() const;
+    Matrix<>& RHSTimeSeries();
 
 
     bool hasAllWeightedLinksOnLayer(size_t layerID);
@@ -411,7 +411,7 @@ private:
     //! Raw ID
     ConstraintName pID;
     //! Time series of the binding constraint. Width = number of series. Height = nbTimeSteps. Only store series for operatorType
-    Matrix<> timeSeries;
+    Matrix<> RHSTimeSeries_;
     //! Weights for links
     linkWeightMap pLinkWeights;
     //! Weights for thermal clusters

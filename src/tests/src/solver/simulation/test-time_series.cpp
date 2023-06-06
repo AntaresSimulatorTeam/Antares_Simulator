@@ -1,7 +1,7 @@
 //
 // Created by marechaljas on 07/04/23.
 //
-#define BOOST_TEST_MODULE timeSeries
+#define BOOST_TEST_MODULE rhsTimeSeries
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/included/unit_test.hpp>
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(load_binding_constraints_timeseries) {
     bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 1);
-    CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries(), expected_equality_series);
+    CheckEqual(bindingConstraints.find("dummy_id")->RHSTimeSeries(), expected_equality_series);
 
     {
         std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE(load_binding_constraints_timeseries) {
     }
     loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
     BOOST_CHECK_EQUAL(loading_ok, true);
-    CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries(), expected_lower_bound_series);
+    CheckEqual(bindingConstraints.find("dummy_id")->RHSTimeSeries(), expected_lower_bound_series);
 
     {
         std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE(load_binding_constraints_timeseries) {
     }
     loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
     BOOST_CHECK_EQUAL(loading_ok, true);
-    CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries(), expected_upper_bound_series);
+    CheckEqual(bindingConstraints.find("dummy_id")->RHSTimeSeries(), expected_upper_bound_series);
 }
 
 BOOST_AUTO_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_of_time_series_error_case) {
@@ -185,7 +185,7 @@ BOOST_AUTO_TEST_CASE(Check_empty_file_interpreted_as_all_zeroes) {
     BOOST_CHECK_EQUAL(loading_ok, true);
     auto expectation = Matrix(1, 8784);
     expectation.fill(0);
-    CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries(), expectation);
+    CheckEqual(bindingConstraints.find("dummy_id")->RHSTimeSeries(), expectation);
 }
 
 BOOST_AUTO_TEST_CASE(Check_missing_file) {

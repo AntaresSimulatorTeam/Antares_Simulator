@@ -216,7 +216,7 @@ void BindingConstraint::resetToDefaultValues()
 {
     pEnabled = true;
     pComments.clear();
-    timeSeries.reset();
+    RHSTimeSeries_.reset();
     markAsModified();
 }
 
@@ -455,7 +455,7 @@ Yuni::uint64 BindingConstraint::memoryUsage() const
            // comments
            + pComments.capacity()
            // Values
-           + TimeSeries().memoryUsage()
+           + RHSTimeSeries().memoryUsage()
            // Estimation
            + pLinkWeights.size() * (sizeof(double) + 3 * sizeof(void *))
            // Estimation
@@ -611,7 +611,7 @@ void BindingConstraint::initLinkArrays(std::vector<double>& w,
 
 bool BindingConstraint::forceReload(bool reload) const
 {
-    return TimeSeries().forceReload(reload);
+    return RHSTimeSeries().forceReload(reload);
 }
 
 void BindingConstraintsList::forceReload(bool reload) const
@@ -625,7 +625,7 @@ void BindingConstraintsList::forceReload(bool reload) const
 
 void BindingConstraint::markAsModified() const
 {
-    TimeSeries().markAsModified();
+    RHSTimeSeries().markAsModified();
 }
 
 void BindingConstraint::clearAndReset(const AnyString &name,
@@ -653,34 +653,34 @@ void BindingConstraint::clearAndReset(const AnyString &name,
     {
     case typeUnknown:
     {
-            timeSeries.reset();
+            RHSTimeSeries_.reset();
             logs.error() << "invalid type for " << name << " (got 'unknown')";
             assert(false);
             break;
         }
     case typeHourly:
     {
-            timeSeries.reset(columnMax, 8784, true);
+            RHSTimeSeries_.reset(columnMax, 8784, true);
             break;
         }
     case typeDaily:
     {
-            timeSeries.reset(columnMax, 366, true);
+            RHSTimeSeries_.reset(columnMax, 366, true);
             break;
         }
     case typeWeekly:
     {
-            timeSeries.reset(columnMax, 366);
+            RHSTimeSeries_.reset(columnMax, 366);
             break;
         }
     case typeMax:
     {
-            timeSeries.reset(0, 0);
+            RHSTimeSeries_.reset(0, 0);
             logs.error() << "invalid type for " << name;
             break;
         }
     }
-    timeSeries.markAsModified();
+    RHSTimeSeries_.markAsModified();
 }
 
 std::string BindingConstraint::group() const {
@@ -692,12 +692,12 @@ void BindingConstraint::group(std::string group_name) {
     markAsModified();
 }
 
-const Matrix<>& BindingConstraint::TimeSeries() const {
-    return timeSeries;
+const Matrix<>& BindingConstraint::RHSTimeSeries() const {
+    return RHSTimeSeries_;
 }
 
-Matrix<>& BindingConstraint::TimeSeries() {
-    return timeSeries;
+Matrix<>& BindingConstraint::RHSTimeSeries() {
+    return RHSTimeSeries_;
 }
 
 void BindingConstraint::copyFrom(BindingConstraint const* original) {
@@ -711,7 +711,7 @@ void BindingConstraint::copyFrom(BindingConstraint const* original) {
     pEnabled = original->pEnabled;
     pComments = original->pComments;
     group_ = original->group_;
-    timeSeries.copyFrom(original->timeSeries);
+    RHSTimeSeries_.copyFrom(original->RHSTimeSeries_);
 }
 
 } // namespace Antares

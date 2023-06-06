@@ -64,6 +64,6 @@ bool BindingConstraintSaver::saveToEnv(EnvForSaving& env, const BindingConstrain
 
     // Exporting the matrix
     env.matrixFilename.clear() << bindingConstraint->timeSeriesFileName(env);
-    return bindingConstraint->timeSeries.saveToCSVFile(env.matrixFilename.c_str());
+    return bindingConstraint->RHSTimeSeries_.saveToCSVFile(env.matrixFilename.c_str());
 }
 }

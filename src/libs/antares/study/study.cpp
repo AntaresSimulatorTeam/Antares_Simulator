@@ -1139,7 +1139,7 @@ void Study::ensureDataAreLoadedForAllBindingConstraints()
 {
     for(const auto& constraint: bindingConstraints)
     {
-        if (not JIT::IsReady(constraint->TimeSeries().jit))
+        if (not JIT::IsReady(constraint->RHSTimeSeries().jit))
             constraint->forceReload(true);
     }
 }

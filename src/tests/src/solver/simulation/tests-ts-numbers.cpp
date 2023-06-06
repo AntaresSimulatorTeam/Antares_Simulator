@@ -691,7 +691,7 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
     auto bc = study->bindingConstraints.add("dummy");
     bc->group("dummy");
-    bc->TimeSeries().resize(42, 1);
+    bc->RHSTimeSeries().resize(42, 1);
     study->bindingConstraints.timeSeriesNumbers["dummy"] = BindingConstraintTimeSeriesNumbers();
     study->bindingConstraints.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 

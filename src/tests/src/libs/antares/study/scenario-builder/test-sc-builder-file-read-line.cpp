@@ -135,7 +135,7 @@ struct Fixture
         bc->group("groupTest");
         study->bindingConstraints.timeSeriesNumbers["groupTest"] = {};
         study->bindingConstraints.resizeAllTimeseriesNumbers(study->parameters.nbYears);
-        bc->TimeSeries().resize(7, 1);
+        bc->RHSTimeSeries().resize(7, 1);
 
 		BOOST_CHECK(my_rule.reset());
 	}

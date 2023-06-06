@@ -54,12 +54,12 @@ std::string GroupPredicate(const std::shared_ptr<T>& bc) {
 
 template<class T>
 unsigned TimeSeriesWidthPredicate(const T& bc) {
-    return bc.TimeSeries().width;
+    return bc.RHSTimeSeries().width;
 }
 
 template<class T>
 unsigned TimeSeriesWidthPredicate(const std::shared_ptr<T>& bc) {
-    return bc->TimeSeries().width;
+    return bc->RHSTimeSeries().width;
 }
 
 template<class ListBindingConstraints>
