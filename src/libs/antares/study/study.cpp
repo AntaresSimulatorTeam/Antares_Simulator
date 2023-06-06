@@ -940,11 +940,7 @@ bool Study::areaRename(Area* area, AreaName newName)
     // A name must not be empty
     if (not area or newName.empty())
         return false;
-    if (CheckForbiddenCharacterInAreaName(newName))
-    {
-        logs.error() << "character '*' is forbidden in area name: `" << newName << "`";
-        return false;
-    }
+
     String beautifyname;
     BeautifyName(beautifyname, newName);
     if (beautifyname.empty())
