@@ -87,11 +87,11 @@ enum class ExportStructConstraintsDict : unsigned char
     AreaHydroLevel,
     FinalStockEquivalent,
     FinalStockExpression,
-    MinRunTime,
-    MinStopTime,
-    PMaxOfRunningThermalClusterGroups,
-    PMinOfRunningThermalClusterGroups,
-    StartingAndStopingThermalClusterGroups,
+    MinUpTime,
+    MinDownTime,
+    PMaxDispatchableGeneration,
+    PMinDispatchableGeneration,
+    ConsistenceNODU,
     ShortTermStorageLevel
 };
 enum class ExportStructTimeStepDict : unsigned char
