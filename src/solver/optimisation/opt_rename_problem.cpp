@@ -70,12 +70,12 @@ void RenameThermalClusterVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
     {
         const auto location
           = LocationIdentifier(zone, Antares::Data::Enum::ExportStructLocationDict::area)
-            + SEPARATOR + Antares::Data::Enum::toString(structDict) + "<" + clusterName + ">";
+            + SEPARATOR
+            + Antares::Data::Enum::toString(Antares::Data::Enum::ExportStructDict::PalierThermique)
+            + "<" + clusterName + ">";
 
-        auto fullName = BuildName(Antares::Data::Enum::toString(
-                                    Antares::Data::Enum::ExportStructDict::DispatchableProduction),
-                                  location,
-                                  TimeIdentifier(ts, timeStepType));
+        auto fullName = BuildName(
+          Antares::Data::Enum::toString(structDict), location, TimeIdentifier(ts, timeStepType));
         problem->NomDesVariables[var] = fullName;
     }
 }

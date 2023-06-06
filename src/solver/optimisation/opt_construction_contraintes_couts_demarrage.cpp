@@ -97,7 +97,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         nombreDeTermes++;
                         RenameThermalClusterVariable(problemeHebdo->ProblemeAResoudre,
                                                      var,
-                                                     Enum::ExportStructDict::PalierThermique,
+                                                     Enum::ExportStructDict::DispatchableProduction,
                                                      timeStepInYear,
                                                      Enum::ExportStructTimeStepDict::hour,
                                                      zone,
@@ -159,7 +159,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         nombreDeTermes++;
                         RenameThermalClusterVariable(problemeHebdo->ProblemeAResoudre,
                                                      var,
-                                                     Enum::ExportStructDict::PalierThermique,
+                                                     Enum::ExportStructDict::DispatchableProduction,
                                                      timeStepInYear,
                                                      Enum::ExportStructTimeStepDict::hour,
                                                      zone,

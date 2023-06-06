@@ -61,7 +61,7 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
             const auto& clusterName = PaliersThermiquesDuPays->NomsDesPaliersThermiques[index];
             RenameThermalClusterVariable(problemeHebdo.ProblemeAResoudre,
                                          var,
-                                         Enum::ExportStructDict::PalierThermique,
+                                         Enum::ExportStructDict::DispatchableProduction,
                                          timeStepInYear,
                                          Enum::ExportStructTimeStepDict::hour,
                                          zone,
@@ -629,7 +629,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
                     RenameThermalClusterVariable(ProblemeAResoudre,
                                                  var,
-                                                 Enum::ExportStructDict::PalierThermique,
+                                                 Enum::ExportStructDict::DispatchableProduction,
                                                  timeStepInYear,
                                                  Enum::ExportStructTimeStepDict::hour,
                                                  zone,
@@ -761,7 +761,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                               [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
                         RenameThermalClusterVariable(ProblemeAResoudre,
                                                      var,
-                                                     Enum::ExportStructDict::PalierThermique,
+                                                     Enum::ExportStructDict::DispatchableProduction,
                                                      timeStepInYear,
                                                      Enum::ExportStructTimeStepDict::hour,
                                                      zone,
@@ -891,7 +891,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                               [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
                         RenameThermalClusterVariable(ProblemeAResoudre,
                                                      var,
-                                                     Enum::ExportStructDict::PalierThermique,
+                                                     Enum::ExportStructDict::DispatchableProduction,
                                                      timeStepInYear,
                                                      Enum::ExportStructTimeStepDict::hour,
                                                      zone,
