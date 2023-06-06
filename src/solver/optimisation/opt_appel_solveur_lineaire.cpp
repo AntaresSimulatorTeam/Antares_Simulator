@@ -94,28 +94,14 @@ private:
     clock::time_point start_;
     clock::time_point end_;
 };
-char** VectorOfStringToCharPP(std::vector<std::string>& in, std::vector<char*>& pointerVec)
-{
-    std::transform(in.begin(),
-                   in.end(),
-                   std::back_inserter(pointerVec),
-                   [](std::string& str) { return str.empty() ? nullptr : str.data(); });
-    return pointerVec.data();
-}
 bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
                          int NumIntervalle,
                          const int optimizationNumber,
                          std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    std::vector<char*> pointerVecVar;
-    std::vector<char*> pointerVecCnt;
-    auto NomsDesVariablesCharPP
-      = VectorOfStringToCharPP(ProblemeAResoudre->NomDesVariables, pointerVecVar);
-    auto NomDesContraintesCharPP
-      = VectorOfStringToCharPP(ProblemeAResoudre->NomDesContraintes, pointerVecCnt);
-    Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(NomsDesVariablesCharPP,
-                                                   NomDesContraintesCharPP,
+    Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
+                                                   ProblemeAResoudre->NomDesContraintes,
                                                    ProblemeAResoudre->StatutDesVariables,
                                                    ProblemeAResoudre->StatutDesContraintes);
     bool PremierPassage = true;

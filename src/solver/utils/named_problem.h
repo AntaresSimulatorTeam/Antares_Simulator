@@ -13,9 +13,12 @@ namespace Optimization
 struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
 {
 private:
+    std::vector<char*> Variables;
+    std::vector<char*> Contraintes;
+
 public:
-    PROBLEME_SIMPLEXE_NOMME(char** NomDesVariables,
-                            char** NomDesContraintes,
+    PROBLEME_SIMPLEXE_NOMME(std::vector<std::string>& VectNomDesVariables,
+                            std::vector<std::string>& VectNomDesContraintes,
                             std::vector<int>& StatutDesVariables,
                             std::vector<int>& StatutDesContraintes);
 
