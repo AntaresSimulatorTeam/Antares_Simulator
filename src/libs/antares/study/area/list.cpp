@@ -554,7 +554,7 @@ bool AreaList::loadListFromFile(const AnyString& filename)
         if (CheckForbiddenCharacterInAreaName(name))
         {
             logs.error() << "character '*' is forbidden in area name: `" << name << "`";
-            return nullptr;
+            continue;
         }
         // Add the area in the list
         AreaListAddFromNames(*this, name, lname, pStudy.maxNbYearsInParallel);
