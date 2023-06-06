@@ -127,7 +127,7 @@ bool Series::saveToFolder(const std::string& folder) const
 
     bool ret = true;
 
-    auto checkWrite = [&ret, &folder](const std::string& name, const std::vector<double> content) {
+    auto checkWrite = [&ret, &folder](const std::string& name, const std::vector<double>& content) {
         ret = writeVectorToFile(folder + SEP + name, content) && ret;
     };
 
