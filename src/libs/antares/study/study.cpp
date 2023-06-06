@@ -779,6 +779,11 @@ Area* Study::areaAdd(const AreaName& name)
 {
     if (name.empty())
         return nullptr;
+    if (CheckForbiddenCharacterInAreaName(name))
+    {
+        logs.error() << "character '*' is forbidden in area name: `" << name << "`";
+        return nullptr;
+    }
 
     // Result
     Area* area = nullptr;

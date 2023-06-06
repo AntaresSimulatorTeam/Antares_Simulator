@@ -496,11 +496,6 @@ Area* AreaListAddFromNames(AreaList& list,
 {
     if (!name || !lname)
         return nullptr;
-    if (CheckForbiddenCharacterInAreaName(name))
-    {
-        logs.error() << "character '*' is forbidden in area name: `" << name << "`";
-        return nullptr;
-    }
     // Look up
     if (!AreaListLFind(&list, lname.c_str()))
     {
@@ -555,6 +550,11 @@ bool AreaList::loadListFromFile(const AnyString& filename)
             logs.warning() << "ignoring invalid area name: `" << name << "`, " << filename
                            << ": line " << line;
             continue;
+        }
+        if (CheckForbiddenCharacterInAreaName(name))
+        {
+            logs.error() << "character '*' is forbidden in area name: `" << name << "`";
+            return nullptr;
         }
         // Add the area in the list
         AreaListAddFromNames(*this, name, lname, pStudy.maxNbYearsInParallel);
