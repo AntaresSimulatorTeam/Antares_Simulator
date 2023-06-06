@@ -307,6 +307,8 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
     }
 
     // Short term storage
+
+    // create the main input/st-storage/clusters directory
     buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "clusters"
         << SEP << area.id;
     IO::Directory::Create(buffer);
@@ -325,9 +327,9 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
     buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "series";
     IO::Directory::Create(buffer);
 
+    // create the series files
     buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "series"
         << SEP << area.id;
-
     ret = area.shortTermStorage.saveDataSeriesToFolder(buffer.c_str()) && ret;
 
     return ret;
