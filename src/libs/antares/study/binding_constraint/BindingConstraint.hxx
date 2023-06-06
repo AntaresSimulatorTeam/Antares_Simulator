@@ -106,11 +106,11 @@ template<class Env>
 inline std::string BindingConstraint::timeSeriesFileName(const Env &env) const {
     switch (operatorType()) {
         case BindingConstraint::opLess:
-            return std::string() + env.folder.c_str() + Yuni::IO::Separator + name().c_str() + "_lt" + ".txt";
+            return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_lt" + ".txt";
         case BindingConstraint::opGreater:
-            return std::string() + env.folder.c_str() + Yuni::IO::Separator + name().c_str() + "_gt" + ".txt";
+            return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_gt" + ".txt";
         case BindingConstraint::opEquality:
-            return std::string() + env.folder.c_str() + Yuni::IO::Separator + name().c_str() + "_eq" + ".txt";
+            return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_eq" + ".txt";
         default:
             logs.error("Cannot load/save time series of type other that eq/gt/lt");
             return "";
