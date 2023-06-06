@@ -106,7 +106,7 @@ std::string BuildName(const std::string& name,
                       const std::string& location,
                       const std::string& timeIdentifier)
 {
-    std::stringstream buffer;
-    buffer << name << SEPARATOR << location << SEPARATOR << timeIdentifier;
-    return buffer.str();
+    std::string result = name + SEPARATOR + location + SEPARATOR + timeIdentifier;
+    std::replace(result.begin(), result.end(), ' ', '*');
+    return result;
 }
