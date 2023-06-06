@@ -93,12 +93,11 @@ void RenameShortTermStorageVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
     {
         const auto location
           = LocationIdentifier(zone, Antares::Data::Enum::ExportStructLocationDict::area)
-            + SEPARATOR + Antares::Data::Enum::toString(structDict) + "<" + shortTermStorageName
-            + ">";
+            + SEPARATOR
+            + Antares::Data::Enum::toString(Antares::Data::Enum::ExportStructDict::ShortTermStorage)
+            + "<" + shortTermStorageName + ">";
         auto fullName = BuildName(
-          Antares::Data::Enum::toString(Antares::Data::Enum::ExportStructDict::ShortTermStorage),
-          location,
-          TimeIdentifier(ts, timeStepType));
+          Antares::Data::Enum::toString(structDict), location, TimeIdentifier(ts, timeStepType));
         problem->NomDesVariables[var] = fullName;
     }
 }
