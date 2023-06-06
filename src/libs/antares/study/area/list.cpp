@@ -307,17 +307,27 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
     }
 
     // Short term storage
-    buffer.clear() << folder << SEP << "input" << SEP << "st-storage";
-
-    IO::Directory::Create(buffer);
-
     buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "clusters"
         << SEP << area.id;
+    IO::Directory::Create(buffer);
 
+    // create empty list.ini for this area
+    buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "clusters"
+        << SEP << area.id << SEP << "list.ini";
+    IO::File::CreateEmptyFile(buffer);
+
+    // save sts in list.ini for this area
+    buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "clusters"
+        << SEP << area.id;
     ret = area.shortTermStorage.saveToFolder(buffer.c_str()) && ret;
+
+    // create the st-storage/series/ directory if it's doesn't exist
+    buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "series";
+    IO::Directory::Create(buffer);
 
     buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "series"
         << SEP << area.id;
+    IO::Directory::Create(buffer);
 
     ret = area.shortTermStorage.saveDataSeriesToFolder(buffer.c_str()) && ret;
 
