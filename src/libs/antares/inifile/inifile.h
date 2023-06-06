@@ -29,6 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <optional>
 
 namespace Antares
 {
@@ -81,6 +82,9 @@ public:
         */
         template<class U>
         Property* add(const AnyString& key, const U& value);
+
+        template<class U>
+        Property* add(const AnyString& key, const std::optional<U>& value);
 
         template<class StreamT>
         void saveToStream(StreamT& file, yuint64& written) const;

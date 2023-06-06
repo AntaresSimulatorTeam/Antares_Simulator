@@ -305,6 +305,19 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
         buffer.clear() << folder << SEP << "input" << SEP << "renewables" << SEP << "series";
         ret = area.renewable.list.saveDataSeriesToFolder(buffer) && ret;
     }
+
+    // Short term storage
+
+    // save sts in list.ini for this area
+    buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "clusters"
+        << SEP << area.id;
+    ret = area.shortTermStorage.saveToFolder(buffer.c_str()) && ret;
+
+    // save the series files
+    buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "series"
+        << SEP << area.id;
+    ret = area.shortTermStorage.saveDataSeriesToFolder(buffer.c_str()) && ret;
+
     return ret;
 }
 
@@ -941,7 +954,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series"
             << SEP << area.id;
-        logs.debug() << "Loading series for st storage " << buffer;
+
         ret = area.shortTermStorage.loadSeriesFromFolder(buffer.c_str()) && ret;
         ret = area.shortTermStorage.validate() && ret;
     }
@@ -952,8 +965,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
         ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
     }
-    if (!ret)
-        logs.error() << "Error while loading sts series";
 
     // Adequacy patch
     readAdqPatchMode(study, area, buffer);
@@ -1111,6 +1122,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     {
         logs.info() << "Loading short term storage clusters...";
         buffer.clear() << pStudy.folderInput << SEP << "st-storage";
+
         if (IO::Directory::Exists(buffer))
         {
             for (const auto& [id, area] : areas)
