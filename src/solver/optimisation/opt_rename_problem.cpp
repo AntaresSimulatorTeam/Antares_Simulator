@@ -20,7 +20,7 @@ void RenameLinkVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
     }
 }
 
-void RenameZoneVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
+void RenameAreaVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                         int var,
                         Antares::Data::Enum::ExportStructDict structDict,
                         int ts,
@@ -37,7 +37,7 @@ void RenameZoneVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
         problem->NomDesVariables[var] = fullName;
     }
 }
-void RenameZoneVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
+void RenameAreaVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                         int var,
                         Antares::Data::Enum::ExportStructDict structDict,
                         int ts,

@@ -13,13 +13,13 @@ void RenameLinkVariable(PROBLEME_ANTARES_A_RESOUDRE* problem_hebdo,
                         const std::string& origin,
                         const std::string& destination);
 
-void RenameZoneVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
+void RenameAreaVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                         int var,
                         Antares::Data::Enum::ExportStructDict structDict,
                         int ts,
                         Antares::Data::Enum::ExportStructTimeStepDict timeStepType,
                         const std::string& zone);
-void RenameZoneVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
+void RenameAreaVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                         int var,
                         Antares::Data::Enum::ExportStructDict structDict,
                         int ts,

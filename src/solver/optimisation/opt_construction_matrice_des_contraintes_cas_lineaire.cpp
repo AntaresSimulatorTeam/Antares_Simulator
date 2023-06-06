@@ -317,7 +317,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
 
-                RenameZoneVariable(ProblemeAResoudre,
+                RenameAreaVariable(ProblemeAResoudre,
                                    var,
                                    Enum::ExportStructDict::ProdHyd,
                                    timeStepInYear,
@@ -331,7 +331,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Pi[nombreDeTermes] = 1.0;
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
-                RenameZoneVariable(ProblemeAResoudre,
+                RenameAreaVariable(ProblemeAResoudre,
                                    var,
                                    Enum::ExportStructDict::Pompage,
                                    timeStepInYear,
@@ -346,7 +346,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
 
-                RenameZoneVariable(ProblemeAResoudre,
+                RenameAreaVariable(ProblemeAResoudre,
                                    var,
                                    Enum::ExportStructDict::DefaillancePositive,
                                    timeStepInYear,
@@ -360,7 +360,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
 
-                RenameZoneVariable(ProblemeAResoudre,
+                RenameAreaVariable(ProblemeAResoudre,
                                    var,
                                    Enum::ExportStructDict::DefaillanceNegative,
                                    timeStepInYear,
@@ -404,7 +404,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
 
-                RenameZoneVariable(ProblemeAResoudre,
+                RenameAreaVariable(ProblemeAResoudre,
                                    var,
                                    Enum::ExportStructDict::ProdHyd,
                                    timeStepInYear,
@@ -420,7 +420,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 nombreDeTermes++;
 
                 const auto& area = problemeHebdo->NomsDesPays[pays];
-                RenameZoneVariable(ProblemeAResoudre,
+                RenameAreaVariable(ProblemeAResoudre,
                                    var,
                                    Enum::ExportStructDict::DefaillanceNegative,
                                    timeStepInYear,
@@ -935,7 +935,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        RenameZoneVariable(ProblemeAResoudre,
+                        RenameAreaVariable(ProblemeAResoudre,
                                            var,
                                            Enum::ExportStructDict::ProdHyd,
                                            timeStepInYear,
@@ -951,7 +951,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Pi[nombreDeTermes] *= -1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        RenameZoneVariable(ProblemeAResoudre,
+                        RenameAreaVariable(ProblemeAResoudre,
                                            var,
                                            Enum::ExportStructDict::Pompage,
                                            timeStepInYear,
@@ -972,7 +972,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        RenameZoneVariable(ProblemeAResoudre,
+                        RenameAreaVariable(ProblemeAResoudre,
                                            var,
                                            Enum::ExportStructDict::ProdHyd,
                                            timeStepInYear,
@@ -1015,7 +1015,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameZoneVariable(ProblemeAResoudre,
+                    RenameAreaVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::ProdHyd,
                                        timeStepInYear,
@@ -1033,7 +1033,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = -1.0;
                     Colonne[nombreDeTermes] = var1;
                     nombreDeTermes++;
-                    RenameZoneVariable(ProblemeAResoudre,
+                    RenameAreaVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::ProdHyd,
                                        timeStepInYear,
@@ -1048,7 +1048,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = -1.0;
                     Colonne[nombreDeTermes] = var2;
                     nombreDeTermes++;
-                    RenameZoneVariable(ProblemeAResoudre,
+                    RenameAreaVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::ProdHydALaBaisse,
                                        timeStepInYear,
@@ -1063,7 +1063,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var3;
                     nombreDeTermes++;
-                    RenameZoneVariable(ProblemeAResoudre,
+                    RenameAreaVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::ProdHydALaHausse,
                                        timeStepInYear,
@@ -1101,7 +1101,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameZoneVariable(ProblemeAResoudre,
+                    RenameAreaVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::ProdHyd,
                                        timeStepInYear,
@@ -1115,7 +1115,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = -1.0;
                     Colonne[nombreDeTermes] = var1;
                     nombreDeTermes++;
-                    RenameZoneVariable(ProblemeAResoudre,
+                    RenameAreaVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::ProdHydALaBaisse,
                                        timeStepInYear,
@@ -1136,7 +1136,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameZoneVariable(ProblemeAResoudre,
+                    RenameAreaVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::ProdHyd,
                                        timeStepInYear,
@@ -1150,7 +1150,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = -1.0;
                     Colonne[nombreDeTermes] = var1;
                     nombreDeTermes++;
-                    RenameZoneVariable(ProblemeAResoudre,
+                    RenameAreaVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::ProdHydALaHausse,
                                        timeStepInYear,
@@ -1193,7 +1193,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameZoneVariable(ProblemeAResoudre,
+                    RenameAreaVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::ProdHyd,
                                        timeStepInYear,
@@ -1230,7 +1230,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameZoneVariable(ProblemeAResoudre,
+                    RenameAreaVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::ProdHyd,
                                        timeStepInYear,
@@ -1269,7 +1269,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameZoneVariable(ProblemeAResoudre,
+                    RenameAreaVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::Pompage,
                                        timeStepInYear,
@@ -1313,7 +1313,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameZoneVariable(ProblemeAResoudre,
+                    RenameAreaVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::NiveauHydro,
                                        timeStepInYear,
@@ -1330,7 +1330,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Pi[nombreDeTermes] = -1.0;
                         Colonne[nombreDeTermes] = var1;
                         nombreDeTermes++;
-                        RenameZoneVariable(ProblemeAResoudre,
+                        RenameAreaVariable(ProblemeAResoudre,
                                            var,
                                            Enum::ExportStructDict::NiveauHydro,
                                            timeStepInYear,
@@ -1345,7 +1345,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameZoneVariable(ProblemeAResoudre,
+                    RenameAreaVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::ProdHyd,
                                        timeStepInYear,
@@ -1361,7 +1361,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] *= -1;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameZoneVariable(ProblemeAResoudre,
+                    RenameAreaVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::Pompage,
                                        timeStepInYear,
@@ -1375,7 +1375,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameZoneVariable(ProblemeAResoudre,
+                    RenameAreaVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::Debordement,
                                        timeStepInYear,
@@ -1415,7 +1415,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Pi[nombreDeTermes] = 1.0;
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
-                RenameZoneVariable(ProblemeAResoudre,
+                RenameAreaVariable(ProblemeAResoudre,
                                    var,
                                    Enum::ExportStructDict::StockFinal,
                                    lastTimeStepOfTheWeek,
@@ -1430,7 +1430,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Pi[nombreDeTermes] = -1.0;
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
-                RenameZoneVariable(ProblemeAResoudre,
+                RenameAreaVariable(ProblemeAResoudre,
                                    var,
                                    Enum::ExportStructDict::NiveauHydro,
                                    lastTimeStepOfTheWeek,
@@ -1458,7 +1458,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Pi[nombreDeTermes] = -1.0;
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
-                RenameZoneVariable(ProblemeAResoudre,
+                RenameAreaVariable(ProblemeAResoudre,
                                    var,
                                    Enum::ExportStructDict::StockFinal,
                                    lastTimeStepOfTheWeek,
@@ -1474,7 +1474,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-                    RenameZoneVariable(ProblemeAResoudre,
+                    RenameAreaVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::TrancheDeStock,
                                        lastTimeStepOfTheWeek,
