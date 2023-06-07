@@ -2,7 +2,7 @@
 // Created by marechaljas on 13/03/23.
 //
 #include "antares/study/fwd.h"
-#define BOOST_TEST_MODULE constraints
+#define BOOST_TEST_MODULE binding_constraints_FOO
 
 #include <boost/test/unit_test.hpp>
 #include <fstream>
@@ -14,8 +14,10 @@
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
+BOOST_AUTO_TEST_SUITE(BindingConstraintTests_FOO)
+
 BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
-    Study study;
+    auto study = std::make_shared<Study>();
 
     StudyLoadOptions options;
     BindingConstraintsList bindingConstraints;
@@ -40,8 +42,8 @@ BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
     std::ofstream rhs(working_tmp_dir / "dummy_id_eq.txt");
     rhs.close();
 
-    study.header.version = version870;
-    const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
+    study->header.version = version870;
+    const bool loading_ok = bindingConstraints.loadFromFolder(*study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 1);
@@ -59,10 +61,10 @@ BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
 }
 
 BOOST_AUTO_TEST_CASE(BC_load_RHS) {
-    Study study;
-    study.areaAdd("area1");
-    study.areaAdd("area2");
-    study.areaAdd("area3");
+    auto study = std::make_shared<Study>();
+    study->areaAdd("area1");
+    study->areaAdd("area2");
+    study->areaAdd("area3");
 
     StudyLoadOptions options;
     BindingConstraintsList bindingConstraints;
@@ -92,8 +94,8 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
         rhs << "0.2\t0.4\t0.6\n";
     }
     rhs.close();
-    study.header.version = version870;
-    const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
+    study->header.version = version870;
+    const bool loading_ok = bindingConstraints.loadFromFolder(*study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 1);
@@ -105,10 +107,10 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
 }
 
 BOOST_AUTO_TEST_CASE(BC_load_range_type) {
-    Study study;
-    study.areaAdd("area1");
-    study.areaAdd("area2");
-    study.areaAdd("area3");
+    auto study = std::make_shared<Study>();
+    study->areaAdd("area1");
+    study->areaAdd("area2");
+    study->areaAdd("area3");
 
     StudyLoadOptions options;
     BindingConstraintsList bindingConstraints;
@@ -143,8 +145,8 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type) {
         gt << "0.4\t0.6\t0.8\n";
     }
     gt.close();
-    study.header.version = version870;
-    const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
+    study->header.version = version870;
+    const bool loading_ok = bindingConstraints.loadFromFolder(*study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 2);
@@ -164,10 +166,10 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type) {
 }
 
 BOOST_AUTO_TEST_CASE(BC_load_legacy) {
-    Study study;
-    study.areaAdd("area1");
-    study.areaAdd("area2");
-    study.areaAdd("area3");
+    auto study = std::make_shared<Study>();
+    study->areaAdd("area1");
+    study->areaAdd("area2");
+    study->areaAdd("area3");
 
     StudyLoadOptions options;
     BindingConstraintsList bindingConstraints;
@@ -197,8 +199,8 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy) {
     }
     lt.close();
 
-    study.header.version = version860;
-    const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
+    study->header.version = version860;
+    const bool loading_ok = bindingConstraints.loadFromFolder(*study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 1);
@@ -210,10 +212,10 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy) {
 }
 
 BOOST_AUTO_TEST_CASE(BC_load_legacy_range) {
-    Study study;
-    study.areaAdd("area1");
-    study.areaAdd("area2");
-    study.areaAdd("area3");
+    auto study = std::make_shared<Study>();
+    study->areaAdd("area1");
+    study->areaAdd("area2");
+    study->areaAdd("area3");
 
     StudyLoadOptions options;
     BindingConstraintsList bindingConstraints;
@@ -243,8 +245,8 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_range) {
     }
     lt.close();
 
-    study.header.version = version860;
-    const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
+    study->header.version = version860;
+    const bool loading_ok = bindingConstraints.loadFromFolder(*study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 2);
@@ -260,3 +262,5 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_range) {
     BOOST_CHECK_CLOSE(bc_gt->RHSTimeSeries()[0][30], 0.4, 0.0001);
     BOOST_CHECK_CLOSE(bc_gt->RHSTimeSeries()[0][8783], 0.4, 0.0001);
 }
+
+BOOST_AUTO_TEST_SUITE_END()
