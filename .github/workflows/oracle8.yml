@@ -26,44 +26,38 @@ jobs:
       ORTOOLSDIR: ${{ github.workspace }}/or-tools
 
     runs-on: ubuntu-latest
-    container: 'antaresrte/rte-antares:oracle8-simulator-no-deps'
+    container: 'oraclelinux:8'
 
     steps:
 
+    - name: Set up Python
+      run: |
+           dnf update -y
+           dnf install -y python3 python3-pip
+
+    - name: Install libraries
+      run: |
+           dnf install -y git gcc-toolset-9-toolchain cmake wget rpm-build
+           dnf install -y python3 python3-pip
+           dnf install -y unzip libuuid-devel boost-test boost-devel
+
     - name: Checkout
       run: |
-          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
+           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
 
     - name: Init submodule
       run: |
-          git submodule update --init --recursive src/antares-deps src/tests/resources/Antares_Simulator_Tests
+           git config --global safe.directory '*'
+           git submodule update --init --recursive src .
 
-    - name: Download & extract precompiled deps at root
+    - name: Install dependencies
       run: |
-           ANTARES_DEPS_VERSION=$(cut -d'"' -f4 antares-deps-version.json | grep -Ev '\{|\}')
-           cd /
-           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${ANTARES_DEPS_VERSION}/rte-antares-deps-centos7-Release.tar.gz
-           tar -xvf rte-antares-deps-centos7-Release.tar.gz
-           rm -rf rte-antares-deps-centos7-Release.tar.gz
-
-    - name: Config OR-Tools URL
-      run: |
-           echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_centos7_static_sirius.zip" >> $GITHUB_ENV
-
-    - name: Download OR-Tools
-      id: ortools
-      run: |
-            mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
-            wget -q -O ortools.zip ${{ env.URL_ORTOOLS }}
-            unzip -q ortools.zip
-            rm ortools.zip
+          pip3 install -r src/tests/examples/requirements.txt
 
     - name: Configure
       run: |
            source /opt/rh/gcc-toolset-9/enable
-           cmake3 -B _build -S src \
-           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+           cmake -B _build -S src \
            -DDEPS_INSTALL_DIR=/rte-antares-deps-Release \
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON \
@@ -75,9 +69,7 @@ jobs:
     - name: Build
       run: |
            source /opt/rh/gcc-toolset-9/enable
-           source /opt/rh/rh-git227/enable
            cmake --build _build --config Release -j2
-           ccache -s
 
     - name: Installer .rpm creation
       run: |
@@ -87,7 +79,7 @@ jobs:
     - name: Solver archive creation
       run: |
            cd _build
-           cmake3 --install . --prefix install
+           cmake --install . --prefix install
            pushd .
            cd install/bin
            tar czf ../../antares-solver_oracle8.tar.gz antares-*-solver libsirius_solver.so
