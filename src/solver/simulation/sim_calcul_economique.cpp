@@ -63,9 +63,10 @@ static void importShortTermStorages(
 
             toInsert.series = st->series;
 
-            // The spread is the same for all ST storages and all MC years. This may lead to multiple solutions
-            // if similar ST storages exist within an area.
-            SIM_drawSpreadOnShortTermStorage(toInsert.spreadOnInjectionWithdrawal, clusterGlobalIndex);
+            // We use the global index as a seed to avoid identical draws for multiple storages
+            // which may lead to equivalent solutions if 2 storages are identical
+            SIM_drawSpreadOnShortTermStorage(toInsert.spreadOnInjectionWithdrawal,
+                                             clusterGlobalIndex);
 
             // TODO add missing properties, or use the same struct
             storageIndex++;
