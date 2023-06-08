@@ -38,12 +38,7 @@ jobs:
     - name: Install libraries
       run: |
            dnf install -y epel-release git gcc-toolset-9-toolchain cmake wget rpm-build
-           dnf install -y unzip libuuid-devel boost-test boost-devel ccache
-
-    - name: ccache
-      uses: hendrikmuhs/ccache-action@v1.2
-      with:
-          key: oraclelinux
+           dnf install -y unzip libuuid-devel boost-test boost-devel
 
     - name: Checkout
       run: |
@@ -62,8 +57,6 @@ jobs:
       run: |
            source /opt/rh/gcc-toolset-9/enable
            cmake -B _build -S src \
-           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON \
            -DBUILD_UI=OFF \
