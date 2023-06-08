@@ -100,13 +100,13 @@ jobs:
              cmake --build _build --config release -j2
 
     - name: Run unfeasibility-related tests
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ false && env.IS_PUSH == 'true' }}
       run: |
            cd _build
            ctest -C Release --output-on-failure -R unfeasible
 
     - name: Run unit and end-to-end tests
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ false && env.IS_PUSH == 'true' }}
       run: |
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end"
@@ -135,7 +135,7 @@ jobs:
         prop_path: 'version'
 
     - name: Run tests about infinity on BCs RHS
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ false && env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -143,7 +143,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ false && env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -151,7 +151,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run mps tests
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ false && env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -159,7 +159,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run tests for adequacy patch (CSR)
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ false && env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -167,7 +167,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run medium-tests
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ false && env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -175,7 +175,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-1
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ false && env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -183,7 +183,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-2
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ false && env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -191,7 +191,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-3
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ false && env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}

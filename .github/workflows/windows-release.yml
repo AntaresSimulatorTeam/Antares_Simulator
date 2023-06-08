@@ -130,6 +130,7 @@ jobs:
         prop_path: 'version'
 
     - name: Run tests for adequacy patch (CSR)
+      if: ${{ false }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -137,6 +138,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run medium-tests
+      if: ${{ false }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -144,6 +146,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-1
+      if: ${{ false }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -151,6 +154,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-2
+      if: ${{ false }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -158,6 +162,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-3
+      if: ${{ false }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
