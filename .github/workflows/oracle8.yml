@@ -62,7 +62,6 @@ jobs:
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
-           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install \
            -DBUILD_UI=OFF \
 
 
