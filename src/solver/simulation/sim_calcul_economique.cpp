@@ -65,7 +65,7 @@ static void importShortTermStorages(
 
             // The spread is the same for all ST storages and all MC years. This may lead to multiple solutions
             // if similar ST storages exist within an area.
-            SIM_drawSpreadOnShortTermStorage(toInsert.spreadOnInjectionWithdrawal);
+            SIM_drawSpreadOnShortTermStorage(toInsert.spreadOnInjectionWithdrawal, clusterGlobalIndex);
 
             // TODO add missing properties, or use the same struct
             storageIndex++;

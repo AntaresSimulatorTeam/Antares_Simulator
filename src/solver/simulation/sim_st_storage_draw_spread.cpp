@@ -32,10 +32,11 @@
 
 #define EPSILON_ST_STORAGE 1e-3
 
-void SIM_drawSpreadOnShortTermStorage(std::vector<double>& out)
+void SIM_drawSpreadOnShortTermStorage(std::vector<double>& out, unsigned int seed)
 {
   out.resize(HOURS_PER_YEAR);
   Antares::MersenneTwister mt;
+  mt.reset(seed);
   for (double& x : out)
       x = mt.next() * EPSILON_ST_STORAGE;
 }

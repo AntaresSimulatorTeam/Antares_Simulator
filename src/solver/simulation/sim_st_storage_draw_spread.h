@@ -30,4 +30,4 @@
 
 #include <vector>
 
-void SIM_drawSpreadOnShortTermStorage(std::vector<double>& out);
+void SIM_drawSpreadOnShortTermStorage(std::vector<double>& out, unsigned int seed);
