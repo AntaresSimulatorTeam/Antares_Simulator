@@ -29,10 +29,11 @@ jobs:
 
     - name: Checkout
       run: |
-          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
+           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
 
     - name: Init submodule
       run: |
+           git config --global safe.directory '*'
            git submodule update --init --recursive src .
 
     - name: Install dependencies
