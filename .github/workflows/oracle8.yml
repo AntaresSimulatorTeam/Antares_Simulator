@@ -66,7 +66,6 @@ jobs:
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON \
-           -DBUILD_not_system=OFF \
            -DBUILD_UI=OFF \
 
 
