@@ -116,13 +116,11 @@ jobs:
            cmake --build _build --config release -j2
 
     - name: Run unfeasibility-related tests
-      if: ${{ false }}
       run: |
            cd _build
            ctest -C Release --output-on-failure -R unfeasible
 
     - name: Run unit and end-to-end tests
-      if: ${{ false }}
       run: |
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end" -LE ortools
@@ -151,7 +149,6 @@ jobs:
         prop_path: 'version'
 
     - name: Run tests for adequacy patch (CSR)
-      if: ${{ false }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -159,7 +156,6 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run tests about infinity on BCs RHS
-      if: ${{ false }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -167,7 +163,6 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
-      if: ${{ false }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -175,7 +170,6 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run mps tests
-      if: ${{ false }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
