@@ -74,7 +74,7 @@ enum Version
 enum
 {
     //! The latest version
-    versionLatest = version860,
+    versionLatest = version870,
 };
 
 /*!
