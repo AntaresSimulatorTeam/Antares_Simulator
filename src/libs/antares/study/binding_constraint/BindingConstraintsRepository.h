@@ -168,6 +168,8 @@ public:
 
     std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>> groupToTimeSeriesNumbers;
 
+    std::vector<std::shared_ptr<BindingConstraint>> enabled() const;
+
 private:
     bool internalSaveToFolder(Data::BindingConstraintSaver::EnvForSaving& env) const;
 

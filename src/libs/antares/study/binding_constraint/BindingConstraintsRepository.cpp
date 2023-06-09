@@ -380,4 +380,12 @@ uint64 BindingConstraintsRepository::timeSeriesNumberMemoryUsage() const {
     }
     return m;
 }
+
+std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::enabled() const {
+    std::vector<std::shared_ptr<BindingConstraint>> out;
+    std::copy_if(pList.begin(), pList.end(), std::back_inserter(out),
+                 [](const auto& bc) {
+                     return bc->enabled();
+                 });
+    return out;
 }

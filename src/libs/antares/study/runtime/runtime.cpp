@@ -496,20 +496,22 @@ uint StudyRuntimeInfos::interconnectionsCount() const
     return static_cast<uint>(areaLink.size());
 }
 
-static bool isBindingConstraintTypeInequality(const Data::BindingConstraintRTI& bc)
+static bool isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)
 {
-    return bc.operatorType == '<' || bc.operatorType == '>';
+    return bc.operatorType() == BindingConstraint::opLess || bc.operatorType() == BindingConstraint::opGreater;
 }
 
-std::vector<uint> StudyRuntimeInfos::getIndicesForInequalityBindingConstraints() const
+std::vector<uint> StudyRuntimeInfos::getIndicesForInequalityBindingConstraints(
+        BindingConstraintsRepository &bindingConstraintRepository) const
 {
-    const auto firstBC = bindingConstraints.begin();
-    const auto lastBC = bindingConstraints.end();
+    auto enabledBCs = bindingConstraintRepository.enabled();
+    const auto firstBC = enabledBCs.begin();
+    const auto lastBC = enabledBCs.end();
 
     std::vector<uint> indices;
     for (auto bc = firstBC; bc < lastBC; bc++)
     {
-        if (isBindingConstraintTypeInequality(*bc))
+        if (isBindingConstraintTypeInequality(*(bc->get())))
         {
             auto index = static_cast<uint>(std::distance(firstBC, bc));
             indices.push_back(index);
