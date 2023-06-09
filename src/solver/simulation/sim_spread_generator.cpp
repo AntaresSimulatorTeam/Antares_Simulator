@@ -25,29 +25,22 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#pragma once
-#include <string>
-#include <map>
-#include "cluster.h"
 
-namespace Antares::Data::ShortTermStorage
+#include "sim_spread_generator.h"
+
+namespace SIM
 {
-class STStorageInput
+SpreadGenerator::SpreadGenerator(double range) : range_(range)
 {
-public:
-    bool validate() const;
-    // 1. Read list.ini
-    bool createSTStorageClustersFromIniFile(const std::string& path);
-    // 2. Read ALL series
-    bool loadSeriesFromFolder(const std::string& folder) const;
-    // Number of ST storages
-    std::size_t count() const;
+}
 
-    bool saveToFolder(const std::string& folder) const;
-    bool saveDataSeriesToFolder(const std::string& folder) const;
+void SpreadGenerator::reset(unsigned int seed)
+{
+    mt_.reset(seed);
+}
 
-
-    std::vector<STStorageCluster*> storagesByIndex;
-    std::map<std::string, STStorageCluster> storagesById;
-};
-} // namespace Antares::Data::ShortTermStorage
+double SpreadGenerator::generate()
+{
+    return mt_.next() * range_;
+}
+} // namespace SIM

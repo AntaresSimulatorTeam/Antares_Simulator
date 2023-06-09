@@ -200,7 +200,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                 // 3. Levels
                 int varLevel
                   = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
-                if (pdtHebdo == PremierPdtDeLIntervalle && storage.initialLevel.has_value())
+                if (pdtHebdo == DernierPdtDeLIntervalle - 1 && storage.initialLevel.has_value())
                 {
                     Xmin[varLevel] = Xmax[varLevel] = storage.reservoirCapacity * storage.initialLevel.value();
                 }
