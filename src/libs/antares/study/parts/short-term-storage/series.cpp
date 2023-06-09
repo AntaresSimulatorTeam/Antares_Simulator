@@ -127,15 +127,21 @@ bool Series::saveToFolder(const std::string& folder) const
 
     bool ret = true;
 
-    auto checkWrite = [&ret, &folder](const std::string& name, const std::vector<double>& content) {
-        ret = writeVectorToFile(folder + SEP + name, content) && ret;
+    auto checkWrite = [&ret, &folder]
+        (const std::string& name, const std::vector<double>& vect, double defValue)
+    {
+        // if vector is only default values we don't save it
+        if (all_of(vect.begin(), vect.end(), [&defValue] (const double& i) { return i == defValue; }))
+            return;
+
+        ret = writeVectorToFile(folder + SEP + name, vect) && ret;
     };
 
-    checkWrite("PMAX-injection.txt", maxInjectionModulation);
-    checkWrite("PMAX-withdrawal.txt", maxWithdrawalModulation);
-    checkWrite("inflows.txt", inflows);
-    checkWrite("lower-rule-curve.txt", lowerRuleCurve);
-    checkWrite("upper-rule-curve.txt", upperRuleCurve);
+    checkWrite("PMAX-injection.txt", maxInjectionModulation, 1.0);
+    checkWrite("PMAX-withdrawal.txt", maxWithdrawalModulation, 1.0);
+    checkWrite("inflows.txt", inflows, 0.0);
+    checkWrite("lower-rule-curve.txt", lowerRuleCurve, 0.0);
+    checkWrite("upper-rule-curve.txt", upperRuleCurve, 1.0);
 
     return ret;
 }
@@ -195,7 +201,6 @@ bool Series::validateMaxInjection() const
 bool Series::validateMaxWithdrawal() const
 {
     return checkVectBetweenZeroOne(maxWithdrawalModulation, "PMAX withdrawal");
-
 }
 
 bool Series::validateRuleCurves() const

@@ -300,4 +300,27 @@ BOOST_AUTO_TEST_CASE(check_series_save)
     BOOST_CHECK(series.validate());
 }
 
+BOOST_AUTO_TEST_CASE(check_default_series_not_saved)
+{
+    series.fillDefaultSeriesIfEmpty();
+
+    BOOST_CHECK(series.saveToFolder(folder));
+
+    BOOST_CHECK(!std::filesystem::exists(folder + SEP + "PMAX-injection.tx"));
+    BOOST_CHECK(!std::filesystem::exists(folder + SEP + "PMAX-withdrawal.txt"));
+    BOOST_CHECK(!std::filesystem::exists(folder + SEP + "inflows.txt"));
+    BOOST_CHECK(!std::filesystem::exists(folder + SEP + "lower-rule-curve.txt"));
+    BOOST_CHECK(!std::filesystem::exists(folder + SEP + "upper-rule-curve.txt"));
+
+    resizeFillVectors(series, 0, 0);
+    resizeFillVectors(series, 0.123456789, 8760);
+
+    BOOST_CHECK(series.saveToFolder(folder));
+    BOOST_CHECK(std::filesystem::exists(folder + SEP + "PMAX-injection.txt"));
+    BOOST_CHECK(std::filesystem::exists(folder + SEP + "PMAX-withdrawal.txt"));
+    BOOST_CHECK(std::filesystem::exists(folder + SEP + "inflows.txt"));
+    BOOST_CHECK(std::filesystem::exists(folder + SEP + "lower-rule-curve.txt"));
+    BOOST_CHECK(std::filesystem::exists(folder + SEP + "upper-rule-curve.txt"));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
