@@ -128,13 +128,14 @@ bool Series::saveToFolder(const std::string& folder) const
     bool ret = true;
 
     auto checkWrite = [&ret, &folder]
-        (const std::string& name, const std::vector<double>& vect, double defValue)
+        (const std::string& filename, const std::vector<double>& timeSeries, double defValue)
     {
         // if vector is only default values we don't save it
-        if (all_of(vect.begin(), vect.end(), [&defValue] (const double& i) { return i == defValue; }))
+        if (all_of(timeSeries.begin(), timeSeries.end(), [&defValue] (const double& i)
+                    { return i == defValue; }))
             return;
 
-        ret = writeVectorToFile(folder + SEP + name, vect) && ret;
+        ret = writeVectorToFile(folder + SEP + filename, timeSeries) && ret;
     };
 
     checkWrite("PMAX-injection.txt", maxInjectionModulation, 1.0);
