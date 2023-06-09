@@ -112,8 +112,8 @@ static void shortTermStorageLevels(
 {
     const auto& VarOptim_current = CorrespondanceVarNativesVarOptim[pdt];
     // Cycle over the simulation period
-    const int pdt_1 = (pdt - 1 + nombreDePasDeTempsPourUneOptimisation) % nombreDePasDeTempsPourUneOptimisation;
-    const auto& VarOptim_previous = CorrespondanceVarNativesVarOptim[pdt_1];
+    const int timestepPrevious = (pdt - 1 + nombreDePasDeTempsPourUneOptimisation) % nombreDePasDeTempsPourUneOptimisation;
+    const auto& VarOptim_previous = CorrespondanceVarNativesVarOptim[timestepPrevious];
     for (auto& storage : shortTermStorageInput)
     {
         int nombreDeTermes = 0;
