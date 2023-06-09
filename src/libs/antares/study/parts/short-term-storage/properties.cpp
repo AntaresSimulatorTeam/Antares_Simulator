@@ -137,19 +137,21 @@ bool Properties::saveToFolder(const std::string& folder) const
     IniFile ini;
     IniFile::Section* s = ini.addSection(this->name);
 
-    s->add("injectionnominalcapacity", this->injectionNominalCapacity);
-    s->add("withdrawalnominalcapacity", this->withdrawalNominalCapacity);
-    s->add("reservoircapacity", this->reservoirCapacity);
-    s->add("initiallevel", this->initialLevel);
-
-    s->add("efficiency", this->efficiencyFactor);
     s->add("name", this->name);
-    s->add("storagecycle", this->cycleDuration);
-    s->add("initialleveloptim", this->initialLevelOptim);
 
     for (const auto& [key, value] : ST_STORAGE_PROPERTY_GROUP_ENUM)
         if (value == this->group)
             s->add("group", key);
+
+    s->add("reservoircapacity", this->reservoirCapacity);
+    s->add("initiallevel", this->initialLevel);
+    s->add("injectionnominalcapacity", this->injectionNominalCapacity);
+    s->add("withdrawalnominalcapacity", this->withdrawalNominalCapacity);
+
+    s->add("efficiency", this->efficiencyFactor);
+    s->add("storagecycle", this->cycleDuration);
+    s->add("initialleveloptim", this->initialLevelOptim);
+
 
     return ini.save(pathIni);
 }
