@@ -31,6 +31,7 @@
 #include <antares/study/area/scratchpad.h>
 #include "opt_structure_probleme_a_resoudre.h"
 
+#include "../simulation/sim_spread_generator.h"
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
@@ -41,33 +42,50 @@
 #include "spx_constantes_externes.h"
 
 static void shortTermStorageCost(
-  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-  const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim,
+  int PremierPdtDeLIntervalle,
+  int DernierPdtDeLIntervalle,
+  int NombreDePays,
+  const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
+  CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim,
   double* linearCost)
 {
-    for (const auto& storage : shortTermStorageInput)
+    SIM::SpreadGenerator spreadGenerator;
+    int pdtJour = 0;
+    for (int pays = 0; pays < NombreDePays; ++pays)
     {
-        const int clusterGlobalIndex = storage.clusterGlobalIndex;
-        if (const int varLevel = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage
-                                   .LevelVariable[clusterGlobalIndex];
-            varLevel >= 0)
+        for (const auto& storage : shortTermStorageInput[pays])
         {
-            linearCost[varLevel] = 0;
-        }
+            // We use the global index as a seed to avoid identical draws for multiple storages
+            // which may lead to equivalent solutions if 2 storages are identical
+            spreadGenerator.reset(storage.clusterGlobalIndex);
+            for (int pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
+                 pdtHebdo++)
+            {
+                auto VarCurrent = CorrespondanceVarNativesVarOptim[pdtJour];
+                const int clusterGlobalIndex = storage.clusterGlobalIndex;
+                if (const int varLevel
+                    = VarCurrent->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
+                    varLevel >= 0)
+                {
+                    linearCost[varLevel] = 0;
+                }
 
-        const double cost = storage.spreadGenerator.generate();
-        if (const int varInjection = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage
-                                       .InjectionVariable[clusterGlobalIndex];
-            varInjection >= 0)
-        {
-            linearCost[varInjection] = cost;
-        }
+                const double cost = spreadGenerator.generate();
+                if (const int varInjection
+                    = VarCurrent->SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
+                    varInjection >= 0)
+                {
+                    linearCost[varInjection] = cost;
+                }
 
-        if (const int varWithdrawal = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage
-                                        .WithdrawalVariable[clusterGlobalIndex];
-            varWithdrawal >= 0)
-        {
-            linearCost[varWithdrawal] = storage.efficiency * cost;
+                if (const int varWithdrawal
+                    = VarCurrent->SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
+                    varWithdrawal >= 0)
+                {
+                    linearCost[varWithdrawal] = storage.efficiency * cost;
+                }
+            }
+            pdtJour++;
         }
     }
 }
@@ -85,6 +103,13 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
     memset((char*)ProblemeAResoudre->CoutQuadratique,
            0,
            ProblemeAResoudre->NombreDeVariables * sizeof(double));
+
+    shortTermStorageCost(PremierPdtDeLIntervalle,
+                         DernierPdtDeLIntervalle,
+                         problemeHebdo->NombreDePays,
+                         problemeHebdo->ShortTermStorage,
+                         problemeHebdo->CorrespondanceVarNativesVarOptim,
+                         ProblemeAResoudre->CoutLineaire);
 
     for (int pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle; pdtHebdo++)
     {
@@ -190,10 +215,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                         ProblemeAResoudre->CoutLineaire[var] = -P;
                 }
             }
-
-            shortTermStorageCost(problemeHebdo->ShortTermStorage[pays],
-                                 CorrespondanceVarNativesVarOptim,
-                                 ProblemeAResoudre->CoutLineaire);
 
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[pays];
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)

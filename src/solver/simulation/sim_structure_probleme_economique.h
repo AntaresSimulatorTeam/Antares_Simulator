@@ -28,8 +28,6 @@
 #ifndef __SOLVER_SIMULATION_ECO_STRUCTS_H__
 #define __SOLVER_SIMULATION_ECO_STRUCTS_H__
 
-#include "sim_spread_generator.h"
-
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
 #include "../utils/optimization_statistics.h"
 #include "../../libs/antares/study/fwd.h"
@@ -171,7 +169,6 @@ struct PROPERTIES
     std::optional<double> initialLevel;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
-    mutable SIM::SpreadGenerator spreadGenerator;
 
     int clusterGlobalIndex;
 };

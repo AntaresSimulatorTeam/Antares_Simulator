@@ -62,10 +62,6 @@ static void importShortTermStorages(
 
             toInsert.series = st->series;
 
-            // We use the global index as a seed to avoid identical draws for multiple storages
-            // which may lead to equivalent solutions if 2 storages are identical
-            toInsert.spreadGenerator.reset(clusterGlobalIndex);
-
             // TODO add missing properties, or use the same struct
             storageIndex++;
             clusterGlobalIndex++;
