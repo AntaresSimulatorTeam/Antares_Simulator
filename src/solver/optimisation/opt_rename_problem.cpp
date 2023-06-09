@@ -62,6 +62,55 @@ void VariableNamer::SetThermalClusterVariableName(int var,
         problem->NomDesVariables[var] = fullName;
     }
 }
+void VariableNamer::DispatchableProduction(int var, const std::string& clusterName)
+{
+    SetThermalClusterVariableName(
+      var, Antares::Data::Enum::ExportStructDict::DispatchableProduction, clusterName);
+}
+void VariableNamer::NODU(int var, const std::string& clusterName)
+{
+    SetThermalClusterVariableName(
+      var,
+      Antares::Data::Enum::ExportStructDict::NombreDeGroupesEnMarcheDuPalierThermique,
+      clusterName);
+}
+void VariableNamer::NumberStoppingDispatchableUnits(int var, const std::string& clusterName)
+{
+    SetThermalClusterVariableName(
+      var,
+      Antares::Data::Enum::ExportStructDict::NombreDeGroupesQuiDemarrentDuPalierThermique,
+      clusterName);
+}
+void VariableNamer::NumberStartingDispatchableUnits(int var, const std::string& clusterName)
+{
+    SetThermalClusterVariableName(
+      var,
+      Antares::Data::Enum::ExportStructDict::NombreDeGroupesQuiDemarrentDuPalierThermique,
+      clusterName);
+}
+void VariableNamer::NumberBreakingDownDispatchableUnits(int var, const std::string& clusterName)
+{
+    SetThermalClusterVariableName(
+      var,
+      Antares::Data::Enum::ExportStructDict::NombreDeGroupesQuiTombentEnPanneDuPalierThermique,
+      clusterName);
+}
+void VariableNamer::NTCValueOriginToDestination(int var)
+{
+    SetLinkVariableName(var,
+                        Antares::Data::Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite);
+}
+void VariableNamer::IntercoCostOriginToDestination(int var)
+{
+    SetLinkVariableName(
+      var, Antares::Data::Enum::ExportStructDict::CoutOrigineVersExtremiteDeLInterconnexion);
+}
+void VariableNamer::IntercoCostDestinationToOrigin(int var)
+{
+    SetLinkVariableName(
+      var, Antares::Data::Enum::ExportStructDict::CoutExtremiteVersOrigineDeLInterconnexion);
+}
+
 void VariableNamer::SetShortTermStorageVariableName(
   int var,
   Antares::Data::Enum::ExportStructDict structDict,
@@ -82,6 +131,65 @@ void VariableNamer::SetShortTermStorageVariableName(
           TimeIdentifier(timeStep, Antares::Data::Enum::ExportStructTimeStepDict::hour));
         problem->NomDesVariables[var] = fullName;
     }
+}
+void VariableNamer::ShortTermStorageInjection(int var, const std::string& shortTermStorageName)
+{
+    SetShortTermStorageVariableName(
+      var, Antares::Data::Enum::ExportStructDict::ShortTermStorageInjection, shortTermStorageName);
+}
+void VariableNamer::ShortTermStorageWithdrawal(int var, const std::string& shortTermStorageName)
+{
+    SetShortTermStorageVariableName(
+      var, Antares::Data::Enum::ExportStructDict::ShortTermStorageWithdrawal, shortTermStorageName);
+}
+void VariableNamer::ShortTermStorageLevel(int var, const std::string& shortTermStorageName)
+{
+    SetShortTermStorageVariableName(
+      var, Antares::Data::Enum::ExportStructDict::ShortTermStorageLevel, shortTermStorageName);
+}
+void VariableNamer::HydProd(int var)
+{
+    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::ProdHyd);
+}
+void VariableNamer::HydProdDown(int var)
+{
+    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::ProdHydALaBaisse);
+}
+void VariableNamer::HydProdUp(int var)
+{
+    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::ProdHydALaHausse);
+}
+void VariableNamer::Pumping(int var)
+{
+    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::Pompage);
+}
+void VariableNamer::HydroLevel(int var)
+{
+    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::NiveauHydro);
+}
+void VariableNamer::Overflow(int var)
+{
+    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::Debordement);
+}
+void VariableNamer::LayerStorage(int var, int layerIndex)
+{
+    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::TrancheDeStock, layerIndex);
+}
+void VariableNamer::FinalStorage(int var)
+{
+    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::StockFinal);
+}
+void VariableNamer::PositiveUnsuppliedEnergy(int var)
+{
+    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::DefaillancePositive);
+}
+void VariableNamer::NegativeUnsuppliedEnergy(int var)
+{
+    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::DefaillanceNegative);
+}
+void VariableNamer::AreaBalance(int var)
+{
+    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::BilansPays);
 }
 
 std::string BuildName(const std::string& name,

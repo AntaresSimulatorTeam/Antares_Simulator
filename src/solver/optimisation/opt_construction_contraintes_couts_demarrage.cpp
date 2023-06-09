@@ -96,8 +96,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        variableNamer.SetThermalClusterVariableName(
-                          var, Enum::ExportStructDict::DispatchableProduction, clusterName);
+                        variableNamer.DispatchableProduction(var, clusterName);
                     }
                 }
                 else
@@ -113,10 +112,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = -pmaxDUnGroupeDuPalierThermique;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        variableNamer.SetThermalClusterVariableName(
-                          var,
-                          Enum::ExportStructDict::NombreDeGroupesEnMarcheDuPalierThermique,
-                          clusterName);
+                        variableNamer.NODU(var, clusterName);
                     }
                 }
                 else
@@ -149,8 +145,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        variableNamer.SetThermalClusterVariableName(
-                          var, Enum::ExportStructDict::DispatchableProduction, clusterName);
+                        variableNamer.DispatchableProduction(var, clusterName);
                     }
                 }
                 else
@@ -166,10 +161,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = -pminDUnGroupeDuPalierThermique;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        variableNamer.SetThermalClusterVariableName(
-                          var,
-                          Enum::ExportStructDict::NombreDeGroupesEnMarcheDuPalierThermique,
-                          clusterName);
+                        variableNamer.NODU(var, clusterName);
                     }
                 }
                 else
@@ -230,10 +222,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        variableNamer.SetThermalClusterVariableName(
-                          var,
-                          Enum::ExportStructDict::NombreDeGroupesEnMarcheDuPalierThermique,
-                          clusterName);
+                        variableNamer.NODU(var, clusterName);
                     }
                 }
                 else
@@ -249,10 +238,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = -1;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        variableNamer.SetThermalClusterVariableName(
-                          var,
-                          Enum::ExportStructDict::NombreDeGroupesEnMarcheDuPalierThermique,
-                          clusterName);
+                        variableNamer.NODU(var, clusterName);
                     }
                 }
                 else
@@ -268,10 +254,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = -1;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        variableNamer.SetThermalClusterVariableName(
-                          var,
-                          Enum::ExportStructDict::NombreDeGroupesQuiDemarrentDuPalierThermique,
-                          clusterName);
+                        variableNamer.NumberStartingDispatchableUnits(var, clusterName);
                     }
                 }
                 else
@@ -287,10 +270,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = 1;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        variableNamer.SetThermalClusterVariableName(
-                          var,
-                          Enum::ExportStructDict::NombreDeGroupesQuiSArretentDuPalierThermique,
-                          clusterName);
+                        variableNamer.NumberStoppingDispatchableUnits(var, clusterName);
                     }
                 }
                 else
@@ -349,10 +329,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        variableNamer.SetThermalClusterVariableName(
-                          var,
-                          Enum::ExportStructDict::NombreDeGroupesQuiTombentEnPanneDuPalierThermique,
-                          clusterName);
+                        variableNamer.NumberBreakingDownDispatchableUnits(var, clusterName);
                     }
                 }
                 else
@@ -368,10 +345,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = -1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        variableNamer.SetThermalClusterVariableName(
-                          var,
-                          Enum::ExportStructDict::NombreDeGroupesQuiSArretentDuPalierThermique,
-                          clusterName);
+                        variableNamer.NumberStoppingDispatchableUnits(var, clusterName);
                     }
                 }
                 else
@@ -433,10 +407,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        variableNamer.SetThermalClusterVariableName(
-                          var,
-                          Enum::ExportStructDict::NombreDeGroupesEnMarcheDuPalierThermique,
-                          clusterName);
+                        variableNamer.NODU(var, clusterName);
                     }
                 }
                 else
@@ -459,10 +430,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                             Pi[nombreDeTermes] = -1.0;
                             Colonne[nombreDeTermes] = var;
                             nombreDeTermes++;
-                            variableNamer.SetThermalClusterVariableName(
-                              var,
-                              Enum::ExportStructDict::NombreDeGroupesQuiDemarrentDuPalierThermique,
-                              clusterName);
+                            variableNamer.NumberStartingDispatchableUnits(var, clusterName);
                         }
                     }
                     else
@@ -479,11 +447,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                             Pi[nombreDeTermes] = 1.0;
                             Colonne[nombreDeTermes] = var;
                             nombreDeTermes++;
-                            variableNamer.SetThermalClusterVariableName(
-                              var,
-                              Enum::ExportStructDict::
-                                NombreDeGroupesQuiTombentEnPanneDuPalierThermique,
-                              clusterName);
+                            variableNamer.NumberBreakingDownDispatchableUnits(var, clusterName);
                         }
                     }
                     else
@@ -557,10 +521,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        variableNamer.SetThermalClusterVariableName(
-                          var,
-                          Enum::ExportStructDict::NombreDeGroupesEnMarcheDuPalierThermique,
-                          clusterName);
+                        variableNamer.NODU(var, clusterName);
                     }
                 }
                 else
@@ -584,10 +545,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                             Pi[nombreDeTermes] = 1.0;
                             Colonne[nombreDeTermes] = var;
                             nombreDeTermes++;
-                            variableNamer.SetThermalClusterVariableName(
-                              var,
-                              Enum::ExportStructDict::NombreDeGroupesQuiSArretentDuPalierThermique,
-                              clusterName);
+                            variableNamer.NumberStoppingDispatchableUnits(var, clusterName);
                         }
                     }
                     else

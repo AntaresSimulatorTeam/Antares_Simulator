@@ -13,6 +13,18 @@ private:
     std::string destination;
     std::string area;
 
+    void SetThermalClusterVariableName(int var,
+                                       Antares::Data::Enum::ExportStructDict structDict,
+                                       const std::string& clusterName);
+    void SetLinkVariableName(int var, Antares::Data::Enum::ExportStructDict structDict);
+    void SetShortTermStorageVariableName(int var,
+                                         Antares::Data::Enum::ExportStructDict structDict,
+                                         const std::string& shortTermStorageName);
+    void SetAreaVariableName(int var, Antares::Data::Enum::ExportStructDict structDict);
+    void SetAreaVariableName(int var,
+                             Antares::Data::Enum::ExportStructDict structDict,
+                             int layerIndex);
+
 public:
     VariableNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : problem(problem)
     {
@@ -41,19 +53,29 @@ public:
     {
         return timeStep;
     }
-    void SetLinkVariableName(int var, Antares::Data::Enum::ExportStructDict structDict);
 
-    void SetAreaVariableName(int var, Antares::Data::Enum::ExportStructDict structDict);
-    void SetAreaVariableName(int var,
-                             Antares::Data::Enum::ExportStructDict structDict,
-                             int layerIndex);
-
-    void SetThermalClusterVariableName(int var,
-                                       Antares::Data::Enum::ExportStructDict structDict,
-                                       const std::string& clusterName);
-    void SetShortTermStorageVariableName(int var,
-                                         Antares::Data::Enum::ExportStructDict structDict,
-                                         const std::string& shortTermStorageName);
+    void DispatchableProduction(int var, const std::string& clusterName);
+    void NODU(int var, const std::string& clusterName);
+    void NumberStoppingDispatchableUnits(int var, const std::string& clusterName);
+    void NumberStartingDispatchableUnits(int var, const std::string& clusterName);
+    void NumberBreakingDownDispatchableUnits(int var, const std::string& clusterName);
+    void NTCValueOriginToDestination(int var);
+    void IntercoCostOriginToDestination(int var);
+    void IntercoCostDestinationToOrigin(int var);
+    void ShortTermStorageInjection(int var, const std::string& shortTermStorageName);
+    void ShortTermStorageWithdrawal(int var, const std::string& shortTermStorageName);
+    void ShortTermStorageLevel(int var, const std::string& shortTermStorageName);
+    void HydProd(int var);
+    void HydProdDown(int var);
+    void HydProdUp(int var);
+    void Pumping(int var);
+    void HydroLevel(int var);
+    void Overflow(int var);
+    void FinalStorage(int var);
+    void LayerStorage(int var, int layerIndex);
+    void PositiveUnsuppliedEnergy(int var);
+    void NegativeUnsuppliedEnergy(int var);
+    void AreaBalance(int var);
 };
 std::string BuildName(const std::string& name,
                       const std::string& location,
