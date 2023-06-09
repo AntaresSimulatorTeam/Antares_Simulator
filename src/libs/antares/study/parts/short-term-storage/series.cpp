@@ -116,6 +116,12 @@ void Series::fillDefaultSeriesIfEmpty()
     fillIfEmpty(upperRuleCurve, 1.0);
 }
 
+bool hasOnlyDefaultValues(const std::vector<double>& vect, double value)
+{
+    return all_of(vect.begin(), vect.end(), [&value] (const double& i)
+            { return i == value; });
+}
+
 bool Series::saveToFolder(const std::string& folder) const
 {
     logs.debug() << "Saving series into folder: " << folder;
@@ -131,11 +137,8 @@ bool Series::saveToFolder(const std::string& folder) const
         (const std::string& filename, const std::vector<double>& timeSeries, double defValue)
     {
         // if vector is only default values we don't save it
-        if (all_of(timeSeries.begin(), timeSeries.end(), [&defValue] (const double& i)
-                    { return i == defValue; }))
-            return;
-
-        ret = writeVectorToFile(folder + SEP + filename, timeSeries) && ret;
+        if (!hasOnlyDefaultValues(timeSeries, defValue))
+            ret = writeVectorToFile(folder + SEP + filename, timeSeries) && ret;
     };
 
     checkWrite("PMAX-injection.txt", maxInjectionModulation, 1.0);
