@@ -150,32 +150,23 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const Clob& filename
 
 static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString& filename)
 {
-    Clob data;
-    data << "[unserverdenergycost]\n";
+    IniFile ini;
+
+    IniFile::Section* s = ini.addSection("unserverdenergycost");
     list.each([&](const Data::Area& area) {
         // 0 values are skipped
         if (!Math::Zero(area.thermal.unsuppliedEnergyCost))
-            data << area.id << " = " << area.thermal.unsuppliedEnergyCost << '\n';
+            s->add(area.id, area.thermal.unsuppliedEnergyCost);
     });
 
-    data << "\n[spilledenergycost]\n";
+    s = ini.addSection("spilledenergycost");
     list.each([&](const Data::Area& area) {
         // 0 values are skipped
         if (!Math::Zero(area.thermal.spilledEnergyCost))
-            data << area.id << " = " << area.thermal.spilledEnergyCost << '\n';
+            s->add(area.id, area.thermal.spilledEnergyCost);
     });
 
-    IO::File::Stream file;
-    if (file.openRW(filename))
-    {
-        file << data;
-    }
-    else
-    {
-        logs.error() << "I/O error: impossible to write " << filename;
-        return false;
-    }
-    return true;
+    return ini.save(filename);
 }
 
 static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const AnyString& folder)
