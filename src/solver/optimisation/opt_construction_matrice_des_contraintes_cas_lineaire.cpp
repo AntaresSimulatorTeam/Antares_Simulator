@@ -110,16 +110,16 @@ static void shortTermStorageLevels(
   int nombreDePasDeTempsPourUneOptimisation,
   int pdt)
 {
-    const auto& VarOptim_current = CorrespondanceVarNativesVarOptim[pdt];
+    const auto& VarOptimCurrent = CorrespondanceVarNativesVarOptim[pdt];
     // Cycle over the simulation period
     const int timestepPrevious = (pdt - 1 + nombreDePasDeTempsPourUneOptimisation) % nombreDePasDeTempsPourUneOptimisation;
-    const auto& VarOptim_previous = CorrespondanceVarNativesVarOptim[timestepPrevious];
+    const auto& VarOptimPrevious = CorrespondanceVarNativesVarOptim[timestepPrevious];
     for (auto& storage : shortTermStorageInput)
     {
         int nombreDeTermes = 0;
         const int clusterGlobalIndex = storage.clusterGlobalIndex;
         // L[h] - L[h-1] - efficiency * injection[h] + withdrawal[h] = inflows[h]
-        if (const int varLevel = VarOptim_current->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
+        if (const int varLevel = VarOptimCurrent->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
             varLevel >= 0)
         {
             Pi[nombreDeTermes] = 1.0;
@@ -127,7 +127,7 @@ static void shortTermStorageLevels(
             nombreDeTermes++;
         }
 
-        if (const int varLevel_previous = VarOptim_previous->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
+        if (const int varLevel_previous = VarOptimPrevious->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
             varLevel_previous >= 0)
         {
             Pi[nombreDeTermes] = -1.0;
@@ -135,7 +135,7 @@ static void shortTermStorageLevels(
             nombreDeTermes++;
         }
 
-        if (const int varInjection = VarOptim_current->SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
+        if (const int varInjection = VarOptimCurrent->SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
             varInjection >= 0)
         {
             Pi[nombreDeTermes] = -1.0 * storage.efficiency;
@@ -143,7 +143,7 @@ static void shortTermStorageLevels(
             nombreDeTermes++;
         }
 
-        if (const int varWithdrawal = VarOptim_current->SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
+        if (const int varWithdrawal = VarOptimCurrent->SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
             varWithdrawal >= 0)
         {
             Pi[nombreDeTermes] = 1.0;
