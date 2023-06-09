@@ -15,7 +15,6 @@ Antares Changelog
 * Tune XPRESS resolution (#1158), this should improve performance for OR-Tools+XPRESS
 
 ## Bugfixes
-* Fix a bug on time ST storage time-series (#1315)
 * Fix a bug in adequacy study mode (#1314)
 * Fix memory errors detected by valgrind (#1302)
 * Fix empty ROR & STORAGE in output using the TS-Generator (#1293)
