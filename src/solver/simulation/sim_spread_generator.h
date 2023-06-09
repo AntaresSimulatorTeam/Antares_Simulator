@@ -29,12 +29,11 @@
 
 #include <antares/mersenne-twister/mersenne-twister.h>
 
-constexpr double rangeDefault = 1.e-3;
-
 namespace SIM
 {
 class SpreadGenerator
 {
+    static constexpr double rangeDefault = 1.e-3;
 public:
     SpreadGenerator(double range = rangeDefault);
     void reset(unsigned int seed);
