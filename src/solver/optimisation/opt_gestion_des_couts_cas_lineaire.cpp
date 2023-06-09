@@ -42,7 +42,6 @@
 
 static void shortTermStorageCost(
   const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-  int hourInTheYear,
   const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim,
   double* linearCost)
 {
@@ -193,7 +192,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
             }
 
             shortTermStorageCost(problemeHebdo->ShortTermStorage[pays],
-                                 problemeHebdo->HeureDansLAnnee + pdtHebdo,
                                  CorrespondanceVarNativesVarOptim,
                                  ProblemeAResoudre->CoutLineaire);
 
