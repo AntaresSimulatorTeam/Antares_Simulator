@@ -25,9 +25,23 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
 #pragma once
 
-#include <vector>
+#include <antares/mersenne-twister/mersenne-twister.h>
 
-void SIM_drawSpreadOnShortTermStorage(std::vector<double>& out, unsigned int seed);
+constexpr double rangeDefault = 1.e-3;
+
+namespace SIM
+{
+class SpreadGenerator
+{
+public:
+    SpreadGenerator(double range = rangeDefault);
+    void reset(unsigned int seed);
+    double generate();
+
+private:
+    Antares::MersenneTwister mt_;
+    const double range_;
+};
+} // namespace SIM

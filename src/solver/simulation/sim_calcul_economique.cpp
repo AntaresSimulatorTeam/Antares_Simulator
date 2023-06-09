@@ -32,7 +32,6 @@
 #include "simulation.h"
 #include "sim_structure_probleme_economique.h"
 #include "sim_extern_variables_globales.h"
-#include "sim_st_storage_draw_spread.h"
 #include "adequacy_patch_runtime_data.h"
 #include <antares/emergency.h>
 
@@ -65,8 +64,7 @@ static void importShortTermStorages(
 
             // We use the global index as a seed to avoid identical draws for multiple storages
             // which may lead to equivalent solutions if 2 storages are identical
-            SIM_drawSpreadOnShortTermStorage(toInsert.spreadOnInjectionWithdrawal,
-                                             clusterGlobalIndex);
+            toInsert.spreadGenerator.reset(clusterGlobalIndex);
 
             // TODO add missing properties, or use the same struct
             storageIndex++;
