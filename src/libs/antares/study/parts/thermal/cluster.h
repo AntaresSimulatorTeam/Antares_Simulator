@@ -314,11 +314,6 @@ public:
     double marketBidCost;
     //@}
 
-    //! Minimum number of group
-    uint groupMinCount;
-    //! Maximum number of group
-    uint groupMaxCount;
-
     //! Annuity investment (kEuros/MW)
     uint annuityInvestment;
 
