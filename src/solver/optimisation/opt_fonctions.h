@@ -92,8 +92,7 @@ void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOU
                                                         double*,
                                                         int*,
                                                         int,
-                                                        char,
-                                                        const std::string& NomDeLaContrainte = "");
+                                                        char);
 void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO*);
 
 void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,

@@ -4,15 +4,17 @@
 
 const std::string SEPARATOR = "::";
 const std::string ZONE_SEPARATOR = "$$";
-class VariableNamer
+struct ProblemElementInfo
 {
-private:
     PROBLEME_ANTARES_A_RESOUDRE* problem;
     int timeStep = 0;
     std::string origin;
     std::string destination;
     std::string area;
-
+};
+class VariableNamer
+{
+private:
     void SetThermalClusterVariableName(int var,
                                        Antares::Data::Enum::ExportStructDict structDict,
                                        const std::string& clusterName);
@@ -24,34 +26,11 @@ private:
     void SetAreaVariableName(int var,
                              Antares::Data::Enum::ExportStructDict structDict,
                              int layerIndex);
+    ProblemElementInfo& problemElementInfo;
 
 public:
-    VariableNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : problem(problem)
+    VariableNamer(ProblemElementInfo& problemElementInfo) : problemElementInfo(problemElementInfo)
     {
-    }
-    void SetTimeStep(int ts)
-    {
-        timeStep = ts;
-    }
-    void SetAreaName(const std::string& areaName)
-    {
-        area = areaName;
-    }
-    std::string AreaName() const
-    {
-        return area;
-    }
-    void SetOrigin(const std::string& linkOrigin)
-    {
-        origin = linkOrigin;
-    }
-    void SetDestination(const std::string& linkDestination)
-    {
-        destination = linkDestination;
-    }
-    int TimeStep() const
-    {
-        return timeStep;
     }
 
     void DispatchableProduction(int var, const std::string& clusterName);
@@ -76,6 +55,51 @@ public:
     void PositiveUnsuppliedEnergy(int var);
     void NegativeUnsuppliedEnergy(int var);
     void AreaBalance(int var);
+};
+class ConstraintNamer
+{
+private:
+    ProblemElementInfo& problemElementInfo;
+
+    void BindingConstraint(int constraint,
+                           const std::string& name,
+                           Antares::Data::Enum::ExportStructTimeStepDict type);
+
+public:
+    ConstraintNamer(ProblemElementInfo& problemElementInfo) : problemElementInfo(problemElementInfo)
+    {
+    }
+    void FlowDissociation(int constraint);
+    void AreaBalance(int constraint);
+    void FictiveLoads(int constraint);
+    void HydroPower(int constraint);
+    void HydroPowerSmoothingUsingVariationSum(int constraint);
+    void HydroPowerSmoothingUsingVariationMaxDown(int constraint);
+    void HydroPowerSmoothingUsingVariationMaxUp(int constraint);
+    void MinHydroPower(int constraint);
+    void MaxHydroPower(int constraint);
+    void MaxPumping(int constraint);
+    void AreaHydroLevel(int constraint);
+    void FinalStockEquivalent(int constraint);
+    void FinalStockExpression(int constraint);
+    void MinUpTime(int constraint);
+    void MinDownTime(int constraint);
+    void PMaxDispatchableGeneration(int constraint);
+    void PMinDispatchableGeneration(int constraint);
+    void ConsistenceNODU(int constraint);
+    void ShortTermStorageLevel(int constraint);
+    void BindingConstraintHour(int constraint, const std::string& name)
+    {
+        BindingConstraint(constraint, name, Antares::Data::Enum::ExportStructTimeStepDict::hour);
+    }
+    void BindingConstraintDay(int constraint, const std::string& name)
+    {
+        BindingConstraint(constraint, name, Antares::Data::Enum::ExportStructTimeStepDict::day);
+    }
+    void BindingConstraintWeek(int constraint, const std::string& name)
+    {
+        BindingConstraint(constraint, name, Antares::Data::Enum::ExportStructTimeStepDict::week);
+    }
 };
 std::string BuildName(const std::string& name,
                       const std::string& location,
