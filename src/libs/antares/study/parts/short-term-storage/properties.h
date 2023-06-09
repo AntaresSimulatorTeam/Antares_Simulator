@@ -69,7 +69,7 @@ public:
     // Efficiency factor between 0 and 1
     double efficiencyFactor = 1;
     // Cycle duration, 1 <= cycleDuration <= 168
-    unsigned int cycleDuration;
+    unsigned int cycleDuration = 0;
     // Used to sort outputs
     Group group = Group::Other1;
     // cluster name
