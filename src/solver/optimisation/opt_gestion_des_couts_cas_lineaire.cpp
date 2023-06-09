@@ -55,9 +55,6 @@ static void shortTermStorageCost(
     {
         for (const auto& storage : shortTermStorageInput[pays])
         {
-            // We use the global index as a seed to avoid identical draws for multiple storages
-            // which may lead to equivalent solutions if 2 storages are identical
-            spreadGenerator.reset(storage.clusterGlobalIndex);
             for (int pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
                  pdtHebdo++)
             {
