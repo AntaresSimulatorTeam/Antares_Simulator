@@ -106,7 +106,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
       = (VARIABLES_DUALES_INTERCONNEXIONS**)MemAlloc(NombreDePasDeTemps * sizeof(void*));
     problem.MatriceDesContraintesCouplantes
       = (CONTRAINTES_COUPLANTES**)MemAlloc(study.runtime->bindingConstraintCount * sizeof(void*));
-    problem.PaliersThermiquesDuPays = (PALIERS_THERMIQUES**)MemAlloc(nbPays * sizeof(void*));
+    problem.PaliersThermiquesDuPays = new PALIERS_THERMIQUES*[nbPays];
+    //(PALIERS_THERMIQUES**)
+    //  MemAlloc(nbPays * sizeof(PALIERS_THERMIQUES*));
     problem.CaracteristiquesHydrauliques
       = (ENERGIES_ET_PUISSANCES_HYDRAULIQUES**)MemAlloc(nbPays * sizeof(void*));
     problem.previousSimulationFinalLevel = (double*)MemAlloc(nbPays * sizeof(double));
@@ -381,8 +383,10 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
-        problem.PaliersThermiquesDuPays[k]
-          = (PALIERS_THERMIQUES*)MemAlloc(sizeof(PALIERS_THERMIQUES));
+        /* problem.PaliersThermiquesDuPays[k]
+          = (PALIERS_THERMIQUES*)MemAlloc(sizeof(PALIERS_THERMIQUES));*/
+         problem.PaliersThermiquesDuPays[k]
+          = new PALIERS_THERMIQUES[1];
         problem.CaracteristiquesHydrauliques[k] = (ENERGIES_ET_PUISSANCES_HYDRAULIQUES*)MemAlloc(
           sizeof(ENERGIES_ET_PUISSANCES_HYDRAULIQUES));
 
@@ -417,7 +421,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
           = (int*)MemAlloc(nbPaliers * sizeof(int));
         problem.PaliersThermiquesDuPays[k]->DureeMinimaleDArretDUnGroupeDuPalierThermique
           = (int*)MemAlloc(nbPaliers * sizeof(int));
-        problem.PaliersThermiquesDuPays[k]->NomsDesPaliersThermiques.resize(nbPaliers);
+       problem.PaliersThermiquesDuPays[k]->NomsDesPaliersThermiques.resize(nbPaliers);
+       //problem.PaliersThermiquesDuPays[k]->NomsDesPaliersThermiques.;
 
         problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimise
           = (double*)MemAllocMemset(7 * sizeof(double));
@@ -843,7 +848,8 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
             MemFree(problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout[j]);
         }
         MemFree(problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout);
-        MemFree(problem.PaliersThermiquesDuPays[k]);
+        //MemFree(problem.PaliersThermiquesDuPays[k]);
+        delete problem.PaliersThermiquesDuPays[k];
 
         MemFree(problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive);
         MemFree(problem.ResultatsHoraires[k].ValeursHorairesDENS);
@@ -891,7 +897,8 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.ResultatsHoraires[k].ProductionThermique);
         MemFree(problem.BruitSurCoutHydraulique[k]);
     }
-    MemFree(problem.PaliersThermiquesDuPays);
+    //MemFree(problem.PaliersThermiquesDuPays);
+    delete[] problem.PaliersThermiquesDuPays;
     MemFree(problem.CaracteristiquesHydrauliques);
     MemFree(problem.previousSimulationFinalLevel);
     if (problem.previousYearFinalLevels)
