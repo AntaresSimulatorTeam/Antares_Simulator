@@ -119,7 +119,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  fixedCost(0.),
  startupCost(0.),
  marketBidCost(0.),
- annuityInvestment(0),
  PthetaInf(HOURS_PER_YEAR, 0),
  prepro(nullptr),
  productionCost(nullptr)
@@ -196,9 +195,6 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     fixedCost = cluster.fixedCost;
     startupCost = cluster.startupCost;
     marketBidCost = cluster.marketBidCost;
-
-    // Annuity investment (kEuros/MW)
-    annuityInvestment = cluster.annuityInvestment;
 
     // modulation
     modulation = cluster.modulation;
@@ -423,8 +419,6 @@ void Data::ThermalCluster::reset()
     fixedCost = 0.;
     startupCost = 0.;
     marketBidCost = 0.;
-
-    annuityInvestment = 0;
 
     // modulation
     modulation.resize(thermalModulationMax, HOURS_PER_YEAR);

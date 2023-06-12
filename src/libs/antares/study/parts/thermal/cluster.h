@@ -314,9 +314,6 @@ public:
     double marketBidCost;
     //@}
 
-    //! Annuity investment (kEuros/MW)
-    uint annuityInvestment;
-
     /*!
     ** \brief thermalMinGenModulation vector used in solver only to store the year values
     ** 8760 vector
