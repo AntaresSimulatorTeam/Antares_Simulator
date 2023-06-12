@@ -124,7 +124,7 @@ static void shortTermStorageLevels(
             Pi[nombreDeTermes] = 1.0;
             Colonne[nombreDeTermes] = varLevel;
             nombreDeTermes++;
-            variableNamer.ShortTermStorageLevel(varLevel_next, storage.name);
+            variableNamer.ShortTermStorageLevel(varLevel, storage.name);
         }
 
         if (const int varLevel_previous = VarOptimPrevious->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
@@ -133,7 +133,7 @@ static void shortTermStorageLevels(
             Pi[nombreDeTermes] = -1.0;
             Colonne[nombreDeTermes] = varLevel_previous;
             nombreDeTermes++;
-            variableNamer.ShortTermStorageLevel(varLevel, storage.name);
+            variableNamer.ShortTermStorageLevel(varLevel_previous, storage.name);
         }
 
         if (const int varInjection = VarOptimCurrent->SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
