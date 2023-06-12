@@ -203,101 +203,126 @@ void VariableNamer::AreaBalance(int var)
     SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::BilansPays);
 }
 
-void ConstraintNamer::FlowDissociation(int constraint)
+void ConstraintNamer::FlowDissociation()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Antares::Data::Enum::toString(Enum::ExportStructConstraintsDict::FlowDissociation),
-      LocationIdentifier(
-        problemElementInfo.origin + ZONE_SEPARATOR + problemElementInfo.destination,
-        Enum::ExportStructLocationDict::link),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Antares::Data::Enum::toString(Enum::ExportStructConstraintsDict::FlowDissociation),
+        LocationIdentifier(
+          problemElementInfo.origin + ZONE_SEPARATOR + problemElementInfo.destination,
+          Enum::ExportStructLocationDict::link),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
 }
-void ConstraintNamer::AreaBalance(int constraint)
+void ConstraintNamer::AreaBalance()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::AreaBalance),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Enum::toString(Enum::ExportStructConstraintsDict::AreaBalance),
+        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
 }
-void ConstraintNamer::FictiveLoads(int constraint)
+void ConstraintNamer::FictiveLoads()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::FictiveLoads),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Enum::toString(Enum::ExportStructConstraintsDict::FictiveLoads),
+        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
 }
-void ConstraintNamer::HydroPower(int constraint)
+void ConstraintNamer::HydroPower()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::HydroPower),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::week));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Enum::toString(Enum::ExportStructConstraintsDict::HydroPower),
+        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::week));
 }
-void ConstraintNamer::HydroPowerSmoothingUsingVariationSum(int constraint)
+void ConstraintNamer::HydroPowerSmoothingUsingVariationSum()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::HydroPowerSmoothingUsingVariationSum),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Enum::toString(Enum::ExportStructConstraintsDict::HydroPowerSmoothingUsingVariationSum),
+        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
 }
-void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxDown(int constraint)
+void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxDown()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::HydroPowerSmoothingUsingVariationMaxDown),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Enum::toString(Enum::ExportStructConstraintsDict::HydroPowerSmoothingUsingVariationMaxDown),
+        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
 }
-void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxUp(int constraint)
+void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxUp()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::HydroPowerSmoothingUsingVariationMaxUp),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Enum::toString(Enum::ExportStructConstraintsDict::HydroPowerSmoothingUsingVariationMaxUp),
+        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
 }
-void ConstraintNamer::MinHydroPower(int constraint)
+void ConstraintNamer::MinHydroPower()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::MinHydroPower),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::week));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Enum::toString(Enum::ExportStructConstraintsDict::MinHydroPower),
+        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::week));
 }
-void ConstraintNamer::MaxHydroPower(int constraint)
+void ConstraintNamer::MaxHydroPower()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::MaxHydroPower),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::week));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Enum::toString(Enum::ExportStructConstraintsDict::MaxHydroPower),
+        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::week));
 }
-void ConstraintNamer::MaxPumping(int constraint)
+void ConstraintNamer::MaxPumping()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::MaxPumping),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::week));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Enum::toString(Enum::ExportStructConstraintsDict::MaxPumping),
+        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::week));
 }
-void ConstraintNamer::AreaHydroLevel(int constraint)
+void ConstraintNamer::AreaHydroLevel()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::AreaHydroLevel),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Enum::toString(Enum::ExportStructConstraintsDict::AreaHydroLevel),
+        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
 }
-void ConstraintNamer::FinalStockEquivalent(int constraint)
+void ConstraintNamer::FinalStockEquivalent()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::FinalStockEquivalent),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Enum::toString(Enum::ExportStructConstraintsDict::FinalStockEquivalent),
+        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
 }
-void ConstraintNamer::FinalStockExpression(int constraint)
+void ConstraintNamer::FinalStockExpression()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::FinalStockExpression),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Enum::toString(Enum::ExportStructConstraintsDict::FinalStockExpression),
+        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
 }
-void ConstraintNamer::BindingConstraint(int constraint,
-                                        const std::string& name,
+void ConstraintNamer::BindingConstraint(const std::string& name,
                                         Enum::ExportStructTimeStepDict type)
 {
     auto timeStepType = (type == Enum::ExportStructTimeStepDict::hour)
@@ -305,47 +330,58 @@ void ConstraintNamer::BindingConstraint(int constraint,
                         : (type == Enum::ExportStructTimeStepDict::day)
                           ? Enum::ExportStructBindingConstraintType::daily
                           : Enum::ExportStructBindingConstraintType::weekly;
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      name, Enum::toString(timeStepType), TimeIdentifier(problemElementInfo.timeStep, type));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        name, Enum::toString(timeStepType), TimeIdentifier(problemElementInfo.timeStep, type));
 }
-void ConstraintNamer::MinUpTime(int constraint)
+void ConstraintNamer::MinUpTime()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::MinUpTime),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Enum::toString(Enum::ExportStructConstraintsDict::MinUpTime),
+        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
 }
-void ConstraintNamer::MinDownTime(int constraint)
+void ConstraintNamer::MinDownTime()
 {
     std::string constraintFullName = BuildName(
       Enum::toString(Enum::ExportStructConstraintsDict::MinDownTime),
       LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
       TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
 }
-void ConstraintNamer::PMaxDispatchableGeneration(int constraint)
+void ConstraintNamer::PMaxDispatchableGeneration()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::PMaxDispatchableGeneration),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Enum::toString(Enum::ExportStructConstraintsDict::PMaxDispatchableGeneration),
+        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
 }
-void ConstraintNamer::PMinDispatchableGeneration(int constraint)
+void ConstraintNamer::PMinDispatchableGeneration()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::PMinDispatchableGeneration),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Enum::toString(Enum::ExportStructConstraintsDict::PMinDispatchableGeneration),
+        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
 }
-void ConstraintNamer::ConsistenceNODU(int constraint)
+void ConstraintNamer::ConsistenceNODU()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint] = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::ConsistenceNODU),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+      = BuildName(
+        Enum::toString(Enum::ExportStructConstraintsDict::ConsistenceNODU),
+        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
+        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
 }
-void ConstraintNamer::ShortTermStorageLevel(int constraint)
+void ConstraintNamer::ShortTermStorageLevel()
 {
-    problemElementInfo.problem->NomDesContraintes[constraint]
+    problemElementInfo.problem
+      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
       = BuildName(Antares::Data::Enum::toString(
                     Antares::Data::Enum::ExportStructConstraintsDict::ShortTermStorageLevel),
                   LocationIdentifier(problemElementInfo.area,

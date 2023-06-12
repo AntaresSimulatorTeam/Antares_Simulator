@@ -61,44 +61,43 @@ class ConstraintNamer
 private:
     ProblemElementInfo& problemElementInfo;
 
-    void BindingConstraint(int constraint,
-                           const std::string& name,
+    void BindingConstraint(const std::string& name,
                            Antares::Data::Enum::ExportStructTimeStepDict type);
 
 public:
     ConstraintNamer(ProblemElementInfo& problemElementInfo) : problemElementInfo(problemElementInfo)
     {
     }
-    void FlowDissociation(int constraint);
-    void AreaBalance(int constraint);
-    void FictiveLoads(int constraint);
-    void HydroPower(int constraint);
-    void HydroPowerSmoothingUsingVariationSum(int constraint);
-    void HydroPowerSmoothingUsingVariationMaxDown(int constraint);
-    void HydroPowerSmoothingUsingVariationMaxUp(int constraint);
-    void MinHydroPower(int constraint);
-    void MaxHydroPower(int constraint);
-    void MaxPumping(int constraint);
-    void AreaHydroLevel(int constraint);
-    void FinalStockEquivalent(int constraint);
-    void FinalStockExpression(int constraint);
-    void MinUpTime(int constraint);
-    void MinDownTime(int constraint);
-    void PMaxDispatchableGeneration(int constraint);
-    void PMinDispatchableGeneration(int constraint);
-    void ConsistenceNODU(int constraint);
-    void ShortTermStorageLevel(int constraint);
-    void BindingConstraintHour(int constraint, const std::string& name)
+    void FlowDissociation();
+    void AreaBalance();
+    void FictiveLoads();
+    void HydroPower();
+    void HydroPowerSmoothingUsingVariationSum();
+    void HydroPowerSmoothingUsingVariationMaxDown();
+    void HydroPowerSmoothingUsingVariationMaxUp();
+    void MinHydroPower();
+    void MaxHydroPower();
+    void MaxPumping();
+    void AreaHydroLevel();
+    void FinalStockEquivalent();
+    void FinalStockExpression();
+    void MinUpTime();
+    void MinDownTime();
+    void PMaxDispatchableGeneration();
+    void PMinDispatchableGeneration();
+    void ConsistenceNODU();
+    void ShortTermStorageLevel();
+    void BindingConstraintHour(const std::string& name)
     {
-        BindingConstraint(constraint, name, Antares::Data::Enum::ExportStructTimeStepDict::hour);
+        BindingConstraint(name, Antares::Data::Enum::ExportStructTimeStepDict::hour);
     }
-    void BindingConstraintDay(int constraint, const std::string& name)
+    void BindingConstraintDay(const std::string& name)
     {
-        BindingConstraint(constraint, name, Antares::Data::Enum::ExportStructTimeStepDict::day);
+        BindingConstraint(name, Antares::Data::Enum::ExportStructTimeStepDict::day);
     }
-    void BindingConstraintWeek(int constraint, const std::string& name)
+    void BindingConstraintWeek(const std::string& name)
     {
-        BindingConstraint(constraint, name, Antares::Data::Enum::ExportStructTimeStepDict::week);
+        BindingConstraint(name, Antares::Data::Enum::ExportStructTimeStepDict::week);
     }
 };
 std::string BuildName(const std::string& name,

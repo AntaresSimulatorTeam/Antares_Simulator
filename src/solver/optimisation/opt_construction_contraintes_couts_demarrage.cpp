@@ -127,8 +127,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     {
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-                        constraintNamer.PMaxDispatchableGeneration(
-                          ProblemeAResoudre->NombreDeContraintes - 1);
+                        constraintNamer.PMaxDispatchableGeneration();
                     }
                 }
                 else
@@ -173,8 +172,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     {
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
-                        constraintNamer.PMinDispatchableGeneration(
-                          ProblemeAResoudre->NombreDeContraintes - 1);
+                        constraintNamer.PMinDispatchableGeneration();
                     }
                 }
                 else
@@ -281,7 +279,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-                        constraintNamer.ConsistenceNODU(ProblemeAResoudre->NombreDeContraintes - 1);
+                        constraintNamer.ConsistenceNODU();
                     }
                 }
                 else
@@ -354,7 +352,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-                        constraintNamer.MinUpTime(ProblemeAResoudre->NombreDeContraintes - 1);
+                        constraintNamer.MinUpTime();
                     }
                 }
                 else
@@ -457,7 +455,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
-                        constraintNamer.MinUpTime(ProblemeAResoudre->NombreDeContraintes - 1);
+                        constraintNamer.MinUpTime();
                     }
                 }
                 else
@@ -551,7 +549,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-                        constraintNamer.MinDownTime(ProblemeAResoudre->NombreDeContraintes - 1);
+                        constraintNamer.MinDownTime();
                     }
                 }
                 else
