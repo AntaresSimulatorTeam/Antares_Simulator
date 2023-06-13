@@ -151,18 +151,23 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type) {
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 2);
 
-    auto bc_lt = *(++bindingConstraints.begin());
-    auto bc_gt = *(bindingConstraints.begin());
+    auto bc_lt = std::find_if(bindingConstraints.begin(), bindingConstraints.end(), [](auto bc){
+            return bc->operatorType() == BindingConstraint::opLess;
+        });
+    auto bc_gt = std::find_if(bindingConstraints.begin(), bindingConstraints.end(), [](auto bc){
+            return bc->operatorType() == BindingConstraint::opGreater;
+        });
 
-    BOOST_CHECK(bc_lt->operatorType() == BindingConstraint::opLess);
-    BOOST_CHECK_CLOSE(bc_lt->RHSTimeSeries()[0][0], 0.2, 0.0001);
-    BOOST_CHECK_CLOSE(bc_lt->RHSTimeSeries()[1][30], 0.4, 0.0001);
-    BOOST_CHECK_CLOSE(bc_lt->RHSTimeSeries()[2][8783], 0.6, 0.0001);
 
-    BOOST_CHECK(bc_gt->operatorType() == BindingConstraint::opGreater);
-    BOOST_CHECK_CLOSE(bc_gt->RHSTimeSeries()[0][0], 0.4, 0.0001);
-    BOOST_CHECK_CLOSE(bc_gt->RHSTimeSeries()[1][30], 0.6, 0.0001);
-    BOOST_CHECK_CLOSE(bc_gt->RHSTimeSeries()[2][8783], 0.8, 0.0001);
+    BOOST_CHECK(bc_lt != bindingConstraints.end());
+    BOOST_CHECK_CLOSE((*bc_lt)->RHSTimeSeries()[0][0], 0.2, 0.0001);
+    BOOST_CHECK_CLOSE((*bc_lt)->RHSTimeSeries()[1][30], 0.4, 0.0001);
+    BOOST_CHECK_CLOSE((*bc_lt)->RHSTimeSeries()[2][8783], 0.6, 0.0001);
+
+    BOOST_CHECK(bc_gt != bindingConstraints.end());
+    BOOST_CHECK_CLOSE((*bc_gt)->RHSTimeSeries()[0][0], 0.4, 0.0001);
+    BOOST_CHECK_CLOSE((*bc_gt)->RHSTimeSeries()[1][30], 0.6, 0.0001);
+    BOOST_CHECK_CLOSE((*bc_gt)->RHSTimeSeries()[2][8783], 0.8, 0.0001);
 }
 
 BOOST_AUTO_TEST_CASE(BC_load_legacy) {
@@ -251,16 +256,23 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_range) {
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 2);
 
-    auto bc_lt = *(++bindingConstraints.begin());
-    auto bc_gt = *(bindingConstraints.begin());
+    auto bc_lt = std::find_if(bindingConstraints.begin(), bindingConstraints.end(), [](auto bc){
+                                  return bc->operatorType() == BindingConstraint::opLess;
+                              });
+    auto bc_gt = std::find_if(bindingConstraints.begin(), bindingConstraints.end(), [](auto bc){
+                                  return bc->operatorType() == BindingConstraint::opGreater;
+                              });
 
-    BOOST_CHECK_CLOSE(bc_lt->RHSTimeSeries()[0][0], 0.2, 0.0001);
-    BOOST_CHECK_CLOSE(bc_lt->RHSTimeSeries()[0][30], 0.2, 0.0001);
-    BOOST_CHECK_CLOSE(bc_lt->RHSTimeSeries()[0][8783], 0.2, 0.0001);
+    BOOST_CHECK(bc_lt != bindingConstraints.end());
+    BOOST_CHECK(bc_gt != bindingConstraints.end());
 
-    BOOST_CHECK_CLOSE(bc_gt->RHSTimeSeries()[0][0], 0.4, 0.0001);
-    BOOST_CHECK_CLOSE(bc_gt->RHSTimeSeries()[0][30], 0.4, 0.0001);
-    BOOST_CHECK_CLOSE(bc_gt->RHSTimeSeries()[0][8783], 0.4, 0.0001);
+    BOOST_CHECK_CLOSE((*bc_lt)->RHSTimeSeries()[0][0], 0.2, 0.0001);
+    BOOST_CHECK_CLOSE((*bc_lt)->RHSTimeSeries()[0][30], 0.2, 0.0001);
+    BOOST_CHECK_CLOSE((*bc_lt)->RHSTimeSeries()[0][8783], 0.2, 0.0001);
+
+    BOOST_CHECK_CLOSE((*bc_gt)->RHSTimeSeries()[0][0], 0.4, 0.0001);
+    BOOST_CHECK_CLOSE((*bc_gt)->RHSTimeSeries()[0][30], 0.4, 0.0001);
+    BOOST_CHECK_CLOSE((*bc_gt)->RHSTimeSeries()[0][8783], 0.4, 0.0001);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
