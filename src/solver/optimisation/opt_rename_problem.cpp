@@ -1,394 +1,391 @@
 #include "opt_rename_problem.h"
 #include <sstream>
-using namespace Antares::Data;
-void VariableNamer::SetLinkVariableName(int var, Antares::Data::Enum::ExportStructDict structDict)
+
+using namespace Antares::Data::Enum;
+
+void VariableNamer::SetLinkVariableName(int var, ExportStructDict structDict)
 {
-    auto nvars = problemElementInfo.problem->NombreDeVariables;
-    if (nvars > var && problemElementInfo.problem->NomDesVariables[var].empty())
+    auto nvars = currentAssetsStorage.problem->NombreDeVariables;
+    if (nvars > var && currentAssetsStorage.problem->NomDesVariables[var].empty())
     {
         const auto location
-          = problemElementInfo.origin + ZONE_SEPARATOR + problemElementInfo.destination;
+          = currentAssetsStorage.origin + AREA_SEP + currentAssetsStorage.destination;
         auto fullName = BuildName(
-          Antares::Data::Enum::toString(structDict),
-          LocationIdentifier(location, Antares::Data::Enum::ExportStructLocationDict::link),
-          TimeIdentifier(problemElementInfo.timeStep,
-                         Antares::Data::Enum::ExportStructTimeStepDict::hour));
-        problemElementInfo.problem->NomDesVariables[var] = fullName;
+          toString(structDict),
+          LocationIdentifier(location, ExportStructLocationDict::link),
+          TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
+        currentAssetsStorage.problem->NomDesVariables[var] = fullName;
     }
 }
 
-void VariableNamer::SetAreaVariableName(int var, Antares::Data::Enum::ExportStructDict structDict)
+void VariableNamer::SetAreaVariableName(int var, ExportStructDict structDict)
 {
-    auto nvars = problemElementInfo.problem->NombreDeVariables;
+    auto nvars = currentAssetsStorage.problem->NombreDeVariables;
     if (nvars > var)
     {
-        auto fullName
-          = BuildName(Antares::Data::Enum::toString(structDict),
-                      LocationIdentifier(problemElementInfo.area,
-                                         Antares::Data::Enum::ExportStructLocationDict::area),
-                      TimeIdentifier(problemElementInfo.timeStep,
-                                     Antares::Data::Enum::ExportStructTimeStepDict::hour));
-        problemElementInfo.problem->NomDesVariables[var] = fullName;
+        auto fullName = BuildName(
+          toString(structDict),
+          LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+          TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
+        currentAssetsStorage.problem->NomDesVariables[var] = fullName;
     }
 }
-void VariableNamer::SetAreaVariableName(int var,
-                                        Antares::Data::Enum::ExportStructDict structDict,
-                                        int layerIndex)
+
+void VariableNamer::SetAreaVariableName(int var, ExportStructDict structDict, int layerIndex)
 {
-    auto nvars = problemElementInfo.problem->NombreDeVariables;
+    auto nvars = currentAssetsStorage.problem->NombreDeVariables;
     if (nvars > var)
     {
-        auto fullName
-          = BuildName(Antares::Data::Enum::toString(structDict),
-                      LocationIdentifier(problemElementInfo.area,
-                                         Antares::Data::Enum::ExportStructLocationDict::area)
-                        + SEPARATOR + "Layer<" + std::to_string(layerIndex) + ">",
-                      TimeIdentifier(problemElementInfo.timeStep,
-                                     Antares::Data::Enum::ExportStructTimeStepDict::hour));
-        problemElementInfo.problem->NomDesVariables[var] = fullName;
+        auto fullName = BuildName(
+          toString(structDict),
+          LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area) + SEPARATOR
+            + "Layer<" + std::to_string(layerIndex) + ">",
+          TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
+        currentAssetsStorage.problem->NomDesVariables[var] = fullName;
     }
 }
+
 void VariableNamer::SetThermalClusterVariableName(int var,
-                                                  Antares::Data::Enum::ExportStructDict structDict,
+                                                  ExportStructDict structDict,
                                                   const std::string& clusterName)
 {
-    auto nvars = problemElementInfo.problem->NombreDeVariables;
+    auto nvars = currentAssetsStorage.problem->NombreDeVariables;
 
     if (nvars > var)
     {
         const auto location
-          = LocationIdentifier(problemElementInfo.area,
-                               Antares::Data::Enum::ExportStructLocationDict::area)
-            + SEPARATOR
-            + Antares::Data::Enum::toString(Antares::Data::Enum::ExportStructDict::PalierThermique)
-            + "<" + clusterName + ">";
+          = LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area)
+            + SEPARATOR + toString(ExportStructDict::PalierThermique) + "<" + clusterName + ">";
 
-        auto fullName
-          = BuildName(Antares::Data::Enum::toString(structDict),
-                      location,
-                      TimeIdentifier(problemElementInfo.timeStep,
-                                     Antares::Data::Enum::ExportStructTimeStepDict::hour));
-        problemElementInfo.problem->NomDesVariables[var] = fullName;
+        auto fullName = BuildName(
+          toString(structDict),
+          location,
+          TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
+        currentAssetsStorage.problem->NomDesVariables[var] = fullName;
     }
 }
+
 void VariableNamer::DispatchableProduction(int var, const std::string& clusterName)
 {
-    SetThermalClusterVariableName(
-      var, Antares::Data::Enum::ExportStructDict::DispatchableProduction, clusterName);
+    SetThermalClusterVariableName(var, ExportStructDict::DispatchableProduction, clusterName);
 }
+
 void VariableNamer::NODU(int var, const std::string& clusterName)
 {
     SetThermalClusterVariableName(
-      var,
-      Antares::Data::Enum::ExportStructDict::NombreDeGroupesEnMarcheDuPalierThermique,
-      clusterName);
+      var, ExportStructDict::NombreDeGroupesEnMarcheDuPalierThermique, clusterName);
 }
+
 void VariableNamer::NumberStoppingDispatchableUnits(int var, const std::string& clusterName)
 {
     SetThermalClusterVariableName(
-      var,
-      Antares::Data::Enum::ExportStructDict::NombreDeGroupesQuiDemarrentDuPalierThermique,
-      clusterName);
+      var, ExportStructDict::NombreDeGroupesQuiDemarrentDuPalierThermique, clusterName);
 }
+
 void VariableNamer::NumberStartingDispatchableUnits(int var, const std::string& clusterName)
 {
     SetThermalClusterVariableName(
-      var,
-      Antares::Data::Enum::ExportStructDict::NombreDeGroupesQuiDemarrentDuPalierThermique,
-      clusterName);
+      var, ExportStructDict::NombreDeGroupesQuiDemarrentDuPalierThermique, clusterName);
 }
+
 void VariableNamer::NumberBreakingDownDispatchableUnits(int var, const std::string& clusterName)
 {
     SetThermalClusterVariableName(
-      var,
-      Antares::Data::Enum::ExportStructDict::NombreDeGroupesQuiTombentEnPanneDuPalierThermique,
-      clusterName);
-}
-void VariableNamer::NTCValueOriginToDestination(int var)
-{
-    SetLinkVariableName(var,
-                        Antares::Data::Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite);
-}
-void VariableNamer::IntercoCostOriginToDestination(int var)
-{
-    SetLinkVariableName(
-      var, Antares::Data::Enum::ExportStructDict::CoutOrigineVersExtremiteDeLInterconnexion);
-}
-void VariableNamer::IntercoCostDestinationToOrigin(int var)
-{
-    SetLinkVariableName(
-      var, Antares::Data::Enum::ExportStructDict::CoutExtremiteVersOrigineDeLInterconnexion);
+      var, ExportStructDict::NombreDeGroupesQuiTombentEnPanneDuPalierThermique, clusterName);
 }
 
-void VariableNamer::SetShortTermStorageVariableName(
-  int var,
-  Antares::Data::Enum::ExportStructDict structDict,
-  const std::string& shortTermStorageName)
+void VariableNamer::NTCValueOriginToDestination(int var)
 {
-    auto nvars = problemElementInfo.problem->NombreDeVariables;
+    SetLinkVariableName(var, ExportStructDict::ValeurDeNTCOrigineVersExtremite);
+}
+
+void VariableNamer::IntercoCostOriginToDestination(int var)
+{
+    SetLinkVariableName(var, ExportStructDict::CoutOrigineVersExtremiteDeLInterconnexion);
+}
+
+void VariableNamer::IntercoCostDestinationToOrigin(int var)
+{
+    SetLinkVariableName(var, ExportStructDict::CoutExtremiteVersOrigineDeLInterconnexion);
+}
+
+void VariableNamer::SetShortTermStorageVariableName(int var,
+                                                    ExportStructDict structDict,
+                                                    const std::string& shortTermStorageName)
+{
+    auto nvars = currentAssetsStorage.problem->NombreDeVariables;
 
     if (nvars > var)
     {
         const auto location
-          = LocationIdentifier(problemElementInfo.area,
-                               Antares::Data::Enum::ExportStructLocationDict::area)
-            + SEPARATOR
-            + Antares::Data::Enum::toString(Antares::Data::Enum::ExportStructDict::ShortTermStorage)
-            + "<" + shortTermStorageName + ">";
-        auto fullName
-          = BuildName(Antares::Data::Enum::toString(structDict),
-                      location,
-                      TimeIdentifier(problemElementInfo.timeStep,
-                                     Antares::Data::Enum::ExportStructTimeStepDict::hour));
-        problemElementInfo.problem->NomDesVariables[var] = fullName;
+          = LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area)
+            + SEPARATOR + toString(ExportStructDict::ShortTermStorage) + "<" + shortTermStorageName
+            + ">";
+        auto fullName = BuildName(
+          toString(structDict),
+          location,
+          TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
+        currentAssetsStorage.problem->NomDesVariables[var] = fullName;
     }
 }
+
 void VariableNamer::ShortTermStorageInjection(int var, const std::string& shortTermStorageName)
 {
     SetShortTermStorageVariableName(
-      var, Antares::Data::Enum::ExportStructDict::ShortTermStorageInjection, shortTermStorageName);
+      var, ExportStructDict::ShortTermStorageInjection, shortTermStorageName);
 }
+
 void VariableNamer::ShortTermStorageWithdrawal(int var, const std::string& shortTermStorageName)
 {
     SetShortTermStorageVariableName(
-      var, Antares::Data::Enum::ExportStructDict::ShortTermStorageWithdrawal, shortTermStorageName);
+      var, ExportStructDict::ShortTermStorageWithdrawal, shortTermStorageName);
 }
+
 void VariableNamer::ShortTermStorageLevel(int var, const std::string& shortTermStorageName)
 {
     SetShortTermStorageVariableName(
-      var, Antares::Data::Enum::ExportStructDict::ShortTermStorageLevel, shortTermStorageName);
+      var, ExportStructDict::ShortTermStorageLevel, shortTermStorageName);
 }
+
 void VariableNamer::HydProd(int var)
 {
-    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::ProdHyd);
+    SetAreaVariableName(var, ExportStructDict::ProdHyd);
 }
+
 void VariableNamer::HydProdDown(int var)
 {
-    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::ProdHydALaBaisse);
+    SetAreaVariableName(var, ExportStructDict::ProdHydALaBaisse);
 }
+
 void VariableNamer::HydProdUp(int var)
 {
-    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::ProdHydALaHausse);
+    SetAreaVariableName(var, ExportStructDict::ProdHydALaHausse);
 }
+
 void VariableNamer::Pumping(int var)
 {
-    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::Pompage);
+    SetAreaVariableName(var, ExportStructDict::Pompage);
 }
+
 void VariableNamer::HydroLevel(int var)
 {
-    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::NiveauHydro);
+    SetAreaVariableName(var, ExportStructDict::NiveauHydro);
 }
+
 void VariableNamer::Overflow(int var)
 {
-    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::Debordement);
+    SetAreaVariableName(var, ExportStructDict::Debordement);
 }
+
 void VariableNamer::LayerStorage(int var, int layerIndex)
 {
-    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::TrancheDeStock, layerIndex);
+    SetAreaVariableName(var, ExportStructDict::TrancheDeStock, layerIndex);
 }
+
 void VariableNamer::FinalStorage(int var)
 {
-    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::StockFinal);
+    SetAreaVariableName(var, ExportStructDict::StockFinal);
 }
+
 void VariableNamer::PositiveUnsuppliedEnergy(int var)
 {
-    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::DefaillancePositive);
+    SetAreaVariableName(var, ExportStructDict::DefaillancePositive);
 }
+
 void VariableNamer::NegativeUnsuppliedEnergy(int var)
 {
-    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::DefaillanceNegative);
+    SetAreaVariableName(var, ExportStructDict::DefaillanceNegative);
 }
+
 void VariableNamer::AreaBalance(int var)
 {
-    SetAreaVariableName(var, Antares::Data::Enum::ExportStructDict::BilansPays);
+    SetAreaVariableName(var, ExportStructDict::BilansPays);
 }
 
 void ConstraintNamer::FlowDissociation()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Antares::Data::Enum::toString(Enum::ExportStructConstraintsDict::FlowDissociation),
-        LocationIdentifier(
-          problemElementInfo.origin + ZONE_SEPARATOR + problemElementInfo.destination,
-          Enum::ExportStructLocationDict::link),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::FlowDissociation),
+                  LocationIdentifier(
+                    currentAssetsStorage.origin + AREA_SEP + currentAssetsStorage.destination,
+                    ExportStructLocationDict::link),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
 }
+
 void ConstraintNamer::AreaBalance()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Enum::toString(Enum::ExportStructConstraintsDict::AreaBalance),
-        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::AreaBalance),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
 }
+
 void ConstraintNamer::FictiveLoads()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Enum::toString(Enum::ExportStructConstraintsDict::FictiveLoads),
-        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::FictiveLoads),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
 }
+
 void ConstraintNamer::HydroPower()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Enum::toString(Enum::ExportStructConstraintsDict::HydroPower),
-        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::week));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::HydroPower),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::week));
 }
+
 void ConstraintNamer::HydroPowerSmoothingUsingVariationSum()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Enum::toString(Enum::ExportStructConstraintsDict::HydroPowerSmoothingUsingVariationSum),
-        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::HydroPowerSmoothingUsingVariationSum),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
 }
+
 void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxDown()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Enum::toString(Enum::ExportStructConstraintsDict::HydroPowerSmoothingUsingVariationMaxDown),
-        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::HydroPowerSmoothingUsingVariationMaxDown),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
 }
+
 void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxUp()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Enum::toString(Enum::ExportStructConstraintsDict::HydroPowerSmoothingUsingVariationMaxUp),
-        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::HydroPowerSmoothingUsingVariationMaxUp),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
 }
+
 void ConstraintNamer::MinHydroPower()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Enum::toString(Enum::ExportStructConstraintsDict::MinHydroPower),
-        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::week));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::MinHydroPower),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::week));
 }
+
 void ConstraintNamer::MaxHydroPower()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Enum::toString(Enum::ExportStructConstraintsDict::MaxHydroPower),
-        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::week));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::MaxHydroPower),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::week));
 }
+
 void ConstraintNamer::MaxPumping()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Enum::toString(Enum::ExportStructConstraintsDict::MaxPumping),
-        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::week));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::MaxPumping),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::week));
 }
+
 void ConstraintNamer::AreaHydroLevel()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Enum::toString(Enum::ExportStructConstraintsDict::AreaHydroLevel),
-        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::AreaHydroLevel),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
 }
+
 void ConstraintNamer::FinalStockEquivalent()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Enum::toString(Enum::ExportStructConstraintsDict::FinalStockEquivalent),
-        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::FinalStockEquivalent),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
 }
+
 void ConstraintNamer::FinalStockExpression()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Enum::toString(Enum::ExportStructConstraintsDict::FinalStockExpression),
-        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::FinalStockExpression),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
 }
-void ConstraintNamer::BindingConstraint(const std::string& name,
-                                        Enum::ExportStructTimeStepDict type)
+
+void ConstraintNamer::BindingConstraint(const std::string& name, ExportStructTimeStepDict type)
 {
-    auto timeStepType = (type == Enum::ExportStructTimeStepDict::hour)
-                          ? Enum::ExportStructBindingConstraintType::hourly
-                        : (type == Enum::ExportStructTimeStepDict::day)
-                          ? Enum::ExportStructBindingConstraintType::daily
-                          : Enum::ExportStructBindingConstraintType::weekly;
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
+    auto timeStepType
+      = (type == ExportStructTimeStepDict::hour)  ? ExportStructBindingConstraintType::hourly
+        : (type == ExportStructTimeStepDict::day) ? ExportStructBindingConstraintType::daily
+                                                  : ExportStructBindingConstraintType::weekly;
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
       = BuildName(
-        name, Enum::toString(timeStepType), TimeIdentifier(problemElementInfo.timeStep, type));
+        name, toString(timeStepType), TimeIdentifier(currentAssetsStorage.timeStep, type));
 }
+
 void ConstraintNamer::MinUpTime()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Enum::toString(Enum::ExportStructConstraintsDict::MinUpTime),
-        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::MinUpTime),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
 }
+
 void ConstraintNamer::MinDownTime()
 {
-    std::string constraintFullName = BuildName(
-      Enum::toString(Enum::ExportStructConstraintsDict::MinDownTime),
-      LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-      TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    std::string constraintFullName
+      = BuildName(toString(ExportStructConstraintsDict::MinDownTime),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
 }
+
 void ConstraintNamer::PMaxDispatchableGeneration()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Enum::toString(Enum::ExportStructConstraintsDict::PMaxDispatchableGeneration),
-        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::PMaxDispatchableGeneration),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
 }
+
 void ConstraintNamer::PMinDispatchableGeneration()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Enum::toString(Enum::ExportStructConstraintsDict::PMinDispatchableGeneration),
-        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::PMinDispatchableGeneration),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
 }
+
 void ConstraintNamer::ConsistenceNODU()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(
-        Enum::toString(Enum::ExportStructConstraintsDict::ConsistenceNODU),
-        LocationIdentifier(problemElementInfo.area, Enum::ExportStructLocationDict::area),
-        TimeIdentifier(problemElementInfo.timeStep, Enum::ExportStructTimeStepDict::hour));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::ConsistenceNODU),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
 }
+
 void ConstraintNamer::ShortTermStorageLevel()
 {
-    problemElementInfo.problem
-      ->NomDesContraintes[problemElementInfo.problem->NombreDeContraintes - 1]
-      = BuildName(Antares::Data::Enum::toString(
-                    Antares::Data::Enum::ExportStructConstraintsDict::ShortTermStorageLevel),
-                  LocationIdentifier(problemElementInfo.area,
-                                     Antares::Data::Enum::ExportStructLocationDict::area),
-                  TimeIdentifier(problemElementInfo.timeStep,
-                                 Antares::Data::Enum::ExportStructTimeStepDict::hour));
+    currentAssetsStorage.problem
+      ->NomDesContraintes[currentAssetsStorage.problem->NombreDeContraintes - 1]
+      = BuildName(toString(ExportStructConstraintsDict::ShortTermStorageLevel),
+                  LocationIdentifier(currentAssetsStorage.area, ExportStructLocationDict::area),
+                  TimeIdentifier(currentAssetsStorage.timeStep, ExportStructTimeStepDict::hour));
 }
+
 std::string BuildName(const std::string& name,
                       const std::string& location,
                       const std::string& timeIdentifier)

@@ -59,17 +59,17 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
     double* Pi = ProblemeAResoudre->Pi;
     int* Colonne = ProblemeAResoudre->Colonne;
-    ProblemElementInfo problemElementInfo;
-    problemElementInfo.problem = ProblemeAResoudre;
-    VariableNamer variableNamer(problemElementInfo);
-    ConstraintNamer constraintNamer(problemElementInfo);
+    CurrentAssetsStorage currentAssetsStorage;
+    currentAssetsStorage.problem = ProblemeAResoudre;
+    VariableNamer variableNamer(currentAssetsStorage);
+    ConstraintNamer constraintNamer(currentAssetsStorage);
     int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
         const auto& area = problemeHebdo->NomsDesPays[pays];
-        problemElementInfo.area = area;
+        currentAssetsStorage.area = area;
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             double pminDUnGroupeDuPalierThermique
@@ -84,7 +84,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                problemElementInfo.timeStep = timeStepInYear;
+                currentAssetsStorage.timeStep = timeStepInYear;
                 CorrespondanceVarNativesVarOptim
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
@@ -186,7 +186,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
         const auto& area = problemeHebdo->NomsDesPays[pays];
-        problemElementInfo.area = area;
+        currentAssetsStorage.area = area;
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             const int palier
@@ -196,7 +196,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                problemElementInfo.timeStep = timeStepInYear;
+                currentAssetsStorage.timeStep = timeStepInYear;
                 CorrespondanceVarNativesVarOptim
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
@@ -275,7 +275,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
-                        problemElementInfo.area = problemeHebdo->NomsDesPays[pays];
+                        currentAssetsStorage.area = problemeHebdo->NomsDesPays[pays];
 
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
@@ -293,7 +293,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
         const auto& area = problemeHebdo->NomsDesPays[pays];
-        problemElementInfo.area = area;
+        currentAssetsStorage.area = area;
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             const int palier
@@ -303,7 +303,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                problemElementInfo.timeStep = timeStepInYear;
+                currentAssetsStorage.timeStep = timeStepInYear;
                 CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
@@ -348,7 +348,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
-                        problemElementInfo.area = problemeHebdo->NomsDesPays[pays];
+                        currentAssetsStorage.area = problemeHebdo->NomsDesPays[pays];
 
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
@@ -366,7 +366,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
         const auto& area = problemeHebdo->NomsDesPays[pays];
-        problemElementInfo.area = area;
+        currentAssetsStorage.area = area;
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
@@ -380,7 +380,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                problemElementInfo.timeStep = timeStepInYear;
+                currentAssetsStorage.timeStep = timeStepInYear;
                 CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
@@ -469,7 +469,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
         const auto& area = problemeHebdo->NomsDesPays[pays];
-        problemElementInfo.area = area;
+        currentAssetsStorage.area = area;
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             int DureeMinimaleDArretDUnGroupeDuPalierThermique
@@ -481,7 +481,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                problemElementInfo.timeStep = timeStepInYear;
+                currentAssetsStorage.timeStep = timeStepInYear;
                 CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim

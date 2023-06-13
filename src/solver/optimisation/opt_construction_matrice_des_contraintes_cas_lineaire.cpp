@@ -184,17 +184,17 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-    ProblemElementInfo problemElementInfo;
-    problemElementInfo.problem = ProblemeAResoudre;
-    VariableNamer variableNamer(problemElementInfo);
-    ConstraintNamer constraintNamer(problemElementInfo);
+    CurrentAssetsStorage currentAssetsStorage;
+    currentAssetsStorage.problem = ProblemeAResoudre;
+    VariableNamer variableNamer(currentAssetsStorage);
+    ConstraintNamer constraintNamer(currentAssetsStorage);
 
     // For now only variable are exported, can't define name for constraints export
     int nvars = ProblemeAResoudre->NombreDeVariables;
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-        problemElementInfo.timeStep = timeStepInYear;
+        currentAssetsStorage.timeStep = timeStepInYear;
         CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
         CorrespondanceCntNativesCntOptim = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
 
@@ -204,7 +204,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
             const auto& area = problemeHebdo->NomsDesPays[pays];
-            problemElementInfo.area = area;
+            currentAssetsStorage.area = area;
 
             while (interco >= 0)
             {
@@ -221,8 +221,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     const auto destination
                       = problemeHebdo
                           ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-                    problemElementInfo.origin = origin;
-                    problemElementInfo.destination = destination;
+                    currentAssetsStorage.origin = origin;
+                    currentAssetsStorage.destination = destination;
                     variableNamer.NTCValueOriginToDestination(var);
                 }
                 interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
@@ -243,8 +243,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     const auto destination
                       = problemeHebdo
                           ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-                    problemElementInfo.origin = origin;
-                    problemElementInfo.destination = destination;
+                    currentAssetsStorage.origin = origin;
+                    currentAssetsStorage.destination = destination;
                     variableNamer.NTCValueOriginToDestination(var);
                 }
                 interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
@@ -258,7 +258,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           Colonne,
                           variableNamer);
 
-            problemElementInfo.area = area;
+            currentAssetsStorage.area = area;
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays];
             if (var >= 0)
             {
@@ -319,7 +319,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           Pi,
                           Colonne,
                           variableNamer);
-            problemElementInfo.area = area;
+            currentAssetsStorage.area = area;
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays];
             if (var >= 0)
             {
@@ -367,8 +367,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             const std::string destination
               = problemeHebdo->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
 
-            problemElementInfo.origin = origin;
-            problemElementInfo.destination = destination;
+            currentAssetsStorage.origin = origin;
+            currentAssetsStorage.destination = destination;
             const COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
             if (CoutDeTransport->IntercoGereeAvecDesCouts)
             {
@@ -459,8 +459,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     const auto destination
                       = problemeHebdo
                           ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-                    problemElementInfo.origin = origin;
-                    problemElementInfo.destination = destination;
+                    currentAssetsStorage.origin = origin;
+                    currentAssetsStorage.destination = destination;
                     variableNamer.NTCValueOriginToDestination(var);
                 }
             }
@@ -498,7 +498,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
 
-                    problemElementInfo.area = problemeHebdo->NomsDesPays[pays];
+                    currentAssetsStorage.area = problemeHebdo->NomsDesPays[pays];
                     const auto& clusterName
                       = PaliersThermiquesDuPays->NomsDesPaliersThermiques
                           [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
@@ -564,7 +564,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                             ->NumeroDeVariableDeLInterconnexion[interco];
                     if (var >= 0)
                     {
-                        problemElementInfo.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
+                        currentAssetsStorage.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
                         Pi[nombreDeTermes] = poids;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
@@ -575,8 +575,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           = problemeHebdo
                               ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
 
-                        problemElementInfo.origin = origin;
-                        problemElementInfo.destination = destination;
+                        currentAssetsStorage.origin = origin;
+                        currentAssetsStorage.destination = destination;
                         variableNamer.NTCValueOriginToDestination(var);
                     }
                 }
@@ -615,8 +615,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
 
-                        problemElementInfo.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
-                        problemElementInfo.area = problemeHebdo->NomsDesPays[pays];
+                        currentAssetsStorage.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
+                        currentAssetsStorage.area = problemeHebdo->NomsDesPays[pays];
                         const auto& clusterName
                           = PaliersThermiquesDuPays->NomsDesPaliersThermiques
                               [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
@@ -630,7 +630,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               ->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
 
-            problemElementInfo.timeStep = jour;
+            currentAssetsStorage.timeStep = jour;
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre,
               Pi,
@@ -685,15 +685,15 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Pi[nombreDeTermes] = poids;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        problemElementInfo.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
+                        currentAssetsStorage.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
                         const auto origin
                           = problemeHebdo
                               ->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
                         const auto destination
                           = problemeHebdo
                               ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-                        problemElementInfo.origin = origin;
-                        problemElementInfo.destination = destination;
+                        currentAssetsStorage.origin = origin;
+                        currentAssetsStorage.destination = destination;
                         variableNamer.NTCValueOriginToDestination(var);
                     }
                 }
@@ -732,8 +732,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Pi[nombreDeTermes] = poids;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
-                        problemElementInfo.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
-                        problemElementInfo.area = problemeHebdo->NomsDesPays[pays];
+                        currentAssetsStorage.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
+                        currentAssetsStorage.area = problemeHebdo->NomsDesPays[pays];
                         const auto& clusterName
                           = PaliersThermiquesDuPays->NomsDesPaliersThermiques
                               [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
@@ -746,7 +746,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               ->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
 
-            problemElementInfo.timeStep = semaine;
+            currentAssetsStorage.timeStep = semaine;
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre,
               Pi,
@@ -761,7 +761,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const auto& area = problemeHebdo->NomsDesPays[pays];
-        problemElementInfo.area = area;
+        currentAssetsStorage.area = area;
         bool presenceHydro
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable;
         bool TurbEntreBornes
@@ -776,7 +776,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             {
                 for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
                 {
-                    problemElementInfo.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
+                    currentAssetsStorage.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
                     var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                             ->NumeroDeVariablesDeLaProdHyd[pays];
 
@@ -804,7 +804,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             {
                 for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
                 {
-                    problemElementInfo.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
+                    currentAssetsStorage.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
                     var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                             ->NumeroDeVariablesDeLaProdHyd[pays];
                     if (var >= 0)
@@ -819,7 +819,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays]
               = ProblemeAResoudre->NombreDeContraintes;
-            problemElementInfo.timeStep = problemeHebdo->weekInTheYear;
+            currentAssetsStorage.timeStep = problemeHebdo->weekInTheYear;
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
             constraintNamer.HydroPower();
@@ -835,11 +835,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
                 continue;
             const auto& area = problemeHebdo->NomsDesPays[pays];
-            problemElementInfo.area = area;
+            currentAssetsStorage.area = area;
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                problemElementInfo.timeStep = timeStepInYear;
+                currentAssetsStorage.timeStep = timeStepInYear;
                 CorrespondanceVarNativesVarOptim
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
                 int nombreDeTermes = 0;
@@ -900,11 +900,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 continue;
 
             const auto& area = problemeHebdo->NomsDesPays[pays];
-            problemElementInfo.area = area;
+            currentAssetsStorage.area = area;
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                problemElementInfo.timeStep = timeStepInYear;
+                currentAssetsStorage.timeStep = timeStepInYear;
                 CorrespondanceVarNativesVarOptim
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
                 int nombreDeTermes = 0;
@@ -964,13 +964,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         const bool TurbEntreBornes
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
         const auto& area = problemeHebdo->NomsDesPays[pays];
-        problemElementInfo.area = area;
+        currentAssetsStorage.area = area;
         if (presenceHydro && (TurbEntreBornes || presencePompage))
         {
             int nombreDeTermes = 0;
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                problemElementInfo.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
+                currentAssetsStorage.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
                 var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                         ->NumeroDeVariablesDeLaProdHyd[pays];
                 if (var >= 0)
@@ -984,7 +984,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays]
               = ProblemeAResoudre->NombreDeContraintes;
-            problemElementInfo.timeStep = problemeHebdo->weekInTheYear;
+            currentAssetsStorage.timeStep = problemeHebdo->weekInTheYear;
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
             constraintNamer.MinHydroPower();
@@ -999,7 +999,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             int nombreDeTermes = 0;
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                problemElementInfo.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
+                currentAssetsStorage.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
                 var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                         ->NumeroDeVariablesDeLaProdHyd[pays];
                 if (var >= 0)
@@ -1013,7 +1013,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays]
               = ProblemeAResoudre->NombreDeContraintes;
-            problemElementInfo.timeStep = problemeHebdo->weekInTheYear;
+            currentAssetsStorage.timeStep = problemeHebdo->weekInTheYear;
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
             constraintNamer.MaxHydroPower();
@@ -1030,7 +1030,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             int nombreDeTermes = 0;
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                problemElementInfo.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
+                currentAssetsStorage.timeStep = problemeHebdo->weekInTheYear * 168 + pdt;
                 var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                         ->NumeroDeVariablesDePompage[pays];
                 if (var >= 0)
@@ -1045,7 +1045,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             problemeHebdo->NumeroDeContrainteMaxPompage[pays]
               = ProblemeAResoudre->NombreDeContraintes;
 
-            problemElementInfo.timeStep = problemeHebdo->weekInTheYear;
+            currentAssetsStorage.timeStep = problemeHebdo->weekInTheYear;
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
             constraintNamer.MaxPumping();
@@ -1060,11 +1060,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         CorrespondanceCntNativesCntOptim = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
 
         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-        problemElementInfo.timeStep = timeStepInYear;
+        currentAssetsStorage.timeStep = timeStepInYear;
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             const auto& area = problemeHebdo->NomsDesPays[pays];
-            problemElementInfo.area = area;
+            currentAssetsStorage.area = area;
             if (problemeHebdo->CaracteristiquesHydrauliques[pays]->SuiviNiveauHoraire)
             {
                 int nombreDeTermes = 0;
@@ -1137,8 +1137,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     {
         const auto& week = problemeHebdo->weekInTheYear;
         const auto& area = problemeHebdo->NomsDesPays[pays];
-        problemElementInfo.area = area;
-        problemElementInfo.timeStep = week * 168 + nombreDePasDeTempsPourUneOptimisation - 1;
+        currentAssetsStorage.area = area;
+        currentAssetsStorage.timeStep = week * 168 + nombreDePasDeTempsPourUneOptimisation - 1;
 
         if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue
             && problemeHebdo->CaracteristiquesHydrauliques[pays]->DirectLevelAccess)

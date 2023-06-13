@@ -3,8 +3,9 @@
 #include "opt_export_structure.h"
 
 const std::string SEPARATOR = "::";
-const std::string ZONE_SEPARATOR = "$$";
-struct ProblemElementInfo
+const std::string AREA_SEP = "$$";
+
+struct CurrentAssetsStorage
 {
     PROBLEME_ANTARES_A_RESOUDRE* problem;
     int timeStep = 0;
@@ -12,6 +13,7 @@ struct ProblemElementInfo
     std::string destination;
     std::string area;
 };
+
 class VariableNamer
 {
 private:
@@ -26,10 +28,11 @@ private:
     void SetAreaVariableName(int var,
                              Antares::Data::Enum::ExportStructDict structDict,
                              int layerIndex);
-    ProblemElementInfo& problemElementInfo;
+    CurrentAssetsStorage& currentAssetsStorage;
 
 public:
-    VariableNamer(ProblemElementInfo& problemElementInfo) : problemElementInfo(problemElementInfo)
+    VariableNamer(CurrentAssetsStorage& currentAssetsStorage) :
+     currentAssetsStorage(currentAssetsStorage)
     {
     }
 
@@ -56,16 +59,18 @@ public:
     void NegativeUnsuppliedEnergy(int var);
     void AreaBalance(int var);
 };
+
 class ConstraintNamer
 {
 private:
-    ProblemElementInfo& problemElementInfo;
+    CurrentAssetsStorage& currentAssetsStorage;
 
     void BindingConstraint(const std::string& name,
                            Antares::Data::Enum::ExportStructTimeStepDict type);
 
 public:
-    ConstraintNamer(ProblemElementInfo& problemElementInfo) : problemElementInfo(problemElementInfo)
+    ConstraintNamer(CurrentAssetsStorage& currentAssetsStorage) :
+     currentAssetsStorage(currentAssetsStorage)
     {
     }
     void FlowDissociation();
@@ -100,14 +105,17 @@ public:
         BindingConstraint(name, Antares::Data::Enum::ExportStructTimeStepDict::week);
     }
 };
+
 std::string BuildName(const std::string& name,
                       const std::string& location,
                       const std::string& timeIdentifier);
+
 inline std::string TimeIdentifier(int timeStep,
                                   Antares::Data::Enum::ExportStructTimeStepDict timeStepType)
 {
     return Antares::Data::Enum::toString(timeStepType) + "<" + std::to_string(timeStep) + ">";
 }
+
 inline std::string LocationIdentifier(const std::string& location,
                                       Antares::Data::Enum::ExportStructLocationDict locationType)
 {
