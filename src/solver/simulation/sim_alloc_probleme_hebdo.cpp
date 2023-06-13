@@ -214,34 +214,34 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
           .assign(shortTermStorageCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays
-          = new int[nbPays];
+          .assign(nbPays, 0);
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContraintePourEviterLesChargesFictives
-          = new int[nbPays];
+          .assign(nbPays, 0);
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesNiveauxPays
-          = new int[nbPays];
+          .assign(nbPays, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]->ShortTermStorageLevelConstraint
-          = new int[shortTermStorageCount];
+          .assign(shortTermStorageCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroPremiereContrainteDeReserveParZone
-          = new int[nbPays];
+          .assign(nbPays, 0);
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeuxiemeContrainteDeReserveParZone
-          = new int[nbPays];
+          .assign(nbPays, 0);
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDeDissociationDeFlux
-          = new int[linkCount];
+          .assign(linkCount, 0);
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesContraintesCouplantes
-          = new int[study.runtime->bindingConstraintCount];
+          .assign(study.runtime->bindingConstraintCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche
-          = new int[study.runtime->thermalPlantTotalCount];
+          .assign(study.runtime->thermalPlantTotalCount, 0);
         problem.CorrespondanceCntNativesCntOptim[k]
           ->NumeroDeContrainteDesContraintesDeDureeMinDArret
-          = new int[study.runtime->thermalPlantTotalCount];
+          .assign(study.runtime->thermalPlantTotalCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           ->NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
-          = new int[study.runtime->thermalPlantTotalCount];
+          .assign(study.runtime->thermalPlantTotalCount, 0);
 
         problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion
           = new double[linkCount];
@@ -568,27 +568,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     for (uint k = 0; k < problem.NombreDePasDeTemps; k++)
     {
         delete problem.CorrespondanceVarNativesVarOptim[k];
-        delete problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays;
-        delete problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesNiveauxPays;
-        MemFree(problem.CorrespondanceCntNativesCntOptim[k]
-                  ->NumeroDeContraintePourEviterLesChargesFictives);
-
-        MemFree(
-          problem.CorrespondanceCntNativesCntOptim[k]->NumeroPremiereContrainteDeReserveParZone);
-        MemFree(
-          problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeuxiemeContrainteDeReserveParZone);
-        MemFree(
-          problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDeDissociationDeFlux);
-        MemFree(
-          problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesContraintesCouplantes);
-        MemFree(problem.CorrespondanceCntNativesCntOptim[k]
-                  ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche);
-        MemFree(problem.CorrespondanceCntNativesCntOptim[k]
-                  ->NumeroDeContrainteDesContraintesDeDureeMinDArret);
-        MemFree(problem.CorrespondanceCntNativesCntOptim[k]
-                  ->NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne);
-        delete problem.CorrespondanceCntNativesCntOptim[k]->ShortTermStorageLevelConstraint;
-
         delete problem.CorrespondanceCntNativesCntOptim[k];
         delete problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion;
         delete problem.VariablesDualesDesContraintesDeNTC[k];

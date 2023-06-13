@@ -75,22 +75,22 @@ struct CORRESPONDANCES_DES_VARIABLES
 
 struct CORRESPONDANCES_DES_CONTRAINTES
 {
-    int* NumeroDeContrainteDesBilansPays;
-    int* NumeroDeContraintePourEviterLesChargesFictives;
+    std::vector<int> NumeroDeContrainteDesBilansPays;
+    std::vector<int> NumeroDeContraintePourEviterLesChargesFictives;
 
-    int* NumeroPremiereContrainteDeReserveParZone;
-    int* NumeroDeuxiemeContrainteDeReserveParZone;
+    std::vector<int> NumeroPremiereContrainteDeReserveParZone;
+    std::vector<int> NumeroDeuxiemeContrainteDeReserveParZone;
 
-    int* NumeroDeContrainteDeDissociationDeFlux;
-    int* NumeroDeContrainteDesContraintesCouplantes;
+    std::vector<int> NumeroDeContrainteDeDissociationDeFlux;
+    std::vector<int> NumeroDeContrainteDesContraintesCouplantes;
 
-    int* NumeroDeContrainteDesContraintesDeDureeMinDeMarche;
-    int* NumeroDeContrainteDesContraintesDeDureeMinDArret;
-    int* NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne;
+    std::vector<int> NumeroDeContrainteDesContraintesDeDureeMinDeMarche;
+    std::vector<int> NumeroDeContrainteDesContraintesDeDureeMinDArret;
+    std::vector<int> NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne;
 
-    int* NumeroDeContrainteDesNiveauxPays;
+    std::vector<int> NumeroDeContrainteDesNiveauxPays;
 
-    int* ShortTermStorageLevelConstraint;
+    std::vector<int> ShortTermStorageLevelConstraint;
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
