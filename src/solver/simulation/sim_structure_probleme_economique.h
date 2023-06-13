@@ -565,7 +565,7 @@ struct PROBLEME_HEBDO
     bool firstWeekOfSimulation = false;
 
     std::vector<CORRESPONDANCES_DES_VARIABLES*> CorrespondanceVarNativesVarOptim;
-    CORRESPONDANCES_DES_CONTRAINTES** CorrespondanceCntNativesCntOptim = nullptr;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES*> CorrespondanceCntNativesCntOptim;
     CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES** CorrespondanceCntNativesCntOptimJournalieres = nullptr;
     CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES** CorrespondanceCntNativesCntOptimHebdomadaires = nullptr;
 

@@ -100,7 +100,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.CorrespondanceVarNativesVarOptim
       = std::vector<CORRESPONDANCES_DES_VARIABLES*>(NombreDePasDeTemps);
     problem.CorrespondanceCntNativesCntOptim
-      = new CORRESPONDANCES_DES_CONTRAINTES*[NombreDePasDeTemps];
+      = std::vector<CORRESPONDANCES_DES_CONTRAINTES*>(NombreDePasDeTemps);
     problem.VariablesDualesDesContraintesDeNTC
       = new VARIABLES_DUALES_INTERCONNEXIONS*[NombreDePasDeTemps];
     problem.MatriceDesContraintesCouplantes
@@ -593,7 +593,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         delete problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion;
         delete problem.VariablesDualesDesContraintesDeNTC[k];
     }
-    delete problem.CorrespondanceCntNativesCntOptim;
     delete problem.VariablesDualesDesContraintesDeNTC;
 
     for (int k = 0; k < 7; k++)
