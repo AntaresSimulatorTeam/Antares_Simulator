@@ -37,8 +37,8 @@ jobs:
 
     - name: Install libraries
       run: |
-           dnf install -y epel-release git gcc-toolset-9-toolchain cmake wget rpm-build
-           dnf install -y unzip libuuid-devel boost-test boost-devel
+           dnf install -y epel-release git cmake wget rpm-build
+           dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-9-toolchain
 
     - name: Checkout
       run: |
