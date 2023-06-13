@@ -104,7 +104,7 @@ static void shortTermStorageLevels(
   const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
   CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim,
-  CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim,
+  std::vector<CORRESPONDANCES_DES_VARIABLES*> CorrespondanceVarNativesVarOptim,
   double* Pi,
   int* Colonne,
   int nombreDePasDeTempsPourUneOptimisation,

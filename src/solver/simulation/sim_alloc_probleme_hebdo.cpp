@@ -98,7 +98,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.AllMustRunGeneration = std::vector<ALL_MUST_RUN_GENERATION>(NombreDePasDeTemps);
     problem.SoldeMoyenHoraire = std::vector<SOLDE_MOYEN_DES_ECHANGES>(NombreDePasDeTemps);
     problem.CorrespondanceVarNativesVarOptim
-      = new CORRESPONDANCES_DES_VARIABLES*[NombreDePasDeTemps];
+      = std::vector<CORRESPONDANCES_DES_VARIABLES*>(NombreDePasDeTemps);
     problem.CorrespondanceCntNativesCntOptim
       = new CORRESPONDANCES_DES_CONTRAINTES*[NombreDePasDeTemps];
     problem.VariablesDualesDesContraintesDeNTC
@@ -164,54 +164,54 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         problem.SoldeMoyenHoraire[k].SoldeMoyenDuPays.assign(nbPays, 0.);
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDeLInterconnexion
-          = new int[linkCount];
+          .assign(linkCount, 0);
         problem.CorrespondanceVarNativesVarOptim[k]
           ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion
-          = new int[linkCount];
+          .assign(linkCount, 0);
         problem.CorrespondanceVarNativesVarOptim[k]
           ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion
-          = new int[linkCount];
+          .assign(linkCount, 0);
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermique
-          = new int[study.runtime->thermalPlantTotalCount];
+          .assign(study.runtime->thermalPlantTotalCount, 0);
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHyd
-          = new int[nbPays];
+          .assign(nbPays, 0);
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDePompage
-          = new int[nbPays];
+          .assign(nbPays, 0);
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeNiveau
-          = new int[nbPays];
+          .assign(nbPays, 0);
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeDebordement
-          = new int[nbPays];
+          .assign(nbPays, 0);
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositive
-          = new int[nbPays];
+          .assign(nbPays, 0);
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegative
-          = new int[nbPays];
+          .assign(nbPays, 0);
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse
-          = new int[nbPays];
+          .assign(nbPays, 0);
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausse
-          = new int[nbPays];
+          .assign(nbPays, 0);
 
         problem.CorrespondanceVarNativesVarOptim[k]
           ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique
-          = new int[study.runtime->thermalPlantTotalCount];
+          .assign(study.runtime->thermalPlantTotalCount, 0);
         problem.CorrespondanceVarNativesVarOptim[k]
           ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique
-          = new int[study.runtime->thermalPlantTotalCount];
+          .assign(study.runtime->thermalPlantTotalCount, 0);
         problem.CorrespondanceVarNativesVarOptim[k]
           ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique
-          = new int[study.runtime->thermalPlantTotalCount];
+          .assign(study.runtime->thermalPlantTotalCount, 0);
         problem.CorrespondanceVarNativesVarOptim[k]
           ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
-          = new int[study.runtime->thermalPlantTotalCount];
+          .assign(study.runtime->thermalPlantTotalCount, 0);
 
         problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.InjectionVariable
-          = new int[shortTermStorageCount];
+          .assign(shortTermStorageCount, 0);
         problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.WithdrawalVariable
-          = new int[shortTermStorageCount];
+          .assign(shortTermStorageCount, 0);
         problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.LevelVariable
-          = new int[shortTermStorageCount];
+          .assign(shortTermStorageCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays
           = new int[nbPays];
@@ -567,35 +567,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     for (uint k = 0; k < problem.NombreDePasDeTemps; k++)
     {
-        delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDeLInterconnexion;
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion);
-        delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermique;
-        delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHyd;
-        delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDePompage;
-        delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeNiveau;
-        delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeDebordement;
-        delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositive;
-        delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegative;
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausse);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique);
-
-        delete problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.InjectionVariable;
-        delete problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.WithdrawalVariable;
-        delete problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.LevelVariable;
-
         delete problem.CorrespondanceVarNativesVarOptim[k];
         delete problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays;
         delete problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesNiveauxPays;
@@ -622,7 +593,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         delete problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion;
         delete problem.VariablesDualesDesContraintesDeNTC[k];
     }
-    delete problem.CorrespondanceVarNativesVarOptim;
     delete problem.CorrespondanceCntNativesCntOptim;
     delete problem.VariablesDualesDesContraintesDeNTC;
 

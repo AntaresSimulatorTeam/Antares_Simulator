@@ -40,36 +40,36 @@ class AdequacyPatchRuntimeData;
 
 struct CORRESPONDANCES_DES_VARIABLES
 {
-    int* NumeroDeVariableDeLInterconnexion;
-    int* NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;
-    int* NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
+    std::vector<int> NumeroDeVariableDeLInterconnexion;
+    std::vector<int> NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;
+    std::vector<int> NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
 
-    int* NumeroDeVariableDuPalierThermique;
+    std::vector<int> NumeroDeVariableDuPalierThermique;
 
-    int* NumeroDeVariablesDeLaProdHyd;
+    std::vector<int> NumeroDeVariablesDeLaProdHyd;
 
-    int* NumeroDeVariablesDePompage;
-    int* NumeroDeVariablesDeNiveau;
-    int* NumeroDeVariablesDeDebordement;
+    std::vector<int> NumeroDeVariablesDePompage;
+    std::vector<int> NumeroDeVariablesDeNiveau;
+    std::vector<int> NumeroDeVariablesDeDebordement;
 
-    int* NumeroDeVariableDefaillancePositive;
+    std::vector<int> NumeroDeVariableDefaillancePositive;
 
-    int* NumeroDeVariableDefaillanceNegative;
+    std::vector<int> NumeroDeVariableDefaillanceNegative;
 
-    int* NumeroDeVariablesVariationHydALaBaisse;
+    std::vector<int> NumeroDeVariablesVariationHydALaBaisse;
 
-    int* NumeroDeVariablesVariationHydALaHausse;
+    std::vector<int> NumeroDeVariablesVariationHydALaHausse;
 
-    int* NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique;
-    int* NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
-    int* NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
-    int* NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
+    std::vector<int> NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique;
+    std::vector<int> NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
+    std::vector<int> NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
+    std::vector<int> NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
 
     struct
     {
-        int* InjectionVariable;
-        int* WithdrawalVariable;
-        int* LevelVariable;
+        std::vector<int> InjectionVariable;
+        std::vector<int> WithdrawalVariable;
+        std::vector<int> LevelVariable;
     } SIM_ShortTermStorage;
 };
 
@@ -564,7 +564,7 @@ struct PROBLEME_HEBDO
     bool LeProblemeADejaEteInstancie = false;
     bool firstWeekOfSimulation = false;
 
-    CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim = nullptr;
+    std::vector<CORRESPONDANCES_DES_VARIABLES*> CorrespondanceVarNativesVarOptim;
     CORRESPONDANCES_DES_CONTRAINTES** CorrespondanceCntNativesCntOptim = nullptr;
     CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES** CorrespondanceCntNativesCntOptimJournalieres = nullptr;
     CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES** CorrespondanceCntNativesCntOptimHebdomadaires = nullptr;
