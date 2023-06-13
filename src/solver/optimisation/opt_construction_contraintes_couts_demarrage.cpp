@@ -46,7 +46,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
   bool Simulation)
 {
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptimTmoins1;
 
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
@@ -273,10 +272,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                CorrespondanceCntNativesCntOptim
+                CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
-                  ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
+                  .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
                   = -1;
 
                 int nombreDeTermes = 0;
@@ -341,10 +340,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                CorrespondanceCntNativesCntOptim
+                CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
-                  ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
+                  .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
                   = -1;
 
                 int nombreDeTermes = 0;
@@ -407,7 +406,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     if (nombreDeTermes > 1)
                     {
                         CorrespondanceCntNativesCntOptim
-                          ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
+                          .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
                           = ProblemeAResoudre->NombreDeContraintes;
 
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
@@ -434,10 +433,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                CorrespondanceCntNativesCntOptim
+                CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
-                  ->NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
+                  .NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
                   = -1;
 
                 CorrespondanceVarNativesVarOptim
@@ -446,7 +445,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 if (!Simulation)
                 {
                     CorrespondanceCntNativesCntOptim
-                      ->NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
+                      .NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
                       = -1;
                 }
 
@@ -494,7 +493,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     if (nombreDeTermes > 1)
                     {
                         CorrespondanceCntNativesCntOptim
-                          ->NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
+                          .NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
                           = ProblemeAResoudre->NombreDeContraintes;
 
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(

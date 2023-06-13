@@ -100,7 +100,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.CorrespondanceVarNativesVarOptim
       = std::vector<CORRESPONDANCES_DES_VARIABLES*>(NombreDePasDeTemps);
     problem.CorrespondanceCntNativesCntOptim
-      = std::vector<CORRESPONDANCES_DES_CONTRAINTES*>(NombreDePasDeTemps);
+      = std::vector<CORRESPONDANCES_DES_CONTRAINTES>(NombreDePasDeTemps);
     problem.VariablesDualesDesContraintesDeNTC
       = new VARIABLES_DUALES_INTERCONNEXIONS*[NombreDePasDeTemps];
     problem.MatriceDesContraintesCouplantes
@@ -151,8 +151,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
 
         problem.CorrespondanceVarNativesVarOptim[k]
           = new CORRESPONDANCES_DES_VARIABLES;
-        problem.CorrespondanceCntNativesCntOptim[k]
-          = new CORRESPONDANCES_DES_CONTRAINTES;
         problem.VariablesDualesDesContraintesDeNTC[k]
           = new VARIABLES_DUALES_INTERCONNEXIONS;
 
@@ -213,34 +211,34 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.LevelVariable
           .assign(shortTermStorageCount, 0);
 
-        problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesBilansPays
           .assign(nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContraintePourEviterLesChargesFictives
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContraintePourEviterLesChargesFictives
           .assign(nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesNiveauxPays
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesNiveauxPays
           .assign(nbPays, 0);
 
-        problem.CorrespondanceCntNativesCntOptim[k]->ShortTermStorageLevelConstraint
+        problem.CorrespondanceCntNativesCntOptim[k].ShortTermStorageLevelConstraint
           .assign(shortTermStorageCount, 0);
 
-        problem.CorrespondanceCntNativesCntOptim[k]->NumeroPremiereContrainteDeReserveParZone
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroPremiereContrainteDeReserveParZone
           .assign(nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeuxiemeContrainteDeReserveParZone
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeuxiemeContrainteDeReserveParZone
           .assign(nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDeDissociationDeFlux
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDeDissociationDeFlux
           .assign(linkCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesContraintesCouplantes
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesContraintesCouplantes
           .assign(study.runtime->bindingConstraintCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
-          ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche
+          .NumeroDeContrainteDesContraintesDeDureeMinDeMarche
           .assign(study.runtime->thermalPlantTotalCount, 0);
         problem.CorrespondanceCntNativesCntOptim[k]
-          ->NumeroDeContrainteDesContraintesDeDureeMinDArret
+          .NumeroDeContrainteDesContraintesDeDureeMinDArret
           .assign(study.runtime->thermalPlantTotalCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
-          ->NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
+          .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
           .assign(study.runtime->thermalPlantTotalCount, 0);
 
         problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion
@@ -568,7 +566,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     for (uint k = 0; k < problem.NombreDePasDeTemps; k++)
     {
         delete problem.CorrespondanceVarNativesVarOptim[k];
-        delete problem.CorrespondanceCntNativesCntOptim[k];
         delete problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion;
         delete problem.VariablesDualesDesContraintesDeNTC[k];
     }

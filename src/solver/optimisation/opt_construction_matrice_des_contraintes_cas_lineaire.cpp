@@ -103,7 +103,7 @@ static void shortTermStorageBalance(
 static void shortTermStorageLevels(
   const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-  CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim,
+  CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim,
   std::vector<CORRESPONDANCES_DES_VARIABLES*> CorrespondanceVarNativesVarOptim,
   double* Pi,
   int* Colonne,
@@ -152,7 +152,7 @@ static void shortTermStorageLevels(
             Colonne[nombreDeTermes] = varWithdrawal;
             nombreDeTermes++;
         }
-        CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[clusterGlobalIndex]
+        CorrespondanceCntNativesCntOptim.ShortTermStorageLevelConstraint[clusterGlobalIndex]
           = ProblemeAResoudre->NombreDeContraintes;
         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
@@ -164,7 +164,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     int var;
 
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim;
 
     Study::Ptr study = Study::Current::Get();
     const bool exportStructure = problemeHebdo->ExportStructure;
@@ -192,7 +191,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
 
         CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-        CorrespondanceCntNativesCntOptim = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+        CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+            = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
@@ -315,7 +315,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                                     Pi,
                                     Colonne);
 
-            CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesBilansPays[pays]
+            CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesBilansPays[pays]
               = ProblemeAResoudre->NombreDeContraintes;
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
@@ -363,7 +363,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 }
             }
 
-            CorrespondanceCntNativesCntOptim->NumeroDeContraintePourEviterLesChargesFictives[pays]
+            CorrespondanceCntNativesCntOptim.NumeroDeContraintePourEviterLesChargesFictives[pays]
               = ProblemeAResoudre->NombreDeContraintes;
 
             std::string NomDeLaContrainte = "fict_load::" + std::to_string(timeStepInYear + 1)
@@ -447,7 +447,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     }
                 }
 
-                CorrespondanceCntNativesCntOptim->NumeroDeContrainteDeDissociationDeFlux[interco]
+                CorrespondanceCntNativesCntOptim.NumeroDeContrainteDeDissociationDeFlux[interco]
                   = ProblemeAResoudre->NombreDeContraintes;
 
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
@@ -541,7 +541,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             }
 
             CorrespondanceCntNativesCntOptim
-              ->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
+              .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
 
             std::string NomDeLaContrainte
@@ -1024,7 +1024,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
         CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-        CorrespondanceCntNativesCntOptim = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+        CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+            = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
 
         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
 
@@ -1080,7 +1081,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     nombreDeTermes++;
                 }
 
-                CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesNiveauxPays[pays]
+                CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays]
                   = ProblemeAResoudre->NombreDeContraintes;
 
                 std::string NomDeLaContrainte = "hydro_level::" + std::to_string(timeStepInYear + 1)
@@ -1090,7 +1091,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                   ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=', NomDeLaContrainte);
             }
             else
-                CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesNiveauxPays[pays] = -1;
+                CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays] = -1;
         }
     }
 
