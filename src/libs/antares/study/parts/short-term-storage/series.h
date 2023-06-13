@@ -57,6 +57,6 @@ private:
 };
 
 bool loadFile(const std::string& folder, std::vector<double>& vect);
-bool writeVectorToFile(const std::string& path, const std::vector<double>& vect);
+bool writeTimeSeriesToFile(const std::string& path, const std::vector<double>& vect);
 
 } // namespace Antares::Data::ShortTermStorage

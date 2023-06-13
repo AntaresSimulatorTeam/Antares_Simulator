@@ -138,7 +138,7 @@ bool Series::saveToFolder(const std::string& folder) const
     {
         // if vector is only default values we don't save it
         if (!hasOnlyDefaultValues(timeSeries, defValue))
-            ret = writeVectorToFile(folder + SEP + filename, timeSeries) && ret;
+            ret = writeTimeSeriesToFile(folder + SEP + filename, timeSeries) && ret;
     };
 
     checkWrite("PMAX-injection.txt", maxInjectionModulation, 1.0);
@@ -150,7 +150,7 @@ bool Series::saveToFolder(const std::string& folder) const
     return ret;
 }
 
-bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
+bool writeTimeSeriesToFile(const std::string& path, const std::vector<double>& vect)
 {
     try
     {
