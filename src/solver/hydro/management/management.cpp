@@ -28,6 +28,7 @@
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 #include <antares/study/area/scratchpad.h>
+#include <antares/emergency.h>
 #include "management.h"
 #include "../../simulation/sim_extern_variables_globales.h"
 #include <yuni/core/math.h>
@@ -219,14 +220,16 @@ void HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint tsIndex, con
     {
         uint realmonth = study.calendar.months[month].realmonth;
         // Monthly minimum generation <= Monthly inflows for each month
-        if (area.hydro.followLoadModulations && 
-            !area.hydro.reservoirManagement && 
+        if (area.hydro.followLoadModulations &&
+            !area.hydro.reservoirManagement &&
             data.totalMonthMingen[realmonth] > data.totalMonthInflows[realmonth])
         {
             logs.error() << "In Area " << area.name << " the minimum generation of "
                          << data.totalMonthMingen[realmonth] << " MW in month " << month + 1
                          << " of TS-" << tsIndex + 1 << " is incompatible with the inflows of "
                          << data.totalMonthInflows[realmonth] << " MW.";
+
+            AntaresSolverEmergencyShutdown();
         }
     }
 }
@@ -234,14 +237,16 @@ void HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint tsIndex, con
 void HydroManagement::checkYearlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const
 {
     const auto& data = pAreas[numSpace][area.index];
-    if (area.hydro.followLoadModulations && 
-        area.hydro.reservoirManagement && 
+    if (area.hydro.followLoadModulations &&
+        area.hydro.reservoirManagement &&
         data.totalYearMingen > data.totalYearInflows)
     {
         // Yearly minimum generation <= Yearly inflows
         logs.error() << "In Area " << area.name << " the minimum generation of "
                      << data.totalYearMingen << " MW of TS-" << tsIndex + 1
                      << " is incompatible with the inflows of " << data.totalYearInflows << " MW.";
+
+        AntaresSolverEmergencyShutdown();
     }
 }
 
@@ -278,6 +283,8 @@ void HydroManagement::checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) c
                              << totalWeekMingen << " MW in week " << week + 1 << " of TS-"
                              << tsIndex + 1 << " is incompatible with the inflows of "
                              << totalWeekInflows << " MW.";
+
+                AntaresSolverEmergencyShutdown();
             }
         }
     }
@@ -314,6 +321,8 @@ void HydroManagement::checkHourlyMinGeneration(uint tsIndex, Data::Area& area) c
                           << " of TS-" << tsIndex + 1
                           << " is incompatible with the maximum generation of " << maxP[day]
                           << " MW.";
+
+                        AntaresSolverEmergencyShutdown();
                     }
                 }
             }
@@ -335,7 +344,7 @@ void HydroManagement::checkMinGeneration(uint numSpace)
             checkYearlyMinGeneration(numSpace, tsIndex, area);
             checkWeeklyMinGeneration(tsIndex, area);
         }
-          
+
         checkHourlyMinGeneration(tsIndex, area);
     });
 }
