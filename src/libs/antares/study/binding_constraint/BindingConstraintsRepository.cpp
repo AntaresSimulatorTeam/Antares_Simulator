@@ -382,7 +382,32 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::en
     std::vector<std::shared_ptr<BindingConstraint>> out;
     std::copy_if(pList.begin(), pList.end(), std::back_inserter(out),
                  [](const auto& bc) {
-                     return bc->enabled();
-                 });
+       return bc->enabled();
+    });
     return out;
+}
+
+static bool isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)
+{
+    return bc.operatorType() == BindingConstraint::opLess || bc.operatorType() == BindingConstraint::opGreater;
+}
+
+std::vector<uint> BindingConstraintsRepository::getIndicesForInequalityBindingConstraints(
+        BindingConstraintsRepository &bindingConstraintRepository)
+{
+    auto enabledBCs = bindingConstraintRepository.enabled();
+    const auto firstBC = enabledBCs.begin();
+    const auto lastBC = enabledBCs.end();
+
+    std::vector<uint> indices;
+    for (auto bc = firstBC; bc < lastBC; bc++)
+    {
+        if (isBindingConstraintTypeInequality(*(bc->get())))
+        {
+            auto index = static_cast<uint>(std::distance(firstBC, bc));
+            indices.push_back(index);
+        }
+    }
+    return indices;
+}
 }

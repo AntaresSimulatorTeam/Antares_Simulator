@@ -88,9 +88,6 @@ public:
     */
     bool loadFromStudy(Study& study);
 
-    std::vector<uint>
-    getIndicesForInequalityBindingConstraints(BindingConstraintsRepository &bindingConstraintRepository) const;
-
 public:
     //! The number of years to process
     uint nbYears;

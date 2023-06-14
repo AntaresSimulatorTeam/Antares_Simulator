@@ -25,19 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../../sys/mem-wrapper.h"
-#include "antares/study/binding_constraint/BindingConstraint.h"
 #include "runtime.h"
-#include "../parameters.h"
-#include "../../date.h"
-#include <algorithm>
-#include <limits>
 #include <functional>
 #include "../../emergency.h"
-#include "../memory-usage.h"
-#include "../../config.h"
-#include "../filter.h"
-#include "../area/constants.h"
+
 #include "../area/scratchpad.h"
 
 using namespace Yuni;
@@ -130,35 +121,6 @@ static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos
             ++indx;
         }
     });
-}
-
-template<enum BindingConstraint::Column C>
-static void CopyBCData(const BindingConstraint &b)
-{
-    std::vector<long> linkIndex;
-    std::vector<double> linkWeight;
-    std::vector<double> clusterWeight;
-    std::vector<int> linkOffset;
-    std::vector<int> clusterOffset;
-    std::vector<long> clusterIndex;
-    std::vector<long> clustersAreaIndex;
-
-    linkWeight.resize(b.linkCount());
-    linkOffset.resize(b.linkCount());
-    linkIndex.resize(b.linkCount());
-
-    clusterWeight.resize(b.clusterCount());
-    clusterOffset.resize(b.clusterCount());
-    clusterIndex.resize(b.clusterCount());
-    clustersAreaIndex.resize(b.clusterCount());
-
-    b.initLinkArrays(linkWeight,
-                     clusterWeight,
-                     linkOffset,
-                     clusterOffset,
-                     linkIndex,
-                     clusterIndex,
-                     clustersAreaIndex);
 }
 
 void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimits& limits)
@@ -400,30 +362,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 uint StudyRuntimeInfos::interconnectionsCount() const
 {
     return static_cast<uint>(areaLink.size());
-}
-
-static bool isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)
-{
-    return bc.operatorType() == BindingConstraint::opLess || bc.operatorType() == BindingConstraint::opGreater;
-}
-
-std::vector<uint> StudyRuntimeInfos::getIndicesForInequalityBindingConstraints(
-        BindingConstraintsRepository &bindingConstraintRepository) const
-{
-    auto enabledBCs = bindingConstraintRepository.enabled();
-    const auto firstBC = enabledBCs.begin();
-    const auto lastBC = enabledBCs.end();
-
-    std::vector<uint> indices;
-    for (auto bc = firstBC; bc < lastBC; bc++)
-    {
-        if (isBindingConstraintTypeInequality(*(bc->get())))
-        {
-            auto index = static_cast<uint>(std::distance(firstBC, bc));
-            indices.push_back(index);
-        }
-    }
-    return indices;
 }
 
 void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study) const

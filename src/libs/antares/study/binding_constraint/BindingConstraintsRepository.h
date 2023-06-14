@@ -168,7 +168,11 @@ public:
 
     std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>> groupToTimeSeriesNumbers;
 
-    std::vector<std::shared_ptr<BindingConstraint>> enabled() const;
+    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> enabled() const;
+
+    static std::vector<uint>
+    getIndicesForInequalityBindingConstraints(BindingConstraintsRepository &bindingConstraintRepository);
+
 
 private:
     bool internalSaveToFolder(Data::BindingConstraintSaver::EnvForSaving& env) const;
