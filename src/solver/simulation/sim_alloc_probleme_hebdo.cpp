@@ -54,12 +54,12 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
 
     problem.BruitSurCoutHydraulique.assign(nbPays, std::vector<double>(8784));
 
-    problem.NomsDesPays = std::vector<const char*>(nbPays);
+    problem.NomsDesPays.resize(nbPays);
 
     problem.PaysExtremiteDeLInterconnexion.assign(linkCount, 0);
     problem.PaysOrigineDeLInterconnexion.assign(linkCount, 0);
 
-    problem.CoutDeTransport = std::vector<COUTS_DE_TRANSPORT>(linkCount);
+    problem.CoutDeTransport.resize(linkCount);
 
     // was previously set to -1 with a loop, now use assign
     problem.IndexDebutIntercoOrigine.assign(nbPays, -1);
@@ -89,18 +89,16 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.NumeroDeVariableStockFinal.assign(nbPays, 0);
     problem.NumeroDeVariableDeTrancheDeStock.assign(nbPays, std::vector<int>(100));
 
-    problem.ValeursDeNTC = std::vector<VALEURS_DE_NTC_ET_RESISTANCES>(NombreDePasDeTemps);
-    problem.ValeursDeNTCRef = std::vector<VALEURS_DE_NTC_ET_RESISTANCES>(NombreDePasDeTemps);
+    problem.ValeursDeNTC.resize(NombreDePasDeTemps);
+    problem.ValeursDeNTCRef.resize(NombreDePasDeTemps);
 
-    problem.ConsommationsAbattues = std::vector<CONSOMMATIONS_ABATTUES>(NombreDePasDeTemps);
-    problem.ConsommationsAbattuesRef = std::vector<CONSOMMATIONS_ABATTUES>(NombreDePasDeTemps);
+    problem.ConsommationsAbattues.resize(NombreDePasDeTemps);
+    problem.ConsommationsAbattuesRef.resize(NombreDePasDeTemps);
 
-    problem.AllMustRunGeneration = std::vector<ALL_MUST_RUN_GENERATION>(NombreDePasDeTemps);
-    problem.SoldeMoyenHoraire = std::vector<SOLDE_MOYEN_DES_ECHANGES>(NombreDePasDeTemps);
-    problem.CorrespondanceVarNativesVarOptim
-      = std::vector<CORRESPONDANCES_DES_VARIABLES*>(NombreDePasDeTemps);
-    problem.CorrespondanceCntNativesCntOptim
-      = std::vector<CORRESPONDANCES_DES_CONTRAINTES>(NombreDePasDeTemps);
+    problem.AllMustRunGeneration.resize(NombreDePasDeTemps);
+    problem.SoldeMoyenHoraire.resize(NombreDePasDeTemps);
+    problem.CorrespondanceVarNativesVarOptim.resize(NombreDePasDeTemps);
+    problem.CorrespondanceCntNativesCntOptim.resize(NombreDePasDeTemps);
     problem.VariablesDualesDesContraintesDeNTC
       = new VARIABLES_DUALES_INTERCONNEXIONS*[NombreDePasDeTemps];
     problem.MatriceDesContraintesCouplantes
@@ -128,7 +126,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.CoutsMarginauxDesContraintesDeReserveParZone
       = new COUTS_MARGINAUX_ZONES_DE_RESERVE*[nbPays];
 
-    problem.ReserveJMoins1 = std::vector<RESERVE_JMOINS1>(nbPays);
+    problem.ReserveJMoins1.resize(nbPays);
     problem.ResultatsHoraires.resize(nbPays);
 
     for (uint k = 0; k < NombreDePasDeTemps; k++)
