@@ -608,7 +608,7 @@ struct PROBLEME_HEBDO
 
     /* Results */
     std::vector<RESULTATS_HORAIRES> ResultatsHoraires;
-    VARIABLES_DUALES_INTERCONNEXIONS** VariablesDualesDesContraintesDeNTC = nullptr;
+    std::vector<VARIABLES_DUALES_INTERCONNEXIONS*> VariablesDualesDesContraintesDeNTC;
 
     double* coutOptimalSolution1 = nullptr;
     double* coutOptimalSolution2 = nullptr;

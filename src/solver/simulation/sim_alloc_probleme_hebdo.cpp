@@ -99,8 +99,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.SoldeMoyenHoraire.resize(NombreDePasDeTemps);
     problem.CorrespondanceVarNativesVarOptim.resize(NombreDePasDeTemps);
     problem.CorrespondanceCntNativesCntOptim.resize(NombreDePasDeTemps);
-    problem.VariablesDualesDesContraintesDeNTC
-      = new VARIABLES_DUALES_INTERCONNEXIONS*[NombreDePasDeTemps];
+    problem.VariablesDualesDesContraintesDeNTC.resize(NombreDePasDeTemps);
     problem.MatriceDesContraintesCouplantes
       = new CONTRAINTES_COUPLANTES*[study.runtime->bindingConstraintCount];
     problem.PaliersThermiquesDuPays = new PALIERS_THERMIQUES*[nbPays];
@@ -567,7 +566,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         delete problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion;
         delete problem.VariablesDualesDesContraintesDeNTC[k];
     }
-    delete problem.VariablesDualesDesContraintesDeNTC;
 
     for (int k = 0; k < 7; k++)
     {
