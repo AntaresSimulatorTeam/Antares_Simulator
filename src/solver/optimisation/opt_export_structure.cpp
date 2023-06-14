@@ -44,7 +44,7 @@ template<>
 const std::initializer_list<std::string>& getNames<ExportStructDict>()
 {
     static std::initializer_list<std::string> s_exportStructDictNames{
-      "NTCValueOriginToDestination",
+      "NTCDirect",
       "ThermalCluster",
       "NODU",
       "NumberStartingDispatchableUnits",
@@ -61,8 +61,8 @@ const std::initializer_list<std::string>& getNames<ExportStructDict>()
       "PositiveUnsuppliedEnergy",
       "NegativeUnsuppliedEnergy",
       "AreaBalance",
-      "IntercoCostOriginToDestination",
-      "IntercoCostDestinationToOrigin",
+      "IntercoDirectCos",
+      "IntercoIndirectCost",
       "CorrespondanceVarNativesVarOptim",
       "DispatchableProduction",
       "ShortTermStorage",

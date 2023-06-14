@@ -7,14 +7,36 @@ const std::string AREA_SEP = "$$";
 
 struct CurrentAssetsStorage
 {
-    PROBLEME_ANTARES_A_RESOUDRE* problem;
-    int timeStep = 0;
-    std::string origin;
-    std::string destination;
-    std::string area;
+    PROBLEME_ANTARES_A_RESOUDRE* problem_;
+    int timeStep_ = 0;
+    std::string origin_;
+    std::string destination_;
+    std::string area_;
+    CurrentAssetsStorage(PROBLEME_ANTARES_A_RESOUDRE* problem) : problem_(problem)
+    {
+    }
+    void UpdateTimeStep(int timeStep)
+    {
+        timeStep_ = timeStep;
+    }
+
+    void UpdateArea(const std::string& area)
+    {
+        area_ = area;
+    }
+
+    void UpdateOrigin(const std::string& origin)
+    {
+        origin_ = origin;
+    }
+
+    void UpdateDestination(const std::string& destination)
+    {
+        destination_ = destination;
+    }
 };
 
-class VariableNamer
+class VariableNamer : public CurrentAssetsStorage
 {
 private:
     void SetThermalClusterVariableName(int var,
@@ -28,11 +50,9 @@ private:
     void SetAreaVariableName(int var,
                              Antares::Data::Enum::ExportStructDict structDict,
                              int layerIndex);
-    CurrentAssetsStorage& currentAssetsStorage;
 
 public:
-    VariableNamer(CurrentAssetsStorage& currentAssetsStorage) :
-     currentAssetsStorage(currentAssetsStorage)
+    VariableNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : CurrentAssetsStorage(problem)
     {
     }
 
@@ -41,9 +61,9 @@ public:
     void NumberStoppingDispatchableUnits(int var, const std::string& clusterName);
     void NumberStartingDispatchableUnits(int var, const std::string& clusterName);
     void NumberBreakingDownDispatchableUnits(int var, const std::string& clusterName);
-    void NTCValueOriginToDestination(int var);
-    void IntercoCostOriginToDestination(int var);
-    void IntercoCostDestinationToOrigin(int var);
+    void NTCDirect(int var);
+    void IntercoDirectCos(int var);
+    void IntercoIndirectCost(int var);
     void ShortTermStorageInjection(int var, const std::string& shortTermStorageName);
     void ShortTermStorageWithdrawal(int var, const std::string& shortTermStorageName);
     void ShortTermStorageLevel(int var, const std::string& shortTermStorageName);
@@ -60,17 +80,14 @@ public:
     void AreaBalance(int var);
 };
 
-class ConstraintNamer
+class ConstraintNamer : public CurrentAssetsStorage
 {
 private:
-    CurrentAssetsStorage& currentAssetsStorage;
-
     void BindingConstraint(const std::string& name,
                            Antares::Data::Enum::ExportStructTimeStepDict type);
 
 public:
-    ConstraintNamer(CurrentAssetsStorage& currentAssetsStorage) :
-     currentAssetsStorage(currentAssetsStorage)
+    ConstraintNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : CurrentAssetsStorage(problem)
     {
     }
     void FlowDissociation();
