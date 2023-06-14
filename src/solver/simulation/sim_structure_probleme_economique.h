@@ -138,23 +138,25 @@ struct TRANSFER_BOUND_AND_LEVEL_FLEX_DOWN_EDGE
 struct CONTRAINTES_COUPLANTES
 {
     char TypeDeContrainteCouplante;
-
     char SensDeLaContrainteCouplante;
 
-    double* SecondMembreDeLaContrainteCouplante;
-
-    double* SecondMembreDeLaContrainteCouplanteRef;
+    std::vector<double> SecondMembreDeLaContrainteCouplante;
+    std::vector<double> SecondMembreDeLaContrainteCouplanteRef;
 
     int NombreDElementsDansLaContrainteCouplante;
     int NombreDInterconnexionsDansLaContrainteCouplante;
-    double* PoidsDeLInterconnexion;
-    int* NumeroDeLInterconnexion;
-    int* OffsetTemporelSurLInterco;
+
+    std::vector<double> PoidsDeLInterconnexion;
+    std::vector<int> NumeroDeLInterconnexion;
+    std::vector<int> OffsetTemporelSurLInterco;
+
     int NombreDePaliersDispatchDansLaContrainteCouplante;
-    double* PoidsDuPalierDispatch;
-    int* PaysDuPalierDispatch;
-    int* NumeroDuPalierDispatch;
-    int* OffsetTemporelSurLePalierDispatch;
+
+    std::vector<double> PoidsDuPalierDispatch;
+    std::vector<int> PaysDuPalierDispatch;
+    std::vector<int> NumeroDuPalierDispatch;
+    std::vector<int> OffsetTemporelSurLePalierDispatch;
+
     const char* NomDeLaContrainteCouplante;
 };
 

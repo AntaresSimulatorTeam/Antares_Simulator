@@ -394,10 +394,11 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 assert(bc.bounds.width && "Invalid constraint data width");
                 assert(weekFirstDay + 6 < bc.bounds.height && "Invalid constraint data height");
                 auto& column = bc.bounds[0];
-                double* sndMember
-                  = problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante;
-                double* sndMemberRef = problem.MatriceDesContraintesCouplantes[k]
-                                         ->SecondMembreDeLaContrainteCouplanteRef;
+                std::vector<double>& sndMember = problem.MatriceDesContraintesCouplantes[k]
+                    ->SecondMembreDeLaContrainteCouplante;
+                std::vector<double>& sndMemberRef = problem.MatriceDesContraintesCouplantes[k]
+                    ->SecondMembreDeLaContrainteCouplanteRef;
+
                 for (uint d = 0; d != 7; ++d)
                 {
                     sndMember[d] = column[weekFirstDay + d];

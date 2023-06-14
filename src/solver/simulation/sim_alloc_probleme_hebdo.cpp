@@ -287,25 +287,25 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         assert(study.runtime->bindingConstraint[k].clusterCount < 50000000);
 
         problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplanteRef
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
 
         problem.MatriceDesContraintesCouplantes[k]->NumeroDeLInterconnexion
-          = new int[study.runtime->bindingConstraint[k].linkCount];
+          .assign(study.runtime->bindingConstraint[k].linkCount, 0);
         problem.MatriceDesContraintesCouplantes[k]->PoidsDeLInterconnexion
-          = new double[study.runtime->bindingConstraint[k].linkCount];
+          .assign(study.runtime->bindingConstraint[k].linkCount, 0.);
         problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLInterco
-          = new int[study.runtime->bindingConstraint[k].linkCount];
+          .assign(study.runtime->bindingConstraint[k].linkCount, 0);
 
         problem.MatriceDesContraintesCouplantes[k]->NumeroDuPalierDispatch
-          = new int[study.runtime->bindingConstraint[k].clusterCount];
+          .assign(study.runtime->bindingConstraint[k].clusterCount, 0);
         problem.MatriceDesContraintesCouplantes[k]->PoidsDuPalierDispatch
-          = new double[study.runtime->bindingConstraint[k].clusterCount];
+          .assign(study.runtime->bindingConstraint[k].clusterCount, 0.);
         problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLePalierDispatch
-          = new int[study.runtime->bindingConstraint[k].clusterCount];
+          .assign(study.runtime->bindingConstraint[k].clusterCount, 0);
         problem.MatriceDesContraintesCouplantes[k]->PaysDuPalierDispatch
-          = new int[study.runtime->bindingConstraint[k].clusterCount];
+          .assign(study.runtime->bindingConstraint[k].clusterCount, 0);
 
         // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
         unsigned int nbTimeSteps;
@@ -580,18 +580,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     for (int k = 0; k < (int)study.runtime->bindingConstraintCount; k++)
     {
-        delete problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante;
-        delete problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplanteRef;
-
-        delete problem.MatriceDesContraintesCouplantes[k]->NumeroDeLInterconnexion;
-        delete problem.MatriceDesContraintesCouplantes[k]->PoidsDeLInterconnexion;
-        delete problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLInterco;
-
-        delete problem.MatriceDesContraintesCouplantes[k]->PoidsDuPalierDispatch;
-        delete problem.MatriceDesContraintesCouplantes[k]->PaysDuPalierDispatch;
-        delete problem.MatriceDesContraintesCouplantes[k]->NumeroDuPalierDispatch;
-        delete problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLePalierDispatch;
-
         delete problem.MatriceDesContraintesCouplantes[k];
 
         if (problem.ResultatsContraintesCouplantes[k].variablesDuales != nullptr)
