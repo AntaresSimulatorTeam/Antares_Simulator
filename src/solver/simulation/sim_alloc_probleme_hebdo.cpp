@@ -252,27 +252,17 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
             .assign(NombreDePasDeTemps, 0.);
     }
 
-    problem.CorrespondanceCntNativesCntOptimJournalieres
-      = new CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES*[7];
+    problem.CorrespondanceCntNativesCntOptimJournalieres.resize(7);
     for (uint k = 0; k < 7; k++)
     {
         problem.CorrespondanceCntNativesCntOptimJournalieres[k]
-          = new CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES;
-        problem.CorrespondanceCntNativesCntOptimJournalieres[k]
-          ->NumeroDeContrainteDesContraintesCouplantes
-          = new int[study.runtime->bindingConstraintCount];
+          .NumeroDeContrainteDesContraintesCouplantes
+          .assign(study.runtime->bindingConstraintCount, 0);
     }
 
     problem.CorrespondanceCntNativesCntOptimHebdomadaires
-      = new CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES*[1];
-    for (uint k = 0; k < 1; k++)
-    {
-        problem.CorrespondanceCntNativesCntOptimHebdomadaires[k]
-          = new CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES;
-        problem.CorrespondanceCntNativesCntOptimHebdomadaires[k]
-          ->NumeroDeContrainteDesContraintesCouplantes
-          = new int[study.runtime->bindingConstraintCount];
-    }
+        .NumeroDeContrainteDesContraintesCouplantes
+        .assign(study.runtime->bindingConstraintCount, 0);
 
     const auto& bindingConstraintCount = study.runtime->bindingConstraintCount;
     problem.ResultatsContraintesCouplantes
@@ -553,22 +543,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     {
         delete problem.CorrespondanceVarNativesVarOptim[k];
     }
-
-    for (int k = 0; k < 7; k++)
-    {
-        MemFree(problem.CorrespondanceCntNativesCntOptimJournalieres[k]
-                  ->NumeroDeContrainteDesContraintesCouplantes);
-        delete problem.CorrespondanceCntNativesCntOptimJournalieres[k];
-    }
-    delete problem.CorrespondanceCntNativesCntOptimJournalieres;
-
-    for (int k = 0; k < 1; k++)
-    {
-        MemFree(problem.CorrespondanceCntNativesCntOptimHebdomadaires[k]
-                  ->NumeroDeContrainteDesContraintesCouplantes);
-        delete problem.CorrespondanceCntNativesCntOptimHebdomadaires[k];
-    }
-    delete problem.CorrespondanceCntNativesCntOptimHebdomadaires;
 
     for (int k = 0; k < (int)study.runtime->bindingConstraintCount; k++)
     {

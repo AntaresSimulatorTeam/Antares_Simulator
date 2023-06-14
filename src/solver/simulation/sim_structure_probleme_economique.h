@@ -95,14 +95,13 @@ struct CORRESPONDANCES_DES_CONTRAINTES
 
 struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
 {
-    int* NumeroDeContrainteDesContraintesCouplantes;
+    std::vector<int> NumeroDeContrainteDesContraintesCouplantes;
 };
 
-typedef struct
+struct CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES
 {
-    int* NumeroDeContrainteDesContraintesCouplantes;
-
-} CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES;
+    std::vector<int> NumeroDeContrainteDesContraintesCouplantes;
+};
 
 struct VALEURS_DE_NTC_ET_RESISTANCES
 {
@@ -555,8 +554,8 @@ struct PROBLEME_HEBDO
 
     std::vector<CORRESPONDANCES_DES_VARIABLES*> CorrespondanceVarNativesVarOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
-    CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES** CorrespondanceCntNativesCntOptimJournalieres = nullptr;
-    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES** CorrespondanceCntNativesCntOptimHebdomadaires = nullptr;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES> CorrespondanceCntNativesCntOptimJournalieres;
+    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES CorrespondanceCntNativesCntOptimHebdomadaires;
 
     mutable std::vector<RESERVE_JMOINS1> ReserveJMoins1;
 

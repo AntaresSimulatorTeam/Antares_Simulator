@@ -574,9 +574,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         while (pdtDebut < nombreDePasDeTempsPourUneOptimisation)
         {
             int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
-            CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES*
-              CorrespondanceCntNativesCntOptimJournalieres
-              = problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[jour];
+            CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES&
+                CorrespondanceCntNativesCntOptimJournalieres
+                = problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[jour];
             int nombreDeTermes = 0;
 
             for (int index = 0; index < nbInterco; index++)
@@ -647,7 +647,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             assert(cntCouplante >= 0);
             CorrespondanceCntNativesCntOptimJournalieres
-              ->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
+              .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
 
             std::string NomDeLaContrainte
@@ -667,9 +667,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     if (nombreDePasDeTempsPourUneOptimisation > nombreDePasDeTempsDUneJournee)
     {
-        int semaine = 0;
-        CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES* CorrespondanceCntNativesCntOptimHebdomadaires
-          = problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires[semaine];
+        CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondanceCntNativesCntOptimHebdomadaires
+            = problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires;
         for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
@@ -749,7 +748,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             }
 
             CorrespondanceCntNativesCntOptimHebdomadaires
-              ->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
+              .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
 
             std::string NomDeLaContrainte
