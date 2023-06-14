@@ -329,17 +329,18 @@ void SIM_InitialisationResultats()
 }
 
 void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int PasDeTempsDebut,
-                               const StudyRuntimeInfos &studyRuntimeInfos, const uint weekFirstDay, int pasDeTemps) {
-    const auto constraintCount = studyRuntimeInfos.bindingConstraints.size();
+                               const BindingConstraintsRepository &bindingConstraints, const uint weekFirstDay, int pasDeTemps) {
+    auto enabledConstraints = bindingConstraints.enabled();
+    const auto constraintCount = enabledConstraints.size();
     for (unsigned constraintIndex = 0; constraintIndex != constraintCount; ++constraintIndex)
     {
-        auto& bc = studyRuntimeInfos.bindingConstraints[constraintIndex];
-        assert(bc.rhsTimeSeries.width && "Invalid constraint data width");
+        auto bc = enabledConstraints[constraintIndex];
+        assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
         //If there is only one TS, always select it.
-        const auto ts_number = bc.rhsTimeSeries.width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc.group];
-        auto& timeSeries = bc.rhsTimeSeries;
+        const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc->group()];
+        auto& timeSeries = bc->RHSTimeSeries();
         double const* column = timeSeries[ts_number];
-        switch (bc.type)
+        switch (bc->type())
         {
             case BindingConstraint::typeHourly:
             {
@@ -591,7 +592,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                (char*)ntc->ValeurDeLoopFlowOrigineVersExtremite,
                sizeOfIntercoDouble);
 
-        preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, studyruntime, weekFirstDay, j);
+        preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, study.bindingConstraints, weekFirstDay, j);
 
         const uint dayInTheYear = study.calendar.hours[indx].dayYear;
 
