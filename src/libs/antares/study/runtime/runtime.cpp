@@ -133,52 +133,32 @@ static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos
 }
 
 template<enum BindingConstraint::Column C>
-static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
+static void CopyBCData(const BindingConstraint &b)
 {
-    switch (C)
-    {
-    case BindingConstraint::columnInferior:
-        rti.operatorType = '<';
-        break;
-    case BindingConstraint::columnSuperior:
-        rti.operatorType = '>';
-        break;
-    case BindingConstraint::columnEquality:
-        rti.operatorType = '=';
-        break;
-    case BindingConstraint::columnMax:
-        rti.operatorType = '?';
-        break;
-    }
-    logs.debug() << "copying constraint " << rti.operatorType << ' ' << b.name();
-    rti.name = b.name().c_str();
-    rti.filterYearByYear_ = b.yearByYearFilter();
-    rti.filterSynthesis_ = b.synthesisFilter();
-    rti.linkCount = b.linkCount();
-    rti.clusterCount = b.enabledClusterCount();
-    assert(rti.linkCount < 50000000 and "Seems a bit large...");    // arbitrary value
-    assert(rti.clusterCount < 50000000 and "Seems a bit large..."); // arbitrary value
+    std::vector<long> linkIndex;
+    std::vector<double> linkWeight;
+    std::vector<double> clusterWeight;
+    std::vector<int> linkOffset;
+    std::vector<int> clusterOffset;
+    std::vector<long> clusterIndex;
+    std::vector<long> clustersAreaIndex;
 
-    rti.rhsTimeSeries.resize(b.RHSTimeSeries().width, b.RHSTimeSeries().height);
-    rti.rhsTimeSeries.copyFrom(b.RHSTimeSeries());
+    linkWeight.resize(b.linkCount());
+    linkOffset.resize(b.linkCount());
+    linkIndex.resize(b.linkCount());
 
-    rti.linkWeight.resize(rti.linkCount);
-    rti.linkOffset.resize(rti.linkCount);
-    rti.linkIndex.resize(rti.linkCount);
+    clusterWeight.resize(b.clusterCount());
+    clusterOffset.resize(b.clusterCount());
+    clusterIndex.resize(b.clusterCount());
+    clustersAreaIndex.resize(b.clusterCount());
 
-    rti.clusterWeight.resize(rti.clusterCount);
-    rti.clusterOffset.resize(rti.clusterCount);
-    rti.clusterIndex.resize(rti.clusterCount);
-    rti.clustersAreaIndex.resize(rti.clusterCount);
-
-    b.initLinkArrays(rti.linkWeight,
-                     rti.clusterWeight,
-                     rti.linkOffset,
-                     rti.clusterOffset,
-                     rti.linkIndex,
-                     rti.clusterIndex,
-                     rti.clustersAreaIndex);
-    rti.group = b.group();
+    b.initLinkArrays(linkWeight,
+                     clusterWeight,
+                     linkOffset,
+                     clusterOffset,
+                     linkIndex,
+                     clusterIndex,
+                     clustersAreaIndex);
 }
 
 void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimits& limits)
@@ -331,45 +311,33 @@ void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsRepositor
         logs.info() << "Optimizing " << bindingConstraintCount << " binding constraints";
     }
 
-    bindingConstraints.clear();
-    bindingConstraints.resize(bindingConstraintCount);
-
     unsigned index = 0;
-    list.eachEnabled([this, &index, &bindingConstraintCount](const BindingConstraint& constraint) {
+    list.eachEnabled([&index, &bindingConstraintCount](const BindingConstraint& constraint) {
         assert(index < bindingConstraintCount and "Not enough slots for binding constraints");
 
-        auto& rti = bindingConstraints[index];
-        rti.type = constraint.type();
         switch (constraint.operatorType())
         {
         case BindingConstraint::opEquality:
         {
-            CopyBCData<BindingConstraint::columnEquality>(rti, constraint);
+            CopyBCData<BindingConstraint::columnEquality>(constraint);
             break;
         }
         case BindingConstraint::opLess:
         {
-            CopyBCData<BindingConstraint::columnInferior>(rti, constraint);
+            CopyBCData<BindingConstraint::columnInferior>(constraint);
             break;
         }
         case BindingConstraint::opGreater:
         {
-            CopyBCData<BindingConstraint::columnSuperior>(rti, constraint);
+            CopyBCData<BindingConstraint::columnSuperior>(constraint);
             break;
         }
         case BindingConstraint::opBoth:
         {
-            CopyBCData<BindingConstraint::columnInferior>(rti, constraint);
-            ++index;
-            bindingConstraints[index].type = constraint.type();
-            CopyBCData<BindingConstraint::columnSuperior>(bindingConstraints[index], constraint);
             break;
         }
         case BindingConstraint::opUnknown:
         {
-            rti.operatorType = '?';
-            rti.linkCount = 0;
-            rti.rhsTimeSeries.clear();
             break;
         }
         case BindingConstraint::opMax:
@@ -483,7 +451,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
     logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
     logs.info() << "     short-term storages: " << shortTermStorageCount;
-    //logs.info() << "     binding constraints: " << bindingConstraints.size();
     logs.info() << "     geographic trimming:" << (gd.geographicTrimming ? "true" : "false");
     logs.info() << "     memory : " << ((study.memoryUsage()) / 1024 / 1024) << "Mo";
     logs.info();

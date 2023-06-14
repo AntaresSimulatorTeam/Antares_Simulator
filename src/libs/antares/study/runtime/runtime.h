@@ -151,8 +151,6 @@ public:
     */
     uint* timeseriesNumberYear;
 
-    std::vector<BindingConstraintRTI> bindingConstraints;
-
     //! Total
     uint thermalPlantTotalCount;
     uint thermalPlantTotalCountMustRun;
