@@ -102,7 +102,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.VariablesDualesDesContraintesDeNTC.resize(NombreDePasDeTemps);
     problem.MatriceDesContraintesCouplantes.resize(study.runtime->bindingConstraintCount);
     problem.PaliersThermiquesDuPays.resize(nbPays);
-    problem.CaracteristiquesHydrauliques = new ENERGIES_ET_PUISSANCES_HYDRAULIQUES*[nbPays];
+    problem.CaracteristiquesHydrauliques.resize(nbPays);
     problem.previousSimulationFinalLevel.assign(nbPays, 0.);
 
     problem.ShortTermStorage.resize(nbPays);
@@ -697,8 +697,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         }
         delete problem.ResultatsHoraires[k].ProductionThermique;
     }
-    delete problem.CaracteristiquesHydrauliques;
-
     delete problem.CoutsMarginauxDesContraintesDeReserveParZone;
 
     delete problem.coutOptimalSolution1;
