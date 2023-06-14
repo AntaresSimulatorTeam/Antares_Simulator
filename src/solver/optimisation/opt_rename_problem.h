@@ -24,16 +24,6 @@ struct CurrentAssetsStorage
     {
         area_ = area;
     }
-
-    void UpdateOrigin(const std::string& origin)
-    {
-        origin_ = origin;
-    }
-
-    void UpdateDestination(const std::string& destination)
-    {
-        destination_ = destination;
-    }
 };
 
 class VariableNamer : public CurrentAssetsStorage
@@ -61,9 +51,9 @@ public:
     void NumberStoppingDispatchableUnits(int var, const std::string& clusterName);
     void NumberStartingDispatchableUnits(int var, const std::string& clusterName);
     void NumberBreakingDownDispatchableUnits(int var, const std::string& clusterName);
-    void NTCDirect(int var);
-    void IntercoDirectCos(int var);
-    void IntercoIndirectCost(int var);
+    void NTCDirect(int var, const std::string& origin, const std::string& destination);
+    void IntercoDirectCost(int var, const std::string& origin, const std::string& destination);
+    void IntercoIndirectCost(int var, const std::string& origin, const std::string& destination);
     void ShortTermStorageInjection(int var, const std::string& shortTermStorageName);
     void ShortTermStorageWithdrawal(int var, const std::string& shortTermStorageName);
     void ShortTermStorageLevel(int var, const std::string& shortTermStorageName);

@@ -204,13 +204,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-
-                    const auto origin
-                      = problemeHebdo
-                          ->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
-                    const auto destination
-                      = problemeHebdo
-                          ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
                 }
                 interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
             }
@@ -223,13 +216,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = -1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-
-                    const auto origin
-                      = problemeHebdo
-                          ->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
-                    const auto destination
-                      = problemeHebdo
-                          ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
                 }
                 interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
             }

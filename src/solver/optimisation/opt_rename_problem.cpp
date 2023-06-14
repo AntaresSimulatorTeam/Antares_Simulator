@@ -70,18 +70,28 @@ void VariableNamer::NumberBreakingDownDispatchableUnits(int var, const std::stri
       var, ExportStructDict::NombreDeGroupesQuiTombentEnPanneDuPalierThermique, clusterName);
 }
 
-void VariableNamer::NTCDirect(int var)
+void VariableNamer::NTCDirect(int var, const std::string& origin, const std::string& destination)
 {
+    origin_ = origin;
+    destination_ = destination;
     SetLinkVariableName(var, ExportStructDict::ValeurDeNTCOrigineVersExtremite);
 }
 
-void VariableNamer::IntercoDirectCos(int var)
+void VariableNamer::IntercoDirectCost(int var,
+                                      const std::string& origin,
+                                      const std::string& destination)
 {
+    origin_ = origin;
+    destination_ = destination;
     SetLinkVariableName(var, ExportStructDict::CoutOrigineVersExtremiteDeLInterconnexion);
 }
 
-void VariableNamer::IntercoIndirectCost(int var)
+void VariableNamer::IntercoIndirectCost(int var,
+                                        const std::string& origin,
+                                        const std::string& destination)
 {
+    origin_ = origin;
+    destination_ = destination;
     SetLinkVariableName(var, ExportStructDict::CoutExtremiteVersOrigineDeLInterconnexion);
 }
 
