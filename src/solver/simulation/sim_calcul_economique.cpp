@@ -108,7 +108,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.NumberOfShortTermStorages = study.runtime->shortTermStorageCount;
 
-    problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraints.size();
+    auto enabledBindingConstraints = study.bindingConstraints.enabled();
+    problem.NombreDeContraintesCouplantes = enabledBindingConstraints.size();
 
     problem.ExportMPS = study.parameters.include.exportMPS;
     problem.ExportStructure = study.parameters.include.exportStructure;
@@ -219,16 +220,16 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.PaysExtremiteDeLInterconnexion[i] = link.with->index;
     }
 
-    for (uint i = 0; i < study.runtime->bindingConstraints.size(); ++i)
+    for (uint i = 0; i < enabledBindingConstraints.size(); ++i)
     {
-        BindingConstraintRTI& bc = study.runtime->bindingConstraints[i];
+        auto bc = enabledBindingConstraints[i];
 
         PtMat = problem.MatriceDesContraintesCouplantes[i];
-        PtMat->NombreDInterconnexionsDansLaContrainteCouplante = bc.linkCount;
-        PtMat->NombreDePaliersDispatchDansLaContrainteCouplante = bc.clusterCount;
-        PtMat->NombreDElementsDansLaContrainteCouplante = bc.linkCount + bc.clusterCount;
-        PtMat->NomDeLaContrainteCouplante = bc.name.c_str();
-        switch (bc.type)
+        PtMat->NombreDInterconnexionsDansLaContrainteCouplante = bc->linkCount();
+        PtMat->NombreDePaliersDispatchDansLaContrainteCouplante = bc->clusterCount();
+        PtMat->NombreDElementsDansLaContrainteCouplante = bc->linkCount() + bc->clusterCount();
+        PtMat->NomDeLaContrainteCouplante = bc->name().c_str();
+        switch (bc->type())
         {
         case BindingConstraint::typeHourly:
             PtMat->TypeDeContrainteCouplante = CONTRAINTE_HORAIRE;
@@ -244,23 +245,23 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             assert(false && "Invalid constraint");
             break;
         }
-        PtMat->SensDeLaContrainteCouplante = bc.operatorType;
+        PtMat->SensDeLaContrainteCouplante = *Antares::Data::BindingConstraint::MathOperatorToCString(bc->operatorType());
 
-        for (uint j = 0; j < bc.linkCount; ++j)
+        for (uint j = 0; j < bc->linkCount(); ++j)
         {
-            PtMat->NumeroDeLInterconnexion[j] = bc.linkIndex[j];
-            PtMat->PoidsDeLInterconnexion[j] = bc.linkWeight[j];
+            PtMat->NumeroDeLInterconnexion[j] = bc->linkIndex()[j];
+            PtMat->PoidsDeLInterconnexion[j] = bc->linkWeight()[j];
 
-            PtMat->OffsetTemporelSurLInterco[j] = bc.linkOffset[j];
+            PtMat->OffsetTemporelSurLInterco[j] = bc->linkOffset()[j];
         }
 
-        for (uint j = 0; j < bc.clusterCount; ++j)
+        for (uint j = 0; j < bc->clusterCount(); ++j)
         {
-            PtMat->NumeroDuPalierDispatch[j] = bc.clusterIndex[j];
-            PtMat->PaysDuPalierDispatch[j] = bc.clustersAreaIndex[j];
-            PtMat->PoidsDuPalierDispatch[j] = bc.clusterWeight[j];
+            PtMat->NumeroDuPalierDispatch[j] = bc->clusterIndex()[j];
+            PtMat->PaysDuPalierDispatch[j] = bc->clustersAreaIndex()[j];
+            PtMat->PoidsDuPalierDispatch[j] = bc->clusterWeight()[j];
 
-            PtMat->OffsetTemporelSurLePalierDispatch[j] = bc.clusterOffset[j];
+            PtMat->OffsetTemporelSurLePalierDispatch[j] = bc->clusterOffset()[j];
         }
     }
 

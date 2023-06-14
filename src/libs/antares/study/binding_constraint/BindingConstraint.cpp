@@ -607,6 +607,14 @@ void BindingConstraint::initLinkArrays(std::vector<double>& w,
             ++off;
         }
     }
+
+    linkIndex_ = linkIndex;
+    linkWeight_ = w;
+    clusterWeight_ = cW;
+    linkOffset_ = o;
+    clusterOffset_ = cO;
+    clusterIndex_ = clusterIndex;
+    clustersAreaIndex_ = clustersAreaIndex;
 }
 
 bool BindingConstraint::forceReload(bool reload) const

@@ -404,6 +404,13 @@ public:
     template<class Env>
     std::string timeSeriesFileName(const Env &env) const;
 
+    [[nodiscard]] const std::vector<long>& linkIndex() const { return linkIndex_; };
+    [[nodiscard]] const std::vector<double>& linkWeight() const { return linkWeight_; };
+    [[nodiscard]] const std::vector<double>& clusterWeight() const { return clusterWeight_; };
+    [[nodiscard]] const std::vector<int>& linkOffset() const { return linkOffset_; };
+    [[nodiscard]] const std::vector<int>& clusterOffset() const { return clusterOffset_; };
+    [[nodiscard]] const std::vector<long>& clusterIndex() const { return clusterIndex_; };
+    [[nodiscard]] const std::vector<long>& clustersAreaIndex() const { return clustersAreaIndex_; };
 
 private:
     //! Raw name
@@ -440,6 +447,14 @@ private:
     void clear();
 
     void copyFrom(BindingConstraint const *original);
+
+    mutable std::vector<long> linkIndex_;
+    mutable std::vector<double> linkWeight_;
+    mutable std::vector<double> clusterWeight_;
+    mutable std::vector<int> linkOffset_;
+    mutable std::vector<int> clusterOffset_;
+    mutable std::vector<long> clusterIndex_;
+    mutable std::vector<long> clustersAreaIndex_;
 }; // class BindingConstraint
 
 // class BindConstList
