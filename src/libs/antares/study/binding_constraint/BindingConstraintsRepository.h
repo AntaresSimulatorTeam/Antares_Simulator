@@ -170,8 +170,7 @@ public:
 
     [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> enabled() const;
 
-    static std::vector<uint>
-    getIndicesForInequalityBindingConstraints(BindingConstraintsRepository &bindingConstraintRepository);
+    [[nodiscard]] std::vector<uint> getIndicesForInequalityBindingConstraints() const;
 
 
 private:

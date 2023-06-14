@@ -392,17 +392,16 @@ static bool isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)
     return bc.operatorType() == BindingConstraint::opLess || bc.operatorType() == BindingConstraint::opGreater;
 }
 
-std::vector<uint> BindingConstraintsRepository::getIndicesForInequalityBindingConstraints(
-        BindingConstraintsRepository &bindingConstraintRepository)
+std::vector<uint> BindingConstraintsRepository::getIndicesForInequalityBindingConstraints() const
 {
-    auto enabledBCs = bindingConstraintRepository.enabled();
+    auto enabledBCs = enabled();
     const auto firstBC = enabledBCs.begin();
     const auto lastBC = enabledBCs.end();
 
     std::vector<uint> indices;
     for (auto bc = firstBC; bc < lastBC; bc++)
     {
-        if (isBindingConstraintTypeInequality(*(bc->get())))
+        if (isBindingConstraintTypeInequality(*(*bc)))
         {
             auto index = static_cast<uint>(std::distance(firstBC, bc));
             indices.push_back(index);

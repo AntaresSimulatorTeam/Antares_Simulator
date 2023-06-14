@@ -102,7 +102,7 @@ template<class NextT>
 void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 {
     const std::vector<uint> InequalityBCindices
-      = Data::BindingConstraintsRepository::getIndicesForInequalityBindingConstraints(study.bindingConstraints);
+      = study.bindingConstraints.getIndicesForInequalityBindingConstraints();
 
     // The total number of inequality binding constraints count
     // (we don't count BCs with equality sign)
