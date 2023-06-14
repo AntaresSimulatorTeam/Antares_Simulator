@@ -71,7 +71,7 @@ public:
                           << " to " << Data::VersionToCStr((Data::Version)Data::versionLatest)
                           << ")";
 
-            auto* study = new Data::Study();
+            auto study = std::make_unique<Data::Study>();
 
             // It is important to enabled those feature to have the entire set of data
             // loaded and written
@@ -95,11 +95,14 @@ public:
                 logs.info() << "Saving...";
                 study->saveToFolder(folder);
             }
+            else
+            {
+                logs.error() << "Could not load the study correctly";
+                return;
+            }
 
             // restoring logs
             logs.verbosityLevel = Logs::Verbosity::Debug::level;
-
-            delete study;
         }
 
         if (cleanup)

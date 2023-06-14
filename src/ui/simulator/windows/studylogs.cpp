@@ -518,10 +518,10 @@ protected:
         //
         if (line.size() < 38 /*arbitrary*/ or line.at(0) != '[')
             return false;
-        if (line.at(25) != ']' or line.at(26) != '[')
+        if (line.at(20) != ']' or line.at(21) != '[')
             return false;
 
-        const BufferType::Size applR = line.find(']', 27);
+        const BufferType::Size applR = line.find(']', 22);
         if (BufferType::npos == applR)
             return false;
         const BufferType::Size verbosityR = line.find(']', applR + 1);
@@ -547,11 +547,11 @@ protected:
         if (message.empty() or message.startsWith(LOG_UI))
             return false;
 
-        date.adapt(bcstr + 1, 24);
+        date.adapt(bcstr + 1, 19);
 
         // Application
         if (applR > 27)
-            application.adapt(bcstr + 27, applR - 27);
+            application.adapt(bcstr + 22, applR - 22);
         else
             application.clear();
 

@@ -125,7 +125,7 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
                 }
             }
 
-            auto& P
+            const auto& P
               = problem.CaracteristiquesHydrauliques[index]->ContrainteDePmaxHydrauliqueHoraire;
 
             double ecart = 1.;

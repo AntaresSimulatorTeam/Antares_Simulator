@@ -619,7 +619,7 @@ Job::Job(const wxString& title, const wxString& subTitle, const char* icon) :
  pThread(nullptr),
  pAnim(nullptr),
  pLblErrors(nullptr),
- pLogRegex(wxT("\\[([a-zA-Z0-9 :]+)\\]\\[([a-zA-Z0-9 "
+ pLogRegex(wxT("\\[([0-9 :-]+)\\]\\[([a-zA-Z0-9 "
                "-]+)\\](\\[[a-z0-9;]+){0,2}\\[([a-z]+)\\](\\[[a-z0-9;]+){0,2} "
                "(\\[[a-z0-9;]+){0,2}([^]*)(\\[[a-z0-9;]+){0,2}")),
  pCatchLogEvents(true),
