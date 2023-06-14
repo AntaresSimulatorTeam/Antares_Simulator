@@ -238,7 +238,7 @@ public:
         // Retrieving the inflows
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
           = state.problemeHebdo->CaracteristiquesHydrauliques[pArea->index]
-              ->ApportNaturelHoraire[state.hourInTheWeek];
+              .ApportNaturelHoraire[state.hourInTheWeek];
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);

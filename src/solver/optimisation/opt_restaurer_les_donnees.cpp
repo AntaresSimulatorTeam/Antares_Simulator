@@ -99,27 +99,27 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            ENERGIES_ET_PUISSANCES_HYDRAULIQUES* CaracteristiquesHydrauliques
+            ENERGIES_ET_PUISSANCES_HYDRAULIQUES& CaracteristiquesHydrauliques
               = problemeHebdo->CaracteristiquesHydrauliques[pays];
 
-            if (!CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable)
+            if (!CaracteristiquesHydrauliques.PresenceDHydrauliqueModulable)
                 continue;
 
-            CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraire[pdt]
-              = CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraireRef[pdt];
-            if (CaracteristiquesHydrauliques->SansHeuristique)
+            CaracteristiquesHydrauliques.ContrainteDePmaxHydrauliqueHoraire[pdt]
+              = CaracteristiquesHydrauliques.ContrainteDePmaxHydrauliqueHoraireRef[pdt];
+            if (CaracteristiquesHydrauliques.SansHeuristique)
                 continue;
             int jour = NumeroDeJourDuPasDeTemps[pdt];
-            double PmaxHydEcretee = CaracteristiquesHydrauliques->CntEnergieH2OParJour[jour];
+            double PmaxHydEcretee = CaracteristiquesHydrauliques.CntEnergieH2OParJour[jour];
             PmaxHydEcretee *= problemeHebdo->CoefficientEcretementPMaxHydraulique[pays];
             PmaxHydEcretee /= (double)problemeHebdo->NombreDePasDeTempsDUneJournee;
             // The primary generating power allowance may need to be uplifted to match pumping power
             // allowance
-            if (CaracteristiquesHydrauliques->PresenceDePompageModulable)
+            if (CaracteristiquesHydrauliques.PresenceDePompageModulable)
             {
                 // Hydro generating power required to make use of energy stored from pumps
                 double PmaxHydUplift
-                  = CaracteristiquesHydrauliques->ContrainteDePmaxPompageHoraire[pdt];
+                  = CaracteristiquesHydrauliques.ContrainteDePmaxPompageHoraire[pdt];
                 PmaxHydUplift *= problemeHebdo->CoefficientEcretementPMaxHydraulique[pays];
 
                 if (PmaxHydEcretee < PmaxHydUplift)
@@ -128,9 +128,9 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
 
             // The generating power allowance cannot exceed the maximum available generating power
             if (PmaxHydEcretee
-                < CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraire[pdt])
+                < CaracteristiquesHydrauliques.ContrainteDePmaxHydrauliqueHoraire[pdt])
             {
-                CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraire[pdt]
+                CaracteristiquesHydrauliques.ContrainteDePmaxHydrauliqueHoraire[pdt]
                   = PmaxHydEcretee;
             }
         }
@@ -142,24 +142,24 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
         pdt += problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            ENERGIES_ET_PUISSANCES_HYDRAULIQUES* CaracteristiquesHydrauliques
+            ENERGIES_ET_PUISSANCES_HYDRAULIQUES& CaracteristiquesHydrauliques
               = problemeHebdo->CaracteristiquesHydrauliques[pays];
-            if (CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable)
+            if (CaracteristiquesHydrauliques.PresenceDHydrauliqueModulable)
             {
-                CaracteristiquesHydrauliques->CntEnergieH2OParIntervalleOptimise[intervalle]
-                  = CaracteristiquesHydrauliques->CntEnergieH2OParIntervalleOptimiseRef[intervalle];
+                CaracteristiquesHydrauliques.CntEnergieH2OParIntervalleOptimise[intervalle]
+                  = CaracteristiquesHydrauliques.CntEnergieH2OParIntervalleOptimiseRef[intervalle];
             }
         }
     }
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        ENERGIES_ET_PUISSANCES_HYDRAULIQUES* CaracteristiquesHydrauliques
+        ENERGIES_ET_PUISSANCES_HYDRAULIQUES& CaracteristiquesHydrauliques
           = problemeHebdo->CaracteristiquesHydrauliques[pays];
-        if (CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable)
+        if (CaracteristiquesHydrauliques.PresenceDHydrauliqueModulable)
         {
-            CaracteristiquesHydrauliques->MaxDesPmaxHydrauliques
-              = CaracteristiquesHydrauliques->MaxDesPmaxHydrauliquesRef;
+            CaracteristiquesHydrauliques.MaxDesPmaxHydrauliques
+              = CaracteristiquesHydrauliques.MaxDesPmaxHydrauliquesRef;
         }
     }
 

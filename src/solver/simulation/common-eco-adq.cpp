@@ -312,7 +312,7 @@ void PrepareRandomNumbers(Data::Study& study,
             for (uint j = 0; j != 8784; ++j)
                 noise[j] = randomForYear.pHydroCostsByArea_freeMod[indexArea][j];
 
-            auto& penalty = *(problem.CaracteristiquesHydrauliques[area.index]);
+            auto& penalty = problem.CaracteristiquesHydrauliques[area.index];
             penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations = 5.e-4;
             penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax = 5.e-4;
             break;
@@ -323,7 +323,7 @@ void PrepareRandomNumbers(Data::Study& study,
         {
             std::fill(noise.begin(), noise.end(), 0);
 
-            auto& penalty = *(problem.CaracteristiquesHydrauliques[area.index]);
+            auto& penalty = problem.CaracteristiquesHydrauliques[area.index];
             double rnd = randomForYear.pHydroCosts_rampingOrExcursion[indexArea];
 
             penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations
@@ -338,7 +338,7 @@ void PrepareRandomNumbers(Data::Study& study,
             assert(false && "invalid power fluctuations");
             std::fill(noise.begin(), noise.end(), 0);
 
-            auto& penalty = *(problem.CaracteristiquesHydrauliques[area.index]);
+            auto& penalty = problem.CaracteristiquesHydrauliques[area.index];
             penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations = 1e-4;
             penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax = 1e-4;
             break;

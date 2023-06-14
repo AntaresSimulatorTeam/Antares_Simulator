@@ -274,7 +274,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         if (cnt >= 0)
         {
             SecondMembre[cnt] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                                  ->CntEnergieH2OParIntervalleOptimise[NumeroDeLIntervalle];
+                                  .CntEnergieH2OParIntervalleOptimise[NumeroDeLIntervalle];
             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
         }
     }
@@ -282,17 +282,17 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         bool presenceHydro
-          = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable;
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
         bool TurbEntreBornes
-          = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
         if (presenceHydro && (TurbEntreBornes
-                || problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable))
+                || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
         {
             int cnt = NumeroDeContrainteMinEnergieHydraulique[pays];
             if (cnt >= 0)
             {
                 SecondMembre[cnt] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                                      ->MinEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
+                                      .MinEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
         }
@@ -301,17 +301,17 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         bool presenceHydro
-          = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable;
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
         bool TurbEntreBornes
-          = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
         if (presenceHydro && (TurbEntreBornes
-                || problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable))
+                || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
         {
             int cnt = NumeroDeContrainteMaxEnergieHydraulique[pays];
             if (cnt >= 0)
             {
                 SecondMembre[cnt] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                                      ->MaxEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
+                                      .MaxEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
         }
@@ -319,13 +319,13 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
         {
             int cnt = NumeroDeContrainteMaxPompage[pays];
             if (cnt >= 0)
             {
                 SecondMembre[cnt] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                                      ->MaxEnergiePompageParIntervalleOptimise[NumeroDeLIntervalle];
+                                      .MaxEnergiePompageParIntervalleOptimise[NumeroDeLIntervalle];
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
         }
@@ -339,18 +339,18 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->SuiviNiveauHoraire)
+            if (!problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
                 continue;
 
             int cnt = CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays];
             if (cnt >= 0)
             {
                 SecondMembre[cnt] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                                      ->ApportNaturelHoraire[pdtHebdo];
+                                      .ApportNaturelHoraire[pdtHebdo];
                 if (pdtHebdo == 0)
                 {
                     SecondMembre[cnt]
-                      += problemeHebdo->CaracteristiquesHydrauliques[pays]->NiveauInitialReservoir;
+                      += problemeHebdo->CaracteristiquesHydrauliques[pays].NiveauInitialReservoir;
                 }
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
@@ -359,8 +359,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue
-            && problemeHebdo->CaracteristiquesHydrauliques[pays]->DirectLevelAccess)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue
+            && problemeHebdo->CaracteristiquesHydrauliques[pays].DirectLevelAccess)
         {
             int cnt = problemeHebdo->NumeroDeContrainteEquivalenceStockFinal[pays];
             if (cnt >= 0)
@@ -370,7 +370,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
         }
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
         {
             int cnt = problemeHebdo->NumeroDeContrainteExpressionStockFinal[pays];
             if (cnt >= 0)

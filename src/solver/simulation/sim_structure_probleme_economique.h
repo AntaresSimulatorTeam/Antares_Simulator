@@ -522,7 +522,7 @@ struct PROBLEME_HEBDO
     std::vector<double> CoutDeDefaillanceEnReserve;
 
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
-    std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES*> CaracteristiquesHydrauliques;
+    mutable std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
     int NumberOfShortTermStorages = 0;
     // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;

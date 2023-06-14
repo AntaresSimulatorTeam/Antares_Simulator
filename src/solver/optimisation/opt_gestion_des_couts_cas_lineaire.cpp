@@ -149,20 +149,20 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                   = problemeHebdo
                       ->BruitSurCoutHydraulique[pays][problemeHebdo->HeureDansLAnnee + pdtHebdo];
 
-                if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue)
+                if (!problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
                     ProblemeAResoudre->CoutLineaire[var]
                       += problemeHebdo->CaracteristiquesHydrauliques[pays]
-                           ->WeeklyWaterValueStateRegular;
+                           .WeeklyWaterValueStateRegular;
             }
 
-            if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
+            if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
             {
                 double P;
                 if (problemeHebdo->TypeDeLissageHydraulique
                     == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
                 {
                     P = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                          ->PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations;
+                          .PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations;
 
                     var = CorrespondanceVarNativesVarOptim
                             ->NumeroDeVariablesVariationHydALaBaisse[pays];
@@ -178,7 +178,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                          && pdtJour == 0)
                 {
                     P = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                          ->PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax;
+                          .PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax;
                     var = CorrespondanceVarNativesVarOptim
                             ->NumeroDeVariablesVariationHydALaBaisse[pays];
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
@@ -219,14 +219,14 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
                 */
 
-                if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue)
+                if (!problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
                 {
                     ProblemeAResoudre->CoutLineaire[var]
                       = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                          ->WeeklyWaterValueStateRegular;
+                          .WeeklyWaterValueStateRegular;
 
                     ProblemeAResoudre->CoutLineaire[var]
-                      *= problemeHebdo->CaracteristiquesHydrauliques[pays]->PumpingRatio;
+                      *= problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
                     ProblemeAResoudre->CoutLineaire[var] *= -1.;
 
                     ProblemeAResoudre->CoutLineaire[var]
@@ -266,14 +266,14 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
               */
 
-                if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue)
+                if (!problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
                 {
                     ProblemeAResoudre->CoutLineaire[var]
                       = problemeHebdo->CoutDeDefaillanceNegative[pays];
 
                     ProblemeAResoudre->CoutLineaire[var]
                       += problemeHebdo->CaracteristiquesHydrauliques[pays]
-                           ->WeeklyWaterValueStateRegular;
+                           .WeeklyWaterValueStateRegular;
                 }
                 else
                 {
@@ -308,7 +308,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
     {
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
         {
             int var = problemeHebdo->NumeroDeVariableStockFinal[pays];
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
@@ -323,7 +323,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 {
                     ProblemeAResoudre->CoutLineaire[var]
                       = -problemeHebdo->CaracteristiquesHydrauliques[pays]
-                           ->WaterLayerValues[layerindex];
+                           .WaterLayerValues[layerindex];
                 }
             }
         }

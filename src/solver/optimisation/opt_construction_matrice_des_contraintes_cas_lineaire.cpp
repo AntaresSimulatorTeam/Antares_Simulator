@@ -769,11 +769,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         bool presenceHydro
-          = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable;
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
         bool TurbEntreBornes
-          = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
         bool presencePompage
-          = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable;
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable;
 
         int nombreDeTermes = 0;
         if (presenceHydro && !TurbEntreBornes)
@@ -795,7 +795,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     if (var >= 0)
                     {
                         Pi[nombreDeTermes]
-                          = problemeHebdo->CaracteristiquesHydrauliques[pays]->PumpingRatio;
+                          = problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
                         Pi[nombreDeTermes] *= -1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
@@ -831,7 +831,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
+            if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
                 continue;
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
@@ -886,7 +886,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
+            if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
                 continue;
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
@@ -938,11 +938,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const bool presenceHydro
-          = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable;
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
         const bool presencePompage
-          = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable;
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable;
         const bool TurbEntreBornes
-          = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
         if (presenceHydro && (TurbEntreBornes || presencePompage))
         {
             int nombreDeTermes = 0;
@@ -969,7 +969,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
         if (presenceHydro
             && (TurbEntreBornes
-            || problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable))
+            || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
         {
             int nombreDeTermes = 0;
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
@@ -996,7 +996,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
         {
             int nombreDeTermes = 0;
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
@@ -1031,7 +1031,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            if (problemeHebdo->CaracteristiquesHydrauliques[pays]->SuiviNiveauHoraire)
+            if (problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
             {
                 int nombreDeTermes = 0;
 
@@ -1067,7 +1067,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 if (var >= 0)
                 {
                     Pi[nombreDeTermes]
-                      = problemeHebdo->CaracteristiquesHydrauliques[pays]->PumpingRatio;
+                      = problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
                     Pi[nombreDeTermes] *= -1;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
@@ -1098,8 +1098,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     /* For each area with ad hoc properties, two possible sets of two additional constraints */
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue
-            && problemeHebdo->CaracteristiquesHydrauliques[pays]->DirectLevelAccess)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue
+            && problemeHebdo->CaracteristiquesHydrauliques[pays].DirectLevelAccess)
         /*  equivalence constraint : StockFinal- Niveau[T]= 0*/
         {
             int nombreDeTermes = 0;
@@ -1125,7 +1125,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
         }
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
         /*  expression constraint : - StockFinal +sum (stocklayers) = 0*/
         {
             int nombreDeTermes = 0;

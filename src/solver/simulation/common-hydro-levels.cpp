@@ -54,7 +54,7 @@ void computingHydroLevels(const Data::AreaList& areas,
         double reservoirCapacity = area.hydro.reservoirCapacity;
 
         std::vector<double>& inflows
-            = problem.CaracteristiquesHydrauliques[index]->ApportNaturelHoraire;
+            = problem.CaracteristiquesHydrauliques[index].ApportNaturelHoraire;
 
         RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
 
@@ -63,7 +63,7 @@ void computingHydroLevels(const Data::AreaList& areas,
         double* pump = weeklyResults.PompageHoraire;
         double pumpingRatio = area.hydro.pumpingEfficiency;
 
-        double nivInit = problem.CaracteristiquesHydrauliques[index]->NiveauInitialReservoir;
+        double nivInit = problem.CaracteristiquesHydrauliques[index].NiveauInitialReservoir;
         double* niv = weeklyResults.niveauxHoraires;
 
         double* ovf = weeklyResults.debordementsHoraires;
