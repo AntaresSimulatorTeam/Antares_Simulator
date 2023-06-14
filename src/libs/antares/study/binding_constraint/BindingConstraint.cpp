@@ -569,52 +569,47 @@ int BindingConstraint::offset(const ThermalCluster* lnk) const
     return (i != pClusterOffsets.end()) ? i->second : 0;
 }
 
-void BindingConstraint::initLinkArrays(std::vector<double>& w,
-                                       std::vector<double>& cW,
-                                       std::vector<int>& o,
-                                       std::vector<int>& cO,
-                                       std::vector<long>& linkIndex,
-                                       std::vector<long>& clusterIndex,
-                                       std::vector<long>& clustersAreaIndex) const
+void BindingConstraint::initLinkArrays() const
 {
+    linkWeight_.resize(linkCount());
+    linkOffset_.resize(linkCount());
+    linkIndex_.resize(linkCount());
+
+    clusterWeight_.resize(clusterCount());
+    clusterOffset_.resize(clusterCount());
+    clusterIndex_.resize(clusterCount());
+    clustersAreaIndex_.resize(clusterCount());
+
     uint off = 0;
     auto end = pLinkWeights.end();
     for (auto i = pLinkWeights.begin(); i != end; ++i, ++off)
     {
-        linkIndex[off] = (i->first)->index;
-        w[off] = i->second;
+        linkIndex_[off] = (i->first)->index;
+        linkWeight_[off] = i->second;
 
         auto offsetIt = pLinkOffsets.find(i->first);
         if (offsetIt != pLinkOffsets.end())
-            o[off] = offsetIt->second;
+            linkOffset_[off] = offsetIt->second;
         else
-            o[off] = 0;
+            linkOffset_[off] = 0;
     }
 
     off = 0;
     auto cEnd = pClusterWeights.end();
     for (auto i = pClusterWeights.begin(); i != cEnd; ++i) {
         if (i->first->enabled && !i->first->mustrun) {
-            clusterIndex[off] = (i->first)->index;
-            clustersAreaIndex[off] = (i->first)->parentArea->index;
-            cW[off] = i->second;
+            clusterIndex_[off] = (i->first)->index;
+            clustersAreaIndex_[off] = (i->first)->parentArea->index;
+            clusterWeight_[off] = i->second;
 
             if (auto offsetIt = pClusterOffsets.find(i->first); offsetIt != pClusterOffsets.end())
-                cO[off] = offsetIt->second;
+                clusterOffset_[off] = offsetIt->second;
             else
-                cO[off] = 0;
+                clusterOffset_[off] = 0;
 
             ++off;
         }
     }
-
-    linkIndex_ = linkIndex;
-    linkWeight_ = w;
-    clusterWeight_ = cW;
-    linkOffset_ = o;
-    clusterOffset_ = cO;
-    clusterIndex_ = clusterIndex;
-    clustersAreaIndex_ = clustersAreaIndex;
 }
 
 bool BindingConstraint::forceReload(bool reload) const

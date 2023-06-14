@@ -393,13 +393,7 @@ public:
     */
     void buildFormula(YString& s) const;
 
-    void initLinkArrays(std::vector<double>& weigth,
-                        std::vector<double>& cWeigth,
-                        std::vector<int>& o,
-                        std::vector<int>& cO,
-                        std::vector<long>& linkIndex,
-                        std::vector<long>& clusterIndex,
-                        std::vector<long>& clustersAreaIndex) const;
+    void initLinkArrays() const;
 
     template<class Env>
     std::string timeSeriesFileName(const Env &env) const;
