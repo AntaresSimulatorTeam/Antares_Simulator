@@ -267,21 +267,21 @@ struct PALIERS_THERMIQUES
 {
     int NombreDePaliersThermiques;
 
-    int* minUpDownTime;
+    std::vector<int> minUpDownTime;
 
-    double* TailleUnitaireDUnGroupeDuPalierThermique;
-    double* PminDuPalierThermiquePendantUneHeure;
-    double* PminDuPalierThermiquePendantUnJour;
-    int* NumeroDuPalierDansLEnsembleDesPaliersThermiques;
+    std::vector<double> TailleUnitaireDUnGroupeDuPalierThermique;
+    std::vector<double> PminDuPalierThermiquePendantUneHeure;
+    std::vector<double> PminDuPalierThermiquePendantUnJour;
+    std::vector<int> NumeroDuPalierDansLEnsembleDesPaliersThermiques;
     PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout;
 
-    double* CoutDeDemarrageDUnGroupeDuPalierThermique;
-    double* CoutDArretDUnGroupeDuPalierThermique;
-    double* CoutFixeDeMarcheDUnGroupeDuPalierThermique;
-    double* pminDUnGroupeDuPalierThermique;
-    double* PmaxDUnGroupeDuPalierThermique;
-    int* DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
-    int* DureeMinimaleDArretDUnGroupeDuPalierThermique;
+    std::vector<double> CoutDeDemarrageDUnGroupeDuPalierThermique;
+    std::vector<double> CoutDArretDUnGroupeDuPalierThermique;
+    std::vector<double> CoutFixeDeMarcheDUnGroupeDuPalierThermique;
+    std::vector<double> pminDUnGroupeDuPalierThermique;
+    std::vector<double> PmaxDUnGroupeDuPalierThermique;
+    std::vector<int> DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
+    std::vector<int> DureeMinimaleDArretDUnGroupeDuPalierThermique;
 };
 
 struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES

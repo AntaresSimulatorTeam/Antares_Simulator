@@ -348,30 +348,30 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
           ->CoutsMarginauxHorairesDeLaReserveParZone
           = new double[NombreDePasDeTemps];
 
-        problem.PaliersThermiquesDuPays[k]->minUpDownTime = new int[nbPaliers];
+        problem.PaliersThermiquesDuPays[k]->minUpDownTime.assign(nbPaliers, 0);
         problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure
-          = new double[nbPaliers];
+         .assign(nbPaliers, 0.);
         problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour
-          = new double[nbPaliers];
+         .assign(nbPaliers, 0.);
         problem.PaliersThermiquesDuPays[k]->TailleUnitaireDUnGroupeDuPalierThermique
-          = new double[nbPaliers];
+         .assign(nbPaliers, 0.);
         problem.PaliersThermiquesDuPays[k]->NumeroDuPalierDansLEnsembleDesPaliersThermiques
-          = new int[nbPaliers];
+         .assign(nbPaliers, 0);
 
         problem.PaliersThermiquesDuPays[k]->CoutDeDemarrageDUnGroupeDuPalierThermique
-          = new double[nbPaliers];
+         .assign(nbPaliers, 0.);
         problem.PaliersThermiquesDuPays[k]->CoutDArretDUnGroupeDuPalierThermique
-          = new double[nbPaliers];
+         .assign(nbPaliers, 0.);
         problem.PaliersThermiquesDuPays[k]->CoutFixeDeMarcheDUnGroupeDuPalierThermique
-          = new double[nbPaliers];
+         .assign(nbPaliers, 0.);
         problem.PaliersThermiquesDuPays[k]->pminDUnGroupeDuPalierThermique
-          = new double[nbPaliers];
+         .assign(nbPaliers, 0.);
         problem.PaliersThermiquesDuPays[k]->PmaxDUnGroupeDuPalierThermique
-          = new double[nbPaliers];
+         .assign(nbPaliers, 0.);
         problem.PaliersThermiquesDuPays[k]->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
-          = new int[nbPaliers];
+         .assign(nbPaliers, 0);
         problem.PaliersThermiquesDuPays[k]->DureeMinimaleDArretDUnGroupeDuPalierThermique
-          = new int[nbPaliers];
+         .assign(nbPaliers, 0);
 
         problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimise
           = new double[7];
@@ -587,22 +587,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     for (int k = 0; k < (int)nbPays; ++k)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
-
-        delete problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure;
-        delete problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour;
-        delete problem.PaliersThermiquesDuPays[k]->minUpDownTime;
-        delete problem.PaliersThermiquesDuPays[k]->TailleUnitaireDUnGroupeDuPalierThermique;
-        MemFree(
-          problem.PaliersThermiquesDuPays[k]->NumeroDuPalierDansLEnsembleDesPaliersThermiques);
-
-        delete problem.PaliersThermiquesDuPays[k]->CoutDeDemarrageDUnGroupeDuPalierThermique;
-        delete problem.PaliersThermiquesDuPays[k]->CoutDArretDUnGroupeDuPalierThermique;
-        delete problem.PaliersThermiquesDuPays[k]->CoutFixeDeMarcheDUnGroupeDuPalierThermique;
-        delete problem.PaliersThermiquesDuPays[k]->pminDUnGroupeDuPalierThermique;
-        delete problem.PaliersThermiquesDuPays[k]->PmaxDUnGroupeDuPalierThermique;
-        MemFree(
-          problem.PaliersThermiquesDuPays[k]->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique);
-        delete problem.PaliersThermiquesDuPays[k]->DureeMinimaleDArretDUnGroupeDuPalierThermique;
 
         delete problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimise;
         delete problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParJour;
