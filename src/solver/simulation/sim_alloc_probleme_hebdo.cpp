@@ -128,7 +128,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.CoutsMarginauxDesContraintesDeReserveParZone
       = new COUTS_MARGINAUX_ZONES_DE_RESERVE*[nbPays];
 
-    problem.ReserveJMoins1 = new RESERVE_JMOINS1*[nbPays];
+    problem.ReserveJMoins1 = std::vector<RESERVE_JMOINS1>(nbPays);
     problem.ResultatsHoraires.resize(nbPays);
 
     for (uint k = 0; k < NombreDePasDeTemps; k++)
@@ -355,7 +355,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
           ->CoutsMarginauxHorairesDeLaReserveParZone
           = new double[NombreDePasDeTemps];
 
-        problem.ReserveJMoins1[k] = new RESERVE_JMOINS1;
         problem.PaliersThermiquesDuPays[k]->minUpDownTime = new int[nbPaliers];
         problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure
           = new double[nbPaliers];
@@ -416,10 +415,11 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxPompageHoraire
           = new double[NombreDePasDeTemps];
 
-        problem.ReserveJMoins1[k]->ReserveHoraireJMoins1
-          = new double[NombreDePasDeTemps];
-        problem.ReserveJMoins1[k]->ReserveHoraireJMoins1Ref
-          = new double[NombreDePasDeTemps];
+        problem.ReserveJMoins1[k].ReserveHoraireJMoins1
+          .assign(NombreDePasDeTemps, 0.);
+        problem.ReserveJMoins1[k].ReserveHoraireJMoins1Ref
+          .assign(NombreDePasDeTemps, 0.);
+
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive
           = new double[NombreDePasDeTemps];
         problem.ResultatsHoraires[k].ValeursHorairesDENS
@@ -654,9 +654,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.CoutsMarginauxDesContraintesDeReserveParZone[k]
                   ->CoutsMarginauxHorairesDeLaReserveParZone);
         delete problem.CoutsMarginauxDesContraintesDeReserveParZone[k];
-        delete problem.ReserveJMoins1[k]->ReserveHoraireJMoins1;
-        delete problem.ReserveJMoins1[k]->ReserveHoraireJMoins1Ref;
-        delete problem.ReserveJMoins1[k];
 
         for (int j = 0; j < (int)nbPaliers; j++)
         {
@@ -747,7 +744,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     delete problem.CaracteristiquesHydrauliques;
 
     delete problem.CoutsMarginauxDesContraintesDeReserveParZone;
-    delete problem.ReserveJMoins1;
 
     delete problem.coutOptimalSolution1;
     delete problem.coutOptimalSolution2;

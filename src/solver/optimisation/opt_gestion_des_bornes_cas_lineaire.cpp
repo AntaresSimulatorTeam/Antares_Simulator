@@ -123,7 +123,7 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
             if (reserveJm1 && opt1)
             {
                 ResidualLoadInArea
-                  += problemeHebdo->ReserveJMoins1[pays]->ReserveHoraireJMoins1[pdtHebdo];
+                  += problemeHebdo->ReserveJMoins1[pays].ReserveHoraireJMoins1[pdtHebdo];
             }
 
             int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[pays];

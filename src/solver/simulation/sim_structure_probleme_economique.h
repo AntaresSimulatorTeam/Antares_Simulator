@@ -416,8 +416,8 @@ public:
 
 struct RESERVE_JMOINS1
 {
-    double* ReserveHoraireJMoins1 = nullptr;
-    double* ReserveHoraireJMoins1Ref = nullptr;
+    std::vector<double> ReserveHoraireJMoins1;
+    std::vector<double> ReserveHoraireJMoins1Ref;
 };
 
 struct PRODUCTION_THERMIQUE_OPTIMALE
@@ -569,7 +569,7 @@ struct PROBLEME_HEBDO
     CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES** CorrespondanceCntNativesCntOptimJournalieres = nullptr;
     CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES** CorrespondanceCntNativesCntOptimHebdomadaires = nullptr;
 
-    RESERVE_JMOINS1** ReserveJMoins1 = nullptr;
+    mutable std::vector<RESERVE_JMOINS1> ReserveJMoins1;
 
     std::vector<int> IndexDebutIntercoOrigine;
     std::vector<int> IndexSuivantIntercoOrigine;

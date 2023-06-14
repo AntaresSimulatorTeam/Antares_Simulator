@@ -678,7 +678,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                     * problem.CaracteristiquesHydrauliques[k]->WeeklyPumpingModulation;
             }
 
-            problem.ReserveJMoins1[k]->ReserveHoraireJMoins1[j]
+            problem.ReserveJMoins1[k].ReserveHoraireJMoins1[j]
               = area.reserves[fhrDayBefore][PasDeTempsDebut + j];
         }
     }
@@ -990,10 +990,10 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
           (char*)problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraire,
           pasDeTempsSizeDouble);
 
-        memcpy((char*)problem.ReserveJMoins1[k]->ReserveHoraireJMoins1Ref,
-               (char*)problem.ReserveJMoins1[k]->ReserveHoraireJMoins1,
-               pasDeTempsSizeDouble);
+        problem.ReserveJMoins1[k].ReserveHoraireJMoins1Ref
+            = problem.ReserveJMoins1[k].ReserveHoraireJMoins1;
     }
+
     for (unsigned int j = 0; j < problem.NombreDePasDeTemps; ++j)
     {
         problem.ConsommationsAbattuesRef[j].ConsommationAbattueDuPays
