@@ -7,7 +7,7 @@ Antares Changelog
 * Short-term storage (#1163). Cycles are planned for the next release.
 * Add pollutant emissions (#1184, #1222)
 * Minimal generation for hydraulic (#1273, RTE/RTE-i/Redstork)
-* Make LMR optional with new option (#1247)
+* Make LMR optional for adequacy patch (#1247)
 
 ## Improvements
 * Use ISO8601 for date format in the logs (#1303)
