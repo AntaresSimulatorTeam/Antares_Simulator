@@ -11,8 +11,10 @@ Antares Changelog
 
 ## Improvements
 * Use ISO8601 for date format in the logs (#1303)
+* Publish installers for Oracle Linux 8 (#1341)
 * Remove doc from UI/package, publish it as a separate PDF (#1233)
 * Tune XPRESS resolution (#1158), this should improve performance for OR-Tools+XPRESS
+* Performance metrics (produce a JSON file) (#1306)
 
 ## Bugfixes
 * Fix a bug in adequacy study mode (#1314)
@@ -30,6 +32,7 @@ Antares Changelog
 * Adequacy patch : refactor parameters management (#1154)
 * Add a few const qualifiers (#1178)
 * INI files load encapsulation (#1057)
+* Remove group{Min,Max}Count, annuityInvestment in thermal clusters (#1350)
 
 ## For developers
 * Bumped OR-Tools 9.2 -> 9.5. CMake 3.18+ is required for build if building OR-Tools, and XPRESS 9.0 for execution (previously 8.13).
