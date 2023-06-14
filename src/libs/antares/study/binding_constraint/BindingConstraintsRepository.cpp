@@ -351,14 +351,11 @@ void BindingConstraintsRepository::estimateMemoryUsage(StudyMemoryUsage& u) cons
     if (!u.study.parameters.include.constraints)
         return;
 
-    // each constraint...
-    for (const auto & constraint : pList)
-    {
+        // each constraint...
+    for (const auto &constraint: pList) {
         u.requiredMemoryForInput += sizeof(void *) * 2;
         uint count = (constraint->operatorType() == BindingConstraint::opBoth) ? 2 : 1;
-        for (uint constraints_counter = 0; constraints_counter != count; ++constraints_counter)
-        {
-            u.requiredMemoryForInput += sizeof(BindingConstraintRTI);
+        for (uint constraints_counter = 0; constraints_counter != count; ++constraints_counter) {
             u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * constraint->linkCount();
             u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * constraint->clusterCount();
             Matrix<>::EstimateMemoryUsage(u, 1, HOURS_PER_YEAR);
