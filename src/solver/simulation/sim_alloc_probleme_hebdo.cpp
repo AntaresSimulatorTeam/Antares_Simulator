@@ -239,7 +239,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
           .assign(study.runtime->thermalPlantTotalCount, 0);
 
         problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion
-          = new double[linkCount];
+          .assign(linkCount, 0.);
     }
 
     for (uint k = 0; k < linkCount; ++k)
@@ -563,7 +563,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     for (uint k = 0; k < problem.NombreDePasDeTemps; k++)
     {
         delete problem.CorrespondanceVarNativesVarOptim[k];
-        delete problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion;
         delete problem.VariablesDualesDesContraintesDeNTC[k];
     }
 

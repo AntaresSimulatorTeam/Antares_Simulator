@@ -483,7 +483,7 @@ struct COUTS_DE_TRANSPORT
 
 struct VARIABLES_DUALES_INTERCONNEXIONS
 {
-    double* VariableDualeParInterconnexion = nullptr;
+    std::vector<double> VariableDualeParInterconnexion;
 };
 
 struct COUTS_MARGINAUX_ZONES_DE_RESERVE
