@@ -58,7 +58,7 @@ void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* problemeHebdo)
         problemeHebdo->CaracteristiquesHydrauliques[pays]->MaxDesPmaxHydrauliquesRef = 0.0;
         if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
             continue;
-        const double* ContrainteDePmaxHydrauliqueHoraire
+        const std::vector<double>& ContrainteDePmaxHydrauliqueHoraire
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->ContrainteDePmaxHydrauliqueHoraire;
         double pmaxHyd = -1;
         for (uint pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)

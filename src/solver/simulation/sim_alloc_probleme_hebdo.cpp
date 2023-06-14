@@ -373,39 +373,39 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
          .assign(nbPaliers, 0);
 
         problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimise
-          = new double[7];
+          .assign(7, 0.);
         problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParJour
-          = new double[7];
+          .assign(7, 0.);
         problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimiseRef
-          = new double[7];
+          .assign(7, 0.);
         problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraire
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraireRef
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
 
         problem.CaracteristiquesHydrauliques[k]->MaxEnergieHydrauParIntervalleOptimise
-          = new double[7];
+          .assign(7, 0.);
         problem.CaracteristiquesHydrauliques[k]->MinEnergieHydrauParIntervalleOptimise
-          = new double[7];
+          .assign(7, 0.);
 
         problem.CaracteristiquesHydrauliques[k]->NiveauHoraireSup
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.CaracteristiquesHydrauliques[k]->NiveauHoraireInf
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.CaracteristiquesHydrauliques[k]->ApportNaturelHoraire
-          = new double[NombreDePasDeTemps]();
+          .assign(NombreDePasDeTemps, 0.);
         problem.CaracteristiquesHydrauliques[k]->MingenHoraire
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
 
         problem.CaracteristiquesHydrauliques[k]->WaterLayerValues
-          = new double[100];
+          .assign(100, 0.);
         problem.CaracteristiquesHydrauliques[k]->InflowForTimeInterval
-          = new double[100];
+          .assign(100, 0.);
 
         problem.CaracteristiquesHydrauliques[k]->MaxEnergiePompageParIntervalleOptimise
-          = new double[7];
+          .assign(7, 0.);
         problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxPompageHoraire
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
 
         problem.ReserveJMoins1[k].ReserveHoraireJMoins1
           .assign(NombreDePasDeTemps, 0.);
@@ -587,26 +587,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
-        delete problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimise;
-        delete problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParJour;
-        delete problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimiseRef;
-
-        delete problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraire;
-        delete problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraireRef;
-
-        delete problem.CaracteristiquesHydrauliques[k]->MaxEnergieHydrauParIntervalleOptimise;
-        delete problem.CaracteristiquesHydrauliques[k]->MinEnergieHydrauParIntervalleOptimise;
-
-        delete problem.CaracteristiquesHydrauliques[k]->MaxEnergiePompageParIntervalleOptimise;
-        delete problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxPompageHoraire;
-
-        delete problem.CaracteristiquesHydrauliques[k]->NiveauHoraireSup;
-        delete problem.CaracteristiquesHydrauliques[k]->NiveauHoraireInf;
-        delete problem.CaracteristiquesHydrauliques[k]->ApportNaturelHoraire;
-        delete problem.CaracteristiquesHydrauliques[k]->MingenHoraire;
-
-        delete problem.CaracteristiquesHydrauliques[k]->WaterLayerValues;
-        delete problem.CaracteristiquesHydrauliques[k]->InflowForTimeInterval;
         delete problem.CaracteristiquesHydrauliques[k];
 
         MemFree(problem.CoutsMarginauxDesContraintesDeReserveParZone[k]

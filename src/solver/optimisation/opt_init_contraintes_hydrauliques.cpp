@@ -52,11 +52,11 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
             || problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes)
             continue;
 
-        double* CntEnergieH2OParJour
+        std::vector<double>& CntEnergieH2OParJour
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->CntEnergieH2OParJour;
-        double* CntEnergieH2OParIntervalleOptimise
+        std::vector<double>& CntEnergieH2OParIntervalleOptimise
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->CntEnergieH2OParIntervalleOptimise;
-        double* CntEnergieH2OParIntervalleOptimiseRef
+        std::vector<double>& CntEnergieH2OParIntervalleOptimiseRef
           = problemeHebdo->CaracteristiquesHydrauliques[pays]
               ->CntEnergieH2OParIntervalleOptimiseRef;
 
@@ -87,12 +87,12 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
             && (TurbEntreBornes
                 || problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable))
         {
-            double* CntEnergieH2OParJour
+            std::vector<double>& CntEnergieH2OParJour
               = problemeHebdo->CaracteristiquesHydrauliques[pays]->CntEnergieH2OParJour;
-            double* MinEnergieHydrauParIntervalleOptimise
+            std::vector<double>& MinEnergieHydrauParIntervalleOptimise
               = problemeHebdo->CaracteristiquesHydrauliques[pays]
                   ->MinEnergieHydrauParIntervalleOptimise;
-            double* MaxEnergieHydrauParIntervalleOptimise
+            std::vector<double>& MaxEnergieHydrauParIntervalleOptimise
               = problemeHebdo->CaracteristiquesHydrauliques[pays]
                   ->MaxEnergieHydrauParIntervalleOptimise;
 
@@ -117,7 +117,7 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        double* MaxEnergiePompageParIntervalleOptimise
+        std::vector<double>& MaxEnergiePompageParIntervalleOptimise
           = problemeHebdo->CaracteristiquesHydrauliques[pays]
               ->MaxEnergiePompageParIntervalleOptimise;
 
@@ -136,7 +136,7 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        double* InflowForTimeInterval
+        std::vector<double>& InflowForTimeInterval
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->InflowForTimeInterval;
 
         for (int intervalle = 0; intervalle < NbIntervallesOptimises; intervalle++)

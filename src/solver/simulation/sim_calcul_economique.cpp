@@ -730,10 +730,10 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                             || (problem.CaracteristiquesHydrauliques[k]->PresenceDePompageModulable
                                 && !problem.OptimisationAuPasHebdomadaire)))
                     {
-                        double* DGU = problem.CaracteristiquesHydrauliques[k]
+                        std::vector<double>& DGU = problem.CaracteristiquesHydrauliques[k]
                                         ->MaxEnergieHydrauParIntervalleOptimise;
 
-                        double* DGL = problem.CaracteristiquesHydrauliques[k]
+                        std::vector<double>& DGL = problem.CaracteristiquesHydrauliques[k]
                                         ->MinEnergieHydrauParIntervalleOptimise;
 
                         double* DNT
@@ -894,7 +894,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                                 WNI += srcinflows[day];
                             }
 
-                            double* DPU = problem.CaracteristiquesHydrauliques[k]
+                            std::vector<double>& DPU = problem.CaracteristiquesHydrauliques[k]
                                             ->MaxEnergiePompageParIntervalleOptimise;
 
                             double WSL
@@ -981,14 +981,10 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                    pasDeTempsSizeDouble);
         }
 
-        memcpy(
-          (char*)problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimiseRef,
-          (char*)problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimise,
-          7 * sizeof(double));
-        memcpy(
-          (char*)problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraireRef,
-          (char*)problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraire,
-          pasDeTempsSizeDouble);
+        problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimiseRef
+            = problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimise;
+        problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraireRef
+            = problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraire;
 
         problem.ReserveJMoins1[k].ReserveHoraireJMoins1Ref
             = problem.ReserveJMoins1[k].ReserveHoraireJMoins1;

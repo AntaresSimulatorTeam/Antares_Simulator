@@ -286,22 +286,22 @@ struct PALIERS_THERMIQUES
 
 struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
 {
-    double* MaxEnergieHydrauParIntervalleOptimise;
+    std::vector<double> MinEnergieHydrauParIntervalleOptimise;
+    std::vector<double> MaxEnergieHydrauParIntervalleOptimise;
 
-    double* MinEnergieHydrauParIntervalleOptimise;
+    std::vector<double> CntEnergieH2OParIntervalleOptimiseRef;
+    std::vector<double> CntEnergieH2OParIntervalleOptimise;
+    std::vector<double> CntEnergieH2OParJour;
 
-    double* CntEnergieH2OParIntervalleOptimise;
-    double* CntEnergieH2OParJour;
-    double* ContrainteDePmaxHydrauliqueHoraire;
+    std::vector<double> ContrainteDePmaxHydrauliqueHoraire;
+    std::vector<double> ContrainteDePmaxHydrauliqueHoraireRef;
+
+    std::vector<double> MaxEnergiePompageParIntervalleOptimise;
+    std::vector<double> ContrainteDePmaxPompageHoraire;
 
     double MaxDesPmaxHydrauliques;
 
-    double* CntEnergieH2OParIntervalleOptimiseRef;
-    double* ContrainteDePmaxHydrauliqueHoraireRef;
     double MaxDesPmaxHydrauliquesRef;
-
-    double* MaxEnergiePompageParIntervalleOptimise;
-    double* ContrainteDePmaxPompageHoraire;
 
     bool PresenceDePompageModulable;
     bool PresenceDHydrauliqueModulable;
@@ -317,11 +317,11 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     bool SansHeuristique;
     bool SuiviNiveauHoraire;
 
-    double* NiveauHoraireSup;
-    double* NiveauHoraireInf;
+    std::vector<double> NiveauHoraireSup;
+    std::vector<double> NiveauHoraireInf;
 
-    double* ApportNaturelHoraire;
-    double* MingenHoraire; /*Minimum Hourly Hydro-Storage Generation*/
+    std::vector<double> ApportNaturelHoraire;
+    std::vector<double> MingenHoraire; /*Minimum Hourly Hydro-Storage Generation*/
     double NiveauInitialReservoir;
     double TailleReservoir;
     double PumpingRatio;
@@ -331,9 +331,9 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     bool DirectLevelAccess; /*  determines the type of constraints bearing on the final stok level*/
     bool AccurateWaterValue;     /*  determines the type of modelling used for water budget*/
     double LevelForTimeInterval; /*  value computed by the simulator in water-value based modes*/
-    double* WaterLayerValues; /*  reference costs for the last time step (caution : dimension set to
+    std::vector<double> WaterLayerValues; /*  reference costs for the last time step (caution : dimension set to
                                  100, should be made dynamic)*/
-    double* InflowForTimeInterval; /*  Energy input to the reservoir, used to in the bounding
+    std::vector<double> InflowForTimeInterval; /*  Energy input to the reservoir, used to in the bounding
                                       constraint on final level*/
 };
 
@@ -344,7 +344,7 @@ private:
     double level;
 
     double capacity;
-    double* inflows;
+    std::vector<double>& inflows;
     double* ovf;
     double* turb;
     double pumpRatio;
@@ -352,41 +352,28 @@ private:
     double excessDown;
 
 public:
-    computeTimeStepLevel() :
-     step(0),
-     level(0.),
-     capacity(0.),
-     inflows(nullptr),
-     ovf(nullptr),
-     turb(nullptr),
-     pumpRatio(0.),
-     pump(nullptr),
-     excessDown(0.)
+    computeTimeStepLevel(
+            const double& startLvl,
+            std::vector<double>& infl,
+            double* overfl,
+            double* H,
+            double pumpEff,
+            double* Pump,
+            double rc) :
+        step(0),
+        level(startLvl),
+        capacity(rc),
+        inflows(infl),
+        ovf(overfl),
+        turb(H),
+        pumpRatio(pumpEff),
+        pump(Pump),
+        excessDown(0.)
     {
-    }
-
-    void setParameters(const double& startLvl,
-                       double* Infl,
-                       double* overfl,
-                       double* H,
-                       double pumpEff,
-                       double* Pump,
-                       double rc)
-    {
-        step = 0;
-        level = startLvl;
-        inflows = Infl;
-        ovf = overfl;
-        turb = H;
-        pumpRatio = pumpEff;
-        pump = Pump;
-        capacity = rc;
     }
 
     void run()
     {
-        excessDown = 0.;
-
         level = level + inflows[step] - turb[step] + pumpRatio * pump[step];
 
         if (level > capacity)
@@ -606,7 +593,6 @@ struct PROBLEME_HEBDO
     std::vector<double> CoefficientEcretementPMaxHydraulique;
     bool hydroHotStart = false;
     std::vector<double> previousSimulationFinalLevel;
-    computeTimeStepLevel computeLvl_object;
 
     /* Results */
     std::vector<RESULTATS_HORAIRES> ResultatsHoraires;
