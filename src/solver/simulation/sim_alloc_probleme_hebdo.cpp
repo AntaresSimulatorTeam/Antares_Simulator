@@ -121,8 +121,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         }
     }
 
-    problem.CoutsMarginauxDesContraintesDeReserveParZone
-      = new COUTS_MARGINAUX_ZONES_DE_RESERVE*[nbPays];
+    problem.CoutsMarginauxDesContraintesDeReserveParZone.resize(nbPays);
 
     problem.ReserveJMoins1.resize(nbPays);
     problem.ResultatsHoraires.resize(nbPays);
@@ -673,7 +672,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         }
         delete problem.ResultatsHoraires[k].ProductionThermique;
     }
-    delete problem.CoutsMarginauxDesContraintesDeReserveParZone;
 
     delete problem.coutOptimalSolution1;
     delete problem.coutOptimalSolution2;
