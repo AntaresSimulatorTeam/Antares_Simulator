@@ -491,13 +491,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 CorrespondanceVarNativesVarOptim
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
-                if (!Simulation)
-                {
-                    CorrespondanceCntNativesCntOptim
-                      ->NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
-                      = -1;
-                }
-
                 int nombreDeTermes = 0;
                 if (!Simulation)
                 {
