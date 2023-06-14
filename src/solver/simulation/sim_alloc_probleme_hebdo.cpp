@@ -100,8 +100,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.CorrespondanceVarNativesVarOptim.resize(NombreDePasDeTemps);
     problem.CorrespondanceCntNativesCntOptim.resize(NombreDePasDeTemps);
     problem.VariablesDualesDesContraintesDeNTC.resize(NombreDePasDeTemps);
-    problem.MatriceDesContraintesCouplantes
-      = new CONTRAINTES_COUPLANTES*[study.runtime->bindingConstraintCount];
+    problem.MatriceDesContraintesCouplantes.resize(study.runtime->bindingConstraintCount);
     problem.PaliersThermiquesDuPays = new PALIERS_THERMIQUES*[nbPays];
     problem.CaracteristiquesHydrauliques = new ENERGIES_ET_PUISSANCES_HYDRAULIQUES*[nbPays];
     problem.previousSimulationFinalLevel.assign(nbPays, 0.);
@@ -598,7 +597,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         if (problem.ResultatsContraintesCouplantes[k].variablesDuales != nullptr)
             delete problem.ResultatsContraintesCouplantes[k].variablesDuales;
     }
-    delete problem.MatriceDesContraintesCouplantes;
     delete problem.ResultatsContraintesCouplantes;
 
     for (int k = 0; k < (int)nbPays; ++k)
