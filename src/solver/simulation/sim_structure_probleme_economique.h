@@ -597,11 +597,11 @@ struct PROBLEME_HEBDO
     std::vector<RESULTATS_HORAIRES> ResultatsHoraires;
     std::vector<VARIABLES_DUALES_INTERCONNEXIONS> VariablesDualesDesContraintesDeNTC;
 
-    double* coutOptimalSolution1 = nullptr;
-    double* coutOptimalSolution2 = nullptr;
+    std::vector<double> coutOptimalSolution1;
+    std::vector<double> coutOptimalSolution2;
 
-    double* tempsResolution1 = nullptr;
-    double* tempsResolution2 = nullptr;
+    std::vector<double> tempsResolution1;
+    std::vector<double> tempsResolution2;
 
     std::vector<COUTS_MARGINAUX_ZONES_DE_RESERVE> CoutsMarginauxDesContraintesDeReserveParZone;
     /* Unused for now, will be used in future revisions */

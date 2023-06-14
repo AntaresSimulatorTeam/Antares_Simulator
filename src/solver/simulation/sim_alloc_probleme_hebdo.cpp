@@ -526,11 +526,11 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         }
     }
 
-    problem.coutOptimalSolution1 = new double[7];
-    problem.coutOptimalSolution2 = new double[7];
+    problem.coutOptimalSolution1.assign(7, 0.);
+    problem.coutOptimalSolution2.assign(7, 0.);
 
-    problem.tempsResolution1 = new double[7];
-    problem.tempsResolution2 = new double[7];
+    problem.tempsResolution1.assign(7, 0.);
+    problem.tempsResolution2.assign(7, 0.);
 }
 
 void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
@@ -639,9 +639,4 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         }
         delete problem.ResultatsHoraires[k].ProductionThermique;
     }
-
-    delete problem.coutOptimalSolution1;
-    delete problem.coutOptimalSolution2;
-    delete problem.tempsResolution1;
-    delete problem.tempsResolution2;
 }
