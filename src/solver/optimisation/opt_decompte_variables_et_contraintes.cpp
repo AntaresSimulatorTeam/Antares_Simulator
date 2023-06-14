@@ -52,9 +52,9 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         ProblemeAResoudre->NombreDeVariables
-          += problemeHebdo->PaliersThermiquesDuPays[pays]->NombreDePaliersThermiques;
+          += problemeHebdo->PaliersThermiquesDuPays[pays].NombreDePaliersThermiques;
 
-        mxPaliers += problemeHebdo->PaliersThermiquesDuPays[pays]->NombreDePaliersThermiques;
+        mxPaliers += problemeHebdo->PaliersThermiquesDuPays[pays].NombreDePaliersThermiques;
 
         if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
         {

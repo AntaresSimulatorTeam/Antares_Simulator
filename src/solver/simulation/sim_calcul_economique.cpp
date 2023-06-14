@@ -268,7 +268,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     {
         auto& area = *(study.areas.byIndex[i]);
 
-        auto& pbPalier = *(problem.PaliersThermiquesDuPays[i]);
+        auto& pbPalier = problem.PaliersThermiquesDuPays[i];
         pbPalier.NombreDePaliersThermiques = area.thermal.list.size();
 
         for (uint l = 0; l != area.thermal.list.size(); ++l)
@@ -648,7 +648,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
 
                 auto& Pt
-                  = *problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout[cluster.index];
+                  = *problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[cluster.index];
                 auto& PtValGen = *ValeursGenereesParPays[numSpace][k];
 
                 Pt.PuissanceDisponibleDuPalierThermique[j]
@@ -966,17 +966,17 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         for (uint l = 0; l != area.thermal.list.size(); ++l)
         {
             memcpy((char*)problem.PaliersThermiquesDuPays[k]
-                     ->PuissanceDisponibleEtCout[l]
+                     .PuissanceDisponibleEtCout[l]
                      ->PuissanceDisponibleDuPalierThermiqueRef,
                    (char*)problem.PaliersThermiquesDuPays[k]
-                     ->PuissanceDisponibleEtCout[l]
+                     .PuissanceDisponibleEtCout[l]
                      ->PuissanceDisponibleDuPalierThermique,
                    pasDeTempsSizeDouble);
             memcpy((char*)problem.PaliersThermiquesDuPays[k]
-                     ->PuissanceDisponibleEtCout[l]
+                     .PuissanceDisponibleEtCout[l]
                      ->CoutHoraireDeProductionDuPalierThermiqueRef,
                    (char*)problem.PaliersThermiquesDuPays[k]
-                     ->PuissanceDisponibleEtCout[l]
+                     .PuissanceDisponibleEtCout[l]
                      ->CoutHoraireDeProductionDuPalierThermique,
                    pasDeTempsSizeDouble);
         }

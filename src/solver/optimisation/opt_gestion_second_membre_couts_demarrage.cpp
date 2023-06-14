@@ -58,18 +58,18 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             const int* NombreMaxDeGroupesEnMarcheDuPalierThermique
-              = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[index]
+              = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index]
                   ->NombreMaxDeGroupesEnMarcheDuPalierThermique;
             const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays->DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
+              = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
             const int palier
-              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+              = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
             for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
                  pdtHebdo < DernierPdtDeLIntervalle;

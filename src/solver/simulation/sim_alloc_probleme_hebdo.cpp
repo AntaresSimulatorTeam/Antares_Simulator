@@ -339,7 +339,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
-        problem.PaliersThermiquesDuPays[k] = new PALIERS_THERMIQUES;
         problem.CaracteristiquesHydrauliques[k] =  new ENERGIES_ET_PUISSANCES_HYDRAULIQUES;
 
         problem.CoutsMarginauxDesContraintesDeReserveParZone[k]
@@ -348,29 +347,29 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
           ->CoutsMarginauxHorairesDeLaReserveParZone
           = new double[NombreDePasDeTemps];
 
-        problem.PaliersThermiquesDuPays[k]->minUpDownTime.assign(nbPaliers, 0);
-        problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure
+        problem.PaliersThermiquesDuPays[k].minUpDownTime.assign(nbPaliers, 0);
+        problem.PaliersThermiquesDuPays[k].PminDuPalierThermiquePendantUneHeure
          .assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour
+        problem.PaliersThermiquesDuPays[k].PminDuPalierThermiquePendantUnJour
          .assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k]->TailleUnitaireDUnGroupeDuPalierThermique
+        problem.PaliersThermiquesDuPays[k].TailleUnitaireDUnGroupeDuPalierThermique
          .assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k]->NumeroDuPalierDansLEnsembleDesPaliersThermiques
+        problem.PaliersThermiquesDuPays[k].NumeroDuPalierDansLEnsembleDesPaliersThermiques
          .assign(nbPaliers, 0);
 
-        problem.PaliersThermiquesDuPays[k]->CoutDeDemarrageDUnGroupeDuPalierThermique
+        problem.PaliersThermiquesDuPays[k].CoutDeDemarrageDUnGroupeDuPalierThermique
          .assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k]->CoutDArretDUnGroupeDuPalierThermique
+        problem.PaliersThermiquesDuPays[k].CoutDArretDUnGroupeDuPalierThermique
          .assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k]->CoutFixeDeMarcheDUnGroupeDuPalierThermique
+        problem.PaliersThermiquesDuPays[k].CoutFixeDeMarcheDUnGroupeDuPalierThermique
          .assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k]->pminDUnGroupeDuPalierThermique
+        problem.PaliersThermiquesDuPays[k].pminDUnGroupeDuPalierThermique
          .assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k]->PmaxDUnGroupeDuPalierThermique
+        problem.PaliersThermiquesDuPays[k].PmaxDUnGroupeDuPalierThermique
          .assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k]->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
+        problem.PaliersThermiquesDuPays[k].DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
          .assign(nbPaliers, 0);
-        problem.PaliersThermiquesDuPays[k]->DureeMinimaleDArretDUnGroupeDuPalierThermique
+        problem.PaliersThermiquesDuPays[k].DureeMinimaleDArretDUnGroupeDuPalierThermique
          .assign(nbPaliers, 0);
 
         problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimise
@@ -455,59 +454,59 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
           = new double[NombreDePasDeTemps];
         problem.ResultatsHoraires[k].debordementsHoraires
           = new double[NombreDePasDeTemps];
-        problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout
+        problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout
           = new PDISP_ET_COUTS_HORAIRES_PAR_PALIER*[nbPaliers];
         problem.ResultatsHoraires[k].ProductionThermique
           = new PRODUCTION_THERMIQUE_OPTIMALE*[NombreDePasDeTemps];
 
         for (uint j = 0; j < nbPaliers; ++j)
         {
-            problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout[j]
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
               = new PDISP_ET_COUTS_HORAIRES_PAR_PALIER;
 
             problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
+              .PuissanceDisponibleEtCout[j]
               ->CoutHoraireDeProductionDuPalierThermique
               = new double[NombreDePasDeTemps];
             problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
+              .PuissanceDisponibleEtCout[j]
               ->CoutHoraireDeProductionDuPalierThermiqueRef
               = new double[NombreDePasDeTemps];
             problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
+              .PuissanceDisponibleEtCout[j]
               ->PuissanceDisponibleDuPalierThermique
               = new double[NombreDePasDeTemps];
             problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
+              .PuissanceDisponibleEtCout[j]
               ->PuissanceDisponibleDuPalierThermiqueRef
               = new double[NombreDePasDeTemps];
             problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
+              .PuissanceDisponibleEtCout[j]
               ->PuissanceDisponibleDuPalierThermiqueRef_SV
               = new double[NombreDePasDeTemps];
             problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
+              .PuissanceDisponibleEtCout[j]
               ->PuissanceMinDuPalierThermique
               = new double[NombreDePasDeTemps];
             problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
+              .PuissanceDisponibleEtCout[j]
               ->PuissanceMinDuPalierThermique_SV
               = new double[NombreDePasDeTemps];
             problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
+              .PuissanceDisponibleEtCout[j]
               ->NombreMaxDeGroupesEnMarcheDuPalierThermique
               = new int[NombreDePasDeTemps];
             problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
+              .PuissanceDisponibleEtCout[j]
               ->NombreMinDeGroupesEnMarcheDuPalierThermique
               = new int[NombreDePasDeTemps];
 
             problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
+              .PuissanceDisponibleEtCout[j]
               ->CoutHoraireDuPalierThermiqueUp
               = new double[NombreDePasDeTemps];
             problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
+              .PuissanceDisponibleEtCout[j]
               ->CoutHoraireDuPalierThermiqueDown
               = new double[NombreDePasDeTemps];
         }
@@ -617,42 +616,41 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         for (int j = 0; j < (int)nbPaliers; j++)
         {
             MemFree(problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
+                      .PuissanceDisponibleEtCout[j]
                       ->CoutHoraireDeProductionDuPalierThermique);
             MemFree(problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
+                      .PuissanceDisponibleEtCout[j]
                       ->CoutHoraireDeProductionDuPalierThermiqueRef);
             MemFree(problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
+                      .PuissanceDisponibleEtCout[j]
                       ->PuissanceDisponibleDuPalierThermique);
             MemFree(problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
+                      .PuissanceDisponibleEtCout[j]
                       ->PuissanceDisponibleDuPalierThermiqueRef);
             MemFree(problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
+                      .PuissanceDisponibleEtCout[j]
                       ->PuissanceDisponibleDuPalierThermiqueRef_SV);
             MemFree(problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
+                      .PuissanceDisponibleEtCout[j]
                       ->PuissanceMinDuPalierThermique);
             MemFree(problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
+                      .PuissanceDisponibleEtCout[j]
                       ->PuissanceMinDuPalierThermique_SV);
             MemFree(problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
+                      .PuissanceDisponibleEtCout[j]
                       ->NombreMaxDeGroupesEnMarcheDuPalierThermique);
             MemFree(problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
+                      .PuissanceDisponibleEtCout[j]
                       ->NombreMinDeGroupesEnMarcheDuPalierThermique);
             MemFree(problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
+                      .PuissanceDisponibleEtCout[j]
                       ->CoutHoraireDuPalierThermiqueUp);
             MemFree(problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
+                      .PuissanceDisponibleEtCout[j]
                       ->CoutHoraireDuPalierThermiqueDown);
-            delete problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout[j];
+            delete problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j];
         }
-        delete problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout;
-        delete problem.PaliersThermiquesDuPays[k];
+        delete problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout;
 
         delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive;
         delete problem.ResultatsHoraires[k].ValeursHorairesDENS;

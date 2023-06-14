@@ -122,19 +122,19 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
         for (int pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
         {
             assert((unsigned int)pays < study.areas.size());
-            const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];
             int var;
 
-            for (int Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+            for (int Index = 0; Index < PaliersThermiquesDuPays.NombreDePaliersThermiques; Index++)
             {
                 int palier
-                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
+                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
                 var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     ProblemeAResoudre->CoutLineaire[var]
-                      = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Index]
+                      = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[Index]
                           ->CoutHoraireDeProductionDuPalierThermique[pdtHebdo];
                 }
             }

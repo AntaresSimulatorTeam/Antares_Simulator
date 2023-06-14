@@ -43,11 +43,11 @@ void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO* problemeHebdo)
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
         PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout
-          = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
-        for (int palier = 0; palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; palier++)
+          = PaliersThermiquesDuPays.PuissanceDisponibleEtCout;
+        for (int palier = 0; palier < PaliersThermiquesDuPays.NombreDePaliersThermiques; palier++)
         {
             const double* PuissanceMinDuPalierThermique
               = PuissanceDisponibleEtCout[palier]->PuissanceMinDuPalierThermique;

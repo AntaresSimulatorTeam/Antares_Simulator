@@ -167,13 +167,13 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];
-            for (int palier = 0; palier < PaliersThermiquesDuPays->NombreDePaliersThermiques;
+            for (int palier = 0; palier < PaliersThermiquesDuPays.NombreDePaliersThermiques;
                  palier++)
             {
                 PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout
-                  = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[palier];
+                  = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[palier];
                 PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique[pdt]
                   = PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique_SV[pdt];
             }
@@ -184,13 +184,13 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];
-            for (int palier = 0; palier < PaliersThermiquesDuPays->NombreDePaliersThermiques;
+            for (int palier = 0; palier < PaliersThermiquesDuPays.NombreDePaliersThermiques;
                  palier++)
             {
                 PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout
-                  = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[palier];
+                  = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[palier];
                 PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[pdt]
                   = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef[pdt];
 

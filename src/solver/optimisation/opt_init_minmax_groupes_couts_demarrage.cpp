@@ -40,12 +40,12 @@ void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* prob
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
         PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout
-          = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
+          = PaliersThermiquesDuPays.PuissanceDisponibleEtCout;
 
-        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             const double* PuissanceDisponibleDuPalierThermiqueRef_SV
               = PuissanceDisponibleEtCout[index]->PuissanceDisponibleDuPalierThermiqueRef_SV;
@@ -57,7 +57,7 @@ void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* prob
               = PuissanceDisponibleEtCout[index]->NombreMinDeGroupesEnMarcheDuPalierThermique;
 
             double TailleUnitaireDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique[index];
+              = PaliersThermiquesDuPays.TailleUnitaireDUnGroupeDuPalierThermique[index];
 
             for (uint pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
             {

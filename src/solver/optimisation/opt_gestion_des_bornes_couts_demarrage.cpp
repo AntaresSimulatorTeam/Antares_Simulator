@@ -66,15 +66,15 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-            for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
+            for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
             {
                 const PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout
-                  = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[index];
+                  = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index];
                 const int palier
-                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
                 const int* NombreMaxDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout->NombreMaxDeGroupesEnMarcheDuPalierThermique;
                 const int* NombreMinDeGroupesEnMarcheDuPalierThermique

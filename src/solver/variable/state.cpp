@@ -115,10 +115,10 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
         {
             thermalClusterPMinOfAGroup
               = problemeHebdo->PaliersThermiquesDuPays[area->index]
-                  ->pminDUnGroupeDuPalierThermique[thermalCluster->index]; // one by cluster
+                  .pminDUnGroupeDuPalierThermique[thermalCluster->index]; // one by cluster
             thermal[area->index].PMinOfClusters[clusterAreaWideIndex]
               = problemeHebdo->PaliersThermiquesDuPays[area->index]
-                  ->PuissanceDisponibleEtCout[thermalCluster->index]
+                  .PuissanceDisponibleEtCout[thermalCluster->index]
                   ->PuissanceMinDuPalierThermique[hourInTheWeek]; // one per hour for one
             // cluster
         }

@@ -76,12 +76,12 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
         const RESULTATS_HORAIRES& ResultatsHoraires = problemeHebdo->ResultatsHoraires[pays];
         PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique = ResultatsHoraires.ProductionThermique;
 
-        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
         PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout
-          = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
+          = PaliersThermiquesDuPays.PuissanceDisponibleEtCout;
 
-        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             if (problemeHebdo->Expansion)
             {
@@ -125,9 +125,9 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
                 double* PuissanceDisponibleDuPalierThermique
                   = PuissanceDisponibleEtCout[index]->PuissanceDisponibleDuPalierThermique;
                 double pminDUnGroupeDuPalierThermique
-                  = PaliersThermiquesDuPays->pminDUnGroupeDuPalierThermique[index];
+                  = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[index];
                 double PmaxDUnGroupeDuPalierThermique
-                  = PaliersThermiquesDuPays->PmaxDUnGroupeDuPalierThermique[index];
+                  = PaliersThermiquesDuPays.PmaxDUnGroupeDuPalierThermique[index];
 
                 for (int pdtHebdo = 0; pdtHebdo < NombreDePasDeTempsProblemeHebdo; pdtHebdo++)
                 {
@@ -214,16 +214,16 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
 {
     int NombreDePasDeTemps = problemeHebdo->NombreDePasDeTemps;
 
-    const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+    const PALIERS_THERMIQUES& PaliersThermiquesDuPays
       = problemeHebdo->PaliersThermiquesDuPays[Pays];
 
     const int* NombreMaxDeGroupesEnMarcheDuPalierThermique
-      = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Index]
+      = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[Index]
           ->NombreMaxDeGroupesEnMarcheDuPalierThermique;
     const int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
-      = PaliersThermiquesDuPays->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[Index];
+      = PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[Index];
     const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-      = PaliersThermiquesDuPays->DureeMinimaleDArretDUnGroupeDuPalierThermique[Index];
+      = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[Index];
 
     PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique
       = problemeHebdo->ResultatsHoraires[Pays].ProductionThermique;

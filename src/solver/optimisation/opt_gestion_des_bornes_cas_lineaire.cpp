@@ -77,12 +77,12 @@ void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* problemeHebdo)
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO* problemeHebdo, int Pays, uint pdtHebdo)
 {
     double sommeDesPminThermiques = 0.0;
-    const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+    const PALIERS_THERMIQUES& PaliersThermiquesDuPays
       = problemeHebdo->PaliersThermiquesDuPays[Pays];
     PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout
-      = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
+      = PaliersThermiquesDuPays.PuissanceDisponibleEtCout;
 
-    for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
+    for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
     {
         sommeDesPminThermiques
           += PuissanceDisponibleEtCout[index]->PuissanceMinDuPalierThermique[pdtHebdo];
@@ -319,18 +319,18 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];
-            int maxThermalPlant = PaliersThermiquesDuPays->NombreDePaliersThermiques;
+            int maxThermalPlant = PaliersThermiquesDuPays.NombreDePaliersThermiques;
 
             for (int index = 0; index < maxThermalPlant; index++)
             {
                 const int palier
-                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
                 int var
                   = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
                 const PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout
-                  = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[index];
+                  = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index];
 
                 Xmin[var] = PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique[pdtHebdo];
 

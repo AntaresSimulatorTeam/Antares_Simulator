@@ -44,12 +44,12 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
                    int timeStepInYear,
                    std::vector<std::string>& varname)
 {
-    const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo.PaliersThermiquesDuPays[pays];
+    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo.PaliersThermiquesDuPays[pays];
 
-    for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
+    for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
     {
         const int palier
-          = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+          = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
         int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDuPalierThermique[palier];
         if (var >= 0)
         {
@@ -500,10 +500,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             for (int index = 0; index < nbClusters; index++)
             {
                 int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
-                const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+                const PALIERS_THERMIQUES& PaliersThermiquesDuPays
                   = problemeHebdo->PaliersThermiquesDuPays[pays];
                 const int palier
-                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques
+                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
                       [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
                 double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
                 int Offset
@@ -612,10 +612,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             for (int index = 0; index < nbClusters; index++)
             {
                 int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
-                const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+                const PALIERS_THERMIQUES& PaliersThermiquesDuPays
                   = problemeHebdo->PaliersThermiquesDuPays[pays];
                 const int palier
-                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques
+                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
                       [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
                 double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
                 int Offset
@@ -716,10 +716,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             for (int index = 0; index < nbClusters; index++)
             {
                 int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
-                const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+                const PALIERS_THERMIQUES& PaliersThermiquesDuPays
                   = problemeHebdo->PaliersThermiquesDuPays[pays];
                 const int palier
-                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques
+                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
                       [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
                 double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
                 int Offset

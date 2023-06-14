@@ -534,7 +534,7 @@ struct PROBLEME_HEBDO
     std::vector<double> CoutDeDefaillanceNegative;
     std::vector<double> CoutDeDefaillanceEnReserve;
 
-    std::vector<PALIERS_THERMIQUES*> PaliersThermiquesDuPays;
+    std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques = nullptr;
 
     int NumberOfShortTermStorages = 0;
