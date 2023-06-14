@@ -223,7 +223,29 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     for (uint i = 0; i < enabledBindingConstraints.size(); ++i)
     {
         auto bc = enabledBindingConstraints[i];
+        std::vector<long> linkIndex;
+        std::vector<double> linkWeight;
+        std::vector<double> clusterWeight;
+        std::vector<int> linkOffset;
+        std::vector<int> clusterOffset;
+        std::vector<long> clusterIndex;
+        std::vector<long> clustersAreaIndex;
 
+        linkWeight.resize(bc->linkCount());
+        linkOffset.resize(bc->linkCount());
+        linkIndex.resize(bc->linkCount());
+
+        clusterWeight.resize(bc->clusterCount());
+        clusterOffset.resize(bc->clusterCount());
+        clusterIndex.resize(bc->clusterCount());
+        clustersAreaIndex.resize(bc->clusterCount());
+        bc->initLinkArrays(linkWeight,
+                           clusterWeight,
+                           linkOffset,
+                           clusterOffset,
+                           linkIndex,
+                           clusterIndex,
+                           clustersAreaIndex);
         PtMat = problem.MatriceDesContraintesCouplantes[i];
         PtMat->NombreDInterconnexionsDansLaContrainteCouplante = bc->linkCount();
         PtMat->NombreDePaliersDispatchDansLaContrainteCouplante = bc->clusterCount();

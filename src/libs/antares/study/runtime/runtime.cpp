@@ -289,64 +289,6 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
 }
 
-void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsRepository& list)
-{
-    // Calculating the total number of binding constraints
-    unsigned bindingConstraintCount = 0;
-
-    list.eachEnabled([&bindingConstraintCount](const BindingConstraint& constraint) {
-        bindingConstraintCount
-          += ((constraint.operatorType() == BindingConstraint::opBoth) ? 2 : 1);
-    });
-
-    switch (bindingConstraintCount)
-    {
-    case 0:
-        logs.info() << "  No binding constraint to consider";
-        return;
-    case 1:
-        logs.info() << "Optimizing 1 binding constraint";
-        break;
-    default:
-        logs.info() << "Optimizing " << bindingConstraintCount << " binding constraints";
-    }
-
-    unsigned index = 0;
-    list.eachEnabled([&index, &bindingConstraintCount](const BindingConstraint& constraint) {
-        assert(index < bindingConstraintCount and "Not enough slots for binding constraints");
-
-        switch (constraint.operatorType())
-        {
-        case BindingConstraint::opEquality:
-        {
-            CopyBCData<BindingConstraint::columnEquality>(constraint);
-            break;
-        }
-        case BindingConstraint::opLess:
-        {
-            CopyBCData<BindingConstraint::columnInferior>(constraint);
-            break;
-        }
-        case BindingConstraint::opGreater:
-        {
-            CopyBCData<BindingConstraint::columnSuperior>(constraint);
-            break;
-        }
-        case BindingConstraint::opBoth:
-        {
-            break;
-        }
-        case BindingConstraint::opUnknown:
-        {
-            break;
-        }
-        case BindingConstraint::opMax:
-            break;
-        }
-        ++index;
-    });
-}
-
 StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  nbYears(0),
  nbHoursPerYear(0),
@@ -434,9 +376,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 
     // Area links
     StudyRuntimeInfosInitializeAreaLinks(study, *this);
-
-    // Binding constraints
-    initializeBindingConstraints(study.bindingConstraints);
 
     // Check if some clusters request TS generation
     checkThermalTSGeneration(study);
