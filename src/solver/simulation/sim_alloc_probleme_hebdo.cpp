@@ -339,9 +339,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
         problem.CoutsMarginauxDesContraintesDeReserveParZone[k]
-          = new COUTS_MARGINAUX_ZONES_DE_RESERVE;
-        problem.CoutsMarginauxDesContraintesDeReserveParZone[k]
-          ->CoutsMarginauxHorairesDeLaReserveParZone.assign(NombreDePasDeTemps, 0.);
+          .CoutsMarginauxHorairesDeLaReserveParZone.assign(NombreDePasDeTemps, 0.);
 
         problem.PaliersThermiquesDuPays[k].minUpDownTime.assign(nbPaliers, 0);
         problem.PaliersThermiquesDuPays[k].PminDuPalierThermiquePendantUneHeure
@@ -582,8 +580,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     for (int k = 0; k < (int)nbPays; ++k)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
-
-        delete problem.CoutsMarginauxDesContraintesDeReserveParZone[k];
 
         for (int j = 0; j < (int)nbPaliers; j++)
         {
