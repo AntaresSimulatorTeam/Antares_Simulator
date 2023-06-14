@@ -270,7 +270,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
             double* adresseDuResultat
               = &(problemeHebdo->VariablesDualesDesContraintesDeNTC[pdtHebdo]
-                    ->VariableDualeParInterconnexion[interco]);
+                    .VariableDualeParInterconnexion[interco]);
             AdresseOuPlacerLaValeurDesCoutsReduits[var] = adresseDuResultat;
 
             adresseDuResultat = &(ValeursDeNTC.ValeurDuFlux[interco]);

@@ -230,7 +230,7 @@ public:
     {
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = Yuni::Math::Abs(
           state.problemeHebdo->VariablesDualesDesContraintesDeNTC[state.hourInTheWeek]
-            ->VariableDualeParInterconnexion[state.link->index]);
+            .VariableDualeParInterconnexion[state.link->index]);
 
         // This value should be reset to zero if  (flow_lowerbound) < flow < (flow_upperbound) (with
         // signed values)

@@ -264,7 +264,7 @@ bool Adequacy::year(Progression::Task& progression,
             for (uint i = 0; i != nbHoursInAWeek; ++i)
             {
                 auto& varduales
-                  = *(pProblemesHebdo[numSpace]->VariablesDualesDesContraintesDeNTC[i]);
+                  = pProblemesHebdo[numSpace]->VariablesDualesDesContraintesDeNTC[i];
                 for (uint lnkindex = 0; lnkindex != runtime.interconnectionsCount(); ++lnkindex)
                     varduales.VariableDualeParInterconnexion[lnkindex] = 0.;
             }
