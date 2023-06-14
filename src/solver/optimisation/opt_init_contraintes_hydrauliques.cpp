@@ -106,8 +106,7 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
                     CntMinEParIntervalle += MinEnergieHydrauParIntervalleOptimise[index];
                     CntMaxEParIntervalle += MaxEnergieHydrauParIntervalleOptimise[index];
 
-                    CntEnergieH2OParJour[index] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                                                    ->MaxEnergieHydrauParIntervalleOptimise[index];
+                    CntEnergieH2OParJour[index] = MaxEnergieHydrauParIntervalleOptimise[index];
                 }
                 MinEnergieHydrauParIntervalleOptimise[intervalle] = CntMinEParIntervalle;
                 MaxEnergieHydrauParIntervalleOptimise[intervalle] = CntMaxEParIntervalle;

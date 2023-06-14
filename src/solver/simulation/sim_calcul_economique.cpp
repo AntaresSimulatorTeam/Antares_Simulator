@@ -170,13 +170,12 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         problem.CaracteristiquesHydrauliques[i]->TurbinageEntreBornes
           = area.hydro.reservoirManagement
-              && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
+            && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
 
         problem.CaracteristiquesHydrauliques[i]->SuiviNiveauHoraire
-          = area.hydro.reservoirManagement
-              && (problem.OptimisationAuPasHebdomadaire == true)
-              && (!area.hydro.useHeuristicTarget
-                  || problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable);
+          = area.hydro.reservoirManagement && (problem.OptimisationAuPasHebdomadaire)
+            && (!area.hydro.useHeuristicTarget
+                || problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable);
 
         problem.CaracteristiquesHydrauliques[i]->DirectLevelAccess = false;
         problem.CaracteristiquesHydrauliques[i]->AccurateWaterValue = false;
