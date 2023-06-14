@@ -224,13 +224,13 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
         for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes
+            CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
               = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
 
-            if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
+            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
             {
-                MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[pdt]
-                  = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplanteRef[pdt];
+                MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[pdt]
+                  = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplanteRef[pdt];
             }
         }
     }
@@ -242,13 +242,13 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
         for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes
+            CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
               = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-            if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante
+            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante
                 == CONTRAINTE_JOURNALIERE)
             {
-                MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[jour]
-                  = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplanteRef[jour];
+                MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[jour]
+                  = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplanteRef[jour];
             }
         }
     }
@@ -260,14 +260,14 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
         for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes
+            CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
               = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-            if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante
+            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante
                 == CONTRAINTE_HEBDOMADAIRE)
             {
-                MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[semaine]
+                MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[semaine]
                   = MatriceDesContraintesCouplantes
-                      ->SecondMembreDeLaContrainteCouplanteRef[semaine];
+                      .SecondMembreDeLaContrainteCouplanteRef[semaine];
             }
         }
     }

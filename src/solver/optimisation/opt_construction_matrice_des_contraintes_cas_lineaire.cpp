@@ -458,20 +458,20 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes
+            const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
               = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
 
-            if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
+            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
                 continue;
 
             int nbInterco
-              = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
+              = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
             int nombreDeTermes = 0;
             for (int index = 0; index < nbInterco; index++)
             {
-                int interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[index];
-                double poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[index];
-                int Offset = MatriceDesContraintesCouplantes->OffsetTemporelSurLInterco[index];
+                int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
+                double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
+                int Offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
                 int pdt1;
 
                 if (Offset >= 0)
@@ -496,18 +496,18 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             }
 
             int nbClusters
-              = MatriceDesContraintesCouplantes->NombreDePaliersDispatchDansLaContrainteCouplante;
+              = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
             for (int index = 0; index < nbClusters; index++)
             {
-                int pays = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[index];
+                int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
                 const PALIERS_THERMIQUES* PaliersThermiquesDuPays
                   = problemeHebdo->PaliersThermiquesDuPays[pays];
                 const int palier
                   = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques
-                      [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
-                double poids = MatriceDesContraintesCouplantes->PoidsDuPalierDispatch[index];
+                      [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
+                double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
                 int Offset
-                  = MatriceDesContraintesCouplantes->OffsetTemporelSurLePalierDispatch[index];
+                  = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
                 int pdt1;
                 if (Offset >= 0)
                 {
@@ -546,14 +546,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             std::string NomDeLaContrainte
               = "bc::hourly::" + std::to_string(timeStepInYear + 1)
-                + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+                + "::" + MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante;
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre,
               Pi,
               Colonne,
               nombreDeTermes,
-              MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante,
+              MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante,
               NomDeLaContrainte);
         }
     }
@@ -561,15 +561,15 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)
     {
-        const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes
+        const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
           = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-        if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante != CONTRAINTE_JOURNALIERE)
+        if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_JOURNALIERE)
             continue;
 
         int nbInterco
-          = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
+          = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
         int nbClusters
-          = MatriceDesContraintesCouplantes->NombreDePaliersDispatchDansLaContrainteCouplante;
+          = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
         int pdtDebut = 0;
         while (pdtDebut < nombreDePasDeTempsPourUneOptimisation)
         {
@@ -581,9 +581,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             for (int index = 0; index < nbInterco; index++)
             {
-                int interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[index];
-                double poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[index];
-                int Offset = MatriceDesContraintesCouplantes->OffsetTemporelSurLInterco[index];
+                int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
+                double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
+                int Offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
 
                 for (int pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
                 {
@@ -611,15 +611,15 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             for (int index = 0; index < nbClusters; index++)
             {
-                int pays = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[index];
+                int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
                 const PALIERS_THERMIQUES* PaliersThermiquesDuPays
                   = problemeHebdo->PaliersThermiquesDuPays[pays];
                 const int palier
                   = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques
-                      [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
-                double poids = MatriceDesContraintesCouplantes->PoidsDuPalierDispatch[index];
+                      [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
+                double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
                 int Offset
-                  = MatriceDesContraintesCouplantes->OffsetTemporelSurLePalierDispatch[index];
+                  = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
 
                 for (int pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
                 {
@@ -652,14 +652,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             std::string NomDeLaContrainte
               = "bc::daily::" + std::to_string(jour + 1)
-                + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+                + "::" + MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante;
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre,
               Pi,
               Colonne,
               nombreDeTermes,
-              MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante,
+              MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante,
               NomDeLaContrainte);
             pdtDebut += nombreDePasDeTempsDUneJournee;
         }
@@ -673,20 +673,20 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes
+            const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
               = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-            if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante
+            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante
                 != CONTRAINTE_HEBDOMADAIRE)
                 continue;
 
             int nbInterco
-              = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
+              = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
             int nombreDeTermes = 0;
             for (int index = 0; index < nbInterco; index++)
             {
-                int interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[index];
-                double poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[index];
-                int Offset = MatriceDesContraintesCouplantes->OffsetTemporelSurLInterco[index];
+                int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
+                double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
+                int Offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
                 for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
                 {
                     int pdt1;
@@ -712,18 +712,18 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             }
 
             int nbClusters
-              = MatriceDesContraintesCouplantes->NombreDePaliersDispatchDansLaContrainteCouplante;
+              = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
             for (int index = 0; index < nbClusters; index++)
             {
-                int pays = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[index];
+                int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
                 const PALIERS_THERMIQUES* PaliersThermiquesDuPays
                   = problemeHebdo->PaliersThermiquesDuPays[pays];
                 const int palier
                   = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques
-                      [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
-                double poids = MatriceDesContraintesCouplantes->PoidsDuPalierDispatch[index];
+                      [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
+                double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
                 int Offset
-                  = MatriceDesContraintesCouplantes->OffsetTemporelSurLePalierDispatch[index];
+                  = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
                 for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
                 {
                     int pdt1;
@@ -754,14 +754,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             std::string NomDeLaContrainte
               = std::string("bc::weekly::")
-                + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+                + MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante;
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre,
               Pi,
               Colonne,
               nombreDeTermes,
-              MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante,
+              MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante,
               NomDeLaContrainte);
         }
     }

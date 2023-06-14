@@ -551,7 +551,7 @@ struct PROBLEME_HEBDO
     std::vector<std::vector<double>> BruitSurCoutHydraulique;
 
     int NombreDeContraintesCouplantes = 0;
-    std::vector<CONTRAINTES_COUPLANTES*> MatriceDesContraintesCouplantes;
+    mutable std::vector<CONTRAINTES_COUPLANTES> MatriceDesContraintesCouplantes;
     RESULTATS_CONTRAINTES_COUPLANTES* ResultatsContraintesCouplantes = nullptr;
 
     std::vector<SOLDE_MOYEN_DES_ECHANGES> SoldeMoyenHoraire; // Used for quadratic opt

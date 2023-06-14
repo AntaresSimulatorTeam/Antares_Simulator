@@ -181,9 +181,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes
+            const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
               = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-            if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
+            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
                 continue;
 
             int cnt = CorrespondanceCntNativesCntOptim
@@ -191,7 +191,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             if (cnt >= 0)
             {
                 SecondMembre[cnt]
-                  = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[pdtHebdo];
+                  = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[pdtHebdo];
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
                   = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales
                     + pdtHebdo;
@@ -217,9 +217,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes
+            const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
               = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-            if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante
+            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante
                 == CONTRAINTE_JOURNALIERE)
             {
                 int cnt = CorrespondanceCntNativesCntOptimJournalieres
@@ -227,7 +227,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                 if (cnt >= 0)
                 {
                     SecondMembre[cnt]
-                      = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[jour];
+                      = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[jour];
                     AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
                       = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales
                         + jour;
@@ -248,10 +248,10 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes
+            const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
               = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
 
-            if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante
+            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante
                 != CONTRAINTE_HEBDOMADAIRE)
                 continue;
 
@@ -260,7 +260,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             if (cnt >= 0)
             {
                 SecondMembre[cnt]
-                  = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[semaine];
+                  = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[semaine];
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
                   = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales
                     + semaine;

@@ -75,7 +75,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                                      uint numSpace)
 {
     int NombrePaliers;
-    CONTRAINTES_COUPLANTES* PtMat;
 
     auto& parameters = study.parameters;
 
@@ -223,44 +222,44 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     {
         BindingConstraintRTI& bc = study.runtime->bindingConstraint[i];
 
-        PtMat = problem.MatriceDesContraintesCouplantes[i];
-        PtMat->NombreDInterconnexionsDansLaContrainteCouplante = bc.linkCount;
-        PtMat->NombreDePaliersDispatchDansLaContrainteCouplante = bc.clusterCount;
-        PtMat->NombreDElementsDansLaContrainteCouplante = bc.linkCount + bc.clusterCount;
-        PtMat->NomDeLaContrainteCouplante = bc.name.c_str();
+        CONTRAINTES_COUPLANTES& PtMat = problem.MatriceDesContraintesCouplantes[i];
+        PtMat.NombreDInterconnexionsDansLaContrainteCouplante = bc.linkCount;
+        PtMat.NombreDePaliersDispatchDansLaContrainteCouplante = bc.clusterCount;
+        PtMat.NombreDElementsDansLaContrainteCouplante = bc.linkCount + bc.clusterCount;
+        PtMat.NomDeLaContrainteCouplante = bc.name.c_str();
         switch (bc.type)
         {
         case BindingConstraint::typeHourly:
-            PtMat->TypeDeContrainteCouplante = CONTRAINTE_HORAIRE;
+            PtMat.TypeDeContrainteCouplante = CONTRAINTE_HORAIRE;
             break;
         case BindingConstraint::typeDaily:
-            PtMat->TypeDeContrainteCouplante = CONTRAINTE_JOURNALIERE;
+            PtMat.TypeDeContrainteCouplante = CONTRAINTE_JOURNALIERE;
             break;
         case BindingConstraint::typeWeekly:
-            PtMat->TypeDeContrainteCouplante = CONTRAINTE_HEBDOMADAIRE;
+            PtMat.TypeDeContrainteCouplante = CONTRAINTE_HEBDOMADAIRE;
             break;
         case BindingConstraint::typeUnknown:
         case BindingConstraint::typeMax:
             assert(false && "Invalid constraint");
             break;
         }
-        PtMat->SensDeLaContrainteCouplante = bc.operatorType;
+        PtMat.SensDeLaContrainteCouplante = bc.operatorType;
 
         for (uint j = 0; j < bc.linkCount; ++j)
         {
-            PtMat->NumeroDeLInterconnexion[j] = bc.linkIndex[j];
-            PtMat->PoidsDeLInterconnexion[j] = bc.linkWeight[j];
+            PtMat.NumeroDeLInterconnexion[j] = bc.linkIndex[j];
+            PtMat.PoidsDeLInterconnexion[j] = bc.linkWeight[j];
 
-            PtMat->OffsetTemporelSurLInterco[j] = bc.linkOffset[j];
+            PtMat.OffsetTemporelSurLInterco[j] = bc.linkOffset[j];
         }
 
         for (uint j = 0; j < bc.clusterCount; ++j)
         {
-            PtMat->NumeroDuPalierDispatch[j] = bc.clusterIndex[j];
-            PtMat->PaysDuPalierDispatch[j] = bc.clustersAreaIndex[j];
-            PtMat->PoidsDuPalierDispatch[j] = bc.clusterWeight[j];
+            PtMat.NumeroDuPalierDispatch[j] = bc.clusterIndex[j];
+            PtMat.PaysDuPalierDispatch[j] = bc.clustersAreaIndex[j];
+            PtMat.PoidsDuPalierDispatch[j] = bc.clusterWeight[j];
 
-            PtMat->OffsetTemporelSurLePalierDispatch[j] = bc.clusterOffset[j];
+            PtMat.OffsetTemporelSurLePalierDispatch[j] = bc.clusterOffset[j];
         }
     }
 
@@ -395,9 +394,9 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 assert(weekFirstDay + 6 < bc.bounds.height && "Invalid constraint data height");
                 auto& column = bc.bounds[0];
                 std::vector<double>& sndMember = problem.MatriceDesContraintesCouplantes[k]
-                    ->SecondMembreDeLaContrainteCouplante;
+                    .SecondMembreDeLaContrainteCouplante;
                 std::vector<double>& sndMemberRef = problem.MatriceDesContraintesCouplantes[k]
-                    ->SecondMembreDeLaContrainteCouplanteRef;
+                    .SecondMembreDeLaContrainteCouplanteRef;
 
                 for (uint d = 0; d != 7; ++d)
                 {
@@ -415,10 +414,10 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 for (uint d = 0; d != 7; ++d)
                     sum += column[weekFirstDay + d];
 
-                problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante[0]
+                problem.MatriceDesContraintesCouplantes[k].SecondMembreDeLaContrainteCouplante[0]
                   = sum;
                 problem.MatriceDesContraintesCouplantes[k]
-                  ->SecondMembreDeLaContrainteCouplanteRef[0]
+                  .SecondMembreDeLaContrainteCouplanteRef[0]
                   = sum;
                 break;
             }
@@ -581,12 +580,12 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 {
                     auto& column = bc.bounds[0];
                     problem.MatriceDesContraintesCouplantes[k]
-                      ->SecondMembreDeLaContrainteCouplante[j]
+                      .SecondMembreDeLaContrainteCouplante[j]
                       = column[PasDeTempsDebut + j];
                     problem.MatriceDesContraintesCouplantes[k]
-                      ->SecondMembreDeLaContrainteCouplanteRef[j]
+                      .SecondMembreDeLaContrainteCouplanteRef[j]
                       = problem.MatriceDesContraintesCouplantes[k]
-                          ->SecondMembreDeLaContrainteCouplante[j];
+                          .SecondMembreDeLaContrainteCouplante[j];
                 }
             }
         }

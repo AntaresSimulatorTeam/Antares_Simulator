@@ -94,7 +94,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)
     {
-        if (problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante]->TypeDeContrainteCouplante
+        if (problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante].TypeDeContrainteCouplante
             == CONTRAINTE_HORAIRE)
         {
             ProblemeAResoudre->NombreDeContraintes++;
@@ -114,7 +114,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)
     {
-        if (problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante]->TypeDeContrainteCouplante
+        if (problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante].TypeDeContrainteCouplante
             == CONTRAINTE_JOURNALIERE)
         {
             ProblemeAResoudre->NombreDeContraintes += nombreDeJoursDansUnIntervalleOptimise;
@@ -127,7 +127,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
              cntCouplante++)
         {
             if (problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante]
-                  ->TypeDeContrainteCouplante
+                  .TypeDeContrainteCouplante
                 == CONTRAINTE_HEBDOMADAIRE)
             {
                 ProblemeAResoudre->NombreDeContraintes++;
