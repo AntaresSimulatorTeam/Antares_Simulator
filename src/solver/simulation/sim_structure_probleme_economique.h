@@ -477,7 +477,7 @@ struct VARIABLES_DUALES_INTERCONNEXIONS
 
 struct COUTS_MARGINAUX_ZONES_DE_RESERVE
 {
-    double* CoutsMarginauxHorairesDeLaReserveParZone = nullptr;
+    std::vector<double> CoutsMarginauxHorairesDeLaReserveParZone;
 };
 
 
