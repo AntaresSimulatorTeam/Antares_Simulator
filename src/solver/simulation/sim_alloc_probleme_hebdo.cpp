@@ -312,9 +312,10 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
     {
         problem.MatriceDesContraintesCouplantes[k] = new CONTRAINTES_COUPLANTES;
 
-        assert(k < study.runtime->bindingConstraints.size());
-        assert(study.runtime->bindingConstraints[k].linkCount < 50000000);
-        assert(study.runtime->bindingConstraints[k].clusterCount < 50000000);
+        auto enabledConstraints = study.bindingConstraints.enabled();
+        assert(k < enabledConstraints.size());
+        assert(enabledConstraints[k]->linkCount() < 50000000);
+        assert(enabledConstraints[k]->clusterCount() < 50000000);
 
         problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante
           = new double[NombreDePasDeTemps];
