@@ -164,6 +164,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     Study::Ptr study = Study::Current::Get();
     const bool exportStructure = problemeHebdo->ExportStructure;
+    const auto nameProblems = problemeHebdo->NamedProblems;
     const bool firstWeekOfSimulation = problemeHebdo->firstWeekOfSimulation;
 
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;

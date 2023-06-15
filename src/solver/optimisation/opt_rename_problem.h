@@ -70,6 +70,48 @@ public:
     void AreaBalance(int var);
 };
 
+// class IConstraintNamer : public CurrentAssetsStorage
+// {
+// private:
+//     void nameWithTimeGranularity(const std::string& name,
+//                                  Antares::Data::Enum::ExportStructTimeStepDict type);
+
+// public:
+//     IConstraintNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : CurrentAssetsStorage(problem)
+//     {
+//     }
+//     void FlowDissociation(const std::string& origin, const std::string& destination);
+//     void AreaBalance();
+//     void FictiveLoads();
+//     void HydroPower();
+//     void HydroPowerSmoothingUsingVariationSum();
+//     void HydroPowerSmoothingUsingVariationMaxDown();
+//     void HydroPowerSmoothingUsingVariationMaxUp();
+//     void MinHydroPower();
+//     void MaxHydroPower();
+//     void MaxPumping();
+//     void AreaHydroLevel();
+//     void FinalStockEquivalent();
+//     void FinalStockExpression();
+//     void MinUpTime();
+//     void MinDownTime();
+//     void PMaxDispatchableGeneration();
+//     void PMinDispatchableGeneration();
+//     void ConsistenceNODU();
+//     void ShortTermStorageLevel();
+//     void BindingConstraintHour(const std::string& name)
+//     {
+//         nameWithTimeGranularity(name, Antares::Data::Enum::ExportStructTimeStepDict::hour);
+//     }
+//     void BindingConstraintDay(const std::string& name)
+//     {
+//         nameWithTimeGranularity(name, Antares::Data::Enum::ExportStructTimeStepDict::day);
+//     }
+//     void BindingConstraintWeek(const std::string& name)
+//     {
+//         nameWithTimeGranularity(name, Antares::Data::Enum::ExportStructTimeStepDict::week);
+//     }
+// };
 class ConstraintNamer : public CurrentAssetsStorage
 {
 private:

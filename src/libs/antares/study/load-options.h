@@ -69,6 +69,8 @@ public:
     SimplexOptimization simplexOptimizationRange;
     //! Mps files export asked
     bool mpsToExport;
+    //! named problems
+    bool namedProblems;
     //! Ignore all constraints
     bool ignoreConstraints;
     //! Simulation mode

@@ -44,6 +44,7 @@ StudyLoadOptions::StudyLoadOptions() :
  noTimeseriesImportIntoInput(false),
  simplexOptimizationRange(sorUnknown),
  mpsToExport(false),
+ namedProblems(false),
  ignoreConstraints(false),
  forceMode(stdmUnknown),
  enableParallel(false),

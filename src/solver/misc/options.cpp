@@ -169,6 +169,12 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
                     "mps-export",
                     "Export in the mps format the optimization problems.");
 
+    // --named-problems
+    parser->addFlag(options.namedProblems,
+                    ' ',
+                    "named-problems",
+                    "Naming constraints and variables in problems.");
+
     parser->addParagraph("\nMisc.");
     // --progress
     parser->addFlag(

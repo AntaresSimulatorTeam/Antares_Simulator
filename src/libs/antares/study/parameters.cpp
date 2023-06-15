@@ -325,6 +325,7 @@ void Parameters::reset()
 
     include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.exportStructure = false;
+    namedProblems = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
 
@@ -1063,6 +1064,8 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     ortoolsUsed = options.ortoolsUsed;
     ortoolsSolver = options.ortoolsSolver;
 
+    namedProblems = options.namedProblems;
+
     // Attempt to fix bad values if any
     fixBadValues();
 
@@ -1469,6 +1472,12 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     if (ortoolsUsed)
     {
         logs.info() << "  :: ortools solver " << ortoolsSolver << " used for problem resolution";
+    }
+
+    // indicated that Problems will be named
+    if (namedProblems)
+    {
+        logs.info() << "  :: The problems will contain named variables and constraints";
     }
 }
 
