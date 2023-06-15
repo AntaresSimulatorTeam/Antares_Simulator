@@ -603,7 +603,6 @@ struct PROBLEME_HEBDO
     std::vector<double> tempsResolution1;
     std::vector<double> tempsResolution2;
 
-    std::vector<COUTS_MARGINAUX_ZONES_DE_RESERVE> CoutsMarginauxDesContraintesDeReserveParZone;
     /* Unused for now, will be used in future revisions */
 #if 0
     char SecondeOptimisationRelaxee;
