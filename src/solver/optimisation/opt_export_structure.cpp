@@ -61,7 +61,7 @@ const std::initializer_list<std::string>& getNames<ExportStructDict>()
       "PositiveUnsuppliedEnergy",
       "NegativeUnsuppliedEnergy",
       "AreaBalance",
-      "IntercoDirectCos",
+      "IntercoDirectCost",
       "IntercoIndirectCost",
       "CorrespondanceVarNativesVarOptim",
       "DispatchableProduction",

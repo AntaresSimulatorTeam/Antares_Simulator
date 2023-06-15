@@ -73,8 +73,8 @@ public:
 class ConstraintNamer : public CurrentAssetsStorage
 {
 private:
-    void BindingConstraint(const std::string& name,
-                           Antares::Data::Enum::ExportStructTimeStepDict type);
+    void nameWithTimeGranularity(const std::string& name,
+                                 Antares::Data::Enum::ExportStructTimeStepDict type);
 
 public:
     ConstraintNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : CurrentAssetsStorage(problem)
@@ -101,15 +101,15 @@ public:
     void ShortTermStorageLevel();
     void BindingConstraintHour(const std::string& name)
     {
-        BindingConstraint(name, Antares::Data::Enum::ExportStructTimeStepDict::hour);
+        nameWithTimeGranularity(name, Antares::Data::Enum::ExportStructTimeStepDict::hour);
     }
     void BindingConstraintDay(const std::string& name)
     {
-        BindingConstraint(name, Antares::Data::Enum::ExportStructTimeStepDict::day);
+        nameWithTimeGranularity(name, Antares::Data::Enum::ExportStructTimeStepDict::day);
     }
     void BindingConstraintWeek(const std::string& name)
     {
-        BindingConstraint(name, Antares::Data::Enum::ExportStructTimeStepDict::week);
+        nameWithTimeGranularity(name, Antares::Data::Enum::ExportStructTimeStepDict::week);
     }
 };
 

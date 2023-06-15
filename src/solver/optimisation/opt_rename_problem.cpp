@@ -284,7 +284,8 @@ void ConstraintNamer::FinalStockExpression()
                   TimeIdentifier(timeStep_, ExportStructTimeStepDict::hour));
 }
 
-void ConstraintNamer::BindingConstraint(const std::string& name, ExportStructTimeStepDict type)
+void ConstraintNamer::nameWithTimeGranularity(const std::string& name,
+                                              ExportStructTimeStepDict type)
 {
     /*TODO convert to map*/
     auto timeStepType
