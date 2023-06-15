@@ -474,12 +474,6 @@ struct VARIABLES_DUALES_INTERCONNEXIONS
     std::vector<double> VariableDualeParInterconnexion;
 };
 
-struct COUTS_MARGINAUX_ZONES_DE_RESERVE
-{
-    std::vector<double> CoutsMarginauxHorairesDeLaReserveParZone;
-};
-
-
 struct PROBLEME_HEBDO
 {
     unsigned int weekInTheYear = 0;
