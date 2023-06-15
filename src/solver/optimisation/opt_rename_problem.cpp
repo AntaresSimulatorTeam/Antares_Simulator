@@ -180,11 +180,11 @@ void VariableNamer::AreaBalance(int var)
     SetAreaVariableName(var, ExportStructDict::BilansPays);
 }
 
-void ConstraintNamer::FlowDissociation()
+void ConstraintNamer::FlowDissociation(const std::string& origin, const std::string& destination)
 {
     problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = BuildName(
       toString(ExportStructConstraintsDict::FlowDissociation),
-      LocationIdentifier(origin_ + AREA_SEP + destination_, ExportStructLocationDict::link),
+      LocationIdentifier(origin + AREA_SEP + destination, ExportStructLocationDict::link),
       TimeIdentifier(timeStep_, ExportStructTimeStepDict::hour));
 }
 

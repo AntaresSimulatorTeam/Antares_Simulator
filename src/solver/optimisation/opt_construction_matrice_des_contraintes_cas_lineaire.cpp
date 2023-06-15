@@ -347,10 +347,15 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
                 CorrespondanceCntNativesCntOptim->NumeroDeContrainteDeDissociationDeFlux[interco]
                   = ProblemeAResoudre->NombreDeContraintes;
-
+                const auto origin
+                  = problemeHebdo
+                      ->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
+                const auto destination
+                  = problemeHebdo
+                      ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                   ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-                constraintNamer.FlowDissociation();
+                constraintNamer.FlowDissociation(origin, destination);
             }
         }
 

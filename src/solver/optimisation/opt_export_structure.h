@@ -119,18 +119,9 @@ class Study;
 
 struct PROBLEME_HEBDO;
 
-void OPT_Export_add_variable(std::vector<std::string>& varname,
-                             int var,
-                             Antares::Data::Enum::ExportStructDict structDict,
-                             int ts, // TODO remove
-                             int firstVal,
-                             std::optional<int> secondVal = std::nullopt);
 void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
                        PROBLEME_HEBDO* problemeHebdo);
 void OPT_ExportAreaName(Antares::Solver::IResultWriter::Ptr writer,
                         const Antares::Data::AreaList& areas);
-void OPT_ExportVariables(const Antares::Solver::IResultWriter::Ptr writer,
-                         const std::vector<std::string>& varname,
-                         const std::string& filename);
 
 #endif

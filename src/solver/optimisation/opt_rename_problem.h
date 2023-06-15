@@ -80,7 +80,7 @@ public:
     ConstraintNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : CurrentAssetsStorage(problem)
     {
     }
-    void FlowDissociation();
+    void FlowDissociation(const std::string& origin, const std::string& destination);
     void AreaBalance();
     void FictiveLoads();
     void HydroPower();
