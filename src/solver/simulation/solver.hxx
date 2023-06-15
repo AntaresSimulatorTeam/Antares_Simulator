@@ -668,7 +668,6 @@ void ISimulation<Impl>::estimateMemoryForWeeklyPb(Antares::Data::StudyMemoryUsag
 
         requiredMemoryForWeeklyPb += sizeof(PALIERS_THERMIQUES);
         requiredMemoryForWeeklyPb += sizeof(ENERGIES_ET_PUISSANCES_HYDRAULIQUES);
-        requiredMemoryForWeeklyPb += sizeof(COUTS_MARGINAUX_ZONES_DE_RESERVE);
         requiredMemoryForWeeklyPb += sizeof(RESERVE_JMOINS1);
         requiredMemoryForWeeklyPb += sizeof(RESULTATS_HORAIRES);
         requiredMemoryForWeeklyPb += nbPaliers * sizeof(int);
