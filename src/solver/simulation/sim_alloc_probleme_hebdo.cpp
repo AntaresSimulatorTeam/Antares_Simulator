@@ -375,12 +375,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         problem.PaliersThermiquesDuPays[k] = new PALIERS_THERMIQUES;
         problem.CaracteristiquesHydrauliques[k] =  new ENERGIES_ET_PUISSANCES_HYDRAULIQUES;
 
-        problem.CoutsMarginauxDesContraintesDeReserveParZone[k]
-          = new COUTS_MARGINAUX_ZONES_DE_RESERVE;
-        problem.CoutsMarginauxDesContraintesDeReserveParZone[k]
-          ->CoutsMarginauxHorairesDeLaReserveParZone
-          = new double[NombreDePasDeTemps];
-
         problem.ReserveJMoins1[k] = new RESERVE_JMOINS1;
         problem.PaliersThermiquesDuPays[k]->minUpDownTime = new int[nbPaliers];
         problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure
@@ -776,9 +770,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         delete[] problem.CaracteristiquesHydrauliques[k]->InflowForTimeInterval;
         delete problem.CaracteristiquesHydrauliques[k];
 
-        delete[] problem.CoutsMarginauxDesContraintesDeReserveParZone[k]
-                  ->CoutsMarginauxHorairesDeLaReserveParZone;
-        delete problem.CoutsMarginauxDesContraintesDeReserveParZone[k];
         delete[] problem.ReserveJMoins1[k]->ReserveHoraireJMoins1;
         delete[] problem.ReserveJMoins1[k]->ReserveHoraireJMoins1Ref;
         delete problem.ReserveJMoins1[k];
@@ -871,7 +862,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     if (problem.previousYearFinalLevels)
         delete[] problem.previousYearFinalLevels;
 
-    delete[] problem.CoutsMarginauxDesContraintesDeReserveParZone;
     delete[] problem.ReserveJMoins1;
 
     delete[] problem.CoutDeDefaillancePositive;
