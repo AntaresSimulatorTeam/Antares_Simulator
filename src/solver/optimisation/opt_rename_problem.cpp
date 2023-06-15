@@ -2,7 +2,7 @@
 #include <sstream>
 
 using namespace Antares::Data::Enum;
-void VariableNamer::SetLinkVariableName(int var, ExportStructDict structDict)
+void IVariableNamer::SetLinkVariableName(int var, ExportStructDict structDict)
 {
     if (problem_->NomDesVariables[var].empty())
     {
@@ -14,7 +14,7 @@ void VariableNamer::SetLinkVariableName(int var, ExportStructDict structDict)
     }
 }
 
-void VariableNamer::SetAreaVariableName(int var, ExportStructDict structDict)
+void IVariableNamer::SetAreaVariableName(int var, ExportStructDict structDict)
 {
     problem_->NomDesVariables[var]
       = BuildName(toString(structDict),
@@ -22,7 +22,7 @@ void VariableNamer::SetAreaVariableName(int var, ExportStructDict structDict)
                   TimeIdentifier(timeStep_, ExportStructTimeStepDict::hour));
 }
 
-void VariableNamer::SetAreaVariableName(int var, ExportStructDict structDict, int layerIndex)
+void IVariableNamer::SetAreaVariableName(int var, ExportStructDict structDict, int layerIndex)
 {
     problem_->NomDesVariables[var]
       = BuildName(toString(structDict),
@@ -31,9 +31,9 @@ void VariableNamer::SetAreaVariableName(int var, ExportStructDict structDict, in
                   TimeIdentifier(timeStep_, ExportStructTimeStepDict::hour));
 }
 
-void VariableNamer::SetThermalClusterVariableName(int var,
-                                                  ExportStructDict structDict,
-                                                  const std::string& clusterName)
+void IVariableNamer::SetThermalClusterVariableName(int var,
+                                                   ExportStructDict structDict,
+                                                   const std::string& clusterName)
 {
     const auto location = LocationIdentifier(area_, ExportStructLocationDict::area) + SEPARATOR
                           + toString(ExportStructDict::PalierThermique) + "<" + clusterName + ">";
@@ -96,9 +96,9 @@ void VariableNamer::IntercoIndirectCost(int var,
     SetLinkVariableName(var, ExportStructDict::CoutExtremiteVersOrigineDeLInterconnexion);
 }
 
-void VariableNamer::SetShortTermStorageVariableName(int var,
-                                                    ExportStructDict structDict,
-                                                    const std::string& shortTermStorageName)
+void IVariableNamer::SetShortTermStorageVariableName(int var,
+                                                     ExportStructDict structDict,
+                                                     const std::string& shortTermStorageName)
 {
     const auto location = LocationIdentifier(area_, ExportStructLocationDict::area) + SEPARATOR
                           + toString(ExportStructDict::ShortTermStorage) + "<"
@@ -363,5 +363,16 @@ SPConstraintsNamer ConstraintsNamerFactory(PROBLEME_ANTARES_A_RESOUDRE* problem,
     else
     {
         return std::make_shared<EmptyConstraintNamer>(problem);
+    }
+}
+SPVariableNamer VariablesNamerFactory(PROBLEME_ANTARES_A_RESOUDRE* problem, bool namedProblem)
+{
+    if (namedProblem)
+    {
+        return std::make_shared<VariableNamer>(problem);
+    }
+    else
+    {
+        return std::make_shared<EmptyVariableNamer>(problem);
     }
 }

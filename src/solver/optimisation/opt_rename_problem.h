@@ -26,9 +26,9 @@ struct CurrentAssetsStorage
     }
 };
 
-class VariableNamer : public CurrentAssetsStorage
+class IVariableNamer : public CurrentAssetsStorage
 {
-private:
+protected:
     void SetThermalClusterVariableName(int var,
                                        Antares::Data::Enum::ExportStructDict structDict,
                                        const std::string& clusterName);
@@ -42,33 +42,169 @@ private:
                              int layerIndex);
 
 public:
-    VariableNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : CurrentAssetsStorage(problem)
+    IVariableNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : CurrentAssetsStorage(problem)
     {
     }
 
-    void DispatchableProduction(int var, const std::string& clusterName);
-    void NODU(int var, const std::string& clusterName);
-    void NumberStoppingDispatchableUnits(int var, const std::string& clusterName);
-    void NumberStartingDispatchableUnits(int var, const std::string& clusterName);
-    void NumberBreakingDownDispatchableUnits(int var, const std::string& clusterName);
-    void NTCDirect(int var, const std::string& origin, const std::string& destination);
-    void IntercoDirectCost(int var, const std::string& origin, const std::string& destination);
-    void IntercoIndirectCost(int var, const std::string& origin, const std::string& destination);
-    void ShortTermStorageInjection(int var, const std::string& shortTermStorageName);
-    void ShortTermStorageWithdrawal(int var, const std::string& shortTermStorageName);
-    void ShortTermStorageLevel(int var, const std::string& shortTermStorageName);
-    void HydProd(int var);
-    void HydProdDown(int var);
-    void HydProdUp(int var);
-    void Pumping(int var);
-    void HydroLevel(int var);
-    void Overflow(int var);
-    void FinalStorage(int var);
-    void LayerStorage(int var, int layerIndex);
-    void PositiveUnsuppliedEnergy(int var);
-    void NegativeUnsuppliedEnergy(int var);
-    void AreaBalance(int var);
+    virtual void DispatchableProduction(int var, const std::string& clusterName) = 0;
+    virtual void NODU(int var, const std::string& clusterName) = 0;
+    virtual void NumberStoppingDispatchableUnits(int var, const std::string& clusterName) = 0;
+    virtual void NumberStartingDispatchableUnits(int var, const std::string& clusterName) = 0;
+    virtual void NumberBreakingDownDispatchableUnits(int var, const std::string& clusterName) = 0;
+    virtual void NTCDirect(int var, const std::string& origin, const std::string& destination) = 0;
+    virtual void IntercoDirectCost(int var,
+                                   const std::string& origin,
+                                   const std::string& destination)
+      = 0;
+    virtual void IntercoIndirectCost(int var,
+                                     const std::string& origin,
+                                     const std::string& destination)
+      = 0;
+    virtual void ShortTermStorageInjection(int var, const std::string& shortTermStorageName) = 0;
+    virtual void ShortTermStorageWithdrawal(int var, const std::string& shortTermStorageName) = 0;
+    virtual void ShortTermStorageLevel(int var, const std::string& shortTermStorageName) = 0;
+    virtual void HydProd(int var) = 0;
+    virtual void HydProdDown(int var) = 0;
+    virtual void HydProdUp(int var) = 0;
+    virtual void Pumping(int var) = 0;
+    virtual void HydroLevel(int var) = 0;
+    virtual void Overflow(int var) = 0;
+    virtual void FinalStorage(int var) = 0;
+    virtual void LayerStorage(int var, int layerIndex) = 0;
+    virtual void PositiveUnsuppliedEnergy(int var) = 0;
+    virtual void NegativeUnsuppliedEnergy(int var) = 0;
+    virtual void AreaBalance(int var) = 0;
 };
+class VariableNamer : public IVariableNamer
+{
+public:
+    using IVariableNamer::IVariableNamer;
+    void DispatchableProduction(int var, const std::string& clusterName) override;
+    void NODU(int var, const std::string& clusterName) override;
+    void NumberStoppingDispatchableUnits(int var, const std::string& clusterName) override;
+    void NumberStartingDispatchableUnits(int var, const std::string& clusterName) override;
+    void NumberBreakingDownDispatchableUnits(int var, const std::string& clusterName) override;
+    void NTCDirect(int var, const std::string& origin, const std::string& destination) override;
+    void IntercoDirectCost(int var,
+                           const std::string& origin,
+                           const std::string& destination) override;
+    void IntercoIndirectCost(int var,
+                             const std::string& origin,
+                             const std::string& destination) override;
+    void ShortTermStorageInjection(int var, const std::string& shortTermStorageName) override;
+    void ShortTermStorageWithdrawal(int var, const std::string& shortTermStorageName) override;
+    void ShortTermStorageLevel(int var, const std::string& shortTermStorageName) override;
+    void HydProd(int var) override;
+    void HydProdDown(int var) override;
+    void HydProdUp(int var) override;
+    void Pumping(int var) override;
+    void HydroLevel(int var) override;
+    void Overflow(int var) override;
+    void FinalStorage(int var) override;
+    void LayerStorage(int var, int layerIndex) override;
+    void PositiveUnsuppliedEnergy(int var) override;
+    void NegativeUnsuppliedEnergy(int var) override;
+    void AreaBalance(int var) override;
+};
+class EmptyVariableNamer : public IVariableNamer
+{
+public:
+    using IVariableNamer::IVariableNamer;
+    void DispatchableProduction(int var, const std::string& clusterName) override
+    {
+        // keep empty
+    }
+    void NODU(int var, const std::string& clusterName) override
+    {
+        // keep empty
+    }
+    void NumberStoppingDispatchableUnits(int var, const std::string& clusterName) override
+    {
+        // keep empty
+    }
+    void NumberStartingDispatchableUnits(int var, const std::string& clusterName) override
+    {
+        // keep empty
+    }
+    void NumberBreakingDownDispatchableUnits(int var, const std::string& clusterName) override
+    {
+        // keep empty
+    }
+    void NTCDirect(int var, const std::string& origin, const std::string& destination) override
+    {
+        // keep empty
+    }
+    void IntercoDirectCost(int var,
+                           const std::string& origin,
+                           const std::string& destination) override
+    {
+        // keep empty
+    }
+    void IntercoIndirectCost(int var,
+                             const std::string& origin,
+                             const std::string& destination) override
+    {
+        // keep empty
+    }
+    void ShortTermStorageInjection(int var, const std::string& shortTermStorageName) override
+    {
+        // keep empty
+    }
+    void ShortTermStorageWithdrawal(int var, const std::string& shortTermStorageName) override
+    {
+        // keep empty
+    }
+    void ShortTermStorageLevel(int var, const std::string& shortTermStorageName) override
+    {
+        // keep empty
+    }
+    void HydProd(int var) override
+    {
+        // keep empty
+    }
+    void HydProdDown(int var) override
+    {
+        // keep empty
+    }
+    void HydProdUp(int var) override
+    {
+        // keep empty
+    }
+    void Pumping(int var) override
+    {
+        // keep empty
+    }
+    void HydroLevel(int var) override
+    {
+        // keep empty
+    }
+    void Overflow(int var) override
+    {
+        // keep empty
+    }
+    void FinalStorage(int var) override
+    {
+        // keep empty
+    }
+    void LayerStorage(int var, int layerIndex) override
+    {
+        // keep empty
+    }
+    void PositiveUnsuppliedEnergy(int var) override
+    {
+        // keep empty
+    }
+    void NegativeUnsuppliedEnergy(int var) override
+    {
+        // keep empty
+    }
+    void AreaBalance(int var) override
+    {
+        // keep empty
+    }
+};
+using SPVariableNamer = std::shared_ptr<IVariableNamer>;
+SPVariableNamer VariablesNamerFactory(PROBLEME_ANTARES_A_RESOUDRE* problem, bool namedProblem);
 
 class IConstraintNamer : public CurrentAssetsStorage
 {
