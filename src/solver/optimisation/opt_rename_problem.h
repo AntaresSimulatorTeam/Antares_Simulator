@@ -70,95 +70,174 @@ public:
     void AreaBalance(int var);
 };
 
-// class IConstraintNamer : public CurrentAssetsStorage
-// {
-// private:
-//     void nameWithTimeGranularity(const std::string& name,
-//                                  Antares::Data::Enum::ExportStructTimeStepDict type);
-
-// public:
-//     IConstraintNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : CurrentAssetsStorage(problem)
-//     {
-//     }
-//     void FlowDissociation(const std::string& origin, const std::string& destination);
-//     void AreaBalance();
-//     void FictiveLoads();
-//     void HydroPower();
-//     void HydroPowerSmoothingUsingVariationSum();
-//     void HydroPowerSmoothingUsingVariationMaxDown();
-//     void HydroPowerSmoothingUsingVariationMaxUp();
-//     void MinHydroPower();
-//     void MaxHydroPower();
-//     void MaxPumping();
-//     void AreaHydroLevel();
-//     void FinalStockEquivalent();
-//     void FinalStockExpression();
-//     void MinUpTime();
-//     void MinDownTime();
-//     void PMaxDispatchableGeneration();
-//     void PMinDispatchableGeneration();
-//     void ConsistenceNODU();
-//     void ShortTermStorageLevel();
-//     void BindingConstraintHour(const std::string& name)
-//     {
-//         nameWithTimeGranularity(name, Antares::Data::Enum::ExportStructTimeStepDict::hour);
-//     }
-//     void BindingConstraintDay(const std::string& name)
-//     {
-//         nameWithTimeGranularity(name, Antares::Data::Enum::ExportStructTimeStepDict::day);
-//     }
-//     void BindingConstraintWeek(const std::string& name)
-//     {
-//         nameWithTimeGranularity(name, Antares::Data::Enum::ExportStructTimeStepDict::week);
-//     }
-// };
-class ConstraintNamer : public CurrentAssetsStorage
+class IConstraintNamer : public CurrentAssetsStorage
 {
-private:
+protected:
     void nameWithTimeGranularity(const std::string& name,
                                  Antares::Data::Enum::ExportStructTimeStepDict type);
 
 public:
-    ConstraintNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : CurrentAssetsStorage(problem)
+    IConstraintNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : CurrentAssetsStorage(problem)
     {
     }
-    void FlowDissociation(const std::string& origin, const std::string& destination);
-    void AreaBalance();
-    void FictiveLoads();
-    void HydroPower();
-    void HydroPowerSmoothingUsingVariationSum();
-    void HydroPowerSmoothingUsingVariationMaxDown();
-    void HydroPowerSmoothingUsingVariationMaxUp();
-    void MinHydroPower();
-    void MaxHydroPower();
-    void MaxPumping();
-    void AreaHydroLevel();
-    void FinalStockEquivalent();
-    void FinalStockExpression();
-    void MinUpTime();
-    void MinDownTime();
-    void PMaxDispatchableGeneration();
-    void PMinDispatchableGeneration();
-    void ConsistenceNODU();
-    void ShortTermStorageLevel();
-    void BindingConstraintHour(const std::string& name)
+    virtual void FlowDissociation(const std::string& origin, const std::string& destination) = 0;
+    virtual void AreaBalance() = 0;
+    virtual void FictiveLoads() = 0;
+    virtual void HydroPower() = 0;
+    virtual void HydroPowerSmoothingUsingVariationSum() = 0;
+    virtual void HydroPowerSmoothingUsingVariationMaxDown() = 0;
+    virtual void HydroPowerSmoothingUsingVariationMaxUp() = 0;
+    virtual void MinHydroPower() = 0;
+    virtual void MaxHydroPower() = 0;
+    virtual void MaxPumping() = 0;
+    virtual void AreaHydroLevel() = 0;
+    virtual void FinalStockEquivalent() = 0;
+    virtual void FinalStockExpression() = 0;
+    virtual void MinUpTime() = 0;
+    virtual void MinDownTime() = 0;
+    virtual void PMaxDispatchableGeneration() = 0;
+    virtual void PMinDispatchableGeneration() = 0;
+    virtual void ConsistenceNODU() = 0;
+    virtual void ShortTermStorageLevel() = 0;
+    virtual void BindingConstraintHour(const std::string& name) = 0;
+    virtual void BindingConstraintDay(const std::string& name) = 0;
+    virtual void BindingConstraintWeek(const std::string& name) = 0;
+};
+class ConstraintNamer : public IConstraintNamer
+{
+public:
+    using IConstraintNamer::IConstraintNamer;
+    void FlowDissociation(const std::string& origin, const std::string& destination) override;
+    void AreaBalance() override;
+    void FictiveLoads() override;
+    void HydroPower() override;
+    void HydroPowerSmoothingUsingVariationSum() override;
+    void HydroPowerSmoothingUsingVariationMaxDown() override;
+    void HydroPowerSmoothingUsingVariationMaxUp() override;
+    void MinHydroPower() override;
+    void MaxHydroPower() override;
+    void MaxPumping() override;
+    void AreaHydroLevel() override;
+    void FinalStockEquivalent() override;
+    void FinalStockExpression() override;
+    void MinUpTime() override;
+    void MinDownTime() override;
+    void PMaxDispatchableGeneration() override;
+    void PMinDispatchableGeneration() override;
+    void ConsistenceNODU() override;
+    void ShortTermStorageLevel() override;
+    void BindingConstraintHour(const std::string& name) override
     {
         nameWithTimeGranularity(name, Antares::Data::Enum::ExportStructTimeStepDict::hour);
     }
-    void BindingConstraintDay(const std::string& name)
+    void BindingConstraintDay(const std::string& name) override
     {
         nameWithTimeGranularity(name, Antares::Data::Enum::ExportStructTimeStepDict::day);
     }
-    void BindingConstraintWeek(const std::string& name)
+    void BindingConstraintWeek(const std::string& name) override
     {
         nameWithTimeGranularity(name, Antares::Data::Enum::ExportStructTimeStepDict::week);
     }
 };
+class EmptyConstraintNamer : public IConstraintNamer
+{
+public:
+    using IConstraintNamer::IConstraintNamer;
+    void FlowDissociation(const std::string& origin, const std::string& destination) override
+    {
+        // keep empty
+    }
+    void AreaBalance() override
+    {
+        // keep empty
+    }
+    void FictiveLoads() override
+    {
+        // keep empty
+    }
+    void HydroPower() override
+    {
+        // keep empty
+    }
+    void HydroPowerSmoothingUsingVariationSum() override
+    {
+        // keep empty
+    }
+    void HydroPowerSmoothingUsingVariationMaxDown() override
+    {
+        // keep empty
+    }
+    void HydroPowerSmoothingUsingVariationMaxUp() override
+    {
+        // keep empty
+    }
+    void MinHydroPower() override
+    {
+        // keep empty
+    }
+    void MaxHydroPower() override
+    {
+        // keep empty
+    }
+    void MaxPumping() override
+    {
+        // keep empty
+    }
+    void AreaHydroLevel() override
+    {
+        // keep empty
+    }
+    void FinalStockEquivalent() override
+    {
+        // keep empty
+    }
+    void FinalStockExpression() override
+    {
+        // keep empty
+    }
+    void MinUpTime() override
+    {
+        // keep empty
+    }
+    void MinDownTime() override
+    {
+        // keep empty
+    }
+    void PMaxDispatchableGeneration() override
+    {
+        // keep empty
+    }
+    void PMinDispatchableGeneration() override
+    {
+        // keep empty
+    }
+    void ConsistenceNODU() override
+    {
+        // keep empty
+    }
+    void ShortTermStorageLevel() override
+    {
+        // keep empty
+    }
+    void BindingConstraintHour(const std::string& name) override
+    {
+        // keep empty
+    }
+    void BindingConstraintDay(const std::string& name) override
+    {
+        // keep empty
+    }
+    void BindingConstraintWeek(const std::string& name) override
+    {
+        // keep empty
+    }
+};
+using SPConstraintsNamer = std::shared_ptr<IConstraintNamer>;
+SPConstraintsNamer ConstraintsNamerFactory(PROBLEME_ANTARES_A_RESOUDRE* problem, bool namedProblem);
 
 std::string BuildName(const std::string& name,
                       const std::string& location,
                       const std::string& timeIdentifier);
-
 inline std::string TimeIdentifier(int timeStep,
                                   Antares::Data::Enum::ExportStructTimeStepDict timeStepType)
 {

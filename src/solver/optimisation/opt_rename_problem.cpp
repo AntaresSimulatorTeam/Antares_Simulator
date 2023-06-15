@@ -285,8 +285,8 @@ void ConstraintNamer::FinalStockExpression()
                   TimeIdentifier(timeStep_, ExportStructTimeStepDict::hour));
 }
 
-void ConstraintNamer::nameWithTimeGranularity(const std::string& name,
-                                              ExportStructTimeStepDict type)
+void IConstraintNamer::nameWithTimeGranularity(const std::string& name,
+                                               ExportStructTimeStepDict type)
 {
     /*TODO convert to map*/
     auto timeStepType
@@ -352,4 +352,16 @@ std::string BuildName(const std::string& name,
     std::string result = name + SEPARATOR + location + SEPARATOR + timeIdentifier;
     std::replace(result.begin(), result.end(), ' ', '*');
     return result;
+}
+
+SPConstraintsNamer ConstraintsNamerFactory(PROBLEME_ANTARES_A_RESOUDRE* problem, bool namedProblem)
+{
+    if (namedProblem)
+    {
+        return std::make_shared<ConstraintNamer>(problem);
+    }
+    else
+    {
+        return std::make_shared<EmptyConstraintNamer>(problem);
+    }
 }
