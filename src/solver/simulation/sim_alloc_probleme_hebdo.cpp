@@ -121,9 +121,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         }
     }
 
-    problem.CoutsMarginauxDesContraintesDeReserveParZone
-      = new COUTS_MARGINAUX_ZONES_DE_RESERVE*[nbPays];
-
     problem.ReserveJMoins1 = new RESERVE_JMOINS1*[nbPays];
     problem.ResultatsHoraires.resize(nbPays);
 

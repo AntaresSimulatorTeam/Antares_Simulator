@@ -487,12 +487,6 @@ struct VARIABLES_DUALES_INTERCONNEXIONS
     double* VariableDualeParInterconnexion = nullptr;
 };
 
-struct COUTS_MARGINAUX_ZONES_DE_RESERVE
-{
-    double* CoutsMarginauxHorairesDeLaReserveParZone = nullptr;
-};
-
-
 struct PROBLEME_HEBDO
 {
     unsigned int weekInTheYear = 0;
