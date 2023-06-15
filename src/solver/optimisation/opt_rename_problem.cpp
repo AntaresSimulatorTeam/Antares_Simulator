@@ -2,31 +2,33 @@
 #include <sstream>
 
 using namespace Antares::Data::Enum;
-// const std::map BCTimeGranularity = {}
 void VariableNamer::SetLinkVariableName(int var, ExportStructDict structDict)
 {
-    const auto location = origin_ + AREA_SEP + destination_;
-    auto fullName = BuildName(toString(structDict),
-                              LocationIdentifier(location, ExportStructLocationDict::link),
-                              TimeIdentifier(timeStep_, ExportStructTimeStepDict::hour));
-    problem_->NomDesVariables[var] = fullName;
+    if (problem_->NomDesVariables[var].empty())
+    {
+        const auto location = origin_ + AREA_SEP + destination_;
+        problem_->NomDesVariables[var]
+          = BuildName(toString(structDict),
+                      LocationIdentifier(location, ExportStructLocationDict::link),
+                      TimeIdentifier(timeStep_, ExportStructTimeStepDict::hour));
+    }
 }
 
 void VariableNamer::SetAreaVariableName(int var, ExportStructDict structDict)
 {
-    auto fullName = BuildName(toString(structDict),
-                              LocationIdentifier(area_, ExportStructLocationDict::area),
-                              TimeIdentifier(timeStep_, ExportStructTimeStepDict::hour));
-    problem_->NomDesVariables[var] = fullName;
+    problem_->NomDesVariables[var]
+      = BuildName(toString(structDict),
+                  LocationIdentifier(area_, ExportStructLocationDict::area),
+                  TimeIdentifier(timeStep_, ExportStructTimeStepDict::hour));
 }
 
 void VariableNamer::SetAreaVariableName(int var, ExportStructDict structDict, int layerIndex)
 {
-    auto fullName = BuildName(toString(structDict),
-                              LocationIdentifier(area_, ExportStructLocationDict::area) + SEPARATOR
-                                + "Layer<" + std::to_string(layerIndex) + ">",
-                              TimeIdentifier(timeStep_, ExportStructTimeStepDict::hour));
-    problem_->NomDesVariables[var] = fullName;
+    problem_->NomDesVariables[var]
+      = BuildName(toString(structDict),
+                  LocationIdentifier(area_, ExportStructLocationDict::area) + SEPARATOR + "Layer<"
+                    + std::to_string(layerIndex) + ">",
+                  TimeIdentifier(timeStep_, ExportStructTimeStepDict::hour));
 }
 
 void VariableNamer::SetThermalClusterVariableName(int var,
@@ -36,9 +38,8 @@ void VariableNamer::SetThermalClusterVariableName(int var,
     const auto location = LocationIdentifier(area_, ExportStructLocationDict::area) + SEPARATOR
                           + toString(ExportStructDict::PalierThermique) + "<" + clusterName + ">";
 
-    auto fullName = BuildName(
+    problem_->NomDesVariables[var] = BuildName(
       toString(structDict), location, TimeIdentifier(timeStep_, ExportStructTimeStepDict::hour));
-    problem_->NomDesVariables[var] = fullName;
 }
 
 void VariableNamer::DispatchableProduction(int var, const std::string& clusterName)
