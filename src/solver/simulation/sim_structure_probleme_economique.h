@@ -620,7 +620,6 @@ struct PROBLEME_HEBDO
     double* tempsResolution1 = nullptr;
     double* tempsResolution2 = nullptr;
 
-    COUTS_MARGINAUX_ZONES_DE_RESERVE** CoutsMarginauxDesContraintesDeReserveParZone = nullptr;
     /* Unused for now, will be used in future revisions */
 #if 0
     char SecondeOptimisationRelaxee;
