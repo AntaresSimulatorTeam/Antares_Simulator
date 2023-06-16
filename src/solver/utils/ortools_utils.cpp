@@ -28,7 +28,7 @@ static void transferVariables(MPSolver* solver,
         }
         double max_l = bMax[idxVar];
         std::string varName;
-        if (NomDesVariables[idxVar] != NULL && NomDesVariables[idxVar][0] == '\0')
+        if (NomDesVariables[idxVar] == NULL || NomDesVariables[idxVar][0] == '\0')
         {
             varName = "x" + std::to_string(idxVar);
         }
@@ -64,7 +64,7 @@ static void transferRows(MPSolver* solver,
         }
 
         std::string constraintName;
-        if (NomDesContraintes[idxRow] != NULL && NomDesContraintes[idxRow][0] == '\0')
+        if (NomDesContraintes[idxRow] == NULL || NomDesContraintes[idxRow][0] == '\0')
         {
             constraintName = "c" + std::to_string(idxRow);
         }
