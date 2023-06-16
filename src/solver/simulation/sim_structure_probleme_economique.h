@@ -30,16 +30,15 @@
 
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
 #include "../utils/optimization_statistics.h"
-#include <memory>
 #include "../../libs/antares/study/fwd.h"
 #include "../../libs/antares/study/study.h"
-#include "sim_constants.h"
+#include <vector>
+#include <optional>
 #include <memory>
-#include <yuni/core/math.h>
 
 class AdequacyPatchRuntimeData;
 
-typedef struct
+struct CORRESPONDANCES_DES_VARIABLES
 {
     int* NumeroDeVariableDeLInterconnexion;
     int* NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;
@@ -66,9 +65,15 @@ typedef struct
     int* NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
     int* NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
 
-} CORRESPONDANCES_DES_VARIABLES;
+    struct
+    {
+        int* InjectionVariable;
+        int* WithdrawalVariable;
+        int* LevelVariable;
+    } SIM_ShortTermStorage;
+};
 
-typedef struct
+struct CORRESPONDANCES_DES_CONTRAINTES
 {
     int* NumeroDeContrainteDesBilansPays;
     int* NumeroDeContraintePourEviterLesChargesFictives;
@@ -85,13 +90,13 @@ typedef struct
 
     int* NumeroDeContrainteDesNiveauxPays;
 
-} CORRESPONDANCES_DES_CONTRAINTES;
+    int* ShortTermStorageLevelConstraint;
+};
 
-typedef struct
+struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
 {
     int* NumeroDeContrainteDesContraintesCouplantes;
-
-} CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES;
+};
 
 typedef struct
 {
@@ -99,7 +104,7 @@ typedef struct
 
 } CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES;
 
-typedef struct
+struct VALEURS_DE_NTC_ET_RESISTANCES
 {
     double* ValeurDeNTCOrigineVersExtremite;
     double* ValeurDeNTCExtremiteVersOrigine;
@@ -110,27 +115,27 @@ typedef struct
     double* ValeurDuFluxDown;
 
     double* ResistanceApparente;
-} VALEURS_DE_NTC_ET_RESISTANCES;
+};
 
-typedef struct
+struct TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE
 {
     double* TransferBoundMarketEdge;
     double* TransferLevelMarketEdge;
-} TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE;
+};
 
-typedef struct
+struct TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE
 {
     double* TransferBoundFlexUpEdge;
     double* TransferLevelFlexUpEdge;
-} TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE;
+};
 
-typedef struct
+struct TRANSFER_BOUND_AND_LEVEL_FLEX_DOWN_EDGE
 {
     double* TransferBoundFlexDownEdge;
     double* TransferLevelFlexDownEdge;
-} TRANSFER_BOUND_AND_LEVEL_FLEX_DOWN_EDGE;
+};
 
-typedef struct
+struct CONTRAINTES_COUPLANTES
 {
     char TypeDeContrainteCouplante;
 
@@ -151,65 +156,91 @@ typedef struct
     int* NumeroDuPalierDispatch;
     int* OffsetTemporelSurLePalierDispatch;
     const char* NomDeLaContrainteCouplante;
-} CONTRAINTES_COUPLANTES;
+};
 
-typedef struct
+namespace ShortTermStorage
+{
+struct PROPERTIES
+{
+    double reservoirCapacity;
+    double injectionNominalCapacity;
+    double withdrawalNominalCapacity;
+    double efficiency;
+    std::optional<double> initialLevel;
+
+    std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
+
+    int clusterGlobalIndex;
+};
+
+using AREA_INPUT = std::vector<::ShortTermStorage::PROPERTIES>; // index is local
+
+struct RESULTS
+{
+    // Index is the number of the STS in the area
+    std::vector<double> level;      // MWh
+    std::vector<double> injection;  // MWh
+    std::vector<double> withdrawal; // MWh
+};
+} // namespace ShortTermStorage
+
+struct RESULTATS_CONTRAINTES_COUPLANTES
 {
     double* variablesDuales;
-} RESULTATS_CONTRAINTES_COUPLANTES;
+};
 
-typedef struct
+struct DEMAND_MARKET_POOL
 {
     double* TotalDemandOfMarketPool;
-} DEMAND_MARKET_POOL;
+};
 
-typedef struct
+struct DEMAND_FLEX_UP_POOL
 {
     double* FosteredDemandOfFlexUpPool;
-} DEMAND_FLEX_UP_POOL;
+};
 
-typedef struct
+struct DEMAND_FLEX_DOWN_POOL
 {
     double* FosteredDemandOfFlexDownPool;
-} DEMAND_FLEX_DOWN_POOL;
+};
 
-typedef struct
+struct BOUND_FLEX_UP_NODE
 {
     double* BoundFlexUpNode;
-} BOUND_FLEX_UP_NODE;
+};
 
-typedef struct
+struct BOUND_FLEX_DOWN_NODE
 {
     double* BoundFlexDownNode;
-} BOUND_FLEX_DOWN_NODE;
+};
 
-typedef struct
+struct LEVEL_FLEX_UP_NODE
 {
     double* LevelFlexUpNode;
-} LEVEL_FLEX_UP_NODE;
+};
 
-typedef struct
+struct LEVEL_FLEX_DOWN_NODE
 {
     double* LevelFlexDownNode;
-} LEVEL_FLEX_DOWN_NODE;
+};
 
-typedef struct
+struct CONSOMMATIONS_ABATTUES
 {
     double* ConsommationAbattueDuPays;
-} CONSOMMATIONS_ABATTUES;
+};
 
-typedef struct
+struct ALL_MUST_RUN_GENERATION
 {
     double* AllMustRunGenerationOfArea;
-} ALL_MUST_RUN_GENERATION;
+};
 
-typedef struct
+struct SOLDE_MOYEN_DES_ECHANGES
 {
     double* SoldeMoyenDuPays;
 
-} SOLDE_MOYEN_DES_ECHANGES;
+};
 
-typedef struct
+struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 {
     double* PuissanceDisponibleDuPalierThermique;
 
@@ -229,9 +260,9 @@ typedef struct
     int* NombreMaxDeGroupesEnMarcheDuPalierThermique;
     int* NombreMinDeGroupesEnMarcheDuPalierThermique;
 
-} PDISP_ET_COUTS_HORAIRES_PAR_PALIER;
+};
 
-typedef struct
+struct PALIERS_THERMIQUES
 {
     int NombreDePaliersThermiques;
 
@@ -246,13 +277,13 @@ typedef struct
     double* CoutDeDemarrageDUnGroupeDuPalierThermique;
     double* CoutDArretDUnGroupeDuPalierThermique;
     double* CoutFixeDeMarcheDUnGroupeDuPalierThermique;
-    double* PminDUnGroupeDuPalierThermique;
+    double* pminDUnGroupeDuPalierThermique;
     double* PmaxDUnGroupeDuPalierThermique;
     int* DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
     int* DureeMinimaleDArretDUnGroupeDuPalierThermique;
-} PALIERS_THERMIQUES;
+};
 
-typedef struct
+struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
 {
     double* MaxEnergieHydrauParIntervalleOptimise;
 
@@ -271,8 +302,8 @@ typedef struct
     double* MaxEnergiePompageParIntervalleOptimise;
     double* ContrainteDePmaxPompageHoraire;
 
-    char PresenceDePompageModulable;
-    char PresenceDHydrauliqueModulable;
+    bool PresenceDePompageModulable;
+    bool PresenceDHydrauliqueModulable;
 
     double PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations;
     double PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax;
@@ -281,28 +312,29 @@ typedef struct
     double WeeklyWaterValueStateUp;
     double WeeklyWaterValueStateDown;
 
-    char TurbinageEntreBornes;
-    char SansHeuristique;
-    char SuiviNiveauHoraire;
+    bool TurbinageEntreBornes;
+    bool SansHeuristique;
+    bool SuiviNiveauHoraire;
 
     double* NiveauHoraireSup;
     double* NiveauHoraireInf;
 
     double* ApportNaturelHoraire;
+    double* MingenHoraire; /*Minimum Hourly Hydro-Storage Generation*/
     double NiveauInitialReservoir;
     double TailleReservoir;
     double PumpingRatio;
 
     double WeeklyGeneratingModulation;
     double WeeklyPumpingModulation;
-    char DirectLevelAccess; /*  determines the type of constraints bearing on the final stok level*/
-    char AccurateWaterValue;     /*  determines the type of modelling used for water budget*/
+    bool DirectLevelAccess; /*  determines the type of constraints bearing on the final stok level*/
+    bool AccurateWaterValue;     /*  determines the type of modelling used for water budget*/
     double LevelForTimeInterval; /*  value computed by the simulator in water-value based modes*/
     double* WaterLayerValues; /*  reference costs for the last time step (caution : dimension set to
                                  100, should be made dynamic)*/
     double* InflowForTimeInterval; /*  Energy input to the reservoir, used to in the bounding
                                       constraint on final level*/
-} ENERGIES_ET_PUISSANCES_HYDRAULIQUES;
+};
 
 class computeTimeStepLevel
 {
@@ -383,13 +415,13 @@ public:
     }
 };
 
-typedef struct
+struct RESERVE_JMOINS1
 {
     double* ReserveHoraireJMoins1 = nullptr;
     double* ReserveHoraireJMoins1Ref = nullptr;
-} RESERVE_JMOINS1;
+};
 
-typedef struct
+struct PRODUCTION_THERMIQUE_OPTIMALE
 {
     double* ProductionThermiqueDuPalier;
 
@@ -403,9 +435,9 @@ typedef struct
 
     double* NombreDeGroupesQuiTombentEnPanneDuPalier;
 
-} PRODUCTION_THERMIQUE_OPTIMALE;
+};
 
-typedef struct
+struct RESULTATS_HORAIRES
 {
     double* ValeursHorairesDeDefaillancePositive;
     double* ValeursHorairesDENS;                  // adq patch domestic unsupplied energy
@@ -433,54 +465,44 @@ typedef struct
     double* debordementsHoraires;
 
     double* CoutsMarginauxHoraires;
-    PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique;
-} RESULTATS_HORAIRES;
+    PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique; // index is pdtHebdo
 
-typedef struct
+    std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
+};
+
+struct COUTS_DE_TRANSPORT
 {
-    char IntercoGereeAvecDesCouts;
-    char IntercoGereeAvecLoopFlow;
+    bool IntercoGereeAvecDesCouts;
+    bool IntercoGereeAvecLoopFlow;
     double* CoutDeTransportOrigineVersExtremite;
     double* CoutDeTransportExtremiteVersOrigine;
 
     double* CoutDeTransportOrigineVersExtremiteRef;
     double* CoutDeTransportExtremiteVersOrigineRef;
 
-} COUTS_DE_TRANSPORT;
+};
 
-typedef struct
+struct VARIABLES_DUALES_INTERCONNEXIONS
 {
     double* VariableDualeParInterconnexion = nullptr;
-} VARIABLES_DUALES_INTERCONNEXIONS;
+};
 
-typedef struct
+struct COUTS_MARGINAUX_ZONES_DE_RESERVE
 {
     double* CoutsMarginauxHorairesDeLaReserveParZone = nullptr;
-} COUTS_MARGINAUX_ZONES_DE_RESERVE;
-
-struct AdequacyPatchParameters
-{
-    bool AdequacyFirstStep;
-    bool SetNTCOutsideToInsideToZero;
-    bool SetNTCOutsideToOutsideToZero;
-    bool IncludeHurdleCostCsr;
-    bool CheckCsrCostFunctionValue;
-    Antares::Data::AdequacyPatch::AdqPatchPTO PriceTakingOrder;
-    double ThresholdRunCurtailmentSharingRule;
-    double ThresholdDisplayLocalMatchingRuleViolations;
-    double ThresholdCSRVarBoundsRelaxation;
 };
+
 
 struct PROBLEME_HEBDO
 {
-    uint weekInTheYear = 0;
-    uint year = 0;
+    unsigned int weekInTheYear = 0;
+    unsigned int year = 0;
 
     /* Business problem */
-    char OptimisationAuPasHebdomadaire = NON_ANTARES;
+    bool OptimisationAuPasHebdomadaire = false;
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
-    char WaterValueAccurate = NON_ANTARES;
-    char OptimisationAvecCoutsDeDemarrage = NON_ANTARES;
+    bool WaterValueAccurate = false;
+    bool OptimisationAvecCoutsDeDemarrage = false;
     int NombreDePays = 0;
     const char** NomsDesPays = nullptr;
     int NombreDePaliersThermiques = 0;
@@ -514,11 +536,16 @@ struct PROBLEME_HEBDO
 
     PALIERS_THERMIQUES** PaliersThermiquesDuPays = nullptr;
     ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques = nullptr;
+
+    int NumberOfShortTermStorages = 0;
+    // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;
+    std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
+
     /* Optimization problem */
     int NbTermesContraintesPourLesCoutsDeDemarrage = 0;
-    char* DefaillanceNegativeUtiliserPMinThermique = nullptr;
-    char* DefaillanceNegativeUtiliserHydro = nullptr;
-    char* DefaillanceNegativeUtiliserConsoAbattue = nullptr;
+    bool* DefaillanceNegativeUtiliserPMinThermique = nullptr;
+    bool* DefaillanceNegativeUtiliserHydro = nullptr;
+    bool* DefaillanceNegativeUtiliserConsoAbattue = nullptr;
 
     char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
 
@@ -537,7 +564,7 @@ struct PROBLEME_HEBDO
     bool ExportStructure = false;
 
     unsigned int HeureDansLAnnee = 0;
-    char LeProblemeADejaEteInstancie = 0;
+    bool LeProblemeADejaEteInstancie = false;
     bool firstWeekOfSimulation = false;
 
     CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim = nullptr;
@@ -552,7 +579,7 @@ struct PROBLEME_HEBDO
     int* IndexDebutIntercoExtremite = nullptr;
     int* IndexSuivantIntercoExtremite = nullptr;
 
-    char Expansion = NON_ANTARES;
+    bool Expansion = false;
 
     int* NumeroDeContrainteEnergieHydraulique = nullptr;
     int* NumeroDeContrainteMinEnergieHydraulique = nullptr;
@@ -567,7 +594,7 @@ struct PROBLEME_HEBDO
     int* NumeroDeVariableStockFinal = nullptr;
     int** NumeroDeVariableDeTrancheDeStock = nullptr;
 
-    char YaDeLaReserveJmoins1 = NON_ANTARES;
+    bool YaDeLaReserveJmoins1 = false;
 
     double* previousYearFinalLevels = nullptr;
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration = nullptr;
@@ -575,7 +602,6 @@ struct PROBLEME_HEBDO
     OptimizationStatistics optimizationStatistics[2];
 
     /* Adequacy Patch */
-    std::shared_ptr<AdequacyPatchParameters> adqPatchParams;
     std::shared_ptr<AdequacyPatchRuntimeData> adequacyPatchRuntimeData;
 
     /* Hydro management */
@@ -585,7 +611,7 @@ struct PROBLEME_HEBDO
     computeTimeStepLevel computeLvl_object;
 
     /* Results */
-    RESULTATS_HORAIRES** ResultatsHoraires = nullptr;
+    std::vector<RESULTATS_HORAIRES> ResultatsHoraires;
     VARIABLES_DUALES_INTERCONNEXIONS** VariablesDualesDesContraintesDeNTC = nullptr;
 
     double* coutOptimalSolution1 = nullptr;

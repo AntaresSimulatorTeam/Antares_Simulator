@@ -77,6 +77,18 @@ private:
     void prepareInflowsScaling(uint numSpace);
     //! prepare data for Final reservoir level
     void prepareFinalReservoirLevelData(uint numSpace, uint yearIndex);
+    //! Prepare minimum generation scaling for each area
+    void minGenerationScaling(uint numSpace);
+    //! check Monthly minimum generation is lower than available inflows
+    void checkMonthlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const;
+    //! check Yearly minimum generation is lower than available inflows
+    void checkYearlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const;
+    //! check Weekly minimum generation is lower than available inflows
+    void checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) const;
+    //! check Hourly minimum generation is lower than available inflows
+    void checkHourlyMinGeneration(uint tsIndex, Data::Area& area) const;
+    //! check minimum generation is lower than available inflows
+    void checkMinGeneration(uint numSpace);
     //! Prepare the net demand for each area
     template<enum Data::StudyMode ModeT>
     void prepareNetDemand(uint numSpace);
@@ -130,6 +142,8 @@ public:
         double MTG[12];
         //! inflows
         double inflows[12];
+        //! monthly minimal generation
+        std::array<double, 12> mingens;
 
         //! Net demand, for each day of the year, for each area
         double DLN[dayYearCount];
@@ -137,6 +151,18 @@ public:
         double DLE[dayYearCount];
         //! Daily optimized Generation
         double DOG[dayYearCount];
+        //! daily minimal generation
+        std::array<double, dayYearCount> dailyMinGen;
+
+        // Data for minGen<->inflows preChecks
+        //! monthly total mingen
+        std::array<double, 12> totalMonthMingen;
+        //! monthly total inflows
+        std::array<double, 12> totalMonthInflows;
+        //! yearly total mingen
+        double totalYearMingen;
+        //! yearly total inflows
+        double totalYearInflows;
 
     }; // struct PerArea
 

@@ -93,9 +93,8 @@ public:
     }
     //@}
 
-    static void initializeFromStudy(Data::Study& study)
+    static void initializeFromStudy([[maybe_unused]] Data::Study& study)
     {
-        study.parameters.variablesPrintInfo.resetInfoIterator();
     }
 
     static void initializeFromArea(Data::Study*, Data::Area*)
@@ -112,9 +111,12 @@ public:
     {
     }
 
-    void getPrintStatusFromStudy(Data::Study& study)
+    void getPrintStatusFromStudy([[maybe_unused]] Data::Study& study)
     {
-        study.parameters.variablesPrintInfo.resetInfoIterator();
+    }
+
+    void supplyMaxNumberOfColumns([[maybe_unused]] Data::Study& study)
+    {
     }
 
     static void simulationBegin()
@@ -205,16 +207,6 @@ public:
     }
 
     static void hourForEachLink(State&, uint numSpace)
-    {
-        UNUSED_VARIABLE(numSpace);
-    }
-
-    static void hourForEachThermalCluster(State&, uint numSpace)
-    {
-        UNUSED_VARIABLE(numSpace);
-    }
-
-    static void hourForEachRenewableCluster(State&, uint numSpace)
     {
         UNUSED_VARIABLE(numSpace);
     }

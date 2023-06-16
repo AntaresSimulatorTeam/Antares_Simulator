@@ -44,8 +44,7 @@ using namespace Antares::Data;
 
 static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
   double** thermalNoisesByArea,
-  uint numSpace,
-  bool EconomicModeT)
+  uint numSpace)
 {
     auto& study = *Data::Study::Current::Get();
     auto& runtime = *study.runtime;
@@ -140,34 +139,31 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
                                                      ? (long)data.timeseriesNumbers[0][year]
                                                      : 0; // zero-based
 
-                if (EconomicModeT)
+                // ptvalgen.AleaCoutDeProductionParPalier[index] =
+                //	(rnd - 0.5) * (cluster->spreadCost + 1e-4);
+                // MBO
+                // 15/04/2014 : bornage du cout thermique
+                // 01/12/2014 : prise en compte du spreadCost non nul
+
+                if (cluster->spreadCost == 0) // 5e-4 < |AleaCoutDeProductionParPalier| < 6e-4
                 {
-                    // ptvalgen.AleaCoutDeProductionParPalier[index] =
-                    //	(rnd - 0.5) * (cluster->spreadCost + 1e-4);
-                    // MBO
-                    // 15/04/2014 : bornage du coût thermique
-                    // 01/12/2014 : prise en compte du spreadCost non nul
-
-                    if (cluster->spreadCost == 0) // 5e-4 < |AleaCoutDeProductionParPalier| < 6e-4
-                    {
-                        if (rnd < 0.5)
-                            ptvalgen.AleaCoutDeProductionParPalier[index] = 1e-4 * (5 + 2 * rnd);
-                        else
-                            ptvalgen.AleaCoutDeProductionParPalier[index]
-                              = -1e-4 * (5 + 2 * (rnd - 0.5));
-                    }
+                    if (rnd < 0.5)
+                        ptvalgen.AleaCoutDeProductionParPalier[index] = 1e-4 * (5 + 2 * rnd);
                     else
-                    {
                         ptvalgen.AleaCoutDeProductionParPalier[index]
-                          = (rnd - 0.5) * (cluster->spreadCost);
+                          = -1e-4 * (5 + 2 * (rnd - 0.5));
+                }
+                else
+                {
+                    ptvalgen.AleaCoutDeProductionParPalier[index]
+                      = (rnd - 0.5) * (cluster->spreadCost);
 
-                        if (Math::Abs(ptvalgen.AleaCoutDeProductionParPalier[index]) < 5.e-4)
-                        {
-                            if (Math::Abs(ptvalgen.AleaCoutDeProductionParPalier[index]) >= 0)
-                                ptvalgen.AleaCoutDeProductionParPalier[index] += 5.e-4;
-                            else
-                                ptvalgen.AleaCoutDeProductionParPalier[index] -= 5.e-4;
-                        }
+                    if (Math::Abs(ptvalgen.AleaCoutDeProductionParPalier[index]) < 5.e-4)
+                    {
+                        if (Math::Abs(ptvalgen.AleaCoutDeProductionParPalier[index]) >= 0)
+                            ptvalgen.AleaCoutDeProductionParPalier[index] += 5.e-4;
+                        else
+                            ptvalgen.AleaCoutDeProductionParPalier[index] -= 5.e-4;
                     }
                 }
 
@@ -184,7 +180,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
         NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION& ptchro
           = NumeroChroniquesTireesParInterconnexion[numSpace][i];
         const uint directWidth = link->directCapacities.width;
-        const uint indirectWidth = link->indirectCapacities.width;
+        [[maybe_unused]] const uint indirectWidth = link->indirectCapacities.width;
         assert(directWidth == indirectWidth);
         ptchro.TransmissionCapacities
           = (directWidth != 1) ? link->timeseriesNumbers[0][year] : 0; // zero-based
@@ -194,9 +190,8 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
 void ALEA_TirageAuSortChroniques(double** thermalNoisesByArea, uint numSpace)
 {
     // Time-series numbers
-    bool ecoMode = Data::Study::Current::Get()->runtime->mode != stdmAdequacyDraft;
     // Retrieve all time-series numbers
     // Initialize in the same time the production costs of all thermal clusters.
     InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
-      thermalNoisesByArea, numSpace, ecoMode);
+      thermalNoisesByArea, numSpace);
 }

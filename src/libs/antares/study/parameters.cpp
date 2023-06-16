@@ -144,20 +144,7 @@ bool StringToStudyMode(StudyMode& mode, CString<20, false> text)
     if (!text)
         return false;
     if (text.size() == 1)
-    {
-        // Compatibility with v2.x
-        if ('0' == text[0])
-        {
-            mode = stdmAdequacy;
-            return true;
-        }
-        if ('1' == text[0])
-        {
-            mode = stdmEconomy;
-            return true;
-        }
         return false;
-    }
 
     // Converting into lowercase
     text.toLower();
@@ -173,11 +160,6 @@ bool StringToStudyMode(StudyMode& mode, CString<20, false> text)
     if (text == "adequacy")
     {
         mode = stdmAdequacy;
-        return true;
-    }
-    if (text == "draft" || text == "adequacy-draft")
-    {
-        mode = stdmAdequacyDraft;
         return true;
     }
     // Expansion
@@ -197,8 +179,6 @@ const char* StudyModeToCString(StudyMode mode)
         return "Economy";
     case stdmAdequacy:
         return "Adequacy";
-    case stdmAdequacyDraft:
-        return "draft";
     case stdmMax:
     case stdmExpansion:
     case stdmUnknown:
@@ -206,45 +186,22 @@ const char* StudyModeToCString(StudyMode mode)
     }
     return "Unknown";
 }
-bool StringToPriceTakingOrder(const AnyString& PTO_as_string, AdequacyPatch::AdqPatchPTO& PTO_as_enum)
-{
-    CString<24, false> s = PTO_as_string;
-    s.trim();
-    s.toLower();
-    if (s == "dens")
-    {
-        PTO_as_enum = AdequacyPatch::AdqPatchPTO::isDens;
-        return true;
-    }
-    if (s == "load")
-    {
-        PTO_as_enum = AdequacyPatch::AdqPatchPTO::isLoad;
-        return true;
-    }
-
-    logs.warning() << "parameters: invalid price taking order. Got '" << PTO_as_string << "'";
-
-    return false;
-}
-
-const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
-{
-    switch (pto)
-    {
-    case AdequacyPatch::AdqPatchPTO::isDens:
-        return "DENS";
-    case AdequacyPatch::AdqPatchPTO::isLoad:
-        return "Load";
-    default:
-        return "";
-    }
-}
 
 Parameters::Parameters() : noOutput(false)
 {
 }
 
 Parameters::~Parameters() = default;
+
+bool Parameters::economy() const
+{
+    return mode == stdmEconomy;
+}
+
+bool Parameters::adequacy() const
+{
+    return mode == stdmAdequacy;
+}
 
 void Parameters::resetSeeds()
 {
@@ -260,37 +217,7 @@ void Parameters::resetSeeds()
     for (auto i = (uint)seedTsGenLoad; i != seedMax; ++i)
         seed[i] = (s += increment);
 }
-void Parameters::resetThresholdsAdqPatch()
-{
-    // Initialize all thresholds values for adequacy patch
-    adqPatch.curtailmentSharing.thresholdRun
-      = Antares::Data::AdequacyPatch::defaultThresholdToRunCurtailmentSharing;
-    adqPatch.curtailmentSharing.thresholdDisplayViolations
-      = Antares::Data::AdequacyPatch::defaultThresholdDisplayLocalMatchingRuleViolations;
-    adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation
-      = Antares::Data::AdequacyPatch::defaultValueThresholdVarBoundsRelaxation;
-}
 
-void Parameters::AdequacyPatch::LocalMatching::reset()
-{
-    setToZeroOutsideInsideLinks = true;
-    setToZeroOutsideOutsideLinks = true;
-}
-
-void Parameters::AdequacyPatch::CurtailmentSharing::reset()
-{
-    priceTakingOrder = Data::AdequacyPatch::AdqPatchPTO::isDens;
-    includeHurdleCost = false;
-    checkCsrCostFunction = false;
-}
-
-void Parameters::resetAdqPatchParameters()
-{
-    adqPatch.enabled = false;
-    adqPatch.localMatching.reset();
-    adqPatch.curtailmentSharing.reset();
-    resetThresholdsAdqPatch();
-}
 
 void Parameters::resetPlayedYears(uint nbOfYears)
 {
@@ -309,13 +236,12 @@ void Parameters::reset()
     // Expansion
     expansion = false;
     // Calendar
-    horizon = nullptr;
+    horizon.clear();
 
     // Reset output variables print info tool
     variablesPrintInfo.clear();
     variablePrintInfoCollector collector(&variablesPrintInfo);
     Antares::Solver::Variable::Economy::AllVariables::RetrieveVariableList(collector);
-    variablesPrintInfo.resetInfoIterator();
     thematicTrimming = false;
 
     resetPlayedYears(1);
@@ -384,8 +310,6 @@ void Parameters::reset()
 
     // Misc
     improveUnitsStartup = false;
-    // Adequacy block size (adequacy-draft)
-    adequacyBlockSize = 100;
 
     include.constraints = true;
     include.hurdleCosts = true;
@@ -415,11 +339,16 @@ void Parameters::reset()
 
     resultFormat = legacyFilesDirectories;
 
-    // Adequacy patch
-    resetAdqPatchParameters();
+    // Adequacy patch parameters
+    adqPatchParams.reset();
 
     // Initialize all seeds
     resetSeeds();
+}
+
+bool Parameters::isTSGeneratedByPrepro(const TimeSeries ts) const
+{
+    return (timeSeriesToGenerate & ts);
 }
 
 static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint value)
@@ -470,8 +399,7 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
 static bool SGDIntLoadFamily_General(Parameters& d,
                                      const String& key,
                                      const String& value,
-                                     const String& rawvalue,
-                                     uint)
+                                     const String& rawvalue)
 {
     if (key == "active-rules-scenario")
     {
@@ -603,8 +531,7 @@ static bool SGDIntLoadFamily_General(Parameters& d,
 static bool SGDIntLoadFamily_Input(Parameters& d,
                                    const String& key,
                                    const String& value,
-                                   const String&,
-                                   uint)
+                                   const String&)
 {
     if (key == "import")
         return ConvertCStrToListTimeSeries(value, d.timeSeriesToImport);
@@ -614,8 +541,7 @@ static bool SGDIntLoadFamily_Input(Parameters& d,
 static bool SGDIntLoadFamily_Output(Parameters& d,
                                     const String& key,
                                     const String& value,
-                                    const String&,
-                                    uint)
+                                    const String&)
 {
     if (key == "archives")
         return ConvertCStrToListTimeSeries(value, d.timeSeriesToArchive);
@@ -632,8 +558,7 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
 static bool SGDIntLoadFamily_Optimization(Parameters& d,
                                           const String& key,
                                           const String& value,
-                                          const String&,
-                                          uint)
+                                          const String&)
 {
     if (key == "include-constraints")
         return value.to<bool>(d.include.constraints);
@@ -692,20 +617,6 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return result;
     }
 
-    if (key == "link-type")
-    {
-        CString<64, false> v = value;
-        v.trim();
-        v.toLower();
-        if (value == "local")
-            d.linkType = ltLocal;
-        else if (value == "ac")
-            d.linkType = ltAC;
-        else
-            d.linkType = ltLocal;
-        return true;
-    }
-
     if (key == "simplex-range")
     {
         d.simplexOptimizationRange = (!value.ifind("day")) ? sorDay : sorWeek;
@@ -721,40 +632,15 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
 static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
                                       const String& key,
                                       const String& value,
-                                      const String&,
-                                      uint)
+                                      const String&)
 {
-    if (key == "include-adq-patch")
-        return value.to<bool>(d.adqPatch.enabled);
-    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
-        return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideInsideLinks);
-    if (key == "set-to-null-ntc-between-physical-out-for-first-step")
-        return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideOutsideLinks);
-    // Price taking order
-    if (key == "price-taking-order")
-        return StringToPriceTakingOrder(value, d.adqPatch.curtailmentSharing.priceTakingOrder);
-    // Include Hurdle Cost
-    if (key == "include-hurdle-cost-csr")
-        return value.to<bool>(d.adqPatch.curtailmentSharing.includeHurdleCost);
-    // Check CSR cost function prior and after CSR
-    if (key == "check-csr-cost-function")
-        return value.to<bool>(d.adqPatch.curtailmentSharing.checkCsrCostFunction);
-    // Thresholds
-    if (key == "threshold-initiate-curtailment-sharing-rule")
-        return value.to<double>(d.adqPatch.curtailmentSharing.thresholdRun);
-    if (key == "threshold-display-local-matching-rule-violations")
-        return value.to<double>(d.adqPatch.curtailmentSharing.thresholdDisplayViolations);
-    if (key == "threshold-csr-variable-bounds-relaxation")
-        return value.to<int>(d.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
-
-    return false;
+    return d.adqPatchParams.updateFromKeyValue(key, value);
 }
 
 static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
                                               const String& key,
                                               const String& value,
-                                              const String&,
-                                              uint)
+                                              const String&)
 {
     if (key == "hydro-heuristic-policy")
     {
@@ -858,11 +744,8 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
 static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
                                                 const String& key,
                                                 const String& value,
-                                                const String&,
-                                                uint)
+                                                const String&)
 {
-    if (key == "adequacy-block-size" || key == "adequacy_blocksize")
-        return value.to<uint>(d.adequacyBlockSize);
     if (key == "accuracy-on-correlation")
         return ConvertCStrToListTimeSeries(value, d.timeSeriesAccuracyOnCorrelation);
     return false;
@@ -870,8 +753,7 @@ static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
 static bool SGDIntLoadFamily_Playlist(Parameters& d,
                                       const String& key,
                                       const String& value,
-                                      const String&,
-                                      uint)
+                                      const String&)
 {
     if (key == "playlist_reset")
     {
@@ -962,35 +844,30 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
 static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
                                                 const String& key,
                                                 const String& value,
-                                                const String&,
-                                                uint)
+                                                const String&)
 {
     if (key == "selected_vars_reset")
     {
-        bool mode = value.to<bool>();
-        if (mode)
-        {
-            for (uint i = 0; i != d.variablesPrintInfo.size(); ++i)
-                d.variablesPrintInfo[i]->enablePrint(true);
-        }
-        else
-        {
-            for (uint i = 0; i != d.variablesPrintInfo.size(); ++i)
-                d.variablesPrintInfo[i]->enablePrint(false);
-        }
+        bool printAllVariables = value.to<bool>();
+        d.variablesPrintInfo.setAllPrintStatusesTo(printAllVariables);
         return true;
     }
-    if (key == "select_var +")
-        return d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), true);
-    if (key == "select_var -")
-        return d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), false);
+    if (key == "select_var +" || key == "select_var -")
+    {
+        // Check if the read output variable exists
+        if (not d.variablesPrintInfo.exists(value.to<std::string>()))
+            return false;
+
+        bool is_var_printed = (key == "select_var +");
+        d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), is_var_printed);
+        return true;
+    }
     return false;
 }
 static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
                                                   const String& key,
                                                   const String& value,
-                                                  const String&,
-                                                  uint)
+                                                  const String&)
 {
     if (key.startsWith("seed")) // seeds
     {
@@ -1038,43 +915,12 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     if (key == "custom-ts-numbers")
         return value.to<bool>(d.useCustomScenario);
 
-    if (key == "dayofthe1stjanuary") // before 4.3 - see january.1st
-        return Date::StringToDayOfTheWeek(d.dayOfThe1stJanuary, value);
-
     if (key == "filtering" && version < 710)
         return value.to<bool>(d.geographicTrimming);
-
-    if (version <= 310 && key == "storetimeseriesnumbers")
-        return value.to<bool>(d.storeTimeseriesNumbers);
 
     // Custom set
     if (key == "customset")
         return true; // value ignored
-
-    if (key == "finalhour") // ignored since v4.3
-        return true;        // value.to<uint>(d.finalHour);
-
-    if (key == "startyear") // ignored from 3.5.3155
-        return true;
-
-    if (key == "starttime")
-        return true; // ignored since 4.3 // return value.to<uint>(d.startTime);
-
-    // deprecated
-    if (key == "seed_virtualcost" || key == "seed_misc")
-        return true; // ignored since 3.8
-
-    if (key == "spillage_bound") // ignored sinve v3.3
-        return true;
-
-    if (key == "spillage_cost") // ignored since v3.3
-        return true;
-
-    if (key == "shedding-strategy-local") // ignored since 4.0
-        return true;
-
-    if (key == "shedding-strategy-global") // ignored since 4.0
-        return true;
 
     if (key == "shedding-strategy") // Was never used
         return true;
@@ -1082,13 +928,16 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     if (key == "day-ahead-reserve-management") // ignored since 8.4
         return true;
 
-    // deprecated
-    if (key == "thresholdmin")
-        return true; // value.to<int>(d.thresholdMinimum);
-    if (key == "thresholdmax")
-        return true; // value.to<int>(d.thresholdMaximum);
+    if (key == "link-type") // ignored since 8.5.2
+        return true;
+
+    if (key == "adequacy-block-size") // ignored since 8.5
+        return true;
+
+    // deprecated but needed for testing old studies
     if (key == "include-split-exported-mps")
         return true;
+
     return false;
 }
 
@@ -1109,8 +958,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
       Parameters&,   // [out] Parameter object to load the data into
       const String&, // [in] Key, comes left to the '=' sign in the .ini file
       const String&, // [in] Lowercase value, comes right to the '=' sign in the .ini file
-      const String&, // [in] Raw value as writtent right to the '=' sign in the .ini file
-      uint);         // [in] Version of the study (such as 710)
+      const String&); // [in] Raw value as writtent right to the '=' sign in the .ini file
 
     static const std::map<String, Callback> sectionAssociatedToKeysProcess
       = {{"general", &SGDIntLoadFamily_General},
@@ -1155,9 +1003,9 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
             // Deal with the current property
             // Do not forget the variable `key` and `value` are identical to
             // `p->key` and `p->value` except they are already in the lower case format
-            if (not handleAllKeysInSection(*this, p->key, value, p->value, version))
+            if (!handleAllKeysInSection(*this, p->key, value, p->value))
             {
-                if (not SGDIntLoadFamily_Legacy(*this, p->key, value, p->value, version))
+                if (!SGDIntLoadFamily_Legacy(*this, p->key, value, p->value, version))
                 {
                     // Continue on error
                     logs.warning() << ini.filename() << ": '" << p->key << "': Unknown property";
@@ -1181,13 +1029,6 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
         {
             yearsWeight.resize(nbYears, 1.f);
         }
-    }
-
-    if (version < 400)
-    {
-        // resetting shedding strategies
-        power.fluctuations = lssFreeModulations;
-        shedding.policy = shpShavePeaks;
     }
 
     // Simulation mode
@@ -1284,15 +1125,6 @@ void Parameters::fixGenRefreshForNTC()
 
 void Parameters::fixBadValues()
 {
-    // Adequacy block size
-    if (adequacyBlockSize < 100 || adequacyBlockSize > 100000)
-    {
-        adequacyBlockSize = 100;
-        logs.warning() << "The block size for the adequacy algorithm is invalid (100 <= blocksize "
-                          "<= 100000). Reset to "
-                       << adequacyBlockSize << '.';
-    }
-
     if (derated)
     {
         // Force the number of years to 1
@@ -1312,12 +1144,6 @@ void Parameters::fixBadValues()
         }
     }
 
-    if (mode == stdmAdequacyDraft)
-    {
-        simulationDays.first = 0;
-        simulationDays.end = 365;
-    }
-
     if (!nbTimeSeriesLoad)
         nbTimeSeriesLoad = 1;
     if (!nbTimeSeriesThermal)
@@ -1328,6 +1154,12 @@ void Parameters::fixBadValues()
         nbTimeSeriesWind = 1;
     if (!nbTimeSeriesSolar)
         nbTimeSeriesSolar = 1;
+}
+
+Yuni::uint64 Parameters::memoryUsage() const
+{
+    return sizeof(Parameters) + yearsWeight.size() * sizeof(double)
+           + yearsFilter.size(); // vector of bools, 1 bit per coefficient
 }
 
 void Parameters::resetYearsWeigth()
@@ -1391,7 +1223,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 {
     // We don't care of the variable `horizon` since it is not used by the solver
     horizon.clear();
-    horizon.shrink();
 
     // Simplex optimization range
     switch (simplexOptimizationRange)
@@ -1404,13 +1235,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         break;
     case sorUnknown:
         break;
-    }
-
-    if (mode == stdmAdequacyDraft)
-    {
-        yearByYear = false;
-        userPlaylist = false;
-        thematicTrimming = false;
     }
 
     if (derated && userPlaylist)
@@ -1511,7 +1335,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     }
     std::vector<std::string> excluded_vars;
     renewableGeneration.addExcludedVariables(excluded_vars);
-    adqPatch.addExcludedVariables(excluded_vars);
+    adqPatchParams.addExcludedVariables(excluded_vars);
 
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 
@@ -1529,12 +1353,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         // The year-by-year mode might have been requested from the command line
         if (options.forceYearByYear)
             yearByYear = true;
-        break;
-    }
-    case stdmAdequacyDraft:
-    {
-        // The mode year-by-year can not be enabled in adequacy
-        yearByYear = false;
         break;
     }
     case stdmUnknown:
@@ -1640,7 +1458,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
     if (include.exportMPS == mpsExportStatus::NO_EXPORT)
         logs.info() << "  :: ignoring export mps";
-    if (!adqPatch.enabled)
+    if (!adqPatchParams.enabled)
         logs.info() << "  :: ignoring adequacy patch";
     if (!include.exportStructure)
         logs.info() << "  :: ignoring export structure";
@@ -1751,15 +1569,7 @@ void Parameters::saveToINI(IniFile& ini) const
         // Optimization preferences
         section->add("transmission-capacities",
                      GlobalTransmissionCapacitiesToString(transmissionCapacities));
-        switch (linkType)
-        {
-        case ltLocal:
-            section->add("link-type", "local");
-            break;
-        case ltAC:
-            section->add("link-type", "ac");
-            break;
-        }
+
         section->add("include-constraints", include.constraints);
         section->add("include-hurdlecosts", include.hurdleCosts);
         section->add("include-tc-minstablepower", include.thermal.minStablePower);
@@ -1778,25 +1588,7 @@ void Parameters::saveToINI(IniFile& ini) const
     }
 
     // Adequacy patch
-    {
-        auto* section = ini.addSection("adequacy patch");
-        section->add("include-adq-patch", adqPatch.enabled);
-        section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
-                     adqPatch.localMatching.setToZeroOutsideInsideLinks);
-        section->add("set-to-null-ntc-between-physical-out-for-first-step",
-                     adqPatch.localMatching.setToZeroOutsideOutsideLinks);
-        section->add("price-taking-order",
-                     PriceTakingOrderToString(adqPatch.curtailmentSharing.priceTakingOrder));
-        section->add("include-hurdle-cost-csr", adqPatch.curtailmentSharing.includeHurdleCost);
-        section->add("check-csr-cost-function", adqPatch.curtailmentSharing.checkCsrCostFunction);
-        // Thresholds
-        section->add("threshold-initiate-curtailment-sharing-rule",
-                     adqPatch.curtailmentSharing.thresholdRun);
-        section->add("threshold-display-local-matching-rule-violations",
-                     adqPatch.curtailmentSharing.thresholdDisplayViolations);
-        section->add("threshold-csr-variable-bounds-relaxation",
-                     adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
-    }
+    adqPatchParams.saveToINI(ini);
 
     // Other preferences
     {
@@ -1820,8 +1612,6 @@ void Parameters::saveToINI(IniFile& ini) const
         // Accuracy on correlation
         ParametersSaveTimeSeries(
           section, "accuracy-on-correlation", timeSeriesAccuracyOnCorrelation);
-        // Adequacy Block size (adequacy draft)
-        section->add("adequacy-block-size", adequacyBlockSize);
     }
 
     // User's playlist
@@ -1877,35 +1667,23 @@ void Parameters::saveToINI(IniFile& ini) const
 
     // Variable selection
     {
-        assert(!variablesPrintInfo.isEmpty());
         uint nb_tot_vars = (uint)variablesPrintInfo.size();
-        uint selected_vars = 0;
+        uint nb_selected_vars = (uint)variablesPrintInfo.numberOfEnabledVariables();
 
-        for (uint i = 0; i != nb_tot_vars; ++i)
-        {
-            if (variablesPrintInfo[i]->isPrinted())
-                ++selected_vars;
-        }
-        if (selected_vars != nb_tot_vars)
+        if (nb_selected_vars != nb_tot_vars)
         {
             // We have something to write !
             auto* section = ini.addSection("variables selection");
-            if (selected_vars <= (nb_tot_vars / 2))
+            if (nb_selected_vars <= (nb_tot_vars / 2))
             {
                 section->add("selected_vars_reset", "false");
-                for (uint i = 0; i != nb_tot_vars; ++i)
-                {
-                    if (variablesPrintInfo[i]->isPrinted())
-                        section->add("select_var +", variablesPrintInfo[i]->name());
-                }
+                for (auto& name : variablesPrintInfo.namesOfEnabledVariables())
+                    section->add("select_var +", name);
             }
             else
             {
-                for (uint i = 0; i != nb_tot_vars; ++i)
-                {
-                    if (not variablesPrintInfo[i]->isPrinted())
-                        section->add("select_var -", variablesPrintInfo[i]->name());
-                }
+                for (auto& name : variablesPrintInfo.namesOfDisabledVariables())
+                    section->add("select_var -", name);
             }
         }
     }
@@ -1944,17 +1722,17 @@ bool Parameters::saveToFile(const AnyString& filename) const
 
 void Parameters::RenewableGeneration::addExcludedVariables(std::vector<std::string>& out) const
 {
-    const static std::vector<std::string> ren = {"wind offshore",
-                                                 "wind onshore",
-                                                 "solar concrt.",
-                                                 "solar pv",
-                                                 "solar rooft",
-                                                 "renw. 1",
-                                                 "renw. 2",
-                                                 "renw. 3",
-                                                 "renw. 4"};
+    const static std::vector<std::string> ren = {"WIND OFFSHORE",
+                                                 "WIND ONSHORE",
+                                                 "SOLAR CONCRT.",
+                                                 "SOLAR PV",
+                                                 "SOLAR ROOFT",
+                                                 "RENW. 1",
+                                                 "RENW. 2",
+                                                 "RENW. 3",
+                                                 "RENW. 4"};
 
-    const static std::vector<std::string> agg = {"wind", "solar"};
+    const static std::vector<std::string> agg = {"WIND", "SOLAR"};
 
     switch (rgModelling)
     {
@@ -1968,17 +1746,6 @@ void Parameters::RenewableGeneration::addExcludedVariables(std::vector<std::stri
         break;
     default:
         break;
-    }
-}
-
-void Parameters::AdequacyPatch::addExcludedVariables(std::vector<std::string>& out) const
-{
-    if (!enabled)
-    {
-        out.emplace_back("DENS");
-        out.emplace_back("LMR VIOL.");
-        out.emplace_back("SPIL. ENRG. CSR");
-        out.emplace_back("DTG MRG CSR");
     }
 }
 
@@ -2017,5 +1784,4 @@ bool Parameters::RenewableGeneration::isClusters() const
 {
     return rgModelling == Antares::Data::rgClusters;
 }
-
 } // namespace Antares::Data

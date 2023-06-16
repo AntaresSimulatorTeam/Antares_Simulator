@@ -40,18 +40,18 @@ namespace Economy
 struct VCardNonProportionalCostByDispatchablePlant
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "NP Cost by plant";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "NP Cost - Euro";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Non proportional costs by all the clusters";
     }
@@ -154,7 +154,7 @@ public:
                 // year-by-year
                 if (!u.gatheringInformationsForInput)
                 {
-                    if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
+                    if (u.study.parameters.yearByYear)
                     {
                         for (unsigned int i = 0; i != u.years; ++i)
                             u.takeIntoConsiderationANewTimeserieForDiskOutput(false);
@@ -218,6 +218,11 @@ public:
 
         // Next
         NextType::initializeFromArea(study, area);
+    }
+
+    uint getMaxNumberColumns() const
+    {
+        return pSize * ResultsType::count;
     }
 
     void initializeFromLink(Data::Study* study, Data::AreaLink* link)
@@ -311,18 +316,6 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
-        // Total Non Proportional cost for this hour
-        // NP = startup cost + fixed cost
-        // pValuesForTheCurrentYear[state.thermalCluster->areaWideIndex].hour[state.hourInTheYear]
-        // += production for the current thermal dispatchable cluster
-        //	(state.thermalClusterNonProportionalCost);
-
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
-    }
-
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
       unsigned int,
       unsigned int numSpace) const
@@ -348,6 +341,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = thermal.clusters[i]->name(); // VCardType::Caption();
+                results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }

@@ -70,8 +70,7 @@ public:
     ** \param o The output folder
     ** \param year The current year, if any
     */
-    SurveyResults(uint maxVars,
-                  const Data::Study& s,
+    SurveyResults(const Data::Study& s,
                   const Yuni::String& o,
                   IResultWriter::Ptr writer);
     /*!
@@ -109,6 +108,7 @@ public:
 
     //! Caption for the current variable
     CaptionType variableCaption;
+    std::string variableUnit;
 
     //! Matrix where to store all results
     double** values;
@@ -130,7 +130,7 @@ public:
     bool** digestNonApplicableStatus;
 
     //! The total number of variables
-    const uint maxVariables;
+    uint maxVariables;
 
     //! Flag to known if we are in the year-by-year mode
     bool yearByYearResults;
@@ -158,7 +158,7 @@ private:
                            const PrecisionT& precision,
                            const bool isNotApplicable);
 
-    void writeDateToFileDescriptor(uint row, int fileLevel, int precisionLevel);
+    void writeDateToFileDescriptor(uint row, int precisionLevel);
 
 }; // class SurveyResults
 

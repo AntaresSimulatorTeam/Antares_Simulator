@@ -28,8 +28,8 @@ def find_dated_output_folder(study_path):
     return output_folder_finder_.get()
 
 def find_simulation_folder(output_dir):
-    # Return full path of the ouptut simulation path (can be "adequacy", "economy" or "adequacy-draft")
+    # Return full path of the ouptut simulation path (can be "adequacy", "economy")
     for root, dirs, files in walk(output_dir):
-        if basename(root) in ["adequacy", "economy", "adequacy-draft"]:
+        if basename(root) in ["adequacy", "economy"]:
             return Path(root)
 

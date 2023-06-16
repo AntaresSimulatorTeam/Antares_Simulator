@@ -38,7 +38,7 @@ InvalidOptimizationRange::InvalidOptimizationRange() :
 
 InvalidSimulationMode::InvalidSimulationMode() :
  LoadingError(
-   "Only one simulation mode is allowed: --expansion, --economy, --adequacy or --adequacy-draft")
+   "Only one simulation mode is allowed: --expansion, --economy, --adequacy")
 {
 }
 
@@ -135,6 +135,11 @@ NoAreaInsideAdqPatchMode::NoAreaInsideAdqPatchMode() :
 
 IncompatibleHurdleCostCSR::IncompatibleHurdleCostCSR() :
  LoadingError("Incompatible options include.hurdleCost and curtailmentSharing.includeHurdleCost")
+{
+}
+
+AdqPatchDisabledLMR::AdqPatchDisabledLMR() :
+ LoadingError("Incompatible options LMR disabled and priceTakingOrder equal Dens")
 {
 }
 

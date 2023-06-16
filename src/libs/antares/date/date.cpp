@@ -90,12 +90,10 @@ static const char* const monthShortLowerNames[]
 static const char* const monthShortUpperNames[]
   = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
 
-CalendarHour::Vector StudyHourlyCalendar; // deprecated
-CalendarDay::Vector StudyDailyCalendar;   // deprecated
-
-uint FirstDayPerMonth[12 + 1]; // deprecated
-
-uint FirstDayPerWeek[54 + 1]; // deprecated
+uint DayInterval::numberOfWeeks() const
+{
+    return (end - first) / 7;
+}
 
 const char* DayOfTheWeekToString(DayOfTheWeek d)
 {

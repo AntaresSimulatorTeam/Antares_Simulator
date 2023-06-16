@@ -12,15 +12,9 @@ on:
       - doc/*
 
 jobs:
-  doc_generation:
-    uses: ./.github/workflows/build-userguide.yml
-    with:
-      artifact_name: pdf-doc
-
   windows:
 
     runs-on: ${{ matrix.os }}
-    needs: doc_generation
     strategy:
       matrix:
         os: [windows-latest]
@@ -34,7 +28,7 @@ jobs:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.1/ortools_cxx_windows-latest_static_sirius.zip"
+      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_windows-latest_static_sirius.zip"
 
     steps:
     - uses: actions/checkout@v3
@@ -47,12 +41,6 @@ jobs:
     - name : Init VCPKG submodule
       run: |
           git submodule update --init vcpkg
-
-    - name: Download userguide
-      uses: actions/download-artifact@v3
-      with:
-        name: pdf-doc
-        path: docs/ref_guides
 
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
@@ -203,6 +191,13 @@ jobs:
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
 
+    - name: Upload NSIS log on failure
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: NSISError.log
+        path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
+
     - name: .zip creation
       run: |
            cd _build
@@ -217,10 +212,3 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         path: _build/*.zip
-
-    - name: Upload build on failure
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: build-after-failure
-        path: ${{ github.workspace }}/_build

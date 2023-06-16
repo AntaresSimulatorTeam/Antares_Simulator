@@ -41,18 +41,18 @@ namespace Economy
 struct VCardTimeSeriesValuesSolar
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "SOLAR";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "MWh";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Solar generation, thoughout all MC years";
     }
@@ -273,6 +273,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

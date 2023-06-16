@@ -37,19 +37,22 @@
 
 namespace
 {
-double calculateQuadraticCost(const PROBLEME_HEBDO* problemeHebdo, int hour, int area)
+
+using namespace Antares::Data::AdequacyPatch;
+
+double calculateQuadraticCost(const PROBLEME_HEBDO* problemeHebdo, const AdqPatchPTO priceTakingOrder, int hour, int area)
 {
+    using namespace Data::AdequacyPatch;
     double priceTakingOrders = 0.0; // PTO
-    if (problemeHebdo->adqPatchParams->PriceTakingOrder == Data::AdequacyPatch::AdqPatchPTO::isLoad)
+    if (priceTakingOrder == AdqPatchPTO::isLoad)
     {
         priceTakingOrders
           = problemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[area]
             + problemeHebdo->AllMustRunGeneration[hour]->AllMustRunGenerationOfArea[area];
     }
-    else if (problemeHebdo->adqPatchParams->PriceTakingOrder
-             == Data::AdequacyPatch::AdqPatchPTO::isDens)
+    else // AdqPatchPTO::isDens
     {
-        priceTakingOrders = problemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour];
+        priceTakingOrders = problemeHebdo->ResultatsHoraires[area].ValeursHorairesDENS[hour];
     }
 
     if (priceTakingOrders <= 0.0)
@@ -80,8 +83,10 @@ void HourlyCSRProblem::setQuadraticCost()
             int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
             if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
             {
-                problemeAResoudre_.CoutQuadratique[var]
-                  = calculateQuadraticCost(problemeHebdo_, triggeredHour, area);
+                problemeAResoudre_.CoutQuadratique[var] = calculateQuadraticCost(problemeHebdo_, 
+                                                                                 adqPatchParams_.curtailmentSharing.priceTakingOrder, 
+                                                                                 triggeredHour, 
+                                                                                 area);
                 logs.debug() << var << ". Quad C = " << problemeAResoudre_.CoutQuadratique[var];
             }
         }
@@ -102,7 +107,7 @@ void HourlyCSRProblem::setLinearCost()
     //  => quadratic cost: 0
     //  => linear cost: hurdle_cost_direct or hurdle_cost_indirect
     // these members of objective functions are considered only if IntercoGereeAvecDesCouts =
-    // OUI_ANTARES (use hurdle cost option is true). otherwise these members are zero.
+    // true (use hurdle cost option is true). otherwise these members are zero.
 
     for (int Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; Interco++)
     {
@@ -128,7 +133,7 @@ void HourlyCSRProblem::setLinearCost()
                 ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
-            if (TransportCost->IntercoGereeAvecDesCouts == NON_ANTARES)
+            if (!TransportCost->IntercoGereeAvecDesCouts)
                 problemeAResoudre_.CoutLineaire[var] = 0;
             else
                 problemeAResoudre_.CoutLineaire[var]
@@ -140,7 +145,7 @@ void HourlyCSRProblem::setLinearCost()
                 ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
-            if (TransportCost->IntercoGereeAvecDesCouts == NON_ANTARES)
+            if (!TransportCost->IntercoGereeAvecDesCouts)
                 problemeAResoudre_.CoutLineaire[var] = 0;
             else
                 problemeAResoudre_.CoutLineaire[var]

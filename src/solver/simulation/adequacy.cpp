@@ -31,15 +31,10 @@
 #include "opt_time_writer.h"
 
 using namespace Yuni;
+using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-enum
-{
-
-    nbHoursInAWeek = 168,
-};
-
 Adequacy::Adequacy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
 {
 }
@@ -111,7 +106,7 @@ bool Adequacy::simulationBegin()
     }
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
-    pNbWeeks = (study.parameters.simulationDays.end - study.parameters.simulationDays.first) / 7;
+    pNbWeeks = study.parameters.simulationDays.numberOfWeeks();
     return true;
 }
 
@@ -169,10 +164,10 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(
-            *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
+          *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed
-        pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim ? OUI_ANTARES : NON_ANTARES;
+        pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim;
         reinitOptim = false;
 
         state.simplexHasBeenRan = (w == 0) || simplexIsRequired(hourInTheYear, numSpace);
@@ -218,15 +213,16 @@ bool Adequacy::year(Progression::Task& progression,
 
             try
             {
-                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
+                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace],
+                                             study.parameters.adqPatchParams);
 
                 computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
 
-                RemixHydroForAllAreas(study.areas, 
+                RemixHydroForAllAreas(study.areas,
                                       *pProblemesHebdo[numSpace],
                                       study.parameters.shedding.policy,
                                       study.parameters.simplexOptimizationRange,
-                                      numSpace, 
+                                      numSpace,
                                       hourInTheYear);
 
                 computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
@@ -281,7 +277,7 @@ bool Adequacy::year(Progression::Task& progression,
 
             for (uint ar = 0; ar != nbAreas; ++ar)
             {
-                auto& hourlyResults = *(pProblemesHebdo[numSpace]->ResultatsHoraires[ar]);
+                auto& hourlyResults = pProblemesHebdo[numSpace]->ResultatsHoraires[ar];
 
                 memset(hourlyResults.ValeursHorairesDeDefaillancePositive,
                        0,
@@ -306,7 +302,7 @@ bool Adequacy::year(Progression::Task& progression,
                     assert(k < state.resSpilled.width);
                     assert(j < state.resSpilled.height);
                     auto& valgen = *ValeursGenereesParPays[numSpace][k];
-                    auto& hourlyResults = *(pProblemesHebdo[numSpace]->ResultatsHoraires[k]);
+                    auto& hourlyResults = pProblemesHebdo[numSpace]->ResultatsHoraires[k];
 
                     hourlyResults.TurbinageHoraire[j]
                       = valgen.HydrauliqueModulableQuotidien[dayInTheYear] / 24.;
@@ -322,7 +318,8 @@ bool Adequacy::year(Progression::Task& progression,
             computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false, true);
         }
 
-        interpolateWaterValue(study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
+        interpolateWaterValue(
+          study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
 
         updatingWeeklyFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
 

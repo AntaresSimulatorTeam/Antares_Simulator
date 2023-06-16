@@ -96,7 +96,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
     try
     {
-        OPT_OptimisationHebdomadaire(&problem, 0);
+        OPT_OptimisationHebdomadaire(&problem, study.parameters.adqPatchParams);
     }
     catch (Data::UnfeasibleProblemError&)
     {
@@ -124,7 +124,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
     for (uint i = 0; i < study.areas.size(); ++i)
     {
         auto& area = *study.areas[i];
-        auto& scratchpad = *(area.scratchpad[numSpace]);
+        auto& scratchpad = area.scratchpad[numSpace];
 
         memset(scratchpad.mustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
         if (inAdequacy)
@@ -182,21 +182,12 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
                     adq[h] += column[h];
             }
         }
-
-        for (uint j = 0; j != area.thermal.clusterCount(); ++j)
-        {
-            Data::ThermalCluster* cluster = area.thermal.clusters[j];
-            cluster->unitCountLastHour[numSpace] = 0;
-            cluster->productionLastHour[numSpace] = 0.;
-            cluster->pminOfAGroup[numSpace] = 0.;
-        }
     }
 }
 
 bool ShouldUseQuadraticOptimisation(const Data::Study& study)
 {
-    const bool flowQuadEnabled
-      = study.parameters.variablesPrintInfo.searchIncrementally_getPrintStatus("FLOW QUAD.");
+    const bool flowQuadEnabled = study.parameters.variablesPrintInfo.isPrinted("FLOW QUAD.");
     if (!flowQuadEnabled)
         return false;
 
@@ -229,7 +220,7 @@ void ComputeFlowQuad(Data::Study& study,
         logs.info() << "Post-processing... (quadratic optimisation)";
 
         problem.TypeDOptimisation = OPTIMISATION_QUADRATIQUE;
-        problem.LeProblemeADejaEteInstancie = NON_ANTARES;
+        problem.LeProblemeADejaEteInstancie = false;
         for (uint w = 0; w != nbWeeks; ++w)
         {
             int PasDeTempsDebut = startTime + (w * problem.NombreDePasDeTemps);

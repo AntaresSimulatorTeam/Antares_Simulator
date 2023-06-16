@@ -32,6 +32,7 @@
 #include "scenario-builder/sets.h"
 
 using namespace Yuni;
+using Antares::Constants::nbHoursInAWeek;
 
 #define SEP IO::Separator
 
@@ -43,7 +44,7 @@ bool Study::internalLoadHeader(const String& path)
 {
     // Header
     buffer.clear() << path << SEP << "study.antares";
-    if (not header.loadFromFile(buffer))
+    if (!header.loadFromFile(buffer))
     {
         logs.error() << path << ": impossible to open the header file";
         return false;
@@ -65,47 +66,23 @@ bool Study::loadFromFolder(const AnyString& path, const StudyLoadOptions& option
     return internalLoadFromFolder(normPath, options);
 }
 
-bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& options)
+bool Study::internalLoadIni(const String& path, const StudyLoadOptions& options)
 {
-    // IO statistics
-    Statistics::LogsDumper statisticsDumper;
-
-    gotFatalError = false;
-
-    // Check if the path is correct
-    if (!IO::Directory::Exists(path))
-    {
-        logs.error()
-          << path << ": The directory does not exist (or not enough privileges to read the folder)";
-        return false;
-    }
-
-    if (not internalLoadHeader(path))
+    if (!internalLoadHeader(path))
     {
         if (options.loadOnlyNeeded)
             return false;
     }
 
-    // Initialize all internal paths
-    relocate(path);
-
-    // Compatibility - The extension according the study version
-    inputExtensionCompatibility();
-
-    // Reserving enough space in buffer to avoid several calls to realloc
-    this->dataBuffer.reserve(4 * 1024 * 1024); // For matrices, reserving 4Mo
-    this->bufferLoadingTS.reserve(2096);
-    assert(this->bufferLoadingTS.capacity() > 0);
-
     // The simulation settings
-    if (not simulationComments.loadFromFolder(options))
+    if (!simulationComments.loadFromFolder(options))
     {
         if (options.loadOnlyNeeded)
             return false;
     }
     // Load the general data
     buffer.clear() << folderSettings << SEP << "generaldata.ini";
-    if (not parameters.loadFromFile(buffer, header.version, options))
+    if (!parameters.loadFromFile(buffer, header.version, options))
     {
         if (options.loadOnlyNeeded)
             return false;
@@ -115,7 +92,12 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     buffer.clear() << path << SEP << "layers" << SEP << "layers.ini";
     loadLayers(buffer);
 
-    if (usedByTheSolver and not options.prepareOutput)
+    return true;
+}
+
+void Study::parameterFiller(const StudyLoadOptions& options)
+{
+    if (usedByTheSolver && !options.prepareOutput)
     {
         parameters.noOutput = true;
         parameters.yearByYear = false;
@@ -124,7 +106,7 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
         parameters.synthesis = false;
     }
 
-    if (options.loadOnlyNeeded and !parameters.timeSeriesToGenerate)
+    if (options.loadOnlyNeeded && !parameters.timeSeriesToGenerate)
         // Nothing to refresh
         parameters.timeSeriesToRefresh = 0;
 
@@ -133,50 +115,24 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     if (usedByTheSolver)
     {
         // We have time-series to import
-        if (parameters.timeSeriesToImport and (uint) header.version != (uint)versionLatest)
+        if (parameters.timeSeriesToImport && (uint) header.version != (uint)versionLatest)
         {
             logs.error() << "Stochastic TS stored in input : study must be upgraded to "
                          << Data::VersionToCStr((Data::Version)Data::versionLatest);
-            gotFatalError = true;
             // it is useless to continue at this point
-            return false;
         }
     }
 
-    // -------------------------
-    // Logical cores
-    // -------------------------
-    // Getting the number of logical cores to use before loading and creating the areas :
-    // Areas need this number to be up-to-date at construction.
-    getNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
-
-    // In case the study is run in the draft mode, only 1 core is allowed
-    if (parameters.mode == Data::stdmAdequacyDraft)
-        maxNbYearsInParallel = 1;
-
-    // In case parallel mode was not chosen, only 1 core is allowed
-    if (!options.enableParallel && !options.forceParallel)
-        maxNbYearsInParallel = 1;
-
-    // End logical core --------
-
-    // Areas - Raw Data
-    bool ret = areas.loadFromFolder(options);
-
-    logs.info() << "Loading correlation matrices...";
-    // Correlation matrices
-    ret = internalLoadCorrelationMatrices(options) and ret;
-    // Binding constraints
-    ret = internalLoadBindingConstraints(options) and ret;
-    // Sets of areas & links
-    ret = internalLoadSets() and ret;
+    // This settings can only be enabled from the solver
+    // Prepare the output for the study
+    prepareOutput(); // will abort early if not usedByTheSolver
 
     // Scenario Rules sets, only available since v3.6
     // After two consecutive load, some scenario builder data
     // may still exist.
     scenarioRulesDestroy();
 
-    if (JIT::usedFromGUI and uiinfo)
+    if (JIT::usedFromGUI && uiinfo)
     {
         // Post-processing when loaded from the User-Interface
         uiinfo->reload();
@@ -194,60 +150,89 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     // In case hydro hot start is enabled, check all conditions are met.
     // (has to be called after areas load and calendar building)
     if (usedByTheSolver && !checkHydroHotStart())
-        return false;
+        logs.error() << "hydro hot start is enabled, conditions are not met. Aborting";
 
     // Reducing memory footprint
     reduceMemoryUsage();
-
-    return ret;
 }
 
-void Study::inputExtensionCompatibility()
+bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& options)
 {
-    // The extension to use according the version
-    if (header.version < 310)
+    // IO statistics
+    Statistics::LogsDumper statisticsDumper;
+
+    // Check if the path is correct
+    if (!IO::Directory::Exists(path))
     {
-        // Since v3.1, all extensions have been changed into .txt in the input folder.
-        inputExtension = "csv";
-        // In order to properly save the study from the interface, the Just-In-Time
-        // mecanism must be temporary disabled
-        JIT::enabled = 0;
+        logs.error()
+          << path << ": The directory does not exist (or not enough privileges to read the folder)";
+        return false;
     }
-    else
-        inputExtension = "txt";
+
+    // Initialize all internal paths
+    relocate(path);
+
+    // Reserving enough space in buffer to avoid several calls to realloc
+    this->dataBuffer.reserve(4 * 1024 * 1024); // For matrices, reserving 4Mo
+    this->bufferLoadingTS.reserve(2096);
+    assert(this->bufferLoadingTS.capacity() > 0);
+
+    if (!internalLoadIni(path, options))
+    {
+        return false;
+    }
+
+    // -------------------------
+    // Logical cores
+    // -------------------------
+    // Getting the number of logical cores to use before loading and creating the areas :
+    // Areas need this number to be up-to-date at construction.
+    getNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
+
+    // In case parallel mode was not chosen, only 1 core is allowed
+    if (!options.enableParallel && !options.forceParallel)
+        maxNbYearsInParallel = 1;
+
+    // End logical core --------
+
+    // Areas - Raw Data
+    bool ret = areas.loadFromFolder(options);
+
+    logs.info() << "Loading correlation matrices...";
+    // Correlation matrices
+    ret = internalLoadCorrelationMatrices(options) && ret;
+    // Binding constraints
+    ret = internalLoadBindingConstraints(options) && ret;
+    // Sets of areas & links
+    ret = internalLoadSets() && ret;
+
+    parameterFiller(options);
+    return ret;
 }
 
 bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
 {
-    if ((uint)header.version > (uint)version320)
-    {
-        // Load
-        if (!options.loadOnlyNeeded or timeSeriesLoad & parameters.timeSeriesToRefresh
+    // Load
+    if (!options.loadOnlyNeeded || timeSeriesLoad & parameters.timeSeriesToRefresh
             || timeSeriesLoad & parameters.timeSeriesToGenerate)
-        {
-            buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP
-                           << "correlation.ini";
-            preproLoadCorrelation.loadFromFile(*this, buffer);
-        }
-
-        // Solar
-        if (!options.loadOnlyNeeded or timeSeriesSolar & parameters.timeSeriesToRefresh
-            || timeSeriesSolar & parameters.timeSeriesToGenerate)
-        {
-            buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP
-                           << "correlation.ini";
-            preproSolarCorrelation.loadFromFile(*this, buffer);
-        }
-    }
-    else
     {
-        preproLoadCorrelation.reset(*this);
-        preproSolarCorrelation.reset(*this);
+        buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP
+            << "correlation.ini";
+        preproLoadCorrelation.loadFromFile(*this, buffer);
+    }
+
+    // Solar
+    if (!options.loadOnlyNeeded || timeSeriesSolar & parameters.timeSeriesToRefresh
+            || timeSeriesSolar & parameters.timeSeriesToGenerate)
+    {
+        buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP
+            << "correlation.ini";
+        preproSolarCorrelation.loadFromFile(*this, buffer);
     }
 
     // Wind
     {
-        if (!options.loadOnlyNeeded or timeSeriesWind & parameters.timeSeriesToRefresh
+        if (!options.loadOnlyNeeded || timeSeriesWind & parameters.timeSeriesToRefresh
             || timeSeriesWind & parameters.timeSeriesToGenerate)
         {
             buffer.clear() << folderInput << SEP << "wind" << SEP << "prepro" << SEP
@@ -258,8 +243,8 @@ bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
 
     // Hydro
     {
-        if (not options.loadOnlyNeeded or (timeSeriesHydro & parameters.timeSeriesToRefresh)
-            or (timeSeriesHydro & parameters.timeSeriesToGenerate))
+        if (!options.loadOnlyNeeded || (timeSeriesHydro & parameters.timeSeriesToRefresh)
+            || (timeSeriesHydro & parameters.timeSeriesToGenerate))
         {
             buffer.clear() << folderInput << SEP << "hydro" << SEP << "prepro" << SEP
                            << "correlation.ini";
@@ -275,7 +260,7 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
     // (actually internalLoadFromFolder)
     buffer.clear() << folderInput << SEP << "bindingconstraints";
     const bool r = bindingConstraints.loadFromFolder(*this, options, buffer);
-    return (!r and options.loadOnlyNeeded) ? false : r;
+    return (!r && options.loadOnlyNeeded) ? false : r;
 }
 
 class SetHandlerAreas
@@ -406,13 +391,13 @@ bool Study::reloadXCastData()
 
         // Load
         buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP << area.id;
-        ret = area.load.prepro->loadFromFolder(*this, buffer) and ret;
+        ret = area.load.prepro->loadFromFolder(buffer) && ret;
         // Solar
         buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP << area.id;
-        ret = area.solar.prepro->loadFromFolder(*this, buffer) and ret;
+        ret = area.solar.prepro->loadFromFolder(buffer) && ret;
         // Wind
         buffer.clear() << folderInput << SEP << "wind" << SEP << "prepro" << SEP << area.id;
-        ret = area.wind.prepro->loadFromFolder(*this, buffer) and ret;
+        ret = area.wind.prepro->loadFromFolder(buffer) && ret;
     });
     return ret;
 }

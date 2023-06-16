@@ -56,4 +56,7 @@
 #include "renewable/cluster.h"
 #include "renewable/container.h"
 
+// Short-term storage
+#include "short-term-storage/container.h"
+
 #endif // __ANTARES_LIBS_STUDY_PARTS_H__

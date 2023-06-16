@@ -266,7 +266,6 @@ const wxChar* const calendarWeeks[] = {wxT("MON  -  SUN"),
 
 const wxChar* const studyMode[] = {wxT("Economy"),
                                    wxT("Adequacy"),
-                                   wxT("Draft"),
 #if STUDY_MODE_EXPANSION
                                    wxT("Expansion"),
 #endif

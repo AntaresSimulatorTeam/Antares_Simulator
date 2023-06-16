@@ -90,8 +90,10 @@ private:
 
 class CurtailmentSharingPostProcessCmd : public basePostProcessCommand
 {
+    using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 public:
-    CurtailmentSharingPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
+    CurtailmentSharingPostProcessCmd(const AdqPatchParams& adqPatchParams,
+                                     PROBLEME_HEBDO* problemeHebdo,
                                      AreaList& areas,
                                      unsigned int thread_number);
 
@@ -100,10 +102,11 @@ public:
 private:
     double calculateDensNewAndTotalLmrViolation();
     std::vector<double> calculateENSoverAllAreasForEachHour() const;
-    std::set<int> identifyHoursForCurtailmentSharing(std::vector<double> sumENS) const;
+    std::set<int> identifyHoursForCurtailmentSharing(const std::vector<double>& sumENS) const;
     std::set<int> getHoursRequiringCurtailmentSharing() const;
 
     const AreaList& area_list_;
+    const AdqPatchParams& adqPatchParams_;
     unsigned int thread_number_ = 0;
 };
 

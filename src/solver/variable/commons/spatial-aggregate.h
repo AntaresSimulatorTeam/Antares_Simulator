@@ -41,36 +41,56 @@ namespace Common
 template<int ColumnCountT, class VCardT>
 struct MultipleCaptionProxy
 {
-    static const char* Caption(const uint indx)
+    static std::string Caption(const uint indx)
     {
         return VCardT::Multiple::Caption(indx);
+    }
+
+    static std::string Unit(const unsigned int indx)
+    {
+        return VCardT::Multiple::Unit(indx);
     }
 };
 
 template<class VCardT>
 struct MultipleCaptionProxy<0, VCardT>
 {
-    static const char* Caption(const uint indx)
+    static std::string Caption(const uint indx)
     {
-        return NULL;
+        return "";
+    }
+
+    static std::string Unit(const uint indx)
+    {
+        return "";
     }
 };
 
 template<class VCardT>
 struct MultipleCaptionProxy<1, VCardT>
 {
-    static const char* Caption(const uint indx)
+    static std::string Caption(const uint indx)
     {
-        return NULL;
+        return "";
+    }
+
+    static std::string Unit(const uint indx)
+    {
+        return "";
     }
 };
 
 template<class VCardT>
 struct MultipleCaptionProxy<Category::dynamicColumns, VCardT>
 {
-    static const char* Caption(const uint indx)
+    static std::string Caption(const uint indx)
     {
-        return NULL;
+        return "";
+    }
+
+    static std::string Unit(const uint indx)
+    {
+        return "";
     }
 };
 
@@ -81,17 +101,17 @@ struct VCardProxy
     typedef typename V<Container::EndOfList>::VCardType VCardOrigin;
 
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return VCardOrigin::Caption();
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return VCardOrigin::Unit();
     }
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return VCardOrigin::Description();
     }
@@ -133,9 +153,14 @@ struct VCardProxy
 
     struct Multiple
     {
-        static const char* Caption(const uint indx)
+        static std::string Caption(const uint indx)
         {
             return MultipleCaptionProxy<columnCount, VCardOrigin>::Caption(indx);
+        }
+
+        static std::string Unit(const unsigned int indx)
+        {
+            return MultipleCaptionProxy<columnCount, VCardOrigin>::Unit(indx);
         }
     };
 
@@ -286,12 +311,6 @@ public:
     {
         // Next variable
         NextType::hourForEachArea(state);
-    }
-
-    void hourForEachThermalCluster(State& state)
-    {
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state);
     }
 
     template<class V, class SetT>

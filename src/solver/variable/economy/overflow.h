@@ -40,18 +40,18 @@ namespace Economy
 struct VCardOverflow
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "H. OVFL";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "%";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Hydro overflow";
     }
@@ -260,6 +260,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

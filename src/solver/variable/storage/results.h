@@ -123,6 +123,5 @@ public:
 #include "minmax.h"
 #include "average.h"
 #include "stdDeviation.h"
-#include "and.h"
 
 #endif // __SOLVER_VARIABLE_STORAGE_RESULTS_H__

@@ -34,6 +34,7 @@
 #include "prepro.h"
 #include "../common/cluster.h"
 #include "../../fwd.h"
+#include "pollutant.h"
 #include <set>
 #include <map>
 #include <memory>
@@ -98,6 +99,8 @@ public:
         groupMax
     };
 
+    Pollutant emissions;
+
     //! Set of thermal clusters
     using Set = std::set<ThermalCluster*, CompareClusterName>;
     //! Set of thermal clusters (pointer)
@@ -105,16 +108,13 @@ public:
     //! Vector of thermal clusters
     using Vector = std::vector<Data::ThermalCluster*>;
 
-public:
     /*!
     ** \brief Get the group name string
     ** \return A valid CString
     */
     static const char* GroupName(enum ThermalDispatchableGroup grp);
 
-public:
     explicit ThermalCluster(Data::Area* parent);
-    explicit ThermalCluster(Data::Area* parent, uint nbParallelYears);
 
     ThermalCluster() = delete;
     ~ThermalCluster();
@@ -208,7 +208,10 @@ public:
 
     bool doWeGenerateTS(bool globalTSgeneration) const;
 
-public:
+    // Check & correct availability timeseries for thermal availability
+    // Only applies if time-series are ready-made
+    void checkAndCorrectAvailability();
+
     /*!
     ** \brief The group ID
     **
@@ -257,9 +260,6 @@ public:
 
     //! Spinning (%)
     double spinning;
-
-    //! CO2  / MWh
-    double co2;
 
     //! Forced Volatility
     double forcedVolatility;
@@ -332,9 +332,6 @@ public:
     //! Data for the preprocessor
     PreproThermal* prepro;
 
-    //! List of all other clusters linked with the current one
-    SetPointer coupling;
-
     //! \name Temporary data for simulation
     //@{
     /*!
@@ -351,27 +348,6 @@ public:
     ** 8760 (HOURS_PER_YEAR) array
     */
     double* productionCost;
-
-    /*!
-    ** \brief The number of units used the last hour in the simulation
-    **
-    ** \warning This variable is only valid when used from the solver
-    */
-    uint* unitCountLastHour;
-
-    /*!
-    ** \brief The production of the last hour in the simulation
-    **
-    ** \warning This variable is only valid when used from the solver
-    */
-    double* productionLastHour;
-    /*!
-    ** \brief The minimum power of a group of the cluster
-    **
-    ** \warning This variable is only valid when used from the solver
-    ** \Field PminDUnGroupeDuPalierThermique of the PALIERS_THERMIQUES structure
-    */
-    double* pminOfAGroup;
 
     LocalTSGenerationBehavior tsGenBehavior = LocalTSGenerationBehavior::useGlobalParameter;
 

@@ -40,18 +40,18 @@ namespace Economy
 struct VCardBindingConstMarginCost
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "BC. MARG. COST";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "Euro";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Marginal cost for binding constraints";
     }
@@ -154,7 +154,7 @@ public:
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
         // Set the associated binding constraint
-        associatedBC_ = &(study.runtime->bindingConstraint[bindConstraintGlobalNumber_]);
+        associatedBC_ = &(study.runtime->bindingConstraint[bindConstraintGlobalIndex_]);
 
         NextType::initializeFromStudy(study);
     }
@@ -165,9 +165,19 @@ public:
         VariableAccessorType::InitializeAndReset(results, study);
     }
 
-    void setBindConstraintGlobalNumber(uint bcNumber)
+    void setBindConstraintGlobalIndex(uint bc_index)
     {
-        bindConstraintGlobalNumber_ = bcNumber;
+        bindConstraintGlobalIndex_ = bc_index;
+    }
+
+    void setBindConstraintsCount(uint bcCount)
+    {
+        nbCount_ = bcCount;
+    }
+
+    uint getMaxNumberColumns() const
+    {
+        return nbCount_ * ResultsType::count;
     }
 
     void yearBegin(unsigned int year, unsigned int numSpace)
@@ -243,7 +253,7 @@ public:
             {
                 pValuesForTheCurrentYear[numSpace].day[dayInTheYear]
                   -= state.problemeHebdo
-                       ->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
+                       ->ResultatsContraintesCouplantes[bindConstraintGlobalIndex_]
                        .variablesDuales[dayInTheWeek];
 
                 dayInTheYear++;
@@ -256,7 +266,7 @@ public:
         {
             uint weekInTheYear = state.weekInTheYear;
             double weeklyValue
-              = -state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
+              = -state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalIndex_]
                    .variablesDuales[0];
 
             pValuesForTheCurrentYear[numSpace].week[weekInTheYear] = weeklyValue;
@@ -287,7 +297,7 @@ public:
         if (associatedBC_->type == Data::BindingConstraint::typeHourly)
         {
             pValuesForTheCurrentYear[numSpace][hourInTheYear]
-              -= state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
+              -= state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalIndex_]
                    .variablesDuales[state.hourInTheWeek];
         }
 
@@ -317,6 +327,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = getBindConstraintCaption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }
@@ -355,7 +366,7 @@ private:
 
     bool isInitialized()
     {
-        return (bindConstraintGlobalNumber_ >= 0) && associatedBC_;
+        return (bindConstraintGlobalIndex_ >= 0) && associatedBC_;
     }
 
     bool isCurrentOutputNonApplicable(int precision) const
@@ -382,7 +393,8 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear = nullptr;
     unsigned int pNbYearsParallel = 0;
     Data::BindingConstraintRTI* associatedBC_ = nullptr;
-    int bindConstraintGlobalNumber_ = -1;
+    int bindConstraintGlobalIndex_ = -1;
+    uint nbCount_ = 0; // Number of inequality BCs 
 
 }; // class BindingConstMarginCost
 

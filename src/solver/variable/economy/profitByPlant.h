@@ -40,18 +40,18 @@ namespace Economy
 struct VCardProfitByPlant
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "Profit by plant";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "Profit - Euro";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Profit for thermal units";
     }
@@ -147,7 +147,7 @@ public:
                 // year-by-year
                 if (!u.gatheringInformationsForInput)
                 {
-                    if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
+                    if (u.study.parameters.yearByYear)
                     {
                         for (unsigned int i = 0; i != u.years; ++i)
                             u.takeIntoConsiderationANewTimeserieForDiskOutput(false);
@@ -211,6 +211,11 @@ public:
 
         // Next
         NextType::initializeFromArea(study, area);
+    }
+
+    uint getMaxNumberColumns() const
+    {
+        return pNbClustersOfArea * ResultsType::count;
     }
 
     void initializeFromLink(Data::Study* study, Data::AreaLink* link)
@@ -285,28 +290,29 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
         // Useful local variables
+        auto area = state.area;
+        auto& thermal = state.thermal;
         double* areaMarginalCosts = state.hourlyResults->CoutsMarginauxHoraires;
-        auto* cluster = state.thermalCluster;
-        double hourlyClusterProduction = state.thermalClusterProduction;
         uint hourInTheWeek = state.hourInTheWeek;
         uint hourInTheYear = state.hourInTheYear;
 
-        // Thermal cluster profit
-        pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
-          = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
-            * (-areaMarginalCosts[hourInTheWeek]
-               - cluster->marginalCost
-                   * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
+        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
+             ++clusterIndex)
+        {
+            auto* cluster = state.area->thermal.clusters[clusterIndex];
+            double hourlyClusterProduction
+              = thermal[area->index].thermalClustersProductions[clusterIndex];
+            // Thermal cluster profit
+            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
+              = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
+                * (-areaMarginalCosts[hourInTheWeek]
+                   - cluster->marginalCost
+                       * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
+        }
 
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
+        // Next variable
+        NextType::hourForEachArea(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
@@ -334,6 +340,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = thermal.clusters[i]->name(); // VCardType::Caption();
+                results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }

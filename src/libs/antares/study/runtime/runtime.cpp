@@ -58,11 +58,6 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         // Precache allocation correlation coefficients
         area.hydro.allocation.prepareForSolver(study.areas);
 
-        // Creating runtime-data for the area
-
-        // alias to the simulation mode
-        auto mode = r.mode;
-
         // Hydro TS Generator: log(expectation) ; log(stddeviation)
         if (area.hydro.prepro)
         {
@@ -97,7 +92,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         }
 
         // Spinning - Economic Only - If no prepro
-        if (mode != stdmAdequacyDraft && !(timeSeriesThermal & r.parameters->timeSeriesToRefresh))
+        if (!(timeSeriesThermal & r.parameters->timeSeriesToRefresh))
         {
             // Calculation of the spinning
             area.thermal.list.calculationOfSpinning();
@@ -105,13 +100,15 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
             area.thermal.mustrunList.calculationOfSpinning();
         }
 
-        area.scratchpad = new AreaScratchpad*[area.nbYearsInParallel];
+        area.scratchpad.reserve(area.nbYearsInParallel);
         for (uint numSpace = 0; numSpace < area.nbYearsInParallel; numSpace++)
-            area.scratchpad[numSpace] = new AreaScratchpad(r, area);
+            area.scratchpad.emplace_back(r, area);
 
         // statistics
         r.thermalPlantTotalCount += area.thermal.list.size();
         r.thermalPlantTotalCountMustRun += area.thermal.mustrunList.size();
+
+        r.shortTermStorageCount += area.shortTermStorage.count();
     }
 }
 
@@ -196,28 +193,25 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
     else
     {
-        if (stdmAdequacyDraft != study.parameters.mode)
+        // In Economy mode, we must deal with an integral number of weeks
+        // A week : 168 hours
+        if ((b - a + 1) % 168)
         {
-            // In Economy mode, we must deal with an integral number of weeks
-            // A week : 168 hours
-            if ((b - a + 1) % 168)
-            {
-                // We have here too much hours, the interval will be reduced
-                // Log Entry
-                logs.info() << "    Partial week detected. Not allowed in "
-                            << StudyModeToCString(study.parameters.mode);
-                logs.info() << "    Time interval that has been requested: " << (1 + a) << ".."
-                            << (1 + b);
-                // Reducing
-                while (b > a and 0 != ((b - a + 1) % 168))
-                    --b;
-            }
+            // We have here too much hours, the interval will be reduced
+            // Log Entry
+            logs.info() << "    Partial week detected. Not allowed in "
+                        << StudyModeToCString(study.parameters.mode);
+            logs.info() << "    Time interval that has been requested: " << (1 + a) << ".."
+                        << (1 + b);
+            // Reducing
+            while (b > a and 0 != ((b - a + 1) % 168))
+                --b;
         }
     }
 
     // Getting informations about the given hours
-    auto& ca = study.calendar.hours[a]; // Antares::Date::StudyHourlyCalendar[a];
-    auto& cb = study.calendar.hours[b]; // Antares::Date::StudyHourlyCalendar[b];
+    auto& ca = study.calendar.hours[a];
+    auto& cb = study.calendar.hours[b];
 
     assert(ca.dayYear < 400 and "Trivial check failed");
     assert(cb.dayYear < 400 and "Trivial check failed");
@@ -303,7 +297,7 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     // (Example: 1 week: from 0 to 0 and it is valid)
     // As the number of hours has already been normalized to stick to a integral number of
     // weeks, this value must be greater than or equal to 168
-    if (not study.parameters.adequacyDraft() and limits.hour[rangeCount] < 168)
+    if (limits.hour[rangeCount] < 168)
     {
         logs.info();
         logs.fatal() << "At least one week is required to run a simulation.";
@@ -454,7 +448,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     mode = gd.mode;
     thermalPlantTotalCount = 0;
     thermalPlantTotalCountMustRun = 0;
-
     // Calendar
     logs.info() << "Generating calendar informations";
     if (study.usedByTheSolver)
@@ -491,9 +484,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Must-run mode
     initializeThermalClustersInMustRunMode(study);
 
-    // Max number of thermal/renewable clusters
-    initializeMaxClusters(study);
-
     // Areas
     StudyRuntimeInfosInitializeAllAreas(study, *this);
 
@@ -515,67 +505,13 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "     links: " << interconnectionsCount();
     logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
     logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
+    logs.info() << "     short-term storages: " << shortTermStorageCount;
     logs.info() << "     binding constraints: " << bindingConstraintCount;
     logs.info() << "     geographic trimming:" << (gd.geographicTrimming ? "true" : "false");
     logs.info() << "     memory : " << ((study.memoryUsage()) / 1024 / 1024) << "Mo";
     logs.info();
 
     return true;
-}
-
-namespace CompareAreasByNumberOfClusters
-{
-// Compare areas by number of thermal clusters
-struct thermal
-{
-    bool operator()(const AreaList::value_type& a, const AreaList::value_type& b) const
-    {
-        assert(a.second);
-        assert(b.second);
-        return a.second->thermal.clusterCount() < b.second->thermal.clusterCount();
-    }
-    size_t getNbClusters(const Area* area) const
-    {
-        assert(area);
-        return area->thermal.clusterCount();
-    }
-};
-// Compare areas by number of renewable clusters
-struct renewable
-{
-    bool operator()(const AreaList::value_type& a, const AreaList::value_type& b) const
-    {
-        assert(a.second);
-        assert(b.second);
-        return a.second->renewable.clusterCount() < b.second->renewable.clusterCount();
-    }
-    size_t getNbClusters(const Area* area) const
-    {
-        assert(area);
-        return area->renewable.clusterCount();
-    }
-};
-} // namespace CompareAreasByNumberOfClusters
-
-template<class CompareGetT>
-static size_t maxNumberOfClusters(const Study& study)
-{
-    CompareGetT cmp;
-    auto pairWithMostClusters = std::max_element(study.areas.begin(), study.areas.end(), cmp);
-    if (pairWithMostClusters != study.areas.end())
-    {
-        auto area = pairWithMostClusters->second;
-        return cmp.getNbClusters(area);
-    }
-    return 0;
-}
-
-void StudyRuntimeInfos::initializeMaxClusters(const Study& study)
-{
-    this->maxThermalClustersForSingleArea
-      = maxNumberOfClusters<CompareAreasByNumberOfClusters::thermal>(study);
-    this->maxRenewableClustersForSingleArea
-      = maxNumberOfClusters<CompareAreasByNumberOfClusters::renewable>(study);
 }
 
 uint StudyRuntimeInfos::interconnectionsCount() const
@@ -625,8 +561,7 @@ void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study) con
     {
         Area& area = *(study.areas.byIndex[a]);
         area.thermal.prepareAreaWideIndexes();
-        if (mode != stdmAdequacyDraft)
-            count += area.thermal.prepareClustersInMustRunMode();
+        count += area.thermal.prepareClustersInMustRunMode();
     }
 
     switch (count)

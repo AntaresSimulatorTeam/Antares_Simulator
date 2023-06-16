@@ -91,42 +91,6 @@ void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange
     }
 }
 
-// Adequacy Patch can only be used with Economy Study/Simulation Mode.
-void checkAdqPatchStudyModeEconomyOnly(const bool adqPatchOn,
-                                       const Antares::Data::StudyMode studyMode)
-{
-    if ((studyMode != Antares::Data::StudyMode::stdmEconomy) && adqPatchOn)
-    {
-        throw Error::IncompatibleStudyModeForAdqPatch();
-    }
-}
-// When Adequacy Patch is on at least one area must be inside Adequacy patch mode.
-void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Data::AreaList& areas)
-{
-    using namespace Antares::Data;
-    if (adqPatchOn)
-    {
-        const bool containsAdqArea
-          = std::any_of(areas.cbegin(), areas.cend(), [](const std::pair<AreaName, Area*>& area) {
-                return area.second->adequacyPatchMode == AdequacyPatch::physicalAreaInsideAdqPatch;
-            });
-        if (!containsAdqArea)
-            throw Error::NoAreaInsideAdqPatchMode();
-    }
-}
-
-void checkAdqPatchIncludeHurdleCost(const bool adqPatchOn,
-                                    const bool includeHurdleCost,
-                                    const bool includeHurdleCostCsr)
-{
-    // No need to check if adq-patch is disabled
-    if (!adqPatchOn)
-        return;
-
-    if (includeHurdleCostCsr && !includeHurdleCost)
-        throw Error::IncompatibleHurdleCostCSR();
-}
-
 void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas)
 {
     if (tsGenThermal)
@@ -137,49 +101,9 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
             throw Error::InvalidParametersForThermalClusters(areaClusterNames);
         }
     }
-
-    // CHECK PuissanceDisponible
-    /* Caracteristiques des paliers thermiques */
-    if (!tsGenThermal) // no time series generation asked (off mode)
+    else
     {
-        for (uint i = 0; i < areas.size(); ++i)
-        {
-            // Alias de la zone courant
-            auto& area = *(areas.byIndex[i]);
-
-            for (uint l = 0; l != area.thermal.clusterCount(); ++l) //
-            {
-                const auto& cluster = *(area.thermal.clusters[l]);
-                auto PmaxDUnGroupeDuPalierThermique = cluster.nominalCapacityWithSpinning;
-                auto PminDUnGroupeDuPalierThermique
-                  = (cluster.nominalCapacityWithSpinning < cluster.minStablePower)
-                      ? cluster.nominalCapacityWithSpinning
-                      : cluster.minStablePower;
-
-                bool condition = false;
-                bool report = false;
-
-                for (uint y = 0; y != cluster.series->series.height; ++y)
-                {
-                    for (uint x = 0; x != cluster.series->series.width; ++x)
-                    {
-                        auto rightpart = PminDUnGroupeDuPalierThermique
-                                         * ceil(cluster.series->series.entry[x][y]
-                                                / PmaxDUnGroupeDuPalierThermique);
-                        condition = rightpart > cluster.series->series.entry[x][y];
-                        if (condition)
-                        {
-                            cluster.series->series.entry[x][y] = rightpart;
-                            report = true;
-                        }
-                    }
-                }
-
-                if (report)
-                    logs.warning() << "Area : " << area.name << " cluster name : " << cluster.name()
-                                   << " available power lifted to match Pmin and Pnom requirements";
-            }
-        }
+        areas.each([](Antares::Data::Area& area) { area.thermal.checkAndCorrectAvailability(); });
     }
 }
 } // namespace
@@ -293,12 +217,10 @@ void Application::prepare(int argc, char* argv[])
 
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
-    checkAdqPatchStudyModeEconomyOnly(pParameters->adqPatch.enabled, pParameters->mode);
-
-    checkAdqPatchContainsAdqPatchArea(pParameters->adqPatch.enabled, pStudy->areas);
-    checkAdqPatchIncludeHurdleCost(pParameters->adqPatch.enabled,
-                                   pParameters->include.hurdleCosts,
-                                   pParameters->adqPatch.curtailmentSharing.includeHurdleCost);
+    if (pParameters->adqPatchParams.enabled)
+        pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,
+                                                        pStudy->areas,
+                                                        pParameters->include.hurdleCosts);
 
     bool tsGenThermal
       = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
@@ -378,9 +300,6 @@ void Application::execute()
             break;
         case Data::stdmAdequacy:
             runSimulationInAdequacyMode();
-            break;
-        case Data::stdmAdequacyDraft:
-            runSimulationInAdequacyDraftMode();
             break;
         default:
             break;

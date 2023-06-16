@@ -32,18 +32,13 @@
 
 namespace Antares::Solver::Simulation
 {
-
-const unsigned int nbHoursInAWeek = 168;
-
+using Constants::nbHoursInAWeek;
 
 void computingHydroLevels(const Data::AreaList& areas,
                           PROBLEME_HEBDO& problem,
                           bool remixWasRun,
                           bool computeAnyway)
 {
-    // gp : we do not care : will be removed very soon
-    // assert(study.parameters.mode != Data::stdmAdequacyDraft);
-
     areas.each([&](const Data::Area& area) {
         if (!area.hydro.reservoirManagement)
             return;
@@ -60,17 +55,17 @@ void computingHydroLevels(const Data::AreaList& areas,
 
         double* inflows = problem.CaracteristiquesHydrauliques[index]->ApportNaturelHoraire;
 
-        RESULTATS_HORAIRES* weeklyResults = problem.ResultatsHoraires[index];
+        RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
 
-        double* turb = weeklyResults->TurbinageHoraire;
+        double* turb = weeklyResults.TurbinageHoraire;
 
-        double* pump = weeklyResults->PompageHoraire;
+        double* pump = weeklyResults.PompageHoraire;
         double pumpingRatio = area.hydro.pumpingEfficiency;
 
         double nivInit = problem.CaracteristiquesHydrauliques[index]->NiveauInitialReservoir;
-        double* niv = weeklyResults->niveauxHoraires;
+        double* niv = weeklyResults.niveauxHoraires;
 
-        double* ovf = weeklyResults->debordementsHoraires;
+        double* ovf = weeklyResults.debordementsHoraires;
 
         auto& computeLvlObj = problem.computeLvl_object;
 
@@ -105,9 +100,9 @@ void interpolateWaterValue(const Data::AreaList& areas,
     areas.each([&](const Data::Area& area) {
         uint index = area.index;
 
-        RESULTATS_HORAIRES* weeklyResults = problem.ResultatsHoraires[index];
+        RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
 
-        double* waterVal = weeklyResults->valeurH2oHoraire;
+        double* waterVal = weeklyResults.valeurH2oHoraire;
 
         for (uint h = 0; h < nbHoursInAWeek; h++)
             waterVal[h] = 0.;
@@ -120,7 +115,7 @@ void interpolateWaterValue(const Data::AreaList& areas,
 
         double reservoirCapacity = area.hydro.reservoirCapacity;
 
-        double* niv = weeklyResults->niveauxHoraires;
+        double* niv = weeklyResults.niveauxHoraires;
 
         Antares::Data::getWaterValue(
                 problem.previousSimulationFinalLevel[index] * 100 / reservoirCapacity,
@@ -148,9 +143,9 @@ void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas,
 
         double reservoirCapacity = area.hydro.reservoirCapacity;
 
-        RESULTATS_HORAIRES* weeklyResults = problem.ResultatsHoraires[index];
+        RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
 
-        double* niv = weeklyResults->niveauxHoraires;
+        double* niv = weeklyResults.niveauxHoraires;
 
         problem.previousSimulationFinalLevel[index]
           = niv[nbHoursInAWeek - 1] * reservoirCapacity / 100;

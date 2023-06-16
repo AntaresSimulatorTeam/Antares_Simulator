@@ -215,6 +215,8 @@ set(SRC_STUDY_PART_THERMAL
 	study/parts/thermal/cluster.cpp
     study/parts/thermal/cluster_list.h
     study/parts/thermal/cluster_list.cpp
+	study/parts/thermal/pollutant.h
+	study/parts/thermal/pollutant.cpp
 	)
 source_group("study\\part\\thermal" FILES ${SRC_STUDY_PART_THERMAL})
 
@@ -228,6 +230,20 @@ set(SRC_STUDY_PART_RENEWABLE
     study/parts/renewable/cluster_list.cpp
     )
 source_group("study\\part\\renewable" FILES ${SRC_STUDY_PART_RENEWABLE})
+
+set(SRC_STUDY_PART_SHORT_TERM_STORAGE
+    study/parts/short-term-storage/container.h
+    study/parts/short-term-storage/container.cpp
+    study/parts/short-term-storage/properties.h
+    study/parts/short-term-storage/properties.cpp
+    study/parts/short-term-storage/series.cpp
+    study/parts/short-term-storage/series.h
+    study/parts/short-term-storage/cluster.h
+    study/parts/short-term-storage/cluster.cpp
+	study/parts/short-term-storage/STStorageOutputCaptions.h
+	study/parts/short-term-storage/STStorageOutputCaptions.cpp
+)
+source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
 
 set(SRC_STUDY_PART_WIND
 	study/parts/wind/container.h
@@ -263,8 +279,9 @@ source_group(study\\UI FILES ${SRC_STUDY_UI})
 
 set(SRC_STUDY_PARAMETERS
 	study/parameters.h
-	study/parameters.hxx
 	study/parameters.cpp
+	study/parameters/adq-patch-params.h
+	study/parameters/adq-patch-params.cpp
 	study/UnfeasibleProblemBehavior.cpp
     # TODO JMK : should be in a target_include_directories : but need to remove all .h from all SRC
     study/UnfeasibleProblemBehavior.hpp
@@ -541,6 +558,7 @@ add_library(libantares-core
 	${SRC_STUDY_PART_COMMON}
 	${SRC_STUDY_PART_THERMAL}
 	${SRC_STUDY_PART_RENEWABLE}
+    ${SRC_STUDY_PART_SHORT_TERM_STORAGE}
 	${SRC_STUDY_SCENARIO_BUILDER}
 	${SRC_EXCEPTION}
 	${SRC_STDCXX}

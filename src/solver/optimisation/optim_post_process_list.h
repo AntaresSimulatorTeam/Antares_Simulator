@@ -2,10 +2,8 @@
 
 #include "../simulation/base_post_process.h"
 
-
 namespace Antares::Solver::Simulation
 {
-
 class OptPostProcessList : public interfacePostProcessList
 {
 public:

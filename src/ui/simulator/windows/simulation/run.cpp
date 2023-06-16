@@ -91,7 +91,11 @@ static wxString TimeSeriesToWxString(uint m)
         r << (r.empty() ? wxEmptyString : wxT(", ")) << wxT("wind");
     if (m & Data::timeSeriesThermal)
         r << (r.empty() ? wxEmptyString : wxT(", ")) << wxT("thermal");
-    return r.empty() ? wxT("none") : r;
+
+    if (r.empty())
+        return wxT("none");
+    else
+        return r;
 }
 
 static inline void UpdateLabel(bool& guiUpdated, wxStaticText* label, const wxString& text)
@@ -857,13 +861,9 @@ void Run::prepareMenuSolverMode(Antares::Component::Button&, wxMenu& menu, void*
     // cleanup
     pMappingSolverMode.clear();
 
-    // Simulation mode is adequacy-draft mode ?
-    auto& study = *Data::Study::Current::Get();
-    bool draftMode = study.parameters.adequacyDraft();
-
     for (uint i = 0; i != featuresCount; ++i)
     {
-        wxMenuItem* it = Menu::CreateItem(&menu,
+        const wxMenuItem* it = Menu::CreateItem(&menu,
                                           wxID_ANY,
                                           featuresNames[i],
                                           "images/16x16/empty.png",
@@ -877,10 +877,6 @@ void Run::prepareMenuSolverMode(Antares::Component::Button&, wxMenu& menu, void*
                      wxCommandEventHandler(Run::onSelectMode),
                      nullptr,
                      this);
-
-        // In case of adequacy-draft mode, parallel mode is disabled
-        if (i == Solver::parallel && draftMode)
-            it->Enable(false);
     }
 }
 

@@ -39,18 +39,18 @@ namespace Variable
 struct VCardJoin
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "";
     }
@@ -266,12 +266,6 @@ public:
     {
         LeftType::hourForEachArea(state, numSpace);
         RightType::hourForEachArea(state);
-    }
-
-    void hourForEachThermalCluster(State& state)
-    {
-        LeftType::hourForEachThermalCluster(state);
-        RightType::hourForEachThermalCluster(state);
     }
 
     void hourForEachLink(State& state)

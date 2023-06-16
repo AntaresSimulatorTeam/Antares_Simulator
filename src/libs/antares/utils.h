@@ -45,9 +45,6 @@ void TransformNameIntoID(const AnyString& name, StringT& out);
 */
 void BeautifyName(YString& out, AnyString oldname);
 
-template<class StringT>
-void TransformNameIntoNameBefore390(const AnyString& name, StringT& out);
-
 } // namespace Antares
 
 #include "utils.hxx"

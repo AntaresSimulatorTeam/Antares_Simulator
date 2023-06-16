@@ -10,7 +10,6 @@ target_link_libraries(tests-simple-study
 						PRIVATE
 						libantares-core
 						libantares-solver-main-economy
-						libantares-solver-main-adequacy-draft
 						libantares-solver-main-adequacy
 						libantares-solver-hydro
 						libantares-solver-aleatoire
