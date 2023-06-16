@@ -44,7 +44,7 @@ namespace Data
 namespace Enum
 {
 /*! Enum class to define export structure dictionnary */
-enum class ExportStructDict : unsigned char
+enum class VariableType : unsigned char
 {
     ValeurDeNTCOrigineVersExtremite,
     PalierThermique,
@@ -72,7 +72,7 @@ enum class ExportStructDict : unsigned char
     ShortTermStorageWithdrawal,
     ShortTermStorageLevel
 };
-enum class ExportStructConstraintsDict : unsigned char
+enum class ConstraintType : unsigned char
 {
     FlowDissociation,
     AreaBalance,
@@ -94,18 +94,18 @@ enum class ExportStructConstraintsDict : unsigned char
     ConsistenceNODU,
     ShortTermStorageLevel
 };
-enum class ExportStructTimeStepDict : unsigned char
+enum class TimeStepType : unsigned char
 {
     hour,
     day,
     week
 };
-enum class ExportStructLocationDict : unsigned char
+enum class LocationType : unsigned char
 {
     area,
     link
 };
-enum class ExportStructBindingConstraintType : unsigned char
+enum class BindingConstraintType : unsigned char
 {
     hourly,
     daily,
