@@ -193,8 +193,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             int nombreDeTermes = 0;
 
             int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
-            const auto& area = problemeHebdo->NomsDesPays[pays];
-            constraintNamer->UpdateArea(area);
+            constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
 
             while (interco >= 0)
             {
@@ -223,7 +222,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             exportPaliers(
               *problemeHebdo, *CorrespondanceVarNativesVarOptim, pays, nombreDeTermes, Pi, Colonne);
 
-            constraintNamer->UpdateArea(area);
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays];
             if (var >= 0)
             {
@@ -272,7 +270,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             exportPaliers(
               *problemeHebdo, *CorrespondanceVarNativesVarOptim, pays, nombreDeTermes, Pi, Colonne);
-            constraintNamer->UpdateArea(area);
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays];
             if (var >= 0)
             {
@@ -287,8 +284,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Pi[nombreDeTermes] = 1.0;
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
-
-                const auto& area = problemeHebdo->NomsDesPays[pays];
             }
 
             CorrespondanceCntNativesCntOptim->NumeroDeContraintePourEviterLesChargesFictives[pays]
@@ -654,8 +649,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const auto& area = problemeHebdo->NomsDesPays[pays];
-        constraintNamer->UpdateArea(area);
+        constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
         bool presenceHydro
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable;
         bool TurbEntreBornes
@@ -723,8 +717,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         {
             if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
                 continue;
-            const auto& area = problemeHebdo->NomsDesPays[pays];
-            constraintNamer->UpdateArea(area);
+
+            constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
@@ -783,8 +777,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
                 continue;
 
-            const auto& area = problemeHebdo->NomsDesPays[pays];
-            constraintNamer->UpdateArea(area);
+            constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
@@ -843,8 +836,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable;
         const bool TurbEntreBornes
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
-        const auto& area = problemeHebdo->NomsDesPays[pays];
-        constraintNamer->UpdateArea(area);
+        constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
         if (presenceHydro && (TurbEntreBornes || presencePompage))
         {
             int nombreDeTermes = 0;
@@ -901,7 +893,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const auto& area = problemeHebdo->NomsDesPays[pays];
+        constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
         if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable)
         {
             int nombreDeTermes = 0;
@@ -938,8 +930,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         constraintNamer->UpdateTimeStep(timeStepInYear);
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const auto& area = problemeHebdo->NomsDesPays[pays];
-            constraintNamer->UpdateArea(area);
+            constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
             if (problemeHebdo->CaracteristiquesHydrauliques[pays]->SuiviNiveauHoraire)
             {
                 int nombreDeTermes = 0;
@@ -1006,8 +997,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const auto& week = problemeHebdo->weekInTheYear;
-        const auto& area = problemeHebdo->NomsDesPays[pays];
-        constraintNamer->UpdateArea(area);
+        constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
         constraintNamer->UpdateTimeStep(week * 168 + nombreDePasDeTempsPourUneOptimisation - 1);
 
         if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue
