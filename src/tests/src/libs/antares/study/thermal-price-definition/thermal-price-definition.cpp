@@ -20,6 +20,29 @@ std::string getFolder()
     return tmpDir.string();
 }
 
+void createIniFile()
+{
+    std::string folder = getFolder();
+
+    std::ofstream outfile;
+    outfile.open(folder + SEP + "list.ini", std::ofstream::out | std::ofstream::trunc);
+
+    outfile << "[area]" << std::endl;
+    outfile << "name = area" << std::endl;
+    outfile << "group = Lignite" << std::endl;
+    outfile << "unitcount = 4" << std::endl;
+    outfile << "nominalcapacity = 900.000000" << std::endl;
+    outfile << "min-stable-power = 400.000000" << std::endl;
+    outfile << "min-up-time = 24" << std::endl;
+    outfile << "min-down-time = 24" << std::endl;
+    outfile << "co2 = 1.200000" << std::endl;
+    outfile << "marginal-cost = 35.000000" << std::endl;
+    outfile << "fixed-cost = 1700.000000" << std::endl;
+    outfile << "startup-cost = 70000.000000" << std::endl;
+    outfile << "market-bid-cost = 35.000000" << std::endl;
+
+    outfile.close();
+}
 
 // =================
 // The fixture
