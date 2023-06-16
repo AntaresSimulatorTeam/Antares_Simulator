@@ -373,6 +373,8 @@ public:
 
     void run()
     {
+        excessDown = 0.;
+
         level = level + inflows[step] - turb[step] + pumpRatio * pump[step];
 
         if (level > capacity)
