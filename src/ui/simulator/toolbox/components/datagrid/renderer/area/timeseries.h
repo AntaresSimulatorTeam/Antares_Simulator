@@ -427,6 +427,34 @@ protected:
 };
 
 // ----------------------
+//   Fuel Cost
+// ----------------------
+class TimeSeriesThermalClusterFuelCost final : public TimeSeriesCluster
+{
+public:
+    TimeSeriesThermalClusterFuelCost(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
+    ~TimeSeriesThermalClusterFuelCost() override;
+
+private:
+    void internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster);
+    void onStudyClosed() override;
+};
+
+// ----------------------
+//   CO2 Cost
+// ----------------------
+class TimeSeriesThermalClusterCO2Cost final : public TimeSeriesCluster
+{
+public:
+    TimeSeriesThermalClusterCO2Cost(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
+    ~TimeSeriesThermalClusterCO2Cost() override;
+
+private:
+    void internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster);
+    void onStudyClosed() override;
+};
+
+// ----------------------
 //   RENEWABLE CLUSTERS
 // ----------------------
 

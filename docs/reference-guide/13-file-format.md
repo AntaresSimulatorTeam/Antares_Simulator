@@ -50,6 +50,15 @@ Add directory **bindingconstraints** to output directory **ts-numbers**. For eve
 #### Pollutant emission factors
 In files **input/thermal/cluster/area/list.ini** add properties `nh3`, `nox`, `pm2_5`, `pm5`, `pm10`, `nmvoc`, `so2`, `op1`, `op2`, `op3`, `op4`, `op5` [double]. These properties are emission factors similar to the existing one for CO2.
 
+#### Thermal cluster new properties
+For each thermal cluster, in existing file **input/thermal/clusters/&lt;area&gt;/list.ini**, under existing sections **&lt;cluster&gt;**, following properties added: 
+
+* `costgeneration` [string] can take values `useCostTimeseries` or be excluded from the section if `Set manually` is selected (default behavior).
+* `efficiency` [float] excluded from the section if default value 100 is selected (default behavior).
+* `variableomcost` [float] excluded from the section if default value 0 is selected (default behavior).
+
+For each thermal cluster, new files added **input/thermal/prepro/&lt;area&gt;/&lt;cluster&gt;/CO2Cost.txt** and **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/fuelCost.txt**. **fuelCost.txt** and **CO2Cost.txt** must either have one column, or the same number of columns as existing file **series.txt** (availability)
+
 #### Adequacy patch
 In file **settings/generaldata.ini**, in section `adequacy patch` add property `enable-first-step` [bool]. Default value = `true` Enable or disable DENS column
 
