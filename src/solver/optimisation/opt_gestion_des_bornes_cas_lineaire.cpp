@@ -61,7 +61,7 @@ void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* problemeHebdo)
         const double* ContrainteDePmaxHydrauliqueHoraire
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->ContrainteDePmaxHydrauliqueHoraire;
         double pmaxHyd = -1;
-        for (int pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
+        for (uint pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
         {
             if (ContrainteDePmaxHydrauliqueHoraire[pdtHebdo] > pmaxHyd)
                 pmaxHyd = ContrainteDePmaxHydrauliqueHoraire[pdtHebdo];
@@ -74,7 +74,7 @@ void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* problemeHebdo)
     return;
 }
 
-double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO* problemeHebdo, int Pays, int pdtHebdo)
+double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO* problemeHebdo, int Pays, uint pdtHebdo)
 {
     double sommeDesPminThermiques = 0.0;
     const PALIERS_THERMIQUES* PaliersThermiquesDuPays
@@ -166,9 +166,11 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
     double* Xmax = problemeHebdo->ProblemeAResoudre->Xmax;
     double** AddressForVars
       = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
+    int weekFirstHour = problemeHebdo->weekInTheYear * 168;
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
+        int hourInTheYear = weekFirstHour + pdtHebdo;
         const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
           = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
         for (int areaIndex = 0; areaIndex < problemeHebdo->NombreDePays; areaIndex++)
@@ -184,7 +186,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                                      .InjectionVariable[clusterGlobalIndex];
                 Xmin[varInjection] = 0.;
                 Xmax[varInjection]
-                  = storage.injectionNominalCapacity * storage.series->maxInjectionModulation[pdtHebdo];
+                  = storage.injectionNominalCapacity * storage.series->maxInjectionModulation[hourInTheYear];
                 AddressForVars[varInjection] = &STSResult.injection[storageIndex];
 
                 // 2. Withdrwal
@@ -192,20 +194,20 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                                       .WithdrawalVariable[clusterGlobalIndex];
                 Xmin[varWithdrawal] = 0.;
                 Xmax[varWithdrawal]
-                  = storage.withdrawalNominalCapacity * storage.series->maxWithdrawalModulation[pdtHebdo];
+                  = storage.withdrawalNominalCapacity * storage.series->maxWithdrawalModulation[hourInTheYear];
                 AddressForVars[varWithdrawal] = &STSResult.withdrawal[storageIndex];
 
                 // 3. Levels
                 int varLevel
                   = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
-                if (pdtHebdo == PremierPdtDeLIntervalle && storage.initialLevel.has_value())
+                if (pdtHebdo == DernierPdtDeLIntervalle - 1 && storage.initialLevel.has_value())
                 {
                     Xmin[varLevel] = Xmax[varLevel] = storage.reservoirCapacity * storage.initialLevel.value();
                 }
                 else
                 {
-                    Xmin[varLevel] = storage.reservoirCapacity * storage.series->lowerRuleCurve[pdtHebdo];
-                    Xmax[varLevel] = storage.reservoirCapacity * storage.series->upperRuleCurve[pdtHebdo];
+                    Xmin[varLevel] = storage.reservoirCapacity * storage.series->lowerRuleCurve[hourInTheYear];
+                    Xmax[varLevel] = storage.reservoirCapacity * storage.series->upperRuleCurve[hourInTheYear];
                 }
                 AddressForVars[varLevel] = &STSResult.level[storageIndex];
 

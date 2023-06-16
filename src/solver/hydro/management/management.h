@@ -80,15 +80,15 @@ private:
     //! Prepare minimum generation scaling for each area
     void minGenerationScaling(uint numSpace);
     //! check Monthly minimum generation is lower than available inflows
-    void checkMonthlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const;
+    bool checkMonthlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const;
     //! check Yearly minimum generation is lower than available inflows
-    void checkYearlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const;
+    bool checkYearlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const;
     //! check Weekly minimum generation is lower than available inflows
-    void checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) const;
+    bool checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) const;
     //! check Hourly minimum generation is lower than available inflows
-    void checkHourlyMinGeneration(uint tsIndex, Data::Area& area) const;
+    bool checkHourlyMinGeneration(uint tsIndex, Data::Area& area) const;
     //! check minimum generation is lower than available inflows
-    void checkMinGeneration(uint numSpace);
+    bool checkMinGeneration(uint numSpace);
     //! Prepare the net demand for each area
     template<enum Data::StudyMode ModeT>
     void prepareNetDemand(uint numSpace);

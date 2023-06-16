@@ -121,6 +121,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
 void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
-double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, int);
+double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
 
 #endif /* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */

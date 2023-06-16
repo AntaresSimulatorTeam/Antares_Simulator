@@ -321,7 +321,7 @@ void ThermalCluster::internalDeletePlant(void*)
             study->uiinfo->reload();
 
             // delete associated constraints
-            Antares::Data::BindConstList::iterator BC = study->bindingConstraints.begin();
+            Antares::Data::BindingConstraintsList::iterator BC = study->bindingConstraints.begin();
             int BCListSize = study->bindingConstraints.size();
 
             if (BCListSize)
@@ -589,8 +589,8 @@ void ThermalCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr i
 
         auto study = Data::Study::Current::Get();
 
-        const Data::BindConstList::iterator cEnd = study->bindingConstraints.end();
-        for (Data::BindConstList::iterator i = study->bindingConstraints.begin(); i != cEnd; ++i)
+        const Data::BindingConstraintsList::iterator cEnd = study->bindingConstraints.end();
+        for (Data::BindingConstraintsList::iterator i = study->bindingConstraints.begin(); i != cEnd; ++i)
         {
             // alias to the current constraint
             Data::BindingConstraint* constraint = *i;

@@ -26,28 +26,21 @@
 */
 
 #pragma once
-#include <string>
-#include <map>
-#include "cluster.h"
 
-namespace Antares::Data::ShortTermStorage
+#include <antares/mersenne-twister/mersenne-twister.h>
+
+namespace SIM
 {
-class STStorageInput
+class SpreadGenerator
 {
+    static constexpr double rangeDefault = 1.e-3;
 public:
-    bool validate() const;
-    // 1. Read list.ini
-    bool createSTStorageClustersFromIniFile(const std::string& path);
-    // 2. Read ALL series
-    bool loadSeriesFromFolder(const std::string& folder) const;
-    // Number of ST storages
-    std::size_t count() const;
+    SpreadGenerator(double range = rangeDefault);
+    void reset(unsigned int seed);
+    double generate();
 
-    bool saveToFolder(const std::string& folder) const;
-    bool saveDataSeriesToFolder(const std::string& folder) const;
-
-
-    std::vector<STStorageCluster*> storagesByIndex;
-    std::map<std::string, STStorageCluster> storagesById;
+private:
+    Antares::MersenneTwister mt_;
+    const double range_;
 };
-} // namespace Antares::Data::ShortTermStorage
+} // namespace SIM

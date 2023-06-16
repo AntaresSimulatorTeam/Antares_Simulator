@@ -55,10 +55,10 @@ int DataSeriesLoadLoadFromFolder(Study& study,
     int ret = 1;
     /* Load the matrix */
     buffer.clear() << folder << SEP << "load_" << areaID << '.' << study.inputExtension;
-    ret = s->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+    ret = s->timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
 
     if (study.usedByTheSolver && study.parameters.derated)
-        s->series.averageTimeseries();
+        s->timeSeries.averageTimeseries();
 
     s->timeseriesNumbers.clear();
 
@@ -80,7 +80,7 @@ int DataSeriesLoadSaveToFolder(DataSeriesLoad* s, const AreaName& areaID, const 
 
         Clob buffer;
         buffer.clear() << folder << SEP << "load_" << areaID << ".txt";
-        res = s->series.saveToCSVFile(buffer, /*decimal*/ 0) && res;
+        res = s->timeSeries.saveToCSVFile(buffer, /*decimal*/ 0) && res;
 
         return res;
     }
@@ -89,22 +89,22 @@ int DataSeriesLoadSaveToFolder(DataSeriesLoad* s, const AreaName& areaID, const 
 
 bool DataSeriesLoad::forceReload(bool reload) const
 {
-    return series.forceReload(reload);
+    return timeSeries.forceReload(reload);
 }
 
 void DataSeriesLoad::markAsModified() const
 {
-    return series.markAsModified();
+    return timeSeries.markAsModified();
 }
 
 void DataSeriesLoad::estimateMemoryUsage(StudyMemoryUsage& u) const
 {
     u.requiredMemoryForInput += sizeof(DataSeriesLoad);
     timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-    series.estimateMemoryUsage(u,
+    timeSeries.estimateMemoryUsage(u,
                                0 != (timeSeriesLoad & u.study.parameters.timeSeriesToGenerate),
-                               u.study.parameters.nbTimeSeriesLoad,
-                               HOURS_PER_YEAR);
+                                    u.study.parameters.nbTimeSeriesLoad,
+                                    HOURS_PER_YEAR);
 }
 
 } // namespace Data

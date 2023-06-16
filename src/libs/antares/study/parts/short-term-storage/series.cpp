@@ -27,26 +27,27 @@
 #include <yuni/io/file.h>
 #include <antares/logs.h>
 #include <antares/constants.h>
-#include <antares/array/array1d.h>
 
+#include <iomanip>
 #include <fstream>
 
 #include "series.h"
 
+#define SEP Yuni::IO::Separator
+
 namespace Antares::Data::ShortTermStorage
 {
-
 
 bool Series::loadFromFolder(const std::string& folder)
 {
     bool ret = true;
-#define SEP Yuni::IO::Separator
+
     ret = loadFile(folder + SEP + "PMAX-injection.txt", maxInjectionModulation) && ret;
     ret = loadFile(folder + SEP + "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
     ret = loadFile(folder + SEP + "inflows.txt", inflows) && ret;
     ret = loadFile(folder + SEP + "lower-rule-curve.txt", lowerRuleCurve) && ret;
     ret = loadFile(folder + SEP + "upper-rule-curve.txt", upperRuleCurve) && ret;
-#undef SEP
+
     return ret;
 }
 
@@ -113,6 +114,49 @@ void Series::fillDefaultSeriesIfEmpty()
     fillIfEmpty(inflows, 0.0);
     fillIfEmpty(lowerRuleCurve, 0.0);
     fillIfEmpty(upperRuleCurve, 1.0);
+}
+
+bool Series::saveToFolder(const std::string& folder) const
+{
+    logs.debug() << "Saving series into folder: " << folder;
+    if (!Yuni::IO::Directory::Create(folder))
+    {
+        logs.warning() << "Couldn't create dir: " << folder;
+        return false;
+    }
+
+    bool ret = true;
+
+    auto checkWrite = [&ret, &folder](const std::string& name, const std::vector<double>& content) {
+        ret = writeVectorToFile(folder + SEP + name, content) && ret;
+    };
+
+    checkWrite("PMAX-injection.txt", maxInjectionModulation);
+    checkWrite("PMAX-withdrawal.txt", maxWithdrawalModulation);
+    checkWrite("inflows.txt", inflows);
+    checkWrite("lower-rule-curve.txt", lowerRuleCurve);
+    checkWrite("upper-rule-curve.txt", upperRuleCurve);
+
+    return ret;
+}
+
+bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
+{
+    try
+    {
+        std::ofstream fout(path);
+        fout << std::setprecision(14);
+
+        for (const auto& x : vect)
+            fout << x << '\n';
+    }
+    catch (...)
+    {
+        logs.error() << "Error while trying to save series file: " << path;
+        return false;
+    }
+
+    return true;
 }
 
 bool Series::validate() const

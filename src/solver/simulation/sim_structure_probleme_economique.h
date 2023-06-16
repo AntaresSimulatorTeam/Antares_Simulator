@@ -487,12 +487,6 @@ struct VARIABLES_DUALES_INTERCONNEXIONS
     double* VariableDualeParInterconnexion = nullptr;
 };
 
-struct COUTS_MARGINAUX_ZONES_DE_RESERVE
-{
-    double* CoutsMarginauxHorairesDeLaReserveParZone = nullptr;
-};
-
-
 struct PROBLEME_HEBDO
 {
     unsigned int weekInTheYear = 0;
@@ -515,8 +509,8 @@ struct PROBLEME_HEBDO
     VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTC = nullptr;
     VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTCRef = nullptr;
 
-    int NombreDePasDeTemps = 0;
-    int NombreDePasDeTempsRef = 0;
+    unsigned int NombreDePasDeTemps = 0;
+    unsigned int NombreDePasDeTempsRef = 0;
     int* NumeroDeJourDuPasDeTemps = nullptr;
 
     int NombreDePasDeTempsPourUneOptimisation = 0;
@@ -620,7 +614,6 @@ struct PROBLEME_HEBDO
     double* tempsResolution1 = nullptr;
     double* tempsResolution2 = nullptr;
 
-    COUTS_MARGINAUX_ZONES_DE_RESERVE** CoutsMarginauxDesContraintesDeReserveParZone = nullptr;
     /* Unused for now, will be used in future revisions */
 #if 0
     char SecondeOptimisationRelaxee;

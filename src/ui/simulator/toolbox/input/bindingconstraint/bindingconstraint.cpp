@@ -100,8 +100,8 @@ public:
         auto& study = *Data::Study::Current::Get();
 
         const Spotlight::SearchToken::Vector::const_iterator tend = tokens.end();
-        Data::BindConstList::iterator end = study.bindingConstraints.end();
-        Data::BindConstList::iterator i = study.bindingConstraints.begin();
+        Data::BindingConstraintsList::iterator end = study.bindingConstraints.end();
+        Data::BindingConstraintsList::iterator i = study.bindingConstraints.begin();
 
         std::vector<Data::BindingConstraint*> layerFilteredItems;
         if (!text.empty())
@@ -130,8 +130,8 @@ public:
             }
         }
 
-        Data::BindConstList::iterator j;
-        Data::BindConstList::iterator endJ;
+        Data::BindingConstraintsList::iterator j;
+        Data::BindingConstraintsList::iterator endJ;
 
         j = layerFilteredItems.begin();
         endJ = layerFilteredItems.end();
