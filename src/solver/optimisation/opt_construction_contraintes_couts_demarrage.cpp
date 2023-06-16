@@ -65,8 +65,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-        const auto& area = problemeHebdo->NomsDesPays[pays];
-        constraintNamer->UpdateArea(area);
+        constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             double pminDUnGroupeDuPalierThermique
@@ -178,8 +177,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-        const auto& area = problemeHebdo->NomsDesPays[pays];
-        constraintNamer->UpdateArea(area);
+        constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             const int palier
@@ -264,8 +262,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
-                        constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
-
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
                         constraintNamer->ConsistenceNODU();
@@ -281,8 +277,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-        const auto& area = problemeHebdo->NomsDesPays[pays];
-        constraintNamer->UpdateArea(area);
+        constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             const int palier
@@ -335,8 +330,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
-                        constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
-
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
                         constraintNamer->MinUpTime();
@@ -352,8 +345,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-        const auto& area = problemeHebdo->NomsDesPays[pays];
-        constraintNamer->UpdateArea(area);
+        constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
@@ -452,8 +444,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-        const auto& area = problemeHebdo->NomsDesPays[pays];
-        constraintNamer->UpdateArea(area);
+        constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             int DureeMinimaleDArretDUnGroupeDuPalierThermique
