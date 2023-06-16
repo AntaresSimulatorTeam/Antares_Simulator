@@ -121,9 +121,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         }
     }
 
-    problem.CoutsMarginauxDesContraintesDeReserveParZone
-      = new COUTS_MARGINAUX_ZONES_DE_RESERVE*[nbPays];
-
     problem.ReserveJMoins1 = new RESERVE_JMOINS1*[nbPays];
     problem.ResultatsHoraires.resize(nbPays);
 
@@ -375,12 +372,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         problem.PaliersThermiquesDuPays[k] = new PALIERS_THERMIQUES;
         problem.CaracteristiquesHydrauliques[k] =  new ENERGIES_ET_PUISSANCES_HYDRAULIQUES;
 
-        problem.CoutsMarginauxDesContraintesDeReserveParZone[k]
-          = new COUTS_MARGINAUX_ZONES_DE_RESERVE;
-        problem.CoutsMarginauxDesContraintesDeReserveParZone[k]
-          ->CoutsMarginauxHorairesDeLaReserveParZone
-          = new double[NombreDePasDeTemps];
-
         problem.ReserveJMoins1[k] = new RESERVE_JMOINS1;
         problem.PaliersThermiquesDuPays[k]->minUpDownTime = new int[nbPaliers];
         problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure
@@ -454,9 +445,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         problem.ResultatsHoraires[k].ValeursHorairesLmrViolations
           = new int[NombreDePasDeTemps](); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR
-          = new double[NombreDePasDeTemps]; // adq patch
+          = new double[NombreDePasDeTemps](); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr
-          = new double[NombreDePasDeTemps]; // adq patch
+          = new double[NombreDePasDeTemps](); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveUp
           = new double[NombreDePasDeTemps];
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveDown
@@ -590,329 +581,314 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     uint nbPays = study.areas.size();
 
-    delete problem.NomsDesPays;
-    delete problem.PaysExtremiteDeLInterconnexion;
-    delete problem.PaysOrigineDeLInterconnexion;
-    delete problem.IndexDebutIntercoOrigine;
-    delete problem.IndexDebutIntercoExtremite;
-    delete problem.IndexSuivantIntercoOrigine;
-    delete problem.IndexSuivantIntercoExtremite;
-    delete problem.NumeroDeJourDuPasDeTemps;
-    delete problem.NumeroDIntervalleOptimiseDuPasDeTemps;
-    delete problem.NbGrpCourbeGuide;
-    delete problem.NbGrpOpt;
+    delete[] problem.NomsDesPays;
+    delete[] problem.PaysExtremiteDeLInterconnexion;
+    delete[] problem.PaysOrigineDeLInterconnexion;
+    delete[] problem.IndexDebutIntercoOrigine;
+    delete[] problem.IndexDebutIntercoExtremite;
+    delete[] problem.IndexSuivantIntercoOrigine;
+    delete[] problem.IndexSuivantIntercoExtremite;
+    delete[] problem.NumeroDeJourDuPasDeTemps;
+    delete[] problem.NumeroDIntervalleOptimiseDuPasDeTemps;
+    delete[] problem.NbGrpCourbeGuide;
+    delete[] problem.NbGrpOpt;
 
     for (uint k = 0; k < problem.NombreDePasDeTemps; k++)
     {
-        delete problem.ValeursDeNTC[k]->ResistanceApparente;
-        delete problem.ValeursDeNTC[k]->ValeurDeNTCExtremiteVersOrigine;
-        delete problem.ValeursDeNTC[k]->ValeurDeNTCOrigineVersExtremite;
-        delete problem.ValeursDeNTC[k]->ValeurDeLoopFlowOrigineVersExtremite;
-        delete problem.ValeursDeNTC[k]->ValeurDuFlux;
-        delete problem.ValeursDeNTC[k]->ValeurDuFluxUp;
-        delete problem.ValeursDeNTC[k]->ValeurDuFluxDown;
+        delete[] problem.ValeursDeNTC[k]->ResistanceApparente;
+        delete[] problem.ValeursDeNTC[k]->ValeurDeNTCExtremiteVersOrigine;
+        delete[] problem.ValeursDeNTC[k]->ValeurDeNTCOrigineVersExtremite;
+        delete[] problem.ValeursDeNTC[k]->ValeurDeLoopFlowOrigineVersExtremite;
+        delete[] problem.ValeursDeNTC[k]->ValeurDuFlux;
+        delete[] problem.ValeursDeNTC[k]->ValeurDuFluxUp;
+        delete[] problem.ValeursDeNTC[k]->ValeurDuFluxDown;
         delete problem.ValeursDeNTC[k];
-        delete problem.ConsommationsAbattues[k]->ConsommationAbattueDuPays;
+        delete[] problem.ConsommationsAbattues[k]->ConsommationAbattueDuPays;
         delete problem.ConsommationsAbattues[k];
-        delete problem.ValeursDeNTCRef[k]->ResistanceApparente;
-        delete problem.ValeursDeNTCRef[k]->ValeurDeNTCExtremiteVersOrigine;
-        delete problem.ValeursDeNTCRef[k]->ValeurDeNTCOrigineVersExtremite;
-        delete problem.ValeursDeNTCRef[k]->ValeurDeLoopFlowOrigineVersExtremite;
-        delete problem.ValeursDeNTCRef[k]->ValeurDuFlux;
-        delete problem.ValeursDeNTCRef[k]->ValeurDuFluxUp;
-        delete problem.ValeursDeNTCRef[k]->ValeurDuFluxDown;
+        delete[] problem.ValeursDeNTCRef[k]->ResistanceApparente;
+        delete[] problem.ValeursDeNTCRef[k]->ValeurDeNTCExtremiteVersOrigine;
+        delete[] problem.ValeursDeNTCRef[k]->ValeurDeNTCOrigineVersExtremite;
+        delete[] problem.ValeursDeNTCRef[k]->ValeurDeLoopFlowOrigineVersExtremite;
+        delete[] problem.ValeursDeNTCRef[k]->ValeurDuFlux;
+        delete[] problem.ValeursDeNTCRef[k]->ValeurDuFluxUp;
+        delete[] problem.ValeursDeNTCRef[k]->ValeurDuFluxDown;
         delete problem.ValeursDeNTCRef[k];
-        delete problem.ConsommationsAbattuesRef[k]->ConsommationAbattueDuPays;
+        delete[] problem.ConsommationsAbattuesRef[k]->ConsommationAbattueDuPays;
         delete problem.ConsommationsAbattuesRef[k];
-        delete problem.AllMustRunGeneration[k]->AllMustRunGenerationOfArea;
+        delete[] problem.AllMustRunGeneration[k]->AllMustRunGenerationOfArea;
         delete problem.AllMustRunGeneration[k];
-        delete problem.SoldeMoyenHoraire[k]->SoldeMoyenDuPays;
+        delete[] problem.SoldeMoyenHoraire[k]->SoldeMoyenDuPays;
         delete problem.SoldeMoyenHoraire[k];
-        delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDeLInterconnexion;
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion);
-        delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermique;
-        delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHyd;
-        delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDePompage;
-        delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeNiveau;
-        delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeDebordement;
-        delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositive;
-        delete problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegative;
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausse);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique);
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDeLInterconnexion;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]
+                  ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]
+                  ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermique;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHyd;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDePompage;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeNiveau;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeDebordement;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositive;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegative;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausse;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]
+                  ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]
+                  ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]
+                  ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]
+                  ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
 
-        delete problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.InjectionVariable;
-        delete problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.WithdrawalVariable;
-        delete problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.LevelVariable;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.InjectionVariable;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.WithdrawalVariable;
+        delete[] problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.LevelVariable;
 
         delete problem.CorrespondanceVarNativesVarOptim[k];
-        delete problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays;
-        delete problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesNiveauxPays;
-        MemFree(problem.CorrespondanceCntNativesCntOptim[k]
-                  ->NumeroDeContraintePourEviterLesChargesFictives);
 
-        MemFree(
-          problem.CorrespondanceCntNativesCntOptim[k]->NumeroPremiereContrainteDeReserveParZone);
-        MemFree(
-          problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeuxiemeContrainteDeReserveParZone);
-        MemFree(
-          problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDeDissociationDeFlux);
-        MemFree(
-          problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesContraintesCouplantes);
-        MemFree(problem.CorrespondanceCntNativesCntOptim[k]
-                  ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche);
-        MemFree(problem.CorrespondanceCntNativesCntOptim[k]
-                  ->NumeroDeContrainteDesContraintesDeDureeMinDArret);
-        MemFree(problem.CorrespondanceCntNativesCntOptim[k]
-                  ->NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne);
-        delete problem.CorrespondanceCntNativesCntOptim[k]->ShortTermStorageLevelConstraint;
+        delete[] problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays;
+        delete[] problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesNiveauxPays;
+        delete[] problem.CorrespondanceCntNativesCntOptim[k]
+                  ->NumeroDeContraintePourEviterLesChargesFictives;
+
+        delete[] problem.CorrespondanceCntNativesCntOptim[k]->NumeroPremiereContrainteDeReserveParZone;
+        delete[] problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeuxiemeContrainteDeReserveParZone;
+        delete[] problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDeDissociationDeFlux;
+        delete[] problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesContraintesCouplantes;
+        delete[] problem.CorrespondanceCntNativesCntOptim[k]
+                  ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche;
+        delete[] problem.CorrespondanceCntNativesCntOptim[k]
+                  ->NumeroDeContrainteDesContraintesDeDureeMinDArret;
+        delete[] problem.CorrespondanceCntNativesCntOptim[k]
+                  ->NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne;
+        delete[] problem.CorrespondanceCntNativesCntOptim[k]->ShortTermStorageLevelConstraint;
 
         delete problem.CorrespondanceCntNativesCntOptim[k];
-        delete problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion;
+        delete[] problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion;
         delete problem.VariablesDualesDesContraintesDeNTC[k];
     }
-    delete problem.ValeursDeNTC;
-    delete problem.ConsommationsAbattues;
-    delete problem.ValeursDeNTCRef;
-    delete problem.ConsommationsAbattuesRef;
-    delete problem.AllMustRunGeneration;
-    delete problem.SoldeMoyenHoraire;
-    delete problem.CorrespondanceVarNativesVarOptim;
-    delete problem.CorrespondanceCntNativesCntOptim;
-    delete problem.VariablesDualesDesContraintesDeNTC;
+    delete[] problem.ValeursDeNTC;
+    delete[] problem.ConsommationsAbattues;
+    delete[] problem.ValeursDeNTCRef;
+    delete[] problem.ConsommationsAbattuesRef;
+    delete[] problem.AllMustRunGeneration;
+    delete[] problem.SoldeMoyenHoraire;
+    delete[] problem.CorrespondanceVarNativesVarOptim;
+    delete[] problem.CorrespondanceCntNativesCntOptim;
+    delete[] problem.VariablesDualesDesContraintesDeNTC;
 
     for (int k = 0; k < (int)study.runtime->interconnectionsCount(); k++)
     {
-        delete problem.CoutDeTransport[k]->CoutDeTransportOrigineVersExtremite;
-        delete problem.CoutDeTransport[k]->CoutDeTransportExtremiteVersOrigine;
+        delete[] problem.CoutDeTransport[k]->CoutDeTransportOrigineVersExtremite;
+        delete[] problem.CoutDeTransport[k]->CoutDeTransportExtremiteVersOrigine;
 
-        delete problem.CoutDeTransport[k]->CoutDeTransportOrigineVersExtremiteRef;
-        delete problem.CoutDeTransport[k]->CoutDeTransportExtremiteVersOrigineRef;
+        delete[] problem.CoutDeTransport[k]->CoutDeTransportOrigineVersExtremiteRef;
+        delete[] problem.CoutDeTransport[k]->CoutDeTransportExtremiteVersOrigineRef;
         delete problem.CoutDeTransport[k];
     }
-    delete problem.CoutDeTransport;
+    delete[] problem.CoutDeTransport;
 
     for (int k = 0; k < 7; k++)
     {
-        MemFree(problem.CorrespondanceCntNativesCntOptimJournalieres[k]
-                  ->NumeroDeContrainteDesContraintesCouplantes);
+        delete[] problem.CorrespondanceCntNativesCntOptimJournalieres[k]
+                  ->NumeroDeContrainteDesContraintesCouplantes;
         delete problem.CorrespondanceCntNativesCntOptimJournalieres[k];
     }
-    delete problem.CorrespondanceCntNativesCntOptimJournalieres;
+    delete[] problem.CorrespondanceCntNativesCntOptimJournalieres;
 
     for (int k = 0; k < 1; k++)
     {
-        MemFree(problem.CorrespondanceCntNativesCntOptimHebdomadaires[k]
-                  ->NumeroDeContrainteDesContraintesCouplantes);
+        delete[] problem.CorrespondanceCntNativesCntOptimHebdomadaires[k]
+                  ->NumeroDeContrainteDesContraintesCouplantes;
         delete problem.CorrespondanceCntNativesCntOptimHebdomadaires[k];
     }
-    delete problem.CorrespondanceCntNativesCntOptimHebdomadaires;
+    delete[] problem.CorrespondanceCntNativesCntOptimHebdomadaires;
 
     for (int k = 0; k < (int)study.runtime->bindingConstraintCount; k++)
     {
-        delete problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante;
-        delete problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplanteRef;
+        delete[] problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante;
+        delete[] problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplanteRef;
 
-        delete problem.MatriceDesContraintesCouplantes[k]->NumeroDeLInterconnexion;
-        delete problem.MatriceDesContraintesCouplantes[k]->PoidsDeLInterconnexion;
-        delete problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLInterco;
+        delete[] problem.MatriceDesContraintesCouplantes[k]->NumeroDeLInterconnexion;
+        delete[] problem.MatriceDesContraintesCouplantes[k]->PoidsDeLInterconnexion;
+        delete[] problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLInterco;
 
-        delete problem.MatriceDesContraintesCouplantes[k]->PoidsDuPalierDispatch;
-        delete problem.MatriceDesContraintesCouplantes[k]->PaysDuPalierDispatch;
-        delete problem.MatriceDesContraintesCouplantes[k]->NumeroDuPalierDispatch;
-        delete problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLePalierDispatch;
+        delete[] problem.MatriceDesContraintesCouplantes[k]->PoidsDuPalierDispatch;
+        delete[] problem.MatriceDesContraintesCouplantes[k]->PaysDuPalierDispatch;
+        delete[] problem.MatriceDesContraintesCouplantes[k]->NumeroDuPalierDispatch;
+        delete[] problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLePalierDispatch;
 
-        delete problem.MatriceDesContraintesCouplantes[k];
+        delete[] problem.MatriceDesContraintesCouplantes[k];
 
         if (problem.ResultatsContraintesCouplantes[k].variablesDuales != nullptr)
-            delete problem.ResultatsContraintesCouplantes[k].variablesDuales;
+            delete[] problem.ResultatsContraintesCouplantes[k].variablesDuales;
     }
-    delete problem.MatriceDesContraintesCouplantes;
-    delete problem.ResultatsContraintesCouplantes;
+    delete[] problem.MatriceDesContraintesCouplantes;
+    delete[] problem.ResultatsContraintesCouplantes;
 
     for (int k = 0; k < (int)nbPays; ++k)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
-        delete problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure;
-        delete problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour;
-        delete problem.PaliersThermiquesDuPays[k]->minUpDownTime;
-        delete problem.PaliersThermiquesDuPays[k]->TailleUnitaireDUnGroupeDuPalierThermique;
-        MemFree(
-          problem.PaliersThermiquesDuPays[k]->NumeroDuPalierDansLEnsembleDesPaliersThermiques);
+        delete[] problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure;
+        delete[] problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour;
+        delete[] problem.PaliersThermiquesDuPays[k]->minUpDownTime;
+        delete[] problem.PaliersThermiquesDuPays[k]->TailleUnitaireDUnGroupeDuPalierThermique;
+        delete[] problem.PaliersThermiquesDuPays[k]->NumeroDuPalierDansLEnsembleDesPaliersThermiques;
 
-        delete problem.PaliersThermiquesDuPays[k]->CoutDeDemarrageDUnGroupeDuPalierThermique;
-        delete problem.PaliersThermiquesDuPays[k]->CoutDArretDUnGroupeDuPalierThermique;
-        delete problem.PaliersThermiquesDuPays[k]->CoutFixeDeMarcheDUnGroupeDuPalierThermique;
-        delete problem.PaliersThermiquesDuPays[k]->pminDUnGroupeDuPalierThermique;
-        delete problem.PaliersThermiquesDuPays[k]->PmaxDUnGroupeDuPalierThermique;
-        MemFree(
-          problem.PaliersThermiquesDuPays[k]->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique);
+        delete[] problem.PaliersThermiquesDuPays[k]->CoutDeDemarrageDUnGroupeDuPalierThermique;
+        delete[] problem.PaliersThermiquesDuPays[k]->CoutDArretDUnGroupeDuPalierThermique;
+        delete[] problem.PaliersThermiquesDuPays[k]->CoutFixeDeMarcheDUnGroupeDuPalierThermique;
+        delete[] problem.PaliersThermiquesDuPays[k]->pminDUnGroupeDuPalierThermique;
+        delete[] problem.PaliersThermiquesDuPays[k]->PmaxDUnGroupeDuPalierThermique;
+        delete[] problem.PaliersThermiquesDuPays[k]->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
         problem.PaliersThermiquesDuPays[k]->NomsDesPaliersThermiques.clear();
-        delete problem.PaliersThermiquesDuPays[k]->DureeMinimaleDArretDUnGroupeDuPalierThermique;
+        delete[] problem.PaliersThermiquesDuPays[k]->DureeMinimaleDArretDUnGroupeDuPalierThermique;
 
-        delete problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimise;
-        delete problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParJour;
-        delete problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimiseRef;
+        delete[] problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimise;
+        delete[] problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParJour;
+        delete[] problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimiseRef;
 
-        delete problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraire;
-        delete problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraireRef;
+        delete[] problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraire;
+        delete[] problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraireRef;
 
-        delete problem.CaracteristiquesHydrauliques[k]->MaxEnergieHydrauParIntervalleOptimise;
-        delete problem.CaracteristiquesHydrauliques[k]->MinEnergieHydrauParIntervalleOptimise;
+        delete[] problem.CaracteristiquesHydrauliques[k]->MaxEnergieHydrauParIntervalleOptimise;
+        delete[] problem.CaracteristiquesHydrauliques[k]->MinEnergieHydrauParIntervalleOptimise;
 
-        delete problem.CaracteristiquesHydrauliques[k]->MaxEnergiePompageParIntervalleOptimise;
-        delete problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxPompageHoraire;
+        delete[] problem.CaracteristiquesHydrauliques[k]->MaxEnergiePompageParIntervalleOptimise;
+        delete[] problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxPompageHoraire;
 
-        delete problem.CaracteristiquesHydrauliques[k]->NiveauHoraireSup;
-        delete problem.CaracteristiquesHydrauliques[k]->NiveauHoraireInf;
-        delete problem.CaracteristiquesHydrauliques[k]->ApportNaturelHoraire;
-        delete problem.CaracteristiquesHydrauliques[k]->MingenHoraire;
+        delete[] problem.CaracteristiquesHydrauliques[k]->NiveauHoraireSup;
+        delete[] problem.CaracteristiquesHydrauliques[k]->NiveauHoraireInf;
+        delete[] problem.CaracteristiquesHydrauliques[k]->ApportNaturelHoraire;
+        delete[] problem.CaracteristiquesHydrauliques[k]->MingenHoraire;
 
-        delete problem.CaracteristiquesHydrauliques[k]->WaterLayerValues;
-        delete problem.CaracteristiquesHydrauliques[k]->InflowForTimeInterval;
+        delete[] problem.CaracteristiquesHydrauliques[k]->WaterLayerValues;
+        delete[] problem.CaracteristiquesHydrauliques[k]->InflowForTimeInterval;
         delete problem.CaracteristiquesHydrauliques[k];
 
-        MemFree(problem.CoutsMarginauxDesContraintesDeReserveParZone[k]
-                  ->CoutsMarginauxHorairesDeLaReserveParZone);
-        delete problem.CoutsMarginauxDesContraintesDeReserveParZone[k];
-        delete problem.ReserveJMoins1[k]->ReserveHoraireJMoins1;
-        delete problem.ReserveJMoins1[k]->ReserveHoraireJMoins1Ref;
+        delete[] problem.ReserveJMoins1[k]->ReserveHoraireJMoins1;
+        delete[] problem.ReserveJMoins1[k]->ReserveHoraireJMoins1Ref;
         delete problem.ReserveJMoins1[k];
 
         for (int j = 0; j < (int)nbPaliers; j++)
         {
-            MemFree(problem.PaliersThermiquesDuPays[k]
+            delete[] problem.PaliersThermiquesDuPays[k]
                       ->PuissanceDisponibleEtCout[j]
-                      ->CoutHoraireDeProductionDuPalierThermique);
-            MemFree(problem.PaliersThermiquesDuPays[k]
+                      ->CoutHoraireDeProductionDuPalierThermique;
+            delete[] problem.PaliersThermiquesDuPays[k]
                       ->PuissanceDisponibleEtCout[j]
-                      ->CoutHoraireDeProductionDuPalierThermiqueRef);
-            MemFree(problem.PaliersThermiquesDuPays[k]
+                      ->CoutHoraireDeProductionDuPalierThermiqueRef;
+            delete[] problem.PaliersThermiquesDuPays[k]
                       ->PuissanceDisponibleEtCout[j]
-                      ->PuissanceDisponibleDuPalierThermique);
-            MemFree(problem.PaliersThermiquesDuPays[k]
+                      ->PuissanceDisponibleDuPalierThermique;
+            delete[] problem.PaliersThermiquesDuPays[k]
                       ->PuissanceDisponibleEtCout[j]
-                      ->PuissanceDisponibleDuPalierThermiqueRef);
-            MemFree(problem.PaliersThermiquesDuPays[k]
+                      ->PuissanceDisponibleDuPalierThermiqueRef;
+            delete[] problem.PaliersThermiquesDuPays[k]
                       ->PuissanceDisponibleEtCout[j]
-                      ->PuissanceDisponibleDuPalierThermiqueRef_SV);
-            MemFree(problem.PaliersThermiquesDuPays[k]
+                      ->PuissanceDisponibleDuPalierThermiqueRef_SV;
+            delete[] problem.PaliersThermiquesDuPays[k]
                       ->PuissanceDisponibleEtCout[j]
-                      ->PuissanceMinDuPalierThermique);
-            MemFree(problem.PaliersThermiquesDuPays[k]
+                      ->PuissanceMinDuPalierThermique;
+            delete[] problem.PaliersThermiquesDuPays[k]
                       ->PuissanceDisponibleEtCout[j]
-                      ->PuissanceMinDuPalierThermique_SV);
-            MemFree(problem.PaliersThermiquesDuPays[k]
+                      ->PuissanceMinDuPalierThermique_SV;
+            delete[] problem.PaliersThermiquesDuPays[k]
                       ->PuissanceDisponibleEtCout[j]
-                      ->NombreMaxDeGroupesEnMarcheDuPalierThermique);
-            MemFree(problem.PaliersThermiquesDuPays[k]
+                      ->NombreMaxDeGroupesEnMarcheDuPalierThermique;
+            delete[] problem.PaliersThermiquesDuPays[k]
                       ->PuissanceDisponibleEtCout[j]
-                      ->NombreMinDeGroupesEnMarcheDuPalierThermique);
-            MemFree(problem.PaliersThermiquesDuPays[k]
+                      ->NombreMinDeGroupesEnMarcheDuPalierThermique;
+            delete[] problem.PaliersThermiquesDuPays[k]
                       ->PuissanceDisponibleEtCout[j]
-                      ->CoutHoraireDuPalierThermiqueUp);
-            MemFree(problem.PaliersThermiquesDuPays[k]
+                      ->CoutHoraireDuPalierThermiqueUp;
+            delete[] problem.PaliersThermiquesDuPays[k]
                       ->PuissanceDisponibleEtCout[j]
-                      ->CoutHoraireDuPalierThermiqueDown);
+                      ->CoutHoraireDuPalierThermiqueDown;
             delete problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout[j];
         }
-        delete problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout;
+        delete[] problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout;
         delete problem.PaliersThermiquesDuPays[k];
 
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDENS;
-        delete problem.ResultatsHoraires[k].ValeursHorairesLmrViolations;
-        delete problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveUp;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveDown;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveAny;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegative;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeUp;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeDown;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeAny;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceEnReserve;
-        delete problem.ResultatsHoraires[k].TurbinageHoraire;
-        delete problem.ResultatsHoraires[k].PompageHoraire;
-        delete problem.ResultatsHoraires[k].TurbinageHoraireUp;
-        delete problem.ResultatsHoraires[k].TurbinageHoraireDown;
-        delete problem.ResultatsHoraires[k].niveauxHoraires;
-        delete problem.ResultatsHoraires[k].valeurH2oHoraire;
-        delete problem.ResultatsHoraires[k].debordementsHoraires;
-        delete problem.ResultatsHoraires[k].CoutsMarginauxHoraires;
+        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive;
+        delete[] problem.ResultatsHoraires[k].ValeursHorairesDENS;
+        delete[] problem.ResultatsHoraires[k].ValeursHorairesLmrViolations;
+        delete[] problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR;
+        delete[] problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr;
+        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveUp;
+        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveDown;
+        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveAny;
+        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegative;
+        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeUp;
+        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeDown;
+        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeAny;
+        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceEnReserve;
+        delete[] problem.ResultatsHoraires[k].TurbinageHoraire;
+        delete[] problem.ResultatsHoraires[k].PompageHoraire;
+        delete[] problem.ResultatsHoraires[k].TurbinageHoraireUp;
+        delete[] problem.ResultatsHoraires[k].TurbinageHoraireDown;
+        delete[] problem.ResultatsHoraires[k].niveauxHoraires;
+        delete[] problem.ResultatsHoraires[k].valeurH2oHoraire;
+        delete[] problem.ResultatsHoraires[k].debordementsHoraires;
+        delete[] problem.ResultatsHoraires[k].CoutsMarginauxHoraires;
 
         for (uint j = 0; j < problem.NombreDePasDeTemps; j++)
         {
-            MemFree(
-              problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalier);
-            MemFree(
-              problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierUp);
-            MemFree(
-              problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierDown);
-            MemFree(
-              problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesEnMarcheDuPalier);
-            MemFree(problem.ResultatsHoraires[k]
+            delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalier;
+            delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierUp;
+            delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierDown;
+            delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesEnMarcheDuPalier;
+            delete[] problem.ResultatsHoraires[k]
                       .ProductionThermique[j]
-                      ->NombreDeGroupesQuiDemarrentDuPalier);
-            MemFree(problem.ResultatsHoraires[k]
+                      ->NombreDeGroupesQuiDemarrentDuPalier;
+            delete[] problem.ResultatsHoraires[k]
                       .ProductionThermique[j]
-                      ->NombreDeGroupesQuiSArretentDuPalier);
-            MemFree(problem.ResultatsHoraires[k]
+                      ->NombreDeGroupesQuiSArretentDuPalier;
+            delete[] problem.ResultatsHoraires[k]
                       .ProductionThermique[j]
-                      ->NombreDeGroupesQuiTombentEnPanneDuPalier);
+                      ->NombreDeGroupesQuiTombentEnPanneDuPalier;
             delete problem.ResultatsHoraires[k].ProductionThermique[j];
         }
-        delete problem.ResultatsHoraires[k].ProductionThermique;
-        delete problem.BruitSurCoutHydraulique[k];
+        delete[] problem.ResultatsHoraires[k].ProductionThermique;
+        delete[] problem.BruitSurCoutHydraulique[k];
     }
-    delete problem.PaliersThermiquesDuPays;
-    delete problem.CaracteristiquesHydrauliques;
-    delete problem.previousSimulationFinalLevel;
+    delete[] problem.PaliersThermiquesDuPays;
+    delete[] problem.CaracteristiquesHydrauliques;
+    delete[] problem.previousSimulationFinalLevel;
     if (problem.previousYearFinalLevels)
-        delete problem.previousYearFinalLevels;
+        delete[] problem.previousYearFinalLevels;
 
-    delete problem.CoutsMarginauxDesContraintesDeReserveParZone;
-    delete problem.ReserveJMoins1;
+    delete[] problem.ReserveJMoins1;
 
-    delete problem.CoutDeDefaillancePositive;
-    delete problem.CoutDeDefaillanceNegative;
-    delete problem.CoutDeDefaillanceEnReserve;
-    delete problem.NumeroDeContrainteEnergieHydraulique;
-    delete problem.NumeroDeContrainteMinEnergieHydraulique;
-    delete problem.NumeroDeContrainteMaxEnergieHydraulique;
-    delete problem.NumeroDeContrainteMaxPompage;
-    delete problem.NumeroDeContrainteDeSoldeDEchange;
+    delete[] problem.CoutDeDefaillancePositive;
+    delete[] problem.CoutDeDefaillanceNegative;
+    delete[] problem.CoutDeDefaillanceEnReserve;
+    delete[] problem.NumeroDeContrainteEnergieHydraulique;
+    delete[] problem.NumeroDeContrainteMinEnergieHydraulique;
+    delete[] problem.NumeroDeContrainteMaxEnergieHydraulique;
+    delete[] problem.NumeroDeContrainteMaxPompage;
+    delete[] problem.NumeroDeContrainteDeSoldeDEchange;
 
-    delete problem.NumeroDeContrainteEquivalenceStockFinal;
-    delete problem.NumeroDeContrainteExpressionStockFinal;
-    delete problem.NumeroDeVariableStockFinal;
+    delete[] problem.NumeroDeContrainteEquivalenceStockFinal;
+    delete[] problem.NumeroDeContrainteExpressionStockFinal;
+    delete[] problem.NumeroDeVariableStockFinal;
     for (uint p = 0; p < nbPays; ++p)
-        delete problem.NumeroDeVariableDeTrancheDeStock[p];
-    delete problem.NumeroDeVariableDeTrancheDeStock;
+        delete[] problem.NumeroDeVariableDeTrancheDeStock[p];
+    delete[] problem.NumeroDeVariableDeTrancheDeStock;
 
-    delete problem.DefaillanceNegativeUtiliserConsoAbattue;
-    delete problem.DefaillanceNegativeUtiliserHydro;
-    delete problem.DefaillanceNegativeUtiliserPMinThermique;
+    delete[] problem.DefaillanceNegativeUtiliserConsoAbattue;
+    delete[] problem.DefaillanceNegativeUtiliserHydro;
+    delete[] problem.DefaillanceNegativeUtiliserPMinThermique;
 
-    delete problem.CoefficientEcretementPMaxHydraulique;
+    delete[] problem.CoefficientEcretementPMaxHydraulique;
 
-    delete problem.BruitSurCoutHydraulique;
+    delete[] problem.BruitSurCoutHydraulique;
 
-    delete problem.coutOptimalSolution1;
-    delete problem.coutOptimalSolution2;
-    delete problem.tempsResolution1;
-    delete problem.tempsResolution2;
+    delete[] problem.coutOptimalSolution1;
+    delete[] problem.coutOptimalSolution2;
+    delete[] problem.tempsResolution1;
+    delete[] problem.tempsResolution2;
 }
