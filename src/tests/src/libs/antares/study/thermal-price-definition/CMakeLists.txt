@@ -12,6 +12,8 @@ add_executable(thermal-price-definition ${SRC_THERM_PRICE_DEF})
 target_include_directories(thermal-price-definition
 								PRIVATE
 									"${src_libs_antares_study}/parts/thermal"
+									"${src_libs_antares_study}/area"
+									"${src_libs_antares_study}"
 )
 
 target_link_libraries(thermal-price-definition

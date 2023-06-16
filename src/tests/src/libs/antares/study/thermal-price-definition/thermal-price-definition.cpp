@@ -7,7 +7,9 @@
 #include <filesystem>
 #include <fstream>
 
-#include "container.h"
+#include <study.h>
+
+#include "cluster_list.h"
 
 #define SEP Yuni::IO::Separator
 
@@ -40,8 +42,17 @@ void createIniFile()
     outfile << "fixed-cost = 1700.000000" << std::endl;
     outfile << "startup-cost = 70000.000000" << std::endl;
     outfile << "market-bid-cost = 35.000000" << std::endl;
+    outfile << "costgeneration = useCostTimeseries" << std::endl;
+    outfile << "efficiency = 35.350000" << std::endl;
+    outfile << "variableomcost = 12.120000" << std::endl;
 
     outfile.close();
+}
+
+void removeIniFile()
+{
+    std::string folder = getFolder();
+    std::filesystem::remove(folder + SEP + "list.ini");
 }
 
 // =================
@@ -53,12 +64,24 @@ struct Fixture
     Fixture(const Fixture && f) = delete;
     Fixture & operator= (const Fixture & f) = delete;
     Fixture& operator= (const Fixture && f) = delete;
-    Fixture() = default;
+    Fixture()
+    {
+        area = study->areaAdd("Area");
+        /* study->usedByTheSolver = true; */
+        study->parameters.include.thermal.minUPTime = true;
+        study->parameters.include.thermal.minStablePower = true;
+        study->parameters.include.reserve.spinning = true;
+
+    }
     ~Fixture()
     {
     }
 
     std::string folder = getFolder();
+    ThermalClusterList clusterList;
+    Area* area;
+
+    Study::Ptr study = std::make_shared<Study>();
 
 };
 
@@ -68,5 +91,18 @@ struct Fixture
 // ==================
 
 BOOST_FIXTURE_TEST_SUITE(s, Fixture)
+
+BOOST_AUTO_TEST_CASE(load_from_folder_basic)
+{
+    createIniFile();
+
+    clusterList.loadFromFolder(*study, folder, area);
+    BOOST_CHECK(clusterList.mapping["area"]->startupCost == 70000.0);
+    BOOST_CHECK(clusterList.mapping["area"]->costgeneration == useCostTimeseries);
+    BOOST_CHECK(clusterList.mapping["area"]->fuelEfficiency == 35.35);
+    BOOST_CHECK(clusterList.mapping["area"]->variableomcost == 12.12);
+
+    removeIniFile();
+}
 
 BOOST_AUTO_TEST_SUITE_END()
