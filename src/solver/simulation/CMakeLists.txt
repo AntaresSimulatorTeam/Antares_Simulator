@@ -40,6 +40,8 @@ set(SRC_SIMULATION
 		opt_time_writer.cpp
 		adequacy_patch_runtime_data.h
 		adequacy_patch_runtime_data.cpp
+		hydro-final-reservoir-level-functions.h
+		hydro-final-reservoir-level-functions.cpp
 		)
 source_group("simulation" FILES ${SRC_SIMULATION})
 
