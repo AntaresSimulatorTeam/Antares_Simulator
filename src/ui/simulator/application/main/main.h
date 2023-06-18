@@ -699,6 +699,7 @@ private:
     Component::Notebook::Page* pageScBuilderLoad;
     Component::Notebook::Page* pageScBuilderThermal;
     Component::Notebook::Page* pageScBuilderHydro;
+    Component::Notebook::Page* pageScBuilderHydroEnergyCredits;
     Component::Notebook::Page* pageScBuilderWind;
     Component::Notebook::Page* pageScBuilderSolar;
     Component::Notebook::Page* pageScBuilderNTC;
