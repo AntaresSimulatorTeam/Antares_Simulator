@@ -329,6 +329,7 @@ void Area::resizeAllTimeseriesNumbers(uint n)
         solar.series->timeseriesNumbers.clear();
         wind.series->timeseriesNumbers.clear();
         hydro.series->timeseriesNumbers.clear();
+        hydro.series->timeseriesNumbersEnergyCredits.clear();
         for (auto& namedLink : links)
         {
             AreaLink* link = namedLink.second;
@@ -341,6 +342,7 @@ void Area::resizeAllTimeseriesNumbers(uint n)
         solar.series->timeseriesNumbers.resize(1, n);
         wind.series->timeseriesNumbers.resize(1, n);
         hydro.series->timeseriesNumbers.resize(1, n);
+        hydro.series->timeseriesNumbersEnergyCredits.resize(1, n);
         for (auto& namedLink : links)
         {
             AreaLink* link = namedLink.second;

@@ -84,7 +84,7 @@ private:
     //! check Weekly minimum generation is lower than available inflows
     bool checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) const;
     //! check Hourly minimum generation is lower than available inflows
-    bool checkHourlyMinGeneration(uint tsIndex, Data::Area& area) const;
+    bool checkHourlyMinMaxGeneration(uint tsIndex, uint tsIndexEnergyCredits, Data::Area& area) const;
     //! check minimum generation is lower than available inflows
     bool checkMinGeneration(uint numSpace);
     //! Prepare the net demand for each area

@@ -154,6 +154,16 @@ public:
     uint count;
 
     /*!
+    ** \brief The number of time-series for maxgen and maxpump matrices
+    **
+    ** This value must be the same as the width of the matrices `maxgen` and `maxpump`.
+    ** It is only provided for convenience to avoid same strange and ambiguous code
+    ** (for example using `maxgen.width` and `maxpump.width` in the same routine, it might
+    ** indicate that the two values are not strictly equal)
+    */
+    uint countenergycredits;
+
+    /*!
     ** \brief Monte-Carlo
     */
     Matrix<Yuni::uint32> timeseriesNumbers;

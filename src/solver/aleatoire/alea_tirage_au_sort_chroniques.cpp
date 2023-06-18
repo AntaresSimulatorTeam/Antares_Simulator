@@ -78,12 +78,15 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             ptchro.Solar
               = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
-        // Hydro
+        // Hydro and Hydro Energy Credits
         {
             const Data::DataSeriesHydro& data = *area.hydro.series;
             assert(year < data.timeseriesNumbers.height);
+            assert(year < data.timeseriesNumbersEnergyCredits.height);
             ptchro.Hydraulique
               = (data.count != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+            ptchro.HydrauliqueEnergyCredits
+              = (data.countenergycredits != 1) ? (long)data.timeseriesNumbersEnergyCredits[0][year] : 0;
             // Hydro - mod
             memset(ptvalgen.HydrauliqueModulableQuotidien, 0, nbDaysPerYearDouble);
         }

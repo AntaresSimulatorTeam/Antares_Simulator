@@ -42,7 +42,7 @@ namespace Antares
 {
 namespace Data
 {
-DataSeriesHydro::DataSeriesHydro() : count(0)
+DataSeriesHydro::DataSeriesHydro() : count(0), countenergycredits(0)
 {
     // Pmin was introduced in v8.6
     // The previous behavior was Pmin=0
@@ -106,6 +106,11 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
         ret = maxpump.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
     }
 
+    countenergycredits = maxgen.width;
+
+    if (maxpump.width > countenergycredits)
+        countenergycredits = maxpump.width;
+
     if (study.usedByTheSolver)
     {
         if (0 == count)
@@ -115,8 +120,6 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
             ror.reset(1, HOURS_PER_YEAR);
             storage.reset(1, DAYS_PER_YEAR);
             mingen.reset(1, HOURS_PER_YEAR);
-            maxgen.reset(1, HOURS_PER_YEAR);
-            maxpump.reset(1, HOURS_PER_YEAR);
         }
         else
         {
@@ -162,6 +165,57 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
             checkMinGenTsNumber(study, areaID);
         }
 
+        if (countenergycredits == 0)
+        {
+            logs.error() << "Hydro Energy Credits: `" << areaID
+                         << "`: empty matrix detected. Fixing it with default values";
+
+            maxgen.reset(1, HOURS_PER_YEAR);
+            maxpump.reset(1, HOURS_PER_YEAR);
+        }
+        else
+        {
+            if (countenergycredits > 1 && maxgen.width != maxpump.width)
+            {
+                if (maxpump.width != 1 && maxgen.width != 1)
+                {
+                    logs.fatal() << "Hydro Energy Credits: `" << areaID
+                                 << "`: The matrices Maximum Generation and Maximum Pumping must "
+                                    "have the same number of time-series.";
+                    study.gotFatalError = true;
+                }
+                else
+                {
+                    if (maxpump.width == 1)
+                    {
+                        maxpump.resizeWithoutDataLost(countenergycredits, maxpump.height);
+                        for (uint x = 1; x < countenergycredits; ++x)
+                            maxpump.pasteToColumn(x, maxpump[0]);
+                    }
+                    else
+                    {
+                        if (maxgen.width == 1)
+                        {
+                            maxgen.resizeWithoutDataLost(countenergycredits, maxgen.height);
+                            for (uint x = 1; x < countenergycredits; ++x)
+                                maxgen.pasteToColumn(x, maxgen[0]);
+                        }
+                    }
+                    Area* areaToInvalidate = study.areas.find(areaID);
+                    if (areaToInvalidate)
+                    {
+                        areaToInvalidate->invalidateJIT = true;
+                        logs.info() << "  '" << areaID
+                                    << "': The hydro energy credits data have been normalized to "
+                                    << countenergycredits << " timeseries";
+                    }
+                    else
+                        logs.error()
+                          << "Impossible to find the area `" << areaID << "` to invalidate it";
+                }
+            }
+        }
+
         if (study.parameters.derated)
         {
             ror.averageTimeseries();
@@ -170,6 +224,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
             maxgen.averageTimeseries();
             maxpump.averageTimeseries();
             count = 1;
+            countenergycredits = 1;
         }
     }
 
@@ -261,6 +316,7 @@ void DataSeriesHydro::reset()
     maxgen.reset(1, HOURS_PER_YEAR);
     maxpump.reset(1, HOURS_PER_YEAR);
     count = 1;
+    countenergycredits = 1;
 }
 
 uint64 DataSeriesHydro::memoryUsage() const

@@ -290,14 +290,15 @@ bool HydroManagement::checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) c
     return true;
 }
 
-bool HydroManagement::checkHourlyMinGeneration(uint tsIndex, Data::Area& area) const
+bool HydroManagement::checkHourlyMinMaxGeneration(uint tsIndex, uint tsIndexEnergyCredits, Data::Area& area) const
 {
     // Hourly minimum generation <= hourly inflows for each hour
     const auto& calendar = study.calendar;
     auto& mingenmatrix = area.hydro.series->mingen;
     auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
-    auto const& maxPower = area.hydro.maxPower;
-    auto const& maxP = maxPower[Data::PartHydro::genMaxP];
+    auto& maxgenmatrix = area.hydro.series->maxgen;
+    auto const& srcmaxgen
+      = maxgenmatrix[tsIndexEnergyCredits < maxgenmatrix.width ? tsIndexEnergyCredits : 0];
 
     if (!area.hydro.reservoirManagement)
     {
@@ -313,14 +314,18 @@ bool HydroManagement::checkHourlyMinGeneration(uint tsIndex, Data::Area& area) c
             {
                 for (uint h = 0; h < 24; ++h)
                 {
-                    if (srcmingen[day * 24 + h] > maxP[day])
+                    const auto& max = srcmaxgen[day * 24 + h];
+                    const auto& min = srcmingen[day * 24 + h];
+
+                    if (max < min)
                     {
                         logs.error()
                           << "In area: " << area.name << " [hourly] minimum generation of "
-                          << srcmingen[day * 24 + h] << " MW in timestep " << day * 24 + h + 1
+                          << min << " MW in timestep " << day * 24 + h + 1
                           << " of TS-" << tsIndex + 1
-                          << " is incompatible with the maximum generation of " << maxP[day]
-                          << " MW.";
+                          << " is incompatible with the maximum generation of "
+                          << max << " MW in timestep " << day * 24 + h + 1
+                          << " of TS-" << tsIndexEnergyCredits + 1 << " MW.";
                         return false;
                     }
                 }
@@ -338,6 +343,7 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
         uint z = area.index;
         const auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
         auto tsIndex = (uint)ptchro.Hydraulique;
+        auto tsIndexEnergyCredits = (uint)ptchro.HydrauliqueEnergyCredits;
 
         if (area.hydro.useHeuristicTarget)
         {
@@ -346,7 +352,7 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
             ret = checkWeeklyMinGeneration(tsIndex, area) && ret;
         }
           
-        ret = checkHourlyMinGeneration(tsIndex, area) && ret;
+        ret = checkHourlyMinMaxGeneration(tsIndex, tsIndexEnergyCredits, area) && ret;
     });
     return ret;
 }

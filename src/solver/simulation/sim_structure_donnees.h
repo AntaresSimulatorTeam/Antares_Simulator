@@ -43,6 +43,7 @@ typedef struct
     int* ThermiqueParPalier;
     int* RenouvelableParPalier;
     int Hydraulique;
+    int HydrauliqueEnergyCredits;
     int Eolien;
     int Consommation;
     int Solar;
@@ -57,7 +58,7 @@ typedef struct
 {
     double* HydrauliqueModulableQuotidien; /* indice par jour */
     double* AleaCoutDeProductionParPalier; /* epsilon sur le cout de production */
-    double* NiveauxReservoirsDebutJours;   // Niveaux (quotidiens) du reservoir de début de jour (en
+    double* NiveauxReservoirsDebutJours;   // Niveaux (quotidiens) du reservoir de dï¿½but de jour (en
                                            // cas de gestion des reservoirs).
     double* NiveauxReservoirsFinJours; // Niveaux (quotidiens) du reservoir de fin de jour (en cas
                                        // de gestion des reservoirs).
