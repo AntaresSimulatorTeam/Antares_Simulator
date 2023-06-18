@@ -174,6 +174,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
     }
 
     timeseriesNumbers.clear();
+    timeseriesNumbersEnergyCredits.clear();
 
     return ret;
 }
@@ -232,14 +233,15 @@ void DataSeriesHydro::estimateMemoryUsage(StudyMemoryUsage& u) const
 {
     u.requiredMemoryForInput += sizeof(DataSeriesHydro);
     timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
+    timeseriesNumbersEnergyCredits.estimateMemoryUsage(u, true, 1, u.years);
     // series
     if ((timeSeriesHydro & u.study.parameters.timeSeriesToGenerate))
     {
         ror.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, HOURS_PER_YEAR);
         storage.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, 12);
         mingen.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, HOURS_PER_YEAR);
-        maxgen.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, HOURS_PER_YEAR);
-        maxpump.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, HOURS_PER_YEAR);
+        maxgen.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydroEnergyCredits, HOURS_PER_YEAR);
+        maxpump.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydroEnergyCredits, HOURS_PER_YEAR);
     }
     else
     {

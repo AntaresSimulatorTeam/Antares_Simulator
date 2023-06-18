@@ -183,11 +183,11 @@ class hydroEnergyCreditsScBuilderPageMaker final : public simpleScBuilderPageMak
 
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        return new_check_allocation<Renderer::hydroScBuilderRenderer>();
+        return new_check_allocation<Renderer::hydroEnergyCreditsScBuilderRenderer>();
     }
     Notebook::Page* addPageToNotebook() override
     {
-        return notebook()->add(grid(), wxT("hydro-energy credits"), wxT("Hydro-Energy Credits"));
+        return notebook()->add(grid(), wxT("hydro-energy-credits"), wxT("Hydro-Energy Credits"));
     }
 };
 
