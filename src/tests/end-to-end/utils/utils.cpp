@@ -63,7 +63,6 @@ float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight
 
 void cleanSimulation(Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation)
 {
-    // simulation
     SIM_DesallocationTableaux();
 
     delete simulation;
@@ -71,11 +70,9 @@ void cleanSimulation(Solver::Simulation::ISimulation< Solver::Simulation::Econom
 
 void cleanStudy(Study::Ptr pStudy)
 {
-    // release all reference to the current study held by this class
     pStudy->clear();
 
-    pStudy = nullptr;
-    // removed any global reference
+    // Remove any global reference
     Data::Study::Current::Set(nullptr);
 }
 

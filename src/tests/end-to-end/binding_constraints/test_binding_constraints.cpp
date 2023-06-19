@@ -22,11 +22,9 @@ struct Fixture {
 
     ~Fixture()
     {
-        study->clear();
-
-        // Remove any global reference
-        Data::Study::Current::Set(nullptr);
+        cleanStudy(study);
     }
+
     std::shared_ptr<Study> study;
 };
 
