@@ -12,6 +12,16 @@ namespace tt = boost::test_tools;
 
 using namespace Antares::Data;
 
+
+struct Fixture {
+    Fixture() 
+    {
+        pStudy = std::make_shared<Study>();
+        
+    };
+    std::shared_ptr<Study> pStudy;
+};
+
 void initializeStudy(Study::Ptr pStudy, int nbYears)
 {
     //Define study parameters
@@ -155,9 +165,6 @@ void prepareStudy(int nbYears,
     auto pCluster = addCluster(area1, "some cluster");
 }
 
-BOOST_AUTO_TEST_SUITE(tests_end2end_binding_constraints)
-
-
 auto prepare(Study::Ptr pStudy, 
              double rhs, 
              BindingConstraint::Type type, 
@@ -187,10 +194,11 @@ auto prepare(Study::Ptr pStudy,
     return std::pair(BC, link);
 }
 
+BOOST_FIXTURE_TEST_SUITE(tests_end2end_binding_constraints, Fixture)
+
 BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
 {
     //Create study
-    Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
     double rhs = 90.;
     auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeHourly, BindingConstraint::opEquality);
 
