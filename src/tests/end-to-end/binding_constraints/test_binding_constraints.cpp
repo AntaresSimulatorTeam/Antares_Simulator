@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
     //Create study
     Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
     double rhs = 90.;
-    auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeHourly, BindingConstraint::opLess);
+    auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeHourly, BindingConstraint::opEquality);
 
     //Launch simulation
     Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
