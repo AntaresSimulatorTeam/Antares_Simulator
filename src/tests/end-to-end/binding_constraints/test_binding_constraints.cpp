@@ -26,6 +26,7 @@ struct Fixture {
     Fixture() 
     {
         study = std::make_shared<Study>();
+        study->resultWriter = std::make_shared<NoOPResultWriter>();
         
     };
 
@@ -192,8 +193,6 @@ auto prepare(Study::Ptr study,
              BindingConstraint::Operator op, 
              int nbYears = 1) 
 {
-    study->resultWriter = std::make_shared<NoOPResultWriter>();
-
     initializeStudy(study, nbYears);
     
     Area* area1;
