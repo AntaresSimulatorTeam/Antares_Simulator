@@ -142,6 +142,8 @@ void prepareStudy(int nbYears,
                   AreaLink *&link) 
 {
     
+    initializeStudy(pStudy, nbYears);
+    
     double loadInAreaOne = 0.;
     area1 = addArea(pStudy, "Area 1", loadInAreaOne);
 
@@ -149,10 +151,6 @@ void prepareStudy(int nbYears,
     Area *area2 = addArea(pStudy, "Area 2", loadInAreaTwo);
 
     link = AreaAddLinkBetweenAreas(area1, area2); //Prepare study
-
-    initializeStudy(pStudy, nbYears);
-
-    //auto* area3 = addArea(pStudy, "Area 3", nbTS);
 
     double linkCapacityInfinite = std::numeric_limits<double>::infinity();
     link->directCapacities.resize(1, 8760);
