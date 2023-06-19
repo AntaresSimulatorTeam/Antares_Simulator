@@ -16,30 +16,38 @@ using namespace Antares::Data;
 struct Fixture {
     Fixture() 
     {
-        pStudy = std::make_shared<Study>();
+        study = std::make_shared<Study>();
         
     };
-    std::shared_ptr<Study> pStudy;
+
+    ~Fixture()
+    {
+        study->clear();
+
+        // Remove any global reference
+        Data::Study::Current::Set(nullptr);
+    }
+    std::shared_ptr<Study> study;
 };
 
-void initializeStudy(Study::Ptr pStudy, int nbYears)
+void initializeStudy(Study::Ptr study, int nbYears)
 {
     //Define study parameters
-    pStudy->parameters.reset();
-    pStudy->parameters.resetPlaylist(nbYears);
+    study->parameters.reset();
+    study->parameters.resetPlaylist(nbYears);
 
-    pStudy->maxNbYearsInParallel = 1;
+    study->maxNbYearsInParallel = 1;
 
     // Define as current study
-    Data::Study::Current::Set(pStudy);
+    Data::Study::Current::Set(study);
 
     // Shrinking the number logs lines to Error level and higher.
     logs.verbosityLevel = Logs::Verbosity::Error::level;
 }
 
-Area* addArea(Study::Ptr pStudy, const std::string& areaName, double loadInArea)
+Area* addArea(Study::Ptr study, const std::string& areaName, double loadInArea)
 {
-    Area* pArea = pStudy->areaAdd(areaName);
+    Area* pArea = study->areaAdd(areaName);
 
     BOOST_CHECK(pArea != NULL);
 
@@ -112,14 +120,14 @@ std::shared_ptr<ThermalCluster> addCluster(Area* pArea, const std::string& clust
     return pCluster;
 }
 
-Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(Study::Ptr pStudy)
+Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(Study::Ptr study)
 {
     // Runtime data dedicated for the solver
-    BOOST_CHECK(pStudy->initializeRuntimeInfos());
+    BOOST_CHECK(study->initializeRuntimeInfos());
 
-    for(auto [_, area]: pStudy->areas) {
-        for (unsigned int i = 0; i<pStudy->maxNbYearsInParallel ;++i) {
-            area->scratchpad.push_back(AreaScratchpad(*pStudy->runtime, *area));
+    for(auto [_, area]: study->areas) {
+        for (unsigned int i = 0; i<study->maxNbYearsInParallel ;++i) {
+            area->scratchpad.push_back(AreaScratchpad(*study->runtime, *area));
         }
     }
 
@@ -130,7 +138,7 @@ Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(St
     //Launch simulation
     Benchmarking::NullDurationCollector nullDurationCollector;
     Solver::Simulation::ISimulation<Solver::Simulation::Economy> *simulation = new Solver::Simulation::ISimulation<Solver::Simulation::Economy>(
-      *pStudy, pSettings, &nullDurationCollector);
+      *study, pSettings, &nullDurationCollector);
 
     // Allocate all arrays
     SIM_AllocationTableaux();
@@ -142,15 +150,15 @@ Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(St
 }
 
 void prepareStudy(int nbYears, 
-                  Study::Ptr &pStudy, 
+                  Study::Ptr &study, 
                   Area *&area1,
                   AreaLink *&link) 
 {    
     double loadInAreaOne = 0.;
-    area1 = addArea(pStudy, "Area 1", loadInAreaOne);
+    area1 = addArea(study, "Area 1", loadInAreaOne);
 
     double loadInAreaTwo = 100.;
-    Area *area2 = addArea(pStudy, "Area 2", loadInAreaTwo);
+    Area *area2 = addArea(study, "Area 2", loadInAreaTwo);
 
     link = AreaAddLinkBetweenAreas(area1, area2); //Prepare study
 
@@ -165,31 +173,31 @@ void prepareStudy(int nbYears,
     auto pCluster = addCluster(area1, "some cluster");
 }
 
-auto prepare(Study::Ptr pStudy, 
+auto prepare(Study::Ptr study, 
              double rhs, 
              BindingConstraint::Type type, 
              BindingConstraint::Operator op, 
              int nbYears = 1) 
 {
-    pStudy->resultWriter = std::make_shared<NoOPResultWriter>();
+    study->resultWriter = std::make_shared<NoOPResultWriter>();
 
-    initializeStudy(pStudy, nbYears);
+    initializeStudy(study, nbYears);
     
     Area* area1;
     AreaLink* link;
 
-    prepareStudy(nbYears, pStudy, area1, link);
+    prepareStudy(nbYears, study, area1, link);
 
     //Add BC
-    auto BC = addBindingConstraints(pStudy, "BC1", "Group1");
+    auto BC = addBindingConstraints(study, "BC1", "Group1");
     BC->weight(link, 1);
     BC->enabled(true);
     BC->mutateTypeWithoutCheck(type);
     BC->operatorType(op);
-    auto& ts_numbers = pStudy->bindingConstraints.timeSeriesNumbers[BC->group()];
+    auto& ts_numbers = study->bindingConstraints.timeSeriesNumbers[BC->group()];
     BC->RHSTimeSeries().resize(1, 8760);
     BC->RHSTimeSeries().fill(rhs);
-    pStudy->bindingConstraints.resizeAllTimeseriesNumbers(1);
+    study->bindingConstraints.resizeAllTimeseriesNumbers(1);
     ts_numbers.timeseriesNumbers.fill(0);
     return std::pair(BC, link);
 }
@@ -200,10 +208,10 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
 {
     //Create study
     double rhs = 90.;
-    auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeHourly, BindingConstraint::opEquality);
+    auto [_ ,link] = prepare(study, rhs, BindingConstraint::typeHourly, BindingConstraint::opEquality);
 
     //Launch simulation
-    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
 
     typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
     simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
@@ -212,38 +220,38 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
     BOOST_TEST(result->avgdata.weekly[0] == rhs * 24 * 7, tt::tolerance(0.001));
 
     //Clean simulation
-    cleanSimulation(pStudy, simulation);
+    cleanSimulation(simulation);
 }
 
 //BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeekly)
 //{
 //    //Create study
-//    Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+//    Study::Ptr study = std::make_shared<Study>(true); // for the solver
 //    auto rhs = 0.3;
 //    auto cost = 1;
-//    auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeWeekly, BindingConstraint::opEquality);
+//    auto [_ ,link] = prepare(study, rhs, BindingConstraint::typeWeekly, BindingConstraint::opEquality);
 //
 //    //Launch simulation
-//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
 //
 //    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
 //    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
 //    BOOST_TEST(result->avgdata.weekly[0] == rhs * cost * 7, tt::tolerance(0.001));
 //
 //    //Clean simulation
-//    cleanSimulation(pStudy, simulation);
+//    cleanSimulation(study, simulation);
 //}
 //
 //BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsDaily)
 //{
 //    //Create study
-//    Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+//    Study::Ptr study = std::make_shared<Study>(true); // for the solver
 //    auto rhs = 0.3;
 //    auto cost = 1;
-//    auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeDaily, BindingConstraint::opEquality);
+//    auto [_ ,link] = prepare(study, rhs, BindingConstraint::typeDaily, BindingConstraint::opEquality);
 //
 //    //Launch simulation
-//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
 //
 //    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
 //    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
@@ -251,19 +259,19 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
 //    BOOST_TEST(result->avgdata.weekly[0] == rhs * cost * 7, tt::tolerance(0.001));
 //
 //    //Clean simulation
-//    cleanSimulation(pStudy, simulation);
+//    cleanSimulation(study, simulation);
 //}
 //
 //BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints_HourlyLess)
 //{
 //    //Create study
-//    Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+//    Study::Ptr study = std::make_shared<Study>(true); // for the solver
 //    auto rhs = 0.3;
 //    auto cost = 1;
-//    auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeHourly, BindingConstraint::opLess);
+//    auto [_ ,link] = prepare(study, rhs, BindingConstraint::typeHourly, BindingConstraint::opLess);
 //
 //    //Launch simulation
-//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
 //
 //    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
 //    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
@@ -272,38 +280,38 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
 //    BOOST_TEST(result->avgdata.weekly[0] < rhs * cost * 24 * 7);
 //
 //    //Clean simulation
-//    cleanSimulation(pStudy, simulation);
+//    cleanSimulation(study, simulation);
 //}
 //
 //BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeeklyLess)
 //{
 //    //Create study
-//    Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+//    Study::Ptr study = std::make_shared<Study>(true); // for the solver
 //    auto rhs = 0.3;
 //    auto cost = 1;
-//    auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeWeekly, BindingConstraint::opLess);
+//    auto [_ ,link] = prepare(study, rhs, BindingConstraint::typeWeekly, BindingConstraint::opLess);
 //
 //    //Launch simulation
-//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
 //
 //    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
 //    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
 //    BOOST_TEST(result->avgdata.weekly[0] < rhs * cost * 7);
 //
 //    //Clean simulation
-//    cleanSimulation(pStudy, simulation);
+//    cleanSimulation(study, simulation);
 //}
 //
 //BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsDailyGreater)
 //{
 //    //Create study
-//    Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+//    Study::Ptr study = std::make_shared<Study>(true); // for the solver
 //    auto rhs = 0.3;
 //    auto cost = 1;
-//    auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeDaily, BindingConstraint::opEquality);
+//    auto [_ ,link] = prepare(study, rhs, BindingConstraint::typeDaily, BindingConstraint::opEquality);
 //
 //    //Launch simulation
-//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
 //
 //    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
 //    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
@@ -311,67 +319,67 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
 //    BOOST_TEST(result->avgdata.weekly[0] > rhs * cost * 7);
 //
 //    //Clean simulation
-//    cleanSimulation(pStudy, simulation);
+//    cleanSimulation(study, simulation);
 //}
 //
 //BOOST_AUTO_TEST_CASE(two_year_one_ts__Binding_ConstraintsWeekly)
 //{
 //    //Create study
-//    Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+//    Study::Ptr study = std::make_shared<Study>(true); // for the solver
 //    auto rhs = 0.3;
 //    auto cost = 1;
 //    auto nbYear = 2;
-//    auto [BC ,link] = prepare(pStudy, rhs, BindingConstraint::typeWeekly, BindingConstraint::opEquality, nbYear);
+//    auto [BC ,link] = prepare(study, rhs, BindingConstraint::typeWeekly, BindingConstraint::opEquality, nbYear);
 //
-//    pStudy->bindingConstraints.resizeAllTimeseriesNumbers(2);
-//    auto& ts_numbers = pStudy->bindingConstraints.timeSeriesNumbers[BC->group()];
+//    study->bindingConstraints.resizeAllTimeseriesNumbers(2);
+//    auto& ts_numbers = study->bindingConstraints.timeSeriesNumbers[BC->group()];
 //    ts_numbers.timeseriesNumbers.fill(10);
 //
 //    //Launch simulation
-//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
 //
 //    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
 //    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
 //    BOOST_TEST(result->avgdata.weekly[0] == rhs * cost * 7, tt::tolerance(0.001));
 //
 //    //Clean simulation
-//    cleanSimulation(pStudy, simulation);
+//    cleanSimulation(study, simulation);
 //}
 //
 //BOOST_AUTO_TEST_CASE(two_mc_year_two_ts__Binding_Constraints_Hourly)
 //{
 //    //Create study
-//    Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+//    Study::Ptr study = std::make_shared<Study>(true); // for the solver
 //    auto rhs_ts1 = 0.3;
 //    auto rhs_ts2 = 0.6;
 //    auto cost = 1;
 //    auto nbYears = 2;
-//    auto [BC, link] = prepare(pStudy, rhs_ts1, BindingConstraint::typeHourly, BindingConstraint::opEquality, nbYears);
+//    auto [BC, link] = prepare(study, rhs_ts1, BindingConstraint::typeHourly, BindingConstraint::opEquality, nbYears);
 //
 //    //Define years weight
 //    std::vector<float> yearsWeight;
 //    yearsWeight.assign(nbYears, 1);
 //    yearsWeight[0] = 4.f;	yearsWeight[1] = 10.f;
 //
-//    float yearSum = defineYearsWeight(pStudy,yearsWeight);
+//    float yearSum = defineYearsWeight(study,yearsWeight);
 //
 //    //Add one TS
-//    auto& ts_numbers = pStudy->bindingConstraints.timeSeriesNumbers[BC->group()];
+//    auto& ts_numbers = study->bindingConstraints.timeSeriesNumbers[BC->group()];
 //    BC->RHSTimeSeries().resize(2, 8760);
 //    BC->RHSTimeSeries().fillColumn(0, rhs_ts1);
 //    BC->RHSTimeSeries().fillColumn(1, rhs_ts2);
-//    pStudy->bindingConstraints.resizeAllTimeseriesNumbers(2);
+//    study->bindingConstraints.resizeAllTimeseriesNumbers(2);
 //    ts_numbers.timeseriesNumbers.fill(0);
 //    //Create scenario rules
 //
-//    ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(pStudy);
+//    ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(study);
 //    pRules->binding_constraints.setData(BC->group(), 0, 1);
 //    pRules->binding_constraints.setData(BC->group(), 1, 2);
 //
 //    double averageLoad = (rhs_ts1 * 4.f + rhs_ts2 * 10.f) / yearSum;
 //
 //    //Launch simulation
-//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
 //
 //    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
 //    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
@@ -380,39 +388,39 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
 //    BOOST_TEST(result->avgdata.weekly[0] == averageLoad * 24 * 7, tt::tolerance(0.001));
 //
 //    //Clean simulation
-//    cleanSimulation(pStudy, simulation);
+//    cleanSimulation(study, simulation);
 //}
 //
 //BOOST_AUTO_TEST_CASE(two_mc_year_one_ts__Binding_Constraints_Hourly)
 //{
 //    //Create study
-//    Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+//    Study::Ptr study = std::make_shared<Study>(true); // for the solver
 //    auto rhs_ts1 = 0.3;
 //    auto cost = 1;
 //    auto nbYears = 2;
-//    auto [BC, link] = prepare(pStudy, rhs_ts1, BindingConstraint::typeHourly, BindingConstraint::opEquality, nbYears);
+//    auto [BC, link] = prepare(study, rhs_ts1, BindingConstraint::typeHourly, BindingConstraint::opEquality, nbYears);
 //
 //    //Define years weight
 //    std::vector<float> yearsWeight;
 //    yearsWeight.assign(nbYears, 1);
 //    yearsWeight[0] = 4.f;	yearsWeight[1] = 10.f;
 //
-//    float yearSum = defineYearsWeight(pStudy,yearsWeight);
+//    float yearSum = defineYearsWeight(study,yearsWeight);
 //
 //    //Add one TS
-//    auto& ts_numbers = pStudy->bindingConstraints.timeSeriesNumbers[BC->group()];
+//    auto& ts_numbers = study->bindingConstraints.timeSeriesNumbers[BC->group()];
 //    BC->RHSTimeSeries().resize(1, 8760);
 //    BC->RHSTimeSeries().fillColumn(0, rhs_ts1);
-//    pStudy->bindingConstraints.resizeAllTimeseriesNumbers(nbYears);
+//    study->bindingConstraints.resizeAllTimeseriesNumbers(nbYears);
 //    ts_numbers.timeseriesNumbers.fill(0);
 //    //Create scenario rules
 //
-//    ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(pStudy);
+//    ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(study);
 //    pRules->binding_constraints.setData(BC->group(), 0, 1);
 //    pRules->binding_constraints.setData(BC->group(), 1, 10);
 //
 //    //Launch simulation
-//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
 //
 //    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
 //    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
@@ -421,7 +429,7 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
 //    BOOST_TEST(result->avgdata.weekly[0] == rhs_ts1 * 24 * 7, tt::tolerance(0.001));
 //
 //    //Clean simulation
-//    cleanSimulation(pStudy, simulation);
+//    cleanSimulation(study, simulation);
 //}
 
 BOOST_AUTO_TEST_SUITE_END()

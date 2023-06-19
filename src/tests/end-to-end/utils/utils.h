@@ -13,7 +13,8 @@ std::shared_ptr<Antares::Data::ThermalCluster> addCluster(Antares::Data::Area* p
 
 std::shared_ptr<Antares::Data::BindingConstraint> addBindingConstraints(Antares::Data::Study::Ptr study, std::string name, std::string group);
 
-void cleanSimulation(Antares::Data::Study::Ptr pStudy, Antares::Solver::Simulation::ISimulation< Antares::Solver::Simulation::Economy >* simulation);
+void cleanSimulation(Antares::Solver::Simulation::ISimulation< Antares::Solver::Simulation::Economy >* simulation);
+void cleanStudy(Antares::Data::Study::Ptr pStudy);
 
 Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(Study::Ptr pStudy);
 
