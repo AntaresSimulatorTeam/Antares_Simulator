@@ -308,8 +308,7 @@ public:
             pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
               = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
                 * (-areaMarginalCosts[hourInTheWeek]
-                   - cluster->getMarginalCost(tsIndex, hourInTheYear)
-                       * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
+                   - cluster->getMarginalCost(tsIndex, hourInTheYear));
         }
 
         // Next variable

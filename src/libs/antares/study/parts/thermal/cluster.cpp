@@ -797,17 +797,17 @@ double ThermalCluster::getOperatingCost(uint serieIndex, uint hourInTheYear) con
 
 double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) const
 {
-    double marginalCostPerHour(0.0);
+    const double mode = modulation[Data::thermalModulationCost][hourInTheYear];
     if (costgeneration == Data::setManually)
-        marginalCostPerHour = marginalCost;
+        return mod * marginalCost;
     else
-        marginalCostPerHour
-          = thermalEconomicTimeSeries[Math::Min(serieIndex, thermalEconomicTimeSeries.size() - 1)]
-              .marginalCostPerHourTs[hourInTheYear];
+        return mod
+               * thermalEconomicTimeSeries[Math::Min(serieIndex,
+                                                     thermalEconomicTimeSeries.size() - 1)]
+                   .marginalCostPerHourTs[hourInTheYear];
     /* Math::Min is necessary in case Availability has e.g 10 TS and both FuelCost & Co2Cost have
      only 1TS. Then - > In order to save memory marginalCostPerHourTs vector has only one array
      inside -> that is used for all (e.g.10) TS*/
-    return marginalCostPerHour;
 }
 
 double ThermalCluster::getMarketBidCost(uint serieIndex, uint hourInTheYear) const
