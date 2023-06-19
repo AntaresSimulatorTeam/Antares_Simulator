@@ -11,6 +11,7 @@ namespace utf = boost::unit_test;
 namespace tt = boost::test_tools;
 
 using namespace Antares::Data;
+using namespace Antares::Solver::Simulation;
 
 
 struct Fixture {
@@ -26,6 +27,7 @@ struct Fixture {
     }
 
     std::shared_ptr<Study> study;
+    // ISimulation<Economy>* simulation = nullptr;
 };
 
 void initializeStudy(Study::Ptr study, int nbYears)
@@ -135,9 +137,9 @@ Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(St
 
     //Launch simulation
     Benchmarking::NullDurationCollector nullDurationCollector;
-    Solver::Simulation::ISimulation<Solver::Simulation::Economy> *simulation = new Solver::Simulation::ISimulation<Solver::Simulation::Economy>(
-      *study, pSettings, &nullDurationCollector);
-
+    ISimulation<Economy>* simulation = new ISimulation<Economy>(*study, 
+                                                                pSettings, 
+                                                                &nullDurationCollector);
     // Allocate all arrays
     SIM_AllocationTableaux();
 
