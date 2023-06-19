@@ -440,7 +440,7 @@ private:
     void clear();
 
     void copyFrom(BindingConstraint const *original);
-};;; // class BindingConstraint
+}; // class BindingConstraint
 
 // class BindConstList
 
