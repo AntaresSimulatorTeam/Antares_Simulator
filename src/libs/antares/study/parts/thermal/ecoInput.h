@@ -92,7 +92,4 @@ public:
 }; // class PreproThermal
 
 } // namespace Antares::Data
-
-#include "ecoInput.hxx"
-
 #endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__
