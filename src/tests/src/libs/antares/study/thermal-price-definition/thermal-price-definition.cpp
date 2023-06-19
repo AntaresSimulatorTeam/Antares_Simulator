@@ -49,10 +49,29 @@ void createIniFile()
     outfile.close();
 }
 
+void createFuelCostFile(int size)
+{
+    std::string folder = getFolder();
+
+    std::ofstream outfile;
+    outfile.open(folder + SEP + "fuelCost.txt", std::ofstream::out | std::ofstream::trunc);
+
+    for (int i = 0; i < size; i++)
+    {
+        outfile << "1" << std::endl;
+    }
+}
+
 void removeIniFile()
 {
     std::string folder = getFolder();
     std::filesystem::remove(folder + SEP + "list.ini");
+}
+
+void removeFuelCostFile()
+{
+    std::string folder = getFolder();
+    std::filesystem::remove(folder + SEP + "fuelCost.txt");
 }
 
 // =================
@@ -103,6 +122,50 @@ BOOST_AUTO_TEST_CASE(load_from_folder_basic)
     BOOST_CHECK(clusterList.mapping["area"]->variableomcost == 12.12);
 
     removeIniFile();
+}
+
+BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder)
+{
+    createIniFile();
+    createFuelCostFile(8760);
+
+    clusterList.loadFromFolder(*study, folder, area);
+
+    EconomicInputData eco(clusterList.mapping["area"]);
+    BOOST_CHECK(eco.loadFromFolder(*study, folder));
+
+    BOOST_CHECK(eco.fuelcost[0][1432] == 1);
+
+    removeIniFile();
+    removeFuelCostFile();
+}
+
+BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_too_small)
+{
+    createIniFile();
+    createFuelCostFile(80);
+
+    clusterList.loadFromFolder(*study, folder, area);
+
+    EconomicInputData eco(clusterList.mapping["area"]);
+    BOOST_CHECK(!eco.loadFromFolder(*study, folder));
+
+    removeIniFile();
+    removeFuelCostFile();
+}
+
+BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_too_big)
+{
+    createIniFile();
+    createFuelCostFile(10000);
+
+    clusterList.loadFromFolder(*study, folder, area);
+
+    EconomicInputData eco(clusterList.mapping["area"]);
+    BOOST_CHECK(eco.loadFromFolder(*study, folder));
+
+    removeIniFile();
+    removeFuelCostFile();
 }
 
 BOOST_AUTO_TEST_SUITE_END()
