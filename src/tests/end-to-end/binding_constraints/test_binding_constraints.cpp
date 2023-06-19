@@ -11,6 +11,7 @@ namespace utf = boost::unit_test;
 namespace tt = boost::test_tools;
 
 using namespace Antares::Data;
+using namespace Antares::Solver;
 using namespace Antares::Solver::Simulation;
 
 // TODO
@@ -124,7 +125,7 @@ std::shared_ptr<ThermalCluster> addCluster(Area* pArea, const std::string& clust
     return pCluster;
 }
 
-Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(Study::Ptr study)
+ISimulation<Economy>* runSimulation(Study::Ptr study)
 {
     // Runtime data dedicated for the solver
     BOOST_CHECK(study->initializeRuntimeInfos());
@@ -217,8 +218,8 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
     //Launch simulation
     simulation = runSimulation(study);
 
-    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
-    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
+    typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
+    simulation->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
     BOOST_TEST(result->avgdata.hourly[0] == rhs, tt::tolerance(0.001));
     BOOST_TEST(result->avgdata.daily[0] == rhs * 24, tt::tolerance(0.001));
     BOOST_TEST(result->avgdata.weekly[0] == rhs * 24 * 7, tt::tolerance(0.001));
