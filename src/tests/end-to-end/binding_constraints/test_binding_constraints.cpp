@@ -25,6 +25,9 @@ void initializeStudy(Study::Ptr pStudy, int nbYears)
 
     // Define as current study
     Data::Study::Current::Set(pStudy);
+
+    // Shrinking the number logs lines to Error level and higher. 
+    logs.verbosityLevel = Logs::Verbosity::Error::level;
 }
 
 Area* addArea(Study::Ptr pStudy, const std::string& areaName, double loadInArea)
