@@ -13,6 +13,10 @@ namespace tt = boost::test_tools;
 using namespace Antares::Data;
 using namespace Antares::Solver::Simulation;
 
+// TODO
+// - make the simulation a smart pointer
+// - try a reset() on Settings (in run simulation)
+
 
 struct Fixture {
     Fixture() 
@@ -27,7 +31,7 @@ struct Fixture {
     }
 
     std::shared_ptr<Study> study;
-    // ISimulation<Economy>* simulation = nullptr;
+    ISimulation<Economy>* simulation = nullptr;
 };
 
 void initializeStudy(Study::Ptr study, int nbYears)
@@ -211,7 +215,7 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
     auto [_ ,link] = prepare(study, rhs, BindingConstraint::typeHourly, BindingConstraint::opEquality);
 
     //Launch simulation
-    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
+    simulation = runSimulation(study);
 
     typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
     simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
