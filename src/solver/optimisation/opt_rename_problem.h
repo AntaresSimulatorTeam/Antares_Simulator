@@ -30,14 +30,14 @@ class IVariableNamer : public CurrentAssetsStorage
 {
 protected:
     void SetThermalClusterVariableName(int var,
-                                       Antares::Data::Enum::VariableType structDict,
+                                       const std::string& variableType,
                                        const std::string& clusterName);
-    void SetLinkVariableName(int var, Antares::Data::Enum::VariableType structDict);
+    void SetLinkVariableName(int var, const std::string& variableType);
     void SetShortTermStorageVariableName(int var,
-                                         Antares::Data::Enum::VariableType structDict,
+                                         const std::string& variableType,
                                          const std::string& shortTermStorageName);
-    void SetAreaVariableName(int var, Antares::Data::Enum::VariableType structDict);
-    void SetAreaVariableName(int var, Antares::Data::Enum::VariableType structDict, int layerIndex);
+    void SetAreaVariableName(int var, const std::string& variableType);
+    void SetAreaVariableName(int var, const std::string& variableType, int layerIndex);
 
 public:
     IVariableNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : CurrentAssetsStorage(problem)
@@ -207,7 +207,7 @@ SPVariableNamer VariablesNamerFactory(PROBLEME_ANTARES_A_RESOUDRE* problem, bool
 class IConstraintNamer : public CurrentAssetsStorage
 {
 protected:
-    void nameWithTimeGranularity(const std::string& name, Antares::Data::Enum::TimeStepType type);
+    void nameWithTimeGranularity(const std::string& name, const std::string& type);
 
 public:
     IConstraintNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : CurrentAssetsStorage(problem)
@@ -259,18 +259,9 @@ public:
     void PMinDispatchableGeneration() override;
     void ConsistenceNODU() override;
     void ShortTermStorageLevel() override;
-    void BindingConstraintHour(const std::string& name) override
-    {
-        nameWithTimeGranularity(name, Antares::Data::Enum::TimeStepType::hour);
-    }
-    void BindingConstraintDay(const std::string& name) override
-    {
-        nameWithTimeGranularity(name, Antares::Data::Enum::TimeStepType::day);
-    }
-    void BindingConstraintWeek(const std::string& name) override
-    {
-        nameWithTimeGranularity(name, Antares::Data::Enum::TimeStepType::week);
-    }
+    void BindingConstraintHour(const std::string& name) override;
+    void BindingConstraintDay(const std::string& name) override;
+    void BindingConstraintWeek(const std::string& name) override;
 };
 class EmptyConstraintNamer : public IConstraintNamer
 {
@@ -371,13 +362,12 @@ SPConstraintsNamer ConstraintsNamerFactory(PROBLEME_ANTARES_A_RESOUDRE* problem,
 std::string BuildName(const std::string& name,
                       const std::string& location,
                       const std::string& timeIdentifier);
-inline std::string TimeIdentifier(int timeStep, Antares::Data::Enum::TimeStepType timeStepType)
+inline std::string TimeIdentifier(int timeStep, const std::string& timeStepType)
 {
-    return Antares::Data::Enum::toString(timeStepType) + "<" + std::to_string(timeStep) + ">";
+    return timeStepType + "<" + std::to_string(timeStep) + ">";
 }
 
-inline std::string LocationIdentifier(const std::string& location,
-                                      Antares::Data::Enum::LocationType locationType)
+inline std::string LocationIdentifier(const std::string& location, const std::string& locationType)
 {
-    return Antares::Data::Enum::toString(locationType) + "<" + location + ">";
+    return locationType + "<" + location + ">";
 }
