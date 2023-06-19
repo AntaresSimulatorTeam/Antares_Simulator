@@ -63,9 +63,9 @@ std::shared_ptr<BindingConstraint> BindingConstraintsList::add(const AnyString &
 }
 
 void BindingConstraintsList::resizeAllTimeseriesNumbers(unsigned int nb_years) {
-    std::for_each(timeSeriesNumbers.begin(), timeSeriesNumbers.end(), [&](auto &kvp) {
-        timeSeriesNumbers[kvp.first].timeseriesNumbers.clear();
-        timeSeriesNumbers[kvp.first].timeseriesNumbers.resize(1, nb_years);
+    std::for_each(groupToTimeSeriesNumbers.begin(), groupToTimeSeriesNumbers.end(), [&](auto &kvp) {
+        groupToTimeSeriesNumbers[kvp.first].timeseriesNumbers.clear();
+        groupToTimeSeriesNumbers[kvp.first].timeseriesNumbers.resize(1, nb_years);
     });
 }
 
@@ -78,7 +78,7 @@ void BindingConstraintsList::fixTSNumbersWhenWidthIsOne() {
         }
         groupOfOneTS[bc->group()] |= hasOneTs;
     });
-    std::for_each(timeSeriesNumbers.begin(), timeSeriesNumbers.end(),
+    std::for_each(groupToTimeSeriesNumbers.begin(), groupToTimeSeriesNumbers.end(),
                   [&groupOfOneTS](std::pair<std::string, BindingConstraintTimeSeriesNumbers> it) {
                       if (groupOfOneTS[it.first]) {
                           it.second.timeseriesNumbers.fillColumn(0, 0);
@@ -207,7 +207,7 @@ bool BindingConstraintsList::checkTimeSeriesWidthConsistency() const {
 
 void BindingConstraintsList::initializeTsNumbers() {
     for (const auto& bc: pList) {
-        timeSeriesNumbers[bc->group()] = {};
+        groupToTimeSeriesNumbers[bc->group()] = {};
     }
 }
 
@@ -373,8 +373,8 @@ void BindingConstraintsList::markAsModified() const
 }
 
 uint64 BindingConstraintsList::timeSeriesNumberMemoryUsage() const {
-    uint64 m = sizeof(timeSeriesNumbers);
-    for (const auto& [key, value]: timeSeriesNumbers) {
+    uint64 m = sizeof(groupToTimeSeriesNumbers);
+    for (const auto& [key, value]: groupToTimeSeriesNumbers) {
         m += sizeof(key);
         m += value.memoryUsage();
     }

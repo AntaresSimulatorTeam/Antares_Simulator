@@ -155,7 +155,7 @@ public:
     void markAsModified() const;
 
     [[nodiscard]] const std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>>& TimeSeriesNumbers() const {
-        return timeSeriesNumbers;
+        return groupToTimeSeriesNumbers;
     }
     void resizeAllTimeseriesNumbers(unsigned nb_years);
 
@@ -166,7 +166,7 @@ public:
     template<class ListBindingConstraints>
     [[nodiscard]] static unsigned int NumberOfTimeseries(const ListBindingConstraints &list, const std::string &group_name);
 
-    std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>> timeSeriesNumbers;
+    std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>> groupToTimeSeriesNumbers;
 
 private:
     bool internalSaveToFolder(Data::BindingConstraintSaver::EnvForSaving& env) const;

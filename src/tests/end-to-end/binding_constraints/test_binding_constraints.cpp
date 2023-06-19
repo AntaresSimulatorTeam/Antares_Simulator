@@ -159,7 +159,7 @@ auto prepare(Study::Ptr pStudy, double rhs, BindingConstraint::Type type, Bindin
     BC->enabled(true);
     BC->mutateTypeWithoutCheck(type);
     BC->operatorType(op);
-    auto& ts_numbers = pStudy->bindingConstraints.timeSeriesNumbers[BC->group()];
+    auto& ts_numbers = pStudy->bindingConstraints.groupToTimeSeriesNumbers[BC->group()];
     BC->RHSTimeSeries().resize(1, 8760);
     BC->RHSTimeSeries().fill(rhs);
     pStudy->bindingConstraints.resizeAllTimeseriesNumbers(1);
@@ -297,7 +297,7 @@ BOOST_AUTO_TEST_CASE(two_year_one_ts__Binding_ConstraintsWeekly)
     auto [BC ,link] = prepare(pStudy, rhs, BindingConstraint::typeWeekly, BindingConstraint::opEquality, nbYear);
 
     pStudy->bindingConstraints.resizeAllTimeseriesNumbers(2);
-    auto& ts_numbers = pStudy->bindingConstraints.timeSeriesNumbers[BC->group()];
+    auto& ts_numbers = pStudy->bindingConstraints.groupToTimeSeriesNumbers[BC->group()];
     ts_numbers.timeseriesNumbers.fill(10);
 
     //Launch simulation
@@ -329,7 +329,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts__Binding_Constraints_Hourly)
     float yearSum = defineYearsWeight(pStudy,yearsWeight);
 
     //Add one TS
-    auto& ts_numbers = pStudy->bindingConstraints.timeSeriesNumbers[BC->group()];
+    auto& ts_numbers = pStudy->bindingConstraints.groupToTimeSeriesNumbers[BC->group()];
     BC->RHSTimeSeries().resize(2, 8760);
     BC->RHSTimeSeries().fillColumn(0, rhs_ts1);
     BC->RHSTimeSeries().fillColumn(1, rhs_ts2);
@@ -373,7 +373,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts__Binding_Constraints_Hourly)
     float yearSum = defineYearsWeight(pStudy,yearsWeight);
 
     //Add one TS
-    auto& ts_numbers = pStudy->bindingConstraints.timeSeriesNumbers[BC->group()];
+    auto& ts_numbers = pStudy->bindingConstraints.groupToTimeSeriesNumbers[BC->group()];
     BC->RHSTimeSeries().resize(1, 8760);
     BC->RHSTimeSeries().fillColumn(0, rhs_ts1);
     pStudy->bindingConstraints.resizeAllTimeseriesNumbers(nbYears);

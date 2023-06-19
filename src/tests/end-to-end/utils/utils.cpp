@@ -28,7 +28,7 @@ std::shared_ptr<BindingConstraint> addBindingConstraints(Study::Ptr study, std::
     auto bc = study->bindingConstraints.add(name);
     bc->group(group);
     bc->type();
-    auto ts = study->bindingConstraints.timeSeriesNumbers[group]; //Create the tsNumbers
+    auto ts = study->bindingConstraints.groupToTimeSeriesNumbers[group]; //Create the tsNumbers
     return bc;
 }
 
