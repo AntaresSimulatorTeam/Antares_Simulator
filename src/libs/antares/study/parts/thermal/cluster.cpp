@@ -813,14 +813,14 @@ double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) cons
 
 double ThermalCluster::getMarketBidCost(uint serieIndex, uint hourInTheYear) const
 {
-    double marketBidCostPerHour(0.0);
+    double mod = modulation[thermalModulationMarketBid][serieIndex];
     if (costgeneration == Data::setManually)
-        marketBidCostPerHour = marketBidCost;
+        return marketBidCost * mod;
     else
-        marketBidCostPerHour
-          = thermalEconomicTimeSeries[Math::Min(serieIndex, thermalEconomicTimeSeries.size() - 1)]
-              .marketBidCostPerHourTs[hourInTheYear];
-    return marketBidCostPerHour;
+        return thermalEconomicTimeSeries[Math::Min(serieIndex,
+                                                   thermalEconomicTimeSeries.size() - 1)]
+                 .marketBidCostPerHourTs[hourInTheYear]
+               * mod;
 }
 
 void ThermalCluster::checkAndCorrectAvailability()
