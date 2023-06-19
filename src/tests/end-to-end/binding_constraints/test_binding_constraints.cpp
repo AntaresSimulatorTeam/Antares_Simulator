@@ -12,6 +12,26 @@ namespace tt = boost::test_tools;
 
 using namespace Antares::Data;
 
+void initializeStudy(Study::Ptr pStudy, int nbYears)
+{
+    //Define study parameters
+    pStudy->parameters.reset();
+    pStudy->parameters.resetPlaylist(nbYears);
+
+    //Prepare parameters for simulation
+    Data::StudyLoadOptions options;
+    pStudy->parameters.prepareForSimulation(options);
+
+    // Logical cores
+    // -------------------------
+    // Getting the number of logical cores to use before loading and creating the areas :
+    // Areas need this number to be up-to-date at construction.
+    pStudy->getNumberOfCores(false, 0);
+
+    // Define as current study
+    Data::Study::Current::Set(pStudy);
+}
+
 Area* addArea(Study::Ptr pStudy, const std::string& areaName, double loadInArea)
 {
     Area* pArea = pStudy->areaAdd(areaName);
@@ -130,7 +150,7 @@ void prepareStudy(int nbYears,
 
     link = AreaAddLinkBetweenAreas(area1, area2); //Prepare study
 
-    prepareStudy(pStudy, nbYears);
+    initializeStudy(pStudy, nbYears);
 
     //auto* area3 = addArea(pStudy, "Area 3", nbTS);
 
