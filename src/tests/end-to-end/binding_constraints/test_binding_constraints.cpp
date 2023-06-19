@@ -16,8 +16,11 @@ using namespace Antares::Solver::Simulation;
 
 // TODO
 // - make the simulation a smart pointer
-// - try a reset() on Settings (in run simulation)
+// - After test are more clear, think of clean runSimulation (that is : the fixture contains all it needs)
+//  + split it
+//  + simulation->run(); must appear in each test
 
+void whenCleaningSimulation();
 
 struct Fixture {
     Fixture() 
@@ -28,11 +31,11 @@ struct Fixture {
 
     ~Fixture()
     {
-        cleanStudy(study);
+        whenCleaningSimulation();
     }
 
+    std::shared_ptr<ISimulation<Economy>> simulation;
     std::shared_ptr<Study> study;
-    ISimulation<Economy>* simulation = nullptr;
 };
 
 void initializeStudy(Study::Ptr study, int nbYears)
@@ -125,7 +128,7 @@ std::shared_ptr<ThermalCluster> addCluster(Area* pArea, const std::string& clust
     return pCluster;
 }
 
-ISimulation<Economy>* runSimulation(Study::Ptr study)
+std::shared_ptr<ISimulation<Economy>> runSimulation(Study::Ptr study)
 {
     // Runtime data dedicated for the solver
     BOOST_CHECK(study->initializeRuntimeInfos());
@@ -142,16 +145,21 @@ ISimulation<Economy>* runSimulation(Study::Ptr study)
 
     //Launch simulation
     Benchmarking::NullDurationCollector nullDurationCollector;
-    ISimulation<Economy>* simulation = new ISimulation<Economy>(*study, 
-                                                                pSettings, 
-                                                                &nullDurationCollector);
-    // Allocate all arrays
+    auto simulation = std::make_shared<ISimulation<Economy>>(*study,
+                                                             pSettings, 
+                                                             &nullDurationCollector);
+    // Allocate arrays for time series
     SIM_AllocationTableaux();
 
     // Let's go
     simulation->run();
 
     return simulation;
+}
+
+void whenCleaningSimulation()
+{
+    SIM_DesallocationTableaux();
 }
 
 void prepareStudy(int nbYears, 
@@ -223,9 +231,6 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
     BOOST_TEST(result->avgdata.hourly[0] == rhs, tt::tolerance(0.001));
     BOOST_TEST(result->avgdata.daily[0] == rhs * 24, tt::tolerance(0.001));
     BOOST_TEST(result->avgdata.weekly[0] == rhs * 24 * 7, tt::tolerance(0.001));
-
-    //Clean simulation
-    cleanSimulation(simulation);
 }
 
 //BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeekly)

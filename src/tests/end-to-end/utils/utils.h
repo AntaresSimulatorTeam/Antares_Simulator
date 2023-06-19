@@ -16,8 +16,6 @@ std::shared_ptr<Antares::Data::BindingConstraint> addBindingConstraints(Antares:
 void cleanSimulation(Antares::Solver::Simulation::ISimulation< Antares::Solver::Simulation::Economy >* simulation);
 void cleanStudy(Antares::Data::Study::Ptr pStudy);
 
-Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(Study::Ptr pStudy);
-
 float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight);
 
 ScenarioBuilder::Rules::Ptr createScenarioRules(Study::Ptr pStudy);
