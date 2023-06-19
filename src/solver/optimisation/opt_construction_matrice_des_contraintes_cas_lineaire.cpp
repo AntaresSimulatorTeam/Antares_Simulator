@@ -99,7 +99,7 @@ static void shortTermStorageLevels(
   int* Colonne,
   int nombreDePasDeTempsPourUneOptimisation,
   int pdt,
-  SPConstraintsNamer constraintNamer)
+  SPConstraintsNamer& constraintNamer)
 {
     const auto& VarOptimCurrent = CorrespondanceVarNativesVarOptim[pdt];
     // Cycle over the simulation period
