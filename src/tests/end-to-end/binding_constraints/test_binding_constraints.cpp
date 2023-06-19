@@ -143,31 +143,6 @@ void prepareStudy(int nbYears, int nbTS, Study::Ptr &pStudy, Area *&area1,
 
 BOOST_AUTO_TEST_SUITE(tests_end2end_binding_constraints)
 
-// checkVariable<VCard>(simulation, pArea, expectedHourlyVal)
-//
-// Check variable value from VCard
-// Template param :
-//		VCard				: VCard defining variable (Solver::Variable::Economy::VCardOverallCost for example)
-// classical params :
-//		simulation 			: Simulation object containing results
-//		area				: Area to be checked
-//		expectedHourlyValue	: Expected hourly value
-template<class VCard>
-void checkVariable(
-  Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation,
-  Area* pArea,
-  double expectedHourlyValue
-)
-
-{
-    /*Get value*/
-    typename Antares::Solver::Variable::Storage<VCard>::ResultsType* result = nullptr;
-    simulation->variables.retrieveResultsForArea<VCard>(&result, pArea);
-    BOOST_TEST(result->avgdata.hourly[0] == expectedHourlyValue,			tt::tolerance(0.001));
-    BOOST_TEST(result->avgdata.daily[0]  == expectedHourlyValue * 24,		tt::tolerance(0.001));
-    BOOST_TEST(result->avgdata.weekly[0] == expectedHourlyValue * 24 * 7,	tt::tolerance(0.001));
-}
-
 auto prepare(Study::Ptr pStudy, double rhs, BindingConstraint::Type type, BindingConstraint::Operator op, int nbYears = 1) {
     pStudy->resultWriter = std::make_shared<NoOPResultWriter>();
     //On year  and one TS
