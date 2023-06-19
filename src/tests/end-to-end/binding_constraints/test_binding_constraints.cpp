@@ -15,7 +15,6 @@ using namespace Antares::Solver;
 using namespace Antares::Solver::Simulation;
 
 // TODO
-// - make the simulation a smart pointer
 // - After test are more clear, think of clean runSimulation (that is : the fixture contains all it needs)
 //  + split it
 //  + simulation->run(); must appear in each test
@@ -23,6 +22,8 @@ using namespace Antares::Solver::Simulation;
 
 void initializeStudy(Study::Ptr study);
 void whenCleaningSimulation();
+std::shared_ptr<ThermalCluster> addCluster(Area* pArea, const std::string& clusterName);
+Area* addArea(Study::Ptr study, const std::string& areaName, double loadInArea);
 
 
 struct Fixture {
@@ -31,6 +32,23 @@ struct Fixture {
         study = std::make_shared<Study>();
 
         initializeStudy(study);
+
+        double loadInAreaOne = 0.;
+        Area* area1 = addArea(study, "Area 1", loadInAreaOne);
+
+        double loadInAreaTwo = 100.;
+        Area* area2 = addArea(study, "Area 2", loadInAreaTwo);
+
+        link = AreaAddLinkBetweenAreas(area1, area2);
+
+        double linkCapacityInfinite = std::numeric_limits<double>::infinity();
+        link->directCapacities.resize(1, 8760);
+        link->directCapacities.fill(linkCapacityInfinite);
+
+        link->indirectCapacities.resize(1, 8760);
+        link->indirectCapacities.fill(linkCapacityInfinite);
+
+        auto pCluster = addCluster(area1, "some cluster");
 
         logs.verbosityLevel = Logs::Verbosity::Error::level;
         
@@ -41,6 +59,8 @@ struct Fixture {
         whenCleaningSimulation();
     }
 
+    AreaLink* link = nullptr;
+    // std::shared_ptr<BindingConstraint> BC;
     std::shared_ptr<ISimulation<Economy>> simulation;
     std::shared_ptr<Study> study;
 };
@@ -163,42 +183,18 @@ void whenCleaningSimulation()
     SIM_DesallocationTableaux();
 }
 
-void prepareStudy(int nbYears, 
-                  Study::Ptr &study, 
-                  Area *&area1,
-                  AreaLink *&link) 
-{    
-    double loadInAreaOne = 0.;
-    area1 = addArea(study, "Area 1", loadInAreaOne);
+BOOST_FIXTURE_TEST_SUITE(tests_end2end_binding_constraints, Fixture)
 
-    double loadInAreaTwo = 100.;
-    Area *area2 = addArea(study, "Area 2", loadInAreaTwo);
+BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
+{
+    // Study parameters varying depending on the test 
+    unsigned int nbYears = 1;
+    study->parameters.resetPlaylist(nbYears);
 
-    link = AreaAddLinkBetweenAreas(area1, area2); //Prepare study
-
-    double linkCapacityInfinite = std::numeric_limits<double>::infinity();
-    link->directCapacities.resize(1, 8760);
-    link->directCapacities.fill(linkCapacityInfinite);
-
-    link->indirectCapacities.resize(1, 8760);
-    link->indirectCapacities.fill(linkCapacityInfinite);
-
-    //Add thermal  cluster
-    auto pCluster = addCluster(area1, "some cluster");
-}
-
-auto prepare(Study::Ptr study, 
-             double rhs, 
-             BindingConstraint::Type type, 
-             BindingConstraint::Operator op, 
-             int nbYears = 1) 
-{    
-    Area* area1;
-    AreaLink* link;
-
-    prepareStudy(nbYears, study, area1, link);
-
-    //Add BC
+    // Binding constraint parameter varying depending on the test
+    double rhs = 90.;
+    BindingConstraint::Type type = BindingConstraint::typeHourly;
+    BindingConstraint::Operator op = BindingConstraint::opEquality;
     auto BC = addBindingConstraints(study, "BC1", "Group1");
     BC->weight(link, 1);
     BC->enabled(true);
@@ -209,20 +205,6 @@ auto prepare(Study::Ptr study,
     BC->RHSTimeSeries().fill(rhs);
     study->bindingConstraints.resizeAllTimeseriesNumbers(1);
     ts_numbers.timeseriesNumbers.fill(0);
-    return std::pair(BC, link);
-}
-
-BOOST_FIXTURE_TEST_SUITE(tests_end2end_binding_constraints, Fixture)
-
-BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
-{
-    // Study parameters varying depending on the test 
-    unsigned int nbYears = 1;
-    study->parameters.resetPlaylist(nbYears);
-
-    double rhs = 90.;
-
-    auto [_ ,link] = prepare(study, rhs, BindingConstraint::typeHourly, BindingConstraint::opEquality);
 
     //Launch simulation
     simulation = runSimulation(study);
