@@ -20,13 +20,19 @@ using namespace Antares::Solver::Simulation;
 //  + split it
 //  + simulation->run(); must appear in each test
 
+
+void initializeStudy(Study::Ptr study);
 void whenCleaningSimulation();
+
 
 struct Fixture {
     Fixture() 
     {
         study = std::make_shared<Study>();
-        study->resultWriter = std::make_shared<NoOPResultWriter>();
+
+        initializeStudy(study);
+
+        logs.verbosityLevel = Logs::Verbosity::Error::level;
         
     };
 
@@ -39,20 +45,14 @@ struct Fixture {
     std::shared_ptr<Study> study;
 };
 
-void initializeStudy(Study::Ptr study, int nbYears)
+void initializeStudy(Study::Ptr study)
 {
-    //Define study parameters
+    study->resultWriter = std::make_shared<NoOPResultWriter>();
     study->parameters.reset();
-    study->parameters.resetPlaylist(nbYears);
-
     study->maxNbYearsInParallel = 1;
-
-    // Define as current study
     Data::Study::Current::Set(study);
-
-    // Shrinking the number logs lines to Error level and higher.
-    logs.verbosityLevel = Logs::Verbosity::Error::level;
 }
+
 
 Area* addArea(Study::Ptr study, const std::string& areaName, double loadInArea)
 {
@@ -193,7 +193,7 @@ auto prepare(Study::Ptr study,
              BindingConstraint::Operator op, 
              int nbYears = 1) 
 {
-    initializeStudy(study, nbYears);
+    study->parameters.resetPlaylist(nbYears);
     
     Area* area1;
     AreaLink* link;
