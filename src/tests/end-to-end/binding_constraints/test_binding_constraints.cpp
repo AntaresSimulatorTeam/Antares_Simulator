@@ -18,15 +18,12 @@ void initializeStudy(Study::Ptr pStudy, int nbYears)
     pStudy->parameters.reset();
     pStudy->parameters.resetPlaylist(nbYears);
 
-    //Prepare parameters for simulation
-    Data::StudyLoadOptions options;
-    pStudy->parameters.prepareForSimulation(options);
     pStudy->maxNbYearsInParallel = 1;
 
     // Define as current study
     Data::Study::Current::Set(pStudy);
 
-    // Shrinking the number logs lines to Error level and higher. 
+    // Shrinking the number logs lines to Error level and higher.
     logs.verbosityLevel = Logs::Verbosity::Error::level;
 }
 
