@@ -46,7 +46,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    explicit EconomicInputData(std::weak_ptr<const ThermalCluster> cluster);
+    explicit EconomicInputData();
     //@}
 
     bool forceReload(bool reload) const;

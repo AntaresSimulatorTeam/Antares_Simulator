@@ -41,9 +41,7 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-EconomicInputData::EconomicInputData(std::weak_ptr<const ThermalCluster> cluster)
-{
-}
+EconomicInputData::EconomicInputData() = default;
 
 void EconomicInputData::copyFrom(const EconomicInputData& rhs)
 {

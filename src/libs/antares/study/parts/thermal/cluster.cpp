@@ -144,7 +144,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  PthetaInf(HOURS_PER_YEAR, 0),
  prepro(nullptr),
  thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
- ecoInput(EconomicInputData(this->weak_from_this())),
  productionCost(nullptr)
 {
     // assert
