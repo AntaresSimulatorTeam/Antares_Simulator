@@ -192,9 +192,7 @@ auto prepare(Study::Ptr study,
              BindingConstraint::Type type, 
              BindingConstraint::Operator op, 
              int nbYears = 1) 
-{
-    study->parameters.resetPlaylist(nbYears);
-    
+{    
     Area* area1;
     AreaLink* link;
 
@@ -218,8 +216,12 @@ BOOST_FIXTURE_TEST_SUITE(tests_end2end_binding_constraints, Fixture)
 
 BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
 {
-    //Create study
+    // Study parameters varying depending on the test 
+    unsigned int nbYears = 1;
+    study->parameters.resetPlaylist(nbYears);
+
     double rhs = 90.;
+
     auto [_ ,link] = prepare(study, rhs, BindingConstraint::typeHourly, BindingConstraint::opEquality);
 
     //Launch simulation
