@@ -40,6 +40,8 @@ public:
     bool loadFromFolder(const std::string& folder);
     void fillDefaultSeriesIfEmpty();
 
+    bool saveToFolder(const std::string& folder) const;
+
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;
     std::vector<double> inflows;
@@ -55,5 +57,6 @@ private:
 };
 
 bool loadFile(const std::string& folder, std::vector<double>& vect);
+bool writeVectorToFile(const std::string& path, const std::vector<double>& vect);
 
 } // namespace Antares::Data::ShortTermStorage

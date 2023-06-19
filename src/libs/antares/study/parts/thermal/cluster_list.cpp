@@ -203,9 +203,6 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
 {
     if (p->key.empty())
         return false;
-
-    if (p->key == "annuityinvestment")
-        return p->value.to<uint>(cluster.annuityInvestment);
     if (p->key == "costgeneration")
         return p->value.to(cluster.costgeneration);
     if (p->key == "enabled")
@@ -215,10 +212,6 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     if (p->key == "fixed-cost")
         return p->value.to<double>(cluster.fixedCost);
 
-    if (p->key == "groupmincount")
-        return p->value.to<uint>(cluster.groupMinCount);
-    if (p->key == "groupmaxcount")
-        return p->value.to<uint>(cluster.groupMaxCount);
     if (p->key == "group")
     {
         cluster.setGroup(p->value);
@@ -461,14 +454,6 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             if (!Math::Zero(c.variableomcost))
                 s->add("variableomcost", Math::Round(c.variableomcost,3));
 
-
-            // groun{min,max}
-            if (not Math::Zero(c.groupMinCount))
-                s->add("groupMinCount", c.groupMinCount);
-            if (not Math::Zero(c.groupMaxCount))
-                s->add("groupMaxCount", c.groupMaxCount);
-            if (not Math::Zero(c.annuityInvestment))
-                s->add("annuityInvestment", c.annuityInvestment);
 
             //pollutant factor
             for (auto const& [key, val] : Pollutant::namesToEnum)

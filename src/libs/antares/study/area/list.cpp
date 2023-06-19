@@ -150,32 +150,23 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const Clob& filename
 
 static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString& filename)
 {
-    Clob data;
-    data << "[unserverdenergycost]\n";
+    IniFile ini;
+
+    IniFile::Section* s = ini.addSection("unserverdenergycost");
     list.each([&](const Data::Area& area) {
         // 0 values are skipped
         if (!Math::Zero(area.thermal.unsuppliedEnergyCost))
-            data << area.id << " = " << area.thermal.unsuppliedEnergyCost << '\n';
+            s->add(area.id, area.thermal.unsuppliedEnergyCost);
     });
 
-    data << "\n[spilledenergycost]\n";
+    s = ini.addSection("spilledenergycost");
     list.each([&](const Data::Area& area) {
         // 0 values are skipped
         if (!Math::Zero(area.thermal.spilledEnergyCost))
-            data << area.id << " = " << area.thermal.spilledEnergyCost << '\n';
+            s->add(area.id, area.thermal.spilledEnergyCost);
     });
 
-    IO::File::Stream file;
-    if (file.openRW(filename))
-    {
-        file << data;
-    }
-    else
-    {
-        logs.error() << "I/O error: impossible to write " << filename;
-        return false;
-    }
-    return true;
+    return ini.save(filename);
 }
 
 static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const AnyString& folder)
@@ -305,6 +296,19 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
         buffer.clear() << folder << SEP << "input" << SEP << "renewables" << SEP << "series";
         ret = area.renewable.list.saveDataSeriesToFolder(buffer) && ret;
     }
+
+    // Short term storage
+
+    // save sts in list.ini for this area
+    buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "clusters"
+        << SEP << area.id;
+    ret = area.shortTermStorage.saveToFolder(buffer.c_str()) && ret;
+
+    // save the series files
+    buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "series"
+        << SEP << area.id;
+    ret = area.shortTermStorage.saveDataSeriesToFolder(buffer.c_str()) && ret;
+
     return ret;
 }
 
@@ -941,7 +945,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series"
             << SEP << area.id;
-        logs.debug() << "Loading series for st storage " << buffer;
+
         ret = area.shortTermStorage.loadSeriesFromFolder(buffer.c_str()) && ret;
         ret = area.shortTermStorage.validate() && ret;
     }
@@ -952,8 +956,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
         ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
     }
-    if (!ret)
-        logs.error() << "Error while loading sts series";
 
     // Adequacy patch
     readAdqPatchMode(study, area, buffer);
@@ -1111,6 +1113,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     {
         logs.info() << "Loading short term storage clusters...";
         buffer.clear() << pStudy.folderInput << SEP << "st-storage";
+
         if (IO::Directory::Exists(buffer))
         {
             for (const auto& [id, area] : areas)

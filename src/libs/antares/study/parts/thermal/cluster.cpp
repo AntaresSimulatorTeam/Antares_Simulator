@@ -141,9 +141,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  startupCost(0.),
  marketBidCost(0.),
  variableomcost(0.),
- groupMinCount(0),
- groupMaxCount(0),
- annuityInvestment(0),
  PthetaInf(HOURS_PER_YEAR, 0),
  prepro(nullptr),
  thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
@@ -229,13 +226,6 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     marketBidCost = cluster.marketBidCost;
     // assignment “=” operator can be used to copy-paste vector by value
     thermalEconomicTimeSeries = cluster.thermalEconomicTimeSeries;
-
-    // group {min,max}
-    groupMinCount = cluster.groupMinCount;
-    groupMaxCount = cluster.groupMaxCount;
-
-    // Annuity investment (kEuros/MW)
-    annuityInvestment = cluster.annuityInvestment;
 
     // modulation
     modulation = cluster.modulation;
@@ -535,10 +525,6 @@ void Data::ThermalCluster::reset()
     marketBidCost = 0.;
     variableomcost = 0.;
     thermalEconomicTimeSeries.resize(1, ThermalEconomicTimeSeries());
-    // group{min,max}
-    groupMinCount = 0;
-    groupMaxCount = 0;
-    annuityInvestment = 0;
 
     // modulation
     modulation.resize(thermalModulationMax, HOURS_PER_YEAR);

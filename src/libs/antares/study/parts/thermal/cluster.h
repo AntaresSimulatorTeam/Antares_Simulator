@@ -340,14 +340,6 @@ public:
     double variableomcost;
     //@}
 
-    //! Minimum number of group
-    uint groupMinCount;
-    //! Maximum number of group
-    uint groupMaxCount;
-
-    //! Annuity investment (kEuros/MW)
-    uint annuityInvestment;
-
     /*!
     ** \brief thermalMinGenModulation vector used in solver only to store the year values
     ** 8760 vector
