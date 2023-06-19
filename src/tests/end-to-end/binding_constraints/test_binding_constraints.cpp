@@ -21,12 +21,7 @@ void initializeStudy(Study::Ptr pStudy, int nbYears)
     //Prepare parameters for simulation
     Data::StudyLoadOptions options;
     pStudy->parameters.prepareForSimulation(options);
-
-    // Logical cores
-    // -------------------------
-    // Getting the number of logical cores to use before loading and creating the areas :
-    // Areas need this number to be up-to-date at construction.
-    pStudy->getNumberOfCores(false, 0);
+    pStudy->maxNbYearsInParallel = 1;
 
     // Define as current study
     Data::Study::Current::Set(pStudy);
@@ -140,10 +135,7 @@ void prepareStudy(int nbYears,
                   Study::Ptr &pStudy, 
                   Area *&area1,
                   AreaLink *&link) 
-{
-    
-    initializeStudy(pStudy, nbYears);
-    
+{    
     double loadInAreaOne = 0.;
     area1 = addArea(pStudy, "Area 1", loadInAreaOne);
 
@@ -173,6 +165,8 @@ auto prepare(Study::Ptr pStudy,
              int nbYears = 1) 
 {
     pStudy->resultWriter = std::make_shared<NoOPResultWriter>();
+
+    initializeStudy(pStudy, nbYears);
     
     Area* area1;
     AreaLink* link;
