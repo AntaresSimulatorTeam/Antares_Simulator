@@ -50,6 +50,10 @@ struct Fixture {
 
         addCluster(area1, "some cluster");
 
+        BC = addBindingConstraints(study, "BC1", "Group1");
+        BC->weight(link, 1);
+        BC->enabled(true);
+
         logs.verbosityLevel = Logs::Verbosity::Error::level;
         
     };
@@ -60,7 +64,7 @@ struct Fixture {
     }
 
     AreaLink* link = nullptr;
-    // std::shared_ptr<BindingConstraint> BC;
+    std::shared_ptr<BindingConstraint> BC;
     std::shared_ptr<ISimulation<Economy>> simulation;
     std::shared_ptr<Study> study;
 };
@@ -195,9 +199,6 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
     double rhs = 90.;
     BindingConstraint::Type type = BindingConstraint::typeHourly;
     BindingConstraint::Operator op = BindingConstraint::opEquality;
-    auto BC = addBindingConstraints(study, "BC1", "Group1");
-    BC->weight(link, 1);
-    BC->enabled(true);
     BC->mutateTypeWithoutCheck(type);
     BC->operatorType(op);
     auto& ts_numbers = study->bindingConstraints.groupToTimeSeriesNumbers[BC->group()];
