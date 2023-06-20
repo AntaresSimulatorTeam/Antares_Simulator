@@ -533,6 +533,16 @@ target_include_directories(libantares-core-calendar
 			${CMAKE_SOURCE_DIR}/libs
 		)
 
+add_library(libantares-core-exceptions
+    ${SRC_EXCEPTION}
+)
+
+target_include_directories(libantares-core-exceptions
+		PRIVATE
+			${CMAKE_SOURCE_DIR}/ext/yuni/src/
+			${CMAKE_SOURCE_DIR}/libs
+		)
+
 add_library(libantares-core
 	antares.h
 	${SRC}
@@ -563,7 +573,6 @@ add_library(libantares-core
 	${SRC_STUDY_PART_RENEWABLE}
     ${SRC_STUDY_PART_SHORT_TERM_STORAGE}
 	${SRC_STUDY_SCENARIO_BUILDER}
-	${SRC_EXCEPTION}
 	${SRC_STDCXX}
 )
 
@@ -583,6 +592,7 @@ target_link_libraries(libantares-core
 		yuni-static-core
 		yuni-static-uuid
 		libantares-core-calendar
+		libantares-core-exceptions
 		libantares-solver-variable-info
         result_writer
 	)
