@@ -45,6 +45,8 @@ struct Fixture {
 
 Fixture::Fixture()
 {
+    logs.verbosityLevel = Logs::Verbosity::Error::level;
+    
     study = std::make_shared<Study>();
 
     initializeStudy(study);
@@ -69,9 +71,6 @@ Fixture::Fixture()
     BC = addBindingConstraints(study, "BC1", "Group1");
     BC->weight(link, 1);
     BC->enabled(true);
-
-    logs.verbosityLevel = Logs::Verbosity::Error::level;
-
 };
 
 Fixture::~Fixture()
