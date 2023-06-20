@@ -153,6 +153,22 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     return cluster;
 }
 
+void configureBCgroupTSnumbers(Study::Ptr study, 
+                               std::string BCgroup,
+                               unsigned int nbYears, 
+                               unsigned int tsNumber)
+{
+    study->bindingConstraints.resizeAllTimeseriesNumbers(nbYears);
+    auto& ts_numbers_matrix = study->bindingConstraints.groupToTimeSeriesNumbers[BCgroup];
+    ts_numbers_matrix.timeseriesNumbers.fill(tsNumber);
+}
+
+void configureBCrhs(std::shared_ptr<BindingConstraint>& BC, double rhsValue)
+{
+    BC->RHSTimeSeries().resize(1, 8760);
+    BC->RHSTimeSeries().fill(rhsValue);
+}
+
 std::shared_ptr<ISimulation<Economy>> runSimulation(Study::Ptr study)
 {
     // Runtime data dedicated for the solver
@@ -199,22 +215,20 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
     BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
 
-    study->bindingConstraints.resizeAllTimeseriesNumbers(1);
-    auto& ts_numbers_matrix = study->bindingConstraints.groupToTimeSeriesNumbers[BC->group()];
-    ts_numbers_matrix.timeseriesNumbers.fill(0);
-
-    double rhs = 90.;
-    BC->RHSTimeSeries().resize(1, 8760);
-    BC->RHSTimeSeries().fill(rhs);
-
+    unsigned int sameTSnumberForEachYear = 0;
+    configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
+    
+    double rhsValue = 90.;
+    configureBCrhs(BC, rhsValue);
+    
     //Launch simulation
     simulation = runSimulation(study);
 
     typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
     simulation->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
-    BOOST_TEST(result->avgdata.hourly[0] == rhs, tt::tolerance(0.001));
-    BOOST_TEST(result->avgdata.daily[0] == rhs * 24, tt::tolerance(0.001));
-    BOOST_TEST(result->avgdata.weekly[0] == rhs * 24 * 7, tt::tolerance(0.001));
+    BOOST_TEST(result->avgdata.hourly[0] == rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(result->avgdata.daily[0] == rhsValue * 24, tt::tolerance(0.001));
+    BOOST_TEST(result->avgdata.weekly[0] == rhsValue * 24 * 7, tt::tolerance(0.001));
 }
 
 //BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeekly)
