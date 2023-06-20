@@ -348,7 +348,7 @@ public:
     std::vector<double> PthetaInf;
 
     //! Data for the preprocessor
-    PreproThermal* prepro;
+    PreproThermal* prepro = nullptr;
 
     //! \name Temporary data for simulation
     //@{
@@ -365,7 +365,7 @@ public:
     ** This value is only set when loaded from a folder
     ** 8760 (HOURS_PER_YEAR) array
     */
-    double* productionCost;
+    double* productionCost = nullptr;
 
     /*!
     ** \brief Production Cost, Market Bid Cost and Marginal Cost Matrixes - Per Hour and per Time

@@ -142,9 +142,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  marketBidCost(0.),
  variableomcost(0.),
  PthetaInf(HOURS_PER_YEAR, 0),
- prepro(nullptr),
- thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
- productionCost(nullptr)
+ thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries())
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");
@@ -785,26 +783,30 @@ unsigned int ThermalCluster::precision() const
 
 double ThermalCluster::getOperatingCost(uint serieIndex, uint hourInTheYear) const
 {
-    double thermalClusterOperatingCost(0.0);
     if (costgeneration == Data::setManually)
-        thermalClusterOperatingCost = productionCost[hourInTheYear];
+    {
+        return productionCost[hourInTheYear];
+    }
     else
-        thermalClusterOperatingCost
-          = thermalEconomicTimeSeries[Math::Min(serieIndex, thermalEconomicTimeSeries.size() - 1)]
-              .productionCostTs[hourInTheYear];
-    return thermalClusterOperatingCost;
+    {
+        const uint tsIndex = Math::Min(serieIndex, thermalEconomicTimeSeries.size() - 1);
+        return thermalEconomicTimeSeries[tsIndex].productionCostTs[hourInTheYear];
+    }
 }
 
 double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) const
 {
-    const double mode = modulation[Data::thermalModulationCost][hourInTheYear];
+    const double mod = modulation[Data::thermalModulationCost][hourInTheYear];
+
     if (costgeneration == Data::setManually)
-        return mod * marginalCost;
+    {
+        return marginalCost * mod;
+    }
     else
-        return mod
-               * thermalEconomicTimeSeries[Math::Min(serieIndex,
-                                                     thermalEconomicTimeSeries.size() - 1)]
-                   .marginalCostPerHourTs[hourInTheYear];
+    {
+        const uint tsIndex = Math::Min(serieIndex, thermalEconomicTimeSeries.size() - 1);
+        return thermalEconomicTimeSeries[tsIndex].marginalCostPerHourTs[hourInTheYear] * mod;
+    }
     /* Math::Min is necessary in case Availability has e.g 10 TS and both FuelCost & Co2Cost have
      only 1TS. Then - > In order to save memory marginalCostPerHourTs vector has only one array
      inside -> that is used for all (e.g.10) TS*/
@@ -813,13 +815,16 @@ double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) cons
 double ThermalCluster::getMarketBidCost(uint serieIndex, uint hourInTheYear) const
 {
     double mod = modulation[thermalModulationMarketBid][serieIndex];
+
     if (costgeneration == Data::setManually)
+    {
         return marketBidCost * mod;
+    }
     else
-        return thermalEconomicTimeSeries[Math::Min(serieIndex,
-                                                   thermalEconomicTimeSeries.size() - 1)]
-                 .marketBidCostPerHourTs[hourInTheYear]
-               * mod;
+    {
+        const uint tsIndex = Math::Min(serieIndex, thermalEconomicTimeSeries.size() - 1);
+        return thermalEconomicTimeSeries[tsIndex].marketBidCostPerHourTs[hourInTheYear] * mod;
+    }
 }
 
 void ThermalCluster::checkAndCorrectAvailability()
