@@ -22,7 +22,7 @@ using namespace Antares::Solver::Simulation;
 
 void initializeStudy(Study::Ptr study);
 void whenCleaningSimulation();
-std::shared_ptr<ThermalCluster> addCluster(Area* pArea, const std::string& clusterName);
+std::shared_ptr<ThermalCluster> addCluster(Area* area, const std::string& clusterName);
 Area* addArea(Study::Ptr study, const std::string& areaName, double loadInArea);
 
 
@@ -80,26 +80,26 @@ void initializeStudy(Study::Ptr study)
 
 Area* addArea(Study::Ptr study, const std::string& areaName, double loadInArea)
 {
-    Area* pArea = study->areaAdd(areaName);
+    Area* area = study->areaAdd(areaName);
 
-    BOOST_CHECK(pArea != NULL);
+    BOOST_CHECK(area != NULL);
 
-    pArea->thermal.unsuppliedEnergyCost = 1000.0;
-    pArea->spreadUnsuppliedEnergyCost	= 0.;
+    area->thermal.unsuppliedEnergyCost = 1000.0;
+    area->spreadUnsuppliedEnergyCost	= 0.;
 
     //Define default load
     unsigned int loadNumberTS = 1;
-    pArea->load.series->timeSeries.resize(loadNumberTS, HOURS_PER_YEAR);
-    pArea->load.series->timeSeries.fill(loadInArea);
+    area->load.series->timeSeries.resize(loadNumberTS, HOURS_PER_YEAR);
+    area->load.series->timeSeries.fill(loadInArea);
 
-    return pArea;
+    return area;
 }
 
-std::shared_ptr<ThermalCluster> addCluster(Area* pArea, const std::string& clusterName)
+std::shared_ptr<ThermalCluster> addCluster(Area* area, const std::string& clusterName)
 {
-    auto pCluster = std::make_shared<ThermalCluster>(pArea);
-    pCluster->setName(clusterName);
-    pCluster->reset();
+    auto cluster = std::make_shared<ThermalCluster>(area);
+    cluster->setName(clusterName);
+    cluster->reset();
 
     double availablePower = 100.0;
     double maximumPower = 100.0;
@@ -107,50 +107,50 @@ std::shared_ptr<ThermalCluster> addCluster(Area* pArea, const std::string& clust
     unsigned int nbTS = 1;
     unsigned int unitCount = 1;
 
-    pCluster->unitCount			= unitCount;
-    pCluster->nominalCapacity	= maximumPower;
+    cluster->unitCount			= unitCount;
+    cluster->nominalCapacity	= maximumPower;
 
     //Power cost
-    pCluster->marginalCost	= clusterCost;
+    cluster->marginalCost	= clusterCost;
 
     //Must define market bid cost otherwise all production is used
-    pCluster->marketBidCost = clusterCost;
+    cluster->marketBidCost = clusterCost;
 
     //Must define  min stable power always 0.0
-    pCluster->minStablePower = 0.0;
+    cluster->minStablePower = 0.0;
 
     //Define power consumption
-    pCluster->series->timeSeries.resize(nbTS, HOURS_PER_YEAR);
-    pCluster->series->timeSeries.fill(availablePower);
+    cluster->series->timeSeries.resize(nbTS, HOURS_PER_YEAR);
+    cluster->series->timeSeries.fill(availablePower);
 
     //No modulation on cost
-    pCluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
-    pCluster->modulation.fill(1.);
-    pCluster->modulation.fillColumn(thermalMinGenModulation, 0.);
+    cluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
+    cluster->modulation.fill(1.);
+    cluster->modulation.fillColumn(thermalMinGenModulation, 0.);
 
     //Initialize production cost from modulation
-    if (not pCluster->productionCost)
-        pCluster->productionCost = new double[HOURS_PER_YEAR];
+    if (not cluster->productionCost)
+        cluster->productionCost = new double[HOURS_PER_YEAR];
 
 
-    double* prodCost	= pCluster->productionCost;
-    double marginalCost = pCluster->marginalCost;
+    double* prodCost	= cluster->productionCost;
+    double marginalCost = cluster->marginalCost;
 
     // Production cost
-    auto& modulation = pCluster->modulation[thermalModulationCost];
-    for (uint h = 0; h != pCluster->modulation.height; ++h)
+    auto& modulation = cluster->modulation[thermalModulationCost];
+    for (uint h = 0; h != cluster->modulation.height; ++h)
         prodCost[h] = marginalCost * modulation[h];
 
 
-    pCluster->nominalCapacityWithSpinning = pCluster->nominalCapacity;
+    cluster->nominalCapacityWithSpinning = cluster->nominalCapacity;
 
-    auto added = pArea->thermal.list.add(pCluster);
+    auto added = area->thermal.list.add(cluster);
 
     BOOST_CHECK(added != nullptr);
 
-    pArea->thermal.list.mapping[pCluster->id()] = added;
+    area->thermal.list.mapping[cluster->id()] = added;
 
-    return pCluster;
+    return cluster;
 }
 
 std::shared_ptr<ISimulation<Economy>> runSimulation(Study::Ptr study)
