@@ -22,8 +22,8 @@ using namespace Antares::Solver::Simulation;
 
 void initializeStudy(Study::Ptr study);
 void whenCleaningSimulation();
-std::shared_ptr<ThermalCluster> addCluster(Area* area, const std::string& clusterName);
-Area* addArea(Study::Ptr study, const std::string& areaName, double loadInArea);
+std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName);
+Area* addAreaToStudy(Study::Ptr study, const std::string& areaName, double loadInArea);
 
 
 struct Fixture {
@@ -34,10 +34,10 @@ struct Fixture {
         initializeStudy(study);
 
         double loadInAreaOne = 0.;
-        Area* area1 = addArea(study, "Area 1", loadInAreaOne);
+        Area* area1 = addAreaToStudy(study, "Area 1", loadInAreaOne);
 
         double loadInAreaTwo = 100.;
-        Area* area2 = addArea(study, "Area 2", loadInAreaTwo);
+        Area* area2 = addAreaToStudy(study, "Area 2", loadInAreaTwo);
 
         link = AreaAddLinkBetweenAreas(area1, area2);
 
@@ -48,7 +48,7 @@ struct Fixture {
         link->indirectCapacities.resize(1, 8760);
         link->indirectCapacities.fill(linkCapacityInfinite);
 
-        addCluster(area1, "some cluster");
+        addClusterToArea(area1, "some cluster");
 
         BC = addBindingConstraints(study, "BC1", "Group1");
         BC->weight(link, 1);
@@ -78,7 +78,7 @@ void initializeStudy(Study::Ptr study)
 }
 
 
-Area* addArea(Study::Ptr study, const std::string& areaName, double loadInArea)
+Area* addAreaToStudy(Study::Ptr study, const std::string& areaName, double loadInArea)
 {
     Area* area = study->areaAdd(areaName);
 
@@ -95,7 +95,7 @@ Area* addArea(Study::Ptr study, const std::string& areaName, double loadInArea)
     return area;
 }
 
-std::shared_ptr<ThermalCluster> addCluster(Area* area, const std::string& clusterName)
+std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName)
 {
     auto cluster = std::make_shared<ThermalCluster>(area);
     cluster->setName(clusterName);
