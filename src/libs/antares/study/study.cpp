@@ -1248,15 +1248,15 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
 
     // Import
     n = 0;
-    if (0 != (timeSeriesLoad & parameters.timeSeriesToImport))
+    if (0 != (timeSeriesLoad & parameters.exportTimeSeriesInInput))
         n += (int)areas.size();
-    if (0 != (timeSeriesSolar & parameters.timeSeriesToImport))
+    if (0 != (timeSeriesSolar & parameters.exportTimeSeriesInInput))
         n += (int)areas.size();
-    if (0 != (timeSeriesWind & parameters.timeSeriesToImport))
+    if (0 != (timeSeriesWind & parameters.exportTimeSeriesInInput))
         n += (int)areas.size();
-    if (0 != (timeSeriesHydro & parameters.timeSeriesToImport))
+    if (0 != (timeSeriesHydro & parameters.exportTimeSeriesInInput))
         n += (int)areas.size();
-    if (0 != (timeSeriesThermal & parameters.timeSeriesToImport))
+    if (0 != (timeSeriesThermal & parameters.exportTimeSeriesInInput))
         n += (int)areas.size();
     if (n)
         progression.add(Solver::Progression::sectImportTS, n);

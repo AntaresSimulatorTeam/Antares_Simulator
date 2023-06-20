@@ -119,12 +119,12 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     {
         // We have time-series to import
         StudyVersion studyVersion;
-        if (parameters.timeSeriesToImport && studyVersion.isStudyLatestVersion(folder.c_str()))
+        if (parameters.exportTimeSeriesInInput && studyVersion.isStudyLatestVersion(folder.c_str()))
         {
             logs.info() << "Stochastic TS stored in input parametrized."
                            " Disabling Store in input because study is not at latest version"
                            "Prevents writing data in unsupported format at the study version";
-            parameters.timeSeriesToImport = 0;
+            parameters.exportTimeSeriesInInput = 0;
         }
     }
 
