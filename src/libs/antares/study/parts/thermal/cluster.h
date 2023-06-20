@@ -327,17 +327,17 @@ public:
     //! Cost generation
     CostGeneration costgeneration = setManually;
     //! Marginal cost (euros/MWh)
-    double marginalCost;
+    double marginalCost = 0;
     //! Spread (euros/MWh)
-    double spreadCost;
+    double spreadCost = 0;
     //! Fixed cost (euros/hour)
-    double fixedCost;
+    double fixedCost = 0;
     //! Startup cost (euros/startup)
-    double startupCost;
+    double startupCost = 0;
     //! Market bid cost (euros/MWh)
-    double marketBidCost;
+    double marketBidCost = 0;
     //! Variable O&M cost (euros/MWh)
-    double variableomcost;
+    double variableomcost = 0;
     //@}
 
     /*!

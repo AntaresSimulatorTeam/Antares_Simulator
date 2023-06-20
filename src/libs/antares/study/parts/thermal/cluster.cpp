@@ -135,12 +135,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  plannedVolatility(0.),
  forcedLaw(thermalLawUniform),
  plannedLaw(thermalLawUniform),
- marginalCost(0.),
- spreadCost(0.),
- fixedCost(0.),
- startupCost(0.),
- marketBidCost(0.),
- variableomcost(0.),
  PthetaInf(HOURS_PER_YEAR, 0),
  thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries())
 {
