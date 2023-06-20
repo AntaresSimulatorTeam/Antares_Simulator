@@ -201,11 +201,11 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
     BindingConstraint::Operator op = BindingConstraint::opEquality;
     BC->mutateTypeWithoutCheck(type);
     BC->operatorType(op);
-    auto& ts_numbers = study->bindingConstraints.groupToTimeSeriesNumbers[BC->group()];
+    auto& ts_numbers_matrix = study->bindingConstraints.groupToTimeSeriesNumbers[BC->group()];
     BC->RHSTimeSeries().resize(1, 8760);
     BC->RHSTimeSeries().fill(rhs);
     study->bindingConstraints.resizeAllTimeseriesNumbers(1);
-    ts_numbers.timeseriesNumbers.fill(0);
+    ts_numbers_matrix.timeseriesNumbers.fill(0);
 
     //Launch simulation
     simulation = runSimulation(study);
