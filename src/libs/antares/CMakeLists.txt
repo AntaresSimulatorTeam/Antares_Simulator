@@ -372,6 +372,12 @@ set(SRC_EXCEPTION
 	)
 source_group("exception" FILES ${SRC_EXCEPTION})
 
+set(SRC_CHECKS
+	checks/checkApplication.cpp
+	checks/checkApplication.h
+	)
+source_group("checks" FILES ${SRC_CHECKS})
+
 set(SRC_STDCXX
 	stdcxx/demangle.cpp
     # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
@@ -543,6 +549,17 @@ target_include_directories(libantares-core-exceptions
 			${CMAKE_SOURCE_DIR}/libs
 		)
 
+add_library(libantares-core-checks
+    ${SRC_CHECKS}
+)
+
+target_include_directories(libantares-core-checks
+		PRIVATE
+			${CMAKE_SOURCE_DIR}/ext/yuni/src/
+			${CMAKE_SOURCE_DIR}/libs/antares/study
+			${CMAKE_SOURCE_DIR}/libs
+)
+
 add_library(libantares-core
 	antares.h
 	${SRC}
@@ -592,7 +609,8 @@ target_link_libraries(libantares-core
 		yuni-static-core
 		yuni-static-uuid
 		libantares-core-calendar
-		libantares-core-exceptions
+        libantares-core-exceptions
+        libantares-core-checks
 		libantares-solver-variable-info
         result_writer
 	)
