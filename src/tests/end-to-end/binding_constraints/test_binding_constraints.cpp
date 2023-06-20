@@ -15,93 +15,6 @@ using namespace Antares::Solver;
 using namespace Antares::Solver::Simulation;
 using namespace Benchmarking;
 
-// TODO
-// - After test are more clear, think of clean runSimulation (that is : the fixture contains all it needs)
-//  + split it
-//  + simulation->run(); must appear in each test
-
-
-void initializeStudy(Study::Ptr study);
-void whenCleaningSimulation();
-std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName);
-Area* addAreaToStudy(Study::Ptr study, const std::string& areaName, double loadInArea);
-
-
-struct Fixture {
-    Fixture();
-    void runSimulation();
-    ~Fixture();
-
-    // Data members
-    AreaLink* link = nullptr;
-    std::shared_ptr<BindingConstraint> BC;
-    std::shared_ptr<ISimulation<Economy>> simulation;
-    std::shared_ptr<Study> study;
-};
-
-// ================================
-// The fixture's member functions
-// ================================
-
-Fixture::Fixture()
-{
-    logs.verbosityLevel = Logs::Verbosity::Error::level;
-    
-    study = std::make_shared<Study>();
-
-    initializeStudy(study);
-
-    double loadInAreaOne = 0.;
-    Area* area1 = addAreaToStudy(study, "Area 1", loadInAreaOne);
-
-    double loadInAreaTwo = 100.;
-    Area* area2 = addAreaToStudy(study, "Area 2", loadInAreaTwo);
-
-    link = AreaAddLinkBetweenAreas(area1, area2);
-
-    double linkCapacityInfinite = std::numeric_limits<double>::infinity();
-    link->directCapacities.resize(1, 8760);
-    link->directCapacities.fill(linkCapacityInfinite);
-
-    link->indirectCapacities.resize(1, 8760);
-    link->indirectCapacities.fill(linkCapacityInfinite);
-
-    addClusterToArea(area1, "some cluster");
-
-    BC = addBindingConstraints(study, "BC1", "Group1");
-    BC->weight(link, 1);
-    BC->enabled(true);
-};
-
-Fixture::~Fixture()
-{
-    whenCleaningSimulation();
-}
-
-void  Fixture::runSimulation()
-{
-    // Runtime data dedicated for the solver
-    BOOST_CHECK(study->initializeRuntimeInfos());
-
-    for (auto [_, area] : study->areas) {
-        for (unsigned int i = 0; i < study->maxNbYearsInParallel; ++i) {
-            area->scratchpad.push_back(AreaScratchpad(*study->runtime, *area));
-        }
-    }
-
-    //Launch simulation
-    NullDurationCollector nullDurationCollector;
-    simulation = std::make_shared<ISimulation<Economy>>(*study,
-                                                        Settings(),
-                                                        &nullDurationCollector);
-    // Allocate arrays for time series
-    SIM_AllocationTableaux();
-
-    // Let's go
-    simulation->run();
-}
-
-
 // ====================
 // Helper functions
 // ====================
@@ -209,6 +122,84 @@ void configureBCrhs(std::shared_ptr<BindingConstraint>& BC, double rhsValue)
 void whenCleaningSimulation()
 {
     SIM_DesallocationTableaux();
+}
+
+
+// ===============
+// The fixture
+// ===============
+struct Fixture {
+    Fixture();
+    void runSimulation();
+    ~Fixture();
+
+    // Data members
+    AreaLink* link = nullptr;
+    std::shared_ptr<BindingConstraint> BC;
+    std::shared_ptr<ISimulation<Economy>> simulation;
+    std::shared_ptr<Study> study;
+};
+
+// ================================
+// The fixture's member functions
+// ================================
+
+Fixture::Fixture()
+{
+    logs.verbosityLevel = Logs::Verbosity::Error::level;
+
+    study = std::make_shared<Study>();
+
+    initializeStudy(study);
+
+    double loadInAreaOne = 0.;
+    Area* area1 = addAreaToStudy(study, "Area 1", loadInAreaOne);
+
+    double loadInAreaTwo = 100.;
+    Area* area2 = addAreaToStudy(study, "Area 2", loadInAreaTwo);
+
+    link = AreaAddLinkBetweenAreas(area1, area2);
+
+    double linkCapacityInfinite = std::numeric_limits<double>::infinity();
+    link->directCapacities.resize(1, 8760);
+    link->directCapacities.fill(linkCapacityInfinite);
+
+    link->indirectCapacities.resize(1, 8760);
+    link->indirectCapacities.fill(linkCapacityInfinite);
+
+    addClusterToArea(area1, "some cluster");
+
+    BC = addBindingConstraints(study, "BC1", "Group1");
+    BC->weight(link, 1);
+    BC->enabled(true);
+};
+
+Fixture::~Fixture()
+{
+    whenCleaningSimulation();
+}
+
+void  Fixture::runSimulation()
+{
+    // Runtime data dedicated for the solver
+    BOOST_CHECK(study->initializeRuntimeInfos());
+
+    for (auto [_, area] : study->areas) {
+        for (unsigned int i = 0; i < study->maxNbYearsInParallel; ++i) {
+            area->scratchpad.push_back(AreaScratchpad(*study->runtime, *area));
+        }
+    }
+
+    //Launch simulation
+    NullDurationCollector nullDurationCollector;
+    simulation = std::make_shared<ISimulation<Economy>>(*study,
+        Settings(),
+        &nullDurationCollector);
+    // Allocate arrays for time series
+    SIM_AllocationTableaux();
+
+    // Let's go
+    simulation->run();
 }
 
 BOOST_FIXTURE_TEST_SUITE(tests_end2end_binding_constraints, Fixture)
