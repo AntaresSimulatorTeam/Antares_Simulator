@@ -130,7 +130,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  minUpTime(1),
  minDownTime(1),
  spinning(0.),
- fuelEfficiency(100.0),
  forcedVolatility(0.),
  plannedVolatility(0.),
  forcedLaw(thermalLawUniform),
