@@ -181,8 +181,6 @@ std::shared_ptr<ISimulation<Economy>> runSimulation(Study::Ptr study)
     }
 
     Settings pSettings;
-    pSettings.tsGeneratorsOnly = false;
-    pSettings.noOutput = false;
 
     //Launch simulation
     Benchmarking::NullDurationCollector nullDurationCollector;
