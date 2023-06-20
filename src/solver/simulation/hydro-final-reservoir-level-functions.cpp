@@ -73,7 +73,12 @@ void FinalReservoirLevel(const Matrix<double>& scenarioInitialHydroLevels,
     for (uint yearIndex = 0; yearIndex != scenarioFinalHydroLevels.height; ++yearIndex)
     {
         areas.each(
-          [&](Data::Area& area)
+          [&scenarioInitialHydroLevels,
+           &scenarioFinalHydroLevels,
+           &parameters,
+           &areas,
+           &preChecksPasses,
+           &yearIndex](Data::Area& area)
           {
               auto& finLevData = area.hydro.finalReservoirLevelRuntimeData;
               finLevData.fillEmpty();

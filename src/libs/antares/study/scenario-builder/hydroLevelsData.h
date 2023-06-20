@@ -57,7 +57,7 @@ public:
     /*!
     ** \brief Export the data into a mere INI file
     */
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
+    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
     void saveToINIFileHydroLevel(const Study& study,
                                  Yuni::IO::File::Stream& file,
                                  const std::string& addToPrefix) const;
