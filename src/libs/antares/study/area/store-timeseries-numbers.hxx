@@ -24,50 +24,55 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_STUDY_HXX__
-#define __ANTARES_LIBS_STUDY_STUDY_HXX__
+#ifndef __ANTARES_LIBS_STUDY_STORE_TIMESERIES_HXX__
+#define __ANTARES_LIBS_STUDY_STORE_TIMESERIES_HXX__
 
-namespace Antares
+namespace Antares::Data
 {
-namespace Data
-{
-inline bool Study::readonly() const
-{
-    return (parameters.readonly);
-}
-
 template<int TimeSeriesT>
-inline void Study::storeTimeSeriesNumbers() const
+void singleAreaStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer, const Area& area)
 {
-    storeTimeseriesNumbers<TimeSeriesT>(resultWriter, areas);
-}
-
-template<enum TimeSeries TS>
-inline void Study::destroyTSGeneratorData()
-{
-    switch (TS)
+    switch (TimeSeriesT)
     {
+    // Load
     case timeSeriesLoad:
-        destroyAllLoadTSGeneratorData();
+        storeTimeseriesNumbersForLoad(writer, area);
         break;
+        // Solar
     case timeSeriesSolar:
-        destroyAllSolarTSGeneratorData();
+        storeTimeseriesNumbersForSolar(writer, area);
         break;
-    case timeSeriesWind:
-        destroyAllWindTSGeneratorData();
-        break;
+        // Hydro
     case timeSeriesHydro:
-        destroyAllHydroTSGeneratorData();
+        storeTimeseriesNumbersForHydro(writer, area);
         break;
+        // Wind
+    case timeSeriesWind:
+        storeTimeseriesNumbersForWind(writer, area);
+        break;
+        // Thermal
     case timeSeriesThermal:
-        destroyAllThermalTSGeneratorData();
+        storeTimeseriesNumbersForThermal(writer, area);
+        break;
+        // Renewable
+    case timeSeriesRenewable:
+        storeTimeseriesNumbersForRenewable(writer, area);
+        break;
+        // Transmission capacities (NTC)
+    case timeSeriesTransmissionCapacities:
+        storeTimeseriesNumbersForTransmissionCapacities(writer, area);
         break;
     case timeSeriesCount:
         break;
     }
 }
 
-} // namespace Data
-} // namespace Antares
+template<int TimeSeriesT>
+void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer, const AreaList& area)
+{
+    // Each area in the list
+    area.each([&writer](const Area& area) { singleAreaStoreTimeseriesNumbers<TimeSeriesT>(writer, area); });
+}
+} //namespace Antares::Data
 
-#endif // __ANTARES_LIBS_STUDY_STUDY_HXX__
+#endif // __ANTARES_LIBS_STUDY_STORE_TIMESERIES_HXX__

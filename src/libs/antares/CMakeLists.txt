@@ -178,6 +178,8 @@ set(SRC_AREAS
 	study/area/links.cpp
 	study/area/links.h
 	study/area/store-timeseries-numbers.cpp
+	study/area/store-timeseries-numbers.h
+	study/area/store-timeseries-numbers.hxx
 	study/area/list.cpp
 	study/area/list.hxx
 	)
@@ -557,7 +559,9 @@ target_include_directories(libantares-core-checks
 		PRIVATE
 			${CMAKE_SOURCE_DIR}/ext/yuni/src/
 			${CMAKE_SOURCE_DIR}/libs/antares/study
+            ${CMAKE_SOURCE_DIR}/libs/antares/logs
 			${CMAKE_SOURCE_DIR}/libs
+            ${CMAKE_SOURCE_DIR}/solver/writer
 )
 
 add_library(libantares-core

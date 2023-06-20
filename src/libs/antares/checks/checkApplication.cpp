@@ -27,6 +27,7 @@
 
 #include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
+#include <i_writer.h>
 
 #include "checkApplication.h"
 #include "version.h"
@@ -91,6 +92,35 @@ void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange
             }
         }
     }
+}
+
+bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& areas,
+                                                std::map<int, YString>& areaClusterNames)
+{
+    YString areaname = "";
+    bool resultat = true;
+    auto endarea = areas.end();
+    int count = 0;
+
+    for (auto areait = areas.begin(); areait != endarea; areait++)
+    {
+        areaname = areait->second->name;
+        logs.debug() << "areaname : " << areaname;
+
+        std::vector<YString> clusternames;
+
+        if (not areait->second->thermalClustersMinStablePowerValidity(clusternames))
+        {
+            for (auto it = clusternames.begin(); it != clusternames.end(); it++)
+            {
+                logs.debug() << "areaname : " << areaname << " ; clustername : " << (*it);
+                YString res = "Area : " + areaname + " cluster name : " + (*it).c_str();
+                areaClusterNames.insert(std::pair<int, YString>(count++, res));
+            }
+            resultat = false;
+        }
+    }
+    return resultat;
 }
 
 void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas)
