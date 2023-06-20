@@ -28,47 +28,84 @@ Area* addAreaToStudy(Study::Ptr study, const std::string& areaName, double loadI
 
 
 struct Fixture {
-    Fixture() 
-    {
-        study = std::make_shared<Study>();
+    Fixture();
+    void runSimulation();
+    ~Fixture();
 
-        initializeStudy(study);
-
-        double loadInAreaOne = 0.;
-        Area* area1 = addAreaToStudy(study, "Area 1", loadInAreaOne);
-
-        double loadInAreaTwo = 100.;
-        Area* area2 = addAreaToStudy(study, "Area 2", loadInAreaTwo);
-
-        link = AreaAddLinkBetweenAreas(area1, area2);
-
-        double linkCapacityInfinite = std::numeric_limits<double>::infinity();
-        link->directCapacities.resize(1, 8760);
-        link->directCapacities.fill(linkCapacityInfinite);
-
-        link->indirectCapacities.resize(1, 8760);
-        link->indirectCapacities.fill(linkCapacityInfinite);
-
-        addClusterToArea(area1, "some cluster");
-
-        BC = addBindingConstraints(study, "BC1", "Group1");
-        BC->weight(link, 1);
-        BC->enabled(true);
-
-        logs.verbosityLevel = Logs::Verbosity::Error::level;
-        
-    };
-
-    ~Fixture()
-    {
-        whenCleaningSimulation();
-    }
-
+    // Data members
     AreaLink* link = nullptr;
     std::shared_ptr<BindingConstraint> BC;
     std::shared_ptr<ISimulation<Economy>> simulation;
     std::shared_ptr<Study> study;
 };
+
+// ================================
+// The fixture's member functions
+// ================================
+
+Fixture::Fixture()
+{
+    study = std::make_shared<Study>();
+
+    initializeStudy(study);
+
+    double loadInAreaOne = 0.;
+    Area* area1 = addAreaToStudy(study, "Area 1", loadInAreaOne);
+
+    double loadInAreaTwo = 100.;
+    Area* area2 = addAreaToStudy(study, "Area 2", loadInAreaTwo);
+
+    link = AreaAddLinkBetweenAreas(area1, area2);
+
+    double linkCapacityInfinite = std::numeric_limits<double>::infinity();
+    link->directCapacities.resize(1, 8760);
+    link->directCapacities.fill(linkCapacityInfinite);
+
+    link->indirectCapacities.resize(1, 8760);
+    link->indirectCapacities.fill(linkCapacityInfinite);
+
+    addClusterToArea(area1, "some cluster");
+
+    BC = addBindingConstraints(study, "BC1", "Group1");
+    BC->weight(link, 1);
+    BC->enabled(true);
+
+    logs.verbosityLevel = Logs::Verbosity::Error::level;
+
+};
+
+Fixture::~Fixture()
+{
+    whenCleaningSimulation();
+}
+
+void  Fixture::runSimulation()
+{
+    // Runtime data dedicated for the solver
+    BOOST_CHECK(study->initializeRuntimeInfos());
+
+    for (auto [_, area] : study->areas) {
+        for (unsigned int i = 0; i < study->maxNbYearsInParallel; ++i) {
+            area->scratchpad.push_back(AreaScratchpad(*study->runtime, *area));
+        }
+    }
+
+    //Launch simulation
+    NullDurationCollector nullDurationCollector;
+    simulation = std::make_shared<ISimulation<Economy>>(*study,
+                                                        Settings(),
+                                                        &nullDurationCollector);
+    // Allocate arrays for time series
+    SIM_AllocationTableaux();
+
+    // Let's go
+    simulation->run();
+}
+
+
+// ====================
+// Helper functions
+// ====================
 
 void initializeStudy(Study::Ptr study)
 {
@@ -170,31 +207,6 @@ void configureBCrhs(std::shared_ptr<BindingConstraint>& BC, double rhsValue)
     BC->RHSTimeSeries().fill(rhsValue);
 }
 
-std::shared_ptr<ISimulation<Economy>> runSimulation(Study::Ptr study)
-{
-    // Runtime data dedicated for the solver
-    BOOST_CHECK(study->initializeRuntimeInfos());
-
-    for(auto [_, area]: study->areas) {
-        for (unsigned int i = 0; i<study->maxNbYearsInParallel ;++i) {
-            area->scratchpad.push_back(AreaScratchpad(*study->runtime, *area));
-        }
-    }
-
-    //Launch simulation
-    NullDurationCollector nullDurationCollector;
-    auto simulation = std::make_shared<ISimulation<Economy>>(*study,
-                                                             Settings(),
-                                                             &nullDurationCollector);
-    // Allocate arrays for time series
-    SIM_AllocationTableaux();
-
-    // Let's go
-    simulation->run();
-
-    return simulation;
-}
-
 void whenCleaningSimulation()
 {
     SIM_DesallocationTableaux();
@@ -218,8 +230,7 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
     double rhsValue = 90.;
     configureBCrhs(BC, rhsValue);
     
-    //Launch simulation
-    simulation = runSimulation(study);
+    runSimulation();
 
     typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
     simulation->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
