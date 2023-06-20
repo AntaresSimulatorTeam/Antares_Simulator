@@ -46,30 +46,26 @@ wxString hydroLevelsScBuilderRenderer::cellValue(int x, int y) const
 
 bool hydroLevelsScBuilderRenderer::cellValue(int x, int y, const Yuni::String& value)
 {
-    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
+    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears
+        && (uint)y < study->areas.size())
     {
-        if ((uint)y < study->areas.size())
-        {
-            assert((uint)y < pRules->hydroInitialLevels.width());
-            assert((uint)x < pRules->hydroInitialLevels.height());
-            double val = fromStringToHydroLevel(value, 100.) / 100.;
-            pRules->hydroInitialLevels.set_value(x, y, val);
-            return true;
-        }
+        assert((uint)y < pRules->hydroInitialLevels.width());
+        assert((uint)x < pRules->hydroInitialLevels.height());
+        double val = fromStringToHydroLevel(value, 100.) / 100.;
+        pRules->hydroInitialLevels.set_value(x, y, val);
+        return true;
     }
     return false;
 }
 
 double hydroLevelsScBuilderRenderer::cellNumericValue(int x, int y) const
 {
-    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
+    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears
+        && (uint)y < study->areas.size())
     {
-        if ((uint)y < study->areas.size())
-        {
-            assert((uint)y < pRules->hydroInitialLevels.width());
-            assert((uint)x < pRules->hydroInitialLevels.height());
-            return pRules->hydroInitialLevels.get_value(x, y) * 100.;
-        }
+        assert((uint)y < pRules->hydroInitialLevels.width());
+        assert((uint)x < pRules->hydroInitialLevels.height());
+        return pRules->hydroInitialLevels.get_value(x, y) * 100.;
     }
     return 0.;
 }
@@ -77,7 +73,7 @@ double hydroLevelsScBuilderRenderer::cellNumericValue(int x, int y) const
 IRenderer::CellStyle hydroLevelsScBuilderRenderer::cellStyle(int x, int y) const
 {
     bool valid = (!(!study) && !(!pRules) && std::isnan(cellNumericValue(x, y)));
-    return (valid) ? cellStyleDefaultCenterDisabled : cellStyleDefaultCenter;
+    return valid ? cellStyleDefaultCenterDisabled : cellStyleDefaultCenter;
 }
 
 } // namespace Renderer

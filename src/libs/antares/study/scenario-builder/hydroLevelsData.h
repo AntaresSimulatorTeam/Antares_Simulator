@@ -60,7 +60,7 @@ public:
     void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
     void saveToINIFileHydroLevel(const Study& study,
                                  Yuni::IO::File::Stream& file,
-                                 std::string addToPrefix) const;
+                                 const std::string& addToPrefix) const;
 
     /*!
     ** \brief Assign a single value
@@ -81,7 +81,7 @@ public:
     void set_value(uint x, uint y, double value);
 
     bool apply(Study& study);
-    bool applyHydroLevels(Matrix<double>& scenarioHydroLevels);
+    bool applyHydroLevels(Matrix<double>& scenarioHydroLevels) const;
 
 private:
     //! Hydro levels overlay (0 if auto)

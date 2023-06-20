@@ -52,7 +52,7 @@ void hydroLevelsData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& 
 
 void hydroLevelsData::saveToINIFileHydroLevel(const Study& study,
                                               Yuni::IO::File::Stream& file,
-                                              std::string addToPrefix) const
+                                              const std::string& addToPrefix) const
 {
     // Prefix
     CString<512, false> prefix;
@@ -95,7 +95,7 @@ bool hydroLevelsData::apply(Study& study)
     return true;
 }
 
-bool hydroLevelsData::applyHydroLevels(Matrix<double>& scenarioHydroLevels)
+bool hydroLevelsData::applyHydroLevels(Matrix<double>& scenarioHydroLevels) const
 {
     scenarioHydroLevels.copyFrom(pHydroLevelsRules);
     return true;

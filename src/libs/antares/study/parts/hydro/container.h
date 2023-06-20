@@ -76,7 +76,7 @@ public:
         deltaLevel.at(yearIndex) = deltaReservoirLevel;
     }
 
-    double calculateTotalInflows(Antares::Memory::Stored<double>::Type& srcinflows)
+    double calculateTotalInflows(Antares::Memory::Stored<double>::Type& srcinflows) const
     {
         double totalYearInflows = 0.0;
         for (uint day = 0; day < DAYS_PER_YEAR; ++day)
@@ -84,10 +84,11 @@ public:
         return totalYearInflows;
     }
 
-    bool preCheckStartAndEndSim(AreaName name)
+    bool preCheckStartAndEndSim(const AreaName& name) const
     {
         if (simEndDay == DAYS_PER_YEAR && initReservoirLvlMonth == 0)
             return true;
+        else
         {
             logs.error() << "Year: " << yearIndex + 1 << ". Area: " << name
                          << ". Simulation must end on day 365 and reservoir level must be "
@@ -96,7 +97,7 @@ public:
         }
     }
 
-    bool preCheckYearlyInflow(double totalYearInflows, AreaName name)
+    bool preCheckYearlyInflow(double totalYearInflows, const AreaName& name) const
     {
         if ((-deltaReservoirLevel) * reservoirCapacity
             > totalYearInflows) // ROR time-series in MW (power), SP time-series in MWh
@@ -111,7 +112,7 @@ public:
         return true;
     }
 
-    bool preCheckRuleCurves(AreaName name)
+    bool preCheckRuleCurves(const AreaName& name) const
     {
         if (finalReservoirLevel < lowLevelLastDay || finalReservoirLevel > highLevelLastDay)
         {
