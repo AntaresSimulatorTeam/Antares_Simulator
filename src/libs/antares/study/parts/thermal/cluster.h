@@ -32,6 +32,7 @@
 #include "../../../array/matrix.h"
 #include "defines.h"
 #include "prepro.h"
+#include "ecoInput.h"
 #include "../common/cluster.h"
 #include "../../fwd.h"
 #include "pollutant.h"
@@ -57,6 +58,12 @@ enum ThermalModulation
     thermalModulationCapacity,
     thermalMinGenModulation,
     thermalModulationMax
+};
+
+enum CostGeneration
+{
+    setManually = 0,
+    useCostTimeseries
 };
 
 enum class LocalTSGenerationBehavior
@@ -149,6 +156,13 @@ public:
     */
     void calculationOfSpinning();
 
+    //! \name MarketBid and Marginal Costs
+    //@{
+    /*!
+    ** \brief Calculation of market bid and marginals costs per hour
+    */
+    void calculationOfMarketBidPerHourAndMarginalCostPerHour();
+
     /*!
     ** \brief Calculation of spinning (reverse)
     **
@@ -208,6 +222,10 @@ public:
 
     bool doWeGenerateTS(bool globalTSgeneration) const;
 
+    double getOperatingCost(uint tsIndex, uint hourInTheYear) const;
+    double getMarginalCost(uint tsIndex, uint hourInTheYear) const;
+    double getMarketBidCost(uint tsIndex, uint hourInTheYear) const;
+
     // Check & correct availability timeseries for thermal availability
     // Only applies if time-series are ready-made
     void checkAndCorrectAvailability();
@@ -261,6 +279,9 @@ public:
     //! Spinning (%)
     double spinning;
 
+    //! Efficiency (%)
+    double fuelEfficiency = 100;
+
     //! Forced Volatility
     double forcedVolatility;
     //! Planned volatility
@@ -302,16 +323,21 @@ public:
     // SP >=0 or in [0.005;50000]
     //
     //@{
+
+    //! Cost generation
+    CostGeneration costgeneration = setManually;
     //! Marginal cost (euros/MWh)
-    double marginalCost;
+    double marginalCost = 0;
     //! Spread (euros/MWh)
-    double spreadCost;
+    double spreadCost = 0;
     //! Fixed cost (euros/hour)
-    double fixedCost;
+    double fixedCost = 0;
     //! Startup cost (euros/startup)
-    double startupCost;
+    double startupCost = 0;
     //! Market bid cost (euros/MWh)
-    double marketBidCost;
+    double marketBidCost = 0;
+    //! Variable O&M cost (euros/MWh)
+    double variableomcost = 0;
     //@}
 
     /*!
@@ -322,7 +348,7 @@ public:
     std::vector<double> PthetaInf;
 
     //! Data for the preprocessor
-    PreproThermal* prepro;
+    PreproThermal* prepro = nullptr;
 
     //! \name Temporary data for simulation
     //@{
@@ -339,13 +365,41 @@ public:
     ** This value is only set when loaded from a folder
     ** 8760 (HOURS_PER_YEAR) array
     */
-    double* productionCost;
+    double* productionCost = nullptr;
+
+    /*!
+    ** \brief Production Cost, Market Bid Cost and Marginal Cost Matrixes - Per Hour and per Time
+    *Series
+    */
+    struct ThermalEconomicTimeSeries
+    {
+        std::array<double, HOURS_PER_YEAR> productionCostTs;
+        std::array<double, HOURS_PER_YEAR> marketBidCostPerHourTs;
+        std::array<double, HOURS_PER_YEAR> marginalCostPerHourTs;
+    };
+    std::vector<ThermalEconomicTimeSeries> thermalEconomicTimeSeries;
+
+    EconomicInputData ecoInput;
 
     LocalTSGenerationBehavior tsGenBehavior = LocalTSGenerationBehavior::useGlobalParameter;
 
     friend class ThermalClusterList;
 
 private:
+    //! \name MarketBid and Marginal Costs
+    //@{
+    /*!
+    ** \brief Calculation of market bid and marginals costs per hour
+    **
+    ** Market bid and marginal costs are set manually.
+    ** Or if time series are used the formula is:
+    ** Marginal_Cost[€/MWh] = Market_Bid_Cost[€/MWh] = (Fuel_Cost[€/GJ] * 3.6 * 100 / Efficiency[%])
+    *+ CO2_emission_factor[tons/MWh] * C02_cost[€/tons] + Variable_O&M_cost[€/MWh]
+    */
+    void costGenManualCalculationOfMarketBidAndMarginalCostPerHour();
+    void costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour();
+    inline double computeMarketBidCost(double fuelCost, double co2EmissionFactor, double co2cost);
+
     unsigned int precision() const override;
 }; // class ThermalCluster
 } // namespace Data
