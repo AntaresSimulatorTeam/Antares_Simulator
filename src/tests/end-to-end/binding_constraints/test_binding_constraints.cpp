@@ -13,6 +13,7 @@ namespace tt = boost::test_tools;
 using namespace Antares::Data;
 using namespace Antares::Solver;
 using namespace Antares::Solver::Simulation;
+using namespace Benchmarking;
 
 // TODO
 // - After test are more clear, think of clean runSimulation (that is : the fixture contains all it needs)
@@ -181,7 +182,7 @@ std::shared_ptr<ISimulation<Economy>> runSimulation(Study::Ptr study)
     }
 
     //Launch simulation
-    Benchmarking::NullDurationCollector nullDurationCollector;
+    NullDurationCollector nullDurationCollector;
     auto simulation = std::make_shared<ISimulation<Economy>>(*study,
                                                              Settings(),
                                                              &nullDurationCollector);
