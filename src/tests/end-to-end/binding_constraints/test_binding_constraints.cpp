@@ -196,7 +196,6 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
     study->parameters.resetPlaylist(nbYears);
 
     // Binding constraint parameter varying depending on the test
-    double rhs = 90.;
     BindingConstraint::Type type = BindingConstraint::typeHourly;
     BindingConstraint::Operator op = BindingConstraint::opEquality;
     BC->mutateTypeWithoutCheck(type);
@@ -206,6 +205,7 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
     auto& ts_numbers_matrix = study->bindingConstraints.groupToTimeSeriesNumbers[BC->group()];
     ts_numbers_matrix.timeseriesNumbers.fill(0);
 
+    double rhs = 90.;
     BC->RHSTimeSeries().resize(1, 8760);
     BC->RHSTimeSeries().fill(rhs);
 
