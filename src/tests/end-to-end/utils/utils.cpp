@@ -27,7 +27,6 @@ void prepareStudy(Study::Ptr pStudy, int nbYears)
 std::shared_ptr<BindingConstraint> addBindingConstraints(Study::Ptr study, std::string name, std::string group) {
     auto bc = study->bindingConstraints.add(name);
     bc->group(group);
-    auto ts = study->bindingConstraints.groupToTimeSeriesNumbers[group]; //Create the tsNumbers
     return bc;
 }
 
