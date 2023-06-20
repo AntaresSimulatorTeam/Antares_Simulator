@@ -48,7 +48,7 @@ struct Fixture {
         link->indirectCapacities.resize(1, 8760);
         link->indirectCapacities.fill(linkCapacityInfinite);
 
-        auto pCluster = addCluster(area1, "some cluster");
+        addCluster(area1, "some cluster");
 
         logs.verbosityLevel = Logs::Verbosity::Error::level;
         
