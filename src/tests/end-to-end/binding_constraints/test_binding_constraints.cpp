@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
     BC->enabled(true);
     BC->mutateTypeWithoutCheck(type);
     BC->operatorType(op);
-    auto& ts_numbers = study->bindingConstraints.timeSeriesNumbers[BC->group()];
+    auto& ts_numbers = study->bindingConstraints.groupToTimeSeriesNumbers[BC->group()];
     BC->RHSTimeSeries().resize(1, 8760);
     BC->RHSTimeSeries().fill(rhs);
     study->bindingConstraints.resizeAllTimeseriesNumbers(1);

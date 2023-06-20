@@ -353,12 +353,12 @@ void BindingConstraint::clear() {
     // No comments
     this->pComments.clear();
     // The type must be `hourly` by default for studies <=3.1, which was the only
-// type of binding constraints supported.
+    // type of binding constraints supported.
     this->pType = typeUnknown;
     // The operator is `<` by default, which was the only option for studies <= 3.1
     this->pOperator = opUnknown;
     // Enabled: True by default to automatically allow the use of bindingconstraint
-// from old studies (<= 3.1)
+    // from old studies (<= 3.1)
     this->pEnabled = true;
 }
 

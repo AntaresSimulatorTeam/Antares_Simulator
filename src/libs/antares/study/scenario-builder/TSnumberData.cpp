@@ -627,7 +627,7 @@ bool BindingConstraintsTSNumberData::apply(Study& study)
     uint errors = 0;
     CString<512, false> logprefix;
     for (const auto& [group_name, ts_numbers]: rules_) {
-        ApplyToMatrix(errors, logprefix, study.bindingConstraints.timeSeriesNumbers[group_name], ts_numbers[0],
+        ApplyToMatrix(errors, logprefix, study.bindingConstraints.groupToTimeSeriesNumbers[group_name], ts_numbers[0],
                       get_tsGenCount(study));
     }
     return true;
