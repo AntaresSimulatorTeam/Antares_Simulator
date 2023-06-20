@@ -30,7 +30,8 @@
 #include "../inifile/inifile.h"
 #include "../logs.h"
 #include "correlation.h"
-#include <math.h>
+#include <cmath>
+#include <string>
 #include "../study/memory-usage.h"
 
 using namespace Yuni;
@@ -173,7 +174,7 @@ static inline void ReadCorrelationCoefficients(Correlation& correlation,
 static inline void ExportCorrelationCoefficients(Study& study,
                                                  const Matrix<>& m,
                                                  IO::File::Stream& file,
-                                                 const char* name)
+                                                 const std::string& name)
 {
     if (m.empty() or m.width != m.height)
         return;
@@ -386,18 +387,10 @@ void Correlation::internalSaveToINI(Study& study, IO::File::Stream& file) const
 
     if (monthly)
     {
-        ExportCorrelationCoefficients(study, monthly[0], file, "0");
-        ExportCorrelationCoefficients(study, monthly[1], file, "1");
-        ExportCorrelationCoefficients(study, monthly[2], file, "2");
-        ExportCorrelationCoefficients(study, monthly[3], file, "3");
-        ExportCorrelationCoefficients(study, monthly[4], file, "4");
-        ExportCorrelationCoefficients(study, monthly[5], file, "5");
-        ExportCorrelationCoefficients(study, monthly[6], file, "6");
-        ExportCorrelationCoefficients(study, monthly[7], file, "7");
-        ExportCorrelationCoefficients(study, monthly[8], file, "8");
-        ExportCorrelationCoefficients(study, monthly[9], file, "9");
-        ExportCorrelationCoefficients(study, monthly[10], file, "10");
-        ExportCorrelationCoefficients(study, monthly[11], file, "11");
+        for (int month = 0; month < 12; month++)
+        {
+            ExportCorrelationCoefficients(study, monthly[month], file, std::to_string(month));
+        }
     }
     else
         logs.error() << correlationName << ": the montlhy correlation coefficients are missing";
