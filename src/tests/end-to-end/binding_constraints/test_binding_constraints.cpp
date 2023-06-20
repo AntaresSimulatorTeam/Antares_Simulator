@@ -45,6 +45,16 @@ Area* addAreaToStudy(Study::Ptr study, const std::string& areaName, double loadI
     return area;
 }
 
+void configureLinkCapacities(AreaLink* link)
+{
+    double linkCapacityInfinite = std::numeric_limits<double>::infinity();
+    link->directCapacities.resize(1, 8760);
+    link->directCapacities.fill(linkCapacityInfinite);
+
+    link->indirectCapacities.resize(1, 8760);
+    link->indirectCapacities.fill(linkCapacityInfinite);
+}
+
 std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName)
 {
     auto cluster = std::make_shared<ThermalCluster>(area);
@@ -125,6 +135,7 @@ void whenCleaningSimulation()
 }
 
 
+
 // ===============
 // The fixture
 // ===============
@@ -160,12 +171,7 @@ Fixture::Fixture()
 
     link = AreaAddLinkBetweenAreas(area1, area2);
 
-    double linkCapacityInfinite = std::numeric_limits<double>::infinity();
-    link->directCapacities.resize(1, 8760);
-    link->directCapacities.fill(linkCapacityInfinite);
-
-    link->indirectCapacities.resize(1, 8760);
-    link->indirectCapacities.fill(linkCapacityInfinite);
+    configureLinkCapacities(link);
 
     addClusterToArea(area1, "some cluster");
 
@@ -174,6 +180,15 @@ Fixture::Fixture()
     BC->enabled(true);
 };
 
+void addScratchpadToEachArea(Study::Ptr study)
+{
+    for (auto [_, area] : study->areas) {
+        for (unsigned int i = 0; i < study->maxNbYearsInParallel; ++i) {
+            area->scratchpad.push_back(AreaScratchpad(*study->runtime, *area));
+        }
+    }
+}
+
 Fixture::~Fixture()
 {
     whenCleaningSimulation();
@@ -181,24 +196,17 @@ Fixture::~Fixture()
 
 void  Fixture::runSimulation()
 {
-    // Runtime data dedicated for the solver
+    // Runtime infos and scratchpad are MANDATORY for the simulation NOT TO CRASH.
     BOOST_CHECK(study->initializeRuntimeInfos());
+    addScratchpadToEachArea(study);
 
-    for (auto [_, area] : study->areas) {
-        for (unsigned int i = 0; i < study->maxNbYearsInParallel; ++i) {
-            area->scratchpad.push_back(AreaScratchpad(*study->runtime, *area));
-        }
-    }
-
-    //Launch simulation
     NullDurationCollector nullDurationCollector;
     simulation = std::make_shared<ISimulation<Economy>>(*study,
-        Settings(),
-        &nullDurationCollector);
+                                                        Settings(),
+                                                        &nullDurationCollector);
     // Allocate arrays for time series
     SIM_AllocationTableaux();
 
-    // Let's go
     simulation->run();
 }
 
