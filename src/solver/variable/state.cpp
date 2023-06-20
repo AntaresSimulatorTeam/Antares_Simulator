@@ -161,6 +161,8 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
     //   from the solver, which is, for each hour in the year, the product
     //   of the market bid price with the modulation vector
 
+    uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
+
     if (thermal[area->index].thermalClustersProductions[clusterAreaWideIndex] > 0.)
     {
         // alias to the production of the current thermal cluster
@@ -191,7 +193,6 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
             }
             else
                 newUnitCount = thermalCluster->unitCount;
-
             if (newUnitCount > previousUnitCount)
                 newUnitCount = previousUnitCount;
         }
@@ -200,7 +201,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
         // O(h) = MA * P(h) * Modulation
         assert(thermalCluster->productionCost != NULL && "invalid production cost");
         thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
-          = (p * thermalCluster->productionCost[hourInTheYear]);
+          = (p * thermalCluster->getOperatingCost(serieIndex, hourInTheYear));
 
         // Startup cost
         if (newUnitCount > previousUnitCount && hourInTheSimulation != 0u)
@@ -292,7 +293,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
             continue;
 
         thermalClusterOperatingCostForYear[h]
-            = (thermalClusterProduction * currentCluster->productionCost[h]);
+          = thermalClusterProduction * currentCluster->getOperatingCost(serieIndex, h);
 
         switch (unitCommitmentMode)
         {

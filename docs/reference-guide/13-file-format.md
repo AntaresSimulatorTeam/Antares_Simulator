@@ -21,6 +21,16 @@ This line is not mandatory for every group & MC year. If absent, the TS number w
 - 0 &lt;= MC Year &lt; generaldata.ini/general.nbyears
 - 1 &lt;=TS number &lt;= number of columns for the group
 
+#### Thermal cluster new properties
+For each thermal cluster, in existing file **input/thermal/clusters/&lt;area&gt;/list.ini**, under existing sections **&lt;cluster&gt;**, following properties added: 
+
+* `costgeneration` [string] can take values `useCostTimeseries` or be excluded from the section if `Set manually` is selected (default behavior).
+* `efficiency` [float] excluded from the section if default value 100 is selected (default behavior).
+* `variableomcost` [float] excluded from the section if default value 0 is selected (default behavior).
+
+For each thermal cluster, new files added **input/thermal/prepro/&lt;area&gt;/&lt;cluster&gt;/CO2Cost.txt** and **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/fuelCost.txt**. **fuelCost.txt** and **CO2Cost.txt** must either have one column, or the same number of columns as existing file **series.txt** (availability)
+
+#### Hydro Final Reservoir Level
 In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added (if final reservoir level specified, different from `init`):
 * **hfl,&lt;area&gt;,&lt;year&gt; = &lt;hfl-value&gt;**
 
