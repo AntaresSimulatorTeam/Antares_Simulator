@@ -180,12 +180,10 @@ std::shared_ptr<ISimulation<Economy>> runSimulation(Study::Ptr study)
         }
     }
 
-    Settings pSettings;
-
     //Launch simulation
     Benchmarking::NullDurationCollector nullDurationCollector;
     auto simulation = std::make_shared<ISimulation<Economy>>(*study,
-                                                             pSettings, 
+                                                             Settings(),
                                                              &nullDurationCollector);
     // Allocate arrays for time series
     SIM_AllocationTableaux();
