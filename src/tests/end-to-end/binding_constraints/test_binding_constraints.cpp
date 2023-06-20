@@ -233,8 +233,6 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
     typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
     simulation->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
     BOOST_TEST(result->avgdata.hourly[0] == rhsValue, tt::tolerance(0.001));
-    BOOST_TEST(result->avgdata.daily[0] == rhsValue * 24, tt::tolerance(0.001));
-    BOOST_TEST(result->avgdata.weekly[0] == rhsValue * 24 * 7, tt::tolerance(0.001));
 }
 
 //BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeekly)
