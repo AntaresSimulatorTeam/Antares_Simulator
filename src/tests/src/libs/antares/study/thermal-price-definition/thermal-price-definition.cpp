@@ -9,7 +9,9 @@
 
 #include <study.h>
 
+#include "../checks/checkApplication.h"
 #include "cluster_list.h"
+#include "container.h"
 
 #define SEP Yuni::IO::Separator
 
@@ -62,16 +64,30 @@ void createFuelCostFile(int size)
     }
 }
 
+void createCo2CostFile(int size)
+{
+    std::string folder = getFolder();
+
+    std::ofstream outfile;
+    outfile.open(folder + SEP + "CO2Cost.txt", std::ofstream::out | std::ofstream::trunc);
+
+    for (int i = 0; i < size; i++)
+    {
+        outfile << "1" << std::endl;
+    }
+}
+
 void removeIniFile()
 {
     std::string folder = getFolder();
     std::filesystem::remove(folder + SEP + "list.ini");
 }
 
-void removeFuelCostFile()
+void removeCostFiles()
 {
     std::string folder = getFolder();
     std::filesystem::remove(folder + SEP + "fuelCost.txt");
+    std::filesystem::remove(folder + SEP + "CO2Cost.txt");
 }
 
 // =================
@@ -85,7 +101,7 @@ struct Fixture
     Fixture& operator= (const Fixture && f) = delete;
     Fixture()
     {
-        area = study->areaAdd("Area");
+        area = study->areaAdd("area");
         /* study->usedByTheSolver = true; */
         study->parameters.include.thermal.minUPTime = true;
         study->parameters.include.thermal.minStablePower = true;
@@ -137,7 +153,7 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder)
     BOOST_CHECK(eco.fuelcost[0][1432] == 1);
 
     removeIniFile();
-    removeFuelCostFile();
+    removeCostFiles();
 }
 
 BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_too_small)
@@ -151,7 +167,7 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_too_small)
     BOOST_CHECK(!eco.loadFromFolder(*study, folder));
 
     removeIniFile();
-    removeFuelCostFile();
+    removeCostFiles();
 }
 
 BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_too_big)
@@ -165,7 +181,30 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_too_big)
     BOOST_CHECK(eco.loadFromFolder(*study, folder));
 
     removeIniFile();
-    removeFuelCostFile();
+    removeCostFiles();
+}
+
+BOOST_AUTO_TEST_CASE(checkFuelAndCo2)
+{
+    createIniFile();
+    area->thermal.list.loadFromFolder(*study, folder, area);
+
+    createFuelCostFile(8760);
+    createCo2CostFile(8760);
+
+    EconomicInputData eco(clusterList.mapping["area"]);
+    BOOST_CHECK(!eco.loadFromFolder(*study, folder));
+
+    clusterList.mapping["area"]->ecoInput.copyFrom(eco);
+
+
+    AreaList l(*study);
+    l.areas.try_emplace(area);
+
+    Antares::Check::checkFuelAndCo2ColumnNumber(l);
+
+    removeCostFiles();
+    removeIniFile();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -27,10 +27,9 @@
 
 #include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
-#include <i_writer.h>
+#include <version.h>
 
 #include "checkApplication.h"
-#include "version.h"
 #include "area.h"
 
 namespace Antares::Check
