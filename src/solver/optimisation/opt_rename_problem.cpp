@@ -106,17 +106,17 @@ void IVariableNamer::SetShortTermStorageVariableName(int var,
 
 void VariableNamer::ShortTermStorageInjection(int var, const std::string& shortTermStorageName)
 {
-    SetShortTermStorageVariableName(var, "ShortTermStorageInjection", shortTermStorageName);
+    SetShortTermStorageVariableName(var, "Injection", shortTermStorageName);
 }
 
 void VariableNamer::ShortTermStorageWithdrawal(int var, const std::string& shortTermStorageName)
 {
-    SetShortTermStorageVariableName(var, "ShortTermStorageWithdrawal", shortTermStorageName);
+    SetShortTermStorageVariableName(var, "Withdrawal", shortTermStorageName);
 }
 
 void VariableNamer::ShortTermStorageLevel(int var, const std::string& shortTermStorageName)
 {
-    SetShortTermStorageVariableName(var, "ShortTermStorageLevel", shortTermStorageName);
+    SetShortTermStorageVariableName(var, "Level", shortTermStorageName);
 }
 
 void VariableNamer::HydProd(int var)
@@ -303,7 +303,7 @@ void ConstraintNamer::ConsistenceNODU()
 void ConstraintNamer::ShortTermStorageLevel(const std::string& name)
 {
     problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = BuildName(
-      "ShortTermStorageLevel",
+      "Level",
       LocationIdentifier(area_, AREA) + SEPARATOR + "ShortTermStorage" + "<" + name + ">",
       TimeIdentifier(timeStep_, HOUR));
 }
