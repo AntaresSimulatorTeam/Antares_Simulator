@@ -31,6 +31,7 @@
 #include "../../../../application/study.h"
 #include "../../../../windows/inspector.h"
 #include <yuni/core/math.h>
+#include "antares/study/ui-runtimeinfos.h"
 
 #define NODE_DRAW_COLOR_VARIATION_LIGHT 30
 #define NODE_DRAW_COLOR_VARIATION_DARK 15

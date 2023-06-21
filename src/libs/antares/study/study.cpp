@@ -49,6 +49,7 @@
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
 #include <math.h>                 // For use of floor(...) and ceil(...)
 #include <writer_factory.h>
+#include "ui-runtimeinfos.h"
 
 using namespace Yuni;
 
@@ -1136,10 +1137,10 @@ void Study::destroyAllThermalTSGeneratorData()
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
 {
-    foreach (auto* constraint, bindingConstraints)
+    for(const auto& constraint: bindingConstraints)
     {
-        if (not JIT::IsReady(constraint->matrix().jit))
-            constraint->matrix().forceReload(true);
+        if (not JIT::IsReady(constraint->RHSTimeSeries().jit))
+            constraint->forceReload(true);
     }
 }
 
@@ -1272,14 +1273,12 @@ bool Study::forceReload(bool reload) const
     // Invalidate all areas
     ret = areas.forceReload(reload) and ret;
     // Binding constraints
-    ret = bindingConstraints.forceReload(reload) and ret;
+    bindingConstraints.forceReload(reload);
 
     ret = preproLoadCorrelation.forceReload(reload) and ret;
     ret = preproSolarCorrelation.forceReload(reload) and ret;
     ret = preproWindCorrelation.forceReload(reload) and ret;
     ret = preproHydroCorrelation.forceReload(reload) and ret;
-
-    ret = bindingConstraints.forceReload(reload) and ret;
 
     ret = setsOfAreas.forceReload(reload) and ret;
     ret = setsOfLinks.forceReload(reload) and ret;
@@ -1313,6 +1312,7 @@ void Study::resizeAllTimeseriesNumbers(uint n)
 {
     logs.debug() << "  resizing timeseries numbers";
     areas.resizeAllTimeseriesNumbers(n);
+    bindingConstraints.resizeAllTimeseriesNumbers(n);
 }
 
 bool Study::checkForFilenameLimits(bool output, const String& chfolder) const

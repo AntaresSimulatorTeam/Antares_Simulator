@@ -31,8 +31,12 @@
 #include <map>
 #include <string>
 #include <array>
+#include <filesystem>
+#include <utility>
 
+#include "antares/study/fwd.h"
 #include "timeseries-numbers.h"
+#include "ITimeSeriesNumbersWriter.h"
 
 using namespace Yuni;
 using namespace Antares::Data;
@@ -465,7 +469,7 @@ void drawTSnumbersForIntraModal(array<uint32, timeSeriesCount>& intramodal_draws
                                 array<uint, timeSeriesCount>& nbTimeseriesByMode,
                                 MersenneTwister* mersenneTwisterTable)
 {
-    for (int tsKind = 0; tsKind < timeSeriesCount; ++tsKind)
+    for (unsigned tsKind = 0; tsKind < timeSeriesCount; ++tsKind)
     {
         if (isTSintramodal[tsKind])
         {
@@ -707,6 +711,22 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
             }
         }
     });
+    // Binding constraints
+    for (auto& [group, timeSeries] : study.bindingConstraints.groupToTimeSeriesNumbers)
+    {
+        const auto nbTimeSeries
+          = BindingConstraintsList::NumberOfTimeseries(study.runtime->bindingConstraints, group);
+        auto& value = timeSeries.timeseriesNumbers[0][year];
+        if (nbTimeSeries == 1)
+        {
+            value = 0;
+        }
+        else
+        {
+            value
+              = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+        }
+    }
 }
 
 Matrix<uint32>* getFirstTSnumberInterModalMatrixFoundInArea(
@@ -843,8 +863,8 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
                           fixTSNumbersSingleAreaSingleMode(
                             link->timeseriesNumbers, link->directCapacities.width, years);
                       });
-        //TODO BC
     });
+    study.bindingConstraints.fixTSNumbersWhenWidthIsOne();
 }
 
 bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(const std::vector<uint>& w)
@@ -950,20 +970,21 @@ bool TimeSeriesNumbers::Generate(Study& study)
     return true;
 }
 
-void TimeSeriesNumbers::StoreTimeseriesIntoOuput(Study& study)
+void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study, Simulation::ITimeSeriesNumbersWriter& writer)
 {
     using namespace Antares::Data;
 
     if (study.parameters.storeTimeseriesNumbers)
     {
         fixTSNumbersWhenWidthIsOne(study);
-        study.storeTimeSeriesNumbers<timeSeriesLoad>();
-        study.storeTimeSeriesNumbers<timeSeriesSolar>();
-        study.storeTimeSeriesNumbers<timeSeriesHydro>();
-        study.storeTimeSeriesNumbers<timeSeriesWind>();
-        study.storeTimeSeriesNumbers<timeSeriesThermal>();
-        study.storeTimeSeriesNumbers<timeSeriesRenewable>();
-        study.storeTimeSeriesNumbers<timeSeriesTransmissionCapacities>();
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesLoad>();
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesSolar>();
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesHydro>();
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesWind>();
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesThermal>();
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesRenewable>();
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesTransmissionCapacities>();
+        writer.write(study.bindingConstraints);
     }
 }
 

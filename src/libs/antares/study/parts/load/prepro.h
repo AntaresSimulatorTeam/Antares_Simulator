@@ -24,8 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_H__
-#define __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_H__
+#pragma once
 
 #include "../../fwd.h"
 #include "../../xcast.h"
@@ -101,5 +100,3 @@ private:
 } // namespace Antares
 
 #include "prepro.hxx"
-
-#endif // __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_H__

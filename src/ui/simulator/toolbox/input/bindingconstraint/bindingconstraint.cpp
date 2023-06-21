@@ -130,11 +130,8 @@ public:
             }
         }
 
-        Data::BindingConstraintsList::iterator j;
-        Data::BindingConstraintsList::iterator endJ;
-
-        j = layerFilteredItems.begin();
-        endJ = layerFilteredItems.end();
+        auto j = layerFilteredItems.begin();
+        auto endJ = layerFilteredItems.end();
 
         for (; j != endJ; ++j)
         {

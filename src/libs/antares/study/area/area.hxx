@@ -24,14 +24,13 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_AREAS_HXX__
-#define __ANTARES_LIBS_STUDY_AREAS_HXX__
+#pragma once
 
 #include "../../utils.h"
+#include "antares/study/parts/parts.h"
+#include "antares/study/parts/load/prepro.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 struct CompareAreaName final
 {
@@ -206,7 +205,4 @@ inline AreaList::const_reverse_iterator AreaList::rend() const
     return areas.rend();
 }
 
-} // namespace Data
 } // namespace Antares
-
-#endif //  __ANTARES_LIBS_STUDY_AREAS_HXX__

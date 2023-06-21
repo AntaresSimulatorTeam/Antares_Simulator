@@ -33,6 +33,7 @@
 #include <yuni/core/math/distance.h>
 
 #include <antares/study/scenario-builder/updater.hxx>
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 

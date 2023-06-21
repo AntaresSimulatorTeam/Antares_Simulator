@@ -33,6 +33,7 @@
 #include "../../toolbox/jobs.h"
 #include <wx/wupdlock.h>
 #include "internal-ids.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 

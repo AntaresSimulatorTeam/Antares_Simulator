@@ -115,14 +115,16 @@ void UIRuntimeInfo::reloadBindingConstraints()
     byOperator.clear();
 
     {
-        const BindingConstraintsList::iterator end = pStudy.bindingConstraints.end();
-        BindingConstraintsList::iterator i = pStudy.bindingConstraints.begin();
-        for (; i != end; ++i)
-            orderedConstraint.insert(*i);
+        const auto end = pStudy.bindingConstraints.end();
+        auto i = pStudy.bindingConstraints.begin();
+        for (; i != end; ++i) {
+            auto bc = *i;
+            orderedConstraint.insert(bc);
+        }
     }
     {
-        const BindingConstraint::Set::const_iterator end = orderedConstraint.end();
-        BindingConstraint::Set::const_iterator i = orderedConstraint.begin();
+        const auto end = orderedConstraint.end();
+        auto i = orderedConstraint.begin();
         for (; i != end; ++i)
         {
             pConstraint.push_back(*i);

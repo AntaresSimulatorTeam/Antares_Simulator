@@ -213,7 +213,7 @@ public:
         NextType::initializeFromArea(study, area);
     }
 
-    uint getMaxNumberColumns() const
+    size_t getMaxNumberColumns() const
     {
         return pNbClustersOfArea * ResultsType::count;
     }
@@ -350,7 +350,7 @@ public:
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    unsigned int pNbClustersOfArea;
+    size_t pNbClustersOfArea;
     unsigned int pNbYearsParallel;
 
 }; // class

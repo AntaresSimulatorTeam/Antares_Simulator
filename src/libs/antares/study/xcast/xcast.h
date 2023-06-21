@@ -30,7 +30,6 @@
 #include <yuni/yuni.h>
 #include "../../array/matrix.h"
 #include <vector>
-#include "../fwd.h"
 #include <yuni/core/noncopyable.h>
 
 namespace Antares
