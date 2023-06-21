@@ -149,6 +149,40 @@ void whenCleaningSimulation()
 }
 
 
+Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType*
+retrieveLinkResults(std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link)
+{
+    typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* result = nullptr;
+    simulation->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
+    return result;
+}
+
+double getLinkFlowAthour(std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int hour)
+{
+    // There is a problem here : 
+    //    we cannot easly retrieve the hourly flow for a link and a year : 
+    //    - Functions retrieveHourlyResultsForCurrentYear are not coded everywhere it should.
+    //    - Even if those functions were correctly implemented, there is another problem :
+    //      Each year results erase results of previous year, how can we retrieve results of year 1
+    //      if 2 year were run ?
+    //    We should be able to run each year independently, which is not possible now.
+    //    A workaround is to retrieve syntheses, and that's what we do here.
+
+    auto result = retrieveLinkResults(simulation, link);
+    return result->avgdata.hourly[hour];
+}
+
+double getLinkFlowForWeek(std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int week)
+{
+    auto result = retrieveLinkResults(simulation, link);
+    return result->avgdata.weekly[week];
+}
+
+double getLinkFlowForDay(std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int day)
+{
+    auto result = retrieveLinkResults(simulation, link);
+    return result->avgdata.daily[day];
+}
 
 // ===============
 // The fixture
@@ -217,40 +251,6 @@ void  Fixture::runSimulation()
     simulation->run();
 }
 
-Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType*
-retrieveLinkResults(std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link)
-{
-    typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* result = nullptr;
-    simulation->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
-    return result;
-}
-
-double getLinkFlowAthour(std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int hour)
-{
-    // There is a problem here : 
-    //    we cannot easly retrieve the hourly flow for a link and a year : 
-    //    - Functions retrieveHourlyResultsForCurrentYear are not coded everywhere it should.
-    //    - Even if those functions were correctly implemented, there is another problem :
-    //      Each year results erase results of previous year, how can we retrieve results of year 1
-    //      if 2 year were run ?
-    //    We should be able to run each year independently, which is not possible now.
-    //    A workaround is to retrieve syntheses, and that's what we do here.
-
-    auto result = retrieveLinkResults(simulation, link);
-    return result->avgdata.hourly[hour];
-}
-
-double getLinkFlowForWeek(std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int week)
-{
-    auto result = retrieveLinkResults(simulation, link);
-    return result->avgdata.weekly[week];
-}
-
-double getLinkFlowForDay(std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int day)
-{
-    auto result = retrieveLinkResults(simulation, link);
-    return result->avgdata.daily[day];
-}
 
 BOOST_FIXTURE_TEST_SUITE(tests_end2end_binding_constraints, Fixture)
 
@@ -322,47 +322,30 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     BOOST_TEST(getLinkFlowForDay(simulation, link, day) == rhsValue, tt::tolerance(0.001));
 }
 
-//BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsDaily)
-//{
-//    //Create study
-//    Study::Ptr study = std::make_shared<Study>(true); // for the solver
-//    auto rhs = 0.3;
-//    auto cost = 1;
-//    auto [_ ,link] = prepare(study, rhs, BindingConstraint::typeDaily, BindingConstraint::opEquality);
-//
-//    //Launch simulation
-//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
-//
-//    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
-//    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
-//    BOOST_TEST(result->avgdata.daily[0] == rhs * cost, tt::tolerance(0.001));
-//    BOOST_TEST(result->avgdata.weekly[0] == rhs * cost * 7, tt::tolerance(0.001));
-//
-//    //Clean simulation
-//    cleanSimulation(study, simulation);
-//}
-//
-//BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints_HourlyLess)
-//{
-//    //Create study
-//    Study::Ptr study = std::make_shared<Study>(true); // for the solver
-//    auto rhs = 0.3;
-//    auto cost = 1;
-//    auto [_ ,link] = prepare(study, rhs, BindingConstraint::typeHourly, BindingConstraint::opLess);
-//
-//    //Launch simulation
-//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
-//
-//    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
-//    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
-//    BOOST_TEST(result->avgdata.hourly[0] < rhs * cost);
-//    BOOST_TEST(result->avgdata.daily[0] < rhs * cost * 24);
-//    BOOST_TEST(result->avgdata.weekly[0] < rhs * cost * 24 * 7);
-//
-//    //Clean simulation
-//    cleanSimulation(study, simulation);
-//}
-//
+
+BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
+{
+    // Study parameters varying depending on the test 
+    unsigned int nbYears = 1;
+    study->parameters.resetPlaylist(nbYears);
+
+    // Binding constraint parameter varying depending on the test
+    BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
+    BC->operatorType(BindingConstraint::opLess);
+
+    unsigned int sameTSnumberForEachYear = 0;
+    configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
+
+    double rhsValue = 90.;
+    configureBCrhs(BC, rhsValue);
+
+    runSimulation();
+
+    unsigned int hour = 100;
+    BOOST_TEST(getLinkFlowAthour(simulation, link, hour) <= rhsValue, tt::tolerance(0.001));
+}
+
+
 //BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeeklyLess)
 //{
 //    //Create study
