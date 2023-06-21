@@ -39,7 +39,10 @@
 #include "opt_fonctions.h"
 #include "../aleatoire/alea_fonctions.h"
 
+extern "C"
+{
 #include "spx_constantes_externes.h"
+}
 
 static void shortTermStorageCost(
   int PremierPdtDeLIntervalle,
@@ -50,13 +53,13 @@ static void shortTermStorageCost(
   double* linearCost)
 {
     SIM::SpreadGenerator spreadGenerator;
-    int pdtJour = 0;
     for (int pays = 0; pays < NombreDePays; ++pays)
     {
         for (const auto& storage : shortTermStorageInput[pays])
         {
-            for (int pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
-                 pdtHebdo++)
+            for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0;
+                 pdtHebdo < DernierPdtDeLIntervalle;
+                 pdtHebdo++, pdtJour++)
             {
                 auto VarCurrent = CorrespondanceVarNativesVarOptim[pdtJour];
                 const int clusterGlobalIndex = storage.clusterGlobalIndex;
@@ -82,7 +85,6 @@ static void shortTermStorageCost(
                     linearCost[varWithdrawal] = storage.efficiency * cost;
                 }
             }
-            pdtJour++;
         }
     }
 }
