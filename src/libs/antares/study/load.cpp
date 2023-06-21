@@ -26,6 +26,7 @@
 */
 #include <fstream>
 #include "study.h"
+#include "version.h"
 #include "../benchmarking.h"
 #include "../array/correlation.h"
 #include "../inifile/inifile.h"
@@ -117,11 +118,13 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     if (usedByTheSolver)
     {
         // We have time-series to import
-        if (parameters.timeSeriesToImport && (uint) header.version != (uint)versionLatest)
+        StudyVersion studyVersion;
+        if (parameters.exportTimeSeriesInInput && studyVersion.isStudyLatestVersion(folder.c_str()))
         {
-            logs.error() << "Stochastic TS stored in input : study must be upgraded to "
-                         << Data::VersionToCStr((Data::Version)Data::versionLatest);
-            // it is useless to continue at this point
+            logs.info() << "Stochastic TS stored in input parametrized."
+                           " Disabling Store in input because study is not at latest version"
+                           "Prevents writing data in unsupported format at the study version";
+            parameters.exportTimeSeriesInInput = 0;
         }
     }
 

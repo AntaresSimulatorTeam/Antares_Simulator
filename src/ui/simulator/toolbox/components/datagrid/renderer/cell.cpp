@@ -406,12 +406,12 @@ storeToInputCell::storeToInputCell(TimeSeries ts) : Cell(ts)
 
 wxString storeToInputCell::cellValue() const
 {
-    return (0 != (study_->parameters.timeSeriesToImport & tsKind_)) ? wxT("Yes") : wxT("No");
+    return (0 != (study_->parameters.exportTimeSeriesInInput & tsKind_)) ? wxT("Yes") : wxT("No");
 }
 
 double storeToInputCell::cellNumericValue() const
 {
-    return (0 != (study_->parameters.timeSeriesToImport & tsKind_)) ? 1. : 0.;
+    return (0 != (study_->parameters.exportTimeSeriesInInput & tsKind_)) ? 1. : 0.;
 }
 
 bool storeToInputCell::setCellValue(const String& value)
@@ -421,9 +421,9 @@ bool storeToInputCell::setCellValue(const String& value)
         return false;
 
     if (Math::Zero(valueDouble))
-        study_->parameters.timeSeriesToImport &= ~tsKind_;
+        study_->parameters.exportTimeSeriesInInput &= ~tsKind_;
     else
-        study_->parameters.timeSeriesToImport |= tsKind_;
+        study_->parameters.exportTimeSeriesInInput |= tsKind_;
     return true;
 }
 
@@ -434,7 +434,7 @@ IRenderer::CellStyle storeToInputCell::cellStyle() const
     {
         return IRenderer::cellStyleDefault;
     }
-    return (isTSgeneratorOn() && 0 != (study_->parameters.timeSeriesToImport & tsKind_))
+    return (isTSgeneratorOn() && 0 != (study_->parameters.exportTimeSeriesInInput & tsKind_))
              ? IRenderer::cellStyleDefault
              : IRenderer::cellStyleDefaultDisabled;
 }
