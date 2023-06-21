@@ -362,7 +362,7 @@ void BindingConstraint::clear() {
     this->pEnabled = true;
 }
 
-    void BindingConstraintsList::clear()
+    void BindingConstraintsRepository::clear()
 {
     pList.clear();
 }
@@ -614,7 +614,7 @@ bool BindingConstraint::forceReload(bool reload) const
     return RHSTimeSeries().forceReload(reload);
 }
 
-void BindingConstraintsList::forceReload(bool reload) const
+void BindingConstraintsRepository::forceReload(bool reload) const
 {
     if (!pList.empty())
     {

@@ -10,7 +10,7 @@
 #include "BindingConstraintSaver.h"
 
 namespace Antares::Data {
-class BindingConstraintsList final : public Yuni::NonCopyable<BindingConstraintsList>
+class BindingConstraintsRepository final : public Yuni::NonCopyable<BindingConstraintsRepository>
 {
 public:
     using iterator = Data::BindingConstraint::Vector::iterator;
@@ -21,11 +21,11 @@ public:
     /*!
     ** \brief Default constructor
     */
-    BindingConstraintsList() = default;
+    BindingConstraintsRepository() = default;
     /*!
     ** \brief Destructor
     */
-    ~BindingConstraintsList() = default;
+    ~BindingConstraintsRepository() = default;
     //@}
 
     /*!
@@ -196,4 +196,4 @@ private:
     AnyString pFilter;
 };
 }
-#include "BindingConstraintsList.hxx"
+#include "BindingConstraintsRepository.hxx"
