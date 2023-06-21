@@ -73,7 +73,7 @@ double hydroFinalLevelsScBuilderRenderer::cellNumericValue(int x, int y) const
 IRenderer::CellStyle hydroFinalLevelsScBuilderRenderer::cellStyle(int x, int y) const
 {
     bool valid = (!(!study) && !(!pRules) && std::isnan(cellNumericValue(x, y)));
-    return (valid) ? cellStyleDefaultCenterDisabled : cellStyleDefaultCenter;
+    return valid ? cellStyleDefaultCenterDisabled : cellStyleDefaultCenter;
 }
 
 } // namespace Renderer
