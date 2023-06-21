@@ -217,19 +217,26 @@ void  Fixture::runSimulation()
     simulation->run();
 }
 
+Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType*
+retrieveLinkResults(std::shared_ptr<ISimulation<Economy>> simulation, AreaLink* link)
+{
+    typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* result = nullptr;
+    simulation->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
+    return result;
+}
+
 double getLinkFlowAthour(std::shared_ptr<ISimulation<Economy>> simulation, AreaLink* link, unsigned int hour)
 {
     // There is a problem here : 
     //    we cannot easly retrieve the hourly flow for a link and a year : 
     //    - Functions retrieveHourlyResultsForCurrentYear are not coded everywhere it should.
     //    - Even if those functions were correctly implemented, there is another problem :
-    //      Each year results erases results of previous year, how can we retrieve results of year 1
+    //      Each year results erase results of previous year, how can we retrieve results of year 1
     //      if 2 year were run ?
     //    We should be able to run each year independently, which is not possible now.
     //    A workaround is to retrieve syntheses, and that's what we do here.
 
-    typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* result = nullptr;
-    simulation->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
+    auto result = retrieveLinkResults(simulation, link);
     return result->avgdata.hourly[hour];
 }
 
@@ -238,6 +245,13 @@ double getLinkFlowForWeek(std::shared_ptr<ISimulation<Economy>> simulation, Area
     typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* result = nullptr;
     simulation->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
     return result->avgdata.weekly[week];
+}
+
+double getLinkFlowForDay(std::shared_ptr<ISimulation<Economy>> simulation, AreaLink* link, unsigned int day)
+{
+    typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* result = nullptr;
+    simulation->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
+    return result->avgdata.daily[day];
 }
 
 BOOST_FIXTURE_TEST_SUITE(tests_end2end_binding_constraints, Fixture)
