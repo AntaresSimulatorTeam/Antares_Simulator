@@ -113,6 +113,15 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     return cluster;
 }
 
+void addScratchpadToEachArea(Study::Ptr study)
+{
+    for (auto [_, area] : study->areas) {
+        for (unsigned int i = 0; i < study->maxNbYearsInParallel; ++i) {
+            area->scratchpad.push_back(AreaScratchpad(*study->runtime, *area));
+        }
+    }
+}
+
 void configureBCgroupTSnumbers(Study::Ptr study, 
                                std::string BCgroup,
                                unsigned int nbYears, 
@@ -157,6 +166,7 @@ struct Fixture {
 
 Fixture::Fixture()
 {
+    // Make logs shrink to errors (and higher) only
     logs.verbosityLevel = Logs::Verbosity::Error::level;
 
     study = std::make_shared<Study>();
@@ -179,15 +189,6 @@ Fixture::Fixture()
     BC->weight(link, 1);
     BC->enabled(true);
 };
-
-void addScratchpadToEachArea(Study::Ptr study)
-{
-    for (auto [_, area] : study->areas) {
-        for (unsigned int i = 0; i < study->maxNbYearsInParallel; ++i) {
-            area->scratchpad.push_back(AreaScratchpad(*study->runtime, *area));
-        }
-    }
-}
 
 Fixture::~Fixture()
 {
