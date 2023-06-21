@@ -233,10 +233,16 @@ double getLinkFlowAthour(std::shared_ptr<ISimulation<Economy>> simulation, AreaL
     return result->avgdata.hourly[hour];
 }
 
+double getLinkFlowForWeek(std::shared_ptr<ISimulation<Economy>> simulation, AreaLink* link, unsigned int week)
+{
+    typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* result = nullptr;
+    simulation->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
+    return result->avgdata.weekly[week];
+}
 
 BOOST_FIXTURE_TEST_SUITE(tests_end2end_binding_constraints, Fixture)
 
-BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
+BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
 {
     // Study parameters varying depending on the test 
     unsigned int nbYears = 1;
@@ -258,25 +264,29 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
     BOOST_TEST(getLinkFlowAthour(simulation, link, hour) == rhsValue, tt::tolerance(0.001));
 }
 
-//BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeekly)
-//{
-//    //Create study
-//    Study::Ptr study = std::make_shared<Study>(true); // for the solver
-//    auto rhs = 0.3;
-//    auto cost = 1;
-//    auto [_ ,link] = prepare(study, rhs, BindingConstraint::typeWeekly, BindingConstraint::opEquality);
-//
-//    //Launch simulation
-//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
-//
-//    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
-//    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
-//    BOOST_TEST(result->avgdata.weekly[0] == rhs * cost * 7, tt::tolerance(0.001));
-//
-//    //Clean simulation
-//    cleanSimulation(study, simulation);
-//}
-//
+BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
+{
+    // Study parameters varying depending on the test 
+    unsigned int nbYears = 1;
+    study->parameters.resetPlaylist(nbYears);
+
+    // Binding constraint parameter varying depending on the test
+    BC->mutateTypeWithoutCheck(BindingConstraint::typeWeekly);
+    BC->operatorType(BindingConstraint::opEquality);
+
+    unsigned int sameTSnumberForEachYear = 0;
+    configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
+
+    double rhsValue = 50.;
+    configureBCrhs(BC, rhsValue);
+
+    runSimulation();
+
+    unsigned int week = 0;
+    unsigned int nbDaysInWeek = 7;
+    BOOST_TEST(getLinkFlowForWeek(simulation, link, week) == rhsValue * nbDaysInWeek, tt::tolerance(0.001));
+}
+
 //BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsDaily)
 //{
 //    //Create study
