@@ -210,6 +210,23 @@ void  Fixture::runSimulation()
     simulation->run();
 }
 
+double getLinkFlowAthour(std::shared_ptr<ISimulation<Economy>> simulation, AreaLink* link, unsigned int hour)
+{
+    // There is a problem here : 
+    //    we cannot easly retrieve the hourly flow for a link and a year : 
+    //    - Functions retrieveHourlyResultsForCurrentYear are not coded everywhere it should.
+    //    - Even if those functions were correctly implemented, there is another problem :
+    //      Each year results erases results of previous year, how can we retrieve results of year 1
+    //      if 2 year were run ?
+    //    We should be able to run each year independently, which is not possible now.
+    //    A workaround is to retrieve syntheses, and that's what we do here.
+
+    typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* result = nullptr;
+    simulation->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
+    return result->avgdata.hourly[hour];
+}
+
+
 BOOST_FIXTURE_TEST_SUITE(tests_end2end_binding_constraints, Fixture)
 
 BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
@@ -230,21 +247,8 @@ BOOST_AUTO_TEST_CASE(BC_restricts_link_direct_capacity_to_90)
     
     runSimulation();
 
-    // There is a problem here : 
-    //    we cannot easly retrieve the hourly flow for a link and a year : 
-    //    - Functions retrieveHourlyResultsForCurrentYear are not coded everywhere it should.
-    //    - Even if those functions were correctly implemented, there is another problem :
-    //      Each year results erases results of previous year, how can we retrieve results of year 1
-    //      if 2 year were run ?
-    //    We should be able to run each year independently, which is not possible now.
-    //    A workaround is to retrieve syntheses, and that's what we do here.
-    typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
-    simulation->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
-    BOOST_TEST(result->avgdata.hourly[0] == rhsValue, tt::tolerance(0.001));
-
-    // In case we find a way to run each MC year independently from the others, some day.
-    // const double* varHourlyResults =
-    //    simulation->variables.retrieveHourlyResultsForCurrentYear<Variable::Economy::VCardFlowLinear>();
+    unsigned int hour = 0;
+    BOOST_TEST(getLinkFlowAthour(simulation, link, hour) == rhsValue, tt::tolerance(0.001));
 }
 
 //BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeekly)
