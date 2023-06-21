@@ -1050,7 +1050,7 @@ struct PRnClusterTSMode
 struct PConstraintName
 {
     using Type = wxString;
-    static Type Value(const Data::BindingConstraint* constraint)
+    static Type Value(const std::shared_ptr<Data::BindingConstraint> constraint)
     {
         return wxStringFromUTF8(constraint->name());
     }
@@ -1063,7 +1063,7 @@ struct PConstraintName
 struct PConstraintComments
 {
     using Type = wxString;
-    static Type Value(const Data::BindingConstraint* constraint)
+    static Type Value(const std::shared_ptr<Data::BindingConstraint> constraint)
     {
         return wxStringFromUTF8(constraint->comments());
     }
@@ -1076,7 +1076,7 @@ struct PConstraintComments
 struct PConstraintEnabled
 {
     using Type = bool;
-    static Type Value(const Data::BindingConstraint* constraint)
+    static Type Value(const std::shared_ptr<Data::BindingConstraint> constraint)
     {
         return constraint->enabled();
     }
@@ -1089,7 +1089,7 @@ struct PConstraintEnabled
 struct PConstraintType
 {
     using Type = Data::BindingConstraint::Type;
-    static Type Value(const Data::BindingConstraint* constraint)
+    static Type Value(const std::shared_ptr<Data::BindingConstraint> constraint)
     {
         return constraint->type();
     }

@@ -85,7 +85,7 @@ public:
     //! The original cluster name
     Data::ThermalCluster* originalPlant;
     //! The current constraint
-    Data::BindingConstraint* constraint;
+    std::shared_ptr<Data::BindingConstraint> constraint;
 
     //! Views
     Views view;

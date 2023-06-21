@@ -31,6 +31,7 @@
 #include <antares/wx-wrapper.h>
 #include <yuni/core/math.h>
 #include <wx/window.h>
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 
@@ -122,15 +123,12 @@ double Data::cellNumericValue(int x, int y) const
     if (!(!study))
     {
         assert(study->uiinfo);
-        auto* bindingconstraint = (study->uiinfo->byOperator[pOperator][pType][x]);
+        auto bindingconstraint = (study->uiinfo->byOperator[pOperator][pType][x]);
         assert(bindingconstraint);
         if (bindingconstraint)
         {
-            auto& matrix = bindingconstraint->matrix();
-            matrix.forceReload(true);
-            assert((uint)pColumn < matrix.width);
-            assert((uint)y < matrix.height);
-            return matrix.entry[pColumn][y];
+            //Deleted some code. UI is deprecated but not yet removed
+            return 0;
         }
     }
     return 0.;
@@ -145,7 +143,7 @@ wxString Data::columnCaption(int x) const
 {
     if (!study)
         return wxEmptyString;
-    auto* constraint = (study->uiinfo->byOperator[pOperator][pType][x]);
+    auto constraint = (study->uiinfo->byOperator[pOperator][pType][x]);
     return constraint ? wxStringFromUTF8(constraint->name()) : wxString();
 }
 
@@ -155,7 +153,7 @@ void Data::applyLayerFiltering(size_t layerID, VGridHelper* gridHelper)
     for (int x = 0; x < gridHelper->virtualSize.x; ++x)
     {
         // The current constraint
-        Antares::Data::BindingConstraint* constraint
+        auto constraint
           = study->uiinfo->byOperator[pOperator][pType][x];
 
         if (constraint->hasAllWeightedLinksOnLayer(layerID))
@@ -193,14 +191,13 @@ bool Data::cellValue(int x, int y, const String& value)
     if (!study)
         return false;
 
-    auto* constraint = (study->uiinfo->byOperator[pOperator][pType][x]);
+    auto constraint = (study->uiinfo->byOperator[pOperator][pType][x]);
     if (constraint)
     {
         double v;
         if (value.to(v))
         {
-            constraint->matrix().entry[pColumn][y] = v;
-            constraint->matrix().markAsModified();
+            //Deleted some code. UI is deprecated but not yet removed
             return true;
         }
     }

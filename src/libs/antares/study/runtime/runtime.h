@@ -32,18 +32,9 @@
 #include "../study.h"
 #include "../../mersenne-twister/mersenne-twister.h"
 
-namespace Antares
+namespace Antares::Data
 {
-/*
-namespace Solver
-{
-namespace Variable
-{
-                class State;
-}
-}*/
-namespace Data
-{
+
 enum RangeLimitsIndex
 {
     rangeBegin = 0,
@@ -60,7 +51,6 @@ public:
     */
     void checkIntegrity() const;
 
-public:
     //! Hours
     uint hour[rangeMax];
     //! Day
@@ -77,27 +67,26 @@ public:
 class BindingConstraintRTI
 {
 public:
-    BindingConstraintRTI();
-    ~BindingConstraintRTI();
-
-public:
-    Matrix<double> bounds;
     BindingConstraint::Type type;
     char operatorType;
     uint filterYearByYear_ = filterAll;
     uint filterSynthesis_ = filterAll;
 
-    uint linkCount;
-    double* linkWeight;
-    int* linkOffset;
-    long* linkIndex;
+    uint linkCount = 0;
+    std::vector<double> linkWeight;
+    std::vector<int> linkOffset;
+    std::vector<long> linkIndex;
 
-    uint clusterCount;
-    double* clusterWeight;
-    int* clusterOffset;
-    long* clusterIndex;
-    long* clustersAreaIndex;
+    uint clusterCount = 0;
+    std::vector<double> clusterWeight;
+    std::vector<int> clusterOffset;
+    std::vector<long> clusterIndex;
+    std::vector<long> clustersAreaIndex;
     std::string name;
+    std::string group;
+    Matrix<> rhsTimeSeries;
+
+    const Matrix<>& RHSTimeSeries() const { return rhsTimeSeries; }
 };
 
 /*!
@@ -124,8 +113,6 @@ public:
     */
     bool loadFromStudy(Study& study);
 
-    // Inequality binding constraints
-    uint getNumberOfInequalityBindingConstraints() const;
     std::vector<uint> getIndicesForInequalityBindingConstraints() const;
 
 public:
@@ -163,9 +150,7 @@ public:
     */
     uint* timeseriesNumberYear;
 
-    //! Number of binding constraint
-    uint bindingConstraintCount;
-    BindingConstraintRTI* bindingConstraint;
+    std::vector<BindingConstraintRTI> bindingConstraints;
 
     //! Total
     uint thermalPlantTotalCount;
@@ -209,12 +194,9 @@ private:
 ** \brief Get the size (bytes) occupied in memory by a StudyRuntimeInfos structure
 ** \ingroup runtimedata
 */
-Yuni::uint64 StudyRuntimeInfosMemoryUsage(StudyRuntimeInfos* r);
-
 void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& study);
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "runtime.hxx"
 

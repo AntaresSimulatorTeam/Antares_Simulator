@@ -27,7 +27,6 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_SOLAR_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_SOLAR_CONTAINER_H__
 
-#include "prepro.h"
 #include "series.h"
 
 namespace Antares
@@ -36,6 +35,7 @@ namespace Data
 {
 namespace Solar
 {
+class Prepro;
 class Container
 {
 public:

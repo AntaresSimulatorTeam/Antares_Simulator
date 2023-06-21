@@ -43,6 +43,7 @@
 #include <wx/statline.h>
 #include "action-panel.h"
 #include "window.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 

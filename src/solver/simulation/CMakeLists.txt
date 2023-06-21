@@ -44,7 +44,9 @@ set(SRC_SIMULATION
 		adequacy_patch_runtime_data.cpp
 		hydro-final-reservoir-level-functions.h
 		hydro-final-reservoir-level-functions.cpp
-		)
+		ITimeSeriesNumbersWriter.h
+		TimeSeriesNumbersWriter.cpp
+        BindingConstraintsTimeSeriesNumbersWriter.h)
 source_group("simulation" FILES ${SRC_SIMULATION})
 
 

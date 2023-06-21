@@ -26,6 +26,7 @@
 */
 
 #include "ts-generator.h"
+#include "antares/study/parts/load/prepro.h"
 
 using namespace Yuni;
 

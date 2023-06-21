@@ -24,14 +24,11 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_HXX__
-#define __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_HXX__
+#pragma once
 
 #include "../../utils.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 inline const ConstraintName& BindingConstraint::name() const
 {
@@ -51,16 +48,6 @@ inline const YString& BindingConstraint::comments() const
 inline void BindingConstraint::comments(const AnyString& newcomments)
 {
     pComments = newcomments;
-}
-
-inline const Matrix<>& BindingConstraint::matrix() const
-{
-    return pValues;
-}
-
-inline Matrix<>& BindingConstraint::matrix()
-{
-    return pValues;
 }
 
 inline uint BindingConstraint::linkCount() const
@@ -94,82 +81,40 @@ inline void BindingConstraint::mutateTypeWithoutCheck(Type t)
         pType = t;
 }
 
-inline BindingConstraint::iterator BindingConstraint::begin()
-{
-    return pLinkWeights.begin();
-}
-
-inline BindingConstraint::iterator BindingConstraint::end()
-{
-    return pLinkWeights.end();
-}
-
-inline BindingConstraint::const_iterator BindingConstraint::begin() const
-{
-    return pLinkWeights.begin();
-}
-
-inline BindingConstraint::const_iterator BindingConstraint::end() const
-{
-    return pLinkWeights.end();
-}
-
-inline bool BindingConstraint::skipped() const
+        inline bool BindingConstraint::skipped() const
 {
     return linkCount() == 0 && enabledClusterCount() == 0;
 }
 
-inline uint BindingConstraintsList::size() const
-{
-    return (uint)pList.size();
+inline BindingConstraint::iterator BindingConstraint::begin() {
+    return pLinkWeights.begin();
 }
 
-inline bool BindingConstraintsList::empty() const
-{
-    return pList.empty();
+inline BindingConstraint::iterator BindingConstraint::end() {
+    return pLinkWeights.end();
 }
 
-template<class PredicateT>
-inline void BindingConstraintsList::each(const PredicateT& predicate)
-{
-    uint count = (uint)pList.size();
-    for (uint i = 0; i != count; ++i)
-        predicate(*(pList[i]));
+inline BindingConstraint::const_iterator BindingConstraint::begin() const {
+    return pLinkWeights.begin();
 }
 
-template<class PredicateT>
-inline void BindingConstraintsList::each(const PredicateT& predicate) const
-{
-    uint count = (uint)pList.size();
-    for (uint i = 0; i != count; ++i)
-        predicate(*(pList[i]));
+inline BindingConstraint::const_iterator BindingConstraint::end() const {
+    return pLinkWeights.end();
 }
 
-template<class PredicateT>
-inline void BindingConstraintsList::eachEnabled(const PredicateT& predicate)
-{
-    uint count = (uint)pList.size();
-    for (uint i = 0; i != count; ++i)
-    {
-        auto& constraint = *(pList[i]);
-        if (constraint.enabled() && !constraint.skipped())
-            predicate(constraint);
+template<class Env>
+inline std::string BindingConstraint::timeSeriesFileName(const Env &env) const {
+    switch (operatorType()) {
+        case BindingConstraint::opLess:
+            return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_lt" + ".txt";
+        case BindingConstraint::opGreater:
+            return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_gt" + ".txt";
+        case BindingConstraint::opEquality:
+            return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_eq" + ".txt";
+        default:
+            logs.error("Cannot load/save time series of type other that eq/gt/lt");
+            return "";
     }
 }
 
-template<class PredicateT>
-inline void BindingConstraintsList::eachEnabled(const PredicateT& predicate) const
-{
-    uint count = (uint)pList.size();
-    for (uint i = 0; i != count; ++i)
-    {
-        auto& constraint = *(pList[i]);
-        if (constraint.enabled() && !constraint.skipped())
-            predicate(constraint);
-    }
-}
-
-} // namespace Data
 } // namespace Antares
-
-#endif // __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_HXX__
