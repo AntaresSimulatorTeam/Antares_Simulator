@@ -27,6 +27,11 @@ void initializeStudy(Study::Ptr study)
     Data::Study::Current::Set(study);
 }
 
+void simulationBetweenDays(Study::Ptr study, const unsigned int firstDay, const unsigned int lastDay)
+{
+    study->parameters.simulationDays.first = firstDay;
+    study->parameters.simulationDays.end = lastDay;
+}
 
 Area* addAreaToStudy(Study::Ptr study, const std::string& areaName, double loadInArea)
 {
@@ -172,6 +177,7 @@ Fixture::Fixture()
     study = std::make_shared<Study>();
 
     initializeStudy(study);
+    simulationBetweenDays(study, 0, 7);
 
     double loadInAreaOne = 0.;
     Area* area1 = addAreaToStudy(study, "Area 1", loadInAreaOne);
