@@ -1,6 +1,12 @@
 Antares Changelog
 =================
 
+8.6.1 (06/2023)
+--------------------
+## Bugfixes
+* Fix major bug related to short-term storage & MRG. PRICE
+
+
 8.6.0 (06/2023)
 --------------------
 ## New features
