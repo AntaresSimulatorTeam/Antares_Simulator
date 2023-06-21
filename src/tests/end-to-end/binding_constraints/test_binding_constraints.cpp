@@ -299,6 +299,29 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
     BOOST_TEST(getLinkFlowForWeek(simulation, link, week) == rhsValue * nbDaysInWeek, tt::tolerance(0.001));
 }
 
+
+BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
+{
+    // Study parameters varying depending on the test 
+    unsigned int nbYears = 1;
+    study->parameters.resetPlaylist(nbYears);
+
+    // Binding constraint parameter varying depending on the test
+    BC->mutateTypeWithoutCheck(BindingConstraint::typeDaily);
+    BC->operatorType(BindingConstraint::opEquality);
+
+    unsigned int sameTSnumberForEachYear = 0;
+    configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
+
+    double rhsValue = 60.;
+    configureBCrhs(BC, rhsValue);
+
+    runSimulation();
+
+    unsigned int day = 0;
+    BOOST_TEST(getLinkFlowForDay(simulation, link, day) == rhsValue, tt::tolerance(0.001));
+}
+
 //BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsDaily)
 //{
 //    //Create study
