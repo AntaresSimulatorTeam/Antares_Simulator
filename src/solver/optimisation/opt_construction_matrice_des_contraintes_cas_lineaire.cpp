@@ -151,7 +151,7 @@ static void shortTermStorageLevels(
 
         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-        constraintNamer->ShortTermStorageLevel();
+        constraintNamer->ShortTermStorageLevel(storage.name);
     }
 }
 

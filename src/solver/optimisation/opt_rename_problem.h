@@ -231,7 +231,7 @@ public:
     virtual void PMaxDispatchableGeneration() = 0;
     virtual void PMinDispatchableGeneration() = 0;
     virtual void ConsistenceNODU() = 0;
-    virtual void ShortTermStorageLevel() = 0;
+    virtual void ShortTermStorageLevel(const std::string& name) = 0;
     virtual void BindingConstraintHour(const std::string& name) = 0;
     virtual void BindingConstraintDay(const std::string& name) = 0;
     virtual void BindingConstraintWeek(const std::string& name) = 0;
@@ -258,7 +258,7 @@ public:
     void PMaxDispatchableGeneration() override;
     void PMinDispatchableGeneration() override;
     void ConsistenceNODU() override;
-    void ShortTermStorageLevel() override;
+    void ShortTermStorageLevel(const std::string& name) override;
     void BindingConstraintHour(const std::string& name) override;
     void BindingConstraintDay(const std::string& name) override;
     void BindingConstraintWeek(const std::string& name) override;
@@ -339,7 +339,7 @@ public:
     {
         // keep empty
     }
-    void ShortTermStorageLevel() override
+    void ShortTermStorageLevel(const std::string& name) override
     {
         // keep empty
     }

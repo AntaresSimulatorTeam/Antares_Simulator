@@ -300,10 +300,12 @@ void ConstraintNamer::ConsistenceNODU()
       "ConsistenceNODU", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR));
 }
 
-void ConstraintNamer::ShortTermStorageLevel()
+void ConstraintNamer::ShortTermStorageLevel(const std::string& name)
 {
     problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = BuildName(
-      "ShortTermStorageLevel", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR));
+      "ShortTermStorageLevel",
+      LocationIdentifier(area_, AREA) + SEPARATOR + "ShortTermStorage" + "<" + name + ">",
+      TimeIdentifier(timeStep_, HOUR));
 }
 
 void ConstraintNamer::BindingConstraintHour(const std::string& name)
