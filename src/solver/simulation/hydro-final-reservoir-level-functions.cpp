@@ -76,7 +76,6 @@ void FinalReservoirLevel(const Matrix<double>& scenarioInitialHydroLevels,
           [&scenarioInitialHydroLevels,
            &scenarioFinalHydroLevels,
            &parameters,
-           &areas,
            &preChecksPasses,
            &yearIndex](Data::Area& area)
           {

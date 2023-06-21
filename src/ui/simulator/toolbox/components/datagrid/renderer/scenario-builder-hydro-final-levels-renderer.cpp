@@ -46,30 +46,26 @@ wxString hydroFinalLevelsScBuilderRenderer::cellValue(int x, int y) const
 
 bool hydroFinalLevelsScBuilderRenderer::cellValue(int x, int y, const Yuni::String& value)
 {
-    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
+    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears
+        && (uint)y < study->areas.size())
     {
-        if ((uint)y < study->areas.size())
-        {
-            assert((uint)y < pRules->hydroFinalLevels.width());
-            assert((uint)x < pRules->hydroFinalLevels.height());
-            double val = fromStringToHydroLevel(value, 100.) / 100.;
-            pRules->hydroFinalLevels.set_value(x, y, val);
-            return true;
-        }
+        assert((uint)y < pRules->hydroFinalLevels.width());
+        assert((uint)x < pRules->hydroFinalLevels.height());
+        double val = fromStringToHydroLevel(value, 100.) / 100.;
+        pRules->hydroFinalLevels.set_value(x, y, val);
+        return true;
     }
     return false;
 }
 
 double hydroFinalLevelsScBuilderRenderer::cellNumericValue(int x, int y) const
 {
-    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
+    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears
+        && (uint)y < study->areas.size())
     {
-        if ((uint)y < study->areas.size())
-        {
-            assert((uint)y < pRules->hydroFinalLevels.width());
-            assert((uint)x < pRules->hydroFinalLevels.height());
-            return pRules->hydroFinalLevels.get_value(x, y) * 100.;
-        }
+        assert((uint)y < pRules->hydroFinalLevels.width());
+        assert((uint)x < pRules->hydroFinalLevels.height());
+        return pRules->hydroFinalLevels.get_value(x, y) * 100.;
     }
     return 0.;
 }
