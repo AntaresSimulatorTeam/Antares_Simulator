@@ -135,7 +135,7 @@ BindingConstraintLoader::load(EnvForLoading env) {
                 logs.error() << env.iniFilename << ": in [" << env.section->name
                              << "]: Missing binding constraint group";
             } else {
-                bc->group_ = std::string() + bc->name().c_str() + "_" + bc->id().c_str();
+                bc->group_ = "legacy_study_group";
             }
         }
 
