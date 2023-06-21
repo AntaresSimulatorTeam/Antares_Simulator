@@ -60,7 +60,6 @@ void ApplyCustomScenario(Data::Study& study)
     // final reservoir level functions and pre-checks
     FinalReservoirLevel(study.scenarioInitialHydroLevels,
                         study.scenarioFinalHydroLevels,
-                        study.calendar,
                         study.parameters,
                         study.areas);
 }

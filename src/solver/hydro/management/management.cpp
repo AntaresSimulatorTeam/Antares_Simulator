@@ -354,7 +354,7 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
 void HydroManagement::prepareFinalReservoirLevelData(uint numSpace, uint year)
 {
     study.areas.each(
-      [&](Data::Area& area)
+      [this, &numSpace, &year](Data::Area& area)
       {
           auto& data = pAreas[numSpace][area.index];
           if (area.hydro.finalReservoirLevelRuntimeData.deltaLevel.empty())

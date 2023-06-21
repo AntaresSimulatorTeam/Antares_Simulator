@@ -29,16 +29,12 @@
 
 #include <antares/study.h>
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 void FinalReservoirLevel(const Matrix<double>& scenarioInitialHydroLevels,
                          const Matrix<double>& scenarioFinalHydroLevels,
-                         const Date::Calendar& calendar,
                          const Data::Parameters& parameters,
                          const Data::AreaList& areas);
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver
 
 #endif // __SOLVER_SIMULATION_HYDRO_FINAL_RESERVOIR_PRE_CHECKS_H__
