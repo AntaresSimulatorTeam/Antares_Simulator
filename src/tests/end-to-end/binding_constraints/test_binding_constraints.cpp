@@ -27,6 +27,11 @@ void initializeStudy(Study::Ptr study)
     Data::Study::Current::Set(study);
 }
 
+void setNumberMCyears(Study::Ptr study, unsigned int nbYears)
+{
+    study->parameters.resetPlaylist(nbYears);
+}
+
 void simulationBetweenDays(Study::Ptr study, const unsigned int firstDay, const unsigned int lastDay)
 {
     study->parameters.simulationDays.first = firstDay;
@@ -256,9 +261,9 @@ BOOST_FIXTURE_TEST_SUITE(tests_end2end_binding_constraints, Fixture)
 
 BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
 {
-    // Study parameters varying depending on the test 
+    // Study parameters varying depending on the test
     unsigned int nbYears = 1;
-    study->parameters.resetPlaylist(nbYears);
+    setNumberMCyears(study, nbYears);
 
     // Binding constraint parameter varying depending on the test
     BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
@@ -280,7 +285,7 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
 {
     // Study parameters varying depending on the test 
     unsigned int nbYears = 1;
-    study->parameters.resetPlaylist(nbYears);
+    setNumberMCyears(study, nbYears);
 
     // Binding constraint parameter varying depending on the test
     BC->mutateTypeWithoutCheck(BindingConstraint::typeWeekly);
@@ -304,7 +309,7 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
 {
     // Study parameters varying depending on the test 
     unsigned int nbYears = 1;
-    study->parameters.resetPlaylist(nbYears);
+    setNumberMCyears(study, nbYears);
 
     // Binding constraint parameter varying depending on the test
     BC->mutateTypeWithoutCheck(BindingConstraint::typeDaily);
@@ -327,7 +332,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
 {
     // Study parameters varying depending on the test 
     unsigned int nbYears = 1;
-    study->parameters.resetPlaylist(nbYears);
+    setNumberMCyears(study, nbYears);
 
     // Binding constraint parameter varying depending on the test
     BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
