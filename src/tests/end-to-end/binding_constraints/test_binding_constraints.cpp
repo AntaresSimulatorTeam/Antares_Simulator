@@ -142,12 +142,6 @@ void configureBCgroupTSnumbers(Study::Ptr study,
     ts_numbers_matrix.timeseriesNumbers.fill(tsNumber);
 }
 
-void configureBCrhs(std::shared_ptr<BindingConstraint>& BC, double rhsValue)
-{
-    BC->RHSTimeSeries().resize(1, 8760);
-    BC->RHSTimeSeries().fill(rhsValue);
-}
-
 void whenCleaningSimulation()
 {
     SIM_DesallocationTableaux();
@@ -210,9 +204,9 @@ private:
 };
 
 BCrhsConfig::BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbOfTimeSeries)
-    : nbOfTimeSeries_(nbOfTimeSeries)
+    : nbOfTimeSeries_(nbOfTimeSeries), BC_(BC)
 {
-    BC->RHSTimeSeries().resize(nbOfTimeSeries_, 8760);
+    BC_->RHSTimeSeries().resize(nbOfTimeSeries_, 8760);
 }
 
 void BCrhsConfig::fillTimeSeriesWith(unsigned int TSnumber, double rhsValue)
@@ -302,8 +296,11 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
 
+    unsigned int numberOfTS = 1;
+    BCrhsConfig bcRHSconfig(BC, numberOfTS);
+
     double rhsValue = 90.;
-    configureBCrhs(BC, rhsValue);
+    bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
 
     unsigned int sameTSnumberForEachYear = 0;
     configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
@@ -324,8 +321,12 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
     BC->mutateTypeWithoutCheck(BindingConstraint::typeWeekly);
     BC->operatorType(BindingConstraint::opEquality);
 
+    unsigned int numberOfTS = 1;
+    BCrhsConfig bcRHSconfig(BC, numberOfTS);
+
     double rhsValue = 50.;
-    configureBCrhs(BC, rhsValue);
+    bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
+
     
     unsigned int sameTSnumberForEachYear = 0;
     configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
@@ -348,8 +349,12 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     BC->mutateTypeWithoutCheck(BindingConstraint::typeDaily);
     BC->operatorType(BindingConstraint::opEquality);
 
+    unsigned int numberOfTS = 1;
+    BCrhsConfig bcRHSconfig(BC, numberOfTS);
+
     double rhsValue = 60.;
-    configureBCrhs(BC, rhsValue);
+    bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
+
     
     unsigned int sameTSnumberForEachYear = 0;
     configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
@@ -371,9 +376,11 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opLess);
 
-    double rhsValue = 90.;
-    configureBCrhs(BC, rhsValue);
+    unsigned int numberOfTS = 1;
+    BCrhsConfig bcRHSconfig(BC, numberOfTS);
 
+    double rhsValue = 90.;
+    bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
     unsigned int sameTSnumberForEachYear = 0;
     configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
 
