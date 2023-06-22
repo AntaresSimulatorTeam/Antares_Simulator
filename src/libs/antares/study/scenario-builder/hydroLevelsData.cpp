@@ -36,6 +36,11 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
+hydroLevelsData::hydroLevelsData(std::string& saveToINIFilePrefix) :
+addToPrefix(saveToINIFilePrefix)
+{
+}
+
 bool hydroLevelsData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;
@@ -47,17 +52,6 @@ bool hydroLevelsData::reset(const Study& study)
 }
 
 void hydroLevelsData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
-{
-    /**
-     * This function is inherited from dataInterface class as pure virtual member function and it
-     * must be overriden. Function does not have body because it can not provide desired
-     * functionality due to lack of necessary function parameters.
-     */
-}
-
-void hydroLevelsData::saveToINIFileHydroLevel(const Study& study,
-                                              Yuni::IO::File::Stream& file,
-                                              const std::string& addToPrefix) const
 {
     // Prefix
     CString<512, false> prefix;

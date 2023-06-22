@@ -45,7 +45,9 @@ public:
     using MatrixType = Matrix<double>;
 
 public:
-    // We use default constructor and destructor
+    // Constructor
+    
+    hydroLevelsData(std::string& saveToINIFilePrefix);
 
     //! \name Data manupulation
     //@{
@@ -58,9 +60,6 @@ public:
     ** \brief Export the data into a mere INI file
     */
     void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
-    void saveToINIFileHydroLevel(const Study& study,
-                                 Yuni::IO::File::Stream& file,
-                                 const std::string& addToPrefix) const;
 
     /*!
     ** \brief Assign a single value
@@ -86,6 +85,8 @@ public:
 private:
     //! Hydro levels overlay (0 if auto)
     MatrixType pHydroLevelsRules;
+    // prefix to be added when calling saveToINIFileHydroLevel
+    std::string& addToPrefix;
 
 }; // class hydroLevelsData
 
