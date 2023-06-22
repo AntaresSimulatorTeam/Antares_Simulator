@@ -309,7 +309,7 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
 }
 
-void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& list)
+void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsRepository& list)
 {
     // Calculating the total number of binding constraints
     unsigned bindingConstraintCount = 0;

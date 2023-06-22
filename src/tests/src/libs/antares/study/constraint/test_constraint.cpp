@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
     auto study = std::make_shared<Study>();
 
     StudyLoadOptions options;
-    BindingConstraintsList bindingConstraints;
+    BindingConstraintsRepository bindingConstraints;
 
     auto tmp_dir = fs::temp_directory_path();
     auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
     study->areaAdd("area3");
 
     StudyLoadOptions options;
-    BindingConstraintsList bindingConstraints;
+    BindingConstraintsRepository bindingConstraints;
 
     auto tmp_dir = fs::temp_directory_path();
     auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type) {
     study->areaAdd("area3");
 
     StudyLoadOptions options;
-    BindingConstraintsList bindingConstraints;
+    BindingConstraintsRepository bindingConstraints;
 
     auto tmp_dir = fs::temp_directory_path();
     auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy) {
     study->areaAdd("area3");
 
     StudyLoadOptions options;
-    BindingConstraintsList bindingConstraints;
+    BindingConstraintsRepository bindingConstraints;
 
     auto tmp_dir = fs::temp_directory_path();
     auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
@@ -223,7 +223,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_range) {
     study->areaAdd("area3");
 
     StudyLoadOptions options;
-    BindingConstraintsList bindingConstraints;
+    BindingConstraintsRepository bindingConstraints;
 
     auto tmp_dir = fs::temp_directory_path();
     auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);

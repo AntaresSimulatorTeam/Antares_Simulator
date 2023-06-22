@@ -100,8 +100,8 @@ public:
         auto& study = *Data::Study::Current::Get();
 
         const Spotlight::SearchToken::Vector::const_iterator tend = tokens.end();
-        Data::BindingConstraintsList::iterator end = study.bindingConstraints.end();
-        Data::BindingConstraintsList::iterator i = study.bindingConstraints.begin();
+        Data::BindingConstraintsRepository::iterator end = study.bindingConstraints.end();
+        Data::BindingConstraintsRepository::iterator i = study.bindingConstraints.begin();
 
         std::vector<Data::BindingConstraint*> layerFilteredItems;
         if (!text.empty())

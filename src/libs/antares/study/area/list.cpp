@@ -1504,7 +1504,7 @@ void AreaList::resizeAllTimeseriesNumbers(uint n)
     each([&](Data::Area& area) { area.resizeAllTimeseriesNumbers(n); });
 }
 
-void AreaList::fixOrientationForAllInterconnections(BindingConstraintsList& bindingconstraints)
+void AreaList::fixOrientationForAllInterconnections(BindingConstraintsRepository& bindingconstraints)
 {
     each([&](Data::Area& area) {
         bool mustLoop;

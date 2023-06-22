@@ -7,7 +7,7 @@
 #include <memory>
 #include "ITimeSeriesNumbersWriter.h"
 #include "i_writer.h"
-#include "antares/study/binding_constraint/BindingConstraintsList.h"
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
 namespace Antares::Solver::Simulation {
 class BindingConstraintsTimeSeriesNumbersWriter: public ITimeSeriesNumbersWriter {
@@ -15,7 +15,7 @@ class BindingConstraintsTimeSeriesNumbersWriter: public ITimeSeriesNumbersWriter
 public:
     explicit BindingConstraintsTimeSeriesNumbersWriter(std::shared_ptr<Antares::Solver::IResultWriter> resultWriter);
     BindingConstraintsTimeSeriesNumbersWriter() = default;
-    void write(const Data::BindingConstraintsList &list) override;
+    void write(const Data::BindingConstraintsRepository &list) override;
 
 private:
     std::shared_ptr<IResultWriter> writer_;
