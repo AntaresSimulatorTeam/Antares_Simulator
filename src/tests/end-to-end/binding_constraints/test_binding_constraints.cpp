@@ -189,6 +189,39 @@ double getLinkFlowForDay(std::shared_ptr<ISimulation<Economy>>& simulation, Area
     return result->avgdata.daily[day];
 }
 
+
+// =================
+// Helper classes
+// =================
+
+// -----------------------
+// BC rhs configuration
+// -----------------------
+class BCrhsConfig
+{
+public:
+    BCrhsConfig() = delete;
+    BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbTimeSeries);
+    void fillTimeSeriesWith(unsigned int TSnumber, double rhsValue);
+
+private:
+    std::shared_ptr<BindingConstraint> BC_;
+    unsigned int nbOfTimeSeries_ = 0;
+};
+
+BCrhsConfig::BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbOfTimeSeries)
+    : nbOfTimeSeries_(nbOfTimeSeries)
+{
+    BC->RHSTimeSeries().resize(nbOfTimeSeries_, 8760);
+}
+
+void BCrhsConfig::fillTimeSeriesWith(unsigned int TSnumber, double rhsValue)
+{
+    BOOST_CHECK(TSnumber < nbOfTimeSeries_);
+    BC_->RHSTimeSeries().fillColumn(TSnumber, rhsValue);
+}
+
+
 // ===============
 // The fixture
 // ===============
@@ -269,12 +302,12 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
 
-    unsigned int sameTSnumberForEachYear = 0;
-    configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
-    
     double rhsValue = 90.;
     configureBCrhs(BC, rhsValue);
-    
+
+    unsigned int sameTSnumberForEachYear = 0;
+    configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
+        
     runSimulation();
 
     unsigned int hour = 0;
@@ -291,11 +324,11 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
     BC->mutateTypeWithoutCheck(BindingConstraint::typeWeekly);
     BC->operatorType(BindingConstraint::opEquality);
 
-    unsigned int sameTSnumberForEachYear = 0;
-    configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
-
     double rhsValue = 50.;
     configureBCrhs(BC, rhsValue);
+    
+    unsigned int sameTSnumberForEachYear = 0;
+    configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
 
     runSimulation();
 
@@ -315,11 +348,11 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     BC->mutateTypeWithoutCheck(BindingConstraint::typeDaily);
     BC->operatorType(BindingConstraint::opEquality);
 
-    unsigned int sameTSnumberForEachYear = 0;
-    configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
-
     double rhsValue = 60.;
     configureBCrhs(BC, rhsValue);
+    
+    unsigned int sameTSnumberForEachYear = 0;
+    configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
 
     runSimulation();
 
@@ -338,11 +371,11 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opLess);
 
-    unsigned int sameTSnumberForEachYear = 0;
-    configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
-
     double rhsValue = 90.;
     configureBCrhs(BC, rhsValue);
+
+    unsigned int sameTSnumberForEachYear = 0;
+    configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
 
     runSimulation();
 
