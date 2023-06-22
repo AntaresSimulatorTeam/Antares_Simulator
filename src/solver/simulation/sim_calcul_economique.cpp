@@ -654,10 +654,12 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 auto& PtValGen = *ValeursGenereesParPays[numSpace][k];
 
                 Pt.PuissanceDisponibleDuPalierThermique[j]
-                  = cluster.series->timeSeries[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][indx];
+                  = cluster.series
+                      ->timeSeries[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][indx];
 
                 Pt.CoutHoraireDeProductionDuPalierThermique[j]
-                  = cluster.marketBidCost * cluster.modulation[thermalModulationMarketBid][indx]
+                  = cluster.getMarketBidCost(tsIndex.ThermiqueParPalier[cluster.areaWideIndex],
+                                             indx)
                     + PtValGen.AleaCoutDeProductionParPalier[cluster.areaWideIndex];
 
                 Pt.PuissanceMinDuPalierThermique[j]

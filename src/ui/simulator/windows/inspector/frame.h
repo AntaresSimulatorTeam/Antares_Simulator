@@ -224,13 +224,16 @@ private:
     wxPGProperty* pPGThClusterLawForced;
     wxPGProperty* pPGThClusterLawPlanned;
     wxPGProperty* pPGThClusterSpinning;
+    wxPGProperty* pPGThClusterEfficiency;
 
+    wxPGProperty* pPGThClusterCostGeneration;
     wxPGProperty* pPGThClusterMarginalCost;
     wxPGProperty* pPGThClusterFixedCost;
     wxPGProperty* pPGThClusterStartupCost;
     wxPGProperty* pPGThClusterOperatingCost;
     wxPGProperty* pPGThClusterRandomSpread;
-
+    wxPGProperty* pPGThClusterVariableOMcost;
+    
     wxPGProperty* pPGThClusterMinStablePower;
     wxPGProperty* pPGThClusterMinUpTime;
     wxPGProperty* pPGThClusterMinDownTime;

@@ -206,5 +206,8 @@ Version StudyTryToFindTheVersion(const AnyString& folder)
     return versionUnknown;
 }
 
+bool StudyVersion::isStudyLatestVersion(std::string studyFolder) const {
+    return StudyTryToFindTheVersion(studyFolder) == versionLatest;
+}
 } // namespace Data
 } // namespace Antares

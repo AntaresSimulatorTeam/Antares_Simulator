@@ -811,6 +811,19 @@ struct PClusterSpinning
     }
 };
 
+struct PClusterEfficiency
+{
+    using Type = double;
+    static Type Value(const Data::ThermalCluster* cluster)
+    {
+        return cluster->fuelEfficiency;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return DoubleToWxString(v);
+    }
+};
+
 struct PClusterSpinningColor
 {
     static wxColor TextColor(Data::ThermalCluster* cluster)
@@ -856,6 +869,19 @@ struct PClusterRandomSpread
     }
 };
 
+struct PClusterCostGeneration
+{
+    using Type = uint;
+    static Type Value(const Data::ThermalCluster* cluster)
+    {
+        return (uint)cluster->costgeneration;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return (v < costgenerationCount) ? costgeneration[v] : nullptr;
+    }
+};
+
 struct PClusterMarginalCost
 {
     using Type = double;
@@ -888,6 +914,19 @@ struct PClusterFixedCost
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->fixedCost;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return DoubleToWxString(v);
+    }
+};
+
+struct PClusterVariableOMcost
+{
+    using Type = double;
+    static Type Value(const Data::ThermalCluster* cluster)
+    {
+        return cluster->variableomcost;
     }
     static wxString ConvertToString(const Type v)
     {
