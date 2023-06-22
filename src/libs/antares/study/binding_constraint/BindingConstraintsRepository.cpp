@@ -12,6 +12,12 @@
 #include "BindingConstraintLoader.h"
 #include "BindingConstraintSaver.h"
 
+void Data::BindingConstraintsRepository::clear()
+{
+    pList.clear();
+    enabledConstraints_.reset();
+}
+
 namespace Antares::Data {
 std::shared_ptr<Data::BindingConstraint> BindingConstraintsRepository::find(const AnyString &id) {
     for (auto const &i: pList) {
@@ -307,6 +313,7 @@ void BindingConstraintsRepository::remove(const Area* area)
     RemovePredicate<Area> predicate(area);
     auto e = std::remove_if(pList.begin(), pList.end(), predicate);
     pList.erase(e, pList.end());
+    enabledConstraints_.reset();
 }
 
 void BindingConstraintsRepository::remove(const AreaLink* lnk)
@@ -314,6 +321,7 @@ void BindingConstraintsRepository::remove(const AreaLink* lnk)
     RemovePredicate<AreaLink> predicate(lnk);
     auto e = std::remove_if(pList.begin(), pList.end(), predicate);
     pList.erase(e, pList.end());
+    enabledConstraints_.reset();
 }
 
 void BindingConstraintsRepository::remove(const BindingConstraint* bc)
@@ -321,6 +329,7 @@ void BindingConstraintsRepository::remove(const BindingConstraint* bc)
     RemovePredicate<BindingConstraint> predicate(bc);
     auto e = std::remove_if(pList.begin(), pList.end(), predicate);
     pList.erase(e, pList.end());
+    enabledConstraints_.reset();
 }
 
 
@@ -379,12 +388,17 @@ uint64 BindingConstraintsRepository::timeSeriesNumberMemoryUsage() const {
 }
 
 std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::enabled() const {
-    std::vector<std::shared_ptr<BindingConstraint>> out;
-    std::copy_if(pList.begin(), pList.end(), std::back_inserter(out),
-                 [](const auto& bc) {
-       return bc->enabled();
-    });
-    return out;
+    if (enabledConstraints_) {
+        return enabledConstraints_.value();
+    } else {
+        std::vector<std::shared_ptr<BindingConstraint>> out;
+        std::copy_if(pList.begin(), pList.end(), std::back_inserter(out),
+                     [](const auto &bc) {
+                         return bc->enabled();
+                     });
+        enabledConstraints_ = out;
+        return enabledConstraints_.value();
+    }
 }
 
 static bool isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)

@@ -184,6 +184,8 @@ private:
     [[nodiscard]] Yuni::uint64 timeSeriesNumberMemoryUsage() const;
 
     [[nodiscard]] bool checkTimeSeriesWidthConsistency() const;
+
+    mutable std::optional<std::vector<std::shared_ptr<BindingConstraint>>> enabledConstraints_;
 };
 
 struct WhoseNameContains final

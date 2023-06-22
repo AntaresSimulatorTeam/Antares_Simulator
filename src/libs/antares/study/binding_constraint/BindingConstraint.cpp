@@ -362,13 +362,8 @@ void BindingConstraint::clear() {
     this->pEnabled = true;
 }
 
-    void BindingConstraintsRepository::clear()
-{
-    pList.clear();
-}
 
-
-void BindingConstraint::reverseWeightSign(const AreaLink* lnk)
+    void BindingConstraint::reverseWeightSign(const AreaLink* lnk)
 {
     auto i = pLinkWeights.find(lnk);
     if (i != pLinkWeights.end())
