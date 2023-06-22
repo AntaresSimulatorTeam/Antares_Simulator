@@ -40,7 +40,11 @@ namespace Antares::Data
 class FinalReservoirLevelRuntimeData
 {
 public:
-    // FInal reservoir level runtime data
+    // Final reservoir level runtime data
+
+    // vectors containing data necessary for final reservoir level calculation 
+    // for one area and all MC years
+    // vector indexes correspond to the MC years 
     std::vector<bool> includeFinalReservoirLevel;
     std::vector<double> endLevel;
     std::vector<double> deltaLevel;
@@ -49,9 +53,11 @@ public:
     uint simEndDay;
 
     // simulation year
+    // overwritten after each MC year
     uint yearIndex;
 
     // data per area
+    // data overwritten after each MC year 
     double initialReservoirLevel;
     double finalReservoirLevel;
     double deltaReservoirLevel;
