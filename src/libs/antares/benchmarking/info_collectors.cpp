@@ -74,9 +74,9 @@ void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent
 {
     auto enabledBindingConstraints = study_.bindingConstraints.enabled();
     auto nbEnabledBC = enabledBindingConstraints.size();
-    auto nbEnabledHourlyBC(0);
-    auto nbEnabledDailyBC(0);
-    auto nbEnabledWeeklyBC(0);
+    unsigned nbEnabledHourlyBC(0);
+    unsigned nbEnabledDailyBC(0);
+    unsigned nbEnabledWeeklyBC(0);
 
     for (uint i = 0; i < nbEnabledBC; i++)
     {
