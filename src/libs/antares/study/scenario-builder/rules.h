@@ -118,10 +118,10 @@ public:
     std::vector<renewableTSNumberData> renewable;
 
     //! hydro initial levels
-    std::string prefixInitial = "hl";
+    std::string prefixInitial = "hl,";
     hydroLevelsData hydroInitialLevels = hydroLevelsData(prefixInitial);
     //! hydro final levels
-    std::string prefixFinal = "hfl";
+    std::string prefixFinal = "hfl,";
     hydroLevelsData hydroFinalLevels = hydroLevelsData(prefixFinal);
 
     // Links NTC
