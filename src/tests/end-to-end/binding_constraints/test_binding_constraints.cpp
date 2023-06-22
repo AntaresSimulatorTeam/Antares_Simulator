@@ -138,7 +138,7 @@ void configureBCgroupTSnumbers(Study::Ptr study,
                                unsigned int tsNumber)
 {
     study->bindingConstraints.resizeAllTimeseriesNumbers(nbYears);
-    auto& ts_numbers_matrix = study->bindingConstraints.groupToTimeSeriesNumbers[BCgroup];
+    auto& ts_numbers_matrix = study->bindingConstraints.groupToTimeSeriesNumbers.at(BCgroup);
     ts_numbers_matrix.timeseriesNumbers.fill(tsNumber);
 }
 
@@ -213,6 +213,36 @@ void BCrhsConfig::fillTimeSeriesWith(unsigned int TSnumber, double rhsValue)
 {
     BOOST_CHECK(TSnumber < nbOfTimeSeries_);
     BC_->RHSTimeSeries().fillColumn(TSnumber, rhsValue);
+}
+
+
+// ----------------------------
+// BC group TS number setter
+// ----------------------------
+class BCgroupTSconfig
+{
+public:
+    BCgroupTSconfig() = delete;
+    BCgroupTSconfig(Study::Ptr study, unsigned int nbYears);
+    void yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber);
+
+private:
+    Study::Ptr study_;
+    unsigned int nbYears_ = 0;
+};
+
+BCgroupTSconfig::BCgroupTSconfig(Study::Ptr study, unsigned int nbYears)
+    : study_(study), nbYears_(nbYears)
+
+{
+    study->bindingConstraints.resizeAllTimeseriesNumbers(nbYears_);
+}
+
+void BCgroupTSconfig::yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber)
+{
+    BOOST_CHECK(year < nbYears_);
+    auto& ts_numbers_matrix = study_->bindingConstraints.groupToTimeSeriesNumbers[groupName];
+    ts_numbers_matrix.timeseriesNumbers.entry[0][year] = TSnumber;
 }
 
 
@@ -302,8 +332,8 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     double rhsValue = 90.;
     bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
 
-    unsigned int sameTSnumberForEachYear = 0;
-    configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
+    BCgroupTSconfig bcGroupTSconfig(study, nbYears);
+    bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
         
     runSimulation();
 
