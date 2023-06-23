@@ -30,6 +30,7 @@ void initializeStudy(Study::Ptr study)
 void setNumberMCyears(Study::Ptr study, unsigned int nbYears)
 {
     study->parameters.resetPlaylist(nbYears);
+    study->bindingConstraints.resizeAllTimeseriesNumbers(nbYears);
 }
 
 void simulationBetweenDays(Study::Ptr study, const unsigned int firstDay, const unsigned int lastDay)
@@ -221,17 +222,15 @@ public:
     void yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber);
 
 private:
-    Study::Ptr study_;
     unsigned int nbYears_ = 0;
     ScenarioBuilder::Rules::Ptr rules_;
 };
 
 BCgroupScenarioBuilder::BCgroupScenarioBuilder(Study::Ptr study, unsigned int nbYears)
-    : study_(study), nbYears_(nbYears)
+    : nbYears_(nbYears)
 
 {
-    study_->bindingConstraints.resizeAllTimeseriesNumbers(nbYears_);
-    rules_ = createScenarioRules(study_);
+    rules_ = createScenarioRules(study);
 }
 
 void BCgroupScenarioBuilder::yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber)
