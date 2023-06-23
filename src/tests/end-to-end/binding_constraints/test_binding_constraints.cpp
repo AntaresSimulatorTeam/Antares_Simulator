@@ -246,6 +246,7 @@ void BCgroupTSconfig::yearGetsTSnumber(std::string groupName, unsigned int year,
 struct Fixture {
     Fixture();
     void createSimulation();
+    void giveWeigthOnlyToYear(unsigned int year);
     ~Fixture();
 
     // Data members
@@ -307,6 +308,16 @@ void Fixture::createSimulation()
     SIM_AllocationTableaux();
 }
 
+void Fixture::giveWeigthOnlyToYear(unsigned int year)
+{
+    // Set all years weight to zero
+    unsigned int nbYears = study->parameters.nbYears;
+    for (unsigned int y = 0; y < nbYears; y++)
+        study->parameters.setYearWeight(y, 0.);
+
+    // Activating one year to 1
+    study->parameters.setYearWeight(year, 1.);
+}
 
 BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BINDING_CONSTRAINTS, Fixture)
 
@@ -330,6 +341,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
         
     createSimulation();
+    giveWeigthOnlyToYear(0);
     simulation->run();
 
     unsigned int hour = 0;
@@ -356,6 +368,7 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
     bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
 
     createSimulation();
+    giveWeigthOnlyToYear(0);
     simulation->run();
 
     unsigned int week = 0;
@@ -384,6 +397,7 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
 
     createSimulation();
+    giveWeigthOnlyToYear(0);
     simulation->run();
 
     unsigned int day = 0;
@@ -411,6 +425,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
 
     createSimulation();
+    giveWeigthOnlyToYear(0);
     simulation->run();
 
     unsigned int hour = 100;
