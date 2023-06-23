@@ -436,45 +436,33 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     BOOST_TEST(getLinkFlowAthour(simulation, link, hour) <= rhsValue, tt::tolerance(0.001));
 }
 
+BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
+{
+    // Study parameters varying depending on the test 
+    unsigned int nbYears = 1;
+    setNumberMCyears(study, nbYears);
 
-//BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeeklyLess)
-//{
-//    //Create study
-//    Study::Ptr study = std::make_shared<Study>(true); // for the solver
-//    auto rhs = 0.3;
-//    auto cost = 1;
-//    auto [_ ,link] = prepare(study, rhs, BindingConstraint::typeWeekly, BindingConstraint::opLess);
-//
-//    //Launch simulation
-//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
-//
-//    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
-//    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
-//    BOOST_TEST(result->avgdata.weekly[0] < rhs * cost * 7);
-//
-//    //Clean simulation
-//    cleanSimulation(study, simulation);
-//}
-//
-//BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsDailyGreater)
-//{
-//    //Create study
-//    Study::Ptr study = std::make_shared<Study>(true); // for the solver
-//    auto rhs = 0.3;
-//    auto cost = 1;
-//    auto [_ ,link] = prepare(study, rhs, BindingConstraint::typeDaily, BindingConstraint::opEquality);
-//
-//    //Launch simulation
-//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
-//
-//    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
-//    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
-//    BOOST_TEST(result->avgdata.daily[0] > rhs * cost);
-//    BOOST_TEST(result->avgdata.weekly[0] > rhs * cost * 7);
-//
-//    //Clean simulation
-//    cleanSimulation(study, simulation);
-//}
+    // Binding constraint parameter varying depending on the test
+    BC->mutateTypeWithoutCheck(BindingConstraint::typeDaily);
+    BC->operatorType(BindingConstraint::opGreater);
+
+    unsigned int numberOfTS = 1;
+    BCrhsConfig bcRHSconfig(BC, numberOfTS);
+
+    double rhsValue = 80.;
+    bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
+
+    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
+
+    createSimulation();
+    giveWeigthOnlyToYear(0);
+    simulation->run();
+
+    unsigned int hour = 100;
+    BOOST_TEST(getLinkFlowAthour(simulation, link, hour) >= rhsValue, tt::tolerance(0.001));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
