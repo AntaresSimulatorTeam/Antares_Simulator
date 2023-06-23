@@ -132,16 +132,6 @@ void addScratchpadToEachArea(Study::Ptr study)
     }
 }
 
-void configureBCgroupTSnumbers(Study::Ptr study, 
-                               std::string BCgroup,
-                               unsigned int nbYears, 
-                               unsigned int tsNumber)
-{
-    study->bindingConstraints.resizeAllTimeseriesNumbers(nbYears);
-    auto& ts_numbers_matrix = study->bindingConstraints.groupToTimeSeriesNumbers.at(BCgroup);
-    ts_numbers_matrix.timeseriesNumbers.fill(tsNumber);
-}
-
 void whenCleaningSimulation()
 {
     SIM_DesallocationTableaux();
@@ -356,10 +346,9 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
 
     double rhsValue = 50.;
     bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
-
-    
-    unsigned int sameTSnumberForEachYear = 0;
-    configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
+  
+    BCgroupTSconfig bcGroupTSconfig(study, nbYears);
+    bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
 
     runSimulation();
 
@@ -385,9 +374,8 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     double rhsValue = 60.;
     bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
 
-    
-    unsigned int sameTSnumberForEachYear = 0;
-    configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
+    BCgroupTSconfig bcGroupTSconfig(study, nbYears);
+    bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
 
     runSimulation();
 
@@ -411,8 +399,9 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
 
     double rhsValue = 90.;
     bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
-    unsigned int sameTSnumberForEachYear = 0;
-    configureBCgroupTSnumbers(study, BC->group(), nbYears, sameTSnumberForEachYear);
+
+    BCgroupTSconfig bcGroupTSconfig(study, nbYears);
+    bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
 
     runSimulation();
 
@@ -459,7 +448,10 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
 //    //Clean simulation
 //    cleanSimulation(study, simulation);
 //}
-//
+
+
+
+
 //BOOST_AUTO_TEST_CASE(two_year_one_ts__Binding_ConstraintsWeekly)
 //{
 //    //Create study
