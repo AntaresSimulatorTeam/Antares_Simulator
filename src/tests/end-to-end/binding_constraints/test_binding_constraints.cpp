@@ -510,50 +510,6 @@ BOOST_AUTO_TEST_CASE(On_year_2_BC_rhs_number_2_is_taken_into_account)
     BOOST_TEST(getLinkFlowAthour(simulation, link, hour) == bcGroupRHS2, tt::tolerance(0.001));
 }
 
-//BOOST_AUTO_TEST_CASE(two_mc_year_two_ts__Binding_Constraints_Hourly)
-//{
-//    //Create study
-//    Study::Ptr study = std::make_shared<Study>(true); // for the solver
-//    auto rhs_ts1 = 0.3;
-//    auto rhs_ts2 = 0.6;
-//    auto cost = 1;
-//    auto nbYears = 2;
-//    auto [BC, link] = prepare(study, rhs_ts1, BindingConstraint::typeHourly, BindingConstraint::opEquality, nbYears);
-//
-//    //Define years weight
-//    std::vector<float> yearsWeight;
-//    yearsWeight.assign(nbYears, 1);
-//    yearsWeight[0] = 4.f;	yearsWeight[1] = 10.f;
-//
-//    float yearSum = defineYearsWeight(study,yearsWeight);
-//
-//    //Add one TS
-//    auto& ts_numbers = study->bindingConstraints.timeSeriesNumbers[BC->group()];
-//    BC->RHSTimeSeries().resize(2, 8760);
-//    BC->RHSTimeSeries().fillColumn(0, rhs_ts1);
-//    BC->RHSTimeSeries().fillColumn(1, rhs_ts2);
-//    study->bindingConstraints.resizeAllTimeseriesNumbers(2);
-//    ts_numbers.timeseriesNumbers.fill(0);
-//    //Create scenario rules
-//
-//    ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(study);
-//    pRules->binding_constraints.setData(BC->group(), 0, 1);
-//    pRules->binding_constraints.setData(BC->group(), 1, 2);
-//
-//    double averageLoad = (rhs_ts1 * 4.f + rhs_ts2 * 10.f) / yearSum;
-//
-//    //Launch simulation
-//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
-//
-//    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
-//    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
-//    BOOST_TEST(result->avgdata.hourly[0] == averageLoad, tt::tolerance(0.001));
-//    BOOST_TEST(result->avgdata.daily[0] == averageLoad * 24, tt::tolerance(0.001));
-//    BOOST_TEST(result->avgdata.weekly[0] == averageLoad * 24 * 7, tt::tolerance(0.001));
-//
-//    //Clean simulation
-//    cleanSimulation(study, simulation);
-//}
 //
 //BOOST_AUTO_TEST_CASE(two_mc_year_one_ts__Binding_Constraints_Hourly)
 //{
