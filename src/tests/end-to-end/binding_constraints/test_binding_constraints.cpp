@@ -481,7 +481,7 @@ BOOST_AUTO_TEST_SUITE_END()
 BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BC_RHS_SCENARIZATION, Fixture)
 
 
-BOOST_AUTO_TEST_CASE(On_year_2_BC_rhs_number_2_is_taken_into_account)
+BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
 {
     // Study parameters varying depending on the test
     unsigned int nbYears = 2;
@@ -510,46 +510,44 @@ BOOST_AUTO_TEST_CASE(On_year_2_BC_rhs_number_2_is_taken_into_account)
     BOOST_TEST(getLinkFlowAthour(simulation, link, hour) == bcGroupRHS2, tt::tolerance(0.001));
 }
 
-//
-//BOOST_AUTO_TEST_CASE(two_mc_year_one_ts__Binding_Constraints_Hourly)
-//{
-//    //Create study
-//    Study::Ptr study = std::make_shared<Study>(true); // for the solver
-//    auto rhs_ts1 = 0.3;
-//    auto cost = 1;
-//    auto nbYears = 2;
-//    auto [BC, link] = prepare(study, rhs_ts1, BindingConstraint::typeHourly, BindingConstraint::opEquality, nbYears);
-//
-//    //Define years weight
-//    std::vector<float> yearsWeight;
-//    yearsWeight.assign(nbYears, 1);
-//    yearsWeight[0] = 4.f;	yearsWeight[1] = 10.f;
-//
-//    float yearSum = defineYearsWeight(study,yearsWeight);
-//
-//    //Add one TS
-//    auto& ts_numbers = study->bindingConstraints.timeSeriesNumbers[BC->group()];
-//    BC->RHSTimeSeries().resize(1, 8760);
-//    BC->RHSTimeSeries().fillColumn(0, rhs_ts1);
-//    study->bindingConstraints.resizeAllTimeseriesNumbers(nbYears);
-//    ts_numbers.timeseriesNumbers.fill(0);
-//    //Create scenario rules
-//
-//    ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(study);
-//    pRules->binding_constraints.setData(BC->group(), 0, 1);
-//    pRules->binding_constraints.setData(BC->group(), 1, 10);
-//
-//    //Launch simulation
-//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
-//
-//    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
-//    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
-//    BOOST_TEST(result->avgdata.hourly[0] == rhs_ts1, tt::tolerance(0.001));
-//    BOOST_TEST(result->avgdata.daily[0] == rhs_ts1 * 24, tt::tolerance(0.001));
-//    BOOST_TEST(result->avgdata.weekly[0] == rhs_ts1 * 24 * 7, tt::tolerance(0.001));
-//
-//    //Clean simulation
-//    cleanSimulation(study, simulation);
-//}
+BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
+{
+    // Study parameters varying depending on the test
+    unsigned int nbYears = 10;
+    setNumberMCyears(study, nbYears);
+
+    // Binding constraint parameter varying depending on the test
+    BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
+    BC->operatorType(BindingConstraint::opEquality);
+
+    unsigned int numberOfTS = 7;
+    BCrhsConfig bcRHSconfig(BC, numberOfTS);
+    bcRHSconfig.fillTimeSeriesWith(0, 10.);
+    bcRHSconfig.fillTimeSeriesWith(1, 20.);
+    bcRHSconfig.fillTimeSeriesWith(2, 30.);
+    bcRHSconfig.fillTimeSeriesWith(3, 40.);
+    bcRHSconfig.fillTimeSeriesWith(4, 50.);
+    bcRHSconfig.fillTimeSeriesWith(5, 60.);
+    bcRHSconfig.fillTimeSeriesWith(6, 70.);
+
+    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 1, 0);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 2, 0);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 3, 0);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 4, 0);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 5, 0);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 6, 0);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 7, 0);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 8, 3); // Here year 9
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 9, 0);
+
+    createSimulation();
+    giveWeigthOnlyToYear(8);
+    simulation->run();
+
+    unsigned int hour = 0;
+    BOOST_TEST(getLinkFlowAthour(simulation, link, hour) == 40., tt::tolerance(0.001));
+}
 
 BOOST_AUTO_TEST_SUITE_END()
