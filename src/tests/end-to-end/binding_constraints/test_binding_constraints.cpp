@@ -206,9 +206,9 @@ void BCrhsConfig::fillTimeSeriesWith(unsigned int TSnumber, double rhsValue)
 }
 
 
-// ----------------------------
-// BC group TS number setter
-// ----------------------------
+// --------------------------------------
+// BC group TS number configuration
+// --------------------------------------
 class BCgroupTSconfig
 {
 public:
@@ -304,7 +304,7 @@ void  Fixture::runSimulation()
 }
 
 
-BOOST_FIXTURE_TEST_SUITE(tests_end2end_binding_constraints, Fixture)
+BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BINDING_CONSTRAINTS, Fixture)
 
 BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
 {
@@ -448,8 +448,10 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
 //    //Clean simulation
 //    cleanSimulation(study, simulation);
 //}
+BOOST_AUTO_TEST_SUITE_END()
 
 
+BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BC_RHS_SCENARIZATION, Fixture)
 
 
 //BOOST_AUTO_TEST_CASE(two_year_one_ts__Binding_ConstraintsWeekly)
