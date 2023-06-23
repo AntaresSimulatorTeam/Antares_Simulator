@@ -138,6 +138,10 @@ void whenCleaningSimulation()
 }
 
 
+// -------------------------------
+// Simulation results retrieval
+// -------------------------------
+
 Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType*
 retrieveLinkResults(std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link)
 {
@@ -241,7 +245,7 @@ void BCgroupTSconfig::yearGetsTSnumber(std::string groupName, unsigned int year,
 // ===============
 struct Fixture {
     Fixture();
-    void runSimulation();
+    void createSimulation();
     ~Fixture();
 
     // Data members
@@ -287,7 +291,8 @@ Fixture::~Fixture()
     whenCleaningSimulation();
 }
 
-void  Fixture::runSimulation()
+
+void Fixture::createSimulation()
 {
     // Runtime infos and scratchpad are MANDATORY for the simulation NOT TO CRASH.
     BOOST_CHECK(study->initializeRuntimeInfos());
@@ -297,10 +302,9 @@ void  Fixture::runSimulation()
     simulation = std::make_shared<ISimulation<Economy>>(*study,
                                                         Settings(),
                                                         &nullDurationCollector);
+
     // Allocate arrays for time series
     SIM_AllocationTableaux();
-
-    simulation->run();
 }
 
 
@@ -325,7 +329,8 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     BCgroupTSconfig bcGroupTSconfig(study, nbYears);
     bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
         
-    runSimulation();
+    createSimulation();
+    simulation->run();
 
     unsigned int hour = 0;
     BOOST_TEST(getLinkFlowAthour(simulation, link, hour) == rhsValue, tt::tolerance(0.001));
@@ -350,7 +355,8 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
     BCgroupTSconfig bcGroupTSconfig(study, nbYears);
     bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
 
-    runSimulation();
+    createSimulation();
+    simulation->run();
 
     unsigned int week = 0;
     unsigned int nbDaysInWeek = 7;
@@ -377,7 +383,8 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     BCgroupTSconfig bcGroupTSconfig(study, nbYears);
     bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
 
-    runSimulation();
+    createSimulation();
+    simulation->run();
 
     unsigned int day = 0;
     BOOST_TEST(getLinkFlowForDay(simulation, link, day) == rhsValue, tt::tolerance(0.001));
@@ -403,7 +410,8 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     BCgroupTSconfig bcGroupTSconfig(study, nbYears);
     bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
 
-    runSimulation();
+    createSimulation();
+    simulation->run();
 
     unsigned int hour = 100;
     BOOST_TEST(getLinkFlowAthour(simulation, link, hour) <= rhsValue, tt::tolerance(0.001));
