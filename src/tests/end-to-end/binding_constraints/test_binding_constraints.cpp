@@ -315,9 +315,13 @@ void Fixture::giveWeigthOnlyToYear(unsigned int year)
     for (unsigned int y = 0; y < nbYears; y++)
         study->parameters.setYearWeight(y, 0.);
 
-    // Activating one year to 1
+    // Set one year's weight to 1
     study->parameters.setYearWeight(year, 1.);
+
+    // Activate playlist, otherwise previous sets won't have any effect
+    study->parameters.userPlaylist = true;
 }
+
 
 BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BINDING_CONSTRAINTS, Fixture)
 
@@ -500,7 +504,36 @@ BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BC_RHS_SCENARIZATION, Fixture)
 //    //Clean simulation
 //    cleanSimulation(study, simulation);
 //}
-//
+
+BOOST_AUTO_TEST_CASE(On_year_2_BC_rhs_number_2_is_taken_into_account)
+{
+    // Study parameters varying depending on the test
+    unsigned int nbYears = 2;
+    setNumberMCyears(study, nbYears);
+
+    // Binding constraint parameter varying depending on the test
+    BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
+    BC->operatorType(BindingConstraint::opEquality);
+
+    unsigned int numberOfTS = 2;
+    BCrhsConfig bcRHSconfig(BC, numberOfTS);
+    double bcGroupRHS1 = 90.;
+    double bcGroupRHS2 = 70.;
+    bcRHSconfig.fillTimeSeriesWith(0, bcGroupRHS1);
+    bcRHSconfig.fillTimeSeriesWith(1, bcGroupRHS2);
+
+    BCgroupTSconfig bcGroupTSconfig(study, nbYears);
+    bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
+    bcGroupTSconfig.yearGetsTSnumber(BC->group(), 1, 1);
+
+    createSimulation();
+    giveWeigthOnlyToYear(1);
+    simulation->run();
+
+    unsigned int hour = 0;
+    BOOST_TEST(getLinkFlowAthour(simulation, link, hour) == bcGroupRHS2, tt::tolerance(0.001));
+}
+
 //BOOST_AUTO_TEST_CASE(two_mc_year_two_ts__Binding_Constraints_Hourly)
 //{
 //    //Create study
