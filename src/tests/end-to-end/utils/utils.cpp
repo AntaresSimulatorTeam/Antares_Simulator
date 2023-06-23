@@ -30,21 +30,21 @@ std::shared_ptr<BindingConstraint> addBindingConstraints(Study::Ptr study, std::
     return bc;
 }
 
-Antares::Data::ScenarioBuilder::Rules::Ptr createScenarioRules(Study::Ptr pStudy)
+Antares::Data::ScenarioBuilder::Rules::Ptr createScenarioRules(Study::Ptr study)
 {
-    ScenarioBuilder::Rules::Ptr pRules;
+    ScenarioBuilder::Rules::Ptr rules;
 
-    pStudy->scenarioRulesCreate();
-    ScenarioBuilder::Sets* p_sets = pStudy->scenarioRules;
-    if (p_sets && !p_sets->empty())
+    study->scenarioRulesCreate();
+    ScenarioBuilder::Sets* sets = study->scenarioRules;
+    if (sets && !sets->empty())
     {
-        pRules = p_sets->createNew("Custom");
+        rules = sets->createNew("Custom");
 
-        pStudy->parameters.useCustomScenario  = true;
-        pStudy->parameters.activeRulesScenario = "Custom";
+        study->parameters.useCustomScenario  = true;
+        study->parameters.activeRulesScenario = "Custom";
     }
 
-    return pRules;
+    return rules;
 }
 
 float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight)

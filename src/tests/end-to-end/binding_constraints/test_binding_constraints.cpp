@@ -213,30 +213,31 @@ void BCrhsConfig::fillTimeSeriesWith(unsigned int TSnumber, double rhsValue)
 // --------------------------------------
 // BC group TS number configuration
 // --------------------------------------
-class BCgroupTSconfig
+class BCgroupScenarioBuilder
 {
 public:
-    BCgroupTSconfig() = delete;
-    BCgroupTSconfig(Study::Ptr study, unsigned int nbYears);
+    BCgroupScenarioBuilder() = delete;
+    BCgroupScenarioBuilder(Study::Ptr study, unsigned int nbYears);
     void yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber);
 
 private:
     Study::Ptr study_;
     unsigned int nbYears_ = 0;
+    ScenarioBuilder::Rules::Ptr rules_;
 };
 
-BCgroupTSconfig::BCgroupTSconfig(Study::Ptr study, unsigned int nbYears)
+BCgroupScenarioBuilder::BCgroupScenarioBuilder(Study::Ptr study, unsigned int nbYears)
     : study_(study), nbYears_(nbYears)
 
 {
-    study->bindingConstraints.resizeAllTimeseriesNumbers(nbYears_);
+    study_->bindingConstraints.resizeAllTimeseriesNumbers(nbYears_);
+    rules_ = createScenarioRules(study_);
 }
 
-void BCgroupTSconfig::yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber)
+void BCgroupScenarioBuilder::yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber)
 {
     BOOST_CHECK(year < nbYears_);
-    auto& ts_numbers_matrix = study_->bindingConstraints.groupToTimeSeriesNumbers[groupName];
-    ts_numbers_matrix.timeseriesNumbers.entry[0][year] = TSnumber;
+    rules_->binding_constraints.setData(groupName, year, TSnumber + 1);
 }
 
 
@@ -341,8 +342,8 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     double rhsValue = 90.;
     bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
 
-    BCgroupTSconfig bcGroupTSconfig(study, nbYears);
-    bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
+    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
         
     createSimulation();
     giveWeigthOnlyToYear(0);
@@ -368,8 +369,8 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
     double rhsValue = 50.;
     bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
   
-    BCgroupTSconfig bcGroupTSconfig(study, nbYears);
-    bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
+    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
     createSimulation();
     giveWeigthOnlyToYear(0);
@@ -397,8 +398,8 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     double rhsValue = 60.;
     bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
 
-    BCgroupTSconfig bcGroupTSconfig(study, nbYears);
-    bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
+    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
     createSimulation();
     giveWeigthOnlyToYear(0);
@@ -425,8 +426,8 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     double rhsValue = 90.;
     bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
 
-    BCgroupTSconfig bcGroupTSconfig(study, nbYears);
-    bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
+    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
     createSimulation();
     giveWeigthOnlyToYear(0);
@@ -481,30 +482,6 @@ BOOST_AUTO_TEST_SUITE_END()
 BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BC_RHS_SCENARIZATION, Fixture)
 
 
-//BOOST_AUTO_TEST_CASE(two_year_one_ts__Binding_ConstraintsWeekly)
-//{
-//    //Create study
-//    Study::Ptr study = std::make_shared<Study>(true); // for the solver
-//    auto rhs = 0.3;
-//    auto cost = 1;
-//    auto nbYear = 2;
-//    auto [BC ,link] = prepare(study, rhs, BindingConstraint::typeWeekly, BindingConstraint::opEquality, nbYear);
-//
-//    study->bindingConstraints.resizeAllTimeseriesNumbers(2);
-//    auto& ts_numbers = study->bindingConstraints.timeSeriesNumbers[BC->group()];
-//    ts_numbers.timeseriesNumbers.fill(10);
-//
-//    //Launch simulation
-//    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(study);
-//
-//    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
-//    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
-//    BOOST_TEST(result->avgdata.weekly[0] == rhs * cost * 7, tt::tolerance(0.001));
-//
-//    //Clean simulation
-//    cleanSimulation(study, simulation);
-//}
-
 BOOST_AUTO_TEST_CASE(On_year_2_BC_rhs_number_2_is_taken_into_account)
 {
     // Study parameters varying depending on the test
@@ -522,9 +499,9 @@ BOOST_AUTO_TEST_CASE(On_year_2_BC_rhs_number_2_is_taken_into_account)
     bcRHSconfig.fillTimeSeriesWith(0, bcGroupRHS1);
     bcRHSconfig.fillTimeSeriesWith(1, bcGroupRHS2);
 
-    BCgroupTSconfig bcGroupTSconfig(study, nbYears);
-    bcGroupTSconfig.yearGetsTSnumber(BC->group(), 0, 0);
-    bcGroupTSconfig.yearGetsTSnumber(BC->group(), 1, 1);
+    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 1, 1);
 
     createSimulation();
     giveWeigthOnlyToYear(1);
