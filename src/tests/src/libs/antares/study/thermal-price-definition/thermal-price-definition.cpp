@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder)
 
     clusterList.loadFromFolder(*study, folder, area);
 
-    EconomicInputData eco(clusterList.mapping["area"]);
+    EconomicInputData eco;
     BOOST_CHECK(eco.loadFromFolder(*study, folder));
 
     BOOST_CHECK(eco.fuelcost[0][1432] == 1);
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_too_small)
 
     clusterList.loadFromFolder(*study, folder, area);
 
-    EconomicInputData eco(clusterList.mapping["area"]);
+    EconomicInputData eco;
     BOOST_CHECK(!eco.loadFromFolder(*study, folder));
 
     removeIniFile();
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_too_big)
 
     clusterList.loadFromFolder(*study, folder, area);
 
-    EconomicInputData eco(clusterList.mapping["area"]);
+    EconomicInputData eco;
     BOOST_CHECK(eco.loadFromFolder(*study, folder));
 
     removeIniFile();
