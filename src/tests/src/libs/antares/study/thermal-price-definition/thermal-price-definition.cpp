@@ -192,16 +192,12 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2)
     createFuelCostFile(8760);
     createCo2CostFile(8760);
 
-    EconomicInputData eco(clusterList.mapping["area"]);
-    BOOST_CHECK(!eco.loadFromFolder(*study, folder));
-
-    clusterList.mapping["area"]->ecoInput.copyFrom(eco);
-
+    BOOST_CHECK(area->thermal.list.mapping["area"]->ecoInput.loadFromFolder(*study, folder));
 
     AreaList l(*study);
-    l.areas.try_emplace(area);
+    l.add(area);
 
-    Antares::Check::checkFuelAndCo2ColumnNumber(l);
+    BOOST_CHECK_NO_THROW(Antares::Check::checkFuelAndCo2ColumnNumber(l));
 
     removeCostFiles();
     removeIniFile();
