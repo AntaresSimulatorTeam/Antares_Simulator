@@ -45,17 +45,15 @@
 #include "header.h"
 #include "version.h"
 #include "sets.h"
-#include "ui-runtimeinfos.h"
-#include "../array/correlation.h"
 #include "progression/progression.h"
 #include "load-options.h"
 #include "../date.h"
 #include "layerdata.h"
 #include "area/store-timeseries-numbers.h"
+#include "antares/array/correlation.h"
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
 #include <memory>
-
-//# include "../../../solver/variable/state.h"
 
 namespace Antares
 {
@@ -65,6 +63,7 @@ namespace Data
 ** \brief Antares Study
 */
 
+class UIRuntimeInfo;
 class Study final : public Yuni::NonCopyable<Study>, public IObject, public LayerData
 {
 public:
@@ -352,7 +351,7 @@ public:
     ** \tparam TimeSeriesT The time-series set to store
     ** \return True if the operation succeeded (the file have been written), false otherwise
     */
-    template<int TimeSeriesT>
+    template<unsigned int TimeSeriesT>
     void storeTimeSeriesNumbers() const;
     //@}
 
@@ -647,7 +646,7 @@ public:
     //! \name Binding constraints
     //@{
     //! Binding constraints
-    BindingConstraintsList bindingConstraints;
+    BindingConstraintsRepository bindingConstraints;
     //@}
 
     //! \name Correlation matrices used by the prepro

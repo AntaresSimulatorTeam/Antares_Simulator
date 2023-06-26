@@ -63,19 +63,6 @@ void Destroy();
 */
 void Unselect();
 //@}
-
-//! \name Study
-//@{
-/*!
-** \brief Clear the selection then Add a study
-*/
-void SelectStudy(const Data::Study::Ptr& study);
-/*!
-** \brief Add a study into the selection
-*/
-void AddStudy(const Data::Study::Ptr& study);
-//@}
-
 //! \name Areas
 //@{
 /*!
@@ -87,11 +74,6 @@ void SelectArea(const Data::Area* area);
 ** \brief Clear the selection then Add a vector of areas
 */
 void SelectAreas(const Data::Area::Vector& areas);
-
-/*!
-** \brief Clear the selection then Add a vector of areas
-*/
-void SelectAreas(const Data::Area::Set& areas);
 
 /*!
 ** \brief Add an area to the selection
@@ -160,25 +142,9 @@ void RemoveLink(const Data::AreaLink* link);
 void SelectThermalCluster(const Data::ThermalCluster* cluster);
 
 /*!
-** \brief Clear the selection then Add a vector of thermal clusters
-*/
-void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters);
-
-/*!
-** \brief Add a thermal cluster to the selection
-*/
-void AddThermalCluster(const Data::ThermalCluster* cluster);
-
-/*!
 ** \brief Add an array of clusters to the current selection
 */
 void AddThermalClusters(const Data::ThermalCluster::Vector& clusters);
-
-/*!
-** \brief Add a set of clusters to the current selection
-*/
-void AddThermalClusters(const Data::ThermalCluster::Set& clusters);
-
 /*!
 ** \brief Remove a thermal cluster from the selection
 */
@@ -197,33 +163,10 @@ void SelectRenewableCluster(const Data::RenewableCluster* cluster);
 */
 void RemoveRenewableCluster(const Data::RenewableCluster* cluster);
 
-//! \name Data::Binding constraints
-//@{
-/*!
-** \brief Clear the selection then Add a binding constraint
-*/
-void SelectBindingConstraint(const Data::BindingConstraint* constraint);
-
-/*!
-** \brief Clear the selection then Add a vector of binding constraints
-*/
-void SelectBindingConstraints(const Data::BindingConstraint::Vector& array);
-
-/*!
-** \brief Add a binding constraint to the selection
-*/
-void AddBindingConstraint(const Data::BindingConstraint* constraint);
-
 /*!
 ** \brief Add a set of binding constraints to the current selection
 */
 void AddBindingConstraints(const Data::BindingConstraint::Set& set);
-
-/*!
-** \brief Remove a binding constraint from the selection
-*/
-void RemoveBindingConstraint(const Data::BindingConstraint* constraint);
-//@}
 
 //! \name Misc
 //@{
@@ -264,8 +207,6 @@ bool ConstraintsSelected(const std::set<Yuni::String>& set);
 
 bool IsLinkSelected(const Data::AreaName& from, const Data::AreaName& with);
 bool LinksSelected(std::map<Data::AreaName, std::map<Data::AreaName, bool>>& set);
-
-bool IsThermalClusterSelected(const Data::AreaName& area, const Data::ClusterName& name);
 
 void FirstSelectedArea(Data::AreaName& out);
 

@@ -59,15 +59,11 @@ bool Data::performWL(Context& ctx)
         Antares::Data::ConstraintName id;
         TransformNameIntoID(pOriginalConstraintName, id);
 
-        Antares::Data::BindingConstraint* source = ctx.extStudy->bindingConstraints.find(id);
+        auto source = ctx.extStudy->bindingConstraints.find(id);
 
         if (source && source != ctx.constraint)
         {
-            source->matrix().forceReload(true);
-            assert(source->matrix().width > 0);
-            assert(source->matrix().height > 0);
-            ctx.constraint->matrix() = source->matrix();
-            source->matrix().unloadFromMemory();
+            //Deleted some code. UI is deprecated but not yet removed
             return true;
         }
     }

@@ -122,7 +122,7 @@ bool checkConstraintSupportingElementsIntegrity(const Antares::Action::Context::
 {
     for (auto i = ctx->constraint.begin(); i != ctx->constraint.end(); ++i)
     {
-        Data::BindingConstraint* bc = context->extStudy->bindingConstraints.findByName(*i);
+        auto bc = context->extStudy->bindingConstraints.findByName(*i);
         if (!bc)
             continue;
 

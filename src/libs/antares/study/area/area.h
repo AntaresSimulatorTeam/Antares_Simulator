@@ -38,6 +38,7 @@
 #include <set>
 #include "links.h"
 #include "ui.h"
+#include "antares/study/parameters/adq-patch-params.h"
 
 namespace Antares
 {
@@ -128,7 +129,7 @@ public:
     */
     void detachLinkFromID(const AreaName& id);
 
-    void detachLink(const AreaLink* lnk);
+    static void detachLink(const AreaLink* lnk);
 
     /*!
     ** \brief Remove a link from its raw pointer
@@ -639,7 +640,7 @@ public:
     /*!
     ** \brief Fix all invalid orientations
     */
-    void fixOrientationForAllInterconnections(BindingConstraintsList& bindingconstraints);
+    void fixOrientationForAllInterconnections(BindingConstraintsRepository& bindingconstraints);
 
     //! Remove all load timeseries
     void removeLoadTimeseries();

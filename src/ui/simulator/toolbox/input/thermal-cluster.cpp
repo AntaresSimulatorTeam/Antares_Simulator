@@ -38,6 +38,7 @@
 #include <wx/wupdlock.h>
 #include <wx/sizer.h>
 #include "thermal-cluster.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 
@@ -321,7 +322,7 @@ void ThermalCluster::internalDeletePlant(void*)
             study->uiinfo->reload();
 
             // delete associated constraints
-            Antares::Data::BindingConstraintsList::iterator BC = study->bindingConstraints.begin();
+            auto BC = study->bindingConstraints.begin();
             int BCListSize = study->bindingConstraints.size();
 
             if (BCListSize)
@@ -332,7 +333,7 @@ void ThermalCluster::internalDeletePlant(void*)
                 for (int i = 0; i < BCListSize; i++)
                 {
                     if (Window::Inspector::isConstraintSelected((*BC)->name()))
-                        study->bindingConstraints.remove(*BC);
+                        study->bindingConstraints.remove(BC->get());
                     else
                         ++BC;
                 }
@@ -589,11 +590,11 @@ void ThermalCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr i
 
         auto study = Data::Study::Current::Get();
 
-        const Data::BindingConstraintsList::iterator cEnd = study->bindingConstraints.end();
-        for (Data::BindingConstraintsList::iterator i = study->bindingConstraints.begin(); i != cEnd; ++i)
+        const auto cEnd = study->bindingConstraints.end();
+        for (auto i = study->bindingConstraints.begin(); i != cEnd; ++i)
         {
             // alias to the current constraint
-            Data::BindingConstraint* constraint = *i;
+            auto constraint = *i;
 
             if (constraint->contains(cluster))
                 constraintlist.insert(constraint);

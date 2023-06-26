@@ -154,7 +154,7 @@ public:
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
         // Set the associated binding constraint
-        associatedBC_ = &(study.runtime->bindingConstraint[bindConstraintGlobalIndex_]);
+        associatedBC_ = &(study.runtime->bindingConstraints[bindConstraintGlobalIndex_]);
 
         NextType::initializeFromStudy(study);
     }
@@ -175,7 +175,7 @@ public:
         nbCount_ = bcCount;
     }
 
-    uint getMaxNumberColumns() const
+    size_t getMaxNumberColumns() const
     {
         return nbCount_ * ResultsType::count;
     }

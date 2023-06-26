@@ -26,6 +26,7 @@
 */
 #ifndef __ANTARES_LIBS_ARRAY_CORRELATION_HXX__
 #define __ANTARES_LIBS_ARRAY_CORRELATION_HXX__
+#include "antares/study/area/area.h"
 
 namespace Antares
 {

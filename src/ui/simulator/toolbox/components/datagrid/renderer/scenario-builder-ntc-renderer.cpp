@@ -3,6 +3,7 @@
 #include "scenario-builder-ntc-renderer.h"
 #include "antares/study/scenario-builder/scBuilderUtils.h"
 #include "../../../../application/study.h" // OnStudyChanged
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 using namespace Antares::Data::ScenarioBuilder;
