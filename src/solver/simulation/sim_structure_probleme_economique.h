@@ -548,6 +548,7 @@ struct PROBLEME_HEBDO
     bool LeProblemeADejaEteInstancie = false;
     bool firstWeekOfSimulation = false;
 
+    // TODO VP: Not working if we're not using a pointer, need more investigation
     std::vector<CORRESPONDANCES_DES_VARIABLES*> CorrespondanceVarNativesVarOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES> CorrespondanceCntNativesCntOptimJournalieres;
