@@ -52,7 +52,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
 
     problem.CoefficientEcretementPMaxHydraulique.assign(nbPays, 0.);
 
-    problem.BruitSurCoutHydraulique.assign(nbPays, std::vector<double>(HOURS_PER_YEAR));
+    problem.BruitSurCoutHydraulique.assign(nbPays, std::vector<double>(8784));
 
     problem.NomsDesPays.resize(nbPays);
 
