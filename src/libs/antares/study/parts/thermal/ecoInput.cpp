@@ -41,9 +41,7 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-EconomicInputData::EconomicInputData(std::weak_ptr<const ThermalCluster> cluster)
-{
-}
+EconomicInputData::EconomicInputData() = default;
 
 void EconomicInputData::copyFrom(const EconomicInputData& rhs)
 {
@@ -73,7 +71,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
     bool ret = true;
     auto& buffer = study.bufferLoadingTS;
 
-    if (study.header.version >= 860)
+    if (study.header.version >= 870)
     {
         buffer.clear() << folder << SEP << "fuelCost.txt";
         if (IO::File::Exists(buffer))
@@ -125,6 +123,11 @@ void EconomicInputData::reset()
 {
     fuelcost.reset(1, HOURS_PER_YEAR, true);
     co2cost.reset(1, HOURS_PER_YEAR, true);
+}
+
+Yuni::uint64 EconomicInputData::memoryUsage() const
+{
+    return sizeof(EconomicInputData);
 }
 
 } // namespace Antares::Data

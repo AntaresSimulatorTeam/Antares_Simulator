@@ -203,7 +203,6 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
 {
     if (p->key.empty())
         return false;
-
     if (p->key == "costgeneration")
         return p->value.to(cluster.costgeneration);
     if (p->key == "enabled")

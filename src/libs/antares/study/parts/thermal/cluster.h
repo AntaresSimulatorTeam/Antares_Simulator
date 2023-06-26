@@ -280,7 +280,7 @@ public:
     double spinning;
 
     //! Efficiency (%)
-    double fuelEfficiency;
+    double fuelEfficiency = 100;
 
     //! Forced Volatility
     double forcedVolatility;
@@ -327,17 +327,17 @@ public:
     //! Cost generation
     CostGeneration costgeneration = setManually;
     //! Marginal cost (euros/MWh)
-    double marginalCost;
+    double marginalCost = 0;
     //! Spread (euros/MWh)
-    double spreadCost;
+    double spreadCost = 0;
     //! Fixed cost (euros/hour)
-    double fixedCost;
+    double fixedCost = 0;
     //! Startup cost (euros/startup)
-    double startupCost;
+    double startupCost = 0;
     //! Market bid cost (euros/MWh)
-    double marketBidCost;
+    double marketBidCost = 0;
     //! Variable O&M cost (euros/MWh)
-    double variableomcost;
+    double variableomcost = 0;
     //@}
 
     /*!
@@ -348,7 +348,7 @@ public:
     std::vector<double> PthetaInf;
 
     //! Data for the preprocessor
-    PreproThermal* prepro;
+    PreproThermal* prepro = nullptr;
 
     //! \name Temporary data for simulation
     //@{
@@ -365,7 +365,7 @@ public:
     ** This value is only set when loaded from a folder
     ** 8760 (HOURS_PER_YEAR) array
     */
-    double* productionCost;
+    double* productionCost = nullptr;
 
     /*!
     ** \brief Production Cost, Market Bid Cost and Marginal Cost Matrixes - Per Hour and per Time
