@@ -274,4 +274,30 @@ BOOST_AUTO_TEST_CASE(check_container_properties_empty_file)
     removeIniFile();
 }
 
+BOOST_AUTO_TEST_CASE(check_file_save)
+{
+    createIniFile();
+
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+
+    removeIniFile();
+
+    BOOST_CHECK(container.saveToFolder(folder));
+
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+
+    removeIniFile();
+}
+
+BOOST_AUTO_TEST_CASE(check_series_save)
+{
+    resizeFillVectors(series, 0.123456789, 8760);
+
+    BOOST_CHECK(series.saveToFolder(folder));
+    resizeFillVectors(series, 0, 0);
+
+    BOOST_CHECK(series.loadFromFolder(folder));
+    BOOST_CHECK(series.validate());
+}
+
 BOOST_AUTO_TEST_SUITE_END()

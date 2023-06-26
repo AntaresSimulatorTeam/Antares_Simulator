@@ -37,7 +37,7 @@
 
 using namespace Antares;
 
-void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemps)
+void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDeTemps)
 {
     auto& study = *Data::Study::Current::Get();
 
@@ -100,7 +100,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     problem.CorrespondanceVarNativesVarOptim.resize(NombreDePasDeTemps);
     problem.CorrespondanceCntNativesCntOptim.resize(NombreDePasDeTemps);
     problem.VariablesDualesDesContraintesDeNTC.resize(NombreDePasDeTemps);
-    problem.MatriceDesContraintesCouplantes.resize(study.runtime->bindingConstraintCount);
+    problem.MatriceDesContraintesCouplantes.resize(study.runtime->bindingConstraints.size());
     problem.PaliersThermiquesDuPays.resize(nbPays);
     problem.CaracteristiquesHydrauliques.resize(nbPays);
     problem.previousSimulationFinalLevel.assign(nbPays, 0.);
@@ -220,7 +220,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDeDissociationDeFlux
           .assign(linkCount, 0);
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesContraintesCouplantes
-          .assign(study.runtime->bindingConstraintCount, 0);
+          .assign(study.runtime->bindingConstraints.size(), 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesDeDureeMinDeMarche
@@ -237,7 +237,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
           .assign(linkCount, 0.);
     }
 
-    for (uint k = 0; k < linkCount; ++k)
+    for (unsigned k = 0; k < linkCount; ++k)
     {
         problem.CoutDeTransport[k].IntercoGereeAvecDesCouts = false;
         problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremite
@@ -255,22 +255,23 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
     {
         problem.CorrespondanceCntNativesCntOptimJournalieres[k]
           .NumeroDeContrainteDesContraintesCouplantes
-          .assign(study.runtime->bindingConstraintCount, 0);
+          .assign(study.runtime->bindingConstraints.size(), 0);
     }
 
     problem.CorrespondanceCntNativesCntOptimHebdomadaires
         .NumeroDeContrainteDesContraintesCouplantes
-        .assign(study.runtime->bindingConstraintCount, 0);
+        .assign(study.runtime->bindingConstraints.size(), 0);
 
-    const auto& bindingConstraintCount = study.runtime->bindingConstraintCount;
+    const auto& bindingConstraintCount = study.runtime->bindingConstraints.size();
+
     problem.ResultatsContraintesCouplantes
         = new RESULTATS_CONTRAINTES_COUPLANTES[bindingConstraintCount];
 
-    for (uint k = 0; k < bindingConstraintCount; k++)
+    for (unsigned k = 0; k < bindingConstraintCount; k++)
     {
-        assert(k < study.runtime->bindingConstraintCount);
-        assert(study.runtime->bindingConstraint[k].linkCount < 50000000);
-        assert(study.runtime->bindingConstraint[k].clusterCount < 50000000);
+        assert(k < study.runtime->bindingConstraints.size());
+        assert(study.runtime->bindingConstraints[k].linkCount < 50000000);
+        assert(study.runtime->bindingConstraints[k].clusterCount < 50000000);
 
         problem.MatriceDesContraintesCouplantes[k].SecondMembreDeLaContrainteCouplante
           .assign(NombreDePasDeTemps, 0.);
@@ -278,24 +279,24 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
           .assign(NombreDePasDeTemps, 0.);
 
         problem.MatriceDesContraintesCouplantes[k].NumeroDeLInterconnexion
-          .assign(study.runtime->bindingConstraint[k].linkCount, 0);
+          .assign(study.runtime->bindingConstraints[k].linkCount, 0);
         problem.MatriceDesContraintesCouplantes[k].PoidsDeLInterconnexion
-          .assign(study.runtime->bindingConstraint[k].linkCount, 0.);
+          .assign(study.runtime->bindingConstraints[k].linkCount, 0.);
         problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLInterco
-          .assign(study.runtime->bindingConstraint[k].linkCount, 0);
+          .assign(study.runtime->bindingConstraints[k].linkCount, 0);
 
         problem.MatriceDesContraintesCouplantes[k].NumeroDuPalierDispatch
-          .assign(study.runtime->bindingConstraint[k].clusterCount, 0);
+          .assign(study.runtime->bindingConstraints[k].clusterCount, 0);
         problem.MatriceDesContraintesCouplantes[k].PoidsDuPalierDispatch
-          .assign(study.runtime->bindingConstraint[k].clusterCount, 0.);
+          .assign(study.runtime->bindingConstraints[k].clusterCount, 0.);
         problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLePalierDispatch
-          .assign(study.runtime->bindingConstraint[k].clusterCount, 0);
+          .assign(study.runtime->bindingConstraints[k].clusterCount, 0);
         problem.MatriceDesContraintesCouplantes[k].PaysDuPalierDispatch
-          .assign(study.runtime->bindingConstraint[k].clusterCount, 0);
+          .assign(study.runtime->bindingConstraints[k].clusterCount, 0);
 
         // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
         unsigned int nbTimeSteps;
-        switch (study.runtime->bindingConstraint[k].type)
+        switch (study.runtime->bindingConstraints[k].type)
         {
             using namespace Antares::Data;
         case BindingConstraint::typeHourly:
@@ -322,7 +323,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         }
     }
 
-    for (uint k = 0; k < nbPays; k++)
+    for (unsigned k = 0; k < nbPays; k++)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
@@ -398,9 +399,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         problem.ResultatsHoraires[k].ValeursHorairesLmrViolations
           = new int[NombreDePasDeTemps](); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR
-          = new double[NombreDePasDeTemps]; // adq patch
+          = new double[NombreDePasDeTemps](); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr
-          = new double[NombreDePasDeTemps]; // adq patch
+          = new double[NombreDePasDeTemps](); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveUp
           = new double[NombreDePasDeTemps];
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveDown
@@ -438,7 +439,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
         problem.ResultatsHoraires[k].ProductionThermique
           = new PRODUCTION_THERMIQUE_OPTIMALE*[NombreDePasDeTemps];
 
-        for (uint j = 0; j < nbPaliers; ++j)
+        for (unsigned j = 0; j < nbPaliers; ++j)
         {
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
               = new PDISP_ET_COUTS_HORAIRES_PAR_PALIER;
@@ -489,7 +490,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
               ->CoutHoraireDuPalierThermiqueDown
               = new double[NombreDePasDeTemps];
         }
-        for (uint j = 0; j < NombreDePasDeTemps; j++)
+        for (unsigned j = 0; j < NombreDePasDeTemps; j++)
         {
             problem.ResultatsHoraires[k].ProductionThermique[j] = new PRODUCTION_THERMIQUE_OPTIMALE;
             problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalier
@@ -539,7 +540,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         delete problem.CorrespondanceVarNativesVarOptim[k];
     }
 
-    for (int k = 0; k < (int)study.runtime->bindingConstraintCount; k++)
+    for (int k = 0; k < (int)study.runtime->bindingConstraints.size(); k++)
     {
         if (problem.ResultatsContraintesCouplantes[k].variablesDuales != nullptr)
             delete problem.ResultatsContraintesCouplantes[k].variablesDuales;
@@ -610,26 +611,21 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         delete problem.ResultatsHoraires[k].valeurH2oHoraire;
         delete problem.ResultatsHoraires[k].debordementsHoraires;
         delete problem.ResultatsHoraires[k].CoutsMarginauxHoraires;
-
         for (uint j = 0; j < problem.NombreDePasDeTemps; j++)
         {
-            MemFree(
-              problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalier);
-            MemFree(
-              problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierUp);
-            MemFree(
-              problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierDown);
-            MemFree(
-              problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesEnMarcheDuPalier);
-            MemFree(problem.ResultatsHoraires[k]
+            delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalier;
+            delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierUp;
+            delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierDown;
+            delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesEnMarcheDuPalier;
+            delete[] problem.ResultatsHoraires[k]
                       .ProductionThermique[j]
-                      ->NombreDeGroupesQuiDemarrentDuPalier);
-            MemFree(problem.ResultatsHoraires[k]
+                      ->NombreDeGroupesQuiDemarrentDuPalier;
+            delete[] problem.ResultatsHoraires[k]
                       .ProductionThermique[j]
-                      ->NombreDeGroupesQuiSArretentDuPalier);
-            MemFree(problem.ResultatsHoraires[k]
+                      ->NombreDeGroupesQuiSArretentDuPalier;
+            delete[] problem.ResultatsHoraires[k]
                       .ProductionThermique[j]
-                      ->NombreDeGroupesQuiTombentEnPanneDuPalier);
+                      ->NombreDeGroupesQuiTombentEnPanneDuPalier;
             delete problem.ResultatsHoraires[k].ProductionThermique[j];
         }
         delete problem.ResultatsHoraires[k].ProductionThermique;

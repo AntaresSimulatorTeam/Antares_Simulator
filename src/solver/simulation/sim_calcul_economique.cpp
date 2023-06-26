@@ -29,6 +29,7 @@
 #include <antares/study/area/constants.h>
 #include <antares/study/area/scratchpad.h>
 
+#include "antares/study/fwd.h"
 #include "simulation.h"
 #include "sim_structure_probleme_economique.h"
 #include "sim_extern_variables_globales.h"
@@ -106,7 +107,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.NumberOfShortTermStorages = study.runtime->shortTermStorageCount;
 
-    problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraintCount;
+    problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraints.size();
 
     problem.ExportMPS = study.parameters.include.exportMPS;
     problem.ExportStructure = study.parameters.include.exportStructure;
@@ -169,13 +170,13 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         problem.CaracteristiquesHydrauliques[i].TurbinageEntreBornes
           = area.hydro.reservoirManagement
-              && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
+            && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
+
 
         problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire
-          = area.hydro.reservoirManagement
-              && (problem.OptimisationAuPasHebdomadaire == true)
-              && (!area.hydro.useHeuristicTarget
-                  || problem.CaracteristiquesHydrauliques[i].PresenceDePompageModulable);
+          = area.hydro.reservoirManagement && (problem.OptimisationAuPasHebdomadaire)
+            && (!area.hydro.useHeuristicTarget
+                || problem.CaracteristiquesHydrauliques[i].PresenceDePompageModulable);
 
         problem.CaracteristiquesHydrauliques[i].DirectLevelAccess = false;
         problem.CaracteristiquesHydrauliques[i].AccurateWaterValue = false;
@@ -218,9 +219,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.PaysExtremiteDeLInterconnexion[i] = link.with->index;
     }
 
-    for (uint i = 0; i < study.runtime->bindingConstraintCount; ++i)
+    for (uint i = 0; i < study.runtime->bindingConstraints.size(); ++i)
     {
-        BindingConstraintRTI& bc = study.runtime->bindingConstraint[i];
+        BindingConstraintRTI& bc = study.runtime->bindingConstraints[i];
 
         CONTRAINTES_COUPLANTES& PtMat = problem.MatriceDesContraintesCouplantes[i];
         PtMat.NombreDInterconnexionsDansLaContrainteCouplante = bc.linkCount;
@@ -326,6 +327,77 @@ void SIM_InitialisationResultats()
     }
 }
 
+void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int PasDeTempsDebut,
+                               const StudyRuntimeInfos &studyRuntimeInfos, const uint weekFirstDay, int pasDeTemps) {
+    const auto constraintCount = studyRuntimeInfos.bindingConstraints.size();
+    for (unsigned constraintIndex = 0; constraintIndex != constraintCount; ++constraintIndex)
+    {
+        auto& bc = studyRuntimeInfos.bindingConstraints[constraintIndex];
+        assert(bc.rhsTimeSeries.width && "Invalid constraint data width");
+        //If there is only one TS, always select it.
+        const auto ts_number = bc.rhsTimeSeries.width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc.group];
+        auto& timeSeries = bc.rhsTimeSeries;
+        double const* column = timeSeries[ts_number];
+        switch (bc.type)
+        {
+            case BindingConstraint::typeHourly:
+            {
+                problem.MatriceDesContraintesCouplantes[constraintIndex]
+                        .SecondMembreDeLaContrainteCouplante[pasDeTemps]
+                        = column[PasDeTempsDebut + pasDeTemps];
+                problem.MatriceDesContraintesCouplantes[constraintIndex]
+                        .SecondMembreDeLaContrainteCouplanteRef[pasDeTemps]
+                        = problem.MatriceDesContraintesCouplantes[constraintIndex]
+                        .SecondMembreDeLaContrainteCouplante[pasDeTemps];
+                break;
+            }
+            case BindingConstraint::typeDaily:
+            {
+                assert(timeSeries.width && "Invalid constraint data width");
+                assert(weekFirstDay + 6 < timeSeries.height && "Invalid constraint data height");
+
+                std::vector<double>& sndMember
+                    = problem.MatriceDesContraintesCouplantes[constraintIndex]
+                        .SecondMembreDeLaContrainteCouplante;
+                std::vector<double>& sndMemberRef
+                    = problem.MatriceDesContraintesCouplantes[constraintIndex]
+                        .SecondMembreDeLaContrainteCouplanteRef;
+                for (unsigned day = 0; day != 7; ++day)
+                {
+                    sndMember[day] = column[weekFirstDay + day];
+                    sndMemberRef[day] = sndMember[day];
+                }
+                break;
+            }
+            case BindingConstraint::typeWeekly:
+            {
+                assert(timeSeries.width && "Invalid constraint data width");
+                assert(weekFirstDay + 6 < timeSeries.height && "Invalid constraint data height");
+
+                double sum = 0;
+                for (unsigned day = 0; day != 7; ++day)
+                    sum += column[weekFirstDay + day];
+
+                problem.MatriceDesContraintesCouplantes[constraintIndex]
+                    .SecondMembreDeLaContrainteCouplante[0]
+                        = sum;
+                problem.MatriceDesContraintesCouplantes[constraintIndex]
+                    .SecondMembreDeLaContrainteCouplanteRef[0]
+                        = sum;
+                break;
+            }
+            case BindingConstraint::typeUnknown:
+            case BindingConstraint::typeMax:
+            default:
+            {
+                assert(false && "invalid constraint type");
+                logs.error() << "internal error. Please submit a full bug report";
+                break;
+            }
+        }
+    }
+}
+
 void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
                                     uint numSpace,
@@ -375,61 +447,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         }
         else
             problem.CoutDeTransport[k].IntercoGereeAvecLoopFlow = false;
-    }
-
-    if (studyruntime.bindingConstraintCount)
-    {
-        for (uint k = 0; k != studyruntime.bindingConstraintCount; ++k)
-        {
-            auto& bc = studyruntime.bindingConstraint[k];
-            switch (bc.type)
-            {
-            case BindingConstraint::typeHourly:
-            {
-                break;
-            }
-            case BindingConstraint::typeDaily:
-            {
-                assert(bc.bounds.width && "Invalid constraint data width");
-                assert(weekFirstDay + 6 < bc.bounds.height && "Invalid constraint data height");
-                auto& column = bc.bounds[0];
-                std::vector<double>& sndMember = problem.MatriceDesContraintesCouplantes[k]
-                    .SecondMembreDeLaContrainteCouplante;
-                std::vector<double>& sndMemberRef = problem.MatriceDesContraintesCouplantes[k]
-                    .SecondMembreDeLaContrainteCouplanteRef;
-
-                for (uint d = 0; d != 7; ++d)
-                {
-                    sndMember[d] = column[weekFirstDay + d];
-                    sndMemberRef[d] = sndMember[d];
-                }
-                break;
-            }
-            case BindingConstraint::typeWeekly:
-            {
-                assert(bc.bounds.width && "Invalid constraint data width");
-                assert(weekFirstDay + 6 < bc.bounds.height && "Invalid constraint data height");
-                const Matrix<>::ColumnType& column = bc.bounds[0];
-                double sum = 0;
-                for (uint d = 0; d != 7; ++d)
-                    sum += column[weekFirstDay + d];
-
-                problem.MatriceDesContraintesCouplantes[k].SecondMembreDeLaContrainteCouplante[0]
-                  = sum;
-                problem.MatriceDesContraintesCouplantes[k]
-                  .SecondMembreDeLaContrainteCouplanteRef[0]
-                  = sum;
-                break;
-            }
-            case BindingConstraint::typeUnknown:
-            case BindingConstraint::typeMax:
-            {
-                assert(false && "invalid constraint type");
-                logs.error() << "internal error. Please submit a full bug report";
-                break;
-            }
-            }
-        }
     }
 
     int weekDayIndex[8];
@@ -542,7 +559,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         }
     }
 
-    for (uint j = 0; j < problem.NombreDePasDeTemps; ++j, ++indx)
+    for (unsigned j = 0; j < problem.NombreDePasDeTemps; ++j, ++indx)
     {
         VALEURS_DE_NTC_ET_RESISTANCES& ntc = problem.ValeursDeNTC[j];
         {
@@ -570,25 +587,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         problem.ValeursDeNTCRef[j].ValeurDeLoopFlowOrigineVersExtremite
             = ntc.ValeurDeLoopFlowOrigineVersExtremite;
 
-        {
-            const uint constraintCount = studyruntime.bindingConstraintCount;
-            for (uint k = 0; k != constraintCount; ++k)
-            {
-                auto& bc = studyruntime.bindingConstraint[k];
-
-                if (bc.type == BindingConstraint::typeHourly)
-                {
-                    auto& column = bc.bounds[0];
-                    problem.MatriceDesContraintesCouplantes[k]
-                      .SecondMembreDeLaContrainteCouplante[j]
-                      = column[PasDeTempsDebut + j];
-                    problem.MatriceDesContraintesCouplantes[k]
-                      .SecondMembreDeLaContrainteCouplanteRef[j]
-                      = problem.MatriceDesContraintesCouplantes[k]
-                          .SecondMembreDeLaContrainteCouplante[j];
-                }
-            }
-        }
+        preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, studyruntime, weekFirstDay, j);
 
         const uint dayInTheYear = study.calendar.hours[indx].dayYear;
 
@@ -652,10 +651,12 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 auto& PtValGen = *ValeursGenereesParPays[numSpace][k];
 
                 Pt.PuissanceDisponibleDuPalierThermique[j]
-                  = cluster.series->timeSeries[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][indx];
+                  = cluster.series
+                      ->timeSeries[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][indx];
 
                 Pt.CoutHoraireDeProductionDuPalierThermique[j]
-                  = cluster.marketBidCost * cluster.modulation[thermalModulationMarketBid][indx]
+                  = cluster.getMarketBidCost(tsIndex.ThermiqueParPalier[cluster.areaWideIndex],
+                                             indx)
                     + PtValGen.AleaCoutDeProductionParPalier[cluster.areaWideIndex];
 
                 Pt.PuissanceMinDuPalierThermique[j]

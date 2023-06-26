@@ -167,7 +167,7 @@ inline void IVariable<ChildT, NextT, VCardT>::simulationEnd()
     NextType::simulationEnd();
 }
 template<class ChildT, class NextT, class VCardT>
-uint IVariable<ChildT, NextT, VCardT>::getMaxNumberColumns() const
+size_t IVariable<ChildT, NextT, VCardT>::getMaxNumberColumns() const
 {
     return VCardT::ResultsType::count;
 }
@@ -774,8 +774,8 @@ namespace // anonymous
 template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::supplyMaxNumberOfColumns(Data::Study& study)
 {
-    uint max_columns = static_cast<const ChildT*>(this)->getMaxNumberColumns();
-    SupplyMaxNbColumnsHelper<VCardType::columnCount, VCardType>::Do(study, max_columns);
+    auto max_columns = static_cast<const ChildT*>(this)->getMaxNumberColumns();
+    SupplyMaxNbColumnsHelper<VCardType::columnCount, VCardType>::Do(study, static_cast<uint>(max_columns));
     // Go to the next variable
     NextType::supplyMaxNumberOfColumns(study);
 }

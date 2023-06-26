@@ -123,6 +123,8 @@ public:
     // Links NTC
     std::vector<ntcTSNumberData> linksNTC;
 
+    BindingConstraintsTSNumberData binding_constraints;
+
 private:
     // Member methods
     bool readThermalCluster(const AreaName::Vector& instrs, String value, bool updaterMode);
@@ -133,6 +135,8 @@ private:
     bool readSolar(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readLink(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readBindingConstraints(const AreaName::Vector &splitKey, String value);
+
 
     Data::Area* getArea(const AreaName& areaname, bool updaterMode);
     Data::AreaLink* getLink(const AreaName& fromAreaName,

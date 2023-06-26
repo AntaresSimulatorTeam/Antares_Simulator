@@ -1,63 +1,42 @@
 Antares Changelog
 =================
 
-v8.6.0-rc6 (05/2023)
---------------------
-## Format improvement
- * Add bool for initial level optimization in short-term storage (#1312)
-
-## Fixes
- * Fix memory errors detected by valfgrind (#1302)
- * Hydro min power : correction on checks (#1308)
-
-## Code quality
- * Simplify if/else (#1309)
- * Fix a few compilation warnings (int -> uint) (#1301)
- * Remove parameters.hxx, fix Parameters::memoryUsage (#1299)
-
-v8.6.0-rc5 (05/2023)
+8.6.0 (06/2023)
 --------------------
 ## New features
 * Short-term storage (#1163). Cycles are planned for the next release.
+* Add pollutant emissions (#1184, #1222)
 * Minimal generation for hydraulic (#1273, RTE/RTE-i/Redstork)
-* Make LMR optional with new option (#1247)
+* Make LMR optional for adequacy patch (#1247)
 
-## Bug fixes
+## Improvements
+* Use ISO8601 for date format in the logs (#1303)
+* Publish installers for Oracle Linux 8 (#1341)
+* Remove doc from UI/package, publish it as a separate PDF (#1233)
+* Tune XPRESS resolution (#1158), this should improve performance for OR-Tools+XPRESS
+* Performance metrics (produce a JSON file) (#1306)
+
+## Bugfixes
+* Fix a bug in adequacy study mode (#1314)
+* Fix memory errors detected by valgrind (#1302)
 * Fix empty ROR & STORAGE in output using the TS-Generator (#1293)
 
-## For developers
-* Bumped OR-Tools 9.2 -> 9.5. CMake 3.18+ is required for build if building OR-Tools, and XPRESS 9.0 for execution (previously 8.13).
-* Code quality improvements
-
-v8.6.0-rc4 (03/2023)
---------------------
-Re-publish
-
-v8.6.0-rc3 (03/2023)
---------------------
-Re-publish
-
-v8.6.0-rc2 (03/2023)
---------------------
+## Code quality
+* Simplify if/else (#1309)
 * Max number of columns in an output file (#1159)
-* Remove doc from UI/package, publish it as a separate PDF (#1233)
-
-v8.6.0-rc1 (03/2023)
---------------------
-
-## New features
-* Add pollutant emissions (#1184, #1222)
-
-## Enhancements
-* Tune XPRESS resolution (#1158), this should improve performance for OR-Tools+XPRESS
-
-## For developers
-* Use CMakeLists.txt instead of *.cmake (#1198)
+* Fix a few compilation warnings (int -> uint) (#1301)
+* Remove parameters.hxx, fix Parameters::memoryUsage (#1299)
 * Remove OUI_ANTARES NON_ANTARES (#1188)
+* Use CMakeLists.txt instead of *.cmake (#1198)
 * Clean up src/solver/optimisation (#1161)
 * Adequacy patch : refactor parameters management (#1154)
 * Add a few const qualifiers (#1178)
 * INI files load encapsulation (#1057)
+* Remove group{Min,Max}Count, annuityInvestment in thermal clusters (#1350)
+
+## For developers
+* Bumped OR-Tools 9.2 -> 9.5. CMake 3.18+ is required for build if building OR-Tools, and XPRESS 9.0 for execution (previously 8.13).
+
 
 v8.5.0 (02/2022)
 --------------------

@@ -31,6 +31,7 @@
 #include <antares/study/area/scratchpad.h>
 #include "opt_structure_probleme_a_resoudre.h"
 
+#include "../simulation/sim_spread_generator.h"
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
@@ -38,35 +39,52 @@
 #include "opt_fonctions.h"
 #include "../aleatoire/alea_fonctions.h"
 
+extern "C"
+{
 #include "spx_constantes_externes.h"
+}
 
 static void shortTermStorageCost(
-  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-  const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim,
+  int PremierPdtDeLIntervalle,
+  int DernierPdtDeLIntervalle,
+  int NombreDePays,
+  const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
+  std::vector<CORRESPONDANCES_DES_VARIABLES*>& CorrespondanceVarNativesVarOptim,
   double* linearCost)
 {
-    for (auto& storage : shortTermStorageInput)
+    SIM::SpreadGenerator spreadGenerator;
+    for (int pays = 0; pays < NombreDePays; ++pays)
     {
-        const int clusterGlobalIndex = storage.clusterGlobalIndex;
-        if (const int varLevel
-            = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
-            varLevel >= 0)
+        for (const auto& storage : shortTermStorageInput[pays])
         {
-            linearCost[varLevel] = 0;
-        }
+            for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0;
+                 pdtHebdo < DernierPdtDeLIntervalle;
+                 pdtHebdo++, pdtJour++)
+            {
+                auto VarCurrent = CorrespondanceVarNativesVarOptim[pdtJour];
+                const int clusterGlobalIndex = storage.clusterGlobalIndex;
+                if (const int varLevel
+                    = VarCurrent->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
+                    varLevel >= 0)
+                {
+                    linearCost[varLevel] = 0;
+                }
 
-        if (const int varInjection
-            = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
-            varInjection >= 0)
-        {
-            linearCost[varInjection] = 0;
-        }
+                const double cost = spreadGenerator.generate();
+                if (const int varInjection
+                    = VarCurrent->SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
+                    varInjection >= 0)
+                {
+                    linearCost[varInjection] = cost;
+                }
 
-        if (const int varWithdrawal
-            = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
-            varWithdrawal >= 0)
-        {
-            linearCost[varWithdrawal] = 0;
+                if (const int varWithdrawal
+                    = VarCurrent->SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
+                    varWithdrawal >= 0)
+                {
+                    linearCost[varWithdrawal] = storage.efficiency * cost;
+                }
+            }
         }
     }
 }
@@ -84,6 +102,13 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
     memset((char*)ProblemeAResoudre->CoutQuadratique,
            0,
            ProblemeAResoudre->NombreDeVariables * sizeof(double));
+
+    shortTermStorageCost(PremierPdtDeLIntervalle,
+                         DernierPdtDeLIntervalle,
+                         problemeHebdo->NombreDePays,
+                         problemeHebdo->ShortTermStorage,
+                         problemeHebdo->CorrespondanceVarNativesVarOptim,
+                         ProblemeAResoudre->CoutLineaire);
 
     for (int pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle; pdtHebdo++)
     {
@@ -189,10 +214,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                         ProblemeAResoudre->CoutLineaire[var] = -P;
                 }
             }
-
-            shortTermStorageCost(problemeHebdo->ShortTermStorage[pays],
-                                 CorrespondanceVarNativesVarOptim,
-                                 ProblemeAResoudre->CoutLineaire);
 
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[pays];
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)

@@ -30,13 +30,7 @@
 #include "../../variable.h"
 #include <antares/study/area/constants.h>
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy
 {
 struct VCardCongestionProbability
 {
@@ -363,9 +357,6 @@ private:
 
 }; // class CongestionProbability
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
 } // namespace Antares
 
 #endif // __SOLVER_VARIABLE_ECONOMY_CongestionProbability_H__

@@ -87,6 +87,26 @@ bool STStorageInput::loadSeriesFromFolder(const std::string& folder) const
     return ret;
 }
 
+bool STStorageInput::saveToFolder(const std::string& folder) const
+{
+    // create empty list.ini if there's no sts in this area
+    Yuni::IO::Directory::Create(folder);
+    Yuni::IO::File::CreateEmptyFile(folder + SEP + "list.ini");
+    logs.notice() << "created empty ini: " << folder + SEP + "list.ini";
+
+    return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [&folder](auto& storage) {
+        return storage->saveProperties(folder);
+    });
+}
+
+bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
+{
+    Yuni::IO::Directory::Create(folder);
+    return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [&folder](auto& storage) {
+        return storage->saveSeries(folder + SEP + storage->id);
+    });
+}
+
 std::size_t STStorageInput::count() const
 {
     return storagesByIndex.size();
