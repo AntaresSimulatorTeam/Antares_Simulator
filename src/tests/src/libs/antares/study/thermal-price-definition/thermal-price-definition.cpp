@@ -8,6 +8,7 @@
 #include <fstream>
 
 #include <study.h>
+#include <antares/exception/LoadingError.hpp>
 
 #include "../checks/checkApplication.h"
 #include "cluster_list.h"
@@ -51,7 +52,7 @@ void createIniFile()
     outfile.close();
 }
 
-void createFuelCostFile(int size)
+void createFuelCostFile(int size, std::string value = "1")
 {
     std::string folder = getFolder();
 
@@ -60,11 +61,11 @@ void createFuelCostFile(int size)
 
     for (int i = 0; i < size; i++)
     {
-        outfile << "1" << std::endl;
+        outfile << value << std::endl;
     }
 }
 
-void createCo2CostFile(int size)
+void createCo2CostFile(int size, std::string value = "1")
 {
     std::string folder = getFolder();
 
@@ -73,7 +74,7 @@ void createCo2CostFile(int size)
 
     for (int i = 0; i < size; i++)
     {
-        outfile << "1" << std::endl;
+        outfile << value << std::endl;
     }
 }
 
@@ -188,6 +189,10 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2)
 {
     createIniFile();
     area->thermal.list.loadFromFolder(*study, folder, area);
+    area->thermal.list.mapping["area"]->series = new DataSeriesCommon;
+    area->thermal.list.mapping["area"]->series->timeSeries.reset(1, 8760);
+
+    area->thermal.prepareAreaWideIndexes();
 
     createFuelCostFile(8760);
     createCo2CostFile(8760);
@@ -199,6 +204,35 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2)
 
     BOOST_CHECK_NO_THROW(Antares::Check::checkFuelAndCo2ColumnNumber(l));
 
+    l.areas.erase("area");
+
+    removeCostFiles();
+    removeIniFile();
+}
+
+BOOST_AUTO_TEST_CASE(checkFuelAndCo2_wrong)
+{
+    createIniFile();
+    area->thermal.list.loadFromFolder(*study, folder, area);
+    area->thermal.list.mapping["area"]->series = new DataSeriesCommon;
+    area->thermal.list.mapping["area"]->series->timeSeries.reset(1, 8760);
+
+    area->thermal.prepareAreaWideIndexes();
+
+    createFuelCostFile(8760);
+    createCo2CostFile(8760);
+
+    BOOST_CHECK(area->thermal.list.mapping["area"]->ecoInput.loadFromFolder(*study, folder));
+    area->thermal.list.mapping["area"]->ecoInput.fuelcost.width = 3;
+    area->thermal.list.mapping["area"]->ecoInput.co2cost.width = 5;
+    AreaList l(*study);
+    l.add(area);
+
+    BOOST_CHECK_THROW(Antares::Check::checkFuelAndCo2ColumnNumber(l),
+            Error::IncompatibleFuelOrCo2CostColumns);
+
+    area->thermal.list.mapping["area"]->ecoInput.fuelcost.width = 1;
+    area->thermal.list.mapping["area"]->ecoInput.co2cost.width = 1;
     l.areas.erase("area");
 
     removeCostFiles();
