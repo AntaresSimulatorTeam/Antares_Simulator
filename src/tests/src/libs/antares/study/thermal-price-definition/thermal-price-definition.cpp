@@ -199,6 +199,8 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2)
 
     BOOST_CHECK_NO_THROW(Antares::Check::checkFuelAndCo2ColumnNumber(l));
 
+    l.areas.erase("area");
+
     removeCostFiles();
     removeIniFile();
 }
