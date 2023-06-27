@@ -398,13 +398,13 @@ public:
     template<class Env>
     std::string timeSeriesFileName(const Env &env) const;
 
-    [[nodiscard]] const std::vector<long>& linkIndex() const { return linkIndex_; };
-    [[nodiscard]] const std::vector<double>& linkWeight() const { return linkWeight_; };
-    [[nodiscard]] const std::vector<double>& clusterWeight() const { return clusterWeight_; };
-    [[nodiscard]] const std::vector<int>& linkOffset() const { return linkOffset_; };
-    [[nodiscard]] const std::vector<int>& clusterOffset() const { return clusterOffset_; };
-    [[nodiscard]] const std::vector<long>& clusterIndex() const { return clusterIndex_; };
-    [[nodiscard]] const std::vector<long>& clustersAreaIndex() const { return clustersAreaIndex_; };
+    [[nodiscard]] long linkIndex(unsigned index) const { return linkIndex_.at(index); };
+    [[nodiscard]] double linkWeight(unsigned index) const { return linkWeight_.at(index); };
+    [[nodiscard]] double clusterWeight(unsigned index) const { return clusterWeight_.at(index); };
+    [[nodiscard]] int linkOffset(unsigned index) const { return linkOffset_.at(index); };
+    [[nodiscard]] int clusterOffset(unsigned index) const { return clusterOffset_.at(index); };
+    [[nodiscard]] long clusterIndex(unsigned index) const { return clusterIndex_.at(index); };
+    [[nodiscard]] long clustersAreaIndex(unsigned index) const { return clustersAreaIndex_.at(index); };
 
 private:
     //! Raw name

@@ -249,19 +249,19 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         for (uint j = 0; j < bc->linkCount(); ++j)
         {
-            PtMat->NumeroDeLInterconnexion[j] = bc->linkIndex()[j];
-            PtMat->PoidsDeLInterconnexion[j] = bc->linkWeight()[j];
+            PtMat->NumeroDeLInterconnexion[j] = bc->linkIndex(j);
+            PtMat->PoidsDeLInterconnexion[j] = bc->linkWeight(j);
 
-            PtMat->OffsetTemporelSurLInterco[j] = bc->linkOffset()[j];
+            PtMat->OffsetTemporelSurLInterco[j] = bc->linkOffset(j);
         }
 
         for (uint j = 0; j < bc->clusterCount(); ++j)
         {
-            PtMat->NumeroDuPalierDispatch[j] = bc->clusterIndex()[j];
-            PtMat->PaysDuPalierDispatch[j] = bc->clustersAreaIndex()[j];
-            PtMat->PoidsDuPalierDispatch[j] = bc->clusterWeight()[j];
+            PtMat->NumeroDuPalierDispatch[j] = bc->clusterIndex(j);
+            PtMat->PaysDuPalierDispatch[j] = bc->clustersAreaIndex(j);
+            PtMat->PoidsDuPalierDispatch[j] = bc->clusterWeight(j);
 
-            PtMat->OffsetTemporelSurLePalierDispatch[j] = bc->clusterOffset()[j];
+            PtMat->OffsetTemporelSurLePalierDispatch[j] = bc->clusterOffset(j);
         }
     }
 
