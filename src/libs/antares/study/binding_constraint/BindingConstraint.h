@@ -100,13 +100,6 @@ public:
 
     //! Map of offset (for links)
     using clusterOffsetMap = std::map<const ThermalCluster*, int>;
-    //! Iterator
-    //! Const iterator
-
-    //! Vector of binding constraints
-    using Vector = std::vector<std::shared_ptr<BindingConstraint>>;
-    //! Ordered Set of binding constraints
-    using Set = std::set<std::shared_ptr<BindingConstraint>, CompareBindingConstraintName>;
 
     /*!
     ** \brief Convert a binding constraint type into a mere C-String
