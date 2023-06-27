@@ -106,15 +106,15 @@ void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter::Ptr 
     if (area.links.empty())
         return;
 
-    for (const auto& link : area.links)
+    for (const auto& [key, value] : area.links)
     {
-        if (link.second == nullptr)
+        if (value == nullptr)
         {
             logs.error() << "Unexpected nullptr encountered for area " << area.id;
             return;
         }
         else
-            link.second->storeTimeseriesNumbers(writer);
+            value->storeTimeseriesNumbers(writer);
     }
 }
 } // namespace Data

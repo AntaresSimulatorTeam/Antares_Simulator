@@ -52,7 +52,7 @@ void createIniFile()
     outfile.close();
 }
 
-void createFuelCostFile(int size, std::string value = "1")
+void createFuelCostFile(int size)
 {
     std::string folder = getFolder();
 
@@ -61,11 +61,11 @@ void createFuelCostFile(int size, std::string value = "1")
 
     for (int i = 0; i < size; i++)
     {
-        outfile << value << std::endl;
+        outfile << 1 << std::endl;
     }
 }
 
-void createCo2CostFile(int size, std::string value = "1")
+void createCo2CostFile(int size)
 {
     std::string folder = getFolder();
 
@@ -74,7 +74,7 @@ void createCo2CostFile(int size, std::string value = "1")
 
     for (int i = 0; i < size; i++)
     {
-        outfile << value << std::endl;
+        outfile << 1 << std::endl;
     }
 }
 
@@ -103,15 +103,12 @@ struct Fixture
     Fixture()
     {
         area = study->areaAdd("area");
-        /* study->usedByTheSolver = true; */
         study->parameters.include.thermal.minUPTime = true;
         study->parameters.include.thermal.minStablePower = true;
         study->parameters.include.reserve.spinning = true;
 
     }
-    ~Fixture()
-    {
-    }
+    ~Fixture() = default;
 
     std::string folder = getFolder();
     ThermalClusterList clusterList;

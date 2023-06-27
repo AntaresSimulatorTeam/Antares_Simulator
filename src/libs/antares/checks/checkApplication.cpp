@@ -47,7 +47,7 @@ void checkStudyVersion(const AnyString& optStudyFolder)
         if ((uint)version > (uint)versionLatest)
         {
             throw Error::InvalidVersion(VersionToCStr(version),
-                                        VersionToCStr((Version)versionLatest));
+                                        VersionToCStr(versionLatest));
         }
     }
 }
@@ -108,13 +108,13 @@ bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& a
 
         std::vector<YString> clusternames;
 
-        if (not areait->second->thermalClustersMinStablePowerValidity(clusternames))
+        if (!areait->second->thermalClustersMinStablePowerValidity(clusternames))
         {
             for (auto it = clusternames.begin(); it != clusternames.end(); it++)
             {
                 logs.debug() << "areaname : " << areaname << " ; clustername : " << (*it);
                 YString res = "Area : " + areaname + " cluster name : " + (*it).c_str();
-                areaClusterNames.insert(std::pair<int, YString>(count++, res));
+                areaClusterNames.try_emplace(std::pair<int, YString>(count++, res));
             }
             resultat = false;
         }

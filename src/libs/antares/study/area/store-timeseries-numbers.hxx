@@ -63,6 +63,7 @@ void singleAreaStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer, const A
         storeTimeseriesNumbersForTransmissionCapacities(writer, area);
         break;
     case timeSeriesCount:
+    default:
         break;
     }
 }
@@ -71,7 +72,7 @@ template<int TimeSeriesT>
 void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer, const AreaList& area)
 {
     // Each area in the list
-    area.each([&writer](const Area& area) { singleAreaStoreTimeseriesNumbers<TimeSeriesT>(writer, area); });
+    area.each([&writer](const Area& a) { singleAreaStoreTimeseriesNumbers<TimeSeriesT>(writer, a); });
 }
 } //namespace Antares::Data
 
