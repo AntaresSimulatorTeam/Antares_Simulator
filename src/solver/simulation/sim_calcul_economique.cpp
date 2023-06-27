@@ -223,7 +223,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     for (uint i = 0; i < enabledBindingConstraints.size(); ++i)
     {
         auto bc = enabledBindingConstraints[i];
-        bc->initLinkArrays();
         PtMat = problem.MatriceDesContraintesCouplantes[i];
         PtMat->NombreDInterconnexionsDansLaContrainteCouplante = bc->linkCount();
         PtMat->NombreDePaliersDispatchDansLaContrainteCouplante = bc->clusterCount();
@@ -247,21 +246,22 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         }
         PtMat->SensDeLaContrainteCouplante = *Antares::Data::BindingConstraint::MathOperatorToCString(bc->operatorType());
 
+        BindingConstraintStructures bindingConstraintStructures = bc->initLinkArrays();
         for (uint j = 0; j < bc->linkCount(); ++j)
         {
-            PtMat->NumeroDeLInterconnexion[j] = bc->linkIndex(j);
-            PtMat->PoidsDeLInterconnexion[j] = bc->linkWeight(j);
+            PtMat->NumeroDeLInterconnexion[j] = bindingConstraintStructures.linkIndex[j];
+            PtMat->PoidsDeLInterconnexion[j] = bindingConstraintStructures.linkWeight[j];
 
-            PtMat->OffsetTemporelSurLInterco[j] = bc->linkOffset(j);
+            PtMat->OffsetTemporelSurLInterco[j] = bindingConstraintStructures.linkOffset[j];
         }
 
         for (uint j = 0; j < bc->clusterCount(); ++j)
         {
-            PtMat->NumeroDuPalierDispatch[j] = bc->clusterIndex(j);
-            PtMat->PaysDuPalierDispatch[j] = bc->clustersAreaIndex(j);
-            PtMat->PoidsDuPalierDispatch[j] = bc->clusterWeight(j);
+            PtMat->NumeroDuPalierDispatch[j] = bindingConstraintStructures.clusterIndex[j];
+            PtMat->PaysDuPalierDispatch[j] = bindingConstraintStructures.clustersAreaIndex[j];
+            PtMat->PoidsDuPalierDispatch[j] = bindingConstraintStructures.clusterWeight[j];
 
-            PtMat->OffsetTemporelSurLePalierDispatch[j] = bc->clusterOffset(j);
+            PtMat->OffsetTemporelSurLePalierDispatch[j] = bindingConstraintStructures.clusterOffset[j];
         }
     }
 

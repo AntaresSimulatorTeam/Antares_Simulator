@@ -38,6 +38,7 @@
 #include "EnvForLoading.h"
 #include "antares/study/filter.h"
 #include "BindingConstraintTimeSeriesNumbers.h"
+#include "BindingConstraintStructures.h"
 #include <memory>
 #include <utility>
 #include <vector>
@@ -385,18 +386,10 @@ public:
     */
     void buildFormula(YString& s) const;
 
-    void initLinkArrays() const;
+    BindingConstraintStructures initLinkArrays() const;
 
     template<class Env>
     std::string timeSeriesFileName(const Env &env) const;
-
-    [[nodiscard]] long linkIndex(unsigned index) const { return linkIndex_.at(index); };
-    [[nodiscard]] double linkWeight(unsigned index) const { return linkWeight_.at(index); };
-    [[nodiscard]] double clusterWeight(unsigned index) const { return clusterWeight_.at(index); };
-    [[nodiscard]] int linkOffset(unsigned index) const { return linkOffset_.at(index); };
-    [[nodiscard]] int clusterOffset(unsigned index) const { return clusterOffset_.at(index); };
-    [[nodiscard]] long clusterIndex(unsigned index) const { return clusterIndex_.at(index); };
-    [[nodiscard]] long clustersAreaIndex(unsigned index) const { return clustersAreaIndex_.at(index); };
 
 private:
     //! Raw name
@@ -433,14 +426,6 @@ private:
     void clear();
 
     void copyFrom(BindingConstraint const *original);
-
-    mutable std::vector<long>   linkIndex_;
-    mutable std::vector<double> linkWeight_;
-    mutable std::vector<double> clusterWeight_;
-    mutable std::vector<int>    linkOffset_;
-    mutable std::vector<int>    clusterOffset_;
-    mutable std::vector<long>   clusterIndex_;
-    mutable std::vector<long>   clustersAreaIndex_;
 }; // class BindingConstraint
 
 // class BindConstList

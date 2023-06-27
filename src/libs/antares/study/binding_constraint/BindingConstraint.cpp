@@ -363,7 +363,7 @@ void BindingConstraint::clear() {
 }
 
 
-    void BindingConstraint::reverseWeightSign(const AreaLink* lnk)
+void BindingConstraint::reverseWeightSign(const AreaLink* lnk)
 {
     auto i = pLinkWeights.find(lnk);
     if (i != pLinkWeights.end())
@@ -564,55 +564,63 @@ int BindingConstraint::offset(const ThermalCluster* lnk) const
     return (i != pClusterOffsets.end()) ? i->second : 0;
 }
 
-void BindingConstraint::initLinkArrays() const
+BindingConstraintStructures BindingConstraint::initLinkArrays() const
 {
-    linkIndex_.clear();
-    linkWeight_.clear();
-    clusterWeight_.clear();
-    linkOffset_.clear();
-    clusterOffset_.clear();
-    clusterIndex_.clear();
-    clustersAreaIndex_.clear();
+    std::vector<long>   linkIndex;
+    std::vector<double> linkWeight;
+    std::vector<double> clusterWeight;
+    std::vector<int>    linkOffset;
+    std::vector<int>    clusterOffset;
+    std::vector<long>   clusterIndex;
+    std::vector<long>   clustersAreaIndex;
 
-    linkWeight_.resize(linkCount());
-    linkOffset_.resize(linkCount());
-    linkIndex_.resize(linkCount());
+    linkWeight.resize(linkCount());
+    linkOffset.resize(linkCount());
+    linkIndex.resize(linkCount());
 
-    clusterWeight_.resize(clusterCount());
-    clusterOffset_.resize(clusterCount());
-    clusterIndex_.resize(clusterCount());
-    clustersAreaIndex_.resize(clusterCount());
+    clusterWeight.resize(clusterCount());
+    clusterOffset.resize(clusterCount());
+    clusterIndex.resize(clusterCount());
+    clustersAreaIndex.resize(clusterCount());
 
     uint off = 0;
     auto end = pLinkWeights.end();
     for (auto i = pLinkWeights.begin(); i != end; ++i, ++off)
     {
-        linkIndex_[off] = (i->first)->index;
-        linkWeight_[off] = i->second;
+        linkIndex[off] = (i->first)->index;
+        linkWeight[off] = i->second;
 
         auto offsetIt = pLinkOffsets.find(i->first);
         if (offsetIt != pLinkOffsets.end())
-            linkOffset_[off] = offsetIt->second;
+            linkOffset[off] = offsetIt->second;
         else
-            linkOffset_[off] = 0;
+            linkOffset[off] = 0;
     }
 
     off = 0;
     auto cEnd = pClusterWeights.end();
     for (auto i = pClusterWeights.begin(); i != cEnd; ++i) {
         if (i->first->enabled && !i->first->mustrun) {
-            clusterIndex_[off] = (i->first)->index;
-            clustersAreaIndex_[off] = (i->first)->parentArea->index;
-            clusterWeight_[off] = i->second;
+            clusterIndex[off] = (i->first)->index;
+            clustersAreaIndex[off] = (i->first)->parentArea->index;
+            clusterWeight[off] = i->second;
 
             if (auto offsetIt = pClusterOffsets.find(i->first); offsetIt != pClusterOffsets.end())
-                clusterOffset_[off] = offsetIt->second;
+                clusterOffset[off] = offsetIt->second;
             else
-                clusterOffset_[off] = 0;
+                clusterOffset[off] = 0;
 
             ++off;
         }
     }
+
+    return {linkIndex,
+    linkWeight,
+    clusterWeight,
+    linkOffset,
+    clusterOffset,
+    clusterIndex,
+    clustersAreaIndex,};
 }
 
 bool BindingConstraint::forceReload(bool reload) const

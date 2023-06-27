@@ -317,6 +317,7 @@ set(SRC_STUDY_BINDING_CONSTRAINT
 	study/binding_constraint/BindingConstraintSaver.cpp
 	study/binding_constraint/BindingConstraintSaver.h
 	study/binding_constraint/EnvForLoading.h
+	study/binding_constraint/BindingConstraintStructures.h
 	)
 
 source_group("study\\constraint" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
