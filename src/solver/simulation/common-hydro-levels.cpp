@@ -68,8 +68,13 @@ void computingHydroLevels(const Data::AreaList& areas,
 
         double* ovf = weeklyResults.debordementsHoraires;
 
-        computeTimeStepLevel computeLvlObj = computeTimeStepLevel(
-                nivInit, inflows, ovf, turb, pumpingRatio, pump, reservoirCapacity);
+        computeTimeStepLevel computeLvlObj(nivInit,
+                                           inflows,
+                                           ovf,
+                                           turb,
+                                           pumpingRatio,
+                                           pump,
+                                           reservoirCapacity);
 
         for (uint h = 0; h < nbHoursInAWeek - 1; h++)
         {
