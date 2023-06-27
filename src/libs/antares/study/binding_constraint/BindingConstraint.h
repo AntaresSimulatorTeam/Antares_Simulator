@@ -442,13 +442,13 @@ private:
 
     void copyFrom(BindingConstraint const *original);
 
-    mutable std::vector<long> linkIndex_;
+    mutable std::vector<long>   linkIndex_;
     mutable std::vector<double> linkWeight_;
     mutable std::vector<double> clusterWeight_;
-    mutable std::vector<int> linkOffset_;
-    mutable std::vector<int> clusterOffset_;
-    mutable std::vector<long> clusterIndex_;
-    mutable std::vector<long> clustersAreaIndex_;
+    mutable std::vector<int>    linkOffset_;
+    mutable std::vector<int>    clusterOffset_;
+    mutable std::vector<long>   clusterIndex_;
+    mutable std::vector<long>   clustersAreaIndex_;
 }; // class BindingConstraint
 
 // class BindConstList

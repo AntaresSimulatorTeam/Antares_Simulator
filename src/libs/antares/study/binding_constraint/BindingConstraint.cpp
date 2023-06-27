@@ -566,6 +566,14 @@ int BindingConstraint::offset(const ThermalCluster* lnk) const
 
 void BindingConstraint::initLinkArrays() const
 {
+    linkIndex_.clear();
+    linkWeight_.clear();
+    clusterWeight_.clear();
+    linkOffset_.clear();
+    clusterOffset_.clear();
+    clusterIndex_.clear();
+    clustersAreaIndex_.clear();
+
     linkWeight_.resize(linkCount());
     linkOffset_.resize(linkCount());
     linkIndex_.resize(linkCount());
