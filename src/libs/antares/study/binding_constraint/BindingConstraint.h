@@ -93,17 +93,9 @@ public:
 
     //! Map of weight (for thermal clusters)
     using clusterWeightMap = std::map<const ThermalCluster*, double, CompareClusterName>;
-    //! Iterator
-    using thermalIterator = clusterWeightMap::iterator;
-    //! Const iterator
-    using const_thermalIterator = clusterWeightMap::const_iterator;
 
     //! Map of offset (for links)
     using linkOffsetMap = std::map<const AreaLink*, int>;
-    //! Iterator
-    using OffsetIterator = linkOffsetMap::iterator;
-    //! Const iterator
-    using OffsetConst_iterator = linkOffsetMap::const_iterator;
 
     //! Map of offset (for links)
     using clusterOffsetMap = std::map<const ThermalCluster*, int>;
