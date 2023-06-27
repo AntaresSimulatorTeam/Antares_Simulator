@@ -160,7 +160,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 {
                     ProblemeAResoudre->CoutLineaire[var]
                       = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[Index]
-                          ->CoutHoraireDeProductionDuPalierThermique[pdtHebdo];
+                          .CoutHoraireDeProductionDuPalierThermique[pdtHebdo];
                 }
             }
 

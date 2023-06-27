@@ -647,7 +647,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
 
                 auto& Pt
-                  = *problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[cluster.index];
+                  = problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[cluster.index];
                 auto& PtValGen = *ValeursGenereesParPays[numSpace][k];
 
                 Pt.PuissanceDisponibleDuPalierThermique[j]
@@ -967,16 +967,16 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         for (uint l = 0; l != area.thermal.list.size(); ++l)
         {
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                ->PuissanceDisponibleDuPalierThermiqueRef
+                .PuissanceDisponibleDuPalierThermiqueRef
                 =
                 problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                ->PuissanceDisponibleDuPalierThermique;
+                .PuissanceDisponibleDuPalierThermique;
 
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                ->CoutHoraireDeProductionDuPalierThermiqueRef
+                .CoutHoraireDeProductionDuPalierThermiqueRef
                 =
                 problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                ->CoutHoraireDeProductionDuPalierThermique;
+                .CoutHoraireDeProductionDuPalierThermique;
         }
 
         problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimiseRef

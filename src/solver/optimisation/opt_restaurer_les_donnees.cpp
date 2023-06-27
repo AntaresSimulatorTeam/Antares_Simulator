@@ -172,10 +172,10 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
             for (int palier = 0; palier < PaliersThermiquesDuPays.NombreDePaliersThermiques;
                  palier++)
             {
-                PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout
+                PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDisponibleEtCout
                   = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[palier];
-                PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique[pdt]
-                  = PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique_SV[pdt];
+                PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt]
+                  = PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique_SV[pdt];
             }
         }
     }
@@ -189,32 +189,32 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
             for (int palier = 0; palier < PaliersThermiquesDuPays.NombreDePaliersThermiques;
                  palier++)
             {
-                PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout
+                PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDisponibleEtCout
                   = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[palier];
-                PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[pdt]
-                  = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef[pdt];
+                PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt]
+                  = PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermiqueRef[pdt];
 
-                if (PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique[pdt]
-                    > PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[pdt])
+                if (PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt]
+                    > PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt])
                 {
-                    PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[pdt]
-                      = PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique[pdt];
+                    PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt]
+                      = PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt];
 
-                    if (PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[pdt]
+                    if (PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt]
                         > PuissanceDisponibleEtCout
-                            ->PuissanceDisponibleDuPalierThermiqueRef_SV[pdt])
+                            .PuissanceDisponibleDuPalierThermiqueRef_SV[pdt])
                     {
-                        PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[pdt]
+                        PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt]
                           = PuissanceDisponibleEtCout
-                              ->PuissanceDisponibleDuPalierThermiqueRef_SV[pdt];
-                        PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique[pdt]
+                              .PuissanceDisponibleDuPalierThermiqueRef_SV[pdt];
+                        PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt]
                           = PuissanceDisponibleEtCout
-                              ->PuissanceDisponibleDuPalierThermiqueRef_SV[pdt];
+                              .PuissanceDisponibleDuPalierThermiqueRef_SV[pdt];
                     }
                 }
 
-                PuissanceDisponibleEtCout->CoutHoraireDeProductionDuPalierThermique[pdt]
-                  = PuissanceDisponibleEtCout->CoutHoraireDeProductionDuPalierThermiqueRef[pdt];
+                PuissanceDisponibleEtCout.CoutHoraireDeProductionDuPalierThermique[pdt]
+                  = PuissanceDisponibleEtCout.CoutHoraireDeProductionDuPalierThermiqueRef[pdt];
             }
         }
     }

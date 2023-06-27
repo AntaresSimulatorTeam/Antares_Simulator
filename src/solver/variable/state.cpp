@@ -119,7 +119,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
             thermal[area->index].PMinOfClusters[clusterAreaWideIndex]
               = problemeHebdo->PaliersThermiquesDuPays[area->index]
                   .PuissanceDisponibleEtCout[thermalCluster->index]
-                  ->PuissanceMinDuPalierThermique[hourInTheWeek]; // one per hour for one
+                  .PuissanceMinDuPalierThermique[hourInTheWeek]; // one per hour for one
             // cluster
         }
         else

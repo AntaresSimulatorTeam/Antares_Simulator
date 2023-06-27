@@ -435,48 +435,45 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         problem.ResultatsHoraires[k].debordementsHoraires
           = new double[NombreDePasDeTemps];
         problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout
-          = std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER*>(nbPaliers);
+          = std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER>(nbPaliers);
         problem.ResultatsHoraires[k].ProductionThermique
           = new PRODUCTION_THERMIQUE_OPTIMALE*[NombreDePasDeTemps];
 
         for (unsigned j = 0; j < nbPaliers; ++j)
         {
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              = new PDISP_ET_COUTS_HORAIRES_PAR_PALIER;
-
-            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              ->CoutHoraireDeProductionDuPalierThermique
+              .CoutHoraireDeProductionDuPalierThermique
               .assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              ->CoutHoraireDeProductionDuPalierThermiqueRef
+              .CoutHoraireDeProductionDuPalierThermiqueRef
               .assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              ->PuissanceDisponibleDuPalierThermique
+              .PuissanceDisponibleDuPalierThermique
               .assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              ->PuissanceDisponibleDuPalierThermiqueRef
+              .PuissanceDisponibleDuPalierThermiqueRef
               .assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              ->PuissanceDisponibleDuPalierThermiqueRef_SV
+              .PuissanceDisponibleDuPalierThermiqueRef_SV
               .assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              ->PuissanceMinDuPalierThermique
+              .PuissanceMinDuPalierThermique
               .assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              ->PuissanceMinDuPalierThermique_SV
+              .PuissanceMinDuPalierThermique_SV
               .assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              ->NombreMaxDeGroupesEnMarcheDuPalierThermique
+              .NombreMaxDeGroupesEnMarcheDuPalierThermique
               .assign(NombreDePasDeTemps, 0);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              ->NombreMinDeGroupesEnMarcheDuPalierThermique
+              .NombreMinDeGroupesEnMarcheDuPalierThermique
               .assign(NombreDePasDeTemps, 0);
 
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              ->CoutHoraireDuPalierThermiqueUp
+              .CoutHoraireDuPalierThermiqueUp
               .assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              ->CoutHoraireDuPalierThermiqueDown
+              .CoutHoraireDuPalierThermiqueDown
               .assign(NombreDePasDeTemps, 0.);
         }
         for (unsigned j = 0; j < NombreDePasDeTemps; j++)
@@ -539,11 +536,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     for (int k = 0; k < (int)nbPays; ++k)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
-
-        for (int j = 0; j < (int)nbPaliers; j++)
-        {
-            delete problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j];
-        }
 
         delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive;
         delete problem.ResultatsHoraires[k].ValeursHorairesDENS;

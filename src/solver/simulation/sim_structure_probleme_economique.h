@@ -251,7 +251,6 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
     std::vector<double> PuissanceMinDuPalierThermique_SV;
 
     std::vector<double> CoutHoraireDeProductionDuPalierThermique;
-
     std::vector<double> CoutHoraireDeProductionDuPalierThermiqueRef;
 
     std::vector<double> CoutHoraireDuPalierThermiqueUp;
@@ -272,7 +271,7 @@ struct PALIERS_THERMIQUES
     std::vector<double> PminDuPalierThermiquePendantUneHeure;
     std::vector<double> PminDuPalierThermiquePendantUnJour;
     std::vector<int> NumeroDuPalierDansLEnsembleDesPaliersThermiques;
-    mutable std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER*> PuissanceDisponibleEtCout;
+    mutable std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER> PuissanceDisponibleEtCout;
 
     std::vector<double> CoutDeDemarrageDUnGroupeDuPalierThermique;
     std::vector<double> CoutDArretDUnGroupeDuPalierThermique;

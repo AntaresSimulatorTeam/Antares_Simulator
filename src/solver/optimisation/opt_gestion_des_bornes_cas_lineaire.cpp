@@ -79,13 +79,13 @@ double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO* problemeHebdo, int Pays,
     double sommeDesPminThermiques = 0.0;
     const PALIERS_THERMIQUES& PaliersThermiquesDuPays
       = problemeHebdo->PaliersThermiquesDuPays[Pays];
-    std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER*>& PuissanceDisponibleEtCout
+    std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER>& PuissanceDisponibleEtCout
       = PaliersThermiquesDuPays.PuissanceDisponibleEtCout;
 
     for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
     {
         sommeDesPminThermiques
-          += PuissanceDisponibleEtCout[index]->PuissanceMinDuPalierThermique[pdtHebdo];
+          += PuissanceDisponibleEtCout[index].PuissanceMinDuPalierThermique[pdtHebdo];
     }
 
     return sommeDesPminThermiques;
@@ -329,13 +329,13 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                   = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
                 int var
                   = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
-                const PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout
+                const PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDisponibleEtCout
                   = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index];
 
-                Xmin[var] = PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique[pdtHebdo];
+                Xmin[var] = PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdtHebdo];
 
                 Xmax[var]
-                  = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[pdtHebdo];
+                  = PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdtHebdo];
 
                 double* adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
                                                 .ProductionThermique[pdtHebdo]
