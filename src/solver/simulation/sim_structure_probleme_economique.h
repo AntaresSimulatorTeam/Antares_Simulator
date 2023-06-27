@@ -272,7 +272,7 @@ struct PALIERS_THERMIQUES
     std::vector<double> PminDuPalierThermiquePendantUneHeure;
     std::vector<double> PminDuPalierThermiquePendantUnJour;
     std::vector<int> NumeroDuPalierDansLEnsembleDesPaliersThermiques;
-    PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout;
+    mutable std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER*> PuissanceDisponibleEtCout;
 
     std::vector<double> CoutDeDemarrageDUnGroupeDuPalierThermique;
     std::vector<double> CoutDArretDUnGroupeDuPalierThermique;

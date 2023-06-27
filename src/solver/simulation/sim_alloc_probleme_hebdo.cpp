@@ -434,8 +434,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
           = new double[NombreDePasDeTemps];
         problem.ResultatsHoraires[k].debordementsHoraires
           = new double[NombreDePasDeTemps];
-        problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout
-          = new PDISP_ET_COUTS_HORAIRES_PAR_PALIER*[nbPaliers];
         problem.ResultatsHoraires[k].ProductionThermique
           = new PRODUCTION_THERMIQUE_OPTIMALE*[NombreDePasDeTemps];
 
@@ -588,7 +586,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
                       ->CoutHoraireDuPalierThermiqueDown);
             delete problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j];
         }
-        delete problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout;
 
         delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive;
         delete problem.ResultatsHoraires[k].ValeursHorairesDENS;

@@ -79,7 +79,7 @@ double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO* problemeHebdo, int Pays,
     double sommeDesPminThermiques = 0.0;
     const PALIERS_THERMIQUES& PaliersThermiquesDuPays
       = problemeHebdo->PaliersThermiquesDuPays[Pays];
-    PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout
+    std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER*>& PuissanceDisponibleEtCout
       = PaliersThermiquesDuPays.PuissanceDisponibleEtCout;
 
     for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
