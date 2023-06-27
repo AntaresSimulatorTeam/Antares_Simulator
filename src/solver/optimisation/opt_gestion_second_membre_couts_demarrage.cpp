@@ -63,7 +63,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
 
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            const int* NombreMaxDeGroupesEnMarcheDuPalierThermique
+            const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
               = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index]
                   ->NombreMaxDeGroupesEnMarcheDuPalierThermique;
             const int DureeMinimaleDArretDUnGroupeDuPalierThermique

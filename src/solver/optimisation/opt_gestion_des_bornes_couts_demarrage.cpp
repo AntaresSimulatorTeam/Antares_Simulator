@@ -75,9 +75,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                   = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index];
                 const int palier
                   = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-                const int* NombreMaxDeGroupesEnMarcheDuPalierThermique
+                const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout->NombreMaxDeGroupesEnMarcheDuPalierThermique;
-                const int* NombreMinDeGroupesEnMarcheDuPalierThermique
+                const std::vector<int>& NombreMinDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout->NombreMinDeGroupesEnMarcheDuPalierThermique;
 
                 int var = CorrespondanceVarNativesVarOptim

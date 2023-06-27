@@ -117,9 +117,9 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
         {
             PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDispoEtCout
               = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[Palier];
-            double* PuissanceMinDuPalierThermique
+            std::vector<double>& PuissanceMinDuPalierThermique
               = PuissanceDispoEtCout->PuissanceMinDuPalierThermique;
-            const double* PuissanceDisponibleDuPalierThermique
+            const std::vector<double>& PuissanceDisponibleDuPalierThermique
               = PuissanceDispoEtCout->PuissanceDisponibleDuPalierThermique;
 
             if (fabs(PminDuPalierThermiquePendantUneHeure[Palier]) < ZERO_PMIN)

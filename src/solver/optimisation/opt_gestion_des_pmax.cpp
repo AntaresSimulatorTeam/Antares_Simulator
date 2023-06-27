@@ -43,15 +43,10 @@ void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO* problemeHebdo)
         for (int palier = 0; palier < PaliersThermiquesDuPays.NombreDePaliersThermiques; palier++)
         {
             PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout
-              = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[palier];
-            double* PuissanceDisponibleDuPalierThermiqueRef
-              = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef;
-            double* PuissanceDisponibleDuPalierThermiqueRef_SV
-              = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef_SV;
+                = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[palier];
 
-            memcpy((char*)PuissanceDisponibleDuPalierThermiqueRef_SV,
-                   (char*)PuissanceDisponibleDuPalierThermiqueRef,
-                   problemeHebdo->NombreDePasDeTempsRef * sizeof(double));
+            PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef_SV
+                = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef;
         }
     }
     return;

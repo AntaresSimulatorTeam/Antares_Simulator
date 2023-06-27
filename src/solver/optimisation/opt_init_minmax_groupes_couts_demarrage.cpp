@@ -47,13 +47,13 @@ void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* prob
 
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            const double* PuissanceDisponibleDuPalierThermiqueRef_SV
+            const std::vector<double>& PuissanceDisponibleDuPalierThermiqueRef_SV
               = PuissanceDisponibleEtCout[index]->PuissanceDisponibleDuPalierThermiqueRef_SV;
-            const double* PuissanceMinDuPalierThermique_SV
+            const std::vector<double>& PuissanceMinDuPalierThermique_SV
               = PuissanceDisponibleEtCout[index]->PuissanceMinDuPalierThermique_SV;
-            int* NombreMaxDeGroupesEnMarcheDuPalierThermique
+            std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
               = PuissanceDisponibleEtCout[index]->NombreMaxDeGroupesEnMarcheDuPalierThermique;
-            int* NombreMinDeGroupesEnMarcheDuPalierThermique
+            std::vector<int>& NombreMinDeGroupesEnMarcheDuPalierThermique
               = PuissanceDisponibleEtCout[index]->NombreMinDeGroupesEnMarcheDuPalierThermique;
 
             double TailleUnitaireDUnGroupeDuPalierThermique

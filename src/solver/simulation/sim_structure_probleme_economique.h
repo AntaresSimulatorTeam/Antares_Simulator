@@ -242,23 +242,23 @@ struct SOLDE_MOYEN_DES_ECHANGES
 
 struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 {
-    double* PuissanceDisponibleDuPalierThermique;
+    std::vector<double> PuissanceDisponibleDuPalierThermique;
 
-    double* PuissanceDisponibleDuPalierThermiqueRef;
-    double* PuissanceDisponibleDuPalierThermiqueRef_SV;
+    std::vector<double> PuissanceDisponibleDuPalierThermiqueRef;
+    std::vector<double> PuissanceDisponibleDuPalierThermiqueRef_SV;
 
-    double* PuissanceMinDuPalierThermique;
-    double* PuissanceMinDuPalierThermique_SV;
+    std::vector<double> PuissanceMinDuPalierThermique;
+    std::vector<double> PuissanceMinDuPalierThermique_SV;
 
-    double* CoutHoraireDeProductionDuPalierThermique;
+    std::vector<double> CoutHoraireDeProductionDuPalierThermique;
 
-    double* CoutHoraireDeProductionDuPalierThermiqueRef;
+    std::vector<double> CoutHoraireDeProductionDuPalierThermiqueRef;
 
-    double* CoutHoraireDuPalierThermiqueUp;
-    double* CoutHoraireDuPalierThermiqueDown;
+    std::vector<double> CoutHoraireDuPalierThermiqueUp;
+    std::vector<double> CoutHoraireDuPalierThermiqueDown;
 
-    int* NombreMaxDeGroupesEnMarcheDuPalierThermique;
-    int* NombreMinDeGroupesEnMarcheDuPalierThermique;
+    std::vector<int> NombreMaxDeGroupesEnMarcheDuPalierThermique;
+    std::vector<int> NombreMinDeGroupesEnMarcheDuPalierThermique;
 
 };
 

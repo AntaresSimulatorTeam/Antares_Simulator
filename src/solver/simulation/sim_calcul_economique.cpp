@@ -966,20 +966,17 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
         for (uint l = 0; l != area.thermal.list.size(); ++l)
         {
-            memcpy((char*)problem.PaliersThermiquesDuPays[k]
-                     .PuissanceDisponibleEtCout[l]
-                     ->PuissanceDisponibleDuPalierThermiqueRef,
-                   (char*)problem.PaliersThermiquesDuPays[k]
-                     .PuissanceDisponibleEtCout[l]
-                     ->PuissanceDisponibleDuPalierThermique,
-                   pasDeTempsSizeDouble);
-            memcpy((char*)problem.PaliersThermiquesDuPays[k]
-                     .PuissanceDisponibleEtCout[l]
-                     ->CoutHoraireDeProductionDuPalierThermiqueRef,
-                   (char*)problem.PaliersThermiquesDuPays[k]
-                     .PuissanceDisponibleEtCout[l]
-                     ->CoutHoraireDeProductionDuPalierThermique,
-                   pasDeTempsSizeDouble);
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
+                ->PuissanceDisponibleDuPalierThermiqueRef
+                =
+                problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
+                ->PuissanceDisponibleDuPalierThermique;
+
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
+                ->CoutHoraireDeProductionDuPalierThermiqueRef
+                =
+                problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
+                ->CoutHoraireDeProductionDuPalierThermique;
         }
 
         problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimiseRef

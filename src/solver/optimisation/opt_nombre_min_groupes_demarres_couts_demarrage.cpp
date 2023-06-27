@@ -57,7 +57,7 @@ using namespace Yuni;
 #endif
 
 void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*,
-                                                                           int*,
+                                                                           std::vector<int>&,
                                                                            int,
                                                                            int);
 
@@ -85,11 +85,11 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
         {
             if (problemeHebdo->Expansion)
             {
-                int* NombreMinDeGroupesEnMarcheDuPalierThermique
+                std::vector<int>& NombreMinDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout[index]->NombreMinDeGroupesEnMarcheDuPalierThermique;
-                double* PuissanceDisponibleDuPalierThermique
+                std::vector<double>& PuissanceDisponibleDuPalierThermique
                   = PuissanceDisponibleEtCout[index]->PuissanceDisponibleDuPalierThermique;
-                double* PuissanceMinDuPalierThermique
+                std::vector<double>& PuissanceMinDuPalierThermique
                   = PuissanceDisponibleEtCout[index]->PuissanceMinDuPalierThermique;
 
                 for (int pdtHebdo = 0; pdtHebdo < NombreDePasDeTempsProblemeHebdo; pdtHebdo++)
@@ -118,11 +118,11 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
             }
             else
             {
-                int* NombreMinDeGroupesEnMarcheDuPalierThermique
+                std::vector<int>& NombreMinDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout[index]->NombreMinDeGroupesEnMarcheDuPalierThermique;
-                int* NombreMaxDeGroupesEnMarcheDuPalierThermique
+                std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout[index]->NombreMaxDeGroupesEnMarcheDuPalierThermique;
-                double* PuissanceDisponibleDuPalierThermique
+                std::vector<double>& PuissanceDisponibleDuPalierThermique
                   = PuissanceDisponibleEtCout[index]->PuissanceDisponibleDuPalierThermique;
                 double pminDUnGroupeDuPalierThermique
                   = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[index];
@@ -208,7 +208,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
 
 void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
   PROBLEME_HEBDO* problemeHebdo,
-  int* NbMinOptDeGroupesEnMarche,
+  std::vector<int>& NbMinOptDeGroupesEnMarche,
   int Pays,
   int Index)
 {
@@ -217,7 +217,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     const PALIERS_THERMIQUES& PaliersThermiquesDuPays
       = problemeHebdo->PaliersThermiquesDuPays[Pays];
 
-    const int* NombreMaxDeGroupesEnMarcheDuPalierThermique
+    const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
       = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[Index]
           ->NombreMaxDeGroupesEnMarcheDuPalierThermique;
     const int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
