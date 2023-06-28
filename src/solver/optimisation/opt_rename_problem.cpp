@@ -7,20 +7,15 @@ const std::string WEEK("week");
 const std::map<std::string, std::string> BindingConstraintTimeGranularity
   = {{HOUR, "hourly"}, {DAY, "daily"}, {WEEK, "weekly"}};
 const std::string LINK("link");
-const std::string AREA("currentAssetsStorage.area");
+const std::string AREA("area");
 
 void VariableNamer::SetLinkVariableName(int var, const std::string& variableType)
 {
-    if (name_updater.StringAtIndex(var).empty())
-    {
-        const auto location
-          = currentAssetsStorage.origin + AREA_SEP + currentAssetsStorage.destination;
-        name_updater.UpdateTargetAtIndex(
-          BuildName(variableType,
-                    LocationIdentifier(location, LINK),
-                    TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-          var);
-    }
+    const auto location = currentAssetsStorage.origin + AREA_SEP + currentAssetsStorage.destination;
+    name_updater.UpdateTargetAtIndex(BuildName(variableType,
+                                               LocationIdentifier(location, LINK),
+                                               TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
+                                     var);
 }
 
 void VariableNamer::SetAreaVariableName(int var, const std::string& variableType)

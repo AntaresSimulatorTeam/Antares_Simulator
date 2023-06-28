@@ -25,11 +25,6 @@ public:
     std::function<void(const std::string&, unsigned index)> UpdateTargetAtIndex
       = [](const std::string&, unsigned index) {};
 
-    std::string& StringAtIndex(unsigned index) const
-    {
-        return target_[index];
-    }
-
 private:
     std::vector<std::string>& target_;
     void UpdateTargetAtIndexImpl(const std::string& full_name, unsigned index)
