@@ -7,6 +7,6 @@
 namespace Antares::Data {
 
     unsigned BindingConstraintGroupRepository::size() {
-        return 0;
+        return 1;
     }
 } // Data
