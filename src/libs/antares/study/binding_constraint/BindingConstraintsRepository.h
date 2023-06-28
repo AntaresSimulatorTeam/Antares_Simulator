@@ -182,7 +182,7 @@ private:
     bool internalSaveToFolder(Data::BindingConstraintSaver::EnvForSaving& env) const;
 
     //! All constraints
-    Data::BindingConstraintsRepository::Vector pList;
+    Data::BindingConstraintsRepository::Vector constraints_;
 
     void initializeTsNumbers();
 

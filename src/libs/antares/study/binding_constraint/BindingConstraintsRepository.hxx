@@ -10,32 +10,32 @@
 namespace Antares::Data {
 
 inline uint BindingConstraintsRepository::size() const {
-    return (uint) pList.size();
+    return (uint) constraints_.size();
 }
 
 inline bool BindingConstraintsRepository::empty() const {
-    return pList.empty();
+    return constraints_.empty();
 }
 
 template<class PredicateT>
 inline void BindingConstraintsRepository::each(const PredicateT &predicate) {
-    uint count = (uint) pList.size();
+    uint count = (uint) constraints_.size();
     for (uint i = 0; i != count; ++i)
-        predicate(*(pList[i]));
+        predicate(*(constraints_[i]));
 }
 
 template<class PredicateT>
 inline void BindingConstraintsRepository::each(const PredicateT &predicate) const {
-    uint count = (uint) pList.size();
+    uint count = (uint) constraints_.size();
     for (uint i = 0; i != count; ++i)
-        predicate(*(pList[i].get()));
+        predicate(*(constraints_[i].get()));
 }
 
 template<class PredicateT>
 inline void BindingConstraintsRepository::eachActive(const PredicateT &predicate) const {
-    uint count = (uint) pList.size();
+    uint count = (uint) constraints_.size();
     for (uint i = 0; i != count; ++i) {
-        auto &constraint = *(pList[i].get());
+        auto &constraint = *(constraints_[i].get());
         if (constraint.isActive())
             predicate(constraint);
     }
