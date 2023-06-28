@@ -114,7 +114,7 @@ bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& a
             {
                 logs.debug() << "areaname : " << areaname << " ; clustername : " << (*it);
                 YString res = "Area : " + areaname + " cluster name : " + (*it).c_str();
-                areaClusterNames.try_emplace(std::pair<int, YString>(count++, res));
+                areaClusterNames.try_emplace(count++, res);
             }
             resultat = false;
         }
