@@ -496,7 +496,7 @@ set(SRC
     # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
     Enum.hpp
     Enum.hxx
-)
+        study/binding_constraint/BindingConstraintGroup.cpp study/binding_constraint/BindingConstraintGroup.h study/binding_constraint/BindingConstraintGroupRepository.cpp study/binding_constraint/BindingConstraintGroupRepository.h)
 
 
 add_library( libantares-core-calendar
