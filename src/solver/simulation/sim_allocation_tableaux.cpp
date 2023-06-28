@@ -145,6 +145,7 @@ void SIM_AllocationTableaux()
             intercoCount * sizeof(NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION*));
     }
 
+    NumeroChroniquesTireesParGroup.resize(study.maxNbYearsInParallel);
     AllocateResultsForEconomicMode();
 }
 
@@ -194,5 +195,6 @@ void SIM_DesallocationTableaux()
     MemFree(DonneesParPays);
     DonneesParPays = NULL;
 
+    NumeroChroniquesTireesParGroup.clear();
     DeallocateResultsForEconomicMode();
 }

@@ -27,7 +27,6 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_H__
 #define __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_H__
 
-#include "../../fwd.h"
 #include "../../xcast.h"
 
 namespace Antares

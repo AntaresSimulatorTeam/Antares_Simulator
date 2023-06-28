@@ -39,3 +39,5 @@ PROBLEME_HORAIRE_ADEQUATION ProblemeHoraireAdequation;
 VALEURS_ANNUELLES** ValeursAnnuellesAdequation;
 
 RESULTATS_PAR_INTERCONNEXION** ResultatsParInterconnexion;
+
+std::vector<std::map<std::string, unsigned>> NumeroChroniquesTireesParGroup; //Vector size = num_parallel_year

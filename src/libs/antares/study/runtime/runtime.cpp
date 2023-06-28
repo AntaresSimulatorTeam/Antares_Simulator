@@ -26,6 +26,7 @@
 */
 
 #include "../../sys/mem-wrapper.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
 #include "runtime.h"
 #include "../parameters.h"
 #include "../../date.h"
@@ -41,9 +42,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos& r)
 {
@@ -159,17 +158,18 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
     rti.clusterCount = b.enabledClusterCount();
     assert(rti.linkCount < 50000000 and "Seems a bit large...");    // arbitrary value
     assert(rti.clusterCount < 50000000 and "Seems a bit large..."); // arbitrary value
-    rti.bounds.resize(1, b.matrix().height);
-    rti.bounds.pasteToColumn(0, b.matrix()[C]);
 
-    rti.linkWeight = new double[rti.linkCount];
-    rti.linkOffset = new int[rti.linkCount];
-    rti.linkIndex = new long[rti.linkCount];
+    rti.rhsTimeSeries.resize(b.RHSTimeSeries().width, b.RHSTimeSeries().height);
+    rti.rhsTimeSeries.copyFrom(b.RHSTimeSeries());
 
-    rti.clusterWeight = new double[rti.clusterCount];
-    rti.clusterOffset = new int[rti.clusterCount];
-    rti.clusterIndex = new long[rti.clusterCount];
-    rti.clustersAreaIndex = new long[rti.clusterCount];
+    rti.linkWeight.resize(rti.linkCount);
+    rti.linkOffset.resize(rti.linkCount);
+    rti.linkIndex.resize(rti.linkCount);
+
+    rti.clusterWeight.resize(rti.clusterCount);
+    rti.clusterOffset.resize(rti.clusterCount);
+    rti.clusterIndex.resize(rti.clusterCount);
+    rti.clustersAreaIndex.resize(rti.clusterCount);
 
     b.initLinkArrays(rti.linkWeight,
                      rti.clusterWeight,
@@ -178,6 +178,7 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
                      rti.linkIndex,
                      rti.clusterIndex,
                      rti.clustersAreaIndex);
+    rti.group = b.group();
 }
 
 void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimits& limits)
@@ -308,32 +309,12 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
 }
 
-BindingConstraintRTI::BindingConstraintRTI() :
- linkWeight(nullptr),
- linkOffset(nullptr),
- linkIndex(nullptr),
- clusterWeight(nullptr),
- clusterOffset(nullptr),
- clusterIndex(nullptr)
-{
-}
-
-BindingConstraintRTI::~BindingConstraintRTI()
-{
-    delete[] linkWeight;
-    delete[] linkOffset;
-    delete[] linkIndex;
-    delete[] clusterWeight;
-    delete[] clusterOffset;
-    delete[] clusterIndex;
-}
-
-void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& list)
+void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsRepository& list)
 {
     // Calculating the total number of binding constraints
-    bindingConstraintCount = 0;
+    unsigned bindingConstraintCount = 0;
 
-    list.eachEnabled([&](const BindingConstraint& constraint) {
+    list.eachEnabled([&bindingConstraintCount](const BindingConstraint& constraint) {
         bindingConstraintCount
           += ((constraint.operatorType() == BindingConstraint::opBoth) ? 2 : 1);
     });
@@ -350,13 +331,14 @@ void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& lis
         logs.info() << "Optimizing " << bindingConstraintCount << " binding constraints";
     }
 
-    bindingConstraint = new BindingConstraintRTI[bindingConstraintCount];
+    bindingConstraints.clear();
+    bindingConstraints.resize(bindingConstraintCount);
 
-    uint index = 0;
-    list.eachEnabled([&](const BindingConstraint& constraint) {
+    unsigned index = 0;
+    list.eachEnabled([this, &index, &bindingConstraintCount](const BindingConstraint& constraint) {
         assert(index < bindingConstraintCount and "Not enough slots for binding constraints");
 
-        auto& rti = bindingConstraint[index];
+        auto& rti = bindingConstraints[index];
         rti.type = constraint.type();
         switch (constraint.operatorType())
         {
@@ -379,15 +361,15 @@ void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& lis
         {
             CopyBCData<BindingConstraint::columnInferior>(rti, constraint);
             ++index;
-            bindingConstraint[index].type = constraint.type();
-            CopyBCData<BindingConstraint::columnSuperior>(bindingConstraint[index], constraint);
+            bindingConstraints[index].type = constraint.type();
+            CopyBCData<BindingConstraint::columnSuperior>(bindingConstraints[index], constraint);
             break;
         }
         case BindingConstraint::opUnknown:
         {
             rti.operatorType = '?';
             rti.linkCount = 0;
-            rti.bounds.clear();
+            rti.rhsTimeSeries.clear();
             break;
         }
         case BindingConstraint::opMax:
@@ -395,9 +377,6 @@ void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& lis
         }
         ++index;
     });
-
-    logs.debug() << "Releasing " << (list.memoryUsage() / 1024) << "Ko unused";
-    list.clear();
 }
 
 StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
@@ -407,8 +386,6 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  nbMonthsPerYear(0),
  parameters(nullptr),
  timeseriesNumberYear(nullptr),
- bindingConstraintCount(0),
- bindingConstraint(nullptr),
  thermalPlantTotalCount(0),
  thermalPlantTotalCountMustRun(0),
  quadraticOptimizationHasFailed(false)
@@ -506,7 +483,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
     logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
     logs.info() << "     short-term storages: " << shortTermStorageCount;
-    logs.info() << "     binding constraints: " << bindingConstraintCount;
+    logs.info() << "     binding constraints: " << bindingConstraints.size();
     logs.info() << "     geographic trimming:" << (gd.geographicTrimming ? "true" : "false");
     logs.info() << "     memory : " << ((study.memoryUsage()) / 1024 / 1024) << "Mo";
     logs.info();
@@ -524,17 +501,10 @@ static bool isBindingConstraintTypeInequality(const Data::BindingConstraintRTI& 
     return bc.operatorType == '<' || bc.operatorType == '>';
 }
 
-uint StudyRuntimeInfos::getNumberOfInequalityBindingConstraints() const
-{
-    const auto* firstBC = this->bindingConstraint;
-    const auto* lastBC = firstBC + this->bindingConstraintCount;
-    return static_cast<uint>(std::count_if(firstBC, lastBC, isBindingConstraintTypeInequality));
-}
-
 std::vector<uint> StudyRuntimeInfos::getIndicesForInequalityBindingConstraints() const
 {
-    const auto* firstBC = this->bindingConstraint;
-    const auto* lastBC = firstBC + this->bindingConstraintCount;
+    const auto firstBC = bindingConstraints.begin();
+    const auto lastBC = bindingConstraints.end();
 
     std::vector<uint> indices;
     for (auto bc = firstBC; bc < lastBC; bc++)
@@ -644,17 +614,6 @@ StudyRuntimeInfos::~StudyRuntimeInfos()
     logs.debug() << "Releasing runtime data";
 
     delete[] timeseriesNumberYear;
-    delete[] bindingConstraint;
-}
-
-Yuni::uint64 StudyRuntimeInfosMemoryUsage(StudyRuntimeInfos* r)
-{
-    if (r)
-    {
-        return sizeof(StudyRuntimeInfos) + sizeof(AreaLink*) * r->interconnectionsCount()
-               + sizeof(BindingConstraint*) * r->bindingConstraintCount;
-    }
-    return 0;
 }
 
 void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& u)
@@ -663,9 +622,6 @@ void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& u)
     u.study.areas.each([&](const Data::Area& area) {
         u.requiredMemoryForInput += sizeof(AreaLink*) * area.links.size();
     });
-
-    // Binding constraints
-    // see BindConstList::estimateMemoryUsage
 }
 
 #ifndef NDEBUG
@@ -697,5 +653,4 @@ void StudyRuntimeInfos::disableAllFilters(Study& study)
     });
 }
 
-} // namespace Data
 } // namespace Antares

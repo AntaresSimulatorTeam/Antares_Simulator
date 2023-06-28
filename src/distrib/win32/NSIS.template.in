@@ -348,18 +348,6 @@ ${Mementosectionend}
 
 
 
-${MementoSection} "$(LngResExamples)" SecExamples
-	SetShellVarContext all
-	SetDetailsPrint textonly
-	DetailPrint "$(LngResInstallExamples)"
-	SetDetailsPrint listonly
-
-	SectionIn 1
-
-	SetOverwrite on
-	!include "@PROJECT_SOURCE_DIR@\distrib\win32\examplesfiles.inc.nsh"
-${Mementosectionend}
-
 ${MementoSection} "$(LngResSources)" SecSources
 	SetShellVarContext all
 	SetDetailsPrint textonly
@@ -434,7 +422,6 @@ sectionend
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
 !insertmacro MUI_DESCRIPTION_TEXT ${SecCore} "The core files required by Antares"
-#!insertmacro MUI_DESCRIPTION_TEXT ${SecExamples} "Examples"
 #!insertmacro MUI_DESCRIPTION_TEXT ${SecSources} "Source files"
 !insertmacro MUI_DESCRIPTION_TEXT ${SecMenuShortcuts} "Create a shortcut in the Start Menu"
 !insertmacro MUI_DESCRIPTION_TEXT ${SecDekstopShortcuts} "Create a shortcut to the Desktop"
@@ -563,7 +550,6 @@ section Uninstall
 	delete "$DESKTOP\Antares ${CMAKE_VERSION}.lnk"
 
 	rmdir "$INSTDIR\Documentation"
-	rmdir "$INSTDIR\Resources\Examples"
 	rmdir "$INSTDIR\Resources"
 	rmdir "$INSTDIR\bin"
 	rmdir "$INSTDIR"

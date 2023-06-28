@@ -44,6 +44,7 @@
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
+#include "BindingConstraintsTimeSeriesNumbersWriter.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -379,7 +380,8 @@ void ISimulation<Impl>::run()
         ImplementationType::variables.simulationEnd();
 
         // Export ts-numbers into output
-        TimeSeriesNumbers::StoreTimeseriesIntoOuput(study);
+        BindingConstraintsTimeSeriesNumbersWriter time_series_writer(pResultWriter);
+        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, time_series_writer);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
@@ -668,7 +670,6 @@ void ISimulation<Impl>::estimateMemoryForWeeklyPb(Antares::Data::StudyMemoryUsag
 
         requiredMemoryForWeeklyPb += sizeof(PALIERS_THERMIQUES);
         requiredMemoryForWeeklyPb += sizeof(ENERGIES_ET_PUISSANCES_HYDRAULIQUES);
-        requiredMemoryForWeeklyPb += sizeof(COUTS_MARGINAUX_ZONES_DE_RESERVE);
         requiredMemoryForWeeklyPb += sizeof(RESERVE_JMOINS1);
         requiredMemoryForWeeklyPb += sizeof(RESULTATS_HORAIRES);
         requiredMemoryForWeeklyPb += nbPaliers * sizeof(int);

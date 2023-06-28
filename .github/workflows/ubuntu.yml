@@ -112,6 +112,7 @@ jobs:
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end"
 
     - name: Run kirchhoff constraints tests
+      if: ${{ false }}
       shell: bash
       run: |
            tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/

@@ -384,7 +384,7 @@ private:
     /*!
     ** \brief add one constraint to the study
     */
-    Antares::Data::BindingConstraint* addConstraint(const Data::ConstraintName& name,
+    std::shared_ptr<Antares::Data::BindingConstraint> addConstraint(const Data::ConstraintName& name,
                                                     const Yuni::String& op,
                                                     const Yuni::String& type,
                                                     const WeightMap& weights,
