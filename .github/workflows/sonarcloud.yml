@@ -28,7 +28,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: true
 
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1.2
@@ -102,6 +101,11 @@ jobs:
         run: |
             python -m pip install --upgrade pip
             pip3 install -r src/tests/examples/requirements.txt
+
+      - name: Init submodule
+        run: |
+          git submodule update --init src/antares-deps
+          git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
 
       - name: Configure
         run: |
