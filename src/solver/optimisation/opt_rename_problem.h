@@ -6,30 +6,27 @@ const std::string SEPARATOR = "::";
 const std::string AREA_SEP = "$$";
 struct BuildNamer
 {
-    BuildNamer(bool name)
+    std::vector<std::string>& target_;
+    BuildNamer(bool name, std::vector<std::string>& target) : target_(target)
     {
         if (name)
         {
-            Run = BuildName;
-        }
-        else
-        {
-            Run = ReturnEmptyString;
+            Run = std::bind(&BuildNamer::BuildName,
+                            this,
+                            std::placeholders::_1,
+                            std::placeholders::_2,
+                            std::placeholders::_3,
+                            std::placeholders::_4);
         }
     }
-    std::function<std::string(const std::string&, const std::string&, const std::string&)> Run;
+    std::function<void(const std::string&, const std::string&, const std::string&, unsigned index)>
+      Run = [](const std::string&, const std::string&, const std::string&, unsigned index) {};
 
 private:
-    static std::string BuildName(const std::string& name,
-                                 const std::string& location,
-                                 const std::string& timeIdentifier);
-
-    static std::string ReturnEmptyString(const std::string& name,
-                                         const std::string& location,
-                                         const std::string& timeIdentifier)
-    {
-        return "";
-    }
+    void BuildName(const std::string& name,
+                   const std::string& location,
+                   const std::string& timeIdentifier,
+                   unsigned index);
 };
 struct CurrentAssetsStorage
 {
@@ -39,8 +36,10 @@ struct CurrentAssetsStorage
     std::string destination_;
     std::string area_;
     BuildNamer build_namer_;
-    CurrentAssetsStorage(PROBLEME_ANTARES_A_RESOUDRE* problem, bool namedProblems) :
-     problem_(problem), build_namer_(namedProblems)
+    CurrentAssetsStorage(PROBLEME_ANTARES_A_RESOUDRE* problem,
+                         bool namedProblems,
+                         std::vector<std::string>& target) :
+     problem_(problem), build_namer_(namedProblems, target)
     {
     }
     void UpdateTimeStep(int timeStep)
@@ -57,7 +56,10 @@ struct CurrentAssetsStorage
 class VariableNamer : public CurrentAssetsStorage
 {
 public:
-    using CurrentAssetsStorage::CurrentAssetsStorage;
+    VariableNamer(PROBLEME_ANTARES_A_RESOUDRE* problem, bool namedProblems) :
+     CurrentAssetsStorage(problem, namedProblems, problem->NomDesVariables)
+    {
+    }
     void DispatchableProduction(int var, const std::string& clusterName);
     void NODU(int var, const std::string& clusterName);
     void NumberStoppingDispatchableUnits(int var, const std::string& clusterName);
@@ -97,7 +99,10 @@ private:
 class ConstraintNamer : public CurrentAssetsStorage
 {
 public:
-    using CurrentAssetsStorage::CurrentAssetsStorage;
+    ConstraintNamer(PROBLEME_ANTARES_A_RESOUDRE* problem, bool namedProblems) :
+     CurrentAssetsStorage(problem, namedProblems, problem->NomDesContraintes)
+    {
+    }
     void FlowDissociation(const std::string& origin, const std::string& destination);
     void AreaBalance();
     void FictiveLoads();
