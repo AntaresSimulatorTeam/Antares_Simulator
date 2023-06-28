@@ -59,13 +59,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
     double* Pi = ProblemeAResoudre->Pi;
     int* Colonne = ProblemeAResoudre->Colonne;
-    auto constraintNamer = ConstraintsNamerFactory(ProblemeAResoudre, problemeHebdo->NamedProblems);
+    ConstraintNamer constraintNamer(ProblemeAResoudre, problemeHebdo->NamedProblems);
     int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-        constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             double pminDUnGroupeDuPalierThermique
@@ -80,7 +80,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                constraintNamer->UpdateTimeStep(timeStepInYear);
+                constraintNamer.UpdateTimeStep(timeStepInYear);
                 CorrespondanceVarNativesVarOptim
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
@@ -121,7 +121,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     {
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-                        constraintNamer->PMaxDispatchableGeneration();
+                        constraintNamer.PMaxDispatchableGeneration();
                     }
                 }
                 else
@@ -164,7 +164,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     {
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
-                        constraintNamer->PMinDispatchableGeneration();
+                        constraintNamer.PMinDispatchableGeneration();
                     }
                 }
                 else
@@ -177,7 +177,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-        constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             const int palier
@@ -187,7 +187,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                constraintNamer->UpdateTimeStep(timeStepInYear);
+                constraintNamer.UpdateTimeStep(timeStepInYear);
                 CorrespondanceVarNativesVarOptim
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
@@ -264,7 +264,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     {
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-                        constraintNamer->ConsistenceNODU();
+                        constraintNamer.ConsistenceNODU();
                     }
                 }
                 else
@@ -277,7 +277,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-        constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             const int palier
@@ -287,7 +287,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                constraintNamer->UpdateTimeStep(timeStepInYear);
+                constraintNamer.UpdateTimeStep(timeStepInYear);
                 CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
@@ -332,7 +332,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     {
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-                        constraintNamer->MinUpTime();
+                        constraintNamer.MinUpTime();
                     }
                 }
                 else
@@ -345,7 +345,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-        constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
@@ -359,7 +359,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                constraintNamer->UpdateTimeStep(timeStepInYear);
+                constraintNamer.UpdateTimeStep(timeStepInYear);
                 CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
@@ -431,7 +431,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
-                        constraintNamer->MinUpTime();
+                        constraintNamer.MinUpTime();
                     }
                 }
                 else
@@ -444,7 +444,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-        constraintNamer->UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             int DureeMinimaleDArretDUnGroupeDuPalierThermique
@@ -456,7 +456,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                constraintNamer->UpdateTimeStep(timeStepInYear);
+                constraintNamer.UpdateTimeStep(timeStepInYear);
                 CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
@@ -515,7 +515,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-                        constraintNamer->MinDownTime();
+                        constraintNamer.MinDownTime();
                     }
                 }
                 else

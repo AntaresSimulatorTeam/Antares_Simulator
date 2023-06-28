@@ -4,7 +4,33 @@
 
 const std::string SEPARATOR = "::";
 const std::string AREA_SEP = "$$";
+struct BuildNamer
+{
+    BuildNamer(bool name)
+    {
+        if (name)
+        {
+            Run = BuildName;
+        }
+        else
+        {
+            Run = ReturnEmptyString;
+        }
+    }
+    std::function<std::string(const std::string&, const std::string&, const std::string&)> Run;
 
+private:
+    static std::string BuildName(const std::string& name,
+                                 const std::string& location,
+                                 const std::string& timeIdentifier);
+
+    static std::string ReturnEmptyString(const std::string& name,
+                                         const std::string& location,
+                                         const std::string& timeIdentifier)
+    {
+        return "";
+    }
+};
 struct CurrentAssetsStorage
 {
     PROBLEME_ANTARES_A_RESOUDRE* problem_;
@@ -12,7 +38,9 @@ struct CurrentAssetsStorage
     std::string origin_;
     std::string destination_;
     std::string area_;
-    CurrentAssetsStorage(PROBLEME_ANTARES_A_RESOUDRE* problem) : problem_(problem)
+    BuildNamer build_namer_;
+    CurrentAssetsStorage(PROBLEME_ANTARES_A_RESOUDRE* problem, bool namedProblems) :
+     problem_(problem), build_namer_(namedProblems)
     {
     }
     void UpdateTimeStep(int timeStep)
@@ -26,342 +54,77 @@ struct CurrentAssetsStorage
     }
 };
 
-class IVariableNamer : public CurrentAssetsStorage
+class VariableNamer : public CurrentAssetsStorage
 {
-protected:
+public:
+    using CurrentAssetsStorage::CurrentAssetsStorage;
+    void DispatchableProduction(int var, const std::string& clusterName);
+    void NODU(int var, const std::string& clusterName);
+    void NumberStoppingDispatchableUnits(int var, const std::string& clusterName);
+    void NumberStartingDispatchableUnits(int var, const std::string& clusterName);
+    void NumberBreakingDownDispatchableUnits(int var, const std::string& clusterName);
+    void NTCDirect(int var, const std::string& origin, const std::string& destination);
+    void IntercoDirectCost(int var, const std::string& origin, const std::string& destination);
+    void IntercoIndirectCost(int var, const std::string& origin, const std::string& destination);
+    void ShortTermStorageInjection(int var, const std::string& shortTermStorageName);
+    void ShortTermStorageWithdrawal(int var, const std::string& shortTermStorageName);
+    void ShortTermStorageLevel(int var, const std::string& shortTermStorageName);
+    void HydProd(int var);
+    void HydProdDown(int var);
+    void HydProdUp(int var);
+    void Pumping(int var);
+    void HydroLevel(int var);
+    void Overflow(int var);
+    void FinalStorage(int var);
+    void LayerStorage(int var, int layerIndex);
+    void PositiveUnsuppliedEnergy(int var);
+    void NegativeUnsuppliedEnergy(int var);
+    void AreaBalance(int var);
+
+private:
     void SetThermalClusterVariableName(int var,
                                        const std::string& variableType,
                                        const std::string& clusterName);
+    void SetAreaVariableName(int var, const std::string& variableType);
+
+    void SetAreaVariableName(int var, const std::string& variableType, int layerIndex);
     void SetLinkVariableName(int var, const std::string& variableType);
     void SetShortTermStorageVariableName(int var,
                                          const std::string& variableType,
                                          const std::string& shortTermStorageName);
-    void SetAreaVariableName(int var, const std::string& variableType);
-    void SetAreaVariableName(int var, const std::string& variableType, int layerIndex);
-
-public:
-    IVariableNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : CurrentAssetsStorage(problem)
-    {
-    }
-
-    virtual void DispatchableProduction(int var, const std::string& clusterName) = 0;
-    virtual void NODU(int var, const std::string& clusterName) = 0;
-    virtual void NumberStoppingDispatchableUnits(int var, const std::string& clusterName) = 0;
-    virtual void NumberStartingDispatchableUnits(int var, const std::string& clusterName) = 0;
-    virtual void NumberBreakingDownDispatchableUnits(int var, const std::string& clusterName) = 0;
-    virtual void NTCDirect(int var, const std::string& origin, const std::string& destination) = 0;
-    virtual void IntercoDirectCost(int var,
-                                   const std::string& origin,
-                                   const std::string& destination)
-      = 0;
-    virtual void IntercoIndirectCost(int var,
-                                     const std::string& origin,
-                                     const std::string& destination)
-      = 0;
-    virtual void ShortTermStorageInjection(int var, const std::string& shortTermStorageName) = 0;
-    virtual void ShortTermStorageWithdrawal(int var, const std::string& shortTermStorageName) = 0;
-    virtual void ShortTermStorageLevel(int var, const std::string& shortTermStorageName) = 0;
-    virtual void HydProd(int var) = 0;
-    virtual void HydProdDown(int var) = 0;
-    virtual void HydProdUp(int var) = 0;
-    virtual void Pumping(int var) = 0;
-    virtual void HydroLevel(int var) = 0;
-    virtual void Overflow(int var) = 0;
-    virtual void FinalStorage(int var) = 0;
-    virtual void LayerStorage(int var, int layerIndex) = 0;
-    virtual void PositiveUnsuppliedEnergy(int var) = 0;
-    virtual void NegativeUnsuppliedEnergy(int var) = 0;
-    virtual void AreaBalance(int var) = 0;
 };
-class VariableNamer : public IVariableNamer
+
+class ConstraintNamer : public CurrentAssetsStorage
 {
 public:
-    using IVariableNamer::IVariableNamer;
-    void DispatchableProduction(int var, const std::string& clusterName) override;
-    void NODU(int var, const std::string& clusterName) override;
-    void NumberStoppingDispatchableUnits(int var, const std::string& clusterName) override;
-    void NumberStartingDispatchableUnits(int var, const std::string& clusterName) override;
-    void NumberBreakingDownDispatchableUnits(int var, const std::string& clusterName) override;
-    void NTCDirect(int var, const std::string& origin, const std::string& destination) override;
-    void IntercoDirectCost(int var,
-                           const std::string& origin,
-                           const std::string& destination) override;
-    void IntercoIndirectCost(int var,
-                             const std::string& origin,
-                             const std::string& destination) override;
-    void ShortTermStorageInjection(int var, const std::string& shortTermStorageName) override;
-    void ShortTermStorageWithdrawal(int var, const std::string& shortTermStorageName) override;
-    void ShortTermStorageLevel(int var, const std::string& shortTermStorageName) override;
-    void HydProd(int var) override;
-    void HydProdDown(int var) override;
-    void HydProdUp(int var) override;
-    void Pumping(int var) override;
-    void HydroLevel(int var) override;
-    void Overflow(int var) override;
-    void FinalStorage(int var) override;
-    void LayerStorage(int var, int layerIndex) override;
-    void PositiveUnsuppliedEnergy(int var) override;
-    void NegativeUnsuppliedEnergy(int var) override;
-    void AreaBalance(int var) override;
-};
-class EmptyVariableNamer : public IVariableNamer
-{
-public:
-    using IVariableNamer::IVariableNamer;
-    void DispatchableProduction(int var, const std::string& clusterName) override
-    {
-        // keep empty
-    }
-    void NODU(int var, const std::string& clusterName) override
-    {
-        // keep empty
-    }
-    void NumberStoppingDispatchableUnits(int var, const std::string& clusterName) override
-    {
-        // keep empty
-    }
-    void NumberStartingDispatchableUnits(int var, const std::string& clusterName) override
-    {
-        // keep empty
-    }
-    void NumberBreakingDownDispatchableUnits(int var, const std::string& clusterName) override
-    {
-        // keep empty
-    }
-    void NTCDirect(int var, const std::string& origin, const std::string& destination) override
-    {
-        // keep empty
-    }
-    void IntercoDirectCost(int var,
-                           const std::string& origin,
-                           const std::string& destination) override
-    {
-        // keep empty
-    }
-    void IntercoIndirectCost(int var,
-                             const std::string& origin,
-                             const std::string& destination) override
-    {
-        // keep empty
-    }
-    void ShortTermStorageInjection(int var, const std::string& shortTermStorageName) override
-    {
-        // keep empty
-    }
-    void ShortTermStorageWithdrawal(int var, const std::string& shortTermStorageName) override
-    {
-        // keep empty
-    }
-    void ShortTermStorageLevel(int var, const std::string& shortTermStorageName) override
-    {
-        // keep empty
-    }
-    void HydProd(int var) override
-    {
-        // keep empty
-    }
-    void HydProdDown(int var) override
-    {
-        // keep empty
-    }
-    void HydProdUp(int var) override
-    {
-        // keep empty
-    }
-    void Pumping(int var) override
-    {
-        // keep empty
-    }
-    void HydroLevel(int var) override
-    {
-        // keep empty
-    }
-    void Overflow(int var) override
-    {
-        // keep empty
-    }
-    void FinalStorage(int var) override
-    {
-        // keep empty
-    }
-    void LayerStorage(int var, int layerIndex) override
-    {
-        // keep empty
-    }
-    void PositiveUnsuppliedEnergy(int var) override
-    {
-        // keep empty
-    }
-    void NegativeUnsuppliedEnergy(int var) override
-    {
-        // keep empty
-    }
-    void AreaBalance(int var) override
-    {
-        // keep empty
-    }
-};
-using SPVariableNamer = std::shared_ptr<IVariableNamer>;
-SPVariableNamer VariablesNamerFactory(PROBLEME_ANTARES_A_RESOUDRE* problem, bool namedProblem);
+    using CurrentAssetsStorage::CurrentAssetsStorage;
+    void FlowDissociation(const std::string& origin, const std::string& destination);
+    void AreaBalance();
+    void FictiveLoads();
+    void HydroPower();
+    void HydroPowerSmoothingUsingVariationSum();
+    void HydroPowerSmoothingUsingVariationMaxDown();
+    void HydroPowerSmoothingUsingVariationMaxUp();
+    void MinHydroPower();
+    void MaxHydroPower();
+    void MaxPumping();
+    void AreaHydroLevel();
+    void FinalStockEquivalent();
+    void FinalStockExpression();
+    void MinUpTime();
+    void MinDownTime();
+    void PMaxDispatchableGeneration();
+    void PMinDispatchableGeneration();
+    void ConsistenceNODU();
+    void ShortTermStorageLevel(const std::string& name);
+    void BindingConstraintHour(const std::string& name);
+    void BindingConstraintDay(const std::string& name);
+    void BindingConstraintWeek(const std::string& name);
 
-class IConstraintNamer : public CurrentAssetsStorage
-{
-protected:
+private:
     void nameWithTimeGranularity(const std::string& name, const std::string& type);
+};
 
-public:
-    IConstraintNamer(PROBLEME_ANTARES_A_RESOUDRE* problem) : CurrentAssetsStorage(problem)
-    {
-    }
-    virtual void FlowDissociation(const std::string& origin, const std::string& destination) = 0;
-    virtual void AreaBalance() = 0;
-    virtual void FictiveLoads() = 0;
-    virtual void HydroPower() = 0;
-    virtual void HydroPowerSmoothingUsingVariationSum() = 0;
-    virtual void HydroPowerSmoothingUsingVariationMaxDown() = 0;
-    virtual void HydroPowerSmoothingUsingVariationMaxUp() = 0;
-    virtual void MinHydroPower() = 0;
-    virtual void MaxHydroPower() = 0;
-    virtual void MaxPumping() = 0;
-    virtual void AreaHydroLevel() = 0;
-    virtual void FinalStockEquivalent() = 0;
-    virtual void FinalStockExpression() = 0;
-    virtual void MinUpTime() = 0;
-    virtual void MinDownTime() = 0;
-    virtual void PMaxDispatchableGeneration() = 0;
-    virtual void PMinDispatchableGeneration() = 0;
-    virtual void ConsistenceNODU() = 0;
-    virtual void ShortTermStorageLevel(const std::string& name) = 0;
-    virtual void BindingConstraintHour(const std::string& name) = 0;
-    virtual void BindingConstraintDay(const std::string& name) = 0;
-    virtual void BindingConstraintWeek(const std::string& name) = 0;
-};
-class ConstraintNamer : public IConstraintNamer
-{
-public:
-    using IConstraintNamer::IConstraintNamer;
-    void FlowDissociation(const std::string& origin, const std::string& destination) override;
-    void AreaBalance() override;
-    void FictiveLoads() override;
-    void HydroPower() override;
-    void HydroPowerSmoothingUsingVariationSum() override;
-    void HydroPowerSmoothingUsingVariationMaxDown() override;
-    void HydroPowerSmoothingUsingVariationMaxUp() override;
-    void MinHydroPower() override;
-    void MaxHydroPower() override;
-    void MaxPumping() override;
-    void AreaHydroLevel() override;
-    void FinalStockEquivalent() override;
-    void FinalStockExpression() override;
-    void MinUpTime() override;
-    void MinDownTime() override;
-    void PMaxDispatchableGeneration() override;
-    void PMinDispatchableGeneration() override;
-    void ConsistenceNODU() override;
-    void ShortTermStorageLevel(const std::string& name) override;
-    void BindingConstraintHour(const std::string& name) override;
-    void BindingConstraintDay(const std::string& name) override;
-    void BindingConstraintWeek(const std::string& name) override;
-};
-class EmptyConstraintNamer : public IConstraintNamer
-{
-public:
-    using IConstraintNamer::IConstraintNamer;
-    void FlowDissociation(const std::string& origin, const std::string& destination) override
-    {
-        // keep empty
-    }
-    void AreaBalance() override
-    {
-        // keep empty
-    }
-    void FictiveLoads() override
-    {
-        // keep empty
-    }
-    void HydroPower() override
-    {
-        // keep empty
-    }
-    void HydroPowerSmoothingUsingVariationSum() override
-    {
-        // keep empty
-    }
-    void HydroPowerSmoothingUsingVariationMaxDown() override
-    {
-        // keep empty
-    }
-    void HydroPowerSmoothingUsingVariationMaxUp() override
-    {
-        // keep empty
-    }
-    void MinHydroPower() override
-    {
-        // keep empty
-    }
-    void MaxHydroPower() override
-    {
-        // keep empty
-    }
-    void MaxPumping() override
-    {
-        // keep empty
-    }
-    void AreaHydroLevel() override
-    {
-        // keep empty
-    }
-    void FinalStockEquivalent() override
-    {
-        // keep empty
-    }
-    void FinalStockExpression() override
-    {
-        // keep empty
-    }
-    void MinUpTime() override
-    {
-        // keep empty
-    }
-    void MinDownTime() override
-    {
-        // keep empty
-    }
-    void PMaxDispatchableGeneration() override
-    {
-        // keep empty
-    }
-    void PMinDispatchableGeneration() override
-    {
-        // keep empty
-    }
-    void ConsistenceNODU() override
-    {
-        // keep empty
-    }
-    void ShortTermStorageLevel(const std::string& name) override
-    {
-        // keep empty
-    }
-    void BindingConstraintHour(const std::string& name) override
-    {
-        // keep empty
-    }
-    void BindingConstraintDay(const std::string& name) override
-    {
-        // keep empty
-    }
-    void BindingConstraintWeek(const std::string& name) override
-    {
-        // keep empty
-    }
-};
-using SPConstraintsNamer = std::shared_ptr<IConstraintNamer>;
-SPConstraintsNamer ConstraintsNamerFactory(PROBLEME_ANTARES_A_RESOUDRE* problem, bool namedProblem);
-
-std::string BuildName(const std::string& name,
-                      const std::string& location,
-                      const std::string& timeIdentifier);
 inline std::string TimeIdentifier(int timeStep, const std::string& timeStepType)
 {
     return timeStepType + "<" + std::to_string(timeStep) + ">";

@@ -9,39 +9,39 @@ const std::map<std::string, std::string> BindingConstraintTimeGranularity
 const std::string LINK("link");
 const std::string AREA("area");
 
-void IVariableNamer::SetLinkVariableName(int var, const std::string& variableType)
+void VariableNamer::SetLinkVariableName(int var, const std::string& variableType)
 {
     if (problem_->NomDesVariables[var].empty())
     {
         const auto location = origin_ + AREA_SEP + destination_;
-        problem_->NomDesVariables[var] = BuildName(
+        problem_->NomDesVariables[var] = build_namer_.Run(
           variableType, LocationIdentifier(location, LINK), TimeIdentifier(timeStep_, HOUR));
     }
 }
 
-void IVariableNamer::SetAreaVariableName(int var, const std::string& variableType)
+void VariableNamer::SetAreaVariableName(int var, const std::string& variableType)
 {
-    problem_->NomDesVariables[var]
-      = BuildName(variableType, LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR));
+    problem_->NomDesVariables[var] = build_namer_.Run(
+      variableType, LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR));
 }
 
-void IVariableNamer::SetAreaVariableName(int var, const std::string& variableType, int layerIndex)
+void VariableNamer::SetAreaVariableName(int var, const std::string& variableType, int layerIndex)
 {
-    problem_->NomDesVariables[var] = BuildName(
+    problem_->NomDesVariables[var] = build_namer_.Run(
       variableType,
       LocationIdentifier(area_, AREA) + SEPARATOR + "Layer<" + std::to_string(layerIndex) + ">",
       TimeIdentifier(timeStep_, HOUR));
 }
 
-void IVariableNamer::SetThermalClusterVariableName(int var,
-                                                   const std::string& variableType,
-                                                   const std::string& clusterName)
+void VariableNamer::SetThermalClusterVariableName(int var,
+                                                  const std::string& variableType,
+                                                  const std::string& clusterName)
 {
     const auto location
       = LocationIdentifier(area_, AREA) + SEPARATOR + "ThermalCluster" + "<" + clusterName + ">";
 
     problem_->NomDesVariables[var]
-      = BuildName(variableType, location, TimeIdentifier(timeStep_, HOUR));
+      = build_namer_.Run(variableType, location, TimeIdentifier(timeStep_, HOUR));
 }
 
 void VariableNamer::DispatchableProduction(int var, const std::string& clusterName)
@@ -94,14 +94,14 @@ void VariableNamer::IntercoIndirectCost(int var,
     SetLinkVariableName(var, "IntercoIndirectCost");
 }
 
-void IVariableNamer::SetShortTermStorageVariableName(int var,
-                                                     const std::string& variableType,
-                                                     const std::string& shortTermStorageName)
+void VariableNamer::SetShortTermStorageVariableName(int var,
+                                                    const std::string& variableType,
+                                                    const std::string& shortTermStorageName)
 {
     const auto location = LocationIdentifier(area_, AREA) + SEPARATOR + "ShortTermStorage" + "<"
                           + shortTermStorageName + ">";
-    auto fullName = BuildName(variableType, location, TimeIdentifier(timeStep_, HOUR));
-    problem_->NomDesVariables[var] = fullName;
+    problem_->NomDesVariables[var]
+      = build_namer_.Run(variableType, location, TimeIdentifier(timeStep_, HOUR));
 }
 
 void VariableNamer::ShortTermStorageInjection(int var, const std::string& shortTermStorageName)
@@ -177,132 +177,132 @@ void VariableNamer::AreaBalance(int var)
 void ConstraintNamer::FlowDissociation(const std::string& origin, const std::string& destination)
 {
     problem_->NomDesContraintes[problem_->NombreDeContraintes - 1]
-      = BuildName("FlowDissociation",
-                  LocationIdentifier(origin + AREA_SEP + destination, LINK),
-                  TimeIdentifier(timeStep_, HOUR));
+      = build_namer_.Run("FlowDissociation",
+                         LocationIdentifier(origin + AREA_SEP + destination, LINK),
+                         TimeIdentifier(timeStep_, HOUR));
 }
 
 void ConstraintNamer::AreaBalance()
 {
-    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1]
-      = BuildName("AreaBalance", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR));
+    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = build_namer_.Run(
+      "AreaBalance", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR));
 }
 
 void ConstraintNamer::FictiveLoads()
 {
-    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1]
-      = BuildName("FictiveLoads", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR));
+    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = build_namer_.Run(
+      "FictiveLoads", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR));
 }
 
 void ConstraintNamer::HydroPower()
 {
-    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1]
-      = BuildName("HydroPower", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, WEEK));
+    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = build_namer_.Run(
+      "HydroPower", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, WEEK));
 }
 
 void ConstraintNamer::HydroPowerSmoothingUsingVariationSum()
 {
     problem_->NomDesContraintes[problem_->NombreDeContraintes - 1]
-      = BuildName("HydroPowerSmoothingUsingVariationSum",
-                  LocationIdentifier(area_, AREA),
-                  TimeIdentifier(timeStep_, HOUR));
+      = build_namer_.Run("HydroPowerSmoothingUsingVariationSum",
+                         LocationIdentifier(area_, AREA),
+                         TimeIdentifier(timeStep_, HOUR));
 }
 
 void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxDown()
 {
     problem_->NomDesContraintes[problem_->NombreDeContraintes - 1]
-      = BuildName("HydroPowerSmoothingUsingVariationMaxDown",
-                  LocationIdentifier(area_, AREA),
-                  TimeIdentifier(timeStep_, HOUR));
+      = build_namer_.Run("HydroPowerSmoothingUsingVariationMaxDown",
+                         LocationIdentifier(area_, AREA),
+                         TimeIdentifier(timeStep_, HOUR));
 }
 
 void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxUp()
 {
     problem_->NomDesContraintes[problem_->NombreDeContraintes - 1]
-      = BuildName("HydroPowerSmoothingUsingVariationMaxUp",
-                  LocationIdentifier(area_, AREA),
-                  TimeIdentifier(timeStep_, HOUR));
+      = build_namer_.Run("HydroPowerSmoothingUsingVariationMaxUp",
+                         LocationIdentifier(area_, AREA),
+                         TimeIdentifier(timeStep_, HOUR));
 }
 
 void ConstraintNamer::MinHydroPower()
 {
-    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = BuildName(
+    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = build_namer_.Run(
       "MinHydroPower", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, WEEK));
 }
 
 void ConstraintNamer::MaxHydroPower()
 {
-    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = BuildName(
+    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = build_namer_.Run(
       "MaxHydroPower", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, WEEK));
 }
 
 void ConstraintNamer::MaxPumping()
 {
-    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1]
-      = BuildName("MaxPumping", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, WEEK));
+    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = build_namer_.Run(
+      "MaxPumping", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, WEEK));
 }
 
 void ConstraintNamer::AreaHydroLevel()
 {
-    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = BuildName(
+    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = build_namer_.Run(
       "AreaHydroLevel", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR));
 }
 
 void ConstraintNamer::FinalStockEquivalent()
 {
-    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = BuildName(
+    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = build_namer_.Run(
       "FinalStockEquivalent", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR));
 }
 
 void ConstraintNamer::FinalStockExpression()
 {
-    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = BuildName(
+    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = build_namer_.Run(
       "FinalStockExpression", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR));
 }
 
-void IConstraintNamer::nameWithTimeGranularity(const std::string& name, const std::string& type)
+void ConstraintNamer::nameWithTimeGranularity(const std::string& name, const std::string& type)
 {
-    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1]
-      = BuildName(name, BindingConstraintTimeGranularity.at(type), TimeIdentifier(timeStep_, type));
+    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = build_namer_.Run(
+      name, BindingConstraintTimeGranularity.at(type), TimeIdentifier(timeStep_, type));
 }
 
 void ConstraintNamer::MinUpTime()
 {
-    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1]
-      = BuildName("MinUpTime", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR));
+    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = build_namer_.Run(
+      "MinUpTime", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR));
 }
 
 void ConstraintNamer::MinDownTime()
 {
-    std::string constraintFullName
-      = BuildName("MinDownTime", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR));
+    std::string constraintFullName = build_namer_.Run(
+      "MinDownTime", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR));
 }
 
 void ConstraintNamer::PMaxDispatchableGeneration()
 {
     problem_->NomDesContraintes[problem_->NombreDeContraintes - 1]
-      = BuildName("PMaxDispatchableGeneration",
-                  LocationIdentifier(area_, AREA),
-                  TimeIdentifier(timeStep_, HOUR));
+      = build_namer_.Run("PMaxDispatchableGeneration",
+                         LocationIdentifier(area_, AREA),
+                         TimeIdentifier(timeStep_, HOUR));
 }
 
 void ConstraintNamer::PMinDispatchableGeneration()
 {
     problem_->NomDesContraintes[problem_->NombreDeContraintes - 1]
-      = BuildName("PMinDispatchableGeneration",
-                  LocationIdentifier(area_, AREA),
-                  TimeIdentifier(timeStep_, HOUR));
+      = build_namer_.Run("PMinDispatchableGeneration",
+                         LocationIdentifier(area_, AREA),
+                         TimeIdentifier(timeStep_, HOUR));
 }
 
 void ConstraintNamer::ConsistenceNODU()
 {
-    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = BuildName(
+    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = build_namer_.Run(
       "ConsistenceNODU", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR));
 }
 
 void ConstraintNamer::ShortTermStorageLevel(const std::string& name)
 {
-    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = BuildName(
+    problem_->NomDesContraintes[problem_->NombreDeContraintes - 1] = build_namer_.Run(
       "Level",
       LocationIdentifier(area_, AREA) + SEPARATOR + "ShortTermStorage" + "<" + name + ">",
       TimeIdentifier(timeStep_, HOUR));
@@ -323,34 +323,11 @@ void ConstraintNamer::BindingConstraintWeek(const std::string& name)
     nameWithTimeGranularity(name, WEEK);
 }
 
-std::string BuildName(const std::string& name,
-                      const std::string& location,
-                      const std::string& timeIdentifier)
+std::string BuildNamer::BuildName(const std::string& name,
+                                  const std::string& location,
+                                  const std::string& timeIdentifier)
 {
     std::string result = name + SEPARATOR + location + SEPARATOR + timeIdentifier;
     std::replace(result.begin(), result.end(), ' ', '*');
     return result;
-}
-
-SPConstraintsNamer ConstraintsNamerFactory(PROBLEME_ANTARES_A_RESOUDRE* problem, bool namedProblem)
-{
-    if (namedProblem)
-    {
-        return std::make_shared<ConstraintNamer>(problem);
-    }
-    else
-    {
-        return std::make_shared<EmptyConstraintNamer>(problem);
-    }
-}
-SPVariableNamer VariablesNamerFactory(PROBLEME_ANTARES_A_RESOUDRE* problem, bool namedProblem)
-{
-    if (namedProblem)
-    {
-        return std::make_shared<VariableNamer>(problem);
-    }
-    else
-    {
-        return std::make_shared<EmptyVariableNamer>(problem);
-    }
 }
