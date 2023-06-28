@@ -385,7 +385,6 @@ public:
 
     friend class ThermalClusterList;
 
-private:
     //! \name MarketBid and Marginal Costs
     //@{
     /*!

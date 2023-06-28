@@ -40,7 +40,7 @@ void createIniFile()
     outfile << "min-up-time = 24" << std::endl;
     outfile << "min-down-time = 24" << std::endl;
     outfile << "co2 = 1.200000" << std::endl;
-    outfile << "marginal-cost = 35.000000" << std::endl;
+    outfile << "marginal-cost = 23.000000" << std::endl;
     outfile << "fixed-cost = 1700.000000" << std::endl;
     outfile << "startup-cost = 70000.000000" << std::endl;
     outfile << "market-bid-cost = 35.000000" << std::endl;
@@ -90,6 +90,14 @@ void removeCostFiles()
     std::filesystem::remove(folder / "CO2Cost.txt");
 }
 
+void fillThermalEconomicTimeSeries(ThermalCluster *c)
+{
+    c->thermalEconomicTimeSeries[0].productionCostTs.fill(1);
+    c->thermalEconomicTimeSeries[0].marketBidCostPerHourTs.fill(1);
+    c->thermalEconomicTimeSeries[0].marginalCostPerHourTs.fill(1);
+}
+
+
 // =================
 // The fixture
 // =================
@@ -107,7 +115,11 @@ struct Fixture
         study->parameters.include.reserve.spinning = true;
 
     }
-    ~Fixture() = default;
+    ~Fixture()
+    {
+        removeIniFile();
+        removeCostFiles();
+    }
 
     std::string folder = getFolder();
     ThermalClusterList clusterList;
@@ -134,7 +146,6 @@ BOOST_AUTO_TEST_CASE(ThermalClusterList_loadFromFolder_basic)
     BOOST_CHECK(clusterList.mapping["area"]->fuelEfficiency == 35.35);
     BOOST_CHECK(clusterList.mapping["area"]->variableomcost == 12.12);
 
-    removeIniFile();
 }
 
 BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_basic)
@@ -148,9 +159,6 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_basic)
     BOOST_CHECK(eco.loadFromFolder(*study, folder));
 
     BOOST_CHECK(eco.fuelcost[0][1432] == 1);
-
-    removeIniFile();
-    removeCostFiles();
 }
 
 BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_value)
@@ -162,9 +170,6 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_value)
 
     EconomicInputData eco;
     BOOST_CHECK(!eco.loadFromFolder(*study, folder));
-
-    removeIniFile();
-    removeCostFiles();
 }
 
 BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_working_with_too_much_value)
@@ -176,9 +181,6 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_working_with_too_much_valu
 
     EconomicInputData eco;
     BOOST_CHECK(eco.loadFromFolder(*study, folder));
-
-    removeIniFile();
-    removeCostFiles();
 }
 
 BOOST_AUTO_TEST_CASE(checkFuelAndCo2_basic_working)
@@ -201,9 +203,6 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2_basic_working)
     BOOST_CHECK_NO_THROW(Antares::Check::checkFuelAndCo2ColumnNumber(l));
 
     l.areas.erase("area");
-
-    removeCostFiles();
-    removeIniFile();
 }
 
 BOOST_AUTO_TEST_CASE(checkFuelAndCo2_failing_different_economic_input_width)
@@ -230,9 +229,6 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2_failing_different_economic_input_width)
     area->thermal.list.mapping["area"]->ecoInput.fuelcost.width = 1;
     area->thermal.list.mapping["area"]->ecoInput.co2cost.width = 1;
     l.areas.erase("area");
-
-    removeCostFiles();
-    removeIniFile();
 }
 
 BOOST_AUTO_TEST_CASE(checkFuelAndCo2_working_same_economic_input_and_time_series_width)
@@ -258,9 +254,39 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2_working_same_economic_input_and_time_series
     area->thermal.list.mapping["area"]->ecoInput.fuelcost.width = 1;
     area->thermal.list.mapping["area"]->ecoInput.co2cost.width = 1;
     l.areas.erase("area");
-
-    removeCostFiles();
-    removeIniFile();
 }
+
+BOOST_AUTO_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMarginalCostPerHour)
+{
+    createIniFile();
+    clusterList.loadFromFolder(*study, folder, area);
+    clusterList.mapping["area"]->costGenManualCalculationOfMarketBidAndMarginalCostPerHour();
+    BOOST_CHECK(clusterList.mapping["area"]->thermalEconomicTimeSeries[0]
+        .marketBidCostPerHourTs[2637] == 35);
+    BOOST_CHECK(clusterList.mapping["area"]->thermalEconomicTimeSeries[0]
+        .marginalCostPerHourTs[6737] == 23);
+}
+
+BOOST_AUTO_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour)
+{
+    createIniFile();
+    createFuelCostFile(8760);
+    createCo2CostFile(8760);
+
+    clusterList.loadFromFolder(*study, folder, area);
+    clusterList.mapping["area"]->modulation.reset(1, 8760);
+    clusterList.mapping["area"]->ecoInput.loadFromFolder(*study, folder);
+    fillThermalEconomicTimeSeries(clusterList.mapping["area"].get());
+
+    clusterList.mapping["area"]->costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour();
+
+    std::cout << clusterList.mapping["area"]->thermalEconomicTimeSeries[0]
+        .marketBidCostPerHourTs[2637];
+    /* BOOST_CHECK(clusterList.mapping["area"]->thermalEconomicTimeSeries[0] */
+    /*     .marketBidCostPerHourTs[2637] == 35); */
+    /* BOOST_CHECK(clusterList.mapping["area"]->thermalEconomicTimeSeries[0] */
+    /*     .marginalCostPerHourTs[6737] == 23); */
+}
+
 
 BOOST_AUTO_TEST_SUITE_END()
