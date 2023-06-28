@@ -19,18 +19,17 @@
 using namespace std;
 using namespace Antares::Data;
 
-std::string getFolder()
+std::filesystem::path getFolder()
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    return tmpDir.string();
+    return std::filesystem::temp_directory_path();
 }
 
 void createIniFile()
 {
-    std::string folder = getFolder();
+    std::filesystem::path folder = getFolder();
 
     std::ofstream outfile;
-    outfile.open(folder + SEP + "list.ini", std::ofstream::out | std::ofstream::trunc);
+    outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
 
     outfile << "[area]" << std::endl;
     outfile << "name = area" << std::endl;
@@ -54,10 +53,10 @@ void createIniFile()
 
 void createFuelCostFile(int size)
 {
-    std::string folder = getFolder();
+    std::filesystem::path folder = getFolder();
 
     std::ofstream outfile;
-    outfile.open(folder + SEP + "fuelCost.txt", std::ofstream::out | std::ofstream::trunc);
+    outfile.open(folder / "fuelCost.txt", std::ofstream::out | std::ofstream::trunc);
 
     for (int i = 0; i < size; i++)
     {
@@ -67,10 +66,10 @@ void createFuelCostFile(int size)
 
 void createCo2CostFile(int size)
 {
-    std::string folder = getFolder();
+    std::filesystem::path folder = getFolder();
 
     std::ofstream outfile;
-    outfile.open(folder + SEP + "CO2Cost.txt", std::ofstream::out | std::ofstream::trunc);
+    outfile.open(folder / "CO2Cost.txt", std::ofstream::out | std::ofstream::trunc);
 
     for (int i = 0; i < size; i++)
     {
@@ -80,15 +79,15 @@ void createCo2CostFile(int size)
 
 void removeIniFile()
 {
-    std::string folder = getFolder();
-    std::filesystem::remove(folder + SEP + "list.ini");
+    std::filesystem::path folder = getFolder();
+    std::filesystem::remove(folder / "list.ini");
 }
 
 void removeCostFiles()
 {
-    std::string folder = getFolder();
-    std::filesystem::remove(folder + SEP + "fuelCost.txt");
-    std::filesystem::remove(folder + SEP + "CO2Cost.txt");
+    std::filesystem::path folder = getFolder();
+    std::filesystem::remove(folder / "fuelCost.txt");
+    std::filesystem::remove(folder / "CO2Cost.txt");
 }
 
 // =================
@@ -125,7 +124,7 @@ struct Fixture
 
 BOOST_FIXTURE_TEST_SUITE(s, Fixture)
 
-BOOST_AUTO_TEST_CASE(load_from_folder_basic)
+BOOST_AUTO_TEST_CASE(ThermalClusterList_loadFromFolder_basic)
 {
     createIniFile();
 
@@ -138,7 +137,7 @@ BOOST_AUTO_TEST_CASE(load_from_folder_basic)
     removeIniFile();
 }
 
-BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder)
+BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_basic)
 {
     createIniFile();
     createFuelCostFile(8760);
@@ -154,7 +153,7 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder)
     removeCostFiles();
 }
 
-BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_too_small)
+BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_value)
 {
     createIniFile();
     createFuelCostFile(80);
@@ -168,7 +167,7 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_too_small)
     removeCostFiles();
 }
 
-BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_too_big)
+BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_working_with_too_much_value)
 {
     createIniFile();
     createFuelCostFile(10000);
@@ -182,7 +181,7 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_too_big)
     removeCostFiles();
 }
 
-BOOST_AUTO_TEST_CASE(checkFuelAndCo2)
+BOOST_AUTO_TEST_CASE(checkFuelAndCo2_basic_working)
 {
     createIniFile();
     area->thermal.list.loadFromFolder(*study, folder, area);
@@ -207,7 +206,7 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2)
     removeIniFile();
 }
 
-BOOST_AUTO_TEST_CASE(checkFuelAndCo2_wrong)
+BOOST_AUTO_TEST_CASE(checkFuelAndCo2_failing_different_economic_input_width)
 {
     createIniFile();
     area->thermal.list.loadFromFolder(*study, folder, area);
@@ -227,6 +226,34 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2_wrong)
 
     BOOST_CHECK_THROW(Antares::Check::checkFuelAndCo2ColumnNumber(l),
             Error::IncompatibleFuelOrCo2CostColumns);
+
+    area->thermal.list.mapping["area"]->ecoInput.fuelcost.width = 1;
+    area->thermal.list.mapping["area"]->ecoInput.co2cost.width = 1;
+    l.areas.erase("area");
+
+    removeCostFiles();
+    removeIniFile();
+}
+
+BOOST_AUTO_TEST_CASE(checkFuelAndCo2_working_same_economic_input_and_time_series_width)
+{
+    createIniFile();
+    area->thermal.list.loadFromFolder(*study, folder, area);
+    area->thermal.list.mapping["area"]->series = new DataSeriesCommon;
+    area->thermal.list.mapping["area"]->series->timeSeries.reset(3, 8760);
+
+    area->thermal.prepareAreaWideIndexes();
+
+    createFuelCostFile(8760);
+    createCo2CostFile(8760);
+
+    BOOST_CHECK(area->thermal.list.mapping["area"]->ecoInput.loadFromFolder(*study, folder));
+    area->thermal.list.mapping["area"]->ecoInput.fuelcost.width = 3;
+    area->thermal.list.mapping["area"]->ecoInput.co2cost.width = 3;
+    AreaList l(*study);
+    l.add(area);
+
+    BOOST_CHECK_NO_THROW(Antares::Check::checkFuelAndCo2ColumnNumber(l));
 
     area->thermal.list.mapping["area"]->ecoInput.fuelcost.width = 1;
     area->thermal.list.mapping["area"]->ecoInput.co2cost.width = 1;
