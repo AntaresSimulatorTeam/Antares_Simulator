@@ -349,10 +349,10 @@ void ConstraintNamer::BindingConstraintWeek(const std::string& name)
     nameWithTimeGranularity(name, WEEK);
 }
 
-void BuildNamer::BuildName(const std::string& name,
-                                  const std::string& location,
-                                  const std::string& timeIdentifier,
-                                  unsigned index)
+void NameUpdater::BuildName(const std::string& name,
+                            const std::string& location,
+                            const std::string& timeIdentifier,
+                            unsigned index)
 {
     std::string result = name + SEPARATOR + location + SEPARATOR + timeIdentifier;
     std::replace(result.begin(), result.end(), ' ', '*');

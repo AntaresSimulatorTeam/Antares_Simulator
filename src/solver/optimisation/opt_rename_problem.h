@@ -4,14 +4,14 @@
 
 const std::string SEPARATOR = "::";
 const std::string AREA_SEP = "$$";
-struct BuildNamer
+struct NameUpdater
 {
     std::vector<std::string>& target_;
-    BuildNamer(bool name, std::vector<std::string>& target) : target_(target)
+    NameUpdater(bool name, std::vector<std::string>& target) : target_(target)
     {
         if (name)
         {
-            Run = std::bind(&BuildNamer::BuildName,
+            Run = std::bind(&NameUpdater::BuildName,
                             this,
                             std::placeholders::_1,
                             std::placeholders::_2,
@@ -28,6 +28,7 @@ private:
                    const std::string& timeIdentifier,
                    unsigned index);
 };
+
 struct CurrentAssetsStorage
 {
     PROBLEME_ANTARES_A_RESOUDRE* problem_;
@@ -35,7 +36,7 @@ struct CurrentAssetsStorage
     std::string origin_;
     std::string destination_;
     std::string area_;
-    BuildNamer build_namer_;
+    NameUpdater build_namer_;
     CurrentAssetsStorage(PROBLEME_ANTARES_A_RESOUDRE* problem,
                          bool namedProblems,
                          std::vector<std::string>& target) :
