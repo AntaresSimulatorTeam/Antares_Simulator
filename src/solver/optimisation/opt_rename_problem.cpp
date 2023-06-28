@@ -14,20 +14,20 @@ void VariableNamer::SetLinkVariableName(int var, const std::string& variableType
     if (problem_->NomDesVariables[var].empty())
     {
         const auto location = origin_ + AREA_SEP + destination_;
-        build_namer_.Run(
+        name_updater_.Run(
           variableType, LocationIdentifier(location, LINK), TimeIdentifier(timeStep_, HOUR), var);
     }
 }
 
 void VariableNamer::SetAreaVariableName(int var, const std::string& variableType)
 {
-    build_namer_.Run(
+    name_updater_.Run(
       variableType, LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR), var);
 }
 
 void VariableNamer::SetAreaVariableName(int var, const std::string& variableType, int layerIndex)
 {
-    build_namer_.Run(
+    name_updater_.Run(
       variableType,
       LocationIdentifier(area_, AREA) + SEPARATOR + "Layer<" + std::to_string(layerIndex) + ">",
       TimeIdentifier(timeStep_, HOUR),
@@ -41,7 +41,7 @@ void VariableNamer::SetThermalClusterVariableName(int var,
     const auto location
       = LocationIdentifier(area_, AREA) + SEPARATOR + "ThermalCluster" + "<" + clusterName + ">";
 
-    build_namer_.Run(variableType, location, TimeIdentifier(timeStep_, HOUR), var);
+    name_updater_.Run(variableType, location, TimeIdentifier(timeStep_, HOUR), var);
 }
 
 void VariableNamer::DispatchableProduction(int var, const std::string& clusterName)
@@ -100,7 +100,7 @@ void VariableNamer::SetShortTermStorageVariableName(int var,
 {
     const auto location = LocationIdentifier(area_, AREA) + SEPARATOR + "ShortTermStorage" + "<"
                           + shortTermStorageName + ">";
-    build_namer_.Run(variableType, location, TimeIdentifier(timeStep_, HOUR), var);
+    name_updater_.Run(variableType, location, TimeIdentifier(timeStep_, HOUR), var);
 }
 
 void VariableNamer::ShortTermStorageInjection(int var, const std::string& shortTermStorageName)
@@ -175,103 +175,103 @@ void VariableNamer::AreaBalance(int var)
 
 void ConstraintNamer::FlowDissociation(const std::string& origin, const std::string& destination)
 {
-    build_namer_.Run("FlowDissociation",
-                     LocationIdentifier(origin + AREA_SEP + destination, LINK),
-                     TimeIdentifier(timeStep_, HOUR),
-                     problem_->NombreDeContraintes - 1);
+    name_updater_.Run("FlowDissociation",
+                      LocationIdentifier(origin + AREA_SEP + destination, LINK),
+                      TimeIdentifier(timeStep_, HOUR),
+                      problem_->NombreDeContraintes - 1);
 }
 
 void ConstraintNamer::AreaBalance()
 {
-    build_namer_.Run("AreaBalance",
-                     LocationIdentifier(area_, AREA),
-                     TimeIdentifier(timeStep_, HOUR),
-                     problem_->NombreDeContraintes - 1);
+    name_updater_.Run("AreaBalance",
+                      LocationIdentifier(area_, AREA),
+                      TimeIdentifier(timeStep_, HOUR),
+                      problem_->NombreDeContraintes - 1);
 }
 
 void ConstraintNamer::FictiveLoads()
 {
-    build_namer_.Run("FictiveLoads",
-                     LocationIdentifier(area_, AREA),
-                     TimeIdentifier(timeStep_, HOUR),
-                     problem_->NombreDeContraintes - 1);
+    name_updater_.Run("FictiveLoads",
+                      LocationIdentifier(area_, AREA),
+                      TimeIdentifier(timeStep_, HOUR),
+                      problem_->NombreDeContraintes - 1);
 }
 
 void ConstraintNamer::HydroPower()
 {
-    build_namer_.Run("HydroPower",
-                     LocationIdentifier(area_, AREA),
-                     TimeIdentifier(timeStep_, WEEK),
-                     problem_->NombreDeContraintes - 1);
-}
-
-void ConstraintNamer::HydroPowerSmoothingUsingVariationSum()
-{
-    build_namer_.Run("HydroPowerSmoothingUsingVariationSum",
-                     LocationIdentifier(area_, AREA),
-                     TimeIdentifier(timeStep_, HOUR),
-                     problem_->NombreDeContraintes - 1);
-}
-
-void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxDown()
-{
-    build_namer_.Run("HydroPowerSmoothingUsingVariationMaxDown",
-                     LocationIdentifier(area_, AREA),
-                     TimeIdentifier(timeStep_, HOUR),
-                     problem_->NombreDeContraintes - 1);
-}
-
-void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxUp()
-{
-    build_namer_.Run("HydroPowerSmoothingUsingVariationMaxUp",
-                     LocationIdentifier(area_, AREA),
-                     TimeIdentifier(timeStep_, HOUR),
-                     problem_->NombreDeContraintes - 1);
-}
-
-void ConstraintNamer::MinHydroPower()
-{
-    build_namer_.Run("MinHydroPower",
-                     LocationIdentifier(area_, AREA),
-                     TimeIdentifier(timeStep_, WEEK),
-                     problem_->NombreDeContraintes - 1);
-}
-
-void ConstraintNamer::MaxHydroPower()
-{
-      build_namer_.Run("MaxHydroPower",
-                       LocationIdentifier(area_, AREA),
-                       TimeIdentifier(timeStep_, WEEK),
-                       problem_->NombreDeContraintes - 1);
-}
-
-void ConstraintNamer::MaxPumping()
-{
-     build_namer_.Run("MaxPumping",
+    name_updater_.Run("HydroPower",
                       LocationIdentifier(area_, AREA),
                       TimeIdentifier(timeStep_, WEEK),
                       problem_->NombreDeContraintes - 1);
 }
 
-void ConstraintNamer::AreaHydroLevel()
+void ConstraintNamer::HydroPowerSmoothingUsingVariationSum()
 {
-     build_namer_.Run("AreaHydroLevel",
+    name_updater_.Run("HydroPowerSmoothingUsingVariationSum",
                       LocationIdentifier(area_, AREA),
                       TimeIdentifier(timeStep_, HOUR),
                       problem_->NombreDeContraintes - 1);
+}
+
+void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxDown()
+{
+    name_updater_.Run("HydroPowerSmoothingUsingVariationMaxDown",
+                      LocationIdentifier(area_, AREA),
+                      TimeIdentifier(timeStep_, HOUR),
+                      problem_->NombreDeContraintes - 1);
+}
+
+void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxUp()
+{
+    name_updater_.Run("HydroPowerSmoothingUsingVariationMaxUp",
+                      LocationIdentifier(area_, AREA),
+                      TimeIdentifier(timeStep_, HOUR),
+                      problem_->NombreDeContraintes - 1);
+}
+
+void ConstraintNamer::MinHydroPower()
+{
+    name_updater_.Run("MinHydroPower",
+                      LocationIdentifier(area_, AREA),
+                      TimeIdentifier(timeStep_, WEEK),
+                      problem_->NombreDeContraintes - 1);
+}
+
+void ConstraintNamer::MaxHydroPower()
+{
+    name_updater_.Run("MaxHydroPower",
+                      LocationIdentifier(area_, AREA),
+                      TimeIdentifier(timeStep_, WEEK),
+                      problem_->NombreDeContraintes - 1);
+}
+
+void ConstraintNamer::MaxPumping()
+{
+      name_updater_.Run("MaxPumping",
+                        LocationIdentifier(area_, AREA),
+                        TimeIdentifier(timeStep_, WEEK),
+                        problem_->NombreDeContraintes - 1);
+}
+
+void ConstraintNamer::AreaHydroLevel()
+{
+     name_updater_.Run("AreaHydroLevel",
+                       LocationIdentifier(area_, AREA),
+                       TimeIdentifier(timeStep_, HOUR),
+                       problem_->NombreDeContraintes - 1);
 }
 
 void ConstraintNamer::FinalStockEquivalent()
 {
-     build_namer_.Run("FinalStockEquivalent",
-                      LocationIdentifier(area_, AREA),
-                      TimeIdentifier(timeStep_, HOUR),
-                      problem_->NombreDeContraintes - 1);
+     name_updater_.Run("FinalStockEquivalent",
+                       LocationIdentifier(area_, AREA),
+                       TimeIdentifier(timeStep_, HOUR),
+                       problem_->NombreDeContraintes - 1);
 }
 
 void ConstraintNamer::FinalStockExpression()
 {
-      build_namer_.Run("FinalStockExpression",
+     name_updater_.Run("FinalStockExpression",
                        LocationIdentifier(area_, AREA),
                        TimeIdentifier(timeStep_, HOUR),
                        problem_->NombreDeContraintes - 1);
@@ -279,55 +279,55 @@ void ConstraintNamer::FinalStockExpression()
 
 void ConstraintNamer::nameWithTimeGranularity(const std::string& name, const std::string& type)
 {
-      build_namer_.Run(name,
-                       BindingConstraintTimeGranularity.at(type),
-                       TimeIdentifier(timeStep_, type),
-                       problem_->NombreDeContraintes - 1);
+      name_updater_.Run(name,
+                        BindingConstraintTimeGranularity.at(type),
+                        TimeIdentifier(timeStep_, type),
+                        problem_->NombreDeContraintes - 1);
 }
 
 void ConstraintNamer::MinUpTime()
 {
-      build_namer_.Run("MinUpTime",
+      name_updater_.Run("MinUpTime",
+                        LocationIdentifier(area_, AREA),
+                        TimeIdentifier(timeStep_, HOUR),
+                        problem_->NombreDeContraintes - 1);
+}
+
+void ConstraintNamer::MinDownTime()
+{
+      name_updater_.Run("MinDownTime",
+                        LocationIdentifier(area_, AREA),
+                        TimeIdentifier(timeStep_, HOUR),
+                        problem_->NombreDeContraintes - 1);
+}
+
+void ConstraintNamer::PMaxDispatchableGeneration()
+{
+     name_updater_.Run("PMaxDispatchableGeneration",
                        LocationIdentifier(area_, AREA),
                        TimeIdentifier(timeStep_, HOUR),
                        problem_->NombreDeContraintes - 1);
 }
 
-void ConstraintNamer::MinDownTime()
-{
-     build_namer_.Run("MinDownTime",
-                      LocationIdentifier(area_, AREA),
-                      TimeIdentifier(timeStep_, HOUR),
-                      problem_->NombreDeContraintes - 1);
-}
-
-void ConstraintNamer::PMaxDispatchableGeneration()
-{
-     build_namer_.Run("PMaxDispatchableGeneration",
-                      LocationIdentifier(area_, AREA),
-                      TimeIdentifier(timeStep_, HOUR),
-                      problem_->NombreDeContraintes - 1);
-}
-
 void ConstraintNamer::PMinDispatchableGeneration()
 {
-     build_namer_.Run("PMinDispatchableGeneration",
-                      LocationIdentifier(area_, AREA),
-                      TimeIdentifier(timeStep_, HOUR),
-                      problem_->NombreDeContraintes - 1);
+     name_updater_.Run("PMinDispatchableGeneration",
+                       LocationIdentifier(area_, AREA),
+                       TimeIdentifier(timeStep_, HOUR),
+                       problem_->NombreDeContraintes - 1);
 }
 
 void ConstraintNamer::ConsistenceNODU()
 {
-     build_namer_.Run("ConsistenceNODU",
-                      LocationIdentifier(area_, AREA),
-                      TimeIdentifier(timeStep_, HOUR),
-                      problem_->NombreDeContraintes - 1);
+     name_updater_.Run("ConsistenceNODU",
+                       LocationIdentifier(area_, AREA),
+                       TimeIdentifier(timeStep_, HOUR),
+                       problem_->NombreDeContraintes - 1);
 }
 
 void ConstraintNamer::ShortTermStorageLevel(const std::string& name)
 {
-     build_namer_.Run(
+     name_updater_.Run(
        "Level",
        LocationIdentifier(area_, AREA) + SEPARATOR + "ShortTermStorage" + "<" + name + ">",
        TimeIdentifier(timeStep_, HOUR),

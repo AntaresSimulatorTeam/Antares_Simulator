@@ -36,11 +36,11 @@ struct CurrentAssetsStorage
     std::string origin_;
     std::string destination_;
     std::string area_;
-    NameUpdater build_namer_;
+    NameUpdater name_updater_;
     CurrentAssetsStorage(PROBLEME_ANTARES_A_RESOUDRE* problem,
                          bool namedProblems,
                          std::vector<std::string>& target) :
-     problem_(problem), build_namer_(namedProblems, target)
+     problem_(problem), name_updater_(namedProblems, target)
     {
     }
     void UpdateTimeStep(int timeStep)
