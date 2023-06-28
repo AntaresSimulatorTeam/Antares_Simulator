@@ -4,63 +4,74 @@
 
 const std::string SEPARATOR = "::";
 const std::string AREA_SEP = "$$";
-struct NameUpdater
+
+std::string BuildName(const std::string& name,
+                      const std::string& location,
+                      const std::string& timeIdentifier);
+
+class TargetVectorUpdater
 {
-    std::vector<std::string>& target_;
-    NameUpdater(bool name, std::vector<std::string>& target) : target_(target)
+public:
+    TargetVectorUpdater(bool isRenamingProcessed, std::vector<std::string>& target) :
+     target_(target)
     {
-        if (name)
+        if (isRenamingProcessed)
         {
-            Run = std::bind(&NameUpdater::BuildName,
-                            this,
-                            std::placeholders::_1,
-                            std::placeholders::_2,
-                            std::placeholders::_3,
-                            std::placeholders::_4);
+            UpdateTargetAtIndex = std::bind(
+              &TargetVectorUpdater::UpdateTargetAtIndexImpl, this, std::placeholders::_1, std::placeholders::_2);
         }
     }
-    std::function<void(const std::string&, const std::string&, const std::string&, unsigned index)>
-      Run = [](const std::string&, const std::string&, const std::string&, unsigned index) {};
+
+    std::function<void(const std::string&, unsigned index)> UpdateTargetAtIndex
+      = [](const std::string&, unsigned index) {};
+
+    std::string& StringAtIndex(unsigned index) const
+    {
+        return target_[index];
+    }
 
 private:
-    void BuildName(const std::string& name,
-                   const std::string& location,
-                   const std::string& timeIdentifier,
-                   unsigned index);
+    std::vector<std::string>& target_;
+    void UpdateTargetAtIndexImpl(const std::string& full_name, unsigned index)
+    {
+        target_[index] = full_name;
+    }
 };
 
 struct CurrentAssetsStorage
 {
-    PROBLEME_ANTARES_A_RESOUDRE* problem_;
-    int timeStep_ = 0;
-    std::string origin_;
-    std::string destination_;
-    std::string area_;
-    NameUpdater name_updater_;
-    CurrentAssetsStorage(PROBLEME_ANTARES_A_RESOUDRE* problem,
-                         bool namedProblems,
-                         std::vector<std::string>& target) :
-     problem_(problem), name_updater_(namedProblems, target)
+    int timeStep = 0;
+    std::string origin;
+    std::string destination;
+    std::string area;
+};
+
+class Namer
+{
+public:
+    Namer(std::vector<std::string>& target, bool namedProblems) :
+     name_updater(namedProblems, target)
     {
     }
+
     void UpdateTimeStep(int timeStep)
     {
-        timeStep_ = timeStep;
+        currentAssetsStorage.timeStep = timeStep;
     }
 
     void UpdateArea(const std::string& area)
     {
-        area_ = area;
+        currentAssetsStorage.area = area;
     }
+
+    TargetVectorUpdater name_updater;
+    CurrentAssetsStorage currentAssetsStorage;
 };
 
-class VariableNamer : public CurrentAssetsStorage
+class VariableNamer : public Namer
 {
 public:
-    VariableNamer(PROBLEME_ANTARES_A_RESOUDRE* problem, bool namedProblems) :
-     CurrentAssetsStorage(problem, namedProblems, problem->NomDesVariables)
-    {
-    }
+    using Namer::Namer;
     void DispatchableProduction(int var, const std::string& clusterName);
     void NODU(int var, const std::string& clusterName);
     void NumberStoppingDispatchableUnits(int var, const std::string& clusterName);
@@ -97,38 +108,40 @@ private:
                                          const std::string& shortTermStorageName);
 };
 
-class ConstraintNamer : public CurrentAssetsStorage
+class ConstraintNamer : public Namer
 {
 public:
-    ConstraintNamer(PROBLEME_ANTARES_A_RESOUDRE* problem, bool namedProblems) :
-     CurrentAssetsStorage(problem, namedProblems, problem->NomDesContraintes)
-    {
-    }
-    void FlowDissociation(const std::string& origin, const std::string& destination);
-    void AreaBalance();
-    void FictiveLoads();
-    void HydroPower();
-    void HydroPowerSmoothingUsingVariationSum();
-    void HydroPowerSmoothingUsingVariationMaxDown();
-    void HydroPowerSmoothingUsingVariationMaxUp();
-    void MinHydroPower();
-    void MaxHydroPower();
-    void MaxPumping();
-    void AreaHydroLevel();
-    void FinalStockEquivalent();
-    void FinalStockExpression();
-    void MinUpTime();
-    void MinDownTime();
-    void PMaxDispatchableGeneration();
-    void PMinDispatchableGeneration();
-    void ConsistenceNODU();
-    void ShortTermStorageLevel(const std::string& name);
-    void BindingConstraintHour(const std::string& name);
-    void BindingConstraintDay(const std::string& name);
-    void BindingConstraintWeek(const std::string& name);
+    using Namer::Namer;
+
+    void FlowDissociation(int numConstraint,
+                          const std::string& origin,
+                          const std::string& destination);
+    void AreaBalance(int numConstraint);
+    void FictiveLoads(int numConstraint);
+    void HydroPower(int numConstraint);
+    void HydroPowerSmoothingUsingVariationSum(int numConstraint);
+    void HydroPowerSmoothingUsingVariationMaxDown(int numConstraint);
+    void HydroPowerSmoothingUsingVariationMaxUp(int numConstraint);
+    void MinHydroPower(int numConstraint);
+    void MaxHydroPower(int numConstraint);
+    void MaxPumping(int numConstraint);
+    void AreaHydroLevel(int numConstraint);
+    void FinalStockEquivalent(int numConstraint);
+    void FinalStockExpression(int numConstraint);
+    void MinUpTime(int numConstraint);
+    void MinDownTime(int numConstraint);
+    void PMaxDispatchableGeneration(int numConstraint);
+    void PMinDispatchableGeneration(int numConstraint);
+    void ConsistenceNODU(int numConstraint);
+    void ShortTermStorageLevel(int numConstraint, const std::string& name);
+    void BindingConstraintHour(int numConstraint, const std::string& name);
+    void BindingConstraintDay(int numConstraint, const std::string& name);
+    void BindingConstraintWeek(int numConstraint, const std::string& name);
 
 private:
-    void nameWithTimeGranularity(const std::string& name, const std::string& type);
+    void nameWithTimeGranularity(int numConstraint,
+                                 const std::string& name,
+                                 const std::string& type);
 };
 
 inline std::string TimeIdentifier(int timeStep, const std::string& timeStepType)

@@ -59,7 +59,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
     double* Pi = ProblemeAResoudre->Pi;
     int* Colonne = ProblemeAResoudre->Colonne;
-    ConstraintNamer constraintNamer(ProblemeAResoudre, problemeHebdo->NamedProblems);
+    ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
+                                    problemeHebdo->NamedProblems);
     int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
@@ -121,7 +122,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     {
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-                        constraintNamer.PMaxDispatchableGeneration();
+                        constraintNamer.PMaxDispatchableGeneration(
+                          ProblemeAResoudre->NombreDeContraintes - 1);
                     }
                 }
                 else
@@ -164,7 +166,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     {
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
-                        constraintNamer.PMinDispatchableGeneration();
+                        constraintNamer.PMinDispatchableGeneration(
+                          ProblemeAResoudre->NombreDeContraintes - 1);
                     }
                 }
                 else
@@ -264,7 +267,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     {
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-                        constraintNamer.ConsistenceNODU();
+                        constraintNamer.ConsistenceNODU(ProblemeAResoudre->NombreDeContraintes - 1);
                     }
                 }
                 else
@@ -332,7 +335,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     {
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-                        constraintNamer.MinUpTime();
+                        constraintNamer.MinUpTime(ProblemeAResoudre->NombreDeContraintes - 1);
                     }
                 }
                 else
@@ -431,7 +434,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
-                        constraintNamer.MinUpTime();
+                        constraintNamer.MinUpTime(ProblemeAResoudre->NombreDeContraintes - 1);
                     }
                 }
                 else
@@ -515,7 +518,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-                        constraintNamer.MinDownTime();
+                        constraintNamer.MinDownTime(ProblemeAResoudre->NombreDeContraintes - 1);
                     }
                 }
                 else
