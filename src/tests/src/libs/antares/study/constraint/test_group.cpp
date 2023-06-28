@@ -19,7 +19,7 @@ public:
     }
 };
 
-BOOST_AUTO_TEST_CASE(WhenLoadingAConstraint_CreateTheGroup) {
+BOOST_AUTO_TEST_CASE(WhenLoadingAConstraint_AGroupExists) {
     auto study = std::make_shared<PublicStudy>();
 
     StudyLoadOptions options;
