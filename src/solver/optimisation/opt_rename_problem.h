@@ -5,10 +5,6 @@
 const std::string SEPARATOR = "::";
 const std::string AREA_SEP = "$$";
 
-std::string BuildName(const std::string& name,
-                      const std::string& location,
-                      const std::string& timeIdentifier);
-
 class TargetVectorUpdater
 {
 public:

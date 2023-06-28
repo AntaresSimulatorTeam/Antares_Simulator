@@ -9,6 +9,15 @@ const std::map<std::string, std::string> BindingConstraintTimeGranularity
 const std::string LINK("link");
 const std::string AREA("area");
 
+std::string BuildName(const std::string& name,
+                      const std::string& location,
+                      const std::string& timeIdentifier)
+{
+    std::string result = name + SEPARATOR + location + SEPARATOR + timeIdentifier;
+    std::replace(result.begin(), result.end(), ' ', '*');
+    return result;
+}
+
 void VariableNamer::SetLinkVariableName(int var, const std::string& variableType)
 {
     const auto location = origin_ + AREA_SEP + destination_;
@@ -343,13 +352,4 @@ void ConstraintNamer::BindingConstraintDay(int numConstraint, const std::string&
 void ConstraintNamer::BindingConstraintWeek(int numConstraint, const std::string& name)
 {
     nameWithTimeGranularity(numConstraint, name, WEEK);
-}
-
-std::string BuildName(const std::string& name,
-                      const std::string& location,
-                      const std::string& timeIdentifier)
-{
-    std::string result = name + SEPARATOR + location + SEPARATOR + timeIdentifier;
-    std::replace(result.begin(), result.end(), ' ', '*');
-    return result;
 }
