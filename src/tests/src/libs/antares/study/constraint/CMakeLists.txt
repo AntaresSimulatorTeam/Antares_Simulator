@@ -1,4 +1,7 @@
-add_executable(test_constraint test_constraint.cpp)
+add_executable(test_constraint
+        test_constraint.cpp
+        test_group.cpp
+    )
 
 target_link_libraries(test_constraint
         PRIVATE
