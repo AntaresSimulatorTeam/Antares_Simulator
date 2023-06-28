@@ -11,40 +11,37 @@ const std::string AREA("area");
 
 void VariableNamer::SetLinkVariableName(int var, const std::string& variableType)
 {
-    const auto location = currentAssetsStorage.origin + AREA_SEP + currentAssetsStorage.destination;
-    name_updater.UpdateTargetAtIndex(BuildName(variableType,
-                                               LocationIdentifier(location, LINK),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-                                     var);
+    const auto location = origin_ + AREA_SEP + destination_;
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName(variableType, LocationIdentifier(location, LINK), TimeIdentifier(timeStep_, HOUR)),
+      var);
 }
 
 void VariableNamer::SetAreaVariableName(int var, const std::string& variableType)
 {
-    name_updater.UpdateTargetAtIndex(BuildName(variableType,
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-                                     var);
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName(variableType, LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR)),
+      var);
 }
 
 void VariableNamer::SetAreaVariableName(int var, const std::string& variableType, int layerIndex)
 {
-    name_updater.UpdateTargetAtIndex(
-      BuildName(variableType,
-                LocationIdentifier(currentAssetsStorage.area, AREA) + SEPARATOR + "Layer<"
-                  + std::to_string(layerIndex) + ">",
-                TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-      var);
+    targetUpdater_.UpdateTargetAtIndex(BuildName(variableType,
+                                                 LocationIdentifier(area_, AREA) + SEPARATOR
+                                                   + "Layer<" + std::to_string(layerIndex) + ">",
+                                                 TimeIdentifier(timeStep_, HOUR)),
+                                       var);
 }
 
 void VariableNamer::SetThermalClusterVariableName(int var,
                                                   const std::string& variableType,
                                                   const std::string& clusterName)
 {
-    const auto location = LocationIdentifier(currentAssetsStorage.area, AREA) + SEPARATOR
-                          + "ThermalCluster" + "<" + clusterName + ">";
+    const auto location
+      = LocationIdentifier(area_, AREA) + SEPARATOR + "ThermalCluster" + "<" + clusterName + ">";
 
-    name_updater.UpdateTargetAtIndex(
-      BuildName(variableType, location, TimeIdentifier(currentAssetsStorage.timeStep, HOUR)), var);
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName(variableType, location, TimeIdentifier(timeStep_, HOUR)), var);
 }
 
 void VariableNamer::DispatchableProduction(int var, const std::string& clusterName)
@@ -74,8 +71,8 @@ void VariableNamer::NumberBreakingDownDispatchableUnits(int var, const std::stri
 
 void VariableNamer::NTCDirect(int var, const std::string& origin, const std::string& destination)
 {
-    currentAssetsStorage.origin = origin;
-    currentAssetsStorage.destination = destination;
+    origin_ = origin;
+    destination_ = destination;
     SetLinkVariableName(var, "NTCDirect");
 }
 
@@ -83,8 +80,8 @@ void VariableNamer::IntercoDirectCost(int var,
                                       const std::string& origin,
                                       const std::string& destination)
 {
-    currentAssetsStorage.origin = origin;
-    currentAssetsStorage.destination = destination;
+    origin_ = origin;
+    destination_ = destination;
     SetLinkVariableName(var, "IntercoDirectCost");
 }
 
@@ -92,8 +89,8 @@ void VariableNamer::IntercoIndirectCost(int var,
                                         const std::string& origin,
                                         const std::string& destination)
 {
-    currentAssetsStorage.origin = origin;
-    currentAssetsStorage.destination = destination;
+    origin_ = origin;
+    destination_ = destination;
     SetLinkVariableName(var, "IntercoIndirectCost");
 }
 
@@ -101,10 +98,10 @@ void VariableNamer::SetShortTermStorageVariableName(int var,
                                                     const std::string& variableType,
                                                     const std::string& shortTermStorageName)
 {
-    const auto location = LocationIdentifier(currentAssetsStorage.area, AREA) + SEPARATOR
-                          + "ShortTermStorage" + "<" + shortTermStorageName + ">";
-    name_updater.UpdateTargetAtIndex(
-      BuildName(variableType, location, TimeIdentifier(currentAssetsStorage.timeStep, HOUR)), var);
+    const auto location = LocationIdentifier(area_, AREA) + SEPARATOR + "ShortTermStorage" + "<"
+                          + shortTermStorageName + ">";
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName(variableType, location, TimeIdentifier(timeStep_, HOUR)), var);
 }
 
 void VariableNamer::ShortTermStorageInjection(int var, const std::string& shortTermStorageName)
@@ -181,166 +178,155 @@ void ConstraintNamer::FlowDissociation(int numConstraint,
                                        const std::string& origin,
                                        const std::string& destination)
 {
-    name_updater.UpdateTargetAtIndex(
+    targetUpdater_.UpdateTargetAtIndex(
       BuildName("FlowDissociation",
                 LocationIdentifier(origin + AREA_SEP + destination, LINK),
-                TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
+                TimeIdentifier(timeStep_, HOUR)),
       numConstraint);
 }
 
 void ConstraintNamer::AreaBalance(int numConstraint)
 {
-    name_updater.UpdateTargetAtIndex(BuildName("AreaBalance",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName("AreaBalance", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR)),
+      numConstraint);
 }
 
 void ConstraintNamer::FictiveLoads(int numConstraint)
 {
-    name_updater.UpdateTargetAtIndex(BuildName("FictiveLoads",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName("FictiveLoads", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR)),
+      numConstraint);
 }
 
 void ConstraintNamer::HydroPower(int numConstraint)
 {
-    name_updater.UpdateTargetAtIndex(BuildName("HydroPower",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, WEEK)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName("HydroPower", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, WEEK)),
+      numConstraint);
 }
 
 void ConstraintNamer::HydroPowerSmoothingUsingVariationSum(int numConstraint)
 {
-    name_updater.UpdateTargetAtIndex(BuildName("HydroPowerSmoothingUsingVariationSum",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(BuildName("HydroPowerSmoothingUsingVariationSum",
+                                                 LocationIdentifier(area_, AREA),
+                                                 TimeIdentifier(timeStep_, HOUR)),
+                                       numConstraint);
 }
 
 void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxDown(int numConstraint)
 {
-    name_updater.UpdateTargetAtIndex(BuildName("HydroPowerSmoothingUsingVariationMaxDown",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(BuildName("HydroPowerSmoothingUsingVariationMaxDown",
+                                                 LocationIdentifier(area_, AREA),
+                                                 TimeIdentifier(timeStep_, HOUR)),
+                                       numConstraint);
 }
 
 void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxUp(int numConstraint)
 {
-    name_updater.UpdateTargetAtIndex(BuildName("HydroPowerSmoothingUsingVariationMaxUp",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(BuildName("HydroPowerSmoothingUsingVariationMaxUp",
+                                                 LocationIdentifier(area_, AREA),
+                                                 TimeIdentifier(timeStep_, HOUR)),
+                                       numConstraint);
 }
 
 void ConstraintNamer::MinHydroPower(int numConstraint)
 {
-    name_updater.UpdateTargetAtIndex(BuildName("MinHydroPower",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, WEEK)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName("MinHydroPower", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, WEEK)),
+      numConstraint);
 }
 
 void ConstraintNamer::MaxHydroPower(int numConstraint)
 {
-    name_updater.UpdateTargetAtIndex(BuildName("MaxHydroPower",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, WEEK)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName("MaxHydroPower", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, WEEK)),
+      numConstraint);
 }
 
 void ConstraintNamer::MaxPumping(int numConstraint)
 {
-    name_updater.UpdateTargetAtIndex(BuildName("MaxPumping",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, WEEK)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName("MaxPumping", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, WEEK)),
+      numConstraint);
 }
 
 void ConstraintNamer::AreaHydroLevel(int numConstraint)
 {
-    name_updater.UpdateTargetAtIndex(BuildName("AreaHydroLevel",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName("AreaHydroLevel", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR)),
+      numConstraint);
 }
 
 void ConstraintNamer::FinalStockEquivalent(int numConstraint)
 {
-    name_updater.UpdateTargetAtIndex(BuildName("FinalStockEquivalent",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName(
+        "FinalStockEquivalent", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR)),
+      numConstraint);
 }
 
 void ConstraintNamer::FinalStockExpression(int numConstraint )
 {
-    name_updater.UpdateTargetAtIndex(BuildName("FinalStockExpression",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName(
+        "FinalStockExpression", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR)),
+      numConstraint);
 }
 
 void ConstraintNamer::nameWithTimeGranularity(int numConstraint,
                                               const std::string& name,
                                               const std::string& type)
 {
-    name_updater.UpdateTargetAtIndex(BuildName(name,
-                                               BindingConstraintTimeGranularity.at(type),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, type)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName(name, BindingConstraintTimeGranularity.at(type), TimeIdentifier(timeStep_, type)),
+      numConstraint);
 }
 
 void ConstraintNamer::MinUpTime(int numConstraint)
 {
-    name_updater.UpdateTargetAtIndex(BuildName("MinUpTime",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName("MinUpTime", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR)),
+      numConstraint);
 }
 
 void ConstraintNamer::MinDownTime(int numConstraint)
 {
-    name_updater.UpdateTargetAtIndex(BuildName("MinDownTime",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName("MinDownTime", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR)),
+      numConstraint);
 }
 
 void ConstraintNamer::PMaxDispatchableGeneration(int numConstraint)
 {
-    name_updater.UpdateTargetAtIndex(BuildName("PMaxDispatchableGeneration",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(BuildName("PMaxDispatchableGeneration",
+                                                 LocationIdentifier(area_, AREA),
+                                                 TimeIdentifier(timeStep_, HOUR)),
+                                       numConstraint);
 }
 
 void ConstraintNamer::PMinDispatchableGeneration(int numConstraint)
 {
-    name_updater.UpdateTargetAtIndex(BuildName("PMinDispatchableGeneration",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(BuildName("PMinDispatchableGeneration",
+                                                 LocationIdentifier(area_, AREA),
+                                                 TimeIdentifier(timeStep_, HOUR)),
+                                       numConstraint);
 }
 
 void ConstraintNamer::ConsistenceNODU(int numConstraint)
 {
-    name_updater.UpdateTargetAtIndex(BuildName("ConsistenceNODU",
-                                               LocationIdentifier(currentAssetsStorage.area, AREA),
-                                               TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
-                                     numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName(
+        "ConsistenceNODU", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR)),
+      numConstraint);
 }
 
 void ConstraintNamer::ShortTermStorageLevel(int numConstraint, const std::string& name)
 {
-    name_updater.UpdateTargetAtIndex(
+    targetUpdater_.UpdateTargetAtIndex(
       BuildName("Level",
-                LocationIdentifier(currentAssetsStorage.area, AREA) + SEPARATOR + "ShortTermStorage"
-                  + "<" + name + ">",
-                TimeIdentifier(currentAssetsStorage.timeStep, HOUR)),
+                LocationIdentifier(area_, AREA) + SEPARATOR + "ShortTermStorage" + "<" + name + ">",
+                TimeIdentifier(timeStep_, HOUR)),
       numConstraint);
 }
 

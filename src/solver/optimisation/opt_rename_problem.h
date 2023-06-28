@@ -33,34 +33,29 @@ private:
     }
 };
 
-struct CurrentAssetsStorage
-{
-    int timeStep = 0;
-    std::string origin;
-    std::string destination;
-    std::string area;
-};
-
 class Namer
 {
 public:
     Namer(std::vector<std::string>& target, bool namedProblems) :
-     name_updater(namedProblems, target)
+     targetUpdater_(namedProblems, target)
     {
     }
 
     void UpdateTimeStep(int timeStep)
     {
-        currentAssetsStorage.timeStep = timeStep;
+        timeStep_ = timeStep;
     }
 
     void UpdateArea(const std::string& area)
     {
-        currentAssetsStorage.area = area;
+        area_ = area;
     }
 
-    TargetVectorUpdater name_updater;
-    CurrentAssetsStorage currentAssetsStorage;
+    int timeStep_ = 0;
+    std::string origin_;
+    std::string destination_;
+    std::string area_;
+    TargetVectorUpdater targetUpdater_;
 };
 
 class VariableNamer : public Namer
