@@ -28,12 +28,12 @@ namespace Antares::Data {
             group->add(constraint);
         }
 
-        bool hasError = checkTimeSeriesWidthConsistency();
+        bool tsAreConsistent = timeSeriesWidthConsistentInGroups();
 
-        return !hasError;
+        return tsAreConsistent;
     }
 
-    bool BindingConstraintGroupRepository::checkTimeSeriesWidthConsistency() const {
+    bool BindingConstraintGroupRepository::timeSeriesWidthConsistentInGroups() const {
         bool hasError = false;
         for(const auto& group: this->groups_) {
             unsigned count = 0;
@@ -53,6 +53,6 @@ namespace Antares::Data {
                 }
             }
         }
-        return hasError;
+        return !hasError;
     }
 } // Data
