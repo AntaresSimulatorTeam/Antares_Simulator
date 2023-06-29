@@ -5,12 +5,11 @@
 #include <boost/test/unit_test.hpp>
 #include <filesystem>
 #include <fstream>
+#include <memory>
 #include "antares/study/study.h"
 
 using namespace Antares::Data;
 namespace fs = std::filesystem;
-
-BOOST_AUTO_TEST_SUITE(BindingConstraintTests_Groups)
 
 class PublicStudy: public Study {
 public:
@@ -19,30 +18,40 @@ public:
     }
 };
 
-BOOST_AUTO_TEST_CASE(WhenLoadingAConstraint_AGroupExists) {
-    auto study = std::make_shared<PublicStudy>();
+struct Fixture {
+    Fixture() {
+        fs::create_directories(working_tmp_dir / "bindingconstraints");
+    }
 
+    void addConstraint(const std::string& name, const std::string& group) const {
+        std::ofstream constraints(working_tmp_dir / "bindingconstraints" / "bindingconstraints.ini", std::ios_base::app);
+        static unsigned constraintNumber = 1;
+        constraints << "[" << constraintNumber++ << "]\n"
+                    << "name = " << name << "\n"
+                    <<"id = " << name << "\n"
+                    << "enabled = false\n"
+                    << "type = hourly\n"
+                    << "operator = equal\n"
+                    << "filter-year-by-year = annual\n"
+                    << "filter-synthesis = hourly\n"
+                    << "comments = dummy_comment\n"
+                    << "group = " << group << "\n"
+                ;
+        constraints.close();
+        std::ofstream rhs(working_tmp_dir / "bindingconstraints"/ (name+"_eq.txt"));
+        rhs.close();
+    }
+
+    std::shared_ptr<PublicStudy> study = std::make_shared<PublicStudy>();
     StudyLoadOptions options;
+    std::filesystem::path tmp_dir = fs::temp_directory_path();
+    std::filesystem::path working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
+};
 
-    auto tmp_dir = fs::temp_directory_path();
-    auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
-    fs::create_directories(working_tmp_dir / "bindingconstraints");
+BOOST_FIXTURE_TEST_SUITE(BindingConstraintTests_Groups, Fixture)
 
-    std::ofstream constraints(working_tmp_dir / "bindingconstraints" / "bindingconstraints.ini");
-    constraints << "[1]\n"
-                << "name = dummy_name\n"
-                <<"id = dummy_id\n"
-                << "enabled = false\n"
-                << "type = hourly\n"
-                << "operator = equal\n"
-                << "filter-year-by-year = annual\n"
-                << "filter-synthesis = hourly\n"
-                << "comments = dummy_comment\n"
-                << "group = dummy_group\n"
-            ;
-    constraints.close();
-    std::ofstream rhs(working_tmp_dir / "bindingconstraints"/ "dummy_id_eq.txt");
-    rhs.close();
+BOOST_AUTO_TEST_CASE(WhenLoadingAConstraint_AGroupExists) {
+    addConstraint("dummy_name", "dummy_group");
 
     study->header.version = version870;
 
@@ -56,7 +65,7 @@ BOOST_AUTO_TEST_CASE(WhenLoadingAConstraint_AGroupExists) {
     auto constraint = *study->bindingConstraints.begin();
 
     BOOST_CHECK_EQUAL(constraint->name(), "dummy_name");
-    BOOST_CHECK_EQUAL(constraint->id(), "dummy_id");
+    BOOST_CHECK_EQUAL(constraint->id(), "dummy_name");
     BOOST_CHECK_EQUAL(constraint->enabled(), false);
     BOOST_CHECK_EQUAL(constraint->type(), BindingConstraint::Type::typeHourly);
     BOOST_CHECK_EQUAL(constraint->operatorType(), BindingConstraint::Operator::opEquality);
@@ -67,47 +76,9 @@ BOOST_AUTO_TEST_CASE(WhenLoadingAConstraint_AGroupExists) {
 }
 
 BOOST_AUTO_TEST_CASE(WhenLoadingsConstraints_AllGroupExists) {
-    auto study = std::make_shared<PublicStudy>();
-
-    StudyLoadOptions options;
-
-    auto tmp_dir = fs::temp_directory_path();
-    auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
-    fs::create_directories(working_tmp_dir / "bindingconstraints");
-
-    std::ofstream constraints(working_tmp_dir / "bindingconstraints" / "bindingconstraints.ini");
-    constraints << "[1]\n"
-                << "name = dummy_name_1\n"
-                <<"id = dummy_id_1\n"
-                << "enabled = false\n"
-                << "type = hourly\n"
-                << "operator = equal\n"
-                << "filter-year-by-year = annual\n"
-                << "filter-synthesis = hourly\n"
-                << "comments = dummy_comment\n"
-                << "group = dummy_group_uno\n"
-                << "[2]\n"
-                << "name = dummy_name_2\n"
-                <<"id = dummy_id_2\n"
-                << "enabled = false\n"
-                << "type = hourly\n"
-                << "operator = equal\n"
-                << "group = dummy_group_uno\n"
-                << "[3]\n"
-                << "name = dummy_name_3\n"
-                <<"id = dummy_id_3\n"
-                << "enabled = false\n"
-                << "type = hourly\n"
-                << "operator = equal\n"
-                << "group = dummy_group_other\n"
-            ;
-    constraints.close();
-    std::ofstream rhs(working_tmp_dir / "bindingconstraints"/ "dummy_id_1_eq.txt");
-    std::ofstream rhs2(working_tmp_dir / "bindingconstraints"/ "dummy_id_2_eq.txt");
-    std::ofstream rhs3(working_tmp_dir / "bindingconstraints"/ "dummy_id_3_eq.txt");
-    rhs.close();
-    rhs2.close();
-    rhs3.close();
+    addConstraint("dummy_name_1", "dummy_group_uno");
+    addConstraint("dummy_name_2", "dummy_group_uno");
+    addConstraint("dummy_name_3", "dummy_group_other");
 
     study->header.version = version870;
 
