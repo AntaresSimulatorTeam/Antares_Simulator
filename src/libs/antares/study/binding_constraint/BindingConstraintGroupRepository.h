@@ -4,11 +4,19 @@
 
 #pragma once
 
+#include <memory>
+#include <set>
+#include "antares/study/binding_constraint/BindingConstraintGroup.h"
+#include "antares/study/fwd.h"
 namespace Antares::Data {
 
 class BindingConstraintGroupRepository {
 public:
-    [[no_discard]] unsigned size();
+    [[nodiscard]] unsigned size() const;
+
+    std::vector<std::shared_ptr<BindingConstraintGroup>> groups_;
+
+    void buildFrom(BindingConstraintsRepository& repository);
 };
 
 } // DAta
