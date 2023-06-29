@@ -18,12 +18,12 @@ public:
         }
     }
 
-    std::function<void(const std::string&, unsigned index)> UpdateTargetAtIndex
-      = [](const std::string&, unsigned index) {};
+    std::function<void(const std::string&, unsigned int index)> UpdateTargetAtIndex
+      = [](const std::string&, unsigned int index) {};
 
 private:
     std::vector<std::string>& target_;
-    void UpdateTargetAtIndexImpl(const std::string& full_name, unsigned index)
+    void UpdateTargetAtIndexImpl(const std::string& full_name, unsigned int index)
     {
         target_[index] = full_name;
     }
