@@ -18,7 +18,7 @@ public:
 
     [[nodiscard]] bool buildFrom(BindingConstraintsRepository& repository);
 
-    [[nodiscard]] bool checkTimeSeriesWidthConsistency() const;
+    [[nodiscard]] bool timeSeriesWidthConsistentInGroups() const;
 };
 
 } // DAta
