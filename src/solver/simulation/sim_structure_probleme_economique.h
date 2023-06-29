@@ -187,7 +187,7 @@ struct RESULTS
 
 struct RESULTATS_CONTRAINTES_COUPLANTES
 {
-    double* variablesDuales;
+    std::vector<double> variablesDuales;
 };
 
 struct DEMAND_MARKET_POOL
@@ -533,7 +533,7 @@ struct PROBLEME_HEBDO
 
     int NombreDeContraintesCouplantes = 0;
     mutable std::vector<CONTRAINTES_COUPLANTES> MatriceDesContraintesCouplantes;
-    RESULTATS_CONTRAINTES_COUPLANTES* ResultatsContraintesCouplantes = nullptr;
+    std::vector<RESULTATS_CONTRAINTES_COUPLANTES> ResultatsContraintesCouplantes;
 
     std::vector<SOLDE_MOYEN_DES_ECHANGES> SoldeMoyenHoraire; // Used for quadratic opt
     /* Implementation details : I/O, error management, etc. */

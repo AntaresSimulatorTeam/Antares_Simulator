@@ -265,7 +265,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
     const auto& bindingConstraintCount = study.runtime->bindingConstraints.size();
 
     problem.ResultatsContraintesCouplantes
-        = new RESULTATS_CONTRAINTES_COUPLANTES[bindingConstraintCount];
+        = std::vector<RESULTATS_CONTRAINTES_COUPLANTES>(bindingConstraintCount);
 
     for (unsigned k = 0; k < bindingConstraintCount; k++)
     {
@@ -313,14 +313,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
             break;
         }
         if (nbTimeSteps > 0)
-        {
-            problem.ResultatsContraintesCouplantes[k].variablesDuales
-              = new double[nbTimeSteps];
-        }
-        else
-        {
-            problem.ResultatsContraintesCouplantes[k].variablesDuales = nullptr;
-        }
+            problem.ResultatsContraintesCouplantes[k].variablesDuales.assign(nbTimeSteps, 0.);
     }
 
     for (unsigned k = 0; k < nbPays; k++)
@@ -525,13 +518,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     {
         delete problem.CorrespondanceVarNativesVarOptim[k];
     }
-
-    for (int k = 0; k < (int)study.runtime->bindingConstraints.size(); k++)
-    {
-        if (problem.ResultatsContraintesCouplantes[k].variablesDuales != nullptr)
-            delete problem.ResultatsContraintesCouplantes[k].variablesDuales;
-    }
-    delete problem.ResultatsContraintesCouplantes;
 
     for (int k = 0; k < (int)nbPays; ++k)
     {
