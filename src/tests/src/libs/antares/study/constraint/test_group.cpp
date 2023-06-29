@@ -21,6 +21,8 @@ public:
 struct Fixture {
     Fixture() {
         fs::create_directories(working_tmp_dir / "bindingconstraints");
+        study->header.version = version870;
+        study->folderInput = working_tmp_dir.string();
     }
 
     void addConstraint(const std::string& name, const std::string& group) const {
@@ -52,10 +54,6 @@ BOOST_FIXTURE_TEST_SUITE(BindingConstraintTests_Groups, Fixture)
 
 BOOST_AUTO_TEST_CASE(WhenLoadingAConstraint_AGroupExists) {
     addConstraint("dummy_name", "dummy_group");
-
-    study->header.version = version870;
-
-    study->folderInput = working_tmp_dir.string();
     const bool loading_ok = study->internalLoadBindingConstraints(options);
 
     BOOST_CHECK_EQUAL(loading_ok, true);
