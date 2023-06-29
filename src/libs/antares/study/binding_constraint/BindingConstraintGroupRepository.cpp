@@ -27,6 +27,32 @@ namespace Antares::Data {
             }
             group->add(constraint);
         }
-        return true;
+
+        bool hasError = checkTimeSeriesWidthConsistency();
+
+        return !hasError;
+    }
+
+    bool BindingConstraintGroupRepository::checkTimeSeriesWidthConsistency() const {
+        bool hasError = false;
+        for(const auto& group: this->groups_) {
+            unsigned count = 0;
+            for (const auto& bc: group->constraints()) {
+                auto width = bc->RHSTimeSeries().width;
+                if (count == 0) {
+                    count = width;
+                    continue;
+                }
+                if (count != width) {
+                    logs.error() << "Inconsistent time series width for constraint of the same group. Group at fault: "
+                                 << bc->group()
+                                 << " .Previous width was " << count
+                                 << " new constraint " << bc->name()
+                                 << " found with width of " << width;
+                    hasError = true;
+                }
+            }
+        }
+        return hasError;
     }
 } // Data
