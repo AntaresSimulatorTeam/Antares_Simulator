@@ -261,9 +261,9 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
     // All checks are performed in 'loadFromFolder'
     // (actually internalLoadFromFolder)
     buffer.clear() << folderInput << SEP << "bindingconstraints";
-    const bool r = bindingConstraints.loadFromFolder(*this, options, buffer);
+    bool r = bindingConstraints.loadFromFolder(*this, options, buffer);
     if (r) {
-        bindingConstraintsGroups.buildFrom(bindingConstraints);
+        r &= bindingConstraintsGroups.buildFrom(bindingConstraints);
     }
     return (!r && options.loadOnlyNeeded) ? false : r;
 }

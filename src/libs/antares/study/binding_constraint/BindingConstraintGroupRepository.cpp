@@ -14,7 +14,7 @@ namespace Antares::Data {
         return groups_.size();
     }
 
-    void BindingConstraintGroupRepository::buildFrom(BindingConstraintsRepository &repository) {
+    bool BindingConstraintGroupRepository::buildFrom(BindingConstraintsRepository &repository) {
         for (auto constraint: repository) {
             auto group_found = std::find_if(groups_.begin(), groups_.end(), [constraint](auto group) {
                 return group->name() == constraint->group();
@@ -27,5 +27,6 @@ namespace Antares::Data {
             }
             group->add(constraint);
         }
+        return true;
     }
 } // Data
