@@ -39,13 +39,13 @@ void createIniFile()
     outfile << "min-stable-power = 400.000000" << std::endl;
     outfile << "min-up-time = 24" << std::endl;
     outfile << "min-down-time = 24" << std::endl;
-    outfile << "co2 = 1.200000" << std::endl;
+    outfile << "co2 = 2.000000" << std::endl;
     outfile << "marginal-cost = 23.000000" << std::endl;
     outfile << "fixed-cost = 1700.000000" << std::endl;
     outfile << "startup-cost = 70000.000000" << std::endl;
     outfile << "market-bid-cost = 35.000000" << std::endl;
     outfile << "costgeneration = useCostTimeseries" << std::endl;
-    outfile << "efficiency = 35.350000" << std::endl;
+    outfile << "efficiency = 36.00000" << std::endl;
     outfile << "variableomcost = 12.120000" << std::endl;
 
     outfile.close();
@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_CASE(ThermalClusterList_loadFromFolder_basic)
     clusterList.loadFromFolder(*study, folder, area);
     BOOST_CHECK(clusterList.mapping["area"]->startupCost == 70000.0);
     BOOST_CHECK(clusterList.mapping["area"]->costgeneration == useCostTimeseries);
-    BOOST_CHECK(clusterList.mapping["area"]->fuelEfficiency == 35.35);
+    BOOST_CHECK(clusterList.mapping["area"]->fuelEfficiency == 36.0);
     BOOST_CHECK(clusterList.mapping["area"]->variableomcost == 12.12);
 
 }
@@ -280,12 +280,10 @@ BOOST_AUTO_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMa
 
     clusterList.mapping["area"]->costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour();
 
-    std::cout << clusterList.mapping["area"]->thermalEconomicTimeSeries[0]
-        .marketBidCostPerHourTs[2637];
-    /* BOOST_CHECK(clusterList.mapping["area"]->thermalEconomicTimeSeries[0] */
-    /*     .marketBidCostPerHourTs[2637] == 35); */
-    /* BOOST_CHECK(clusterList.mapping["area"]->thermalEconomicTimeSeries[0] */
-    /*     .marginalCostPerHourTs[6737] == 23); */
+    BOOST_CHECK(clusterList.mapping["area"]->thermalEconomicTimeSeries[0]
+        .marketBidCostPerHourTs[0] - 24.12 < 0.000001);
+    BOOST_CHECK(clusterList.mapping["area"]->thermalEconomicTimeSeries[0]
+        .marketBidCostPerHourTs[2637] - 24.12 < 0.000001);
 }
 
 
