@@ -16,7 +16,7 @@ public:
 
     std::vector<std::shared_ptr<BindingConstraintGroup>> groups_;
 
-    void buildFrom(BindingConstraintsRepository& repository);
+    bool buildFrom(BindingConstraintsRepository& repository);
 };
 
 } // DAta
