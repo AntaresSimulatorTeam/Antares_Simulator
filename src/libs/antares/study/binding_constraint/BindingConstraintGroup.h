@@ -10,10 +10,11 @@ namespace Antares::Data {
 
 class BindingConstraintGroup {
 public:
-    BindingConstraintGroup(std::string name);
+    explicit BindingConstraintGroup(std::string name);
 
     [[nodiscard]] std::string name() { return name_; }
     void add(const std::shared_ptr<BindingConstraint>& constraint);
+    [[nodiscard]] std::set<std::shared_ptr<BindingConstraint>> constraints() const;
 private:
     std::set<std::shared_ptr<BindingConstraint>> constraints_;
     std::string name_;

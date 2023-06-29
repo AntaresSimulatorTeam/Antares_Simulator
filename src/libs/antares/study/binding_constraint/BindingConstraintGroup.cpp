@@ -18,4 +18,8 @@ namespace Antares::Data {
 
     }
 
+    std::set<std::shared_ptr<BindingConstraint>> BindingConstraintGroup::constraints() const {
+        return constraints_;
+    }
+
 } // Data
