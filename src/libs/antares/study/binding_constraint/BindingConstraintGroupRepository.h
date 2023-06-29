@@ -16,7 +16,9 @@ public:
 
     std::vector<std::shared_ptr<BindingConstraintGroup>> groups_;
 
-    bool buildFrom(BindingConstraintsRepository& repository);
+    [[nodiscard]] bool buildFrom(BindingConstraintsRepository& repository);
+
+    [[nodiscard]] bool checkTimeSeriesWidthConsistency() const;
 };
 
 } // DAta
