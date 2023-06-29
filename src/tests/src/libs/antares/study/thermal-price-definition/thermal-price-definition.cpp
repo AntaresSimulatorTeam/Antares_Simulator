@@ -121,7 +121,7 @@ struct Fixture
         removeCostFiles();
     }
 
-    std::string folder = getFolder();
+    std::string folder = getFolder().string();
     ThermalClusterList clusterList;
     Area* area;
 
