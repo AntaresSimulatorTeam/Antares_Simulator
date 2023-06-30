@@ -343,20 +343,20 @@ private:
 
     double capacity;
     std::vector<double>& inflows;
-    std::vector<double> ovf;
-    std::vector<double> turb;
+    std::vector<double>& ovf;
+    std::vector<double>& turb;
     double pumpRatio;
-    std::vector<double> pump;
+    std::vector<double>& pump;
     double excessDown;
 
 public:
     computeTimeStepLevel(
             const double& startLvl,
             std::vector<double>& infl,
-            std::vector<double> overfl,
-            std::vector<double> H,
+            std::vector<double>& overfl,
+            std::vector<double>& H,
             double pumpEff,
-            std::vector<double> Pump,
+            std::vector<double>& Pump,
             double rc) :
         step(0),
         level(startLvl),
