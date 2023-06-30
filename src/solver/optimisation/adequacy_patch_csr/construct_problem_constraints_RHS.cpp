@@ -137,7 +137,7 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
 
             double ValueOfVar = problemeHebdo_->ResultatsHoraires[Area]
                                   .ProductionThermique[triggeredHour]
-                                  ->ProductionThermiqueDuPalier[IndexNumeroDuPalierDispatch];
+                                  .ProductionThermiqueDuPalier[IndexNumeroDuPalierDispatch];
 
             SecondMembre[Cnt] -= ValueOfVar * Poids;
         }

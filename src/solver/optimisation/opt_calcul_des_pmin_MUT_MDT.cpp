@@ -110,7 +110,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
           = PaliersThermiquesDuPays.TailleUnitaireDUnGroupeDuPalierThermique;
         const std::vector<int>& minUpDownTime = PaliersThermiquesDuPays.minUpDownTime;
 
-        const std::vector<PRODUCTION_THERMIQUE_OPTIMALE*>& ProductionThermiqueOptimale
+        const std::vector<PRODUCTION_THERMIQUE_OPTIMALE>& ProductionThermiqueOptimale
           = ResultatsHoraires.ProductionThermique;
 
         for (int Palier = 0; Palier < PaliersThermiquesDuPays.NombreDePaliersThermiques; Palier++)
@@ -127,7 +127,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
 
             for (int Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
             {
-                double P = ProductionThermiqueOptimale[Pdt]->ProductionThermiqueDuPalier[Palier];
+                double P = ProductionThermiqueOptimale[Pdt].ProductionThermiqueDuPalier[Palier];
 
                 NbGrpCourbeGuide[Pdt] = 0;
                 if (fabs(P) < ZERO_PMIN)

@@ -339,7 +339,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
                 double* adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
                                                 .ProductionThermique[pdtHebdo]
-                                                ->ProductionThermiqueDuPalier[index]);
+                                                .ProductionThermiqueDuPalier[index]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
             }
 

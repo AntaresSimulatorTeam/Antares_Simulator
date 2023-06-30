@@ -130,12 +130,12 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
         thermal[area->index].thermalClustersProductions[clusterAreaWideIndex]
           = hourlyResults->ProductionThermique[hourInTheWeek]
-              ->ProductionThermiqueDuPalier[thermalCluster->index];
+              .ProductionThermiqueDuPalier[thermalCluster->index];
 
         if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucMILP) // Economy accurate
             thermal[area->index].numberOfUnitsONbyCluster[clusterAreaWideIndex]
               = static_cast<uint>(hourlyResults->ProductionThermique[hourInTheWeek]
-                                    ->NombreDeGroupesEnMarcheDuPalier[thermalCluster->index]);
+                                    .NombreDeGroupesEnMarcheDuPalier[thermalCluster->index]);
         else
             // Economy Fast or Adequacy -- will be calculated during the smoothing
             thermal[area->index].numberOfUnitsONbyCluster[clusterAreaWideIndex] = 0;

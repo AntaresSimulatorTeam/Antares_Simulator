@@ -430,7 +430,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout
           = std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER>(nbPaliers);
         problem.ResultatsHoraires[k].ProductionThermique
-          = std::vector<PRODUCTION_THERMIQUE_OPTIMALE*>(NombreDePasDeTemps);
+          = std::vector<PRODUCTION_THERMIQUE_OPTIMALE>(NombreDePasDeTemps);
 
         for (unsigned j = 0; j < nbPaliers; ++j)
         {
@@ -471,21 +471,20 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         }
         for (unsigned j = 0; j < NombreDePasDeTemps; j++)
         {
-            problem.ResultatsHoraires[k].ProductionThermique[j] = new PRODUCTION_THERMIQUE_OPTIMALE;
-            problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalier
+            problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalier
               .assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierUp
+            problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalierUp
               .assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierDown
+            problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalierDown
               .assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesEnMarcheDuPalier
+            problem.ResultatsHoraires[k].ProductionThermique[j].NombreDeGroupesEnMarcheDuPalier
               .assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesQuiDemarrentDuPalier
+            problem.ResultatsHoraires[k].ProductionThermique[j].NombreDeGroupesQuiDemarrentDuPalier
               .assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesQuiSArretentDuPalier
+            problem.ResultatsHoraires[k].ProductionThermique[j].NombreDeGroupesQuiSArretentDuPalier
               .assign(nbPaliers, 0.);
             problem.ResultatsHoraires[k].ProductionThermique[j]
-              ->NombreDeGroupesQuiTombentEnPanneDuPalier
+              .NombreDeGroupesQuiTombentEnPanneDuPalier
               .assign(nbPaliers, 0.);
         }
         // Short term storage results
@@ -516,13 +515,5 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     for (uint k = 0; k < problem.NombreDePasDeTemps; k++)
     {
         delete problem.CorrespondanceVarNativesVarOptim[k];
-    }
-
-    for (int k = 0; k < (int)nbPays; ++k)
-    {
-        for (uint j = 0; j < problem.NombreDePasDeTemps; j++)
-        {
-            delete problem.ResultatsHoraires[k].ProductionThermique[j];
-        }
     }
 }

@@ -45,7 +45,7 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
                 for (uint h = 0; h != nbHoursInWeek; ++h)
                 {
                     double production = hourlyResults.ProductionThermique[h]
-                                          ->ProductionThermiqueDuPalier[cluster.index];
+                                          .ProductionThermiqueDuPalier[cluster.index];
                     dtgmrg[h] += column[h + hourInYear] - production;
                 }
             }
