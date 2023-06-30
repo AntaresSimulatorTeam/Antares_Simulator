@@ -343,20 +343,20 @@ private:
 
     double capacity;
     std::vector<double>& inflows;
-    double* ovf;
-    double* turb;
+    std::vector<double> ovf;
+    std::vector<double> turb;
     double pumpRatio;
-    double* pump;
+    std::vector<double> pump;
     double excessDown;
 
 public:
     computeTimeStepLevel(
             const double& startLvl,
             std::vector<double>& infl,
-            double* overfl,
-            double* H,
+            std::vector<double> overfl,
+            std::vector<double> H,
             double pumpEff,
-            double* Pump,
+            std::vector<double> Pump,
             double rc) :
         step(0),
         level(startLvl),
@@ -427,32 +427,32 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
 
 struct RESULTATS_HORAIRES
 {
-    double* ValeursHorairesDeDefaillancePositive;
-    double* ValeursHorairesDENS;                  // adq patch domestic unsupplied energy
-    int* ValeursHorairesLmrViolations;            // adq patch lmr violations
-    double* ValeursHorairesSpilledEnergyAfterCSR; // adq patch spillage after CSR
-    double* ValeursHorairesDtgMrgCsr;             // adq patch DTG MRG after CSR
-    double* ValeursHorairesDeDefaillancePositiveUp;
-    double* ValeursHorairesDeDefaillancePositiveDown;
-    double* ValeursHorairesDeDefaillancePositiveAny;
+    std::vector<double> ValeursHorairesDeDefaillancePositive;
+    std::vector<double> ValeursHorairesDENS;                  // adq patch domestic unsupplied energy
+    mutable std::vector<int> ValeursHorairesLmrViolations;    // adq patch lmr violations
+    std::vector<double> ValeursHorairesSpilledEnergyAfterCSR; // adq patch spillage after CSR
+    std::vector<double> ValeursHorairesDtgMrgCsr;             // adq patch DTG MRG after CSR
+    std::vector<double> ValeursHorairesDeDefaillancePositiveUp;
+    std::vector<double> ValeursHorairesDeDefaillancePositiveDown;
+    std::vector<double> ValeursHorairesDeDefaillancePositiveAny;
 
-    double* ValeursHorairesDeDefaillanceNegative;
-    double* ValeursHorairesDeDefaillanceNegativeUp;
-    double* ValeursHorairesDeDefaillanceNegativeDown;
-    double* ValeursHorairesDeDefaillanceNegativeAny;
+    std::vector<double> ValeursHorairesDeDefaillanceNegative;
+    std::vector<double> ValeursHorairesDeDefaillanceNegativeUp;
+    std::vector<double> ValeursHorairesDeDefaillanceNegativeDown;
+    std::vector<double> ValeursHorairesDeDefaillanceNegativeAny;
 
-    double* ValeursHorairesDeDefaillanceEnReserve;
-    double* PompageHoraire;
-    double* TurbinageHoraire;
-    double* TurbinageHoraireUp;
-    double* TurbinageHoraireDown;
+    std::vector<double> ValeursHorairesDeDefaillanceEnReserve;
+    std::vector<double> PompageHoraire;
+    std::vector<double> TurbinageHoraire;
+    std::vector<double> TurbinageHoraireUp;
+    std::vector<double> TurbinageHoraireDown;
 
-    double* niveauxHoraires;
-    double* valeurH2oHoraire;
+    std::vector<double> niveauxHoraires;
+    std::vector<double> valeurH2oHoraire;
 
-    double* debordementsHoraires;
+    std::vector<double> debordementsHoraires;
 
-    double* CoutsMarginauxHoraires;
+    std::vector<double> CoutsMarginauxHoraires;
     PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique; // index is pdtHebdo
 
     std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;

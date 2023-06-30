@@ -82,7 +82,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     AdqPatchParams adqPatchParams;
 
     problem.ResultatsHoraires.resize(1);
-    problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive = new double;
+    problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive = std::vector<double>(1);
     problem.ValeursDeNTC = std::vector<VALEURS_DE_NTC_ET_RESISTANCES>(1);
     problem.ValeursDeNTC[0].ValeurDuFlux = std::vector<double>(3);
     problem.IndexSuivantIntercoOrigine = std::vector<int>(3);
@@ -110,9 +110,6 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     double densNew;
     std::tie(netPositionInit, densNew, std::ignore)
         = calculateAreaFlowBalance(&problem, adqPatchParams.localMatching.setToZeroOutsideInsideLinks, Area, hour);
-
-    // free memory
-    delete problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive;
 
     return std::make_pair(netPositionInit, densNew);
 }

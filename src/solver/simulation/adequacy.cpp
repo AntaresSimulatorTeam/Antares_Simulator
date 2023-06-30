@@ -279,16 +279,23 @@ bool Adequacy::year(Progression::Task& progression,
             {
                 auto& hourlyResults = pProblemesHebdo[numSpace]->ResultatsHoraires[ar];
 
-                memset(hourlyResults.ValeursHorairesDeDefaillancePositive,
-                       0,
-                       sizeof(double) * nbHoursInAWeek);
-                memset(hourlyResults.ValeursHorairesDeDefaillanceNegative,
-                       0,
-                       sizeof(double) * nbHoursInAWeek);
-                memset(hourlyResults.CoutsMarginauxHoraires, 0, sizeof(double) * nbHoursInAWeek);
-                memset(hourlyResults.PompageHoraire, 0, sizeof(double) * nbHoursInAWeek);
-                memset(hourlyResults.debordementsHoraires, 0, sizeof(double) * nbHoursInAWeek);
-                memset(hourlyResults.niveauxHoraires, 0, sizeof(double) * nbHoursInAWeek);
+                std::fill(hourlyResults.ValeursHorairesDeDefaillancePositive.begin(),
+                        hourlyResults.ValeursHorairesDeDefaillancePositive.end(), 0);
+
+                std::fill(hourlyResults.ValeursHorairesDeDefaillanceNegative.begin(),
+                        hourlyResults.ValeursHorairesDeDefaillanceNegative.end(), 0);
+
+                std::fill(hourlyResults.CoutsMarginauxHoraires.begin(),
+                        hourlyResults.CoutsMarginauxHoraires.end(), 0);
+
+                std::fill(hourlyResults.PompageHoraire.begin(),
+                        hourlyResults.PompageHoraire.end(), 0);
+
+                std::fill(hourlyResults.debordementsHoraires.begin(),
+                        hourlyResults.debordementsHoraires.end(), 0);
+
+                std::fill(hourlyResults.niveauxHoraires.begin(),
+                        hourlyResults.niveauxHoraires.end(), 0);
             }
 
             uint indx = hourInTheYear;

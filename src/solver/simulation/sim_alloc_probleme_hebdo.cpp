@@ -386,47 +386,47 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
           .assign(NombreDePasDeTemps, 0.);
 
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDENS
-          = new double[NombreDePasDeTemps](); // adq patch
+          .assign(NombreDePasDeTemps, 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesLmrViolations
-          = new int[NombreDePasDeTemps](); // adq patch
+          .assign(NombreDePasDeTemps, 0); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR
-          = new double[NombreDePasDeTemps](); // adq patch
+          .assign(NombreDePasDeTemps, 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr
-          = new double[NombreDePasDeTemps](); // adq patch
+          .assign(NombreDePasDeTemps, 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveUp
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveDown
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveAny
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegative
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeUp
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeDown
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeAny
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceEnReserve
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].TurbinageHoraire
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].PompageHoraire
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].TurbinageHoraireUp
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].TurbinageHoraireDown
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].CoutsMarginauxHoraires
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].niveauxHoraires
-          = new double[NombreDePasDeTemps]();
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].valeurH2oHoraire
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].debordementsHoraires
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout
           = std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER>(nbPaliers);
         problem.ResultatsHoraires[k].ProductionThermique
@@ -521,29 +521,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     for (int k = 0; k < (int)nbPays; ++k)
     {
-        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
-
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDENS;
-        delete problem.ResultatsHoraires[k].ValeursHorairesLmrViolations;
-        delete problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveUp;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveDown;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveAny;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegative;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeUp;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeDown;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeAny;
-        delete problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceEnReserve;
-        delete problem.ResultatsHoraires[k].TurbinageHoraire;
-        delete problem.ResultatsHoraires[k].PompageHoraire;
-        delete problem.ResultatsHoraires[k].TurbinageHoraireUp;
-        delete problem.ResultatsHoraires[k].TurbinageHoraireDown;
-        delete problem.ResultatsHoraires[k].niveauxHoraires;
-        delete problem.ResultatsHoraires[k].valeurH2oHoraire;
-        delete problem.ResultatsHoraires[k].debordementsHoraires;
-        delete problem.ResultatsHoraires[k].CoutsMarginauxHoraires;
         for (uint j = 0; j < problem.NombreDePasDeTemps; j++)
         {
             delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalier;

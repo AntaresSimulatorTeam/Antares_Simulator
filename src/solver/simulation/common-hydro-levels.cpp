@@ -58,15 +58,15 @@ void computingHydroLevels(const Data::AreaList& areas,
 
         RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
 
-        double* turb = weeklyResults.TurbinageHoraire;
+        std::vector<double>& turb = weeklyResults.TurbinageHoraire;
 
-        double* pump = weeklyResults.PompageHoraire;
+        std::vector<double>& pump = weeklyResults.PompageHoraire;
         double pumpingRatio = area.hydro.pumpingEfficiency;
 
         double nivInit = problem.CaracteristiquesHydrauliques[index].NiveauInitialReservoir;
-        double* niv = weeklyResults.niveauxHoraires;
+        std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
-        double* ovf = weeklyResults.debordementsHoraires;
+        std::vector<double>& ovf = weeklyResults.debordementsHoraires;
 
         computeTimeStepLevel computeLvlObj(nivInit,
                                            inflows,
@@ -106,7 +106,7 @@ void interpolateWaterValue(const Data::AreaList& areas,
 
         RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
 
-        double* waterVal = weeklyResults.valeurH2oHoraire;
+        std::vector<double>& waterVal = weeklyResults.valeurH2oHoraire;
 
         for (uint h = 0; h < nbHoursInAWeek; h++)
             waterVal[h] = 0.;
@@ -119,7 +119,7 @@ void interpolateWaterValue(const Data::AreaList& areas,
 
         double reservoirCapacity = area.hydro.reservoirCapacity;
 
-        double* niv = weeklyResults.niveauxHoraires;
+        std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
         Antares::Data::getWaterValue(
                 problem.previousSimulationFinalLevel[index] * 100 / reservoirCapacity,
@@ -149,7 +149,7 @@ void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas,
 
         RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
 
-        double* niv = weeklyResults.niveauxHoraires;
+        std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
         problem.previousSimulationFinalLevel[index]
           = niv[nbHoursInAWeek - 1] * reservoirCapacity / 100;
