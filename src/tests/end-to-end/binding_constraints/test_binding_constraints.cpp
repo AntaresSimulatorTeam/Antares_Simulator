@@ -58,7 +58,7 @@ Area* addAreaToStudy(Study::Ptr study, const std::string& areaName, double loadI
 
 void configureLinkCapacities(AreaLink* link)
 {
-    double linkCapacityInfinite = std::numeric_limits<double>::infinity();
+    const double linkCapacityInfinite = +std::numeric_limits<double>::infinity();
     link->directCapacities.resize(1, 8760);
     link->directCapacities.fill(linkCapacityInfinite);
 
@@ -253,6 +253,8 @@ struct Fixture {
     AreaLink* link = nullptr;
     std::shared_ptr<BindingConstraint> BC;
     std::shared_ptr<ISimulation<Economy>> simulation;
+    NullDurationCollector nullDurationCollector;
+    Settings settings;
     std::shared_ptr<Study> study;
 };
 
@@ -299,9 +301,8 @@ void Fixture::createSimulation()
     BOOST_CHECK(study->initializeRuntimeInfos());
     addScratchpadToEachArea(study);
 
-    NullDurationCollector nullDurationCollector;
     simulation = std::make_shared<ISimulation<Economy>>(*study,
-                                                        Settings(),
+                                                        settings,
                                                         &nullDurationCollector);
 
     // Allocate arrays for time series
@@ -351,6 +352,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     unsigned int hour = 0;
     BOOST_TEST(getLinkFlowAthour(simulation, link, hour) == rhsValue, tt::tolerance(0.001));
 }
+
 
 BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
 {
