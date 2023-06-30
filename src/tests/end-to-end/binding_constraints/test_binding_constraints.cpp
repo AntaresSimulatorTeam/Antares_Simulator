@@ -139,14 +139,14 @@ void addScratchpadToEachArea(Study::Ptr study)
 // -------------------------------
 
 Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType*
-retrieveLinkResults(std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link)
+retrieveLinkResults(const std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link)
 {
     typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* result = nullptr;
     simulation->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
     return result;
 }
 
-double getLinkFlowAthour(std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int hour)
+double getLinkFlowAthour(const std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int hour)
 {
     // There is a problem here : 
     //    we cannot easly retrieve the hourly flow for a link and a year : 
@@ -161,13 +161,13 @@ double getLinkFlowAthour(std::shared_ptr<ISimulation<Economy>>& simulation, Area
     return result->avgdata.hourly[hour];
 }
 
-double getLinkFlowForWeek(std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int week)
+double getLinkFlowForWeek(const std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int week)
 {
     auto result = retrieveLinkResults(simulation, link);
     return result->avgdata.weekly[week];
 }
 
-double getLinkFlowForDay(std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int day)
+double getLinkFlowForDay(const std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int day)
 {
     auto result = retrieveLinkResults(simulation, link);
     return result->avgdata.daily[day];
