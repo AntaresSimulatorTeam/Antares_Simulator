@@ -29,6 +29,8 @@
 #include <vector>
 #include <utility>
 #include "antares/study/binding_constraint/BindingConstraint.h"
+#include "antares/study/fwd.h"
+#include "bindConstraints.h"
 
 namespace Antares::Solver::Variable
 {
@@ -100,7 +102,7 @@ template<class NextT>
 void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 {
     const std::vector<uint> InequalityBCindices
-      = study.runtime->getIndicesForInequalityBindingConstraints();
+      = study.bindingConstraints.getIndicesForInequalityBindingConstraints();
 
     // The total number of inequality binding constraints count
     // (we don't count BCs with equality sign)

@@ -362,11 +362,6 @@ void BindingConstraint::clear() {
     this->pEnabled = true;
 }
 
-    void BindingConstraintsRepository::clear()
-{
-    pList.clear();
-}
-
 
 void BindingConstraint::reverseWeightSign(const AreaLink* lnk)
 {
@@ -569,26 +564,37 @@ int BindingConstraint::offset(const ThermalCluster* lnk) const
     return (i != pClusterOffsets.end()) ? i->second : 0;
 }
 
-void BindingConstraint::initLinkArrays(std::vector<double>& w,
-                                       std::vector<double>& cW,
-                                       std::vector<int>& o,
-                                       std::vector<int>& cO,
-                                       std::vector<long>& linkIndex,
-                                       std::vector<long>& clusterIndex,
-                                       std::vector<long>& clustersAreaIndex) const
+BindingConstraintStructures BindingConstraint::initLinkArrays() const
 {
+    std::vector<long>   linkIndex;
+    std::vector<double> linkWeight;
+    std::vector<double> clusterWeight;
+    std::vector<int>    linkOffset;
+    std::vector<int>    clusterOffset;
+    std::vector<long>   clusterIndex;
+    std::vector<long>   clustersAreaIndex;
+
+    linkWeight.resize(linkCount());
+    linkOffset.resize(linkCount());
+    linkIndex.resize(linkCount());
+
+    clusterWeight.resize(clusterCount());
+    clusterOffset.resize(clusterCount());
+    clusterIndex.resize(clusterCount());
+    clustersAreaIndex.resize(clusterCount());
+
     uint off = 0;
     auto end = pLinkWeights.end();
     for (auto i = pLinkWeights.begin(); i != end; ++i, ++off)
     {
         linkIndex[off] = (i->first)->index;
-        w[off] = i->second;
+        linkWeight[off] = i->second;
 
         auto offsetIt = pLinkOffsets.find(i->first);
         if (offsetIt != pLinkOffsets.end())
-            o[off] = offsetIt->second;
+            linkOffset[off] = offsetIt->second;
         else
-            o[off] = 0;
+            linkOffset[off] = 0;
     }
 
     off = 0;
@@ -597,16 +603,24 @@ void BindingConstraint::initLinkArrays(std::vector<double>& w,
         if (i->first->enabled && !i->first->mustrun) {
             clusterIndex[off] = (i->first)->index;
             clustersAreaIndex[off] = (i->first)->parentArea->index;
-            cW[off] = i->second;
+            clusterWeight[off] = i->second;
 
             if (auto offsetIt = pClusterOffsets.find(i->first); offsetIt != pClusterOffsets.end())
-                cO[off] = offsetIt->second;
+                clusterOffset[off] = offsetIt->second;
             else
-                cO[off] = 0;
+                clusterOffset[off] = 0;
 
             ++off;
         }
     }
+
+    return {linkIndex,
+    linkWeight,
+    clusterWeight,
+    linkOffset,
+    clusterOffset,
+    clusterIndex,
+    clustersAreaIndex,};
 }
 
 bool BindingConstraint::forceReload(bool reload) const

@@ -154,7 +154,7 @@ public:
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
         // Set the associated binding constraint
-        associatedBC_ = &(study.runtime->bindingConstraints[bindConstraintGlobalIndex_]);
+        associatedBC_ = study.bindingConstraints.enabled()[bindConstraintGlobalIndex_];
 
         NextType::initializeFromStudy(study);
     }
@@ -197,7 +197,7 @@ public:
         // Compute statistics for the current year depending on
         // the BC type (hourly, daily, weekly)
         using namespace Data;
-        switch (associatedBC_->type)
+        switch (associatedBC_->type())
         {
         case BindingConstraint::typeHourly:
             pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromHourlyResults();
@@ -239,7 +239,7 @@ public:
         auto numSpace = state.numSpace;
         // For daily binding constraints, getting daily marginal price
         using namespace Data;
-        switch (associatedBC_->type)
+        switch (associatedBC_->type())
         {
         case BindingConstraint::typeHourly:
         case BindingConstraint::typeUnknown:
@@ -294,7 +294,7 @@ public:
             return;
 
         auto numSpace = state.numSpace;
-        if (associatedBC_->type == Data::BindingConstraint::typeHourly)
+        if (associatedBC_->type() == Data::BindingConstraint::typeHourly)
         {
             pValuesForTheCurrentYear[numSpace][hourInTheYear]
               -= state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalIndex_]
@@ -317,7 +317,7 @@ public:
       int precision /* printed results : hourly, daily, weekly, ...*/,
       unsigned int numSpace) const
     {
-        if (!(precision & associatedBC_->filterYearByYear_))
+        if (!(precision & associatedBC_->yearByYearFilter()))
             return;
 
         // Initializing external pointer on current variable non applicable status
@@ -340,7 +340,7 @@ public:
     {
         // Building syntheses results
         // ------------------------------
-        if (!(precision & associatedBC_->filterSynthesis_))
+        if (!(precision & associatedBC_->yearByYearFilter()))
             return;
 
         // And only if we match the current data level _and_ precision level
@@ -361,7 +361,8 @@ private:
     // ---------------
     std::string getBindConstraintCaption() const
     {
-        return associatedBC_->name + " (" + associatedBC_->operatorType + ")";
+        std::string mathOperator(Antares::Data::BindingConstraint::MathOperatorToCString(associatedBC_->operatorType()));
+        return std::string() + associatedBC_->name().c_str() + " (" + mathOperator + ")";
     }
 
     bool isInitialized()
@@ -376,13 +377,13 @@ private:
         // (hour, day, week, ...) smaller than the associated binding constraint granularity.
         // Ex : if the BC is daily and we try to print hourly associated marginal prices,
         //      then these prices are set to N/A
-        switch (associatedBC_->type)
+        switch (associatedBC_->type())
         {
         case BindingConstraint::typeUnknown:
         case BindingConstraint::typeMax:
             return true;
         default:
-            const auto precision_bc = 1 << (associatedBC_->type - 1);
+            const auto precision_bc = 1 << (associatedBC_->type() - 1);
             return precision < precision_bc;
         }
     }
@@ -392,7 +393,7 @@ private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear = nullptr;
     unsigned int pNbYearsParallel = 0;
-    Data::BindingConstraintRTI* associatedBC_ = nullptr;
+    std::shared_ptr<Data::BindingConstraint> associatedBC_ = nullptr;
     int bindConstraintGlobalIndex_ = -1;
     uint nbCount_ = 0; // Number of inequality BCs 
 
