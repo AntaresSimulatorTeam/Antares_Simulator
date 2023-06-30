@@ -133,11 +133,6 @@ void addScratchpadToEachArea(Study::Ptr study)
     }
 }
 
-void whenCleaningSimulation()
-{
-    SIM_DesallocationTableaux();
-}
-
 
 // -------------------------------
 // Simulation results retrieval
@@ -239,22 +234,56 @@ void BCgroupScenarioBuilder::yearGetsTSnumber(std::string groupName, unsigned in
     rules_->binding_constraints.setData(groupName, year, TSnumber + 1);
 }
 
+// =====================
+// Simulation handler
+// =====================
+class SimulationHandler
+{
+public:
+    SimulationHandler(std::shared_ptr<Study> study) 
+        : study_(study)
+    {}
+    ~SimulationHandler();
+    void create();
+    void run() { simulation_->run(); }
+    std::shared_ptr<ISimulation<Economy>> get() { return simulation_; }
+
+private:
+    std::shared_ptr<ISimulation<Economy>> simulation_;
+    NullDurationCollector nullDurationCollector_;
+    Settings settings_;
+    std::shared_ptr<Study> study_;
+};
+
+void SimulationHandler::create()
+{
+    BOOST_CHECK(study_->initializeRuntimeInfos());
+    addScratchpadToEachArea(study_);
+
+    simulation_ = std::make_shared<ISimulation<Economy>>(*study_,
+                                                         settings_,
+                                                         &nullDurationCollector_);
+
+    // Allocate arrays for time series
+    SIM_AllocationTableaux();
+}
+
+SimulationHandler::~SimulationHandler()
+{
+    SIM_DesallocationTableaux();
+}
 
 // ===============
 // The fixture
 // ===============
 struct Fixture {
     Fixture();
-    void createSimulation();
     void giveWeigthOnlyToYear(unsigned int year);
-    ~Fixture();
 
     // Data members
     AreaLink* link = nullptr;
     std::shared_ptr<BindingConstraint> BC;
-    std::shared_ptr<ISimulation<Economy>> simulation;
-    NullDurationCollector nullDurationCollector;
-    Settings settings;
+    std::shared_ptr<SimulationHandler> simulation;
     std::shared_ptr<Study> study;
 };
 
@@ -268,6 +297,7 @@ Fixture::Fixture()
     logs.verbosityLevel = Logs::Verbosity::Error::level;
 
     study = std::make_shared<Study>();
+    simulation = std::make_shared<SimulationHandler>(study);
 
     initializeStudy(study);
     simulationBetweenDays(study, 0, 7);
@@ -288,26 +318,6 @@ Fixture::Fixture()
     BC->weight(link, 1);
     BC->enabled(true);
 };
-
-Fixture::~Fixture()
-{
-    whenCleaningSimulation();
-}
-
-
-void Fixture::createSimulation()
-{
-    // Runtime infos and scratchpad are MANDATORY for the simulation NOT TO CRASH.
-    BOOST_CHECK(study->initializeRuntimeInfos());
-    addScratchpadToEachArea(study);
-
-    simulation = std::make_shared<ISimulation<Economy>>(*study,
-                                                        settings,
-                                                        &nullDurationCollector);
-
-    // Allocate arrays for time series
-    SIM_AllocationTableaux();
-}
 
 void Fixture::giveWeigthOnlyToYear(unsigned int year)
 {
@@ -345,12 +355,12 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
         
-    createSimulation();
+    simulation->create();
     giveWeigthOnlyToYear(0);
     simulation->run();
 
     unsigned int hour = 0;
-    BOOST_TEST(getLinkFlowAthour(simulation, link, hour) == rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(getLinkFlowAthour(simulation->get(), link, hour) == rhsValue, tt::tolerance(0.001));
 }
 
 
@@ -373,13 +383,13 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
-    createSimulation();
+    simulation->create();
     giveWeigthOnlyToYear(0);
     simulation->run();
 
     unsigned int week = 0;
     unsigned int nbDaysInWeek = 7;
-    BOOST_TEST(getLinkFlowForWeek(simulation, link, week) == rhsValue * nbDaysInWeek, tt::tolerance(0.001));
+    BOOST_TEST(getLinkFlowForWeek(simulation->get(), link, week) == rhsValue * nbDaysInWeek, tt::tolerance(0.001));
 }
 
 
@@ -402,12 +412,12 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
-    createSimulation();
+    simulation->create();
     giveWeigthOnlyToYear(0);
     simulation->run();
 
     unsigned int day = 0;
-    BOOST_TEST(getLinkFlowForDay(simulation, link, day) == rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(getLinkFlowForDay(simulation->get(), link, day) == rhsValue, tt::tolerance(0.001));
 }
 
 
@@ -430,12 +440,12 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
-    createSimulation();
+    simulation->create();
     giveWeigthOnlyToYear(0);
     simulation->run();
 
     unsigned int hour = 100;
-    BOOST_TEST(getLinkFlowAthour(simulation, link, hour) <= rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(getLinkFlowAthour(simulation->get(), link, hour) <= rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
@@ -457,12 +467,12 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
-    createSimulation();
+    simulation->create();
     giveWeigthOnlyToYear(0);
     simulation->run();
 
     unsigned int hour = 100;
-    BOOST_TEST(getLinkFlowAthour(simulation, link, hour) >= rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(getLinkFlowAthour(simulation->get(), link, hour) >= rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -492,12 +502,12 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 1, 1);
 
-    createSimulation();
+    simulation->create();
     giveWeigthOnlyToYear(1);
     simulation->run();
 
     unsigned int hour = 0;
-    BOOST_TEST(getLinkFlowAthour(simulation, link, hour) == bcGroupRHS2, tt::tolerance(0.001));
+    BOOST_TEST(getLinkFlowAthour(simulation->get(), link, hour) == bcGroupRHS2, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
@@ -532,12 +542,12 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 8, 3); // Here year 9
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 9, 0);
 
-    createSimulation();
+    simulation->create();
     giveWeigthOnlyToYear(8);
     simulation->run();
 
     unsigned int hour = 0;
-    BOOST_TEST(getLinkFlowAthour(simulation, link, hour) == 40., tt::tolerance(0.001));
+    BOOST_TEST(getLinkFlowAthour(simulation->get(), link, hour) == 40., tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
