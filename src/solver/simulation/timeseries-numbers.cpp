@@ -714,8 +714,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
     // Binding constraints
     for (auto& group: study.bindingConstraintsGroups)
     {
-        const auto nbTimeSeries
-          = BindingConstraintsRepository::NumberOfTimeseries(study.bindingConstraints.activeContraints(), group->name());
+        const auto nbTimeSeries = group->numberOfTimeseries();
         auto& value = group->timeSeriesNumbers().timeseriesNumbers[0][year];
         if (nbTimeSeries == 1)
         {
