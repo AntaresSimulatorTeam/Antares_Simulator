@@ -712,11 +712,11 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         }
     });
     // Binding constraints
-    for (auto& [group, timeSeries] : study.bindingConstraints.groupToTimeSeriesNumbers)
+    for (auto& group: study.bindingConstraintsGroups)
     {
         const auto nbTimeSeries
-          = BindingConstraintsRepository::NumberOfTimeseries(study.bindingConstraints.activeContraints(), group);
-        auto& value = timeSeries.timeseriesNumbers[0][year];
+          = BindingConstraintsRepository::NumberOfTimeseries(study.bindingConstraints.activeContraints(), group->name());
+        auto& value = group->timeSeriesNumbers().timeseriesNumbers[0][year];
         if (nbTimeSeries == 1)
         {
             value = 0;
@@ -864,7 +864,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
                             link->timeseriesNumbers, link->directCapacities.width, years);
                       });
     });
-    study.bindingConstraints.fixTSNumbersWhenWidthIsOne();
+    study.bindingConstraintsGroups.fixTSNumbersWhenWidthIsOne();
 }
 
 bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(const std::vector<uint>& w)
@@ -984,7 +984,7 @@ void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study, Simu
         study.storeTimeSeriesNumbers<TimeSeries::timeSeriesThermal>();
         study.storeTimeSeriesNumbers<TimeSeries::timeSeriesRenewable>();
         study.storeTimeSeriesNumbers<TimeSeries::timeSeriesTransmissionCapacities>();
-        writer.write(study.bindingConstraints);
+        writer.write(study.bindingConstraintsGroups);
     }
 }
 

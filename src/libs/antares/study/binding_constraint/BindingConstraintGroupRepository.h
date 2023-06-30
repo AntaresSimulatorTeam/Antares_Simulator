@@ -14,11 +14,25 @@ class BindingConstraintGroupRepository {
 public:
     [[nodiscard]] unsigned size() const;
 
-    std::vector<std::shared_ptr<BindingConstraintGroup>> groups_;
-
     [[nodiscard]] bool buildFrom(BindingConstraintsRepository& repository);
 
     [[nodiscard]] bool timeSeriesWidthConsistentInGroups() const;
+    void resizeAllTimeseriesNumbers(unsigned nb_years);
+
+    void fixTSNumbersWhenWidthIsOne();
+
+    std::shared_ptr<BindingConstraintGroup> operator[](std::string name);
+
+    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraintGroup>>::iterator begin();
+    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraintGroup>>::const_iterator begin() const;
+
+    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraintGroup>>::iterator end();
+    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraintGroup>>::const_iterator end() const;
+
+    std::shared_ptr<BindingConstraintGroup> add(const std::string& name);
+
+private:
+    std::vector<std::shared_ptr<BindingConstraintGroup>> groups_;
 };
 
 } // DAta

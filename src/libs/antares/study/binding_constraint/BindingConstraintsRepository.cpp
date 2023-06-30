@@ -95,31 +95,6 @@ std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnySt
     return bc;
 }
 
-void BindingConstraintsRepository::resizeAllTimeseriesNumbers(unsigned int nb_years) {
-    initializeTsNumbers();
-    std::for_each(groupToTimeSeriesNumbers.begin(), groupToTimeSeriesNumbers.end(), [&](auto &kvp) {
-        groupToTimeSeriesNumbers[kvp.first].timeseriesNumbers.clear();
-        groupToTimeSeriesNumbers[kvp.first].timeseriesNumbers.resize(1, nb_years);
-    });
-}
-
-void BindingConstraintsRepository::fixTSNumbersWhenWidthIsOne() {
-    std::map<std::string, bool, std::less<>> groupOfOneTS;
-    std::for_each(constraints_.begin(), constraints_.end(), [&groupOfOneTS](auto bc) {
-        auto hasOneTs = bc->RHSTimeSeries().width == 1;
-        if (groupOfOneTS[bc->group()] && !hasOneTs) {
-            assert(false && ("Group of binding constraints mixing 1TS and N TS group:" + bc->group()).c_str());
-        }
-        groupOfOneTS[bc->group()] |= hasOneTs;
-    });
-    std::for_each(groupToTimeSeriesNumbers.begin(), groupToTimeSeriesNumbers.end(),
-                  [&groupOfOneTS](std::pair<std::string, BindingConstraintTimeSeriesNumbers> it) {
-                      if (groupOfOneTS[it.first]) {
-                          it.second.timeseriesNumbers.fillColumn(0, 0);
-                      }
-                  });
-}
-
 std::vector<std::shared_ptr<BindingConstraint>>
 BindingConstraintsRepository::LoadBindingConstraint(EnvForLoading env) {
     BindingConstraintLoader loader;
@@ -210,15 +185,7 @@ bool BindingConstraintsRepository::loadFromFolder(Study &study,
         mutateWeeklyConstraintsIntoDailyOnes();
     }
 
-    initializeTsNumbers();
-
     return true;
-}
-
-void BindingConstraintsRepository::initializeTsNumbers() {
-    for (const auto& bc: constraints_) {
-        groupToTimeSeriesNumbers[bc->group()] = {};
-    }
 }
 
 void BindingConstraintsRepository::mutateWeeklyConstraintsIntoDailyOnes()
@@ -280,7 +247,6 @@ uint64 BindingConstraintsRepository::memoryUsage() const
     uint64 m = sizeof(BindingConstraintsRepository);
     for (const auto & i : constraints_)
         m += i->memoryUsage();
-    m += timeSeriesNumberMemoryUsage();
     return m;
 }
 
@@ -382,16 +348,7 @@ void BindingConstraintsRepository::markAsModified() const
         i->markAsModified();
 }
 
-uint64 BindingConstraintsRepository::timeSeriesNumberMemoryUsage() const {
-    uint64 m = sizeof(groupToTimeSeriesNumbers);
-    for (const auto& [key, value]: groupToTimeSeriesNumbers) {
-        m += sizeof(key);
-        m += value.memoryUsage();
-    }
-    return m;
-}
-
-std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeContraints() const {
+std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::enabled() const {
     if (activeConstraints_) {
         return activeConstraints_.value();
     } else {

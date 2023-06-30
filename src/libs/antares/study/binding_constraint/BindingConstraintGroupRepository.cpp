@@ -55,4 +55,48 @@ namespace Antares::Data {
         }
         return !hasError;
     }
+
+    void BindingConstraintGroupRepository::resizeAllTimeseriesNumbers(unsigned int nb_years) {
+        std::for_each(groups_.begin(), groups_.end(), [&](auto &group) {
+            group->timeSeriesNumbers().timeseriesNumbers.clear();
+            group->timeSeriesNumbers().timeseriesNumbers.resize(1, nb_years);
+        });
+    }
+
+    void BindingConstraintGroupRepository::fixTSNumbersWhenWidthIsOne() {
+        std::for_each(groups_.begin(), groups_.end(), [](auto group) {
+            group->fixTSNumbersWhenWidthIsOne();
+        });
+    }
+
+    std::shared_ptr<BindingConstraintGroup> BindingConstraintGroupRepository::operator[](std::string name) {
+        if (auto group = std::find_if(groups_.begin(), groups_.end(), [&name](auto group) {
+            return group->name() == name;
+        }); group != groups_.end()) {
+            return *group;
+        }
+        return nullptr;
+    }
+
+    std::vector<std::shared_ptr<BindingConstraintGroup>>::iterator BindingConstraintGroupRepository::begin() {
+        return groups_.begin();
+    }
+
+    std::vector<std::shared_ptr<BindingConstraintGroup>>::const_iterator
+    BindingConstraintGroupRepository::begin() const {
+        return groups_.begin();
+    }
+
+    std::vector<std::shared_ptr<BindingConstraintGroup>>::iterator BindingConstraintGroupRepository::end() {
+        return groups_.end();
+    }
+
+    std::vector<std::shared_ptr<BindingConstraintGroup>>::const_iterator BindingConstraintGroupRepository::end() const {
+        return groups_.end();
+    }
+
+    std::shared_ptr<BindingConstraintGroup> BindingConstraintGroupRepository::add(const std::string& name) {
+        auto group = groups_.emplace_back(std::make_shared<BindingConstraintGroup>(name));
+        return group;
+    }
 } // Data
