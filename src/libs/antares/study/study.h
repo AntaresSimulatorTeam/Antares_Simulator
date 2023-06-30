@@ -50,7 +50,7 @@
 #include "../date.h"
 #include "layerdata.h"
 #include "antares/array/correlation.h"
-#include "antares/study/binding_constraint/BindingConstraintsList.h"
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
 #include <memory>
 
@@ -645,7 +645,7 @@ public:
     //! \name Binding constraints
     //@{
     //! Binding constraints
-    BindingConstraintsList bindingConstraints;
+    BindingConstraintsRepository bindingConstraints;
     //@}
 
     //! \name Correlation matrices used by the prepro

@@ -45,7 +45,7 @@ static void genericStoreTimeseriesNumbers(const Solver::IResultWriter::Ptr& writ
     writer->addEntryFromBuffer(path.string(), buffer);
 }
 
-void BindingConstraintsTimeSeriesNumbersWriter::write(const Data::BindingConstraintsList &list) {
+void BindingConstraintsTimeSeriesNumbersWriter::write(const Data::BindingConstraintsRepository &list) {
     for (auto const& [group, timeSeries]: list.TimeSeriesNumbers()) {
         genericStoreTimeseriesNumbers(writer_,
                                       timeSeries.timeseriesNumbers,

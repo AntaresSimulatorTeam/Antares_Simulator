@@ -14,7 +14,7 @@ set(ANTARES_WEBSITE "https://antares-simulator.org/")
 set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
 # Beta release
-set(ANTARES_BETA 3)
+set(ANTARES_BETA 0)
 set(ANTARES_RC 0)
 
 # OR-Tools tag
@@ -247,7 +247,7 @@ endif()
 set(GFLAGS_USE_TARGET_NAMESPACE TRUE) 
 find_package(gflags)
 
-find_package(ortools QUIET)
+find_package(ortools)
 if(NOT ortools_FOUND OR BUILD_ORTOOLS)
 message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_Declare(ortools
