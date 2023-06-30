@@ -1314,7 +1314,7 @@ void Study::resizeAllTimeseriesNumbers(uint n)
 {
     logs.debug() << "  resizing timeseries numbers";
     areas.resizeAllTimeseriesNumbers(n);
-    bindingConstraints.resizeAllTimeseriesNumbers(n);
+    bindingConstraintsGroups.resizeAllTimeseriesNumbers(n);
 }
 
 bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
