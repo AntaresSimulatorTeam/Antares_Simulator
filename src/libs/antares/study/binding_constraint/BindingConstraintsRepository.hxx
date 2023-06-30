@@ -41,35 +41,4 @@ inline void BindingConstraintsRepository::eachActive(const PredicateT &predicate
     }
 }
 
-//Following code is there to handle both BindingConstraintRTI and BindingConstraintList while we remove one or the other
-template<class T>
-std::string GroupPredicate(const T& bc) {
-    return bc.group;
-}
-
-template<class T>
-std::string GroupPredicate(const std::shared_ptr<T>& bc) {
-    return bc->group();
-}
-
-template<class T>
-unsigned TimeSeriesWidthPredicate(const T& bc) {
-    return bc.RHSTimeSeries().width;
-}
-
-template<class T>
-unsigned TimeSeriesWidthPredicate(const std::shared_ptr<T>& bc) {
-    return bc->RHSTimeSeries().width;
-}
-
-template<class ListBindingConstraints>
-unsigned int BindingConstraintsRepository::NumberOfTimeseries(const ListBindingConstraints &list, const std::string& group_name) {
-    //Assume all BC in a group have the same width
-    const auto& binding_constraint = std::find_if(list.begin(), list.end(), [&group_name](auto& bc) {
-        return GroupPredicate(bc) == group_name;
-    });
-    if (binding_constraint == list.end())
-        return 0;
-    return TimeSeriesWidthPredicate(*binding_constraint);
-}
 }

@@ -6,8 +6,12 @@
 
 #include <memory>
 #include <set>
+#include <functional>
 #include "antares/study/binding_constraint/BindingConstraintGroup.h"
 #include "antares/study/fwd.h"
+#include "BindingConstraint.h"
+#include "BindingConstraintSaver.h"
+
 namespace Antares::Data {
 
 class BindingConstraintGroupRepository {
