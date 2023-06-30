@@ -15,9 +15,13 @@ public:
     [[nodiscard]] std::string name() { return name_; }
     void add(const std::shared_ptr<BindingConstraint>& constraint);
     [[nodiscard]] std::set<std::shared_ptr<BindingConstraint>> constraints() const;
+    [[nodiscard]] BindingConstraintTimeSeriesNumbers& timeSeriesNumbers() { return timeSeriesNumbers_; };
+    void fixTSNumbersWhenWidthIsOne();
 private:
     std::set<std::shared_ptr<BindingConstraint>> constraints_;
     std::string name_;
+    BindingConstraintTimeSeriesNumbers timeSeriesNumbers_;
+
 };
 
 } // Data

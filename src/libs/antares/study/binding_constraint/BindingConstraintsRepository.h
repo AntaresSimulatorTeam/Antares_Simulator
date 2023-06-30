@@ -159,19 +159,10 @@ public:
     */
     void markAsModified() const;
 
-    [[nodiscard]] const std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>>& TimeSeriesNumbers() const {
-        return groupToTimeSeriesNumbers;
-    }
-    void resizeAllTimeseriesNumbers(unsigned nb_years);
-
-    void fixTSNumbersWhenWidthIsOne();
-
     static std::vector<std::shared_ptr<BindingConstraint>> LoadBindingConstraint(EnvForLoading env);
 
     template<class ListBindingConstraints>
     [[nodiscard]] static unsigned int NumberOfTimeseries(const ListBindingConstraints &list, const std::string &group_name);
-
-    std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>> groupToTimeSeriesNumbers;
 
     [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> activeContraints() const;
 
@@ -183,8 +174,6 @@ private:
 
     //! All constraints
     Data::BindingConstraintsRepository::Vector constraints_;
-
-    void initializeTsNumbers();
 
     [[nodiscard]] Yuni::uint64 timeSeriesNumberMemoryUsage() const;
 
