@@ -430,7 +430,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout
           = std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER>(nbPaliers);
         problem.ResultatsHoraires[k].ProductionThermique
-          = new PRODUCTION_THERMIQUE_OPTIMALE*[NombreDePasDeTemps];
+          = std::vector<PRODUCTION_THERMIQUE_OPTIMALE*>(NombreDePasDeTemps);
 
         for (unsigned j = 0; j < nbPaliers; ++j)
         {
@@ -538,6 +538,5 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
                       ->NombreDeGroupesQuiTombentEnPanneDuPalier;
             delete problem.ResultatsHoraires[k].ProductionThermique[j];
         }
-        delete problem.ResultatsHoraires[k].ProductionThermique;
     }
 }

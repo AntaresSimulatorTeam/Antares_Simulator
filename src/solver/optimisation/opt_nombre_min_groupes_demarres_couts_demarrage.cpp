@@ -74,7 +74,8 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
     for (int pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
     {
         const RESULTATS_HORAIRES& ResultatsHoraires = problemeHebdo->ResultatsHoraires[pays];
-        PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique = ResultatsHoraires.ProductionThermique;
+        const std::vector<PRODUCTION_THERMIQUE_OPTIMALE*>& ProductionThermique
+            = ResultatsHoraires.ProductionThermique;
 
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
@@ -225,7 +226,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     const int DureeMinimaleDArretDUnGroupeDuPalierThermique
       = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[Index];
 
-    PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique
+    std::vector<PRODUCTION_THERMIQUE_OPTIMALE*>& ProductionThermique
       = problemeHebdo->ResultatsHoraires[Pays].ProductionThermique;
 
     bool ResoudreLeProblemeLineaire = true;
