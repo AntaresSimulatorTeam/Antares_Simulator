@@ -161,9 +161,6 @@ public:
 
     static std::vector<std::shared_ptr<BindingConstraint>> LoadBindingConstraint(EnvForLoading env);
 
-    template<class ListBindingConstraints>
-    [[nodiscard]] static unsigned int NumberOfTimeseries(const ListBindingConstraints &list, const std::string &group_name);
-
     [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> activeContraints() const;
 
     [[nodiscard]] std::vector<uint> getIndicesForInequalityBindingConstraints() const;
@@ -174,8 +171,6 @@ private:
 
     //! All constraints
     Data::BindingConstraintsRepository::Vector constraints_;
-
-    [[nodiscard]] Yuni::uint64 timeSeriesNumberMemoryUsage() const;
 
     mutable std::optional<std::vector<std::shared_ptr<BindingConstraint>>> activeConstraints_;
 };

@@ -30,4 +30,10 @@ namespace Antares::Data {
         }
     }
 
+    unsigned BindingConstraintGroup::numberOfTimeseries() const {
+        //Assume all BC in a group have the same width
+        if (constraints_.empty()) return 0;
+        return (*constraints_.begin())->RHSTimeSeries().width;
+    }
+
 } // Data
