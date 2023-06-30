@@ -87,7 +87,7 @@ struct Fixture {
     std::shared_ptr<Study> study;
     StudyLoadOptions options;
     std::filesystem::path working_tmp_dir;
-    BindingConstraintsList bindingConstraints;
+    BindingConstraintsRepository bindingConstraints;
     Matrix<double> expected_lower_bound_series;
     Matrix<double> expected_upper_bound_series;
     Matrix<double> expected_equality_series;

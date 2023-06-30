@@ -107,7 +107,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.NumberOfShortTermStorages = study.runtime->shortTermStorageCount;
 
-    problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraints.size();
+    auto enabledBindingConstraints = study.bindingConstraints.enabled();
+    problem.NombreDeContraintesCouplantes = enabledBindingConstraints.size();
 
     problem.ExportMPS = study.parameters.include.exportMPS;
     problem.ExportStructure = study.parameters.include.exportStructure;
@@ -219,16 +220,15 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.PaysExtremiteDeLInterconnexion[i] = link.with->index;
     }
 
-    for (uint i = 0; i < study.runtime->bindingConstraints.size(); ++i)
+    for (uint i = 0; i < enabledBindingConstraints.size(); ++i)
     {
-        BindingConstraintRTI& bc = study.runtime->bindingConstraints[i];
-
-        CONTRAINTES_COUPLANTES& PtMat = problem.MatriceDesContraintesCouplantes[i];
-        PtMat.NombreDInterconnexionsDansLaContrainteCouplante = bc.linkCount;
-        PtMat.NombreDePaliersDispatchDansLaContrainteCouplante = bc.clusterCount;
-        PtMat.NombreDElementsDansLaContrainteCouplante = bc.linkCount + bc.clusterCount;
-        PtMat.NomDeLaContrainteCouplante = bc.name.c_str();
-        switch (bc.type)
+        auto bc = enabledBindingConstraints[i];
+        auto PtMat = problem.MatriceDesContraintesCouplantes[i];
+        PtMat.NombreDInterconnexionsDansLaContrainteCouplante = bc->linkCount();
+        PtMat.NombreDePaliersDispatchDansLaContrainteCouplante = bc->clusterCount();
+        PtMat.NombreDElementsDansLaContrainteCouplante = bc->linkCount() + bc->clusterCount();
+        PtMat.NomDeLaContrainteCouplante = bc->name().c_str();
+        switch (bc->type())
         {
         case BindingConstraint::typeHourly:
             PtMat.TypeDeContrainteCouplante = CONTRAINTE_HORAIRE;
@@ -244,23 +244,24 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             assert(false && "Invalid constraint");
             break;
         }
-        PtMat.SensDeLaContrainteCouplante = bc.operatorType;
+        PtMat.SensDeLaContrainteCouplante = *Antares::Data::BindingConstraint::MathOperatorToCString(bc->operatorType());
 
-        for (uint j = 0; j < bc.linkCount; ++j)
+        BindingConstraintStructures bindingConstraintStructures = bc->initLinkArrays();
+        for (uint j = 0; j < bc->linkCount(); ++j)
         {
-            PtMat.NumeroDeLInterconnexion[j] = bc.linkIndex[j];
-            PtMat.PoidsDeLInterconnexion[j] = bc.linkWeight[j];
+            PtMat.NumeroDeLInterconnexion[j] = bindingConstraintStructures.linkIndex[j];
+            PtMat.PoidsDeLInterconnexion[j] = bindingConstraintStructures.linkWeight[j];
 
-            PtMat.OffsetTemporelSurLInterco[j] = bc.linkOffset[j];
+            PtMat.OffsetTemporelSurLInterco[j] = bindingConstraintStructures.linkOffset[j];
         }
 
-        for (uint j = 0; j < bc.clusterCount; ++j)
+        for (uint j = 0; j < bc->clusterCount(); ++j)
         {
-            PtMat.NumeroDuPalierDispatch[j] = bc.clusterIndex[j];
-            PtMat.PaysDuPalierDispatch[j] = bc.clustersAreaIndex[j];
-            PtMat.PoidsDuPalierDispatch[j] = bc.clusterWeight[j];
+            PtMat.NumeroDuPalierDispatch[j] = bindingConstraintStructures.clusterIndex[j];
+            PtMat.PaysDuPalierDispatch[j] = bindingConstraintStructures.clustersAreaIndex[j];
+            PtMat.PoidsDuPalierDispatch[j] = bindingConstraintStructures.clusterWeight[j];
 
-            PtMat.OffsetTemporelSurLePalierDispatch[j] = bc.clusterOffset[j];
+            PtMat.OffsetTemporelSurLePalierDispatch[j] = bindingConstraintStructures.clusterOffset[j];
         }
     }
 
@@ -328,17 +329,18 @@ void SIM_InitialisationResultats()
 }
 
 void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int PasDeTempsDebut,
-                               const StudyRuntimeInfos &studyRuntimeInfos, const uint weekFirstDay, int pasDeTemps) {
-    const auto constraintCount = studyRuntimeInfos.bindingConstraints.size();
+                               const BindingConstraintsRepository &bindingConstraints, const uint weekFirstDay, int pasDeTemps) {
+    auto enabledConstraints = bindingConstraints.enabled();
+    const auto constraintCount = enabledConstraints.size();
     for (unsigned constraintIndex = 0; constraintIndex != constraintCount; ++constraintIndex)
     {
-        auto& bc = studyRuntimeInfos.bindingConstraints[constraintIndex];
-        assert(bc.rhsTimeSeries.width && "Invalid constraint data width");
+        auto bc = enabledConstraints[constraintIndex];
+        assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
         //If there is only one TS, always select it.
-        const auto ts_number = bc.rhsTimeSeries.width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc.group];
-        auto& timeSeries = bc.rhsTimeSeries;
+        const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc->group()];
+        auto& timeSeries = bc->RHSTimeSeries();
         double const* column = timeSeries[ts_number];
-        switch (bc.type)
+        switch (bc->type())
         {
             case BindingConstraint::typeHourly:
             {
@@ -587,7 +589,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         problem.ValeursDeNTCRef[j].ValeurDeLoopFlowOrigineVersExtremite
             = ntc.ValeurDeLoopFlowOrigineVersExtremite;
 
-        preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, studyruntime, weekFirstDay, j);
+        preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, study.bindingConstraints, weekFirstDay, j);
 
         const uint dayInTheYear = study.calendar.hours[indx].dayYear;
 

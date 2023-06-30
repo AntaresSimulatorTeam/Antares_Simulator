@@ -652,7 +652,7 @@ public:
     /*!
     ** \brief Fix all invalid orientations
     */
-    void fixOrientationForAllInterconnections(BindingConstraintsList& bindingconstraints);
+    void fixOrientationForAllInterconnections(BindingConstraintsRepository& bindingconstraints);
 
     //! Remove all load timeseries
     void removeLoadTimeseries();

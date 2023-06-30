@@ -27,6 +27,7 @@
 
 #include "manager.h"
 #include <limits.h>
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 #include "nodes/connection.h"
 #include "component.h"
 #include <antares/utils.h>
@@ -472,7 +473,7 @@ void Manager::selectOnly(Item* item)
                 // building list of selected links
                 const Data::AreaLink::Set& linklist = Window::Inspector::getLinks();
 
-                Data::BindingConstraint::Set constraintlist;
+                Data::BindingConstraintsRepository::Set constraintlist;
 
                 const auto cEnd = pStudy->bindingConstraints.end();
                 for (auto i = pStudy->bindingConstraints.begin();
@@ -529,7 +530,7 @@ void Manager::changeItemSelectionState(Item* item)
             // building list of selected links
             Data::AreaLink::Set linklist = Window::Inspector::getLinks();
 
-            Data::BindingConstraint::Set constraintlist;
+            Data::BindingConstraintsRepository::Set constraintlist;
 
             const auto cEnd = pStudy->bindingConstraints.end();
             for (auto i = pStudy->bindingConstraints.begin(); i != cEnd;
@@ -738,7 +739,7 @@ void Manager::selectFromBoundingBox(const wxPoint& a, const wxPoint& b, const si
         Data::Area::Set arealist;
         Data::AreaLink::Set linklist;
         Data::ThermalCluster::Vector clusterlist;
-        Data::BindingConstraint::Set constraintlist;
+        Data::BindingConstraintsRepository::Set constraintlist;
 
         {
             NodeByZPosition::const_iterator end = pAllNodes.end();

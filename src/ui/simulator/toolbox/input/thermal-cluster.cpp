@@ -586,7 +586,7 @@ void ThermalCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr i
 
         // Selecting Binding constraints containing the cluster
 
-        Data::BindingConstraint::Set constraintlist;
+        Data::BindingConstraintsRepository::Set constraintlist;
 
         auto study = Data::Study::Current::Get();
 

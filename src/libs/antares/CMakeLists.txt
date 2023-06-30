@@ -306,9 +306,10 @@ set(SRC_STUDY_BINDING_CONSTRAINT
 	study/binding_constraint/BindingConstraint.h
 	study/binding_constraint/BindingConstraint.hxx
 	study/binding_constraint/BindingConstraint.cpp
-	study/binding_constraint/BindingConstraintsList.h
-	study/binding_constraint/BindingConstraintsList.hxx
-	study/binding_constraint/BindingConstraintsList.cpp
+	study/binding_constraint/BindingConstraintsRepository.h
+	study/binding_constraint/BindingConstraintsRepository.h
+	study/binding_constraint/BindingConstraintsRepository.hxx
+	study/binding_constraint/BindingConstraintsRepository.cpp
 	study/binding_constraint/BindingConstraintTimeSeriesNumbers.cpp
 	study/binding_constraint/BindingConstraintTimeSeriesNumbers.h
 	study/binding_constraint/BindingConstraintLoader.cpp
@@ -316,6 +317,7 @@ set(SRC_STUDY_BINDING_CONSTRAINT
 	study/binding_constraint/BindingConstraintSaver.cpp
 	study/binding_constraint/BindingConstraintSaver.h
 	study/binding_constraint/EnvForLoading.h
+	study/binding_constraint/BindingConstraintStructures.h
 	)
 
 source_group("study\\constraint" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
