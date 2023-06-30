@@ -411,17 +411,17 @@ struct RESERVE_JMOINS1
 
 struct PRODUCTION_THERMIQUE_OPTIMALE
 {
-    double* ProductionThermiqueDuPalier;
+    std::vector<double> ProductionThermiqueDuPalier;
 
-    double* ProductionThermiqueDuPalierUp;
-    double* ProductionThermiqueDuPalierDown;
+    std::vector<double> ProductionThermiqueDuPalierUp;
+    std::vector<double> ProductionThermiqueDuPalierDown;
 
-    double* NombreDeGroupesEnMarcheDuPalier;
-    double* NombreDeGroupesQuiDemarrentDuPalier;
+    std::vector<double> NombreDeGroupesEnMarcheDuPalier;
+    std::vector<double> NombreDeGroupesQuiDemarrentDuPalier;
 
-    double* NombreDeGroupesQuiSArretentDuPalier;
+    std::vector<double> NombreDeGroupesQuiSArretentDuPalier;
 
-    double* NombreDeGroupesQuiTombentEnPanneDuPalier;
+    std::vector<double> NombreDeGroupesQuiTombentEnPanneDuPalier;
 
 };
 

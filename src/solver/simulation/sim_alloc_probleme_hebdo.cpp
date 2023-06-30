@@ -473,21 +473,20 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         {
             problem.ResultatsHoraires[k].ProductionThermique[j] = new PRODUCTION_THERMIQUE_OPTIMALE;
             problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalier
-              = new double[nbPaliers];
+              .assign(nbPaliers, 0.);
             problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierUp
-              = new double[nbPaliers];
+              .assign(nbPaliers, 0.);
             problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierDown
-              = new double[nbPaliers];
+              .assign(nbPaliers, 0.);
             problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesEnMarcheDuPalier
-              = new double[nbPaliers];
+              .assign(nbPaliers, 0.);
             problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesQuiDemarrentDuPalier
-              = new double[nbPaliers];
+              .assign(nbPaliers, 0.);
             problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesQuiSArretentDuPalier
-              = new double[nbPaliers];
-            problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
+              .assign(nbPaliers, 0.);
+            problem.ResultatsHoraires[k].ProductionThermique[j]
               ->NombreDeGroupesQuiTombentEnPanneDuPalier
-              = new double[nbPaliers];
+              .assign(nbPaliers, 0.);
         }
         // Short term storage results
         const unsigned long nbShortTermStorage = study.areas.byIndex[k]->shortTermStorage.count();
@@ -523,19 +522,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     {
         for (uint j = 0; j < problem.NombreDePasDeTemps; j++)
         {
-            delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalier;
-            delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierUp;
-            delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierDown;
-            delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesEnMarcheDuPalier;
-            delete[] problem.ResultatsHoraires[k]
-                      .ProductionThermique[j]
-                      ->NombreDeGroupesQuiDemarrentDuPalier;
-            delete[] problem.ResultatsHoraires[k]
-                      .ProductionThermique[j]
-                      ->NombreDeGroupesQuiSArretentDuPalier;
-            delete[] problem.ResultatsHoraires[k]
-                      .ProductionThermique[j]
-                      ->NombreDeGroupesQuiTombentEnPanneDuPalier;
             delete problem.ResultatsHoraires[k].ProductionThermique[j];
         }
     }
