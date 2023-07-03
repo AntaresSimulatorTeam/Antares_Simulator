@@ -50,8 +50,7 @@ void SIM_AllocationTableaux()
 {
     auto& study = *Data::Study::Current::Get();
 
-    ValeursGenereesParPays
-      = (VALEURS_GENEREES_PAR_PAYS***)MemAlloc(study.maxNbYearsInParallel * sizeof(void*));
+    ValeursGenereesParPays.resize(study.maxNbYearsInParallel);
     NumeroChroniquesTireesParPays
       = (NUMERO_CHRONIQUES_TIREES_PAR_PAYS***)MemAlloc(study.maxNbYearsInParallel * sizeof(void*));
 
@@ -129,10 +128,8 @@ void SIM_DesallocationTableaux()
         }
     }
     MemFree(NumeroChroniquesTireesParPays);
-    MemFree(ValeursGenereesParPays);
     MemFree(NumeroChroniquesTireesParInterconnexion);
     NumeroChroniquesTireesParPays = NULL;
-    ValeursGenereesParPays = NULL;
     NumeroChroniquesTireesParInterconnexion = nullptr;
 
     NumeroChroniquesTireesParGroup.clear();
