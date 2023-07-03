@@ -30,8 +30,7 @@
 
 #include <sstream>
 #include <iomanip>
-#include "scBuilderUtils.h"
-#include "TSnumberData.h"
+#include "BindingConstraintsTSNumbersData.h"
 #include "applyToMatrix.hxx"
 
 namespace Antares::Data::ScenarioBuilder
