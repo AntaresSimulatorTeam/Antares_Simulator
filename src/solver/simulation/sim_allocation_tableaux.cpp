@@ -48,6 +48,7 @@ static void AllocateResultsForEconomicMode(void)
     {
         rpNtc = (RESULTATS_PAR_INTERCONNEXION*)MemAlloc(sizeof(RESULTATS_PAR_INTERCONNEXION));
         ResultatsParInterconnexion[i] = rpNtc;
+        rpNtc->TransitMoyenRecalculQuadratique.assign(sizeOfDoubleHours, 0.);
     }
 }
 
