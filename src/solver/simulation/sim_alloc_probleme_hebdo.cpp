@@ -102,6 +102,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
     problem.VariablesDualesDesContraintesDeNTC.resize(NombreDePasDeTemps);
 
     auto enabledBindingConstraints = study.bindingConstraints.enabled();
+    problem.NombreDeContraintesCouplantes = enabledBindingConstraints.size();
     problem.MatriceDesContraintesCouplantes.resize(enabledBindingConstraints.size());
     problem.PaliersThermiquesDuPays.resize(nbPays);
     problem.CaracteristiquesHydrauliques.resize(nbPays);
@@ -265,8 +266,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         .assign(enabledBindingConstraints.size(), 0);
 
     const auto& bindingConstraintCount = enabledBindingConstraints.size();
-    problem.ResultatsContraintesCouplantes
-        = std::vector<RESULTATS_CONTRAINTES_COUPLANTES>(bindingConstraintCount);
+    problem.ResultatsContraintesCouplantes.resize(bindingConstraintCount);
 
     for (unsigned k = 0; k < bindingConstraintCount; k++)
     {
@@ -288,13 +288,13 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
           .assign(enabledBindingConstraints[k]->linkCount(), 0);
 
         problem.MatriceDesContraintesCouplantes[k].NumeroDuPalierDispatch
-          .assign(enabledBindingConstraints[k]->linkCount(), 0);
+          .assign(enabledBindingConstraints[k]->clusterCount(), 0);
         problem.MatriceDesContraintesCouplantes[k].PoidsDuPalierDispatch
-          .assign(enabledBindingConstraints[k]->linkCount(), 0.);
+          .assign(enabledBindingConstraints[k]->clusterCount(), 0.);
         problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLePalierDispatch
-          .assign(enabledBindingConstraints[k]->linkCount(), 0);
+          .assign(enabledBindingConstraints[k]->clusterCount(), 0);
         problem.MatriceDesContraintesCouplantes[k].PaysDuPalierDispatch
-          .assign(enabledBindingConstraints[k]->linkCount(), 0);
+          .assign(enabledBindingConstraints[k]->clusterCount(), 0);
 
 
         // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
@@ -430,10 +430,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
           .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].debordementsHoraires
           .assign(NombreDePasDeTemps, 0.);
-        problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout
-          = std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER>(nbPaliers);
-        problem.ResultatsHoraires[k].ProductionThermique
-          = std::vector<PRODUCTION_THERMIQUE_OPTIMALE>(NombreDePasDeTemps);
+        problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout.resize(nbPaliers);
+        problem.ResultatsHoraires[k].ProductionThermique.resize(NombreDePasDeTemps);
 
         for (unsigned j = 0; j < nbPaliers; ++j)
         {
@@ -512,8 +510,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
 void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 {
     auto& study = *Data::Study::Current::Get();
-
-    uint nbPays = study.areas.size();
 
     for (uint k = 0; k < problem.NombreDePasDeTemps; k++)
     {
