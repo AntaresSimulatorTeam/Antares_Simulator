@@ -76,15 +76,15 @@ void SIM_AllocationTableaux()
             NumeroChroniquesTireesParPays[numSpace][i]->RenouvelableParPalier
               = (int*)MemAlloc(area.renewable.clusterCount() * sizeof(int));
             ValeursGenereesParPays[numSpace][i]->HydrauliqueModulableQuotidien
-              = (double*)MemAlloc(study.runtime->nbDaysPerYear * sizeof(double));
+                .assign(study.runtime->nbDaysPerYear,0 );
             ValeursGenereesParPays[numSpace][i]->AleaCoutDeProductionParPalier
-              = (double*)MemAlloc(area.thermal.clusterCount() * sizeof(double));
+                .assign(area.thermal.clusterCount(), 0.);
             if (area.hydro.reservoirManagement)
             {
                 ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsDebutJours
-                  = (double*)MemAlloc(study.runtime->nbDaysPerYear * sizeof(double));
+                    .assign(study.runtime->nbDaysPerYear, 0.);
                 ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsFinJours
-                  = (double*)MemAlloc(study.runtime->nbDaysPerYear * sizeof(double));
+                    .assign(study.runtime->nbDaysPerYear, 0.);
             }
         }
     }
@@ -114,19 +114,9 @@ void SIM_DesallocationTableaux()
         {
             for (uint i = 0; i < study.areas.size(); ++i)
             {
-                auto& area = *study.areas.byIndex[i];
-
                 MemFree(NumeroChroniquesTireesParPays[numSpace][i]->ThermiqueParPalier);
                 MemFree(NumeroChroniquesTireesParPays[numSpace][i]->RenouvelableParPalier);
                 MemFree(NumeroChroniquesTireesParPays[numSpace][i]);
-                MemFree(ValeursGenereesParPays[numSpace][i]->HydrauliqueModulableQuotidien);
-                MemFree(ValeursGenereesParPays[numSpace][i]->AleaCoutDeProductionParPalier);
-
-                if (area.hydro.reservoirManagement)
-                {
-                    MemFree(ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsDebutJours);
-                    MemFree(ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsFinJours);
-                }
 
                 MemFree(ValeursGenereesParPays[numSpace][i]);
             }

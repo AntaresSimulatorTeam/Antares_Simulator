@@ -715,7 +715,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                         std::vector<double>& DGL = problem.CaracteristiquesHydrauliques[k]
                                         .MinEnergieHydrauParIntervalleOptimise;
 
-                        double* DNT
+                        std::vector<double>& DNT
                           = ValeursGenereesParPays[numSpace][k]->HydrauliqueModulableQuotidien;
 
                         double WSL

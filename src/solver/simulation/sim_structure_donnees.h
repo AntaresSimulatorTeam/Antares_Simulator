@@ -46,12 +46,12 @@ typedef struct
 
 typedef struct
 {
-    double* HydrauliqueModulableQuotidien; /* indice par jour */
-    double* AleaCoutDeProductionParPalier; /* epsilon sur le cout de production */
-    double* NiveauxReservoirsDebutJours;   // Niveaux (quotidiens) du reservoir de début de jour (en
-                                           // cas de gestion des reservoirs).
-    double* NiveauxReservoirsFinJours; // Niveaux (quotidiens) du reservoir de fin de jour (en cas
-                                       // de gestion des reservoirs).
+    std::vector<double> HydrauliqueModulableQuotidien; /* indice par jour */
+    std::vector<double> AleaCoutDeProductionParPalier; /* epsilon sur le cout de production */
+    std::vector<double> NiveauxReservoirsDebutJours;   //Niveaux (quotidiens) du reservoir de début
+                                                       //de jour (en cas de gestion des reservoirs).
+    std::vector<double> NiveauxReservoirsFinJours; //Niveaux (quotidiens) du reservoir de fin
+                                                   //de jour (en cas de gestion des reservoirs).
 } VALEURS_GENEREES_PAR_PAYS;
 
 typedef struct
