@@ -63,7 +63,7 @@ enum Version
     version850 = 850,
     //! Study version 8.6
     version860 = 860,
-    // see versionLatest below
+    version870 = 870,
 
     // Constants
     //! A more recent version that we can't handle
@@ -71,11 +71,7 @@ enum Version
 
 };
 
-enum
-{
-    //! The latest version
-    versionLatest = version860,
-};
+constexpr Version versionLatest = version870;
 
 /*!
 ** \brief Try to determine the version of a study
@@ -110,6 +106,10 @@ const wchar_t* VersionToWStr(const Version v);
 */
 Version VersionIntToVersion(uint version);
 
+class StudyVersion {
+public:
+    [[nodiscard]] bool isStudyLatestVersion(std::string studyFolder) const;
+};
 } // namespace Data
 } // namespace Antares
 

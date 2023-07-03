@@ -390,7 +390,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
 
         // The current result file must be a detail file and of one kind only.
         // So the vector above must contain one true. No less, no more.
-        unsigned int how_many_kinds_of_details = std::count(kind_of_details.begin(), kind_of_details.end(), true);
+        auto how_many_kinds_of_details = std::count(kind_of_details.begin(), kind_of_details.end(), true);
 
         if (how_many_kinds_of_details != 1)
         {

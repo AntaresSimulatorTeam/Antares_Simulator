@@ -28,6 +28,7 @@
 #include <yuni/yuni.h>
 #include "../../study.h"
 #include "container.h"
+#include "prepro.h"
 
 using namespace Yuni;
 

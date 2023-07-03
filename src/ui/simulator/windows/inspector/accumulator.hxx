@@ -811,6 +811,19 @@ struct PClusterSpinning
     }
 };
 
+struct PClusterEfficiency
+{
+    using Type = double;
+    static Type Value(const Data::ThermalCluster* cluster)
+    {
+        return cluster->fuelEfficiency;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return DoubleToWxString(v);
+    }
+};
+
 struct PClusterSpinningColor
 {
     static wxColor TextColor(Data::ThermalCluster* cluster)
@@ -856,6 +869,19 @@ struct PClusterRandomSpread
     }
 };
 
+struct PClusterCostGeneration
+{
+    using Type = uint;
+    static Type Value(const Data::ThermalCluster* cluster)
+    {
+        return (uint)cluster->costgeneration;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return (v < costgenerationCount) ? costgeneration[v] : nullptr;
+    }
+};
+
 struct PClusterMarginalCost
 {
     using Type = double;
@@ -888,6 +914,19 @@ struct PClusterFixedCost
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->fixedCost;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return DoubleToWxString(v);
+    }
+};
+
+struct PClusterVariableOMcost
+{
+    using Type = double;
+    static Type Value(const Data::ThermalCluster* cluster)
+    {
+        return cluster->variableomcost;
     }
     static wxString ConvertToString(const Type v)
     {
@@ -1011,7 +1050,7 @@ struct PRnClusterTSMode
 struct PConstraintName
 {
     using Type = wxString;
-    static Type Value(const Data::BindingConstraint* constraint)
+    static Type Value(const std::shared_ptr<Data::BindingConstraint> constraint)
     {
         return wxStringFromUTF8(constraint->name());
     }
@@ -1024,7 +1063,7 @@ struct PConstraintName
 struct PConstraintComments
 {
     using Type = wxString;
-    static Type Value(const Data::BindingConstraint* constraint)
+    static Type Value(const std::shared_ptr<Data::BindingConstraint> constraint)
     {
         return wxStringFromUTF8(constraint->comments());
     }
@@ -1037,7 +1076,7 @@ struct PConstraintComments
 struct PConstraintEnabled
 {
     using Type = bool;
-    static Type Value(const Data::BindingConstraint* constraint)
+    static Type Value(const std::shared_ptr<Data::BindingConstraint> constraint)
     {
         return constraint->enabled();
     }
@@ -1050,7 +1089,7 @@ struct PConstraintEnabled
 struct PConstraintType
 {
     using Type = Data::BindingConstraint::Type;
-    static Type Value(const Data::BindingConstraint* constraint)
+    static Type Value(const std::shared_ptr<Data::BindingConstraint> constraint)
     {
         return constraint->type();
     }

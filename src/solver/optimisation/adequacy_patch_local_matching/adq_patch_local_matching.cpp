@@ -124,7 +124,7 @@ static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* probl
 
 void setNTCbounds(double& Xmax,
                   double& Xmin,
-                  const VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                  const VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC,
                   const int Interco,
                   PROBLEME_HEBDO* problemeHebdo,
                   const AdqPatchParams& adqPatchParams)
@@ -132,8 +132,8 @@ void setNTCbounds(double& Xmax,
     NtcSetToZeroStatus_AdqPatchStep1 ntcToZeroStatusForAdqPatch;
 
     // set as default values
-    Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-    Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+    Xmax = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco];
+    Xmin = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco]);
 
     // set for adq patch first step
     if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled
@@ -152,12 +152,12 @@ void setNTCbounds(double& Xmax,
         case NtcSetToZeroStatus_AdqPatchStep1::setOriginExtremityToZero:
         {
             Xmax = 0.;
-            Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+            Xmin = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco]);
             break;
         }
         case NtcSetToZeroStatus_AdqPatchStep1::setExtremityOriginToZero:
         {
-            Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+            Xmax = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco];
             Xmin = 0.;
             break;
         }

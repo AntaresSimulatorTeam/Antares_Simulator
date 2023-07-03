@@ -232,7 +232,7 @@ public:
     {
         // Flow assessed over all MC years (linear)
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
-          += state.ntc->ValeurDuFlux[state.link->index];
+          += state.ntc.ValeurDuFlux[state.link->index];
         // Next item in the list
         NextType::hourForEachLink(state, numSpace);
     }

@@ -115,11 +115,11 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
         {
             thermalClusterPMinOfAGroup
               = problemeHebdo->PaliersThermiquesDuPays[area->index]
-                  ->pminDUnGroupeDuPalierThermique[thermalCluster->index]; // one by cluster
+                  .pminDUnGroupeDuPalierThermique[thermalCluster->index]; // one by cluster
             thermal[area->index].PMinOfClusters[clusterAreaWideIndex]
               = problemeHebdo->PaliersThermiquesDuPays[area->index]
-                  ->PuissanceDisponibleEtCout[thermalCluster->index]
-                  ->PuissanceMinDuPalierThermique[hourInTheWeek]; // one per hour for one
+                  .PuissanceDisponibleEtCout[thermalCluster->index]
+                  .PuissanceMinDuPalierThermique[hourInTheWeek]; // one per hour for one
             // cluster
         }
         else
@@ -130,12 +130,12 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
         thermal[area->index].thermalClustersProductions[clusterAreaWideIndex]
           = hourlyResults->ProductionThermique[hourInTheWeek]
-              ->ProductionThermiqueDuPalier[thermalCluster->index];
+              .ProductionThermiqueDuPalier[thermalCluster->index];
 
         if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucMILP) // Economy accurate
             thermal[area->index].numberOfUnitsONbyCluster[clusterAreaWideIndex]
               = static_cast<uint>(hourlyResults->ProductionThermique[hourInTheWeek]
-                                    ->NombreDeGroupesEnMarcheDuPalier[thermalCluster->index]);
+                                    .NombreDeGroupesEnMarcheDuPalier[thermalCluster->index]);
         else
             // Economy Fast or Adequacy -- will be calculated during the smoothing
             thermal[area->index].numberOfUnitsONbyCluster[clusterAreaWideIndex] = 0;
@@ -160,6 +160,8 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
     // Reminder: the variable 'productionCost' is a vector only valid when used
     //   from the solver, which is, for each hour in the year, the product
     //   of the market bid price with the modulation vector
+
+    uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
 
     if (thermal[area->index].thermalClustersProductions[clusterAreaWideIndex] > 0.)
     {
@@ -191,7 +193,6 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
             }
             else
                 newUnitCount = thermalCluster->unitCount;
-
             if (newUnitCount > previousUnitCount)
                 newUnitCount = previousUnitCount;
         }
@@ -200,7 +201,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
         // O(h) = MA * P(h) * Modulation
         assert(thermalCluster->productionCost != NULL && "invalid production cost");
         thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
-          = (p * thermalCluster->productionCost[hourInTheYear]);
+          = (p * thermalCluster->getOperatingCost(serieIndex, hourInTheYear));
 
         // Startup cost
         if (newUnitCount > previousUnitCount && hourInTheSimulation != 0u)
@@ -292,7 +293,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
             continue;
 
         thermalClusterOperatingCostForYear[h]
-            = (thermalClusterProduction * currentCluster->productionCost[h]);
+          = thermalClusterProduction * currentCluster->getOperatingCost(serieIndex, h);
 
         switch (unitCommitmentMode)
         {

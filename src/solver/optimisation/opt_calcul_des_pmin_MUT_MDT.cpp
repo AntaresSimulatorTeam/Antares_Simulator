@@ -41,8 +41,8 @@ double OPT_CalculerAireMaxPminJour(int PremierPdt,
                                    int DernierPdt,
                                    int MUTetMDT,
                                    int NombreDePasDeTemps,
-                                   int* NbGrpCourbeGuide,
-                                   int* NbGrpOpt)
+                                   std::vector<int>& NbGrpCourbeGuide,
+                                   std::vector<int>& NbGrpOpt)
 {
     double Cout = 0.0;
     int NbMx = 0;
@@ -96,38 +96,38 @@ double OPT_CalculerAireMaxPminJour(int PremierPdt,
 void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeHebdo)
 {
     int NombreDePasDeTemps = problemeHebdo->NombreDePasDeTemps;
-    int* NbGrpCourbeGuide = problemeHebdo->NbGrpCourbeGuide;
-    int* NbGrpOpt = problemeHebdo->NbGrpOpt;
+    std::vector<int>& NbGrpCourbeGuide = problemeHebdo->NbGrpCourbeGuide;
+    std::vector<int>& NbGrpOpt = problemeHebdo->NbGrpOpt;
 
     for (int Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
     {
         const RESULTATS_HORAIRES& ResultatsHoraires = problemeHebdo->ResultatsHoraires[Pays];
-        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[Pays];
-        const double* PminDuPalierThermiquePendantUneHeure
-          = PaliersThermiquesDuPays->PminDuPalierThermiquePendantUneHeure;
-        const double* TailleUnitaireDUnGroupeDuPalierThermique
-          = PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique;
-        const int* minUpDownTime = PaliersThermiquesDuPays->minUpDownTime;
+        const std::vector<double>& PminDuPalierThermiquePendantUneHeure
+          = PaliersThermiquesDuPays.PminDuPalierThermiquePendantUneHeure;
+        const std::vector<double>& TailleUnitaireDUnGroupeDuPalierThermique
+          = PaliersThermiquesDuPays.TailleUnitaireDUnGroupeDuPalierThermique;
+        const std::vector<int>& minUpDownTime = PaliersThermiquesDuPays.minUpDownTime;
 
-        PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermiqueOptimale
+        const std::vector<PRODUCTION_THERMIQUE_OPTIMALE>& ProductionThermiqueOptimale
           = ResultatsHoraires.ProductionThermique;
 
-        for (int Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
+        for (int Palier = 0; Palier < PaliersThermiquesDuPays.NombreDePaliersThermiques; Palier++)
         {
-            PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDispoEtCout
-              = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier];
-            double* PuissanceMinDuPalierThermique
-              = PuissanceDispoEtCout->PuissanceMinDuPalierThermique;
-            const double* PuissanceDisponibleDuPalierThermique
-              = PuissanceDispoEtCout->PuissanceDisponibleDuPalierThermique;
+            PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDispoEtCout
+              = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[Palier];
+            std::vector<double>& PuissanceMinDuPalierThermique
+              = PuissanceDispoEtCout.PuissanceMinDuPalierThermique;
+            const std::vector<double>& PuissanceDisponibleDuPalierThermique
+              = PuissanceDispoEtCout.PuissanceDisponibleDuPalierThermique;
 
             if (fabs(PminDuPalierThermiquePendantUneHeure[Palier]) < ZERO_PMIN)
                 continue;
 
             for (int Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
             {
-                double P = ProductionThermiqueOptimale[Pdt]->ProductionThermiqueDuPalier[Palier];
+                double P = ProductionThermiqueOptimale[Pdt].ProductionThermiqueDuPalier[Palier];
 
                 NbGrpCourbeGuide[Pdt] = 0;
                 if (fabs(P) < ZERO_PMIN)

@@ -233,7 +233,7 @@ public:
     {
         // Flow assessed over all MC years (linear)
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
-          += Yuni::Math::Abs(state.ntc->ValeurDuFlux[state.link->index]);
+          += Yuni::Math::Abs(state.ntc.ValeurDuFlux[state.link->index]);
         // Next item in the list
         NextType::hourForEachLink(state, numSpace);
     }

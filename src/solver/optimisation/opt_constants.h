@@ -5,8 +5,6 @@
 constexpr char PREMIERE_OPTIMISATION = 1;
 constexpr char DEUXIEME_OPTIMISATION = 2;
 
-constexpr bool RESERVE_J_MOINS_1 = true;
-
 constexpr char CONTRAINTE_HORAIRE = 1;
 constexpr char CONTRAINTE_JOURNALIERE = 2;
 constexpr char CONTRAINTE_HEBDOMADAIRE = 3;

@@ -265,7 +265,7 @@ public:
         // Hydro costs : water value and pumping
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
           += state.problemeHebdo->CaracteristiquesHydrauliques[state.area->index]
-               ->WeeklyWaterValueStateRegular
+               .WeeklyWaterValueStateRegular
              * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
                 - area->hydro.pumpingEfficiency
                     * state.hourlyResults->PompageHoraire[state.hourInTheWeek]);

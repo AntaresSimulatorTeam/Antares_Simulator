@@ -98,9 +98,6 @@ bool Properties::loadKey(const IniFile::Property* p)
     if (p->key == "name")
         return p->value.to<std::string>(this->name);
 
-    if (p->key == "storagecycle")
-        return p->value.to<unsigned int>(this->cycleDuration);
-
     if (p->key == "initiallevel")
         return valueForOptional(this->initialLevel);
 
@@ -149,7 +146,6 @@ bool Properties::saveToFolder(const std::string& folder) const
     s->add("withdrawalnominalcapacity", this->withdrawalNominalCapacity);
 
     s->add("efficiency", this->efficiencyFactor);
-    s->add("storagecycle", this->cycleDuration);
     s->add("initialleveloptim", this->initialLevelOptim);
 
 

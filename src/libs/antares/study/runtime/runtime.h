@@ -32,18 +32,9 @@
 #include "../study.h"
 #include "../../mersenne-twister/mersenne-twister.h"
 
-namespace Antares
+namespace Antares::Data
 {
-/*
-namespace Solver
-{
-namespace Variable
-{
-                class State;
-}
-}*/
-namespace Data
-{
+
 enum RangeLimitsIndex
 {
     rangeBegin = 0,
@@ -60,7 +51,6 @@ public:
     */
     void checkIntegrity() const;
 
-public:
     //! Hours
     uint hour[rangeMax];
     //! Day
@@ -73,32 +63,6 @@ public:
     uint year[rangeMax];
 
 }; // class StudyRangeLimits
-
-class BindingConstraintRTI
-{
-public:
-    BindingConstraintRTI();
-    ~BindingConstraintRTI();
-
-public:
-    Matrix<double> bounds;
-    BindingConstraint::Type type;
-    char operatorType;
-    uint filterYearByYear_ = filterAll;
-    uint filterSynthesis_ = filterAll;
-
-    uint linkCount;
-    double* linkWeight;
-    int* linkOffset;
-    long* linkIndex;
-
-    uint clusterCount;
-    double* clusterWeight;
-    int* clusterOffset;
-    long* clusterIndex;
-    long* clustersAreaIndex;
-    std::string name;
-};
 
 /*!
 ** \brief Runtime informations
@@ -123,10 +87,6 @@ public:
     ** \brief Reset internal data according a given study
     */
     bool loadFromStudy(Study& study);
-
-    // Inequality binding constraints
-    uint getNumberOfInequalityBindingConstraints() const;
-    std::vector<uint> getIndicesForInequalityBindingConstraints() const;
 
 public:
     //! The number of years to process
@@ -163,10 +123,6 @@ public:
     */
     uint* timeseriesNumberYear;
 
-    //! Number of binding constraint
-    uint bindingConstraintCount;
-    BindingConstraintRTI* bindingConstraint;
-
     //! Total
     uint thermalPlantTotalCount;
     uint thermalPlantTotalCountMustRun;
@@ -194,7 +150,6 @@ public:
     bool quadraticOptimizationHasFailed;
 
 private:
-    void initializeBindingConstraints(BindingConstraintsList& list);
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
     //! Prepare all thermal clusters in 'must-run' mode
     void initializeThermalClustersInMustRunMode(Study& study) const;
@@ -209,12 +164,9 @@ private:
 ** \brief Get the size (bytes) occupied in memory by a StudyRuntimeInfos structure
 ** \ingroup runtimedata
 */
-Yuni::uint64 StudyRuntimeInfosMemoryUsage(StudyRuntimeInfos* r);
-
 void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& study);
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "runtime.hxx"
 
