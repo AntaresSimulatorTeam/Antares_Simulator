@@ -38,12 +38,12 @@ using namespace Antares;
 static void AllocateResultsForEconomicMode(void)
 {
     auto& study = *Data::Study::Current::Get();
-    const size_t sizeOfLongHours = study.runtime->nbHoursPerYear * sizeof(int);
-    const size_t sizeOfDoubleHours = study.runtime->nbHoursPerYear * sizeof(double);
+
     ResultatsParInterconnexion.resize(1 + study.runtime->interconnectionsCount());
 
     for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
-        ResultatsParInterconnexion[i].TransitMoyenRecalculQuadratique.assign(sizeOfDoubleHours, 0.);
+        ResultatsParInterconnexion[i].TransitMoyenRecalculQuadratique
+            .assign(study.runtime->nbHoursPerYear , 0.);
 }
 
 void SIM_AllocationTableaux()
