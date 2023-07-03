@@ -31,6 +31,19 @@
 
 namespace Antares::Solver
 {
+void initializeGeneralData(Data::FinalReservoirLevelRuntimeData& finLevData,
+                           const Data::Parameters& parameters,
+                           uint year);
+
+void initializePerAreaData(Data::FinalReservoirLevelRuntimeData& finLevData,
+                           const Matrix<double>& scenarioInitialHydroLevels,
+                           const Matrix<double>& scenarioFinalHydroLevels,
+                           const Data::Area& area);
+
+void initializePreCheckData(Data::FinalReservoirLevelRuntimeData& finLevData,
+                            const Data::Area& area);
+
+void ruleCurveForSimEndReal(Data::FinalReservoirLevelRuntimeData& finLevData, Data::Area& area);
 void FinalReservoirLevel(const Matrix<double>& scenarioInitialHydroLevels,
                          const Matrix<double>& scenarioFinalHydroLevels,
                          const Data::Parameters& parameters,

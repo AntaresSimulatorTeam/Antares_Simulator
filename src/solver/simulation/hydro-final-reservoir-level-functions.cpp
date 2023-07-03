@@ -30,7 +30,7 @@
 
 namespace Antares::Solver
 {
-static void initializeGeneralData(Data::FinalReservoirLevelRuntimeData& finLevData,
+void initializeGeneralData(Data::FinalReservoirLevelRuntimeData& finLevData,
                            const Data::Parameters& parameters,
                            uint year)
 {
@@ -38,7 +38,7 @@ static void initializeGeneralData(Data::FinalReservoirLevelRuntimeData& finLevDa
     finLevData.yearIndex = year;
 }
 
-static void initializePerAreaData(Data::FinalReservoirLevelRuntimeData& finLevData,
+void initializePerAreaData(Data::FinalReservoirLevelRuntimeData& finLevData,
                            const Matrix<double>& scenarioInitialHydroLevels,
                            const Matrix<double>& scenarioFinalHydroLevels,
                            const Data::Area& area)
