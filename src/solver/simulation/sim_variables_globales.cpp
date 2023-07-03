@@ -29,8 +29,6 @@
 #include "sim_structure_probleme_economique.h"
 #include "sim_structure_probleme_adequation.h"
 
-DONNEES_PAR_PAYS** DonneesParPays;
-
 VALEURS_GENEREES_PAR_PAYS*** ValeursGenereesParPays;
 NUMERO_CHRONIQUES_TIREES_PAR_PAYS*** NumeroChroniquesTireesParPays;
 NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION** NumeroChroniquesTireesParInterconnexion;

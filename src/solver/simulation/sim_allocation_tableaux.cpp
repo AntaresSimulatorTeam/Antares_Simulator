@@ -50,10 +50,6 @@ void SIM_AllocationTableaux()
 {
     auto& study = *Data::Study::Current::Get();
 
-    DonneesParPays = (DONNEES_PAR_PAYS**)MemAlloc(study.areas.size() * sizeof(DONNEES_PAR_PAYS*));
-    for (uint i = 0; i < study.areas.size(); ++i)
-        DonneesParPays[i] = (DONNEES_PAR_PAYS*)MemAlloc(sizeof(DONNEES_PAR_PAYS));
-
     ValeursGenereesParPays
       = (VALEURS_GENEREES_PAR_PAYS***)MemAlloc(study.maxNbYearsInParallel * sizeof(void*));
     NumeroChroniquesTireesParPays
@@ -113,7 +109,6 @@ void SIM_DesallocationTableaux()
     {
         const auto& study = *Data::Study::Current::Get();
         for (uint i = 0; i < study.areas.size(); ++i)
-            MemFree(DonneesParPays[i]);
 
         for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
         {
@@ -149,9 +144,6 @@ void SIM_DesallocationTableaux()
     NumeroChroniquesTireesParPays = NULL;
     ValeursGenereesParPays = NULL;
     NumeroChroniquesTireesParInterconnexion = nullptr;
-
-    MemFree(DonneesParPays);
-    DonneesParPays = NULL;
 
     NumeroChroniquesTireesParGroup.clear();
 }

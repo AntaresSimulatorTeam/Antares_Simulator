@@ -31,9 +31,6 @@
 #include "sim_structure_probleme_adequation.h"
 #include "sim_structure_probleme_economique.h"
 
-/* Structures Donnees lues a partir de fichiers */
-extern DONNEES_PAR_PAYS** DonneesParPays;
-
 /* Valeurs generees de maniere aleatoire */
 extern VALEURS_GENEREES_PAR_PAYS*** ValeursGenereesParPays;
 extern NUMERO_CHRONIQUES_TIREES_PAR_PAYS*** NumeroChroniquesTireesParPays;

@@ -31,17 +31,6 @@
 
 typedef struct
 {
-    /* donnees communes adequation et economie */
-    /*-----------------------------------------*/
-    /* hydraulique si generation en ligne */
-    double* PuissanceHydrauliqueFilMoyenne;
-    double* PuissanceHydrauliqueFilVariance;
-    double* CoefficientHydraulicite;
-    double* ProbabiliteHydraulicite;
-} DONNEES_PAR_PAYS;
-
-typedef struct
-{
     int* ThermiqueParPalier;
     int* RenouvelableParPalier;
     int Hydraulique;
