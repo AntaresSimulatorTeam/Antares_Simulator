@@ -48,8 +48,6 @@ static void AllocateResultsForEconomicMode(void)
     {
         rpNtc = (RESULTATS_PAR_INTERCONNEXION*)MemAlloc(sizeof(RESULTATS_PAR_INTERCONNEXION));
         ResultatsParInterconnexion[i] = rpNtc;
-
-        rpNtc->TransitMoyenRecalculQuadratique = (double*)MemAlloc(sizeOfDoubleHours);
     }
 }
 
@@ -61,8 +59,6 @@ static void DeallocateResultsForEconomicMode(void)
     for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
     {
         rpNtc = ResultatsParInterconnexion[i];
-
-        MemFree(rpNtc->TransitMoyenRecalculQuadratique);
 
         MemFree(rpNtc);
     }

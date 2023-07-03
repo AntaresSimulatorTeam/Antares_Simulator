@@ -27,6 +27,8 @@
 #ifndef __SOLVER_SIMULATION_DATA_STRUCTS_H__
 #define __SOLVER_SIMULATION_DATA_STRUCTS_H__
 
+#include <vector>
+
 typedef struct
 {
     /* donnees communes adequation et economie */
@@ -70,7 +72,7 @@ typedef struct
 
 typedef struct
 {
-    double* TransitMoyenRecalculQuadratique;
+    std::vector<double> TransitMoyenRecalculQuadratique;
 } RESULTATS_PAR_INTERCONNEXION;
 
 typedef struct
