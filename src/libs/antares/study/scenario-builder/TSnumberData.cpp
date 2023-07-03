@@ -27,13 +27,10 @@
 
 #include "TSnumberData.h"
 #include "scBuilderUtils.h"
+#include "applyToMatrix.hxx"
 
 namespace Antares::Data::ScenarioBuilder
 {
-enum
-{
-    maxErrors = 20,
-};
 
 bool TSNumberData::reset(const Study& study)
 {
@@ -80,90 +77,6 @@ void TSNumberData::set_value(uint x, uint y, uint value)
 {
     pTSNumberRules.entry[y][x] = value;
 }
-
-namespace // anonymous
-{
-template<class D>
-static inline bool CheckValidity(uint value, const D& data, uint tsGenMax)
-{
-    // When the TS-Generators are not used
-    return (!tsGenMax) ? (value < data.timeSeries.width) : (value < tsGenMax);
-}
-
-template<>
-inline bool CheckValidity<Data::DataSeriesHydro>(uint value,
-                                                 const Data::DataSeriesHydro& data,
-                                                 uint tsGenMax)
-{
-    // When the TS-Generators are not used
-    return (!tsGenMax) ? (value < data.count) : (value < tsGenMax);
-}
-
-template<>
-inline bool CheckValidity<Data::AreaLink>(uint value,
-                                          const Data::AreaLink& data,
-                                          uint /* tsGenMax */)
-{
-    //Value = index of time series
-    //Direct Capacities = all time series
-    //directCapacities.width = Number of time series
-    return value < data.directCapacities.width;
-}
-
-template<>
-inline bool CheckValidity<Data::BindingConstraintTimeSeriesNumbers>(uint, const Data::BindingConstraintTimeSeriesNumbers&, uint)
-{
-    //TS-Generator never used
-    //Should check for time-series width, but we are missing information at this point
-    return true;
-}
-
-template<class StringT, class D>
-bool ApplyToMatrix(uint& errors,
-                   StringT& logprefix,
-                   D& data,
-                   const TSNumberData::MatrixType::ColumnType& years,
-                   uint tsGenMax)
-{
-    bool ret = true;
-
-    // In this case, m.height represents the total number of years
-    const uint nbYears = data.timeseriesNumbers.height;
-    // The matrix m has only one column
-    assert(data.timeseriesNumbers.width == 1);
-    typename Matrix<uint32>::ColumnType& target = data.timeseriesNumbers[0];
-
-    for (uint y = 0; y != nbYears; ++y)
-    {
-        if (years[y] != 0)
-        {
-            // The new TS number
-            uint tsNum = years[y] - 1;
-
-            // When the TS-Generators are not used
-            if (!CheckValidity(tsNum, data, tsGenMax))
-            {
-                if (errors <= maxErrors)
-                {
-                    if (++errors == maxErrors)
-                        logs.warning() << "scenario-builder: ... (skipped)";
-                    else
-                        logs.warning() << "scenario-builder: " << logprefix
-                                       << "value out of bounds for the year " << (y + 1);
-                }
-                ret = false;
-                continue;
-            }
-            // Ok, assign. The value provided by the interface is user-friendly
-            // and starts from 1.
-            target[y] = tsNum;
-        }
-    }
-
-    return ret;
-}
-
-} // anonymous namespace
 
 // =============== TSNumberData derived classes ===============
 
@@ -619,21 +532,4 @@ uint ntcTSNumberData::get_tsGenCount(const Study& /* study */) const
     return 0;
 }
 
-// ================================
-// Binding Constraints ...
-// ================================
-bool BindingConstraintsTSNumberData::apply(Study& study)
-{
-    return std::all_of(rules_.begin(), rules_.end(), [&study, this](const std::pair<std::string, MatrixType>& args){
-        const auto& [group_name, ts_numbers] = args;
-        auto group = study.bindingConstraintsGroups[group_name];
-        if (group == nullptr) {
-            logs.error("Group with name" + group_name + " does not exists");
-        }
-        uint errors = 0;
-        CString<512, false> logprefix;
-        return ApplyToMatrix(errors, logprefix, study.bindingConstraintsGroups[group_name]->timeSeriesNumbers(), ts_numbers[0],
-                      get_tsGenCount(study));
-    });
-}
 } // namespace Antares
