@@ -40,29 +40,10 @@ static void AllocateResultsForEconomicMode(void)
     auto& study = *Data::Study::Current::Get();
     const size_t sizeOfLongHours = study.runtime->nbHoursPerYear * sizeof(int);
     const size_t sizeOfDoubleHours = study.runtime->nbHoursPerYear * sizeof(double);
-    RESULTATS_PAR_INTERCONNEXION* rpNtc;
-
     ResultatsParInterconnexion.resize(1 + study.runtime->interconnectionsCount());
 
     for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
-    {
-        rpNtc = (RESULTATS_PAR_INTERCONNEXION*)MemAlloc(sizeof(RESULTATS_PAR_INTERCONNEXION));
-        ResultatsParInterconnexion[i] = rpNtc;
-        rpNtc->TransitMoyenRecalculQuadratique.assign(sizeOfDoubleHours, 0.);
-    }
-}
-
-static void DeallocateResultsForEconomicMode(void)
-{
-    auto& study = *Data::Study::Current::Get();
-    RESULTATS_PAR_INTERCONNEXION* rpNtc;
-
-    for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
-    {
-        rpNtc = ResultatsParInterconnexion[i];
-
-        MemFree(rpNtc);
-    }
+        ResultatsParInterconnexion[i].TransitMoyenRecalculQuadratique.assign(sizeOfDoubleHours, 0.);
 }
 
 void SIM_AllocationTableaux()
@@ -173,5 +154,4 @@ void SIM_DesallocationTableaux()
     DonneesParPays = NULL;
 
     NumeroChroniquesTireesParGroup.clear();
-    DeallocateResultsForEconomicMode();
 }
