@@ -125,8 +125,8 @@ struct Fixture
         Matrix<Yuni::uint32>& timeseriesNumbersArea1 = area_1->hydro.series->timeseriesNumbers;
         Matrix<Yuni::uint32>& timeseriesNumbersArea2 = area_2->hydro.series->timeseriesNumbers;
 
-        timeseriesNumbersArea1.resize(nbYears, 1);
-        timeseriesNumbersArea2.resize(nbYears, 1);
+        timeseriesNumbersArea1.resize(nbYears, 2);
+        timeseriesNumbersArea2.resize(nbYears, 2);
 
         timeseriesNumbersArea1[0][0] = 0;
         timeseriesNumbersArea1[0][1] = 1;
@@ -226,6 +226,81 @@ BOOST_AUTO_TEST_CASE(Testing_ruleCurveForSimEndReal_function_for_area_1)
 
     BOOST_CHECK_EQUAL(HydroreservoirLevelMinimum, lowLevelLastDay);
     BOOST_CHECK_EQUAL(HydroreservoirLevelMaximum, highLevelLastDay);
+}
+
+BOOST_AUTO_TEST_CASE(calculateTotalInflows_function_for_area_1)
+{
+    FinalReservoirLevelRuntimeData& finLevData = area_1->hydro.finalReservoirLevelRuntimeData;
+
+    auto& inflowsmatrix = area_1->hydro.series->storage;
+    auto& srcinflows = inflowsmatrix[0];
+
+    double total_inflow_expected = DAYS_PER_YEAR * 200;
+    double total_inflow_calculated = finLevData.calculateTotalInflows(srcinflows);
+
+    BOOST_CHECK_EQUAL(total_inflow_expected, total_inflow_calculated);
+}
+
+BOOST_AUTO_TEST_CASE(preCheckStartAndEndSim_function_for_area_1)
+{
+    FinalReservoirLevelRuntimeData& finLevData = area_1->hydro.finalReservoirLevelRuntimeData;
+
+    const AreaName& areaName = "TestName";
+
+    finLevData.simEndDay = DAYS_PER_YEAR;
+    finLevData.initReservoirLvlMonth = 0;
+
+    bool error_calculated = finLevData.preCheckStartAndEndSim(areaName);
+    BOOST_CHECK_EQUAL(true, error_calculated);
+
+    finLevData.simEndDay = DAYS_PER_YEAR - 1;
+
+    error_calculated = finLevData.preCheckStartAndEndSim(areaName);
+    BOOST_CHECK_EQUAL(false, error_calculated);
+
+    finLevData.simEndDay = DAYS_PER_YEAR;
+    finLevData.initReservoirLvlMonth = 3;
+
+    error_calculated = finLevData.preCheckStartAndEndSim(areaName);
+    BOOST_CHECK_EQUAL(false, error_calculated);
+}
+
+BOOST_AUTO_TEST_CASE(preCheckYearlyInflow_function_for_area_1)
+{
+    FinalReservoirLevelRuntimeData& finLevData = area_1->hydro.finalReservoirLevelRuntimeData;
+
+    const AreaName& areaName = "TestName";
+    double totalYearInflows = 100;
+
+    finLevData.deltaReservoirLevel = -0.1;
+    finLevData.reservoirCapacity = 1500;
+
+    bool error_calculated = finLevData.preCheckYearlyInflow(totalYearInflows, areaName);
+    BOOST_CHECK_EQUAL(false, error_calculated);
+
+    finLevData.reservoirCapacity = 0.5;
+
+    error_calculated = finLevData.preCheckYearlyInflow(totalYearInflows, areaName);
+    BOOST_CHECK_EQUAL(true, error_calculated);
+}
+
+BOOST_AUTO_TEST_CASE(preCheckRuleCurves_function_for_area_1)
+{
+    FinalReservoirLevelRuntimeData& finLevData = area_1->hydro.finalReservoirLevelRuntimeData;
+
+    const AreaName& areaName = "TestName";
+
+    finLevData.finalReservoirLevel = 88;
+    finLevData.lowLevelLastDay = 50;
+    finLevData.highLevelLastDay = 99;
+
+    bool error_calculated = finLevData.preCheckRuleCurves(areaName);
+    BOOST_CHECK_EQUAL(true, error_calculated);
+
+    finLevData.highLevelLastDay = 66;
+
+    error_calculated = finLevData.preCheckRuleCurves(areaName);
+    BOOST_CHECK_EQUAL(false, error_calculated);
 }
 
 BOOST_AUTO_TEST_CASE(
