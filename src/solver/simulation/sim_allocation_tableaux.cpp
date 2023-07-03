@@ -42,8 +42,8 @@ static void AllocateResultsForEconomicMode(void)
     const size_t sizeOfDoubleHours = study.runtime->nbHoursPerYear * sizeof(double);
     RESULTATS_PAR_INTERCONNEXION* rpNtc;
 
-    ResultatsParInterconnexion = (RESULTATS_PAR_INTERCONNEXION**)MemAlloc(
-      (1 + study.runtime->interconnectionsCount()) * sizeof(void*));
+    ResultatsParInterconnexion.resize(1 + study.runtime->interconnectionsCount());
+
     for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
     {
         rpNtc = (RESULTATS_PAR_INTERCONNEXION*)MemAlloc(sizeof(RESULTATS_PAR_INTERCONNEXION));
@@ -62,8 +62,6 @@ static void DeallocateResultsForEconomicMode(void)
 
         MemFree(rpNtc);
     }
-    MemFree(ResultatsParInterconnexion);
-    ResultatsParInterconnexion = NULL;
 }
 
 void SIM_AllocationTableaux()

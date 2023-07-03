@@ -49,6 +49,6 @@ extern VALEURS_ANNUELLES** ValeursAnnuellesAdequation;
 
 /* Resultats */
 /*-Economique-*/
-extern RESULTATS_PAR_INTERCONNEXION** ResultatsParInterconnexion;
+extern std::vector<RESULTATS_PAR_INTERCONNEXION*> ResultatsParInterconnexion;
 
 #endif /* __SOLVER_SIMULATION_EXTERN_H__ */
