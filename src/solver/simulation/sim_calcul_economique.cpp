@@ -626,7 +626,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
                 auto& Pt
                   = problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[cluster.index];
-                auto& PtValGen = *ValeursGenereesParPays[numSpace][k];
+                auto& PtValGen = ValeursGenereesParPays[numSpace][k];
 
                 Pt.PuissanceDisponibleDuPalierThermique[j]
                   = cluster.series
@@ -716,7 +716,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                                         .MinEnergieHydrauParIntervalleOptimise;
 
                         std::vector<double>& DNT
-                          = ValeursGenereesParPays[numSpace][k]->HydrauliqueModulableQuotidien;
+                          = ValeursGenereesParPays[numSpace][k].HydrauliqueModulableQuotidien;
 
                         double WSL
                           = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
@@ -806,7 +806,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                     {
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
                         weekTarget_tmp += ValeursGenereesParPays[numSpace][k]
-                                            ->HydrauliqueModulableQuotidien[day];
+                                            .HydrauliqueModulableQuotidien[day];
                     }
 
                     if (weekTarget_tmp != 0.)
@@ -826,7 +826,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
                         problem.CaracteristiquesHydrauliques[k]
                           .CntEnergieH2OParIntervalleOptimise[j]
-                          = ValeursGenereesParPays[numSpace][k]->HydrauliqueModulableQuotidien[day]
+                          = ValeursGenereesParPays[numSpace][k].HydrauliqueModulableQuotidien[day]
                             * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation
                             * marginGen / weekGenerationTarget;
                     }

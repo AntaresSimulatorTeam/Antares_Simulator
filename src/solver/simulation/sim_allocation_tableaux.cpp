@@ -66,22 +66,20 @@ void SIM_AllocationTableaux()
             NumeroChroniquesTireesParPays[numSpace][i]
               = (NUMERO_CHRONIQUES_TIREES_PAR_PAYS*)MemAlloc(
                 sizeof(NUMERO_CHRONIQUES_TIREES_PAR_PAYS));
-            ValeursGenereesParPays[numSpace][i]
-              = (VALEURS_GENEREES_PAR_PAYS*)MemAlloc(sizeof(VALEURS_GENEREES_PAR_PAYS));
 
             NumeroChroniquesTireesParPays[numSpace][i]->ThermiqueParPalier
               = (int*)MemAlloc(area.thermal.clusterCount() * sizeof(int));
             NumeroChroniquesTireesParPays[numSpace][i]->RenouvelableParPalier
               = (int*)MemAlloc(area.renewable.clusterCount() * sizeof(int));
-            ValeursGenereesParPays[numSpace][i]->HydrauliqueModulableQuotidien
+            ValeursGenereesParPays[numSpace][i].HydrauliqueModulableQuotidien
                 .assign(study.runtime->nbDaysPerYear,0 );
-            ValeursGenereesParPays[numSpace][i]->AleaCoutDeProductionParPalier
+            ValeursGenereesParPays[numSpace][i].AleaCoutDeProductionParPalier
                 .assign(area.thermal.clusterCount(), 0.);
             if (area.hydro.reservoirManagement)
             {
-                ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsDebutJours
+                ValeursGenereesParPays[numSpace][i].NiveauxReservoirsDebutJours
                     .assign(study.runtime->nbDaysPerYear, 0.);
-                ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsFinJours
+                ValeursGenereesParPays[numSpace][i].NiveauxReservoirsFinJours
                     .assign(study.runtime->nbDaysPerYear, 0.);
             }
         }
@@ -115,8 +113,6 @@ void SIM_DesallocationTableaux()
                 MemFree(NumeroChroniquesTireesParPays[numSpace][i]->ThermiqueParPalier);
                 MemFree(NumeroChroniquesTireesParPays[numSpace][i]->RenouvelableParPalier);
                 MemFree(NumeroChroniquesTireesParPays[numSpace][i]);
-
-                MemFree(ValeursGenereesParPays[numSpace][i]);
             }
             MemFree(NumeroChroniquesTireesParPays[numSpace]);
         }
