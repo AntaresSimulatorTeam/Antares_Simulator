@@ -57,7 +57,7 @@ typedef struct
 {
     double* HydrauliqueModulableQuotidien; /* indice par jour */
     double* AleaCoutDeProductionParPalier; /* epsilon sur le cout de production */
-    double* NiveauxReservoirsDebutJours;   // Niveaux (quotidiens) du reservoir de début de jour (en
+    double* NiveauxReservoirsDebutJours;   // Niveaux (quotidiens) du reservoir de dÃ©but de jour (en
                                            // cas de gestion des reservoirs).
     double* NiveauxReservoirsFinJours; // Niveaux (quotidiens) du reservoir de fin de jour (en cas
                                        // de gestion des reservoirs).
@@ -70,16 +70,7 @@ typedef struct
 
 typedef struct
 {
-    double* TransitMoyen;   // UNUSED
-    double* TransitMinimum; // UNUSED
-    int* TransitMinimumNo;  // UNUSED
-    double* TransitMaximum; // UNUSED
-    int* TransitMaximumNo;  // UNUSED
-    double* TransitStdDev;  // UNUSED
     double* TransitMoyenRecalculQuadratique;
-    double* VariablesDualesMoyennes; // UNUSED
-    double* TransitAnnuel;           // UNUSED
-    double* RenteHoraire;            // UNUSED
 } RESULTATS_PAR_INTERCONNEXION;
 
 typedef struct

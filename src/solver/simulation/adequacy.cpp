@@ -95,8 +95,6 @@ bool Adequacy::simulationBegin()
                 return false;
             }
         }
-
-        SIM_InitialisationResultats();
     }
 
     if (pProblemesHebdo)

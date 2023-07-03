@@ -49,16 +49,7 @@ static void AllocateResultsForEconomicMode(void)
         rpNtc = (RESULTATS_PAR_INTERCONNEXION*)MemAlloc(sizeof(RESULTATS_PAR_INTERCONNEXION));
         ResultatsParInterconnexion[i] = rpNtc;
 
-        rpNtc->TransitMoyen = (double*)MemAlloc(sizeOfDoubleHours);
-        rpNtc->TransitMinimum = (double*)MemAlloc(sizeOfDoubleHours);
-        rpNtc->TransitMinimumNo = (int*)MemAlloc(sizeOfLongHours);
-        rpNtc->TransitMaximum = (double*)MemAlloc(sizeOfDoubleHours);
-        rpNtc->TransitMaximumNo = (int*)MemAlloc(sizeOfLongHours);
-        rpNtc->TransitStdDev = (double*)MemAlloc(sizeOfDoubleHours);
-        rpNtc->TransitAnnuel = (double*)MemAlloc(study.runtime->nbYears * sizeof(double));
         rpNtc->TransitMoyenRecalculQuadratique = (double*)MemAlloc(sizeOfDoubleHours);
-        rpNtc->VariablesDualesMoyennes = (double*)MemAlloc(sizeOfDoubleHours);
-        rpNtc->RenteHoraire = (double*)MemAlloc(sizeOfDoubleHours);
     }
 }
 
@@ -71,16 +62,7 @@ static void DeallocateResultsForEconomicMode(void)
     {
         rpNtc = ResultatsParInterconnexion[i];
 
-        MemFree(rpNtc->TransitMoyen);
-        MemFree(rpNtc->TransitMinimum);
-        MemFree(rpNtc->TransitMinimumNo);
-        MemFree(rpNtc->TransitMaximum);
-        MemFree(rpNtc->TransitMaximumNo);
-        MemFree(rpNtc->TransitStdDev);
-        MemFree(rpNtc->TransitAnnuel);
         MemFree(rpNtc->TransitMoyenRecalculQuadratique);
-        MemFree(rpNtc->VariablesDualesMoyennes);
-        MemFree(rpNtc->RenteHoraire);
 
         MemFree(rpNtc);
     }

@@ -304,30 +304,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.LeProblemeADejaEteInstancie = false;
 }
 
-void SIM_InitialisationResultats()
-{
-    auto& study = *Data::Study::Current::Get();
-    const size_t sizeOfNbHoursDouble = study.runtime->nbHoursPerYear * sizeof(double);
-    const size_t sizeOfNbHoursLong = study.runtime->nbHoursPerYear * sizeof(int);
-
-    for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
-    {
-        auto& interconnexion = *ResultatsParInterconnexion[i];
-        memset(interconnexion.VariablesDualesMoyennes, 0, sizeOfNbHoursDouble);
-        memset(interconnexion.TransitMoyen, 0, sizeOfNbHoursDouble);
-        memset(interconnexion.TransitStdDev, 0, sizeOfNbHoursDouble);
-        memset(interconnexion.TransitMinimumNo, 0, sizeOfNbHoursLong);
-        memset(interconnexion.TransitMaximumNo, 0, sizeOfNbHoursLong);
-        memset(interconnexion.RenteHoraire, 0, sizeOfNbHoursDouble);
-        memset(interconnexion.TransitAnnuel, 0, study.runtime->nbYears * sizeof(double));
-        for (uint j = 0; j < study.runtime->nbHoursPerYear; j++)
-        {
-            interconnexion.TransitMinimum[j] = (double)LINFINI_ENTIER;
-            interconnexion.TransitMaximum[j] = (double)-LINFINI_ENTIER;
-        }
-    }
-}
-
 void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int PasDeTempsDebut,
                                const BindingConstraintsRepository &bindingConstraints, const uint weekFirstDay, int pasDeTemps) {
     auto enabledConstraints = bindingConstraints.enabled();
