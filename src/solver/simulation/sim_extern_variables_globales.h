@@ -32,7 +32,7 @@
 #include "sim_structure_probleme_economique.h"
 
 /* Valeurs generees de maniere aleatoire */
-extern std::vector<VALEURS_GENEREES_PAR_PAYS**> ValeursGenereesParPays;
+extern std::vector<std::vector<VALEURS_GENEREES_PAR_PAYS*>> ValeursGenereesParPays;
 extern NUMERO_CHRONIQUES_TIREES_PAR_PAYS*** NumeroChroniquesTireesParPays;
 extern NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION** NumeroChroniquesTireesParInterconnexion;
 extern std::vector<std::map<std::string, unsigned>> NumeroChroniquesTireesParGroup;

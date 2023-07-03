@@ -56,8 +56,7 @@ void SIM_AllocationTableaux()
 
     for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
     {
-        ValeursGenereesParPays[numSpace]
-          = (VALEURS_GENEREES_PAR_PAYS**)MemAlloc(study.areas.size() * sizeof(void*));
+        ValeursGenereesParPays[numSpace].resize(study.areas.size());
         NumeroChroniquesTireesParPays[numSpace]
           = (NUMERO_CHRONIQUES_TIREES_PAR_PAYS**)MemAlloc(study.areas.size() * sizeof(void*));
         for (uint i = 0; i < study.areas.size(); ++i)
@@ -119,7 +118,6 @@ void SIM_DesallocationTableaux()
 
                 MemFree(ValeursGenereesParPays[numSpace][i]);
             }
-            MemFree(ValeursGenereesParPays[numSpace]);
             MemFree(NumeroChroniquesTireesParPays[numSpace]);
         }
         for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
