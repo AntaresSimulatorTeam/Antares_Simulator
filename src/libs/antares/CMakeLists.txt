@@ -36,6 +36,7 @@ set(SRC_STUDY_SCENARIO_BUILDER
 	study/scenario-builder/scBuilderUtils.h
 	study/scenario-builder/scBuilderUtils.cpp
 	study/scenario-builder/BindingConstraintsTSNumbersData.cpp
+	study/scenario-builder/applyToMatrix.hxx
 )
 source_group("study\\scenario builder" FILES ${SRC_MATRIX})
 
