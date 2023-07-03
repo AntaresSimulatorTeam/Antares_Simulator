@@ -278,7 +278,7 @@ BOOST_AUTO_TEST_CASE(preCheckYearlyInflow_function_for_area_1)
     bool error_calculated = finLevData.preCheckYearlyInflow(totalYearInflows, areaName);
     BOOST_CHECK_EQUAL(false, error_calculated);
 
-    finLevData.reservoirCapacity = 0.5;
+    finLevData.deltaReservoirLevel = -0.05;
 
     error_calculated = finLevData.preCheckYearlyInflow(totalYearInflows, areaName);
     BOOST_CHECK_EQUAL(true, error_calculated);
