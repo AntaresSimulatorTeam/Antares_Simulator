@@ -390,7 +390,7 @@ BOOST_AUTO_TEST_CASE(
 }
 
 // ========================
-// Tests on Hydro levels
+// Tests on Hydro initial levels
 // ========================
 BOOST_AUTO_TEST_CASE(
   HYDRO_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
@@ -406,6 +406,28 @@ BOOST_AUTO_TEST_CASE(
     referenceFile.append("hl,area 1,5 = 8");
     referenceFile.append("hl,area 1,9 = 9");
     referenceFile.append("hl,area 3,18 = 7");
+    referenceFile.write();
+
+    BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
+// ========================
+// Tests on Hydro final levels
+// ========================
+BOOST_AUTO_TEST_CASE(
+  HYDRO_FINAL_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+{
+    my_rule->hydroFinalLevels.set(area_1->index, 4, 8);
+    my_rule->hydroFinalLevels.set(area_2->index, 11, 3);
+    my_rule->hydroFinalLevels.set(area_3->index, 15, 2);
+
+    saveScenarioBuilder();
+
+    // Build reference scenario builder file
+    referenceFile.append("[my rule name]");
+    referenceFile.append("hfl,area 1,4 = 8");
+    referenceFile.append("hfl,area 2,11 = 3");
+    referenceFile.append("hfl,area 3,15 = 2");
     referenceFile.write();
 
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
