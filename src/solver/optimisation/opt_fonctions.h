@@ -86,7 +86,7 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO*, const int);
 /*------------------------------*/
 
 void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO*);
-double OPT_CalculerAireMaxPminJour(int, int, int, int, int*, int*);
+double OPT_CalculerAireMaxPminJour(int, int, int, int, std::vector<int>&, std::vector<int>&);
 
 void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*,
                                                         double*,

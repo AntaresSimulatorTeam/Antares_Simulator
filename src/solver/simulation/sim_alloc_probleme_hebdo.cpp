@@ -46,297 +46,256 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
     const uint linkCount = study.runtime->interconnectionsCount();
     const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
 
-    problem.DefaillanceNegativeUtiliserPMinThermique = new bool[nbPays];
-    problem.DefaillanceNegativeUtiliserHydro = new bool[nbPays];
-    problem.DefaillanceNegativeUtiliserConsoAbattue = new bool[nbPays];
+    problem.DefaillanceNegativeUtiliserPMinThermique.assign(nbPays, false);
+    problem.DefaillanceNegativeUtiliserHydro.assign(nbPays, false);
+    problem.DefaillanceNegativeUtiliserConsoAbattue.assign(nbPays, false);
 
-    problem.CoefficientEcretementPMaxHydraulique = new double[nbPays];
+    problem.CoefficientEcretementPMaxHydraulique.assign(nbPays, 0.);
 
-    problem.BruitSurCoutHydraulique = new double*[nbPays];
+    problem.BruitSurCoutHydraulique.assign(nbPays, std::vector<double>(8784));
 
-    for (uint p = 0; p < nbPays; ++p)
-        problem.BruitSurCoutHydraulique[p] = new double[8784];
+    problem.NomsDesPays.resize(nbPays);
 
-    problem.NomsDesPays =  new const char*[nbPays];
-    problem.PaysExtremiteDeLInterconnexion = new int[linkCount];
-    problem.PaysOrigineDeLInterconnexion = new int[linkCount];
-    problem.CoutDeTransport = new COUTS_DE_TRANSPORT*[linkCount];
-    problem.IndexDebutIntercoOrigine = new int[nbPays];
-    problem.IndexDebutIntercoExtremite = new int[nbPays];
-    problem.IndexSuivantIntercoOrigine = new int[linkCount];
-    problem.IndexSuivantIntercoExtremite = new int[linkCount];
-    problem.NumeroDeJourDuPasDeTemps = new int[NombreDePasDeTemps];
-    problem.NumeroDIntervalleOptimiseDuPasDeTemps
-      = new int[NombreDePasDeTemps];
-    problem.NbGrpCourbeGuide = new int[NombreDePasDeTemps];
-    problem.NbGrpOpt = new int[NombreDePasDeTemps];
-    problem.CoutDeDefaillancePositive = new double[nbPays];
-    problem.CoutDeDefaillanceNegative = new double[nbPays];
-    problem.CoutDeDefaillanceEnReserve = new double[nbPays];
-    problem.NumeroDeContrainteEnergieHydraulique = new int[nbPays];
-    problem.NumeroDeContrainteMinEnergieHydraulique = new int[nbPays];
-    problem.NumeroDeContrainteMaxEnergieHydraulique = new int[nbPays];
-    problem.NumeroDeContrainteMaxPompage = new int[nbPays];
-    problem.NumeroDeContrainteDeSoldeDEchange = new int[nbPays];
+    problem.PaysExtremiteDeLInterconnexion.assign(linkCount, 0);
+    problem.PaysOrigineDeLInterconnexion.assign(linkCount, 0);
 
-    problem.NumeroDeContrainteEquivalenceStockFinal = new int[nbPays];
-    problem.NumeroDeContrainteExpressionStockFinal = new int[nbPays];
+    problem.CoutDeTransport.resize(linkCount);
 
-    problem.NumeroDeVariableStockFinal = new int[nbPays];
-    problem.NumeroDeVariableDeTrancheDeStock = new int*[nbPays];
-    for (uint p = 0; p < nbPays; ++p)
-        problem.NumeroDeVariableDeTrancheDeStock[p] = new int[100];
+    // was previously set to -1 with a loop, now use assign
+    problem.IndexDebutIntercoOrigine.assign(nbPays, -1);
+    problem.IndexDebutIntercoExtremite.assign(nbPays, -1);
 
-    problem.ValeursDeNTC = new VALEURS_DE_NTC_ET_RESISTANCES*[NombreDePasDeTemps];
-    problem.ValeursDeNTCRef = new VALEURS_DE_NTC_ET_RESISTANCES*[NombreDePasDeTemps];
-    problem.ConsommationsAbattues = new CONSOMMATIONS_ABATTUES*[NombreDePasDeTemps];
-    problem.ConsommationsAbattuesRef = new CONSOMMATIONS_ABATTUES*[NombreDePasDeTemps];
-    problem.AllMustRunGeneration = new ALL_MUST_RUN_GENERATION*[NombreDePasDeTemps];
-    problem.SoldeMoyenHoraire = new SOLDE_MOYEN_DES_ECHANGES*[NombreDePasDeTemps];
-    problem.CorrespondanceVarNativesVarOptim
-      = new CORRESPONDANCES_DES_VARIABLES*[NombreDePasDeTemps];
-    problem.CorrespondanceCntNativesCntOptim
-      = new CORRESPONDANCES_DES_CONTRAINTES*[NombreDePasDeTemps];
-    problem.VariablesDualesDesContraintesDeNTC
-      = new VARIABLES_DUALES_INTERCONNEXIONS*[NombreDePasDeTemps];
+    problem.IndexSuivantIntercoOrigine.assign(linkCount, 0);
+    problem.IndexSuivantIntercoExtremite.assign(linkCount, 0);
+
+    problem.NumeroDeJourDuPasDeTemps.assign(NombreDePasDeTemps, 0);
+    problem.NumeroDIntervalleOptimiseDuPasDeTemps.assign(NombreDePasDeTemps, 0);
+    problem.NbGrpCourbeGuide.assign(NombreDePasDeTemps, 0);
+    problem.NbGrpOpt.assign(NombreDePasDeTemps, 0);
+
+    problem.CoutDeDefaillancePositive.assign(nbPays, 0);
+    problem.CoutDeDefaillanceNegative.assign(nbPays, 0);
+    problem.CoutDeDefaillanceEnReserve.assign(nbPays, 0);
+
+    problem.NumeroDeContrainteEnergieHydraulique.assign(nbPays, 0);
+    problem.NumeroDeContrainteMinEnergieHydraulique.assign(nbPays, 0);
+    problem.NumeroDeContrainteMaxEnergieHydraulique.assign(nbPays, 0);
+    problem.NumeroDeContrainteMaxPompage.assign(nbPays, 0);
+    problem.NumeroDeContrainteDeSoldeDEchange.assign(nbPays, 0);
+
+    problem.NumeroDeContrainteEquivalenceStockFinal.assign(nbPays, 0);
+    problem.NumeroDeContrainteExpressionStockFinal.assign(nbPays, 0);
+
+    problem.NumeroDeVariableStockFinal.assign(nbPays, 0);
+    problem.NumeroDeVariableDeTrancheDeStock.assign(nbPays, std::vector<int>(100));
+
+    problem.ValeursDeNTC.resize(NombreDePasDeTemps);
+    problem.ValeursDeNTCRef.resize(NombreDePasDeTemps);
+
+    problem.ConsommationsAbattues.resize(NombreDePasDeTemps);
+    problem.ConsommationsAbattuesRef.resize(NombreDePasDeTemps);
+
+    problem.AllMustRunGeneration.resize(NombreDePasDeTemps);
+    problem.SoldeMoyenHoraire.resize(NombreDePasDeTemps);
+    problem.CorrespondanceVarNativesVarOptim.resize(NombreDePasDeTemps);
+    problem.CorrespondanceCntNativesCntOptim.resize(NombreDePasDeTemps);
+    problem.VariablesDualesDesContraintesDeNTC.resize(NombreDePasDeTemps);
+
     auto enabledBindingConstraints = study.bindingConstraints.enabled();
-    problem.MatriceDesContraintesCouplantes
-      = new CONTRAINTES_COUPLANTES*[enabledBindingConstraints.size()];
-    problem.PaliersThermiquesDuPays = new PALIERS_THERMIQUES*[nbPays];
-    problem.CaracteristiquesHydrauliques = new ENERGIES_ET_PUISSANCES_HYDRAULIQUES*[nbPays];
-    problem.previousSimulationFinalLevel = new double[nbPays];
+    problem.NombreDeContraintesCouplantes = enabledBindingConstraints.size();
+    problem.MatriceDesContraintesCouplantes.resize(enabledBindingConstraints.size());
+    problem.PaliersThermiquesDuPays.resize(nbPays);
+    problem.CaracteristiquesHydrauliques.resize(nbPays);
+    problem.previousSimulationFinalLevel.assign(nbPays, 0.);
 
     problem.ShortTermStorage.resize(nbPays);
 
-    problem.previousYearFinalLevels = nullptr;
+    problem.previousYearFinalLevels.resize(0);
     if (problem.hydroHotStart)
     {
-        for (uint i = 0; i != nbPays; i++)
+        for (uint i = 0; i <= nbPays; i++)
         {
             auto& area = *(study.areas[i]);
             if (area.hydro.reservoirManagement)
             {
-                problem.previousYearFinalLevels = new double[nbPays];
+                problem.previousYearFinalLevels.assign(nbPays, 0.);
                 break;
             }
         }
     }
 
-    problem.ReserveJMoins1 = new RESERVE_JMOINS1*[nbPays];
+    problem.ReserveJMoins1.resize(nbPays);
     problem.ResultatsHoraires.resize(nbPays);
 
-    for (uint p = 0; p != nbPays; ++p)
+    for (uint k = 0; k < NombreDePasDeTemps; k++)
     {
-        problem.IndexDebutIntercoOrigine[p] = -1;
-        problem.IndexDebutIntercoExtremite[p] = -1;
-    }
+        problem.ValeursDeNTC[k].ValeurDeNTCOrigineVersExtremite.assign(linkCount, 0.);
+        problem.ValeursDeNTC[k].ValeurDeNTCExtremiteVersOrigine.assign(linkCount, 0.);
+        problem.ValeursDeNTC[k].ValeurDeLoopFlowOrigineVersExtremite.assign(linkCount, 0.);
+        problem.ValeursDeNTC[k].ValeurDuFlux.assign(linkCount, 0.);
+        problem.ValeursDeNTC[k].ValeurDuFluxUp.assign(linkCount, 0.);
+        problem.ValeursDeNTC[k].ValeurDuFluxDown.assign(linkCount, 0.);
+        problem.ValeursDeNTC[k].ResistanceApparente.assign(linkCount, 0.);
 
-    for (unsigned k = 0; k < NombreDePasDeTemps; k++)
-    {
-        problem.ValeursDeNTC[k]
-          = new VALEURS_DE_NTC_ET_RESISTANCES;
-        problem.ValeursDeNTCRef[k]
-          = new VALEURS_DE_NTC_ET_RESISTANCES;
-        problem.ConsommationsAbattues[k]
-          = new CONSOMMATIONS_ABATTUES;
-        problem.ConsommationsAbattuesRef[k]
-          = new CONSOMMATIONS_ABATTUES;
-        problem.AllMustRunGeneration[k]
-          = new ALL_MUST_RUN_GENERATION;
-        problem.SoldeMoyenHoraire[k]
-          = new SOLDE_MOYEN_DES_ECHANGES;
+        problem.ValeursDeNTCRef[k].ValeurDeNTCOrigineVersExtremite.assign(linkCount, 0.);
+        problem.ValeursDeNTCRef[k].ValeurDeNTCExtremiteVersOrigine.assign(linkCount, 0.);
+        problem.ValeursDeNTCRef[k].ValeurDeLoopFlowOrigineVersExtremite.assign(linkCount, 0.);
+        problem.ValeursDeNTCRef[k].ValeurDuFlux.assign(linkCount, 0.);
+        problem.ValeursDeNTCRef[k].ValeurDuFluxUp.assign(linkCount, 0.);
+        problem.ValeursDeNTCRef[k].ValeurDuFluxDown.assign(linkCount, 0.);
+        problem.ValeursDeNTCRef[k].ResistanceApparente.assign(linkCount, 0.);
+
+        // TODO VP: Remove this allocation
         problem.CorrespondanceVarNativesVarOptim[k]
           = new CORRESPONDANCES_DES_VARIABLES;
-        problem.CorrespondanceCntNativesCntOptim[k]
-          = new CORRESPONDANCES_DES_CONTRAINTES;
-        problem.VariablesDualesDesContraintesDeNTC[k]
-          = new VARIABLES_DUALES_INTERCONNEXIONS;
-        problem.ValeursDeNTC[k]->ResistanceApparente
-          = new double[linkCount];
-        problem.ValeursDeNTC[k]->ValeurDeNTCExtremiteVersOrigine
-          = new double[linkCount];
-        problem.ValeursDeNTC[k]->ValeurDeNTCOrigineVersExtremite
-          = new double[linkCount];
-        problem.ValeursDeNTC[k]->ValeurDeLoopFlowOrigineVersExtremite
-          = new double[linkCount];
-        problem.ValeursDeNTC[k]->ValeurDuFlux = new double[linkCount];
-        problem.ValeursDeNTC[k]->ValeurDuFluxUp = new double[linkCount];
-        problem.ValeursDeNTC[k]->ValeurDuFluxDown = new double[linkCount];
-        problem.ValeursDeNTCRef[k]->ResistanceApparente
-          = new double[linkCount];
-        problem.ValeursDeNTCRef[k]->ValeurDeNTCExtremiteVersOrigine
-          = new double[linkCount];
-        problem.ValeursDeNTCRef[k]->ValeurDeLoopFlowOrigineVersExtremite
-          = new double[linkCount];
-        problem.ValeursDeNTCRef[k]->ValeurDeNTCOrigineVersExtremite
-          = new double[linkCount];
-        problem.ValeursDeNTCRef[k]->ValeurDuFlux = new double[linkCount];
-        problem.ValeursDeNTCRef[k]->ValeurDuFluxUp = new double[linkCount];
-        problem.ValeursDeNTCRef[k]->ValeurDuFluxDown
-          = new double[linkCount];
-        problem.ConsommationsAbattues[k]->ConsommationAbattueDuPays
-          = new double[nbPays];
-        problem.ConsommationsAbattuesRef[k]->ConsommationAbattueDuPays
-          = new double[nbPays];
-        problem.AllMustRunGeneration[k]->AllMustRunGenerationOfArea
-          = new double[nbPays];
-        problem.SoldeMoyenHoraire[k]->SoldeMoyenDuPays
-          = new double[nbPays];
+
+        problem.ConsommationsAbattues[k].ConsommationAbattueDuPays.assign(nbPays, 0.);
+        problem.ConsommationsAbattuesRef[k].ConsommationAbattueDuPays.assign(nbPays, 0.);
+
+        problem.AllMustRunGeneration[k].AllMustRunGenerationOfArea.assign(nbPays, 0.);
+
+        problem.SoldeMoyenHoraire[k].SoldeMoyenDuPays.assign(nbPays, 0.);
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDeLInterconnexion
-          = new int[linkCount];
+          .assign(linkCount, 0);
         problem.CorrespondanceVarNativesVarOptim[k]
           ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion
-          = new int[linkCount];
+          .assign(linkCount, 0);
         problem.CorrespondanceVarNativesVarOptim[k]
           ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion
-          = new int[linkCount];
+          .assign(linkCount, 0);
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermique
-          = new int[study.runtime->thermalPlantTotalCount];
+          .assign(study.runtime->thermalPlantTotalCount, 0);
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHyd
-          = new int[nbPays];
+          .assign(nbPays, 0);
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDePompage
-          = new int[nbPays];
+          .assign(nbPays, 0);
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeNiveau
-          = new int[nbPays];
+          .assign(nbPays, 0);
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeDebordement
-          = new int[nbPays];
+          .assign(nbPays, 0);
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositive
-          = new int[nbPays];
+          .assign(nbPays, 0);
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegative
-          = new int[nbPays];
+          .assign(nbPays, 0);
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse
-          = new int[nbPays];
+          .assign(nbPays, 0);
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausse
-          = new int[nbPays];
+          .assign(nbPays, 0);
 
         problem.CorrespondanceVarNativesVarOptim[k]
           ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique
-          = new int[study.runtime->thermalPlantTotalCount];
+          .assign(study.runtime->thermalPlantTotalCount, 0);
         problem.CorrespondanceVarNativesVarOptim[k]
           ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique
-          = new int[study.runtime->thermalPlantTotalCount];
+          .assign(study.runtime->thermalPlantTotalCount, 0);
         problem.CorrespondanceVarNativesVarOptim[k]
           ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique
-          = new int[study.runtime->thermalPlantTotalCount];
+          .assign(study.runtime->thermalPlantTotalCount, 0);
         problem.CorrespondanceVarNativesVarOptim[k]
           ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
-          = new int[study.runtime->thermalPlantTotalCount];
+          .assign(study.runtime->thermalPlantTotalCount, 0);
 
         problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.InjectionVariable
-          = new int[shortTermStorageCount];
+          .assign(shortTermStorageCount, 0);
         problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.WithdrawalVariable
-          = new int[shortTermStorageCount];
+          .assign(shortTermStorageCount, 0);
         problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.LevelVariable
-          = new int[shortTermStorageCount];
+          .assign(shortTermStorageCount, 0);
 
-        problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays
-          = new int[nbPays];
-        problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContraintePourEviterLesChargesFictives
-          = new int[nbPays];
-        problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesNiveauxPays
-          = new int[nbPays];
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesBilansPays
+          .assign(nbPays, 0);
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContraintePourEviterLesChargesFictives
+          .assign(nbPays, 0);
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesNiveauxPays
+          .assign(nbPays, 0);
 
-        problem.CorrespondanceCntNativesCntOptim[k]->ShortTermStorageLevelConstraint
-          = new int[shortTermStorageCount];
+        problem.CorrespondanceCntNativesCntOptim[k].ShortTermStorageLevelConstraint
+          .assign(shortTermStorageCount, 0);
 
-        problem.CorrespondanceCntNativesCntOptim[k]->NumeroPremiereContrainteDeReserveParZone
-          = new int[nbPays];
-        problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeuxiemeContrainteDeReserveParZone
-          = new int[nbPays];
-        problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDeDissociationDeFlux
-          = new int[linkCount];
-        problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesContraintesCouplantes
-          = new int[enabledBindingConstraints.size()];
-
-        problem.CorrespondanceCntNativesCntOptim[k]
-          ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche
-          = new int[study.runtime->thermalPlantTotalCount];
-        problem.CorrespondanceCntNativesCntOptim[k]
-          ->NumeroDeContrainteDesContraintesDeDureeMinDArret
-          = new int[study.runtime->thermalPlantTotalCount];
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroPremiereContrainteDeReserveParZone
+          .assign(nbPays, 0);
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeuxiemeContrainteDeReserveParZone
+          .assign(nbPays, 0);
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDeDissociationDeFlux
+          .assign(linkCount, 0);
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesContraintesCouplantes
+          .assign(enabledBindingConstraints.size(), 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
-          ->NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
-          = new int[study.runtime->thermalPlantTotalCount];
+          .NumeroDeContrainteDesContraintesDeDureeMinDeMarche
+          .assign(study.runtime->thermalPlantTotalCount, 0);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeContrainteDesContraintesDeDureeMinDArret
+          .assign(study.runtime->thermalPlantTotalCount, 0);
 
-        problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion
-          = new double[linkCount];
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
+          .assign(study.runtime->thermalPlantTotalCount, 0);
+
+        problem.VariablesDualesDesContraintesDeNTC[k].VariableDualeParInterconnexion
+          .assign(linkCount, 0.);
     }
 
     for (unsigned k = 0; k < linkCount; ++k)
     {
-        problem.CoutDeTransport[k] = new COUTS_DE_TRANSPORT;
-        problem.CoutDeTransport[k]->IntercoGereeAvecDesCouts = false;
-        problem.CoutDeTransport[k]->CoutDeTransportOrigineVersExtremite
-          = new double[NombreDePasDeTemps];
-        problem.CoutDeTransport[k]->CoutDeTransportExtremiteVersOrigine
-          = new double[NombreDePasDeTemps];
-
-        problem.CoutDeTransport[k]->CoutDeTransportOrigineVersExtremiteRef
-          = new double[NombreDePasDeTemps];
-        problem.CoutDeTransport[k]->CoutDeTransportExtremiteVersOrigineRef
-          = new double[NombreDePasDeTemps];
+        problem.CoutDeTransport[k].IntercoGereeAvecDesCouts = false;
+        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremite
+            .assign(NombreDePasDeTemps, 0.);
+        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigine
+            .assign(NombreDePasDeTemps, 0.);
+        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremiteRef
+            .assign(NombreDePasDeTemps, 0.);
+        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigineRef
+            .assign(NombreDePasDeTemps, 0.);
     }
 
-    problem.CorrespondanceCntNativesCntOptimJournalieres
-      = new CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES*[7];
-    for (unsigned k = 0; k < 7; k++)
+    problem.CorrespondanceCntNativesCntOptimJournalieres.resize(7);
+    for (uint k = 0; k < 7; k++)
     {
         problem.CorrespondanceCntNativesCntOptimJournalieres[k]
-          = new CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES;
-        problem.CorrespondanceCntNativesCntOptimJournalieres[k]
-          ->NumeroDeContrainteDesContraintesCouplantes
-          = new int[enabledBindingConstraints.size()];
+          .NumeroDeContrainteDesContraintesCouplantes
+          .assign(enabledBindingConstraints.size(), 0);
     }
 
     problem.CorrespondanceCntNativesCntOptimHebdomadaires
-      = new CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES*[1];
-    for (unsigned k = 0; k < 1; k++)
-    {
-        problem.CorrespondanceCntNativesCntOptimHebdomadaires[k]
-          = new CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES;
-        problem.CorrespondanceCntNativesCntOptimHebdomadaires[k]
-          ->NumeroDeContrainteDesContraintesCouplantes
-          = new int[enabledBindingConstraints.size()];
-    }
+        .NumeroDeContrainteDesContraintesCouplantes
+        .assign(enabledBindingConstraints.size(), 0);
 
     const auto& bindingConstraintCount = enabledBindingConstraints.size();
-    problem.ResultatsContraintesCouplantes
-        = new RESULTATS_CONTRAINTES_COUPLANTES[bindingConstraintCount];
+    problem.ResultatsContraintesCouplantes.resize(bindingConstraintCount);
 
     for (unsigned k = 0; k < bindingConstraintCount; k++)
     {
-        problem.MatriceDesContraintesCouplantes[k] = new CONTRAINTES_COUPLANTES;
-
         auto enabledConstraints = study.bindingConstraints.enabled();
         assert(k < enabledConstraints.size());
         assert(enabledConstraints[k]->linkCount() < 50000000);
         assert(enabledConstraints[k]->clusterCount() < 50000000);
 
-        problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante
-          = new double[NombreDePasDeTemps];
-        problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplanteRef
-          = new double[NombreDePasDeTemps];
+        problem.MatriceDesContraintesCouplantes[k].SecondMembreDeLaContrainteCouplante
+          .assign(NombreDePasDeTemps, 0.);
+        problem.MatriceDesContraintesCouplantes[k].SecondMembreDeLaContrainteCouplanteRef
+          .assign(NombreDePasDeTemps, 0.);
 
-        problem.MatriceDesContraintesCouplantes[k]->NumeroDeLInterconnexion
-          = new int[enabledBindingConstraints[k]->linkCount()];
-        problem.MatriceDesContraintesCouplantes[k]->PoidsDeLInterconnexion
-          = new double[enabledBindingConstraints[k]->linkCount()];
-        problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLInterco
-          = new int[enabledBindingConstraints[k]->linkCount()];
+        problem.MatriceDesContraintesCouplantes[k].NumeroDeLInterconnexion
+          .assign(enabledBindingConstraints[k]->linkCount(), 0);
+        problem.MatriceDesContraintesCouplantes[k].PoidsDeLInterconnexion
+          .assign(enabledBindingConstraints[k]->linkCount(), 0.);
+        problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLInterco
+          .assign(enabledBindingConstraints[k]->linkCount(), 0);
 
-        problem.MatriceDesContraintesCouplantes[k]->NumeroDuPalierDispatch
-          = new int[enabledBindingConstraints[k]->clusterCount()];
-        problem.MatriceDesContraintesCouplantes[k]->PoidsDuPalierDispatch
-          = new double[enabledBindingConstraints[k]->clusterCount()];
-        problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLePalierDispatch
-          = new int[enabledBindingConstraints[k]->clusterCount()];
-        problem.MatriceDesContraintesCouplantes[k]->PaysDuPalierDispatch
-          = new int[enabledBindingConstraints[k]->clusterCount()];
+        problem.MatriceDesContraintesCouplantes[k].NumeroDuPalierDispatch
+          .assign(enabledBindingConstraints[k]->clusterCount(), 0);
+        problem.MatriceDesContraintesCouplantes[k].PoidsDuPalierDispatch
+          .assign(enabledBindingConstraints[k]->clusterCount(), 0.);
+        problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLePalierDispatch
+          .assign(enabledBindingConstraints[k]->clusterCount(), 0);
+        problem.MatriceDesContraintesCouplantes[k].PaysDuPalierDispatch
+          .assign(enabledBindingConstraints[k]->clusterCount(), 0);
+
 
         // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
         unsigned int nbTimeSteps;
@@ -357,205 +316,177 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
             break;
         }
         if (nbTimeSteps > 0)
-        {
-            problem.ResultatsContraintesCouplantes[k].variablesDuales
-              = new double[nbTimeSteps];
-        }
-        else
-        {
-            problem.ResultatsContraintesCouplantes[k].variablesDuales = nullptr;
-        }
+            problem.ResultatsContraintesCouplantes[k].variablesDuales.assign(nbTimeSteps, 0.);
     }
 
     for (unsigned k = 0; k < nbPays; k++)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
-        problem.PaliersThermiquesDuPays[k] = new PALIERS_THERMIQUES;
-        problem.CaracteristiquesHydrauliques[k] =  new ENERGIES_ET_PUISSANCES_HYDRAULIQUES;
+        problem.PaliersThermiquesDuPays[k].minUpDownTime.assign(nbPaliers, 0);
+        problem.PaliersThermiquesDuPays[k].PminDuPalierThermiquePendantUneHeure
+         .assign(nbPaliers, 0.);
+        problem.PaliersThermiquesDuPays[k].PminDuPalierThermiquePendantUnJour
+         .assign(nbPaliers, 0.);
+        problem.PaliersThermiquesDuPays[k].TailleUnitaireDUnGroupeDuPalierThermique
+         .assign(nbPaliers, 0.);
+        problem.PaliersThermiquesDuPays[k].NumeroDuPalierDansLEnsembleDesPaliersThermiques
+         .assign(nbPaliers, 0);
 
-        problem.ReserveJMoins1[k] = new RESERVE_JMOINS1;
-        problem.PaliersThermiquesDuPays[k]->minUpDownTime = new int[nbPaliers];
-        problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure
-          = new double[nbPaliers];
-        problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour
-          = new double[nbPaliers];
-        problem.PaliersThermiquesDuPays[k]->TailleUnitaireDUnGroupeDuPalierThermique
-          = new double[nbPaliers];
-        problem.PaliersThermiquesDuPays[k]->NumeroDuPalierDansLEnsembleDesPaliersThermiques
-          = new int[nbPaliers];
+        problem.PaliersThermiquesDuPays[k].CoutDeDemarrageDUnGroupeDuPalierThermique
+         .assign(nbPaliers, 0.);
+        problem.PaliersThermiquesDuPays[k].CoutDArretDUnGroupeDuPalierThermique
+         .assign(nbPaliers, 0.);
+        problem.PaliersThermiquesDuPays[k].CoutFixeDeMarcheDUnGroupeDuPalierThermique
+         .assign(nbPaliers, 0.);
+        problem.PaliersThermiquesDuPays[k].pminDUnGroupeDuPalierThermique
+         .assign(nbPaliers, 0.);
+        problem.PaliersThermiquesDuPays[k].PmaxDUnGroupeDuPalierThermique
+         .assign(nbPaliers, 0.);
+        problem.PaliersThermiquesDuPays[k].DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
+         .assign(nbPaliers, 0);
+        problem.PaliersThermiquesDuPays[k].DureeMinimaleDArretDUnGroupeDuPalierThermique
+         .assign(nbPaliers, 0);
 
-        problem.PaliersThermiquesDuPays[k]->CoutDeDemarrageDUnGroupeDuPalierThermique
-          = new double[nbPaliers];
-        problem.PaliersThermiquesDuPays[k]->CoutDArretDUnGroupeDuPalierThermique
-          = new double[nbPaliers];
-        problem.PaliersThermiquesDuPays[k]->CoutFixeDeMarcheDUnGroupeDuPalierThermique
-          = new double[nbPaliers];
-        problem.PaliersThermiquesDuPays[k]->pminDUnGroupeDuPalierThermique
-          = new double[nbPaliers];
-        problem.PaliersThermiquesDuPays[k]->PmaxDUnGroupeDuPalierThermique
-          = new double[nbPaliers];
-        problem.PaliersThermiquesDuPays[k]->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
-          = new int[nbPaliers];
-        problem.PaliersThermiquesDuPays[k]->DureeMinimaleDArretDUnGroupeDuPalierThermique
-          = new int[nbPaliers];
+        problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimise
+          .assign(7, 0.);
+        problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParJour
+          .assign(7, 0.);
+        problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimiseRef
+          .assign(7, 0.);
+        problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire
+          .assign(NombreDePasDeTemps, 0.);
+        problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraireRef
+          .assign(NombreDePasDeTemps, 0.);
 
-        problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimise
-          = new double[7];
-        problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParJour
-          = new double[7];
-        problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimiseRef
-          = new double[7];
-        problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraire
-          = new double[NombreDePasDeTemps];
-        problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraireRef
-          = new double[NombreDePasDeTemps];
+        problem.CaracteristiquesHydrauliques[k].MaxEnergieHydrauParIntervalleOptimise
+          .assign(7, 0.);
+        problem.CaracteristiquesHydrauliques[k].MinEnergieHydrauParIntervalleOptimise
+          .assign(7, 0.);
 
-        problem.CaracteristiquesHydrauliques[k]->MaxEnergieHydrauParIntervalleOptimise
-          = new double[7];
-        problem.CaracteristiquesHydrauliques[k]->MinEnergieHydrauParIntervalleOptimise
-          = new double[7];
+        problem.CaracteristiquesHydrauliques[k].NiveauHoraireSup
+          .assign(NombreDePasDeTemps, 0.);
+        problem.CaracteristiquesHydrauliques[k].NiveauHoraireInf
+          .assign(NombreDePasDeTemps, 0.);
+        problem.CaracteristiquesHydrauliques[k].ApportNaturelHoraire
+          .assign(NombreDePasDeTemps, 0.);
+        problem.CaracteristiquesHydrauliques[k].MingenHoraire
+          .assign(NombreDePasDeTemps, 0.);
 
-        problem.CaracteristiquesHydrauliques[k]->NiveauHoraireSup
-          = new double[NombreDePasDeTemps];
-        problem.CaracteristiquesHydrauliques[k]->NiveauHoraireInf
-          = new double[NombreDePasDeTemps];
-        problem.CaracteristiquesHydrauliques[k]->ApportNaturelHoraire
-          = new double[NombreDePasDeTemps]();
-        problem.CaracteristiquesHydrauliques[k]->MingenHoraire
-          = new double[NombreDePasDeTemps];
+        problem.CaracteristiquesHydrauliques[k].WaterLayerValues
+          .assign(100, 0.);
+        problem.CaracteristiquesHydrauliques[k].InflowForTimeInterval
+          .assign(100, 0.);
 
-        problem.CaracteristiquesHydrauliques[k]->WaterLayerValues
-          = new double[100];
-        problem.CaracteristiquesHydrauliques[k]->InflowForTimeInterval
-          = new double[100];
+        problem.CaracteristiquesHydrauliques[k].MaxEnergiePompageParIntervalleOptimise
+          .assign(7, 0.);
+        problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxPompageHoraire
+          .assign(NombreDePasDeTemps, 0.);
 
-        problem.CaracteristiquesHydrauliques[k]->MaxEnergiePompageParIntervalleOptimise
-          = new double[7];
-        problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxPompageHoraire
-          = new double[NombreDePasDeTemps];
+        problem.ReserveJMoins1[k].ReserveHoraireJMoins1
+          .assign(NombreDePasDeTemps, 0.);
+        problem.ReserveJMoins1[k].ReserveHoraireJMoins1Ref
+          .assign(NombreDePasDeTemps, 0.);
 
-        problem.ReserveJMoins1[k]->ReserveHoraireJMoins1
-          = new double[NombreDePasDeTemps];
-        problem.ReserveJMoins1[k]->ReserveHoraireJMoins1Ref
-          = new double[NombreDePasDeTemps];
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDENS
-          = new double[NombreDePasDeTemps](); // adq patch
+          .assign(NombreDePasDeTemps, 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesLmrViolations
-          = new int[NombreDePasDeTemps](); // adq patch
+          .assign(NombreDePasDeTemps, 0); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR
-          = new double[NombreDePasDeTemps](); // adq patch
+          .assign(NombreDePasDeTemps, 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr
-          = new double[NombreDePasDeTemps](); // adq patch
+          .assign(NombreDePasDeTemps, 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveUp
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveDown
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveAny
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegative
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeUp
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeDown
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeAny
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceEnReserve
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].TurbinageHoraire
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].PompageHoraire
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].TurbinageHoraireUp
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].TurbinageHoraireDown
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].CoutsMarginauxHoraires
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].niveauxHoraires
-          = new double[NombreDePasDeTemps]();
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].valeurH2oHoraire
-          = new double[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].debordementsHoraires
-          = new double[NombreDePasDeTemps];
-        problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout
-          = new PDISP_ET_COUTS_HORAIRES_PAR_PALIER*[nbPaliers];
-        problem.ResultatsHoraires[k].ProductionThermique
-          = new PRODUCTION_THERMIQUE_OPTIMALE*[NombreDePasDeTemps];
+          .assign(NombreDePasDeTemps, 0.);
+        problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout.resize(nbPaliers);
+        problem.ResultatsHoraires[k].ProductionThermique.resize(NombreDePasDeTemps);
 
         for (unsigned j = 0; j < nbPaliers; ++j)
         {
-            problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout[j]
-              = new PDISP_ET_COUTS_HORAIRES_PAR_PALIER;
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
+              .CoutHoraireDeProductionDuPalierThermique
+              .assign(NombreDePasDeTemps, 0.);
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
+              .CoutHoraireDeProductionDuPalierThermiqueRef
+              .assign(NombreDePasDeTemps, 0.);
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
+              .PuissanceDisponibleDuPalierThermique
+              .assign(NombreDePasDeTemps, 0.);
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
+              .PuissanceDisponibleDuPalierThermiqueRef
+              .assign(NombreDePasDeTemps, 0.);
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
+              .PuissanceDisponibleDuPalierThermiqueRef_SV
+              .assign(NombreDePasDeTemps, 0.);
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
+              .PuissanceMinDuPalierThermique
+              .assign(NombreDePasDeTemps, 0.);
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
+              .PuissanceMinDuPalierThermique_SV
+              .assign(NombreDePasDeTemps, 0.);
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
+              .NombreMaxDeGroupesEnMarcheDuPalierThermique
+              .assign(NombreDePasDeTemps, 0);
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
+              .NombreMinDeGroupesEnMarcheDuPalierThermique
+              .assign(NombreDePasDeTemps, 0);
 
-            problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
-              ->CoutHoraireDeProductionDuPalierThermique
-              = new double[NombreDePasDeTemps];
-            problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
-              ->CoutHoraireDeProductionDuPalierThermiqueRef
-              = new double[NombreDePasDeTemps];
-            problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
-              ->PuissanceDisponibleDuPalierThermique
-              = new double[NombreDePasDeTemps];
-            problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
-              ->PuissanceDisponibleDuPalierThermiqueRef
-              = new double[NombreDePasDeTemps];
-            problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
-              ->PuissanceDisponibleDuPalierThermiqueRef_SV
-              = new double[NombreDePasDeTemps];
-            problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
-              ->PuissanceMinDuPalierThermique
-              = new double[NombreDePasDeTemps];
-            problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
-              ->PuissanceMinDuPalierThermique_SV
-              = new double[NombreDePasDeTemps];
-            problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
-              ->NombreMaxDeGroupesEnMarcheDuPalierThermique
-              = new int[NombreDePasDeTemps];
-            problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
-              ->NombreMinDeGroupesEnMarcheDuPalierThermique
-              = new int[NombreDePasDeTemps];
-
-            problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
-              ->CoutHoraireDuPalierThermiqueUp
-              = new double[NombreDePasDeTemps];
-            problem.PaliersThermiquesDuPays[k]
-              ->PuissanceDisponibleEtCout[j]
-              ->CoutHoraireDuPalierThermiqueDown
-              = new double[NombreDePasDeTemps];
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
+              .CoutHoraireDuPalierThermiqueUp
+              .assign(NombreDePasDeTemps, 0.);
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
+              .CoutHoraireDuPalierThermiqueDown
+              .assign(NombreDePasDeTemps, 0.);
         }
         for (unsigned j = 0; j < NombreDePasDeTemps; j++)
         {
-            problem.ResultatsHoraires[k].ProductionThermique[j] = new PRODUCTION_THERMIQUE_OPTIMALE;
-            problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalier
-              = new double[nbPaliers];
-            problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierUp
-              = new double[nbPaliers];
-            problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierDown
-              = new double[nbPaliers];
-            problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesEnMarcheDuPalier
-              = new double[nbPaliers];
-            problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesQuiDemarrentDuPalier
-              = new double[nbPaliers];
-            problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesQuiSArretentDuPalier
-              = new double[nbPaliers];
-            problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              ->NombreDeGroupesQuiTombentEnPanneDuPalier
-              = new double[nbPaliers];
+            problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalier
+              .assign(nbPaliers, 0.);
+            problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalierUp
+              .assign(nbPaliers, 0.);
+            problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalierDown
+              .assign(nbPaliers, 0.);
+            problem.ResultatsHoraires[k].ProductionThermique[j].NombreDeGroupesEnMarcheDuPalier
+              .assign(nbPaliers, 0.);
+            problem.ResultatsHoraires[k].ProductionThermique[j].NombreDeGroupesQuiDemarrentDuPalier
+              .assign(nbPaliers, 0.);
+            problem.ResultatsHoraires[k].ProductionThermique[j].NombreDeGroupesQuiSArretentDuPalier
+              .assign(nbPaliers, 0.);
+            problem.ResultatsHoraires[k].ProductionThermique[j]
+              .NombreDeGroupesQuiTombentEnPanneDuPalier
+              .assign(nbPaliers, 0.);
         }
         // Short term storage results
         const unsigned long nbShortTermStorage = study.areas.byIndex[k]->shortTermStorage.count();
@@ -569,327 +500,19 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         }
     }
 
-    problem.coutOptimalSolution1 = new double[7];
-    problem.coutOptimalSolution2 = new double[7];
+    problem.coutOptimalSolution1.assign(7, 0.);
+    problem.coutOptimalSolution2.assign(7, 0.);
 
-    problem.tempsResolution1 = new double[7];
-    problem.tempsResolution2 = new double[7];
+    problem.tempsResolution1.assign(7, 0.);
+    problem.tempsResolution2.assign(7, 0.);
 }
 
 void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 {
     auto& study = *Data::Study::Current::Get();
 
-    uint nbPays = study.areas.size();
-
-    delete[] problem.NomsDesPays;
-    delete[] problem.PaysExtremiteDeLInterconnexion;
-    delete[] problem.PaysOrigineDeLInterconnexion;
-    delete[] problem.IndexDebutIntercoOrigine;
-    delete[] problem.IndexDebutIntercoExtremite;
-    delete[] problem.IndexSuivantIntercoOrigine;
-    delete[] problem.IndexSuivantIntercoExtremite;
-    delete[] problem.NumeroDeJourDuPasDeTemps;
-    delete[] problem.NumeroDIntervalleOptimiseDuPasDeTemps;
-    delete[] problem.NbGrpCourbeGuide;
-    delete[] problem.NbGrpOpt;
-
-    for (unsigned k = 0; k < problem.NombreDePasDeTemps; k++)
+    for (uint k = 0; k < problem.NombreDePasDeTemps; k++)
     {
-        delete[] problem.ValeursDeNTC[k]->ResistanceApparente;
-        delete[] problem.ValeursDeNTC[k]->ValeurDeNTCExtremiteVersOrigine;
-        delete[] problem.ValeursDeNTC[k]->ValeurDeNTCOrigineVersExtremite;
-        delete[] problem.ValeursDeNTC[k]->ValeurDeLoopFlowOrigineVersExtremite;
-        delete[] problem.ValeursDeNTC[k]->ValeurDuFlux;
-        delete[] problem.ValeursDeNTC[k]->ValeurDuFluxUp;
-        delete[] problem.ValeursDeNTC[k]->ValeurDuFluxDown;
-        delete problem.ValeursDeNTC[k];
-        delete[] problem.ConsommationsAbattues[k]->ConsommationAbattueDuPays;
-        delete problem.ConsommationsAbattues[k];
-        delete[] problem.ValeursDeNTCRef[k]->ResistanceApparente;
-        delete[] problem.ValeursDeNTCRef[k]->ValeurDeNTCExtremiteVersOrigine;
-        delete[] problem.ValeursDeNTCRef[k]->ValeurDeNTCOrigineVersExtremite;
-        delete[] problem.ValeursDeNTCRef[k]->ValeurDeLoopFlowOrigineVersExtremite;
-        delete[] problem.ValeursDeNTCRef[k]->ValeurDuFlux;
-        delete[] problem.ValeursDeNTCRef[k]->ValeurDuFluxUp;
-        delete[] problem.ValeursDeNTCRef[k]->ValeurDuFluxDown;
-        delete problem.ValeursDeNTCRef[k];
-        delete[] problem.ConsommationsAbattuesRef[k]->ConsommationAbattueDuPays;
-        delete problem.ConsommationsAbattuesRef[k];
-        delete[] problem.AllMustRunGeneration[k]->AllMustRunGenerationOfArea;
-        delete problem.AllMustRunGeneration[k];
-        delete[] problem.SoldeMoyenHoraire[k]->SoldeMoyenDuPays;
-        delete problem.SoldeMoyenHoraire[k];
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDeLInterconnexion;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermique;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHyd;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDePompage;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeNiveau;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeDebordement;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositive;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegative;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausse;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]
-                  ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
-
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.InjectionVariable;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.WithdrawalVariable;
-        delete[] problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.LevelVariable;
-
         delete problem.CorrespondanceVarNativesVarOptim[k];
-
-        delete[] problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays;
-        delete[] problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesNiveauxPays;
-        delete[] problem.CorrespondanceCntNativesCntOptim[k]
-                  ->NumeroDeContraintePourEviterLesChargesFictives;
-
-        delete[] problem.CorrespondanceCntNativesCntOptim[k]->NumeroPremiereContrainteDeReserveParZone;
-        delete[] problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeuxiemeContrainteDeReserveParZone;
-        delete[] problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDeDissociationDeFlux;
-        delete[] problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesContraintesCouplantes;
-        delete[] problem.CorrespondanceCntNativesCntOptim[k]
-                  ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche;
-        delete[] problem.CorrespondanceCntNativesCntOptim[k]
-                  ->NumeroDeContrainteDesContraintesDeDureeMinDArret;
-        delete[] problem.CorrespondanceCntNativesCntOptim[k]
-                  ->NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne;
-        delete[] problem.CorrespondanceCntNativesCntOptim[k]->ShortTermStorageLevelConstraint;
-
-        delete problem.CorrespondanceCntNativesCntOptim[k];
-        delete[] problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion;
-        delete problem.VariablesDualesDesContraintesDeNTC[k];
     }
-    delete[] problem.ValeursDeNTC;
-    delete[] problem.ConsommationsAbattues;
-    delete[] problem.ValeursDeNTCRef;
-    delete[] problem.ConsommationsAbattuesRef;
-    delete[] problem.AllMustRunGeneration;
-    delete[] problem.SoldeMoyenHoraire;
-    delete[] problem.CorrespondanceVarNativesVarOptim;
-    delete[] problem.CorrespondanceCntNativesCntOptim;
-    delete[] problem.VariablesDualesDesContraintesDeNTC;
-
-    for (int k = 0; k < (int)study.runtime->interconnectionsCount(); k++)
-    {
-        delete[] problem.CoutDeTransport[k]->CoutDeTransportOrigineVersExtremite;
-        delete[] problem.CoutDeTransport[k]->CoutDeTransportExtremiteVersOrigine;
-
-        delete[] problem.CoutDeTransport[k]->CoutDeTransportOrigineVersExtremiteRef;
-        delete[] problem.CoutDeTransport[k]->CoutDeTransportExtremiteVersOrigineRef;
-        delete problem.CoutDeTransport[k];
-    }
-    delete[] problem.CoutDeTransport;
-
-    for (int k = 0; k < 7; k++)
-    {
-        delete[] problem.CorrespondanceCntNativesCntOptimJournalieres[k]
-                  ->NumeroDeContrainteDesContraintesCouplantes;
-        delete problem.CorrespondanceCntNativesCntOptimJournalieres[k];
-    }
-    delete[] problem.CorrespondanceCntNativesCntOptimJournalieres;
-
-    for (int k = 0; k < 1; k++)
-    {
-        delete[] problem.CorrespondanceCntNativesCntOptimHebdomadaires[k]
-                  ->NumeroDeContrainteDesContraintesCouplantes;
-        delete problem.CorrespondanceCntNativesCntOptimHebdomadaires[k];
-    }
-    delete[] problem.CorrespondanceCntNativesCntOptimHebdomadaires;
-
-    auto enabledBindingConstraints = study.bindingConstraints.enabled();
-    for (int k = 0; k < (int)enabledBindingConstraints.size(); k++)
-    {
-        delete[] problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante;
-        delete[] problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplanteRef;
-
-        delete[] problem.MatriceDesContraintesCouplantes[k]->NumeroDeLInterconnexion;
-        delete[] problem.MatriceDesContraintesCouplantes[k]->PoidsDeLInterconnexion;
-        delete[] problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLInterco;
-
-        delete[] problem.MatriceDesContraintesCouplantes[k]->PoidsDuPalierDispatch;
-        delete[] problem.MatriceDesContraintesCouplantes[k]->PaysDuPalierDispatch;
-        delete[] problem.MatriceDesContraintesCouplantes[k]->NumeroDuPalierDispatch;
-        delete[] problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLePalierDispatch;
-
-        delete[] problem.MatriceDesContraintesCouplantes[k];
-
-        if (problem.ResultatsContraintesCouplantes[k].variablesDuales != nullptr)
-            delete[] problem.ResultatsContraintesCouplantes[k].variablesDuales;
-    }
-    delete[] problem.MatriceDesContraintesCouplantes;
-    delete[] problem.ResultatsContraintesCouplantes;
-
-    for (int k = 0; k < (int)nbPays; ++k)
-    {
-        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
-
-        delete[] problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure;
-        delete[] problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour;
-        delete[] problem.PaliersThermiquesDuPays[k]->minUpDownTime;
-        delete[] problem.PaliersThermiquesDuPays[k]->TailleUnitaireDUnGroupeDuPalierThermique;
-        delete[] problem.PaliersThermiquesDuPays[k]->NumeroDuPalierDansLEnsembleDesPaliersThermiques;
-
-        delete[] problem.PaliersThermiquesDuPays[k]->CoutDeDemarrageDUnGroupeDuPalierThermique;
-        delete[] problem.PaliersThermiquesDuPays[k]->CoutDArretDUnGroupeDuPalierThermique;
-        delete[] problem.PaliersThermiquesDuPays[k]->CoutFixeDeMarcheDUnGroupeDuPalierThermique;
-        delete[] problem.PaliersThermiquesDuPays[k]->pminDUnGroupeDuPalierThermique;
-        delete[] problem.PaliersThermiquesDuPays[k]->PmaxDUnGroupeDuPalierThermique;
-        delete[] problem.PaliersThermiquesDuPays[k]->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
-        delete[] problem.PaliersThermiquesDuPays[k]->DureeMinimaleDArretDUnGroupeDuPalierThermique;
-
-        delete[] problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimise;
-        delete[] problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParJour;
-        delete[] problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimiseRef;
-
-        delete[] problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraire;
-        delete[] problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxHydrauliqueHoraireRef;
-
-        delete[] problem.CaracteristiquesHydrauliques[k]->MaxEnergieHydrauParIntervalleOptimise;
-        delete[] problem.CaracteristiquesHydrauliques[k]->MinEnergieHydrauParIntervalleOptimise;
-
-        delete[] problem.CaracteristiquesHydrauliques[k]->MaxEnergiePompageParIntervalleOptimise;
-        delete[] problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxPompageHoraire;
-
-        delete[] problem.CaracteristiquesHydrauliques[k]->NiveauHoraireSup;
-        delete[] problem.CaracteristiquesHydrauliques[k]->NiveauHoraireInf;
-        delete[] problem.CaracteristiquesHydrauliques[k]->ApportNaturelHoraire;
-        delete[] problem.CaracteristiquesHydrauliques[k]->MingenHoraire;
-
-        delete[] problem.CaracteristiquesHydrauliques[k]->WaterLayerValues;
-        delete[] problem.CaracteristiquesHydrauliques[k]->InflowForTimeInterval;
-        delete problem.CaracteristiquesHydrauliques[k];
-
-        delete[] problem.ReserveJMoins1[k]->ReserveHoraireJMoins1;
-        delete[] problem.ReserveJMoins1[k]->ReserveHoraireJMoins1Ref;
-        delete problem.ReserveJMoins1[k];
-
-        for (int j = 0; j < (int)nbPaliers; j++)
-        {
-            delete[] problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
-                      ->CoutHoraireDeProductionDuPalierThermique;
-            delete[] problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
-                      ->CoutHoraireDeProductionDuPalierThermiqueRef;
-            delete[] problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
-                      ->PuissanceDisponibleDuPalierThermique;
-            delete[] problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
-                      ->PuissanceDisponibleDuPalierThermiqueRef;
-            delete[] problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
-                      ->PuissanceDisponibleDuPalierThermiqueRef_SV;
-            delete[] problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
-                      ->PuissanceMinDuPalierThermique;
-            delete[] problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
-                      ->PuissanceMinDuPalierThermique_SV;
-            delete[] problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
-                      ->NombreMaxDeGroupesEnMarcheDuPalierThermique;
-            delete[] problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
-                      ->NombreMinDeGroupesEnMarcheDuPalierThermique;
-            delete[] problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
-                      ->CoutHoraireDuPalierThermiqueUp;
-            delete[] problem.PaliersThermiquesDuPays[k]
-                      ->PuissanceDisponibleEtCout[j]
-                      ->CoutHoraireDuPalierThermiqueDown;
-            delete problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout[j];
-        }
-        delete[] problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout;
-        delete problem.PaliersThermiquesDuPays[k];
-
-        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive;
-        delete[] problem.ResultatsHoraires[k].ValeursHorairesDENS;
-        delete[] problem.ResultatsHoraires[k].ValeursHorairesLmrViolations;
-        delete[] problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR;
-        delete[] problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr;
-        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveUp;
-        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveDown;
-        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveAny;
-        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegative;
-        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeUp;
-        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeDown;
-        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeAny;
-        delete[] problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceEnReserve;
-        delete[] problem.ResultatsHoraires[k].TurbinageHoraire;
-        delete[] problem.ResultatsHoraires[k].PompageHoraire;
-        delete[] problem.ResultatsHoraires[k].TurbinageHoraireUp;
-        delete[] problem.ResultatsHoraires[k].TurbinageHoraireDown;
-        delete[] problem.ResultatsHoraires[k].niveauxHoraires;
-        delete[] problem.ResultatsHoraires[k].valeurH2oHoraire;
-        delete[] problem.ResultatsHoraires[k].debordementsHoraires;
-        delete[] problem.ResultatsHoraires[k].CoutsMarginauxHoraires;
-
-        for (uint j = 0; j < problem.NombreDePasDeTemps; j++)
-        {
-            delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalier;
-            delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierUp;
-            delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierDown;
-            delete[] problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesEnMarcheDuPalier;
-            delete[] problem.ResultatsHoraires[k]
-                      .ProductionThermique[j]
-                      ->NombreDeGroupesQuiDemarrentDuPalier;
-            delete[] problem.ResultatsHoraires[k]
-                      .ProductionThermique[j]
-                      ->NombreDeGroupesQuiSArretentDuPalier;
-            delete[] problem.ResultatsHoraires[k]
-                      .ProductionThermique[j]
-                      ->NombreDeGroupesQuiTombentEnPanneDuPalier;
-            delete problem.ResultatsHoraires[k].ProductionThermique[j];
-        }
-        delete[] problem.ResultatsHoraires[k].ProductionThermique;
-        delete[] problem.BruitSurCoutHydraulique[k];
-    }
-    delete[] problem.PaliersThermiquesDuPays;
-    delete[] problem.CaracteristiquesHydrauliques;
-    delete[] problem.previousSimulationFinalLevel;
-    if (problem.previousYearFinalLevels)
-        delete[] problem.previousYearFinalLevels;
-
-    delete[] problem.ReserveJMoins1;
-
-    delete[] problem.CoutDeDefaillancePositive;
-    delete[] problem.CoutDeDefaillanceNegative;
-    delete[] problem.CoutDeDefaillanceEnReserve;
-    delete[] problem.NumeroDeContrainteEnergieHydraulique;
-    delete[] problem.NumeroDeContrainteMinEnergieHydraulique;
-    delete[] problem.NumeroDeContrainteMaxEnergieHydraulique;
-    delete[] problem.NumeroDeContrainteMaxPompage;
-    delete[] problem.NumeroDeContrainteDeSoldeDEchange;
-
-    delete[] problem.NumeroDeContrainteEquivalenceStockFinal;
-    delete[] problem.NumeroDeContrainteExpressionStockFinal;
-    delete[] problem.NumeroDeVariableStockFinal;
-    for (uint p = 0; p < nbPays; ++p)
-        delete[] problem.NumeroDeVariableDeTrancheDeStock[p];
-    delete[] problem.NumeroDeVariableDeTrancheDeStock;
-
-    delete[] problem.DefaillanceNegativeUtiliserConsoAbattue;
-    delete[] problem.DefaillanceNegativeUtiliserHydro;
-    delete[] problem.DefaillanceNegativeUtiliserPMinThermique;
-
-    delete[] problem.CoefficientEcretementPMaxHydraulique;
-
-    delete[] problem.BruitSurCoutHydraulique;
-
-    delete[] problem.coutOptimalSolution1;
-    delete[] problem.coutOptimalSolution2;
-    delete[] problem.tempsResolution1;
-    delete[] problem.tempsResolution2;
 }

@@ -207,19 +207,19 @@ void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
     for (int CntCouplante = 0; CntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
          CntCouplante++)
     {
-        const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes
+        const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
           = problemeHebdo_->MatriceDesContraintesCouplantes[CntCouplante];
 
-        if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
+        if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
             continue;
 
         int NbInterco
-          = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
+          = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
         int NombreDeTermes = 0;
         for (int Index = 0; Index < NbInterco; Index++)
         {
-            int Interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[Index];
-            double Poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[Index];
+            int Interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[Index];
+            double Poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[Index];
 
             if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
                   == Data::AdequacyPatch::physicalAreaInsideAdqPatch
@@ -245,7 +245,7 @@ void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
 
             std::string NomDeLaContrainte
               = "bc::hourly::" + std::to_string(hour)
-                + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+                + "::" + MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante;
 
             logs.debug() << "C (bc): " << problemeAResoudre_.NombreDeContraintes << ": "
                          << NomDeLaContrainte;
@@ -255,7 +255,7 @@ void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
               Pi,
               Colonne,
               NombreDeTermes,
-              MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante);
+              MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
         }
     }
 }

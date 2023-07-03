@@ -40,6 +40,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* probleme
     {
         int cnt = problemeHebdo->NumeroDeContrainteDeSoldeDEchange[pays];
         ProblemeAResoudre->SecondMembre[cnt]
-          = problemeHebdo->SoldeMoyenHoraire[PdtHebdo]->SoldeMoyenDuPays[pays];
+          = problemeHebdo->SoldeMoyenHoraire[PdtHebdo].SoldeMoyenDuPays[pays];
     }
 }
