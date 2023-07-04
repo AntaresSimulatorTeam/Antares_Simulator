@@ -78,9 +78,8 @@ void SIM_AllocationTableaux()
             }
         }
     }
-    NumeroChroniquesTireesParInterconnexion
-      = (NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION**)MemAlloc(study.maxNbYearsInParallel
-                                                                * sizeof(void*));
+    NumeroChroniquesTireesParInterconnexion.resize(study.maxNbYearsInParallel);
+
     const uint intercoCount = study.areas.areaLinkCount();
     for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
     {
@@ -104,8 +103,5 @@ void SIM_DesallocationTableaux()
             MemFree(NumeroChroniquesTireesParInterconnexion[numSpace]);
         }
     }
-    MemFree(NumeroChroniquesTireesParInterconnexion);
-    NumeroChroniquesTireesParInterconnexion = nullptr;
-
     NumeroChroniquesTireesParGroup.clear();
 }
