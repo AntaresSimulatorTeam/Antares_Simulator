@@ -243,10 +243,6 @@ BindingConstraint::BindingConstraint(wxWindow* parent) :
  pPageList(nullptr),
  pPageWeights(nullptr),
  pPageOffsets(nullptr),
- pPageEqual(nullptr),
- pPageLess(nullptr),
- pPageGreater(nullptr),
- // pGridWeights(nullptr),
  pAllConstraints(nullptr),
  pSelected(nullptr),
  pWeightsPanel(nullptr)
