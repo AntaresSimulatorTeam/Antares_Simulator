@@ -176,6 +176,11 @@ struct commonFixture
         study->bindingConstraints.add("BC_2")->group("group2");
         study->bindingConstraints.add("BC_2")->group("group3");
 
+        study->bindingConstraintsGroups.add("group1");
+        study->bindingConstraintsGroups.add("group2");
+        study->bindingConstraintsGroups.add("group3");
+
+
         // Scenario builder initialization
         study->scenarioRules = new ScenarioBuilder::Sets();
         study->scenarioRules->setStudy(*study);
