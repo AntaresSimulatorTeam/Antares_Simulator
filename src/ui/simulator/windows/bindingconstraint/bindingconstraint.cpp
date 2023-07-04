@@ -322,8 +322,7 @@ BindingConstraint::BindingConstraint(wxWindow* parent) :
 
     // Second membre
     {
-        auto unavailablePanel = new Component::Panel(n);
-        n->add(unavailablePanel, wxT("antares-web"), wxT("  Please use Antares Web to edit BC data  "));
+        n->add(new Component::Panel(n), wxT("antares-web"), wxT("  Please use Antares Web to edit BC data  "));
     }
     
 
