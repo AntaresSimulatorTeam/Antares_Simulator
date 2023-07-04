@@ -73,7 +73,7 @@ struct Fixture
         auto& reservoirCapacityArea2 = area_2->hydro.reservoirCapacity;
 
         reservoirCapacityArea1 = 340.;
-        reservoirCapacityArea2 = 300;
+        reservoirCapacityArea2 = 300.;
 
         // Initialize reservoir max and min levels, but just for the last day in year
         auto& reservoirLevelArea1 = area_1->hydro.reservoirLevel;
@@ -125,8 +125,8 @@ struct Fixture
         Matrix<Yuni::uint32>& timeseriesNumbersArea1 = area_1->hydro.series->timeseriesNumbers;
         Matrix<Yuni::uint32>& timeseriesNumbersArea2 = area_2->hydro.series->timeseriesNumbers;
 
-        timeseriesNumbersArea1.resize(nbYears, 2);
-        timeseriesNumbersArea2.resize(nbYears, 2);
+        timeseriesNumbersArea1.resize(1, nbYears);
+        timeseriesNumbersArea2.resize(1, nbYears);
 
         timeseriesNumbersArea1[0][0] = 0;
         timeseriesNumbersArea1[0][1] = 1;
@@ -168,7 +168,7 @@ BOOST_AUTO_TEST_CASE(Testing_initializeGeneralData_function_for_area_1)
     BOOST_CHECK_EQUAL(RuntimeData.yearIndex, year);
 }
 
-BOOST_AUTO_TEST_CASE(Testing_initializePerAreaData_function_for_area_2s)
+BOOST_AUTO_TEST_CASE(Testing_initializePerAreaData_function_for_area_2)
 {
     FinalReservoirLevelRuntimeData& finLevData = area_2->hydro.finalReservoirLevelRuntimeData;
     auto& initialReservoirLevel = finLevData.initialReservoirLevel;
