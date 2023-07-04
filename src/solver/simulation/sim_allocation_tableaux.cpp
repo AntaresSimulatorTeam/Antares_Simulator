@@ -51,14 +51,12 @@ void SIM_AllocationTableaux()
     auto& study = *Data::Study::Current::Get();
 
     ValeursGenereesParPays.resize(study.maxNbYearsInParallel);
-    NumeroChroniquesTireesParPays
-      = (NUMERO_CHRONIQUES_TIREES_PAR_PAYS***)MemAlloc(study.maxNbYearsInParallel * sizeof(void*));
+    NumeroChroniquesTireesParPays.resize(study.maxNbYearsInParallel);
 
     for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
     {
         ValeursGenereesParPays[numSpace].resize(study.areas.size());
-        NumeroChroniquesTireesParPays[numSpace]
-          = (NUMERO_CHRONIQUES_TIREES_PAR_PAYS**)MemAlloc(study.areas.size() * sizeof(void*));
+        NumeroChroniquesTireesParPays[numSpace].resize(study.areas.size());
         for (uint i = 0; i < study.areas.size(); ++i)
         {
             auto& area = *study.areas.byIndex[i];
@@ -111,16 +109,13 @@ void SIM_DesallocationTableaux()
             {
                 MemFree(NumeroChroniquesTireesParPays[numSpace][i]);
             }
-            MemFree(NumeroChroniquesTireesParPays[numSpace]);
         }
         for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
         {
             MemFree(NumeroChroniquesTireesParInterconnexion[numSpace]);
         }
     }
-    MemFree(NumeroChroniquesTireesParPays);
     MemFree(NumeroChroniquesTireesParInterconnexion);
-    NumeroChroniquesTireesParPays = NULL;
     NumeroChroniquesTireesParInterconnexion = nullptr;
 
     NumeroChroniquesTireesParGroup.clear();
