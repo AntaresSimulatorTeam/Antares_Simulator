@@ -37,7 +37,6 @@ namespace Antares
 {
 namespace Window
 {
-class BindingConstraintDataPanel;
 class BindingConstraintWeightsPanel;
 class BindingConstraintOffsetsPanel;
 
@@ -85,9 +84,6 @@ private:
     Toolbox::InputSelector::BindingConstraint* pAllConstraints;
     Data::BindingConstraint* pSelected;
 
-    BindingConstraintDataPanel* pDataPanelEqual;
-    BindingConstraintDataPanel* pDataPanelLess;
-    BindingConstraintDataPanel* pDataPanelGreater;
     BindingConstraintWeightsPanel* pWeightsPanel;
     BindingConstraintOffsetsPanel* pOffsetsPanel;
 
