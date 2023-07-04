@@ -31,6 +31,7 @@
 #include <yuni/core/string.h>
 #include "../fwd.h"
 #include "TSnumberData.h"
+#include "ThermalTSNumberData.h"
 #include "hydroLevelsData.h"
 #include "NTCTSNumberData.h"
 #include "BindingConstraintsTSNumbersData.h"
