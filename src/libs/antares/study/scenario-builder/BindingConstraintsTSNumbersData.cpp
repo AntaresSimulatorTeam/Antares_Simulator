@@ -38,13 +38,8 @@ namespace Antares::Data::ScenarioBuilder
 bool BindingConstraintsTSNumberData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;
-    std::set<std::string> group_names;
-    std::for_each(study.bindingConstraints.begin(), study.bindingConstraints.end(), [&group_names](const auto& bc) {
-        group_names.insert(bc->group());
-    });
-    rules_.clear();
-    std::for_each(group_names.begin(), group_names.end(), [&](const auto& group_name) {
-        MatrixType& ts_numbers = rules_[group_name];
+    std::for_each(study.bindingConstraintsGroups.begin(), study.bindingConstraintsGroups.end(), [&](const auto& group) {
+        MatrixType& ts_numbers = rules_[group->name()];
         ts_numbers.resize(1, nbYears);
         ts_numbers.fillColumn(0, 0);
     });
