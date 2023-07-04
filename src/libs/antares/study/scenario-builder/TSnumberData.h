@@ -104,24 +104,6 @@ inline double TSNumberData::get_value(uint x, uint y) const
     return pTSNumberRules.entry[y][x];
 }
 
-// =============== TSNumberData derived classes ===============
-
-// =====================
-// Load ...
-// =====================
-class loadTSNumberData : public TSNumberData
-{
-public:
-    bool apply(Study& study) override;
-    CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const override;
-};
-
-inline CString<512, false> loadTSNumberData::get_prefix() const
-{
-    return "l,";
-}
-
 } // namespace Antares::Data::ScenarioBuilder
 
 #endif // __LIBS_STUDY_SCENARIO_BUILDER_DATA_TS_NUMBER_H__
