@@ -2,7 +2,7 @@
 // Created by marechaljas on 11/05/23.
 //
 
-#include "BindingConstraintsList.h"
+#include "BindingConstraintsRepository.h"
 #include <algorithm>
 #include <memory>
 #include <utility>
@@ -12,8 +12,14 @@
 #include "BindingConstraintLoader.h"
 #include "BindingConstraintSaver.h"
 
+void Data::BindingConstraintsRepository::clear()
+{
+    pList.clear();
+    enabledConstraints_.reset();
+}
+
 namespace Antares::Data {
-std::shared_ptr<Data::BindingConstraint> BindingConstraintsList::find(const AnyString &id) {
+std::shared_ptr<Data::BindingConstraint> BindingConstraintsRepository::find(const AnyString &id) {
     for (auto const &i: pList) {
         if (i->id() == id)
             return i;
@@ -21,7 +27,7 @@ std::shared_ptr<Data::BindingConstraint> BindingConstraintsList::find(const AnyS
     return nullptr;
 }
 
-std::shared_ptr<const Data::BindingConstraint> BindingConstraintsList::find(const AnyString &id) const {
+std::shared_ptr<const Data::BindingConstraint> BindingConstraintsRepository::find(const AnyString &id) const {
     for (const auto & i : pList) {
         if (i->id() == id)
             return i;
@@ -29,7 +35,7 @@ std::shared_ptr<const Data::BindingConstraint> BindingConstraintsList::find(cons
     return nullptr;
 }
 
-BindingConstraint *BindingConstraintsList::findByName(const AnyString &name) {
+BindingConstraint *BindingConstraintsRepository::findByName(const AnyString &name) {
     for (auto const & i : pList) {
         if (i->name() == name)
             return i.get();
@@ -37,7 +43,7 @@ BindingConstraint *BindingConstraintsList::findByName(const AnyString &name) {
     return nullptr;
 }
 
-const BindingConstraint *BindingConstraintsList::findByName(const AnyString &name) const {
+const BindingConstraint *BindingConstraintsRepository::findByName(const AnyString &name) const {
     for (const auto & i : pList) {
         if (i->name() == name)
             return i.get();
@@ -45,7 +51,7 @@ const BindingConstraint *BindingConstraintsList::findByName(const AnyString &nam
     return nullptr;
 }
 
-void BindingConstraintsList::removeConstraintsWhoseNameConstains(const AnyString &filter) {
+void BindingConstraintsRepository::removeConstraintsWhoseNameConstains(const AnyString &filter) {
     WhoseNameContains pred(filter);
     pList.erase(std::remove_if(pList.begin(), pList.end(), pred), pList.end());
 }
@@ -54,7 +60,7 @@ bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1, const std:
     return s1->name() < s2->name();
 }
 
-std::shared_ptr<BindingConstraint> BindingConstraintsList::add(const AnyString &name) {
+std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnyString &name) {
     auto bc = std::make_shared<BindingConstraint>();
     bc->name(name);
     pList.push_back(bc);
@@ -62,14 +68,14 @@ std::shared_ptr<BindingConstraint> BindingConstraintsList::add(const AnyString &
     return bc;
 }
 
-void BindingConstraintsList::resizeAllTimeseriesNumbers(unsigned int nb_years) {
+void BindingConstraintsRepository::resizeAllTimeseriesNumbers(unsigned int nb_years) {
     std::for_each(groupToTimeSeriesNumbers.begin(), groupToTimeSeriesNumbers.end(), [&](auto &kvp) {
         groupToTimeSeriesNumbers[kvp.first].timeseriesNumbers.clear();
         groupToTimeSeriesNumbers[kvp.first].timeseriesNumbers.resize(1, nb_years);
     });
 }
 
-void BindingConstraintsList::fixTSNumbersWhenWidthIsOne() {
+void BindingConstraintsRepository::fixTSNumbersWhenWidthIsOne() {
     std::map<std::string, bool, std::less<>> groupOfOneTS;
     std::for_each(pList.begin(), pList.end(), [&groupOfOneTS](auto bc) {
         auto hasOneTs = bc->RHSTimeSeries().width == 1;
@@ -87,18 +93,18 @@ void BindingConstraintsList::fixTSNumbersWhenWidthIsOne() {
 }
 
 std::vector<std::shared_ptr<BindingConstraint>>
-BindingConstraintsList::LoadBindingConstraint(EnvForLoading env) {
+BindingConstraintsRepository::LoadBindingConstraint(EnvForLoading env) {
     BindingConstraintLoader loader;
     return loader.load(std::move(env));
 }
 
-bool BindingConstraintsList::saveToFolder(const AnyString &folder) const {
+bool BindingConstraintsRepository::saveToFolder(const AnyString &folder) const {
     BindingConstraintSaver::EnvForSaving env;
     env.folder = folder;
     return internalSaveToFolder(env);
 }
 
-bool BindingConstraintsList::rename(BindingConstraint *bc, const AnyString &newname) {
+bool BindingConstraintsRepository::rename(BindingConstraint *bc, const AnyString &newname) {
     // Copy of the name
     ConstraintName name;
     name = newname;
@@ -117,9 +123,9 @@ bool BindingConstraintsList::rename(BindingConstraint *bc, const AnyString &newn
     return true;
 }
 
-bool BindingConstraintsList::loadFromFolder(Study &study,
-                                            const StudyLoadOptions &options,
-                                            const AnyString &folder) {
+bool BindingConstraintsRepository::loadFromFolder(Study &study,
+                                                  const StudyLoadOptions &options,
+                                                  const AnyString &folder) {
     // Log entries
     logs.info(); // space for beauty
     logs.info() << "Loading constraints...";
@@ -183,7 +189,7 @@ bool BindingConstraintsList::loadFromFolder(Study &study,
     return !hasError;
 }
 
-bool BindingConstraintsList::checkTimeSeriesWidthConsistency() const {
+bool BindingConstraintsRepository::checkTimeSeriesWidthConsistency() const {
     bool hasError = false;
     std::map<std::string, unsigned, std::less<>> timeSeriesCountByGroup;
     for(const auto& bc: this->pList) {
@@ -205,13 +211,13 @@ bool BindingConstraintsList::checkTimeSeriesWidthConsistency() const {
     return hasError;
 }
 
-void BindingConstraintsList::initializeTsNumbers() {
+void BindingConstraintsRepository::initializeTsNumbers() {
     for (const auto& bc: pList) {
         groupToTimeSeriesNumbers[bc->group()] = {};
     }
 }
 
-void BindingConstraintsList::mutateWeeklyConstraintsIntoDailyOnes()
+void BindingConstraintsRepository::mutateWeeklyConstraintsIntoDailyOnes()
 {
     each([](BindingConstraint &constraint) {
         if (constraint.type() == BindingConstraint::typeWeekly)
@@ -223,7 +229,7 @@ void BindingConstraintsList::mutateWeeklyConstraintsIntoDailyOnes()
     });
 }
 
-bool BindingConstraintsList::internalSaveToFolder(BindingConstraintSaver::EnvForSaving& env) const
+bool BindingConstraintsRepository::internalSaveToFolder(BindingConstraintSaver::EnvForSaving& env) const
 {
     if (pList.empty())
     {
@@ -260,14 +266,14 @@ bool BindingConstraintsList::internalSaveToFolder(BindingConstraintSaver::EnvFor
     return ini.save(env.folder) && ret;
 }
 
-void BindingConstraintsList::reverseWeightSign(const AreaLink* lnk)
+void BindingConstraintsRepository::reverseWeightSign(const AreaLink* lnk)
 {
     each([&lnk](BindingConstraint &constraint) { constraint.reverseWeightSign(lnk); });
 }
 
-uint64 BindingConstraintsList::memoryUsage() const
+uint64 BindingConstraintsRepository::memoryUsage() const
 {
-    uint64 m = sizeof(BindingConstraintsList);
+    uint64 m = sizeof(BindingConstraintsRepository);
     for (const auto & i : pList)
         m += i->memoryUsage();
     m += timeSeriesNumberMemoryUsage();
@@ -302,63 +308,63 @@ namespace // anonymous
 
 } // anonymous namespace
 
-void BindingConstraintsList::remove(const Area* area)
+void BindingConstraintsRepository::remove(const Area* area)
 {
     RemovePredicate<Area> predicate(area);
     auto e = std::remove_if(pList.begin(), pList.end(), predicate);
     pList.erase(e, pList.end());
+    enabledConstraints_.reset();
 }
 
-void BindingConstraintsList::remove(const AreaLink* lnk)
+void BindingConstraintsRepository::remove(const AreaLink* lnk)
 {
     RemovePredicate<AreaLink> predicate(lnk);
     auto e = std::remove_if(pList.begin(), pList.end(), predicate);
     pList.erase(e, pList.end());
+    enabledConstraints_.reset();
 }
 
-void BindingConstraintsList::remove(const BindingConstraint* bc)
+void BindingConstraintsRepository::remove(const BindingConstraint* bc)
 {
     RemovePredicate<BindingConstraint> predicate(bc);
     auto e = std::remove_if(pList.begin(), pList.end(), predicate);
     pList.erase(e, pList.end());
+    enabledConstraints_.reset();
 }
 
 
-BindingConstraintsList::iterator BindingConstraintsList::begin()
+BindingConstraintsRepository::iterator BindingConstraintsRepository::begin()
 {
     return pList.begin();
 }
 
-BindingConstraintsList::const_iterator BindingConstraintsList::begin() const
+BindingConstraintsRepository::const_iterator BindingConstraintsRepository::begin() const
 {
     return pList.begin();
 }
 
-BindingConstraintsList::iterator BindingConstraintsList::end()
+BindingConstraintsRepository::iterator BindingConstraintsRepository::end()
 {
     return pList.end();
 }
 
-BindingConstraintsList::const_iterator BindingConstraintsList::end() const
+BindingConstraintsRepository::const_iterator BindingConstraintsRepository::end() const
 {
     return pList.end();
 }
 
 
-void BindingConstraintsList::estimateMemoryUsage(StudyMemoryUsage& u) const
+void BindingConstraintsRepository::estimateMemoryUsage(StudyMemoryUsage& u) const
 {
     // Disabled by the optimization preferences
     if (!u.study.parameters.include.constraints)
         return;
 
-    // each constraint...
-    for (const auto & constraint : pList)
-    {
+        // each constraint...
+    for (const auto &constraint: pList) {
         u.requiredMemoryForInput += sizeof(void *) * 2;
         uint count = (constraint->operatorType() == BindingConstraint::opBoth) ? 2 : 1;
-        for (uint constraints_counter = 0; constraints_counter != count; ++constraints_counter)
-        {
-            u.requiredMemoryForInput += sizeof(BindingConstraintRTI);
+        for (uint constraints_counter = 0; constraints_counter != count; ++constraints_counter) {
             u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * constraint->linkCount();
             u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * constraint->clusterCount();
             Matrix<>::EstimateMemoryUsage(u, 1, HOURS_PER_YEAR);
@@ -366,18 +372,55 @@ void BindingConstraintsList::estimateMemoryUsage(StudyMemoryUsage& u) const
     }
 }
 
-void BindingConstraintsList::markAsModified() const
+void BindingConstraintsRepository::markAsModified() const
 {
     for (const auto & i : pList)
         i->markAsModified();
 }
 
-uint64 BindingConstraintsList::timeSeriesNumberMemoryUsage() const {
+uint64 BindingConstraintsRepository::timeSeriesNumberMemoryUsage() const {
     uint64 m = sizeof(groupToTimeSeriesNumbers);
     for (const auto& [key, value]: groupToTimeSeriesNumbers) {
         m += sizeof(key);
         m += value.memoryUsage();
     }
     return m;
+}
+
+std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::enabled() const {
+    if (enabledConstraints_) {
+        return enabledConstraints_.value();
+    } else {
+        std::vector<std::shared_ptr<BindingConstraint>> out;
+        std::copy_if(pList.begin(), pList.end(), std::back_inserter(out),
+                     [](const auto &bc) {
+                         return bc->enabled();
+                     });
+        enabledConstraints_ = out;
+        return enabledConstraints_.value();
+    }
+}
+
+static bool isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)
+{
+    return bc.operatorType() == BindingConstraint::opLess || bc.operatorType() == BindingConstraint::opGreater;
+}
+
+std::vector<uint> BindingConstraintsRepository::getIndicesForInequalityBindingConstraints() const
+{
+    auto enabledBCs = enabled();
+    const auto firstBC = enabledBCs.begin();
+    const auto lastBC = enabledBCs.end();
+
+    std::vector<uint> indices;
+    for (auto bc = firstBC; bc < lastBC; bc++)
+    {
+        if (isBindingConstraintTypeInequality(*(*bc)))
+        {
+            auto index = static_cast<uint>(std::distance(firstBC, bc));
+            indices.push_back(index);
+        }
+    }
+    return indices;
 }
 }

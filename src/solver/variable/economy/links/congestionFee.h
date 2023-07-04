@@ -236,7 +236,7 @@ public:
 
         // Congestion Fee
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
-          = state.ntc->ValeurDuFlux[state.link->index] * (UPSTREAM_PRICE - DOWNSTREAM_PRICE);
+          = state.ntc.ValeurDuFlux[state.link->index] * (UPSTREAM_PRICE - DOWNSTREAM_PRICE);
         // Next item in the list
         NextType::hourForEachLink(state, numSpace);
 

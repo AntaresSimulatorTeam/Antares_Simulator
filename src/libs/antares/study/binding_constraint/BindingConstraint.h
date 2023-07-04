@@ -38,6 +38,7 @@
 #include "EnvForLoading.h"
 #include "antares/study/filter.h"
 #include "BindingConstraintTimeSeriesNumbers.h"
+#include "BindingConstraintStructures.h"
 #include <memory>
 #include <utility>
 #include <vector>
@@ -93,27 +94,12 @@ public:
 
     //! Map of weight (for thermal clusters)
     using clusterWeightMap = std::map<const ThermalCluster*, double, CompareClusterName>;
-    //! Iterator
-    using thermalIterator = clusterWeightMap::iterator;
-    //! Const iterator
-    using const_thermalIterator = clusterWeightMap::const_iterator;
 
     //! Map of offset (for links)
     using linkOffsetMap = std::map<const AreaLink*, int>;
-    //! Iterator
-    using OffsetIterator = linkOffsetMap::iterator;
-    //! Const iterator
-    using OffsetConst_iterator = linkOffsetMap::const_iterator;
 
     //! Map of offset (for links)
     using clusterOffsetMap = std::map<const ThermalCluster*, int>;
-    //! Iterator
-    //! Const iterator
-
-    //! Vector of binding constraints
-    using Vector = std::vector<std::shared_ptr<BindingConstraint>>;
-    //! Ordered Set of binding constraints
-    using Set = std::set<std::shared_ptr<BindingConstraint>, CompareBindingConstraintName>;
 
     /*!
     ** \brief Convert a binding constraint type into a mere C-String
@@ -393,17 +379,10 @@ public:
     */
     void buildFormula(YString& s) const;
 
-    void initLinkArrays(std::vector<double>& weigth,
-                        std::vector<double>& cWeigth,
-                        std::vector<int>& o,
-                        std::vector<int>& cO,
-                        std::vector<long>& linkIndex,
-                        std::vector<long>& clusterIndex,
-                        std::vector<long>& clustersAreaIndex) const;
+    BindingConstraintStructures initLinkArrays() const;
 
     template<class Env>
     std::string timeSeriesFileName(const Env &env) const;
-
 
 private:
     //! Raw name

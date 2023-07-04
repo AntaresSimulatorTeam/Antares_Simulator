@@ -64,31 +64,6 @@ public:
 
 }; // class StudyRangeLimits
 
-class BindingConstraintRTI
-{
-public:
-    BindingConstraint::Type type;
-    char operatorType;
-    uint filterYearByYear_ = filterAll;
-    uint filterSynthesis_ = filterAll;
-
-    uint linkCount = 0;
-    std::vector<double> linkWeight;
-    std::vector<int> linkOffset;
-    std::vector<long> linkIndex;
-
-    uint clusterCount = 0;
-    std::vector<double> clusterWeight;
-    std::vector<int> clusterOffset;
-    std::vector<long> clusterIndex;
-    std::vector<long> clustersAreaIndex;
-    std::string name;
-    std::string group;
-    Matrix<> rhsTimeSeries;
-
-    const Matrix<>& RHSTimeSeries() const { return rhsTimeSeries; }
-};
-
 /*!
 ** \brief Runtime informations
 ** \ingroup runtimedata
@@ -112,8 +87,6 @@ public:
     ** \brief Reset internal data according a given study
     */
     bool loadFromStudy(Study& study);
-
-    std::vector<uint> getIndicesForInequalityBindingConstraints() const;
 
 public:
     //! The number of years to process
@@ -150,8 +123,6 @@ public:
     */
     uint* timeseriesNumberYear;
 
-    std::vector<BindingConstraintRTI> bindingConstraints;
-
     //! Total
     uint thermalPlantTotalCount;
     uint thermalPlantTotalCountMustRun;
@@ -179,7 +150,6 @@ public:
     bool quadraticOptimizationHasFailed;
 
 private:
-    void initializeBindingConstraints(BindingConstraintsList& list);
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
     //! Prepare all thermal clusters in 'must-run' mode
     void initializeThermalClustersInMustRunMode(Study& study) const;

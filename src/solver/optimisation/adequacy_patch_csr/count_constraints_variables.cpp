@@ -61,7 +61,7 @@ int countConstraints(const PROBLEME_HEBDO* problemeHebdo)
     for (int CntCouplante = 0; CntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          CntCouplante++)
     {
-        if (MatrixBindingConstraints[CntCouplante]->TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
+        if (MatrixBindingConstraints[CntCouplante].TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
             numberOfConstraints++;
     }
     return numberOfConstraints;

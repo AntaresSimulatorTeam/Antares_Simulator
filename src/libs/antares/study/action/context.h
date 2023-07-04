@@ -34,6 +34,7 @@
 #include <yuni/core/bind.h>
 #include <memory>
 #include "action.h"
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
 namespace Antares
 {
@@ -112,7 +113,7 @@ public:
     //! List of links to select after the paste
     Data::AreaLink::Vector autoselectLinks;
     //! List of binding constraints to select after the paste
-    Data::BindingConstraint::Vector autoselectConstraints;
+    Data::BindingConstraintsRepository::Vector autoselectConstraints;
     //@}
 
 }; // class Context

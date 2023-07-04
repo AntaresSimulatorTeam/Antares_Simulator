@@ -1,10 +1,16 @@
 Antares Changelog
 =================
 
+8.6.1 (06/2023)
+--------------------
+## Bugfixes
+* Fix major bug related to short-term storage & MRG. PRICE
+
+
 8.6.0 (06/2023)
 --------------------
 ## New features
-* Short-term storage (#1163). Cycles are planned for the next release.
+* Short-term storage (#1163).
 * Add pollutant emissions (#1184, #1222)
 * Minimal generation for hydraulic (#1273, RTE/RTE-i/Redstork)
 * Make LMR optional for adequacy patch (#1247)
