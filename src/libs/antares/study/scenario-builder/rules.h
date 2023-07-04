@@ -36,6 +36,9 @@
 #include "NTCTSNumberData.h"
 #include "BindingConstraintsTSNumbersData.h"
 #include "RenewableTSNumberData.h"
+#include "solarTSNumberData.h"
+#include "HydroTSNumberData.h"
+#include "WindTSNumberData.h"
 #include <map>
 #include <memory>
 
