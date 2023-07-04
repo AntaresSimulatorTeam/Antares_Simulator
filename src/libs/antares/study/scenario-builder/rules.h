@@ -34,6 +34,7 @@
 #include "hydroLevelsData.h"
 #include "NTCTSNumberData.h"
 #include "BindingConstraintsTSNumbersData.h"
+#include "RenewableTSNumberData.h"
 #include <map>
 #include <memory>
 
