@@ -31,7 +31,7 @@
 
 std::vector<std::vector<VALEURS_GENEREES_PAR_PAYS>> ValeursGenereesParPays;
 std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_PAYS>> NumeroChroniquesTireesParPays;
-std::vector<NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION*> NumeroChroniquesTireesParInterconnexion;
+std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION>> NumeroChroniquesTireesParInterconnexion;
 
 PROBLEME_HORAIRE_ADEQUATION ProblemeHoraireAdequation;
 VALEURS_ANNUELLES** ValeursAnnuellesAdequation;

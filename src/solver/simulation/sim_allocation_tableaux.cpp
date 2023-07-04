@@ -82,11 +82,7 @@ void SIM_AllocationTableaux()
 
     const uint intercoCount = study.areas.areaLinkCount();
     for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
-    {
-        NumeroChroniquesTireesParInterconnexion[numSpace]
-          = (NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION*)MemAlloc(
-            intercoCount * sizeof(NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION*));
-    }
+        NumeroChroniquesTireesParInterconnexion[numSpace].resize(intercoCount);
 
     NumeroChroniquesTireesParGroup.resize(study.maxNbYearsInParallel);
     AllocateResultsForEconomicMode();
@@ -94,14 +90,5 @@ void SIM_AllocationTableaux()
 
 void SIM_DesallocationTableaux()
 {
-    if (Data::Study::Current::Valid())
-    {
-        const auto& study = *Data::Study::Current::Get();
-
-        for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
-        {
-            MemFree(NumeroChroniquesTireesParInterconnexion[numSpace]);
-        }
-    }
     NumeroChroniquesTireesParGroup.clear();
 }
