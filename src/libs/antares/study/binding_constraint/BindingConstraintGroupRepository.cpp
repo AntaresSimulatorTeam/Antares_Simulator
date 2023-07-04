@@ -99,4 +99,8 @@ namespace Antares::Data {
         auto group = groups_.emplace_back(std::make_shared<BindingConstraintGroup>(name));
         return group;
     }
+
+    void BindingConstraintGroupRepository::clear() {
+        groups_.clear();
+    }
 } // Data
