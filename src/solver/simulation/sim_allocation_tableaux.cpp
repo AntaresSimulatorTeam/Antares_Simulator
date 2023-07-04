@@ -68,9 +68,9 @@ void SIM_AllocationTableaux()
                 sizeof(NUMERO_CHRONIQUES_TIREES_PAR_PAYS));
 
             NumeroChroniquesTireesParPays[numSpace][i]->ThermiqueParPalier
-              = (int*)MemAlloc(area.thermal.clusterCount() * sizeof(int));
+                .assign(area.thermal.clusterCount(), 0);
             NumeroChroniquesTireesParPays[numSpace][i]->RenouvelableParPalier
-              = (int*)MemAlloc(area.renewable.clusterCount() * sizeof(int));
+                .assign(area.renewable.clusterCount(), 0);
             ValeursGenereesParPays[numSpace][i].HydrauliqueModulableQuotidien
                 .assign(study.runtime->nbDaysPerYear,0 );
             ValeursGenereesParPays[numSpace][i].AleaCoutDeProductionParPalier
@@ -109,8 +109,6 @@ void SIM_DesallocationTableaux()
         {
             for (uint i = 0; i < study.areas.size(); ++i)
             {
-                MemFree(NumeroChroniquesTireesParPays[numSpace][i]->ThermiqueParPalier);
-                MemFree(NumeroChroniquesTireesParPays[numSpace][i]->RenouvelableParPalier);
                 MemFree(NumeroChroniquesTireesParPays[numSpace][i]);
             }
             MemFree(NumeroChroniquesTireesParPays[numSpace]);
