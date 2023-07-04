@@ -501,7 +501,7 @@ set(SRC
     # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
     Enum.hpp
     Enum.hxx
-		study/scenario-builder/NTCTSNumberData.cpp study/scenario-builder/NTCTSNumberData.h study/scenario-builder/BindingConstraintsTSNumbersData.h study/scenario-builder/RenewableTSNumberData.h study/scenario-builder/RenewableTSNumberData.cpp)
+		study/scenario-builder/NTCTSNumberData.cpp study/scenario-builder/NTCTSNumberData.h study/scenario-builder/BindingConstraintsTSNumbersData.h study/scenario-builder/RenewableTSNumberData.h study/scenario-builder/RenewableTSNumberData.cpp study/scenario-builder/ThermalTSNumberData.cpp study/scenario-builder/ThermalTSNumberData.h)
 
 
 add_library( libantares-core-calendar
