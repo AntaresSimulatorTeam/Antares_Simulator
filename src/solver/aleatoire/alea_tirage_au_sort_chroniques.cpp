@@ -58,7 +58,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
     for (unsigned int i = 0; i != count; ++i)
     {
         // Variables - the current area
-        NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = *NumeroChroniquesTireesParPays[numSpace][i];
+        NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = NumeroChroniquesTireesParPays[numSpace][i];
         auto& area = *(study.areas.byIndex[i]);
         VALEURS_GENEREES_PAR_PAYS& ptvalgen = ValeursGenereesParPays[numSpace][i];
 

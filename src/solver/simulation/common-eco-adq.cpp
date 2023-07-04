@@ -130,7 +130,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
         if (inAdequacy)
             memset(scratchpad.originalMustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
 
-        auto& PtChro = *(NumeroChroniquesTireesParPays[numSpace][i]);
+        auto& PtChro = NumeroChroniquesTireesParPays[numSpace][i];
         double* mrs = scratchpad.mustrunSum;
         double* adq = scratchpad.originalMustrunSum;
 

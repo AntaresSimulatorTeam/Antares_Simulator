@@ -61,13 +61,9 @@ void SIM_AllocationTableaux()
         {
             auto& area = *study.areas.byIndex[i];
 
-            NumeroChroniquesTireesParPays[numSpace][i]
-              = (NUMERO_CHRONIQUES_TIREES_PAR_PAYS*)MemAlloc(
-                sizeof(NUMERO_CHRONIQUES_TIREES_PAR_PAYS));
-
-            NumeroChroniquesTireesParPays[numSpace][i]->ThermiqueParPalier
+            NumeroChroniquesTireesParPays[numSpace][i].ThermiqueParPalier
                 .assign(area.thermal.clusterCount(), 0);
-            NumeroChroniquesTireesParPays[numSpace][i]->RenouvelableParPalier
+            NumeroChroniquesTireesParPays[numSpace][i].RenouvelableParPalier
                 .assign(area.renewable.clusterCount(), 0);
             ValeursGenereesParPays[numSpace][i].HydrauliqueModulableQuotidien
                 .assign(study.runtime->nbDaysPerYear,0 );
@@ -103,13 +99,6 @@ void SIM_DesallocationTableaux()
     {
         const auto& study = *Data::Study::Current::Get();
 
-        for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
-        {
-            for (uint i = 0; i < study.areas.size(); ++i)
-            {
-                MemFree(NumeroChroniquesTireesParPays[numSpace][i]);
-            }
-        }
         for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
         {
             MemFree(NumeroChroniquesTireesParInterconnexion[numSpace]);

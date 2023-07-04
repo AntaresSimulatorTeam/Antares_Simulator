@@ -571,7 +571,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
         for (uint k = 0; k < nbPays; ++k)
         {
-            auto& tsIndex = *NumeroChroniquesTireesParPays[numSpace][k];
+            auto& tsIndex = NumeroChroniquesTireesParPays[numSpace][k];
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
@@ -668,7 +668,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
                 auto& area = *study.areas.byIndex[k];
-                uint tsIndex = (*NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
+                uint tsIndex = (NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
                 auto& inflowsmatrix = area.hydro.series->storage;
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
                 {

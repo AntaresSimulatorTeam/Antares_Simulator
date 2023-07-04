@@ -211,7 +211,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     uint z = area.index;
     assert(z < study.areas.size());
 
-    auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
+    auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
 
     auto& inflowsmatrix = area.hydro.series->storage;
 
