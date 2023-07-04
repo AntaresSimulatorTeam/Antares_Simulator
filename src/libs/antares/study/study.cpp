@@ -131,6 +131,7 @@ void Study::clear()
     preproHydroCorrelation.clear();
 
     bindingConstraints.clear();
+    bindingConstraintsGroups.clear();
     areas.clear();
 
     // no folder

@@ -92,6 +92,7 @@ std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnySt
     bc->name(name);
     constraints_.push_back(bc);
     std::sort(constraints_.begin(), constraints_.end(), compareConstraints);
+    auto count = bc.use_count();
     return bc;
 }
 
