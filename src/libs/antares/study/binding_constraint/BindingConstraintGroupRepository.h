@@ -34,6 +34,7 @@ public:
     [[nodiscard]] std::vector<std::shared_ptr<BindingConstraintGroup>>::const_iterator end() const;
 
     std::shared_ptr<BindingConstraintGroup> add(const std::string& name);
+    void clear();
 
 private:
     std::vector<std::shared_ptr<BindingConstraintGroup>> groups_;
