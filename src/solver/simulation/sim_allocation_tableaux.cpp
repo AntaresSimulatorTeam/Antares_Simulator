@@ -87,8 +87,3 @@ void SIM_AllocationTableaux()
     NumeroChroniquesTireesParGroup.resize(study.maxNbYearsInParallel);
     AllocateResultsForEconomicMode();
 }
-
-void SIM_DesallocationTableaux()
-{
-    NumeroChroniquesTireesParGroup.clear();
-}

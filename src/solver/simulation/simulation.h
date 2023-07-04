@@ -66,8 +66,6 @@ void SIM_InitialisationChainagePourAdequation(void);
 
 void SIM_DesallocationProblemeHoraireAdequation(void);
 
-void SIM_DesallocationTableaux(void);
-
 void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem);
 
 #endif /* __SOLVER_SIMULATION_H__ */
