@@ -175,6 +175,11 @@ BOOST_AUTO_TEST_CASE(Testing_initializePerAreaData_function_for_area_2)
     auto& finalReservoirLevel = finLevData.finalReservoirLevel;
     auto& deltaReservoirLevel = finLevData.deltaReservoirLevel;
 
+    initialReservoirLevel = 0.;
+    finalReservoirLevel = 0.;
+    deltaReservoirLevel = 0.;
+    finLevData.yearIndex = 0;
+
     Matrix<double>& scenarioInitialHydroLevels = study->scenarioInitialHydroLevels;
     Matrix<double>& scenarioFinalHydroLevels = study->scenarioFinalHydroLevels;
 
