@@ -69,6 +69,7 @@ std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnySt
 }
 
 void BindingConstraintsRepository::resizeAllTimeseriesNumbers(unsigned int nb_years) {
+    initializeTsNumbers();
     std::for_each(groupToTimeSeriesNumbers.begin(), groupToTimeSeriesNumbers.end(), [&](auto &kvp) {
         groupToTimeSeriesNumbers[kvp.first].timeseriesNumbers.clear();
         groupToTimeSeriesNumbers[kvp.first].timeseriesNumbers.resize(1, nb_years);

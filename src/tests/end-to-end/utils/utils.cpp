@@ -27,26 +27,24 @@ void prepareStudy(Study::Ptr pStudy, int nbYears)
 std::shared_ptr<BindingConstraint> addBindingConstraints(Study::Ptr study, std::string name, std::string group) {
     auto bc = study->bindingConstraints.add(name);
     bc->group(group);
-    bc->type();
-    auto ts = study->bindingConstraints.groupToTimeSeriesNumbers[group]; //Create the tsNumbers
     return bc;
 }
 
-Antares::Data::ScenarioBuilder::Rules::Ptr createScenarioRules(Study::Ptr pStudy)
+Antares::Data::ScenarioBuilder::Rules::Ptr createScenarioRules(Study::Ptr study)
 {
-    ScenarioBuilder::Rules::Ptr pRules;
+    ScenarioBuilder::Rules::Ptr rules;
 
-    pStudy->scenarioRulesCreate();
-    ScenarioBuilder::Sets* p_sets = pStudy->scenarioRules;
-    if (p_sets && !p_sets->empty())
+    study->scenarioRulesCreate();
+    ScenarioBuilder::Sets* sets = study->scenarioRules;
+    if (sets && !sets->empty())
     {
-        pRules = p_sets->createNew("Custom");
+        rules = sets->createNew("Custom");
 
-        pStudy->parameters.useCustomScenario  = true;
-        pStudy->parameters.activeRulesScenario = "Custom";
+        study->parameters.useCustomScenario  = true;
+        study->parameters.activeRulesScenario = "Custom";
     }
 
-    return pRules;
+    return rules;
 }
 
 float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight)
@@ -61,18 +59,18 @@ float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight
     return pStudy->parameters.getYearsWeightSum();
 }
 
-void cleanSimulation(Study::Ptr pStudy, Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation)
+void cleanSimulation(Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation)
 {
-    // simulation
     SIM_DesallocationTableaux();
 
     delete simulation;
+}
 
-    // release all reference to the current study held by this class
+void cleanStudy(Study::Ptr pStudy)
+{
     pStudy->clear();
 
-    pStudy = nullptr;
-    // removed any global reference
+    // Remove any global reference
     Data::Study::Current::Set(nullptr);
 }
 
