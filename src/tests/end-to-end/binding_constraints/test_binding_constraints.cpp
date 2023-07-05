@@ -30,7 +30,7 @@ void initializeStudy(Study::Ptr study)
 void setNumberMCyears(Study::Ptr study, unsigned int nbYears)
 {
     study->parameters.resetPlaylist(nbYears);
-    study->bindingConstraints.resizeAllTimeseriesNumbers(nbYears);
+    study->bindingConstraintsGroups.resizeAllTimeseriesNumbers(nbYears);
 }
 
 void simulationBetweenDays(Study::Ptr study, const unsigned int firstDay, const unsigned int lastDay)

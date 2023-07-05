@@ -1,5 +1,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include "utils.h"
+
+#include <utility>
 #include "simulation/simulation.h"
 
 using namespace Antares::Data;
@@ -24,9 +26,14 @@ void prepareStudy(Study::Ptr pStudy, int nbYears)
     Data::Study::Current::Set(pStudy);
 }
 
-std::shared_ptr<BindingConstraint> addBindingConstraints(Study::Ptr study, std::string name, std::string group) {
+std::shared_ptr<BindingConstraint> addBindingConstraints(const Study::Ptr& study, const std::string& name, const std::string& group) {
     auto bc = study->bindingConstraints.add(name);
     bc->group(group);
+    if (auto groupOfConstraint = study->bindingConstraintsGroups[group]; groupOfConstraint != nullptr) {
+        groupOfConstraint->add(bc);
+    } else {
+        study->bindingConstraintsGroups.add(group)->add(bc);
+    }
     return bc;
 }
 
