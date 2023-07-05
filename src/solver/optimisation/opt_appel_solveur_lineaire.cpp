@@ -190,7 +190,7 @@ RESOLUTION:
     Probleme.NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
     Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne.data();
     Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes.data();
-    Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes;
+    Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes.data();
     Probleme.CoefficientsDeLaMatriceDesContraintes
       = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.data();
     Probleme.Sens = ProblemeAResoudre->Sens.data();

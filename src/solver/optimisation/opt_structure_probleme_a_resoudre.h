@@ -54,7 +54,7 @@ typedef struct
     std::vector<int> IndicesDebutDeLigne;
     std::vector<int> NombreDeTermesDesLignes;
     std::vector<double> CoefficientsDeLaMatriceDesContraintes;
-    int* IndicesColonnes;
+    std::vector<int> IndicesColonnes;
     int NombreDeTermesAllouesDansLaMatriceDesContraintes;
     int IncrementDAllocationMatriceDesContraintes;
     int NombreDeTermesDansLaMatriceDesContraintes;
