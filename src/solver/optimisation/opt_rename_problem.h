@@ -114,7 +114,8 @@ public:
     void AreaHydroLevel(int numConstraint);
     void FinalStockEquivalent(int numConstraint);
     void FinalStockExpression(int numConstraint);
-    void MinUpTime(int numConstraint);
+    void NbUnitsOutageLessThanNbUnitsStop(int numConstraint);
+    void NbDispUnitsMinBoundSinceMinUpTime(int numConstraint);
     void MinDownTime(int numConstraint);
     void PMaxDispatchableGeneration(int numConstraint);
     void PMinDispatchableGeneration(int numConstraint);
