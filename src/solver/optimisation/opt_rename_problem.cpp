@@ -18,7 +18,7 @@ std::string BuildName(const std::string& name,
     return result;
 }
 
-void VariableNamer::SetLinkVariableName(int var, const std::string& variableType)
+void VariableNamer::SetLinkVariableName(unsigned int var, const std::string& variableType)
 {
     const auto location = origin_ + AREA_SEP + destination_;
     targetUpdater_.UpdateTargetAtIndex(
@@ -26,14 +26,14 @@ void VariableNamer::SetLinkVariableName(int var, const std::string& variableType
       var);
 }
 
-void VariableNamer::SetAreaVariableName(int var, const std::string& variableType)
+void VariableNamer::SetAreaVariableName(unsigned int var, const std::string& variableType)
 {
     targetUpdater_.UpdateTargetAtIndex(
       BuildName(variableType, LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR)),
       var);
 }
 
-void VariableNamer::SetAreaVariableName(int var, const std::string& variableType, int layerIndex)
+void VariableNamer::SetAreaVariableName(unsigned int var, const std::string& variableType, int layerIndex)
 {
     targetUpdater_.UpdateTargetAtIndex(BuildName(variableType,
                                                  LocationIdentifier(area_, AREA) + SEPARATOR
@@ -42,7 +42,7 @@ void VariableNamer::SetAreaVariableName(int var, const std::string& variableType
                                        var);
 }
 
-void VariableNamer::SetThermalClusterVariableName(int var,
+void VariableNamer::SetThermalClusterVariableName(unsigned int var,
                                                   const std::string& variableType,
                                                   const std::string& clusterName)
 {
@@ -53,39 +53,39 @@ void VariableNamer::SetThermalClusterVariableName(int var,
       BuildName(variableType, location, TimeIdentifier(timeStep_, HOUR)), var);
 }
 
-void VariableNamer::DispatchableProduction(int var, const std::string& clusterName)
+void VariableNamer::DispatchableProduction(unsigned int var, const std::string& clusterName)
 {
     SetThermalClusterVariableName(var, "DispatchableProduction", clusterName);
 }
 
-void VariableNamer::NODU(int var, const std::string& clusterName)
+void VariableNamer::NODU(unsigned int var, const std::string& clusterName)
 {
     SetThermalClusterVariableName(var, "NODU", clusterName);
 }
 
-void VariableNamer::NumberStoppingDispatchableUnits(int var, const std::string& clusterName)
+void VariableNamer::NumberStoppingDispatchableUnits(unsigned int var, const std::string& clusterName)
 {
     SetThermalClusterVariableName(var, "NumberStoppingDispatchableUnits", clusterName);
 }
 
-void VariableNamer::NumberStartingDispatchableUnits(int var, const std::string& clusterName)
+void VariableNamer::NumberStartingDispatchableUnits(unsigned int var, const std::string& clusterName)
 {
     SetThermalClusterVariableName(var, "NumberStartingDispatchableUnits", clusterName);
 }
 
-void VariableNamer::NumberBreakingDownDispatchableUnits(int var, const std::string& clusterName)
+void VariableNamer::NumberBreakingDownDispatchableUnits(unsigned int var, const std::string& clusterName)
 {
     SetThermalClusterVariableName(var, "NumberBreakingDownDispatchableUnits", clusterName);
 }
 
-void VariableNamer::NTCDirect(int var, const std::string& origin, const std::string& destination)
+void VariableNamer::NTCDirect(unsigned int var, const std::string& origin, const std::string& destination)
 {
     origin_ = origin;
     destination_ = destination;
     SetLinkVariableName(var, "NTCDirect");
 }
 
-void VariableNamer::IntercoDirectCost(int var,
+void VariableNamer::IntercoDirectCost(unsigned int var,
                                       const std::string& origin,
                                       const std::string& destination)
 {
@@ -94,7 +94,7 @@ void VariableNamer::IntercoDirectCost(int var,
     SetLinkVariableName(var, "IntercoDirectCost");
 }
 
-void VariableNamer::IntercoIndirectCost(int var,
+void VariableNamer::IntercoIndirectCost(unsigned int var,
                                         const std::string& origin,
                                         const std::string& destination)
 {
@@ -103,7 +103,7 @@ void VariableNamer::IntercoIndirectCost(int var,
     SetLinkVariableName(var, "IntercoIndirectCost");
 }
 
-void VariableNamer::SetShortTermStorageVariableName(int var,
+void VariableNamer::SetShortTermStorageVariableName(unsigned int var,
                                                     const std::string& variableType,
                                                     const std::string& shortTermStorageName)
 {
@@ -113,77 +113,77 @@ void VariableNamer::SetShortTermStorageVariableName(int var,
       BuildName(variableType, location, TimeIdentifier(timeStep_, HOUR)), var);
 }
 
-void VariableNamer::ShortTermStorageInjection(int var, const std::string& shortTermStorageName)
+void VariableNamer::ShortTermStorageInjection(unsigned int var, const std::string& shortTermStorageName)
 {
     SetShortTermStorageVariableName(var, "Injection", shortTermStorageName);
 }
 
-void VariableNamer::ShortTermStorageWithdrawal(int var, const std::string& shortTermStorageName)
+void VariableNamer::ShortTermStorageWithdrawal(unsigned int var, const std::string& shortTermStorageName)
 {
     SetShortTermStorageVariableName(var, "Withdrawal", shortTermStorageName);
 }
 
-void VariableNamer::ShortTermStorageLevel(int var, const std::string& shortTermStorageName)
+void VariableNamer::ShortTermStorageLevel(unsigned int var, const std::string& shortTermStorageName)
 {
     SetShortTermStorageVariableName(var, "Level", shortTermStorageName);
 }
 
-void VariableNamer::HydProd(int var)
+void VariableNamer::HydProd(unsigned int var)
 {
     SetAreaVariableName(var, "HydProd");
 }
 
-void VariableNamer::HydProdDown(int var)
+void VariableNamer::HydProdDown(unsigned int var)
 {
     SetAreaVariableName(var, "HydProdDown");
 }
 
-void VariableNamer::HydProdUp(int var)
+void VariableNamer::HydProdUp(unsigned int var)
 {
     SetAreaVariableName(var, "HydProdUp");
 }
 
-void VariableNamer::Pumping(int var)
+void VariableNamer::Pumping(unsigned int var)
 {
     SetAreaVariableName(var, "Pumping");
 }
 
-void VariableNamer::HydroLevel(int var)
+void VariableNamer::HydroLevel(unsigned int var)
 {
     SetAreaVariableName(var, "HydroLevel");
 }
 
-void VariableNamer::Overflow(int var)
+void VariableNamer::Overflow(unsigned int var)
 {
     SetAreaVariableName(var, "Overflow");
 }
 
-void VariableNamer::LayerStorage(int var, int layerIndex)
+void VariableNamer::LayerStorage(unsigned int var, int layerIndex)
 {
     SetAreaVariableName(var, "LayerStorage", layerIndex);
 }
 
-void VariableNamer::FinalStorage(int var)
+void VariableNamer::FinalStorage(unsigned int var)
 {
     SetAreaVariableName(var, "FinalStorage");
 }
 
-void VariableNamer::PositiveUnsuppliedEnergy(int var)
+void VariableNamer::PositiveUnsuppliedEnergy(unsigned int var)
 {
     SetAreaVariableName(var, "PositiveUnsuppliedEnergy");
 }
 
-void VariableNamer::NegativeUnsuppliedEnergy(int var)
+void VariableNamer::NegativeUnsuppliedEnergy(unsigned int var)
 {
     SetAreaVariableName(var, "NegativeUnsuppliedEnergy");
 }
 
-void VariableNamer::AreaBalance(int var)
+void VariableNamer::AreaBalance(unsigned int var)
 {
     SetAreaVariableName(var, "AreaBalance");
 }
 
-void ConstraintNamer::FlowDissociation(int numConstraint,
+void ConstraintNamer::FlowDissociation(unsigned int numConstraint,
                                        const std::string& origin,
                                        const std::string& destination)
 {
@@ -194,28 +194,28 @@ void ConstraintNamer::FlowDissociation(int numConstraint,
       numConstraint);
 }
 
-void ConstraintNamer::AreaBalance(int numConstraint)
+void ConstraintNamer::AreaBalance(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(
       BuildName("AreaBalance", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR)),
       numConstraint);
 }
 
-void ConstraintNamer::FictiveLoads(int numConstraint)
+void ConstraintNamer::FictiveLoads(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(
       BuildName("FictiveLoads", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR)),
       numConstraint);
 }
 
-void ConstraintNamer::HydroPower(int numConstraint)
+void ConstraintNamer::HydroPower(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(
       BuildName("HydroPower", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, WEEK)),
       numConstraint);
 }
 
-void ConstraintNamer::HydroPowerSmoothingUsingVariationSum(int numConstraint)
+void ConstraintNamer::HydroPowerSmoothingUsingVariationSum(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(BuildName("HydroPowerSmoothingUsingVariationSum",
                                                  LocationIdentifier(area_, AREA),
@@ -223,7 +223,7 @@ void ConstraintNamer::HydroPowerSmoothingUsingVariationSum(int numConstraint)
                                        numConstraint);
 }
 
-void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxDown(int numConstraint)
+void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxDown(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(BuildName("HydroPowerSmoothingUsingVariationMaxDown",
                                                  LocationIdentifier(area_, AREA),
@@ -231,7 +231,7 @@ void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxDown(int numConstraint
                                        numConstraint);
 }
 
-void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxUp(int numConstraint)
+void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxUp(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(BuildName("HydroPowerSmoothingUsingVariationMaxUp",
                                                  LocationIdentifier(area_, AREA),
@@ -239,35 +239,35 @@ void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxUp(int numConstraint)
                                        numConstraint);
 }
 
-void ConstraintNamer::MinHydroPower(int numConstraint)
+void ConstraintNamer::MinHydroPower(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(
       BuildName("MinHydroPower", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, WEEK)),
       numConstraint);
 }
 
-void ConstraintNamer::MaxHydroPower(int numConstraint)
+void ConstraintNamer::MaxHydroPower(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(
       BuildName("MaxHydroPower", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, WEEK)),
       numConstraint);
 }
 
-void ConstraintNamer::MaxPumping(int numConstraint)
+void ConstraintNamer::MaxPumping(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(
       BuildName("MaxPumping", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, WEEK)),
       numConstraint);
 }
 
-void ConstraintNamer::AreaHydroLevel(int numConstraint)
+void ConstraintNamer::AreaHydroLevel(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(
       BuildName("AreaHydroLevel", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR)),
       numConstraint);
 }
 
-void ConstraintNamer::FinalStockEquivalent(int numConstraint)
+void ConstraintNamer::FinalStockEquivalent(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(
       BuildName(
@@ -275,7 +275,7 @@ void ConstraintNamer::FinalStockEquivalent(int numConstraint)
       numConstraint);
 }
 
-void ConstraintNamer::FinalStockExpression(int numConstraint )
+void ConstraintNamer::FinalStockExpression(unsigned int numConstraint )
 {
     targetUpdater_.UpdateTargetAtIndex(
       BuildName(
@@ -283,7 +283,7 @@ void ConstraintNamer::FinalStockExpression(int numConstraint )
       numConstraint);
 }
 
-void ConstraintNamer::nameWithTimeGranularity(int numConstraint,
+void ConstraintNamer::nameWithTimeGranularity(unsigned int numConstraint,
                                               const std::string& name,
                                               const std::string& type)
 {
@@ -292,7 +292,7 @@ void ConstraintNamer::nameWithTimeGranularity(int numConstraint,
       numConstraint);
 }
 
-void ConstraintNamer::NbUnitsOutageLessThanNbUnitsStop(int numConstraint)
+void ConstraintNamer::NbUnitsOutageLessThanNbUnitsStop(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(BuildName("NbUnitsOutageLessThanNbUnitsStop",
                                                  LocationIdentifier(area_, AREA),
@@ -300,7 +300,7 @@ void ConstraintNamer::NbUnitsOutageLessThanNbUnitsStop(int numConstraint)
                                        numConstraint);
 }
 
-void ConstraintNamer::NbDispUnitsMinBoundSinceMinUpTime(int numConstraint)
+void ConstraintNamer::NbDispUnitsMinBoundSinceMinUpTime(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(BuildName("NbDispUnitsMinBoundSinceMinUpTime",
                                                  LocationIdentifier(area_, AREA),
@@ -308,14 +308,14 @@ void ConstraintNamer::NbDispUnitsMinBoundSinceMinUpTime(int numConstraint)
                                        numConstraint);
 }
 
-void ConstraintNamer::MinDownTime(int numConstraint)
+void ConstraintNamer::MinDownTime(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(
       BuildName("MinDownTime", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR)),
       numConstraint);
 }
 
-void ConstraintNamer::PMaxDispatchableGeneration(int numConstraint)
+void ConstraintNamer::PMaxDispatchableGeneration(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(BuildName("PMaxDispatchableGeneration",
                                                  LocationIdentifier(area_, AREA),
@@ -323,7 +323,7 @@ void ConstraintNamer::PMaxDispatchableGeneration(int numConstraint)
                                        numConstraint);
 }
 
-void ConstraintNamer::PMinDispatchableGeneration(int numConstraint)
+void ConstraintNamer::PMinDispatchableGeneration(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(BuildName("PMinDispatchableGeneration",
                                                  LocationIdentifier(area_, AREA),
@@ -331,7 +331,7 @@ void ConstraintNamer::PMinDispatchableGeneration(int numConstraint)
                                        numConstraint);
 }
 
-void ConstraintNamer::ConsistenceNODU(int numConstraint)
+void ConstraintNamer::ConsistenceNODU(unsigned int numConstraint)
 {
     targetUpdater_.UpdateTargetAtIndex(
       BuildName(
@@ -339,7 +339,7 @@ void ConstraintNamer::ConsistenceNODU(int numConstraint)
       numConstraint);
 }
 
-void ConstraintNamer::ShortTermStorageLevel(int numConstraint, const std::string& name)
+void ConstraintNamer::ShortTermStorageLevel(unsigned int numConstraint, const std::string& name)
 {
     targetUpdater_.UpdateTargetAtIndex(
       BuildName("Level",
@@ -348,17 +348,17 @@ void ConstraintNamer::ShortTermStorageLevel(int numConstraint, const std::string
       numConstraint);
 }
 
-void ConstraintNamer::BindingConstraintHour(int numConstraint, const std::string& name)
+void ConstraintNamer::BindingConstraintHour(unsigned int numConstraint, const std::string& name)
 {
     nameWithTimeGranularity(numConstraint, name, HOUR);
 }
 
-void ConstraintNamer::BindingConstraintDay(int numConstraint, const std::string& name)
+void ConstraintNamer::BindingConstraintDay(unsigned int numConstraint, const std::string& name)
 {
     nameWithTimeGranularity(numConstraint, name, DAY);
 }
 
-void ConstraintNamer::BindingConstraintWeek(int numConstraint, const std::string& name)
+void ConstraintNamer::BindingConstraintWeek(unsigned int numConstraint, const std::string& name)
 {
     nameWithTimeGranularity(numConstraint, name, WEEK);
 }
