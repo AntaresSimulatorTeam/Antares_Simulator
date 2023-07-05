@@ -119,10 +119,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
+                        constraintNamer.PMaxDispatchableGeneration(
+                          ProblemeAResoudre->NombreDeContraintes);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-                        constraintNamer.PMaxDispatchableGeneration(
-                          ProblemeAResoudre->NombreDeContraintes - 1);
                     }
                 }
                 else
@@ -163,10 +163,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
+                        constraintNamer.PMinDispatchableGeneration(
+                          ProblemeAResoudre->NombreDeContraintes);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
-                        constraintNamer.PMinDispatchableGeneration(
-                          ProblemeAResoudre->NombreDeContraintes - 1);
                     }
                 }
                 else
@@ -264,9 +264,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
+                        constraintNamer.ConsistenceNODU(ProblemeAResoudre->NombreDeContraintes);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-                        constraintNamer.ConsistenceNODU(ProblemeAResoudre->NombreDeContraintes - 1);
                     }
                 }
                 else
@@ -333,10 +333,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
+                        constraintNamer.NbUnitsOutageLessThanNbUnitsStop(
+                          ProblemeAResoudre->NombreDeContraintes);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-                        constraintNamer.NbUnitsOutageLessThanNbUnitsStop(
-                          ProblemeAResoudre->NombreDeContraintes - 1);
                     }
                 }
                 else
@@ -434,10 +434,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                           .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
                           = ProblemeAResoudre->NombreDeContraintes;
 
+                        constraintNamer.NbDispUnitsMinBoundSinceMinUpTime(
+                          ProblemeAResoudre->NombreDeContraintes);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
-                        constraintNamer.NbDispUnitsMinBoundSinceMinUpTime(
-                          ProblemeAResoudre->NombreDeContraintes - 1);
                     }
                 }
                 else
@@ -520,9 +520,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                           .NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
                           = ProblemeAResoudre->NombreDeContraintes;
 
+                        constraintNamer.MinDownTime(ProblemeAResoudre->NombreDeContraintes);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-                        constraintNamer.MinDownTime(ProblemeAResoudre->NombreDeContraintes - 1);
                     }
                 }
                 else
