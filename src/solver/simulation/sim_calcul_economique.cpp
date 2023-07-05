@@ -304,30 +304,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.LeProblemeADejaEteInstancie = false;
 }
 
-void SIM_InitialisationResultats()
-{
-    auto& study = *Data::Study::Current::Get();
-    const size_t sizeOfNbHoursDouble = study.runtime->nbHoursPerYear * sizeof(double);
-    const size_t sizeOfNbHoursLong = study.runtime->nbHoursPerYear * sizeof(int);
-
-    for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
-    {
-        auto& interconnexion = *ResultatsParInterconnexion[i];
-        memset(interconnexion.VariablesDualesMoyennes, 0, sizeOfNbHoursDouble);
-        memset(interconnexion.TransitMoyen, 0, sizeOfNbHoursDouble);
-        memset(interconnexion.TransitStdDev, 0, sizeOfNbHoursDouble);
-        memset(interconnexion.TransitMinimumNo, 0, sizeOfNbHoursLong);
-        memset(interconnexion.TransitMaximumNo, 0, sizeOfNbHoursLong);
-        memset(interconnexion.RenteHoraire, 0, sizeOfNbHoursDouble);
-        memset(interconnexion.TransitAnnuel, 0, study.runtime->nbYears * sizeof(double));
-        for (uint j = 0; j < study.runtime->nbHoursPerYear; j++)
-        {
-            interconnexion.TransitMinimum[j] = (double)LINFINI_ENTIER;
-            interconnexion.TransitMaximum[j] = (double)-LINFINI_ENTIER;
-        }
-    }
-}
-
 void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int PasDeTempsDebut,
                                const BindingConstraintsRepository &bindingConstraints, const uint weekFirstDay, int pasDeTemps) {
     auto enabledConstraints = bindingConstraints.enabled();
@@ -595,7 +571,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
         for (uint k = 0; k < nbPays; ++k)
         {
-            auto& tsIndex = *NumeroChroniquesTireesParPays[numSpace][k];
+            auto& tsIndex = NumeroChroniquesTireesParPays[numSpace][k];
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
@@ -650,7 +626,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
                 auto& Pt
                   = problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[cluster.index];
-                auto& PtValGen = *ValeursGenereesParPays[numSpace][k];
+                auto& PtValGen = ValeursGenereesParPays[numSpace][k];
 
                 Pt.PuissanceDisponibleDuPalierThermique[j]
                   = cluster.series
@@ -692,7 +668,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
                 auto& area = *study.areas.byIndex[k];
-                uint tsIndex = (*NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
+                uint tsIndex = (NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
                 auto& inflowsmatrix = area.hydro.series->storage;
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
                 {
@@ -739,8 +715,8 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                         std::vector<double>& DGL = problem.CaracteristiquesHydrauliques[k]
                                         .MinEnergieHydrauParIntervalleOptimise;
 
-                        double* DNT
-                          = ValeursGenereesParPays[numSpace][k]->HydrauliqueModulableQuotidien;
+                        std::vector<double>& DNT
+                          = ValeursGenereesParPays[numSpace][k].HydrauliqueModulableQuotidien;
 
                         double WSL
                           = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
@@ -830,7 +806,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                     {
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
                         weekTarget_tmp += ValeursGenereesParPays[numSpace][k]
-                                            ->HydrauliqueModulableQuotidien[day];
+                                            .HydrauliqueModulableQuotidien[day];
                     }
 
                     if (weekTarget_tmp != 0.)
@@ -850,7 +826,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
                         problem.CaracteristiquesHydrauliques[k]
                           .CntEnergieH2OParIntervalleOptimise[j]
-                          = ValeursGenereesParPays[numSpace][k]->HydrauliqueModulableQuotidien[day]
+                          = ValeursGenereesParPays[numSpace][k].HydrauliqueModulableQuotidien[day]
                             * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation
                             * marginGen / weekGenerationTarget;
                     }

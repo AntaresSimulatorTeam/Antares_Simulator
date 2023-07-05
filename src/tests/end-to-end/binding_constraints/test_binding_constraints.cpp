@@ -270,7 +270,6 @@ void SimulationHandler::create()
 
 SimulationHandler::~SimulationHandler()
 {
-    SIM_DesallocationTableaux();
 }
 
 // ===============

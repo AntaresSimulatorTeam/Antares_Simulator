@@ -509,8 +509,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
 
 void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 {
-    auto& study = *Data::Study::Current::Get();
-
     for (uint k = 0; k < problem.NombreDePasDeTemps; k++)
     {
         delete problem.CorrespondanceVarNativesVarOptim[k];

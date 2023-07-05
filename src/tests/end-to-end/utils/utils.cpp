@@ -61,8 +61,6 @@ float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight
 
 void cleanSimulation(Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation)
 {
-    SIM_DesallocationTableaux();
-
     delete simulation;
 }
 

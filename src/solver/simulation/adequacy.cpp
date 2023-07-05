@@ -95,8 +95,6 @@ bool Adequacy::simulationBegin()
                 return false;
             }
         }
-
-        SIM_InitialisationResultats();
     }
 
     if (pProblemesHebdo)
@@ -121,7 +119,7 @@ bool Adequacy::simplexIsRequired(uint hourInTheYear, uint numSpace) const
 
         for (uint k = 0; k != areaCount; ++k)
         {
-            auto& valgen = *ValeursGenereesParPays[numSpace][k];
+            auto& valgen = ValeursGenereesParPays[numSpace][k];
 
             double quantity
               = pProblemesHebdo[numSpace]->ConsommationsAbattues[j].ConsommationAbattueDuPays[k]
@@ -308,7 +306,7 @@ bool Adequacy::year(Progression::Task& progression,
                 {
                     assert(k < state.resSpilled.width);
                     assert(j < state.resSpilled.height);
-                    auto& valgen = *ValeursGenereesParPays[numSpace][k];
+                    auto& valgen = ValeursGenereesParPays[numSpace][k];
                     auto& hourlyResults = pProblemesHebdo[numSpace]->ResultatsHoraires[k];
 
                     hourlyResults.TurbinageHoraire[j]
