@@ -1,7 +1,4 @@
 #define BOOST_TEST_MODULE test save scenario - builder.dat
-
-#define WIN32_LEAN_AND_MEAN
-
 #include <boost/test/included/unit_test.hpp>
 
 #include <string>
@@ -174,6 +171,10 @@ struct commonFixture
         area_1->resizeAllTimeseriesNumbers(study->parameters.nbYears);
         area_2->resizeAllTimeseriesNumbers(study->parameters.nbYears);
         area_3->resizeAllTimeseriesNumbers(study->parameters.nbYears);
+
+        study->bindingConstraints.add("BC_1")->group("group1");
+        study->bindingConstraints.add("BC_2")->group("group2");
+        study->bindingConstraints.add("BC_2")->group("group3");
 
         // Scenario builder initialization
         study->scenarioRules = new ScenarioBuilder::Sets();
@@ -433,6 +434,26 @@ BOOST_AUTO_TEST_CASE(
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
 }
 
+BOOST_AUTO_TEST_CASE(
+    BC__TS_number_for_many_years__generated_and_ref_sc_buider_files_are_identical
+        ) {
+    my_rule->binding_constraints.setData("group1", 5, 20);
+    my_rule->binding_constraints.setData("group2", 19, 1);
+    my_rule->binding_constraints.setData("group3", 5, 43);
+    my_rule->binding_constraints.setData("group3", 10, 6);
+
+    saveScenarioBuilder();
+    // Build reference scenario builder file
+    referenceFile.append("[my rule name]");
+    referenceFile.append("bc,group1,5=20");
+    referenceFile.append("bc,group2,19=1");
+    referenceFile.append("bc,group3,5=43");
+    referenceFile.append("bc,group3,10=6");
+
+    referenceFile.write();
+    BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
 // ================================
 // Tests on All assets together
 // ================================
@@ -451,6 +472,7 @@ BOOST_AUTO_TEST_CASE(
     my_rule->linksNTC[area_1->index].setDataForLink(link_13, 19, 8);
     my_rule->linksNTC[area_2->index].setDataForLink(link_23, 2, 4);
     my_rule->hydroLevels.set(area_1->index, 5, 8);
+    my_rule->binding_constraints.setData("group3", 10, 6);
 
     saveScenarioBuilder();
 
@@ -468,6 +490,7 @@ BOOST_AUTO_TEST_CASE(
     referenceFile.append("t,area 3,5,th-cluster-31 = 13");
     referenceFile.append("r,area 3,5,rn-cluster-32 = 13");
     referenceFile.append("hl,area 1,5 = 8");
+    referenceFile.append("bc,group3,10=6");
     referenceFile.write();
 
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));

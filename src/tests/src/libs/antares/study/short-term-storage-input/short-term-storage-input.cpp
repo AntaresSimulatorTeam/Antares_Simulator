@@ -89,7 +89,6 @@ void createIniFile()
     outfile << "withdrawalnominalcapacity = 900.000000" << std::endl;
     outfile << "reservoircapacity = 31200.000000" << std::endl;
     outfile << "efficiency = 0.75" << std::endl;
-    outfile << "storagecycle = 50" << std::endl;
     outfile << "initiallevel = 0.50000" << std::endl;
 
     outfile.close();
@@ -109,7 +108,6 @@ void createIniFileWrongValue()
     outfile << "withdrawalnominalcapacity = -900.000000" << std::endl;
     outfile << "reservoircapacity = -31200.000000" << std::endl;
     outfile << "efficiency = 4" << std::endl;
-    outfile << "storagecycle = 50" << std::endl;
     outfile << "initiallevel = -0.50000" << std::endl;
 
     outfile.close();

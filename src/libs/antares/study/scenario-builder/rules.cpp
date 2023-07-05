@@ -66,6 +66,7 @@ void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
         // hydro levels
         hydroLevels.saveToINIFile(study_, file);
     }
+    binding_constraints.saveToINIFile(study_, file);
     file << '\n';
 }
 
@@ -111,6 +112,7 @@ bool Rules::reset()
         linksNTC[i].reset(study_);
     }
 
+    binding_constraints.reset(study_);
     return true;
 }
 
@@ -306,6 +308,14 @@ bool Rules::readLink(const AreaName::Vector& splitKey, String value, bool update
     return true;
 }
 
+bool Rules::readBindingConstraints(const AreaName::Vector &splitKey, String value) {
+    std::string group_name = splitKey[1].c_str();
+    auto year = std::stoi(splitKey[2].c_str());
+    auto tsNumber = fromStringToTSnumber(value);
+    binding_constraints.setData(group_name, year, tsNumber);
+    return true;
+}
+
 bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool updaterMode = false)
 {
     if (splitKey.size() <= 2)
@@ -331,6 +341,8 @@ bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool update
         return readHydroLevels(splitKey, value, updaterMode);
     else if (kind_of_scenario == "ntc")
         return readLink(splitKey, value, updaterMode);
+    else if (kind_of_scenario == "bc")
+        return readBindingConstraints(splitKey, value);
     return false;
 }
 
@@ -350,6 +362,7 @@ bool Rules::apply()
             returned_status = linksNTC[i].apply(study_) && returned_status;
         }
         returned_status = hydroLevels.apply(study_) && returned_status;
+        returned_status = binding_constraints.apply(study_) && returned_status;
     }
     else
         returned_status = false;

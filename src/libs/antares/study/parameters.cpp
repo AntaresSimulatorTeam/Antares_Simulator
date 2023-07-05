@@ -279,7 +279,7 @@ void Parameters::reset()
     // Pre-Processor
     timeSeriesToGenerate = 0; // None
     // Import
-    timeSeriesToImport = 0; // None
+    exportTimeSeriesInInput = 0; // None
     // Same selection
     intraModal = 0; // None
     interModal = 0; // None
@@ -535,7 +535,7 @@ static bool SGDIntLoadFamily_Input(Parameters& d,
                                    const String&)
 {
     if (key == "import")
-        return ConvertCStrToListTimeSeries(value, d.timeSeriesToImport);
+        return ConvertCStrToListTimeSeries(value, d.exportTimeSeriesInInput);
 
     return false;
 }
@@ -1427,7 +1427,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     if (options.noTimeseriesImportIntoInput && timeSeriesToArchive != 0)
     {
         logs.info() << "  :: ignoring timeseries importation to input";
-        timeSeriesToImport = 0;
+        exportTimeSeriesInInput = 0;
     }
 
     if (expansion)
@@ -1547,7 +1547,7 @@ void Parameters::saveToINI(IniFile& ini) const
     // input
     {
         auto* section = ini.addSection("input");
-        ParametersSaveTimeSeries(section, "import", timeSeriesToImport);
+        ParametersSaveTimeSeries(section, "import", exportTimeSeriesInInput);
     }
 
     // Output
@@ -1764,9 +1764,9 @@ bool Parameters::haveToImport(int tsKind) const
     {
         // Special case: some clusters might override the global parameter,
         // see Cluster::doWeGenerateTS
-        return timeSeriesToImport & tsKind;
+        return exportTimeSeriesInInput & tsKind;
     }
-    return (timeSeriesToImport & tsKind) && (timeSeriesToGenerate & tsKind);
+    return (exportTimeSeriesInInput & tsKind) && (timeSeriesToGenerate & tsKind);
 }
 
 RenewableGenerationModelling Parameters::RenewableGeneration::operator()() const

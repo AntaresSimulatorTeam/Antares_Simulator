@@ -45,7 +45,9 @@ set(SRC_STUDY_SCENARIO_BUILDER
 	study/scenario-builder/sets.cpp
 	study/scenario-builder/updater.hxx
 	study/scenario-builder/scBuilderUtils.h
-	study/scenario-builder/scBuilderUtils.cpp)
+	study/scenario-builder/scBuilderUtils.cpp
+	study/scenario-builder/BindingConstraintsTSNumbersData.cpp
+)
 source_group("study\\scenario builder" FILES ${SRC_MATRIX})
 
 set(SRC_STUDY_ACTIONS
@@ -210,6 +212,8 @@ set(SRC_STUDY_PART_THERMAL
 	study/parts/thermal/prepro.h
 	study/parts/thermal/prepro.hxx
 	study/parts/thermal/prepro.cpp
+	study/parts/thermal/ecoInput.h
+	study/parts/thermal/ecoInput.cpp
 	study/parts/thermal/cluster.h
 	study/parts/thermal/cluster.hxx
 	study/parts/thermal/cluster.cpp
@@ -302,7 +306,20 @@ set(SRC_STUDY_BINDING_CONSTRAINT
 	study/binding_constraint/BindingConstraint.h
 	study/binding_constraint/BindingConstraint.hxx
 	study/binding_constraint/BindingConstraint.cpp
+	study/binding_constraint/BindingConstraintsRepository.h
+	study/binding_constraint/BindingConstraintsRepository.h
+	study/binding_constraint/BindingConstraintsRepository.hxx
+	study/binding_constraint/BindingConstraintsRepository.cpp
+	study/binding_constraint/BindingConstraintTimeSeriesNumbers.cpp
+	study/binding_constraint/BindingConstraintTimeSeriesNumbers.h
+	study/binding_constraint/BindingConstraintLoader.cpp
+	study/binding_constraint/BindingConstraintLoader.h
+	study/binding_constraint/BindingConstraintSaver.cpp
+	study/binding_constraint/BindingConstraintSaver.h
+	study/binding_constraint/EnvForLoading.h
+	study/binding_constraint/BindingConstraintStructures.h
 	)
+
 source_group("study\\constraint" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
 
 set(SRC_LOGS
@@ -515,7 +532,6 @@ set(SRC
 )
 
 
-
 add_library( libantares-core-calendar
 	# separated target to reduce multiple unit compilations introduced by swap mode
 	date.h
@@ -584,3 +600,4 @@ target_link_libraries(libantares-core
         result_writer
 	)
 
+import_std_libs(libantares-core)

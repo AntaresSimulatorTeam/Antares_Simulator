@@ -55,20 +55,20 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-            for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
+            for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
             {
                 const int palier
-                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
                 int var = CorrespondanceVarNativesVarOptim
                             ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     CoutLineaire[var]
-                      = PaliersThermiquesDuPays->CoutFixeDeMarcheDUnGroupeDuPalierThermique[index];
+                      = PaliersThermiquesDuPays.CoutFixeDeMarcheDUnGroupeDuPalierThermique[index];
                 }
 
                 var = CorrespondanceVarNativesVarOptim
@@ -76,7 +76,7 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     CoutLineaire[var]
-                      = PaliersThermiquesDuPays->CoutDArretDUnGroupeDuPalierThermique[index];
+                      = PaliersThermiquesDuPays.CoutDArretDUnGroupeDuPalierThermique[index];
                 }
 
                 var
@@ -90,7 +90,7 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     CoutLineaire[var]
-                      = PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[index];
+                      = PaliersThermiquesDuPays.CoutDeDemarrageDUnGroupeDuPalierThermique[index];
                 }
             }
         }

@@ -196,5 +196,12 @@ class IncompatibleOutputOptions : public LoadingError
 public:
     explicit IncompatibleOutputOptions(const std::string& text);
 };
+
+class IncompatibleFuelOrCo2CostColumns : public LoadingError
+{
+public:
+    IncompatibleFuelOrCo2CostColumns();
+};
+
 } // namespace Error
 } // namespace Antares

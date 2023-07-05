@@ -41,7 +41,7 @@ jobs:
 
     - name: Init submodule
       run: |
-           git submodule update --init --recursive src .
+           git submodule update --init --recursive src/antares-deps
 
     - name: Install dependencies
       run: |

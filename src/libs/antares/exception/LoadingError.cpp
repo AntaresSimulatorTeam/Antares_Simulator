@@ -147,5 +147,11 @@ IncompatibleOutputOptions::IncompatibleOutputOptions(const std::string& text) : 
 {
 }
 
+IncompatibleFuelOrCo2CostColumns::IncompatibleFuelOrCo2CostColumns() :
+ LoadingError(
+   "Number of columns for Fuel & CO2 Cost can be one or same as number of TS in Availability")
+{
+}
+
 } // namespace Error
 } // namespace Antares

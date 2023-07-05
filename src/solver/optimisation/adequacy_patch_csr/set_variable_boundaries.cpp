@@ -112,7 +112,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
       = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
     double* Xmin = problemeAResoudre_.Xmin;
     double* Xmax = problemeAResoudre_.Xmax;
-    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC = problemeHebdo_->ValeursDeNTC[triggeredHour];
+    VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo_->ValeursDeNTC[triggeredHour];
 
     // variables bounds: transmissin flows (flow, direct_direct and flow_indirect). For links
     // between nodes of type 2. Set hourly bounds for links between nodes of type 2, depending on
@@ -130,9 +130,9 @@ void HourlyCSRProblem::setBoundsOnFlows()
 
         // flow
         int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-        Xmax[var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco] + belowThisThresholdSetToZero;
-        Xmin[var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]) - belowThisThresholdSetToZero;
-        problemeAResoudre_.X[var] = ValeursDeNTC->ValeurDuFlux[Interco];
+        Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco] + belowThisThresholdSetToZero;
+        Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco]) - belowThisThresholdSetToZero;
+        problemeAResoudre_.X[var] = ValeursDeNTC.ValeurDuFlux[Interco];
 
         if (Math::Infinite(Xmax[var]) == 1)
         {
@@ -149,7 +149,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
                 problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
         }
 
-        double* AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
+        double* AdresseDuResultat = &(ValeursDeNTC.ValeurDuFlux[Interco]);
         problemeAResoudre_.AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = AdresseDuResultat;
 
         logs.debug() << var << ": " << problemeAResoudre_.Xmin[var] << ", "
@@ -160,7 +160,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
                 ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
 
         Xmin[var] = -belowThisThresholdSetToZero;
-        Xmax[var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco] + belowThisThresholdSetToZero;
+        Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco] + belowThisThresholdSetToZero;
         problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
         if (Math::Infinite(Xmax[var]) == 1)
         {
@@ -174,7 +174,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
                 ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
 
         Xmin[var] = -belowThisThresholdSetToZero;
-        Xmax[var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco] + belowThisThresholdSetToZero;
+        Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco] + belowThisThresholdSetToZero;
         problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
         if (Math::Infinite(Xmax[var]) == 1)
         {

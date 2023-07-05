@@ -67,8 +67,8 @@ struct SortAlphaReverseOrder
 
 void GetBindingConstraintList(Data::Study& study, BindingConstraintList& l, const wxString& search)
 {
-    Data::BindingConstraintsList::iterator end = study.bindingConstraints.end();
-    for (Data::BindingConstraintsList::iterator i = study.bindingConstraints.begin(); i != end; ++i)
+    Data::BindingConstraintsRepository::iterator end = study.bindingConstraints.end();
+    for (Data::BindingConstraintsRepository::iterator i = study.bindingConstraints.begin(); i != end; ++i)
     {
         if (search.empty())
             l.push_back(*i);

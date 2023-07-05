@@ -131,6 +131,12 @@ struct Fixture
 		area_2->resizeAllTimeseriesNumbers(study->parameters.nbYears);
 		area_3->resizeAllTimeseriesNumbers(study->parameters.nbYears);
 
+        auto bc = study->bindingConstraints.add("BC_1");
+        bc->group("groupTest");
+        study->bindingConstraints.groupToTimeSeriesNumbers["groupTest"] = {};
+        study->bindingConstraints.resizeAllTimeseriesNumbers(study->parameters.nbYears);
+        bc->RHSTimeSeries().resize(7, 1);
+
 		BOOST_CHECK(my_rule.reset());
 	}
 
@@ -384,6 +390,23 @@ BOOST_AUTO_TEST_CASE(on_link_area2_area3_and_on_year_19__ntc_TS_number_6_is_chos
 
 	BOOST_CHECK(my_rule.apply());
 	BOOST_CHECK_EQUAL(link_23->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+}
+
+// ========================
+// Tests on Binding Constraints
+// ========================
+BOOST_AUTO_TEST_CASE(binding_constraints_group_groupTest__Load_TS_4_for_year_3__reading_OK)
+{
+    auto yearNumber = 3;
+    auto tsNumber = 4;
+
+    AreaName::Vector splitKey = { "bc", "groupTest", std::to_string(yearNumber) };
+    BOOST_CHECK(my_rule.readLine(splitKey, std::to_string(tsNumber), false));
+    BOOST_CHECK_EQUAL(my_rule.binding_constraints.get("groupTest", yearNumber), tsNumber);
+
+    BOOST_CHECK(my_rule.apply());
+    auto actual = study->bindingConstraints.groupToTimeSeriesNumbers["groupTest"].timeseriesNumbers[0][yearNumber];
+    BOOST_CHECK_EQUAL(actual, tsNumber-1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

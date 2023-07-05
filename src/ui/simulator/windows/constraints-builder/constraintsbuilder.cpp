@@ -43,6 +43,7 @@
 #include <wx/button.h>
 #include <wx/valtext.h>
 
+#include "antares/study/ui-runtimeinfos.h"
 #include <ui/common/component/panel.h>
 #include "../../toolbox/resources.h"
 #include "../../toolbox/create.h"
