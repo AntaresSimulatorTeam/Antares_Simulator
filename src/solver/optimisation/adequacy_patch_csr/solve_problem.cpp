@@ -72,8 +72,8 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
     Probleme->VariableBinaire = (char*)ProblemeAResoudre.CoutsReduits;
 
     Probleme->NombreDeContraintes = ProblemeAResoudre.NombreDeContraintes;
-    Probleme->IndicesDebutDeLigne = ProblemeAResoudre.IndicesDebutDeLigne;
-    Probleme->NombreDeTermesDesLignes = ProblemeAResoudre.NombreDeTermesDesLignes;
+    Probleme->IndicesDebutDeLigne = ProblemeAResoudre.IndicesDebutDeLigne.data();
+    Probleme->NombreDeTermesDesLignes = ProblemeAResoudre.NombreDeTermesDesLignes.data();
     Probleme->IndicesColonnes = ProblemeAResoudre.IndicesColonnes;
     Probleme->CoefficientsDeLaMatriceDesContraintes
       = ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes;

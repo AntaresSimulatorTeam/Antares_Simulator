@@ -60,8 +60,8 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
     const size_t szNbContint = ProblemeAResoudre->NombreDeContraintes * sizeof(int);
 
     ProblemeAResoudre->Sens.resize(ProblemeAResoudre->NombreDeContraintes);
-    ProblemeAResoudre->IndicesDebutDeLigne = (int*)MemAlloc(szNbContint);
-    ProblemeAResoudre->NombreDeTermesDesLignes = (int*)MemAlloc(szNbContint);
+    ProblemeAResoudre->IndicesDebutDeLigne.resize(szNbContint);
+    ProblemeAResoudre->NombreDeTermesDesLignes.resize(szNbContint);
 
     ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes
       = (double*)MemAlloc(NbTermes * sizeof(double));
@@ -106,8 +106,6 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
 
 void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
-    MemFree(ProblemeAResoudre->IndicesDebutDeLigne);
-    MemFree(ProblemeAResoudre->NombreDeTermesDesLignes);
     MemFree(ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes);
     MemFree(ProblemeAResoudre->IndicesColonnes);
     MemFree(ProblemeAResoudre->CoutQuadratique);

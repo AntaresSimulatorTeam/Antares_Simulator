@@ -81,8 +81,8 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     Probleme.VariableBinaire = (char*)ProblemeAResoudre->CoutsReduits;
 
     Probleme.NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
-    Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne;
-    Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes;
+    Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne.data();
+    Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes.data();
     Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes;
     Probleme.CoefficientsDeLaMatriceDesContraintes
       = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes;
