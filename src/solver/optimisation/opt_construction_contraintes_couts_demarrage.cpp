@@ -77,7 +77,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 constraintNamer.UpdateTimeStep(timeStepInYear);
                 CorrespondanceVarNativesVarOptim
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
@@ -185,7 +185,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 constraintNamer.UpdateTimeStep(timeStepInYear);
                 CorrespondanceVarNativesVarOptim
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
@@ -285,7 +285,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 constraintNamer.UpdateTimeStep(timeStepInYear);
                 CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
@@ -358,7 +358,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 constraintNamer.UpdateTimeStep(timeStepInYear);
                 CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
@@ -456,7 +456,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 constraintNamer.UpdateTimeStep(timeStepInYear);
                 CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
