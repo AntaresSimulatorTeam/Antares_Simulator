@@ -70,7 +70,7 @@ public:
     //! Mps files export asked
     bool mpsToExport;
     //! named problems
-    bool namedProblems;
+    bool namedProblems = false;
     //! Ignore all constraints
     bool ignoreConstraints;
     //! Simulation mode
