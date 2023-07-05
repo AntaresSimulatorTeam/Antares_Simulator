@@ -61,11 +61,6 @@ typedef struct
 
 typedef struct
 {
-    std::vector<double> TransitMoyenRecalculQuadratique;
-} RESULTATS_PAR_INTERCONNEXION;
-
-typedef struct
-{
     double* ParLigne;
 } MATRICE_2D;
 

@@ -173,7 +173,7 @@ public:
         // Flow assessed over all MC years (linear)
         (void)::memcpy(
           pValuesForTheCurrentYear.hour,
-          ResultatsParInterconnexion[pLinkGlobalIndex].TransitMoyenRecalculQuadratique.data(),
+          transitMoyenInterconnexionsRecalculQuadratique[pLinkGlobalIndex].data(),
           sizeof(double) * pNbHours);
 
         // Compute all statistics for the current year (daily,weekly,monthly)

@@ -39,10 +39,10 @@ static void AllocateResultsForEconomicMode(void)
 {
     auto& study = *Data::Study::Current::Get();
 
-    ResultatsParInterconnexion.resize(study.runtime->interconnectionsCount());
+    transitMoyenInterconnexionsRecalculQuadratique.resize(study.runtime->interconnectionsCount());
 
     for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
-        ResultatsParInterconnexion[i].TransitMoyenRecalculQuadratique
+        transitMoyenInterconnexionsRecalculQuadratique[i]
             .assign(study.runtime->nbHoursPerYear , 0.);
 }
 

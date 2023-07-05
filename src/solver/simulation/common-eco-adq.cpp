@@ -111,7 +111,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
         for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
         {
-            ResultatsParInterconnexion[j].TransitMoyenRecalculQuadratique[indx]
+            transitMoyenInterconnexionsRecalculQuadratique[j][indx]
               = ntcValues.ValeurDuFlux[j];
         }
     }
@@ -239,7 +239,7 @@ void ComputeFlowQuad(Data::Study& study,
                 for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; ++i)
                 {
                     const uint indx = i + PasDeTempsDebut;
-                    ResultatsParInterconnexion[j].TransitMoyenRecalculQuadratique[indx] = 0;
+                    transitMoyenInterconnexionsRecalculQuadratique[j][indx] = 0;
                 }
             }
         }

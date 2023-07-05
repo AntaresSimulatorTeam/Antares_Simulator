@@ -36,6 +36,6 @@ std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION>> NumeroChro
 PROBLEME_HORAIRE_ADEQUATION ProblemeHoraireAdequation;
 VALEURS_ANNUELLES** ValeursAnnuellesAdequation;
 
-std::vector<RESULTATS_PAR_INTERCONNEXION> ResultatsParInterconnexion;
+std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
 
 std::vector<std::map<std::string, unsigned>> NumeroChroniquesTireesParGroup; //Vector size = num_parallel_year

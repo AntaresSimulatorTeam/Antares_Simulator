@@ -46,6 +46,6 @@ extern VALEURS_ANNUELLES** ValeursAnnuellesAdequation;
 
 /* Resultats */
 /*-Economique-*/
-extern std::vector<RESULTATS_PAR_INTERCONNEXION> ResultatsParInterconnexion;
+extern std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
 
 #endif /* __SOLVER_SIMULATION_EXTERN_H__ */
