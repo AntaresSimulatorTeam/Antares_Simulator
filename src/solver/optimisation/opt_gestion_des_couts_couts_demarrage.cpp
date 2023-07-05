@@ -45,7 +45,7 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
                                                      const int DernierPdtDeLIntervalle)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    double* CoutLineaire = ProblemeAResoudre->CoutLineaire;
+    std::vector<double>& CoutLineaire = ProblemeAResoudre->CoutLineaire;
 
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)

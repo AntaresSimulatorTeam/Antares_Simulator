@@ -61,8 +61,8 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
     auto Probleme = std::make_unique<PROBLEME_POINT_INTERIEUR>();
 
     Probleme->NombreMaxDIterations = -1;
-    Probleme->CoutQuadratique = ProblemeAResoudre.CoutQuadratique;
-    Probleme->CoutLineaire = ProblemeAResoudre.CoutLineaire;
+    Probleme->CoutQuadratique = ProblemeAResoudre.CoutQuadratique.data();
+    Probleme->CoutLineaire = ProblemeAResoudre.CoutLineaire.data();
     Probleme->X = ProblemeAResoudre.X;
     Probleme->Xmin = ProblemeAResoudre.Xmin;
     Probleme->Xmax = ProblemeAResoudre.Xmax;

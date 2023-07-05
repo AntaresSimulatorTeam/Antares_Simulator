@@ -59,8 +59,8 @@ typedef struct
     int IncrementDAllocationMatriceDesContraintes;
     int NombreDeTermesDansLaMatriceDesContraintes;
     /* Donnees variables de la matrice des contraintes */
-    double* CoutQuadratique;
-    double* CoutLineaire;
+    std::vector<double> CoutQuadratique;
+    std::vector<double> CoutLineaire;
     int* TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
                              (voir le fichier spx_constantes_externes.h mais ne jamais utiliser les
                             valeurs explicites des constantes): VARIABLE_FIXE                  ,

@@ -152,7 +152,7 @@ RESOLUTION:
             if (ortoolsUsed)
             {
                 ORTOOLS_ModifierLeVecteurCouts(
-                  solver, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
+                  solver, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
                 ORTOOLS_ModifierLeVecteurSecondMembre(solver,
                                                       ProblemeAResoudre->SecondMembre,
                                                       ProblemeAResoudre->Sens.data(),
@@ -166,7 +166,7 @@ RESOLUTION:
             else
             {
                 SPX_ModifierLeVecteurCouts(
-                  ProbSpx, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
+                  ProbSpx, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
                 SPX_ModifierLeVecteurSecondMembre(ProbSpx,
                                                   ProblemeAResoudre->SecondMembre,
                                                   ProblemeAResoudre->Sens.data(),
@@ -180,7 +180,7 @@ RESOLUTION:
     Probleme.NombreMaxDIterations = -1;
     Probleme.DureeMaxDuCalcul = -1.;
 
-    Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire;
+    Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire.data();
     Probleme.X = ProblemeAResoudre->X;
     Probleme.Xmin = ProblemeAResoudre->Xmin;
     Probleme.Xmax = ProblemeAResoudre->Xmax;
