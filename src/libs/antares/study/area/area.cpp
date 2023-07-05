@@ -26,22 +26,17 @@
 */
 
 #include <yuni/yuni.h>
-#include <yuni/io/directory.h>
-#include <assert.h>
+#include <cassert>
 #include "../study.h"
 #include "area.h"
-#include "../../logs.h"
-#include "../memory-usage.h"
-#include "../filter.h"
 #include "constants.h"
 #include "ui.h"
 #include "scratchpad.h"
+#include "antares/study/parts/load/prepro.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 void Area::internalInitialize()
 {
@@ -76,7 +71,7 @@ Area::Area(const AnyString& name, uint nbParallelYears) :
  spreadSpilledEnergyCost(0.),
  filterSynthesis(filterAll),
  filterYearByYear(filterAll),
- ui(NULL),
+ ui(nullptr),
  nbYearsInParallel(nbParallelYears),
  invalidateJIT(false)
 {
@@ -155,8 +150,7 @@ AreaLink* Area::findExistingLinkWith(Area& with)
     }
     if (!with.links.empty())
     {
-        const AreaLink::Map::iterator end = with.links.end();
-        for (AreaLink::Map::iterator i = with.links.begin(); i != end; ++i)
+        for (auto i = with.links.begin(); i != with.links.end(); ++i)
         {
             if (i->second->from == this or i->second->with == this)
                 return i->second;
@@ -171,8 +165,8 @@ const AreaLink* Area::findExistingLinkWith(const Area& with) const
     {
         if (not links.empty())
         {
-            const AreaLink::Map::const_iterator end = links.end();
-            for (AreaLink::Map::const_iterator i = links.begin(); i != end; ++i)
+            const auto end = links.end();
+            for (auto i = links.begin(); i != end; ++i)
             {
                 if (i->second->from == &with or i->second->with == &with)
                     return i->second;
@@ -180,8 +174,8 @@ const AreaLink* Area::findExistingLinkWith(const Area& with) const
         }
         if (!with.links.empty())
         {
-            const AreaLink::Map::const_iterator end = with.links.end();
-            for (AreaLink::Map::const_iterator i = with.links.begin(); i != end; ++i)
+            const auto end = with.links.end();
+            for (auto i = with.links.begin(); i != end; ++i)
             {
                 if (i->second->from == this or i->second->with == this)
                     return i->second;
@@ -536,5 +530,4 @@ void Area::buildLinksIndexes()
     }
 }
 
-} // namespace Data
 } // namespace Antares

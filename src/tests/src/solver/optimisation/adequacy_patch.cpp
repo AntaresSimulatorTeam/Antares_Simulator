@@ -43,18 +43,15 @@ std::pair<double, double> setNTCboundsForOneTimeStep(AdequacyPatchMode originTyp
     adqPatchParams.localMatching.setToZeroOutsideInsideLinks = SetNTCOutsideToInsideToZero;
 
     VALEURS_DE_NTC_ET_RESISTANCES ValeursDeNTC;
-    ValeursDeNTC.ValeurDeNTCOrigineVersExtremite = new double[1];
-    ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine = new double[1];
+    ValeursDeNTC.ValeurDeNTCOrigineVersExtremite.assign(1, 0.);
+    ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine.assign(1, 0.);
     ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[0] = origineExtremite;
     ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[0] = extremiteOrigine;
 
     double Xmin(0.);
     double Xmax(0.);
 
-    setNTCbounds(Xmax, Xmin, &ValeursDeNTC, 0, &problem, adqPatchParams);
-
-    delete[] ValeursDeNTC.ValeurDeNTCOrigineVersExtremite;
-    delete[] ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine;
+    setNTCbounds(Xmax, Xmin, ValeursDeNTC, 0, &problem, adqPatchParams);
 
     return std::make_pair(Xmin, Xmax);
 }
@@ -85,14 +82,13 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     AdqPatchParams adqPatchParams;
 
     problem.ResultatsHoraires.resize(1);
-    problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive = new double;
-    problem.ValeursDeNTC = new VALEURS_DE_NTC_ET_RESISTANCES*;
-    problem.ValeursDeNTC[0] = new VALEURS_DE_NTC_ET_RESISTANCES;
-    problem.ValeursDeNTC[0]->ValeurDuFlux = new double[3];
-    problem.IndexSuivantIntercoOrigine = new int[3];
-    problem.IndexSuivantIntercoExtremite = new int[3];
-    problem.IndexDebutIntercoOrigine = new int[1];
-    problem.IndexDebutIntercoExtremite = new int[1];
+    problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive = std::vector<double>(1);
+    problem.ValeursDeNTC = std::vector<VALEURS_DE_NTC_ET_RESISTANCES>(1);
+    problem.ValeursDeNTC[0].ValeurDuFlux = std::vector<double>(3);
+    problem.IndexSuivantIntercoOrigine = std::vector<int>(3);
+    problem.IndexSuivantIntercoExtremite = std::vector<int>(3);
+    problem.IndexDebutIntercoOrigine = std::vector<int>(1);
+    problem.IndexDebutIntercoExtremite = std::vector<int>(1);
 
     // input values
     adqPatchParams.localMatching.setToZeroOutsideInsideLinks = !includeFlowsOutsideAdqPatchToDensNew;
@@ -100,13 +96,13 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     int Interco = 1;
     problem.IndexDebutIntercoOrigine[Area] = Interco;
     problem.adequacyPatchRuntimeData->extremityAreaMode[Interco] = Area1Mode;
-    problem.ValeursDeNTC[hour]->ValeurDuFlux[Interco] = flowToArea1;
+    problem.ValeursDeNTC[hour].ValeurDuFlux[Interco] = flowToArea1;
     problem.IndexSuivantIntercoOrigine[Interco] = -1;
 
     Interco = 2;
     problem.IndexDebutIntercoExtremite[Area] = Interco;
     problem.adequacyPatchRuntimeData->originAreaMode[Interco] = Area2Mode;
-    problem.ValeursDeNTC[hour]->ValeurDuFlux[Interco] = flowFromArea2;
+    problem.ValeursDeNTC[hour].ValeurDuFlux[Interco] = flowFromArea2;
     problem.IndexSuivantIntercoExtremite[Interco] = -1;
 
     // get results
@@ -114,16 +110,6 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     double densNew;
     std::tie(netPositionInit, densNew, std::ignore)
         = calculateAreaFlowBalance(&problem, adqPatchParams.localMatching.setToZeroOutsideInsideLinks, Area, hour);
-
-    // free memory
-    delete[] problem.IndexDebutIntercoExtremite;
-    delete[] problem.IndexSuivantIntercoExtremite;
-    delete[] problem.IndexDebutIntercoOrigine;
-    delete[] problem.IndexSuivantIntercoOrigine;
-    delete[] problem.ValeursDeNTC[0]->ValeurDuFlux;
-    delete problem.ValeursDeNTC[0];
-    delete problem.ValeursDeNTC;
-    delete problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive;
 
     return std::make_pair(netPositionInit, densNew);
 }

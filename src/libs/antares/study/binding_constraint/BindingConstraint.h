@@ -24,8 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_H__
-#define __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_H__
+#pragma once
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
@@ -36,19 +35,24 @@
 #include "../parts/thermal/cluster.h"
 #include "../../array/matrix.h"
 #include "../../inifile/inifile.h"
+#include "EnvForLoading.h"
 #include "antares/study/filter.h"
+#include "BindingConstraintTimeSeriesNumbers.h"
+#include "BindingConstraintStructures.h"
+#include <memory>
+#include <utility>
 #include <vector>
 #include <set>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 // Forward declaration
 struct CompareBindingConstraintName;
 
 class BindingConstraint final : public Yuni::NonCopyable<BindingConstraint>
 {
+    friend class BindingConstraintLoader;
+    friend class BindingConstraintSaver;
 public:
     enum Type
     {
@@ -90,69 +94,17 @@ public:
 
     //! Map of weight (for thermal clusters)
     using clusterWeightMap = std::map<const ThermalCluster*, double, CompareClusterName>;
-    //! Iterator
-    using thermalIterator = clusterWeightMap::iterator;
-    //! Const iterator
-    using const_thermalIterator = clusterWeightMap::const_iterator;
 
     //! Map of offset (for links)
     using linkOffsetMap = std::map<const AreaLink*, int>;
-    //! Iterator
-    using OffsetIterator = linkOffsetMap::iterator;
-    //! Const iterator
-    using OffsetConst_iterator = linkOffsetMap::const_iterator;
 
     //! Map of offset (for links)
     using clusterOffsetMap = std::map<const ThermalCluster*, int>;
-    //! Iterator
-    using thermalOffsetIterator = clusterOffsetMap::iterator;
-    //! Const iterator
-    using thermalOffsetConst_iterator = clusterOffsetMap::const_iterator;
 
-    //! Vector of binding constraints
-    using Vector = std::vector<BindingConstraint*>;
-    //! Ordered Set of binding constraints
-    using Set = std::set<BindingConstraint*, CompareBindingConstraintName>;
-
-    class EnvForLoading final
-    {
-    public:
-        explicit EnvForLoading(AreaList& l) : areaList(l)
-        {
-        }
-        //! INI file
-        Yuni::Clob iniFilename;
-        //! Current section
-        IniFile::Section* section;
-
-        Yuni::Clob buffer;
-        Matrix<>::BufferType matrixBuffer;
-        Yuni::Clob folder;
-
-        //! List of areas
-        AreaList& areaList;
-    };
-
-    class EnvForSaving final
-    {
-    public:
-        EnvForSaving()
-        {
-        }
-
-        //! Current section
-        IniFile::Section* section;
-
-        Yuni::Clob folder;
-        Yuni::Clob matrixFilename;
-        Yuni::CString<2 * (ant_k_area_name_max_length + 8), false> key;
-    };
-
-public:
     /*!
     ** \brief Convert a binding constraint type into a mere C-String
     */
-    static const char* TypeToCString(const Type t);
+    static const char* TypeToCString(Type t);
 
     /*!
     ** \brief Convert a string into its corresponding type
@@ -178,13 +130,8 @@ public:
     */
     static Operator StringToOperator(const AnyString& text);
 
-public:
     //! \name Constructor & Destructor
     //@{
-    /*!
-    ** \brief Default Constructor
-    */
-    BindingConstraint();
     /*!
     ** \brief Destructor
     */
@@ -216,6 +163,15 @@ public:
     ** \brief Get the comments
     */
     const YString& comments() const;
+
+    //! \name Group
+    //@{
+    /*!
+    ** \brief Get the group
+    */
+    std::string group() const;
+    void group(std::string group_name);
+
     /*!
     ** \brief Set the comments
     */
@@ -235,14 +191,10 @@ public:
 
     bool skipped() const;
 
-    //! \name Values
-    //@{
-    //! Values for inequalities (const)
-    const Matrix<>& matrix() const;
-    //! Values for inequalities
-    Matrix<>& matrix();
+    //Ref to prevent copy. const ref to prevent modification.
+    const Matrix<>& RHSTimeSeries() const;
+    Matrix<>& RHSTimeSeries();
 
-    //@}
 
     bool hasAllWeightedLinksOnLayer(size_t layerID);
 
@@ -284,11 +236,6 @@ public:
     /*!
     ** \brief Copy all weights from another constraint
     */
-    void copyWeights(const Study& study, const BindingConstraint& rhs, bool emptyBefore = true);
-
-    /*!
-    ** \brief Copy all weights from another constraint
-    */
     void copyWeights(const Study& study,
                      const BindingConstraint& rhs,
                      bool emptyBefore,
@@ -319,16 +266,6 @@ public:
     void offset(const ThermalCluster* clstr, int o);
 
     /*!
-    ** \brief Remove all offsets
-    */
-    void removeAllOffsets();
-
-    /*!
-    ** \brief Copy all offsets from another constraint
-    */
-    void copyOffsets(const Study& study, const BindingConstraint& rhs, bool emptyBefore = true);
-
-    /*!
     ** \brief Copy all offsets from another constraint
     */
     void copyOffsets(const Study& study,
@@ -351,16 +288,8 @@ public:
     */
     uint enabledClusterCount() const;
 
-    /*!
-    ** \brief Remove an interconnection
-    */
-    bool removeLink(const AreaLink* lnk);
     //@}
 
-    /*!
-    ** \brief Remove a thermalcluster
-    */
-    bool removeCluster(const ThermalCluster* clstr);
     //@}
 
     //! \name Type of the binding constraint
@@ -423,29 +352,11 @@ public:
     //@}
 
     /*!
-    ** \brief Load the binding constraint from a folder and an INI file
-    **
-    ** \param env All information needed to perform the task
-    ** \return True if the operation succeeded, false otherwise
-    */
-    bool loadFromEnv(EnvForLoading& env);
-
-    /*!
-    ** \brief Save the binding constraint into a folder and an INI file
-    **
-    ** \param env All information needed to perform the task
-    ** \return True if the operation succeeded, false otherwise
-    */
-    bool saveToEnv(EnvForSaving& env);
-
-    /*!
     ** \brief Reverse the sign of the weight for a given interconnection or thermal cluster
     **
     ** This method is used when reverting an interconnection or thermal cluster
     */
     void reverseWeightSign(const AreaLink* lnk);
-
-    void reverseWeightSign(const ThermalCluster* clstr);
 
     /*!
     ** \brief Get if the given binding constraint is identical
@@ -467,28 +378,19 @@ public:
     ** \brief Build a human readable formula for the binding constraint
     */
     void buildFormula(YString& s) const;
-    void buildHTMLFormula(YString& s) const;
 
-    void initLinkArrays(double* weigth,
-                        double* cWeigth,
-                        int* o,
-                        int* cO,
-                        long* linkIndex,
-                        long* clusterIndex,
-                        long* clustersAreaIndex) const;
+    BindingConstraintStructures initLinkArrays() const;
 
-    /*!
-    ** \brief Fill the second member matrix with all member to the same value
-    */
-    void matrix(const double onevalue);
+    template<class Env>
+    std::string timeSeriesFileName(const Env &env) const;
 
 private:
     //! Raw name
     ConstraintName pName;
     //! Raw ID
     ConstraintName pID;
-    //! Matrix<> where values for inequalities could be found
-    Matrix<> pValues;
+    //! Time series of the binding constraint. Width = number of series. Height = nbTimeSteps. Only store series for operatorType
+    Matrix<> RHSTimeSeries_;
     //! Weights for links
     linkWeightMap pLinkWeights;
     //! Weights for thermal clusters
@@ -508,199 +410,27 @@ private:
     // By default, print nothing
     uint pFilterSynthesis = filterNone;
     //! Enabled / Disabled
-    bool pEnabled;
+    bool pEnabled = false;
     //! Comments
     YString pComments;
+    //! Group
+    std::string group_;
 
-}; // class BindingConstraint
-
-class BindingConstraintsList final : public Yuni::NonCopyable<BindingConstraintsList>
-{
-public:
-    using iterator = BindingConstraint::Vector::iterator;
-    using const_iterator = BindingConstraint::Vector::const_iterator;
-
-public:
-    //! \name Constructor && Destructor
-    //@{
-    /*!
-    ** \brief Default constructor
-    */
-    BindingConstraintsList();
-    /*!
-    ** \brief Destructor
-    */
-    ~BindingConstraintsList();
-    //@}
-
-    /*!
-    ** \brief Delete all constraints
-    */
     void clear();
 
-    //! \name Iterating through all constraints
-    //@{
-    /*!
-    ** \brief Iterate through all constraints
-    */
-    template<class PredicateT>
-    void each(const PredicateT& predicate);
-    /*!
-    ** \brief Iterate through all constraints (const)
-    */
-    template<class PredicateT>
-    void each(const PredicateT& predicate) const;
+    void copyFrom(BindingConstraint const *original);
+}; // class BindingConstraint
 
-    /*!
-    ** \brief Iterate through all enabled constraints
-    */
-    template<class PredicateT>
-    void eachEnabled(const PredicateT& predicate);
-    /*!
-    ** \brief Iterate through all enabled constraints (const)
-    */
-    template<class PredicateT>
-    void eachEnabled(const PredicateT& predicate) const;
-
-    iterator begin();
-    const_iterator begin() const;
-
-    iterator end();
-    const_iterator end() const;
-
-    bool empty() const;
-    //@}
-
-    /*!
-    ** \brief Add a new binding constraint
-    */
-    BindingConstraint* add(const AnyString& name);
-
-    /*!
-    ** Try to find a constraint from its id
-    */
-    BindingConstraint* find(const AnyString& id);
-
-    /*!
-    ** \brief Try to find a constraint from its id (const)
-    */
-    const BindingConstraint* find(const AnyString& id) const;
-
-    /*!
-    ** \brief Try to find a constraint from its name
-    */
-    BindingConstraint* findByName(const AnyString& name);
-
-    /*!
-    ** \brief Try to find a constraint from its name (const)
-    */
-    const BindingConstraint* findByName(const AnyString& name) const;
-
-    /*!
-    ** \brief Load all binding constraints from a folder
-    */
-    bool loadFromFolder(Study& s, const StudyLoadOptions& options, const AnyString& folder);
-
-    /*!
-    ** \brief Save all binding constraints into a folder
-    */
-    bool saveToFolder(const AnyString& folder) const;
-
-    /*!
-    ** \brief Reverse the sign of the weight for a given interconnection or thermal cluster
-    **
-    ** This method is used when reverting an interconnection or thermal cluster
-    */
-    void reverseWeightSign(const AreaLink* lnk);
-
-    void reverseWeightSign(const ThermalCluster* clstr);
-
-    //! Get the number of binding constraints
-    uint size() const;
-
-    /*!
-    ** \brief Remove a binding constraint
-    */
-    void remove(const BindingConstraint* bc);
-    /*!
-    ** \brief Remove any binding constraint linked with a given area
-    */
-    void remove(const Area* area);
-    /*!
-    ** \brief Remove any binding constraint linked with a given interconnection
-    */
-    void remove(const AreaLink* area);
-
-    /*!
-    ** \brief Remove any binding constraint whose name contains the string in argument
-    */
-    void removeConstraintsWhoseNameConstains(const AnyString& filter);
-
-    /*!
-    ** \brief Rename a binding constraint
-    */
-    bool rename(BindingConstraint* bc, const AnyString& newname);
-
-    /*!
-    ** \brief Convert all weekly constraints into daily ones
-    */
-    void mutateWeeklyConstraintsIntoDailyOnes();
-
-    /*!
-    ** \brief Get the memory usage
-    */
-    yuint64 memoryUsage() const;
-
-    /*!
-    ** \brief Estimate
-    */
-    void estimateMemoryUsage(StudyMemoryUsage& u) const;
-
-    /*!
-    ** \brief Invalidate all matrices of all binding constraints
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the constraint as modified
-    */
-    void markAsModified() const;
-
-private:
-    bool internalSaveToFolder(BindingConstraint::EnvForSaving& env) const;
-
-private:
-    //! All constraints
-    BindingConstraint::Vector pList;
-
-}; // class BindConstList
+// class BindConstList
 
 struct CompareBindingConstraintName final
 {
-    bool operator()(const BindingConstraint* s1, const BindingConstraint* s2) const
+    bool operator()(const std::shared_ptr<BindingConstraint>& s1, const std::shared_ptr<BindingConstraint>& s2) const
     {
-        return ((s1->name()) < (s2->name()));
+        return s1->name() < s2->name();
     }
 };
 
-struct WhoseNameContains final
-{
-public:
-    WhoseNameContains(const AnyString& filter) : pFilter(filter)
-    {
-    }
-    bool operator()(const BindingConstraint* s) const
-    {
-        return (s->name()).contains(pFilter);
-    }
-
-private:
-    AnyString pFilter;
-};
-
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "BindingConstraint.hxx"
-
-#endif // __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_H__

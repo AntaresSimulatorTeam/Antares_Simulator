@@ -30,13 +30,7 @@
 #include "../../variable.h"
 #include <antares/study/area/constants.h>
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy
 {
 struct VCardCongestionProbability
 {
@@ -287,11 +281,11 @@ public:
         const int tsIndex = NumeroChroniquesTireesParInterconnexion[numSpace][state.link->index]
                               .TransmissionCapacities;
         // CONG. PROB +
-        if (state.ntc->ValeurDuFlux[state.link->index]
+        if (state.ntc.ValeurDuFlux[state.link->index]
             > +linkDirectCapa.entry[tsIndex][state.hourInTheYear] - 10e-6)
             pValuesForTheCurrentYear[numSpace][0].hour[state.hourInTheYear] += 100.0 * ratio;
         // CONG. PROB -
-        if (state.ntc->ValeurDuFlux[state.link->index]
+        if (state.ntc.ValeurDuFlux[state.link->index]
             < -linkIndirectCapa.entry[tsIndex][state.hourInTheYear] + 10e-6)
             pValuesForTheCurrentYear[numSpace][1].hour[state.hourInTheYear] += 100.0 * ratio;
 
@@ -363,9 +357,6 @@ private:
 
 }; // class CongestionProbability
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
 } // namespace Antares
 
 #endif // __SOLVER_VARIABLE_ECONOMY_CongestionProbability_H__

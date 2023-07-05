@@ -29,6 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <memory>
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 #include <antares/study.h>
 
 namespace Antares
@@ -82,7 +83,7 @@ public:
     //! All selected renewable clusters
     Data::RenewableCluster::Set RnClusters;
     //! All selected binding constraints
-    Data::BindingConstraint::Set constraints;
+    Data::BindingConstraintsRepository::Set constraints;
     //! All studies
     Data::Study::Set studies;
 

@@ -30,6 +30,7 @@
 #include <yuni/yuni.h>
 #include <antares/study/area.h>
 #include <yuni/core/math.h>
+#include "antares/study/parts/load/prepro.h"
 
 namespace Antares
 {

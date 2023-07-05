@@ -44,6 +44,7 @@
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
+#include "BindingConstraintsTimeSeriesNumbersWriter.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -145,7 +146,7 @@ private:
             double* randomReservoirLevel = nullptr;
 
             if (hydroHotStart && firstSetParallelWithAPerformedYearWasRun)
-                randomReservoirLevel = state[numSpace].problemeHebdo->previousYearFinalLevels;
+                randomReservoirLevel = state[numSpace].problemeHebdo->previousYearFinalLevels.data();
             else
                 randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
@@ -379,7 +380,8 @@ void ISimulation<Impl>::run()
         ImplementationType::variables.simulationEnd();
 
         // Export ts-numbers into output
-        TimeSeriesNumbers::StoreTimeseriesIntoOuput(study);
+        BindingConstraintsTimeSeriesNumbersWriter time_series_writer(pResultWriter);
+        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, time_series_writer);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.

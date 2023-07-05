@@ -91,7 +91,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
     double OI[168];
 
     // H.STOR
-    double* H = weeklyResults.TurbinageHoraire;
+    std::vector<double>& H = weeklyResults.TurbinageHoraire;
 
     // energie turbinee de la semaine
     {

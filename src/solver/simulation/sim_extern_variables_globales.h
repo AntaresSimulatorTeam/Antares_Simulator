@@ -38,6 +38,7 @@ extern DONNEES_PAR_PAYS** DonneesParPays;
 extern VALEURS_GENEREES_PAR_PAYS*** ValeursGenereesParPays;
 extern NUMERO_CHRONIQUES_TIREES_PAR_PAYS*** NumeroChroniquesTireesParPays;
 extern NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION** NumeroChroniquesTireesParInterconnexion;
+extern std::vector<std::map<std::string, unsigned>> NumeroChroniquesTireesParGroup;
 
 /* Optimisation */
 /*-Economique-*/

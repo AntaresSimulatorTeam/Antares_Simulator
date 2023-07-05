@@ -21,6 +21,15 @@ This line is not mandatory for every group & MC year. If absent, the TS number w
 - 0 &lt;= MC Year &lt; generaldata.ini/general.nbyears
 - 1 &lt;=TS number &lt;= number of columns for the group
 
+#### Thermal cluster new properties
+For each thermal cluster, in existing file **input/thermal/clusters/&lt;area&gt;/list.ini**, under existing sections **&lt;cluster&gt;**, following properties added: 
+
+* `costgeneration` [string] can take values `useCostTimeseries` or be excluded from the section if `Set manually` is selected (default behavior).
+* `efficiency` [float] excluded from the section if default value 100 is selected (default behavior).
+* `variableomcost` [float] excluded from the section if default value 0 is selected (default behavior).
+
+For each thermal cluster, new files added **input/thermal/prepro/&lt;area&gt;/&lt;cluster&gt;/CO2Cost.txt** and **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/fuelCost.txt**. **fuelCost.txt** and **CO2Cost.txt** must either have one column, or the same number of columns as existing file **series.txt** (availability)
+
 ### Output
 #### Scenarized RHS for binding constraints
 Add directory **bindingconstraints** to output directory **ts-numbers**. For every binding constraint group, add a file **ts-numbers/bindingconstraints/&lt;group&gt;.txt** containing the TS numbers used for that group.
@@ -43,7 +52,7 @@ Add directory **bindingconstraints** to output directory **ts-numbers**. For eve
 * For each short-term-storage object, add the corresponding time-series in directory **input/st-storage/series/&lt;area id&gt;/&lt;STS id&gt;**. All of these files contain 8760 rows and 1 column.
     * **PMAX-injection.txt** All entries must be in range 0-1
     * **PMAX-withdrawal.txt** All entries must be in range 0-1
-    * **inflow.txt** All entries must be &gt; 0
+    * **inflows.txt** All entries must be &gt; 0
     * **lower-rule-curve.txt** All entries must be in range 0-1
     * **upper-rule-curve.txt** All entries must be in range 0-1
 

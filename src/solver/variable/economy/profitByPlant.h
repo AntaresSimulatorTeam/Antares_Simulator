@@ -213,7 +213,7 @@ public:
         NextType::initializeFromArea(study, area);
     }
 
-    uint getMaxNumberColumns() const
+    size_t getMaxNumberColumns() const
     {
         return pNbClustersOfArea * ResultsType::count;
     }
@@ -293,7 +293,7 @@ public:
         // Useful local variables
         auto area = state.area;
         auto& thermal = state.thermal;
-        double* areaMarginalCosts = state.hourlyResults->CoutsMarginauxHoraires;
+        std::vector<double> areaMarginalCosts = state.hourlyResults->CoutsMarginauxHoraires;
         uint hourInTheWeek = state.hourInTheWeek;
         uint hourInTheYear = state.hourInTheYear;
 
@@ -303,12 +303,12 @@ public:
             auto* cluster = state.area->thermal.clusters[clusterIndex];
             double hourlyClusterProduction
               = thermal[area->index].thermalClustersProductions[clusterIndex];
+            uint tsIndex = state.timeseriesIndex->ThermiqueParPalier[cluster->areaWideIndex];
             // Thermal cluster profit
             pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
               = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
                 * (-areaMarginalCosts[hourInTheWeek]
-                   - cluster->marginalCost
-                       * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
+                   - cluster->getMarginalCost(tsIndex, hourInTheYear));
         }
 
         // Next variable
@@ -350,7 +350,7 @@ public:
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    unsigned int pNbClustersOfArea;
+    size_t pNbClustersOfArea;
     unsigned int pNbYearsParallel;
 
 }; // class

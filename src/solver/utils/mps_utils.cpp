@@ -93,7 +93,7 @@ private:
 };
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
-                                               Solver::IResultWriter::Ptr writer,
+                                               const Solver::IResultWriter::Ptr& writer,
                                                const std::string& filename)
 {
     logs.info() << "Solver MPS File: `" << filename << "'";

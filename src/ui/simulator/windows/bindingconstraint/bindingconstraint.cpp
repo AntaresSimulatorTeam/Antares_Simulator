@@ -43,6 +43,7 @@
 #include "edit.h"
 #include "../../application/main.h"
 #include "../../application/wait.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 
@@ -50,137 +51,6 @@ namespace Antares
 {
 namespace Window
 {
-class BindingConstraintDataPanel final : public Component::Panel,
-                                         public Yuni::IEventObserver<BindingConstraintDataPanel>
-{
-public:
-    BindingConstraintDataPanel(wxWindow* parent, Data::BindingConstraint::Operator op) :
-     Component::Panel(parent), pOperator(op)
-    {
-        auto* sizer = new wxBoxSizer(wxVERTICAL);
-
-        auto* notebook = new Component::Notebook(this, Component::Notebook::orTop);
-        notebook->theme(Component::Notebook::themeLight);
-
-        // The pseudo panel should have their size non-null for proper alignment
-        pPageHourly = notebook->add(
-          new wxPanel(notebook, wxID_ANY, wxDefaultPosition, wxSize(2, 2)), wxT(" Hourly "));
-        pPageDaily = notebook->add(new wxPanel(notebook, wxID_ANY, wxDefaultPosition, wxSize(2, 2)),
-                                   wxT(" Daily "));
-        pPageWeekly = notebook->add(
-          new wxPanel(notebook, wxID_ANY, wxDefaultPosition, wxSize(2, 2)), wxT(" Weekly "));
-        sizer->Add(notebook, 0, wxALL | wxEXPAND);
-
-        using RendererType = Component::Datagrid::Renderer::BindingConstraint::Data;
-        auto* renderer = new RendererType(this, pOperator);
-        onBindingConstraintTypeChanged.connect(renderer,
-                                               &RendererType::bindingConstraintTypeChanged);
-        onBindingConstraintTypeChanged.connect(
-          this, &BindingConstraintDataPanel::bindingConstraintTypeChanged);
-        grid = new Component::Datagrid::Component(
-          this, renderer, wxEmptyString, true, true, false, false, true);
-        sizer->Add(grid, 1, wxALL | wxEXPAND);
-
-        SetSizer(sizer);
-        pPageHourly->select();
-
-        notebook->onPageChanged.connect(this, &BindingConstraintDataPanel::onPageChanged);
-    }
-
-    virtual ~BindingConstraintDataPanel()
-    {
-        destroyBoundEvents();
-    }
-
-    void forceRefresh()
-    {
-        assert(grid && "Invalid pointer to grid");
-        assert(GetSizer() && "Invalid sizer");
-
-        if (Data::Study::Current::Valid())
-        {
-            grid->InvalidateBestSize();
-            grid->forceRefresh();
-            Data::UIRuntimeInfo& uiinfo = *(Data::Study::Current::Get()->uiinfo);
-            wxString s;
-            uint c;
-
-            c = uiinfo.countItems(pOperator, Data::BindingConstraint::typeHourly);
-            s << wxT("  Hourly  (") << c << wxT(") ");
-            pPageHourly->caption(s);
-
-            c = uiinfo.countItems(pOperator, Data::BindingConstraint::typeDaily);
-            s.clear();
-            s << wxT("  Daily  (") << c << wxT(") ");
-            pPageDaily->caption(s);
-
-            c = uiinfo.countItems(pOperator, Data::BindingConstraint::typeWeekly);
-            s.clear();
-            s << wxT("  Weekly  (") << c << wxT(") ");
-            pPageWeekly->caption(s);
-
-            GetSizer()->Layout();
-        }
-    }
-
-    void selectDefaultPage()
-    {
-        // Select the first page
-        pPageHourly->select(true);
-        // Making sure that the event has been done, even on Windows...
-        bindingConstraintTypeChanged(Data::BindingConstraint::typeHourly);
-    }
-
-public:
-    Component::Datagrid::Component* grid;
-
-private:
-    void onPageChanged(Component::Notebook::Page& page)
-    {
-        if (&page == pPageHourly)
-            onBindingConstraintTypeChanged(Data::BindingConstraint::typeHourly);
-        else
-        {
-            if (&page == pPageDaily)
-                onBindingConstraintTypeChanged(Data::BindingConstraint::typeDaily);
-            else
-                onBindingConstraintTypeChanged(Data::BindingConstraint::typeWeekly);
-        }
-        grid->forceRefresh();
-    }
-
-    void bindingConstraintTypeChanged(Data::BindingConstraint::Type type)
-    {
-        if (type == Data::BindingConstraint::typeHourly)
-        {
-            pPageHourly->select(true);
-            return;
-        }
-        if (type == Data::BindingConstraint::typeDaily)
-        {
-            pPageDaily->select(true);
-            return;
-        }
-        if (type == Data::BindingConstraint::typeWeekly)
-        {
-            pPageWeekly->select(true);
-            return;
-        }
-        logs.warning() << "internal error: invalid type for selecting binding constraint type";
-    }
-
-private:
-    const Data::BindingConstraint::Operator pOperator;
-    static Yuni::Event<void(Data::BindingConstraint::Type)> onBindingConstraintTypeChanged;
-    Component::Notebook::Page* pPageHourly;
-    Component::Notebook::Page* pPageDaily;
-    Component::Notebook::Page* pPageWeekly;
-
-}; // class BindingConstraintDataPanel
-
-Yuni::Event<void(Data::BindingConstraint::Type)>
-  BindingConstraintDataPanel::onBindingConstraintTypeChanged;
-
 BEGIN_EVENT_TABLE(BindingConstraint, wxPanel)
 END_EVENT_TABLE()
 
@@ -373,15 +243,8 @@ BindingConstraint::BindingConstraint(wxWindow* parent) :
  pPageList(nullptr),
  pPageWeights(nullptr),
  pPageOffsets(nullptr),
- pPageEqual(nullptr),
- pPageLess(nullptr),
- pPageGreater(nullptr),
- // pGridWeights(nullptr),
  pAllConstraints(nullptr),
  pSelected(nullptr),
- pDataPanelEqual(nullptr),
- pDataPanelLess(nullptr),
- pDataPanelGreater(nullptr),
  pWeightsPanel(nullptr)
 {
     // Main sizer
@@ -459,20 +322,9 @@ BindingConstraint::BindingConstraint(wxWindow* parent) :
 
     // Second membre
     {
-        BindingConstraintDataPanel* p;
-
-        p = new BindingConstraintDataPanel(n, Data::BindingConstraint::opEquality);
-        pPageEqual = n->add(p, wxT("equality"), wxT("    =    "));
-        pDataPanelEqual = p;
-
-        p = new BindingConstraintDataPanel(n, Data::BindingConstraint::opLess);
-        pPageLess = n->add(p, wxT("less"), wxT("    <    "));
-        pDataPanelLess = p;
-
-        p = new BindingConstraintDataPanel(n, Data::BindingConstraint::opGreater);
-        pPageGreater = n->add(p, wxT("greater"), wxT("    >    "));
-        pDataPanelGreater = p;
+        n->add(new Component::Panel(n), wxT("antares-web"), wxT("  Please use Antares Web to edit BC data  "));
     }
+    
 
     // Post
     n->select(wxT("list"));
@@ -530,24 +382,6 @@ void BindingConstraint::onPageChanged(Component::Notebook::Page& page)
         logs.info() << "notebook binding constraints: page changed: offsets";
 
         pOffsetsPanel->forceRefresh();
-        return;
-    }
-    if (&page == pPageLess)
-    {
-        logs.info() << "notebook binding constraints: page changed: less";
-        pDataPanelLess->forceRefresh();
-        return;
-    }
-    if (&page == pPageGreater)
-    {
-        logs.info() << "notebook binding constraints: page changed: greater";
-        pDataPanelGreater->forceRefresh();
-        return;
-    }
-    if (&page == pPageEqual)
-    {
-        logs.info() << "notebook binding constraints: page changed: equal";
-        pDataPanelEqual->forceRefresh();
         return;
     }
 }
@@ -672,13 +506,13 @@ void BindingConstraint::onDeleteAll(void*)
         logs.info() << "deleting the constraints ";
         WIP::Locker wip;
 
-        Antares::Data::BindingConstraintsList::iterator BC = study.bindingConstraints.begin();
+        auto BC = study.bindingConstraints.begin();
         int BCListSize = study.bindingConstraints.size();
         for (int i = 0; i < BCListSize; i++)
         {
             if ((*BC)->hasAllWeightedLinksOnLayer(study.activeLayerID)
                 && (*BC)->hasAllWeightedClustersOnLayer(study.activeLayerID))
-                study.bindingConstraints.remove(*BC);
+                study.bindingConstraints.remove(BC->get());
             else
                 ++BC;
         }

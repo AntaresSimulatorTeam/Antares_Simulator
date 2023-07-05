@@ -58,6 +58,7 @@
 #include <yuni/core/system/cpu.h>
 
 #include "main/internal-data.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 

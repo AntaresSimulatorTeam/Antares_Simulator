@@ -94,22 +94,22 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
             == numberOfConstraintCsrHourlyBinding.end())
             continue;
 
-        const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes
+        const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
           = problemeHebdo_->MatriceDesContraintesCouplantes[CntCouplante];
 
         int Cnt = numberOfConstraintCsrHourlyBinding[CntCouplante];
 
         // 1. The original RHS of bingding constraint
         SecondMembre[Cnt]
-          = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[triggeredHour];
+          = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[triggeredHour];
 
         // 2. RHS part 2: flow other than 2<->2
         int NbInterco
-          = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
+          = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
         for (int Index = 0; Index < NbInterco; Index++)
         {
-            int Interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[Index];
-            double Poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[Index];
+            int Interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[Index];
+            double Poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[Index];
 
             if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
                   != Data::AdequacyPatch::physicalAreaInsideAdqPatch
@@ -117,35 +117,35 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
                      != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
                 double ValueOfFlow
-                  = problemeHebdo_->ValeursDeNTC[triggeredHour]->ValeurDuFlux[Interco];
+                  = problemeHebdo_->ValeursDeNTC[triggeredHour].ValeurDuFlux[Interco];
                 SecondMembre[Cnt] -= ValueOfFlow * Poids;
             }
         }
 
         // 3. RHS part 3: - cluster
         int NbClusters
-          = MatriceDesContraintesCouplantes->NombreDePaliersDispatchDansLaContrainteCouplante;
+          = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
 
         for (int Index = 0; Index < NbClusters; Index++)
         {
-            int Area = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[Index];
+            int Area = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[Index];
 
             int IndexNumeroDuPalierDispatch
-              = MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[Index];
+              = MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[Index];
 
-            double Poids = MatriceDesContraintesCouplantes->PoidsDuPalierDispatch[Index];
+            double Poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[Index];
 
             double ValueOfVar = problemeHebdo_->ResultatsHoraires[Area]
                                   .ProductionThermique[triggeredHour]
-                                  ->ProductionThermiqueDuPalier[IndexNumeroDuPalierDispatch];
+                                  .ProductionThermiqueDuPalier[IndexNumeroDuPalierDispatch];
 
             SecondMembre[Cnt] -= ValueOfVar * Poids;
         }
-        if (MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante == '<')
+        if (MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante == '<')
         {
             SecondMembre[Cnt] += belowThisThresholdSetToZero;
         }
-        else if (MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante == '>')
+        else if (MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante == '>')
         {
             SecondMembre[Cnt] -= belowThisThresholdSetToZero;
         }

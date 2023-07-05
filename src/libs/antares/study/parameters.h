@@ -327,7 +327,7 @@ public:
     ** All generated timeseries will be re-written into the input
     ** \see TimeSeries
     */
-    uint timeSeriesToImport;
+    uint exportTimeSeriesInInput;
     //@}
 
     //! \name Correlated draws

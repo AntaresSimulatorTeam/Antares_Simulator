@@ -292,11 +292,20 @@ void ConstraintNamer::nameWithTimeGranularity(int numConstraint,
       numConstraint);
 }
 
-void ConstraintNamer::MinUpTime(int numConstraint)
+void ConstraintNamer::NbUnitsOutageLessThanNbUnitsStop(int numConstraint)
 {
-    targetUpdater_.UpdateTargetAtIndex(
-      BuildName("MinUpTime", LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR)),
-      numConstraint);
+    targetUpdater_.UpdateTargetAtIndex(BuildName("NbUnitsOutageLessThanNbUnitsStop",
+                                                 LocationIdentifier(area_, AREA),
+                                                 TimeIdentifier(timeStep_, HOUR)),
+                                       numConstraint);
+}
+
+void ConstraintNamer::NbDispUnitsMinBoundSinceMinUpTime(int numConstraint)
+{
+    targetUpdater_.UpdateTargetAtIndex(BuildName("NbDispUnitsMinBoundSinceMinUpTime",
+                                                 LocationIdentifier(area_, AREA),
+                                                 TimeIdentifier(timeStep_, HOUR)),
+                                       numConstraint);
 }
 
 void ConstraintNamer::MinDownTime(int numConstraint)

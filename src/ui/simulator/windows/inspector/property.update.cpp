@@ -506,8 +506,8 @@ bool InspectorGrid::onPropertyChanging_Constraint(wxPGProperty*,
     const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
-    Data::BindingConstraint::Set::iterator end = data->constraints.end();
-    Data::BindingConstraint::Set::iterator i = data->constraints.begin();
+    Data::BindingConstraintsRepository::Set::iterator end = data->constraints.end();
+    Data::BindingConstraintsRepository::Set::iterator i = data->constraints.begin();
 
     if (name == "constraint.name")
     {
@@ -715,7 +715,53 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         }
         return true;
     }
+    if (name == "cluster.efficiency")
+    {
+        const double d = value.GetDouble();
+        if (d < 0. || d > 100.)
+        {
+            for (; i != end; ++i)
+                (*i)->fuelEfficiency = 100.0;
+            pFrame.delayApply();
+        }
+        else
+        {
+            for (; i != end; ++i)
+            {
+                (*i)->fuelEfficiency = d;
+                (*i)->calculationOfMarketBidPerHourAndMarginalCostPerHour();
+            } // update
+        }
+        OnStudyThermalClusterCommonSettingsChanged();
+        pFrame.Refresh();
+        return true;
+    }
+    if (name == "cluster.costgeneration")
+    {
+        long index = value.GetLong();
+        Data::CostGeneration costgeneration = Data::setManually;
 
+        switch (index)
+        {
+        case 0:
+            costgeneration = Data::setManually;
+            break;
+        case 1:
+            costgeneration = Data::useCostTimeseries;
+            break;
+        default:
+            return false;
+        }
+        for (; i != end; ++i)
+        {
+            (*i)->costgeneration = costgeneration;    
+            (*i)->calculationOfMarketBidPerHourAndMarginalCostPerHour(); //update     
+        }
+        // Notify
+        OnStudyThermalClusterCommonSettingsChanged();
+        pFrame.Refresh();        
+        return true;
+    }
     // MBO 15/04/2014
     // New scheme when editing thermal clusters costs from the inspector
     // * Forbid values > 5.e4 and limit them to 5.e4
@@ -746,7 +792,11 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         }
 
         for (; i != end; ++i)
+        {
             (*i)->marginalCost = d;
+            (*i)->calculationOfMarketBidPerHourAndMarginalCostPerHour(); // update
+        }
+        
         pFrame.delayApply();
         // Notify
         OnStudyThermalClusterCommonSettingsChanged();
@@ -825,7 +875,10 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         }
 
         for (; i != end; ++i)
+        {
             (*i)->marketBidCost = d;
+            (*i)->calculationOfMarketBidPerHourAndMarginalCostPerHour();
+        }
         pFrame.delayApply();
 
         // Notify
@@ -851,6 +904,27 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
                 (*i)->spreadCost = d;
             pFrame.delayApply();
         }
+        return true;
+    }
+    if (name == "cluster.variableomcost")
+    {
+        const double d = value.GetDouble();
+        if (d < 0.)
+        {
+            for (; i != end; ++i)
+                (*i)->variableomcost = 0.;
+            pFrame.delayApply();
+        }
+        else
+        {
+            for (; i != end; ++i)
+            {
+                (*i)->variableomcost = d;
+                (*i)->calculationOfMarketBidPerHourAndMarginalCostPerHour(); // update
+            }
+        }
+        OnStudyThermalClusterCommonSettingsChanged();
+        pFrame.Refresh();
         return true;
     }
     if (name == "cluster.forcedvolatility")

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
 set(ANTARES_VERSION_HI	      8)
-set(ANTARES_VERSION_LO	      6)
+set(ANTARES_VERSION_LO	      7)
 set(ANTARES_VERSION_REVISION  0)
 set(ANTARES_VERSION_YEAR      2023)
 
@@ -247,7 +247,7 @@ endif()
 set(GFLAGS_USE_TARGET_NAMESPACE TRUE) 
 find_package(gflags)
 
-find_package(ortools QUIET)
+find_package(ortools)
 if(NOT ortools_FOUND OR BUILD_ORTOOLS)
 message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_Declare(ortools

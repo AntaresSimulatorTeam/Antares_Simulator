@@ -33,12 +33,12 @@
 #include "../inifile.h"
 #include "../study/fwd.h"
 #include "../study/version.h"
-#include "../study/fwd.h"
 
 namespace Antares
 {
 namespace Data
 {
+
 class Correlation final
 {
 public:
@@ -130,7 +130,7 @@ public:
     void copyFrom(const Correlation& source,
                   const Study& studySource,
                   const AreaName& areaSource,
-                  const Area::NameMapping& mapping,
+                  const AreaNameMapping& mapping,
                   const Study& study);
 
     /*!
