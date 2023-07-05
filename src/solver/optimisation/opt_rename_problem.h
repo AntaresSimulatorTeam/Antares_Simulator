@@ -9,24 +9,21 @@ class TargetVectorUpdater
 {
 public:
     TargetVectorUpdater(bool isRenamingProcessed, std::vector<std::string>& target) :
-     target_(target)
+    target_(target), isRenamingProcessed_(isRenamingProcessed)
     {
-        if (isRenamingProcessed)
-        {
-            UpdateTargetAtIndex = std::bind(
-              &TargetVectorUpdater::UpdateTargetAtIndexImpl, this, std::placeholders::_1, std::placeholders::_2);
-        }
     }
 
-    std::function<void(const std::string&, unsigned int index)> UpdateTargetAtIndex
-      = [](const std::string&, unsigned int index) {};
+    void UpdateTargetAtIndex(const std::string& full_name, unsigned int index)
+    {
+    if (isRenamingProcessed_)
+    {
+          target_[index] = full_name;
+    }
+    }
 
 private:
     std::vector<std::string>& target_;
-    void UpdateTargetAtIndexImpl(const std::string& full_name, unsigned int index)
-    {
-        target_[index] = full_name;
-    }
+    bool isRenamingProcessed_;
 };
 
 class Namer
