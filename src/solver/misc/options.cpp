@@ -172,7 +172,7 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
     // --named-problems
     parser->addFlag(options.namedProblems,
                     ' ',
-                    "named-problems",
+                    "named-mps-problems",
                     "Naming constraints and variables in problems.");
 
     parser->addParagraph("\nMisc.");
