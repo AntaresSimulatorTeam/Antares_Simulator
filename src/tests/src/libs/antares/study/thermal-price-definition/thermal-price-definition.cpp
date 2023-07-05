@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_basic)
     EconomicInputData eco;
     BOOST_CHECK(eco.loadFromFolder(*study, folder));
 
-    BOOST_CHECK(eco.fuelcost[0][1432] == 1);
+    BOOST_CHECK_EQUAL(eco.fuelcost[0][1432], 1);
 }
 
 BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_value)
@@ -261,10 +261,10 @@ BOOST_AUTO_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMargin
     createIniFile();
     clusterList.loadFromFolder(*study, folder, area);
     clusterList.mapping["area"]->costGenManualCalculationOfMarketBidAndMarginalCostPerHour();
-    BOOST_CHECK(clusterList.mapping["area"]->thermalEconomicTimeSeries[0]
-        .marketBidCostPerHourTs[2637] == 35);
-    BOOST_CHECK(clusterList.mapping["area"]->thermalEconomicTimeSeries[0]
-        .marginalCostPerHourTs[6737] == 23);
+    BOOST_CHECK_EQUAL(clusterList.mapping["area"]->thermalEconomicTimeSeries[0]
+        .marketBidCostPerHourTs[2637], 35);
+    BOOST_CHECK_EQUAL(clusterList.mapping["area"]->thermalEconomicTimeSeries[0]
+        .marginalCostPerHourTs[6737], 23);
 }
 
 BOOST_AUTO_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour)
@@ -280,10 +280,10 @@ BOOST_AUTO_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMa
 
     clusterList.mapping["area"]->costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour();
 
-    BOOST_CHECK(clusterList.mapping["area"]->thermalEconomicTimeSeries[0]
-        .marketBidCostPerHourTs[0] - 24.12 < 0.000001);
-    BOOST_CHECK(clusterList.mapping["area"]->thermalEconomicTimeSeries[0]
-        .marketBidCostPerHourTs[2637] - 24.12 < 0.000001);
+    BOOST_CHECK_CLOSE(clusterList.mapping["area"]->thermalEconomicTimeSeries[0]
+        .marketBidCostPerHourTs[0], 24.12, 0.001);
+    BOOST_CHECK_CLOSE(clusterList.mapping["area"]->thermalEconomicTimeSeries[0]
+        .marketBidCostPerHourTs[2637], 24.12, 0.001);
 }
 
 
