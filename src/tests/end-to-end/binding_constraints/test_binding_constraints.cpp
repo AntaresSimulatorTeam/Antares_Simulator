@@ -268,6 +268,10 @@ void SimulationHandler::create()
     SIM_AllocationTableaux();
 }
 
+SimulationHandler::~SimulationHandler()
+{
+}
+
 // ===============
 // The fixture
 // ===============
