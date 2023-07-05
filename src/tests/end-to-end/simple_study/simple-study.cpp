@@ -174,8 +174,8 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 	//Load must be load
 	checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
 
-	//Clean simulation
-	cleanSimulation(pStudy, simulation);
+	cleanSimulation(simulation);
+	cleanStudy(pStudy);
 }
 
 //Very simple test with one area and one load and two year
@@ -218,8 +218,8 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 	//Load must be load
 	checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
 
-	//Clean simulation
-	cleanSimulation(pStudy, simulation);
+	cleanSimulation(simulation);
+	cleanStudy(pStudy);
 }
 
 
@@ -265,8 +265,8 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 	//Load must be load
 	checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
 
-	//Clean simulation
-	cleanSimulation(pStudy, simulation);
+	cleanSimulation(simulation);
+	cleanStudy(pStudy);
 }
 
 
@@ -326,8 +326,8 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 	//Load must be load
 	checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, averageLoad);
 
-	//Clean simulation
-	cleanSimulation(pStudy, simulation);
+	cleanSimulation(simulation);
+	cleanStudy(pStudy);
 }
 
 
@@ -405,8 +405,8 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
 	//Load must be load
 	checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, averageLoad);
 
-	//Clean simulation
-	cleanSimulation(pStudy, simulation);
+	cleanSimulation(simulation);
+	cleanStudy(pStudy);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

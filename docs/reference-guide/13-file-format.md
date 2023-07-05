@@ -52,7 +52,7 @@ Add directory **bindingconstraints** to output directory **ts-numbers**. For eve
 * For each short-term-storage object, add the corresponding time-series in directory **input/st-storage/series/&lt;area id&gt;/&lt;STS id&gt;**. All of these files contain 8760 rows and 1 column.
     * **PMAX-injection.txt** All entries must be in range 0-1
     * **PMAX-withdrawal.txt** All entries must be in range 0-1
-    * **inflow.txt** All entries must be &gt; 0
+    * **inflows.txt** All entries must be &gt; 0
     * **lower-rule-curve.txt** All entries must be in range 0-1
     * **upper-rule-curve.txt** All entries must be in range 0-1
 
