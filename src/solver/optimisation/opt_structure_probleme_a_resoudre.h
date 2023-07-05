@@ -50,7 +50,7 @@ typedef struct
                                   + NombreDeContraintesCouplantes
                                  )* NombreDePasDeTempsDUneJournee
                                   + NombreDePays contraintes de turbine */
-    char* Sens;
+    std::string Sens;
     int* IndicesDebutDeLigne;
     int* NombreDeTermesDesLignes;
     double* CoefficientsDeLaMatriceDesContraintes;

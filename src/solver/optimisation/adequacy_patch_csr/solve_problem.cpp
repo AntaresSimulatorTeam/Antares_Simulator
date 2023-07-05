@@ -77,7 +77,7 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
     Probleme->IndicesColonnes = ProblemeAResoudre.IndicesColonnes;
     Probleme->CoefficientsDeLaMatriceDesContraintes
       = ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes;
-    Probleme->Sens = ProblemeAResoudre.Sens;
+    Probleme->Sens = ProblemeAResoudre.Sens.data();
     Probleme->SecondMembre = ProblemeAResoudre.SecondMembre;
 
     Probleme->AffichageDesTraces = NON_PI;

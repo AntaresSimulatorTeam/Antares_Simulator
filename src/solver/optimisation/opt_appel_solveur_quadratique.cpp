@@ -86,7 +86,7 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes;
     Probleme.CoefficientsDeLaMatriceDesContraintes
       = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes;
-    Probleme.Sens = ProblemeAResoudre->Sens;
+    Probleme.Sens = ProblemeAResoudre->Sens.data();
     Probleme.SecondMembre = ProblemeAResoudre->SecondMembre;
 
     Probleme.AffichageDesTraces = NON_PI;
