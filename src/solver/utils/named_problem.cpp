@@ -7,21 +7,13 @@ namespace Antares
 namespace Optimization
 {
 
-char** VectorOfStringToCharPP(std::vector<std::string>& in, std::vector<char*>& pointerVec)
-{
-    std::transform(in.begin(),
-                   in.end(),
-                   std::back_inserter(pointerVec),
-                   [](std::string& str) { return str.empty() ? nullptr : str.data(); });
-    return pointerVec.data();
-}
-PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(std::vector<std::string>& VectNomDesVariables,
-                                                 std::vector<std::string>& VectNomDesContraintes,
+PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
+                                                 const std::vector<std::string>& NomDesContraintes,
                                                  std::vector<int>& StatutDesVariables,
                                                  std::vector<int>& StatutDesContraintes) :
 
- NomDesVariables(VectorOfStringToCharPP(VectNomDesVariables, Variables)),
- NomDesContraintes(VectorOfStringToCharPP(VectNomDesContraintes, Contraintes)),
+ NomDesVariables(NomDesVariables),
+ NomDesContraintes(NomDesContraintes),
  StatutDesVariables(StatutDesVariables),
  StatutDesContraintes(StatutDesContraintes)
 {

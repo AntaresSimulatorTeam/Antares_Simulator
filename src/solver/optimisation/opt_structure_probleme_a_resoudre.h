@@ -109,9 +109,7 @@ typedef struct
 
     /* Nommage des variables & contraintes */
     std::vector<std::string> NomDesVariables;
-    // char** NomDesVariables;
     std::vector<std::string> NomDesContraintes;
-    // char** NomDesContraintes;
 
 public:
     std::vector<int> StatutDesVariables;

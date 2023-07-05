@@ -17,13 +17,13 @@ private:
     std::vector<char*> Contraintes;
 
 public:
-    PROBLEME_SIMPLEXE_NOMME(std::vector<std::string>& VectNomDesVariables,
-                            std::vector<std::string>& VectNomDesContraintes,
+    PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
+                            const std::vector<std::string>& NomDesContraintes,
                             std::vector<int>& StatutDesVariables,
                             std::vector<int>& StatutDesContraintes);
 
-    char** NomDesVariables;
-    char** NomDesContraintes;
+    std::vector<std::string> NomDesVariables;
+    std::vector<std::string> NomDesContraintes;
     std::vector<int>& StatutDesVariables;
     std::vector<int>& StatutDesContraintes;
 

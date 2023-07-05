@@ -55,6 +55,15 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 
+static char** VectorOfStringToCharPP(std::vector<std::string>& in, std::vector<char*>& pointerVec)
+{
+    std::transform(in.begin(),
+                   in.end(),
+                   std::back_inserter(pointerVec),
+                   [](std::string& str) { return str.empty() ? nullptr : str.data(); });
+    return pointerVec.data();
+}
+
 class ProblemConverter
 {
 public:
@@ -84,12 +93,16 @@ public:
         dest->NbTerm = src->NombreDeTermesDesLignes;
         dest->B = src->SecondMembre;
         dest->SensDeLaContrainte = src->Sens;
-        dest->LabelDeLaVariable = src->NomDesVariables;
-        dest->LabelDeLaContrainte = src->NomDesContraintes;
+
+        // Names
+        dest->LabelDeLaVariable = VectorOfStringToCharPP(src->NomDesVariables, mVariableNames);
+        dest->LabelDeLaContrainte = VectorOfStringToCharPP(src->NomDesContraintes, mConstraintNames);
     }
 
 private:
     std::vector<int> mVariableType;
+    std::vector<char*> mVariableNames;
+    std::vector<char*> mConstraintNames;
 };
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
