@@ -1065,13 +1065,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     }
 
     // Export structure
-    if (exportStructure)
+    if (exportStructure && firstWeekOfSimulation)
     {
-        if (firstWeekOfSimulation)
-        {
-            OPT_ExportInterco(study->resultWriter, problemeHebdo);
-            OPT_ExportAreaName(study->resultWriter, study->areas);
-        }
+        OPT_ExportInterco(study->resultWriter, problemeHebdo);
+        OPT_ExportAreaName(study->resultWriter, study->areas);
     }
 
     return;
