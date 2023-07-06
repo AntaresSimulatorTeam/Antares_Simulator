@@ -231,7 +231,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits;
     double* Xmin = ProblemeAResoudre->Xmin;
     double* Xmax = ProblemeAResoudre->Xmax;
-    int* TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
+    std::vector<int>& TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
 
     for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
     {

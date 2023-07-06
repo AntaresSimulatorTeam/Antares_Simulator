@@ -61,7 +61,7 @@ typedef struct
     /* Donnees variables de la matrice des contraintes */
     std::vector<double> CoutQuadratique;
     std::vector<double> CoutLineaire;
-    int* TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
+    std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
                              (voir le fichier spx_constantes_externes.h mais ne jamais utiliser les
                             valeurs explicites des constantes): VARIABLE_FIXE                  ,
                               VARIABLE_BORNEE_DES_DEUX_COTES ,

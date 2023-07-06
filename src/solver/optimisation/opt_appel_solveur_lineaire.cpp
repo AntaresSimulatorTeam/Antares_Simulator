@@ -160,7 +160,7 @@ RESOLUTION:
                 ORTOOLS_CorrigerLesBornes(solver,
                                           ProblemeAResoudre->Xmin,
                                           ProblemeAResoudre->Xmax,
-                                          ProblemeAResoudre->TypeDeVariable,
+                                          ProblemeAResoudre->TypeDeVariable.data(),
                                           ProblemeAResoudre->NombreDeVariables);
             }
             else
@@ -185,7 +185,7 @@ RESOLUTION:
     Probleme.Xmin = ProblemeAResoudre->Xmin;
     Probleme.Xmax = ProblemeAResoudre->Xmax;
     Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-    Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
+    Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable.data();
 
     Probleme.NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
     Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne.data();

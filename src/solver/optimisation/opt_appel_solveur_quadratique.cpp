@@ -76,7 +76,7 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     Probleme.Xmin = ProblemeAResoudre->Xmin;
     Probleme.Xmax = ProblemeAResoudre->Xmax;
     Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-    Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
+    Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable.data();
 
     Probleme.VariableBinaire = (char*)ProblemeAResoudre->CoutsReduits;
 

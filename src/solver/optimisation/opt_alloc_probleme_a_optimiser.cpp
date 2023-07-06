@@ -71,7 +71,7 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
 
     ProblemeAResoudre->CoutQuadratique.assign(szNbVarsDouble, 0);
     ProblemeAResoudre->CoutLineaire.assign(szNbVarsDouble, 0);
-    ProblemeAResoudre->TypeDeVariable = (int*)MemAlloc(szNbVarsint);
+    ProblemeAResoudre->TypeDeVariable.assign(szNbVarsint, 0);
     ProblemeAResoudre->Xmin = (double*)MemAlloc(szNbVarsDouble);
     ProblemeAResoudre->Xmax = (double*)MemAlloc(szNbVarsDouble);
     ProblemeAResoudre->X = (double*)MemAlloc(szNbVarsDouble);
@@ -105,7 +105,6 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
 
 void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
-    MemFree(ProblemeAResoudre->TypeDeVariable);
     MemFree(ProblemeAResoudre->Xmin);
     MemFree(ProblemeAResoudre->Xmax);
     MemFree(ProblemeAResoudre->X);
