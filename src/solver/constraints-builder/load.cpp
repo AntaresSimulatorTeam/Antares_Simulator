@@ -25,11 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include "cbuilder.h"
-#include <antares/inifile.h>
+#include <antares/inifile/inifile.h>
 #include "../../config.h"
 #include "../../libs/antares/study/area/constants.h"
 #include <yuni/io/file.h>
-//#include <wx/wx.h> // bourrin -> à modifier
+//#include <wx/wx.h> // bourrin -> ï¿½ modifier
 //#include "../../ui/simulator/application/study.h"
 
 using namespace Yuni;

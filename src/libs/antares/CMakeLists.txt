@@ -341,10 +341,7 @@ set(SRC_JIT
 	)
 source_group("misc\\jit" FILES ${SRC_JIT})
 
-set(SRC_INI
-	inifile/inifile.h inifile/inifile.hxx inifile/inifile.cpp  inifile.h
-	)
-source_group("misc\\inifile" FILES ${SRC_INI})
+add_subdirectory(inifile)
 
 set(SRC_XCAST
 	study/xcast.h
@@ -365,13 +362,7 @@ set(SRC_BENCHMARKING
 	)
 source_group("misc\\benchmarking" FILES ${SRC_BENCHMARKING})
 
-set(SRC_IO
-	io/statistics.h
-	io/statistics.cpp
-	io/file.h
-	io/file.cpp
-	)
-source_group("io" FILES ${SRC_IO})
+add_subdirectory(io)
 
 set(SRC_EXCEPTION
 	exception/AssertionError.cpp
@@ -553,8 +544,6 @@ add_library(libantares-core
 	${SRC_MEMORY}
 	${SRC_OBJECT}
 	${SRC_JIT}
-	${SRC_INI}
-	${SRC_IO}
 	${SRC_MATRIX}
 	${SRC_BENCHMARKING}
 	${SRC_AREAS}
@@ -598,6 +587,8 @@ target_link_libraries(libantares-core
 		libantares-core-calendar
 		libantares-solver-variable-info
         result_writer
+		inifile
+		io
 	)
 
 import_std_libs(libantares-core)

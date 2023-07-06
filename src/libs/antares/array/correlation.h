@@ -30,7 +30,7 @@
 #include <yuni/yuni.h>
 #include <assert.h>
 #include "matrix.h"
-#include "../inifile.h"
+#include <antares/inifile/inifile.h>
 #include "../study/fwd.h"
 #include "../study/version.h"
 
