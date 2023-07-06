@@ -312,12 +312,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
-
-                    // TODO VP: var "pays" is used in function call below but is previously used to
-                    // loop
-                    // until NombreDePays, check if it's expected behavior
-                    // I added the next line to keep the same behavior as before
-                    int pays = problemeHebdo->NombreDePays;
                 }
                 var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[interco];
