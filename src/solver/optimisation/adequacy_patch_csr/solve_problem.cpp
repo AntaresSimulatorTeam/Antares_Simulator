@@ -86,7 +86,7 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
     Probleme->UtiliserLaToleranceDeStationnariteParDefaut = OUI_PI;
     Probleme->UtiliserLaToleranceDeComplementariteParDefaut = OUI_PI;
 
-    Probleme->CoutsMarginauxDesContraintes = ProblemeAResoudre.CoutsMarginauxDesContraintes;
+    Probleme->CoutsMarginauxDesContraintes = ProblemeAResoudre.CoutsMarginauxDesContraintes.data();
 
     Probleme->CoutsMarginauxDesContraintesDeBorneInf = ProblemeAResoudre.CoutsReduits;
     Probleme->CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre.CoutsReduits;

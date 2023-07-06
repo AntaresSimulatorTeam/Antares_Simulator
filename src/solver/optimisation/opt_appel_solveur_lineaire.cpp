@@ -213,7 +213,7 @@ RESOLUTION:
     Probleme.UtiliserCoutMax = NON_SPX;
     Probleme.CoutMax = 0.0;
 
-    Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes;
+    Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes.data();
     Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits;
 
 #ifndef NDEBUG
