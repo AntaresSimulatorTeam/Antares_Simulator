@@ -29,7 +29,7 @@
 #include <yuni/io/file.h>
 #include <stdio.h>
 #include "series.h"
-#include "../../../inifile.h"
+#include <antares/inifile/inifile.h>
 #include "../../../logs.h"
 #include "../../study.h"
 #include "../../memory-usage.h"

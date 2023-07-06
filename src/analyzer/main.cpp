@@ -34,7 +34,7 @@
 #include <antares/version.h>
 #include "atsp/atsp.h"
 #include <antares/hostinfo.h>
-#include <antares/inifile.h>
+#include <antares/inifile/inifile.h>
 #include <antares/sys/policy.h>
 #include <antares/locale.h>
 #include "../config.h"

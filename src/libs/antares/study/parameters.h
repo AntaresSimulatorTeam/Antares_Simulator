@@ -35,7 +35,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "../date.h"
-#include "../inifile.h"
+#include <antares/inifile/inifile.h>
 #include "fwd.h"
 #include "variable-print-info.h"
 #include "parameters/adq-patch-params.h"
