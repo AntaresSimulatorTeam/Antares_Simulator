@@ -44,7 +44,7 @@ public:
         area_ = area;
     }
 
-    int timeStep_ = 0;
+    unsigned int timeStep_ = 0;
     std::string origin_;
     std::string destination_;
     std::string area_;
