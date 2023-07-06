@@ -71,7 +71,7 @@ typedef struct
                                             */
     std::vector<double> Xmin;
     std::vector<double> Xmax;
-    double* SecondMembre;
+    std::vector<double> SecondMembre;
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a X, il permet
        de renseigner directement les structures de description du reseau avec les
        resultats contenus dans X */

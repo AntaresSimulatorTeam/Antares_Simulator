@@ -76,8 +76,7 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
     ProblemeAResoudre->Xmax.assign(szNbVarsDouble, 0.);
     ProblemeAResoudre->X = (double*)MemAlloc(szNbVarsDouble);
 
-    ProblemeAResoudre->SecondMembre
-      = (double*)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(double));
+    ProblemeAResoudre->SecondMembre.assign(ProblemeAResoudre->NombreDeContraintes, 0.);
 
     ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees
       = (double**)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(void*));
@@ -106,7 +105,6 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
 void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
     MemFree(ProblemeAResoudre->X);
-    MemFree(ProblemeAResoudre->SecondMembre);
     MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees);
     MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits);
     MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux);

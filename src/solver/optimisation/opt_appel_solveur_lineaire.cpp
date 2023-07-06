@@ -154,7 +154,7 @@ RESOLUTION:
                 ORTOOLS_ModifierLeVecteurCouts(
                   solver, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
                 ORTOOLS_ModifierLeVecteurSecondMembre(solver,
-                                                      ProblemeAResoudre->SecondMembre,
+                                                      ProblemeAResoudre->SecondMembre.data(),
                                                       ProblemeAResoudre->Sens.data(),
                                                       ProblemeAResoudre->NombreDeContraintes);
                 ORTOOLS_CorrigerLesBornes(solver,
@@ -168,7 +168,7 @@ RESOLUTION:
                 SPX_ModifierLeVecteurCouts(
                   ProbSpx, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
                 SPX_ModifierLeVecteurSecondMembre(ProbSpx,
-                                                  ProblemeAResoudre->SecondMembre,
+                                                  ProblemeAResoudre->SecondMembre.data(),
                                                   ProblemeAResoudre->Sens.data(),
                                                   ProblemeAResoudre->NombreDeContraintes);
             }
@@ -194,7 +194,7 @@ RESOLUTION:
     Probleme.CoefficientsDeLaMatriceDesContraintes
       = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.data();
     Probleme.Sens = ProblemeAResoudre->Sens.data();
-    Probleme.SecondMembre = ProblemeAResoudre->SecondMembre;
+    Probleme.SecondMembre = ProblemeAResoudre->SecondMembre.data();
 
     Probleme.ChoixDeLAlgorithme = SPX_DUAL;
 
