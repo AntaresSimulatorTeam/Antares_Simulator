@@ -60,7 +60,6 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
 }
 
 static void shortTermStorageBalance(
-  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
   const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
   const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
   int& nombreDeTermes,
@@ -252,8 +251,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 nombreDeTermes++;
             }
 
-            shortTermStorageBalance(ProblemeAResoudre,
-                                    problemeHebdo->ShortTermStorage[pays],
+            shortTermStorageBalance(problemeHebdo->ShortTermStorage[pays],
                                     *CorrespondanceVarNativesVarOptim,
                                     nombreDeTermes,
                                     Pi,
