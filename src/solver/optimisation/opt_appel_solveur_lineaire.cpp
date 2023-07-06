@@ -159,7 +159,7 @@ RESOLUTION:
                                                       ProblemeAResoudre->NombreDeContraintes);
                 ORTOOLS_CorrigerLesBornes(solver,
                                           ProblemeAResoudre->Xmin.data(),
-                                          ProblemeAResoudre->Xmax,
+                                          ProblemeAResoudre->Xmax.data(),
                                           ProblemeAResoudre->TypeDeVariable.data(),
                                           ProblemeAResoudre->NombreDeVariables);
             }
@@ -183,7 +183,7 @@ RESOLUTION:
     Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire.data();
     Probleme.X = ProblemeAResoudre->X;
     Probleme.Xmin = ProblemeAResoudre->Xmin.data();
-    Probleme.Xmax = ProblemeAResoudre->Xmax;
+    Probleme.Xmax = ProblemeAResoudre->Xmax.data();
     Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
     Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable.data();
 

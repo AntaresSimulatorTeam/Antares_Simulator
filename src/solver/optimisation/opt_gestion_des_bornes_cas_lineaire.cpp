@@ -99,7 +99,7 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
 {
     // OUTPUT
     std::vector<double>& Xmin = problemeHebdo->ProblemeAResoudre->Xmin;
-    double* Xmax = problemeHebdo->ProblemeAResoudre->Xmax;
+    std::vector<double>& Xmax = problemeHebdo->ProblemeAResoudre->Xmax;
     double** AdresseOuPlacerLaValeurDesVariablesOptimisees
       = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
@@ -163,7 +163,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                                          const int DernierPdtDeLIntervalle)
 {
     std::vector<double>& Xmin = problemeHebdo->ProblemeAResoudre->Xmin;
-    double* Xmax = problemeHebdo->ProblemeAResoudre->Xmax;
+    std::vector<double>& Xmax = problemeHebdo->ProblemeAResoudre->Xmax;
     double** AddressForVars
       = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
     int weekFirstHour = problemeHebdo->weekInTheYear * 168;
@@ -230,7 +230,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
     double** AdresseOuPlacerLaValeurDesCoutsReduits
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits;
     std::vector<double>& Xmin = ProblemeAResoudre->Xmin;
-    double* Xmax = ProblemeAResoudre->Xmax;
+    std::vector<double>& Xmax = ProblemeAResoudre->Xmax;
     std::vector<int>& TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
 
     for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)

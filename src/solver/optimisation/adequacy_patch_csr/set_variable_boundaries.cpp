@@ -111,7 +111,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
       = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
     std::vector<double>& Xmin = problemeAResoudre_.Xmin;
-    double* Xmax = problemeAResoudre_.Xmax;
+    std::vector<double>& Xmax = problemeAResoudre_.Xmax;
     VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo_->ValeursDeNTC[triggeredHour];
 
     // variables bounds: transmissin flows (flow, direct_direct and flow_indirect). For links

@@ -70,7 +70,7 @@ typedef struct
                               VARIABLE_NON_BORNEE
                                             */
     std::vector<double> Xmin;
-    double* Xmax;
+    std::vector<double> Xmax;
     double* SecondMembre;
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a X, il permet
        de renseigner directement les structures de description du reseau avec les
