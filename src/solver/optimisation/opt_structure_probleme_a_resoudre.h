@@ -69,7 +69,7 @@ typedef struct
                               VARIABLE_BORNEE_SUPERIEUREMENT ,
                               VARIABLE_NON_BORNEE
                                             */
-    double* Xmin;
+    std::vector<double> Xmin;
     double* Xmax;
     double* SecondMembre;
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a X, il permet

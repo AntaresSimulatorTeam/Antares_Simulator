@@ -110,7 +110,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
 {
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
       = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
-    double* Xmin = problemeAResoudre_.Xmin;
+    std::vector<double>& Xmin = problemeAResoudre_.Xmin;
     double* Xmax = problemeAResoudre_.Xmax;
     VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo_->ValeursDeNTC[triggeredHour];
 
