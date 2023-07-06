@@ -1,5 +1,6 @@
 # Useful variables definitions
 set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
+set(src_libs_antares_checks "${CMAKE_SOURCE_DIR}/libs/antares/checks")
 
 # ====================================
 # Tests on thermal price definition
@@ -14,6 +15,7 @@ target_include_directories(thermal-price-definition
 									"${src_libs_antares_study}/parts/thermal"
 									"${src_libs_antares_study}/area"
 									"${src_libs_antares_study}"
+									"${src_libs_antares_checks}"
 )
 
 target_link_libraries(thermal-price-definition
