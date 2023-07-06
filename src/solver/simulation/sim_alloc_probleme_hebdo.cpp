@@ -347,6 +347,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
          .assign(nbPaliers, 0);
         problem.PaliersThermiquesDuPays[k].DureeMinimaleDArretDUnGroupeDuPalierThermique
          .assign(nbPaliers, 0);
+        problem.PaliersThermiquesDuPays[k].NomsDesPaliersThermiques.assign(nbPaliers, "");
 
         problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimise
           .assign(7, 0.);

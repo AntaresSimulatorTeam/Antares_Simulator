@@ -94,7 +94,6 @@ private:
     clock::time_point start_;
     clock::time_point end_;
 };
-
 bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
                          int NumIntervalle,
                          const int optimizationNumber,
@@ -107,7 +106,8 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
                                                    ProblemeAResoudre->StatutDesContraintes);
     bool PremierPassage = true;
 
-    auto ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
+    auto ProbSpx
+      = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
     auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
 
     auto study = Data::Study::Current::Get();
