@@ -286,5 +286,11 @@ BOOST_AUTO_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMa
         .marketBidCostPerHourTs[2637], 24.12, 0.001);
 }
 
+BOOST_AUTO_TEST_CASE(computeMarketBidCost)
+{
+    createIniFile();
+    clusterList.loadFromFolder(*study, folder, area);
+    BOOST_CHECK_CLOSE(clusterList.mapping["area"]->computeMarketBidCost(1, 2, 1), 24.12, 0.001);
+}
 
 BOOST_AUTO_TEST_SUITE_END()
