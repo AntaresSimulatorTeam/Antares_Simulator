@@ -30,7 +30,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/core/math.h>
-#include <logs.h>
+#include <antares/logs.h>
 #include <utility>
 #include <cstdlib>
 #include "../io/statistics.h"

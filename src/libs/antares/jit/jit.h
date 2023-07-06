@@ -27,8 +27,8 @@
 #ifndef __ANTARES_LIBS_JIT_JIT_H__
 #define __ANTARES_LIBS_JIT_JIT_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
+#include <yuni/core/fwd.h>
+#include <yuni/core/string/string.h>
 
 namespace Antares
 {

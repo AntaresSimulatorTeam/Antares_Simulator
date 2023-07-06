@@ -17,19 +17,8 @@ set(SRC_OBJECT
 )
 source_group("object" FILES ${SRC_OBJECT})
 
-
-set(SRC_MATRIX
-	array/array1d.h
-	array/array1d.cpp
-	array/matrix.h
-	array/matrix.cpp
-	array/matrix.hxx
-	array/correlation.h
-	array/correlation.hxx
-	array/correlation.cpp)
-source_group("array" FILES ${SRC_MATRIX})
-
-
+add_subdirectory(array)
+add_subdirectory(correlation)
 
 set(SRC_STUDY_SCENARIO_BUILDER
 	study/scenario-builder/scBuilderDataInterface.h
@@ -589,6 +578,8 @@ target_link_libraries(libantares-core
         result_writer
 		inifile
 		io
+		array
+		correlation
 	)
 
 import_std_libs(libantares-core)
