@@ -34,7 +34,7 @@ public:
     {
     }
 
-    void UpdateTimeStep(int timeStep)
+    void UpdateTimeStep(unsigned int timeStep)
     {
         timeStep_ = timeStep;
     }
@@ -136,7 +136,7 @@ private:
                                  const std::string& type);
 };
 
-inline std::string TimeIdentifier(int timeStep, const std::string& timeStepType)
+inline std::string TimeIdentifier(unsigned int timeStep, const std::string& timeStepType)
 {
     return timeStepType + "<" + std::to_string(timeStep) + ">";
 }
