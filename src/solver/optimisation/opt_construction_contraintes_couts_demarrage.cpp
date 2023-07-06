@@ -61,7 +61,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo->NamedProblems);
     int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    for (unsigned int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
@@ -75,7 +75,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (unsigned int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 constraintNamer.UpdateTimeStep(timeStepInYear);
