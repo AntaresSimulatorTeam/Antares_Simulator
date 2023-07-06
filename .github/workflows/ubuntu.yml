@@ -166,6 +166,14 @@ jobs:
         batch-name: valid-mps
         os: ${{ matrix.test-platform }}
 
+    - name: Run named mps tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-named-mps
+        os: ${{ matrix.test-platform }}
+
     - name: Run tests for adequacy patch (CSR)
       if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests

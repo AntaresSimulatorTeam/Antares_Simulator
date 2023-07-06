@@ -183,6 +183,13 @@ jobs:
         batch-name: valid-mps
         os: ${{ matrix.test-platform }}
 
+    - name: Run named mps tests
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-named-mps
+        os: ${{ matrix.test-platform }}
+
     - name: Solver archive creation
       shell: bash
       run: |
