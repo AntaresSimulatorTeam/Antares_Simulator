@@ -64,8 +64,10 @@ static int operatorTypeToInt(BindingConstraint::Operator op)
         return 0;
     case BindingConstraint::opGreater:
         return 1;
-    case BindingConstraint::opBoth:
+    case BindingConstraint::opEquality:
         return 2;
+    case BindingConstraint::opBoth:
+        return 3;
     default:
         return -1;
     }
