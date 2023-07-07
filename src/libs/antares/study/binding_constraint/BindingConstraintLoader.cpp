@@ -150,6 +150,7 @@ BindingConstraintLoader::load(EnvForLoading env) {
     switch(bc->operatorType())
     {
     case BindingConstraint::opLess:
+    case BindingConstraint::opEquality:
     case BindingConstraint::opGreater:{
         if (loadTimeSeries(env, bc.get()))
             return {bc};
@@ -170,7 +171,7 @@ BindingConstraintLoader::load(EnvForLoading env) {
         break;
     }
     default:{
-        logs.error() << "Wrong binding constraint operator type";
+        logs.error() << "Wrong binding constraint operator type for constraint " << bc->name();
         return {};
     }
     }
