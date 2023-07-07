@@ -26,10 +26,22 @@ void Namer::SetLinkElementName(unsigned int variable, const std::string& variabl
       variable);
 }
 
-void Namer::SetAreaElementName(unsigned int variable, const std::string& variableType)
+void Namer::SetAreaElementNameHour(unsigned int variable, const std::string& variableType)
+{
+    SetAreaElementName(variable, variableType, HOUR);
+}
+void Namer::SetAreaElementNameWeek(unsigned int variable, const std::string& variableType)
+{
+    SetAreaElementName(variable, variableType, WEEK);
+}
+
+void Namer::SetAreaElementName(unsigned int variable,
+                               const std::string& variableType,
+                               const std::string& timeStepType)
 {
     targetUpdater_.UpdateTargetAtIndex(
-      BuildName(variableType, LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, HOUR)),
+      BuildName(
+        variableType, LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, timeStepType)),
       variable);
 }
 
@@ -140,32 +152,32 @@ void VariableNamer::ShortTermStorageLevel(unsigned int variable,
 
 void VariableNamer::HydProd(unsigned int variable)
 {
-    SetAreaElementName(variable, "HydProd");
+    SetAreaElementNameHour(variable, "HydProd");
 }
 
 void VariableNamer::HydProdDown(unsigned int variable)
 {
-    SetAreaElementName(variable, "HydProdDown");
+    SetAreaElementNameHour(variable, "HydProdDown");
 }
 
 void VariableNamer::HydProdUp(unsigned int variable)
 {
-    SetAreaElementName(variable, "HydProdUp");
+    SetAreaElementNameHour(variable, "HydProdUp");
 }
 
 void VariableNamer::Pumping(unsigned int variable)
 {
-    SetAreaElementName(variable, "Pumping");
+    SetAreaElementNameHour(variable, "Pumping");
 }
 
 void VariableNamer::HydroLevel(unsigned int variable)
 {
-    SetAreaElementName(variable, "HydroLevel");
+    SetAreaElementNameHour(variable, "HydroLevel");
 }
 
 void VariableNamer::Overflow(unsigned int variable)
 {
-    SetAreaElementName(variable, "Overflow");
+    SetAreaElementNameHour(variable, "Overflow");
 }
 
 void VariableNamer::LayerStorage(unsigned int variable, int layerIndex)
@@ -175,22 +187,22 @@ void VariableNamer::LayerStorage(unsigned int variable, int layerIndex)
 
 void VariableNamer::FinalStorage(unsigned int variable)
 {
-    SetAreaElementName(variable, "FinalStorage");
+    SetAreaElementNameHour(variable, "FinalStorage");
 }
 
 void VariableNamer::PositiveUnsuppliedEnergy(unsigned int variable)
 {
-    SetAreaElementName(variable, "PositiveUnsuppliedEnergy");
+    SetAreaElementNameHour(variable, "PositiveUnsuppliedEnergy");
 }
 
 void VariableNamer::NegativeUnsuppliedEnergy(unsigned int variable)
 {
-    SetAreaElementName(variable, "NegativeUnsuppliedEnergy");
+    SetAreaElementNameHour(variable, "NegativeUnsuppliedEnergy");
 }
 
 void VariableNamer::AreaBalance(unsigned int variable)
 {
-    SetAreaElementName(variable, "AreaBalance");
+    SetAreaElementNameHour(variable, "AreaBalance");
 }
 
 void ConstraintNamer::FlowDissociation(unsigned int constraint,
@@ -204,62 +216,62 @@ void ConstraintNamer::FlowDissociation(unsigned int constraint,
 
 void ConstraintNamer::AreaBalance(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "AreaBalance");
+    SetAreaElementNameHour(constraint, "AreaBalance");
 }
 
 void ConstraintNamer::FictiveLoads(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "FictiveLoads");
+    SetAreaElementNameHour(constraint, "FictiveLoads");
 }
 
 void ConstraintNamer::HydroPower(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "HydroPower");
+    SetAreaElementNameHour(constraint, "HydroPower");
 }
 
 void ConstraintNamer::HydroPowerSmoothingUsingVariationSum(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "HydroPowerSmoothingUsingVariationSum");
+    SetAreaElementNameHour(constraint, "HydroPowerSmoothingUsingVariationSum");
 }
 
 void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxDown(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "HydroPowerSmoothingUsingVariationMaxDown");
+    SetAreaElementNameHour(constraint, "HydroPowerSmoothingUsingVariationMaxDown");
 }
 
 void ConstraintNamer::HydroPowerSmoothingUsingVariationMaxUp(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "HydroPowerSmoothingUsingVariationMaxUp");
+    SetAreaElementNameHour(constraint, "HydroPowerSmoothingUsingVariationMaxUp");
 }
 
 void ConstraintNamer::MinHydroPower(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "MinHydroPower");
+    SetAreaElementNameWeek(constraint, "MinHydroPower");
 }
 
 void ConstraintNamer::MaxHydroPower(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "MaxHydroPower");
+    SetAreaElementNameWeek(constraint, "MaxHydroPower");
 }
 
 void ConstraintNamer::MaxPumping(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "MaxPumping");
+    SetAreaElementNameWeek(constraint, "MaxPumping");
 }
 
 void ConstraintNamer::AreaHydroLevel(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "AreaHydroLevel");
+    SetAreaElementNameHour(constraint, "AreaHydroLevel");
 }
 
 void ConstraintNamer::FinalStockEquivalent(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "FinalStockEquivalent");
+    SetAreaElementNameHour(constraint, "FinalStockEquivalent");
 }
 
 void ConstraintNamer::FinalStockExpression(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "FinalStockExpression");
+    SetAreaElementNameHour(constraint, "FinalStockExpression");
 }
 
 void ConstraintNamer::nameWithTimeGranularity(unsigned int constraint,
@@ -273,32 +285,32 @@ void ConstraintNamer::nameWithTimeGranularity(unsigned int constraint,
 
 void ConstraintNamer::NbUnitsOutageLessThanNbUnitsStop(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "NbUnitsOutageLessThanNbUnitsStop");
+    SetAreaElementNameHour(constraint, "NbUnitsOutageLessThanNbUnitsStop");
 }
 
 void ConstraintNamer::NbDispUnitsMinBoundSinceMinUpTime(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "NbDispUnitsMinBoundSinceMinUpTime");
+    SetAreaElementNameHour(constraint, "NbDispUnitsMinBoundSinceMinUpTime");
 }
 
 void ConstraintNamer::MinDownTime(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "MinDownTime");
+    SetAreaElementNameHour(constraint, "MinDownTime");
 }
 
 void ConstraintNamer::PMaxDispatchableGeneration(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "PMaxDispatchableGeneration");
+    SetAreaElementNameHour(constraint, "PMaxDispatchableGeneration");
 }
 
 void ConstraintNamer::PMinDispatchableGeneration(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "PMinDispatchableGeneration");
+    SetAreaElementNameHour(constraint, "PMinDispatchableGeneration");
 }
 
 void ConstraintNamer::ConsistenceNODU(unsigned int constraint)
 {
-    SetAreaElementName(constraint, "ConsistenceNODU");
+    SetAreaElementNameHour(constraint, "ConsistenceNODU");
 }
 
 void ConstraintNamer::ShortTermStorageLevel(unsigned int constraint, const std::string& name)

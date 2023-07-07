@@ -44,7 +44,11 @@ public:
         area_ = area;
     }
     void SetLinkElementName(unsigned int variable, const std::string& variableType);
-    void SetAreaElementName(unsigned int variable, const std::string& variableType);
+    void SetAreaElementNameHour(unsigned int variable, const std::string& variableType);
+    void SetAreaElementNameWeek(unsigned int variable, const std::string& variableType);
+    void SetAreaElementName(unsigned int variable,
+                            const std::string& variableType,
+                            const std::string& timeStepType);
 
     unsigned int timeStep_ = 0;
     std::string origin_;
