@@ -32,6 +32,7 @@ include("cmake/resources.cmake")
 set(SRCS
 		# Config
 		config.h
+		${CMAKE_SOURCE_DIR}/libs/antares/constants.cpp #Missing symbol for logs library. Kinda hacky but works
 
 		# Validator
 		toolbox/validator.h

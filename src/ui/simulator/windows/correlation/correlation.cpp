@@ -33,7 +33,6 @@
 #include "../../toolbox/components/refresh.h"
 #include <antares/date.h>
 #include "../../toolbox/resources.h"
-#include <antares/array/correlation.h>
 
 #include <wx/tglbtn.h>
 #include <wx/stattext.h>
