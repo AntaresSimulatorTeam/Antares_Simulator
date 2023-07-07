@@ -65,7 +65,7 @@ std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnySt
     auto bc = std::make_shared<BindingConstraint>();
     bc->name(name);
     pList.push_back(bc);
-    std::stable_sort(pList.begin(), pList.end(), compareConstraints);
+    std::sort(pList.begin(), pList.end(), compareConstraints);
     return bc;
 }
 
@@ -172,7 +172,7 @@ bool BindingConstraintsRepository::loadFromFolder(Study &study,
         logs.info() << "No binding constraint found";
     else
     {
-        std::stable_sort(pList.begin(), pList.end(), compareConstraints);
+        std::sort(pList.begin(), pList.end(), compareConstraints);
 
         if (pList.size() == 1)
             logs.info() << "1 binding constraint found";
