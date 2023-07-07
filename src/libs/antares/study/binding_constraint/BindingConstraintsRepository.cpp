@@ -56,7 +56,7 @@ void BindingConstraintsRepository::removeConstraintsWhoseNameConstains(const Any
     pList.erase(std::remove_if(pList.begin(), pList.end(), pred), pList.end());
 }
 
-static int operatorTypeToInt(BindingConstraint::Operator op)
+static int valueForSort(BindingConstraint::Operator op)
 {
     switch (op)
     {
@@ -82,7 +82,7 @@ bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1,
     }
     else
     {
-        return operatorTypeToInt(s1->operatorType()) < operatorTypeToInt(s2->operatorType());
+        return valueForSort(s1->operatorType()) < valueForSort(s2->operatorType());
     }
 }
 
