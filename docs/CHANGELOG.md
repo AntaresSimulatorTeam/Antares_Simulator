@@ -4,9 +4,9 @@ Antares Changelog
 8.7.0-beta1 (07/2023)
 --------------------
 ## New features
-* Thermal price definition (#1272)
 * Binding constraint RHS scenarization (#1219)
 * Name constraints & variables in MPS files (#1294)
+* Thermal price definition (contributed by RTE-i, #1272)
 
 TODO: bugfix, code cleaning, etc.
 
