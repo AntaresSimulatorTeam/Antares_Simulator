@@ -226,7 +226,7 @@ void ConstraintNamer::FictiveLoads(unsigned int constraint)
 
 void ConstraintNamer::HydroPower(unsigned int constraint)
 {
-    SetAreaElementNameHour(constraint, "HydroPower");
+    SetAreaElementNameWeek(constraint, "HydroPower");
 }
 
 void ConstraintNamer::HydroPowerSmoothingUsingVariationSum(unsigned int constraint)
