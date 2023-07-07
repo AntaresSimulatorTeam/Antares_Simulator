@@ -311,25 +311,8 @@ set(SRC_STUDY_BINDING_CONSTRAINT
 
 source_group("study\\constraint" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
 
-set(SRC_LOGS
-	logs.h
-	logs/logs.h
-	logs/logs.hxx
-	logs/logs.cpp
-	logs/cleaner.h
-	logs/cleaner.cpp
-	)
-source_group("misc\\logs" FILES ${SRC_LOGS})
-
-set(SRC_JIT
-	# JIT (Just in Time)
-	jit.h
-	jit/jit.h
-	jit/jit.hxx
-	jit/jit.cpp
-	)
-source_group("misc\\jit" FILES ${SRC_JIT})
-
+add_subdirectory(logs)
+add_subdirectory(jit)
 add_subdirectory(inifile)
 
 set(SRC_XCAST
