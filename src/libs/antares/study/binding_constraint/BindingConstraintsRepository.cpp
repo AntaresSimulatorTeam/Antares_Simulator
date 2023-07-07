@@ -56,21 +56,30 @@ void BindingConstraintsRepository::removeConstraintsWhoseNameConstains(const Any
     pList.erase(std::remove_if(pList.begin(), pList.end(), pred), pList.end());
 }
 
-static int operatorTypeToInt(BindingConstraint::Operator op) {
-  switch (op)
-  {
-  case BindingConstraint::opLess: return 0;
-  case BindingConstraint::opGreater: return 1;
-  case BindingConstraint::opBoth: return 2;
-  default: return -1;
-  }
+static int operatorTypeToInt(BindingConstraint::Operator op)
+{
+    switch (op)
+    {
+    case BindingConstraint::opLess:
+        return 0;
+    case BindingConstraint::opGreater:
+        return 1;
+    case BindingConstraint::opBoth:
+        return 2;
+    default:
+        return -1;
+    }
 }
 
-bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1, const std::shared_ptr<BindingConstraint>& s2) {
+bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1,
+                        const std::shared_ptr<BindingConstraint>& s2)
+{
     if (s1->name() != s2->name())
     {
         return s1->name() < s2->name();
-    } else {
+    }
+    else
+    {
         return operatorTypeToInt(s1->operatorType()) < operatorTypeToInt(s2->operatorType());
     }
 }
