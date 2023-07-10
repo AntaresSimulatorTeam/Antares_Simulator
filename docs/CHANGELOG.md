@@ -1,8 +1,14 @@
 Antares Changelog
 =================
 
+8.7.0-beta3 (07/2023)
+--------------------
+## Bugfixes
+* Fix MPS differences related to int/unsigned surprises (#1417)
+
 8.7.0-beta2 (07/2023)
 --------------------
+## Bugfixes
 * Fix order for binding constraints of type "both" (#1413)
 
 8.7.0-beta1 (07/2023)
