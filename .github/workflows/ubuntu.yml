@@ -175,6 +175,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run medium-tests
+      if: ${{ env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -182,6 +183,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-1
+      if: ${{ env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -189,6 +191,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-2
+      if: ${{ env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -196,6 +199,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-3
+      if: ${{ env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
