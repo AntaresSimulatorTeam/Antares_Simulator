@@ -14,22 +14,22 @@
 #include "cluster_list.h"
 #include "container.h"
 
-#define SEP Yuni::IO::Separator
-
-using namespace std;
+const auto SEP = Yuni::IO::Separator;
 using namespace Antares::Data;
 
-std::filesystem::path getFolder()
+static std::filesystem::path getFolder()
 {
     return std::filesystem::temp_directory_path();
 }
 
-void createIniFile()
+// Use RAII to simplify teardown
+struct ThermalIniFile
 {
-    std::filesystem::path folder = getFolder();
+  explicit ThermalIniFile()
+  {
+    auto folder = getFolder();
 
-    std::ofstream outfile;
-    outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
+    std::ofstream outfile(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
 
     outfile << "[area]" << std::endl;
     outfile << "name = area" << std::endl;
@@ -48,47 +48,47 @@ void createIniFile()
     outfile << "efficiency = 36.00000" << std::endl;
     outfile << "variableomcost = 12.120000" << std::endl;
 
-    outfile.close();
-}
+    outfile.flush();
+  }
 
-void createFuelCostFile(int size)
-{
-    std::filesystem::path folder = getFolder();
-
-    std::ofstream outfile;
-    outfile.open(folder / "fuelCost.txt", std::ofstream::out | std::ofstream::trunc);
-
-    for (int i = 0; i < size; i++)
-    {
-        outfile << 1 << std::endl;
-    }
-}
-
-void createCo2CostFile(int size)
-{
-    std::filesystem::path folder = getFolder();
-
-    std::ofstream outfile;
-    outfile.open(folder / "CO2Cost.txt", std::ofstream::out | std::ofstream::trunc);
-
-    for (int i = 0; i < size; i++)
-    {
-        outfile << 1 << std::endl;
-    }
-}
-
-void removeIniFile()
-{
-    std::filesystem::path folder = getFolder();
+  ~ThermalIniFile() noexcept
+  {
+    auto folder = getFolder();
     std::filesystem::remove(folder / "list.ini");
-}
+  }
+};
 
-void removeCostFiles()
+struct SeriesFile
 {
-    std::filesystem::path folder = getFolder();
-    std::filesystem::remove(folder / "fuelCost.txt");
-    std::filesystem::remove(folder / "CO2Cost.txt");
-}
+  SeriesFile(const std::string& name, std::size_t size) : name_(name)
+  {
+    auto folder = getFolder();
+    std::ofstream outfile(folder / name, std::ofstream::out | std::ofstream::trunc);
+
+    for (std::size_t i = 0; i < size; i++)
+    {
+        outfile << 1 << std::endl;
+    }
+  }
+
+  ~SeriesFile()
+  {
+    auto folder = getFolder();
+    std::filesystem::remove(folder / name_);
+  }
+private:
+  const std::string name_;
+};
+
+struct CO2CostFile : private SeriesFile
+{
+  CO2CostFile(std::size_t size) : SeriesFile("CO2Cost.txt", size) {}
+};
+
+struct FuelCostFile : private SeriesFile
+{
+  FuelCostFile(std::size_t size) : SeriesFile("fuelCost.txt", size) {}
+};
 
 void fillThermalEconomicTimeSeries(ThermalCluster *c)
 {
@@ -101,7 +101,7 @@ void fillThermalEconomicTimeSeries(ThermalCluster *c)
 // =================
 // The fixture
 // =================
-struct Fixture
+struct Fixture : private ThermalIniFile
 {
     Fixture(const Fixture & f) = delete;
     Fixture(const Fixture && f) = delete;
@@ -113,12 +113,6 @@ struct Fixture
         study->parameters.include.thermal.minUPTime = true;
         study->parameters.include.thermal.minStablePower = true;
         study->parameters.include.reserve.spinning = true;
-
-    }
-    ~Fixture()
-    {
-        removeIniFile();
-        removeCostFiles();
     }
 
     std::string folder = getFolder().string();
@@ -126,7 +120,6 @@ struct Fixture
     Area* area;
 
     Study::Ptr study = std::make_shared<Study>();
-
 };
 
 
@@ -138,8 +131,6 @@ BOOST_FIXTURE_TEST_SUITE(s, Fixture)
 
 BOOST_AUTO_TEST_CASE(ThermalClusterList_loadFromFolder_basic)
 {
-    createIniFile();
-
     clusterList.loadFromFolder(*study, folder, area);
     BOOST_CHECK(clusterList.mapping["area"]->startupCost == 70000.0);
     BOOST_CHECK(clusterList.mapping["area"]->costgeneration == useCostTimeseries);
@@ -150,8 +141,7 @@ BOOST_AUTO_TEST_CASE(ThermalClusterList_loadFromFolder_basic)
 
 BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_basic)
 {
-    createIniFile();
-    createFuelCostFile(8760);
+    FuelCostFile f(8760);
 
     clusterList.loadFromFolder(*study, folder, area);
 
@@ -163,8 +153,7 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_basic)
 
 BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_value)
 {
-    createIniFile();
-    createFuelCostFile(80);
+    FuelCostFile f(80);
 
     clusterList.loadFromFolder(*study, folder, area);
 
@@ -174,8 +163,7 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_value)
 
 BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_working_with_too_much_value)
 {
-    createIniFile();
-    createFuelCostFile(10000);
+    CO2CostFile f(10000);
 
     clusterList.loadFromFolder(*study, folder, area);
 
@@ -185,15 +173,14 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_working_with_too_much_valu
 
 BOOST_AUTO_TEST_CASE(checkFuelAndCo2_basic_working)
 {
-    createIniFile();
     area->thermal.list.loadFromFolder(*study, folder, area);
     area->thermal.list.mapping["area"]->series = new DataSeriesCommon;
     area->thermal.list.mapping["area"]->series->timeSeries.reset(1, 8760);
 
     area->thermal.prepareAreaWideIndexes();
 
-    createFuelCostFile(8760);
-    createCo2CostFile(8760);
+    FuelCostFile fuel(8760);
+    CO2CostFile co2(8760);
 
     BOOST_CHECK(area->thermal.list.mapping["area"]->ecoInput.loadFromFolder(*study, folder));
 
@@ -207,15 +194,14 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2_basic_working)
 
 BOOST_AUTO_TEST_CASE(checkFuelAndCo2_failing_different_economic_input_width)
 {
-    createIniFile();
     area->thermal.list.loadFromFolder(*study, folder, area);
     area->thermal.list.mapping["area"]->series = new DataSeriesCommon;
     area->thermal.list.mapping["area"]->series->timeSeries.reset(1, 8760);
 
     area->thermal.prepareAreaWideIndexes();
 
-    createFuelCostFile(8760);
-    createCo2CostFile(8760);
+    FuelCostFile fuel(8760);
+    CO2CostFile co2(8760);
 
     BOOST_CHECK(area->thermal.list.mapping["area"]->ecoInput.loadFromFolder(*study, folder));
     area->thermal.list.mapping["area"]->ecoInput.fuelcost.width = 3;
@@ -233,15 +219,14 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2_failing_different_economic_input_width)
 
 BOOST_AUTO_TEST_CASE(checkFuelAndCo2_working_same_economic_input_and_time_series_width)
 {
-    createIniFile();
     area->thermal.list.loadFromFolder(*study, folder, area);
     area->thermal.list.mapping["area"]->series = new DataSeriesCommon;
     area->thermal.list.mapping["area"]->series->timeSeries.reset(3, 8760);
 
     area->thermal.prepareAreaWideIndexes();
 
-    createFuelCostFile(8760);
-    createCo2CostFile(8760);
+    FuelCostFile fuel(8760);
+    CO2CostFile co2(8760);
 
     BOOST_CHECK(area->thermal.list.mapping["area"]->ecoInput.loadFromFolder(*study, folder));
     area->thermal.list.mapping["area"]->ecoInput.fuelcost.width = 3;
@@ -258,7 +243,6 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2_working_same_economic_input_and_time_series
 
 BOOST_AUTO_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMarginalCostPerHour)
 {
-    createIniFile();
     clusterList.loadFromFolder(*study, folder, area);
     clusterList.mapping["area"]->costGenManualCalculationOfMarketBidAndMarginalCostPerHour();
     BOOST_CHECK_EQUAL(clusterList.mapping["area"]->thermalEconomicTimeSeries[0]
@@ -269,9 +253,8 @@ BOOST_AUTO_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMargin
 
 BOOST_AUTO_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour)
 {
-    createIniFile();
-    createFuelCostFile(8760);
-    createCo2CostFile(8760);
+    FuelCostFile fuel(8760);
+    CO2CostFile co2(8760);
 
     clusterList.loadFromFolder(*study, folder, area);
     clusterList.mapping["area"]->modulation.reset(1, 8760);
@@ -288,7 +271,6 @@ BOOST_AUTO_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMa
 
 BOOST_AUTO_TEST_CASE(computeMarketBidCost)
 {
-    createIniFile();
     clusterList.loadFromFolder(*study, folder, area);
     BOOST_CHECK_CLOSE(clusterList.mapping["area"]->computeMarketBidCost(1, 2, 1), 24.12, 0.001);
 }
