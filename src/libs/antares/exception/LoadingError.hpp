@@ -197,10 +197,16 @@ public:
     explicit IncompatibleOutputOptions(const std::string& text);
 };
 
-class IncompatibleFuelOrCo2CostColumns : public LoadingError
+class IncompatibleCO2CostColumns : public LoadingError
 {
 public:
-    IncompatibleFuelOrCo2CostColumns();
+    IncompatibleCO2CostColumns();
+};
+
+class IncompatibleFuelCostColumns : public LoadingError
+{
+public:
+    IncompatibleFuelCostColumns();
 };
 
 } // namespace Error

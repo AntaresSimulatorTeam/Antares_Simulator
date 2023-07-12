@@ -39,6 +39,7 @@ void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange
 
 void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas);
 
-void checkFuelAndCo2ColumnNumber(const Antares::Data::AreaList& areas);
-
+void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas);
+void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas);
+ 
 } // namespace Antares::Check

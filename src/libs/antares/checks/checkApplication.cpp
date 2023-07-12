@@ -140,7 +140,9 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
 
 // Number of columns for Fuel & CO2 cost in thermal clusters must be one, or same as the number of
 // TS
-void checkFuelAndCo2ColumnNumber(const Antares::Data::AreaList& areas)
+static void checkThermalColumnNumber(const Antares::Data::AreaList& areas,
+                                     Matrix<double> Antares::Data::EconomicInputData::*matrix,
+                                     const Antares::Error::LoadingError& exception)
 {
     bool error = false;
     for (uint areaIndex = 0; areaIndex < areas.size(); ++areaIndex)
@@ -151,25 +153,33 @@ void checkFuelAndCo2ColumnNumber(const Antares::Data::AreaList& areas)
             const auto& cluster = *(area.thermal.clusters[clusterIndex]);
             if (cluster.costgeneration == Antares::Data::setManually)
                 continue;
-            uint fuelCostWidth = cluster.ecoInput.fuelcost.width;
-            uint co2CostWidth = cluster.ecoInput.co2cost.width;
+            const uint otherMatrixWidth = (cluster.ecoInput.*matrix).width;
             uint tsWidth = cluster.series->timeSeries.width;
-            if (fuelCostWidth != 1 && fuelCostWidth != tsWidth)
+            if (otherMatrixWidth != 1 && otherMatrixWidth != tsWidth)
             {
                 logs.warning() << "Area: " << area.name << ". Cluster name: " << cluster.name()
-                               << ". Fuel Cost column mismatch";
-                error = true;
-            }
-            if (co2CostWidth != 1 && co2CostWidth != tsWidth)
-            {
-                logs.warning() << "Area: " << area.name << ". Cluster name: " << cluster.name()
-                               << ". CO2 Cost column mismatch";
+                               << ". " << exception.what();
                 error = true;
             }
         }
     }
     if (error)
-        throw Error::IncompatibleFuelOrCo2CostColumns();
+        throw exception;
+
+}
+
+void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas)
+{
+  checkThermalColumnNumber(areas,
+                           &Antares::Data::EconomicInputData::fuelcost,
+                           Antares::Error::IncompatibleFuelCostColumns());
+}
+
+void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas)
+{
+  checkThermalColumnNumber(areas,
+                           &Antares::Data::EconomicInputData::co2cost,
+                           Antares::Error::IncompatibleCO2CostColumns());
 }
 
 } // namespace Antares::Check

@@ -154,7 +154,8 @@ void Application::prepare(int argc, char* argv[])
 
     checkMinStablePower(tsGenThermal, pStudy->areas);
 
-    checkFuelAndCo2ColumnNumber(pStudy->areas);
+    checkFuelCostColumnNumber(pStudy->areas);
+    checkCO2CostColumnNumber(pStudy->areas);
 
     // Start the progress meter
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);

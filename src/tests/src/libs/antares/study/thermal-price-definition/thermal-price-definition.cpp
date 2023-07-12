@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_working_with_too_much_valu
     BOOST_CHECK(eco.loadFromFolder(*study, folder));
 }
 
-BOOST_AUTO_TEST_CASE(checkFuelAndCo2_basic_working)
+BOOST_AUTO_TEST_CASE(checkCo2_basic_working)
 {
     area->thermal.list.loadFromFolder(*study, folder, area);
     area->thermal.list.mapping["area"]->series = new DataSeriesCommon;
@@ -181,7 +181,6 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2_basic_working)
 
     area->thermal.prepareAreaWideIndexes();
 
-    FuelCostFile fuel(8760);
     CO2CostFile co2(8760);
 
     BOOST_CHECK(area->thermal.list.mapping["area"]->ecoInput.loadFromFolder(*study, folder));
@@ -189,12 +188,12 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2_basic_working)
     AreaList l(*study);
     l.add(area);
 
-    BOOST_CHECK_NO_THROW(Antares::Check::checkFuelAndCo2ColumnNumber(l));
+    BOOST_CHECK_NO_THROW(Antares::Check::checkCO2CostColumnNumber(l));
 
     l.areas.erase("area");
 }
 
-BOOST_AUTO_TEST_CASE(checkFuelAndCo2_failing_different_economic_input_width)
+BOOST_AUTO_TEST_CASE(checkCo2_failing_different_economic_input_width)
 {
     area->thermal.list.loadFromFolder(*study, folder, area);
     area->thermal.list.mapping["area"]->series = new DataSeriesCommon;
@@ -202,19 +201,16 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2_failing_different_economic_input_width)
 
     area->thermal.prepareAreaWideIndexes();
 
-    FuelCostFile fuel(8760);
     CO2CostFile co2(8760);
 
     BOOST_CHECK(area->thermal.list.mapping["area"]->ecoInput.loadFromFolder(*study, folder));
-    area->thermal.list.mapping["area"]->ecoInput.fuelcost.width = 3;
     area->thermal.list.mapping["area"]->ecoInput.co2cost.width = 5;
     AreaList l(*study);
     l.add(area);
 
-    BOOST_CHECK_THROW(Antares::Check::checkFuelAndCo2ColumnNumber(l),
-                      Error::IncompatibleFuelOrCo2CostColumns);
+    BOOST_CHECK_THROW(Antares::Check::checkCO2CostColumnNumber(l),
+                      Error::IncompatibleCO2CostColumns);
 
-    area->thermal.list.mapping["area"]->ecoInput.fuelcost.width = 1;
     area->thermal.list.mapping["area"]->ecoInput.co2cost.width = 1;
     l.areas.erase("area");
 }
@@ -236,7 +232,8 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2_working_same_economic_input_and_time_series
     AreaList l(*study);
     l.add(area);
 
-    BOOST_CHECK_NO_THROW(Antares::Check::checkFuelAndCo2ColumnNumber(l));
+    BOOST_CHECK_NO_THROW(Antares::Check::checkFuelCostColumnNumber(l));
+    BOOST_CHECK_NO_THROW(Antares::Check::checkCO2CostColumnNumber(l));
 
     area->thermal.list.mapping["area"]->ecoInput.fuelcost.width = 1;
     area->thermal.list.mapping["area"]->ecoInput.co2cost.width = 1;
