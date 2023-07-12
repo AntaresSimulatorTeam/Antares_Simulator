@@ -37,7 +37,6 @@ namespace Antares
 {
 namespace Window
 {
-class BindingConstraintDataPanel;
 class BindingConstraintWeightsPanel;
 class BindingConstraintOffsetsPanel;
 
@@ -79,15 +78,9 @@ private:
     Component::Notebook::Page* pPageList;
     Component::Notebook::Page* pPageWeights;
     Component::Notebook::Page* pPageOffsets;
-    Component::Notebook::Page* pPageEqual;
-    Component::Notebook::Page* pPageLess;
-    Component::Notebook::Page* pPageGreater;
     Toolbox::InputSelector::BindingConstraint* pAllConstraints;
     Data::BindingConstraint* pSelected;
 
-    BindingConstraintDataPanel* pDataPanelEqual;
-    BindingConstraintDataPanel* pDataPanelLess;
-    BindingConstraintDataPanel* pDataPanelGreater;
     BindingConstraintWeightsPanel* pWeightsPanel;
     BindingConstraintOffsetsPanel* pOffsetsPanel;
 

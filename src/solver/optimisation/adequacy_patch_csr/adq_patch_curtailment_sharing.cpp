@@ -73,13 +73,13 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
         if (problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco]
             == physicalAreaInsideAdqPatch)
         {
-            netPositionInit -= problemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
+            netPositionInit -= problemeHebdo->ValeursDeNTC[hour].ValeurDuFlux[Interco];
         }
         else if (problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco]
                  == physicalAreaOutsideAdqPatch)
         {
             flowsNode1toNodeA
-              -= std::min(0.0, problemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
+              -= std::min(0.0, problemeHebdo->ValeursDeNTC[hour].ValeurDuFlux[Interco]);
         }
         Interco = problemeHebdo->IndexSuivantIntercoOrigine[Interco];
     }
@@ -89,13 +89,13 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
         if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco]
             == physicalAreaInsideAdqPatch)
         {
-            netPositionInit += problemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
+            netPositionInit += problemeHebdo->ValeursDeNTC[hour].ValeurDuFlux[Interco];
         }
         else if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco]
                  == physicalAreaOutsideAdqPatch)
         {
             flowsNode1toNodeA
-              += std::max(0.0, problemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
+              += std::max(0.0, problemeHebdo->ValeursDeNTC[hour].ValeurDuFlux[Interco]);
         }
         Interco = problemeHebdo->IndexSuivantIntercoExtremite[Interco];
     }

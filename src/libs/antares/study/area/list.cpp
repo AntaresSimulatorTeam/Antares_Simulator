@@ -483,7 +483,6 @@ Area* AreaList::add(Area* a)
     }
     return a;
 }
-
 Area* AreaListAddFromName(AreaList& list, const AnyString& name, uint nbParallelYears)
 {
     // Initializing names
@@ -506,7 +505,6 @@ Area* AreaListAddFromNames(AreaList& list,
     // Look up
     if (!AreaListLFind(&list, lname.c_str()))
     {
-        // Creating the area
         Area* area = new Area(name, lname, nbParallelYears);
         // Adding it
         Area* ret = list.add(area);
@@ -557,6 +555,11 @@ bool AreaList::loadListFromFile(const AnyString& filename)
         {
             logs.warning() << "ignoring invalid area name: `" << name << "`, " << filename
                            << ": line " << line;
+            continue;
+        }
+        if (CheckForbiddenCharacterInAreaName(name))
+        {
+            logs.error() << "character '*' is forbidden in area name: `" << name << "`";
             continue;
         }
         // Add the area in the list
@@ -1406,6 +1409,11 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
     if (!oldid || !newName || !newid || areas.empty())
         return false;
 
+    if (CheckForbiddenCharacterInAreaName(newName))
+    {
+        logs.error() << "character '*' is forbidden in area name: `" << newName << "`";
+        return false;
+    }
     // Detaching the area from the list
     Area* area;
     {

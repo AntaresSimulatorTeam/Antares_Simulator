@@ -162,6 +162,13 @@ jobs:
         batch-name: valid-v830
         os: ${{ matrix.test-platform }}
 
+    - name: Run tests introduced in v860
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-v860
+        os: ${{ matrix.test-platform }}
+
     - name: Run short-tests
       uses: ./.github/workflows/run-tests
       with:

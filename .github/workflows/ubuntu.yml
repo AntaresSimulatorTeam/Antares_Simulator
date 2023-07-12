@@ -12,11 +12,14 @@ on:
       - issue-*
       - release/*
       - doc/*
+  schedule:
+    - cron: '21 2 * * *'
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
+  RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || github.event_name == 'release' }}
 
 jobs:
 
@@ -142,6 +145,14 @@ jobs:
         batch-name: valid-v830
         os: ${{ matrix.test-platform }}
 
+    - name: Run tests introduced in v860
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-v860
+        os: ${{ matrix.test-platform }}
+
     - name: Run short-tests
       if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
@@ -167,7 +178,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run medium-tests
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -175,7 +186,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-1
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -183,7 +194,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-2
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -191,7 +202,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-3
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}

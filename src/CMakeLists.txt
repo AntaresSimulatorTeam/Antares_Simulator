@@ -4,6 +4,11 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 set(ANTARES_VERSION_HI	      8)
 set(ANTARES_VERSION_LO	      7)
 set(ANTARES_VERSION_REVISION  0)
+
+# Beta release
+set(ANTARES_BETA 3)
+set(ANTARES_RC 0)
+
 set(ANTARES_VERSION_YEAR      2023)
 
 project(antares
@@ -13,9 +18,6 @@ set(ANTARES_PUBLISHER "RTE France")
 set(ANTARES_WEBSITE "https://antares-simulator.org/")
 set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
-# Beta release
-set(ANTARES_BETA 3)
-set(ANTARES_RC 0)
 
 # OR-Tools tag
 file(READ "../ortools_tag" ORTOOLS_TAG)
@@ -247,7 +249,7 @@ endif()
 set(GFLAGS_USE_TARGET_NAMESPACE TRUE) 
 find_package(gflags)
 
-find_package(ortools QUIET)
+find_package(ortools)
 if(NOT ortools_FOUND OR BUILD_ORTOOLS)
 message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_Declare(ortools

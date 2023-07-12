@@ -12,6 +12,12 @@
 #include "BindingConstraintLoader.h"
 #include "BindingConstraintSaver.h"
 
+void Data::BindingConstraintsRepository::clear()
+{
+    pList.clear();
+    enabledConstraints_.reset();
+}
+
 namespace Antares::Data {
 std::shared_ptr<Data::BindingConstraint> BindingConstraintsRepository::find(const AnyString &id) {
     for (auto const &i: pList) {
@@ -50,11 +56,38 @@ void BindingConstraintsRepository::removeConstraintsWhoseNameConstains(const Any
     pList.erase(std::remove_if(pList.begin(), pList.end(), pred), pList.end());
 }
 
-bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1, const std::shared_ptr<BindingConstraint>& s2) {
-    return s1->name() < s2->name();
+static int valueForSort(BindingConstraint::Operator op)
+{
+    switch (op)
+    {
+    case BindingConstraint::opLess:
+        return 0;
+    case BindingConstraint::opGreater:
+        return 1;
+    case BindingConstraint::opEquality:
+        return 2;
+    case BindingConstraint::opBoth:
+        return 3;
+    default:
+        return -1;
+    }
 }
 
-std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnyString &name) {
+bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1,
+                        const std::shared_ptr<BindingConstraint>& s2)
+{
+    if (s1->name() != s2->name())
+    {
+        return s1->name() < s2->name();
+    }
+    else
+    {
+        return valueForSort(s1->operatorType()) < valueForSort(s2->operatorType());
+    }
+}
+
+std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnyString &name)
+{
     auto bc = std::make_shared<BindingConstraint>();
     bc->name(name);
     pList.push_back(bc);
@@ -63,6 +96,7 @@ std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnySt
 }
 
 void BindingConstraintsRepository::resizeAllTimeseriesNumbers(unsigned int nb_years) {
+    initializeTsNumbers();
     std::for_each(groupToTimeSeriesNumbers.begin(), groupToTimeSeriesNumbers.end(), [&](auto &kvp) {
         groupToTimeSeriesNumbers[kvp.first].timeseriesNumbers.clear();
         groupToTimeSeriesNumbers[kvp.first].timeseriesNumbers.resize(1, nb_years);
@@ -307,6 +341,7 @@ void BindingConstraintsRepository::remove(const Area* area)
     RemovePredicate<Area> predicate(area);
     auto e = std::remove_if(pList.begin(), pList.end(), predicate);
     pList.erase(e, pList.end());
+    enabledConstraints_.reset();
 }
 
 void BindingConstraintsRepository::remove(const AreaLink* lnk)
@@ -314,6 +349,7 @@ void BindingConstraintsRepository::remove(const AreaLink* lnk)
     RemovePredicate<AreaLink> predicate(lnk);
     auto e = std::remove_if(pList.begin(), pList.end(), predicate);
     pList.erase(e, pList.end());
+    enabledConstraints_.reset();
 }
 
 void BindingConstraintsRepository::remove(const BindingConstraint* bc)
@@ -321,6 +357,7 @@ void BindingConstraintsRepository::remove(const BindingConstraint* bc)
     RemovePredicate<BindingConstraint> predicate(bc);
     auto e = std::remove_if(pList.begin(), pList.end(), predicate);
     pList.erase(e, pList.end());
+    enabledConstraints_.reset();
 }
 
 
@@ -351,14 +388,11 @@ void BindingConstraintsRepository::estimateMemoryUsage(StudyMemoryUsage& u) cons
     if (!u.study.parameters.include.constraints)
         return;
 
-    // each constraint...
-    for (const auto & constraint : pList)
-    {
+        // each constraint...
+    for (const auto &constraint: pList) {
         u.requiredMemoryForInput += sizeof(void *) * 2;
         uint count = (constraint->operatorType() == BindingConstraint::opBoth) ? 2 : 1;
-        for (uint constraints_counter = 0; constraints_counter != count; ++constraints_counter)
-        {
-            u.requiredMemoryForInput += sizeof(BindingConstraintRTI);
+        for (uint constraints_counter = 0; constraints_counter != count; ++constraints_counter) {
             u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * constraint->linkCount();
             u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * constraint->clusterCount();
             Matrix<>::EstimateMemoryUsage(u, 1, HOURS_PER_YEAR);
@@ -379,5 +413,42 @@ uint64 BindingConstraintsRepository::timeSeriesNumberMemoryUsage() const {
         m += value.memoryUsage();
     }
     return m;
+}
+
+std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::enabled() const {
+    if (enabledConstraints_) {
+        return enabledConstraints_.value();
+    } else {
+        std::vector<std::shared_ptr<BindingConstraint>> out;
+        std::copy_if(pList.begin(), pList.end(), std::back_inserter(out),
+                     [](const auto &bc) {
+                         return bc->enabled();
+                     });
+        enabledConstraints_ = out;
+        return enabledConstraints_.value();
+    }
+}
+
+static bool isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)
+{
+    return bc.operatorType() == BindingConstraint::opLess || bc.operatorType() == BindingConstraint::opGreater;
+}
+
+std::vector<uint> BindingConstraintsRepository::getIndicesForInequalityBindingConstraints() const
+{
+    auto enabledBCs = enabled();
+    const auto firstBC = enabledBCs.begin();
+    const auto lastBC = enabledBCs.end();
+
+    std::vector<uint> indices;
+    for (auto bc = firstBC; bc < lastBC; bc++)
+    {
+        if (isBindingConstraintTypeInequality(*(*bc)))
+        {
+            auto index = static_cast<uint>(std::distance(firstBC, bc));
+            indices.push_back(index);
+        }
+    }
+    return indices;
 }
 }

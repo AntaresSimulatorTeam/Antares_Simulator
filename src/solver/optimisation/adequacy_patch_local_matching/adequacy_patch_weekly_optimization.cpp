@@ -53,13 +53,11 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[pays]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            memcpy(problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS,
-                   problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDeDefaillancePositive,
-                   problemeHebdo_->NombreDePasDeTemps * sizeof(double));
+            problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS
+                = problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDeDefaillancePositive;
         else
-            memset(problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS,
-                   0,
-                   problemeHebdo_->NombreDePasDeTemps * sizeof(double));
+            std::fill(problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS.begin(),
+                    problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS.end(), 0);
     }
 
     // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the

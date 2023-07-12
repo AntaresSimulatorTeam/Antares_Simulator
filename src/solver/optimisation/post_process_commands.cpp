@@ -36,7 +36,7 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
             {
                 auto& cluster = *(i->second);
                 uint chro = NumeroChroniquesTireesParPays[thread_number_][area.index]
-                              ->ThermiqueParPalier[cluster.areaWideIndex];
+                              .ThermiqueParPalier[cluster.areaWideIndex];
                 auto& matrix = cluster.series->timeSeries;
                 assert(chro < matrix.width);
                 auto& column = matrix.entry[chro];
@@ -45,7 +45,7 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
                 for (uint h = 0; h != nbHoursInWeek; ++h)
                 {
                     double production = hourlyResults.ProductionThermique[h]
-                                          ->ProductionThermiqueDuPalier[cluster.index];
+                                          .ProductionThermiqueDuPalier[cluster.index];
                     dtgmrg[h] += column[h + hourInYear] - production;
                 }
             }
@@ -285,7 +285,7 @@ std::vector<double> CurtailmentSharingPostProcessCmd::calculateENSoverAllAreasFo
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            const double* ENS
+            const std::vector<double>& ENS
               = problemeHebdo_->ResultatsHoraires[area].ValeursHorairesDeDefaillancePositive;
             for (uint h = 0; h < nbHoursInWeek; ++h)
                 sumENS[h] += ENS[h];

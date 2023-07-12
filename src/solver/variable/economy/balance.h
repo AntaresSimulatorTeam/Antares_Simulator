@@ -246,14 +246,14 @@ public:
         pInterco[numSpace] = state.problemeHebdo->IndexDebutIntercoOrigine[state.area->index];
         while (pInterco[numSpace] >= 0)
         {
-            bilanPays[numSpace] += state.ntc->ValeurDuFlux[pInterco[numSpace]];
+            bilanPays[numSpace] += state.ntc.ValeurDuFlux[pInterco[numSpace]];
             pInterco[numSpace]
               = state.problemeHebdo->IndexSuivantIntercoOrigine[pInterco[numSpace]];
         }
         pInterco[numSpace] = state.problemeHebdo->IndexDebutIntercoExtremite[state.area->index];
         while (pInterco[numSpace] >= 0)
         {
-            bilanPays[numSpace] -= state.ntc->ValeurDuFlux[pInterco[numSpace]];
+            bilanPays[numSpace] -= state.ntc.ValeurDuFlux[pInterco[numSpace]];
             pInterco[numSpace]
               = state.problemeHebdo->IndexSuivantIntercoExtremite[pInterco[numSpace]];
         }

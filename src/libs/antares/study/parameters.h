@@ -35,7 +35,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "../date.h"
-#include "../inifile.h"
+#include <antares/inifile/inifile.h>
 #include "fwd.h"
 #include "variable-print-info.h"
 #include "parameters/adq-patch-params.h"
@@ -520,6 +520,9 @@ public:
     //@}
     // Format of results. Currently, only single files or zip archive are supported
     ResultFormat resultFormat = legacyFilesDirectories;
+
+    // Naming constraints and variables in problems
+    bool namedProblems;
 
 private:
     //! Load data from an INI file

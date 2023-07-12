@@ -461,9 +461,6 @@ Application::~Application()
         if (!pStudy->parameters.noOutput)
             pStudy->importLogsToOutputFolder();
 
-        // simulation
-        SIM_DesallocationTableaux();
-
         // release all reference to the current study held by this class
         pStudy->clear();
         pStudy = nullptr;

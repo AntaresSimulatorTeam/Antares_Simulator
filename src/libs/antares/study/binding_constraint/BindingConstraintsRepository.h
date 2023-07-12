@@ -13,8 +13,13 @@ namespace Antares::Data {
 class BindingConstraintsRepository final : public Yuni::NonCopyable<BindingConstraintsRepository>
 {
 public:
-    using iterator = Data::BindingConstraint::Vector::iterator;
-    using const_iterator = Data::BindingConstraint::Vector::const_iterator;
+    //! Vector of binding constraints
+    using Vector = std::vector<std::shared_ptr<BindingConstraint>>;
+    //! Ordered Set of binding constraints
+    using Set = std::set<std::shared_ptr<BindingConstraint>, CompareBindingConstraintName>;
+
+    using iterator = Vector::iterator;
+    using const_iterator = Vector::const_iterator;
 
     //! \name Constructor && Destructor
     //@{
@@ -168,17 +173,24 @@ public:
 
     std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>> groupToTimeSeriesNumbers;
 
+    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> enabled() const;
+
+    [[nodiscard]] std::vector<uint> getIndicesForInequalityBindingConstraints() const;
+
+
 private:
     bool internalSaveToFolder(Data::BindingConstraintSaver::EnvForSaving& env) const;
 
     //! All constraints
-    Data::BindingConstraint::Vector pList;
+    Data::BindingConstraintsRepository::Vector pList;
 
     void initializeTsNumbers();
 
     [[nodiscard]] Yuni::uint64 timeSeriesNumberMemoryUsage() const;
 
     [[nodiscard]] bool checkTimeSeriesWidthConsistency() const;
+
+    mutable std::optional<std::vector<std::shared_ptr<BindingConstraint>>> enabledConstraints_;
 };
 
 struct WhoseNameContains final

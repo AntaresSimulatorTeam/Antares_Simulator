@@ -25,19 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../../sys/mem-wrapper.h"
-#include "antares/study/binding_constraint/BindingConstraint.h"
 #include "runtime.h"
-#include "../parameters.h"
-#include "../../date.h"
-#include <algorithm>
-#include <limits>
 #include <functional>
 #include "../../emergency.h"
-#include "../memory-usage.h"
-#include "../../config.h"
-#include "../filter.h"
-#include "../area/constants.h"
+
 #include "../area/scratchpad.h"
 
 using namespace Yuni;
@@ -130,55 +121,6 @@ static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos
             ++indx;
         }
     });
-}
-
-template<enum BindingConstraint::Column C>
-static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
-{
-    switch (C)
-    {
-    case BindingConstraint::columnInferior:
-        rti.operatorType = '<';
-        break;
-    case BindingConstraint::columnSuperior:
-        rti.operatorType = '>';
-        break;
-    case BindingConstraint::columnEquality:
-        rti.operatorType = '=';
-        break;
-    case BindingConstraint::columnMax:
-        rti.operatorType = '?';
-        break;
-    }
-    logs.debug() << "copying constraint " << rti.operatorType << ' ' << b.name();
-    rti.name = b.name().c_str();
-    rti.filterYearByYear_ = b.yearByYearFilter();
-    rti.filterSynthesis_ = b.synthesisFilter();
-    rti.linkCount = b.linkCount();
-    rti.clusterCount = b.enabledClusterCount();
-    assert(rti.linkCount < 50000000 and "Seems a bit large...");    // arbitrary value
-    assert(rti.clusterCount < 50000000 and "Seems a bit large..."); // arbitrary value
-
-    rti.rhsTimeSeries.resize(b.RHSTimeSeries().width, b.RHSTimeSeries().height);
-    rti.rhsTimeSeries.copyFrom(b.RHSTimeSeries());
-
-    rti.linkWeight.resize(rti.linkCount);
-    rti.linkOffset.resize(rti.linkCount);
-    rti.linkIndex.resize(rti.linkCount);
-
-    rti.clusterWeight.resize(rti.clusterCount);
-    rti.clusterOffset.resize(rti.clusterCount);
-    rti.clusterIndex.resize(rti.clusterCount);
-    rti.clustersAreaIndex.resize(rti.clusterCount);
-
-    b.initLinkArrays(rti.linkWeight,
-                     rti.clusterWeight,
-                     rti.linkOffset,
-                     rti.clusterOffset,
-                     rti.linkIndex,
-                     rti.clusterIndex,
-                     rti.clustersAreaIndex);
-    rti.group = b.group();
 }
 
 void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimits& limits)
@@ -309,76 +251,6 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
 }
 
-void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsRepository& list)
-{
-    // Calculating the total number of binding constraints
-    unsigned bindingConstraintCount = 0;
-
-    list.eachEnabled([&bindingConstraintCount](const BindingConstraint& constraint) {
-        bindingConstraintCount
-          += ((constraint.operatorType() == BindingConstraint::opBoth) ? 2 : 1);
-    });
-
-    switch (bindingConstraintCount)
-    {
-    case 0:
-        logs.info() << "  No binding constraint to consider";
-        return;
-    case 1:
-        logs.info() << "Optimizing 1 binding constraint";
-        break;
-    default:
-        logs.info() << "Optimizing " << bindingConstraintCount << " binding constraints";
-    }
-
-    bindingConstraints.clear();
-    bindingConstraints.resize(bindingConstraintCount);
-
-    unsigned index = 0;
-    list.eachEnabled([this, &index, &bindingConstraintCount](const BindingConstraint& constraint) {
-        assert(index < bindingConstraintCount and "Not enough slots for binding constraints");
-
-        auto& rti = bindingConstraints[index];
-        rti.type = constraint.type();
-        switch (constraint.operatorType())
-        {
-        case BindingConstraint::opEquality:
-        {
-            CopyBCData<BindingConstraint::columnEquality>(rti, constraint);
-            break;
-        }
-        case BindingConstraint::opLess:
-        {
-            CopyBCData<BindingConstraint::columnInferior>(rti, constraint);
-            break;
-        }
-        case BindingConstraint::opGreater:
-        {
-            CopyBCData<BindingConstraint::columnSuperior>(rti, constraint);
-            break;
-        }
-        case BindingConstraint::opBoth:
-        {
-            CopyBCData<BindingConstraint::columnInferior>(rti, constraint);
-            ++index;
-            bindingConstraints[index].type = constraint.type();
-            CopyBCData<BindingConstraint::columnSuperior>(bindingConstraints[index], constraint);
-            break;
-        }
-        case BindingConstraint::opUnknown:
-        {
-            rti.operatorType = '?';
-            rti.linkCount = 0;
-            rti.rhsTimeSeries.clear();
-            break;
-        }
-        case BindingConstraint::opMax:
-            break;
-        }
-        ++index;
-    });
-}
-
 StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  nbYears(0),
  nbHoursPerYear(0),
@@ -467,9 +339,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Area links
     StudyRuntimeInfosInitializeAreaLinks(study, *this);
 
-    // Binding constraints
-    initializeBindingConstraints(study.bindingConstraints);
-
     // Check if some clusters request TS generation
     checkThermalTSGeneration(study);
 
@@ -483,7 +352,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
     logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
     logs.info() << "     short-term storages: " << shortTermStorageCount;
-    logs.info() << "     binding constraints: " << bindingConstraints.size();
+    logs.info() << "     binding constraints: " << study.bindingConstraints.enabled().size();
     logs.info() << "     geographic trimming:" << (gd.geographicTrimming ? "true" : "false");
     logs.info() << "     memory : " << ((study.memoryUsage()) / 1024 / 1024) << "Mo";
     logs.info();
@@ -494,28 +363,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 uint StudyRuntimeInfos::interconnectionsCount() const
 {
     return static_cast<uint>(areaLink.size());
-}
-
-static bool isBindingConstraintTypeInequality(const Data::BindingConstraintRTI& bc)
-{
-    return bc.operatorType == '<' || bc.operatorType == '>';
-}
-
-std::vector<uint> StudyRuntimeInfos::getIndicesForInequalityBindingConstraints() const
-{
-    const auto firstBC = bindingConstraints.begin();
-    const auto lastBC = bindingConstraints.end();
-
-    std::vector<uint> indices;
-    for (auto bc = firstBC; bc < lastBC; bc++)
-    {
-        if (isBindingConstraintTypeInequality(*bc))
-        {
-            auto index = static_cast<uint>(std::distance(firstBC, bc));
-            indices.push_back(index);
-        }
-    }
-    return indices;
 }
 
 void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study) const

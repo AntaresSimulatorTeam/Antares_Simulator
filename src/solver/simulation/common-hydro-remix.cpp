@@ -97,7 +97,7 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
             double bottom = std::numeric_limits<double>::max();
             double top = 0;
 
-            uint loadTS = NumeroChroniquesTireesParPays[numSpace][index]->Consommation;
+            uint loadTS = NumeroChroniquesTireesParPays[numSpace][index].Consommation;
             auto& load = area.load.series->timeSeries;
             assert(load.width > 0);
 
@@ -126,7 +126,7 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
             }
 
             const auto& P
-              = problem.CaracteristiquesHydrauliques[index]->ContrainteDePmaxHydrauliqueHoraire;
+              = problem.CaracteristiquesHydrauliques[index].ContrainteDePmaxHydrauliqueHoraire;
 
             double ecart = 1.;
             uint loop = 100;
