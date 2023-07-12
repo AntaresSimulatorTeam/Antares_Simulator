@@ -183,14 +183,12 @@ set(SRC_AREAS
 	study/area/store-timeseries-numbers.h
 	study/area/store-timeseries-numbers.hxx
 	study/area/list.cpp
-	study/area/list.hxx
 	)
 source_group("study\\area" FILES ${SRC_AREAS})
 
 
 set(SRC_STUDY_AREA_UI
 	study/area/ui.h
-	study/area/ui.hxx
 	study/area/ui.cpp
 	)
 source_group("study\\area\\ui" FILES ${SRC_STUDY_AREA_UI})

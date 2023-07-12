@@ -31,9 +31,6 @@ void checkStudyVersion(const AnyString& optStudyFolder);
 void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
                                    Antares::Data::HydroPricingMode hpMode);
 
-void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
-                                   Antares::Data::HydroPricingMode hpMode);
-
 void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,
                                          Antares::Data::UnitCommitmentMode ucMode);
 
