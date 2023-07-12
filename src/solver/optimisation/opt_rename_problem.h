@@ -49,6 +49,9 @@ public:
     void SetAreaElementName(unsigned int variable,
                             const std::string& variableType,
                             const std::string& timeStepType);
+    void SetThermalClusterElementName(unsigned int variable,
+                                      const std::string& variableType,
+                                      const std::string& clusterName);
 
     unsigned int timeStep_ = 0;
     std::string origin_;
@@ -91,10 +94,6 @@ public:
     void AreaBalance(unsigned int variable);
 
 private:
-    void SetThermalClusterVariableName(unsigned int variable,
-                                       const std::string& variableType,
-                                       const std::string& clusterName);
-
     void SetAreaVariableName(unsigned int variable,
                              const std::string& variableType,
                              int layerIndex);
