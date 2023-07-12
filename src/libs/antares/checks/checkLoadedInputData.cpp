@@ -165,21 +165,20 @@ static void checkThermalColumnNumber(const Antares::Data::AreaList& areas,
     }
     if (error)
         throw exception;
-
 }
 
 void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas)
 {
-  checkThermalColumnNumber(areas,
-                           &Antares::Data::EconomicInputData::fuelcost,
-                           Antares::Error::IncompatibleFuelCostColumns());
+    checkThermalColumnNumber(areas,
+                             &Antares::Data::EconomicInputData::fuelcost,
+                             Antares::Error::IncompatibleFuelCostColumns());
 }
 
 void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas)
 {
-  checkThermalColumnNumber(areas,
-                           &Antares::Data::EconomicInputData::co2cost,
-                           Antares::Error::IncompatibleCO2CostColumns());
+    checkThermalColumnNumber(areas,
+                             &Antares::Data::EconomicInputData::co2cost,
+                             Antares::Error::IncompatibleCO2CostColumns());
 }
 
 } // namespace Antares::Check

@@ -41,5 +41,5 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
 
 void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas);
 void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas);
- 
+
 } // namespace Antares::Check
