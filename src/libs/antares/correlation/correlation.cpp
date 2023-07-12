@@ -25,7 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
+#include "correlation.h"
+#include "antares/study/study.h"
 #include "antares/study/area/area.h"
 #include "antares/array/matrix.h"
 
