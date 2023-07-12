@@ -3,16 +3,17 @@
 #include <antares/sys/policy.h>
 #include <antares/resources/resources.h>
 #include <antares/hostinfo.h>
-#include <antares/exception/LoadingError.hpp>
 #include <antares/emergency.h>
 #include <antares/benchmarking/timer.h>
+
+#include <antares/exception/InitializationError.hpp>
+#include <antares/exception/LoadingError.hpp>
+#include <antares/checks/checkApplication.h>
 #include <antares/version.h>
-#include "../config.h"
 
 #include "misc/system-memory.h"
 #include "utils/ortools_utils.h"
-
-#include <antares/exception/InitializationError.hpp>
+#include "../config.h"
 
 #include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>
@@ -20,124 +21,16 @@
 
 #include <algorithm>
 
+using namespace Antares::Check;
+
 namespace
 {
-void checkStudyVersion(const AnyString& optStudyFolder)
-{
-    using namespace Antares::Data;
-    auto version = StudyTryToFindTheVersion(optStudyFolder);
-    if (version == versionUnknown)
-    {
-        throw Error::InvalidStudy(optStudyFolder);
-    }
-    else
-    {
-        if ((uint)version > (uint)versionLatest)
-        {
-            throw Error::InvalidVersion(VersionToCStr(version),
-                                        VersionToCStr((Version)versionLatest));
-        }
-    }
-}
-
 void printSolvers()
 {
     std::cout << "Available solvers :" << std::endl;
     for (const auto& solver : getAvailableOrtoolsSolverName())
     {
         std::cout << solver << std::endl;
-    }
-}
-
-// CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing
-// = MILP ».
-void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
-                                   Antares::Data::HydroPricingMode hpMode)
-{
-    using namespace Antares::Data;
-    if (optRange == SimplexOptimization::sorDay && hpMode == HydroPricingMode::hpMILP)
-    {
-        throw Error::IncompatibleOptRangeHydroPricing();
-    }
-}
-
-// CHECK incompatible de choix simultané des options « simplex range= daily » et «
-// unit-commitment = MILP ».
-void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,
-                                         Antares::Data::UnitCommitmentMode ucMode)
-{
-    if (optRange == Antares::Data::SimplexOptimization::sorDay
-        && ucMode == Antares::Data::UnitCommitmentMode::ucMILP)
-    {
-        throw Error::IncompatibleOptRangeUCMode();
-    }
-}
-
-// Daily simplex optimisation and any area's use heurictic target turned to "No" are not
-// compatible.
-void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange,
-                                     const Antares::Data::AreaList& areas)
-{
-    if (optRange == Antares::Data::SimplexOptimization::sorDay)
-    {
-        for (uint i = 0; i < areas.size(); ++i)
-        {
-            const auto& area = *(areas.byIndex[i]);
-            if (!area.hydro.useHeuristicTarget)
-            {
-                throw Error::IncompatibleDailyOptHeuristicForArea(area.name);
-            }
-        }
-    }
-}
-
-// Number of columns for Fuel & CO2 cost in thermal clusters must be one, or same as the number of
-// TS
-void checkFuelAndCo2ColumnNumber(const Antares::Data::AreaList& areas)
-{
-    bool error = false;
-    for (uint areaIndex = 0; areaIndex < areas.size(); ++areaIndex)
-    {
-        const auto& area = *(areas.byIndex[areaIndex]);
-        for (uint clusterIndex = 0; clusterIndex != area.thermal.clusterCount(); ++clusterIndex)
-        {
-            const auto& cluster = *(area.thermal.clusters[clusterIndex]);
-            if (cluster.costgeneration == Antares::Data::setManually)
-                continue;
-            uint fuelCostWidth = cluster.ecoInput.fuelcost.width;
-            uint co2CostWidth = cluster.ecoInput.co2cost.width;
-            uint tsWidth = cluster.series->timeSeries.width;
-            if (fuelCostWidth != 1 && fuelCostWidth != tsWidth)
-            {
-                logs.warning() << "Area: " << area.name << ". Cluster name: " << cluster.name()
-                               << ". Fuel Cost column mismatch";
-                error = true;
-            }
-            if (co2CostWidth != 1 && co2CostWidth != tsWidth)
-            {
-                logs.warning() << "Area: " << area.name << ". Cluster name: " << cluster.name()
-                               << ". CO2 Cost column mismatch";
-                error = true;
-            }
-        }
-    }
-    if (error)
-        throw Error::IncompatibleFuelOrCo2CostColumns();
-}
-
-void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas)
-{
-    if (tsGenThermal)
-    {
-        std::map<int, YString> areaClusterNames;
-        if (!(areasThermalClustersMinStablePowerValidity(areas, areaClusterNames)))
-        {
-            throw Error::InvalidParametersForThermalClusters(areaClusterNames);
-        }
-    }
-    else
-    {
-        areas.each([](Antares::Data::Area& area) { area.thermal.checkAndCorrectAvailability(); });
     }
 }
 } // namespace

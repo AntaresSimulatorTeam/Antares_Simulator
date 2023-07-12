@@ -22,7 +22,6 @@ public:
     */
     bool loadFromFolder(Study& s, const AnyString& folder, Area* area);
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!

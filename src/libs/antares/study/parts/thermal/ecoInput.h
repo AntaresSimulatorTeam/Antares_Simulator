@@ -88,7 +88,7 @@ public:
     // max x DAYS_PER_YEAR
     Matrix<double> fuelcost;
     Matrix<double> co2cost;
-    
+
 }; // class PreproThermal
 
 } // namespace Antares::Data

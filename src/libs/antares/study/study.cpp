@@ -1551,34 +1551,5 @@ void Study::prepareWriter(Benchmarking::IDurationCollector* duration_collector)
       parameters.resultFormat, folderOutput, pQueueService, duration_collector);
 }
 
-bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
-                                                std::map<int, YString>& areaClusterNames)
-{
-    YString areaname = "";
-    bool resultat = true;
-    auto endarea = areas.end();
-    int count = 0;
-
-    for (auto areait = areas.begin(); areait != endarea; areait++)
-    {
-        areaname = areait->second->name;
-        logs.debug() << "areaname : " << areaname;
-
-        std::vector<YString> clusternames;
-
-        if (not areait->second->thermalClustersMinStablePowerValidity(clusternames))
-        {
-            for (auto it = clusternames.begin(); it != clusternames.end(); it++)
-            {
-                logs.debug() << "areaname : " << areaname << " ; clustername : " << (*it);
-                YString res = "Area : " + areaname + " cluster name : " + (*it).c_str();
-                areaClusterNames.insert(std::pair<int, YString>(count++, res));
-            }
-            resultat = false;
-        }
-    }
-    return resultat;
-}
-
 } // namespace Data
 } // namespace Antares

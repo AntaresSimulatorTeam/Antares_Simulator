@@ -36,13 +36,6 @@ inline bool AreaList::empty() const
     return areas.empty();
 }
 
-template<int TimeSeriesT>
-void AreaList::storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const
-{
-    // Each area in the list
-    each([&writer](const Area& area) { area.storeTimeseriesNumbers<TimeSeriesT>(writer); });
-}
-
 } // namespace Data
 } // namespace Antares
 

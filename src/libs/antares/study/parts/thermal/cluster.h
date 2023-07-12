@@ -385,7 +385,6 @@ public:
 
     friend class ThermalClusterList;
 
-private:
     //! \name MarketBid and Marginal Costs
     //@{
     /*!
@@ -398,7 +397,7 @@ private:
     */
     void costGenManualCalculationOfMarketBidAndMarginalCostPerHour();
     void costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour();
-    inline double computeMarketBidCost(double fuelCost, double co2EmissionFactor, double co2cost);
+    double computeMarketBidCost(double fuelCost, double co2EmissionFactor, double co2cost);
 
     unsigned int precision() const override;
 }; // class ThermalCluster

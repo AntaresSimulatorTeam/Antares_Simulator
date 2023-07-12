@@ -49,6 +49,7 @@
 #include "load-options.h"
 #include "../date.h"
 #include "layerdata.h"
+#include "area/store-timeseries-numbers.h"
 #include "antares/array/correlation.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
@@ -775,9 +776,6 @@ protected:
 ** \brief Icon to use for studies
 */
 extern YString StudyIconFile;
-
-bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
-                                                std::map<int, YString>& areaClusterNames);
 
 YString StudyCreateOutputPath(StudyMode mode,
                               ResultFormat fmt,
