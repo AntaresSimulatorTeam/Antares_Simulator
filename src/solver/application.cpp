@@ -8,7 +8,7 @@
 
 #include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
-#include <antares/checks/checkApplication.h>
+#include <antares/checks/checkLoadedInputData.h>
 #include <antares/version.h>
 
 #include "misc/system-memory.h"

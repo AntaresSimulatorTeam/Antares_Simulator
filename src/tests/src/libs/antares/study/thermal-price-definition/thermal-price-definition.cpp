@@ -10,7 +10,7 @@
 #include <study.h>
 #include <antares/exception/LoadingError.hpp>
 
-#include "checkApplication.h"
+#include "checkLoadedInputData.h"
 #include "cluster_list.h"
 #include "container.h"
 

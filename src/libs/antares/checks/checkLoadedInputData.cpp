@@ -29,7 +29,7 @@
 #include <antares/exception/LoadingError.hpp>
 #include <version.h>
 
-#include "checkApplication.h"
+#include "checkLoadedInputData.h"
 #include "area.h"
 
 namespace Antares::Check

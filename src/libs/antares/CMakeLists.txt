@@ -378,8 +378,8 @@ set(SRC_EXCEPTION
 source_group("exception" FILES ${SRC_EXCEPTION})
 
 set(SRC_CHECKS
-	checks/checkApplication.cpp
-	checks/checkApplication.h
+	checks/checkLoadedInputData.cpp
+	checks/checkLoadedInputData.h
 	)
 source_group("checks" FILES ${SRC_CHECKS})
 
