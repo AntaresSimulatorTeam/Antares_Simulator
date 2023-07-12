@@ -9,16 +9,16 @@ class TargetVectorUpdater
 {
 public:
     TargetVectorUpdater(bool isRenamingProcessed, std::vector<std::string>& target) :
-    target_(target), isRenamingProcessed_(isRenamingProcessed)
+     target_(target), isRenamingProcessed_(isRenamingProcessed)
     {
     }
 
     void UpdateTargetAtIndex(const std::string& full_name, unsigned int index)
     {
-    if (isRenamingProcessed_)
-    {
-          target_[index] = full_name;
-    }
+        if (isRenamingProcessed_)
+        {
+            target_[index] = full_name;
+        }
     }
 
 private:
@@ -122,12 +122,12 @@ public:
     void AreaHydroLevel(unsigned int constraint);
     void FinalStockEquivalent(unsigned int constraint);
     void FinalStockExpression(unsigned int constraint);
-    void NbUnitsOutageLessThanNbUnitsStop(unsigned int constraint);
-    void NbDispUnitsMinBoundSinceMinUpTime(unsigned int constraint);
-    void MinDownTime(unsigned int constraint);
-    void PMaxDispatchableGeneration(unsigned int constraint);
-    void PMinDispatchableGeneration(unsigned int constraint);
-    void ConsistenceNODU(unsigned int constraint);
+    void NbUnitsOutageLessThanNbUnitsStop(unsigned int constraint, const std::string& clusterName);
+    void NbDispUnitsMinBoundSinceMinUpTime(unsigned int constraint, const std::string& clusterName);
+    void MinDownTime(unsigned int constraint, const std::string& clusterName);
+    void PMaxDispatchableGeneration(unsigned int constraint, const std::string& clusterName);
+    void PMinDispatchableGeneration(unsigned int constraint, const std::string& clusterName);
+    void ConsistenceNODU(unsigned int constraint, const std::string& clusterName);
     void ShortTermStorageLevel(unsigned int constraint, const std::string& name);
     void BindingConstraintHour(unsigned int constraint, const std::string& name);
     void BindingConstraintDay(unsigned int constraint, const std::string& name);

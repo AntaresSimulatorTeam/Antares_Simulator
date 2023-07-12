@@ -118,7 +118,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     if (nombreDeTermes > 0)
                     {
                         constraintNamer.PMaxDispatchableGeneration(
-                          ProblemeAResoudre->NombreDeContraintes);
+                          ProblemeAResoudre->NombreDeContraintes,
+                          PaliersThermiquesDuPays.NomsDesPaliersThermiques[palier]);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
                     }
@@ -162,7 +163,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     if (nombreDeTermes > 0)
                     {
                         constraintNamer.PMinDispatchableGeneration(
-                          ProblemeAResoudre->NombreDeContraintes);
+                          ProblemeAResoudre->NombreDeContraintes,
+                          PaliersThermiquesDuPays.NomsDesPaliersThermiques[palier]);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
                     }
@@ -261,7 +263,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
-                        constraintNamer.ConsistenceNODU(ProblemeAResoudre->NombreDeContraintes);
+                        constraintNamer.ConsistenceNODU(
+                          ProblemeAResoudre->NombreDeContraintes,
+                          PaliersThermiquesDuPays.NomsDesPaliersThermiques[palier]);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
                     }
@@ -330,7 +334,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     if (nombreDeTermes > 0)
                     {
                         constraintNamer.NbUnitsOutageLessThanNbUnitsStop(
-                          ProblemeAResoudre->NombreDeContraintes);
+                          ProblemeAResoudre->NombreDeContraintes,
+                          PaliersThermiquesDuPays.NomsDesPaliersThermiques[palier]);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
                     }
@@ -430,7 +435,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                           = ProblemeAResoudre->NombreDeContraintes;
 
                         constraintNamer.NbDispUnitsMinBoundSinceMinUpTime(
-                          ProblemeAResoudre->NombreDeContraintes);
+                          ProblemeAResoudre->NombreDeContraintes,
+                          PaliersThermiquesDuPays.NomsDesPaliersThermiques[palier]);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
                     }
@@ -514,7 +520,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                           .NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
                           = ProblemeAResoudre->NombreDeContraintes;
 
-                        constraintNamer.MinDownTime(ProblemeAResoudre->NombreDeContraintes);
+                        constraintNamer.MinDownTime(
+                          ProblemeAResoudre->NombreDeContraintes,
+                          PaliersThermiquesDuPays.NomsDesPaliersThermiques[palier]);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
                     }

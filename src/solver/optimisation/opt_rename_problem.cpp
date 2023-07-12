@@ -284,34 +284,38 @@ void ConstraintNamer::nameWithTimeGranularity(unsigned int constraint,
       constraint);
 }
 
-void ConstraintNamer::NbUnitsOutageLessThanNbUnitsStop(unsigned int constraint)
+void ConstraintNamer::NbUnitsOutageLessThanNbUnitsStop(unsigned int constraint,
+                                                       const std::string& clusterName)
 {
-    SetAreaElementNameHour(constraint, "NbUnitsOutageLessThanNbUnitsStop");
+    SetThermalClusterElementName(constraint, "NbUnitsOutageLessThanNbUnitsStop", clusterName);
 }
 
-void ConstraintNamer::NbDispUnitsMinBoundSinceMinUpTime(unsigned int constraint)
+void ConstraintNamer::NbDispUnitsMinBoundSinceMinUpTime(unsigned int constraint,
+                                                        const std::string& clusterName)
 {
-    SetAreaElementNameHour(constraint, "NbDispUnitsMinBoundSinceMinUpTime");
+    SetThermalClusterElementName(constraint, "NbDispUnitsMinBoundSinceMinUpTime", clusterName);
 }
 
-void ConstraintNamer::MinDownTime(unsigned int constraint)
+void ConstraintNamer::MinDownTime(unsigned int constraint, const std::string& clusterName)
 {
-    SetAreaElementNameHour(constraint, "MinDownTime");
+    SetThermalClusterElementName(constraint, "MinDownTime", clusterName);
 }
 
-void ConstraintNamer::PMaxDispatchableGeneration(unsigned int constraint)
+void ConstraintNamer::PMaxDispatchableGeneration(unsigned int constraint,
+                                                 const std::string& clusterName)
 {
-    SetAreaElementNameHour(constraint, "PMaxDispatchableGeneration");
+    SetThermalClusterElementName(constraint, "PMaxDispatchableGeneration", clusterName);
 }
 
-void ConstraintNamer::PMinDispatchableGeneration(unsigned int constraint)
+void ConstraintNamer::PMinDispatchableGeneration(unsigned int constraint,
+                                                 const std::string& clusterName)
 {
-    SetAreaElementNameHour(constraint, "PMinDispatchableGeneration");
+    SetThermalClusterElementName(constraint, "PMinDispatchableGeneration", clusterName);
 }
 
-void ConstraintNamer::ConsistenceNODU(unsigned int constraint)
+void ConstraintNamer::ConsistenceNODU(unsigned int constraint, const std::string& clusterName)
 {
-    SetAreaElementNameHour(constraint, "ConsistenceNODU");
+    SetThermalClusterElementName(constraint, "ConsistenceNODU", clusterName);
 }
 
 void ConstraintNamer::ShortTermStorageLevel(unsigned int constraint, const std::string& name)
