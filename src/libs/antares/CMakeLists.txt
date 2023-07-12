@@ -17,19 +17,8 @@ set(SRC_OBJECT
 )
 source_group("object" FILES ${SRC_OBJECT})
 
-
-set(SRC_MATRIX
-	array/array1d.h
-	array/array1d.cpp
-	array/matrix.h
-	array/matrix.cpp
-	array/matrix.hxx
-	array/correlation.h
-	array/correlation.hxx
-	array/correlation.cpp)
-source_group("array" FILES ${SRC_MATRIX})
-
-
+add_subdirectory(array)
+add_subdirectory(correlation)
 
 set(SRC_STUDY_SCENARIO_BUILDER
 	study/scenario-builder/scBuilderDataInterface.h
@@ -324,25 +313,8 @@ set(SRC_STUDY_BINDING_CONSTRAINT
 
 source_group("study\\constraint" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
 
-set(SRC_LOGS
-	logs.h
-	logs/logs.h
-	logs/logs.hxx
-	logs/logs.cpp
-	logs/cleaner.h
-	logs/cleaner.cpp
-	)
-source_group("misc\\logs" FILES ${SRC_LOGS})
-
-set(SRC_JIT
-	# JIT (Just in Time)
-	jit.h
-	jit/jit.h
-	jit/jit.hxx
-	jit/jit.cpp
-	)
-source_group("misc\\jit" FILES ${SRC_JIT})
-
+add_subdirectory(logs)
+add_subdirectory(jit)
 add_subdirectory(inifile)
 
 set(SRC_XCAST
@@ -394,7 +366,8 @@ source_group("stdcxx" FILES ${SRC_STDCXX})
 
 set(SRC
     config.h
-    constants.h constants.cpp
+    constants.h
+	constants.cpp
     xpansion.h
 	# Misc
 
@@ -621,6 +594,8 @@ target_link_libraries(libantares-core
         result_writer
 		inifile
 		io
+		array
+		correlation
 	)
 
 import_std_libs(libantares-core)

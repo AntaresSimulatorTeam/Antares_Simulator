@@ -38,13 +38,10 @@
 
 #include "study.h"
 #include "runtime.h"
-#include "../logs.h"
-#include "../array/correlation.h"
 #include "scenario-builder/sets.h"
 #include "correlation-updater.hxx"
 #include "scenario-builder/updater.hxx"
 #include "area/constants.h"
-#include "filter.h"
 
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
 #include <math.h>                 // For use of floor(...) and ceil(...)
