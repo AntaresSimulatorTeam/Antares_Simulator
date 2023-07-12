@@ -1,20 +1,21 @@
 //
 // Created by marechaljas on 13/03/23.
 //
-#include "antares/study/fwd.h"
-#define BOOST_TEST_MODULE binding_constraints_FOO
 
-#include <boost/test/unit_test.hpp>
+#define WIN32_LEAN_AND_MEAN
+#define BOOST_TEST_MODULE binding_constraints
+
+#include <boost/test/included/unit_test.hpp>
 #include <fstream>
 #include "antares/study/constraint.h"
 #include "antares/study/area/area.h"
-#include "antares/study/study.h"
+#include "antares/study.h"
 #include <filesystem>
 
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-BOOST_AUTO_TEST_SUITE(BindingConstraintTests_FOO)
+BOOST_AUTO_TEST_SUITE(BindingConstraintTests)
 
 BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
     auto study = std::make_shared<Study>();
