@@ -31,7 +31,7 @@
 #include <yuni/core/string.h>
 #include <yuni/core/noncopyable.h>
 #include <stdlib.h>
-#include <i_writer.h>
+#include <antares/study/parameters/adq-patch-params.h>
 #include "../../array/matrix.h"
 #include "../parts/parts.h"
 #include <vector>
@@ -154,9 +154,6 @@ public:
     ** \param n A number of years
     */
     void resizeAllTimeseriesNumbers(uint n);
-
-    template<int TimeSeriesT>
-    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
 
     /*!
     ** \brief Check if a link with another area is already established
@@ -341,14 +338,7 @@ public:
 private:
     void internalInitialize();
 
-    // Store time-series numbers
-    void storeTimeseriesNumbersForLoad(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForSolar(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForWind(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForHydro(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForThermal(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForRenewable(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter::Ptr writer) const;
+
 }; // class Area
 
 bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);
@@ -554,8 +544,6 @@ public:
     //! Get if the container is empty
     bool empty() const;
 
-    template<int TimeSeriesT>
-    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
 
     /*!
     ** \brief Invalidate all areas

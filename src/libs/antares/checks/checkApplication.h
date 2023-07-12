@@ -24,42 +24,24 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_HXX__
-#define __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_HXX__
+namespace Antares::Check
+{
+void checkStudyVersion(const AnyString& optStudyFolder);
 
-namespace Antares
-{
-namespace Data
-{
-namespace Load
-{
-inline void Prepro::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    xcast.estimateMemoryUsage(u);
-}
+void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
+                                   Antares::Data::HydroPricingMode hpMode);
 
-inline Yuni::uint64 Prepro::memoryUsage() const
-{
-    return xcast.memoryUsage();
-}
+void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
+                                   Antares::Data::HydroPricingMode hpMode);
 
-inline bool Prepro::forceReload(bool reload) const
-{
-    return xcast.forceReload(reload);
-}
+void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,
+                                         Antares::Data::UnitCommitmentMode ucMode);
 
-inline void Prepro::markAsModified() const
-{
-    xcast.markAsModified();
-}
+void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange,
+                                     const Antares::Data::AreaList& areas);
 
-inline void Prepro::resetToDefault()
-{
-    xcast.resetToDefaultValues();
-}
+void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas);
 
-} // namespace Load
-} // namespace Data
-} // namespace Antares
+void checkFuelAndCo2ColumnNumber(const Antares::Data::AreaList& areas);
 
-#endif // __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_H__
+} // namespace Antares::Check
