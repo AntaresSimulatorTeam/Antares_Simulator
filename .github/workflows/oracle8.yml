@@ -3,6 +3,15 @@ name: Oracle 8 CI (push and/or release)
 on:
   release:
     types: [created]
+  push:
+    branches:
+      - develop
+      - feature/*
+      - features/*
+      - fix/*
+      - issue-*
+      - release/*
+      - doc/*
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
