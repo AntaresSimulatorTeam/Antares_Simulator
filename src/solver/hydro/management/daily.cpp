@@ -43,6 +43,7 @@
 #include <limits>
 #include <variable/state.h>
 #include <array>
+#include <numeric>
 
 using namespace Yuni;
 
@@ -173,7 +174,7 @@ struct DebugData
                 double niveauDeb = valgen.NiveauxReservoirsDebutJours[day];
                 double niveauFin = valgen.NiveauxReservoirsFinJours[day];
                 double apports = srcinflows[day] / reservoirCapacity;
-                double turbMax = maxP[day] * maxE[day] / reservoirCapacity;
+                double turbMax = CalculateDailyMeanPower(day, maxP) * maxE[day] / reservoirCapacity;
                 double turbCible = dailyTargetGen[day] / reservoirCapacity;
                 double turbCibleUpdated = dailyTargetGen[day] / reservoirCapacity
                                           + previousMonthWaste[realmonth] / daysPerMonth;
@@ -232,10 +233,14 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     uint dayYear = 0;
 
-    auto const& maxPower = area.hydro.maxPower;
+    auto const& maxPowerHours = area.hydro.maxPower;
+    auto const& maxPower = area.hydro.series->maxgen;
 
-    auto const& maxP = maxPower[Data::PartHydro::genMaxP];
-    auto const& maxE = maxPower[Data::PartHydro::genMaxE];
+    uint tsIndexEnergyCredits
+      = (*NumeroChroniquesTireesParPays[numSpace][z]).HydrauliqueEnergyCredits;
+
+    auto const& maxP = maxPower[tsIndexEnergyCredits < maxPower.width ? tsIndexEnergyCredits : 0];
+    auto const& maxE = maxPowerHours[Data::PartHydro::genMaxE];
 
     auto const& valgen = *ValeursGenereesParPays[numSpace][z];
 
@@ -266,10 +271,11 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             auto dYear = day + dayYear;
             assert(day < 32);
             assert(dYear < 366);
-            scratchpad.optimalMaxPower[dYear] = maxP[dYear];
+            //scratchpad.optimalMaxPower[dYear] = maxP[dYear];
+            auto meanPower = CalculateDailyMeanPower(dYear, maxP);
 
             if (debugData)
-                debugData->OPP[dYear] = maxP[dYear] * maxE[dYear];
+                debugData->OPP[dYear] = meanPower * maxE[dYear];
         }
 
         dayYear += daysPerMonth;
@@ -378,7 +384,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             uint dayMonth = 0;
             for (uint day = firstDay; day != endDay; ++day)
             {
-                problem.TurbineMax[dayMonth] = maxP[day] * maxE[day];
+                auto meanPower = CalculateDailyMeanPower(day, maxP);
+                problem.TurbineMax[dayMonth] = meanPower * maxE[day];
                 problem.TurbineMin[dayMonth] = data.dailyMinGen[day];
                 problem.TurbineCible[dayMonth] = dailyTargetGen[day];
                 dayMonth++;
@@ -457,7 +464,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             uint dayMonth = 0;
             for (uint day = firstDay; day != endDay; ++day)
             {
-                problem.TurbineMax[dayMonth] = maxP[day] * maxE[day] / reservoirCapacity;       
+                auto meanPower = CalculateDailyMeanPower(day, maxP);
+                problem.TurbineMax[dayMonth] = meanPower * maxE[day] / reservoirCapacity;       
                 problem.TurbineMin[dayMonth] = data.dailyMinGen[day] / reservoirCapacity;
 
                 problem.TurbineCible[dayMonth]
@@ -543,5 +551,11 @@ void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& st
     study.areas.each(
       [&](Data::Area& area) { prepareDailyOptimalGenerations(state, area, y, numSpace); });
 }
+
+double CalculateDailyMeanPower(uint dYear, const Matrix<double>::ColumnType&  maxPower)
+{
+    return std::accumulate(maxPower + dYear * 24, maxPower + dYear * 24 + 24, 0) / 24.;
+}
+
 
 } // namespace Antares
