@@ -140,10 +140,11 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
 
 // Number of columns for Fuel & CO2 cost in thermal clusters must be one, or same as the number of
 // TS
+template<class ExceptionT>
 static void checkThermalColumnNumber(const Antares::Data::AreaList& areas,
-                                     Matrix<double> Antares::Data::EconomicInputData::*matrix,
-                                     const Antares::Error::LoadingError& exception)
+                                     Matrix<double> Antares::Data::EconomicInputData::*matrix)
 {
+    ExceptionT exception;
     bool error = false;
     for (uint areaIndex = 0; areaIndex < areas.size(); ++areaIndex)
     {
@@ -169,16 +170,14 @@ static void checkThermalColumnNumber(const Antares::Data::AreaList& areas,
 
 void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas)
 {
-    checkThermalColumnNumber(areas,
-                             &Antares::Data::EconomicInputData::fuelcost,
-                             Antares::Error::IncompatibleFuelCostColumns());
+    checkThermalColumnNumber<Antares::Error::IncompatibleFuelCostColumns>(areas,
+                             &Antares::Data::EconomicInputData::fuelcost);
 }
 
 void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas)
 {
-    checkThermalColumnNumber(areas,
-                             &Antares::Data::EconomicInputData::co2cost,
-                             Antares::Error::IncompatibleCO2CostColumns());
+    checkThermalColumnNumber<Antares::Error::IncompatibleCO2CostColumns>(areas,
+                             &Antares::Data::EconomicInputData::co2cost);
 }
 
 } // namespace Antares::Check
