@@ -130,6 +130,13 @@ public:
     Matrix<double, Yuni::sint32> mingen;
 
     /*!
+    ** \brief Maximum Generation (MW)
+    **
+    ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
+    */
+    Matrix<double, Yuni::sint32> maxgen;
+
+    /*!
     ** \brief The number of time-series
     **
     ** This value must be the same as the width of the matrices `mod` and `fatal`.
