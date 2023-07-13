@@ -185,7 +185,7 @@ BindingConstraintLoader::SeparateValue(const EnvForLoading &env, const IniFile::
     CString<64> stringWO = p->value;
     String::Size setVal = p->value.find('%');
     uint occurrence = 0;
-    stringWO.words("%", [&](const CString<64> &part) {
+    stringWO.words("%", [&occurrence, &setVal, &env, &ret, &p, &w, &o](const CString<64> &part) {
         if (occurrence == 0) {
             if (setVal == 0) // weight is null
             {
