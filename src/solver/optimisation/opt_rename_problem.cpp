@@ -18,31 +18,32 @@ std::string BuildName(const std::string& name,
     return result;
 }
 
-void Namer::SetLinkElementName(unsigned int variable, const std::string& variableType)
+void Namer::SetLinkElementName(unsigned int element, const std::string& elementType)
 {
     const auto location = origin_ + AREA_SEP + destination_;
     targetUpdater_.UpdateTargetAtIndex(
-      BuildName(variableType, LocationIdentifier(location, LINK), TimeIdentifier(timeStep_, HOUR)),
-      variable);
+      BuildName(elementType, LocationIdentifier(location, LINK), TimeIdentifier(timeStep_, HOUR)),
+      element);
 }
 
-void Namer::SetAreaElementNameHour(unsigned int variable, const std::string& variableType)
+void Namer::SetAreaElementNameHour(unsigned int element, const std::string& elementType)
 {
-    SetAreaElementName(variable, variableType, HOUR);
-}
-void Namer::SetAreaElementNameWeek(unsigned int variable, const std::string& variableType)
-{
-    SetAreaElementName(variable, variableType, WEEK);
+    SetAreaElementName(element, elementType, HOUR);
 }
 
-void Namer::SetAreaElementName(unsigned int variable,
-                               const std::string& variableType,
+void Namer::SetAreaElementNameWeek(unsigned int element, const std::string& elementType)
+{
+    SetAreaElementName(element, elementType, WEEK);
+}
+
+void Namer::SetAreaElementName(unsigned int element,
+                               const std::string& elementType,
                                const std::string& timeStepType)
 {
     targetUpdater_.UpdateTargetAtIndex(
       BuildName(
-        variableType, LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, timeStepType)),
-      variable);
+        elementType, LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, timeStepType)),
+      element);
 }
 
 void VariableNamer::SetAreaVariableName(unsigned int variable,
@@ -56,43 +57,43 @@ void VariableNamer::SetAreaVariableName(unsigned int variable,
                                        variable);
 }
 
-void VariableNamer::SetThermalClusterVariableName(unsigned int variable,
-                                                  const std::string& variableType,
-                                                  const std::string& clusterName)
+void Namer::SetThermalClusterElementName(unsigned int variable,
+                                         const std::string& elementType,
+                                         const std::string& clusterName)
 {
     const auto location
       = LocationIdentifier(area_, AREA) + SEPARATOR + "ThermalCluster" + "<" + clusterName + ">";
 
     targetUpdater_.UpdateTargetAtIndex(
-      BuildName(variableType, location, TimeIdentifier(timeStep_, HOUR)), variable);
+      BuildName(elementType, location, TimeIdentifier(timeStep_, HOUR)), variable);
 }
 
 void VariableNamer::DispatchableProduction(unsigned int variable, const std::string& clusterName)
 {
-    SetThermalClusterVariableName(variable, "DispatchableProduction", clusterName);
+    SetThermalClusterElementName(variable, "DispatchableProduction", clusterName);
 }
 
 void VariableNamer::NODU(unsigned int variable, const std::string& clusterName)
 {
-    SetThermalClusterVariableName(variable, "NODU", clusterName);
+    SetThermalClusterElementName(variable, "NODU", clusterName);
 }
 
 void VariableNamer::NumberStoppingDispatchableUnits(unsigned int variable,
                                                     const std::string& clusterName)
 {
-    SetThermalClusterVariableName(variable, "NumberStoppingDispatchableUnits", clusterName);
+    SetThermalClusterElementName(variable, "NumberStoppingDispatchableUnits", clusterName);
 }
 
 void VariableNamer::NumberStartingDispatchableUnits(unsigned int variable,
                                                     const std::string& clusterName)
 {
-    SetThermalClusterVariableName(variable, "NumberStartingDispatchableUnits", clusterName);
+    SetThermalClusterElementName(variable, "NumberStartingDispatchableUnits", clusterName);
 }
 
 void VariableNamer::NumberBreakingDownDispatchableUnits(unsigned int variable,
                                                         const std::string& clusterName)
 {
-    SetThermalClusterVariableName(variable, "NumberBreakingDownDispatchableUnits", clusterName);
+    SetThermalClusterElementName(variable, "NumberBreakingDownDispatchableUnits", clusterName);
 }
 
 void VariableNamer::NTCDirect(unsigned int variable,
@@ -283,34 +284,38 @@ void ConstraintNamer::nameWithTimeGranularity(unsigned int constraint,
       constraint);
 }
 
-void ConstraintNamer::NbUnitsOutageLessThanNbUnitsStop(unsigned int constraint)
+void ConstraintNamer::NbUnitsOutageLessThanNbUnitsStop(unsigned int constraint,
+                                                       const std::string& clusterName)
 {
-    SetAreaElementNameHour(constraint, "NbUnitsOutageLessThanNbUnitsStop");
+    SetThermalClusterElementName(constraint, "NbUnitsOutageLessThanNbUnitsStop", clusterName);
 }
 
-void ConstraintNamer::NbDispUnitsMinBoundSinceMinUpTime(unsigned int constraint)
+void ConstraintNamer::NbDispUnitsMinBoundSinceMinUpTime(unsigned int constraint,
+                                                        const std::string& clusterName)
 {
-    SetAreaElementNameHour(constraint, "NbDispUnitsMinBoundSinceMinUpTime");
+    SetThermalClusterElementName(constraint, "NbDispUnitsMinBoundSinceMinUpTime", clusterName);
 }
 
-void ConstraintNamer::MinDownTime(unsigned int constraint)
+void ConstraintNamer::MinDownTime(unsigned int constraint, const std::string& clusterName)
 {
-    SetAreaElementNameHour(constraint, "MinDownTime");
+    SetThermalClusterElementName(constraint, "MinDownTime", clusterName);
 }
 
-void ConstraintNamer::PMaxDispatchableGeneration(unsigned int constraint)
+void ConstraintNamer::PMaxDispatchableGeneration(unsigned int constraint,
+                                                 const std::string& clusterName)
 {
-    SetAreaElementNameHour(constraint, "PMaxDispatchableGeneration");
+    SetThermalClusterElementName(constraint, "PMaxDispatchableGeneration", clusterName);
 }
 
-void ConstraintNamer::PMinDispatchableGeneration(unsigned int constraint)
+void ConstraintNamer::PMinDispatchableGeneration(unsigned int constraint,
+                                                 const std::string& clusterName)
 {
-    SetAreaElementNameHour(constraint, "PMinDispatchableGeneration");
+    SetThermalClusterElementName(constraint, "PMinDispatchableGeneration", clusterName);
 }
 
-void ConstraintNamer::ConsistenceNODU(unsigned int constraint)
+void ConstraintNamer::ConsistenceNODU(unsigned int constraint, const std::string& clusterName)
 {
-    SetAreaElementNameHour(constraint, "ConsistenceNODU");
+    SetThermalClusterElementName(constraint, "ConsistenceNODU", clusterName);
 }
 
 void ConstraintNamer::ShortTermStorageLevel(unsigned int constraint, const std::string& name)
