@@ -365,6 +365,38 @@ private:
     }
 };
 
+class TimeSeriesHydroMaxPump final : public ATimeSeries
+{
+public:
+    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
+
+    TimeSeriesHydroMaxPump(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
+     ATimeSeries(control, notifier)
+    {
+    }
+    ~TimeSeriesHydroMaxPump() override
+    {
+        destroyBoundEvents();
+    }
+
+    Date::Precision precision() override
+    {
+        return Date::hourly;
+    }
+
+    uint maxHeightResize() const override
+    {
+        return HOURS_PER_YEAR;
+    }
+
+private:
+    void internalAreaChanged(Antares::Data::Area* area) override
+    {
+        matrix((area && Data::Study::Current::Valid()) ? &(area->hydro.series->maxpump) : NULL);
+        Renderer::ARendererArea::internalAreaChanged(area);
+    }
+};
+
 // =========================
 // Clusters ...
 // =========================

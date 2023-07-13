@@ -159,6 +159,7 @@ bool DataTimeseries::performWL(Context& ctx)
                     ctx.area->hydro.series->storage = source->hydro.series->storage;
                     ctx.area->hydro.series->mingen = source->hydro.series->mingen;
                     ctx.area->hydro.series->maxgen = source->hydro.series->maxgen;
+                    ctx.area->hydro.series->maxpump = source->hydro.series->maxpump;
 
                     ctx.area->hydro.series->count = source->hydro.series->count;
 
@@ -166,6 +167,7 @@ bool DataTimeseries::performWL(Context& ctx)
                     source->hydro.series->storage.unloadFromMemory();
                     source->hydro.series->mingen.unloadFromMemory();
                     source->hydro.series->maxgen.unloadFromMemory();
+                    source->hydro.series->maxpump.unloadFromMemory();
                                         
                     break;
                 }

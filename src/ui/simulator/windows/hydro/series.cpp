@@ -61,6 +61,10 @@ Series::Series(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
     com->renderer(new Component::Datagrid::Renderer::TimeSeriesHydroMaxGen(com, notifier));
     pPageFatal = notebook->add(com, wxT("Maximum Generation"));
 
+    com = new Component::Datagrid::Component(notebook);
+    com->renderer(new Component::Datagrid::Renderer::TimeSeriesHydroMaxPump(com, notifier));
+    pPageFatal = notebook->add(com, wxT("Maximum Pumping"));
+
     // Connection to the notifier
     if (pNotifier)
         pNotifier->onAreaChanged.connect(this, &Series::onAreaChanged);

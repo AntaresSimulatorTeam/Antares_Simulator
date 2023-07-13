@@ -50,6 +50,7 @@ DataSeriesHydro::DataSeriesHydro() : count(0)
     // by default
     mingen.reset(1, HOURS_PER_YEAR);
     maxgen.reset(1, HOURS_PER_YEAR);
+    maxpump.reset(1, HOURS_PER_YEAR);
 }
 
 bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& folder) const
@@ -69,7 +70,9 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& fold
         buffer.clear() << folder << SEP << areaID << SEP << "mingen.txt";
         ret = mingen.saveToCSVFile(buffer, 0) && ret;
         buffer.clear() << folder << SEP << areaID << SEP << "maxgen.txt";
-        ret = mingen.saveToCSVFile(buffer, 0) && ret;
+        ret = maxgen.saveToCSVFile(buffer, 0) && ret;
+        buffer.clear() << folder << SEP << areaID << SEP << "maxpump.txt";
+        ret = maxpump.saveToCSVFile(buffer, 0) && ret;
         return ret;
     }
     return false;
@@ -99,6 +102,8 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
         ret = mingen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
         buffer.clear() << folder << SEP << areaID << SEP << "maxgen." << study.inputExtension;
         ret = maxgen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+        buffer.clear() << folder << SEP << areaID << SEP << "maxpump." << study.inputExtension;
+        ret = maxpump.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
     }
 
     if (study.usedByTheSolver)
@@ -111,6 +116,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
             storage.reset(1, DAYS_PER_YEAR);
             mingen.reset(1, HOURS_PER_YEAR);
             maxgen.reset(1, HOURS_PER_YEAR);
+            maxpump.reset(1, HOURS_PER_YEAR);
         }
         else
         {
@@ -162,6 +168,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
             storage.averageTimeseries();
             mingen.averageTimeseries();
             maxgen.averageTimeseries();
+            maxpump.averageTimeseries();
             count = 1;
         }
     }
@@ -208,6 +215,7 @@ bool DataSeriesHydro::forceReload(bool reload) const
     ret = storage.forceReload(reload) && ret;
     ret = mingen.forceReload(reload) && ret;
     ret = maxgen.forceReload(reload) && ret;
+    ret = maxpump.forceReload(reload) && ret;
     return ret;
 }
 
@@ -217,6 +225,7 @@ void DataSeriesHydro::markAsModified() const
     storage.markAsModified();
     mingen.markAsModified();
     maxgen.markAsModified();
+    maxpump.markAsModified();
 }
 
 void DataSeriesHydro::estimateMemoryUsage(StudyMemoryUsage& u) const
@@ -230,6 +239,7 @@ void DataSeriesHydro::estimateMemoryUsage(StudyMemoryUsage& u) const
         storage.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, 12);
         mingen.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, HOURS_PER_YEAR);
         maxgen.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, HOURS_PER_YEAR);
+        maxpump.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, HOURS_PER_YEAR);
     }
     else
     {
@@ -237,6 +247,7 @@ void DataSeriesHydro::estimateMemoryUsage(StudyMemoryUsage& u) const
         storage.estimateMemoryUsage(u);
         mingen.estimateMemoryUsage(u);
         maxgen.estimateMemoryUsage(u);
+        maxpump.estimateMemoryUsage(u);
     }
 }
 
@@ -246,12 +257,14 @@ void DataSeriesHydro::reset()
     storage.reset(1, DAYS_PER_YEAR);
     mingen.reset(1, HOURS_PER_YEAR);
     maxgen.reset(1, HOURS_PER_YEAR);
+    maxpump.reset(1, HOURS_PER_YEAR);
     count = 1;
 }
 
 uint64 DataSeriesHydro::memoryUsage() const
 {
-    return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage() + maxgen.memoryUsage();
+    return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage()
+           + maxgen.memoryUsage() + maxpump.memoryUsage();
 }
 
 } // namespace Data
