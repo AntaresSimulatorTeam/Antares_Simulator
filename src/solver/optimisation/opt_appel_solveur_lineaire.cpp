@@ -214,7 +214,7 @@ RESOLUTION:
     Probleme.CoutMax = 0.0;
 
     Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes.data();
-    Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits;
+    Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits.data();
 
 #ifndef NDEBUG
     Probleme.AffichageDesTraces = ( PremierPassage ? OUI_SPX : NON_SPX );

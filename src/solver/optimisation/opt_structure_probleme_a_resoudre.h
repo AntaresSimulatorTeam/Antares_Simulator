@@ -87,7 +87,7 @@ typedef struct
        il permet de renseigner directement les structures de description du reseau avec les
        resultats sur les couts reduits */
     double** AdresseOuPlacerLaValeurDesCoutsReduits;
-    double* CoutsReduits;
+    std::vector<double> CoutsReduits;
     /* En Entree ou en Sortie */
     int ExistenceDUneSolution; /* En sortie, vaut :
                                    OUI_SPX s'il y a une solution,
