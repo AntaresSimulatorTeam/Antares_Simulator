@@ -72,7 +72,7 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     Probleme.NombreMaxDIterations = -1;
     Probleme.CoutQuadratique = ProblemeAResoudre->CoutQuadratique.data();
     Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire.data();
-    Probleme.X = ProblemeAResoudre->X;
+    Probleme.X = ProblemeAResoudre->X.data();
     Probleme.Xmin = ProblemeAResoudre->Xmin.data();
     Probleme.Xmax = ProblemeAResoudre->Xmax.data();
     Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;

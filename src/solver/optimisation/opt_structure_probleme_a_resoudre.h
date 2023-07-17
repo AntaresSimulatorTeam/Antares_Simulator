@@ -77,7 +77,7 @@ typedef struct
        resultats contenus dans X */
     double** AdresseOuPlacerLaValeurDesVariablesOptimisees;
     /* Resultat */
-    double* X;
+    std::vector<double> X;
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a CoutsMarginauxDesContraintes,
        il permet de renseigner directement les structures de description du reseau avec les
        resultats sur les couts marginaux */
