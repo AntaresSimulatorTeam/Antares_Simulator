@@ -90,7 +90,7 @@ double OPT_CalculerAireMaxPminJour(int, int, int, int, std::vector<int>&, std::v
 
 void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*,
                                                         std::vector<double>&,
-                                                        int*,
+                                                        std::vector<int>&,
                                                         int,
                                                         char);
 void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO*);

@@ -105,7 +105,7 @@ typedef struct
 
     /* Vecteurs de travail pour contruire la matrice des contraintes lineaires */
     std::vector<double> Pi;
-    int* Colonne;
+    std::vector<int> Colonne;
 
     /* Nommage des variables & contraintes */
     std::vector<std::string> NomDesVariables;

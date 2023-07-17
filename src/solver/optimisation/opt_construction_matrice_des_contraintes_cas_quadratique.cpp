@@ -37,7 +37,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* 
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     std::vector<double> Pi(ProblemeAResoudre->NombreDeVariables, 0.);
-    auto Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
+    std::vector<int> Colonne(ProblemeAResoudre->NombreDeVariables, 0);
 
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
@@ -81,6 +81,4 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* 
         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
     }
-
-    MemFree(Colonne);
 }

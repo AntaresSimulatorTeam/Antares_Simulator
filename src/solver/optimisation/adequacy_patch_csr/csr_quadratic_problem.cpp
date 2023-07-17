@@ -39,7 +39,7 @@ using namespace Antares::Data;
 
 namespace Antares::Solver::Optimization
 {
-void CsrQuadraticProblem::setConstraintsOnFlows(std::vector<double>& Pi, int* Colonne)
+void CsrQuadraticProblem::setConstraintsOnFlows(std::vector<double>& Pi, std::vector<int>& Colonne)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
@@ -92,7 +92,7 @@ void CsrQuadraticProblem::setConstraintsOnFlows(std::vector<double>& Pi, int* Co
     }
 }
 
-void CsrQuadraticProblem::setNodeBalanceConstraints(std::vector<double>& Pi, int* Colonne)
+void CsrQuadraticProblem::setNodeBalanceConstraints(std::vector<double>& Pi, std::vector<int>& Colonne)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
@@ -199,7 +199,7 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(std::vector<double>& Pi, int
     }
 }
 
-void CsrQuadraticProblem::setBindingConstraints(std::vector<double>& Pi, int* Colonne)
+void CsrQuadraticProblem::setBindingConstraints(std::vector<double>& Pi, std::vector<int>& Colonne)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
 
@@ -270,9 +270,9 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     problemeAResoudre_.NombreDeContraintes = 0;
     problemeAResoudre_.NombreDeTermesDansLaMatriceDesContraintes = 0;
 
-    setConstraintsOnFlows(Pi, Colonne.data());
-    setNodeBalanceConstraints(Pi, Colonne.data());
-    setBindingConstraints(Pi, Colonne.data());
+    setConstraintsOnFlows(Pi, Colonne);
+    setNodeBalanceConstraints(Pi, Colonne);
+    setBindingConstraints(Pi, Colonne);
 }
 
 } // namespace Antares::Solver::Optimization

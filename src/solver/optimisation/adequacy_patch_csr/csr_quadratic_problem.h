@@ -47,9 +47,9 @@ private:
     PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre_;
     HourlyCSRProblem& hourlyCsrProblem_;
 
-    void setConstraintsOnFlows(std::vector<double>& Pi, int* Colonne);
-    void setNodeBalanceConstraints(std::vector<double>& Pi, int* Colonne);
-    void setBindingConstraints(std::vector<double>& Pi, int* Colonne);
+    void setConstraintsOnFlows(std::vector<double>& Pi, std::vector<int>& Colonne);
+    void setNodeBalanceConstraints(std::vector<double>& Pi, std::vector<int>& Colonne);
+    void setBindingConstraints(std::vector<double>& Pi, std::vector<int>& Colonne);
 };
 
 } //namespace Antares::Solver::Optimization

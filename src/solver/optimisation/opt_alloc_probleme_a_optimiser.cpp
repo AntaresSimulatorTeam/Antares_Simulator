@@ -92,7 +92,7 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
     ProblemeAResoudre->ComplementDeLaBase.assign(ProblemeAResoudre->NombreDeContraintes, 0);
 
     ProblemeAResoudre->Pi.assign(ProblemeAResoudre->NombreDeVariables, 0.);
-    ProblemeAResoudre->Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
+    ProblemeAResoudre->Colonne.assign(ProblemeAResoudre->NombreDeVariables, 0);
 
     ProblemeAResoudre->NomDesVariables.resize(ProblemeAResoudre->NombreDeVariables);
     ProblemeAResoudre->NomDesContraintes.resize(ProblemeAResoudre->NombreDeContraintes);
@@ -103,8 +103,6 @@ void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
     MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees);
     MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits);
     MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux);
-
-    MemFree(ProblemeAResoudre->Colonne);
 
     ProblemeAResoudre->NomDesVariables.clear();
     ProblemeAResoudre->NomDesContraintes.clear();
