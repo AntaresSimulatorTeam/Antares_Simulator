@@ -56,7 +56,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-    double* Pi = ProblemeAResoudre->Pi;
+    std::vector<double>& Pi = ProblemeAResoudre->Pi;
     int* Colonne = ProblemeAResoudre->Colonne;
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo->NamedProblems);

@@ -104,7 +104,7 @@ typedef struct
     std::vector<int> ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
 
     /* Vecteurs de travail pour contruire la matrice des contraintes lineaires */
-    double* Pi;
+    std::vector<double> Pi;
     int* Colonne;
 
     /* Nommage des variables & contraintes */

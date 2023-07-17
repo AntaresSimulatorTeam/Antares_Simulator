@@ -35,7 +35,7 @@
 
 void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-  double* Pi,
+  std::vector<double>& Pi,
   int* Colonne,
   int NombreDeTermesDeLaContrainte,
   char SensContrainte)

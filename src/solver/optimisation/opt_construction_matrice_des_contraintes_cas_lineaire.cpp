@@ -40,7 +40,7 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
                    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
                    int pays,
                    int& nombreDeTermes,
-                   double* Pi,
+                   std::vector<double>& Pi,
                    int* Colonne)
 {
     const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo.PaliersThermiquesDuPays[pays];
@@ -63,7 +63,7 @@ static void shortTermStorageBalance(
   const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
   const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
   int& nombreDeTermes,
-  double* Pi,
+  std::vector<double>& Pi,
   int* Colonne)
 {
     for (const auto& storage : shortTermStorageInput)
@@ -94,7 +94,7 @@ static void shortTermStorageLevels(
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
   CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim,
   std::vector<CORRESPONDANCES_DES_VARIABLES*> CorrespondanceVarNativesVarOptim,
-  double* Pi,
+  std::vector<double>& Pi,
   int* Colonne,
   int nombreDePasDeTempsPourUneOptimisation,
   int pdt,
@@ -170,7 +170,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-    double* Pi = ProblemeAResoudre->Pi;
+    std::vector<double>& Pi = ProblemeAResoudre->Pi;
     int* Colonne = ProblemeAResoudre->Colonne;
 
     ProblemeAResoudre->NombreDeContraintes = 0;
