@@ -204,9 +204,9 @@ RESOLUTION:
 
     Probleme.StrategieAntiDegenerescence = AGRESSIF;
 
-    Probleme.PositionDeLaVariable = ProblemeAResoudre->PositionDeLaVariable;
+    Probleme.PositionDeLaVariable = ProblemeAResoudre->PositionDeLaVariable.data();
     Probleme.NbVarDeBaseComplementaires = 0;
-    Probleme.ComplementDeLaBase = ProblemeAResoudre->ComplementDeLaBase;
+    Probleme.ComplementDeLaBase = ProblemeAResoudre->ComplementDeLaBase.data();
 
     Probleme.LibererMemoireALaFin = NON_SPX;
 
