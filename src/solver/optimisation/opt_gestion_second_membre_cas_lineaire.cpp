@@ -46,7 +46,7 @@ using namespace Yuni;
 static void shortTermStorageLevelsRHS(
     const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
     int numberOfAreas,
-    double* SecondMembre,
+    std::vector<double>& SecondMembre,
     const CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim,
     int hourInTheYear)
 {
@@ -72,7 +72,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
 
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    double* SecondMembre = ProblemeAResoudre->SecondMembre;
+    std::vector<double>& SecondMembre = ProblemeAResoudre->SecondMembre;
 
     double** AdresseOuPlacerLaValeurDesCoutsMarginaux
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
