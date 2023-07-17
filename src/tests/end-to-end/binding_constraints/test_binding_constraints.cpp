@@ -243,7 +243,7 @@ public:
     SimulationHandler(std::shared_ptr<Study> study) 
         : study_(study)
     {}
-    ~SimulationHandler();
+    ~SimulationHandler() = default;
     void create();
     void run() { simulation_->run(); }
     std::shared_ptr<ISimulation<Economy>> get() { return simulation_; }
@@ -266,10 +266,6 @@ void SimulationHandler::create()
 
     // Allocate arrays for time series
     SIM_AllocationTableaux();
-}
-
-SimulationHandler::~SimulationHandler()
-{
 }
 
 // ===============
@@ -342,7 +338,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     setNumberMCyears(study, nbYears);
 
     // Binding constraint parameter varying depending on the test
-    BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
+    BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
 
     unsigned int numberOfTS = 1;
@@ -370,7 +366,7 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
     setNumberMCyears(study, nbYears);
 
     // Binding constraint parameter varying depending on the test
-    BC->mutateTypeWithoutCheck(BindingConstraint::typeWeekly);
+    BC->setTimeGranularity(BindingConstraint::typeWeekly);
     BC->operatorType(BindingConstraint::opEquality);
 
     unsigned int numberOfTS = 1;
@@ -399,7 +395,7 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     setNumberMCyears(study, nbYears);
 
     // Binding constraint parameter varying depending on the test
-    BC->mutateTypeWithoutCheck(BindingConstraint::typeDaily);
+    BC->setTimeGranularity(BindingConstraint::typeDaily);
     BC->operatorType(BindingConstraint::opEquality);
 
     unsigned int numberOfTS = 1;
@@ -427,7 +423,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     setNumberMCyears(study, nbYears);
 
     // Binding constraint parameter varying depending on the test
-    BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
+    BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opLess);
 
     unsigned int numberOfTS = 1;
@@ -454,7 +450,7 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
     setNumberMCyears(study, nbYears);
 
     // Binding constraint parameter varying depending on the test
-    BC->mutateTypeWithoutCheck(BindingConstraint::typeDaily);
+    BC->setTimeGranularity(BindingConstraint::typeDaily);
     BC->operatorType(BindingConstraint::opGreater);
 
     unsigned int numberOfTS = 1;
@@ -487,7 +483,7 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
     setNumberMCyears(study, nbYears);
 
     // Binding constraint parameter varying depending on the test
-    BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
+    BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
 
     unsigned int numberOfTS = 2;
@@ -516,7 +512,7 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
     setNumberMCyears(study, nbYears);
 
     // Binding constraint parameter varying depending on the test
-    BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
+    BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
 
     unsigned int numberOfTS = 7;

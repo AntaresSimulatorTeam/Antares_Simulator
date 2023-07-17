@@ -310,7 +310,7 @@ void BindingConstraintInfoEditor::onSave(void*)
         {
             assert(pType);
             wxStringToString(pType->GetStringSelection(), tmp);
-            pConstraint->mutateTypeWithoutCheck(Data::BindingConstraint::StringToType(tmp));
+            pConstraint->setTimeGranularity(Data::BindingConstraint::StringToType(tmp));
             assert(pConstraint->type() != Data::BindingConstraint::typeUnknown);
         }
 

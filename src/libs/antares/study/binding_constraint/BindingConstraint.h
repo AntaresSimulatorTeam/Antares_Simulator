@@ -302,7 +302,7 @@ public:
     /*!
     ** \brief Set the type of the binding constraint
     */
-    void mutateTypeWithoutCheck(Type t);
+    void setTimeGranularity(Type t);
     //@}
 
     //! \name Operator

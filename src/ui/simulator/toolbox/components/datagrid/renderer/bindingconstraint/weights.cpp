@@ -209,7 +209,7 @@ bool LinkWeights::cellValue(int x, int y, const String& value)
             if (type == Data::BindingConstraint::typeDaily
                 || type == Data::BindingConstraint::typeWeekly)
             {
-                constraint->mutateTypeWithoutCheck(type);
+                constraint->setTimeGranularity(type);
                 OnStudyConstraintModified(constraint);
                 return true;
             }
@@ -500,7 +500,7 @@ bool ClusterWeights::cellValue(int x, int y, const String& value)
             if (type == Data::BindingConstraint::typeDaily
                 || type == Data::BindingConstraint::typeWeekly)
             {
-                constraint->mutateTypeWithoutCheck(type);
+                constraint->setTimeGranularity(type);
                 OnStudyConstraintModified(constraint);
                 return true;
             }
