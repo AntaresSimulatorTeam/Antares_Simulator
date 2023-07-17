@@ -1,5 +1,4 @@
-_install
-_build
+
 antares-[0-9].[0-9]-*
 
 .*.sw[a-z]
