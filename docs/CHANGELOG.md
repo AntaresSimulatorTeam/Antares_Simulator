@@ -1,10 +1,29 @@
 Antares Changelog
 =================
 
+8.7.0-beta3 (07/2023)
+--------------------
+## Bugfixes
+* Fix MPS differences related to int/unsigned surprises (#1417)
+
+8.7.0-beta2 (07/2023)
+--------------------
+## Bugfixes
+* Fix order for binding constraints of type "both" (#1413)
+
+8.7.0-beta1 (07/2023)
+--------------------
+## New features
+* Binding constraint RHS scenarization (#1219)
+* Name constraints & variables in MPS files (#1294)
+* Thermal price definition (contributed by RTE-i, #1272)
+
+TODO: bugfix, code cleaning, etc.
+
 8.6.1 (06/2023)
 --------------------
 ## Bugfixes
-* Fix major bug related to short-term storage & MRG. PRICE
+* Fix major bug related to short-term storage & MRG. PRICE (#1377)
 
 
 8.6.0 (06/2023)

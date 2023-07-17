@@ -50,7 +50,7 @@ static void shortTermStorageCost(
   int NombreDePays,
   const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
   std::vector<CORRESPONDANCES_DES_VARIABLES*>& CorrespondanceVarNativesVarOptim,
-  double* linearCost)
+  std::vector<double>& linearCost)
 {
     SIM::SpreadGenerator spreadGenerator;
     for (int pays = 0; pays < NombreDePays; ++pays)
@@ -99,9 +99,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
     int pdtJour = 0;
 
-    memset((char*)ProblemeAResoudre->CoutQuadratique,
-           0,
-           ProblemeAResoudre->NombreDeVariables * sizeof(double));
+    ProblemeAResoudre->CoutQuadratique.assign(ProblemeAResoudre->NombreDeVariables, 0.);
 
     shortTermStorageCost(PremierPdtDeLIntervalle,
                          DernierPdtDeLIntervalle,

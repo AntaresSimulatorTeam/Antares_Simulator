@@ -40,44 +40,6 @@ struct CompareAreaName final
     }
 };
 
-template<int TimeSeriesT>
-inline void Area::storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const
-{
-    switch (TimeSeriesT)
-    {
-    // Load
-    case timeSeriesLoad:
-        storeTimeseriesNumbersForLoad(writer);
-        break;
-        // Solar
-    case timeSeriesSolar:
-        storeTimeseriesNumbersForSolar(writer);
-        break;
-        // Hydro
-    case timeSeriesHydro:
-        storeTimeseriesNumbersForHydro(writer);
-        break;
-        // Wind
-    case timeSeriesWind:
-        storeTimeseriesNumbersForWind(writer);
-        break;
-        // Thermal
-    case timeSeriesThermal:
-        storeTimeseriesNumbersForThermal(writer);
-        break;
-        // Renewable
-    case timeSeriesRenewable:
-        storeTimeseriesNumbersForRenewable(writer);
-        break;
-        // Transmission capacities (NTC)
-    case timeSeriesTransmissionCapacities:
-        storeTimeseriesNumbersForTransmissionCapacities(writer);
-        break;
-    case timeSeriesCount:
-        break;
-    }
-}
-
 inline Area* AreaList::operator[](uint i)
 {
     assert(i < areas.size() and "Index out of bounds");

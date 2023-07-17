@@ -35,7 +35,7 @@ class SpreadGenerator
 {
     static constexpr double rangeDefault = 1.e-3;
 public:
-    SpreadGenerator(double range = rangeDefault);
+    explicit SpreadGenerator(double range = rangeDefault);
     void reset(unsigned int seed);
     double generate();
 

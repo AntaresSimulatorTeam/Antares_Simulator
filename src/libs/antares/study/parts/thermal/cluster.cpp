@@ -32,7 +32,7 @@
 #include "../../study.h"
 #include "../../memory-usage.h"
 #include "cluster.h"
-#include "../../../inifile.h"
+#include <antares/inifile/inifile.h>
 #include "../../../logs.h"
 #include "../../../utils.h"
 #include <numeric>
@@ -441,7 +441,7 @@ void Data::ThermalCluster::costGenTimeSeriesCalculationOfMarketBidAndMarginalCos
     }
 }
 
-inline double Data::ThermalCluster::computeMarketBidCost(double fuelCost,
+double Data::ThermalCluster::computeMarketBidCost(double fuelCost,
                                                          double co2EmissionFactor,
                                                          double co2cost)
 {

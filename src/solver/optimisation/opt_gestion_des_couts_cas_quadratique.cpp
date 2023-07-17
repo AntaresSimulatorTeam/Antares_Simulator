@@ -37,9 +37,7 @@ void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtH
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    memset((char*)ProblemeAResoudre->CoutLineaire,
-           0,
-           ProblemeAResoudre->NombreDeVariables * sizeof(double));
+    ProblemeAResoudre->CoutLineaire.assign(ProblemeAResoudre->NombreDeVariables, 0.);
 
     const VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeResistances
       = problemeHebdo->ValeursDeNTC[PdtHebdo];

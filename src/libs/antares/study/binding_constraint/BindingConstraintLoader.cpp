@@ -147,22 +147,35 @@ BindingConstraintLoader::load(EnvForLoading env) {
     if (bc->pLinkWeights.empty() && bc->pClusterWeights.empty())
         bc->pEnabled = false;
 
-    if (bc->operatorType() == BindingConstraint::opBoth) {
+    switch(bc->operatorType())
+    {
+    case BindingConstraint::opLess:
+    case BindingConstraint::opEquality:
+    case BindingConstraint::opGreater:{
+        if (loadTimeSeries(env, bc.get()))
+            return {bc};
+        break;
+    }
+    case BindingConstraint::opBoth:{
         auto greater_bc = std::make_shared<BindingConstraint>();
         greater_bc->copyFrom(bc.get());
         greater_bc->name(bc->name());
         greater_bc->pID = bc->pID;
-        bc->operatorType(BindingConstraint::opLess);
         greater_bc->operatorType(BindingConstraint::opGreater);
+
+        bc->operatorType(BindingConstraint::opLess);
+
         if (loadTimeSeries(env, bc.get()) && loadTimeSeries(env, greater_bc.get())) {
             return {bc, greater_bc};
+        }
+        break;
     }
-    return {};
-}
+    default:{
+        logs.error() << "Wrong binding constraint operator type for constraint " << bc->name();
+        return {};
+    }
+    }
 
-    if (loadTimeSeries(env, bc.get())) {
-        return {bc};
-    }
     return {};
 }
 
@@ -172,7 +185,7 @@ BindingConstraintLoader::SeparateValue(const EnvForLoading &env, const IniFile::
     CString<64> stringWO = p->value;
     String::Size setVal = p->value.find('%');
     uint occurrence = 0;
-    stringWO.words("%", [&](const CString<64> &part) {
+    stringWO.words("%", [&occurrence, &setVal, &env, &ret, &p, &w, &o](const CString<64> &part) {
         if (occurrence == 0) {
             if (setVal == 0) // weight is null
             {

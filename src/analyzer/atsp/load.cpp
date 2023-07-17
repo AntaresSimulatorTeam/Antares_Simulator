@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include "atsp.h"
-#include <antares/inifile.h>
+#include <antares/inifile/inifile.h>
 #include "../../config.h"
 
 using namespace Yuni;

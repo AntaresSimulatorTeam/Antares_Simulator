@@ -1,0 +1,12 @@
+FROM oraclelinux:8
+
+# update repo
+RUN dnf update -y
+
+# install python & modules
+RUN dnf install -y python3 python3-pip
+RUN pip3 install --user pandas numpy pytest
+
+# Install build tools
+RUN dnf install -y epel-release git cmake wget rpm-build
+RUN dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-9-toolchain

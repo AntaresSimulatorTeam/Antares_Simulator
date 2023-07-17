@@ -28,7 +28,7 @@
 #pragma once
 #include <string>
 #include <memory>
-#include <antares/inifile.h>
+#include <antares/inifile/inifile.h>
 #include "properties.h"
 #include "series.h"
 

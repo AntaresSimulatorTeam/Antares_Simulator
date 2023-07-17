@@ -33,7 +33,7 @@
 #include "../../study.h"
 #include "../../memory-usage.h"
 #include "cluster.h"
-#include "../../../inifile.h"
+#include <antares/inifile/inifile.h>
 #include "../../../logs.h"
 #include "../../../utils.h"
 

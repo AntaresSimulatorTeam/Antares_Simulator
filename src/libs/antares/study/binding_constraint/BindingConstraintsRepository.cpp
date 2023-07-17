@@ -56,11 +56,38 @@ void BindingConstraintsRepository::removeConstraintsWhoseNameConstains(const Any
     pList.erase(std::remove_if(pList.begin(), pList.end(), pred), pList.end());
 }
 
-bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1, const std::shared_ptr<BindingConstraint>& s2) {
-    return s1->name() < s2->name();
+static int valueForSort(BindingConstraint::Operator op)
+{
+    switch (op)
+    {
+    case BindingConstraint::opLess:
+        return 0;
+    case BindingConstraint::opGreater:
+        return 1;
+    case BindingConstraint::opEquality:
+        return 2;
+    case BindingConstraint::opBoth:
+        return 3;
+    default:
+        return -1;
+    }
 }
 
-std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnyString &name) {
+bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1,
+                        const std::shared_ptr<BindingConstraint>& s2)
+{
+    if (s1->name() != s2->name())
+    {
+        return s1->name() < s2->name();
+    }
+    else
+    {
+        return valueForSort(s1->operatorType()) < valueForSort(s2->operatorType());
+    }
+}
+
+std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnyString &name)
+{
     auto bc = std::make_shared<BindingConstraint>();
     bc->name(name);
     pList.push_back(bc);

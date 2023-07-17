@@ -35,7 +35,7 @@
 
 #include "../constants.h"
 #include "parameters.h"
-#include "../inifile.h"
+#include <antares/inifile/inifile.h>
 #include "../logs.h"
 #include "load-options.h"
 #include <limits.h>
@@ -1076,6 +1076,11 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // Specific action before launching a simulation
     if (options.usedByTheSolver)
         prepareForSimulation(options);
+
+    if (options.mpsToExport)
+    {
+        this->include.exportMPS = mpsExportStatus::EXPORT_BOTH_OPTIMS;
+    }
 
     // We currently always returns true to not block any loading process
     // Anyway we already have reported all problems
