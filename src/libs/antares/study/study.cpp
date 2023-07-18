@@ -795,14 +795,14 @@ Area* Study::areaAdd(const AreaName& name)
 
         // Adding an area
         AreaName newName;
-        if (not areaFindNameForANewArea(newName, name) or newName.empty())
+        if (not modifyAreaNameIfAlreadyTaken(newName, name) or newName.empty())
         {
             logs.error() << "Impossible to find a name for a new area";
             return nullptr;
         }
 
         // Adding an area
-        area = AreaListAddFromName(areas, newName, maxNbYearsInParallel);
+        area = AreaListAddFromName(areas, newName);
         if (not area)
             return nullptr;
         // Rebuild indexes for all areas

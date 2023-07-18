@@ -55,14 +55,12 @@ Area::Area() :
  spreadSpilledEnergyCost(0.),
  filterSynthesis(filterAll),
  filterYearByYear(filterAll),
- ui(nullptr),
- nbYearsInParallel(0),
- invalidateJIT(false)
+ ui(nullptr)
 {
     internalInitialize();
 }
 
-Area::Area(const AnyString& name, uint nbParallelYears) :
+Area::Area(const AnyString& name) :
  index((uint)(-1)),
  reserves(fhrMax, HOURS_PER_YEAR),
  miscGen(fhhMax, HOURS_PER_YEAR),
@@ -72,7 +70,6 @@ Area::Area(const AnyString& name, uint nbParallelYears) :
  filterSynthesis(filterAll),
  filterYearByYear(filterAll),
  ui(nullptr),
- nbYearsInParallel(nbParallelYears),
  invalidateJIT(false)
 {
     internalInitialize();
@@ -80,7 +77,7 @@ Area::Area(const AnyString& name, uint nbParallelYears) :
     Antares::TransformNameIntoID(this->name, this->id);
 }
 
-Area::Area(const AnyString& name, const AnyString& id, uint nbParallelYears, uint indx) :
+Area::Area(const AnyString& name, const AnyString& id, uint indx) :
  index(indx),
  reserves(fhrMax, HOURS_PER_YEAR),
  miscGen(fhhMax, HOURS_PER_YEAR),
@@ -90,7 +87,6 @@ Area::Area(const AnyString& name, const AnyString& id, uint nbParallelYears, uin
  filterSynthesis(filterAll),
  filterYearByYear(filterAll),
  ui(nullptr),
- nbYearsInParallel(nbParallelYears),
  invalidateJIT(false)
 {
     internalInitialize();
@@ -216,10 +212,6 @@ Yuni::uint64 Area::memoryUsage() const
     // UI
     if (ui)
         ret += ui->memoryUsage();
-
-    // scratchpad
-    if (!scratchpad.empty())
-        ret += sizeof(AreaScratchpad) * nbYearsInParallel;
 
     // links
     auto end = links.end();

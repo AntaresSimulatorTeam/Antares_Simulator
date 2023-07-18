@@ -72,23 +72,23 @@ void cleanStudy(Study::Ptr pStudy)
     Data::Study::Current::Set(nullptr);
 }
 
-void NoOPResultWriter::addEntryFromBuffer(const std::string&, Clob&)
+void NullResultWriter::addEntryFromBuffer(const std::string&, Clob&)
 {
 
 }
-void NoOPResultWriter::addEntryFromBuffer(const std::string&, std::string&)
+void NullResultWriter::addEntryFromBuffer(const std::string&, std::string&)
 {
 
 }
-void NoOPResultWriter::addEntryFromFile(const std::string&, const std::string&)
+void NullResultWriter::addEntryFromFile(const std::string&, const std::string&)
 {
 
 }
-bool NoOPResultWriter::needsTheJobQueue() const
+bool NullResultWriter::needsTheJobQueue() const
 {
     return false;
 }
-void NoOPResultWriter::finalize(bool)
+void NullResultWriter::finalize(bool)
 {
 
 }

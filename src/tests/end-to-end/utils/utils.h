@@ -21,7 +21,7 @@ float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight
 ScenarioBuilder::Rules::Ptr createScenarioRules(Study::Ptr pStudy);
 
 
-class NoOPResultWriter: public Solver::IResultWriter {
+class NullResultWriter: public Solver::IResultWriter {
     void addEntryFromBuffer(const std::string &, Clob &) override;
 
     void addEntryFromBuffer(const std::string &, std::string &) override;

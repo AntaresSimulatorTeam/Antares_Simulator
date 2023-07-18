@@ -251,7 +251,7 @@ public:
     ** \param basename The root base name
     ** \return True if a new name has been found, false otherwise
     */
-    bool areaFindNameForANewArea(AreaName& out, const AreaName& basename);
+    bool modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename);
 
     /*!
     ** \brief Add an area and make all required initialization

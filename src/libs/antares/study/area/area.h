@@ -74,14 +74,14 @@ public:
     **
     ** \param name The name of the area
     */
-    explicit Area(const AnyString& name, uint nbParallelYears);
+    explicit Area(const AnyString& name);
     /*!
     ** \brief Constructor
     **
     ** \param name Name of the area
     ** \param id id of the area
     */
-    Area(const AnyString& name, const AnyString& id, uint nbParallelYears, uint indx = (uint)-1);
+    Area(const AnyString& name, const AnyString& id, uint indx = (uint)-1);
     /*!
     ** \brief Destructor
     */
@@ -312,10 +312,7 @@ public:
     //! Information for the UI
     AreaUI* ui;
     //@}
-
-    // Number of years actually run in parallel
-    uint nbYearsInParallel;
-
+    
     //! \name Dynamic
     //@{
     /*!
@@ -772,7 +769,7 @@ Area* AreaListFindPtr(AreaList* l, const Area* ptr);
 ** \param name The name of the area
 ** \return A valid pointer to the area if successful, NULL otherwise
 */
-Area* AreaListAddFromName(AreaList& list, const AnyString& name, uint nbParallelYears);
+Area* AreaListAddFromName(AreaList& list, const AnyString& name);
 
 /*!
 ** \brief Add an area in the list from a given name
@@ -784,8 +781,7 @@ Area* AreaListAddFromName(AreaList& list, const AnyString& name, uint nbParallel
 */
 Area* AreaListAddFromNames(AreaList& list,
                            const AnyString& name,
-                           const AnyString& lname,
-                           uint nbParallelYears);
+                           const AnyString& lname);
 
 /*!
 ** \brief Try to establish a link between two areas

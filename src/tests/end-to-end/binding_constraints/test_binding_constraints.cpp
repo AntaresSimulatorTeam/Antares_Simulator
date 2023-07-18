@@ -21,7 +21,11 @@ using namespace Benchmarking;
 
 void initializeStudy(Study::Ptr study)
 {
-    study->resultWriter = std::make_shared<NoOPResultWriter>();
+    study->resultWriter = std::make_shared<NullResultWriter>();
+    if (not memory.initializeTemporaryFolder())
+    {
+        logs.error() << "Could not initialize temp folder properly";
+    }
     study->parameters.reset();
     Data::Study::Current::Set(study);
 }
@@ -301,6 +305,11 @@ Fixture::Fixture()
 
     double loadInAreaTwo = 100.;
     Area* area2 = addAreaToStudy(study, "Area 2", loadInAreaTwo);
+
+    //study->preproLoadCorrelation.reset(*study);
+    //study->preproSolarCorrelation.reset(*study);
+    //study->preproWindCorrelation.reset(*study);
+    //study->preproHydroCorrelation.reset(*study);
 
     link = AreaAddLinkBetweenAreas(area1, area2);
 

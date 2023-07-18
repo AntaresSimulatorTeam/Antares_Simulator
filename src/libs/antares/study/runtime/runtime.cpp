@@ -38,6 +38,7 @@ namespace Antares::Data
 static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos& r)
 {
     uint areaCount = study.areas.size();
+    uint nbYearsInParallel = study.maxNbYearsInParallel;
 
     // For each area
     for (uint a = 0; a != areaCount; ++a)
@@ -90,8 +91,8 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
             area.thermal.mustrunList.calculationOfSpinning();
         }
 
-        area.scratchpad.reserve(area.nbYearsInParallel);
-        for (uint numSpace = 0; numSpace < area.nbYearsInParallel; numSpace++)
+        area.scratchpad.reserve(nbYearsInParallel);
+        for (uint numSpace = 0; numSpace < nbYearsInParallel; numSpace++)
             area.scratchpad.emplace_back(r, area);
 
         // statistics
