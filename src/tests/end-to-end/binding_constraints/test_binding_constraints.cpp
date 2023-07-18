@@ -44,9 +44,14 @@ void simulationBetweenDays(Study::Ptr study, const unsigned int firstDay, const 
 
 Area* addAreaToStudy(Study::Ptr study, const std::string& areaName, double loadInArea)
 {
-    Area* area = study->areaAdd(areaName);
-
+    Area* area = addAreaToListOfAreas(study->areas, areaName);
     BOOST_CHECK(area != NULL);
+
+    // Default values for the area
+    area->createMissingData();
+    area->resetToDefaultValues();
+
+    study->areas.rebuildIndexes();
 
     area->thermal.unsuppliedEnergyCost = 1000.0;
     area->spreadUnsuppliedEnergyCost	= 0.;

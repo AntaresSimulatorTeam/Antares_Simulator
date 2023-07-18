@@ -221,9 +221,14 @@ Yuni::uint64 Area::memoryUsage() const
     return ret;
 }
 
-void Area::ensureAllDataAreCreated()
+void Area::createMissingData()
 {
-    // Timeseries
+    createMissingTimeSeries();
+    createMissingPrepros();
+}
+
+void Area::createMissingTimeSeries()
+{
     if (!load.series)
         load.series = new DataSeriesLoad();
     if (!solar.series)
@@ -234,8 +239,9 @@ void Area::ensureAllDataAreCreated()
         hydro.series = new DataSeriesHydro();
     thermal.list.ensureDataTimeSeries();
     renewable.list.ensureDataTimeSeries();
-
-    // Prepro
+}
+void Area::createMissingPrepros()
+{
     if (!load.prepro)
         load.prepro = new Data::Load::Prepro();
     if (!solar.prepro)
@@ -280,29 +286,6 @@ void Area::resetToDefaultValues()
 
     // invalidate the whole area
     invalidateJIT = true;
-
-    // -- No thermal cluster by default, since 3.6.3348
-
-    // -- Code for creating a new thermal cluster
-    // if (JIT::usedFromGUI)
-    // {
-    // 	if (thermal.list.empty())
-    // 	{
-    // 		ThermalCluster* ag = new ThermalCluster(this);
-    // 		if (!ag)
-    // 		{
-    // 			logs.error() << "Impossible to allocate in memory a new thermal cluster.";
-    // 			return;
-    // 		}
-    // 		ag->reset();
-    // 		ag->name("default");
-
-    // 		thermal.list.add(ag);
-    // 		thermal.list.rebuildIndex();
-    // 		thermal.list.ensureDataPrepro();
-    // 		thermal.list.ensureDataTimeSeries();
-    // 	}
-    // }
 }
 
 void Area::resizeAllTimeseriesNumbers(uint n)

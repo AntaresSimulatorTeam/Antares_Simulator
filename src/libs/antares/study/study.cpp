@@ -802,14 +802,15 @@ Area* Study::areaAdd(const AreaName& name)
         }
 
         // Adding an area
-        area = AreaListAddFromName(areas, newName);
+        area = addAreaToListOfAreas(areas, newName);
         if (not area)
             return nullptr;
+
         // Rebuild indexes for all areas
         areas.rebuildIndexes();
 
         // Default values for the area
-        area->ensureAllDataAreCreated();
+        area->createMissingData();
         area->resetToDefaultValues();
     }
 

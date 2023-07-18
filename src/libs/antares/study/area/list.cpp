@@ -483,7 +483,7 @@ Area* AreaList::add(Area* a)
     }
     return a;
 }
-Area* AreaListAddFromName(AreaList& list, const AnyString& name)
+Area* addAreaToListOfAreas(AreaList& list, const AnyString& name)
 {
     // Initializing names
     AreaName cname;

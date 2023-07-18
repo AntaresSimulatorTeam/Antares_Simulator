@@ -141,7 +141,7 @@ public:
     /*!
     ** \brief Ensure all data are created
     */
-    void ensureAllDataAreCreated();
+    void createMissingData();
 
     /*!
     ** \brief Reset all values to their default one
@@ -334,6 +334,8 @@ public:
 
 private:
     void internalInitialize();
+    void createMissingTimeSeries();
+    void createMissingPrepros();
 
 
 }; // class Area
@@ -769,7 +771,7 @@ Area* AreaListFindPtr(AreaList* l, const Area* ptr);
 ** \param name The name of the area
 ** \return A valid pointer to the area if successful, NULL otherwise
 */
-Area* AreaListAddFromName(AreaList& list, const AnyString& name);
+Area* addAreaToListOfAreas(AreaList& list, const AnyString& name);
 
 /*!
 ** \brief Add an area in the list from a given name
