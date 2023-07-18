@@ -102,11 +102,6 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     cluster->series->timeSeries.resize(nbTS, HOURS_PER_YEAR);
     cluster->series->timeSeries.fill(availablePower);
 
-    //No modulation on cost
-    cluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
-    cluster->modulation.fill(1.);
-    cluster->modulation.fillColumn(thermalMinGenModulation, 0.);
-
     //Initialize production cost from modulation
     if (not cluster->productionCost)
         cluster->productionCost = new double[HOURS_PER_YEAR];
