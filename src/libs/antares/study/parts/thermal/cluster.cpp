@@ -139,6 +139,8 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");
+
+    productionCost = new double[HOURS_PER_YEAR];
 }
 
 Data::ThermalCluster::~ThermalCluster()

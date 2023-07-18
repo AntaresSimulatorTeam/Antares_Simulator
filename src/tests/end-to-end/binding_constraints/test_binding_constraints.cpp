@@ -83,7 +83,6 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     double availablePower = 100.0;
     double maximumPower = 100.0;
     double clusterCost = 50.;
-    unsigned int nbTS = 1;
     unsigned int unitCount = 1;
 
     cluster->unitCount			= unitCount;
@@ -99,13 +98,7 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     cluster->minStablePower = 0.0;
 
     //Define power consumption
-    cluster->series->timeSeries.resize(nbTS, HOURS_PER_YEAR);
     cluster->series->timeSeries.fill(availablePower);
-
-    //Initialize production cost from modulation
-    if (not cluster->productionCost)
-        cluster->productionCost = new double[HOURS_PER_YEAR];
-
 
     double* prodCost	= cluster->productionCost;
     double marginalCost = cluster->marginalCost;
