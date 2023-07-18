@@ -271,8 +271,6 @@ void SimulationHandler::create()
     simulation_ = std::make_shared<ISimulation<Economy>>(*study_,
                                                          settings_,
                                                          &nullDurationCollector_);
-
-    // Allocate arrays for time series
     SIM_AllocationTableaux();
 }
 
@@ -310,11 +308,6 @@ Fixture::Fixture()
 
     double loadInAreaTwo = 100.;
     Area* area2 = addAreaToStudy(study, "Area 2", loadInAreaTwo);
-
-    //study->preproLoadCorrelation.reset(*study);
-    //study->preproSolarCorrelation.reset(*study);
-    //study->preproWindCorrelation.reset(*study);
-    //study->preproHydroCorrelation.reset(*study);
 
     link = AreaAddLinkBetweenAreas(area1, area2);
 
