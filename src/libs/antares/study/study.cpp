@@ -72,9 +72,9 @@ static inline void FreeAndNil(T*& pointer)
 Study::Study(bool forTheSolver) :
  LayerData(0, true),
  simulationComments(*this),
- maxNbYearsInParallel(0),
+ maxNbYearsInParallel(1),
  maxNbYearsInParallel_save(0),
- nbYearsParallelRaw(0),
+ nbYearsParallelRaw(1),
  minNbYearsInParallel(0),
  minNbYearsInParallel_save(0),
  areas(*this),

@@ -587,7 +587,7 @@ public:
     // This raw number of cores is possibly reduced by the smallest TS refresh span or the total
     // number of MC years. In GUI, used for RAM estimation only. In solver, it is the max number of
     // years (actually run, not skipped) a set of parallel years can contain.
-    uint maxNbYearsInParallel;
+    uint maxNbYearsInParallel = 1;
 
     // Used in GUI only.
     // ----------------

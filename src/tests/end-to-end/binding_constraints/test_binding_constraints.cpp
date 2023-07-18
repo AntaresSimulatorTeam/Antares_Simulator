@@ -23,7 +23,6 @@ void initializeStudy(Study::Ptr study)
 {
     study->resultWriter = std::make_shared<NoOPResultWriter>();
     study->parameters.reset();
-    study->maxNbYearsInParallel = 1;
     Data::Study::Current::Set(study);
 }
 
