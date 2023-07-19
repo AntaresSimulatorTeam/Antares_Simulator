@@ -46,16 +46,17 @@ void Area::internalInitialize()
 }
 
 Area::Area() :
- index((uint)(-1)),
- enabled(true),
- reserves(fhrMax, HOURS_PER_YEAR),
- miscGen(fhhMax, HOURS_PER_YEAR),
- nodalOptimization(anoAll),
- spreadUnsuppliedEnergyCost(0.),
- spreadSpilledEnergyCost(0.),
- filterSynthesis(filterAll),
- filterYearByYear(filterAll),
- ui(nullptr)
+     index((uint)(-1)),
+     enabled(true),
+     reserves(fhrMax, HOURS_PER_YEAR),
+     miscGen(fhhMax, HOURS_PER_YEAR),
+     nodalOptimization(anoAll),
+     spreadUnsuppliedEnergyCost(0.),
+     spreadSpilledEnergyCost(0.),
+     filterSynthesis(filterAll),
+     filterYearByYear(filterAll),
+     ui(nullptr),
+     invalidateJIT(false)
 {
     internalInitialize();
 }

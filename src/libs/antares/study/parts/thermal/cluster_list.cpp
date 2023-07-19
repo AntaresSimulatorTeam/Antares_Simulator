@@ -134,9 +134,6 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
         // Special operations when not ran from the interface (aka solver)
         if (study.usedByTheSolver)
         {
-            if (not cluster->productionCost)
-                cluster->productionCost = new double[HOURS_PER_YEAR];
-
             // alias to the production cost
             double* prodCost = cluster->productionCost;
             // alias to the marginal cost
