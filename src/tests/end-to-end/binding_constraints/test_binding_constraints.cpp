@@ -295,13 +295,12 @@ Area* StudyBuilder::addAreaToStudy(const std::string& areaName)
 }
 
 
-// ===============
-// The fixture
-// ===============
+// =================================
+// The Basic fixture fot BC tests
+// =================================
 struct StudyForBCTest : public StudyBuilder
 {
     using StudyBuilder::StudyBuilder;
-
     StudyForBCTest();
 
     // Data members
@@ -309,9 +308,9 @@ struct StudyForBCTest : public StudyBuilder
     std::shared_ptr<BindingConstraint> BC;
 };
 
-// ================================
-// The fixture's member functions
-// ================================
+// =======================================
+// The basic fixture's member functions
+// =======================================
 
 StudyForBCTest::StudyForBCTest()
 {
@@ -334,12 +333,26 @@ StudyForBCTest::StudyForBCTest()
     configureCluster(cluster);
 
     BC = addBindingConstraints(study, "BC1", "Group1");
-    BC->weight(link, 1);
-    BC->enabled(true);
 };
 
+// ==============================================
+// Study fixture containing a BC on the link 
+// ==============================================
 
-BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BINDING_CONSTRAINTS, StudyForBCTest)
+struct StudyWithBConLink : public StudyForBCTest
+{
+    using StudyForBCTest::StudyForBCTest;
+    StudyWithBConLink();
+};
+
+StudyWithBConLink::StudyWithBConLink()
+{
+    BC->weight(link, 1);
+    BC->enabled(true);
+}
+
+
+BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BINDING_CONSTRAINTS, StudyWithBConLink)
 
 BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
 {
@@ -483,7 +496,7 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
 BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BC_RHS_SCENARIZATION, StudyForBCTest)
+BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BC_RHS_SCENARIZATION, StudyWithBConLink)
 
 
 BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
