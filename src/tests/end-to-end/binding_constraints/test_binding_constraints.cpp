@@ -234,8 +234,10 @@ void SimulationHandler::create()
 struct StudyBuilder
 {
     StudyBuilder();
+
     void simulationBetweenDays(const unsigned int firstDay, const unsigned int lastDay);
     Area* addAreaToStudy(const std::string& areaName);
+    void giveWeigthOnlyToYear(unsigned int year);
 
     // Data members
     std::shared_ptr<SimulationHandler> simulation;
@@ -257,6 +259,20 @@ void StudyBuilder::simulationBetweenDays(const unsigned int firstDay, const unsi
 {
     study->parameters.simulationDays.first = firstDay;
     study->parameters.simulationDays.end = lastDay;
+}
+
+void StudyBuilder::giveWeigthOnlyToYear(unsigned int year)
+{
+    // Set all years weight to zero
+    unsigned int nbYears = study->parameters.nbYears;
+    for (unsigned int y = 0; y < nbYears; y++)
+        study->parameters.setYearWeight(y, 0.);
+
+    // Set one year's weight to 1
+    study->parameters.setYearWeight(year, 1.);
+
+    // Activate playlist, otherwise previous sets won't have any effect
+    study->parameters.userPlaylist = true;
 }
 
 Area* StudyBuilder::addAreaToStudy(const std::string& areaName)
@@ -287,7 +303,7 @@ struct StudyForBCTest : public StudyBuilder
     using StudyBuilder::StudyBuilder;
 
     StudyForBCTest();
-    void giveWeigthOnlyToYear(unsigned int year);
+    // void giveWeigthOnlyToYear(unsigned int year);
 
     // Data members
     AreaLink* link = nullptr;
@@ -323,20 +339,6 @@ StudyForBCTest::StudyForBCTest()
     BC->weight(link, 1);
     BC->enabled(true);
 };
-
-void StudyForBCTest::giveWeigthOnlyToYear(unsigned int year)
-{
-    // Set all years weight to zero
-    unsigned int nbYears = study->parameters.nbYears;
-    for (unsigned int y = 0; y < nbYears; y++)
-        study->parameters.setYearWeight(y, 0.);
-
-    // Set one year's weight to 1
-    study->parameters.setYearWeight(year, 1.);
-
-    // Activate playlist, otherwise previous sets won't have any effect
-    study->parameters.userPlaylist = true;
-}
 
 
 BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BINDING_CONSTRAINTS, StudyForBCTest)
