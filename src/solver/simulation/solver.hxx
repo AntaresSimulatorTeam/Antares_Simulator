@@ -44,6 +44,7 @@
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
+#include <sstream>
 #include "BindingConstraintsTimeSeriesNumbersWriter.h"
 
 namespace Antares::Solver::Simulation
