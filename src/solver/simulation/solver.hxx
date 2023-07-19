@@ -44,6 +44,7 @@
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
+#include <sstream>
 
 namespace Antares::Solver::Simulation
 {

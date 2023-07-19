@@ -30,7 +30,6 @@
 #include <antares/study/memory-usage.h>
 #include <antares/study.h>
 #include <antares/logs.h>
-#include <antares/study/fwd.h> // PowerFluctuations
 #include <antares/benchmarking.h>
 
 #include <yuni/core/string.h>
