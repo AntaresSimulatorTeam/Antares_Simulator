@@ -422,7 +422,7 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::en
         std::vector<std::shared_ptr<BindingConstraint>> out;
         std::copy_if(pList.begin(), pList.end(), std::back_inserter(out),
                      [](const auto &bc) {
-                         return bc->enabled();
+                         return bc->enabled() && !bc->skipped();
                      });
         enabledConstraints_ = std::move(out);
         return enabledConstraints_.value();
