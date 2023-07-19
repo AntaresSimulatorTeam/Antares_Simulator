@@ -173,7 +173,7 @@ private:
     bool pFirstSetParallelWithAPerformedYearWasRun;
 
     //! Statistics about annual (system and solution) costs
-    annualCostsStatistics pAnnualCostsStatistics;
+    annualCostsStatistics pAnnualStatistics;
 
     // Collecting durations inside the simulation
     Benchmarking::IDurationCollector* pDurationCollector;

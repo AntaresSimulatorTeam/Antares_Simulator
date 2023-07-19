@@ -39,6 +39,13 @@
 
 #define SEP Yuni::IO::Separator
 
+static const std::string systemCostFilename = "annualSystemCost.txt";
+static const std::string criterionsCostsFilename = "checkIntegrity.txt";
+static const std::string optimizationTimeFilename
+  = std::string("optimization") + SEP + "solve-durations.txt";
+static const std::string updateTimeFilename
+  = std::string("optimization") + SEP + "update-durations.txt";
+
 namespace Antares::Solver::Simulation
 {
 struct setOfParallelYears
@@ -132,12 +139,7 @@ private:
 class annualCostsStatistics
 {
 public:
-    annualCostsStatistics() :
-     systemCostFilename("annualSystemCost.txt"),
-     criterionsCostsFilename("checkIntegrity.txt"),
-     optimizationTimeFilename("timeStatistics.txt")
-    {
-    }
+    annualCostsStatistics() = default;
 
     void setNbPerformedYears(uint n)
     {
@@ -146,6 +148,7 @@ public:
         criterionCost2.setNbPerformedYears(n);
         optimizationTime1.setNbPerformedYears(n);
         optimizationTime2.setNbPerformedYears(n);
+        updateTime.setNbPerformedYears(n);
     };
 
     void endStandardDeviations()
@@ -155,6 +158,7 @@ public:
         criterionCost2.endStandardDeviation();
         optimizationTime1.endStandardDeviation();
         optimizationTime2.endStandardDeviation();
+        updateTime.endStandardDeviation();
     };
 
     void writeToOutput(IResultWriter::Ptr writer)
@@ -165,6 +169,7 @@ public:
         writeSystemCostToOutput(writer);
         writeCriterionCostsToOutput(writer);
         writeOptimizationTimeToOutput(writer);
+        writeUpdateTimes(writer);
     }
 
     std::string to_scientific(const double d)
@@ -216,6 +221,17 @@ private:
         writer->addEntryFromBuffer(criterionsCostsFilename, buffer);
     }
 
+    void writeUpdateTimes(IResultWriter::Ptr writer)
+    {
+        Yuni::Clob buffer;
+        buffer << "EXP (ms) : " << updateTime.costAverage << "\n";
+        buffer << "STD (ms) : " << updateTime.costStdDeviation << "\n";
+        buffer << "MIN (ms) : " << updateTime.costMin << "\n";
+        buffer << "MAX (ms) : " << updateTime.costMax << "\n";
+
+        writer->addEntryFromBuffer(updateTimeFilename, buffer);
+    }
+
     void writeOptimizationTimeToOutput(IResultWriter::Ptr writer)
     {
         Yuni::Clob buffer;
@@ -241,11 +257,9 @@ public:
     costStatistics criterionCost2;
     costStatistics optimizationTime1;
     costStatistics optimizationTime2;
+    costStatistics updateTime;
 
 private:
-    const std::string systemCostFilename;
-    const std::string criterionsCostsFilename;
-    const std::string optimizationTimeFilename;
     char conversionBuffer[256]; // Used to round a double to the closer integer
 };
 

@@ -67,12 +67,7 @@ State::State(Data::Study& s) :
  unitCommitmentMode(s.parameters.unitCommitment.ucMode),
  study(s),
  thermal(s.areas),
- simplexHasBeenRan(true),
- annualSystemCost(0.),
- optimalSolutionCost1(0.),
- optimalSolutionCost2(0.),
- averageOptimizationTime1(0.),
- averageOptimizationTime2(0.)
+ simplexHasBeenRan(true)
 {
 }
 
