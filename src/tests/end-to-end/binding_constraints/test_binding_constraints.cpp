@@ -32,12 +32,6 @@ void setNumberMCyears(Study::Ptr study, unsigned int nbYears)
     study->bindingConstraints.resizeAllTimeseriesNumbers(nbYears);
 }
 
-void simulationBetweenDays(Study::Ptr study, const unsigned int firstDay, const unsigned int lastDay)
-{
-    study->parameters.simulationDays.first = firstDay;
-    study->parameters.simulationDays.end = lastDay;
-}
-
 Area* addAreaToStudy(Study::Ptr study, const std::string& areaName, double loadInArea)
 {
     Area* area = addAreaToListOfAreas(study->areas, areaName);
@@ -244,12 +238,13 @@ void SimulationHandler::create()
 }
 
 // =========================
-// 
+// Basic study builder
 // =========================
 
 struct StudyBuilder
 {
     StudyBuilder();
+    void simulationBetweenDays(const unsigned int firstDay, const unsigned int lastDay);
 
     // Data members
     std::shared_ptr<SimulationHandler> simulation;
@@ -266,6 +261,13 @@ StudyBuilder::StudyBuilder()
 
     initializeStudy(study);
 }
+
+void StudyBuilder::simulationBetweenDays(const unsigned int firstDay, const unsigned int lastDay)
+{
+    study->parameters.simulationDays.first = firstDay;
+    study->parameters.simulationDays.end = lastDay;
+}
+
 
 // ===============
 // The fixture
@@ -288,7 +290,7 @@ struct Fixture : public StudyBuilder
 
 Fixture::Fixture()
 {
-    simulationBetweenDays(study, 0, 7);
+    simulationBetweenDays(0, 7);
 
     double loadInAreaOne = 0.;
     Area* area1 = addAreaToStudy(study, "Area 1", loadInAreaOne);
