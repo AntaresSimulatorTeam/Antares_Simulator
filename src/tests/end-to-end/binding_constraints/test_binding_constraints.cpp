@@ -303,11 +303,9 @@ struct StudyForBCTest : public StudyBuilder
     using StudyBuilder::StudyBuilder;
 
     StudyForBCTest();
-    // void giveWeigthOnlyToYear(unsigned int year);
 
     // Data members
     AreaLink* link = nullptr;
-    std::shared_ptr<ThermalCluster> cluster;
     std::shared_ptr<BindingConstraint> BC;
 };
 
@@ -332,7 +330,7 @@ StudyForBCTest::StudyForBCTest()
 
     configureLinkCapacities(link);
 
-    cluster = addClusterToArea(area1, "some cluster");
+    std::shared_ptr<ThermalCluster> cluster = addClusterToArea(area1, "some cluster");
     configureCluster(cluster);
 
     BC = addBindingConstraints(study, "BC1", "Group1");
