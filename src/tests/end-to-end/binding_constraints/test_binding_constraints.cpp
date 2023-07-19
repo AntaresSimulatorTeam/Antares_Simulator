@@ -56,15 +56,25 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     cluster->setName(clusterName);
     cluster->reset();
 
+    auto added = area->thermal.list.add(cluster);
+    BOOST_CHECK(added != nullptr);
+
+    area->thermal.list.mapping[cluster->id()] = added;
+
+    return cluster;
+}
+
+void configureCluster(std::shared_ptr<ThermalCluster> cluster)
+{
     double availablePower = 100.0;
     double maximumPower = 100.0;
     double clusterCost = 50.;
     unsigned int unitCount = 1;
 
-    cluster->unitCount			= unitCount;
-    cluster->nominalCapacity	= maximumPower;
+    cluster->unitCount = unitCount;
+    cluster->nominalCapacity = maximumPower;
 
-    cluster->marginalCost	= clusterCost;
+    cluster->marginalCost = clusterCost;
 
     // Must define market bid cost otherwise all production is used
     cluster->marketBidCost = clusterCost;
@@ -73,15 +83,9 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     cluster->series->timeSeries.fill(availablePower);
 
     cluster->nominalCapacityWithSpinning = cluster->nominalCapacity;
-
-    auto added = area->thermal.list.add(cluster);
-
-    BOOST_CHECK(added != nullptr);
-
-    area->thermal.list.mapping[cluster->id()] = added;
-
-    return cluster;
 }
+
+
 
 void addScratchpadToEachArea(Study::Ptr study)
 {
@@ -289,6 +293,7 @@ struct StudyForBCTest : public StudyBuilder
 
     // Data members
     AreaLink* link = nullptr;
+    std::shared_ptr<ThermalCluster> cluster;
     std::shared_ptr<BindingConstraint> BC;
 };
 
@@ -313,7 +318,8 @@ StudyForBCTest::StudyForBCTest()
 
     configureLinkCapacities(link);
 
-    addClusterToArea(area1, "some cluster");
+    cluster = addClusterToArea(area1, "some cluster");
+    configureCluster(cluster);
 
     BC = addBindingConstraints(study, "BC1", "Group1");
     BC->weight(link, 1);
