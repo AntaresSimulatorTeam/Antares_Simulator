@@ -32,25 +32,13 @@ void setNumberMCyears(Study::Ptr study, unsigned int nbYears)
     study->bindingConstraints.resizeAllTimeseriesNumbers(nbYears);
 }
 
-Area* addAreaToStudy(Study::Ptr study, const std::string& areaName, double loadInArea)
+void addLoadToArea(Area* area, double loadInArea)
 {
-    Area* area = addAreaToListOfAreas(study->areas, areaName);
-    BOOST_CHECK(area != NULL);
-
-    // Default values for the area
-    area->createMissingData();
-    area->resetToDefaultValues();
-
-    area->thermal.unsuppliedEnergyCost = 1000.0;
-    area->spreadUnsuppliedEnergyCost = 0.;
-
-    //Define default load
     unsigned int loadNumberTS = 1;
     area->load.series->timeSeries.resize(loadNumberTS, HOURS_PER_YEAR);
     area->load.series->timeSeries.fill(loadInArea);
-
-    return area;
 }
+
 
 void configureLinkCapacities(AreaLink* link)
 {
@@ -245,6 +233,7 @@ struct StudyBuilder
 {
     StudyBuilder();
     void simulationBetweenDays(const unsigned int firstDay, const unsigned int lastDay);
+    Area* addAreaToStudy(const std::string& areaName);
 
     // Data members
     std::shared_ptr<SimulationHandler> simulation;
@@ -266,6 +255,25 @@ void StudyBuilder::simulationBetweenDays(const unsigned int firstDay, const unsi
 {
     study->parameters.simulationDays.first = firstDay;
     study->parameters.simulationDays.end = lastDay;
+}
+
+Area* StudyBuilder::addAreaToStudy(const std::string& areaName)
+{
+    Area* area = addAreaToListOfAreas(study->areas, areaName);
+    BOOST_CHECK(area != NULL);
+
+    // Default values for the area
+    area->createMissingData();
+    area->resetToDefaultValues();
+
+    // Temporary : we want to give a high unsupplied or spilled energy costs.
+    // Which cost should we give ?
+    area->thermal.unsuppliedEnergyCost = 1000.0;
+    area->thermal.spilledEnergyCost = 1000.0;
+
+    study->areas.rebuildIndexes();
+
+    return area;
 }
 
 
@@ -292,13 +300,14 @@ StudyForBCTest::StudyForBCTest()
 {
     simulationBetweenDays(0, 7);
 
+    Area* area1 = addAreaToStudy("Area 1");
+    Area* area2 = addAreaToStudy("Area 2");
+
     double loadInAreaOne = 0.;
-    Area* area1 = addAreaToStudy(study, "Area 1", loadInAreaOne);
+    addLoadToArea(area1, loadInAreaOne);
 
     double loadInAreaTwo = 100.;
-    Area* area2 = addAreaToStudy(study, "Area 2", loadInAreaTwo);
-
-    study->areas.rebuildIndexes();
+    addLoadToArea(area2, loadInAreaTwo);
 
     link = AreaAddLinkBetweenAreas(area1, area2);
 
