@@ -48,7 +48,7 @@ Area* addAreaToStudy(Study::Ptr study, const std::string& areaName, double loadI
     area->resetToDefaultValues();
 
     area->thermal.unsuppliedEnergyCost = 1000.0;
-    area->spreadUnsuppliedEnergyCost	= 0.;
+    area->spreadUnsuppliedEnergyCost = 0.;
 
     //Define default load
     unsigned int loadNumberTS = 1;
@@ -82,16 +82,12 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     cluster->unitCount			= unitCount;
     cluster->nominalCapacity	= maximumPower;
 
-    //Power cost
     cluster->marginalCost	= clusterCost;
 
-    //Must define market bid cost otherwise all production is used
+    // Must define market bid cost otherwise all production is used
     cluster->marketBidCost = clusterCost;
 
-    //Must define  min stable power always 0.0
     cluster->minStablePower = 0.0;
-
-    //Define power consumption
     cluster->series->timeSeries.fill(availablePower);
 
     cluster->nominalCapacityWithSpinning = cluster->nominalCapacity;
@@ -247,25 +243,20 @@ void SimulationHandler::create()
     SIM_AllocationTableaux();
 }
 
-// ===============
-// The fixture
-// ===============
-struct Fixture {
-    Fixture();
-    void giveWeigthOnlyToYear(unsigned int year);
+// =========================
+// 
+// =========================
+
+struct StudyBuilder
+{
+    StudyBuilder();
 
     // Data members
-    AreaLink* link = nullptr;
-    std::shared_ptr<BindingConstraint> BC;
     std::shared_ptr<SimulationHandler> simulation;
     std::shared_ptr<Study> study;
 };
 
-// ================================
-// The fixture's member functions
-// ================================
-
-Fixture::Fixture()
+StudyBuilder::StudyBuilder()
 {
     // Make logs shrink to errors (and higher) only
     logs.verbosityLevel = Logs::Verbosity::Error::level;
@@ -274,6 +265,29 @@ Fixture::Fixture()
     simulation = std::make_shared<SimulationHandler>(study);
 
     initializeStudy(study);
+}
+
+// ===============
+// The fixture
+// ===============
+struct Fixture : public StudyBuilder
+{
+    using StudyBuilder::StudyBuilder;
+
+    Fixture();
+    void giveWeigthOnlyToYear(unsigned int year);
+
+    // Data members
+    AreaLink* link = nullptr;
+    std::shared_ptr<BindingConstraint> BC;
+};
+
+// ================================
+// The fixture's member functions
+// ================================
+
+Fixture::Fixture()
+{
     simulationBetweenDays(study, 0, 7);
 
     double loadInAreaOne = 0.;
