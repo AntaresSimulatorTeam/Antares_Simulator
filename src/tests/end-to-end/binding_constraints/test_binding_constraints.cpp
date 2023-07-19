@@ -22,10 +22,6 @@ using namespace Benchmarking;
 void initializeStudy(Study::Ptr study)
 {
     study->resultWriter = std::make_shared<NullResultWriter>();
-    if (not memory.initializeTemporaryFolder())
-    {
-        logs.error() << "Could not initialize temp folder properly";
-    }
     study->parameters.reset();
     Data::Study::Current::Set(study);
 }
@@ -50,8 +46,6 @@ Area* addAreaToStudy(Study::Ptr study, const std::string& areaName, double loadI
     // Default values for the area
     area->createMissingData();
     area->resetToDefaultValues();
-
-    study->areas.rebuildIndexes();
 
     area->thermal.unsuppliedEnergyCost = 1000.0;
     area->spreadUnsuppliedEnergyCost	= 0.;
@@ -296,6 +290,8 @@ Fixture::Fixture()
 
     double loadInAreaTwo = 100.;
     Area* area2 = addAreaToStudy(study, "Area 2", loadInAreaTwo);
+
+    study->areas.rebuildIndexes();
 
     link = AreaAddLinkBetweenAreas(area1, area2);
 
