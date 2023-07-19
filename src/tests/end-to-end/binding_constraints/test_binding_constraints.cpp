@@ -81,8 +81,6 @@ void configureCluster(std::shared_ptr<ThermalCluster> cluster)
 
     cluster->minStablePower = 0.0;
     cluster->series->timeSeries.fill(availablePower);
-
-    cluster->nominalCapacityWithSpinning = cluster->nominalCapacity;
 }
 
 
