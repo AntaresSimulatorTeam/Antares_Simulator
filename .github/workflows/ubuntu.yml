@@ -102,6 +102,23 @@ jobs:
       run: |
              cmake --build _build --config release -j2
 
+
+    # simtest
+    - name: Read simtest version
+      id: simtest-version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'simtest.json'
+        prop_path: 'version'
+
+    - name: Run named mps tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-named-mps
+        os: ${{ matrix.test-platform }}
+
     - name: Run unfeasibility-related tests
       if: ${{ env.IS_PUSH == 'true' }}
       run: |
@@ -128,14 +145,6 @@ jobs:
       with:
         name: test-log
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
-
-    # simtest
-    - name: Read simtest version
-      id: simtest-version
-      uses: notiz-dev/github-action-json-property@release
-      with:
-        path: 'simtest.json'
-        prop_path: 'version'
 
     - name: Run tests about infinity on BCs RHS
       if: ${{ env.IS_PUSH == 'true' }}
@@ -167,14 +176,6 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-mps
-        os: ${{ matrix.test-platform }}
-
-    - name: Run named mps tests
-      if: ${{ env.IS_PUSH == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-named-mps
         os: ${{ matrix.test-platform }}
 
     - name: Run tests for adequacy patch (CSR)
