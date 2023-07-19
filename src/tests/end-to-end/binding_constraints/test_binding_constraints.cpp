@@ -94,15 +94,6 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     //Define power consumption
     cluster->series->timeSeries.fill(availablePower);
 
-    double* prodCost	= cluster->productionCost;
-    double marginalCost = cluster->marginalCost;
-
-    // Production cost
-    auto& modulation = cluster->modulation[thermalModulationCost];
-    for (uint h = 0; h != cluster->modulation.height; ++h)
-        prodCost[h] = marginalCost * modulation[h];
-
-
     cluster->nominalCapacityWithSpinning = cluster->nominalCapacity;
 
     auto added = area->thermal.list.add(cluster);

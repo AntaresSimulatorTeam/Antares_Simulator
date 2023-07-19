@@ -226,6 +226,8 @@ public:
     double getMarginalCost(uint tsIndex, uint hourInTheYear) const;
     double getMarketBidCost(uint tsIndex, uint hourInTheYear) const;
 
+    void setProductionCost();
+
     // Check & correct availability timeseries for thermal availability
     // Only applies if time-series are ready-made
     void checkAndCorrectAvailability();

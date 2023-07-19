@@ -135,8 +135,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
     forcedLaw(thermalLawUniform),
     plannedLaw(thermalLawUniform),
     PthetaInf(HOURS_PER_YEAR, 0),
-    thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
-    costgeneration(setManually)
+    thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries())
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");
@@ -518,6 +517,7 @@ void Data::ThermalCluster::reset()
     marketBidCost = 0.;
     variableomcost = 0.;
     thermalEconomicTimeSeries.resize(1, ThermalEconomicTimeSeries());
+    this->setProductionCost();
 
     // modulation
     modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
@@ -820,6 +820,23 @@ double ThermalCluster::getMarketBidCost(uint serieIndex, uint hourInTheYear) con
     {
         const uint tsIndex = Math::Min(serieIndex, thermalEconomicTimeSeries.size() - 1);
         return thermalEconomicTimeSeries[tsIndex].marketBidCostPerHourTs[hourInTheYear] * mod;
+    }
+}
+
+void ThermalCluster::setProductionCost()
+{
+    auto& modulationCost = modulation[thermalModulationCost];
+    if (costgeneration == Data::setManually)
+    {
+        // alias to the marginal cost
+        for (uint h = 0; h != modulation.height; ++h)
+            productionCost[h] = marginalCost * modulationCost[h];
+    }
+    else
+    {
+        const auto& marginalCostPerHour = thermalEconomicTimeSeries[0].marginalCostPerHourTs;
+        for (uint h = 0; h != modulation.height; ++h)
+            productionCost[h] = marginalCostPerHour[h] * modulationCost[h];
     }
 }
 
