@@ -272,11 +272,11 @@ void StudyBuilder::simulationBetweenDays(const unsigned int firstDay, const unsi
 // ===============
 // The fixture
 // ===============
-struct Fixture : public StudyBuilder
+struct StudyForBCTest : public StudyBuilder
 {
     using StudyBuilder::StudyBuilder;
 
-    Fixture();
+    StudyForBCTest();
     void giveWeigthOnlyToYear(unsigned int year);
 
     // Data members
@@ -288,7 +288,7 @@ struct Fixture : public StudyBuilder
 // The fixture's member functions
 // ================================
 
-Fixture::Fixture()
+StudyForBCTest::StudyForBCTest()
 {
     simulationBetweenDays(0, 7);
 
@@ -311,7 +311,7 @@ Fixture::Fixture()
     BC->enabled(true);
 };
 
-void Fixture::giveWeigthOnlyToYear(unsigned int year)
+void StudyForBCTest::giveWeigthOnlyToYear(unsigned int year)
 {
     // Set all years weight to zero
     unsigned int nbYears = study->parameters.nbYears;
@@ -326,7 +326,7 @@ void Fixture::giveWeigthOnlyToYear(unsigned int year)
 }
 
 
-BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BINDING_CONSTRAINTS, Fixture)
+BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BINDING_CONSTRAINTS, StudyForBCTest)
 
 BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
 {
@@ -470,7 +470,7 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
 BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BC_RHS_SCENARIZATION, Fixture)
+BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BC_RHS_SCENARIZATION, StudyForBCTest)
 
 
 BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
