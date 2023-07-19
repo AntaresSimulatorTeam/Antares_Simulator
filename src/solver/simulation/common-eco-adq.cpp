@@ -394,10 +394,14 @@ void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
 {
     auto& firstOptStat = problem.optimizationStatistics[0];
     state.averageOptimizationTime1 = firstOptStat.getAverageSolveTime();
-    firstOptStat.reset();
 
     auto& secondOptStat = problem.optimizationStatistics[1];
     state.averageOptimizationTime2 = secondOptStat.getAverageSolveTime();
+
+    state.averageUpdateTime
+      = firstOptStat.getAverageUpdateTime() + secondOptStat.getAverageUpdateTime();
+
+    firstOptStat.reset();
     secondOptStat.reset();
 }
 

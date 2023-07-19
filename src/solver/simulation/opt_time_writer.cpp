@@ -33,7 +33,8 @@ OptimizationStatisticsWriter::OptimizationStatisticsWriter(
 {
     printHeader();
 #define SEP Yuni::IO::Separator
-    pFilename << "debug" << SEP << "solver" << SEP << "weeksSolveTimes_" << year << ".txt";
+    pFilename << "optimization" << SEP << "week-solve-durations" << SEP << "year_" << year
+              << ".txt";
 #undef SEP
 }
 
