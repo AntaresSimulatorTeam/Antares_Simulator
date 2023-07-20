@@ -179,13 +179,13 @@ option(BUILD_UI "Build antares ui simulator" ON)
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
 option(BUILD_TOOLS "Build antares tools" OFF)
-message(STATUS "Build antares tools": ${BUILD_TOOLS}")
+message(STATUS "Build antares tools: ${BUILD_TOOLS}")
 
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
-message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
+message(STATUS "Build OR-Tools: ${BUILD_ORTOOLS}")
 
 option(BUILD_MINIZIP "Build minizip" OFF)
-message(STATUS "Build minizip ${BUILD_MINIZIP}")
+message(STATUS "Build minizip: ${BUILD_MINIZIP}")
 
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
