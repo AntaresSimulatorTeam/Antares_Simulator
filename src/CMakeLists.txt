@@ -178,6 +178,9 @@ endif ()
 option(BUILD_UI "Build antares ui simulator" ON)
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
+option(BUILD_TOOLS "Build antares tools" OFF)
+message(STATUS "Build antares tools": ${BUILD_TOOLS}")
+
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
 message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
 
@@ -326,7 +329,9 @@ add_subdirectory(solver)	#antares solver and all associated libs
 add_subdirectory(analyzer)	#antares analyser
 
 # Tools
+if (BUILD_TOOLS)
 add_subdirectory(tools)	#All antares tools
+endif()
 
 # Tests
 # 	Not setting BUILD_TESTING as a command line argument is equivalent to use -DBUILD_TESTING=OFF
