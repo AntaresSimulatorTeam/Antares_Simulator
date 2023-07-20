@@ -81,9 +81,9 @@ inline void BindingConstraint::mutateTypeWithoutCheck(Type t)
         pType = t;
 }
 
-        inline bool BindingConstraint::skipped() const
+inline bool BindingConstraint::skipped() const
 {
-    return linkCount() == 0 && enabledClusterCount() == 0;
+    return linkCount() == 0 && clusterCount() == 0;
 }
 
 inline BindingConstraint::iterator BindingConstraint::begin() {
