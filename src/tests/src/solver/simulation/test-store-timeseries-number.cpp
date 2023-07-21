@@ -1,16 +1,15 @@
 //
 // Created by marechaljas on 15/03/23.
 //
-#include <memory>
-#include "antares/study/fwd.h"
-
 #define BOOST_TEST_MODULE store-timeseries-number
 #define WIN32_LEAN_AND_MEAN
+
+
 #include <boost/test/included/unit_test.hpp>
 #include <filesystem>
-#include <fstream>
-#include "timeseries-numbers.h"
+#include "antares/study.h"
 #include "immediate_file_writer.h"
+#include "timeseries-numbers.h"
 #include "BindingConstraintsTimeSeriesNumbersWriter.h"
 
 using namespace Antares::Solver;
