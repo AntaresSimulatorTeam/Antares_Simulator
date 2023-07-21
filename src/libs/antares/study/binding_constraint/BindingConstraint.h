@@ -282,14 +282,6 @@ public:
     ** \brief Get how many thermal clusters the binding constraint contains
     */
     uint clusterCount() const;
-
-    /*!
-    ** \brief Get how many thermal clusters the binding constraint contains
-    */
-    uint enabledClusterCount() const;
-
-    //@}
-
     //@}
 
     //! \name Type of the binding constraint

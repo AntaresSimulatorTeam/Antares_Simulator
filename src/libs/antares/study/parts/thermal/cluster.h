@@ -230,6 +230,8 @@ public:
     // Only applies if time-series are ready-made
     void checkAndCorrectAvailability();
 
+    bool isActive() const;
+
     /*!
     ** \brief The group ID
     **
