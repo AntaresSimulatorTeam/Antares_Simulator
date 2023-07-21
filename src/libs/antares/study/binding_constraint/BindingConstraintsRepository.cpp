@@ -424,7 +424,7 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::en
                      [](const auto &bc) {
                          return bc->enabled();
                      });
-        enabledConstraints_ = out;
+        enabledConstraints_ = std::move(out);
         return enabledConstraints_.value();
     }
 }
