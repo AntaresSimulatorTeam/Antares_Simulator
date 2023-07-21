@@ -135,6 +135,21 @@ double getLinkFlowForDay(const std::shared_ptr<ISimulation<Economy>>& simulation
 }
 
 
+Variable::Storage<Variable::Economy::VCardProductionByDispatchablePlant>::ResultsType*
+retrieveThermalClusterGenerationResults(const std::shared_ptr<ISimulation<Economy>>& simulation, ThermalCluster* cluster)
+{
+    typename Variable::Storage<Variable::Economy::VCardProductionByDispatchablePlant>::ResultsType* result = nullptr;
+    simulation->variables.retrieveResultsForThermalCluster<Variable::Economy::VCardProductionByDispatchablePlant>(&result, cluster);
+    return result;
+}
+
+double getThermalGenerationAthour(const std::shared_ptr<ISimulation<Economy>>& simulation, ThermalCluster* cluster, unsigned int hour)
+{
+    auto result = retrieveThermalClusterGenerationResults(simulation, cluster);
+    return (*result)[cluster->index].avgdata.hourly[hour];
+}
+
+
 // =================
 // Helper classes
 // =================
@@ -305,6 +320,7 @@ struct StudyForBCTest : public StudyBuilder
 
     // Data members
     AreaLink* link = nullptr;
+    std::shared_ptr<ThermalCluster> cluster;
     std::shared_ptr<BindingConstraint> BC;
 };
 
@@ -329,10 +345,8 @@ StudyForBCTest::StudyForBCTest()
 
     configureLinkCapacities(link);
 
-    std::shared_ptr<ThermalCluster> cluster = addClusterToArea(area1, "some cluster");
+    cluster = addClusterToArea(area1, "some cluster");
     configureCluster(cluster);
-
-    BC = addBindingConstraints(study, "BC1", "Group1");
 };
 
 // ==============================================
@@ -347,7 +361,26 @@ struct StudyWithBConLink : public StudyForBCTest
 
 StudyWithBConLink::StudyWithBConLink()
 {
+    BC = addBindingConstraints(study, "BC1", "Group1");
     BC->weight(link, 1);
+    BC->enabled(true);
+}
+
+
+// ==============================================
+// Study fixture containing a BC on the link 
+// ==============================================
+
+struct StudyWithBConCluster : public StudyForBCTest
+{
+    using StudyForBCTest::StudyForBCTest;
+    StudyWithBConCluster();
+};
+
+StudyWithBConCluster::StudyWithBConCluster()
+{
+    BC = addBindingConstraints(study, "BC1", "Group1");
+    BC->weight(cluster.get(), 1);
     BC->enabled(true);
 }
 
@@ -491,6 +524,38 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
 
     unsigned int hour = 100;
     BOOST_TEST(getLinkFlowAthour(simulation->get(), link, hour) >= rhsValue, tt::tolerance(0.001));
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_FIXTURE_TEST_SUITE(TESTS_BINDING_CONSTRAINTS_ON_A_CLUSTER, StudyWithBConCluster)
+
+BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90)
+{
+    // Study parameters varying depending on the test
+    unsigned int nbYears = 1;
+    setNumberMCyears(study, nbYears);
+
+    // Binding constraint parameter varying depending on the test
+    BC->setTimeGranularity(BindingConstraint::typeHourly);
+    BC->operatorType(BindingConstraint::opEquality);
+
+    unsigned int numberOfTS = 1;
+    BCrhsConfig bcRHSconfig(BC, numberOfTS);
+
+    double rhsValue = 90.;
+    bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
+
+    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
+    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
+
+    simulation->create();
+    giveWeigthOnlyToYear(0);
+    simulation->run();
+
+    unsigned int hour = 10;
+    BOOST_TEST(getThermalGenerationAthour(simulation->get(), cluster.get(), hour) == rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
