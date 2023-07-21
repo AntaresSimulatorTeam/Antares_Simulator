@@ -75,7 +75,7 @@ typedef struct
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a X, il permet
        de renseigner directement les structures de description du reseau avec les
        resultats contenus dans X */
-    double** AdresseOuPlacerLaValeurDesVariablesOptimisees;
+    std::vector<double*> AdresseOuPlacerLaValeurDesVariablesOptimisees;
     /* Resultat */
     std::vector<double> X;
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a CoutsMarginauxDesContraintes,
