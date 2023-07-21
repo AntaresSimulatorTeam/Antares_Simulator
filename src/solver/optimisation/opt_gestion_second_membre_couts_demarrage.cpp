@@ -50,7 +50,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     std::vector<double>& SecondMembre = ProblemeAResoudre->SecondMembre;
 
-    double** AdresseOuPlacerLaValeurDesCoutsMarginaux
+    std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
 
     int NombreDePasDeTempsPourUneOptimisation
