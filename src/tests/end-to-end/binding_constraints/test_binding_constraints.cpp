@@ -100,15 +100,25 @@ void addScratchpadToEachArea(Study::Ptr study)
 // Simulation results retrieval
 // -------------------------------
 
-Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType*
-retrieveLinkResults(const std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link)
+class OutputRetriever
 {
-    typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* result = nullptr;
-    simulation->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
-    return result;
-}
+public:
+    OutputRetriever(std::shared_ptr<ISimulation<Economy>>& simulation) : simulation_(simulation) {}
 
-double getLinkFlowAthour(const std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int hour)
+    double linkFlowAtHour(AreaLink* link, unsigned int hour);
+    double linkFlowForWeek(AreaLink* link, unsigned int week);
+    double linkFlowForDay(AreaLink* link, unsigned int day);
+
+
+private:
+    Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* 
+    retrieveLinkFlowResults(AreaLink* link);
+
+    std::shared_ptr<ISimulation<Economy>>& simulation_;
+};
+
+
+double OutputRetriever::linkFlowAtHour(AreaLink* link, unsigned int hour)
 {
     // There is a problem here : 
     //    we cannot easly retrieve the hourly flow for a link and a year : 
@@ -119,22 +129,32 @@ double getLinkFlowAthour(const std::shared_ptr<ISimulation<Economy>>& simulation
     //    We should be able to run each year independently, which is not possible now.
     //    A workaround is to retrieve syntheses, and that's what we do here.
 
-    auto result = retrieveLinkResults(simulation, link);
+    auto result = retrieveLinkFlowResults(link);
     return result->avgdata.hourly[hour];
 }
 
-double getLinkFlowForWeek(const std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int week)
+double OutputRetriever::linkFlowForWeek(AreaLink* link, unsigned int week)
 {
-    auto result = retrieveLinkResults(simulation, link);
+    auto result = retrieveLinkFlowResults(link);
     return result->avgdata.weekly[week];
 }
 
-double getLinkFlowForDay(const std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int day)
+double OutputRetriever::linkFlowForDay(AreaLink* link, unsigned int day)
 {
-    auto result = retrieveLinkResults(simulation, link);
+    auto result = retrieveLinkFlowResults(link);
     return result->avgdata.daily[day];
 }
 
+
+Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* 
+OutputRetriever::retrieveLinkFlowResults(AreaLink* link)
+{
+    typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* result = nullptr;
+    simulation_->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
+    return result;
+}
+
+// =======================================================
 
 Variable::Storage<Variable::Economy::VCardProductionByDispatchablePlant>::ResultsType*
 retrieveThermalClusterGenerationResults(const std::shared_ptr<ISimulation<Economy>>& simulation, ThermalCluster* cluster)
@@ -223,7 +243,7 @@ public:
     ~SimulationHandler() = default;
     void create();
     void run() { simulation_->run(); }
-    std::shared_ptr<ISimulation<Economy>> get() { return simulation_; }
+    std::shared_ptr<ISimulation<Economy>>& get() { return simulation_; }
 
 private:
     std::shared_ptr<ISimulation<Economy>> simulation_;
@@ -256,8 +276,9 @@ struct StudyBuilder
     void giveWeigthOnlyToYear(unsigned int year);
 
     // Data members
-    std::shared_ptr<SimulationHandler> simulation;
     std::shared_ptr<Study> study;
+    std::shared_ptr<SimulationHandler> simulation;
+    std::shared_ptr<OutputRetriever> output;
 };
 
 StudyBuilder::StudyBuilder()
@@ -269,6 +290,7 @@ StudyBuilder::StudyBuilder()
     simulation = std::make_shared<SimulationHandler>(study);
 
     initializeStudy(study);
+    output = std::make_shared<OutputRetriever>(simulation->get());
 }
 
 void StudyBuilder::simulationBetweenDays(const unsigned int firstDay, const unsigned int lastDay)
@@ -412,7 +434,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     simulation->run();
 
     unsigned int hour = 0;
-    BOOST_TEST(getLinkFlowAthour(simulation->get(), link, hour) == rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->linkFlowAtHour(link, hour) == rhsValue, tt::tolerance(0.001));
 }
 
 
@@ -441,7 +463,7 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
 
     unsigned int week = 0;
     unsigned int nbDaysInWeek = 7;
-    BOOST_TEST(getLinkFlowForWeek(simulation->get(), link, week) == rhsValue * nbDaysInWeek, tt::tolerance(0.001));
+    BOOST_TEST(output->linkFlowForWeek(link, week) == rhsValue * nbDaysInWeek, tt::tolerance(0.001));
 }
 
 
@@ -469,7 +491,7 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     simulation->run();
 
     unsigned int day = 0;
-    BOOST_TEST(getLinkFlowForDay(simulation->get(), link, day) == rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->linkFlowForDay(link, day) == rhsValue, tt::tolerance(0.001));
 }
 
 
@@ -497,7 +519,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     simulation->run();
 
     unsigned int hour = 100;
-    BOOST_TEST(getLinkFlowAthour(simulation->get(), link, hour) <= rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->linkFlowAtHour(link, hour) <= rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
@@ -524,7 +546,7 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
     simulation->run();
 
     unsigned int hour = 100;
-    BOOST_TEST(getLinkFlowAthour(simulation->get(), link, hour) >= rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->linkFlowAtHour(link, hour) >= rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -591,7 +613,7 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
     simulation->run();
 
     unsigned int hour = 0;
-    BOOST_TEST(getLinkFlowAthour(simulation->get(), link, hour) == bcGroupRHS2, tt::tolerance(0.001));
+    BOOST_TEST(output->linkFlowAtHour(link, hour) == bcGroupRHS2, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
@@ -631,7 +653,7 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
     simulation->run();
 
     unsigned int hour = 0;
-    BOOST_TEST(getLinkFlowAthour(simulation->get(), link, hour) == 40., tt::tolerance(0.001));
+    BOOST_TEST(output->linkFlowAtHour(link, hour) == 40., tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
