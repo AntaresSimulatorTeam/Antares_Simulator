@@ -4,6 +4,7 @@
 
 #include "BindingConstraintGroupRepository.h"
 #include <algorithm>
+#include <numeric>
 #include <memory>
 #include "BindingConstraintsRepository.h"
 #include "BindingConstraintGroup.h"
@@ -32,26 +33,24 @@ namespace Antares::Data {
     }
 
     bool BindingConstraintGroupRepository::timeSeriesWidthConsistentInGroups() const {
-        bool hasError = false;
-        for(const auto& group: groups_) {
-            unsigned count = 0;
-            for (const auto& bc: group->constraints()) {
-                auto width = bc->RHSTimeSeries().width;
-                if (count == 0) {
-                    count = width;
-                    continue;
-                }
-                if (count != width) {
-                    logs.error() << "Inconsistent time series width for constraint of the same group. Group at fault: "
-                                 << bc->group()
-                                 << " .Previous width was " << count
-                                 << " new constraint " << bc->name()
-                                 << " found with width of " << width;
-                    hasError = true;
-                }
-            }
-        }
-        return !hasError;
+        bool allConsistent = !std::any_of(groups_.begin(), groups_.end(), [](const std::shared_ptr<Antares::Data::BindingConstraintGroup> &group) {
+                                            if (group->constraints().empty())
+                                                return false;
+                                            auto width = (*group->constraints().begin())->RHSTimeSeries().width;
+                                            bool isConsistent = std::all_of(group->constraints().begin(), group->constraints().end(), [&width](const std::shared_ptr<BindingConstraint>& bc){
+                                                              bool sameWidth = bc->RHSTimeSeries().width == width;
+                                                              if (!sameWidth) {
+                                                                  logs.error() << "Inconsistent time series width for constraint of the same group. Group at fault: "
+                                                                               << bc->group()
+                                                                               << " .Previous width was " << width
+                                                                               << " new constraint " << bc->name()
+                                                                               << " found with width of " << bc->RHSTimeSeries().width;
+                                                              }
+                                                              return sameWidth;
+                                                          });
+                                            return !isConsistent;
+        });
+        return allConsistent;
     }
 
     void BindingConstraintGroupRepository::resizeAllTimeseriesNumbers(unsigned int nb_years) {
