@@ -60,6 +60,7 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     BOOST_CHECK(added != nullptr);
 
     area->thermal.list.mapping[cluster->id()] = added;
+    area->thermal.prepareAreaWideIndexes();
 
     return cluster;
 }
@@ -146,7 +147,7 @@ retrieveThermalClusterGenerationResults(const std::shared_ptr<ISimulation<Econom
 double getThermalGenerationAthour(const std::shared_ptr<ISimulation<Economy>>& simulation, ThermalCluster* cluster, unsigned int hour)
 {
     auto result = retrieveThermalClusterGenerationResults(simulation, cluster);
-    return (*result)[cluster->index].avgdata.hourly[hour];
+    return (*result)[cluster->areaWideIndex].avgdata.hourly[hour];
 }
 
 
