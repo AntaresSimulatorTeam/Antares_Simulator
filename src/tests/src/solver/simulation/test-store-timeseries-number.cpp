@@ -1,9 +1,6 @@
 //
 // Created by marechaljas on 15/03/23.
 //
-#include <memory>
-#include "antares/study/fwd.h"
-
 #define BOOST_TEST_MODULE store-timeseries-number
 #define WIN32_LEAN_AND_MEAN
 
