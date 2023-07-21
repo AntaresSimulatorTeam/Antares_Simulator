@@ -28,9 +28,7 @@ namespace Antares::Data {
             group->add(constraint);
         }
 
-        bool tsAreConsistent = timeSeriesWidthConsistentInGroups();
-
-        return tsAreConsistent;
+        return timeSeriesWidthConsistentInGroups();
     }
 
     bool BindingConstraintGroupRepository::timeSeriesWidthConsistentInGroups() const {
