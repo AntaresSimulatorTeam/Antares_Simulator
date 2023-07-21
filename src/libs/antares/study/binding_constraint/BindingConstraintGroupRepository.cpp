@@ -33,7 +33,7 @@ namespace Antares::Data {
 
     bool BindingConstraintGroupRepository::timeSeriesWidthConsistentInGroups() const {
         bool hasError = false;
-        for(const auto& group: this->groups_) {
+        for(const auto& group: groups_) {
             unsigned count = 0;
             for (const auto& bc: group->constraints()) {
                 auto width = bc->RHSTimeSeries().width;
