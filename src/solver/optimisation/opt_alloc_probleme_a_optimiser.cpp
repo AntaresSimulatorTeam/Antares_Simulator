@@ -55,13 +55,12 @@ using namespace Antares;
 void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                                                  int NbTermes)
 {
-    const size_t szNbVarsDouble = ProblemeAResoudre->NombreDeVariables * sizeof(double);
-    const size_t szNbVarsint = ProblemeAResoudre->NombreDeVariables * sizeof(int);
-    const size_t szNbContint = ProblemeAResoudre->NombreDeContraintes * sizeof(int);
+    const size_t nbVars = ProblemeAResoudre->NombreDeVariables;
+    const size_t nbCont = ProblemeAResoudre->NombreDeContraintes;
 
-    ProblemeAResoudre->Sens.resize(ProblemeAResoudre->NombreDeContraintes);
-    ProblemeAResoudre->IndicesDebutDeLigne.assign(szNbContint, 0);
-    ProblemeAResoudre->NombreDeTermesDesLignes.assign(szNbContint, 0);
+    ProblemeAResoudre->Sens.resize(nbCont);
+    ProblemeAResoudre->IndicesDebutDeLigne.assign(nbCont, 0);
+    ProblemeAResoudre->NombreDeTermesDesLignes.assign(nbCont, 0);
 
     ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.assign(NbTermes, 0.);
     ProblemeAResoudre->IndicesColonnes.assign(NbTermes, 0);
@@ -69,33 +68,33 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
     ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
     ProblemeAResoudre->IncrementDAllocationMatriceDesContraintes = (int)(0.1 * NbTermes);
 
-    ProblemeAResoudre->CoutQuadratique.assign(szNbVarsDouble, 0.);
-    ProblemeAResoudre->CoutLineaire.assign(szNbVarsDouble, 0.);
-    ProblemeAResoudre->TypeDeVariable.assign(szNbVarsint, 0);
-    ProblemeAResoudre->Xmin.assign(szNbVarsDouble, 0.);
-    ProblemeAResoudre->Xmax.assign(szNbVarsDouble, 0.);
-    ProblemeAResoudre->X.assign(szNbVarsDouble, 0.);
+    ProblemeAResoudre->CoutQuadratique.assign(nbVars, 0.);
+    ProblemeAResoudre->CoutLineaire.assign(nbVars, 0.);
+    ProblemeAResoudre->TypeDeVariable.assign(nbVars, 0);
+    ProblemeAResoudre->Xmin.assign(nbVars, 0.);
+    ProblemeAResoudre->Xmax.assign(nbVars, 0.);
+    ProblemeAResoudre->X.assign(nbVars, 0.);
 
-    ProblemeAResoudre->SecondMembre.assign(ProblemeAResoudre->NombreDeContraintes, 0.);
+    ProblemeAResoudre->SecondMembre.assign(nbCont, 0.);
 
     ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees
-      = (double**)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(void*));
+      = (double**)MemAlloc(nbVars * sizeof(void*));
     ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits
-      = (double**)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(void*));
+      = (double**)MemAlloc(nbVars * sizeof(void*));
     ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux
-      = (double**)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(void*));
+      = (double**)MemAlloc(nbCont * sizeof(void*));
 
-    ProblemeAResoudre->CoutsMarginauxDesContraintes.assign(ProblemeAResoudre->NombreDeContraintes, 0.);
-    ProblemeAResoudre->CoutsReduits.assign(szNbVarsDouble, 0.);
+    ProblemeAResoudre->CoutsMarginauxDesContraintes.assign(nbCont, 0.);
+    ProblemeAResoudre->CoutsReduits.assign(nbVars, 0.);
 
-    ProblemeAResoudre->PositionDeLaVariable.assign(ProblemeAResoudre->NombreDeVariables, 0);
-    ProblemeAResoudre->ComplementDeLaBase.assign(ProblemeAResoudre->NombreDeContraintes, 0);
+    ProblemeAResoudre->PositionDeLaVariable.assign(nbVars, 0);
+    ProblemeAResoudre->ComplementDeLaBase.assign(nbCont, 0);
 
-    ProblemeAResoudre->Pi.assign(ProblemeAResoudre->NombreDeVariables, 0.);
-    ProblemeAResoudre->Colonne.assign(ProblemeAResoudre->NombreDeVariables, 0);
+    ProblemeAResoudre->Pi.assign(nbVars, 0.);
+    ProblemeAResoudre->Colonne.assign(nbVars, 0);
 
-    ProblemeAResoudre->NomDesVariables.resize(ProblemeAResoudre->NombreDeVariables);
-    ProblemeAResoudre->NomDesContraintes.resize(ProblemeAResoudre->NombreDeContraintes);
+    ProblemeAResoudre->NomDesVariables.resize(nbVars);
+    ProblemeAResoudre->NomDesContraintes.resize(nbVars);
 }
 
 void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
