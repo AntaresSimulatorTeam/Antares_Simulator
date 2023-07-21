@@ -59,11 +59,14 @@ if(Python3_Interpreter_FOUND)
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
+# The Kirchhoff constraint builder is built only if BUILD_TOOLS=ON
+if (BUILD_TOOLS)
       add_test(
         NAME kirchhoff
         COMMAND Python3::Interpreter -m pytest -m kirchhoff --exe_kirchhoff_path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-kirchhoff-constraints-builder> kirchhoff_pytest.py
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/kirchhoff-cbuilder"
         )
+endif()
 
       set_property(TEST unfeasible PROPERTY LABELS study sirius)
   else()
