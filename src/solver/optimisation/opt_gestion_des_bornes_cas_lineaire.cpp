@@ -227,7 +227,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
     std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
-    double** AdresseOuPlacerLaValeurDesCoutsReduits
+    std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsReduits
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits;
     std::vector<double>& Xmin = ProblemeAResoudre->Xmin;
     std::vector<double>& Xmax = ProblemeAResoudre->Xmax;

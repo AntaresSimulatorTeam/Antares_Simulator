@@ -86,7 +86,7 @@ typedef struct
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a CoutsMarginauxDesContraintes,
        il permet de renseigner directement les structures de description du reseau avec les
        resultats sur les couts reduits */
-    double** AdresseOuPlacerLaValeurDesCoutsReduits;
+    std::vector<double*> AdresseOuPlacerLaValeurDesCoutsReduits;
     std::vector<double> CoutsReduits;
     /* En Entree ou en Sortie */
     int ExistenceDUneSolution; /* En sortie, vaut :
