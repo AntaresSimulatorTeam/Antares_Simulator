@@ -86,6 +86,10 @@ inline bool BindingConstraint::skipped() const
     return linkCount() == 0 && clusterCount() == 0;
 }
 
+inline bool BindingConstraint::isActive() const {
+    return enabled() && !skipped();
+}
+
 inline BindingConstraint::iterator BindingConstraint::begin() {
     return pLinkWeights.begin();
 }

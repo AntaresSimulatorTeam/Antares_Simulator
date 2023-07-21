@@ -190,6 +190,7 @@ public:
     //@}
 
     bool skipped() const;
+    bool isActive() const;
 
     //Ref to prevent copy. const ref to prevent modification.
     const Matrix<>& RHSTimeSeries() const;
@@ -411,6 +412,7 @@ private:
     void clear();
 
     void copyFrom(BindingConstraint const *original);
+
 }; // class BindingConstraint
 
 // class BindConstList
