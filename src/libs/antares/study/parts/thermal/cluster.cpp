@@ -851,5 +851,9 @@ void ThermalCluster::checkAndCorrectAvailability()
                        << " available power lifted to match Pmin and Pnom requirements";
 }
 
+bool ThermalCluster::isActive() const {
+    return enabled && !mustrun;
+}
+
 } // namespace Data
 } // namespace Antares
