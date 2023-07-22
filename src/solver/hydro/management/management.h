@@ -169,6 +169,8 @@ public:
 
 }; // class HydroManagement
 
+double CalculateDailyMeanPower(uint dYear, const Matrix<double>::ColumnType&  maxPower);
+
 } // namespace Antares
 
 #endif // __ANTARES_SOLVER_HYDRO_MANAGEMENT_MANAGEMENT_H__
