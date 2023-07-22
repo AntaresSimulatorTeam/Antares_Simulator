@@ -640,6 +640,18 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         }
 
         // -------------
+        // Hydro Power Credits...
+        // -------------
+        indexTS = ts_to_tsIndex.at(timeSeriesHydro);
+
+        if (!isTSintramodal[indexTS])
+        {
+            uint nbTimeSeries = area.hydro.series->maxgen.width;
+            area.hydro.series->timeseriesNumbersPowerCredits[0][year]
+              = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+        }
+
+        // -------------
         // Thermal ...
         // -------------
         indexTS = ts_to_tsIndex.at(timeSeriesThermal);
