@@ -183,7 +183,7 @@ class hydroPowerCreditsScBuilderPageMaker final : public simpleScBuilderPageMake
 
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        return new_check_allocation<Renderer::hydroScBuilderRenderer>();
+        return new_check_allocation<Renderer::hydroPowerCreditsScBuilderRenderer>();
     }
     Notebook::Page* addPageToNotebook() override
     {

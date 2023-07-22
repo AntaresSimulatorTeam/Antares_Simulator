@@ -54,6 +54,8 @@ void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
         solar.saveToINIFile(study_, file);
         // hydro
         hydro.saveToINIFile(study_, file);
+        // hydroPowerCredits
+        hydroPowerCredits.saveToINIFile(study_, file);
         // wind
         wind.saveToINIFile(study_, file);
         // Thermal clusters, renewable clusters, links NTS : each area
@@ -78,6 +80,7 @@ bool Rules::reset()
     load.reset(study_);
     solar.reset(study_);
     hydro.reset(study_);
+    hydroPowerCredits.reset(study_);
     wind.reset(study_);
 
     // Thermal
@@ -242,6 +245,20 @@ bool Rules::readHydro(const AreaName::Vector& splitKey, String value, bool updat
     return true;
 }
 
+bool Rules::readHydroPowerCredits(const AreaName::Vector& splitKey, String value, bool updaterMode)
+{
+    const uint year = splitKey[2].to<uint>();
+    const AreaName& areaname = splitKey[1];
+
+    const Data::Area* area = getArea(areaname, updaterMode);
+    if (!area)
+        return false;
+
+    uint val = fromStringToTSnumber(value);
+    hydroPowerCredits.set(area->index, year, val);
+    return true;
+}
+
 bool Rules::readSolar(const AreaName::Vector& splitKey, String value, bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
@@ -335,6 +352,8 @@ bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool update
         return readWind(splitKey, value, updaterMode);
     else if (kind_of_scenario == "h")
         return readHydro(splitKey, value, updaterMode);
+    else if (kind_of_scenario == "hgp")
+        return readHydroPowerCredits(splitKey, value, updaterMode);
     else if (kind_of_scenario == "s")
         return readSolar(splitKey, value, updaterMode);
     else if (kind_of_scenario == "hl")
@@ -354,6 +373,7 @@ bool Rules::apply()
         returned_status = load.apply(study_) && returned_status;
         returned_status = solar.apply(study_) && returned_status;
         returned_status = hydro.apply(study_) && returned_status;
+        returned_status = hydroPowerCredits.apply(study_) && returned_status;
         returned_status = wind.apply(study_) && returned_status;
         for (uint i = 0; i != pAreaCount; ++i)
         {

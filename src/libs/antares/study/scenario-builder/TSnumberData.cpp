@@ -118,6 +118,14 @@ inline bool CheckValidity<Data::BindingConstraintTimeSeriesNumbers>(uint, const 
     return true;
 }
 
+template<class D>
+static inline bool CheckValidityHydroPowerCredits(uint value, const D& data)
+{
+    // TS Generator never used
+    //return value < data.countpowercredits;
+    return true;
+}
+
 template<class StringT, class D>
 bool ApplyToMatrix(uint& errors,
                    StringT& logprefix,
@@ -142,6 +150,50 @@ bool ApplyToMatrix(uint& errors,
 
             // When the TS-Generators are not used
             if (!CheckValidity(tsNum, data, tsGenMax))
+            {
+                if (errors <= maxErrors)
+                {
+                    if (++errors == maxErrors)
+                        logs.warning() << "scenario-builder: ... (skipped)";
+                    else
+                        logs.warning() << "scenario-builder: " << logprefix
+                                       << "value out of bounds for the year " << (y + 1);
+                }
+                ret = false;
+                continue;
+            }
+            // Ok, assign. The value provided by the interface is user-friendly
+            // and starts from 1.
+            target[y] = tsNum;
+        }
+    }
+
+    return ret;
+}
+
+template<class StringT, class D>
+bool ApplyToMatrixPowerCredits(uint& errors,
+                                StringT& logprefix,
+                                D& data,
+                                const TSNumberData::MatrixType::ColumnType& years)
+{
+    bool ret = true;
+
+    // In this case, m.height represents the total number of years
+    const uint nbYears = data.timeseriesNumbersPowerCredits.height;
+    // The matrix m has only one column
+    assert(data.timeseriesNumbersPowerCredits.width == 1);
+    typename Matrix<uint32>::ColumnType& target = data.timeseriesNumbersPowerCredits[0];
+
+    for (uint y = 0; y != nbYears; ++y)
+    {
+        if (years[y] != 0)
+        {
+            // The new TS number
+            uint tsNum = years[y] - 1;
+
+            // When the TS-Generators are not used
+            if (!CheckValidityHydroPowerCredits(tsNum, data))
             {
                 if (errors <= maxErrors)
                 {
@@ -318,6 +370,41 @@ bool hydroTSNumberData::apply(Study& study)
 
         logprefix.clear() << "Hydro: Area '" << area.name << "': ";
         ret = ApplyToMatrix(errors, logprefix, *area.hydro.series, col, tsGenCountHydro) && ret;
+    }
+    return ret;
+}
+
+// ================================
+// Hydro Energy Credits...
+// ================================
+
+uint hydroPowerCreditsTSNumberData::get_tsGenCount(const Study& study) const
+{
+    //This function must be overriden because it is inherited from abstract class
+    return 0;
+}
+
+bool hydroPowerCreditsTSNumberData::apply(Study& study)
+{
+    bool ret = true;
+    CString<512, false> logprefix;
+    // Errors
+    uint errors = 0;
+
+    // The total number of areas;
+    const uint areaCount = study.areas.size();
+
+
+    for (uint areaIndex = 0; areaIndex != areaCount; ++areaIndex)
+    {
+        // Alias to the current area
+        Area& area = *(study.areas.byIndex[areaIndex]);
+        // alias to the current column
+        assert(areaIndex < pTSNumberRules.width);
+        const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
+
+        logprefix.clear() << "Hydro Power Credits: Area '" << area.name << "': ";
+        ret = ApplyToMatrixPowerCredits(errors, logprefix, *area.hydro.series, col) && ret;
     }
     return ret;
 }

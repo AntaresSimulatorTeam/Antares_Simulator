@@ -69,6 +69,36 @@ double hydroScBuilderRenderer::cellNumericValue(int x, int y) const
     return 0.;
 }
 
+bool hydroPowerCreditsScBuilderRenderer::cellValue(int x, int y, const Yuni::String& value)
+{
+    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
+    {
+        if ((uint)y < study->areas.size())
+        {
+            assert((uint)y < pRules->hydroPowerCredits.width());
+            assert((uint)x < pRules->hydroPowerCredits.height());
+            uint val = fromStringToTSnumber(value);
+            pRules->hydroPowerCredits.set_value(x, y, val);
+            return true;
+        }
+    }
+    return false;
+}
+
+double hydroPowerCreditsScBuilderRenderer::cellNumericValue(int x, int y) const
+{
+    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
+    {
+        if ((uint)y < study->areas.size())
+        {
+            assert((uint)y < pRules->hydroPowerCredits.width());
+            assert((uint)x < pRules->hydroPowerCredits.height());
+            return pRules->hydroPowerCredits.get_value(x, y);
+        }
+    }
+    return 0.;
+}
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
