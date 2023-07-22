@@ -122,8 +122,7 @@ template<class D>
 static inline bool CheckValidityHydroPowerCredits(uint value, const D& data)
 {
     // TS Generator never used
-    //return value < data.countpowercredits;
-    return true;
+    return value < data.countpowercredits;
 }
 
 template<class StringT, class D>

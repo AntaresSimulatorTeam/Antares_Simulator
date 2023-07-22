@@ -591,14 +591,25 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
         preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, study.bindingConstraints, weekFirstDay, j);
 
-        const uint dayInTheYear = study.calendar.hours[indx].dayYear;
 
         for (uint k = 0; k < nbPays; ++k)
         {
             auto& tsIndex = *NumeroChroniquesTireesParPays[numSpace][k];
+            uint tsIndexPowerCredits = tsIndex.HydrauliquePowerCredits;
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
+
+            auto& maxgenmatrix = area.hydro.series->maxgen;
+            auto const& srcmaxgen
+              = maxgenmatrix[tsIndexPowerCredits < maxgenmatrix.width ? tsIndexPowerCredits : 0];
+            auto const& ContrainteDePmaxHydrauliqueHoraire = srcmaxgen[PasDeTempsDebut + j];
+
+            auto& maxpumpmatrix = area.hydro.series->maxpump;
+            auto const& srcmaxpump
+              = maxpumpmatrix[tsIndexPowerCredits < maxpumpmatrix.width ? tsIndexPowerCredits
+                                                                         : 0];
+            auto const& ContrainteDePmaxPompageHoraire = srcmaxpump[PasDeTempsDebut + j];
 
             assert(&scratchpad);
             assert((uint)indx < scratchpad.ts.load.height);
@@ -670,14 +681,14 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
                 problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire[j]
-                  = scratchpad.optimalMaxPower[dayInTheYear]
+                  = ContrainteDePmaxHydrauliqueHoraire
                     * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation;
             }
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDePompageModulable)
             {
                 problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxPompageHoraire[j]
-                  = scratchpad.pumpingMaxPower[dayInTheYear]
+                  = ContrainteDePmaxPompageHoraire
                     * problem.CaracteristiquesHydrauliques[k].WeeklyPumpingModulation;
             }
 
