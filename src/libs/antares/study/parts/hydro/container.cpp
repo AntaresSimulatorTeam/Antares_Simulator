@@ -242,17 +242,20 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
         }
         else
         {
-            // Is area hydro modulable ?
-            auto& max = area.hydro.maxPower[area.hydro.genMaxP];
+            /*
+            Maxgen matrix is not initialized at this moment, so this code will induce
+            Segmentation fault (core dumped) because maxgen matrix pointing to invalid memory
+            address. This code block is moved to series.cpp file for hydro.
 
-            for (uint y = 0; y != area.hydro.maxPower.height; ++y)
+            Is area hydro modulable ?
+
+            auto& max = area.hydro.series->maxgen;
+
+            if (MatrixTestForAtLeastOnePositiveValue(max))
             {
-                if (max[y] > 0.)
-                {
-                    area.hydro.hydroModulable = true;
-                    break;
-                }
+                area.hydro.hydroModulable = true;
             }
+            */
         }
     });
 

@@ -227,6 +227,16 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
             countpowercredits = 1;
         }
     }
+    else
+    {
+        // Is area hydro modulable ?
+        Area* area = study.areas.find(areaID);
+
+        if (MatrixTestForAtLeastOnePositiveValue(maxgen))
+        {
+            area->hydro.hydroModulable = true;
+        }
+    }
 
     timeseriesNumbers.clear();
     timeseriesNumbersPowerCredits.clear();
