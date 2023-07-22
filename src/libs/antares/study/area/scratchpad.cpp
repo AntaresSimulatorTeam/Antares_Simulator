@@ -90,22 +90,12 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
     // Hydro generation permission
     // ------------------------------
     // Useful whether we use a heuristic target or not
-    bool hydroGenerationPermission = false;
+     bool hydroGenerationPermission = false;
 
     // ... Getting hydro max power
-    auto const& maxPower = area.hydro.maxPower;
+    auto const& maxPower = area.hydro.series->maxgen;
 
-    // ... Hydro max generating power and energy
-    auto const& maxGenP = maxPower[Data::PartHydro::genMaxP];
-    auto const& maxGenE = maxPower[Data::PartHydro::genMaxE];
-
-    double value = 0.;
-    for (uint d = 0; d < DAYS_PER_YEAR; ++d)
-        value += maxGenP[d] * maxGenE[d];
-
-    // If generating energy is nil over the whole year, hydroGenerationPermission is false, true
-    // otherwise.
-    hydroGenerationPermission = (value > 0.);
+    hydroGenerationPermission = MatrixTestForAtLeastOnePositiveValue(maxPower);
 
     // ---------------------
     // Hydro has inflows
@@ -141,20 +131,10 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
     // ... Hydro max power
 
     // ... Hydro max pumping power and energy
-    auto const& maxPumpingP = maxPower[Data::PartHydro::pumpMaxP];
-    auto const& maxPumpingE = maxPower[Data::PartHydro::pumpMaxE];
-
-    // ... Pumping max power
-    for (uint d = 0; d != DAYS_PER_YEAR; ++d)
-        pumpingMaxPower[d] = maxPumpingP[d];
-
-    double valuePumping = 0.;
-    // ... Computing 'pumpHasMod' parameter
-    for (uint d = 0; d < DAYS_PER_YEAR; ++d)
-        valuePumping += maxPumpingP[d] * maxPumpingE[d];
+     auto const& maxPumpingP = area.hydro.series->maxpump;
 
     // If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
-    pumpHasMod = (valuePumping > 0.);
+    pumpHasMod = MatrixTestForAtLeastOnePositiveValue(maxPumpingP);
 }
 
 AreaScratchpad::~AreaScratchpad() = default;
