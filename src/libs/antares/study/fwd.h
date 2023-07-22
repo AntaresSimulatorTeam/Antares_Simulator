@@ -215,16 +215,18 @@ enum TimeSeries : unsigned int
     //! TimeSeries : Wind
     timeSeriesWind = 4,
     //! TimeSeries : Thermal
-    timeSeriesThermal = 8,
+    timeSeriesThermal = 128,
     //! TimeSeries : Solar
     timeSeriesSolar = 16,
     //! TimeSeries : Renewable
     timeSeriesRenewable = 32,
     //! TimeSeries : Renewable
     timeSeriesTransmissionCapacities = 64,
+    //! TimeSeries : Hydro Power Credits
+    timeSeriesHydroPowerCredits = 256,
 
     //! The maximum number of time-series that we can encounter
-    timeSeriesCount = 7,
+    timeSeriesCount = 8,
 
 }; // enum TimeSeries
 
@@ -256,7 +258,7 @@ struct TimeSeriesBitPatternIntoIndex<4>
     };
 };
 template<>
-struct TimeSeriesBitPatternIntoIndex<8>
+struct TimeSeriesBitPatternIntoIndex<128>
 {
     enum
     {
@@ -307,7 +309,7 @@ struct TimeSeriesToCStr<4>
     }
 };
 template<>
-struct TimeSeriesToCStr<8>
+struct TimeSeriesToCStr<128>
 {
     static const char* Value()
     {

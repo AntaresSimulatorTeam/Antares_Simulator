@@ -76,6 +76,8 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
             v |= timeSeriesRenewable;
         else if (word == "ntc")
             v |= timeSeriesTransmissionCapacities;
+        else if (word == "power-credits")
+            v |= timeSeriesHydroPowerCredits;
         return true;
     });
     return true;
@@ -392,6 +394,12 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
         if (!v.empty())
             v += ", ";
         v += "ntc";
+    }
+    if (value & timeSeriesHydroPowerCredits)
+    {
+        if (!v.empty())
+            v += ", ";
+        v += "power-credits";
     }
     s->add(name, v);
 }
