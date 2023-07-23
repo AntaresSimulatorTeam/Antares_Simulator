@@ -159,6 +159,12 @@ public:
     void fixGenRefreshForNTC();
 
     /*!
+    ** \brief Try to detect then fix TS generation/refresh parameters
+    *         for Hydro Power Credits
+    */
+    void fixGenRefreshForHydroPowerCredits();
+
+    /*!
     ** \brief Get the amount of memory used by the general data
     */
     Yuni::uint64 memoryUsage() const;

@@ -1626,6 +1626,7 @@ void AreaList::removeHydroTimeseries()
         area.hydro.series->maxgen.reset(1, HOURS_PER_YEAR);
         area.hydro.series->maxpump.reset(1, HOURS_PER_YEAR);
         area.hydro.series->count = 1;
+        area.hydro.series->countpowercredits = 1;
     });
 }
 

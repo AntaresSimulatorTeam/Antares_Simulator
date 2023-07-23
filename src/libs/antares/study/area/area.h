@@ -349,6 +349,7 @@ private:
     void storeTimeseriesNumbersForThermal(Solver::IResultWriter::Ptr writer) const;
     void storeTimeseriesNumbersForRenewable(Solver::IResultWriter::Ptr writer) const;
     void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter::Ptr writer) const;
+    void storeTimeseriesNumbersForHydroPowerCredits(Solver::IResultWriter::Ptr writer) const;
 }; // class Area
 
 bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);

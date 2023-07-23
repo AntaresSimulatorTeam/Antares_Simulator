@@ -73,6 +73,10 @@ inline void Area::storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) cons
     case timeSeriesTransmissionCapacities:
         storeTimeseriesNumbersForTransmissionCapacities(writer);
         break;
+    // Hydro Power Credits
+    case timeSeriesHydroPowerCredits:
+        storeTimeseriesNumbersForHydroPowerCredits(writer);
+        break;
     case timeSeriesCount:
         break;
     }
