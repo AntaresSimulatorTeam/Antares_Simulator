@@ -110,8 +110,7 @@ private:
     /*!
     ** \brief Support old studies due to new sets of data
     */
-    void AutoTransferData(Study& study,
-                          Matrix<double, Yuni::sint32>& matrix,
+    void AutoTransferData(Matrix<double, Yuni::sint32>& matrix,
                           const Matrix<double>::ColumnType& maxPower);
 
     /*!

@@ -202,8 +202,8 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
         maxgen.reset(1, HOURS_PER_YEAR);
         maxpump.reset(1, HOURS_PER_YEAR);
 
-        AutoTransferData(study, maxgen, MaxPowerGen);
-        AutoTransferData(study, maxpump, MaxPowerPump);
+        AutoTransferData(maxgen, MaxPowerGen);
+        AutoTransferData(maxpump, MaxPowerPump);
 
         buffer.clear() << folder << SEP << areaID << SEP << "maxgen." << study.inputExtension;
         ret = maxgen.saveToCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
@@ -361,8 +361,7 @@ uint64 DataSeriesHydro::memoryUsage() const
            + maxgen.memoryUsage() + maxpump.memoryUsage();
 }
 
-void DataSeriesHydro::AutoTransferData(Study& study,
-                                       Matrix<double, Yuni::sint32>& matrix,
+void DataSeriesHydro::AutoTransferData(Matrix<double, Yuni::sint32>& matrix,
                                        const Matrix<double>::ColumnType& maxPower)
 {
     uint hours = 0;
@@ -370,7 +369,7 @@ void DataSeriesHydro::AutoTransferData(Study& study,
 
     while (hours < HOURS_PER_YEAR && days < DAYS_PER_YEAR)
     {
-        for(uint i = 0; i < 24; ++i)
+        for (uint i = 0; i < 24; ++i)
         {
             matrix[0][hours] = maxPower[days];
             ++hours;
