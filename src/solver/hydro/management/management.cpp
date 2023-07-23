@@ -300,38 +300,22 @@ bool HydroManagement::checkHourlyMinMaxGeneration(uint tsIndex, uint tsIndexPowe
     auto const& srcmaxgen
       = maxgenmatrix[tsIndexPowerCredits < maxgenmatrix.width ? tsIndexPowerCredits : 0];
 
-    if (!area.hydro.reservoirManagement)
+    for (uint h = 0; h < HOURS_PER_YEAR; ++h)
     {
-        for (uint month = 0; month != 12; ++month)
+        const auto& max = srcmaxgen[h];
+        const auto& min = srcmingen[h];
+
+        if (max < min)
         {
-            uint realmonth = calendar.months[month].realmonth;
-            uint simulationMonth = study.calendar.mapping.months[realmonth];
-            auto daysPerMonth = study.calendar.months[simulationMonth].days;
-            uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
-            uint endDay = firstDay + daysPerMonth;
-
-            for (uint day = firstDay; day != endDay; ++day)
-            {
-                for (uint h = 0; h < 24; ++h)
-                {
-                    const auto& max = srcmaxgen[day * 24 + h];
-                    const auto& min = srcmingen[day * 24 + h];
-
-                    if (max < min)
-                    {
-                        logs.error()
-                          << "In area: " << area.name << " [hourly] minimum generation of "
-                          << min << " MW in timestep " << day * 24 + h + 1
-                          << " of TS-" << tsIndex + 1
-                          << " is incompatible with the maximum generation of "
-                          << max << " MW in timestep " << day * 24 + h + 1
-                          << " of TS-" << tsIndexPowerCredits + 1 << " MW.";
-                        return false;
-                    }
-                }
-            }
+            logs.error() << "In area: " << area.name << " [hourly] minimum generation of " << min
+                         << " MW in timestep " << h + 1 << " of TS-" << tsIndex + 1
+                         << " is incompatible with the maximum generation of " << max
+                         << " MW in timestep " << h + 1 << " of TS-" << tsIndexPowerCredits + 1
+                         << " MW.";
+            return false;
         }
     }
+
     return true;
 }
 
