@@ -241,6 +241,27 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
     timeseriesNumbers.clear();
     timeseriesNumbersPowerCredits.clear();
 
+    if (study.header.version < 870)
+    {
+        Area* area = study.areas.find(areaID);
+
+        auto& MaxPowerGen = area->hydro.maxPower[area->hydro.genMaxP];
+        auto& MaxPowerPump = area->hydro.maxPower[area->hydro.pumpMaxP];
+
+        maxgen.reset(1, HOURS_PER_YEAR);
+        maxpump.reset(1, HOURS_PER_YEAR);
+
+        AutoTransferData(study, maxgen, MaxPowerGen);
+        AutoTransferData(study, maxpump, MaxPowerPump);
+
+        buffer.clear() << folder << SEP << areaID << SEP << "maxgen." << study.inputExtension;
+        ret = maxgen.saveToCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+
+        buffer.clear() << folder << SEP << areaID << SEP << "maxpump." << study.inputExtension;
+        ret = maxpump.saveToCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+
+    }
+
     return ret;
 }
 
@@ -333,6 +354,24 @@ uint64 DataSeriesHydro::memoryUsage() const
 {
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage()
            + maxgen.memoryUsage() + maxpump.memoryUsage();
+}
+
+void DataSeriesHydro::AutoTransferData(Study& study,
+                                       Matrix<double, Yuni::sint32>& matrix,
+                                       const Matrix<double>::ColumnType& maxPower)
+{
+    uint hours = 0;
+    uint days = 0;
+
+    while (hours < HOURS_PER_YEAR && days < DAYS_PER_YEAR)
+    {
+        for(uint i = 0; i < 24; ++i)
+        {
+            matrix[0][hours] = maxPower[days];
+            ++hours;
+        }
+    ++days;
+    }
 }
 
 } // namespace Data

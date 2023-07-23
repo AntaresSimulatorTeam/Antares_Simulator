@@ -105,6 +105,15 @@ public:
     */
     void checkMinGenTsNumber(Study& s, const AreaName& areaID);
 
+private:
+
+    /*!
+    ** \brief Support old studies due to new sets of data
+    */
+    void AutoTransferData(Study& study,
+                          Matrix<double, Yuni::sint32>& matrix,
+                          const Matrix<double>::ColumnType& maxPower);
+
 public:
     /*!
     ** \brief Run-of-the-river - ROR (MW)

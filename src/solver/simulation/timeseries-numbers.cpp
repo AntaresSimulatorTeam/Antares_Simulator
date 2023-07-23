@@ -445,7 +445,7 @@ bool checkInterModalConsistencyForArea(Area& area,
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
-    // Hydro Power Credits : Add hydro's number of TS in area ...
+    // Hydro Power Credits : Add hydro's power credits number of TS in area ...
     indexTS = ts_to_tsIndex.at(timeSeriesHydroPowerCredits);
     if (isTSintermodal[indexTS])
     {
