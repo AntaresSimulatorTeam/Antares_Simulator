@@ -114,6 +114,11 @@ private:
                           Matrix<double, Yuni::sint32>& matrix,
                           const Matrix<double>::ColumnType& maxPower);
 
+    /*!
+    ** \brief Checking whether or not matrices maxgen and maxpump have the same number of TS's
+    */
+    void checkMaxGenPumpTsNumber(Study& study, const AreaName& areaID);
+
 public:
     /*!
     ** \brief Run-of-the-river - ROR (MW)
