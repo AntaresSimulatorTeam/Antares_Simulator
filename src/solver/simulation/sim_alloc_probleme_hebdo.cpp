@@ -506,6 +506,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
 
     problem.tempsResolution1.assign(7, 0.);
     problem.tempsResolution2.assign(7, 0.);
+    problem.tempsUpdate.assign(7, 0.);
 }
 
 void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)

@@ -198,7 +198,8 @@ bool Economy::year(Progression::Task& progression,
             }
             optWriter.addTime(w,
                               pProblemesHebdo[numSpace]->tempsResolution1[0],
-                              pProblemesHebdo[numSpace]->tempsResolution2[0]);
+                              pProblemesHebdo[numSpace]->tempsResolution2[0],
+                              pProblemesHebdo[numSpace]->tempsUpdate[0]);
         }
         catch (Data::AssertionError& ex)
         {

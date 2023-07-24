@@ -25,31 +25,30 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include "opt_time_writer.h"
+#include <filesystem>
 
 OptimizationStatisticsWriter::OptimizationStatisticsWriter(
   Antares::Solver::IResultWriter::Ptr writer,
   uint year) :
- pWriter(writer)
+  pYear(year), pWriter(writer)
 {
     printHeader();
-#define SEP Yuni::IO::Separator
-    pFilename << "optimization" << SEP << "week-solve-durations" << SEP << "year_" << year
-              << ".txt";
-#undef SEP
 }
 
 void OptimizationStatisticsWriter::printHeader()
 {
-    pBuffer << "# Week Optimization_1_ms Optimization_2_ms\n";
+    pBuffer << "# Week Optimization_1_ms Optimization_2_ms Update_ms\n";
 }
 
-void OptimizationStatisticsWriter::addTime(uint week, double opt_1_ms, double opt_2_ms)
+void OptimizationStatisticsWriter::addTime(uint week, double opt_1_ms, double opt_2_ms, double update_ms)
 {
-    pBuffer << week << " " << opt_1_ms << " " << opt_2_ms << "\n";
+    pBuffer << week << " " << opt_1_ms << " " << opt_2_ms << " " << update_ms <<"\n";
 }
 
 void OptimizationStatisticsWriter::finalize()
 {
+    using path = std::filesystem::path;
+    const path filename = path("optimization") / "week-by-week" / ("year_" + std::to_string(pYear) + ".txt");
     if (pWriter)
-        pWriter->addEntryFromBuffer(pFilename.c_str(), pBuffer);
+        pWriter->addEntryFromBuffer(filename.string(), pBuffer);
 }

@@ -117,6 +117,7 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics* optimizationStatistics = &(problemeHebdo->optimizationStatistics[opt]);
 
+    double updateTime = 0;
 RESOLUTION:
 
     if (ProbSpx == nullptr && solver == nullptr)
@@ -148,7 +149,7 @@ RESOLUTION:
             Probleme.Contexte = BRANCH_AND_BOUND_OU_CUT_NOEUD;
             Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
 
-            TimeMeasurement measure;
+            TimeMeasurement updateMeasure;
             if (ortoolsUsed)
             {
                 ORTOOLS_ModifierLeVecteurCouts(
@@ -172,8 +173,9 @@ RESOLUTION:
                                                   ProblemeAResoudre->Sens.data(),
                                                   ProblemeAResoudre->NombreDeContraintes);
             }
-            measure.tick();
-            optimizationStatistics->addUpdateTime(measure.duration_ms());
+            updateMeasure.tick();
+            optimizationStatistics->addUpdateTime(updateMeasure.duration_ms());
+            updateTime += updateMeasure.duration_ms();
         }
     }
 
@@ -329,6 +331,7 @@ RESOLUTION:
         {
             problemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
             problemeHebdo->tempsResolution2[NumIntervalle] = solveTime;
+            problemeHebdo->tempsUpdate[NumIntervalle] = updateTime;
         }
         for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
