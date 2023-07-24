@@ -426,7 +426,6 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
         
     simulation->create();
-    giveWeigthOnlyToYear(0);
     simulation->run();
 
     unsigned int hour = 0;
@@ -454,7 +453,6 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
     simulation->create();
-    giveWeigthOnlyToYear(0);
     simulation->run();
 
     unsigned int week = 0;
@@ -483,7 +481,6 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
     simulation->create();
-    giveWeigthOnlyToYear(0);
     simulation->run();
 
     unsigned int day = 0;
@@ -511,7 +508,6 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
     simulation->create();
-    giveWeigthOnlyToYear(0);
     simulation->run();
 
     unsigned int hour = 100;
@@ -538,7 +534,6 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
     simulation->create();
-    giveWeigthOnlyToYear(0);
     simulation->run();
 
     unsigned int hour = 100;
@@ -570,7 +565,6 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90)
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
     simulation->create();
-    giveWeigthOnlyToYear(0);
     simulation->run();
 
     unsigned int hour = 10;
