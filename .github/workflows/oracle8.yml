@@ -59,6 +59,7 @@ jobs:
            cmake -B _build -S src \
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON \
+           -DBUILD_TOOLS=OFF \
            -DBUILD_UI=OFF \
 
 
