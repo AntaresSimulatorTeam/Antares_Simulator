@@ -19,50 +19,11 @@ using namespace Benchmarking;
 // Helper functions
 // ====================
 
-void initializeStudy(Study::Ptr study)
-{
-    study->resultWriter = std::make_shared<NullResultWriter>();
-    study->parameters.reset();
-    Data::Study::Current::Set(study);
-}
-
-void setNumberMCyears(Study::Ptr study, unsigned int nbYears)
-{
-    study->parameters.resetPlaylist(nbYears);
-    study->bindingConstraints.resizeAllTimeseriesNumbers(nbYears);
-}
-
 void addLoadToArea(Area* area, double loadInArea)
 {
     unsigned int loadNumberTS = 1;
     area->load.series->timeSeries.resize(loadNumberTS, HOURS_PER_YEAR);
     area->load.series->timeSeries.fill(loadInArea);
-}
-
-
-void configureLinkCapacities(AreaLink* link)
-{
-    const double linkCapacityInfinite = +std::numeric_limits<double>::infinity();
-    link->directCapacities.resize(1, 8760);
-    link->directCapacities.fill(linkCapacityInfinite);
-
-    link->indirectCapacities.resize(1, 8760);
-    link->indirectCapacities.fill(linkCapacityInfinite);
-}
-
-std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName)
-{
-    auto cluster = std::make_shared<ThermalCluster>(area);
-    cluster->setName(clusterName);
-    cluster->reset();
-
-    auto added = area->thermal.list.add(cluster);
-    BOOST_CHECK(added != nullptr);
-
-    area->thermal.list.mapping[cluster->id()] = added;
-    area->thermal.prepareAreaWideIndexes();
-
-    return cluster;
 }
 
 void configureCluster(std::shared_ptr<ThermalCluster> cluster)
@@ -82,89 +43,6 @@ void configureCluster(std::shared_ptr<ThermalCluster> cluster)
 
     cluster->minStablePower = 0.0;
     cluster->series->timeSeries.fill(availablePower);
-}
-
-void addScratchpadToEachArea(Study::Ptr study)
-{
-    for (auto [_, area] : study->areas) {
-        for (unsigned int i = 0; i < study->maxNbYearsInParallel; ++i) {
-            area->scratchpad.push_back(AreaScratchpad(*study->runtime, *area));
-        }
-    }
-}
-
-
-// -------------------------------
-// Simulation results retrieval
-// -------------------------------
-
-class averageResults
-{
-public:
-    averageResults(Variable::R::AllYears::AverageData& averageResults) : averageResults_(averageResults)
-    {}
-
-    double hour(unsigned int hour) { return averageResults_.hourly[hour]; }
-    double day(unsigned int day) { return averageResults_.daily[day]; }
-    double week(unsigned int week) { return averageResults_.weekly[week]; }
-
-private:
-    Variable::R::AllYears::AverageData& averageResults_;
-};
-
-class OutputRetriever
-{
-public:
-    OutputRetriever(std::shared_ptr<ISimulation<Economy>>& simulation) : simulation_(simulation) {}
-    averageResults flow(AreaLink* link);
-    averageResults thermalGeneration(ThermalCluster* cluster);
-
-private:
-    Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* 
-        retrieveLinkFlowResults(AreaLink* link);
-        
-    Variable::Storage<Variable::Economy::VCardProductionByDispatchablePlant>::ResultsType*
-        retrieveThermalClusterGenerationResults(ThermalCluster* cluster);
-
-    std::shared_ptr<ISimulation<Economy>>& simulation_;
-};
-
-
-averageResults OutputRetriever::flow(AreaLink* link)
-{
-    // There is a problem here : 
-    //    we cannot easly retrieve the hourly flow for a link and a year : 
-    //    - Functions retrieveHourlyResultsForCurrentYear are not coded everywhere it should.
-    //    - Even if those functions were correctly implemented, there is another problem :
-    //      Each year results erase results of previous year, how can we retrieve results of year 1
-    //      if 2 year were run ?
-    //    We should be able to run each year independently, which is not possible now.
-    //    A workaround is to retrieve syntheses, and that's what we do here.
-
-    auto result = retrieveLinkFlowResults(link);
-    return averageResults(result->avgdata);
-}
-
-averageResults OutputRetriever::thermalGeneration(ThermalCluster* cluster)
-{
-    auto result = retrieveThermalClusterGenerationResults(cluster);
-    return averageResults((*result)[cluster->areaWideIndex].avgdata);
-}
-
-Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* 
-OutputRetriever::retrieveLinkFlowResults(AreaLink* link)
-{
-    typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* result = nullptr;
-    simulation_->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
-    return result;
-}
-
-Variable::Storage<Variable::Economy::VCardProductionByDispatchablePlant>::ResultsType*
-OutputRetriever::retrieveThermalClusterGenerationResults(ThermalCluster* cluster)
-{
-    typename Variable::Storage<Variable::Economy::VCardProductionByDispatchablePlant>::ResultsType* result = nullptr;
-    simulation_->variables.retrieveResultsForThermalCluster<Variable::Economy::VCardProductionByDispatchablePlant>(&result, cluster);
-    return result;
 }
 
 // =================

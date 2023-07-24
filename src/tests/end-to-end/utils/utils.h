@@ -4,6 +4,55 @@
 #include "simulation/economy.h"
 #include "antares/study/scenario-builder/rules.h"
 #include "antares/study/scenario-builder/sets.h"
+#include "simulation.h"
+
+using namespace Antares::Solver;
+using namespace Antares::Solver::Simulation;
+
+
+void initializeStudy(Study::Ptr study);
+void setNumberMCyears(Study::Ptr study, unsigned int nbYears);
+void configureLinkCapacities(AreaLink* link);
+std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName);
+void addScratchpadToEachArea(Study::Ptr study);
+
+// -------------------------------
+// Simulation results retrieval
+// -------------------------------
+
+class averageResults
+{
+public:
+    averageResults(Variable::R::AllYears::AverageData& averageResults) : averageResults_(averageResults)
+    {}
+
+    double hour(unsigned int hour) { return averageResults_.hourly[hour]; }
+    double day(unsigned int day) { return averageResults_.daily[day]; }
+    double week(unsigned int week) { return averageResults_.weekly[week]; }
+
+private:
+    Variable::R::AllYears::AverageData& averageResults_;
+};
+
+
+class OutputRetriever
+{
+public:
+    OutputRetriever(std::shared_ptr<ISimulation<Economy>>& simulation) : simulation_(simulation) {}
+    averageResults flow(AreaLink* link);
+    averageResults thermalGeneration(ThermalCluster* cluster);
+
+private:
+    Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType*
+        retrieveLinkFlowResults(AreaLink* link);
+
+    Variable::Storage<Variable::Economy::VCardProductionByDispatchablePlant>::ResultsType*
+        retrieveThermalClusterGenerationResults(ThermalCluster* cluster);
+
+    std::shared_ptr<ISimulation<Economy>>& simulation_;
+};
+
+// ===========================================================
 
 void prepareStudy(Antares::Data::Study::Ptr pStudy, int nbYears);
 
