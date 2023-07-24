@@ -116,11 +116,8 @@ class OutputRetriever
 {
 public:
     OutputRetriever(std::shared_ptr<ISimulation<Economy>>& simulation) : simulation_(simulation) {}
-
     averageResults flow(AreaLink* link);
-
-    double thermalGenerationAtHour(ThermalCluster* cluster, unsigned int hour);
-
+    averageResults thermalGeneration(ThermalCluster* cluster);
 
 private:
     Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* 
@@ -148,10 +145,10 @@ averageResults OutputRetriever::flow(AreaLink* link)
     return averageResults(result->avgdata);
 }
 
-double OutputRetriever::thermalGenerationAtHour(ThermalCluster* cluster, unsigned int hour)
+averageResults OutputRetriever::thermalGeneration(ThermalCluster* cluster)
 {
     auto result = retrieveThermalClusterGenerationResults(cluster);
-    return (*result)[cluster->areaWideIndex].avgdata.hourly[hour];
+    return averageResults((*result)[cluster->areaWideIndex].avgdata);
 }
 
 Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* 
@@ -577,7 +574,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90)
     simulation->run();
 
     unsigned int hour = 10;
-    BOOST_TEST(output->thermalGenerationAtHour(cluster.get(), hour) == rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->thermalGeneration(cluster.get()).hour(hour) == rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
