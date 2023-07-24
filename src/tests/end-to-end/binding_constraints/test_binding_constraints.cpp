@@ -84,8 +84,6 @@ void configureCluster(std::shared_ptr<ThermalCluster> cluster)
     cluster->series->timeSeries.fill(availablePower);
 }
 
-
-
 void addScratchpadToEachArea(Study::Ptr study)
 {
     for (auto [_, area] : study->areas) {
@@ -100,14 +98,26 @@ void addScratchpadToEachArea(Study::Ptr study)
 // Simulation results retrieval
 // -------------------------------
 
+class averageResults
+{
+public:
+    averageResults(Variable::R::AllYears::AverageData& averageResults) : averageResults_(averageResults)
+    {}
+
+    double hour(unsigned int hour) { return averageResults_.hourly[hour]; }
+    double day(unsigned int day) { return averageResults_.daily[day]; }
+    double week(unsigned int week) { return averageResults_.weekly[week]; }
+
+private:
+    Variable::R::AllYears::AverageData& averageResults_;
+};
+
 class OutputRetriever
 {
 public:
     OutputRetriever(std::shared_ptr<ISimulation<Economy>>& simulation) : simulation_(simulation) {}
 
-    double flowAtHour(AreaLink* link, unsigned int hour);
-    double flowForWeek(AreaLink* link, unsigned int week);
-    double flowForDay(AreaLink* link, unsigned int day);
+    averageResults flow(AreaLink* link);
 
     double thermalGenerationAtHour(ThermalCluster* cluster, unsigned int hour);
 
@@ -123,7 +133,7 @@ private:
 };
 
 
-double OutputRetriever::flowAtHour(AreaLink* link, unsigned int hour)
+averageResults OutputRetriever::flow(AreaLink* link)
 {
     // There is a problem here : 
     //    we cannot easly retrieve the hourly flow for a link and a year : 
@@ -135,19 +145,7 @@ double OutputRetriever::flowAtHour(AreaLink* link, unsigned int hour)
     //    A workaround is to retrieve syntheses, and that's what we do here.
 
     auto result = retrieveLinkFlowResults(link);
-    return result->avgdata.hourly[hour];
-}
-
-double OutputRetriever::flowForWeek(AreaLink* link, unsigned int week)
-{
-    auto result = retrieveLinkFlowResults(link);
-    return result->avgdata.weekly[week];
-}
-
-double OutputRetriever::flowForDay(AreaLink* link, unsigned int day)
-{
-    auto result = retrieveLinkFlowResults(link);
-    return result->avgdata.daily[day];
+    return averageResults(result->avgdata);
 }
 
 double OutputRetriever::thermalGenerationAtHour(ThermalCluster* cluster, unsigned int hour)
@@ -435,7 +433,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     simulation->run();
 
     unsigned int hour = 0;
-    BOOST_TEST(output->flowAtHour(link, hour) == rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->flow(link).hour(hour) == rhsValue, tt::tolerance(0.001));
 }
 
 
@@ -464,7 +462,7 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
 
     unsigned int week = 0;
     unsigned int nbDaysInWeek = 7;
-    BOOST_TEST(output->flowForWeek(link, week) == rhsValue * nbDaysInWeek, tt::tolerance(0.001));
+    BOOST_TEST(output->flow(link).week(week) == rhsValue * nbDaysInWeek, tt::tolerance(0.001));
 }
 
 
@@ -492,7 +490,7 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     simulation->run();
 
     unsigned int day = 0;
-    BOOST_TEST(output->flowForDay(link, day) == rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->flow(link).day(day) == rhsValue, tt::tolerance(0.001));
 }
 
 
@@ -520,7 +518,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     simulation->run();
 
     unsigned int hour = 100;
-    BOOST_TEST(output->flowAtHour(link, hour) <= rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->flow(link).hour(hour) <= rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
@@ -547,7 +545,7 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
     simulation->run();
 
     unsigned int hour = 100;
-    BOOST_TEST(output->flowAtHour(link, hour) >= rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->flow(link).hour(hour) >= rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -614,7 +612,7 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
     simulation->run();
 
     unsigned int hour = 0;
-    BOOST_TEST(output->flowAtHour(link, hour) == bcGroupRHS2, tt::tolerance(0.001));
+    BOOST_TEST(output->flow(link).hour(hour) == bcGroupRHS2, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
@@ -654,7 +652,7 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
     simulation->run();
 
     unsigned int hour = 0;
-    BOOST_TEST(output->flowAtHour(link, hour) == 40., tt::tolerance(0.001));
+    BOOST_TEST(output->flow(link).hour(hour) == 40., tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
