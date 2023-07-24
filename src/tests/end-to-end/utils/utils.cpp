@@ -134,6 +134,76 @@ void BCgroupScenarioBuilder::yearGetsTSnumber(std::string groupName, unsigned in
 }
 
 
+// =====================
+// Simulation handler
+// =====================
+
+void SimulationHandler::create()
+{
+    study_->initializeRuntimeInfos();
+    addScratchpadToEachArea(study_);
+
+    simulation_ = std::make_shared<ISimulation<Economy>>(*study_,
+                                                         settings_,
+                                                         &nullDurationCollector_);
+    SIM_AllocationTableaux();
+}
+
+
+// =========================
+// Basic study builder
+// =========================
+StudyBuilder::StudyBuilder()
+{
+    // Make logs shrink to errors (and higher) only
+    logs.verbosityLevel = Logs::Verbosity::Error::level;
+
+    study = std::make_shared<Study>();
+    simulation = std::make_shared<SimulationHandler>(study);
+
+    initializeStudy(study);
+    output = std::make_shared<OutputRetriever>(simulation->get());
+}
+
+void StudyBuilder::simulationBetweenDays(const unsigned int firstDay, const unsigned int lastDay)
+{
+    study->parameters.simulationDays.first = firstDay;
+    study->parameters.simulationDays.end = lastDay;
+}
+
+void StudyBuilder::giveWeigthOnlyToYear(unsigned int year)
+{
+    // Set all years weight to zero
+    unsigned int nbYears = study->parameters.nbYears;
+    for (unsigned int y = 0; y < nbYears; y++)
+        study->parameters.setYearWeight(y, 0.);
+
+    // Set one year's weight to 1
+    study->parameters.setYearWeight(year, 1.);
+
+    // Activate playlist, otherwise previous sets won't have any effect
+    study->parameters.userPlaylist = true;
+}
+
+Area* StudyBuilder::addAreaToStudy(const std::string& areaName)
+{
+    Area* area = addAreaToListOfAreas(study->areas, areaName);
+
+    // Default values for the area
+    area->createMissingData();
+    area->resetToDefaultValues();
+
+    // Temporary : we want to give a high unsupplied or spilled energy costs.
+    // Which cost should we give ?
+    area->thermal.unsuppliedEnergyCost = 1000.0;
+    area->thermal.spilledEnergyCost = 1000.0;
+
+    study->areas.rebuildIndexes();
+
+    return area;
+}
+
+
 // ===========================================================
 
 void prepareStudy(Study::Ptr pStudy, int nbYears)

@@ -10,14 +10,10 @@
 namespace utf = boost::unit_test;
 namespace tt = boost::test_tools;
 
-using namespace Antares::Data;
-using namespace Antares::Solver;
-using namespace Antares::Solver::Simulation;
-using namespace Benchmarking;
 
-// ====================
-// Helper functions
-// ====================
+// ===============================
+// Helper functions for BC tests
+// ===============================
 
 void addLoadToArea(Area* area, double loadInArea)
 {
@@ -45,110 +41,9 @@ void configureCluster(std::shared_ptr<ThermalCluster> cluster)
     cluster->series->timeSeries.fill(availablePower);
 }
 
-// =====================
-// Simulation handler
-// =====================
-class SimulationHandler
-{
-public:
-    SimulationHandler(std::shared_ptr<Study> study) 
-        : study_(study)
-    {}
-    ~SimulationHandler() = default;
-    void create();
-    void run() { simulation_->run(); }
-    std::shared_ptr<ISimulation<Economy>>& get() { return simulation_; }
-
-private:
-    std::shared_ptr<ISimulation<Economy>> simulation_;
-    NullDurationCollector nullDurationCollector_;
-    Settings settings_;
-    std::shared_ptr<Study> study_;
-};
-
-void SimulationHandler::create()
-{
-    BOOST_CHECK(study_->initializeRuntimeInfos());
-    addScratchpadToEachArea(study_);
-
-    simulation_ = std::make_shared<ISimulation<Economy>>(*study_,
-                                                         settings_,
-                                                         &nullDurationCollector_);
-    SIM_AllocationTableaux();
-}
-
-// =========================
-// Basic study builder
-// =========================
-
-struct StudyBuilder
-{
-    StudyBuilder();
-
-    void simulationBetweenDays(const unsigned int firstDay, const unsigned int lastDay);
-    Area* addAreaToStudy(const std::string& areaName);
-    void giveWeigthOnlyToYear(unsigned int year);
-
-    // Data members
-    std::shared_ptr<Study> study;
-    std::shared_ptr<SimulationHandler> simulation;
-    std::shared_ptr<OutputRetriever> output;
-};
-
-StudyBuilder::StudyBuilder()
-{
-    // Make logs shrink to errors (and higher) only
-    logs.verbosityLevel = Logs::Verbosity::Error::level;
-
-    study = std::make_shared<Study>();
-    simulation = std::make_shared<SimulationHandler>(study);
-
-    initializeStudy(study);
-    output = std::make_shared<OutputRetriever>(simulation->get());
-}
-
-void StudyBuilder::simulationBetweenDays(const unsigned int firstDay, const unsigned int lastDay)
-{
-    study->parameters.simulationDays.first = firstDay;
-    study->parameters.simulationDays.end = lastDay;
-}
-
-void StudyBuilder::giveWeigthOnlyToYear(unsigned int year)
-{
-    // Set all years weight to zero
-    unsigned int nbYears = study->parameters.nbYears;
-    for (unsigned int y = 0; y < nbYears; y++)
-        study->parameters.setYearWeight(y, 0.);
-
-    // Set one year's weight to 1
-    study->parameters.setYearWeight(year, 1.);
-
-    // Activate playlist, otherwise previous sets won't have any effect
-    study->parameters.userPlaylist = true;
-}
-
-Area* StudyBuilder::addAreaToStudy(const std::string& areaName)
-{
-    Area* area = addAreaToListOfAreas(study->areas, areaName);
-    BOOST_CHECK(area != NULL);
-
-    // Default values for the area
-    area->createMissingData();
-    area->resetToDefaultValues();
-
-    // Temporary : we want to give a high unsupplied or spilled energy costs.
-    // Which cost should we give ?
-    area->thermal.unsuppliedEnergyCost = 1000.0;
-    area->thermal.spilledEnergyCost = 1000.0;
-
-    study->areas.rebuildIndexes();
-
-    return area;
-}
-
 
 // =================================
-// The Basic fixture fot BC tests
+// The Basic fixture for BC tests
 // =================================
 struct StudyForBCTest : public StudyBuilder
 {
@@ -160,10 +55,6 @@ struct StudyForBCTest : public StudyBuilder
     std::shared_ptr<ThermalCluster> cluster;
     std::shared_ptr<BindingConstraint> BC;
 };
-
-// =======================================
-// The basic fixture's member functions
-// =======================================
 
 StudyForBCTest::StudyForBCTest()
 {
@@ -186,9 +77,9 @@ StudyForBCTest::StudyForBCTest()
     configureCluster(cluster);
 };
 
-// ==============================================
-// Study fixture containing a BC on the link 
-// ==============================================
+// ======================================================
+// Study fixture containing a BC on the link capacity
+// ======================================================
 
 struct StudyWithBConLink : public StudyForBCTest
 {
@@ -204,9 +95,9 @@ StudyWithBConLink::StudyWithBConLink()
 }
 
 
-// ==============================================
-// Study fixture containing a BC on the link 
-// ==============================================
+// =======================================================
+// Study fixture containing a BC on the thermal cluster 
+// =======================================================
 
 struct StudyWithBConCluster : public StudyForBCTest
 {

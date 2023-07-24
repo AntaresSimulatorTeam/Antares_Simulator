@@ -83,6 +83,51 @@ private:
     ScenarioBuilder::Rules::Ptr rules_;
 };
 
+
+// =====================
+// Simulation handler
+// =====================
+using namespace Benchmarking;
+
+class SimulationHandler
+{
+public:
+    SimulationHandler(std::shared_ptr<Study> study)
+        : study_(study)
+    {}
+    ~SimulationHandler() = default;
+    void create();
+    void run() { simulation_->run(); }
+    std::shared_ptr<ISimulation<Economy>>& get() { return simulation_; }
+
+private:
+    std::shared_ptr<ISimulation<Economy>> simulation_;
+    NullDurationCollector nullDurationCollector_;
+    Settings settings_;
+    std::shared_ptr<Study> study_;
+};
+
+
+// =========================
+// Basic study builder
+// =========================
+
+struct StudyBuilder
+{
+    StudyBuilder();
+
+    void simulationBetweenDays(const unsigned int firstDay, const unsigned int lastDay);
+    Area* addAreaToStudy(const std::string& areaName);
+    void giveWeigthOnlyToYear(unsigned int year);
+
+    // Data members
+    std::shared_ptr<Study> study;
+    std::shared_ptr<SimulationHandler> simulation;
+    std::shared_ptr<OutputRetriever> output;
+};
+
+
+
 // ===========================================================
 
 void prepareStudy(Antares::Data::Study::Ptr pStudy, int nbYears);
