@@ -2,6 +2,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
+#include <utility>
 #include "utils.h"
 #include "simulation.h"
 
@@ -185,7 +186,7 @@ class BCrhsConfig
 {
 public:
     BCrhsConfig() = delete;
-    BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbTimeSeries);
+    BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbOfTimeSeries);
     void fillTimeSeriesWith(unsigned int TSnumber, double rhsValue);
 
 private:
@@ -194,7 +195,7 @@ private:
 };
 
 BCrhsConfig::BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbOfTimeSeries)
-    : nbOfTimeSeries_(nbOfTimeSeries), BC_(BC)
+    : BC_(std::move(BC)), nbOfTimeSeries_(nbOfTimeSeries)
 {
     BC_->RHSTimeSeries().resize(nbOfTimeSeries_, 8760);
 }
@@ -214,7 +215,7 @@ class BCgroupScenarioBuilder
 public:
     BCgroupScenarioBuilder() = delete;
     BCgroupScenarioBuilder(Study::Ptr study, unsigned int nbYears);
-    void yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber);
+    void yearGetsTSnumber(const std::string& groupName, unsigned int year, unsigned int TSnumber);
 
 private:
     unsigned int nbYears_ = 0;
@@ -225,10 +226,10 @@ BCgroupScenarioBuilder::BCgroupScenarioBuilder(Study::Ptr study, unsigned int nb
     : nbYears_(nbYears)
 
 {
-    rules_ = createScenarioRules(study);
+    rules_ = createScenarioRules(std::move(study));
 }
 
-void BCgroupScenarioBuilder::yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber)
+void BCgroupScenarioBuilder::yearGetsTSnumber(const std::string& groupName, unsigned int year, unsigned int TSnumber)
 {
     BOOST_CHECK(year < nbYears_);
     rules_->binding_constraints.setData(groupName, year, TSnumber + 1);
@@ -240,8 +241,8 @@ void BCgroupScenarioBuilder::yearGetsTSnumber(std::string groupName, unsigned in
 class SimulationHandler
 {
 public:
-    SimulationHandler(std::shared_ptr<Study> study)
-        : study_(study)
+    explicit SimulationHandler(std::shared_ptr<Study> study)
+        : study_(std::move(study))
     {}
     ~SimulationHandler() = default;
     void create();
@@ -257,16 +258,24 @@ private:
 
 void SimulationHandler::create()
 {
+    BOOST_CHECK(study_);
     BOOST_CHECK(study_->initializeRuntimeInfos());
     addScratchpadToEachArea(study_);
+    BOOST_CHECK(true);
 
     simulation_ = std::make_shared<ISimulation<Economy>>(*study_,
                                                          settings_,
                                                          &nullDurationCollector_);
+    BOOST_CHECK(true);
 
     // Allocate arrays for time series
     SIM_AllocationTableaux();
+    BOOST_CHECK(true);
+
 }
+
+SimulationHandler::~SimulationHandler()
+= default;
 
 // ===============
 // The fixture
@@ -289,29 +298,38 @@ struct Fixture {
 Fixture::Fixture()
 {
     // Make logs shrink to errors (and higher) only
+    BOOST_CHECK(true);
     logs.verbosityLevel = Logs::Verbosity::Error::level;
 
     study = std::make_shared<Study>();
     simulation = std::make_shared<SimulationHandler>(study);
+    BOOST_CHECK(true);
 
     initializeStudy(study);
     simulationBetweenDays(study, 0, 7);
+    BOOST_CHECK(true);
 
     double loadInAreaOne = 0.;
     Area* area1 = addAreaToStudy(study, "Area 1", loadInAreaOne);
+    BOOST_CHECK(true);
 
     double loadInAreaTwo = 100.;
     Area* area2 = addAreaToStudy(study, "Area 2", loadInAreaTwo);
+    BOOST_CHECK(true);
 
     link = AreaAddLinkBetweenAreas(area1, area2);
+    BOOST_CHECK(true);
 
     configureLinkCapacities(link);
+    BOOST_CHECK(true);
 
     addClusterToArea(area1, "some cluster");
+    BOOST_CHECK(true);
 
     BC = addBindingConstraints(study, "BC1", "Group1");
     BC->weight(link, 1);
     BC->enabled(true);
+    study->bindingConstraintsGroups.buildFrom(study->bindingConstraints);
 };
 
 void Fixture::giveWeigthOnlyToYear(unsigned int year)
@@ -334,25 +352,32 @@ BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BINDING_CONSTRAINTS, Fixture)
 BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
 {
     // Study parameters varying depending on the test
+    BOOST_CHECK(true);
     unsigned int nbYears = 1;
     setNumberMCyears(study, nbYears);
+    BOOST_CHECK(true);
 
     // Binding constraint parameter varying depending on the test
     BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
+    BOOST_CHECK(true);
 
     unsigned int numberOfTS = 1;
     BCrhsConfig bcRHSconfig(BC, numberOfTS);
+    BOOST_CHECK(true);
 
     double rhsValue = 90.;
     bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
+    BOOST_CHECK(true);
 
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
+    BOOST_CHECK(true);
 
     simulation->create();
     giveWeigthOnlyToYear(0);
     simulation->run();
+    BOOST_CHECK(true);
 
     unsigned int hour = 0;
     BOOST_TEST(getLinkFlowAthour(simulation->get(), link, hour) == rhsValue, tt::tolerance(0.001));
