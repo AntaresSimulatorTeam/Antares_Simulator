@@ -19,7 +19,6 @@ void addScratchpadToEachArea(Study::Ptr study);
 // -------------------------------
 // Simulation results retrieval
 // -------------------------------
-
 class averageResults
 {
 public:
@@ -50,6 +49,38 @@ private:
         retrieveThermalClusterGenerationResults(ThermalCluster* cluster);
 
     std::shared_ptr<ISimulation<Economy>>& simulation_;
+};
+
+
+// -----------------------
+// BC rhs configuration
+// -----------------------
+class BCrhsConfig
+{
+public:
+    BCrhsConfig() = delete;
+    BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbTimeSeries);
+    void fillTimeSeriesWith(unsigned int TSnumber, double rhsValue);
+
+private:
+    std::shared_ptr<BindingConstraint> BC_;
+    unsigned int nbOfTimeSeries_ = 0;
+};
+
+
+// --------------------------------------
+// BC group TS number configuration
+// --------------------------------------
+class BCgroupScenarioBuilder
+{
+public:
+    BCgroupScenarioBuilder() = delete;
+    BCgroupScenarioBuilder(Study::Ptr study, unsigned int nbYears);
+    void yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber);
+
+private:
+    unsigned int nbYears_ = 0;
+    ScenarioBuilder::Rules::Ptr rules_;
 };
 
 // ===========================================================

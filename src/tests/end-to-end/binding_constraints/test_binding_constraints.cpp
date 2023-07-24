@@ -45,66 +45,6 @@ void configureCluster(std::shared_ptr<ThermalCluster> cluster)
     cluster->series->timeSeries.fill(availablePower);
 }
 
-// =================
-// Helper classes
-// =================
-
-// -----------------------
-// BC rhs configuration
-// -----------------------
-class BCrhsConfig
-{
-public:
-    BCrhsConfig() = delete;
-    BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbTimeSeries);
-    void fillTimeSeriesWith(unsigned int TSnumber, double rhsValue);
-
-private:
-    std::shared_ptr<BindingConstraint> BC_;
-    unsigned int nbOfTimeSeries_ = 0;
-};
-
-BCrhsConfig::BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbOfTimeSeries)
-    : nbOfTimeSeries_(nbOfTimeSeries), BC_(BC)
-{
-    BC_->RHSTimeSeries().resize(nbOfTimeSeries_, 8760);
-}
-
-void BCrhsConfig::fillTimeSeriesWith(unsigned int TSnumber, double rhsValue)
-{
-    BOOST_CHECK(TSnumber < nbOfTimeSeries_);
-    BC_->RHSTimeSeries().fillColumn(TSnumber, rhsValue);
-}
-
-
-// --------------------------------------
-// BC group TS number configuration
-// --------------------------------------
-class BCgroupScenarioBuilder
-{
-public:
-    BCgroupScenarioBuilder() = delete;
-    BCgroupScenarioBuilder(Study::Ptr study, unsigned int nbYears);
-    void yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber);
-
-private:
-    unsigned int nbYears_ = 0;
-    ScenarioBuilder::Rules::Ptr rules_;
-};
-
-BCgroupScenarioBuilder::BCgroupScenarioBuilder(Study::Ptr study, unsigned int nbYears)
-    : nbYears_(nbYears)
-
-{
-    rules_ = createScenarioRules(study);
-}
-
-void BCgroupScenarioBuilder::yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber)
-{
-    BOOST_CHECK(year < nbYears_);
-    rules_->binding_constraints.setData(groupName, year, TSnumber + 1);
-}
-
 // =====================
 // Simulation handler
 // =====================

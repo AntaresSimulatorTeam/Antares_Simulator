@@ -51,7 +51,9 @@ void addScratchpadToEachArea(Study::Ptr study)
     }
 }
 
-
+// -------------------------------
+// Simulation results retrieval
+// -------------------------------
 averageResults OutputRetriever::flow(AreaLink* link)
 {
     // There is a problem here : 
@@ -88,6 +90,49 @@ OutputRetriever::retrieveThermalClusterGenerationResults(ThermalCluster* cluster
     simulation_->variables.retrieveResultsForThermalCluster<Variable::Economy::VCardProductionByDispatchablePlant>(&result, cluster);
     return result;
 }
+
+
+// -----------------------
+// BC rhs configuration
+// -----------------------
+BCrhsConfig::BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbOfTimeSeries)
+    : nbOfTimeSeries_(nbOfTimeSeries), BC_(BC)
+{
+    BC_->RHSTimeSeries().resize(nbOfTimeSeries_, 8760);
+}
+
+void BCrhsConfig::fillTimeSeriesWith(unsigned int TSnumber, double rhsValue)
+{
+    if (TSnumber >= nbOfTimeSeries_)
+    {
+        logs.fatal() << "BCrhsConfig : TS number must be < Nb of TS";
+        AntaresSolverEmergencyShutdown();
+    }
+    BC_->RHSTimeSeries().fillColumn(TSnumber, rhsValue);
+}
+
+
+// --------------------------------------
+// BC group TS number configuration
+// --------------------------------------
+BCgroupScenarioBuilder::BCgroupScenarioBuilder(Study::Ptr study, unsigned int nbYears)
+    : nbYears_(nbYears)
+
+{
+    rules_ = createScenarioRules(study);
+}
+
+void BCgroupScenarioBuilder::yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber)
+{
+    if (year >= nbYears_)
+    {
+        logs.fatal() << "BCgroupScenarioBuilder : year number must be < Nb of MC years";
+        AntaresSolverEmergencyShutdown();
+    }
+
+    rules_->binding_constraints.setData(groupName, year, TSnumber + 1);
+}
+
 
 // ===========================================================
 
