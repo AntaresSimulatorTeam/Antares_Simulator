@@ -178,7 +178,7 @@ this command allows to state, for each kind of time-series, whether it should be
 the available set (be it ready-made or Antares-generated) _**OR**_ should take a user-defined value
 (in the former case, the default "rand" value should be kept; in the latter, the value should be the reference number of the time-series to use). Multiple simulation profiles can be defined and archived. The default active profile gives the "rand" status for all time-series in all areas (full probabilistic simulation).
 
-  Regarding Hydro time-series, the scenario builder gives, in addition to the assignment of a specific number to use for the inflows time-series, the ability to define the initial reservoir level to use for each MC year.
+  Regarding Hydro time-series, the scenario builder gives, in addition to the assignment of a specific number to use for the inflows time-series, the ability to define the initial reservoir level to use for each MC year, also hydro power credits scenario builder is available to support time-series for Maximum Generation and Maximum Pumping because the number of TS's for ROR, Hydro Storage and Minimum Generation can be different than the  number of TS's for Maximum Generation and Maximum Pumping.
 
 - **MC Scenario playlist** For each Monte-Carlo year of the simulation defined in the "Simulation" active window,
 this command allows to state whether a MC year prepared for the simulation should be actually simulated or not.
