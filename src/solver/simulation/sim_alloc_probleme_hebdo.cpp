@@ -594,6 +594,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemp
 
     problem.tempsResolution1 = (double*)MemAlloc(7 * sizeof(double));
     problem.tempsResolution2 = (double*)MemAlloc(7 * sizeof(double));
+    problem.tempsUpdate = (double*)MemAlloc(7 * sizeof(double));
 }
 
 void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
