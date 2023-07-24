@@ -34,6 +34,7 @@
 #include "../../array/matrix.h"
 #include <vector>
 #include <set>
+#include <numeric>
 
 namespace Antares
 {
@@ -103,7 +104,13 @@ public:
     ** running the hydro remix.
     */
     double dispatchableGenerationMargin[168];
+
+private:
+    bool CalculateEnergy(const Matrix<double, Yuni::sint32>& matrix,
+                         const Matrix<double>::ColumnType& hours);
 }; // class AreaScratchpad
+
+double CalculateDailyMeanPower(uint dYear, const Matrix<double>::ColumnType&  maxPower);
 
 } // namespace Data
 } // namespace Antares

@@ -35,7 +35,6 @@
 #include "sim_extern_variables_globales.h"
 #include "adequacy_patch_runtime_data.h"
 #include <antares/emergency.h>
-#include "../hydro/management.h"
 
 using namespace Antares;
 using namespace Antares::Data;
