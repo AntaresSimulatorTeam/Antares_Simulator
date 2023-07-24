@@ -109,10 +109,15 @@ public:
     double linkFlowForWeek(AreaLink* link, unsigned int week);
     double linkFlowForDay(AreaLink* link, unsigned int day);
 
+    double thermalGenerationAtHour(ThermalCluster* cluster, unsigned int hour);
+
 
 private:
     Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* 
-    retrieveLinkFlowResults(AreaLink* link);
+        retrieveLinkFlowResults(AreaLink* link);
+        
+    Variable::Storage<Variable::Economy::VCardProductionByDispatchablePlant>::ResultsType*
+        retrieveThermalClusterGenerationResults(ThermalCluster* cluster);
 
     std::shared_ptr<ISimulation<Economy>>& simulation_;
 };
@@ -145,6 +150,11 @@ double OutputRetriever::linkFlowForDay(AreaLink* link, unsigned int day)
     return result->avgdata.daily[day];
 }
 
+double OutputRetriever::thermalGenerationAtHour(ThermalCluster* cluster, unsigned int hour)
+{
+    auto result = retrieveThermalClusterGenerationResults(cluster);
+    return (*result)[cluster->areaWideIndex].avgdata.hourly[hour];
+}
 
 Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* 
 OutputRetriever::retrieveLinkFlowResults(AreaLink* link)
@@ -154,22 +164,13 @@ OutputRetriever::retrieveLinkFlowResults(AreaLink* link)
     return result;
 }
 
-// =======================================================
-
 Variable::Storage<Variable::Economy::VCardProductionByDispatchablePlant>::ResultsType*
-retrieveThermalClusterGenerationResults(const std::shared_ptr<ISimulation<Economy>>& simulation, ThermalCluster* cluster)
+OutputRetriever::retrieveThermalClusterGenerationResults(ThermalCluster* cluster)
 {
     typename Variable::Storage<Variable::Economy::VCardProductionByDispatchablePlant>::ResultsType* result = nullptr;
-    simulation->variables.retrieveResultsForThermalCluster<Variable::Economy::VCardProductionByDispatchablePlant>(&result, cluster);
+    simulation_->variables.retrieveResultsForThermalCluster<Variable::Economy::VCardProductionByDispatchablePlant>(&result, cluster);
     return result;
 }
-
-double getThermalGenerationAthour(const std::shared_ptr<ISimulation<Economy>>& simulation, ThermalCluster* cluster, unsigned int hour)
-{
-    auto result = retrieveThermalClusterGenerationResults(simulation, cluster);
-    return (*result)[cluster->areaWideIndex].avgdata.hourly[hour];
-}
-
 
 // =================
 // Helper classes
@@ -578,7 +579,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90)
     simulation->run();
 
     unsigned int hour = 10;
-    BOOST_TEST(getThermalGenerationAthour(simulation->get(), cluster.get(), hour) == rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->thermalGenerationAtHour(cluster.get(), hour) == rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
