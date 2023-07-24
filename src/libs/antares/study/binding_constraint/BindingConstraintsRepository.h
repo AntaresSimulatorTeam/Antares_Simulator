@@ -55,7 +55,7 @@ public:
     ** \brief Iterate through all enabled constraints (const)
     */
     template<class PredicateT>
-    void eachEnabled(const PredicateT& predicate) const;
+    void eachActive(const PredicateT& predicate) const;
 
     iterator begin();
     [[nodiscard]] const_iterator begin() const;
@@ -173,7 +173,7 @@ public:
 
     std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>> groupToTimeSeriesNumbers;
 
-    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> enabled() const;
+    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> activeContraints() const;
 
     [[nodiscard]] std::vector<uint> getIndicesForInequalityBindingConstraints() const;
 
@@ -190,7 +190,7 @@ private:
 
     [[nodiscard]] bool checkTimeSeriesWidthConsistency() const;
 
-    mutable std::optional<std::vector<std::shared_ptr<BindingConstraint>>> enabledConstraints_;
+    mutable std::optional<std::vector<std::shared_ptr<BindingConstraint>>> activeConstraints_;
 };
 
 struct WhoseNameContains final

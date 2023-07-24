@@ -32,11 +32,11 @@ inline void BindingConstraintsRepository::each(const PredicateT &predicate) cons
 }
 
 template<class PredicateT>
-inline void BindingConstraintsRepository::eachEnabled(const PredicateT &predicate) const {
+inline void BindingConstraintsRepository::eachActive(const PredicateT &predicate) const {
     uint count = (uint) pList.size();
     for (uint i = 0; i != count; ++i) {
         auto &constraint = *(pList[i].get());
-        if (constraint.enabled() && !constraint.skipped())
+        if (constraint.isActive())
             predicate(constraint);
     }
 }
