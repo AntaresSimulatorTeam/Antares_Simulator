@@ -105,9 +105,9 @@ class OutputRetriever
 public:
     OutputRetriever(std::shared_ptr<ISimulation<Economy>>& simulation) : simulation_(simulation) {}
 
-    double linkFlowAtHour(AreaLink* link, unsigned int hour);
-    double linkFlowForWeek(AreaLink* link, unsigned int week);
-    double linkFlowForDay(AreaLink* link, unsigned int day);
+    double flowAtHour(AreaLink* link, unsigned int hour);
+    double flowForWeek(AreaLink* link, unsigned int week);
+    double flowForDay(AreaLink* link, unsigned int day);
 
     double thermalGenerationAtHour(ThermalCluster* cluster, unsigned int hour);
 
@@ -123,7 +123,7 @@ private:
 };
 
 
-double OutputRetriever::linkFlowAtHour(AreaLink* link, unsigned int hour)
+double OutputRetriever::flowAtHour(AreaLink* link, unsigned int hour)
 {
     // There is a problem here : 
     //    we cannot easly retrieve the hourly flow for a link and a year : 
@@ -138,13 +138,13 @@ double OutputRetriever::linkFlowAtHour(AreaLink* link, unsigned int hour)
     return result->avgdata.hourly[hour];
 }
 
-double OutputRetriever::linkFlowForWeek(AreaLink* link, unsigned int week)
+double OutputRetriever::flowForWeek(AreaLink* link, unsigned int week)
 {
     auto result = retrieveLinkFlowResults(link);
     return result->avgdata.weekly[week];
 }
 
-double OutputRetriever::linkFlowForDay(AreaLink* link, unsigned int day)
+double OutputRetriever::flowForDay(AreaLink* link, unsigned int day)
 {
     auto result = retrieveLinkFlowResults(link);
     return result->avgdata.daily[day];
@@ -435,7 +435,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     simulation->run();
 
     unsigned int hour = 0;
-    BOOST_TEST(output->linkFlowAtHour(link, hour) == rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->flowAtHour(link, hour) == rhsValue, tt::tolerance(0.001));
 }
 
 
@@ -464,7 +464,7 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
 
     unsigned int week = 0;
     unsigned int nbDaysInWeek = 7;
-    BOOST_TEST(output->linkFlowForWeek(link, week) == rhsValue * nbDaysInWeek, tt::tolerance(0.001));
+    BOOST_TEST(output->flowForWeek(link, week) == rhsValue * nbDaysInWeek, tt::tolerance(0.001));
 }
 
 
@@ -492,7 +492,7 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     simulation->run();
 
     unsigned int day = 0;
-    BOOST_TEST(output->linkFlowForDay(link, day) == rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->flowForDay(link, day) == rhsValue, tt::tolerance(0.001));
 }
 
 
@@ -520,7 +520,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     simulation->run();
 
     unsigned int hour = 100;
-    BOOST_TEST(output->linkFlowAtHour(link, hour) <= rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->flowAtHour(link, hour) <= rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
@@ -547,7 +547,7 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
     simulation->run();
 
     unsigned int hour = 100;
-    BOOST_TEST(output->linkFlowAtHour(link, hour) >= rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->flowAtHour(link, hour) >= rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -614,7 +614,7 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
     simulation->run();
 
     unsigned int hour = 0;
-    BOOST_TEST(output->linkFlowAtHour(link, hour) == bcGroupRHS2, tt::tolerance(0.001));
+    BOOST_TEST(output->flowAtHour(link, hour) == bcGroupRHS2, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
@@ -654,7 +654,7 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
     simulation->run();
 
     unsigned int hour = 0;
-    BOOST_TEST(output->linkFlowAtHour(link, hour) == 40., tt::tolerance(0.001));
+    BOOST_TEST(output->flowAtHour(link, hour) == 40., tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
