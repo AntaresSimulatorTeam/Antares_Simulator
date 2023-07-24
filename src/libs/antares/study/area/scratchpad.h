@@ -106,8 +106,8 @@ public:
     double dispatchableGenerationMargin[168];
 
 private:
-    bool CalculateEnergy(const Matrix<double, Yuni::sint32>& matrix,
-                         const Matrix<double>::ColumnType& hours);
+    bool CheckForPositiveEnergy(const Matrix<double, Yuni::sint32>& matrix,
+                                const Matrix<double>::ColumnType& hours);
 }; // class AreaScratchpad
 
 double CalculateDailyMeanPower(uint dYear, const Matrix<double>::ColumnType&  maxPower);

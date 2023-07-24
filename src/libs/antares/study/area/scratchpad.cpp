@@ -97,7 +97,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
     auto const& maxPowerHours = area.hydro.maxPower;
     auto const& hoursGen = maxPowerHours[Data::PartHydro::genMaxE];
 
-    hydroGenerationPermission = CalculateEnergy(maxPower, hoursGen);
+    hydroGenerationPermission = CheckForPositiveEnergy(maxPower, hoursGen);
 
     // ---------------------
     // Hydro has inflows
@@ -137,13 +137,13 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
      auto const& hoursPump = maxPowerHours[Data::PartHydro::genMaxP];
 
     // If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
-    pumpHasMod = CalculateEnergy(maxPumpingP, hoursPump);
+    pumpHasMod = CheckForPositiveEnergy(maxPumpingP, hoursPump);
 }
 
 AreaScratchpad::~AreaScratchpad() = default;
 
-bool AreaScratchpad::CalculateEnergy(const Matrix<double, Yuni::sint32>& matrix,
-                                     const Matrix<double>::ColumnType& hours)
+bool AreaScratchpad::CheckForPositiveEnergy(const Matrix<double, Yuni::sint32>& matrix,
+                                            const Matrix<double>::ColumnType& hours)
 {
     double value = 0.;
 
