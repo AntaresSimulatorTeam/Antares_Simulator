@@ -89,4 +89,23 @@ BOOST_AUTO_TEST_CASE(WhenLoadingsConstraints_AllGroupExists) {
     BOOST_CHECK_EQUAL(study->bindingConstraintsGroups.size(), 2);
 }
 
+BOOST_AUTO_TEST_CASE(WhenLoadingsConstraints_AllGroupsNonEmpty) {
+    addConstraint("dummy_name_1", "dummy_group_uno");
+    addConstraint("dummy_name_2", "dummy_group_uno");
+    addConstraint("dummy_name_3", "dummy_group_other");
+
+    study->header.version = version870;
+
+    study->folderInput = working_tmp_dir.string();
+    const bool loading_ok = study->internalLoadBindingConstraints(options);
+
+    BOOST_CHECK_EQUAL(loading_ok, true);
+    BOOST_CHECK_EQUAL(study->bindingConstraints.size(), 3);
+    BOOST_CHECK_EQUAL(study->bindingConstraintsGroups.size(), 2);
+    BOOST_CHECK(std::all_of(study->bindingConstraintsGroups.begin(), study->bindingConstraintsGroups.end(),
+                            [](std::shared_ptr<BindingConstraintGroup> group){
+                            return !group->constraints().empty();
+                            }));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
