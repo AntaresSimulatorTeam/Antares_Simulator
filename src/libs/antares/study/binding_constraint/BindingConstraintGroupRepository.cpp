@@ -34,10 +34,11 @@ namespace Antares::Data {
 
     bool BindingConstraintGroupRepository::timeSeriesWidthConsistentInGroups() const {
         bool allConsistent = !std::any_of(groups_.begin(), groups_.end(), [](const std::shared_ptr<Antares::Data::BindingConstraintGroup> &group) {
-                                            if (group->constraints().empty())
+                                            const auto& constraints = group->constraints();
+                                            if (constraints.empty())
                                                 return false;
-                                            auto width = (*group->constraints().begin())->RHSTimeSeries().width;
-                                            bool isConsistent = std::all_of(group->constraints().begin(), group->constraints().end(), [&width](const std::shared_ptr<BindingConstraint>& bc){
+                                            auto width = (*constraints.begin())->RHSTimeSeries().width;
+                                            bool isConsistent = std::all_of(constraints.begin(), constraints.end(), [&width](const std::shared_ptr<BindingConstraint>& bc){
                                                               bool sameWidth = bc->RHSTimeSeries().width == width;
                                                               if (!sameWidth) {
                                                                   logs.error() << "Inconsistent time series width for constraint of the same group. Group at fault: "
