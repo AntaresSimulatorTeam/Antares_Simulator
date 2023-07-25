@@ -20,7 +20,6 @@ public:
 
     [[nodiscard]] bool buildFrom(BindingConstraintsRepository& repository);
 
-    [[nodiscard]] bool timeSeriesWidthConsistentInGroups() const;
     void resizeAllTimeseriesNumbers(unsigned nb_years);
 
     void fixTSNumbersWhenWidthIsOne();
@@ -37,6 +36,8 @@ public:
     void clear();
 
 private:
+    [[nodiscard]] bool timeSeriesWidthConsistentInGroups() const;
+
     std::vector<std::shared_ptr<BindingConstraintGroup>> groups_;
 };
 
