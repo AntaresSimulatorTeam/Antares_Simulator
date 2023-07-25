@@ -3,7 +3,7 @@
 //
 #define BOOST_TEST_MODULE binding_constraints_groups
 
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <filesystem>
 #include <fstream>
 #include <memory>
