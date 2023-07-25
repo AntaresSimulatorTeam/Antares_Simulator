@@ -35,15 +35,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: true
 
     - name: Pre-requisites
       shell: cmd
       run: |
           choco install wget unzip zip --no-progress
-
-    - name : Init VCPKG submodule
-      run: |
-          git submodule update --init vcpkg
 
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
@@ -93,10 +91,6 @@ jobs:
 
     - name: Install pip dependencies if necessary
       run: pip install -r src/tests/examples/requirements.txt
-
-    - name: Init submodule
-      run: |
-           git submodule update --init --recursive src
 
     - name: Enable git longpaths
       run:  git config --system core.longpaths true
