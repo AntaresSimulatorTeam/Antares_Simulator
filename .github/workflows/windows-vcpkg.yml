@@ -93,6 +93,7 @@ jobs:
 
     - name: Init submodule
       run: |
+        git submodule update --init src/antares-deps
         git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
 
     - name: Enable git longpaths
