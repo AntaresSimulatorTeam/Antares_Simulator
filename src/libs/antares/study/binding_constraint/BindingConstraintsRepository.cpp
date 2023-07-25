@@ -348,7 +348,7 @@ void BindingConstraintsRepository::markAsModified() const
         i->markAsModified();
 }
 
-std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::enabled() const {
+std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeContraints() const {
     if (activeConstraints_) {
         return activeConstraints_.value();
     } else {
