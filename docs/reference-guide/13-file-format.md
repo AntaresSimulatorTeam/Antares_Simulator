@@ -2,6 +2,10 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 ## v8.8.0
 For each area, new files are added **input/hydro/series/&lt;area&gt;/maxgen.txt** and **input/hydro/series/&lt;area&gt;/maxpump.txt**. These files have one or more columns, and 8760 rows. The number of columns in these two files must be the same, if there is more than one column in each file, but if there is just one column for example in maxgen.txt file, maxpump.txt file can have more than one column and vice versa.
+### Input
+Under `Configure/MC Scenario Builder` new section added `Hydro-Power-Credits`
+In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added:
+* **hgp,&lt;area&gt;,&lt;year&gt; = &lt;hgp-value&gt;**
 ## v8.7.0
 ### Input
 #### Scenarized RHS for binding constraints
