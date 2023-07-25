@@ -11,37 +11,6 @@ namespace utf = boost::unit_test;
 namespace tt = boost::test_tools;
 
 
-// ===============================
-// Helper functions for BC tests
-// ===============================
-
-void addLoadToArea(Area* area, double loadInArea)
-{
-    unsigned int loadNumberTS = 1;
-    area->load.series->timeSeries.resize(loadNumberTS, HOURS_PER_YEAR);
-    area->load.series->timeSeries.fill(loadInArea);
-}
-
-void configureCluster(std::shared_ptr<ThermalCluster> cluster)
-{
-    double availablePower = 100.0;
-    double maximumPower = 100.0;
-    double clusterCost = 50.;
-    unsigned int unitCount = 1;
-
-    cluster->unitCount = unitCount;
-    cluster->nominalCapacity = maximumPower;
-
-    cluster->marginalCost = clusterCost;
-
-    // Must define market bid cost otherwise all production is used
-    cluster->marketBidCost = clusterCost;
-
-    cluster->minStablePower = 0.0;
-    cluster->series->timeSeries.fill(availablePower);
-}
-
-
 // =================================
 // The Basic fixture for BC tests
 // =================================
@@ -74,7 +43,12 @@ StudyForBCTest::StudyForBCTest()
     configureLinkCapacities(link);
 
     cluster = addClusterToArea(area1, "some cluster");
-    configureCluster(cluster);
+
+    double nominalCapacity = 100.0;
+    double availablePower = 100.0;
+    double cost = 50.;
+    unsigned int unitCount = 1;
+    configureCluster(cluster, nominalCapacity, availablePower, cost, unitCount);
 };
 
 // ======================================================
@@ -119,7 +93,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
 {
     // Study parameters varying depending on the test
     unsigned int nbYears = 1;
-    setNumberMCyears(study, nbYears);
+    setNumberMCyears(nbYears);
 
     // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeHourly);
@@ -137,8 +111,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     simulation->create();
     simulation->run();
 
-    unsigned int hour = 0;
-    BOOST_TEST(output->flow(link).hour(hour) == rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->flow(link).hour(0) == rhsValue, tt::tolerance(0.001));
 }
 
 
@@ -146,7 +119,7 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
 {
     // Study parameters varying depending on the test 
     unsigned int nbYears = 1;
-    setNumberMCyears(study, nbYears);
+    setNumberMCyears(nbYears);
 
     // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeWeekly);
@@ -164,9 +137,8 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
     simulation->create();
     simulation->run();
 
-    unsigned int week = 0;
     unsigned int nbDaysInWeek = 7;
-    BOOST_TEST(output->flow(link).week(week) == rhsValue * nbDaysInWeek, tt::tolerance(0.001));
+    BOOST_TEST(output->flow(link).week(0) == rhsValue * nbDaysInWeek, tt::tolerance(0.001));
 }
 
 
@@ -174,7 +146,7 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
 {
     // Study parameters varying depending on the test 
     unsigned int nbYears = 1;
-    setNumberMCyears(study, nbYears);
+    setNumberMCyears(nbYears);
 
     // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeDaily);
@@ -192,8 +164,7 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     simulation->create();
     simulation->run();
 
-    unsigned int day = 0;
-    BOOST_TEST(output->flow(link).day(day) == rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->flow(link).day(0) == rhsValue, tt::tolerance(0.001));
 }
 
 
@@ -201,7 +172,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
 {
     // Study parameters varying depending on the test 
     unsigned int nbYears = 1;
-    setNumberMCyears(study, nbYears);
+    setNumberMCyears(nbYears);
 
     // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeHourly);
@@ -219,15 +190,14 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     simulation->create();
     simulation->run();
 
-    unsigned int hour = 100;
-    BOOST_TEST(output->flow(link).hour(hour) <= rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->flow(link).hour(100) <= rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
 {
     // Study parameters varying depending on the test 
     unsigned int nbYears = 1;
-    setNumberMCyears(study, nbYears);
+    setNumberMCyears(nbYears);
 
     // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeDaily);
@@ -245,8 +215,7 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
     simulation->create();
     simulation->run();
 
-    unsigned int hour = 100;
-    BOOST_TEST(output->flow(link).hour(hour) >= rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->flow(link).hour(100) >= rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -258,7 +227,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90)
 {
     // Study parameters varying depending on the test
     unsigned int nbYears = 1;
-    setNumberMCyears(study, nbYears);
+    setNumberMCyears(nbYears);
 
     // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeHourly);
@@ -276,8 +245,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90)
     simulation->create();
     simulation->run();
 
-    unsigned int hour = 10;
-    BOOST_TEST(output->thermalGeneration(cluster.get()).hour(hour) == rhsValue, tt::tolerance(0.001));
+    BOOST_TEST(output->thermalGeneration(cluster.get()).hour(10) == rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -290,7 +258,7 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
 {
     // Study parameters varying depending on the test
     unsigned int nbYears = 2;
-    setNumberMCyears(study, nbYears);
+    setNumberMCyears(nbYears);
 
     // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeHourly);
@@ -311,15 +279,14 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
     playOnlyYear(1);
     simulation->run();
 
-    unsigned int hour = 0;
-    BOOST_TEST(output->flow(link).hour(hour) == bcGroupRHS2, tt::tolerance(0.001));
+    BOOST_TEST(output->flow(link).hour(0) == bcGroupRHS2, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
 {
     // Study parameters varying depending on the test
     unsigned int nbYears = 10;
-    setNumberMCyears(study, nbYears);
+    setNumberMCyears(nbYears);
 
     // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeHourly);
@@ -351,8 +318,7 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
     playOnlyYear(8);
     simulation->run();
 
-    unsigned int hour = 0;
-    BOOST_TEST(output->flow(link).hour(hour) == 40., tt::tolerance(0.001));
+    BOOST_TEST(output->flow(link).hour(0) == 40., tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -107,7 +107,6 @@ Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(St
     return simulation;
 }
 
-BOOST_AUTO_TEST_SUITE(simple_test)
 
 // checkVariable<VCard>(simulation, pArea, expectedHourlyVal)
 //
@@ -120,63 +119,68 @@ BOOST_AUTO_TEST_SUITE(simple_test)
 //		expectedHourlyValue	: Expected hourly value
 template<class VCard>
 void checkVariable(
-  Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation,
-  Area* pArea,
-  double expectedHourlyValue
+	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation,
+	Area* pArea,
+	double expectedHourlyValue
 )
 
 {
-    /*Get value*/
-    typename Antares::Solver::Variable::Storage<VCard>::ResultsType* result = nullptr;
-    simulation->variables.retrieveResultsForArea<VCard>(&result, pArea);
-    BOOST_TEST(result->avgdata.hourly[0] == expectedHourlyValue,			tt::tolerance(0.001));
-    BOOST_TEST(result->avgdata.daily[0]  == expectedHourlyValue * 24,		tt::tolerance(0.001));
-    BOOST_TEST(result->avgdata.weekly[0] == expectedHourlyValue * 24 * 7,	tt::tolerance(0.001));
+	/*Get value*/
+	typename Antares::Solver::Variable::Storage<VCard>::ResultsType* result = nullptr;
+	simulation->variables.retrieveResultsForArea<VCard>(&result, pArea);
+	BOOST_TEST(result->avgdata.hourly[0] == expectedHourlyValue, tt::tolerance(0.001));
+	BOOST_TEST(result->avgdata.daily[0] == expectedHourlyValue * 24, tt::tolerance(0.001));
+	BOOST_TEST(result->avgdata.weekly[0] == expectedHourlyValue * 24 * 7, tt::tolerance(0.001));
 }
 
-//Very simple test with one area and one load and one year
-BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
+// =================================
+// Basic fixture 
+// =================================
+struct StudyFixture : public StudyBuilder
 {
-	//Create study
-	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+	using StudyBuilder::StudyBuilder;
+	StudyFixture();
 
-	//On year  and one TS
-	int nbYears = 1;
-	int  nbTS	= 1;
+	// Data members
+	std::shared_ptr<ThermalCluster> cluster;
+	Area* area = nullptr;
+};
 
-	//Prepare study
-	prepareStudy(pStudy, nbYears);
-	pStudy->parameters.nbTimeSeriesLoad		= nbTS;
-	pStudy->parameters.nbTimeSeriesThermal	= nbTS;
+StudyFixture::StudyFixture()
+{
+	simulationBetweenDays(0, 7);
+	area = addAreaToStudy("Some area");
+	cluster = addClusterToArea(area, "some cluster");
+};
 
-	//Create area
-	double load = 7.0;
-	Area*  pArea = addArea(pStudy,"Area 1", nbTS);
 
-	//Initialize time series
-	pArea->load.series->timeSeries.fillColumn(0, load);
+BOOST_FIXTURE_TEST_SUITE(ONE_YEAR__ONE_AREA__ONE_THERMAL_CLUSTER, StudyFixture)
 
-	//Add thermal  cluster
-	double availablePower	= 50.0;
-	double cost				= 2.0;
-	double maximumPower		= 100.0;
-	auto pCluster = addCluster(pArea,"Cluster 1", maximumPower,cost, nbTS);
+BOOST_AUTO_TEST_CASE(thermal_cluster_fullfill_area_demand)
+{	
+	setNumberMCyears(1);
 
-	//Initialize time series
-	pCluster->series->timeSeries.fillColumn(0, availablePower);
+	double loadInArea = 7.0;
+	addLoadToArea(area, loadInArea);
 
-	//Launch simulation
-	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+	double nominalCapacity = 100.0;
+	double availablePower = 50.0;
+	double cost = 2.0;
+	unsigned int unitCount = 1;
+	configureCluster(cluster, nominalCapacity, availablePower, cost, unitCount);
 
-	//Overall cost must be load * cost by MW
-	checkVariable<Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
+	simulation->create();
+	simulation->run();
 
-	//Load must be load
-	checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
-
-	cleanSimulation(simulation);
-	cleanStudy(pStudy);
+	BOOST_TEST(output->overallCost(area).hour(0) == loadInArea * cost, tt::tolerance(0.001));
+	BOOST_TEST(output->load(area).hour(0) == loadInArea, tt::tolerance(0.001));
 }
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_AUTO_TEST_SUITE(simple_test)
+
 
 //Very simple test with one area and one load and two year
 BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)

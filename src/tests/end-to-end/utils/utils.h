@@ -11,8 +11,15 @@ using namespace Antares::Solver::Simulation;
 
 
 void initializeStudy(Study::Ptr study);
-void setNumberMCyears(Study::Ptr study, unsigned int nbYears);
 void configureLinkCapacities(AreaLink* link);
+void addLoadToArea(Area* area, double loadInArea);
+
+void configureCluster(std::shared_ptr<ThermalCluster> cluster,
+                      double nominalCapacity,
+                      double availablePower,
+                      double cost,
+                      unsigned int unitCount);
+
 std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName);
 void addScratchpadToEachArea(Study::Ptr study);
 
@@ -38,19 +45,50 @@ class OutputRetriever
 {
 public:
     OutputRetriever(std::shared_ptr<ISimulation<Economy>>& simulation) : simulation_(simulation) {}
+    averageResults overallCost(Area* area);
+    averageResults load(Area* area);
     averageResults flow(AreaLink* link);
     averageResults thermalGeneration(ThermalCluster* cluster);
 
 private:
-    Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType*
-        retrieveLinkFlowResults(AreaLink* link);
+    template<class VCard>
+    typename Variable::Storage<VCard>::ResultsType* retrieveAreaResults(Area* area);
 
-    Variable::Storage<Variable::Economy::VCardProductionByDispatchablePlant>::ResultsType*
-        retrieveThermalClusterGenerationResults(ThermalCluster* cluster);
+    template<class VCard>
+    typename Variable::Storage<VCard>::ResultsType* retrieveLinkResults(AreaLink* link);
+
+    template<class VCard>
+    typename Variable::Storage<VCard>::ResultsType* retrieveResultsForThermalCluster(ThermalCluster* cluster);
 
     std::shared_ptr<ISimulation<Economy>>& simulation_;
 };
 
+template<class VCard>
+typename Variable::Storage<VCard>::ResultsType*
+OutputRetriever::retrieveAreaResults(Area* area)
+{
+    typename Variable::Storage<VCard>::ResultsType* result = nullptr;
+    simulation_->variables.retrieveResultsForArea<VCard>(&result, area);
+    return result;
+}
+
+template<class VCard>
+typename Variable::Storage<VCard>::ResultsType*
+OutputRetriever::retrieveLinkResults(AreaLink* link)
+{
+    typename Variable::Storage<VCard>::ResultsType* result = nullptr;
+    simulation_->variables.retrieveResultsForLink<VCard>(&result, link);
+    return result;
+}
+
+template<class VCard>
+typename Variable::Storage<VCard>::ResultsType*
+OutputRetriever::retrieveResultsForThermalCluster(ThermalCluster* cluster)
+{
+    typename Variable::Storage<VCard>::ResultsType* result = nullptr;
+    simulation_->variables.retrieveResultsForThermalCluster<VCard>(&result, cluster);
+    return result;
+}
 
 // -----------------------
 // BC rhs configuration
@@ -118,6 +156,7 @@ struct StudyBuilder
 
     void simulationBetweenDays(const unsigned int firstDay, const unsigned int lastDay);
     Area* addAreaToStudy(const std::string& areaName);
+    void setNumberMCyears(unsigned int nbYears);
     void playOnlyYear(unsigned int year);
 
     // Data members

@@ -12,12 +12,6 @@ void initializeStudy(Study::Ptr study)
     Data::Study::Current::Set(study);
 }
 
-void setNumberMCyears(Study::Ptr study, unsigned int nbYears)
-{
-    study->parameters.resetPlaylist(nbYears);
-    study->bindingConstraints.resizeAllTimeseriesNumbers(nbYears);
-}
-
 void configureLinkCapacities(AreaLink* link)
 {
     const double linkCapacityInfinite = +std::numeric_limits<double>::infinity();
@@ -26,6 +20,13 @@ void configureLinkCapacities(AreaLink* link)
 
     link->indirectCapacities.resize(1, 8760);
     link->indirectCapacities.fill(linkCapacityInfinite);
+}
+
+void addLoadToArea(Area* area, double loadInArea)
+{
+    unsigned int loadNumberTS = 1;
+    area->load.series->timeSeries.resize(loadNumberTS, HOURS_PER_YEAR);
+    area->load.series->timeSeries.fill(loadInArea);
 }
 
 std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName)
@@ -42,6 +43,23 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     return cluster;
 }
 
+void configureCluster(std::shared_ptr<ThermalCluster> cluster,
+                      double nominalCapacity,
+                      double availablePower,
+                      double cost,
+                      unsigned int unitCount)
+{
+    cluster->unitCount = unitCount;
+    cluster->nominalCapacity = nominalCapacity;
+
+    cluster->marginalCost = cost;
+    cluster->marketBidCost = cost; // Must define market bid cost otherwise all production is used
+    cluster->setProductionCost();
+
+    cluster->minStablePower = 0.0;
+    cluster->series->timeSeries.fill(availablePower);
+}
+
 void addScratchpadToEachArea(Study::Ptr study)
 {
     for (auto [_, area] : study->areas) {
@@ -54,6 +72,18 @@ void addScratchpadToEachArea(Study::Ptr study)
 // -------------------------------
 // Simulation results retrieval
 // -------------------------------
+averageResults OutputRetriever::overallCost(Area* area)
+{
+    auto result = retrieveAreaResults<Variable::Economy::VCardOverallCost>(area);
+    return averageResults(result->avgdata);
+}
+
+averageResults OutputRetriever::load(Area* area)
+{
+    auto result = retrieveAreaResults<Variable::Economy::VCardTimeSeriesValuesLoad>(area);
+    return averageResults(result->avgdata);
+}
+
 averageResults OutputRetriever::flow(AreaLink* link)
 {
     // There is a problem here : 
@@ -65,30 +95,14 @@ averageResults OutputRetriever::flow(AreaLink* link)
     //    We should be able to run each year independently, which is not possible now.
     //    A workaround is to retrieve syntheses, and that's what we do here.
 
-    auto result = retrieveLinkFlowResults(link);
+    auto result = retrieveLinkResults<Variable::Economy::VCardFlowLinear>(link);
     return averageResults(result->avgdata);
 }
 
 averageResults OutputRetriever::thermalGeneration(ThermalCluster* cluster)
 {
-    auto result = retrieveThermalClusterGenerationResults(cluster);
+    auto result = retrieveResultsForThermalCluster<Variable::Economy::VCardProductionByDispatchablePlant>(cluster);
     return averageResults((*result)[cluster->areaWideIndex].avgdata);
-}
-
-Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType*
-OutputRetriever::retrieveLinkFlowResults(AreaLink* link)
-{
-    typename Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType* result = nullptr;
-    simulation_->variables.retrieveResultsForLink<Variable::Economy::VCardFlowLinear>(&result, link);
-    return result;
-}
-
-Variable::Storage<Variable::Economy::VCardProductionByDispatchablePlant>::ResultsType*
-OutputRetriever::retrieveThermalClusterGenerationResults(ThermalCluster* cluster)
-{
-    typename Variable::Storage<Variable::Economy::VCardProductionByDispatchablePlant>::ResultsType* result = nullptr;
-    simulation_->variables.retrieveResultsForThermalCluster<Variable::Economy::VCardProductionByDispatchablePlant>(&result, cluster);
-    return result;
 }
 
 
@@ -169,6 +183,12 @@ void StudyBuilder::simulationBetweenDays(const unsigned int firstDay, const unsi
 {
     study->parameters.simulationDays.first = firstDay;
     study->parameters.simulationDays.end = lastDay;
+}
+
+void StudyBuilder::setNumberMCyears(unsigned int nbYears)
+{
+    study->parameters.resetPlaylist(nbYears);
+    study->areas.resizeAllTimeseriesNumbers(nbYears);
 }
 
 void StudyBuilder::playOnlyYear(unsigned int year)
