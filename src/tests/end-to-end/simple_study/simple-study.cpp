@@ -144,6 +144,8 @@ struct StudyFixture : public StudyBuilder
 	// Data members
 	std::shared_ptr<ThermalCluster> cluster;
 	Area* area = nullptr;
+	double loadInArea = 0.;
+	double clusterCost = 0.;
 };
 
 StudyFixture::StudyFixture()
@@ -151,28 +153,40 @@ StudyFixture::StudyFixture()
 	simulationBetweenDays(0, 7);
 	area = addAreaToStudy("Some area");
 	cluster = addClusterToArea(area, "some cluster");
-};
 
-
-BOOST_FIXTURE_TEST_SUITE(ONE_YEAR__ONE_AREA__ONE_THERMAL_CLUSTER, StudyFixture)
-
-BOOST_AUTO_TEST_CASE(thermal_cluster_fullfill_area_demand)
-{	
-	setNumberMCyears(1);
-
-	double loadInArea = 7.0;
+	loadInArea = 7.0;
 	addLoadToArea(area, loadInArea);
 
 	double nominalCapacity = 100.0;
 	double availablePower = 50.0;
-	double cost = 2.0;
+	clusterCost = 2.0;
 	unsigned int unitCount = 1;
-	configureCluster(cluster, nominalCapacity, availablePower, cost, unitCount);
+	configureCluster(cluster, nominalCapacity, availablePower, clusterCost, unitCount);
+};
+
+
+BOOST_FIXTURE_TEST_SUITE(ONE_AREA__ONE_THERMAL_CLUSTER, StudyFixture)
+
+BOOST_AUTO_TEST_CASE(thermal_cluster_fullfills_area_demand)
+{	
+	setNumberMCyears(1);
 
 	simulation->create();
 	simulation->run();
 
-	BOOST_TEST(output->overallCost(area).hour(0) == loadInArea * cost, tt::tolerance(0.001));
+	BOOST_TEST(output->overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
+	BOOST_TEST(output->load(area).hour(0) == loadInArea, tt::tolerance(0.001));
+}
+
+BOOST_AUTO_TEST_CASE(two_MC_years__thermal_cluster_fullfills_area_demand_on_2nd_year_as_well)
+{
+	setNumberMCyears(2);
+
+	simulation->create();
+	giveWeigthOnlyToYear(1);
+	simulation->run();
+
+	BOOST_TEST(output->overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
 	BOOST_TEST(output->load(area).hour(0) == loadInArea, tt::tolerance(0.001));
 }
 
@@ -180,52 +194,6 @@ BOOST_AUTO_TEST_SUITE_END()
 
 
 BOOST_AUTO_TEST_SUITE(simple_test)
-
-
-//Very simple test with one area and one load and two year
-BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
-{
-	//Create study
-	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
-
-	//On year  and one TS
-	int nbYears = 2;
-	int  nbTS	= 1;
-
-	//Prepare study
-	prepareStudy(pStudy, nbYears);
-	pStudy->parameters.nbTimeSeriesLoad = nbTS;
-	pStudy->parameters.nbTimeSeriesThermal = nbTS;
-
-	//Create area
-	double load = 7.0;
-	Area* pArea = addArea(pStudy, "Area 1", nbTS);
-
-	//Initialize time series
-	pArea->load.series->timeSeries.fillColumn(0, load);
-
-	//Add thermal  cluster
-	double availablePower	= 10.0;
-	double cost				= 2.0;
-	double maximumPower		= 100.0;
-	auto pCluster = addCluster(pArea, "Cluster 1", maximumPower, cost, nbTS);
-
-	//Initialize time series
-	pCluster->series->timeSeries.fillColumn(0, availablePower);
-
-	//Launch simulation
-	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
-
-	//Overall cost must be load * cost by MW
-	checkVariable<Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
-
-	//Load must be load
-	checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
-
-	cleanSimulation(simulation);
-	cleanStudy(pStudy);
-}
-
 
 //Very simple test with one area and one load and two year and two identical TS
 BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
