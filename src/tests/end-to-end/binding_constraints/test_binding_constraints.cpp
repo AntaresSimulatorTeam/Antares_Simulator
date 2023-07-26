@@ -103,9 +103,6 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
 
     double rhsValue = 90.;
     bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
-
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
         
     simulation->create();
     simulation->run();
@@ -128,9 +125,6 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
     double rhsValue = 50.;
     bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
   
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
-
     simulation->create();
     simulation->run();
 
@@ -152,9 +146,6 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     double rhsValue = 60.;
     bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
 
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
-
     simulation->create();
     simulation->run();
 
@@ -175,9 +166,6 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     double rhsValue = 90.;
     bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
 
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
-
     simulation->create();
     simulation->run();
 
@@ -196,9 +184,6 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
 
     double rhsValue = 80.;
     bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
-
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
     simulation->create();
     simulation->run();
@@ -223,9 +208,6 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90)
 
     double rhsValue = 90.;
     bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
-
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
     simulation->create();
     simulation->run();
