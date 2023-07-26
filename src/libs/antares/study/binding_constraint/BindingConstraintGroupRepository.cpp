@@ -68,9 +68,11 @@ namespace Antares::Data {
     }
 
     std::shared_ptr<BindingConstraintGroup> BindingConstraintGroupRepository::operator[](std::string name) {
-        if (auto group = std::find_if(groups_.begin(), groups_.end(), [&name](auto group) {
-            return group->name() == name;
-        }); group != groups_.end()) {
+        if (auto group = std::find_if(groups_.begin(), groups_.end(), [&name](auto group_of_constraint) {
+                                        return group_of_constraint->name() == name;
+                                    });
+            group != groups_.end())
+        {
             return *group;
         }
         return nullptr;
