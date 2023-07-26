@@ -46,7 +46,7 @@ void addScratchpadToEachArea(Study::Ptr study)
 {
     for (auto [_, area] : study->areas) {
         for (unsigned int i = 0; i < study->maxNbYearsInParallel; ++i) {
-            area->scratchpad.push_back(AreaScratchpad(*study->runtime, *area));
+            area->scratchpad.emplace_back(*study->runtime, *area);
         }
     }
 }
