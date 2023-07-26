@@ -29,7 +29,7 @@
 #include <yuni/io/file.h>
 #include "series.h"
 #include "../../study.h"
-#include "../../memory-usage.h"
+#include <antares/study/memory_usage/memory-usage.h>
 
 using namespace Yuni;
 

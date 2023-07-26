@@ -34,7 +34,7 @@
 #include "../../array/array1d.h"
 #include "../../inifile/inifile.h"
 #include "../../logs.h"
-#include "../memory-usage.h"
+#include <antares/study/memory_usage/memory-usage.h>
 #include "../../config.h"
 #include "../filter.h"
 #include "constants.h"

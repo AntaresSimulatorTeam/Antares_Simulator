@@ -25,9 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "study.h"
 #include "memory-usage.h"
-#include "../date.h"
+#include <antares/study/study.h>
 
 using namespace Yuni;
 
@@ -170,6 +169,22 @@ void StudyMemoryUsage::overheadDiskSpaceForSingleAreaOrLink()
 void StudyMemoryUsage::overheadDiskSpaceForSingleBindConstraint()
 {
     requiredDiskSpaceForOutput += computeOverheadDiskSpaceForAnyDataLevelComponent();
+}
+
+unsigned int StudyMemoryUsage::NbYearsParallel() {
+    return nbYearsParallel ;
+}
+
+bool StudyMemoryUsage::GatheringInformationsForInput() {
+    return gatheringInformationsForInput;
+}
+
+void StudyMemoryUsage::AddRequiredMemoryForInput(unsigned int i) {
+    requiredMemoryForInput += i;
+}
+
+void StudyMemoryUsage::AddRequiredMemoryForOutput(unsigned int i) {
+    requiredMemoryForOutput += i;
 }
 
 } // namespace Data

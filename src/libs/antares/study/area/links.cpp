@@ -30,11 +30,8 @@
 #include "../study.h"
 #include "links.h"
 #include "area.h"
-#include "../../logs.h"
-#include "../memory-usage.h"
-#include "../filter.h"
+#include <antares/study/memory_usage/memory-usage.h>
 #include "constants.h"
-#include "../fwd.h"
 
 using namespace Yuni;
 using namespace Antares;

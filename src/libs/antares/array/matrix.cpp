@@ -26,7 +26,7 @@
 */
 
 #include <cstdlib>
-#include "antares/study/memory-usage.h"
+#include <antares/study/memory_usage/memory-usage.h>
 
 using namespace Yuni;
 

@@ -30,7 +30,7 @@
 #include <yuni/io/directory.h>
 #include <yuni/core/math.h>
 #include "../../study.h"
-#include "../../memory-usage.h"
+#include <antares/study/memory_usage/memory-usage.h>
 #include "prepro.h"
 #include "../../../logs.h"
 #include "../../../array/array1d.h"

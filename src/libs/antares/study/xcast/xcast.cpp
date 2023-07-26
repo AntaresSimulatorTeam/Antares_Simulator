@@ -29,7 +29,7 @@
 #include "../../logs.h"
 #include <antares/inifile/inifile.h>
 #include "../study.h"
-#include "../memory-usage.h"
+#include <antares/study/memory_usage/memory-usage.h>
 #include <limits>
 
 using namespace Yuni;

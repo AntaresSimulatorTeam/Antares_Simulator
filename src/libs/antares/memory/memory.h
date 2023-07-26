@@ -30,6 +30,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/core/bit/array.h>
+#include "IMemoryUsage.h"
 
 namespace Antares
 {
@@ -139,7 +140,7 @@ public:
     */
     static void EstimateMemoryUsage(size_t bytes,
                                     uint count,
-                                    Data::StudyMemoryUsage& u,
+                                    IMemoryUsage &studyMemoryUsage,
                                     bool duplicateForParallelYears);
 
 public:

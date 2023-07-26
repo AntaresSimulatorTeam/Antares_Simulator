@@ -24,29 +24,25 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_MEMORYUSAGE_H__
-#define __ANTARES_LIBS_STUDY_MEMORYUSAGE_H__
+#pragma once
 
-#include <yuni/yuni.h>
-#include "fwd.h"
-#include "../array/matrix.h"
+#include <antares/array/matrix.h>
+#include "antares/memory/IMemoryUsage.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Estimate the amount of memory (RAM, disk) required for a simulation
 */
-class StudyMemoryUsage final
+class StudyMemoryUsage final : public IMemoryUsage
 {
 public:
     //! \name Constructor
     //@{
     //! Default constructor
-    StudyMemoryUsage(const Study& study);
+    explicit StudyMemoryUsage(const Study& study);
     //! Destructor
-    ~StudyMemoryUsage();
+    ~StudyMemoryUsage() override;
     //@}
 
     /*!
@@ -71,7 +67,14 @@ public:
 
     void overheadDiskSpaceForSingleBindConstraint();
 
-public:
+    unsigned int NbYearsParallel() override;
+
+    bool GatheringInformationsForInput() override;
+
+    void AddRequiredMemoryForInput(unsigned int i) override;
+
+    void AddRequiredMemoryForOutput(unsigned int i) override;
+
     //! \name Input data
     //@{
     //! Study mode (economy / adequacy / other)
@@ -125,7 +128,4 @@ private:
 
 }; // class StudyMemoryUsage
 
-} // namespace Data
 } // namespace Antares
-
-#endif // __ANTARES_LIBS_STUDY_MEMORYUSAGE_H__

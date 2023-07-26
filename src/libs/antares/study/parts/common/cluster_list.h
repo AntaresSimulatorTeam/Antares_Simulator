@@ -1,7 +1,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_CLUSTER_LIST_H__
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_CLUSTER_LIST_H__
 
-#include "../../memory-usage.h"
+#include <antares/study/memory_usage/memory-usage.h>
 #include "../../../logs.h"
 #include "../../fwd.h"
 

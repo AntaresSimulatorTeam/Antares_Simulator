@@ -28,7 +28,7 @@
 #include <algorithm>
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include <antares/study/memory-usage.h>
+#include <antares/study/memory_usage/memory-usage.h>
 #include "surveyresults.h"
 #include <antares/logs.h>
 #include <yuni/io/file.h>

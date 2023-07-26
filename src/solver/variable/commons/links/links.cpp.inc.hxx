@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/study/memory-usage.h>
+#include <antares/study/memory_usage/memory-usage.h>
 #include "../../variable.h"
 #include "../../area.h"
 #include "../../setofareas.h"

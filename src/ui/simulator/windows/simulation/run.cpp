@@ -32,7 +32,7 @@
 #include <yuni/core/system/process.h>
 #include <yuni/io/file.h>
 #include <antares/study/parameters.h>
-#include <antares/study/memory-usage.h>
+#include <antares/study/memory_usage/memory-usage.h>
 
 #include <wx/stattext.h>
 #include <wx/button.h>

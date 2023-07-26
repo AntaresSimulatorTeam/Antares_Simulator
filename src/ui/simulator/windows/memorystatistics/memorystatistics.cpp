@@ -31,7 +31,7 @@
 #include "memorystatistics.h"
 
 #include <antares/study.h>
-#include <antares/study/memory-usage.h>
+#include <antares/study/memory_usage/memory-usage.h>
 #include "../../application/study.h"
 #include "../../toolbox/create.h"
 #include "../../toolbox/resources.h"

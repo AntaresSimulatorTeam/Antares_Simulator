@@ -27,7 +27,7 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_H__
 #define __SOLVER_SIMULATION_SOLVER_H__
 
-#include <antares/study/memory-usage.h>
+#include <antares/study/memory_usage/memory-usage.h>
 #include <antares/study.h>
 #include <antares/logs.h>
 #include <antares/study/fwd.h> // PowerFluctuations

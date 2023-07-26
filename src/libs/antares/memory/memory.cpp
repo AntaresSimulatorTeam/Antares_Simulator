@@ -46,7 +46,7 @@
 #ifdef YUNI_OS_WINDOWS
 #include <WinIoCtl.h>
 #endif
-#include "../study/memory-usage.h"
+#include "IMemoryUsage.h"
 #include "../sys/policy.h"
 #include <yuni/core/system/process.h>
 
@@ -121,17 +121,17 @@ bool Memory::initializeTemporaryFolder()
 
 void Memory::EstimateMemoryUsage(size_t bytes,
                                  uint count,
-                                 Data::StudyMemoryUsage& u,
+                                 IMemoryUsage &studyMemoryUsage,
                                  bool duplicateForParallelYears)
 {
     size_t total = bytes * count;
     if (duplicateForParallelYears)
-        total = total * u.nbYearsParallel;
+        total = total * studyMemoryUsage.NbYearsParallel();
 
-    if (u.gatheringInformationsForInput)
-        u.requiredMemoryForInput += total;
+    if (studyMemoryUsage.GatheringInformationsForInput())
+        studyMemoryUsage.AddRequiredMemoryForInput(total);
     else
-        u.requiredMemoryForOutput += total;
+        studyMemoryUsage.AddRequiredMemoryForOutput(total);
 }
 
 void Memory::displayInfo() const

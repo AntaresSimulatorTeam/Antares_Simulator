@@ -60,4 +60,7 @@ add_library(libantares-solver-simulation
 target_include_directories(libantares-solver-simulation PUBLIC
 		${CMAKE_SOURCE_DIR}/solver/simulation)
 
-target_link_libraries(libantares-solver-simulation PRIVATE libantares-core)
+target_link_libraries(libantares-solver-simulation
+		PRIVATE
+		memory-usage
+		libantares-core)

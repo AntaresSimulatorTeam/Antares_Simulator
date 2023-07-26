@@ -29,7 +29,7 @@
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
 #include "../../study.h"
-#include "../../memory-usage.h"
+#include <antares/study/memory_usage/memory-usage.h>
 #include "prepro.h"
 #include <antares/inifile/inifile.h>
 #include "../../../array/array1d.h"

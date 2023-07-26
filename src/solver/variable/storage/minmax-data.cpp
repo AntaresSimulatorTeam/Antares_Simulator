@@ -26,7 +26,7 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/study/memory-usage.h>
+#include <antares/study/memory_usage/memory-usage.h>
 #include "intermediate.h"
 #include "minmax-data.h"
 #include <float.h>

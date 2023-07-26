@@ -28,7 +28,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
 #include <antares/study/study.h>
-#include <antares/study/memory-usage.h>
+#include <antares/study/memory_usage/memory-usage.h>
 #include <antares/exception/AssertionError.hpp>
 #include "common-eco-adq.h"
 #include <antares/logs.h>

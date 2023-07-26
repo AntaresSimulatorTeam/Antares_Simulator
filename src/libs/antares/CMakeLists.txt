@@ -1,11 +1,9 @@
 
 OMESSAGE("Antares Core library")
 
-set(SRC_MEMORY
-	memory/memory.h
-	memory/memory.hxx
-	memory/memory.cpp)
-source_group("memory" FILES ${SRC_MEMORY})
+add_subdirectory(memory)
+add_subdirectory(study/memory_usage)
+
 
 set(SRC_OBJECT
 	object/intrusive-reference.h
@@ -455,8 +453,6 @@ set(SRC
 	study/study.cpp
 	study/correlation-updater.hxx
 	study/study.importprepro.cpp
-	study/memory-usage.h
-	study/memory-usage.cpp
 	study/importlogs.cpp
 	study/load.cpp
 	study/save.cpp
@@ -545,7 +541,6 @@ add_library(libantares-core
 	antares.h
 	${SRC}
 	${SRC_LOGS}
-	${SRC_MEMORY}
 	${SRC_OBJECT}
 	${SRC_JIT}
 	${SRC_MATRIX}
@@ -596,6 +591,7 @@ target_link_libraries(libantares-core
 		io
 		array
 		correlation
+		memory
 	)
 
 import_std_libs(libantares-core)

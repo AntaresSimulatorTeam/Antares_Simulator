@@ -39,7 +39,7 @@
 #include "../logs.h"
 #include "load-options.h"
 #include <limits.h>
-#include <antares/study/memory-usage.h>
+#include <antares/study/memory_usage/memory-usage.h>
 #include "../solver/variable/economy/all.h"
 #include "../solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
