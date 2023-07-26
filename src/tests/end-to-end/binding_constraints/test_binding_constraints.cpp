@@ -308,7 +308,7 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 1, 1);
 
     simulation->create();
-    giveWeigthOnlyToYear(1);
+    playOnlyYear(1);
     simulation->run();
 
     unsigned int hour = 0;
@@ -348,7 +348,7 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 9, 0);
 
     simulation->create();
-    giveWeigthOnlyToYear(8);
+    playOnlyYear(8);
     simulation->run();
 
     unsigned int hour = 0;

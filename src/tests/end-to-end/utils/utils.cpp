@@ -171,18 +171,13 @@ void StudyBuilder::simulationBetweenDays(const unsigned int firstDay, const unsi
     study->parameters.simulationDays.end = lastDay;
 }
 
-void StudyBuilder::giveWeigthOnlyToYear(unsigned int year)
+void StudyBuilder::playOnlyYear(unsigned int year)
 {
-    // Set all years weight to zero
-    unsigned int nbYears = study->parameters.nbYears;
-    for (unsigned int y = 0; y < nbYears; y++)
-        study->parameters.setYearWeight(y, 0.);
+    auto& params = study->parameters;
 
-    // Set one year's weight to 1
-    study->parameters.setYearWeight(year, 1.);
-
-    // Activate playlist, otherwise previous sets won't have any effect
-    study->parameters.userPlaylist = true;
+    params.userPlaylist = true;
+    std::fill(params.yearsFilter.begin(), params.yearsFilter.end(), false);
+    params.yearsFilter[year] = true;
 }
 
 Area* StudyBuilder::addAreaToStudy(const std::string& areaName)

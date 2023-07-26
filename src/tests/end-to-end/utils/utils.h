@@ -118,7 +118,7 @@ struct StudyBuilder
 
     void simulationBetweenDays(const unsigned int firstDay, const unsigned int lastDay);
     Area* addAreaToStudy(const std::string& areaName);
-    void giveWeigthOnlyToYear(unsigned int year);
+    void playOnlyYear(unsigned int year);
 
     // Data members
     std::shared_ptr<Study> study;
