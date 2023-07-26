@@ -60,7 +60,7 @@ class BCrhsConfig
 public:
     BCrhsConfig() = delete;
     BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbTimeSeries);
-    void fillTimeSeriesWith(unsigned int TSnumber, double rhsValue);
+    void fillRHStimeSeriesWith(unsigned int TSnumber, double rhsValue);
 
 private:
     std::shared_ptr<BindingConstraint> BC_;

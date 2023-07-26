@@ -129,7 +129,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     BCrhsConfig bcRHSconfig(BC, numberOfTS);
 
     double rhsValue = 90.;
-    bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
+    bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
 
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
@@ -156,7 +156,7 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
     BCrhsConfig bcRHSconfig(BC, numberOfTS);
 
     double rhsValue = 50.;
-    bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
+    bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
   
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     BCrhsConfig bcRHSconfig(BC, numberOfTS);
 
     double rhsValue = 60.;
-    bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
+    bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
 
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
@@ -211,7 +211,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     BCrhsConfig bcRHSconfig(BC, numberOfTS);
 
     double rhsValue = 90.;
-    bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
+    bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
 
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
@@ -237,7 +237,7 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
     BCrhsConfig bcRHSconfig(BC, numberOfTS);
 
     double rhsValue = 80.;
-    bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
+    bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
 
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
@@ -268,7 +268,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90)
     BCrhsConfig bcRHSconfig(BC, numberOfTS);
 
     double rhsValue = 90.;
-    bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
+    bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
 
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
@@ -300,8 +300,8 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
     BCrhsConfig bcRHSconfig(BC, numberOfTS);
     double bcGroupRHS1 = 90.;
     double bcGroupRHS2 = 70.;
-    bcRHSconfig.fillTimeSeriesWith(0, bcGroupRHS1);
-    bcRHSconfig.fillTimeSeriesWith(1, bcGroupRHS2);
+    bcRHSconfig.fillRHStimeSeriesWith(0, bcGroupRHS1);
+    bcRHSconfig.fillRHStimeSeriesWith(1, bcGroupRHS2);
 
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
@@ -327,13 +327,13 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
 
     unsigned int numberOfTS = 7;
     BCrhsConfig bcRHSconfig(BC, numberOfTS);
-    bcRHSconfig.fillTimeSeriesWith(0, 10.);
-    bcRHSconfig.fillTimeSeriesWith(1, 20.);
-    bcRHSconfig.fillTimeSeriesWith(2, 30.);
-    bcRHSconfig.fillTimeSeriesWith(3, 40.);
-    bcRHSconfig.fillTimeSeriesWith(4, 50.);
-    bcRHSconfig.fillTimeSeriesWith(5, 60.);
-    bcRHSconfig.fillTimeSeriesWith(6, 70.);
+    bcRHSconfig.fillRHStimeSeriesWith(0, 10.);
+    bcRHSconfig.fillRHStimeSeriesWith(1, 20.);
+    bcRHSconfig.fillRHStimeSeriesWith(2, 30.);
+    bcRHSconfig.fillRHStimeSeriesWith(3, 40.);
+    bcRHSconfig.fillRHStimeSeriesWith(4, 50.);
+    bcRHSconfig.fillRHStimeSeriesWith(5, 60.);
+    bcRHSconfig.fillRHStimeSeriesWith(6, 70.);
 
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);

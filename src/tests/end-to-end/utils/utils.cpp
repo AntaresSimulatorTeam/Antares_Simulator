@@ -101,7 +101,7 @@ BCrhsConfig::BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbO
     BC_->RHSTimeSeries().resize(nbOfTimeSeries_, 8760);
 }
 
-void BCrhsConfig::fillTimeSeriesWith(unsigned int TSnumber, double rhsValue)
+void BCrhsConfig::fillRHStimeSeriesWith(unsigned int TSnumber, double rhsValue)
 {
     if (TSnumber >= nbOfTimeSeries_)
     {
