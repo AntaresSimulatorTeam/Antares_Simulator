@@ -26,11 +26,14 @@ public:
 
     std::shared_ptr<BindingConstraintGroup> operator[](std::string name);
 
-    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraintGroup>>::iterator begin();
-    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraintGroup>>::const_iterator begin() const;
+    using iterator = std::vector<std::shared_ptr<BindingConstraintGroup>>::iterator;
+    using const_iterator = std::vector<std::shared_ptr<BindingConstraintGroup>>::const_iterator;
 
-    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraintGroup>>::iterator end();
-    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraintGroup>>::const_iterator end() const;
+    [[nodiscard]] iterator begin();
+    [[nodiscard]] const_iterator begin() const;
+
+    [[nodiscard]] iterator end();
+    [[nodiscard]] const_iterator end() const;
 
     std::shared_ptr<BindingConstraintGroup> add(const std::string& name);
     void clear();
