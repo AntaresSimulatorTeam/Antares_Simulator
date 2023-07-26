@@ -188,7 +188,7 @@ BOOST_AUTO_TEST_CASE(two_MC_years__thermal_cluster_fullfills_area_demand_on_2nd_
 	setNumberMCyears(2);
 
 	simulation->create();
-	giveWeigthOnlyToYear(1);
+	playOnlyYear(1);
 	simulation->run();
 
 	BOOST_TEST(output->overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
