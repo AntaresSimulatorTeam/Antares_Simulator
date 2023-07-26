@@ -147,7 +147,7 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
     if (cluster)
     {
         uint val = fromStringToTSnumber(value);
-        thermal[area->index].set(cluster, year, val);
+        thermal[area->index].setTSnumber(cluster, year, val);
     }
     else
     {
@@ -184,7 +184,7 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
     if (cluster)
     {
         uint val = fromStringToTSnumber(value);
-        renewable[area->index].set(cluster, year, val);
+        renewable[area->index].setTSnumber(cluster, year, val);
     }
     else
     {
@@ -210,7 +210,7 @@ bool Rules::readLoad(const AreaName::Vector& splitKey, String value, bool update
         return false;
 
     uint val = fromStringToTSnumber(value);
-    load.set(area->index, year, val);
+    load.setTSnumber(area->index, year, val);
     return true;
 }
 
@@ -224,7 +224,7 @@ bool Rules::readWind(const AreaName::Vector& splitKey, String value, bool update
         return false;
 
     uint val = fromStringToTSnumber(value);
-    wind.set(area->index, year, val);
+    wind.setTSnumber(area->index, year, val);
     return true;
 }
 
@@ -238,7 +238,7 @@ bool Rules::readHydro(const AreaName::Vector& splitKey, String value, bool updat
         return false;
 
     uint val = fromStringToTSnumber(value);
-    hydro.set(area->index, year, val);
+    hydro.setTSnumber(area->index, year, val);
     return true;
 }
 
@@ -252,7 +252,7 @@ bool Rules::readSolar(const AreaName::Vector& splitKey, String value, bool updat
         return false;
 
     uint val = fromStringToTSnumber(value);
-    solar.set(area->index, year, val);
+    solar.setTSnumber(area->index, year, val);
     return true;
 }
 
@@ -266,7 +266,7 @@ bool Rules::readHydroLevels(const AreaName::Vector& splitKey, String value, bool
         return false;
 
     double val = fromStringToHydroLevel(value, 1.);
-    hydroLevels.set(area->index, year, val);
+    hydroLevels.setTSnumber(area->index, year, val);
     return true;
 }
 
@@ -312,7 +312,7 @@ bool Rules::readBindingConstraints(const AreaName::Vector &splitKey, String valu
     std::string group_name = splitKey[1].c_str();
     auto year = std::stoi(splitKey[2].c_str());
     auto tsNumber = fromStringToTSnumber(value);
-    binding_constraints.setData(group_name, year, tsNumber);
+    binding_constraints.setTSnumber(group_name, year, tsNumber);
     return true;
 }
 

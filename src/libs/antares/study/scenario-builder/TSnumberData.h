@@ -62,7 +62,7 @@ public:
     ** \param year  A year
     ** \param value The new TS number
     */
-    void set(uint index, uint year, uint value);
+    void setTSnumber(uint index, uint year, uint value);
     //@}
 
     uint width() const;
@@ -188,7 +188,7 @@ public:
         pArea = area;
     }
 
-    void set(const Antares::Data::ThermalCluster* cluster, const uint year, uint value);
+    void setTSnumber(const Antares::Data::ThermalCluster* cluster, const uint year, uint value);
     uint get(const Antares::Data::ThermalCluster* cluster, const uint year) const;
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;
@@ -237,7 +237,7 @@ public:
         pArea = area;
     }
 
-    void set(const Antares::Data::RenewableCluster* cluster, const uint year, uint value);
+    void setTSnumber(const Antares::Data::RenewableCluster* cluster, const uint year, uint value);
     uint get(const Antares::Data::RenewableCluster* cluster, const uint year) const;
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;
@@ -323,7 +323,7 @@ public:
     bool reset(const Study& study) override;
     void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
 
-    void setData(const std::string& group_name, unsigned year, unsigned value);
+    void setTSnumber(const std::string& group_name, unsigned year, unsigned value);
     unsigned get(const std::string& group_name, unsigned year) const;
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;

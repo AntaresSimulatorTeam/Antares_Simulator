@@ -112,9 +112,8 @@ void BCrhsConfig::fillRHStimeSeriesWith(unsigned int TSnumber, double rhsValue)
 // --------------------------------------
 // BC group TS number configuration
 // --------------------------------------
-BCgroupScenarioBuilder::BCgroupScenarioBuilder(Study::Ptr study, unsigned int nbYears)
-    : nbYears_(nbYears)
-
+BCgroupScenarioBuilder::BCgroupScenarioBuilder(Study::Ptr study)
+    : nbYears_(study->parameters.nbYears)
 {
     rules_ = createScenarioRules(study);
 }
@@ -127,7 +126,16 @@ void BCgroupScenarioBuilder::yearGetsTSnumber(std::string groupName, unsigned in
         AntaresSolverEmergencyShutdown();
     }
 
-    rules_->binding_constraints.setData(groupName, year, TSnumber + 1);
+    rules_->binding_constraints.setTSnumber(groupName, year, TSnumber + 1);
+}
+
+
+ScenarioBuilderRule::ScenarioBuilderRule(Study::Ptr study) :
+    nbYears_(study->parameters.nbYears)
+{
+    rules_= createScenarioRules(study);
+    // load_(rules_->load),
+    // bcGroup_(rules_->binding_constraints)
 }
 
 

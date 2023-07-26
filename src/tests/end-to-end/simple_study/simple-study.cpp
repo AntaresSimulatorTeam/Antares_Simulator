@@ -262,7 +262,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 	ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(pStudy);
 	for (int i = 0; i < nbYears; i++)
 	{
-		pRules->load.set(pArea->index, i, areaLoadTS[i]);
+		pRules->load.setTSnumber(pArea->index, i, areaLoadTS[i]);
 	}
 
 	//Launch simulation
@@ -334,7 +334,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
 	ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(pStudy);
 	for (int i = 0; i < nbYears; i++)
 	{
-		pRules->load.set(pArea->index, i, areaLoadTS[i]);
+		pRules->load.setTSnumber(pArea->index, i, areaLoadTS[i]);
 	}
 
 	//Calculate average load with mc years weight

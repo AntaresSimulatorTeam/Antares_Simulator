@@ -93,11 +93,8 @@ BOOST_FIXTURE_TEST_SUITE(TESTS_BINDING_CONSTRAINTS_ON_A_LINK, StudyWithBConLink)
 
 BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
 {
-    // Study parameters varying depending on the test
-    unsigned int nbYears = 1;
-    setNumberMCyears(nbYears);
+    setNumberMCyears(1);
 
-    // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
 
@@ -107,7 +104,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     double rhsValue = 90.;
     bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
 
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
+    BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
         
     simulation->create();
@@ -119,9 +116,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
 
 BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
 {
-    // Study parameters varying depending on the test 
-    unsigned int nbYears = 1;
-    setNumberMCyears(nbYears);
+    setNumberMCyears(1);
 
     // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeWeekly);
@@ -133,7 +128,7 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
     double rhsValue = 50.;
     bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
   
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
+    BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
     simulation->create();
@@ -146,11 +141,8 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
 
 BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
 {
-    // Study parameters varying depending on the test 
-    unsigned int nbYears = 1;
-    setNumberMCyears(nbYears);
+    setNumberMCyears(1);
 
-    // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeDaily);
     BC->operatorType(BindingConstraint::opEquality);
 
@@ -160,7 +152,7 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     double rhsValue = 60.;
     bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
 
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
+    BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
     simulation->create();
@@ -172,11 +164,8 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
 
 BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
 {
-    // Study parameters varying depending on the test 
-    unsigned int nbYears = 1;
-    setNumberMCyears(nbYears);
+    setNumberMCyears(1);
 
-    // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opLess);
 
@@ -186,7 +175,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     double rhsValue = 90.;
     bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
 
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
+    BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
     simulation->create();
@@ -197,11 +186,8 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
 
 BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
 {
-    // Study parameters varying depending on the test 
-    unsigned int nbYears = 1;
-    setNumberMCyears(nbYears);
+    setNumberMCyears(1);
 
-    // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeDaily);
     BC->operatorType(BindingConstraint::opGreater);
 
@@ -211,7 +197,7 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
     double rhsValue = 80.;
     bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
 
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
+    BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
     simulation->create();
@@ -227,11 +213,8 @@ BOOST_FIXTURE_TEST_SUITE(TESTS_BINDING_CONSTRAINTS_ON_A_CLUSTER, StudyWithBConCl
 
 BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90)
 {
-    // Study parameters varying depending on the test
-    unsigned int nbYears = 1;
-    setNumberMCyears(nbYears);
+    setNumberMCyears(1);
 
-    // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
 
@@ -241,7 +224,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90)
     double rhsValue = 90.;
     bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
 
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
+    BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
     simulation->create();
@@ -258,9 +241,7 @@ BOOST_FIXTURE_TEST_SUITE(TESTING_BC_RHS_SCENARIZATION_WHEN_BC_ON_A_LINK, StudyWi
 
 BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
 {
-    // Study parameters varying depending on the test
-    unsigned int nbYears = 2;
-    setNumberMCyears(nbYears);
+    setNumberMCyears(2);
 
     // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeHourly);
@@ -273,7 +254,7 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
     bcRHSconfig.fillRHStimeSeriesWith(0, bcGroupRHS1);
     bcRHSconfig.fillRHStimeSeriesWith(1, bcGroupRHS2);
 
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
+    BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 1, 1);
 
@@ -286,9 +267,7 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
 
 BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
 {
-    // Study parameters varying depending on the test
-    unsigned int nbYears = 10;
-    setNumberMCyears(nbYears);
+    setNumberMCyears(10);
 
     // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeHourly);
@@ -304,7 +283,7 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
     bcRHSconfig.fillRHStimeSeriesWith(5, 60.);
     bcRHSconfig.fillRHStimeSeriesWith(6, 70.);
 
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
+    BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 1, 0);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 2, 0);

@@ -8,6 +8,7 @@
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Simulation;
+using namespace Antares::Data::ScenarioBuilder;
 
 
 void initializeStudy(Study::Ptr study);
@@ -143,12 +144,26 @@ class BCgroupScenarioBuilder
 {
 public:
     BCgroupScenarioBuilder() = delete;
-    BCgroupScenarioBuilder(Study::Ptr study, unsigned int nbYears);
+    BCgroupScenarioBuilder(Study::Ptr study);
     void yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber);
 
 private:
     unsigned int nbYears_ = 0;
     ScenarioBuilder::Rules::Ptr rules_;
+};
+
+ScenarioBuilder::Rules::Ptr createScenarioRules(Study::Ptr pStudy);
+
+class ScenarioBuilderRule
+{
+public:
+    ScenarioBuilderRule(Study::Ptr study);
+    loadTSNumberData& load() { return rules_->load; }
+    BindingConstraintsTSNumberData& bcGroup() { return rules_->binding_constraints; }
+
+private:
+    unsigned int nbYears_ = 0;
+    Rules::Ptr rules_;
 };
 
 
@@ -211,8 +226,6 @@ void cleanSimulation(Antares::Solver::Simulation::ISimulation< Antares::Solver::
 void cleanStudy(Antares::Data::Study::Ptr pStudy);
 
 float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight);
-
-ScenarioBuilder::Rules::Ptr createScenarioRules(Study::Ptr pStudy);
 
 
 class NullResultWriter: public Solver::IResultWriter {
