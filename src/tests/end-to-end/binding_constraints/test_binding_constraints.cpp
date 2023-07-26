@@ -32,11 +32,13 @@ StudyForBCTest::StudyForBCTest()
     Area* area1 = addAreaToStudy("Area 1");
     Area* area2 = addAreaToStudy("Area 2");
 
-    double loadInAreaOne = 0.;
-    addLoadToArea(area1, loadInAreaOne);
+    auto loadTSconfig = std::make_shared<TimeSeriesConfig<Matrix<double, int32_t>>>(area1->load.series->timeSeries);
+    loadTSconfig->setNumberColumns(1);
+    loadTSconfig->fillColumnWith(0, 0);
 
-    double loadInAreaTwo = 100.;
-    addLoadToArea(area2, loadInAreaTwo);
+    loadTSconfig->setTargetTSmatrix(area2->load.series->timeSeries);
+    loadTSconfig->setNumberColumns(1);
+    loadTSconfig->fillColumnWith(0, 100);
 
     link = AreaAddLinkBetweenAreas(area1, area2);
 
@@ -44,11 +46,11 @@ StudyForBCTest::StudyForBCTest()
 
     cluster = addClusterToArea(area1, "some cluster");
 
-    double nominalCapacity = 100.0;
-    double availablePower = 100.0;
-    double cost = 50.;
-    unsigned int unitCount = 1;
-    configureCluster(cluster, nominalCapacity, availablePower, cost, unitCount);
+    ThermalClusterConfig clusterConfig(cluster);
+    clusterConfig.setNominalCapacity(100.);
+    clusterConfig.setAvailablePower(0, 100.);
+    clusterConfig.setCosts(50.);
+    clusterConfig.setUnitCount(1);
 };
 
 // ======================================================

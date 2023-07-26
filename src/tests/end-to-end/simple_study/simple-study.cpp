@@ -146,6 +146,8 @@ struct StudyFixture : public StudyBuilder
 	Area* area = nullptr;
 	double loadInArea = 0.;
 	double clusterCost = 0.;
+	std::shared_ptr<ThermalClusterConfig> clusterConfig;
+	std::shared_ptr<TimeSeriesConfig<Matrix<double, int32_t>>> loadTSconfig;
 };
 
 StudyFixture::StudyFixture()
@@ -154,14 +156,17 @@ StudyFixture::StudyFixture()
 	area = addAreaToStudy("Some area");
 	cluster = addClusterToArea(area, "some cluster");
 
+	loadTSconfig = std::make_shared<TimeSeriesConfig<Matrix<double, int32_t>>>(area->load.series->timeSeries);
+	loadTSconfig->setNumberColumns(1);
 	loadInArea = 7.0;
-	addLoadToArea(area, loadInArea);
+	loadTSconfig->fillColumnWith(0, loadInArea);
 
-	double nominalCapacity = 100.0;
-	double availablePower = 50.0;
-	clusterCost = 2.0;
-	unsigned int unitCount = 1;
-	configureCluster(cluster, nominalCapacity, availablePower, clusterCost, unitCount);
+	clusterConfig = std::make_shared<ThermalClusterConfig>(cluster);
+	clusterConfig->setNominalCapacity(100.);
+	clusterConfig->setAvailablePower(0, 50.);
+	clusterCost = 2.;
+	clusterConfig->setCosts(clusterCost);
+	clusterConfig->setUnitCount(1);
 };
 
 
@@ -190,12 +195,32 @@ BOOST_AUTO_TEST_CASE(two_MC_years__thermal_cluster_fullfills_area_demand_on_2nd_
 	BOOST_TEST(output->load(area).hour(0) == loadInArea, tt::tolerance(0.001));
 }
 
+BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
+{
+	setNumberMCyears(2);
+
+	loadTSconfig->setNumberColumns(2);
+	loadTSconfig->fillColumnWith(0, 7.0);
+	loadTSconfig->fillColumnWith(1, 7.0);
+
+	clusterConfig->setAvailablePowerNumberOfTS(2);
+	clusterConfig->setAvailablePower(0, 50.);
+	clusterConfig->setAvailablePower(1, 50.);
+
+	simulation->create();
+	simulation->run();
+
+	BOOST_TEST(output->overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
+	BOOST_TEST(output->load(area).hour(0) == loadInArea, tt::tolerance(0.001));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
 BOOST_AUTO_TEST_SUITE(simple_test)
 
 //Very simple test with one area and one load and two year and two identical TS
+/*
 BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 {
 	//Create study
@@ -240,6 +265,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 	cleanSimulation(simulation);
 	cleanStudy(pStudy);
 }
+*/
 
 
 

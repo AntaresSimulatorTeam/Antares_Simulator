@@ -43,23 +43,6 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     return cluster;
 }
 
-void configureCluster(std::shared_ptr<ThermalCluster> cluster,
-                      double nominalCapacity,
-                      double availablePower,
-                      double cost,
-                      unsigned int unitCount)
-{
-    cluster->unitCount = unitCount;
-    cluster->nominalCapacity = nominalCapacity;
-
-    cluster->marginalCost = cost;
-    cluster->marketBidCost = cost; // Must define market bid cost otherwise all production is used
-    cluster->setProductionCost();
-
-    cluster->minStablePower = 0.0;
-    cluster->series->timeSeries.fill(availablePower);
-}
-
 void addScratchpadToEachArea(Study::Ptr study)
 {
     for (auto [_, area] : study->areas) {

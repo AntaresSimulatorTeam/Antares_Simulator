@@ -14,11 +14,41 @@ void initializeStudy(Study::Ptr study);
 void configureLinkCapacities(AreaLink* link);
 void addLoadToArea(Area* area, double loadInArea);
 
-void configureCluster(std::shared_ptr<ThermalCluster> cluster,
-                      double nominalCapacity,
-                      double availablePower,
-                      double cost,
-                      unsigned int unitCount);
+
+template<class MatixType>
+class TimeSeriesConfig
+{
+public:
+    TimeSeriesConfig(MatixType& matrix) : ts_(&matrix) {}
+    void setTargetTSmatrix(MatixType& matrix) { ts_ = &matrix; }
+    void setNumberColumns(unsigned int nbColumns) { ts_->resize(nbColumns, HOURS_PER_YEAR);}
+    void fillColumnWith(unsigned int column, double value) { ts_->fillColumn(column, value); }
+private:
+    MatixType* ts_;
+};
+
+class ThermalClusterConfig
+{
+public:
+    ThermalClusterConfig(std::shared_ptr<ThermalCluster> cluster) : cluster_(cluster) 
+    {
+        tsAvailablePowerConfig_ = std::make_unique<TimeSeriesConfig<Matrix<double>>>(cluster_->series->timeSeries);
+    }
+    void setNominalCapacity(double nominalCapacity) { cluster_->nominalCapacity = nominalCapacity; }
+    void setUnitCount(unsigned int unitCount) { cluster_->unitCount = unitCount; }
+    void setCosts(double cost)
+    {
+        cluster_->marginalCost = cost;
+        cluster_->marketBidCost = cost; // Must define market bid cost otherwise all production is used
+        cluster_->setProductionCost();
+    }
+    void setAvailablePowerNumberOfTS(unsigned int nbColumns) { tsAvailablePowerConfig_->setNumberColumns(nbColumns); };
+    void setAvailablePower(unsigned int column, double value) { tsAvailablePowerConfig_->fillColumnWith(column, value); }
+
+private:
+    std::shared_ptr<ThermalCluster> cluster_;
+    std::unique_ptr<TimeSeriesConfig<Matrix<double>>> tsAvailablePowerConfig_;
+};
 
 std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName);
 void addScratchpadToEachArea(Study::Ptr study);
