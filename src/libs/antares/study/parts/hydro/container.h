@@ -65,6 +65,9 @@ public:
     double lowLevelLastDay;
     double highLevelLastDay;
     int initReservoirLvlMonth;
+    Area* areaPtr;
+
+    FinalReservoirLevelRuntimeData() : areaPtr(nullptr) {}
 
     // methods:
 

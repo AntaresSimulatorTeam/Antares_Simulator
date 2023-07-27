@@ -69,6 +69,13 @@ void FinalReservoirLevel(const Matrix<double>& scenarioInitialHydroLevels,
                          const Data::Parameters& parameters,
                          const Data::AreaList& areas)
 {
+    //Code for testing
+    uint in = 10;
+    for (uint i = 0; i < areas.size(); i++)
+    {
+        in = areas[i]->hydro.finalReservoirLevelRuntimeData.areaPtr->index;
+    }
+    
     bool preChecksPasses = true;
     for (uint yearIndex = 0; yearIndex != scenarioFinalHydroLevels.height; ++yearIndex)
     {
