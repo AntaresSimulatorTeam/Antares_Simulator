@@ -865,7 +865,7 @@ void AreaListEnsureDataRenewableTimeSeries(AreaList* l);
 */
 void AreaListEnsureDataThermalPrepro(AreaList* l);
 
-void AreaListEnsureFinalReservoirLevelRuntimeDataAreaPtr(AreaList* l);
+void AreaListEnsureFinalLevelInflowsModifyerAreaPtr(AreaList* l);
 
 } // namespace Data
 } // namespace Antares

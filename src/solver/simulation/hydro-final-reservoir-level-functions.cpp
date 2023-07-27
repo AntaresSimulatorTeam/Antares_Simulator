@@ -30,102 +30,49 @@
 
 namespace Antares::Solver
 {
-void initializeGeneralData(Data::FinalReservoirLevelRuntimeData& finLevData,
-                           const Data::Parameters& parameters,
-                           uint year)
-{
-    finLevData.simEndDay = parameters.simulationDays.end;
-    finLevData.yearIndex = year;
-}
-
-void initializePerAreaData(Data::FinalReservoirLevelRuntimeData& finLevData,
-                           const Matrix<double>& scenarioInitialHydroLevels,
-                           const Matrix<double>& scenarioFinalHydroLevels,
-                           const Data::Area& area)
-{
-    finLevData.initialReservoirLevel = scenarioInitialHydroLevels[area.index][finLevData.yearIndex];
-    finLevData.finalReservoirLevel = scenarioFinalHydroLevels[area.index][finLevData.yearIndex];
-    finLevData.deltaReservoirLevel
-      = finLevData.initialReservoirLevel - finLevData.finalReservoirLevel;
-}
-
-void initializePreCheckData(Data::FinalReservoirLevelRuntimeData& finLevData,
-                            const Data::Area& area)
-{
-    finLevData.initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate; // month [0-11]
-    finLevData.reservoirCapacity = area.hydro.reservoirCapacity;
-}
-
-void ruleCurveForSimEndReal(Data::FinalReservoirLevelRuntimeData& finLevData, Data::Area& area)
-{
-    finLevData.lowLevelLastDay
-      = area.hydro.reservoirLevel[Data::PartHydro::minimum][DAYS_PER_YEAR - 1];
-    finLevData.highLevelLastDay
-      = area.hydro.reservoirLevel[Data::PartHydro::maximum][DAYS_PER_YEAR - 1];
-}
 
 void FinalReservoirLevel(const Matrix<double>& scenarioInitialHydroLevels,
                          const Matrix<double>& scenarioFinalHydroLevels,
                          const Data::Parameters& parameters,
-                         const Data::AreaList& areas)
+                         std::shared_ptr<Data::FinalLevelInflowsModifyer> finalinflows,
+                         uint yearIndex)
 {
-    //Code for testing
-    uint in = 10;
-    for (uint i = 0; i < areas.size(); i++)
-    {
-        in = areas[i]->hydro.finalReservoirLevelRuntimeData.areaPtr->index;
-    }
-    
     bool preChecksPasses = true;
-    for (uint yearIndex = 0; yearIndex != scenarioFinalHydroLevels.height; ++yearIndex)
+    finalinflows->fillEmpty();
+    finalinflows->initializeGeneralData(parameters, yearIndex);
+    finalinflows->initializePerAreaData(scenarioInitialHydroLevels, scenarioFinalHydroLevels);
+
+    if (finalinflows->areaPtr->hydro.reservoirManagement
+        && !finalinflows->areaPtr->hydro.useWaterValue && !isnan(finalinflows->finalReservoirLevel)
+        && !isnan(finalinflows->initialReservoirLevel))
     {
-        areas.each(
-          [&scenarioInitialHydroLevels,
-           &scenarioFinalHydroLevels,
-           &parameters,
-           &preChecksPasses,
-           &yearIndex](Data::Area& area)
-          {
-              auto& finLevData = area.hydro.finalReservoirLevelRuntimeData;
-              finLevData.fillEmpty();
-              initializeGeneralData(finLevData, parameters, yearIndex);
-              initializePerAreaData(
-                finLevData, scenarioInitialHydroLevels, scenarioFinalHydroLevels, area);
+        finalinflows->initializePreCheckData();
+        finalinflows->assignEndLevelAndDelta();
 
-              if (area.hydro.reservoirManagement && !area.hydro.useWaterValue
-                  && !isnan(finLevData.finalReservoirLevel)
-                  && !isnan(finLevData.initialReservoirLevel))
-              {
-                  initializePreCheckData(finLevData, area);
-                  finLevData.assignEndLevelAndDelta();
+        // pre-check 0 -> simulation must end on day 365 and reservoir level must be
+        // initiated in January
+        if (!finalinflows->preCheckStartAndEndSim())
+            preChecksPasses = false;
 
-                  // pre-check 0 -> simulation must end on day 365 and reservoir level must be
-                  // initiated in January
-                  if (!finLevData.preCheckStartAndEndSim(area.name))
-                      preChecksPasses = false;
+        // rule curve values for simEndDayReal
+        finalinflows->ruleCurveForSimEndReal();
 
-                  // rule curve values for simEndDayReal
-                  ruleCurveForSimEndReal(finLevData, area);
+        // calculate (partial)yearly inflows
+        const Data::DataSeriesHydro& data = *finalinflows->areaPtr->hydro.series;
+        uint tsHydroIndex = data.timeseriesNumbers[0][finalinflows->yearIndex];
+        auto& inflowsmatrix = finalinflows->areaPtr->hydro.series->storage;
+        auto& srcinflows = inflowsmatrix[tsHydroIndex < inflowsmatrix.width ? tsHydroIndex : 0];
 
-                  // calculate (partial)yearly inflows
-                  const Data::DataSeriesHydro& data = *area.hydro.series;
-                  uint tsHydroIndex = data.timeseriesNumbers[0][finLevData.yearIndex];
-                  auto& inflowsmatrix = area.hydro.series->storage;
-                  auto& srcinflows
-                    = inflowsmatrix[tsHydroIndex < inflowsmatrix.width ? tsHydroIndex : 0];
+        // pre-check 1 -> reservoir_levelDay_365 – reservoir_levelDay_1 ≤
+        // yearly_inflows
+        if (double totalInflows = finalinflows->calculateTotalInflows(srcinflows);
+            !finalinflows->preCheckYearlyInflow(totalInflows))
+            preChecksPasses = false;
 
-                  // pre-check 1 -> reservoir_levelDay_365 – reservoir_levelDay_1 ≤
-                  // yearly_inflows
-                  if (double totalInflows = finLevData.calculateTotalInflows(srcinflows);
-                      !finLevData.preCheckYearlyInflow(totalInflows, area.name))
-                      preChecksPasses = false;
-
-                  // pre-check 2 -> final reservoir level set by the user is within the
-                  // rule curves for the final day
-                  if (!finLevData.preCheckRuleCurves(area.name))
-                      preChecksPasses = false;
-              }
-          });
+        // pre-check 2 -> final reservoir level set by the user is within the
+        // rule curves for the final day
+        if (!finalinflows->preCheckRuleCurves())
+            preChecksPasses = false;
     }
     if (!preChecksPasses)
     {
@@ -134,4 +81,4 @@ void FinalReservoirLevel(const Matrix<double>& scenarioInitialHydroLevels,
     }
 }
 
-} // namespace Anatres::Solver
+} // namespace Antares::Solver

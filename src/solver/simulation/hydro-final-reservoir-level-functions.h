@@ -31,23 +31,12 @@
 
 namespace Antares::Solver
 {
-void initializeGeneralData(Data::FinalReservoirLevelRuntimeData& finLevData,
-                           const Data::Parameters& parameters,
-                           uint year);
 
-void initializePerAreaData(Data::FinalReservoirLevelRuntimeData& finLevData,
-                           const Matrix<double>& scenarioInitialHydroLevels,
-                           const Matrix<double>& scenarioFinalHydroLevels,
-                           const Data::Area& area);
-
-void initializePreCheckData(Data::FinalReservoirLevelRuntimeData& finLevData,
-                            const Data::Area& area);
-
-void ruleCurveForSimEndReal(Data::FinalReservoirLevelRuntimeData& finLevData, Data::Area& area);
 void FinalReservoirLevel(const Matrix<double>& scenarioInitialHydroLevels,
                          const Matrix<double>& scenarioFinalHydroLevels,
                          const Data::Parameters& parameters,
-                         const Data::AreaList& areas);
+                         std::shared_ptr<Data::FinalLevelInflowsModifyer> finalinflows,
+                         uint yearIndex);
 } // namespace Antares::Solver
 
 #endif // __SOLVER_SIMULATION_HYDRO_FINAL_RESERVOIR_PRE_CHECKS_H__

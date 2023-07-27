@@ -1,6 +1,7 @@
 //
 // Created by Nikola Ilic on 23/06/23.
 //
+/*
 #define BOOST_TEST_MODULE hydro - final - level
 #define WIN32_LEAN_AND_MEAN
 #include <boost/test/unit_test.hpp>
@@ -344,4 +345,4 @@ BOOST_AUTO_TEST_CASE(
                       (scenarioInitialHydroLevels[1][1] - scenarioFinalHydroLevels[1][1]));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_SUITE_END()*/

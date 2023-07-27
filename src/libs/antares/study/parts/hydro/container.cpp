@@ -57,7 +57,8 @@ PartHydro::PartHydro() :
  pumpingEfficiency(1.),
  hydroModulable(false),
  prepro(nullptr),
- series(nullptr)
+ series(nullptr),
+ finalLevelInflowsModifyer(std::make_shared<FinalLevelInflowsModifyer>())
 {
 }
 

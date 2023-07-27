@@ -37,103 +37,8 @@ namespace Antares::Data
 /*!
  ** \brief Final Reservoir Level data for a single area
  */
-class FinalReservoirLevelRuntimeData
-{
-public:
-    // Final reservoir level runtime data
 
-    // vectors containing data necessary for final reservoir level calculation 
-    // for one area and all MC years
-    // vector indexes correspond to the MC years 
-    std::vector<bool> includeFinalReservoirLevel;
-    std::vector<double> endLevel;
-    std::vector<double> deltaLevel;
-
-    // Simulation Data
-    uint simEndDay;
-
-    // simulation year
-    // overwritten after each MC year
-    uint yearIndex;
-
-    // data per area
-    // data overwritten after each MC year 
-    double initialReservoirLevel;
-    double finalReservoirLevel;
-    double deltaReservoirLevel;
-    double reservoirCapacity;
-    double lowLevelLastDay;
-    double highLevelLastDay;
-    int initReservoirLvlMonth;
-    Area* areaPtr;
-
-    FinalReservoirLevelRuntimeData() : areaPtr(nullptr) {}
-
-    // methods:
-
-    void fillEmpty()
-    {
-        includeFinalReservoirLevel.push_back(false);
-        endLevel.push_back(0.);
-        deltaLevel.push_back(0.);
-    }
-
-    void assignEndLevelAndDelta()
-    {
-        includeFinalReservoirLevel.at(yearIndex) = true;
-        endLevel.at(yearIndex) = finalReservoirLevel;
-        deltaLevel.at(yearIndex) = deltaReservoirLevel;
-    }
-
-    double calculateTotalInflows(Antares::Memory::Stored<double>::Type& srcinflows) const
-    {
-        double totalYearInflows = 0.0;
-        for (uint day = 0; day < DAYS_PER_YEAR; ++day)
-            totalYearInflows += srcinflows[day];
-        return totalYearInflows;
-    }
-
-    bool preCheckStartAndEndSim(const AreaName& name) const
-    {
-        if (simEndDay == DAYS_PER_YEAR && initReservoirLvlMonth == 0)
-            return true;
-        else
-        {
-            logs.error() << "Year: " << yearIndex + 1 << ". Area: " << name
-                         << ". Simulation must end on day 365 and reservoir level must be "
-                            "initiated in January";
-            return false;
-        }
-    }
-
-    bool preCheckYearlyInflow(double totalYearInflows, const AreaName& name) const
-    {
-        if ((-deltaReservoirLevel) * reservoirCapacity
-            > totalYearInflows) // ROR time-series in MW (power), SP time-series in MWh
-                                // (energy)
-        {
-            logs.error() << "Year: " << yearIndex + 1 << ". Area: " << name
-                         << ". Incompatible total inflows: " << totalYearInflows
-                         << " with initial: " << initialReservoirLevel
-                         << " and final: " << finalReservoirLevel << " reservoir levels.";
-            return false;
-        }
-        return true;
-    }
-
-    bool preCheckRuleCurves(const AreaName& name) const
-    {
-        if (finalReservoirLevel < lowLevelLastDay || finalReservoirLevel > highLevelLastDay)
-        {
-            logs.error() << "Year: " << yearIndex + 1 << ". Area: " << name
-                         << ". Specifed final reservoir level: " << finalReservoirLevel
-                         << " is incompatible with reservoir level rule curve [" << lowLevelLastDay
-                         << " , " << highLevelLastDay << "]";
-            return false;
-        }
-        return true;
-    }
-};
+class FinalLevelInflowsModifyer;
 
 /*!
 ** \brief Hydro for a single area
@@ -274,7 +179,8 @@ public:
     DataSeriesHydro* series;
 
     //! Data for final reservoir level
-    FinalReservoirLevelRuntimeData finalReservoirLevelRuntimeData;
+    
+    std::shared_ptr<FinalLevelInflowsModifyer> finalLevelInflowsModifyer;
 
 }; // class PartHydro
 
