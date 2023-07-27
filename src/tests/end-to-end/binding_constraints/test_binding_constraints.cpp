@@ -233,7 +233,6 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 0, 1);
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 1, 2);
 
-
     simulation->create();
     playOnlyYear(1);
     simulation->run();
@@ -269,9 +268,6 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 7, 1);
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 8, 4);  // Here year 9
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 9, 1);
-
-
-
 
     simulation->create();
     playOnlyYear(8);

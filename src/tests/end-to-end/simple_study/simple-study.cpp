@@ -214,71 +214,30 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 	BOOST_TEST(output->load(area).hour(0) == loadInArea, tt::tolerance(0.001));
 }
 
+BOOST_AUTO_TEST_CASE(two_mc_year__two_ts_for_load)
+{
+	setNumberMCyears(2);
+
+	loadTSconfig->setNumberColumns(2);
+	loadTSconfig->fillColumnWith(0, 7.0);
+	loadTSconfig->fillColumnWith(1, 14.0);
+
+	ScenarioBuilderRule scenarioBuilderRule(study);
+	scenarioBuilderRule.load().setTSnumber(area->index, 0, 1);
+	scenarioBuilderRule.load().setTSnumber(area->index, 1, 2);
+
+	simulation->create();
+	simulation->run();
+
+	double averageLoad = (7. + 14.) / 2.;
+	BOOST_TEST(output->thermalGeneration(cluster.get()).hour(10) == averageLoad, tt::tolerance(0.001));
+	BOOST_TEST(output->overallCost(area).hour(0) == averageLoad * clusterCost, tt::tolerance(0.001));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
 BOOST_AUTO_TEST_SUITE(simple_test)
-
-//Very simple test with one area and one load and two year and two TS with different load
-BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
-{
-	//Create study
-	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
-
-	//On year  and one TS
-	int nbYears = 2;
-	int  nbTS = 2;
-
-	//Prepare study
-	prepareStudy(pStudy, nbYears);
-	pStudy->parameters.nbTimeSeriesLoad = nbTS;
-	pStudy->parameters.nbTimeSeriesThermal = nbTS;
-
-	//Create area
-	double load = 5.0;
-	Area* pArea = addArea(pStudy, "Area 1", nbTS);
-
-	//Initialize time series
-	pArea->load.series->timeSeries.fillColumn(0, load);
-	pArea->load.series->timeSeries.fillColumn(1, load * 2);
-
-	double averageLoad = load * 1.5;
-
-	//Add thermal  cluster
-	double availablePower	= 20.0;
-	double cost				= 2.2;
-	double maximumPower		= 100.0;
-	auto pCluster = addCluster(pArea, "Cluster 1", maximumPower, cost, nbTS);
-
-	//Initialize time series
-	pCluster->series->timeSeries.fillColumn(0, availablePower);
-	pCluster->series->timeSeries.fillColumn(1, availablePower);
-
-	//Create scenario rules to force use of TS otherwise the TS used is random
-	std::vector<int> areaLoadTS;
-	areaLoadTS.assign(nbYears, 1);
-	areaLoadTS[0] = 1;	areaLoadTS[1] = 2;
-
-	ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(pStudy);
-	for (int i = 0; i < nbYears; i++)
-	{
-		pRules->load.setTSnumber(pArea->index, i, areaLoadTS[i]);
-	}
-
-	//Launch simulation
-	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
-
-	//Overall cost must be load * cost by MW
-	checkVariable<Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, averageLoad * cost);
-
-	//Load must be load
-	checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, averageLoad);
-
-	cleanSimulation(simulation);
-	cleanStudy(pStudy);
-}
-
-
 
 //Very simple test with one area and one load and two year with different load and weight
 BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
