@@ -88,27 +88,6 @@ averageResults OutputRetriever::thermalGeneration(ThermalCluster* cluster)
     return averageResults((*result)[cluster->areaWideIndex].avgdata);
 }
 
-
-// -----------------------
-// BC rhs configuration
-// -----------------------
-BCrhsConfig::BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbOfTimeSeries)
-    : nbOfTimeSeries_(nbOfTimeSeries), BC_(BC)
-{
-    BC_->RHSTimeSeries().resize(nbOfTimeSeries_, 8760);
-}
-
-void BCrhsConfig::fillRHStimeSeriesWith(unsigned int TSnumber, double rhsValue)
-{
-    if (TSnumber >= nbOfTimeSeries_)
-    {
-        logs.fatal() << "BCrhsConfig : TS number must be < Nb of TS";
-        AntaresSolverEmergencyShutdown();
-    }
-    BC_->RHSTimeSeries().fillColumn(TSnumber, rhsValue);
-}
-
-
 // --------------------------------------
 // BC group TS number configuration
 // --------------------------------------

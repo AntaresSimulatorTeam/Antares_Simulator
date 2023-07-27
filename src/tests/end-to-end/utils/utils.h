@@ -121,22 +121,6 @@ OutputRetriever::retrieveResultsForThermalCluster(ThermalCluster* cluster)
     return result;
 }
 
-// -----------------------
-// BC rhs configuration
-// -----------------------
-class BCrhsConfig
-{
-public:
-    BCrhsConfig() = delete;
-    BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbTimeSeries);
-    void fillRHStimeSeriesWith(unsigned int TSnumber, double rhsValue);
-
-private:
-    std::shared_ptr<BindingConstraint> BC_;
-    unsigned int nbOfTimeSeries_ = 0;
-};
-
-
 // --------------------------------------
 // BC group TS number configuration
 // --------------------------------------

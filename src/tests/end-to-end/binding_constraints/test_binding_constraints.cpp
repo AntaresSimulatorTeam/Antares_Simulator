@@ -98,12 +98,11 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
 
-    unsigned int numberOfTS = 1;
-    BCrhsConfig bcRHSconfig(BC, numberOfTS);
-
+    TimeSeriesConfig<Matrix<>> bcRHStsConfig(BC->RHSTimeSeries());
+    bcRHStsConfig.setNumberColumns(1);
     double rhsValue = 90.;
-    bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
-        
+    bcRHStsConfig.fillColumnWith(0, rhsValue);
+
     simulation->create();
     simulation->run();
 
@@ -115,15 +114,14 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
 {
     setNumberMCyears(1);
 
-    // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeWeekly);
     BC->operatorType(BindingConstraint::opEquality);
 
-    unsigned int numberOfTS = 1;
-    BCrhsConfig bcRHSconfig(BC, numberOfTS);
-
+    TimeSeriesConfig<Matrix<>> bcRHStsConfig(BC->RHSTimeSeries());
+    bcRHStsConfig.setNumberColumns(1);
     double rhsValue = 50.;
-    bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
+    bcRHStsConfig.fillColumnWith(0, rhsValue);
+
   
     simulation->create();
     simulation->run();
@@ -140,11 +138,10 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     BC->setTimeGranularity(BindingConstraint::typeDaily);
     BC->operatorType(BindingConstraint::opEquality);
 
-    unsigned int numberOfTS = 1;
-    BCrhsConfig bcRHSconfig(BC, numberOfTS);
-
+    TimeSeriesConfig<Matrix<>> bcRHStsConfig(BC->RHSTimeSeries());
+    bcRHStsConfig.setNumberColumns(1);
     double rhsValue = 60.;
-    bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
+    bcRHStsConfig.fillColumnWith(0, rhsValue);
 
     simulation->create();
     simulation->run();
@@ -160,11 +157,10 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opLess);
 
-    unsigned int numberOfTS = 1;
-    BCrhsConfig bcRHSconfig(BC, numberOfTS);
-
+    TimeSeriesConfig<Matrix<>> bcRHStsConfig(BC->RHSTimeSeries());
+    bcRHStsConfig.setNumberColumns(1);
     double rhsValue = 90.;
-    bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
+    bcRHStsConfig.fillColumnWith(0, rhsValue);
 
     simulation->create();
     simulation->run();
@@ -179,11 +175,10 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
     BC->setTimeGranularity(BindingConstraint::typeDaily);
     BC->operatorType(BindingConstraint::opGreater);
 
-    unsigned int numberOfTS = 1;
-    BCrhsConfig bcRHSconfig(BC, numberOfTS);
-
+    TimeSeriesConfig<Matrix<>> bcRHStsConfig(BC->RHSTimeSeries());
+    bcRHStsConfig.setNumberColumns(1);
     double rhsValue = 80.;
-    bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
+    bcRHStsConfig.fillColumnWith(0, rhsValue);
 
     simulation->create();
     simulation->run();
@@ -203,11 +198,10 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90)
     BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
 
-    unsigned int numberOfTS = 1;
-    BCrhsConfig bcRHSconfig(BC, numberOfTS);
-
+    TimeSeriesConfig<Matrix<>> bcRHStsConfig(BC->RHSTimeSeries());
+    bcRHStsConfig.setNumberColumns(1);
     double rhsValue = 90.;
-    bcRHSconfig.fillRHStimeSeriesWith(0, rhsValue);
+    bcRHStsConfig.fillColumnWith(0, rhsValue);
 
     simulation->create();
     simulation->run();
@@ -225,16 +219,16 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
 {
     setNumberMCyears(2);
 
-    // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
 
-    unsigned int numberOfTS = 2;
-    BCrhsConfig bcRHSconfig(BC, numberOfTS);
+    TimeSeriesConfig<Matrix<>> bcRHStsConfig(BC->RHSTimeSeries());
+    bcRHStsConfig.setNumberColumns(2);
     double bcGroupRHS1 = 90.;
     double bcGroupRHS2 = 70.;
-    bcRHSconfig.fillRHStimeSeriesWith(0, bcGroupRHS1);
-    bcRHSconfig.fillRHStimeSeriesWith(1, bcGroupRHS2);
+    bcRHStsConfig.fillColumnWith(0, bcGroupRHS1);
+    bcRHStsConfig.fillColumnWith(1, bcGroupRHS2);
+
 
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
@@ -251,19 +245,18 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
 {
     setNumberMCyears(10);
 
-    // Binding constraint parameter varying depending on the test
     BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
 
-    unsigned int numberOfTS = 7;
-    BCrhsConfig bcRHSconfig(BC, numberOfTS);
-    bcRHSconfig.fillRHStimeSeriesWith(0, 10.);
-    bcRHSconfig.fillRHStimeSeriesWith(1, 20.);
-    bcRHSconfig.fillRHStimeSeriesWith(2, 30.);
-    bcRHSconfig.fillRHStimeSeriesWith(3, 40.);
-    bcRHSconfig.fillRHStimeSeriesWith(4, 50.);
-    bcRHSconfig.fillRHStimeSeriesWith(5, 60.);
-    bcRHSconfig.fillRHStimeSeriesWith(6, 70.);
+    TimeSeriesConfig<Matrix<>> bcRHStsConfig(BC->RHSTimeSeries());
+    bcRHStsConfig.setNumberColumns(7);
+    bcRHStsConfig.fillColumnWith(0, 10.);
+    bcRHStsConfig.fillColumnWith(1, 20.);
+    bcRHStsConfig.fillColumnWith(2, 30.);
+    bcRHStsConfig.fillColumnWith(3, 40.);
+    bcRHStsConfig.fillColumnWith(4, 50.);
+    bcRHStsConfig.fillColumnWith(5, 60.);
+    bcRHStsConfig.fillColumnWith(6, 70.);
 
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
