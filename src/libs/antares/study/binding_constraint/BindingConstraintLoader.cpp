@@ -152,19 +152,6 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
                      << "]: Invalid operator [less,greater,equal,both]";
         return {};
     }
-    if (bc->group_.empty())
-    {
-        if (env.version >= version870)
-        {
-            logs.error() << env.iniFilename << ": in [" << env.section->name
-                         << "]: Missing mandatory binding constraint group";
-            return {};
-        }
-        else
-        {
-            bc->group_ = "legacy_study_group";
-        }
-    }
 
     // The binding constraint can not be enabled if there is no weight in the table
     if (bc->pLinkWeights.empty() && bc->pClusterWeights.empty())
