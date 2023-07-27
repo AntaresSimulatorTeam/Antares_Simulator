@@ -2,10 +2,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
-#include "utils.h"
-#include "simulation.h"
 
-#include "antares/study/study.h"
+#include "utils.h"
 
 namespace utf = boost::unit_test;
 namespace tt = boost::test_tools;

@@ -1,8 +1,5 @@
 #define WIN32_LEAN_AND_MEAN
 #include "utils.h"
-#include "simulation/simulation.h"
-
-using namespace Antares::Data;
 
 
 void initializeStudy(Study::Ptr study)
@@ -154,6 +151,14 @@ void StudyBuilder::playOnlyYear(unsigned int year)
     params.yearsFilter[year] = true;
 }
 
+void StudyBuilder::giveWeightToYear(float weight, unsigned int year)
+{
+    study->parameters.setYearWeight(year, weight);
+
+    // Activate playlist, otherwise previous sets won't have any effect
+    study->parameters.userPlaylist = true;
+}
+
 Area* StudyBuilder::addAreaToStudy(const std::string& areaName)
 {
     Area* area = addAreaToListOfAreas(study->areas, areaName);
@@ -172,75 +177,10 @@ Area* StudyBuilder::addAreaToStudy(const std::string& areaName)
     return area;
 }
 
-
-// ===========================================================
-
-void prepareStudy(Study::Ptr pStudy, int nbYears)
-{
-    //Define study parameters
-    pStudy->parameters.reset();
-    pStudy->parameters.resetPlaylist(nbYears);
-
-    //Prepare parameters for simulation
-    Data::StudyLoadOptions options;
-    pStudy->parameters.prepareForSimulation(options);
-
-    // Logical cores
-    // -------------------------
-    // Getting the number of logical cores to use before loading and creating the areas :
-    // Areas need this number to be up-to-date at construction.
-    pStudy->getNumberOfCores(false, 0);
-
-    // Define as current study
-    Data::Study::Current::Set(pStudy);
-}
-
 std::shared_ptr<BindingConstraint> addBindingConstraints(Study::Ptr study, std::string name, std::string group) {
     auto bc = study->bindingConstraints.add(name);
     bc->group(group);
     return bc;
-}
-
-Antares::Data::ScenarioBuilder::Rules::Ptr createScenarioRules(Study::Ptr study)
-{
-    ScenarioBuilder::Rules::Ptr rules;
-
-    study->scenarioRulesCreate();
-    ScenarioBuilder::Sets* sets = study->scenarioRules;
-    if (sets && !sets->empty())
-    {
-        rules = sets->createNew("Custom");
-
-        study->parameters.useCustomScenario  = true;
-        study->parameters.activeRulesScenario = "Custom";
-    }
-
-    return rules;
-}
-
-float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight)
-{
-    pStudy->parameters.userPlaylist = true;
-
-    for (uint i = 0; i < yearsWeight.size(); i++)
-    {
-        pStudy->parameters.setYearWeight(i, yearsWeight[i]);
-    }
-
-    return pStudy->parameters.getYearsWeightSum();
-}
-
-void cleanSimulation(Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation)
-{
-    delete simulation;
-}
-
-void cleanStudy(Study::Ptr pStudy)
-{
-    pStudy->clear();
-
-    // Remove any global reference
-    Data::Study::Current::Set(nullptr);
 }
 
 void NullResultWriter::addEntryFromBuffer(const std::string&, Clob&)

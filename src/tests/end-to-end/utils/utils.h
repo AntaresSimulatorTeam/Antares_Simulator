@@ -121,8 +121,6 @@ OutputRetriever::retrieveResultsForThermalCluster(ThermalCluster* cluster)
     return result;
 }
 
-ScenarioBuilder::Rules::Ptr createScenarioRules(Study::Ptr pStudy);
-
 class ScenarioBuilderRule
 {
 public:
@@ -171,6 +169,7 @@ struct StudyBuilder
     Area* addAreaToStudy(const std::string& areaName);
     void setNumberMCyears(unsigned int nbYears);
     void playOnlyYear(unsigned int year);
+    void giveWeightToYear(float weight, unsigned int year);
 
     // Data members
     std::shared_ptr<Study> study;
@@ -178,23 +177,7 @@ struct StudyBuilder
     std::shared_ptr<OutputRetriever> output;
 };
 
-
-
-// ===========================================================
-
-void prepareStudy(Antares::Data::Study::Ptr pStudy, int nbYears);
-
-Antares::Data::Area* addArea(Antares::Data::Study::Ptr pStudy, const std::string& areaName, int nbTS);
-
-std::shared_ptr<Antares::Data::ThermalCluster> addCluster(Antares::Data::Area* pArea, const std::string& clusterName, double maximumPower, double cost, int nbTS, int unitCount = 1);
-
 std::shared_ptr<Antares::Data::BindingConstraint> addBindingConstraints(Antares::Data::Study::Ptr study, std::string name, std::string group);
-
-void cleanSimulation(Antares::Solver::Simulation::ISimulation< Antares::Solver::Simulation::Economy >* simulation);
-void cleanStudy(Antares::Data::Study::Ptr pStudy);
-
-float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight);
-
 
 class NullResultWriter: public Solver::IResultWriter {
     void addEntryFromBuffer(const std::string &, Clob &) override;
