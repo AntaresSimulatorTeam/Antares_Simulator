@@ -229,10 +229,10 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
     bcRHStsConfig.fillColumnWith(0, bcGroupRHS1);
     bcRHStsConfig.fillColumnWith(1, bcGroupRHS2);
 
+    ScenarioBuilderRule scenarioBuilderRule(study);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 0, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 1, 2);
 
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 1, 1);
 
     simulation->create();
     playOnlyYear(1);
@@ -258,17 +258,20 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
     bcRHStsConfig.fillColumnWith(5, 60.);
     bcRHStsConfig.fillColumnWith(6, 70.);
 
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 1, 0);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 2, 0);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 3, 0);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 4, 0);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 5, 0);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 6, 0);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 7, 0);
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 8, 3); // Here year 9
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 9, 0);
+    ScenarioBuilderRule scenarioBuilderRule(study);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 0, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 1, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 2, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 3, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 4, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 5, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 6, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 7, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 8, 4);  // Here year 9
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 9, 1);
+
+
+
 
     simulation->create();
     playOnlyYear(8);

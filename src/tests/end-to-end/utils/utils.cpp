@@ -88,34 +88,18 @@ averageResults OutputRetriever::thermalGeneration(ThermalCluster* cluster)
     return averageResults((*result)[cluster->areaWideIndex].avgdata);
 }
 
-// --------------------------------------
-// BC group TS number configuration
-// --------------------------------------
-BCgroupScenarioBuilder::BCgroupScenarioBuilder(Study::Ptr study)
-    : nbYears_(study->parameters.nbYears)
+ScenarioBuilderRule::ScenarioBuilderRule(Study::Ptr study)
 {
-    rules_ = createScenarioRules(study);
-}
-
-void BCgroupScenarioBuilder::yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber)
-{
-    if (year >= nbYears_)
+    study->scenarioRulesCreate();
+    ScenarioBuilder::Sets* sets = study->scenarioRules;
+    if (sets && !sets->empty())
     {
-        logs.fatal() << "BCgroupScenarioBuilder : year number must be < Nb of MC years";
-        AntaresSolverEmergencyShutdown();
+        rules_ = sets->createNew("Custom");
+
+        study->parameters.useCustomScenario = true;
+        study->parameters.activeRulesScenario = "Custom";
     }
-
-    rules_->binding_constraints.setTSnumber(groupName, year, TSnumber + 1);
-}
-
-
-ScenarioBuilderRule::ScenarioBuilderRule(Study::Ptr study) :
-    nbYears_(study->parameters.nbYears)
-{
-    rules_= createScenarioRules(study);
-    // load_(rules_->load),
-    // bcGroup_(rules_->binding_constraints)
-}
+ }
 
 
 // =====================

@@ -121,21 +121,6 @@ OutputRetriever::retrieveResultsForThermalCluster(ThermalCluster* cluster)
     return result;
 }
 
-// --------------------------------------
-// BC group TS number configuration
-// --------------------------------------
-class BCgroupScenarioBuilder
-{
-public:
-    BCgroupScenarioBuilder() = delete;
-    BCgroupScenarioBuilder(Study::Ptr study);
-    void yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber);
-
-private:
-    unsigned int nbYears_ = 0;
-    ScenarioBuilder::Rules::Ptr rules_;
-};
-
 ScenarioBuilder::Rules::Ptr createScenarioRules(Study::Ptr pStudy);
 
 class ScenarioBuilderRule
@@ -146,7 +131,6 @@ public:
     BindingConstraintsTSNumberData& bcGroup() { return rules_->binding_constraints; }
 
 private:
-    unsigned int nbYears_ = 0;
     Rules::Ptr rules_;
 };
 
