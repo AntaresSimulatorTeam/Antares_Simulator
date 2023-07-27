@@ -115,32 +115,34 @@ BindingConstraintLoader::load(EnvForLoading env) {
     }
 
     // Checking for validity
-    if (!bc->pName || !bc->pID || bc->pOperator == BindingConstraint::opUnknown ||
-        bc->pType == BindingConstraint::typeUnknown) {
-        // Reporting the error into the logs
-        if (!bc->pName)
-            logs.error() << env.iniFilename << ": in [" << env.section->name
-                         << "]: Invalid binding constraint name";
-        if (!bc->pID)
-            logs.error() << env.iniFilename << ": in [" << env.section->name
-                         << "]: Invalid binding constraint id";
-        if (bc->pType == bc->typeUnknown)
-            logs.error() << env.iniFilename << ": in [" << env.section->name
-                         << "]: Invalid type [hourly,daily,weekly]";
-        if (bc->pOperator == BindingConstraint::opUnknown)
-            logs.error() << env.iniFilename << ": in [" << env.section->name
-                         << "]: Invalid operator [less,greater,equal,both]";
-        if (bc->group_.empty()) {
-            if (env.version >= version870) {
-                logs.error() << env.iniFilename << ": in [" << env.section->name
-                             << "]: Missing binding constraint group";
-            } else {
-                bc->group_ = "legacy_study_group";
-            }
-        }
-
-        // Invalid binding constraint
+    if (!bc->pName) {
+        logs.error() << env.iniFilename << ": in [" << env.section->name
+                     << "]: Invalid binding constraint name";
         return {};
+    }
+    if (!bc->pID) {
+        logs.error() << env.iniFilename << ": in [" << env.section->name
+                     << "]: Invalid binding constraint id";
+        return {};
+    }
+    if (bc->pType == bc->typeUnknown) {
+        logs.error() << env.iniFilename << ": in [" << env.section->name
+                     << "]: Invalid type [hourly,daily,weekly]";
+                    return {};
+    }
+    if (bc->pOperator == BindingConstraint::opUnknown) {
+        logs.error() << env.iniFilename << ": in [" << env.section->name
+                     << "]: Invalid operator [less,greater,equal,both]";
+        return {};
+    }
+    if (bc->group_.empty()) {
+        if (env.version >= version870) {
+            logs.error() << env.iniFilename << ": in [" << env.section->name
+                         << "]: Missing mandatory binding constraint group";
+            return {};
+        } else {
+            bc->group_ = "legacy_study_group";
+        }
     }
 
     // The binding constraint can not be enabled if there is no weight in the table
@@ -175,7 +177,6 @@ BindingConstraintLoader::load(EnvForLoading env) {
         return {};
     }
     }
-
     return {};
 }
 
