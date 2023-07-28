@@ -27,7 +27,7 @@
 #pragma once
 
 #include "../../fwd.h"
-#include "../../xcast.h"
+#include <antares/study/xcast/xcast.h>
 
 namespace Antares
 {

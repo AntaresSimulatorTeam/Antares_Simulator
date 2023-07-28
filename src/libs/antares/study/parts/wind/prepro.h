@@ -28,7 +28,7 @@
 #define __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_H__
 
 #include "../../fwd.h"
-#include "../../xcast.h"
+#include <antares/study/xcast/xcast.h>
 
 namespace Antares
 {

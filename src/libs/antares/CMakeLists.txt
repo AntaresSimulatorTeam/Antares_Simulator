@@ -276,14 +276,7 @@ source_group("study\\constraint" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
 add_subdirectory(logs)
 add_subdirectory(jit)
 add_subdirectory(inifile)
-
-set(SRC_XCAST
-	study/xcast.h
-	study/xcast/xcast.h
-	study/xcast/xcast.hxx
-	study/xcast/xcast.cpp
-	)
-source_group("study\\xcast" FILES ${SRC_XCAST})
+add_subdirectory(study/xcast)
 
 add_subdirectory(benchmarking)
 add_subdirectory(io)
@@ -551,6 +544,7 @@ target_link_libraries(libantares-core
 		area
 		finder
 		benchmarking
+		xcast
 	)
 
 import_std_libs(libantares-core)
