@@ -45,11 +45,9 @@ BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file) {
     study->resultWriter = std::make_shared<ImmediateFileResultWriter>(working_tmp_dir.string().c_str());
     fs::path bc_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "TestGroup.txt";
 
-    Simulation::BindingConstraintsTimeSeriesNumbersWriter timeSeriesWriter(study->resultWriter);
-
     initializeStudy(*study);
     TimeSeriesNumbers::Generate(*study);
-    TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study, timeSeriesWriter);
+    TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study);
 
     bool file_exists = fs::exists(bc_path);
     BOOST_CHECK_EQUAL(file_exists, true);
@@ -72,8 +70,7 @@ BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group) {
     initializeStudy(*study);
     TimeSeriesNumbers::Generate(*study);
 
-    Simulation::BindingConstraintsTimeSeriesNumbersWriter time_series_writer(study->resultWriter);
-    TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study, time_series_writer);
+    TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study);
 
     fs::path test1_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "test1.txt";
     fs::path test2_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "test2.txt";
@@ -105,8 +102,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
     series[1][1] = 3;
     study->bindingConstraintsGroups["test1"]->timeSeriesNumbers().timeseriesNumbers = series;
 
-    Simulation::BindingConstraintsTimeSeriesNumbersWriter time_series_writer(study->resultWriter);
-    TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study, time_series_writer);
+    TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study);
 
     fs::path test1_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "test1.txt";
     BOOST_CHECK_EQUAL(fs::exists(test1_path), true);

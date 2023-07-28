@@ -37,6 +37,7 @@
 #include "antares/study/fwd.h"
 #include "timeseries-numbers.h"
 #include "ITimeSeriesNumbersWriter.h"
+#include "BindingConstraintsTimeSeriesNumbersWriter.h"
 
 using namespace Yuni;
 using namespace Antares::Data;
@@ -969,7 +970,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
     return true;
 }
 
-void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study, Simulation::ITimeSeriesNumbersWriter& writer)
+void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study)
 {
     using namespace Antares::Data;
 
@@ -983,7 +984,9 @@ void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study, Simu
         study.storeTimeSeriesNumbers<TimeSeries::timeSeriesThermal>();
         study.storeTimeSeriesNumbers<TimeSeries::timeSeriesRenewable>();
         study.storeTimeSeriesNumbers<TimeSeries::timeSeriesTransmissionCapacities>();
-        writer.write(study.bindingConstraintsGroups);
+
+        Simulation::BindingConstraintsTimeSeriesNumbersWriter ts_writer(study.resultWriter);
+        ts_writer.write(study.bindingConstraintsGroups);
     }
 }
 
