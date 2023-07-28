@@ -4,7 +4,7 @@
 #include <yuni/job/queue/service.h>
 
 #include <antares/study/fwd.h>
-#include <antares/benchmarking.h> // Timer
+#include <antares/benchmarking/benchmarking.h> // Timer
 
 #include "i_writer.h"
 #include "immediate_file_writer.h"

@@ -30,7 +30,7 @@
 #include "../simulation/sim_structure_probleme_adequation.h"
 #include "../simulation/sim_extern_variables_globales.h"
 #include "../aleatoire/alea_fonctions.h"
-#include <antares/benchmarking.h>
+#include <antares/benchmarking/benchmarking.h>
 #include <antares/emergency.h>
 #include <antares/logs.h>
 #include <antares/study.h>
