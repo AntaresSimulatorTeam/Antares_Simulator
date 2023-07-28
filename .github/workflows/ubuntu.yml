@@ -119,6 +119,7 @@ jobs:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-named-mps
         os: ${{ matrix.test-platform }}
+        variant: "named-mps"
 
     - name: Run unfeasibility-related tests
       if: ${{ env.IS_PUSH == 'true' }}

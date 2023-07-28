@@ -155,6 +155,7 @@ jobs:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-named-mps
         os: ${{ matrix.test-platform }}
+        variant: "named-mps"
 
     - name: Run tests for adequacy patch (CSR)
       uses: ./.github/workflows/run-tests
