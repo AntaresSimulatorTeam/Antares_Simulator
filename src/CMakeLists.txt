@@ -6,8 +6,8 @@ set(ANTARES_VERSION_LO	      7)
 set(ANTARES_VERSION_REVISION  0)
 
 # Beta release
-set(ANTARES_BETA 3)
-set(ANTARES_RC 0)
+set(ANTARES_BETA 0)
+set(ANTARES_RC 1)
 
 set(ANTARES_VERSION_YEAR      2023)
 
@@ -178,11 +178,14 @@ endif ()
 option(BUILD_UI "Build antares ui simulator" ON)
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
+option(BUILD_TOOLS "Build antares tools" OFF)
+message(STATUS "Build antares tools: ${BUILD_TOOLS}")
+
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
-message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
+message(STATUS "Build OR-Tools: ${BUILD_ORTOOLS}")
 
 option(BUILD_MINIZIP "Build minizip" OFF)
-message(STATUS "Build minizip ${BUILD_MINIZIP}")
+message(STATUS "Build minizip: ${BUILD_MINIZIP}")
 
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
@@ -326,7 +329,9 @@ add_subdirectory(solver)	#antares solver and all associated libs
 add_subdirectory(analyzer)	#antares analyser
 
 # Tools
+if (BUILD_TOOLS)
 add_subdirectory(tools)	#All antares tools
+endif()
 
 # Tests
 # 	Not setting BUILD_TESTING as a command line argument is equivalent to use -DBUILD_TESTING=OFF

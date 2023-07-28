@@ -37,7 +37,7 @@ jobs:
 
     - name: Install libraries
       run: |
-           dnf install -y epel-release git cmake wget rpm-build
+           dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
            dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-9-toolchain
 
     - name: Checkout
@@ -47,7 +47,7 @@ jobs:
     - name: Init submodule
       run: |
            git config --global safe.directory '*'
-           git submodule update --init --recursive src/antares-deps src/tests/resources/Antares_Simulator_Tests
+           git submodule update --init --remote src/antares-deps src/tests/resources/Antares_Simulator_Tests
 
     - name: Install dependencies
       run: |
@@ -59,6 +59,7 @@ jobs:
            cmake -B _build -S src \
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON \
+           -DBUILD_TOOLS=OFF \
            -DBUILD_UI=OFF \
 
 

@@ -41,7 +41,7 @@ Add directory **bindingconstraints** to output directory **ts-numbers**. For eve
 * For each area, add directory **input/st-storage/clusters/&lt;area id&gt;/list.ini**
 * This file contains the multiple sections whose name is ignored. Each section contains these properties:
     * `name` [str]
-    * `group` [str]. Possible values: "PSP_open", "PSP_closed", "Pondage", "Battery", "Other_1", ... , "Other_5". Default Other_1
+    * `group` [str]. Possible values: "PSP_open", "PSP_closed", "Pondage", "Battery", "Other1", ... , "Other5". Default Other1
     * `efficiency` [double] in range 0-1
     * `reservoircapacity` [double] &gt; 0
     * `initiallevel` [double] in range 0-1
