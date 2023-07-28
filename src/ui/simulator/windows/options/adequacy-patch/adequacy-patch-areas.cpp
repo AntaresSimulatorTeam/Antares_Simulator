@@ -30,7 +30,7 @@
 #include <wx/settings.h>
 #include <wx/statline.h>
 
-#include <antares/study/finder.h>
+#include <antares/study/finder/finder.h>
 #include "../../../toolbox/resources.h"
 #include "../../../application/study.h"
 #include "../../../application/main.h"

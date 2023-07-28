@@ -34,7 +34,7 @@
 #include <iostream>
 #include <yuni/core/string.h>
 #include <yuni/core/getopt.h>
-#include <antares/study/finder.h>
+#include <antares/study/finder/finder.h>
 #include "../../ui/common/winmain.hxx"
 #include <antares/version.h>
 #include <antares/locale.h>
