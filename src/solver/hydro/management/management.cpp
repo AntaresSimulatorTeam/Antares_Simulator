@@ -357,13 +357,13 @@ void HydroManagement::changeInflowsDueToFinalLevels(uint numSpace, uint year)
       [this, &numSpace, &year](Data::Area& area)
       {
           auto& data = pAreas[numSpace][area.index];
-          if (area.hydro.finalLevelInflowsModifyer->deltaLevel.empty())
+          if (area.hydro.finalLevelInflowsModifier->deltaLevel.empty())
               return;
 
-          if (!area.hydro.finalLevelInflowsModifyer->includeFinalReservoirLevel[year])
+          if (!area.hydro.finalLevelInflowsModifier->includeFinalReservoirLevel[year])
               return;
 
-          double delta = area.hydro.finalLevelInflowsModifyer->deltaLevel[year];
+          double delta = area.hydro.finalLevelInflowsModifier->deltaLevel[year];
           // must be done before prepareMonthlyTargetGenerations
           if (delta > 0)
               data.inflows[0] += delta;

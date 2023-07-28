@@ -35,7 +35,7 @@ void prepareFinalReservoirLevelDataPerMcY(Data::Study& study, uint year)
     study.areas.each(
       [&study, &year](Data::Area& area)
       {
-          auto& finalinflows = area.hydro.finalLevelInflowsModifyer;
+          auto& finalinflows = area.hydro.finalLevelInflowsModifier;
           auto& scenarioInitialHydroLevels = study.scenarioInitialHydroLevels;
           auto& scenarioFinalHydroLevels = study.scenarioFinalHydroLevels;
           auto& parameters = study.parameters;

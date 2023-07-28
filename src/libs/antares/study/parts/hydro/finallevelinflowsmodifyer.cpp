@@ -32,24 +32,24 @@ namespace Antares
 namespace Data
 {
 
-FinalLevelInflowsModifyer::FinalLevelInflowsModifyer() : areaPtr(nullptr)
+FinalLevelInflowsModifier::FinalLevelInflowsModifier() : areaPtr(nullptr)
 {
 }
 
-void FinalLevelInflowsModifyer::fillEmpty()
+void FinalLevelInflowsModifier::fillEmpty()
 {
     includeFinalReservoirLevel.push_back(false);
     endLevel.push_back(0.);
     deltaLevel.push_back(0.);
 }
 
-void FinalLevelInflowsModifyer::initializeGeneralData(const Data::Parameters& parameters, uint year)
+void FinalLevelInflowsModifier::initializeGeneralData(const Data::Parameters& parameters, uint year)
 {
     simEndDay = parameters.simulationDays.end;
     yearIndex = year;
 }
 
-void FinalLevelInflowsModifyer::initializePerAreaData(
+void FinalLevelInflowsModifier::initializePerAreaData(
   const Matrix<double>& scenarioInitialHydroLevels,
   const Matrix<double>& scenarioFinalHydroLevels)
 {
@@ -58,26 +58,26 @@ void FinalLevelInflowsModifyer::initializePerAreaData(
     deltaReservoirLevel = initialReservoirLevel - finalReservoirLevel;
 }
 
-void FinalLevelInflowsModifyer::initializePreCheckData()
+void FinalLevelInflowsModifier::initializePreCheckData()
 {
     initReservoirLvlMonth = areaPtr->hydro.initializeReservoirLevelDate; // month [0-11]
     reservoirCapacity = areaPtr->hydro.reservoirCapacity;
 }
 
-void FinalLevelInflowsModifyer::ruleCurveForSimEndReal()
+void FinalLevelInflowsModifier::ruleCurveForSimEndReal()
 {
     lowLevelLastDay = areaPtr->hydro.reservoirLevel[Data::PartHydro::minimum][DAYS_PER_YEAR - 1];
     highLevelLastDay = areaPtr->hydro.reservoirLevel[Data::PartHydro::maximum][DAYS_PER_YEAR - 1];
 }
 
-void FinalLevelInflowsModifyer::assignEndLevelAndDelta()
+void FinalLevelInflowsModifier::assignEndLevelAndDelta()
 {
     includeFinalReservoirLevel.at(yearIndex) = true;
     endLevel.at(yearIndex) = finalReservoirLevel;
     deltaLevel.at(yearIndex) = deltaReservoirLevel;
 }
 
-double FinalLevelInflowsModifyer::calculateTotalInflows() const
+double FinalLevelInflowsModifier::calculateTotalInflows() const
 {
     // calculate yearly inflows
     const Data::DataSeriesHydro& data = *areaPtr->hydro.series;
@@ -91,7 +91,7 @@ double FinalLevelInflowsModifyer::calculateTotalInflows() const
     return totalYearInflows;
 }
 
-bool FinalLevelInflowsModifyer::preCheckStartAndEndSim() const
+bool FinalLevelInflowsModifier::preCheckStartAndEndSim() const
 {
     if (simEndDay == DAYS_PER_YEAR && initReservoirLvlMonth == 0)
         return true;
@@ -104,7 +104,7 @@ bool FinalLevelInflowsModifyer::preCheckStartAndEndSim() const
     }
 }
 
-bool FinalLevelInflowsModifyer::preCheckYearlyInflow(double totalYearInflows) const
+bool FinalLevelInflowsModifier::preCheckYearlyInflow(double totalYearInflows) const
 {
     if ((-deltaReservoirLevel) * reservoirCapacity
         > totalYearInflows) // ROR time-series in MW (power), SP time-series in MWh
@@ -119,7 +119,7 @@ bool FinalLevelInflowsModifyer::preCheckYearlyInflow(double totalYearInflows) co
     return true;
 }
 
-bool FinalLevelInflowsModifyer::preCheckRuleCurves() const
+bool FinalLevelInflowsModifier::preCheckRuleCurves() const
 {
     if (finalReservoirLevel < lowLevelLastDay || finalReservoirLevel > highLevelLastDay)
     {
@@ -132,7 +132,7 @@ bool FinalLevelInflowsModifyer::preCheckRuleCurves() const
     return true;
 }
 
-void FinalLevelInflowsModifyer::initializeData(const Matrix<double>& scenarioInitialHydroLevels,
+void FinalLevelInflowsModifier::initializeData(const Matrix<double>& scenarioInitialHydroLevels,
                                                const Matrix<double>& scenarioFinalHydroLevels,
                                                const Data::Parameters& parameters,
                                                uint year)
@@ -143,7 +143,7 @@ void FinalLevelInflowsModifyer::initializeData(const Matrix<double>& scenarioIni
     initializePreCheckData();
 }
 
-bool FinalLevelInflowsModifyer::isActive()
+bool FinalLevelInflowsModifier::isActive()
 {
     if (areaPtr->hydro.reservoirManagement && !areaPtr->hydro.useWaterValue
         && !isnan(finalReservoirLevel) && !isnan(initialReservoirLevel))
@@ -156,14 +156,14 @@ bool FinalLevelInflowsModifyer::isActive()
     }
 }
 
-void FinalLevelInflowsModifyer::updateInflows()
+void FinalLevelInflowsModifier::updateInflows()
 {
     assignEndLevelAndDelta();
     // rule curve values for simEndDayReal
     ruleCurveForSimEndReal();
 }
 
-void FinalLevelInflowsModifyer::makeChecks()
+void FinalLevelInflowsModifier::makeChecks()
 {
     bool preChecksPasses = true;
 

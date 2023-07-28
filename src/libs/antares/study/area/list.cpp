@@ -1328,8 +1328,8 @@ void AreaListEnsureFinalLevelInflowsModifyerAreaPtr(AreaList* l)
     assert(l);
 
     l->each([&](Data::Area& area) {
-        if (!area.hydro.finalLevelInflowsModifyer->areaPtr)
-            area.hydro.finalLevelInflowsModifyer->areaPtr = &area;
+        if (!area.hydro.finalLevelInflowsModifier->areaPtr)
+            area.hydro.finalLevelInflowsModifier->areaPtr = &area;
     });
 }
 

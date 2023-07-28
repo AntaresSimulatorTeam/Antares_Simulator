@@ -36,7 +36,7 @@ namespace Antares::Data
 /*!
  ** \brief Final Reservoir Level data for a single area
  */
-class FinalLevelInflowsModifyer
+class FinalLevelInflowsModifier
 {
 private:
     // Final reservoir level runtime data
@@ -69,7 +69,7 @@ public:
     std::vector<double> deltaLevel;
 
     // Constructor
-    FinalLevelInflowsModifyer();
+    FinalLevelInflowsModifier();
 
 private:
     // methods:

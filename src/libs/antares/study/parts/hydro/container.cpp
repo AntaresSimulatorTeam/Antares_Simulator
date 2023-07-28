@@ -58,7 +58,7 @@ PartHydro::PartHydro() :
  hydroModulable(false),
  prepro(nullptr),
  series(nullptr),
- finalLevelInflowsModifyer(std::make_shared<FinalLevelInflowsModifyer>())
+ finalLevelInflowsModifier(std::make_shared<FinalLevelInflowsModifier>())
 {
 }
 

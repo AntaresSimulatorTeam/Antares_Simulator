@@ -38,7 +38,7 @@ namespace Antares::Data
  ** \brief Final Reservoir Level data for a single area
  */
 
-class FinalLevelInflowsModifyer;
+class FinalLevelInflowsModifier;
 
 /*!
 ** \brief Hydro for a single area
@@ -180,7 +180,7 @@ public:
 
     //! Data for final reservoir level
     
-    std::shared_ptr<FinalLevelInflowsModifyer> finalLevelInflowsModifyer;
+    std::shared_ptr<FinalLevelInflowsModifier> finalLevelInflowsModifier;
 
 }; // class PartHydro
 
