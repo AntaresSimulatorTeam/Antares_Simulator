@@ -249,13 +249,7 @@ set(SRC_STUDY_PARAMETERS
 	)
 source_group("study\\general data" FILES ${SRC_STUDY_PARAMETERS})
 
-
-set(SRC_STUDY_FINDER
-	study/finder.h
-	study/finder/finder.cpp
-	study/finder/finder.h
-	)
-source_group("study\\finder" FILES ${SRC_STUDY_FINDER})
+add_subdirectory(study/finder)
 
 
 set(SRC_STUDY_BINDING_CONSTRAINT
@@ -565,6 +559,7 @@ target_link_libraries(libantares-core
 		object
 		area_ui
 		area
+		finder
 	)
 
 import_std_libs(libantares-core)

@@ -26,7 +26,7 @@
 */
 
 #include <antares/logs.h>
-#include <antares/study/finder.h>
+#include <antares/study/finder/finder.h>
 #include <yuni/core/getopt.h>
 #include "../../ui/common/winmain.hxx"
 #include <antares/utils.h>
