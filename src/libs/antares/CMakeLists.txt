@@ -185,18 +185,6 @@ set(SRC_STUDY_PART_SHORT_TERM_STORAGE
 )
 source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
 
-set(SRC_STUDY_PART_WIND
-	study/parts/wind/container.h
-	study/parts/wind/container.cpp
-	study/parts/wind/series.h
-	study/parts/wind/series.hxx
-	study/parts/wind/series.cpp
-	study/parts/wind/prepro.h
-	study/parts/wind/prepro.hxx
-	study/parts/wind/prepro.cpp
-	)
-source_group("study\\part\\wind" FILES ${SRC_STUDY_PART_WIND})
-
 set(SRC_STUDY_PART_HYDRO
 	study/parts/hydro/container.h
 	study/parts/hydro/container.cpp
@@ -526,6 +514,7 @@ target_link_libraries(libantares-core
 		xcast
 		renewable
 		parts_common
+		wind
 	)
 
 import_std_libs(libantares-core)
