@@ -150,6 +150,7 @@ set(SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_CONSTRAINT
 source_group("study\\action\\handler\\antares study\\constraint" FILES ${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_CONSTRAINT})
 
 add_subdirectory(study/area)
+add_subdirectory(study/parts)
 
 set(SRC_STUDY_PART_COMMON
     study/parts/common/series.h
@@ -180,17 +181,6 @@ set(SRC_STUDY_PART_THERMAL
 	study/parts/thermal/pollutant.cpp
 	)
 source_group("study\\part\\thermal" FILES ${SRC_STUDY_PART_THERMAL})
-
-set(SRC_STUDY_PART_RENEWABLE
-	study/parts/renewable/container.h
-	study/parts/renewable/container.hxx
-	study/parts/renewable/container.cpp
-	study/parts/renewable/cluster.h
-	study/parts/renewable/cluster.cpp
-    study/parts/renewable/cluster_list.h
-    study/parts/renewable/cluster_list.cpp
-    )
-source_group("study\\part\\renewable" FILES ${SRC_STUDY_PART_RENEWABLE})
 
 set(SRC_STUDY_PART_SHORT_TERM_STORAGE
     study/parts/short-term-storage/container.h
@@ -545,6 +535,7 @@ target_link_libraries(libantares-core
 		finder
 		benchmarking
 		xcast
+		renewable
 	)
 
 import_std_libs(libantares-core)
