@@ -285,17 +285,7 @@ set(SRC_XCAST
 	)
 source_group("study\\xcast" FILES ${SRC_XCAST})
 
-set(SRC_BENCHMARKING
-	benchmarking.h
-	benchmarking/timer.h
-	benchmarking/timer.cpp
-    benchmarking/info_collectors.h
-    benchmarking/info_collectors.cpp
-	benchmarking/file_content.h
-    benchmarking/file_content.cpp
-	)
-source_group("misc\\benchmarking" FILES ${SRC_BENCHMARKING})
-
+add_subdirectory(benchmarking)
 add_subdirectory(io)
 
 set(SRC_EXCEPTION
@@ -560,6 +550,7 @@ target_link_libraries(libantares-core
 		area_ui
 		area
 		finder
+		benchmarking
 	)
 
 import_std_libs(libantares-core)
