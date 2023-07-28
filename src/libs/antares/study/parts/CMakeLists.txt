@@ -1,3 +1,5 @@
 add_subdirectory(renewable)
 add_subdirectory(common)
 add_subdirectory(wind)
+add_subdirectory(hydro)
+add_subdirectory(thermal)

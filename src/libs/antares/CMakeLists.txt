@@ -152,25 +152,6 @@ source_group("study\\action\\handler\\antares study\\constraint" FILES ${SRC_STU
 add_subdirectory(study/area)
 add_subdirectory(study/parts)
 
-set(SRC_STUDY_PART_THERMAL
-	study/parts/thermal/container.h
-	study/parts/thermal/container.hxx
-	study/parts/thermal/container.cpp
-	study/parts/thermal/prepro.h
-	study/parts/thermal/prepro.hxx
-	study/parts/thermal/prepro.cpp
-	study/parts/thermal/ecoInput.h
-	study/parts/thermal/ecoInput.cpp
-	study/parts/thermal/cluster.h
-	study/parts/thermal/cluster.hxx
-	study/parts/thermal/cluster.cpp
-    study/parts/thermal/cluster_list.h
-    study/parts/thermal/cluster_list.cpp
-	study/parts/thermal/pollutant.h
-	study/parts/thermal/pollutant.cpp
-	)
-source_group("study\\part\\thermal" FILES ${SRC_STUDY_PART_THERMAL})
-
 set(SRC_STUDY_PART_SHORT_TERM_STORAGE
     study/parts/short-term-storage/container.h
     study/parts/short-term-storage/container.cpp
@@ -184,20 +165,6 @@ set(SRC_STUDY_PART_SHORT_TERM_STORAGE
 	study/parts/short-term-storage/STStorageOutputCaptions.cpp
 )
 source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
-
-set(SRC_STUDY_PART_HYDRO
-	study/parts/hydro/container.h
-	study/parts/hydro/container.cpp
-	study/parts/hydro/series.h
-	study/parts/hydro/series.hxx
-	study/parts/hydro/series.cpp
-	study/parts/hydro/prepro.h
-	study/parts/hydro/prepro.cpp
-	study/parts/hydro/allocation.h
-	study/parts/hydro/allocation.hxx
-	study/parts/hydro/allocation.cpp
-	)
-source_group("study\\part\\hydro" FILES ${SRC_STUDY_PART_HYDRO})
 
 set(SRC_STUDY_UI
 	study/ui-runtimeinfos.h
@@ -515,6 +482,8 @@ target_link_libraries(libantares-core
 		renewable
 		parts_common
 		wind
+		hydro
+		thermal
 	)
 
 import_std_libs(libantares-core)
