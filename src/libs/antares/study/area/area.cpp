@@ -30,7 +30,6 @@
 #include "../study.h"
 #include "area.h"
 #include "constants.h"
-#include "ui.h"
 #include "scratchpad.h"
 #include "antares/study/parts/load/prepro.h"
 

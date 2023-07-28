@@ -168,14 +168,7 @@ set(SRC_AREAS
 	)
 source_group("study\\area" FILES ${SRC_AREAS})
 
-
-set(SRC_STUDY_AREA_UI
-	study/area/ui.h
-	study/area/ui.hxx
-	study/area/ui.cpp
-	)
-source_group("study\\area\\ui" FILES ${SRC_STUDY_AREA_UI})
-
+add_subdirectory(study/area)
 
 set(SRC_STUDY_PART_COMMON
     study/parts/common/series.h
@@ -589,6 +582,7 @@ target_link_libraries(libantares-core
 		array
 		correlation
 		object
+		area_ui
 	)
 
 import_std_libs(libantares-core)
