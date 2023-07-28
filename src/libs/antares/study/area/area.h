@@ -30,14 +30,14 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/core/noncopyable.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <antares/study/parameters/adq-patch-params.h>
 #include "../../array/matrix.h"
 #include "../parts/parts.h"
 #include <vector>
 #include <set>
 #include "links.h"
-#include "ui.h"
+#include <antares/study/area/UI/ui.h>
 #include "antares/study/parameters/adq-patch-params.h"
 
 namespace Antares
