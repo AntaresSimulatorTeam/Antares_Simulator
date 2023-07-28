@@ -149,6 +149,14 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
+    - name: Run named mps tests
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-named-mps
+        os: ${{ matrix.test-platform }}
+        variant: "named-mps"
+
     - name: Run tests for adequacy patch (CSR)
       uses: ./.github/workflows/run-tests
       with:
