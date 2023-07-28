@@ -27,7 +27,7 @@
 #ifndef __ANTARES_LIBS_BENCHMARKING_H__
 #define __ANTARES_LIBS_BENCHMARKING_H__
 
-#include "benchmarking/timer.h"
-#include "benchmarking/info_collectors.h"
+#include "timer.h"
+#include "info_collectors.h"
 
 #endif // __ANTARES_LIBS_BENCHMARKING_H__

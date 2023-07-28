@@ -3,6 +3,8 @@
 #include <mutex>
 #include <string>
 
+#include <antares/benchmarking/benchmarking.h> // Timer
+
 #include <yuni/job/queue/service.h>
 #include <yuni/job/job.h>
 #include <yuni/core/string.h>

@@ -30,7 +30,7 @@
 #include "../variable/constants.h"
 #include <antares/logs.h>
 #include <antares/date.h>
-#include <antares/benchmarking.h>
+#include <antares/benchmarking/benchmarking.h>
 #include <antares/exception/InitializationError.hpp>
 #include "../variable/print.h"
 #include <yuni/io/io.h>
