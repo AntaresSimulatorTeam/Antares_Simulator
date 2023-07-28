@@ -77,9 +77,14 @@ void FinalLevelInflowsModifyer::assignEndLevelAndDelta()
     deltaLevel.at(yearIndex) = deltaReservoirLevel;
 }
 
-double FinalLevelInflowsModifyer::calculateTotalInflows(
-  Antares::Memory::Stored<double>::Type& srcinflows) const
+double FinalLevelInflowsModifyer::calculateTotalInflows() const
 {
+    // calculate yearly inflows
+    const Data::DataSeriesHydro& data = *areaPtr->hydro.series;
+    uint tsHydroIndex = data.timeseriesNumbers[0][yearIndex];
+    auto& inflowsmatrix = areaPtr->hydro.series->storage;
+    auto& srcinflows = inflowsmatrix[tsHydroIndex < inflowsmatrix.width ? tsHydroIndex : 0];
+
     double totalYearInflows = 0.0;
     for (uint day = 0; day < DAYS_PER_YEAR; ++day)
         totalYearInflows += srcinflows[day];
@@ -153,27 +158,23 @@ bool FinalLevelInflowsModifyer::isActive()
 
 void FinalLevelInflowsModifyer::updateInflows()
 {
-    bool preChecksPasses = true;
-
     assignEndLevelAndDelta();
+    // rule curve values for simEndDayReal
+    ruleCurveForSimEndReal();
+}
+
+void FinalLevelInflowsModifyer::makeChecks()
+{
+    bool preChecksPasses = true;
 
     // pre-check 0 -> simulation must end on day 365 and reservoir level must be
     // initiated in January
     if (!preCheckStartAndEndSim())
         preChecksPasses = false;
 
-    // rule curve values for simEndDayReal
-    ruleCurveForSimEndReal();
-
-    // calculate (partial)yearly inflows
-    const Data::DataSeriesHydro& data = *areaPtr->hydro.series;
-    uint tsHydroIndex = data.timeseriesNumbers[0][yearIndex];
-    auto& inflowsmatrix = areaPtr->hydro.series->storage;
-    auto& srcinflows = inflowsmatrix[tsHydroIndex < inflowsmatrix.width ? tsHydroIndex : 0];
-
     // pre-check 1 -> reservoir_levelDay_365 – reservoir_levelDay_1 ≤
     // yearly_inflows
-    if (double totalInflows = calculateTotalInflows(srcinflows);
+    if (double totalInflows = calculateTotalInflows();
         !preCheckYearlyInflow(totalInflows))
         preChecksPasses = false;
 

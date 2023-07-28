@@ -78,7 +78,7 @@ private:
 
     void assignEndLevelAndDelta();
 
-    double calculateTotalInflows(Antares::Memory::Stored<double>::Type& srcinflows) const;
+    double calculateTotalInflows() const;
 
     bool preCheckStartAndEndSim() const;
 
@@ -102,6 +102,8 @@ public:
     bool isActive();
 
     void updateInflows();
+
+    void makeChecks();
 };
 } // namespace Antares::Data
 

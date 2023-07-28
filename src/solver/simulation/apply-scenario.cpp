@@ -57,12 +57,7 @@ void ApplyCustomScenario(Data::Study& study)
     study.scenarioRulesDestroy();
     logs.info();
 
-    uint numberMCYears = study.scenarioFinalHydroLevels.height;
-
-    for (uint yearIndex = 0; yearIndex != numberMCYears; ++yearIndex)
-    {
-        prepareFinalReservoirLevelData(study, yearIndex);
-    }
+    prepareFinalReservoirLevelData(study);
 }
 
 } // namespace Antares::Solver

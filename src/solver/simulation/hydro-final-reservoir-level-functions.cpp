@@ -30,7 +30,7 @@
 namespace Antares::Solver
 {
 
-void prepareFinalReservoirLevelData(Data::Study& study, uint year)
+void prepareFinalReservoirLevelDataPerMcY(Data::Study& study, uint year)
 {
     study.areas.each(
       [&study, &year](Data::Area& area)
@@ -46,8 +46,19 @@ void prepareFinalReservoirLevelData(Data::Study& study, uint year)
           if (finalinflows->isActive())
           {
               finalinflows->updateInflows();
+              finalinflows->makeChecks();
           }
       });
+}
+
+void prepareFinalReservoirLevelData(Data::Study& study)
+{
+    uint numberMCYears = study.scenarioFinalHydroLevels.height;
+
+    for (uint yearIndex = 0; yearIndex != numberMCYears; ++yearIndex)
+    {
+        prepareFinalReservoirLevelDataPerMcY(study, yearIndex);
+    }
 }
 
 } // namespace Antares::Solver
