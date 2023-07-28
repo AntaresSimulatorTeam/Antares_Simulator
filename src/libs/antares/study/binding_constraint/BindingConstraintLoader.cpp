@@ -160,9 +160,9 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
                          << "]: Missing mandatory binding constraint group";
             return {};
         }
-        else
+        else // In studies versions < 870, binding constraints have no group. From version 870, antares requires constraints to have a group.
         {
-            bc->group_ = "legacy_study_group";
+            bc->group_ = "default";
         }
     }
 
