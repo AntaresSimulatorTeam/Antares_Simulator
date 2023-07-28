@@ -57,20 +57,11 @@ void ApplyCustomScenario(Data::Study& study)
     study.scenarioRulesDestroy();
     logs.info();
 
-    auto& areas = study.areas;
+    uint numberMCYears = study.scenarioFinalHydroLevels.height;
 
-    for (uint yearIndex = 0; yearIndex != study.scenarioFinalHydroLevels.height; ++yearIndex)
+    for (uint yearIndex = 0; yearIndex != numberMCYears; ++yearIndex)
     {
-        areas.each(
-          [&study, &yearIndex](Data::Area& area)
-          {
-              auto& finalinflows = area.hydro.finalLevelInflowsModifyer;
-              FinalReservoirLevel(study.scenarioInitialHydroLevels,
-                                  study.scenarioFinalHydroLevels,
-                                  study.parameters,
-                                  finalinflows,
-                                  yearIndex);
-          });
+        prepareFinalReservoirLevelData(study, yearIndex);
     }
 }
 

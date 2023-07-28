@@ -28,6 +28,7 @@
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_FINAL_LEVEL_INFLOWS_MODIFYER_H__
 
 #include "../../area/area.h"
+#include <antares/emergency.h>
 
 namespace Antares::Data
 {
@@ -37,15 +38,8 @@ namespace Antares::Data
  */
 class FinalLevelInflowsModifyer
 {
-public:
+private:
     // Final reservoir level runtime data
-
-    // vectors containing data necessary for final reservoir level calculation
-    // for one area and all MC years
-    // vector indexes correspond to the MC years
-    std::vector<bool> includeFinalReservoirLevel;
-    std::vector<double> endLevel;
-    std::vector<double> deltaLevel;
 
     // Simulation Data
     uint simEndDay;
@@ -63,11 +57,21 @@ public:
     double lowLevelLastDay;
     double highLevelLastDay;
     int initReservoirLvlMonth;
+
+public:
     Area* areaPtr;
+
+    // vectors containing data necessary for final reservoir level calculation
+    // for one area and all MC years
+    // vector indexes correspond to the MC years
+    std::vector<bool> includeFinalReservoirLevel;
+    std::vector<double> endLevel;
+    std::vector<double> deltaLevel;
 
     // Constructor
     FinalLevelInflowsModifyer();
 
+private:
     // methods:
 
     void fillEmpty();
@@ -87,8 +91,16 @@ public:
     void initializePerAreaData(const Matrix<double>& scenarioInitialHydroLevels,
                                const Matrix<double>& scenarioFinalHydroLevels);
     void initializePreCheckData();
-    
+
     void ruleCurveForSimEndReal();
+
+public:
+    void initializeData(const Matrix<double>& scenarioInitialHydroLevels,
+                        const Matrix<double>& scenarioFinalHydroLevels,
+                        const Data::Parameters& parameters);
+    bool isActive();
+
+    void updateInflows();
 };
 } // namespace Antares::Data
 
