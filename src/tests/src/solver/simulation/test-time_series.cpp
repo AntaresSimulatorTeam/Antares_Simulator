@@ -167,7 +167,7 @@ BOOST_FIXTURE_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_o
     BOOST_CHECK_EQUAL(loading_ok, true);
 }
 
-BOOST_AUTO_TEST_CASE(Check_empty_file_interpreted_as_all_zeroes) {
+BOOST_FIXTURE_TEST_CASE(Check_empty_file_interpreted_as_all_zeroes, Fixture) {
     std::vector file_names = {working_tmp_dir / "bindingconstraints"/ "dummy_name_lt.txt",
                               working_tmp_dir / "bindingconstraints"/ "dummy_name_gt.txt",
                               working_tmp_dir / "bindingconstraints"/ "dummy_name_eq.txt"};
@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_CASE(Check_empty_file_interpreted_as_all_zeroes) {
     CheckEqual(study->bindingConstraints.find("dummy_name")->RHSTimeSeries(), expectation);
 }
 
-BOOST_AUTO_TEST_CASE(Check_missing_file) {
+BOOST_FIXTURE_TEST_CASE(Check_missing_file, Fixture) {
     std::vector file_names = {working_tmp_dir / "bindingconstraints"/ "dummy_name_lt.txt",
                               working_tmp_dir / "bindingconstraints"/ "dummy_name_gt.txt",
                               working_tmp_dir / "bindingconstraints"/ "dummy_name_eq.txt"};
