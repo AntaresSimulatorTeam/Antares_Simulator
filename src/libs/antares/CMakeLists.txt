@@ -149,25 +149,6 @@ set(SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_CONSTRAINT
 	)
 source_group("study\\action\\handler\\antares study\\constraint" FILES ${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_CONSTRAINT})
 
-
-set(SRC_AREAS
-	study/area.h
-	study/area/constants.h
-	study/area/area.h
-	study/area/area.hxx
-	study/area/scratchpad.h
-	study/area/scratchpad.cpp
-	study/area/area.cpp
-	study/area/links.cpp
-	study/area/links.h
-	study/area/store-timeseries-numbers.cpp
-	study/area/store-timeseries-numbers.h
-	study/area/store-timeseries-numbers.hxx
-	study/area/list.cpp
-	study/area/list.hxx
-	)
-source_group("study\\area" FILES ${SRC_AREAS})
-
 add_subdirectory(study/area)
 
 set(SRC_STUDY_PART_COMMON
@@ -583,6 +564,7 @@ target_link_libraries(libantares-core
 		correlation
 		object
 		area_ui
+		area
 	)
 
 import_std_libs(libantares-core)

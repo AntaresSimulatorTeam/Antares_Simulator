@@ -25,9 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "area.h"
+#include <antares/study/area/area.h>
 #include <cassert>
 #include "../resources.h"
+#include "area.h"
 
 using namespace Yuni;
 

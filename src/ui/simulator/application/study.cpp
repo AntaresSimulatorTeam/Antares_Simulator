@@ -28,7 +28,7 @@
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
 #include <yuni/core/system/environment.h>
-#include <antares/study/area.h>
+#include <antares/study/area/area.h>
 #include <antares/inifile/inifile.h>
 #include <antares/io/statistics.h>
 

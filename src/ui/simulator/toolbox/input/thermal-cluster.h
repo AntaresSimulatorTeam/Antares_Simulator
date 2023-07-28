@@ -31,7 +31,7 @@
 #include <yuni/core/event.h>
 #include <antares/study.h>
 #include "input.h"
-#include "area.h"
+#include <antares/study/area/area.h>
 #include <wx/panel.h>
 #include <wx/arrstr.h>
 #include <wx/stattext.h>
@@ -40,6 +40,7 @@
 #include "../components/htmllistbox/item/thermal-cluster-item.h"
 #include "../components/htmllistbox/datasource/thermal-cluster-order.h"
 #include "../components/htmllistbox/item/thermal-cluster-item.h"
+#include "ui/simulator/toolbox/components/datagrid/renderer/area.h"
 
 namespace Antares
 {

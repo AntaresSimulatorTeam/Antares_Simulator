@@ -1,7 +1,7 @@
 #include "cluster_list.h"
 #include "../../../utils.h"
 #include "../../study.h"
-#include "../../area.h"
+#include <antares/study/area/area.h>
 
 using namespace Yuni;
 namespace // anonymous

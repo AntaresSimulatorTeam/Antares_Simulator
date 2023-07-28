@@ -30,7 +30,7 @@
 #include <yuni/core/string.h>
 #include "../study.h"
 #include <assert.h>
-#include "area.h"
+#include <antares/study/area/area.h>
 #include "../../array/array1d.h"
 #include "../../inifile/inifile.h"
 #include "../../logs.h"

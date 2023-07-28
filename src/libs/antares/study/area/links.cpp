@@ -29,7 +29,7 @@
 #include <yuni/yuni.h>
 #include "../study.h"
 #include "links.h"
-#include "area.h"
+#include <antares/study/area/area.h>
 #include "../../logs.h"
 #include "../memory-usage.h"
 #include "../filter.h"

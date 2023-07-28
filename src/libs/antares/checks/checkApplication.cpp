@@ -30,7 +30,7 @@
 #include <version.h>
 
 #include "checkApplication.h"
-#include "area.h"
+#include <antares/study/area/area.h>
 
 namespace Antares::Check
 {

@@ -27,7 +27,7 @@
 
 #include <antares/study/memory-usage.h>
 #include "../../variable.h"
-#include "../../area.h"
+#include <antares/study/area/area.h>
 #include "../../setofareas.h"
 
 using namespace Yuni;

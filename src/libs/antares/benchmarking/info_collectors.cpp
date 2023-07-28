@@ -2,7 +2,7 @@
 #include "info_collectors.h"
 #include <antares/config.h>
 #include <antares/Enum.hpp>
-#include <antares/study/area.h>
+#include <antares/study/area/area.h>
 
 using namespace Antares::Data;
 

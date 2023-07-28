@@ -28,7 +28,7 @@
 
 #include <i_writer.h>
 
-#include "area.h"
+#include <antares/study/area/area.h>
 
 namespace Antares::Data
 {

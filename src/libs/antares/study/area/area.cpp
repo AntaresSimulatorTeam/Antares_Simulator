@@ -28,7 +28,7 @@
 #include <yuni/yuni.h>
 #include <cassert>
 #include "../study.h"
-#include "area.h"
+#include <antares/study/area/area.h>
 #include "constants.h"
 #include "scratchpad.h"
 #include "antares/study/parts/load/prepro.h"
