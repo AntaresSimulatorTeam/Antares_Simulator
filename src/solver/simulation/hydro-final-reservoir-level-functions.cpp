@@ -44,9 +44,9 @@ void prepareFinalReservoirLevelData(Data::Study& study, uint yearIndex)
             scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters);
 
           if (!finalinflows->isActive())
-              return;
-
-          finalinflows->updateInflows();
+          {
+              finalinflows->updateInflows();
+          }
       });
 }
 
