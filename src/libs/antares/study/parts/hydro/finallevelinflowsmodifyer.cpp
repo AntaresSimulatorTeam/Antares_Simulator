@@ -39,6 +39,33 @@ void FinalLevelInflowsModifyer::fillEmpty()
     deltaLevel.push_back(0.);
 }
 
+void FinalLevelInflowsModifyer::initializeGeneralData(const Data::Parameters& parameters, uint year)
+{
+    simEndDay = parameters.simulationDays.end;
+    yearIndex = year;
+}
+
+void FinalLevelInflowsModifyer::initializePerAreaData(
+  const Matrix<double>& scenarioInitialHydroLevels,
+  const Matrix<double>& scenarioFinalHydroLevels)
+{
+    initialReservoirLevel = scenarioInitialHydroLevels[areaPtr->index][yearIndex];
+    finalReservoirLevel = scenarioFinalHydroLevels[areaPtr->index][yearIndex];
+    deltaReservoirLevel = initialReservoirLevel - finalReservoirLevel;
+}
+
+void FinalLevelInflowsModifyer::initializePreCheckData()
+{
+    initReservoirLvlMonth = areaPtr->hydro.initializeReservoirLevelDate; // month [0-11]
+    reservoirCapacity = areaPtr->hydro.reservoirCapacity;
+}
+
+void FinalLevelInflowsModifyer::ruleCurveForSimEndReal()
+{
+    lowLevelLastDay = areaPtr->hydro.reservoirLevel[Data::PartHydro::minimum][DAYS_PER_YEAR - 1];
+    highLevelLastDay = areaPtr->hydro.reservoirLevel[Data::PartHydro::maximum][DAYS_PER_YEAR - 1];
+}
+
 void FinalLevelInflowsModifyer::assignEndLevelAndDelta()
 {
     includeFinalReservoirLevel.at(yearIndex) = true;
@@ -94,33 +121,6 @@ bool FinalLevelInflowsModifyer::preCheckRuleCurves() const
         return false;
     }
     return true;
-}
-
-void FinalLevelInflowsModifyer::initializeGeneralData(const Data::Parameters& parameters, uint year)
-{
-    simEndDay = parameters.simulationDays.end;
-    yearIndex = year;
-}
-
-void FinalLevelInflowsModifyer::initializePerAreaData(
-  const Matrix<double>& scenarioInitialHydroLevels,
-  const Matrix<double>& scenarioFinalHydroLevels)
-{
-    initialReservoirLevel = scenarioInitialHydroLevels[areaPtr->index][yearIndex];
-    finalReservoirLevel = scenarioFinalHydroLevels[areaPtr->index][yearIndex];
-    deltaReservoirLevel = initialReservoirLevel - finalReservoirLevel;
-}
-
-void FinalLevelInflowsModifyer::initializePreCheckData()
-{
-    initReservoirLvlMonth = areaPtr->hydro.initializeReservoirLevelDate; // month [0-11]
-    reservoirCapacity = areaPtr->hydro.reservoirCapacity;
-}
-
-void FinalLevelInflowsModifyer::ruleCurveForSimEndReal()
-{
-    lowLevelLastDay = areaPtr->hydro.reservoirLevel[Data::PartHydro::minimum][DAYS_PER_YEAR - 1];
-    highLevelLastDay = areaPtr->hydro.reservoirLevel[Data::PartHydro::maximum][DAYS_PER_YEAR - 1];
 }
 
 } // namespace Data

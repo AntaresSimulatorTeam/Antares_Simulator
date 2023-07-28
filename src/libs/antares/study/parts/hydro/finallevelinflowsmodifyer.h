@@ -88,6 +88,7 @@ public:
     void initializePerAreaData(const Matrix<double>& scenarioInitialHydroLevels,
                                const Matrix<double>& scenarioFinalHydroLevels);
     void initializePreCheckData();
+    
     void ruleCurveForSimEndReal();
 };
 } // namespace Antares::Data
