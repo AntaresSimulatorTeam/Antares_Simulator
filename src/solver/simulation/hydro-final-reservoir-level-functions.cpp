@@ -35,18 +35,18 @@ void prepareFinalReservoirLevelDataPerMcY(Data::Study& study, uint year)
     study.areas.each(
       [&study, &year](Data::Area& area)
       {
-          auto& finalinflows = area.hydro.finalLevelInflowsModifier;
+          auto& finalInflows = area.hydro.finalLevelInflowsModifier;
           auto& scenarioInitialHydroLevels = study.scenarioInitialHydroLevels;
           auto& scenarioFinalHydroLevels = study.scenarioFinalHydroLevels;
           auto& parameters = study.parameters;
 
-          finalinflows->initializeData(
+          finalInflows->initializeData(
             scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
 
-          if (finalinflows->isActive())
+          if (finalInflows->isActive())
           {
-              finalinflows->updateInflows();
-              finalinflows->makeChecks();
+              finalInflows->updateInflows();
+              finalInflows->makeChecks();
           }
       });
 }
