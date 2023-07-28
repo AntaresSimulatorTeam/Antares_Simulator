@@ -51,7 +51,7 @@ void BindingConstraintsTimeSeriesNumbersWriter::write(const Data::BindingConstra
     for (auto const& group: list) 
     {
         genericStoreTimeseriesNumbers(writer_,
-                                      group->timeSeriesNumbers().timeseriesNumbers,
+                                      group->timeSeriesNumbers(),
                                       group->name(),
                                       "bindingconstraints");
     }

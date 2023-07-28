@@ -26,7 +26,7 @@ namespace Antares::Data {
         if (std::all_of(constraints_.begin(), constraints_.end(), [](auto constraint){
             return constraint->RHSTimeSeries().width == 1;
         })) {
-            timeSeriesNumbers_.timeseriesNumbers.fillColumn(0, 0);
+            timeSeriesNumbers_.fillColumn(0, 0);
         }
     }
 
