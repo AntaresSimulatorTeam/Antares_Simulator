@@ -97,7 +97,8 @@ private:
 public:
     void initializeData(const Matrix<double>& scenarioInitialHydroLevels,
                         const Matrix<double>& scenarioFinalHydroLevels,
-                        const Data::Parameters& parameters);
+                        const Data::Parameters& parameters,
+                        uint year);
     bool isActive();
 
     void updateInflows();

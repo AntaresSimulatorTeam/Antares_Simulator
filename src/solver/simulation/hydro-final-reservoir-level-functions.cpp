@@ -30,10 +30,10 @@
 namespace Antares::Solver
 {
 
-void prepareFinalReservoirLevelData(Data::Study& study, uint yearIndex)
+void prepareFinalReservoirLevelData(Data::Study& study, uint year)
 {
     study.areas.each(
-      [&study, &yearIndex](Data::Area& area)
+      [&study, &year](Data::Area& area)
       {
           auto& finalinflows = area.hydro.finalLevelInflowsModifyer;
           auto& scenarioInitialHydroLevels = study.scenarioInitialHydroLevels;
@@ -41,9 +41,9 @@ void prepareFinalReservoirLevelData(Data::Study& study, uint yearIndex)
           auto& parameters = study.parameters;
 
           finalinflows->initializeData(
-            scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters);
+            scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
 
-          if (!finalinflows->isActive())
+          if (finalinflows->isActive())
           {
               finalinflows->updateInflows();
           }

@@ -129,10 +129,11 @@ bool FinalLevelInflowsModifyer::preCheckRuleCurves() const
 
 void FinalLevelInflowsModifyer::initializeData(const Matrix<double>& scenarioInitialHydroLevels,
                                                const Matrix<double>& scenarioFinalHydroLevels,
-                                               const Data::Parameters& parameters)
+                                               const Data::Parameters& parameters,
+                                               uint year)
 {
     fillEmpty();
-    initializeGeneralData(parameters, yearIndex);
+    initializeGeneralData(parameters, year);
     initializePerAreaData(scenarioInitialHydroLevels, scenarioFinalHydroLevels);
     initializePreCheckData();
 }
