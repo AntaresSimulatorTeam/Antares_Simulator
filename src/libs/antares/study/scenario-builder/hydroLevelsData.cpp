@@ -36,8 +36,8 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
-hydroLevelsData::hydroLevelsData(std::string& saveToINIFilePrefix) :
-addToPrefix(saveToINIFilePrefix)
+hydroLevelsData::hydroLevelsData(std::string& iniFilePrefix) :
+addToPrefix(iniFilePrefix)
 {
 }
 

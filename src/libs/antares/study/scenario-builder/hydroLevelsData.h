@@ -47,7 +47,7 @@ public:
 public:
     // Constructor
     
-    hydroLevelsData(std::string& saveToINIFilePrefix);
+    hydroLevelsData(std::string& iniFilePrefix);
 
     //! \name Data manupulation
     //@{
