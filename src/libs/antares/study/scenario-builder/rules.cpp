@@ -30,6 +30,7 @@
 #include "../study.h"
 #include "../../logs.h"
 #include "scBuilderUtils.h"
+#include "TSnumberData.h"
 
 using namespace Yuni;
 

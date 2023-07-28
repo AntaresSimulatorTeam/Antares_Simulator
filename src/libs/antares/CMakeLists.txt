@@ -36,6 +36,22 @@ set(SRC_STUDY_SCENARIO_BUILDER
 	study/scenario-builder/scBuilderUtils.h
 	study/scenario-builder/scBuilderUtils.cpp
 	study/scenario-builder/BindingConstraintsTSNumbersData.cpp
+	study/scenario-builder/NTCTSNumberData.cpp
+	study/scenario-builder/NTCTSNumberData.h
+	study/scenario-builder/BindingConstraintsTSNumbersData.h
+	study/scenario-builder/RenewableTSNumberData.h
+	study/scenario-builder/RenewableTSNumberData.cpp
+	study/scenario-builder/ThermalTSNumberData.cpp
+	study/scenario-builder/ThermalTSNumberData.h
+	study/scenario-builder/HydroTSNumberData.h
+	study/scenario-builder/HydroTSNumberData.cpp
+	study/scenario-builder/SolarTSNumberData.cpp
+	study/scenario-builder/solarTSNumberData.h
+	study/scenario-builder/WindTSNumberData.h
+	study/scenario-builder/WindTSNumberData.cpp
+	study/scenario-builder/LoadTSNumberData.h
+	study/scenario-builder/LoadTSNumberData.cpp
+	study/scenario-builder/applyToMatrix.hxx
 )
 source_group("study\\scenario builder" FILES ${SRC_MATRIX})
 
