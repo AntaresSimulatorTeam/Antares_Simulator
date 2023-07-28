@@ -65,9 +65,8 @@ public:
     int initReservoirLvlMonth;
     Area* areaPtr;
 
-    FinalLevelInflowsModifyer() : areaPtr(nullptr)
-    {
-    }
+    // Constructor
+    FinalLevelInflowsModifyer();
 
     // methods:
 

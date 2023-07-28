@@ -32,6 +32,8 @@ namespace Antares
 namespace Data
 {
 
+FinalLevelInflowsModifyer::FinalLevelInflowsModifyer() : areaPtr(nullptr) {}
+
 void FinalLevelInflowsModifyer::fillEmpty()
 {
     includeFinalReservoirLevel.push_back(false);
