@@ -152,17 +152,6 @@ source_group("study\\action\\handler\\antares study\\constraint" FILES ${SRC_STU
 add_subdirectory(study/area)
 add_subdirectory(study/parts)
 
-set(SRC_STUDY_PART_COMMON
-    study/parts/common/series.h
-	study/parts/common/series.hxx
-	study/parts/common/series.cpp
-    study/parts/common/cluster.cpp
-    study/parts/common/cluster.h
-    study/parts/common/cluster_list.h
-	study/parts/common/cluster_list.cpp
-    )
-source_group("study\\part\\common" FILES ${SRC_STUDY_PART_COMMON})
-
 set(SRC_STUDY_PART_THERMAL
 	study/parts/thermal/container.h
 	study/parts/thermal/container.hxx
@@ -536,6 +525,7 @@ target_link_libraries(libantares-core
 		benchmarking
 		xcast
 		renewable
+		parts_common
 	)
 
 import_std_libs(libantares-core)
