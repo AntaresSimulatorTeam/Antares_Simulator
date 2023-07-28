@@ -152,20 +152,6 @@ source_group("study\\action\\handler\\antares study\\constraint" FILES ${SRC_STU
 add_subdirectory(study/area)
 add_subdirectory(study/parts)
 
-set(SRC_STUDY_PART_SHORT_TERM_STORAGE
-    study/parts/short-term-storage/container.h
-    study/parts/short-term-storage/container.cpp
-    study/parts/short-term-storage/properties.h
-    study/parts/short-term-storage/properties.cpp
-    study/parts/short-term-storage/series.cpp
-    study/parts/short-term-storage/series.h
-    study/parts/short-term-storage/cluster.h
-    study/parts/short-term-storage/cluster.cpp
-	study/parts/short-term-storage/STStorageOutputCaptions.h
-	study/parts/short-term-storage/STStorageOutputCaptions.cpp
-)
-source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
-
 set(SRC_STUDY_UI
 	study/ui-runtimeinfos.h
 	study/ui-runtimeinfos.cpp
@@ -484,6 +470,7 @@ target_link_libraries(libantares-core
 		wind
 		hydro
 		thermal
+		short_term_storage
 	)
 
 import_std_libs(libantares-core)
