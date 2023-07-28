@@ -620,15 +620,6 @@ bool BindingConstraint::forceReload(bool reload) const
     return RHSTimeSeries().forceReload(reload);
 }
 
-void BindingConstraintsRepository::forceReload(bool reload) const
-{
-    if (!pList.empty())
-    {
-        for (const auto & i : pList)
-            i->forceReload(reload);
-    }
-}
-
 void BindingConstraint::markAsModified() const
 {
     RHSTimeSeries().markAsModified();

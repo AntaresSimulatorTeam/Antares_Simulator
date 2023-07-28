@@ -133,8 +133,8 @@ struct Fixture
 
         auto bc = study->bindingConstraints.add("BC_1");
         bc->group("groupTest");
-        study->bindingConstraints.groupToTimeSeriesNumbers["groupTest"] = {};
-        study->bindingConstraints.resizeAllTimeseriesNumbers(study->parameters.nbYears);
+        auto group = study->bindingConstraintsGroups.add("groupTest");
+        study->bindingConstraintsGroups.resizeAllTimeseriesNumbers(study->parameters.nbYears);
         bc->RHSTimeSeries().resize(7, 1);
 
 		BOOST_CHECK(my_rule.reset());
@@ -405,7 +405,7 @@ BOOST_AUTO_TEST_CASE(binding_constraints_group_groupTest__Load_TS_4_for_year_3__
     BOOST_CHECK_EQUAL(my_rule.binding_constraints.get("groupTest", yearNumber), tsNumber);
 
     BOOST_CHECK(my_rule.apply());
-    auto actual = study->bindingConstraints.groupToTimeSeriesNumbers["groupTest"].timeseriesNumbers[0][yearNumber];
+    auto actual = study->bindingConstraintsGroups["groupTest"]->timeSeriesNumbers().timeseriesNumbers[0][yearNumber];
     BOOST_CHECK_EQUAL(actual, tsNumber-1);
 }
 
