@@ -30,7 +30,8 @@
 #include <version.h>
 
 #include "checkLoadedInputData.h"
-#include "area.h"
+#include <antares/study/area/area.h>
+
 
 namespace Antares::Check
 {

@@ -31,7 +31,7 @@
 #include "item.h"
 #include "node.h"
 #include "../tools/tool.h"
-#include <antares/study/area.h>
+#include <antares/study/area/area.h>
 
 namespace Antares
 {

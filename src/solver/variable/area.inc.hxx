@@ -26,7 +26,7 @@
 */
 
 #include "variable.h"
-#include "area.h"
+#include <antares/study/area/area.h>
 #include <cassert>
 
 using namespace Yuni;

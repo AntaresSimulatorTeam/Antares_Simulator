@@ -26,7 +26,7 @@
 */
 
 #include <yuni/yuni.h>
-#include "area.h"
+#include <antares/study/area/area.h>
 #include <wx/sizer.h>
 #include "../../application/study.h"
 #include "../../application/main.h"
@@ -37,6 +37,7 @@
 #include <ui/common/component/spotlight.h>
 #include <ui/common/lock.h>
 #include "../spotlight/area.h"
+#include "area.h"
 
 using namespace Yuni;
 

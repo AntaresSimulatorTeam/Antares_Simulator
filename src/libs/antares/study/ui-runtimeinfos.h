@@ -30,7 +30,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include "fwd.h"
-#include "area.h"
+#include <antares/study/area/area.h>
 #include "binding_constraint/BindingConstraint.h"
 
 namespace Antares

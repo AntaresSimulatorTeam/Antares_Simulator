@@ -25,8 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "area.h"
+#include <antares/study/area/area.h>
 #include <wx/colour.h>
+#include "area.h"
 
 namespace Antares
 {

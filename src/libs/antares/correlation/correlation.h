@@ -248,7 +248,7 @@ IniFile* InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l)
 } // namespace Data
 } // namespace Antares
 
-#include "../study/area.h"
+#include <antares/study/area/area.h>
 #include "correlation.hxx"
 
 #endif /* __ANTARES_LIBS_ARRAY_CORRELATION_H__ */
