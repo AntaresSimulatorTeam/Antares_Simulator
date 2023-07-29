@@ -31,6 +31,7 @@
 #include "series.h"
 #include "../../fwd.h"
 #include "allocation.h"
+#include <memory>
 
 namespace Antares::Data
 {
