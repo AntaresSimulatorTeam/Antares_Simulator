@@ -42,6 +42,7 @@ void simulationBetweenDays(Study::Ptr study, const unsigned int firstDay, const 
 Area* addAreaToStudy(Study::Ptr study, const std::string& areaName, double loadInArea)
 {
     Area* area = study->areaAdd(areaName);
+    area->hydro.finalLevelInflowsModifier->areaPtr = area;
 
     BOOST_CHECK(area != NULL);
 

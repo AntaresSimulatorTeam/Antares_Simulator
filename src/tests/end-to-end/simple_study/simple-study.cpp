@@ -12,6 +12,7 @@ using namespace Antares::Data;
 Area* addArea(Study::Ptr pStudy, const std::string& areaName, int nbTS)
 {
     Area* pArea = pStudy->areaAdd(areaName);
+	pArea->hydro.finalLevelInflowsModifier->areaPtr = pArea;
 
     BOOST_CHECK(pArea != NULL);
 
