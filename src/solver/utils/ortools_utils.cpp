@@ -197,33 +197,6 @@ static void extract_from_MPSolver(const MPSolver* solver,
     }
 }
 
-static void change_MPSolver_objective(MPSolver* solver, const double* costs, int nbVar)
-{
-    auto& variables = solver->variables();
-    for (int idxVar = 0; idxVar < nbVar; ++idxVar)
-    {
-        auto& var = variables[idxVar];
-        solver->MutableObjective()->SetCoefficient(var, costs[idxVar]);
-    }
-}
-
-static void change_MPSolver_rhs(const MPSolver* solver,
-                                const double* rhs,
-                                const char* sens,
-                                int nbRow)
-{
-    auto& constraints = solver->constraints();
-    for (int idxRow = 0; idxRow < nbRow; ++idxRow)
-    {
-        if (sens[idxRow] == '=')
-            constraints[idxRow]->SetBounds(rhs[idxRow], rhs[idxRow]);
-        else if (sens[idxRow] == '<')
-            constraints[idxRow]->SetBounds(-MPSolver::infinity(), rhs[idxRow]);
-        else if (sens[idxRow] == '>')
-            constraints[idxRow]->SetBounds(rhs[idxRow], MPSolver::infinity());
-    }
-}
-
 std::string generateTempPath(const std::string& filename)
 {
     namespace fs = std::filesystem;
@@ -328,7 +301,12 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
 
 void ORTOOLS_ModifierLeVecteurCouts(MPSolver* solver, const double* costs, int nbVar)
 {
-    change_MPSolver_objective(solver, costs, nbVar);
+    auto& variables = solver->variables();
+    for (int idxVar = 0; idxVar < nbVar; ++idxVar)
+    {
+        auto& var = variables[idxVar];
+        solver->MutableObjective()->SetCoefficient(var, costs[idxVar]);
+    }
 }
 
 void ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* solver,
@@ -336,7 +314,16 @@ void ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* solver,
                                            const char* sens,
                                            int nbRow)
 {
-    change_MPSolver_rhs(solver, rhs, sens, nbRow);
+    auto& constraints = solver->constraints();
+    for (int idxRow = 0; idxRow < nbRow; ++idxRow)
+    {
+        if (sens[idxRow] == '=')
+            constraints[idxRow]->SetBounds(rhs[idxRow], rhs[idxRow]);
+        else if (sens[idxRow] == '<')
+            constraints[idxRow]->SetBounds(-MPSolver::infinity(), rhs[idxRow]);
+        else if (sens[idxRow] == '>')
+            constraints[idxRow]->SetBounds(rhs[idxRow], MPSolver::infinity());
+    }
 }
 
 void ORTOOLS_CorrigerLesBornes(MPSolver* solver,

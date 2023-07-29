@@ -172,6 +172,7 @@ struct PROPERTIES
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
 
     int clusterGlobalIndex;
+    std::string name;
 };
 
 using AREA_INPUT = std::vector<::ShortTermStorage::PROPERTIES>; // index is local
@@ -280,6 +281,7 @@ struct PALIERS_THERMIQUES
     std::vector<double> PmaxDUnGroupeDuPalierThermique;
     std::vector<int> DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
     std::vector<int> DureeMinimaleDArretDUnGroupeDuPalierThermique;
+    std::vector<std::string> NomsDesPaliersThermiques;
 };
 
 struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
@@ -542,6 +544,7 @@ struct PROBLEME_HEBDO
     Data::mpsExportStatus ExportMPS = Data::mpsExportStatus::NO_EXPORT;
     bool exportMPSOnError = false;
     bool ExportStructure = false;
+    bool NamedProblems = false;
 
     unsigned int HeureDansLAnnee = 0;
     bool LeProblemeADejaEteInstancie = false;

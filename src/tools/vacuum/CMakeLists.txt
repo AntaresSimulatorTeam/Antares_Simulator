@@ -42,6 +42,7 @@ set(VACUUM_LIBS
 target_link_libraries(${execname}
 		PRIVATE
 			${VACUUM_LIBS}
+			array
 		)
 
 import_std_libs(${execname})

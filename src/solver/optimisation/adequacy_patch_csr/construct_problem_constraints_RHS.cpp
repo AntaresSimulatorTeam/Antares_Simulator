@@ -82,7 +82,7 @@ void HourlyCSRProblem::setRHSnodeBalanceValue()
 
 void HourlyCSRProblem::setRHSbindingConstraintsValue()
 {
-    double* SecondMembre = problemeAResoudre_.SecondMembre;
+    std::vector<double>& SecondMembre = problemeAResoudre_.SecondMembre;
 
     // constraint:
     // user defined Binding constraints between transmission flows

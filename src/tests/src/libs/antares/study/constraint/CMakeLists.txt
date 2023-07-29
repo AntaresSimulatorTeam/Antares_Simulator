@@ -5,6 +5,9 @@ target_link_libraries(test_constraint
         libantares-core
         Boost::unit_test_framework
         )
+		
+# Storing test_constraint under the folder Unit-tests in the IDE
+set_target_properties(test_constraint PROPERTIES FOLDER Unit-tests)
 
 if(UNIX AND NOT APPLE)
     target_link_libraries(test_constraint PRIVATE stdc++fs)

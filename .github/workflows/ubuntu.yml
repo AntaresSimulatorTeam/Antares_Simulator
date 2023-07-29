@@ -12,11 +12,14 @@ on:
       - issue-*
       - release/*
       - doc/*
+  schedule:
+    - cron: '21 2 * * *'
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
+  RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || github.event_name == 'release' }}
 
 jobs:
 
@@ -82,7 +85,7 @@ jobs:
     - name: Init submodule
       run: |
           git submodule update --init src/antares-deps
-          git submodule update --init src/tests/resources/Antares_Simulator_Tests
+          git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
 
     - name: Configure push
       run: |
@@ -93,11 +96,30 @@ jobs:
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
+           -DBUILD_TOOLS=ON \
            -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
 
     - name: Build
       run: |
              cmake --build _build --config release -j2
+
+
+    # simtest
+    - name: Read simtest version
+      id: simtest-version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'simtest.json'
+        prop_path: 'version'
+
+    - name: Run named mps tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-named-mps
+        os: ${{ matrix.test-platform }}
+        variant: "named-mps"
 
     - name: Run unfeasibility-related tests
       if: ${{ env.IS_PUSH == 'true' }}
@@ -125,14 +147,6 @@ jobs:
       with:
         name: test-log
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
-
-    # simtest
-    - name: Read simtest version
-      id: simtest-version
-      uses: notiz-dev/github-action-json-property@release
-      with:
-        path: 'simtest.json'
-        prop_path: 'version'
 
     - name: Run tests about infinity on BCs RHS
       if: ${{ env.IS_PUSH == 'true' }}
@@ -175,7 +189,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run medium-tests
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -183,7 +197,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-1
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -191,7 +205,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-2
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -199,7 +213,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-3
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}

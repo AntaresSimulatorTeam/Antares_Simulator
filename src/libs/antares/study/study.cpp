@@ -38,13 +38,10 @@
 
 #include "study.h"
 #include "runtime.h"
-#include "../logs.h"
-#include "../array/correlation.h"
 #include "scenario-builder/sets.h"
 #include "correlation-updater.hxx"
 #include "scenario-builder/updater.hxx"
 #include "area/constants.h"
-#include "filter.h"
 
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
 #include <math.h>                 // For use of floor(...) and ceil(...)
@@ -780,6 +777,11 @@ Area* Study::areaAdd(const AreaName& name)
 {
     if (name.empty())
         return nullptr;
+    if (CheckForbiddenCharacterInAreaName(name))
+    {
+        logs.error() << "character '*' is forbidden in area name: `" << name << "`";
+        return nullptr;
+    }
 
     // Result
     Area* area = nullptr;
@@ -1544,35 +1546,6 @@ void Study::prepareWriter(Benchmarking::IDurationCollector* duration_collector)
 {
     resultWriter = Solver::resultWriterFactory(
       parameters.resultFormat, folderOutput, pQueueService, duration_collector);
-}
-
-bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
-                                                std::map<int, YString>& areaClusterNames)
-{
-    YString areaname = "";
-    bool resultat = true;
-    auto endarea = areas.end();
-    int count = 0;
-
-    for (auto areait = areas.begin(); areait != endarea; areait++)
-    {
-        areaname = areait->second->name;
-        logs.debug() << "areaname : " << areaname;
-
-        std::vector<YString> clusternames;
-
-        if (not areait->second->thermalClustersMinStablePowerValidity(clusternames))
-        {
-            for (auto it = clusternames.begin(); it != clusternames.end(); it++)
-            {
-                logs.debug() << "areaname : " << areaname << " ; clustername : " << (*it);
-                YString res = "Area : " + areaname + " cluster name : " + (*it).c_str();
-                areaClusterNames.insert(std::pair<int, YString>(count++, res));
-            }
-            resultat = false;
-        }
-    }
-    return resultat;
 }
 
 } // namespace Data

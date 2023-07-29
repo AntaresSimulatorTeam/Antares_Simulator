@@ -1,10 +1,58 @@
 Antares Changelog
 =================
 
+
+8.7.0-rc1 (07/2023)
+--------------------
+## Features
+* Implement --mps-export command-line option (#1404)
+
+## Bugfixes
+* Fix segfault, add !skipped to enabled constraints (#1441)
+* Use local index for thermal cluster instead of global one (#1448)
+* Only add "active" thermal clusters in binding constraints (#1447)
+* Add cluster name for 6 constraints associated to unit-commitment = accurate (#1426)
+* Fix size for assign / resize - too much memory was allocated (#1443)
+
+## Packages
+* Give Oracle Linux 8 assets a proper name instead of "unknown" (#1438)
+* Don't build tools (study-updater, etc.) by default (#1442)
+
+## For developers
+* Clarify logs & code in case of "failed year" (#1450)
+* Remove two static functions (#1440)
+* Avoid copies using std::move (#1445)
+* Memory allocation, use std::vector (#1402)
+* Fix critical code smells (#1412)
+* Named MPS: factorize variable & constraint namers (#1409)
+* Array, logs jit and correlation in makefile (#1410)
+
+## Tests
+* Tests for CR20: thermal price definition (#1364)
+
+8.7.0-beta3 (07/2023)
+--------------------
+## Bugfixes
+* Fix MPS differences related to int/unsigned surprises (#1417)
+
+8.7.0-beta2 (07/2023)
+--------------------
+## Bugfixes
+* Fix order for binding constraints of type "both" (#1413)
+
+8.7.0-beta1 (07/2023)
+--------------------
+## New features
+* Binding constraint RHS scenarization (#1219)
+* Name constraints & variables in MPS files (#1294)
+* Thermal price definition (contributed by RTE-i, #1272)
+
+TODO: bugfix, code cleaning, etc.
+
 8.6.1 (06/2023)
 --------------------
 ## Bugfixes
-* Fix major bug related to short-term storage & MRG. PRICE
+* Fix major bug related to short-term storage & MRG. PRICE (#1377)
 
 
 8.6.0 (06/2023)

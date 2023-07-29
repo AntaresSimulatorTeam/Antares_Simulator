@@ -38,14 +38,6 @@ typedef struct
 
 typedef struct
 {
-    double PuissanceThermiqueCumulee;
-    double Consommation;
-    double Reserve;
-} DONNEES_ADEQUATION;
-
-typedef struct
-{
-    DONNEES_ADEQUATION** DonneesParPays;
     RESULTATS_HORAIRES_ADEQUATION** ResultatsParPays;
     char DefaillanceEuropeenneHorsReseau; /* vaut OUI_SIM ou NON_SIM */
     char DefaillanceEuropeenneAvecReseau; /* vaut OUI_SIM ou NON_SIM */

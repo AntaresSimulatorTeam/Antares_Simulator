@@ -53,16 +53,14 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
 
     uint year = runtime.timeseriesNumberYear[numSpace];
 
-    const size_t nbDaysPerYearDouble = runtime.nbDaysPerYear * sizeof(double);
-
     // each area
     const unsigned int count = study.areas.size();
     for (unsigned int i = 0; i != count; ++i)
     {
         // Variables - the current area
-        NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = *NumeroChroniquesTireesParPays[numSpace][i];
+        NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = NumeroChroniquesTireesParPays[numSpace][i];
         auto& area = *(study.areas.byIndex[i]);
-        VALEURS_GENEREES_PAR_PAYS& ptvalgen = *(ValeursGenereesParPays[numSpace][i]);
+        VALEURS_GENEREES_PAR_PAYS& ptvalgen = ValeursGenereesParPays[numSpace][i];
 
         // Load
         {
@@ -85,7 +83,8 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             ptchro.Hydraulique
               = (data.count != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
             // Hydro - mod
-            memset(ptvalgen.HydrauliqueModulableQuotidien, 0, nbDaysPerYearDouble);
+            std::fill(ptvalgen.HydrauliqueModulableQuotidien.begin(),
+                    ptvalgen.HydrauliqueModulableQuotidien.end(),0);
         }
         // Wind
         {
@@ -191,8 +190,10 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
     //Setting 0 for time_series of width 0 is done when using the value.
     //To do this here we would have to check every BC for its width
     for (const auto& [group_name, _] : study.bindingConstraints.groupToTimeSeriesNumbers) {
-        auto number_of_ts_numbers = study.bindingConstraints.groupToTimeSeriesNumbers[group_name].timeseriesNumbers.height;
+#ifndef NDEBUG
+        const auto number_of_ts_numbers = study.bindingConstraints.groupToTimeSeriesNumbers[group_name].timeseriesNumbers.height;
         assert(year < number_of_ts_numbers); //If only 1 ts_number we suppose only one TS. Any "year" will be converted to "0" later
+#endif
         NumeroChroniquesTireesParGroup[numSpace][group_name] = study.bindingConstraints.groupToTimeSeriesNumbers[group_name].timeseriesNumbers[0][year];
     }
 }

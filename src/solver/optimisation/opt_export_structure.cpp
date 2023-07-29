@@ -34,31 +34,6 @@
 // Export de la structure des LPs
 ////////////////////////////////////////////////////////////////////
 
-namespace Antares
-{
-namespace Data
-{
-namespace Enum
-{
-template<>
-const std::initializer_list<std::string>& getNames<ExportStructDict>()
-{
-    static std::initializer_list<std::string> s_exportStructDictNames{
-      "ValeurDeNTCOrigineVersExtremite",
-      "PalierThermique",
-      "ProdHyd",
-      "DefaillancePositive",
-      "DefaillanceNegative",
-      "BilansPays",
-      "CoutOrigineVersExtremiteDeLInterconnexion",
-      "CoutExtremiteVersOrigineDeLInterconnexion",
-      "CorrespondanceVarNativesVarOptim"};
-    return s_exportStructDictNames;
-}
-} // namespace Enum
-} // namespace Data
-} // namespace Antares
-
 void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
                        PROBLEME_HEBDO* problemeHebdo)
 {
@@ -84,40 +59,6 @@ void OPT_ExportAreaName(Antares::Solver::IResultWriter::Ptr writer,
     for (uint i = 0; i < areas.size(); ++i)
     {
         Flot.appendFormat("%s\n", areas[i]->name.c_str());
-    }
-    writer->addEntryFromBuffer(filename, Flot);
-}
-
-void OPT_Export_add_variable(std::vector<std::string>& varname,
-                             int var,
-                             Antares::Data::Enum::ExportStructDict structDict,
-                             int ts, // TODO remove
-                             int firstVal,
-                             std::optional<int> secondVal)
-{
-    if ((int)varname.size() > var && varname[var].empty())
-    {
-        std::stringstream buffer;
-        buffer << var << " ";
-        buffer << Antares::Data::Enum::toString(structDict) << " ";
-        buffer << firstVal << " ";
-        if (secondVal.has_value())
-        {
-            buffer << secondVal.value() << " ";
-        }
-        buffer << ts << " ";
-        varname[var] = buffer.str();
-    }
-}
-
-void OPT_ExportVariables(const Antares::Solver::IResultWriter::Ptr writer,
-                         const std::vector<std::string>& varname,
-                         const std::string& filename)
-{
-    Yuni::Clob Flot;
-    for (auto const& line : varname)
-    {
-        Flot.appendFormat("%s\n", line.c_str());
     }
     writer->addEntryFromBuffer(filename, Flot);
 }

@@ -15,7 +15,7 @@
 void Data::BindingConstraintsRepository::clear()
 {
     pList.clear();
-    enabledConstraints_.reset();
+    activeConstraints_.reset();
 }
 
 namespace Antares::Data {
@@ -56,11 +56,38 @@ void BindingConstraintsRepository::removeConstraintsWhoseNameConstains(const Any
     pList.erase(std::remove_if(pList.begin(), pList.end(), pred), pList.end());
 }
 
-bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1, const std::shared_ptr<BindingConstraint>& s2) {
-    return s1->name() < s2->name();
+static int valueForSort(BindingConstraint::Operator op)
+{
+    switch (op)
+    {
+    case BindingConstraint::opLess:
+        return 0;
+    case BindingConstraint::opGreater:
+        return 1;
+    case BindingConstraint::opEquality:
+        return 2;
+    case BindingConstraint::opBoth:
+        return 3;
+    default:
+        return -1;
+    }
 }
 
-std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnyString &name) {
+bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1,
+                        const std::shared_ptr<BindingConstraint>& s2)
+{
+    if (s1->name() != s2->name())
+    {
+        return s1->name() < s2->name();
+    }
+    else
+    {
+        return valueForSort(s1->operatorType()) < valueForSort(s2->operatorType());
+    }
+}
+
+std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnyString &name)
+{
     auto bc = std::make_shared<BindingConstraint>();
     bc->name(name);
     pList.push_back(bc);
@@ -69,6 +96,7 @@ std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnySt
 }
 
 void BindingConstraintsRepository::resizeAllTimeseriesNumbers(unsigned int nb_years) {
+    initializeTsNumbers();
     std::for_each(groupToTimeSeriesNumbers.begin(), groupToTimeSeriesNumbers.end(), [&](auto &kvp) {
         groupToTimeSeriesNumbers[kvp.first].timeseriesNumbers.clear();
         groupToTimeSeriesNumbers[kvp.first].timeseriesNumbers.resize(1, nb_years);
@@ -313,7 +341,7 @@ void BindingConstraintsRepository::remove(const Area* area)
     RemovePredicate<Area> predicate(area);
     auto e = std::remove_if(pList.begin(), pList.end(), predicate);
     pList.erase(e, pList.end());
-    enabledConstraints_.reset();
+    activeConstraints_.reset();
 }
 
 void BindingConstraintsRepository::remove(const AreaLink* lnk)
@@ -321,7 +349,7 @@ void BindingConstraintsRepository::remove(const AreaLink* lnk)
     RemovePredicate<AreaLink> predicate(lnk);
     auto e = std::remove_if(pList.begin(), pList.end(), predicate);
     pList.erase(e, pList.end());
-    enabledConstraints_.reset();
+    activeConstraints_.reset();
 }
 
 void BindingConstraintsRepository::remove(const BindingConstraint* bc)
@@ -329,7 +357,7 @@ void BindingConstraintsRepository::remove(const BindingConstraint* bc)
     RemovePredicate<BindingConstraint> predicate(bc);
     auto e = std::remove_if(pList.begin(), pList.end(), predicate);
     pList.erase(e, pList.end());
-    enabledConstraints_.reset();
+    activeConstraints_.reset();
 }
 
 
@@ -387,17 +415,17 @@ uint64 BindingConstraintsRepository::timeSeriesNumberMemoryUsage() const {
     return m;
 }
 
-std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::enabled() const {
-    if (enabledConstraints_) {
-        return enabledConstraints_.value();
+std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeContraints() const {
+    if (activeConstraints_) {
+        return activeConstraints_.value();
     } else {
         std::vector<std::shared_ptr<BindingConstraint>> out;
         std::copy_if(pList.begin(), pList.end(), std::back_inserter(out),
                      [](const auto &bc) {
-                         return bc->enabled();
+                         return bc->isActive();
                      });
-        enabledConstraints_ = out;
-        return enabledConstraints_.value();
+        activeConstraints_ = std::move(out);
+        return activeConstraints_.value();
     }
 }
 
@@ -408,9 +436,9 @@ static bool isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)
 
 std::vector<uint> BindingConstraintsRepository::getIndicesForInequalityBindingConstraints() const
 {
-    auto enabledBCs = enabled();
-    const auto firstBC = enabledBCs.begin();
-    const auto lastBC = enabledBCs.end();
+    auto activeConstraints = activeContraints();
+    const auto firstBC = activeConstraints.begin();
+    const auto lastBC = activeConstraints.end();
 
     std::vector<uint> indices;
     for (auto bc = firstBC; bc < lastBC; bc++)

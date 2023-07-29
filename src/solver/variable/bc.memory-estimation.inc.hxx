@@ -48,7 +48,7 @@ uint64 BindingConstraints<bc_next_type>::memoryUsage() const
 template<>
 void BindingConstraints<bc_next_type>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
 {
-    u.study.bindingConstraints.eachEnabled([&](const Data::BindingConstraint& constraint) {
+    u.study.bindingConstraints.eachActive([&](const Data::BindingConstraint &constraint) {
         if (constraint.operatorType() == Data::BindingConstraint::opEquality)
             return;
 
@@ -58,16 +58,13 @@ void BindingConstraints<bc_next_type>::EstimateMemoryUsage(Data::StudyMemoryUsag
         if (constraint.operatorType() == Data::BindingConstraint::opBoth)
             bc_count = 2;
 
-        for (int i = 0; i < bc_count; i++)
-        {
-            u.requiredMemoryForOutput += sizeof(NextType) + sizeof(void*) /*overhead vector*/;
+        for (int i = 0; i < bc_count; i++) {
+            u.requiredMemoryForOutput += sizeof(NextType) + sizeof(void *) /*overhead vector*/;
             u.overheadDiskSpaceForSingleBindConstraint();
 
             // year-by-year
-            if (!u.gatheringInformationsForInput)
-            {
-                if (u.study.parameters.yearByYear)
-                {
+            if (!u.gatheringInformationsForInput) {
+                if (u.study.parameters.yearByYear) {
                     for (unsigned int i = 0; i != u.years; ++i)
                         u.overheadDiskSpaceForSingleBindConstraint();
                 }

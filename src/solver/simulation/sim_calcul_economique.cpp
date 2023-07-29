@@ -60,6 +60,7 @@ static void importShortTermStorages(
             toInsert.injectionNominalCapacity = st->properties.injectionNominalCapacity.value();
             toInsert.withdrawalNominalCapacity = st->properties.withdrawalNominalCapacity.value();
             toInsert.initialLevel = st->properties.initialLevel;
+            toInsert.name = st->properties.name;
 
             toInsert.series = st->series;
 
@@ -107,11 +108,12 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.NumberOfShortTermStorages = study.runtime->shortTermStorageCount;
 
-    auto enabledBindingConstraints = study.bindingConstraints.enabled();
-    problem.NombreDeContraintesCouplantes = enabledBindingConstraints.size();
+    auto activeContraints = study.bindingConstraints.activeContraints();
+    problem.NombreDeContraintesCouplantes = activeContraints.size();
 
     problem.ExportMPS = study.parameters.include.exportMPS;
     problem.ExportStructure = study.parameters.include.exportStructure;
+    problem.NamedProblems = study.parameters.namedProblems;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
     problem.OptimisationAvecCoutsDeDemarrage
@@ -220,9 +222,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.PaysExtremiteDeLInterconnexion[i] = link.with->index;
     }
 
-    for (uint i = 0; i < enabledBindingConstraints.size(); ++i)
+    for (uint i = 0; i < activeContraints.size(); ++i)
     {
-        auto bc = enabledBindingConstraints[i];
+        auto bc = activeContraints[i];
         CONTRAINTES_COUPLANTES& PtMat = problem.MatriceDesContraintesCouplantes[i];
         PtMat.NombreDInterconnexionsDansLaContrainteCouplante = bc->linkCount();
         PtMat.NombreDePaliersDispatchDansLaContrainteCouplante = bc->clusterCount();
@@ -273,27 +275,32 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         auto& pbPalier = problem.PaliersThermiquesDuPays[i];
         pbPalier.NombreDePaliersThermiques = area.thermal.list.size();
 
-        for (uint l = 0; l != area.thermal.list.size(); ++l)
+        for (uint clusterIndex = 0; clusterIndex != area.thermal.list.size(); ++clusterIndex)
         {
-            auto& cluster = *(area.thermal.list.byIndex[l]);
-            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[l] = NombrePaliers + l;
-            pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[l]
+            auto& cluster = *(area.thermal.list.byIndex[clusterIndex]);
+            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[clusterIndex]
+              = NombrePaliers + clusterIndex;
+            pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[clusterIndex]
               = cluster.nominalCapacityWithSpinning;
-            pbPalier.PminDuPalierThermiquePendantUneHeure[l] = cluster.minStablePower;
-            pbPalier.PminDuPalierThermiquePendantUnJour[l] = 0;
-            pbPalier.minUpDownTime[l] = cluster.minUpDownTime;
+            pbPalier.PminDuPalierThermiquePendantUneHeure[clusterIndex] = cluster.minStablePower;
+            pbPalier.PminDuPalierThermiquePendantUnJour[clusterIndex] = 0;
+            pbPalier.minUpDownTime[clusterIndex] = cluster.minUpDownTime;
 
-            pbPalier.CoutDeDemarrageDUnGroupeDuPalierThermique[l] = cluster.startupCost;
-            pbPalier.CoutDArretDUnGroupeDuPalierThermique[l] = 0;
-            pbPalier.CoutFixeDeMarcheDUnGroupeDuPalierThermique[l] = cluster.fixedCost;
-            pbPalier.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[l] = cluster.minUpTime;
-            pbPalier.DureeMinimaleDArretDUnGroupeDuPalierThermique[l] = cluster.minDownTime;
+            pbPalier.CoutDeDemarrageDUnGroupeDuPalierThermique[clusterIndex] = cluster.startupCost;
+            pbPalier.CoutDArretDUnGroupeDuPalierThermique[clusterIndex] = 0;
+            pbPalier.CoutFixeDeMarcheDUnGroupeDuPalierThermique[clusterIndex] = cluster.fixedCost;
+            pbPalier.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[clusterIndex]
+              = cluster.minUpTime;
+            pbPalier.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex]
+              = cluster.minDownTime;
 
-            pbPalier.PmaxDUnGroupeDuPalierThermique[l] = cluster.nominalCapacityWithSpinning;
-            pbPalier.pminDUnGroupeDuPalierThermique[l]
-              = (pbPalier.PmaxDUnGroupeDuPalierThermique[l] < cluster.minStablePower)
-                  ? pbPalier.PmaxDUnGroupeDuPalierThermique[l]
+            pbPalier.PmaxDUnGroupeDuPalierThermique[clusterIndex]
+              = cluster.nominalCapacityWithSpinning;
+            pbPalier.pminDUnGroupeDuPalierThermique[clusterIndex]
+              = (pbPalier.PmaxDUnGroupeDuPalierThermique[clusterIndex] < cluster.minStablePower)
+                  ? pbPalier.PmaxDUnGroupeDuPalierThermique[clusterIndex]
                   : cluster.minStablePower;
+            pbPalier.NomsDesPaliersThermiques[clusterIndex] = cluster.name().c_str();
         }
 
         NombrePaliers += area.thermal.list.size();
@@ -304,37 +311,13 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.LeProblemeADejaEteInstancie = false;
 }
 
-void SIM_InitialisationResultats()
-{
-    auto& study = *Data::Study::Current::Get();
-    const size_t sizeOfNbHoursDouble = study.runtime->nbHoursPerYear * sizeof(double);
-    const size_t sizeOfNbHoursLong = study.runtime->nbHoursPerYear * sizeof(int);
-
-    for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
-    {
-        auto& interconnexion = *ResultatsParInterconnexion[i];
-        memset(interconnexion.VariablesDualesMoyennes, 0, sizeOfNbHoursDouble);
-        memset(interconnexion.TransitMoyen, 0, sizeOfNbHoursDouble);
-        memset(interconnexion.TransitStdDev, 0, sizeOfNbHoursDouble);
-        memset(interconnexion.TransitMinimumNo, 0, sizeOfNbHoursLong);
-        memset(interconnexion.TransitMaximumNo, 0, sizeOfNbHoursLong);
-        memset(interconnexion.RenteHoraire, 0, sizeOfNbHoursDouble);
-        memset(interconnexion.TransitAnnuel, 0, study.runtime->nbYears * sizeof(double));
-        for (uint j = 0; j < study.runtime->nbHoursPerYear; j++)
-        {
-            interconnexion.TransitMinimum[j] = (double)LINFINI_ENTIER;
-            interconnexion.TransitMaximum[j] = (double)-LINFINI_ENTIER;
-        }
-    }
-}
-
 void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int PasDeTempsDebut,
                                const BindingConstraintsRepository &bindingConstraints, const uint weekFirstDay, int pasDeTemps) {
-    auto enabledConstraints = bindingConstraints.enabled();
-    const auto constraintCount = enabledConstraints.size();
+    auto activeContraints = bindingConstraints.activeContraints();
+    const auto constraintCount = activeContraints.size();
     for (unsigned constraintIndex = 0; constraintIndex != constraintCount; ++constraintIndex)
     {
-        auto bc = enabledConstraints[constraintIndex];
+        auto bc = activeContraints[constraintIndex];
         assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
         //If there is only one TS, always select it.
         const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc->group()];
@@ -595,7 +578,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
         for (uint k = 0; k < nbPays; ++k)
         {
-            auto& tsIndex = *NumeroChroniquesTireesParPays[numSpace][k];
+            auto& tsIndex = NumeroChroniquesTireesParPays[numSpace][k];
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
@@ -650,7 +633,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
                 auto& Pt
                   = problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[cluster.index];
-                auto& PtValGen = *ValeursGenereesParPays[numSpace][k];
+                auto& PtValGen = ValeursGenereesParPays[numSpace][k];
 
                 Pt.PuissanceDisponibleDuPalierThermique[j]
                   = cluster.series
@@ -692,7 +675,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
                 auto& area = *study.areas.byIndex[k];
-                uint tsIndex = (*NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
+                uint tsIndex = (NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
                 auto& inflowsmatrix = area.hydro.series->storage;
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
                 {
@@ -739,8 +722,8 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                         std::vector<double>& DGL = problem.CaracteristiquesHydrauliques[k]
                                         .MinEnergieHydrauParIntervalleOptimise;
 
-                        double* DNT
-                          = ValeursGenereesParPays[numSpace][k]->HydrauliqueModulableQuotidien;
+                        std::vector<double>& DNT
+                          = ValeursGenereesParPays[numSpace][k].HydrauliqueModulableQuotidien;
 
                         double WSL
                           = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
@@ -830,7 +813,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                     {
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
                         weekTarget_tmp += ValeursGenereesParPays[numSpace][k]
-                                            ->HydrauliqueModulableQuotidien[day];
+                                            .HydrauliqueModulableQuotidien[day];
                     }
 
                     if (weekTarget_tmp != 0.)
@@ -850,7 +833,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
                         problem.CaracteristiquesHydrauliques[k]
                           .CntEnergieH2OParIntervalleOptimise[j]
-                          = ValeursGenereesParPays[numSpace][k]->HydrauliqueModulableQuotidien[day]
+                          = ValeursGenereesParPays[numSpace][k].HydrauliqueModulableQuotidien[day]
                             * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation
                             * marginGen / weekGenerationTarget;
                     }

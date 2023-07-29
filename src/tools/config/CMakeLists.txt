@@ -43,6 +43,7 @@ target_include_directories(${execname}
 target_link_libraries(${execname}
 		PRIVATE
 			${CONFIG_LIBS}
+			array
 		)
 
 import_std_libs(${execname})

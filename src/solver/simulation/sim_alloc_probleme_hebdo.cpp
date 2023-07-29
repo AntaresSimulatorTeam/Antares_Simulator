@@ -101,9 +101,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
     problem.CorrespondanceCntNativesCntOptim.resize(NombreDePasDeTemps);
     problem.VariablesDualesDesContraintesDeNTC.resize(NombreDePasDeTemps);
 
-    auto enabledBindingConstraints = study.bindingConstraints.enabled();
-    problem.NombreDeContraintesCouplantes = enabledBindingConstraints.size();
-    problem.MatriceDesContraintesCouplantes.resize(enabledBindingConstraints.size());
+    auto activeContraints = study.bindingConstraints.activeContraints();
+    problem.NombreDeContraintesCouplantes = activeContraints.size();
+    problem.MatriceDesContraintesCouplantes.resize(activeContraints.size());
     problem.PaliersThermiquesDuPays.resize(nbPays);
     problem.CaracteristiquesHydrauliques.resize(nbPays);
     problem.previousSimulationFinalLevel.assign(nbPays, 0.);
@@ -223,7 +223,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDeDissociationDeFlux
           .assign(linkCount, 0);
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesContraintesCouplantes
-          .assign(enabledBindingConstraints.size(), 0);
+          .assign(activeContraints.size(), 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesDeDureeMinDeMarche
@@ -258,22 +258,22 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
     {
         problem.CorrespondanceCntNativesCntOptimJournalieres[k]
           .NumeroDeContrainteDesContraintesCouplantes
-          .assign(enabledBindingConstraints.size(), 0);
+          .assign(activeContraints.size(), 0);
     }
 
     problem.CorrespondanceCntNativesCntOptimHebdomadaires
         .NumeroDeContrainteDesContraintesCouplantes
-        .assign(enabledBindingConstraints.size(), 0);
+        .assign(activeContraints.size(), 0);
 
-    const auto& bindingConstraintCount = enabledBindingConstraints.size();
+    const auto& bindingConstraintCount = activeContraints.size();
     problem.ResultatsContraintesCouplantes.resize(bindingConstraintCount);
 
     for (unsigned k = 0; k < bindingConstraintCount; k++)
     {
-        auto enabledConstraints = study.bindingConstraints.enabled();
-        assert(k < enabledConstraints.size());
-        assert(enabledConstraints[k]->linkCount() < 50000000);
-        assert(enabledConstraints[k]->clusterCount() < 50000000);
+        auto activeConstraints = study.bindingConstraints.activeContraints();
+        assert(k < activeConstraints.size());
+        assert(activeConstraints[k]->linkCount() < 50000000);
+        assert(activeConstraints[k]->clusterCount() < 50000000);
 
         problem.MatriceDesContraintesCouplantes[k].SecondMembreDeLaContrainteCouplante
           .assign(NombreDePasDeTemps, 0.);
@@ -281,25 +281,25 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
           .assign(NombreDePasDeTemps, 0.);
 
         problem.MatriceDesContraintesCouplantes[k].NumeroDeLInterconnexion
-          .assign(enabledBindingConstraints[k]->linkCount(), 0);
+          .assign(activeContraints[k]->linkCount(), 0);
         problem.MatriceDesContraintesCouplantes[k].PoidsDeLInterconnexion
-          .assign(enabledBindingConstraints[k]->linkCount(), 0.);
+          .assign(activeContraints[k]->linkCount(), 0.);
         problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLInterco
-          .assign(enabledBindingConstraints[k]->linkCount(), 0);
+          .assign(activeContraints[k]->linkCount(), 0);
 
         problem.MatriceDesContraintesCouplantes[k].NumeroDuPalierDispatch
-          .assign(enabledBindingConstraints[k]->clusterCount(), 0);
+          .assign(activeContraints[k]->clusterCount(), 0);
         problem.MatriceDesContraintesCouplantes[k].PoidsDuPalierDispatch
-          .assign(enabledBindingConstraints[k]->clusterCount(), 0.);
+          .assign(activeContraints[k]->clusterCount(), 0.);
         problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLePalierDispatch
-          .assign(enabledBindingConstraints[k]->clusterCount(), 0);
+          .assign(activeContraints[k]->clusterCount(), 0);
         problem.MatriceDesContraintesCouplantes[k].PaysDuPalierDispatch
-          .assign(enabledBindingConstraints[k]->clusterCount(), 0);
+          .assign(activeContraints[k]->clusterCount(), 0);
 
 
         // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
         unsigned int nbTimeSteps;
-        switch (enabledBindingConstraints[k]->type())
+        switch (activeContraints[k]->type())
         {
             using namespace Antares::Data;
         case BindingConstraint::typeHourly:
@@ -347,6 +347,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
          .assign(nbPaliers, 0);
         problem.PaliersThermiquesDuPays[k].DureeMinimaleDArretDUnGroupeDuPalierThermique
          .assign(nbPaliers, 0);
+        problem.PaliersThermiquesDuPays[k].NomsDesPaliersThermiques.resize(nbPaliers);
 
         problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimise
           .assign(7, 0.);
@@ -509,8 +510,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
 
 void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 {
-    auto& study = *Data::Study::Current::Get();
-
     for (uint k = 0; k < problem.NombreDePasDeTemps; k++)
     {
         delete problem.CorrespondanceVarNativesVarOptim[k];

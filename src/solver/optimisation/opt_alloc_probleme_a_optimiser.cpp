@@ -55,74 +55,57 @@ using namespace Antares;
 void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                                                  int NbTermes)
 {
-    const size_t szNbVarsDouble = ProblemeAResoudre->NombreDeVariables * sizeof(double);
-    const size_t szNbVarsint = ProblemeAResoudre->NombreDeVariables * sizeof(int);
-    const size_t szNbContint = ProblemeAResoudre->NombreDeContraintes * sizeof(int);
+    const size_t nbVariables = ProblemeAResoudre->NombreDeVariables;
+    const size_t nbConstraints = ProblemeAResoudre->NombreDeContraintes;
 
-    ProblemeAResoudre->Sens
-      = (char*)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(char));
-    ProblemeAResoudre->IndicesDebutDeLigne = (int*)MemAlloc(szNbContint);
-    ProblemeAResoudre->NombreDeTermesDesLignes = (int*)MemAlloc(szNbContint);
+    ProblemeAResoudre->Sens.resize(nbConstraints);
+    ProblemeAResoudre->IndicesDebutDeLigne.assign(nbConstraints, 0);
+    ProblemeAResoudre->NombreDeTermesDesLignes.assign(nbConstraints, 0);
 
-    ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes
-      = (double*)MemAlloc(NbTermes * sizeof(double));
-    ProblemeAResoudre->IndicesColonnes = (int*)MemAlloc(NbTermes * sizeof(int));
+    ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.assign(NbTermes, 0.);
+    ProblemeAResoudre->IndicesColonnes.assign(NbTermes, 0);
 
     ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
     ProblemeAResoudre->IncrementDAllocationMatriceDesContraintes = (int)(0.1 * NbTermes);
 
-    ProblemeAResoudre->CoutQuadratique = (double*)MemAlloc(szNbVarsDouble);
-    ProblemeAResoudre->CoutLineaire = (double*)MemAlloc(szNbVarsDouble);
-    ProblemeAResoudre->TypeDeVariable = (int*)MemAlloc(szNbVarsint);
-    ProblemeAResoudre->Xmin = (double*)MemAlloc(szNbVarsDouble);
-    ProblemeAResoudre->Xmax = (double*)MemAlloc(szNbVarsDouble);
-    ProblemeAResoudre->X = (double*)MemAlloc(szNbVarsDouble);
+    ProblemeAResoudre->CoutQuadratique.assign(nbVariables, 0.);
+    ProblemeAResoudre->CoutLineaire.assign(nbVariables, 0.);
+    ProblemeAResoudre->TypeDeVariable.assign(nbVariables, 0);
+    ProblemeAResoudre->Xmin.assign(nbVariables, 0.);
+    ProblemeAResoudre->Xmax.assign(nbVariables, 0.);
+    ProblemeAResoudre->X = (double*)MemAlloc(nbVariables * sizeof(double));
 
-    ProblemeAResoudre->SecondMembre
-      = (double*)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(double));
+    ProblemeAResoudre->SecondMembre.assign(nbConstraints, 0.);
 
     ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees
-      = (double**)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(void*));
+      = (double**)MemAlloc(nbVariables * sizeof(void*));
     ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits
-      = (double**)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(void*));
+      = (double**)MemAlloc(nbVariables * sizeof(void*));
     ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux
-      = (double**)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(void*));
+      = (double**)MemAlloc(nbConstraints * sizeof(void*));
 
-    ProblemeAResoudre->CoutsMarginauxDesContraintes
-      = (double*)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(double));
-    ProblemeAResoudre->CoutsReduits = (double*)MemAlloc(szNbVarsDouble);
+    ProblemeAResoudre->CoutsMarginauxDesContraintes.assign(nbConstraints, 0.);
+    ProblemeAResoudre->CoutsReduits = (double*)MemAlloc(nbVariables * sizeof(double));
 
     ProblemeAResoudre->PositionDeLaVariable
-      = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
+      = (int*)MemAlloc(nbVariables * sizeof(int));
     ProblemeAResoudre->ComplementDeLaBase
-      = (int*)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(int));
+      = (int*)MemAlloc(nbConstraints * sizeof(int));
 
     ProblemeAResoudre->Pi
-      = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
-    ProblemeAResoudre->Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
+      = (double*)MemAlloc(nbVariables * sizeof(double));
+    ProblemeAResoudre->Colonne = (int*)MemAlloc(nbVariables * sizeof(int));
 
-    ProblemeAResoudre->NomDesVariables.resize(ProblemeAResoudre->NombreDeVariables);
-    ProblemeAResoudre->NomDesContraintes.resize(ProblemeAResoudre->NombreDeContraintes);
+    ProblemeAResoudre->NomDesVariables.resize(nbVariables);
+    ProblemeAResoudre->NomDesContraintes.resize(nbConstraints);
 }
 
 void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
-    MemFree(ProblemeAResoudre->Sens);
-    MemFree(ProblemeAResoudre->IndicesDebutDeLigne);
-    MemFree(ProblemeAResoudre->NombreDeTermesDesLignes);
-    MemFree(ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes);
-    MemFree(ProblemeAResoudre->IndicesColonnes);
-    MemFree(ProblemeAResoudre->CoutQuadratique);
-    MemFree(ProblemeAResoudre->CoutLineaire);
-    MemFree(ProblemeAResoudre->TypeDeVariable);
-    MemFree(ProblemeAResoudre->Xmin);
-    MemFree(ProblemeAResoudre->Xmax);
     MemFree(ProblemeAResoudre->X);
-    MemFree(ProblemeAResoudre->SecondMembre);
     MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees);
     MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits);
     MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux);
-    MemFree(ProblemeAResoudre->CoutsMarginauxDesContraintes);
     MemFree(ProblemeAResoudre->CoutsReduits);
 
     MemFree(ProblemeAResoudre->PositionDeLaVariable);
@@ -222,11 +205,9 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*
                 << NbTermes;
     logs.info();
 
-    ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes = (double*)MemRealloc(
-      ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes, NbTermes * sizeof(double));
+    ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.resize(NbTermes);
 
-    ProblemeAResoudre->IndicesColonnes
-      = (int*)MemRealloc(ProblemeAResoudre->IndicesColonnes, NbTermes * sizeof(int));
+    ProblemeAResoudre->IndicesColonnes.resize(NbTermes);
 
     ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
 }

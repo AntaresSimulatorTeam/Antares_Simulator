@@ -94,7 +94,6 @@ private:
     clock::time_point start_;
     clock::time_point end_;
 };
-
 bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
                          int NumIntervalle,
                          const int optimizationNumber,
@@ -107,7 +106,8 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
                                                    ProblemeAResoudre->StatutDesContraintes);
     bool PremierPassage = true;
 
-    auto ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
+    auto ProbSpx
+      = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
     auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
 
     auto study = Data::Study::Current::Get();
@@ -152,24 +152,24 @@ RESOLUTION:
             if (ortoolsUsed)
             {
                 ORTOOLS_ModifierLeVecteurCouts(
-                  solver, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
+                  solver, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
                 ORTOOLS_ModifierLeVecteurSecondMembre(solver,
-                                                      ProblemeAResoudre->SecondMembre,
-                                                      ProblemeAResoudre->Sens,
+                                                      ProblemeAResoudre->SecondMembre.data(),
+                                                      ProblemeAResoudre->Sens.data(),
                                                       ProblemeAResoudre->NombreDeContraintes);
                 ORTOOLS_CorrigerLesBornes(solver,
-                                          ProblemeAResoudre->Xmin,
-                                          ProblemeAResoudre->Xmax,
-                                          ProblemeAResoudre->TypeDeVariable,
+                                          ProblemeAResoudre->Xmin.data(),
+                                          ProblemeAResoudre->Xmax.data(),
+                                          ProblemeAResoudre->TypeDeVariable.data(),
                                           ProblemeAResoudre->NombreDeVariables);
             }
             else
             {
                 SPX_ModifierLeVecteurCouts(
-                  ProbSpx, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
+                  ProbSpx, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
                 SPX_ModifierLeVecteurSecondMembre(ProbSpx,
-                                                  ProblemeAResoudre->SecondMembre,
-                                                  ProblemeAResoudre->Sens,
+                                                  ProblemeAResoudre->SecondMembre.data(),
+                                                  ProblemeAResoudre->Sens.data(),
                                                   ProblemeAResoudre->NombreDeContraintes);
             }
             measure.tick();
@@ -180,21 +180,21 @@ RESOLUTION:
     Probleme.NombreMaxDIterations = -1;
     Probleme.DureeMaxDuCalcul = -1.;
 
-    Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire;
+    Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire.data();
     Probleme.X = ProblemeAResoudre->X;
-    Probleme.Xmin = ProblemeAResoudre->Xmin;
-    Probleme.Xmax = ProblemeAResoudre->Xmax;
+    Probleme.Xmin = ProblemeAResoudre->Xmin.data();
+    Probleme.Xmax = ProblemeAResoudre->Xmax.data();
     Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-    Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
+    Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable.data();
 
     Probleme.NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
-    Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne;
-    Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes;
-    Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes;
+    Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne.data();
+    Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes.data();
+    Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes.data();
     Probleme.CoefficientsDeLaMatriceDesContraintes
-      = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes;
-    Probleme.Sens = ProblemeAResoudre->Sens;
-    Probleme.SecondMembre = ProblemeAResoudre->SecondMembre;
+      = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.data();
+    Probleme.Sens = ProblemeAResoudre->Sens.data();
+    Probleme.SecondMembre = ProblemeAResoudre->SecondMembre.data();
 
     Probleme.ChoixDeLAlgorithme = SPX_DUAL;
 
@@ -213,7 +213,7 @@ RESOLUTION:
     Probleme.UtiliserCoutMax = NON_SPX;
     Probleme.CoutMax = 0.0;
 
-    Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes;
+    Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes.data();
     Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits;
 
 #ifndef NDEBUG
