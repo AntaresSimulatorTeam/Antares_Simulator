@@ -137,6 +137,8 @@ void FinalLevelInflowsModifier::initializeData(const Matrix<double>& scenarioIni
                                                const Data::Parameters& parameters,
                                                uint year)
 {
+    if (!areaPtr)
+        return;
     fillEmpty();
     initializeGeneralData(parameters, year);
     initializePerAreaData(scenarioInitialHydroLevels, scenarioFinalHydroLevels);
@@ -145,7 +147,7 @@ void FinalLevelInflowsModifier::initializeData(const Matrix<double>& scenarioIni
 
 bool FinalLevelInflowsModifier::isActive()
 {
-    if (areaPtr->hydro.reservoirManagement && !areaPtr->hydro.useWaterValue
+    if (areaPtr && areaPtr->hydro.reservoirManagement && !areaPtr->hydro.useWaterValue
         && !isnan(finalReservoirLevel) && !isnan(initialReservoirLevel))
     {
         return true;
