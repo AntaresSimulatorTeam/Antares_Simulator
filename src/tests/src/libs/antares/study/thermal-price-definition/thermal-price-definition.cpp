@@ -18,18 +18,12 @@
 const auto SEP = Yuni::IO::Separator;
 using namespace Antares::Data;
 
-static std::filesystem::path getFolder()
-{
-    return std::filesystem::temp_directory_path();
-}
-
 // Use RAII to simplify teardown
 struct ThermalIniFile
 {
     explicit ThermalIniFile()
     {
-        auto folder = getFolder();
-
+        const auto folder = std::filesystem::temp_directory_path();
         std::ofstream outfile(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
 
         outfile << "[area]" << std::endl;
@@ -54,7 +48,7 @@ struct ThermalIniFile
 
     ~ThermalIniFile() noexcept
     {
-        auto folder = getFolder();
+        auto folder = std::filesystem::temp_directory_path();
         std::filesystem::remove(folder / "list.ini");
     }
 };
@@ -63,7 +57,7 @@ struct SeriesFile
 {
     SeriesFile(const std::string& name, std::size_t size) : name_(name)
     {
-        auto folder = getFolder();
+        folder = std::filesystem::temp_directory_path();
         std::ofstream outfile(folder / name, std::ofstream::out | std::ofstream::trunc);
 
         for (std::size_t i = 0; i < size; i++)
@@ -74,22 +68,26 @@ struct SeriesFile
 
     ~SeriesFile()
     {
-        auto folder = getFolder();
         std::filesystem::remove(folder / name_);
     }
 
+    std::string getFolder() {
+        return folder;
+    }
+
 private:
+    std::filesystem::path folder;
     const std::string name_;
 };
 
-struct CO2CostFile : private SeriesFile
+struct CO2CostFile : public SeriesFile
 {
     CO2CostFile(std::size_t size) : SeriesFile("CO2Cost.txt", size)
     {
     }
 };
 
-struct FuelCostFile : private SeriesFile
+struct FuelCostFile : public SeriesFile
 {
     FuelCostFile(std::size_t size) : SeriesFile("fuelCost.txt", size)
     {
@@ -106,24 +104,30 @@ void fillThermalEconomicTimeSeries(ThermalCluster* c)
 // =================
 // The fixture
 // =================
-struct Fixture : private ThermalIniFile
+struct FixtureFull : private ThermalIniFile
 {
-    Fixture(const Fixture& f) = delete;
-    Fixture(const Fixture&& f) = delete;
-    Fixture& operator=(const Fixture& f) = delete;
-    Fixture& operator=(const Fixture&& f) = delete;
-    Fixture()
+    FixtureFull(const FixtureFull& f) = delete;
+    FixtureFull(const FixtureFull&& f) = delete;
+    FixtureFull& operator=(const FixtureFull& f) = delete;
+    FixtureFull& operator=(const FixtureFull&& f) = delete;
+    FixtureFull()
     {
         area = study->areaAdd("area");
         study->parameters.include.thermal.minUPTime = true;
         study->parameters.include.thermal.minStablePower = true;
         study->parameters.include.reserve.spinning = true;
+        folder = std::filesystem::temp_directory_path();
     }
 
-    std::string folder = getFolder().string();
+    std::string folder;
     ThermalClusterList clusterList;
     Area* area;
 
+    Study::Ptr study = std::make_shared<Study>();
+};
+
+struct FixtureStudyOnly
+{
     Study::Ptr study = std::make_shared<Study>();
 };
 
@@ -131,8 +135,33 @@ struct Fixture : private ThermalIniFile
 // Tests section
 // ==================
 
-BOOST_FIXTURE_TEST_SUITE(s, Fixture)
+// Here, we need the "lightweight fixture"
+BOOST_FIXTURE_TEST_SUITE(EconomicInputData_loadFromFolder, FixtureStudyOnly)
+BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_OK)
+{
+    FuelCostFile f(8760);
+    EconomicInputData eco;
+    BOOST_CHECK(eco.loadFromFolder(*study, f.getFolder()));
 
+    BOOST_CHECK_EQUAL(eco.fuelcost[0][1432], 1);
+}
+
+BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_values)
+{
+    FuelCostFile f(80);
+    EconomicInputData eco;
+    BOOST_CHECK(!eco.loadFromFolder(*study, f.getFolder()));
+}
+
+BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_working_with_many_values)
+{
+    CO2CostFile f(10000);
+    EconomicInputData eco;
+    BOOST_CHECK(eco.loadFromFolder(*study, f.getFolder()));
+}
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE(s, FixtureFull)
 BOOST_AUTO_TEST_CASE(ThermalClusterList_loadFromFolder_basic)
 {
     clusterList.loadFromFolder(*study, folder, area);
@@ -142,39 +171,7 @@ BOOST_AUTO_TEST_CASE(ThermalClusterList_loadFromFolder_basic)
     BOOST_CHECK(clusterList.mapping["area"]->variableomcost == 12.12);
 }
 
-BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_basic)
-{
-    FuelCostFile f(8760);
-
-    clusterList.loadFromFolder(*study, folder, area);
-
-    EconomicInputData eco;
-    BOOST_CHECK(eco.loadFromFolder(*study, folder));
-
-    BOOST_CHECK_EQUAL(eco.fuelcost[0][1432], 1);
-}
-
-BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_value)
-{
-    FuelCostFile f(80);
-
-    clusterList.loadFromFolder(*study, folder, area);
-
-    EconomicInputData eco;
-    BOOST_CHECK(!eco.loadFromFolder(*study, folder));
-}
-
-BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_working_with_too_much_value)
-{
-    CO2CostFile f(10000);
-
-    clusterList.loadFromFolder(*study, folder, area);
-
-    EconomicInputData eco;
-    BOOST_CHECK(eco.loadFromFolder(*study, folder));
-}
-
-BOOST_AUTO_TEST_CASE(checkCo2_basic_working)
+BOOST_AUTO_TEST_CASE(checkCo2_checkCO2CostColumnNumber_OK)
 {
     area->thermal.list.loadFromFolder(*study, folder, area);
     area->thermal.list.mapping["area"]->series = new DataSeriesCommon;
@@ -188,7 +185,7 @@ BOOST_AUTO_TEST_CASE(checkCo2_basic_working)
     BOOST_CHECK_NO_THROW(Antares::Check::checkCO2CostColumnNumber(study->areas));
 }
 
-BOOST_AUTO_TEST_CASE(checkCo2_failing_different_economic_input_width)
+BOOST_AUTO_TEST_CASE(checkCo2_checkCO2CostColumnNumber_KO)
 {
     area->thermal.list.loadFromFolder(*study, folder, area);
     area->thermal.list.mapping["area"]->series = new DataSeriesCommon;
@@ -203,7 +200,7 @@ BOOST_AUTO_TEST_CASE(checkCo2_failing_different_economic_input_width)
                       Antares::Error::IncompatibleCO2CostColumns);
 }
 
-BOOST_AUTO_TEST_CASE(checkFuelAndCo2_working_same_economic_input_and_time_series_width)
+BOOST_AUTO_TEST_CASE(checkFuelAndCo2_checkColumnNumber_OK)
 {
     area->thermal.list.loadFromFolder(*study, folder, area);
     area->thermal.list.mapping["area"]->series = new DataSeriesCommon;
@@ -256,5 +253,4 @@ BOOST_AUTO_TEST_CASE(computeMarketBidCost)
     clusterList.loadFromFolder(*study, folder, area);
     BOOST_CHECK_CLOSE(clusterList.mapping["area"]->computeMarketBidCost(1, 2, 1), 24.12, 0.001);
 }
-
 BOOST_AUTO_TEST_SUITE_END()
