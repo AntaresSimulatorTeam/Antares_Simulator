@@ -151,8 +151,8 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
 
     int NbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
-    ProblemeAResoudre->ProblemesSpx = (PROBLEMES_SIMPLEXE*)MemAlloc(sizeof(PROBLEMES_SIMPLEXE));
-    ProblemeAResoudre->ProblemesSpx->ProblemeSpx = (void**)MemAlloc(NbIntervalles * sizeof(void*));
+    ProblemeAResoudre->ProblemesSpx = new PROBLEMES_SIMPLEXE;
+    ProblemeAResoudre->ProblemesSpx->ProblemeSpx = new void*[NbIntervalles];
     for (int NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
         ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = NULL;
 
@@ -194,8 +194,8 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
     {
         if (ProblemeAResoudre->ProblemesSpx)
         {
-            MemFree(ProblemeAResoudre->ProblemesSpx->ProblemeSpx);
-            MemFree(ProblemeAResoudre->ProblemesSpx);
+            delete ProblemeAResoudre->ProblemesSpx->ProblemeSpx;
+            delete[] ProblemeAResoudre->ProblemesSpx;
         }
         delete ProblemeAResoudre;
     }
