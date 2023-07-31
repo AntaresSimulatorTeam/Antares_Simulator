@@ -24,9 +24,24 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_INIFILE_H__
-#define __ANTARES_LIBS_INIFILE_H__
+namespace Antares::Check
+{
+void checkStudyVersion(const AnyString& optStudyFolder);
 
-#include "inifile/inifile.h"
+void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
+                                   Antares::Data::HydroPricingMode hpMode);
 
-#endif /* __TOOLBOX_INIFILE_H__ */
+void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
+                                   Antares::Data::HydroPricingMode hpMode);
+
+void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,
+                                         Antares::Data::UnitCommitmentMode ucMode);
+
+void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange,
+                                     const Antares::Data::AreaList& areas);
+
+void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas);
+
+void checkFuelAndCo2ColumnNumber(const Antares::Data::AreaList& areas);
+
+} // namespace Antares::Check

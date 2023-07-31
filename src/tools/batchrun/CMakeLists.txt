@@ -39,6 +39,7 @@ set(BATCHRUN_LIBS
 		libantares-core
 		libantares-core-calendar
 		yuni-static-core
+		inifile
 		${CMAKE_THREADS_LIBS_INIT}
 )
 

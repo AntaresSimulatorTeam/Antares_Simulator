@@ -55,8 +55,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
 
     double** AdresseOuPlacerLaValeurDesVariablesOptimisees
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
-    double* Xmin = ProblemeAResoudre->Xmin;
-    double* Xmax = ProblemeAResoudre->Xmax;
+    std::vector<double>& Xmin = ProblemeAResoudre->Xmin;
+    std::vector<double>& Xmax = ProblemeAResoudre->Xmax;
 
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)

@@ -103,7 +103,7 @@ void HydroManagement::prepareInflowsScaling(uint numSpace)
       {
           uint z = area.index;
 
-          auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
+          auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
 
           auto& inflowsmatrix = area.hydro.series->storage;
           assert(inflowsmatrix.width && inflowsmatrix.height);
@@ -159,7 +159,7 @@ void HydroManagement::minGenerationScaling(uint numSpace)
       {
           uint z = area.index;
 
-          const auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
+          const auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
           auto& mingenmatrix = area.hydro.series->mingen;
           auto tsIndex = (uint)ptchro.Hydraulique;
           auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
@@ -324,7 +324,7 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
     study.areas.each([this, &numSpace, &ret](Data::Area& area)
     {
         uint z = area.index;
-        const auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
+        const auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
         auto tsIndex = (uint)ptchro.Hydraulique;
         auto tsIndexPowerCredits = (uint)ptchro.HydrauliquePowerCredits;
 
@@ -348,7 +348,7 @@ void HydroManagement::prepareNetDemand(uint numSpace)
 
         auto& scratchpad = area.scratchpad[numSpace];
 
-        auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
+        auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
 
         auto& rormatrix = area.hydro.series->ror;
         auto tsIndex = (uint)ptchro.Hydraulique;

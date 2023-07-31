@@ -17,19 +17,8 @@ set(SRC_OBJECT
 )
 source_group("object" FILES ${SRC_OBJECT})
 
-
-set(SRC_MATRIX
-	array/array1d.h
-	array/array1d.cpp
-	array/matrix.h
-	array/matrix.cpp
-	array/matrix.hxx
-	array/correlation.h
-	array/correlation.hxx
-	array/correlation.cpp)
-source_group("array" FILES ${SRC_MATRIX})
-
-
+add_subdirectory(array)
+add_subdirectory(correlation)
 
 set(SRC_STUDY_SCENARIO_BUILDER
 	study/scenario-builder/scBuilderDataInterface.h
@@ -180,6 +169,8 @@ set(SRC_AREAS
 	study/area/links.cpp
 	study/area/links.h
 	study/area/store-timeseries-numbers.cpp
+	study/area/store-timeseries-numbers.h
+	study/area/store-timeseries-numbers.hxx
 	study/area/list.cpp
 	study/area/list.hxx
 	)
@@ -322,29 +313,9 @@ set(SRC_STUDY_BINDING_CONSTRAINT
 
 source_group("study\\constraint" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
 
-set(SRC_LOGS
-	logs.h
-	logs/logs.h
-	logs/logs.hxx
-	logs/logs.cpp
-	logs/cleaner.h
-	logs/cleaner.cpp
-	)
-source_group("misc\\logs" FILES ${SRC_LOGS})
-
-set(SRC_JIT
-	# JIT (Just in Time)
-	jit.h
-	jit/jit.h
-	jit/jit.hxx
-	jit/jit.cpp
-	)
-source_group("misc\\jit" FILES ${SRC_JIT})
-
-set(SRC_INI
-	inifile/inifile.h inifile/inifile.hxx inifile/inifile.cpp  inifile.h
-	)
-source_group("misc\\inifile" FILES ${SRC_INI})
+add_subdirectory(logs)
+add_subdirectory(jit)
+add_subdirectory(inifile)
 
 set(SRC_XCAST
 	study/xcast.h
@@ -365,13 +336,7 @@ set(SRC_BENCHMARKING
 	)
 source_group("misc\\benchmarking" FILES ${SRC_BENCHMARKING})
 
-set(SRC_IO
-	io/statistics.h
-	io/statistics.cpp
-	io/file.h
-	io/file.cpp
-	)
-source_group("io" FILES ${SRC_IO})
+add_subdirectory(io)
 
 set(SRC_EXCEPTION
 	exception/AssertionError.cpp
@@ -386,6 +351,12 @@ set(SRC_EXCEPTION
 	)
 source_group("exception" FILES ${SRC_EXCEPTION})
 
+set(SRC_CHECKS
+	checks/checkApplication.cpp
+	checks/checkApplication.h
+	)
+source_group("checks" FILES ${SRC_CHECKS})
+
 set(SRC_STDCXX
 	stdcxx/demangle.cpp
     # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
@@ -395,7 +366,8 @@ source_group("stdcxx" FILES ${SRC_STDCXX})
 
 set(SRC
     config.h
-    constants.h constants.cpp
+    constants.h
+	constants.cpp
     xpansion.h
 	# Misc
 
@@ -546,6 +518,29 @@ target_include_directories(libantares-core-calendar
 			${CMAKE_SOURCE_DIR}/libs
 		)
 
+add_library(libantares-core-exceptions
+    ${SRC_EXCEPTION}
+)
+
+target_include_directories(libantares-core-exceptions
+		PRIVATE
+			${CMAKE_SOURCE_DIR}/ext/yuni/src/
+			${CMAKE_SOURCE_DIR}/libs
+		)
+
+add_library(libantares-core-checks
+    ${SRC_CHECKS}
+)
+
+target_include_directories(libantares-core-checks
+		PRIVATE
+			${CMAKE_SOURCE_DIR}/ext/yuni/src/
+			${CMAKE_SOURCE_DIR}/libs/antares/study
+            ${CMAKE_SOURCE_DIR}/libs/antares/logs
+			${CMAKE_SOURCE_DIR}/libs
+            ${CMAKE_SOURCE_DIR}/solver/writer
+)
+
 add_library(libantares-core
 	antares.h
 	${SRC}
@@ -553,8 +548,6 @@ add_library(libantares-core
 	${SRC_MEMORY}
 	${SRC_OBJECT}
 	${SRC_JIT}
-	${SRC_INI}
-	${SRC_IO}
 	${SRC_MATRIX}
 	${SRC_BENCHMARKING}
 	${SRC_AREAS}
@@ -576,7 +569,6 @@ add_library(libantares-core
 	${SRC_STUDY_PART_RENEWABLE}
     ${SRC_STUDY_PART_SHORT_TERM_STORAGE}
 	${SRC_STUDY_SCENARIO_BUILDER}
-	${SRC_EXCEPTION}
 	${SRC_STDCXX}
 )
 
@@ -596,8 +588,14 @@ target_link_libraries(libantares-core
 		yuni-static-core
 		yuni-static-uuid
 		libantares-core-calendar
+        libantares-core-exceptions
+        libantares-core-checks
 		libantares-solver-variable-info
         result_writer
+		inifile
+		io
+		array
+		correlation
 	)
 
 import_std_libs(libantares-core)

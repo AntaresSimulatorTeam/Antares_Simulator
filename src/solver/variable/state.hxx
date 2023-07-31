@@ -73,7 +73,7 @@ inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace
     area = study.areas[areaIndex];
     scratchpad = &area->scratchpad[numSpace];
     thermalCluster = nullptr;
-    timeseriesIndex = NumeroChroniquesTireesParPays[numSpace][areaIndex];
+    timeseriesIndex = &NumeroChroniquesTireesParPays[numSpace][areaIndex];
 
     switch (studyMode)
     {

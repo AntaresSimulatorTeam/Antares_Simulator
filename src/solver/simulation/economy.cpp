@@ -113,8 +113,6 @@ bool Economy::simulationBegin()
                                                  study.parameters.simplexOptimizationRange,
                                                  study.calendar);
         }
-
-        SIM_InitialisationResultats();
     }
 
     if (pProblemesHebdo)

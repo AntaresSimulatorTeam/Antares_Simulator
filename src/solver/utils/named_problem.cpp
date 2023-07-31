@@ -1,13 +1,17 @@
 #include "named_problem.h"
+#include <algorithm>
+#include <iterator>
 
 namespace Antares
 {
 namespace Optimization
 {
+
 PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                                                  const std::vector<std::string>& NomDesContraintes,
                                                  std::vector<int>& StatutDesVariables,
                                                  std::vector<int>& StatutDesContraintes) :
+
  NomDesVariables(NomDesVariables),
  NomDesContraintes(NomDesContraintes),
  StatutDesVariables(StatutDesVariables),

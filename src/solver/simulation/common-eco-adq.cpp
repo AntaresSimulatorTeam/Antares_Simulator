@@ -111,7 +111,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
         for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
         {
-            ResultatsParInterconnexion[j]->TransitMoyenRecalculQuadratique[indx]
+            transitMoyenInterconnexionsRecalculQuadratique[j][indx]
               = ntcValues.ValeurDuFlux[j];
         }
     }
@@ -130,7 +130,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
         if (inAdequacy)
             memset(scratchpad.originalMustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
 
-        auto& PtChro = *(NumeroChroniquesTireesParPays[numSpace][i]);
+        auto& PtChro = NumeroChroniquesTireesParPays[numSpace][i];
         double* mrs = scratchpad.mustrunSum;
         double* adq = scratchpad.originalMustrunSum;
 
@@ -239,9 +239,7 @@ void ComputeFlowQuad(Data::Study& study,
                 for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; ++i)
                 {
                     const uint indx = i + PasDeTempsDebut;
-                    assert(ResultatsParInterconnexion[j]);
-                    ResultatsParInterconnexion[j]->TransitMoyenRecalculQuadratique[indx] = 0;
-                    ;
+                    transitMoyenInterconnexionsRecalculQuadratique[j][indx] = 0;
                 }
             }
         }

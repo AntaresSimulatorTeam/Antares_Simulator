@@ -3,7 +3,7 @@
 //
 #define BOOST_TEST_MODULE store-timeseries-number
 #define WIN32_LEAN_AND_MEAN
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <filesystem>
 #include <fstream>
 #include "timeseries-numbers.h"

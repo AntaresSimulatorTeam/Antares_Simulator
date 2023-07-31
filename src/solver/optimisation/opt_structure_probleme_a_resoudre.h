@@ -50,18 +50,18 @@ typedef struct
                                   + NombreDeContraintesCouplantes
                                  )* NombreDePasDeTempsDUneJournee
                                   + NombreDePays contraintes de turbine */
-    char* Sens;
-    int* IndicesDebutDeLigne;
-    int* NombreDeTermesDesLignes;
-    double* CoefficientsDeLaMatriceDesContraintes;
-    int* IndicesColonnes;
+    std::string Sens;
+    std::vector<int> IndicesDebutDeLigne;
+    std::vector<int> NombreDeTermesDesLignes;
+    std::vector<double> CoefficientsDeLaMatriceDesContraintes;
+    std::vector<int> IndicesColonnes;
     int NombreDeTermesAllouesDansLaMatriceDesContraintes;
     int IncrementDAllocationMatriceDesContraintes;
     int NombreDeTermesDansLaMatriceDesContraintes;
     /* Donnees variables de la matrice des contraintes */
-    double* CoutQuadratique;
-    double* CoutLineaire;
-    int* TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
+    std::vector<double> CoutQuadratique;
+    std::vector<double> CoutLineaire;
+    std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
                              (voir le fichier spx_constantes_externes.h mais ne jamais utiliser les
                             valeurs explicites des constantes): VARIABLE_FIXE                  ,
                               VARIABLE_BORNEE_DES_DEUX_COTES ,
@@ -69,9 +69,9 @@ typedef struct
                               VARIABLE_BORNEE_SUPERIEUREMENT ,
                               VARIABLE_NON_BORNEE
                                             */
-    double* Xmin;
-    double* Xmax;
-    double* SecondMembre;
+    std::vector<double> Xmin;
+    std::vector<double> Xmax;
+    std::vector<double> SecondMembre;
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a X, il permet
        de renseigner directement les structures de description du reseau avec les
        resultats contenus dans X */
@@ -82,7 +82,7 @@ typedef struct
        il permet de renseigner directement les structures de description du reseau avec les
        resultats sur les couts marginaux */
     double** AdresseOuPlacerLaValeurDesCoutsMarginaux;
-    double* CoutsMarginauxDesContraintes;
+    std::vector<double> CoutsMarginauxDesContraintes;
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a CoutsMarginauxDesContraintes,
        il permet de renseigner directement les structures de description du reseau avec les
        resultats sur les couts reduits */

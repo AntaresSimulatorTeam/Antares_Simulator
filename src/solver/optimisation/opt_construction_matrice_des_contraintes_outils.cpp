@@ -38,8 +38,7 @@ void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
   double* Pi,
   int* Colonne,
   int NombreDeTermesDeLaContrainte,
-  char SensContrainte,
-  const std::string& NomDeLaContrainte)
+  char SensContrainte)
 {
     int& nombreDeTermes = ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes;
     int& nombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
@@ -56,7 +55,6 @@ void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
         }
     }
     ProblemeAResoudre->NombreDeTermesDesLignes[nombreDeContraintes] = NombreDeTermesDeLaContrainte;
-    ProblemeAResoudre->NomDesContraintes[nombreDeContraintes] = NomDeLaContrainte;
 
     ProblemeAResoudre->Sens[nombreDeContraintes] = SensContrainte;
     nombreDeContraintes++;

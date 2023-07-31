@@ -153,17 +153,17 @@ void BindingConstraint::weight(const AreaLink* lnk, double w)
     }
 }
 
-void BindingConstraint::weight(const ThermalCluster* clstr, double w)
+void BindingConstraint::weight(const ThermalCluster* cluster, double w)
 {
-    if (clstr)
+    if (cluster && cluster->isActive())
     {
         if (Math::Zero(w))
         {
-            auto i = pClusterWeights.find(clstr);
+            auto i = pClusterWeights.find(cluster);
             if (i != pClusterWeights.end())
                 pClusterWeights.erase(i);
         } else {
-            pClusterWeights[clstr] = w;
+            pClusterWeights[cluster] = w;
         }
     }
 }
@@ -189,27 +189,19 @@ void BindingConstraint::offset(const AreaLink* lnk, int o)
     }
 }
 
-void BindingConstraint::offset(const ThermalCluster* clstr, int o)
+void BindingConstraint::offset(const ThermalCluster* cluster, int o)
 {
-    if (clstr)
+    if (cluster && cluster->isActive())
     {
         if (Math::Zero(o))
         {
-            auto i = pClusterOffsets.find(clstr);
+            auto i = pClusterOffsets.find(cluster);
             if (i != pClusterOffsets.end())
                 pClusterOffsets.erase(i);
         }
         else
-            pClusterOffsets[clstr] = o;
+            pClusterOffsets[cluster] = o;
     }
-}
-
-    uint Antares::Data::BindingConstraint::enabledClusterCount() const
-{
-    return static_cast<uint>(std::count_if(
-            pClusterWeights.begin(), pClusterWeights.end(), [](const clusterWeightMap::value_type &i) {
-                return i.first->enabled && !i.first->mustrun;
-            }));
 }
 
 void BindingConstraint::resetToDefaultValues()
@@ -436,7 +428,7 @@ void BindingConstraint::buildFormula(String& s) const
                 s << " x (t - " << Math::Abs(pClusterOffsets.find(i->first)->second) << ')';
         }
 
-        if (!(i->first)->enabled || (i->first)->mustrun)
+        if (!i->first->isActive())
             s << " x N/A";
 
         s << ')';
@@ -472,9 +464,9 @@ bool BindingConstraint::contains(const AreaLink* lnk) const
     return (i != pLinkWeights.end());
 }
 
-bool BindingConstraint::contains(const ThermalCluster* clstr) const
+bool BindingConstraint::contains(const ThermalCluster* cluster) const
 {
-    const auto i = pClusterWeights.find(clstr);
+    const auto i = pClusterWeights.find(cluster);
     return (i != pClusterWeights.end());
 }
 
@@ -528,11 +520,11 @@ bool BindingConstraint::hasAllWeightedClustersOnLayer(size_t layerID)
 
     for (auto j = pClusterWeights.begin(); j != endWeights; ++j)
     {
-        auto *clstr = j->first;
-        if (!clstr)
+        auto *cluster = j->first;
+        if (!cluster)
             continue;
 
-        if (!clstr->isVisibleOnLayer(layerID) || j->second == 0)
+        if (!cluster->isVisibleOnLayer(layerID) || j->second == 0)
         {
             return false;
         }
@@ -546,9 +538,9 @@ double BindingConstraint::weight(const AreaLink* lnk) const
     return (i != pLinkWeights.end()) ? i->second : 0.;
 }
 
-double BindingConstraint::weight(const ThermalCluster* clstr) const
+double BindingConstraint::weight(const ThermalCluster* cluster) const
 {
-    auto i = pClusterWeights.find(clstr);
+    auto i = pClusterWeights.find(cluster);
     return (i != pClusterWeights.end()) ? i->second : 0.;
 }
 
@@ -600,7 +592,7 @@ BindingConstraintStructures BindingConstraint::initLinkArrays() const
     off = 0;
     auto cEnd = pClusterWeights.end();
     for (auto i = pClusterWeights.begin(); i != cEnd; ++i) {
-        if (i->first->enabled && !i->first->mustrun) {
+        if (i->first->isActive()) {
             clusterIndex[off] = (i->first)->index;
             clustersAreaIndex[off] = (i->first)->parentArea->index;
             clusterWeight[off] = i->second;

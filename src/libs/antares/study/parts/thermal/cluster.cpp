@@ -32,7 +32,7 @@
 #include "../../study.h"
 #include "../../memory-usage.h"
 #include "cluster.h"
-#include "../../../inifile.h"
+#include <antares/inifile/inifile.h>
 #include "../../../logs.h"
 #include "../../../utils.h"
 #include <numeric>
@@ -441,7 +441,7 @@ void Data::ThermalCluster::costGenTimeSeriesCalculationOfMarketBidAndMarginalCos
     }
 }
 
-inline double Data::ThermalCluster::computeMarketBidCost(double fuelCost,
+double Data::ThermalCluster::computeMarketBidCost(double fuelCost,
                                                          double co2EmissionFactor,
                                                          double co2cost)
 {
@@ -849,6 +849,10 @@ void ThermalCluster::checkAndCorrectAvailability()
     if (report)
         logs.warning() << "Area : " << parentArea->name << " cluster name : " << name()
                        << " available power lifted to match Pmin and Pnom requirements";
+}
+
+bool ThermalCluster::isActive() const {
+    return enabled && !mustrun;
 }
 
 } // namespace Data

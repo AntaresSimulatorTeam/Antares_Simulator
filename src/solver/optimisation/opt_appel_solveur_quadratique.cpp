@@ -70,24 +70,24 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     int ChoixToleranceParDefautSurLaComplementarite = OUI_PI;
 
     Probleme.NombreMaxDIterations = -1;
-    Probleme.CoutQuadratique = ProblemeAResoudre->CoutQuadratique;
-    Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire;
+    Probleme.CoutQuadratique = ProblemeAResoudre->CoutQuadratique.data();
+    Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire.data();
     Probleme.X = ProblemeAResoudre->X;
-    Probleme.Xmin = ProblemeAResoudre->Xmin;
-    Probleme.Xmax = ProblemeAResoudre->Xmax;
+    Probleme.Xmin = ProblemeAResoudre->Xmin.data();
+    Probleme.Xmax = ProblemeAResoudre->Xmax.data();
     Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-    Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
+    Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable.data();
 
     Probleme.VariableBinaire = (char*)ProblemeAResoudre->CoutsReduits;
 
     Probleme.NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
-    Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne;
-    Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes;
-    Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes;
+    Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne.data();
+    Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes.data();
+    Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes.data();
     Probleme.CoefficientsDeLaMatriceDesContraintes
-      = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes;
-    Probleme.Sens = ProblemeAResoudre->Sens;
-    Probleme.SecondMembre = ProblemeAResoudre->SecondMembre;
+      = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.data();
+    Probleme.Sens = ProblemeAResoudre->Sens.data();
+    Probleme.SecondMembre = ProblemeAResoudre->SecondMembre.data();
 
     Probleme.AffichageDesTraces = NON_PI;
 
@@ -102,7 +102,7 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
       = ChoixToleranceParDefautSurLaComplementarite;
     Probleme.ToleranceDeComplementarite = ToleranceSurLaComplementarite;
 
-    Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes;
+    Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes.data();
 
     Probleme.CoutsMarginauxDesContraintesDeBorneInf = ProblemeAResoudre->CoutsReduits;
     Probleme.CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre->CoutsReduits;

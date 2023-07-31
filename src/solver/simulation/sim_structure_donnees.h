@@ -27,21 +27,12 @@
 #ifndef __SOLVER_SIMULATION_DATA_STRUCTS_H__
 #define __SOLVER_SIMULATION_DATA_STRUCTS_H__
 
-typedef struct
-{
-    /* donnees communes adequation et economie */
-    /*-----------------------------------------*/
-    /* hydraulique si generation en ligne */
-    double* PuissanceHydrauliqueFilMoyenne;
-    double* PuissanceHydrauliqueFilVariance;
-    double* CoefficientHydraulicite;
-    double* ProbabiliteHydraulicite;
-} DONNEES_PAR_PAYS;
+#include <vector>
 
 typedef struct
 {
-    int* ThermiqueParPalier;
-    int* RenouvelableParPalier;
+    std::vector<int> ThermiqueParPalier;
+    std::vector<int> RenouvelableParPalier;
     int Hydraulique;
     int HydrauliquePowerCredits;
     int Eolien;
@@ -56,32 +47,19 @@ typedef struct
 
 typedef struct
 {
-    double* HydrauliqueModulableQuotidien; /* indice par jour */
-    double* AleaCoutDeProductionParPalier; /* epsilon sur le cout de production */
-    double* NiveauxReservoirsDebutJours;   // Niveaux (quotidiens) du reservoir de d�but de jour (en
-                                           // cas de gestion des reservoirs).
-    double* NiveauxReservoirsFinJours; // Niveaux (quotidiens) du reservoir de fin de jour (en cas
-                                       // de gestion des reservoirs).
+    std::vector<double> HydrauliqueModulableQuotidien; /* indice par jour */
+    std::vector<double> AleaCoutDeProductionParPalier; /* epsilon sur le cout de production */
+    std::vector<double> NiveauxReservoirsDebutJours; // Niveaux (quotidiens) du reservoir de début
+                                                     // de jour (en cas de gestion des reservoirs).
+    std::vector<double> NiveauxReservoirsFinJours; // Niveaux (quotidiens) du reservoir de fin
+                                                   // de jour (en cas de gestion des reservoirs).
+
 } VALEURS_GENEREES_PAR_PAYS;
 
 typedef struct
 {
     double* Horaire;
 } PRODUCTION_THERMIQUE;
-
-typedef struct
-{
-    double* TransitMoyen;   // UNUSED
-    double* TransitMinimum; // UNUSED
-    int* TransitMinimumNo;  // UNUSED
-    double* TransitMaximum; // UNUSED
-    int* TransitMaximumNo;  // UNUSED
-    double* TransitStdDev;  // UNUSED
-    double* TransitMoyenRecalculQuadratique;
-    double* VariablesDualesMoyennes; // UNUSED
-    double* TransitAnnuel;           // UNUSED
-    double* RenteHoraire;            // UNUSED
-} RESULTATS_PAR_INTERCONNEXION;
 
 typedef struct
 {

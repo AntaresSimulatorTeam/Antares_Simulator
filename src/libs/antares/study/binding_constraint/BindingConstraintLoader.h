@@ -6,6 +6,8 @@
 
 #include <memory>
 #include "antares/study/area/area.h"
+#include "EnvForLoading.h"
+#include "BindingConstraint.h"
 
 namespace Antares::Data {
 

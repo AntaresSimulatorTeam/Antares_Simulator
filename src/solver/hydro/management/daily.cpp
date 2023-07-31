@@ -212,7 +212,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     uint z = area.index;
     assert(z < study.areas.size());
 
-    auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
+    auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
 
     auto& inflowsmatrix = area.hydro.series->storage;
 
@@ -242,7 +242,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     auto const& maxP = maxPower[tsIndexPowerCredits < maxPower.width ? tsIndexPowerCredits : 0];
     auto const& maxE = maxPowerHours[Data::PartHydro::genMaxE];
 
-    auto const& valgen = *ValeursGenereesParPays[numSpace][z];
+    auto& valgen = ValeursGenereesParPays[numSpace][z];
 
     std::shared_ptr<DebugData> debugData(nullptr);
 

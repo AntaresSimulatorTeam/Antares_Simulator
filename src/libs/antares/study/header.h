@@ -30,7 +30,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <time.h>
-#include "../inifile.h"
+#include <antares/inifile/inifile.h>
 
 //! Default author
 #define STUDYHEADER_DEFAULT_AUTHOR "Unknown"
