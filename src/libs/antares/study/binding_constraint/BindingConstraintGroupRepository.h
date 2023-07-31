@@ -24,10 +24,10 @@ public:
 
     void fixTSNumbersWhenWidthIsOne();
 
-    std::shared_ptr<BindingConstraintGroup> operator[](std::string name);
+    BindingConstraintGroup* operator[](std::string name);
 
-    using iterator = std::vector<std::shared_ptr<BindingConstraintGroup>>::iterator;
-    using const_iterator = std::vector<std::shared_ptr<BindingConstraintGroup>>::const_iterator;
+    using iterator = std::vector<std::unique_ptr<BindingConstraintGroup>>::iterator;
+    using const_iterator = std::vector<std::unique_ptr<BindingConstraintGroup>>::const_iterator;
 
     [[nodiscard]] iterator begin();
     [[nodiscard]] const_iterator begin() const;
@@ -35,13 +35,13 @@ public:
     [[nodiscard]] iterator end();
     [[nodiscard]] const_iterator end() const;
 
-    std::shared_ptr<BindingConstraintGroup> add(const std::string& name);
+    BindingConstraintGroup* add(const std::string& name);
     void clear();
 
 private:
     [[nodiscard]] bool timeSeriesWidthConsistentInGroups() const;
 
-    std::vector<std::shared_ptr<BindingConstraintGroup>> groups_;
+    std::vector<std::unique_ptr<BindingConstraintGroup>> groups_;
 };
 
 } // DAta

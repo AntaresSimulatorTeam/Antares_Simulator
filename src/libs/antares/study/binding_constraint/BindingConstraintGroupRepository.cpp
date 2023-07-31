@@ -4,7 +4,6 @@
 
 #include "BindingConstraintGroupRepository.h"
 #include <algorithm>
-#include <numeric>
 #include <memory>
 #include "BindingConstraintsRepository.h"
 #include "BindingConstraintGroup.h"
@@ -16,15 +15,15 @@ namespace Antares::Data {
     }
 
     bool BindingConstraintGroupRepository::buildFrom(BindingConstraintsRepository &repository) {
-        for (auto constraint: repository) {
-            auto group_found = std::find_if(groups_.begin(), groups_.end(), [constraint](auto group) {
+        for (const auto& constraint: repository) {
+            auto group_found = std::find_if(groups_.begin(), groups_.end(), [constraint](const auto& group) {
                 return group->name() == constraint->group();
             });
-            std::shared_ptr<BindingConstraintGroup> group;
+            BindingConstraintGroup* group;
             if (group_found == groups_.end()) {
-                group = groups_.emplace_back(std::make_shared<BindingConstraintGroup>(constraint->group()));
+                group = groups_.emplace_back(std::make_unique<BindingConstraintGroup>(constraint->group())).get();
             } else {
-                group = *group_found;
+                group = group_found->get();
             }
             group->add(constraint);
         }
@@ -33,7 +32,7 @@ namespace Antares::Data {
     }
 
     bool BindingConstraintGroupRepository::timeSeriesWidthConsistentInGroups() const {
-        bool allConsistent = !std::any_of(groups_.begin(), groups_.end(), [](const std::shared_ptr<Antares::Data::BindingConstraintGroup> &group) {
+        bool allConsistent = !std::any_of(groups_.begin(), groups_.end(), [](const auto &group) {
                                             const auto& constraints = group->constraints();
                                             if (constraints.empty())
                                                 return false;
@@ -62,42 +61,41 @@ namespace Antares::Data {
     }
 
     void BindingConstraintGroupRepository::fixTSNumbersWhenWidthIsOne() {
-        std::for_each(groups_.begin(), groups_.end(), [](auto group) {
+        std::for_each(groups_.begin(), groups_.end(), [](auto& group) {
             group->fixTSNumbersWhenWidthIsOne();
         });
     }
 
-    std::shared_ptr<BindingConstraintGroup> BindingConstraintGroupRepository::operator[](std::string name) {
-        if (auto group = std::find_if(groups_.begin(), groups_.end(), [&name](auto group_of_constraint) {
+    BindingConstraintGroup* BindingConstraintGroupRepository::operator[](std::string name) {
+        if (auto group = std::find_if(groups_.begin(), groups_.end(), [&name](auto& group_of_constraint) {
                                         return group_of_constraint->name() == name;
                                     });
             group != groups_.end())
         {
-            return *group;
+            return group->get();
         }
         return nullptr;
     }
 
-    std::vector<std::shared_ptr<BindingConstraintGroup>>::iterator BindingConstraintGroupRepository::begin() {
+    BindingConstraintGroupRepository::iterator BindingConstraintGroupRepository::begin() {
         return groups_.begin();
     }
 
-    std::vector<std::shared_ptr<BindingConstraintGroup>>::const_iterator
+    BindingConstraintGroupRepository::const_iterator
     BindingConstraintGroupRepository::begin() const {
         return groups_.begin();
     }
 
-    std::vector<std::shared_ptr<BindingConstraintGroup>>::iterator BindingConstraintGroupRepository::end() {
+    BindingConstraintGroupRepository::iterator BindingConstraintGroupRepository::end() {
         return groups_.end();
     }
 
-    std::vector<std::shared_ptr<BindingConstraintGroup>>::const_iterator BindingConstraintGroupRepository::end() const {
+    BindingConstraintGroupRepository::const_iterator BindingConstraintGroupRepository::end() const {
         return groups_.end();
     }
 
-    std::shared_ptr<BindingConstraintGroup> BindingConstraintGroupRepository::add(const std::string& name) {
-        auto group = groups_.emplace_back(std::make_shared<BindingConstraintGroup>(name));
-        return group;
+    BindingConstraintGroup* BindingConstraintGroupRepository::add(const std::string& name) {
+        return groups_.emplace_back(std::make_unique<BindingConstraintGroup>(name)).get();
     }
 
     void BindingConstraintGroupRepository::clear() {

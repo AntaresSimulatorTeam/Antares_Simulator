@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE(WhenLoadingsConstraints_AllGroupsNonEmpty) {
     BOOST_CHECK_EQUAL(study->bindingConstraints.size(), 3);
     BOOST_CHECK_EQUAL(study->bindingConstraintsGroups.size(), 2);
     BOOST_CHECK(std::all_of(study->bindingConstraintsGroups.begin(), study->bindingConstraintsGroups.end(),
-                            [](std::shared_ptr<BindingConstraintGroup> group){
+                            [](const auto& group){
                             return !group->constraints().empty();
                             }));
 }
