@@ -641,23 +641,23 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
 #endif
     }
 
-    MemFree(NumeroDeVariableDeM);
-    MemFree(NumeroDeVariableDeMMoinsMoins);
-    MemFree(NumeroDeVariableDeMPlus);
-    MemFree(NumeroDeVariableDeMMoins);
-    MemFree(PositionDeLaVariable);
-    MemFree(CoutLineaire);
-    MemFree(Xsolution);
-    MemFree(Xmin);
-    MemFree(Xmax);
-    MemFree(TypeDeVariable);
-    MemFree(ComplementDeLaBase);
-    MemFree(IndicesDebutDeLigne);
-    MemFree(NombreDeTermesDesLignes);
-    MemFree(Sens);
-    MemFree(SecondMembre);
-    MemFree(IndicesColonnes);
-    MemFree(CoefficientsDeLaMatriceDesContraintes);
+    delete[] NumeroDeVariableDeM;
+    delete[] NumeroDeVariableDeMMoinsMoins;
+    delete[] NumeroDeVariableDeMPlus;
+    delete[] NumeroDeVariableDeMMoins;
+    delete[] PositionDeLaVariable;
+    delete[] CoutLineaire;
+    delete[] Xsolution;
+    delete[] Xmin;
+    delete[] Xmax;
+    delete[] TypeDeVariable;
+    delete[] ComplementDeLaBase;
+    delete[] IndicesDebutDeLigne;
+    delete[] NombreDeTermesDesLignes;
+    delete[] Sens;
+    delete[] SecondMembre;
+    delete[] IndicesColonnes;
+    delete[] CoefficientsDeLaMatriceDesContraintes;
 
     return;
 }
