@@ -379,8 +379,8 @@ bool Rules::apply()
             returned_status = renewable[i].apply(study_) && returned_status;
             returned_status = linksNTC[i].apply(study_) && returned_status;
         }
-        returned_status = hydroInitialLevels.applyHydroLevels(study_.scenarioInitialHydroLevels) && returned_status;
-        returned_status = hydroFinalLevels.applyHydroLevels(study_.scenarioFinalHydroLevels) && returned_status;
+        returned_status = hydroInitialLevels.apply(study_) && returned_status;
+        returned_status = hydroFinalLevels.apply(study_) && returned_status;
         returned_status = binding_constraints.apply(study_) && returned_status;
     }
     else

@@ -36,8 +36,9 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
-hydroLevelsData::hydroLevelsData(std::string& iniFilePrefix) :
-addToPrefix(iniFilePrefix)
+hydroLevelsData::hydroLevelsData(std::string& iniFilePrefix,
+                                 std::function<void(Study&, MatrixType&)> applyToTarget) :
+ addToPrefix(iniFilePrefix), applyToTarget_(applyToTarget)
 {
 }
 
@@ -90,13 +91,7 @@ void hydroLevelsData::set_value(uint x, uint y, double value)
 
 bool hydroLevelsData::apply(Study& study)
 {
-    study.scenarioInitialHydroLevels.copyFrom(pHydroLevelsRules);
-    return true;
-}
-
-bool hydroLevelsData::applyHydroLevels(Matrix<double>& scenarioHydroLevels) const
-{
-    scenarioHydroLevels.copyFrom(pHydroLevelsRules);
+    applyToTarget_(study, pHydroLevelsRules);
     return true;
 }
 

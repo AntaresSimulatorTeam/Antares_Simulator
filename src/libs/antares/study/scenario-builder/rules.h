@@ -119,10 +119,10 @@ public:
 
     //! hydro initial levels
     std::string prefixInitial = "hl,";
-    hydroLevelsData hydroInitialLevels = hydroLevelsData(prefixInitial);
+    hydroLevelsData hydroInitialLevels = hydroLevelsData(prefixInitial, initLevelApply);
     //! hydro final levels
     std::string prefixFinal = "hfl,";
-    hydroLevelsData hydroFinalLevels = hydroLevelsData(prefixFinal);
+    hydroLevelsData hydroFinalLevels = hydroLevelsData(prefixFinal, finalLevelApply);
 
     // Links NTC
     std::vector<ntcTSNumberData> linksNTC;
