@@ -54,9 +54,9 @@ struct ThermalIniFile
     }
 };
 
-struct SeriesFile
+struct TimeSeriesFile
 {
-    SeriesFile(const std::string& name, std::size_t size) : name_(name)
+    TimeSeriesFile(const std::string& name, std::size_t size) : name_(name)
     {
         folder = temp_directory_path();
         std::ofstream outfile(folder / name, std::ofstream::out | std::ofstream::trunc);
@@ -67,7 +67,7 @@ struct SeriesFile
         }
     }
 
-    ~SeriesFile()
+    ~TimeSeriesFile()
     {
         std::filesystem::remove(folder / name_);
     }
@@ -79,20 +79,6 @@ struct SeriesFile
 private:
     std::filesystem::path folder;
     const std::string name_;
-};
-
-struct CO2CostFile : public SeriesFile
-{
-    CO2CostFile(std::size_t size) : SeriesFile("CO2Cost.txt", size)
-    {
-    }
-};
-
-struct FuelCostFile : public SeriesFile
-{
-    FuelCostFile(std::size_t size) : SeriesFile("fuelCost.txt", size)
-    {
-    }
 };
 
 void fillThermalEconomicTimeSeries(ThermalCluster* c)
@@ -140,25 +126,25 @@ struct FixtureStudyOnly
 BOOST_FIXTURE_TEST_SUITE(EconomicInputData_loadFromFolder, FixtureStudyOnly)
 BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_OK)
 {
-    FuelCostFile f(8760);
+    TimeSeriesFile fuelCostTSfile("fuelCost.txt", 8760);
     EconomicInputData eco;
-    BOOST_CHECK(eco.loadFromFolder(*study, f.getFolder()));
+    BOOST_CHECK(eco.loadFromFolder(*study, fuelCostTSfile.getFolder()));
 
     BOOST_CHECK_EQUAL(eco.fuelcost[0][1432], 1);
 }
 
 BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_values)
 {
-    FuelCostFile f(80);
+    TimeSeriesFile fuelCostTSfile("fuelCost.txt", 80);
     EconomicInputData eco;
-    BOOST_CHECK(!eco.loadFromFolder(*study, f.getFolder()));
+    BOOST_CHECK(!eco.loadFromFolder(*study, fuelCostTSfile.getFolder()));
 }
 
 BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_working_with_many_values)
 {
-    CO2CostFile f(10000);
+    TimeSeriesFile co2CostTSfile("CO2Cost.txt", 10000);
     EconomicInputData eco;
-    BOOST_CHECK(eco.loadFromFolder(*study, f.getFolder()));
+    BOOST_CHECK(eco.loadFromFolder(*study, co2CostTSfile.getFolder()));
 }
 BOOST_AUTO_TEST_SUITE_END()
 
@@ -229,8 +215,8 @@ BOOST_AUTO_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMargin
 
 BOOST_AUTO_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour)
 {
-    FuelCostFile fuel(8760);
-    CO2CostFile co2(8760);
+    TimeSeriesFile fuel("fuelCost.txt", 8760);
+    TimeSeriesFile co2("CO2Cost.txt", 8760);
 
     clusterList.loadFromFolder(*study, folder, area);
     clusterList.mapping["some cluster"]->modulation.reset(1, 8760);
