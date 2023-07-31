@@ -73,28 +73,22 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
     ProblemeAResoudre->TypeDeVariable.assign(nbVariables, 0);
     ProblemeAResoudre->Xmin.assign(nbVariables, 0.);
     ProblemeAResoudre->Xmax.assign(nbVariables, 0.);
-    ProblemeAResoudre->X = (double*)MemAlloc(nbVariables * sizeof(double));
+    ProblemeAResoudre->X.assign(nbVariables, 0.);
 
     ProblemeAResoudre->SecondMembre.assign(nbConstraints, 0.);
 
-    ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees
-      = (double**)MemAlloc(nbVariables * sizeof(void*));
-    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits
-      = (double**)MemAlloc(nbVariables * sizeof(void*));
-    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux
-      = (double**)MemAlloc(nbConstraints * sizeof(void*));
+    ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees.assign(nbVariables, nullptr);
+    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits.assign(nbVariables, nullptr);
+    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux.assign(nbConstraints, nullptr);
 
     ProblemeAResoudre->CoutsMarginauxDesContraintes.assign(nbConstraints, 0.);
-    ProblemeAResoudre->CoutsReduits = (double*)MemAlloc(nbVariables * sizeof(double));
+    ProblemeAResoudre->CoutsReduits.assign(nbVariables, 0.);
 
-    ProblemeAResoudre->PositionDeLaVariable
-      = (int*)MemAlloc(nbVariables * sizeof(int));
-    ProblemeAResoudre->ComplementDeLaBase
-      = (int*)MemAlloc(nbConstraints * sizeof(int));
+    ProblemeAResoudre->PositionDeLaVariable.assign(nbVariables, 0);
+    ProblemeAResoudre->ComplementDeLaBase.assign(nbConstraints, 0);
 
-    ProblemeAResoudre->Pi
-      = (double*)MemAlloc(nbVariables * sizeof(double));
-    ProblemeAResoudre->Colonne = (int*)MemAlloc(nbVariables * sizeof(int));
+    ProblemeAResoudre->Pi.assign(nbVariables, 0.);
+    ProblemeAResoudre->Colonne.assign(nbVariables, 0);
 
     ProblemeAResoudre->NomDesVariables.resize(nbVariables);
     ProblemeAResoudre->NomDesContraintes.resize(nbConstraints);
@@ -102,17 +96,6 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
 
 void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
-    MemFree(ProblemeAResoudre->X);
-    MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees);
-    MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits);
-    MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux);
-    MemFree(ProblemeAResoudre->CoutsReduits);
-
-    MemFree(ProblemeAResoudre->PositionDeLaVariable);
-    MemFree(ProblemeAResoudre->ComplementDeLaBase);
-    MemFree(ProblemeAResoudre->Pi);
-    MemFree(ProblemeAResoudre->Colonne);
-
     ProblemeAResoudre->NomDesVariables.clear();
     ProblemeAResoudre->NomDesContraintes.clear();
 }

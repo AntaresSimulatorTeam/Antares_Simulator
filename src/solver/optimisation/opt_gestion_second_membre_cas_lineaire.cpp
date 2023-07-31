@@ -74,7 +74,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
 
     std::vector<double>& SecondMembre = ProblemeAResoudre->SecondMembre;
 
-    double** AdresseOuPlacerLaValeurDesCoutsMarginaux
+    std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
 
     int NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
