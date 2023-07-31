@@ -353,17 +353,17 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     NombreDeContraintes += NombreDePasDeTemps;
 
     auto PositionDeLaVariable = new int[NombreDeVariables];
-    auto CoutLineaire = (double*)MemAlloc(NombreDeVariables * sizeof(double));
-    auto Xsolution = (double*)MemAlloc(NombreDeVariables * sizeof(double));
-    auto Xmin = (double*)MemAlloc(NombreDeVariables * sizeof(double));
-    auto Xmax = (double*)MemAlloc(NombreDeVariables * sizeof(double));
+    auto CoutLineaire = new double[NombreDeVariables];
+    auto Xsolution = new double[NombreDeVariables];
+    auto Xmin = new double[NombreDeVariables];
+    auto Xmax = new double[NombreDeVariables];
     auto TypeDeVariable = new int[NombreDeVariables];
 
     auto ComplementDeLaBase = new int[NombreDeContraintes];
     auto IndicesDebutDeLigne = new int[NombreDeContraintes];
     auto NombreDeTermesDesLignes = new int[NombreDeContraintes];
-    auto Sens = (char*)MemAlloc(NombreDeContraintes * sizeof(char));
-    auto SecondMembre = (double*)MemAlloc(NombreDeContraintes * sizeof(double));
+    auto Sens = new char[NombreDeContraintes];
+    auto SecondMembre = new double[NombreDeContraintes];
 
     int NbTermesMatrice = 0;
     NbTermesMatrice += 4 * NombreDePasDeTemps;
@@ -375,7 +375,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
 
     auto IndicesColonnes = new int[NbTermesMatrice];
     auto CoefficientsDeLaMatriceDesContraintes
-      = (double*)MemAlloc(NbTermesMatrice * sizeof(double));
+      = new double[NbTermesMatrice];
 
     if (NumeroDeVariableDeM == nullptr || NumeroDeVariableDeMMoinsMoins == nullptr
         || NumeroDeVariableDeMPlus == nullptr || NumeroDeVariableDeMMoins == nullptr
