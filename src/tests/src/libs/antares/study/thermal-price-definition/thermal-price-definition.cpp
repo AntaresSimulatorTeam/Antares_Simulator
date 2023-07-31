@@ -17,13 +17,14 @@
 
 const auto SEP = Yuni::IO::Separator;
 using namespace Antares::Data;
+using std::filesystem::temp_directory_path;
 
 // Use RAII to simplify teardown
 struct ThermalIniFile
 {
     explicit ThermalIniFile()
     {
-        const auto folder = std::filesystem::temp_directory_path();
+        const auto folder = temp_directory_path();
         std::ofstream outfile(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
 
         outfile << "[area]" << std::endl;
@@ -48,7 +49,7 @@ struct ThermalIniFile
 
     ~ThermalIniFile() noexcept
     {
-        auto folder = std::filesystem::temp_directory_path();
+        auto folder = temp_directory_path();
         std::filesystem::remove(folder / "list.ini");
     }
 };
@@ -57,7 +58,7 @@ struct SeriesFile
 {
     SeriesFile(const std::string& name, std::size_t size) : name_(name)
     {
-        folder = std::filesystem::temp_directory_path();
+        folder = temp_directory_path();
         std::ofstream outfile(folder / name, std::ofstream::out | std::ofstream::trunc);
 
         for (std::size_t i = 0; i < size; i++)
@@ -72,7 +73,7 @@ struct SeriesFile
     }
 
     std::string getFolder() {
-        return folder;
+        return folder.string();
     }
 
 private:
@@ -116,7 +117,7 @@ struct FixtureFull : private ThermalIniFile
         study->parameters.include.thermal.minUPTime = true;
         study->parameters.include.thermal.minStablePower = true;
         study->parameters.include.reserve.spinning = true;
-        folder = std::filesystem::temp_directory_path();
+        folder = temp_directory_path().string();
     }
 
     std::string folder;
