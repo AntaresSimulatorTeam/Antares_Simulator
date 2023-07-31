@@ -62,6 +62,9 @@ void singleAreaStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer, const A
     case timeSeriesTransmissionCapacities:
         storeTimeseriesNumbersForTransmissionCapacities(writer, area);
         break;
+    case timeSeriesHydroPowerCredits:
+        storeTimeseriesNumbersForHydroPowerCredits(writer, area);
+        break;
     case timeSeriesCount:
     default:
         break;
