@@ -312,7 +312,7 @@ Fixture::Fixture()
     configureLinkCapacities(link);
     addClusterToArea(area1, "some cluster");
 
-    BC = addBindingConstraints(study, "BC1", "Group1");
+    BC = addBindingConstraints(*(study), "BC1", "Group1");
     BC->weight(link, 1);
     BC->enabled(true);
     study->bindingConstraintsGroups.buildFrom(study->bindingConstraints);
