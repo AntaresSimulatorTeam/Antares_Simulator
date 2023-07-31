@@ -317,7 +317,7 @@ bool Rules::readBindingConstraints(const AreaName::Vector &splitKey, String valu
     return true;
 }
 
-bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool updaterMode = false)
+bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool updaterMode)
 {
     if (splitKey.size() <= 2)
         return false;

@@ -84,7 +84,7 @@ public:
     /*!
     ** \brief Load information from a single line (extracted from an INI file)
     */
-    bool readLine(const AreaName::Vector& splitKey, String value, bool updaterMode);
+    bool readLine(const AreaName::Vector& splitKey, String value, bool updaterMode = false);
 
     /*!
     ** \brief Export the data into a mere INI file
