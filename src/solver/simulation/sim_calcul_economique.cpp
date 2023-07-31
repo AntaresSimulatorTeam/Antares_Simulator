@@ -689,7 +689,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 auto& inflowsmatrix = area.hydro.series->storage;
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
 
-                uint tsIndexPowerCredits = (*NumeroChroniquesTireesParPays[numSpace][k]).HydrauliquePowerCredits;
+                uint tsIndexPowerCredits = (NumeroChroniquesTireesParPays[numSpace][k]).HydrauliquePowerCredits;
                 auto& maxgenmatrix = area.hydro.series->maxgen;
                 auto const& srcmaxgen = maxgenmatrix[tsIndexPowerCredits < maxgenmatrix.width ? tsIndexPowerCredits : 0];
                 auto& maxpumpmatrix = area.hydro.series->maxpump;

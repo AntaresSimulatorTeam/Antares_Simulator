@@ -134,7 +134,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
     uint loop = 100; // arbitrary - maximum number of iterations
 
     // Pmax
-    uint tsIndex = (*NumeroChroniquesTireesParPays[numSpace][index]).HydrauliquePowerCredits;
+    uint tsIndex = (NumeroChroniquesTireesParPays[numSpace][index]).HydrauliquePowerCredits;
     auto& maxgenmatrix = area.hydro.series->maxgen;
     const auto& P = maxgenmatrix[tsIndex < maxgenmatrix.width ? tsIndex : 0];
 
