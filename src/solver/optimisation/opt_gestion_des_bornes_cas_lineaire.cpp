@@ -98,9 +98,9 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
                                   const int optimizationNumber)
 {
     // OUTPUT
-    double* Xmin = problemeHebdo->ProblemeAResoudre->Xmin;
-    double* Xmax = problemeHebdo->ProblemeAResoudre->Xmax;
-    double** AdresseOuPlacerLaValeurDesVariablesOptimisees
+    std::vector<double>& Xmin = problemeHebdo->ProblemeAResoudre->Xmin;
+    std::vector<double>& Xmax = problemeHebdo->ProblemeAResoudre->Xmax;
+    std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
       = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
     const bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
@@ -162,9 +162,9 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                                          const int PremierPdtDeLIntervalle,
                                          const int DernierPdtDeLIntervalle)
 {
-    double* Xmin = problemeHebdo->ProblemeAResoudre->Xmin;
-    double* Xmax = problemeHebdo->ProblemeAResoudre->Xmax;
-    double** AddressForVars
+    std::vector<double>& Xmin = problemeHebdo->ProblemeAResoudre->Xmin;
+    std::vector<double>& Xmax = problemeHebdo->ProblemeAResoudre->Xmax;
+    std::vector<double*>& AddressForVars
       = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
     int weekFirstHour = problemeHebdo->weekInTheYear * 168;
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
@@ -225,13 +225,13 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    double** AdresseOuPlacerLaValeurDesVariablesOptimisees
+    std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
-    double** AdresseOuPlacerLaValeurDesCoutsReduits
+    std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsReduits
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits;
-    double* Xmin = ProblemeAResoudre->Xmin;
-    double* Xmax = ProblemeAResoudre->Xmax;
-    int* TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
+    std::vector<double>& Xmin = ProblemeAResoudre->Xmin;
+    std::vector<double>& Xmax = ProblemeAResoudre->Xmax;
+    std::vector<int>& TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
 
     for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
     {

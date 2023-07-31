@@ -21,7 +21,9 @@ target_include_directories(lib-matrix
 									"${CMAKE_CURRENT_SOURCE_DIR}"
 									"${CMAKE_CURRENT_SOURCE_DIR}/logs"
 									"${CMAKE_SOURCE_DIR}/ext/yuni/src"
-)
+									"${CMAKE_SOURCE_DIR}/tests/src/libs"
+
+		)
 
 # Storing lib-matrix under the folder Unit-tests in the IDE
 set_target_properties(lib-matrix PROPERTIES FOLDER Unit-tests)
@@ -43,7 +45,9 @@ target_include_directories(tests-matrix-save
 									"${CMAKE_CURRENT_SOURCE_DIR}/logs"
 									"${CMAKE_CURRENT_SOURCE_DIR}/jit"
 									"${CMAKE_SOURCE_DIR}/ext/yuni/src"
-)
+									"${CMAKE_SOURCE_DIR}/tests/src/libs"
+
+		)
 
 target_link_libraries(tests-matrix-save
 						PRIVATE
@@ -74,6 +78,7 @@ target_include_directories(tests-matrix-load
 									"${CMAKE_CURRENT_SOURCE_DIR}/logs"
 									"${CMAKE_CURRENT_SOURCE_DIR}/jit"
 									"${CMAKE_SOURCE_DIR}/ext/yuni/src"
+									"${CMAKE_SOURCE_DIR}/tests/src/libs"
 )
 
 

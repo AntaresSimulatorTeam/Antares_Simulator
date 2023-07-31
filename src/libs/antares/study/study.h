@@ -49,8 +49,8 @@
 #include "load-options.h"
 #include "../date.h"
 #include "layerdata.h"
+#include "antares/correlation/correlation.h"
 #include "area/store-timeseries-numbers.h"
-#include "antares/array/correlation.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
 #include <memory>

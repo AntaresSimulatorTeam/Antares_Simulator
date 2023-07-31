@@ -53,15 +53,15 @@ typedef struct
     std::string Sens;
     std::vector<int> IndicesDebutDeLigne;
     std::vector<int> NombreDeTermesDesLignes;
-    double* CoefficientsDeLaMatriceDesContraintes;
-    int* IndicesColonnes;
+    std::vector<double> CoefficientsDeLaMatriceDesContraintes;
+    std::vector<int> IndicesColonnes;
     int NombreDeTermesAllouesDansLaMatriceDesContraintes;
     int IncrementDAllocationMatriceDesContraintes;
     int NombreDeTermesDansLaMatriceDesContraintes;
     /* Donnees variables de la matrice des contraintes */
-    double* CoutQuadratique;
-    double* CoutLineaire;
-    int* TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
+    std::vector<double> CoutQuadratique;
+    std::vector<double> CoutLineaire;
+    std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
                              (voir le fichier spx_constantes_externes.h mais ne jamais utiliser les
                             valeurs explicites des constantes): VARIABLE_FIXE                  ,
                               VARIABLE_BORNEE_DES_DEUX_COTES ,
@@ -69,25 +69,25 @@ typedef struct
                               VARIABLE_BORNEE_SUPERIEUREMENT ,
                               VARIABLE_NON_BORNEE
                                             */
-    double* Xmin;
-    double* Xmax;
-    double* SecondMembre;
+    std::vector<double> Xmin;
+    std::vector<double> Xmax;
+    std::vector<double> SecondMembre;
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a X, il permet
        de renseigner directement les structures de description du reseau avec les
        resultats contenus dans X */
-    double** AdresseOuPlacerLaValeurDesVariablesOptimisees;
+    std::vector<double*> AdresseOuPlacerLaValeurDesVariablesOptimisees;
     /* Resultat */
-    double* X;
+    std::vector<double> X;
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a CoutsMarginauxDesContraintes,
        il permet de renseigner directement les structures de description du reseau avec les
        resultats sur les couts marginaux */
-    double** AdresseOuPlacerLaValeurDesCoutsMarginaux;
-    double* CoutsMarginauxDesContraintes;
+    std::vector<double*> AdresseOuPlacerLaValeurDesCoutsMarginaux;
+    std::vector<double> CoutsMarginauxDesContraintes;
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a CoutsMarginauxDesContraintes,
        il permet de renseigner directement les structures de description du reseau avec les
        resultats sur les couts reduits */
-    double** AdresseOuPlacerLaValeurDesCoutsReduits;
-    double* CoutsReduits;
+    std::vector<double*> AdresseOuPlacerLaValeurDesCoutsReduits;
+    std::vector<double> CoutsReduits;
     /* En Entree ou en Sortie */
     int ExistenceDUneSolution; /* En sortie, vaut :
                                    OUI_SPX s'il y a une solution,
@@ -100,12 +100,12 @@ typedef struct
 
     PROBLEMES_SIMPLEXE* ProblemesSpx;
 
-    int* PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    int* ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    std::vector<int> PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    std::vector<int> ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
 
     /* Vecteurs de travail pour contruire la matrice des contraintes lineaires */
-    double* Pi;
-    int* Colonne;
+    std::vector<double> Pi;
+    std::vector<int> Colonne;
 
     /* Nommage des variables & contraintes */
     std::vector<std::string> NomDesVariables;

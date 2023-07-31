@@ -28,7 +28,7 @@ struct /*YUNI_DECL*/ None
 };
 
 // Forward declaration for the base class String
-template<uint ChunkSizeT = 128, bool ExpandableT = true>
+template<unsigned ChunkSizeT = 128, bool ExpandableT = true>
 class /*YUNI_DECL*/ CString;
 
 //! Standard string implementation

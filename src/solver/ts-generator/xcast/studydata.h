@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/xcast/xcast.h>
-#include <antares/array/correlation.h>
+#include <antares/correlation/correlation.h>
 
 namespace Antares
 {

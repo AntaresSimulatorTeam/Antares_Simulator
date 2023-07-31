@@ -36,7 +36,7 @@ jobs:
 
     - name: Init submodule
       run: |
-          git submodule update --init --recursive src/antares-deps src/tests/resources/Antares_Simulator_Tests
+          git submodule update --init --remote src/antares-deps src/tests/resources/Antares_Simulator_Tests
 
     - name: Download & extract precompiled deps at root
       run: |
@@ -68,6 +68,8 @@ jobs:
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
+           -DBUILD_TOOLS=OFF \
+           -DBUILD_UI=OFF \
            -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install \
 
     - name: Build

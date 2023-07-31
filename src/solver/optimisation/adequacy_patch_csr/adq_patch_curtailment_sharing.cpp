@@ -198,8 +198,8 @@ void HourlyCSRProblem::buildProblemConstraintsRHS()
 void HourlyCSRProblem::setProblemCost()
 {
     logs.debug() << "[CSR] cost";
-    std::fill_n(problemeAResoudre_.CoutLineaire, problemeAResoudre_.NombreDeVariables, 0.);
-    std::fill_n(problemeAResoudre_.CoutQuadratique, problemeAResoudre_.NombreDeVariables, 0.);
+    problemeAResoudre_.CoutLineaire.assign(problemeAResoudre_.NombreDeVariables, 0.);
+    problemeAResoudre_.CoutQuadratique.assign(problemeAResoudre_.NombreDeVariables, 0.);
 
     setQuadraticCost();
     if (adqPatchParams_.curtailmentSharing.includeHurdleCost)
