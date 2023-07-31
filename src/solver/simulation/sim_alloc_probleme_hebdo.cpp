@@ -140,10 +140,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         problem.ValeursDeNTCRef[k].ValeurDeNTCOrigineVersExtremite.assign(linkCount, 0.);
         problem.ValeursDeNTCRef[k].ValeurDeNTCExtremiteVersOrigine.assign(linkCount, 0.);
         problem.ValeursDeNTCRef[k].ValeurDeLoopFlowOrigineVersExtremite.assign(linkCount, 0.);
-        problem.ValeursDeNTCRef[k].ValeurDuFlux.assign(linkCount, 0.);
-        problem.ValeursDeNTCRef[k].ValeurDuFluxUp.assign(linkCount, 0.);
-        problem.ValeursDeNTCRef[k].ValeurDuFluxDown.assign(linkCount, 0.);
-        problem.ValeursDeNTCRef[k].ResistanceApparente.assign(linkCount, 0.);
 
         // TODO VP: Remove this allocation
         problem.CorrespondanceVarNativesVarOptim[k]
