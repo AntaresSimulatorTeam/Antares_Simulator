@@ -68,7 +68,7 @@ public:
     {
     }
 
-    ~fake_buffer_factory(){};
+    ~fake_buffer_factory() = default;
 
     void matrix_to_build_buffer_with(Matrix_easy_to_fill<T, ReadWriteT>* mtx)
     {

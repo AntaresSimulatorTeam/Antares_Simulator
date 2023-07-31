@@ -148,8 +148,8 @@ retrieveLinkResults(const std::shared_ptr<ISimulation<Economy>>& simulation, Are
 
 double getLinkFlowAthour(const std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int hour)
 {
-    // There is a problem here : 
-    //    we cannot easly retrieve the hourly flow for a link and a year : 
+    // There is a problem here :
+    //    we cannot easly retrieve the hourly flow for a link and a year :
     //    - Functions retrieveHourlyResultsForCurrentYear are not coded everywhere it should.
     //    - Even if those functions were correctly implemented, there is another problem :
     //      Each year results erase results of previous year, how can we retrieve results of year 1
@@ -240,10 +240,10 @@ void BCgroupScenarioBuilder::yearGetsTSnumber(std::string groupName, unsigned in
 class SimulationHandler
 {
 public:
-    SimulationHandler(std::shared_ptr<Study> study) 
+    SimulationHandler(std::shared_ptr<Study> study)
         : study_(study)
     {}
-    ~SimulationHandler();
+    ~SimulationHandler() = default;
     void create();
     void run() { simulation_->run(); }
     std::shared_ptr<ISimulation<Economy>> get() { return simulation_; }
@@ -266,10 +266,6 @@ void SimulationHandler::create()
 
     // Allocate arrays for time series
     SIM_AllocationTableaux();
-}
-
-SimulationHandler::~SimulationHandler()
-{
 }
 
 // ===============
@@ -353,7 +349,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
 
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
-        
+
     simulation->create();
     giveWeigthOnlyToYear(0);
     simulation->run();
@@ -365,7 +361,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
 
 BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
 {
-    // Study parameters varying depending on the test 
+    // Study parameters varying depending on the test
     unsigned int nbYears = 1;
     setNumberMCyears(study, nbYears);
 
@@ -378,7 +374,7 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
 
     double rhsValue = 50.;
     bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
-  
+
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
 
@@ -394,7 +390,7 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
 
 BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
 {
-    // Study parameters varying depending on the test 
+    // Study parameters varying depending on the test
     unsigned int nbYears = 1;
     setNumberMCyears(study, nbYears);
 
@@ -422,7 +418,7 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
 
 BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
 {
-    // Study parameters varying depending on the test 
+    // Study parameters varying depending on the test
     unsigned int nbYears = 1;
     setNumberMCyears(study, nbYears);
 
@@ -449,7 +445,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
 
 BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
 {
-    // Study parameters varying depending on the test 
+    // Study parameters varying depending on the test
     unsigned int nbYears = 1;
     setNumberMCyears(study, nbYears);
 
