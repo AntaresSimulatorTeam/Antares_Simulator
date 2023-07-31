@@ -15,7 +15,7 @@ class BindingConstraintsTimeSeriesNumbersWriter: public ITimeSeriesNumbersWriter
 public:
     explicit BindingConstraintsTimeSeriesNumbersWriter(std::shared_ptr<Antares::Solver::IResultWriter> resultWriter);
     BindingConstraintsTimeSeriesNumbersWriter() = default;
-    void write(const Data::BindingConstraintGroupRepository &list) override;
+    void write(const Data::BindingConstraintGroupRepository &bindingConstraintGroupRepository) override;
 
 private:
     std::shared_ptr<IResultWriter> writer_;
