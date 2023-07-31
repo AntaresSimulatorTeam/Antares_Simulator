@@ -94,12 +94,6 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
     ProblemeAResoudre->NomDesContraintes.resize(nbConstraints);
 }
 
-void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
-{
-    ProblemeAResoudre->NomDesVariables.clear();
-    ProblemeAResoudre->NomDesContraintes.clear();
-}
-
 static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int mxPaliers)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
@@ -169,9 +163,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
 
 void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
-    auto ProblemeAResoudre
-      = (PROBLEME_ANTARES_A_RESOUDRE*)MemAllocMemset(sizeof(PROBLEME_ANTARES_A_RESOUDRE));
-    problemeHebdo->ProblemeAResoudre = ProblemeAResoudre;
+    problemeHebdo->ProblemeAResoudre = new PROBLEME_ANTARES_A_RESOUDRE;
 
     int mxPaliers = OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(problemeHebdo);
 
@@ -200,13 +192,11 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     if (ProblemeAResoudre)
     {
-        OPT_FreeOptimizationData(ProblemeAResoudre);
         if (ProblemeAResoudre->ProblemesSpx)
         {
             MemFree(ProblemeAResoudre->ProblemesSpx->ProblemeSpx);
             MemFree(ProblemeAResoudre->ProblemesSpx);
         }
-        MemFree(ProblemeAResoudre);
-        ProblemeAResoudre = nullptr;
+        delete ProblemeAResoudre;
     }
 }
