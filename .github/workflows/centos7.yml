@@ -69,6 +69,7 @@ jobs:
            -DBUILD_TESTING=ON \
            -DBUILD_UI=OFF \
            -DBUILD_not_system=OFF \
+           -DCMAKE_BUILD_TYPE=RelWithDebInfo \
            -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install \
 
     - name: Build
