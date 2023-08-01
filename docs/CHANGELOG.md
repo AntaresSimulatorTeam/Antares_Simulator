@@ -1,8 +1,11 @@
 Antares Changelog
 =================
 
-v8.5.0 (02/2022)
---------------------
+# v8.5.1 (08/2023)
+
+* Backport [v8.4.3](#v843-082023) changes
+
+# v8.5.0 (02/2022)
 
 ## New features
 * Curtailment Sharing Rule for Adequacy Patch #1062, including a scaling coefficient in hurdle costs #1155. This feature was contributed by RTE-i with support from RTE, ELIA and APG.
@@ -19,6 +22,15 @@ v8.5.0 (02/2022)
 * Update docs to include CSR #1156
 * Fix examples studies (invalid v8.3.0 -> v8.5.0) #1136
 
+# v8.4.3 (08/2023)
+
+## Features
+* Increase file size limit from 80Mo to 80Go when reading file.
+
+## Bugfix
+* Fix "unhandled error" with big studies in zip mode. MPS files were too big and hit file size hard limit
+
+
 v8.4.2 (01/2022)
 --------------------
 
@@ -29,7 +41,7 @@ v8.4.2 (01/2022)
 ## GUI
 * Allow more than 100 thermal clusters #1011
 * Remove status bar count. The sum was sometimes wrong #1029
-* Remove unused "District marginal prices" button from Advanced Parameters #1067
+* Remove unused "District marginal prices" button from Advanced Parameters (#1067)
 
 ## Bugfix
 * Fix overwritten MPS files when optimization/simplex-range=day #1041
