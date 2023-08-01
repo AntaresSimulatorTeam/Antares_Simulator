@@ -268,12 +268,7 @@ void SimulationHandler::create()
     
     // Allocate arrays for time series
     SIM_AllocationTableaux();
-    BOOST_CHECK(true);
-
 }
-
-SimulationHandler::~SimulationHandler()
-= default;
 
 // ===============
 // The fixture
@@ -296,16 +291,13 @@ struct Fixture {
 Fixture::Fixture()
 {
     // Make logs shrink to errors (and higher) only
-    BOOST_CHECK(true);
     logs.verbosityLevel = Logs::Verbosity::Error::level;
 
     study = std::make_shared<Study>();
     simulation = std::make_shared<SimulationHandler>(study);
-    BOOST_CHECK(true);
 
     initializeStudy(study);
     simulationBetweenDays(study, 0, 7);
-    BOOST_CHECK(true);
 
     double loadInAreaOne = 0.;
     Area* area1 = addAreaToStudy(study, "Area 1", loadInAreaOne);
@@ -313,11 +305,9 @@ Fixture::Fixture()
 
     Area* area2 = addAreaToStudy(study, "Area 2", loadInAreaTwo);
     link = AreaAddLinkBetweenAreas(area1, area2);
-    BOOST_CHECK(true);
 
     configureLinkCapacities(link);
     addClusterToArea(area1, "some cluster");
-    BOOST_CHECK(true);
 
     BC = addBindingConstraints(*(study), "BC1", "Group1");
     BC->weight(link, 1);
@@ -345,23 +335,18 @@ BOOST_FIXTURE_TEST_SUITE(TESTS_ON_BINDING_CONSTRAINTS, Fixture)
 BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
 {
     // Study parameters varying depending on the test
-    BOOST_CHECK(true);
     unsigned int nbYears = 1;
     setNumberMCyears(study, nbYears);
-    BOOST_CHECK(true);
 
     // Binding constraint parameter varying depending on the test
     BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
-    BOOST_CHECK(true);
 
     unsigned int numberOfTS = 1;
     BCrhsConfig bcRHSconfig(BC, numberOfTS);
-    BOOST_CHECK(true);
 
     double rhsValue = 90.;
     bcRHSconfig.fillTimeSeriesWith(0, rhsValue);
-    BOOST_CHECK(true);
 
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
@@ -369,7 +354,6 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     simulation->create();
     giveWeigthOnlyToYear(0);
     simulation->run();
-    BOOST_CHECK(true);
 
     unsigned int hour = 0;
     BOOST_TEST(getLinkFlowAthour(simulation->get(), link, hour) == rhsValue, tt::tolerance(0.001));
