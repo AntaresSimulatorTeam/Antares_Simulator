@@ -161,7 +161,7 @@ public:
     /*!
     ** \brief Calculation of market bid and marginals costs per hour
     */
-    void calculationOfMarketBidPerHourAndMarginalCostPerHour();
+    void ComputeCostTimeSeries();
 
     /*!
     ** \brief Calculation of spinning (reverse)
@@ -373,13 +373,13 @@ public:
     ** \brief Production Cost, Market Bid Cost and Marginal Cost Matrixes - Per Hour and per Time
     *Series
     */
-    struct ThermalEconomicTimeSeries
+    struct CostsTimeSeries
     {
         std::array<double, HOURS_PER_YEAR> productionCostTs;
-        std::array<double, HOURS_PER_YEAR> marketBidCostPerHourTs;
-        std::array<double, HOURS_PER_YEAR> marginalCostPerHourTs;
+        std::array<double, HOURS_PER_YEAR> marketBidCostTS;
+        std::array<double, HOURS_PER_YEAR> marginalCostTS;
     };
-    std::vector<ThermalEconomicTimeSeries> thermalEconomicTimeSeries;
+    std::vector<CostsTimeSeries> costsTimeSeries;
 
     EconomicInputData ecoInput;
 
@@ -387,21 +387,30 @@ public:
 
     friend class ThermalClusterList;
 
-    //! \name MarketBid and Marginal Costs
-    //@{
-    /*!
-    ** \brief Calculation of market bid and marginals costs per hour
-    **
-    ** Market bid and marginal costs are set manually.
-    ** Or if time series are used the formula is:
-    ** Marginal_Cost[€/MWh] = Market_Bid_Cost[€/MWh] = (Fuel_Cost[€/GJ] * 3.6 * 100 / Efficiency[%])
-    *+ CO2_emission_factor[tons/MWh] * C02_cost[€/tons] + Variable_O&M_cost[€/MWh]
-    */
-    void costGenManualCalculationOfMarketBidAndMarginalCostPerHour();
-    void costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour();
     double computeMarketBidCost(double fuelCost, double co2EmissionFactor, double co2cost);
 
     unsigned int precision() const override;
+
+private:
+    // Calculation of marketBid and marginal costs hourly time series
+    //
+    // Calculation of market bid and marginals costs per hour
+    //
+    // These time series can be set 
+    // Market bid and marginal costs are set manually.
+    // Or if time series are used the formula is:
+    // Marginal_Cost[€/MWh] = Market_Bid_Cost[€/MWh] = (Fuel_Cost[€/GJ] * 3.6 * 100 / Efficiency[%])
+    // CO2_emission_factor[tons/MWh] * C02_cost[€/tons] + Variable_O&M_cost[€/MWh]
+    
+    void fillMarketBidCostTS();
+    void fillMarginalCostTS();
+    void resizeCostTS();
+    void ComputeMarketBidTS();
+    void MarginalCostEqualsMarketBid();
+    void ComputeProductionCostTS();
+
+
+
 }; // class ThermalCluster
 } // namespace Data
 } // namespace Antares

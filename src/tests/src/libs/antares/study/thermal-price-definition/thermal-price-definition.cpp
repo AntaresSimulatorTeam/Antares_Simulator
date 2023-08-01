@@ -83,9 +83,9 @@ private:
 
 void fillThermalEconomicTimeSeries(ThermalCluster* c)
 {
-    c->thermalEconomicTimeSeries[0].productionCostTs.fill(1);
-    c->thermalEconomicTimeSeries[0].marketBidCostPerHourTs.fill(1);
-    c->thermalEconomicTimeSeries[0].marginalCostPerHourTs.fill(1);
+    c->costsTimeSeries[0].productionCostTs.fill(1);
+    c->costsTimeSeries[0].marketBidCostTS.fill(1);
+    c->costsTimeSeries[0].marginalCostTS.fill(1);
 }
 
 // =================
@@ -206,11 +206,12 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2_checkColumnNumber_OK)
 BOOST_AUTO_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMarginalCostPerHour)
 {
     clusterList.loadFromFolder(*study, folder, area);
-    clusterList.mapping["some cluster"]->costGenManualCalculationOfMarketBidAndMarginalCostPerHour();
+    clusterList.mapping["some cluster"]->costgeneration = Data::setManually;
+    clusterList.mapping["some cluster"]->ComputeCostTimeSeries();
     BOOST_CHECK_EQUAL(
-      clusterList.mapping["some cluster"]->thermalEconomicTimeSeries[0].marketBidCostPerHourTs[2637], 35);
+      clusterList.mapping["some cluster"]->costsTimeSeries[0].marketBidCostTS[2637], 35);
     BOOST_CHECK_EQUAL(
-      clusterList.mapping["some cluster"]->thermalEconomicTimeSeries[0].marginalCostPerHourTs[6737], 23);
+      clusterList.mapping["some cluster"]->costsTimeSeries[0].marginalCostTS[6737], 23);
 }
 
 BOOST_AUTO_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour)
@@ -223,14 +224,14 @@ BOOST_AUTO_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMa
     clusterList.mapping["some cluster"]->ecoInput.loadFromFolder(*study, folder);
     fillThermalEconomicTimeSeries(clusterList.mapping["some cluster"].get());
 
-    clusterList.mapping["some cluster"]->costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour();
+    clusterList.mapping["some cluster"]->ComputeCostTimeSeries();
 
     BOOST_CHECK_CLOSE(
-      clusterList.mapping["some cluster"]->thermalEconomicTimeSeries[0].marketBidCostPerHourTs[0],
+      clusterList.mapping["some cluster"]->costsTimeSeries[0].marketBidCostTS[0],
       24.12,
       0.001);
     BOOST_CHECK_CLOSE(
-      clusterList.mapping["some cluster"]->thermalEconomicTimeSeries[0].marketBidCostPerHourTs[2637],
+      clusterList.mapping["some cluster"]->costsTimeSeries[0].marketBidCostTS[2637],
       24.12,
       0.001);
 }
