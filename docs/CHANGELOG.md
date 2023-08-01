@@ -1,6 +1,15 @@
 Antares Changelog
 =================
 
+v8.4.3 (08/2023)
+--------------------
+## Features
+* Increase file size limit from 80Mo to 80Go when reading file.
+
+## Bugfix
+* Fix "unhandled error" with big studies in zip mode. MPS files were too big and hit file size hard limit
+
+
 v8.4.2 (01/2022)
 --------------------
 
