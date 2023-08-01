@@ -6,6 +6,7 @@ Antares Changelog
 --------------------
 ## Features
 * Implement --mps-export command-line option (#1404)
+* Backport [v8.4.3](#v843-082023) changes
 
 ## Bugfixes
 * Fix segfault, add !skipped to enabled constraints (#1441)
@@ -49,6 +50,11 @@ Antares Changelog
 
 TODO: bugfix, code cleaning, etc.
 
+--------------------
+# v8.6.2 (08/2023)
+
+* Backport [v8.4.3](#v843-082023) changes
+
 8.6.1 (06/2023)
 --------------------
 ## Bugfixes
@@ -91,9 +97,12 @@ TODO: bugfix, code cleaning, etc.
 ## For developers
 * Bumped OR-Tools 9.2 -> 9.5. CMake 3.18+ is required for build if building OR-Tools, and XPRESS 9.0 for execution (previously 8.13).
 
-
-v8.5.0 (02/2022)
 --------------------
+# v8.5.1 (08/2023)
+
+* Backport [v8.4.3](#v843-082023) changes
+
+# v8.5.0 (02/2022)
 
 ## New features
 * Curtailment Sharing Rule for Adequacy Patch #1062, including a scaling coefficient in hurdle costs #1155. This feature was contributed by RTE-i with support from RTE, ELIA and APG.
@@ -109,6 +118,15 @@ v8.5.0 (02/2022)
 ## Examples & documentation
 * Update docs to include CSR #1156
 * Fix examples studies (invalid v8.3.0 -> v8.5.0) #1136
+
+# v8.4.3 (08/2023)
+
+## Features
+* Increase file size limit from 80Mo to 80Go when reading file.
+
+## Bugfix
+* Fix "unhandled error" with big studies in zip mode. MPS files were too big and hit file size hard limit
+
 
 v8.4.2 (01/2022)
 --------------------
