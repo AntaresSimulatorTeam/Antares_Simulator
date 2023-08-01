@@ -76,7 +76,7 @@ jobs:
       run: |
            source /opt/rh/devtoolset-9/enable
            source /opt/rh/rh-git227/enable
-           cmake3 --build _build --config Release -j2
+           cmake3 --build _build -j2
            ccache -s
 
     - name: Solver archive creation
