@@ -36,7 +36,7 @@
 /* Les problemes Simplexe */
 typedef struct
 {
-    void** ProblemeSpx;
+    std::vector<void*> ProblemeSpx;
 } PROBLEMES_SIMPLEXE;
 
 /* Le probleme a resoudre */
