@@ -244,7 +244,7 @@ public:
     explicit SimulationHandler(std::shared_ptr<Study> study)
         : study_(std::move(study))
     {}
-    ~SimulationHandler();
+    ~SimulationHandler() = default;
     void create();
     void run() { simulation_->run(); }
     std::shared_ptr<ISimulation<Economy>> get() { return simulation_; }
@@ -365,7 +365,6 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
 
     BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
     bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 0, 0);
-    BOOST_CHECK(true);
 
     simulation->create();
     giveWeigthOnlyToYear(0);

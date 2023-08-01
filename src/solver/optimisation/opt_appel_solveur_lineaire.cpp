@@ -181,7 +181,7 @@ RESOLUTION:
     Probleme.DureeMaxDuCalcul = -1.;
 
     Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire.data();
-    Probleme.X = ProblemeAResoudre->X;
+    Probleme.X = ProblemeAResoudre->X.data();
     Probleme.Xmin = ProblemeAResoudre->Xmin.data();
     Probleme.Xmax = ProblemeAResoudre->Xmax.data();
     Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
@@ -204,9 +204,9 @@ RESOLUTION:
 
     Probleme.StrategieAntiDegenerescence = AGRESSIF;
 
-    Probleme.PositionDeLaVariable = ProblemeAResoudre->PositionDeLaVariable;
+    Probleme.PositionDeLaVariable = ProblemeAResoudre->PositionDeLaVariable.data();
     Probleme.NbVarDeBaseComplementaires = 0;
-    Probleme.ComplementDeLaBase = ProblemeAResoudre->ComplementDeLaBase;
+    Probleme.ComplementDeLaBase = ProblemeAResoudre->ComplementDeLaBase.data();
 
     Probleme.LibererMemoireALaFin = NON_SPX;
 
@@ -214,7 +214,7 @@ RESOLUTION:
     Probleme.CoutMax = 0.0;
 
     Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes.data();
-    Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits;
+    Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits.data();
 
 #ifndef NDEBUG
     Probleme.AffichageDesTraces = ( PremierPassage ? OUI_SPX : NON_SPX );

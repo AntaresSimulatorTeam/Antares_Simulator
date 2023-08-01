@@ -356,6 +356,9 @@ void XCast::destroyTemporaryData()
         delete[] TREN;
         delete[] WIEN;
         delete[] BROW;
+        delete[] BASI;
+        delete[] ALPH;
+        delete[] BETA;
         delete[] pQCHOLTotal;
         delete[] pUseConversion;
     }
