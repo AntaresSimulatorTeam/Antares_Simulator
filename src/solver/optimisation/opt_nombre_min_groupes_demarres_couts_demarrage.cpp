@@ -340,10 +340,10 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     NombreDeVariables += NombreDePasDeTemps;
     NombreDeVariables += NombreDePasDeTemps;
 
-    auto NumeroDeVariableDeM = std::vector<int>(NombreDePasDeTemps);
-    auto NumeroDeVariableDeMMoinsMoins = std::vector<int>(NombreDePasDeTemps);
-    auto NumeroDeVariableDeMPlus = std::vector<int>(NombreDePasDeTemps);
-    auto NumeroDeVariableDeMMoins = std::vector<int>(NombreDePasDeTemps);
+    std::vector<int> NumeroDeVariableDeM(NombreDePasDeTemps);
+    std::vector<int> NumeroDeVariableDeMMoinsMoins(NombreDePasDeTemps);
+    std::vector<int> NumeroDeVariableDeMPlus(NombreDePasDeTemps);
+    std::vector<int> NumeroDeVariableDeMMoins(NombreDePasDeTemps);
 
     int NombreDeContraintes = 0;
     NombreDeContraintes += NombreDePasDeTemps;
@@ -352,18 +352,18 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     NombreDeContraintes += NombreDePasDeTemps;
     NombreDeContraintes += NombreDePasDeTemps;
 
-    auto PositionDeLaVariable = std::vector<int>(NombreDeVariables);
-    auto CoutLineaire = std::vector<double>(NombreDeVariables);
-    auto Xsolution = std::vector<double>(NombreDeVariables);
-    auto Xmin = std::vector<double>(NombreDeVariables);
-    auto Xmax = std::vector<double>(NombreDeVariables);
-    auto TypeDeVariable = std::vector<int>(NombreDeVariables);
+    std::vector<int> PositionDeLaVariable(NombreDeVariables);
+    std::vector<double> CoutLineaire(NombreDeVariables);
+    std::vector<double> Xsolution(NombreDeVariables);
+    std::vector<double> Xmin(NombreDeVariables);
+    std::vector<double> Xmax(NombreDeVariables);
+    std::vector<int> TypeDeVariable(NombreDeVariables);
 
-    auto ComplementDeLaBase = std::vector<int>(NombreDeContraintes);
-    auto IndicesDebutDeLigne = std::vector<int>(NombreDeContraintes);
-    auto NombreDeTermesDesLignes = std::vector<int>(NombreDeContraintes);
-    auto Sens = new char[NombreDeContraintes];
-    auto SecondMembre = std::vector<double>(NombreDeContraintes);
+    std::vector<int> ComplementDeLaBase(NombreDeContraintes);
+    std::vector<int> IndicesDebutDeLigne(NombreDeContraintes);
+    std::vector<int> NombreDeTermesDesLignes(NombreDeContraintes);
+    std::vector<char> Sens(NombreDeContraintes);
+    std::vector<double> SecondMembre(NombreDeContraintes);
 
     int NbTermesMatrice = 0;
     NbTermesMatrice += 4 * NombreDePasDeTemps;
@@ -373,9 +373,8 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
       += NombreDePasDeTemps * (1 + (2 * DureeMinimaleDeMarcheDUnGroupeDuPalierThermique));
     NbTermesMatrice += NombreDePasDeTemps * (1 + DureeMinimaleDArretDUnGroupeDuPalierThermique);
 
-    auto IndicesColonnes = std::vector<int>(NbTermesMatrice);
-    auto CoefficientsDeLaMatriceDesContraintes
-      = std::vector<double>(NbTermesMatrice);
+    std::vector<int> IndicesColonnes(NbTermesMatrice);
+    std::vector<double> CoefficientsDeLaMatriceDesContraintes(NbTermesMatrice);
 
 
     NombreDeVariables = 0;
@@ -585,7 +584,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     Probleme.NombreDeTermesDesLignes = NombreDeTermesDesLignes.data();
     Probleme.IndicesColonnes = IndicesColonnes.data();
     Probleme.CoefficientsDeLaMatriceDesContraintes = CoefficientsDeLaMatriceDesContraintes.data();
-    Probleme.Sens = Sens;
+    Probleme.Sens = Sens.data();
     Probleme.SecondMembre = SecondMembre.data();
 
     Probleme.ChoixDeLAlgorithme = SPX_DUAL;
