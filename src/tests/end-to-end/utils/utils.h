@@ -11,7 +11,7 @@ Antares::Data::Area* addArea(Antares::Data::Study::Ptr pStudy, const std::string
 
 std::shared_ptr<Antares::Data::ThermalCluster> addCluster(Antares::Data::Area* pArea, const std::string& clusterName, double maximumPower, double cost, int nbTS, int unitCount = 1);
 
-std::shared_ptr<Antares::Data::BindingConstraint> addBindingConstraints(const Antares::Data::Study::Ptr& study, const std::string& name, const std::string& group);
+std::shared_ptr<Antares::Data::BindingConstraint> addBindingConstraints(Study &study, const std::string& name, const std::string& group);
 
 void cleanSimulation(Antares::Solver::Simulation::ISimulation< Antares::Solver::Simulation::Economy >* simulation);
 void cleanStudy(Antares::Data::Study::Ptr pStudy);

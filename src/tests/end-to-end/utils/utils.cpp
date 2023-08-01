@@ -26,13 +26,13 @@ void prepareStudy(Study::Ptr pStudy, int nbYears)
     Data::Study::Current::Set(pStudy);
 }
 
-std::shared_ptr<BindingConstraint> addBindingConstraints(const Study::Ptr& study, const std::string& name, const std::string& group) {
-    auto bc = study->bindingConstraints.add(name);
+std::shared_ptr<BindingConstraint> addBindingConstraints(Study &study, const std::string& name, const std::string& group) {
+    auto bc = study.bindingConstraints.add(name);
     bc->group(group);
-    if (auto groupOfConstraint = study->bindingConstraintsGroups[group]; groupOfConstraint != nullptr) {
+    if (auto groupOfConstraint = study.bindingConstraintsGroups[group]; groupOfConstraint != nullptr) {
         groupOfConstraint->add(bc);
     } else {
-        study->bindingConstraintsGroups.add(group)->add(bc);
+        study.bindingConstraintsGroups.add(group)->add(bc);
     }
     return bc;
 }

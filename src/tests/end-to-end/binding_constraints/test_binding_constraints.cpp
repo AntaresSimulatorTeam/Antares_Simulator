@@ -261,13 +261,11 @@ void SimulationHandler::create()
     BOOST_CHECK(study_);
     BOOST_CHECK(study_->initializeRuntimeInfos());
     addScratchpadToEachArea(study_);
-    BOOST_CHECK(true);
-
+    
     simulation_ = std::make_shared<ISimulation<Economy>>(*study_,
                                                          settings_,
                                                          &nullDurationCollector_);
-    BOOST_CHECK(true);
-
+    
     // Allocate arrays for time series
     SIM_AllocationTableaux();
     BOOST_CHECK(true);
@@ -311,22 +309,17 @@ Fixture::Fixture()
 
     double loadInAreaOne = 0.;
     Area* area1 = addAreaToStudy(study, "Area 1", loadInAreaOne);
-    BOOST_CHECK(true);
-
     double loadInAreaTwo = 100.;
-    Area* area2 = addAreaToStudy(study, "Area 2", loadInAreaTwo);
-    BOOST_CHECK(true);
 
+    Area* area2 = addAreaToStudy(study, "Area 2", loadInAreaTwo);
     link = AreaAddLinkBetweenAreas(area1, area2);
     BOOST_CHECK(true);
 
     configureLinkCapacities(link);
-    BOOST_CHECK(true);
-
     addClusterToArea(area1, "some cluster");
     BOOST_CHECK(true);
 
-    BC = addBindingConstraints(study, "BC1", "Group1");
+    BC = addBindingConstraints(*(study), "BC1", "Group1");
     BC->weight(link, 1);
     BC->enabled(true);
     study->bindingConstraintsGroups.buildFrom(study->bindingConstraints);
