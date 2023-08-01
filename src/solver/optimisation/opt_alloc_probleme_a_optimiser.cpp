@@ -151,8 +151,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
 
     int NbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
-    ProblemeAResoudre->ProblemesSpx = new PROBLEMES_SIMPLEXE;
-    ProblemeAResoudre->ProblemesSpx->ProblemeSpx.assign(NbIntervalles, nullptr);
+    ProblemeAResoudre->ProblemesSpx.assign(NbIntervalles, nullptr);
 
     logs.info();
     logs.info() << " Status of Preliminary Allocations for Generic Problem Resolution : Successful";
@@ -189,10 +188,5 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     if (ProblemeAResoudre)
-    {
-        if (ProblemeAResoudre->ProblemesSpx)
-            delete ProblemeAResoudre->ProblemesSpx;
-
         delete ProblemeAResoudre;
-    }
 }
