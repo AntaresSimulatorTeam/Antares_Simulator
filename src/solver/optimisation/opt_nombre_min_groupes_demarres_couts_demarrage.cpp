@@ -340,10 +340,10 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     NombreDeVariables += NombreDePasDeTemps;
     NombreDeVariables += NombreDePasDeTemps;
 
-    auto NumeroDeVariableDeM = new int[NombreDePasDeTemps];
-    auto NumeroDeVariableDeMMoinsMoins = new int[NombreDePasDeTemps];
-    auto NumeroDeVariableDeMPlus = new int[NombreDePasDeTemps];
-    auto NumeroDeVariableDeMMoins = new int[NombreDePasDeTemps];
+    auto NumeroDeVariableDeM = std::vector<int>(NombreDePasDeTemps);
+    auto NumeroDeVariableDeMMoinsMoins = std::vector<int>(NombreDePasDeTemps);
+    auto NumeroDeVariableDeMPlus = std::vector<int>(NombreDePasDeTemps);
+    auto NumeroDeVariableDeMMoins = std::vector<int>(NombreDePasDeTemps);
 
     int NombreDeContraintes = 0;
     NombreDeContraintes += NombreDePasDeTemps;
@@ -352,18 +352,18 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     NombreDeContraintes += NombreDePasDeTemps;
     NombreDeContraintes += NombreDePasDeTemps;
 
-    auto PositionDeLaVariable = new int[NombreDeVariables];
-    auto CoutLineaire = new double[NombreDeVariables];
-    auto Xsolution = new double[NombreDeVariables];
-    auto Xmin = new double[NombreDeVariables];
-    auto Xmax = new double[NombreDeVariables];
-    auto TypeDeVariable = new int[NombreDeVariables];
+    auto PositionDeLaVariable = std::vector<int>(NombreDeVariables);
+    auto CoutLineaire = std::vector<double>(NombreDeVariables);
+    auto Xsolution = std::vector<double>(NombreDeVariables);
+    auto Xmin = std::vector<double>(NombreDeVariables);
+    auto Xmax = std::vector<double>(NombreDeVariables);
+    auto TypeDeVariable = std::vector<int>(NombreDeVariables);
 
-    auto ComplementDeLaBase = new int[NombreDeContraintes];
-    auto IndicesDebutDeLigne = new int[NombreDeContraintes];
-    auto NombreDeTermesDesLignes = new int[NombreDeContraintes];
+    auto ComplementDeLaBase = std::vector<int>(NombreDeContraintes);
+    auto IndicesDebutDeLigne = std::vector<int>(NombreDeContraintes);
+    auto NombreDeTermesDesLignes = std::vector<int>(NombreDeContraintes);
     auto Sens = new char[NombreDeContraintes];
-    auto SecondMembre = new double[NombreDeContraintes];
+    auto SecondMembre = std::vector<double>(NombreDeContraintes);
 
     int NbTermesMatrice = 0;
     NbTermesMatrice += 4 * NombreDePasDeTemps;
@@ -373,24 +373,10 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
       += NombreDePasDeTemps * (1 + (2 * DureeMinimaleDeMarcheDUnGroupeDuPalierThermique));
     NbTermesMatrice += NombreDePasDeTemps * (1 + DureeMinimaleDArretDUnGroupeDuPalierThermique);
 
-    auto IndicesColonnes = new int[NbTermesMatrice];
+    auto IndicesColonnes = std::vector<int>(NbTermesMatrice);
     auto CoefficientsDeLaMatriceDesContraintes
-      = new double[NbTermesMatrice];
+      = std::vector<double>(NbTermesMatrice);
 
-    if (NumeroDeVariableDeM == nullptr || NumeroDeVariableDeMMoinsMoins == nullptr
-        || NumeroDeVariableDeMPlus == nullptr || NumeroDeVariableDeMMoins == nullptr
-        || PositionDeLaVariable == nullptr || CoutLineaire == nullptr || Xsolution == nullptr
-        || Xmin == nullptr || Xmax == nullptr || TypeDeVariable == nullptr
-        || ComplementDeLaBase == nullptr || IndicesDebutDeLigne == nullptr
-        || NombreDeTermesDesLignes == nullptr || Sens == nullptr || SecondMembre == nullptr
-        || IndicesColonnes == nullptr || CoefficientsDeLaMatriceDesContraintes == nullptr)
-    {
-        logs.info();
-        logs.error() << "Internal error: insufficient memory";
-        logs.info();
-        AntaresSolverEmergencyShutdown();
-        return;
-    }
 
     NombreDeVariables = 0;
     for (int pdt = 0; pdt < NombreDePasDeTemps; pdt++)
@@ -587,20 +573,20 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     Probleme.NombreMaxDIterations = -1;
     Probleme.DureeMaxDuCalcul = -1.;
 
-    Probleme.CoutLineaire = CoutLineaire;
-    Probleme.X = Xsolution;
-    Probleme.Xmin = Xmin;
-    Probleme.Xmax = Xmax;
+    Probleme.CoutLineaire = CoutLineaire.data();
+    Probleme.X = Xsolution.data();
+    Probleme.Xmin = Xmin.data();
+    Probleme.Xmax = Xmax.data();
     Probleme.NombreDeVariables = NombreDeVariables;
-    Probleme.TypeDeVariable = TypeDeVariable;
+    Probleme.TypeDeVariable = TypeDeVariable.data();
 
     Probleme.NombreDeContraintes = NombreDeContraintes;
-    Probleme.IndicesDebutDeLigne = IndicesDebutDeLigne;
-    Probleme.NombreDeTermesDesLignes = NombreDeTermesDesLignes;
-    Probleme.IndicesColonnes = IndicesColonnes;
-    Probleme.CoefficientsDeLaMatriceDesContraintes = CoefficientsDeLaMatriceDesContraintes;
+    Probleme.IndicesDebutDeLigne = IndicesDebutDeLigne.data();
+    Probleme.NombreDeTermesDesLignes = NombreDeTermesDesLignes.data();
+    Probleme.IndicesColonnes = IndicesColonnes.data();
+    Probleme.CoefficientsDeLaMatriceDesContraintes = CoefficientsDeLaMatriceDesContraintes.data();
     Probleme.Sens = Sens;
-    Probleme.SecondMembre = SecondMembre;
+    Probleme.SecondMembre = SecondMembre.data();
 
     Probleme.ChoixDeLAlgorithme = SPX_DUAL;
 
@@ -608,9 +594,9 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     Probleme.FaireDuScaling = OUI_SPX;
     Probleme.StrategieAntiDegenerescence = AGRESSIF;
 
-    Probleme.PositionDeLaVariable = PositionDeLaVariable;
+    Probleme.PositionDeLaVariable = PositionDeLaVariable.data();
     Probleme.NbVarDeBaseComplementaires = 0;
-    Probleme.ComplementDeLaBase = ComplementDeLaBase;
+    Probleme.ComplementDeLaBase = ComplementDeLaBase.data();
 
     Probleme.LibererMemoireALaFin = OUI_SPX;
 
@@ -640,24 +626,6 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
         printf("Pas de solution au probleme auxiliaire\n");
 #endif
     }
-
-    delete[] NumeroDeVariableDeM;
-    delete[] NumeroDeVariableDeMMoinsMoins;
-    delete[] NumeroDeVariableDeMPlus;
-    delete[] NumeroDeVariableDeMMoins;
-    delete[] PositionDeLaVariable;
-    delete[] CoutLineaire;
-    delete[] Xsolution;
-    delete[] Xmin;
-    delete[] Xmax;
-    delete[] TypeDeVariable;
-    delete[] ComplementDeLaBase;
-    delete[] IndicesDebutDeLigne;
-    delete[] NombreDeTermesDesLignes;
-    delete[] Sens;
-    delete[] SecondMembre;
-    delete[] IndicesColonnes;
-    delete[] CoefficientsDeLaMatriceDesContraintes;
 
     return;
 }
