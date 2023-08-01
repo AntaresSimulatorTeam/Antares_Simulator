@@ -79,16 +79,6 @@ jobs:
            cmake3 --build _build -j2
            ccache -s
 
-    - name: Solver archive creation
-      run: |
-           cd _build
-           cmake3 --install . --prefix install
-           pushd .
-           cd install/bin
-           tar czf ../../antares-solver_centos7.tar.gz antares-*-solver libsirius_solver.so
-           popd
-           rm -rf install
-
     - name: .tar.gz creation
       run: |
            cd _build
