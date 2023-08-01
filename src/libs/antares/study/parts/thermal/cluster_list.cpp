@@ -152,7 +152,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
             else
             {
                 const auto& marginalCostPerHour
-                  = cluster->thermalEconomicTimeSeries[0].marginalCostPerHourTs;
+                  = cluster->costsTimeSeries[0].marginalCostTS;
                 for (uint h = 0; h != cluster->modulation.height; ++h)
                     prodCost[h] = marginalCostPerHour[h] * modulation[h];
             }
@@ -547,7 +547,7 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
             buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
 
             bool result = c.ecoInput.loadFromFolder(study, buffer);
-            c.calculationOfMarketBidPerHourAndMarginalCostPerHour();
+            c.ComputeCostTimeSeries();
 
             ret = result && ret;
         }

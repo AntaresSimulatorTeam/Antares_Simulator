@@ -24,29 +24,22 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_UI_HXX__
-#define __ANTARES_LIBS_STUDY_UI_HXX__
-
-namespace Antares
+namespace Antares::Check
 {
-namespace Data
-{
-inline Yuni::uint64 AreaUI::memoryUsage() const
-{
-    return sizeof(AreaUI);
-}
+void checkStudyVersion(const AnyString& optStudyFolder);
 
-inline bool AreaUI::modified() const
-{
-    return pModified;
-}
+void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
+                                   Antares::Data::HydroPricingMode hpMode);
 
-inline void AreaUI::markAsModified()
-{
-    pModified = true;
-}
+void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,
+                                         Antares::Data::UnitCommitmentMode ucMode);
 
-} // namespace Data
-} // namespace Antares
+void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange,
+                                     const Antares::Data::AreaList& areas);
 
-#endif // __ANTARES_LIBS_STUDY_UI_HXX__
+void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas);
+
+void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas);
+void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas);
+
+} // namespace Antares::Check
