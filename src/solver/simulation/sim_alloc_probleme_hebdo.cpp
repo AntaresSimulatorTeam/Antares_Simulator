@@ -133,8 +133,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         problem.ValeursDeNTC[k].ValeurDeNTCExtremiteVersOrigine.assign(linkCount, 0.);
         problem.ValeursDeNTC[k].ValeurDeLoopFlowOrigineVersExtremite.assign(linkCount, 0.);
         problem.ValeursDeNTC[k].ValeurDuFlux.assign(linkCount, 0.);
-        problem.ValeursDeNTC[k].ValeurDuFluxUp.assign(linkCount, 0.);
-        problem.ValeursDeNTC[k].ValeurDuFluxDown.assign(linkCount, 0.);
         problem.ValeursDeNTC[k].ResistanceApparente.assign(linkCount, 0.);
 
         problem.ValeursDeNTCRef[k].ValeurDeNTCOrigineVersExtremite.assign(linkCount, 0.);

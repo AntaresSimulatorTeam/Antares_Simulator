@@ -110,9 +110,6 @@ struct VALEURS_DE_NTC_ET_RESISTANCES
     std::vector<double> ValeurDeLoopFlowOrigineVersExtremite;
     std::vector<double> ValeurDuFlux;
 
-    std::vector<double> ValeurDuFluxUp;
-    std::vector<double> ValeurDuFluxDown;
-
     std::vector<double> ResistanceApparente;
 };
 
