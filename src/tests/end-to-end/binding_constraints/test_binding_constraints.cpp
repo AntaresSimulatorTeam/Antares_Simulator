@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
     double rhsValue = 50.;
     bcRHStsConfig.fillColumnWith(0, rhsValue);
 
-  
+
     simulation->create();
     simulation->run();
 

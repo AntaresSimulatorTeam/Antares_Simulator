@@ -526,7 +526,7 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
             buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
 
             bool result = c.ecoInput.loadFromFolder(study, buffer);
-            c.calculationOfMarketBidPerHourAndMarginalCostPerHour();
+            c.ComputeCostTimeSeries();
 
             ret = result && ret;
         }

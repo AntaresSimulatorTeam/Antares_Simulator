@@ -966,8 +966,6 @@ void ISimulation<Impl>::estimateMemoryForOptimizationPb(Antares::Data::StudyMemo
     requiredMemoryForOptPb += 2 * NombreDeVariables * sizeof(void*);
     requiredMemoryForOptPb += NombreDeContraintes * sizeof(void*);
 
-    requiredMemoryForOptPb += sizeof(PROBLEMES_SIMPLEXE);
-
     // ================================================
     // Adding memory from the optimization problem
     // ================================================
@@ -1579,21 +1577,14 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             pFirstSetParallelWithAPerformedYearWasRun = true;
 
         // On regarde si au moins une année du lot n'a pas trouvé de solution
-        std::map<uint, bool>::iterator it;
-        bool foundFailure = false;
-        for (it = set_it->yearFailed.begin(); it != set_it->yearFailed.end(); it++)
+        for (auto& [year, failed] : set_it->yearFailed)
         {
-            if (it->second)
+            // Si une année du lot d'années n'a pas trouvé de solution, on arrête tout
+            if (failed)
             {
-                foundFailure = true;
-                break;
+                logs.fatal() << "Year " << year << " has failed in the previous set of parallel year.";
+                AntaresSolverEmergencyShutdown();
             }
-        }
-        // Si une année du lot d'années n'a pas trouvé de solution, on arrête tout
-        if (foundFailure)
-        {
-            logs.fatal() << "At least one year has failed in the previous set of parallel year.";
-            AntaresSolverEmergencyShutdown();
         }
         // Computing the summary : adding the contribution of MC years
         // previously computed in parallel

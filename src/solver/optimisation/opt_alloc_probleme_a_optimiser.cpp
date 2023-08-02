@@ -55,13 +55,12 @@ using namespace Antares;
 void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                                                  int NbTermes)
 {
-    const size_t szNbVarsDouble = ProblemeAResoudre->NombreDeVariables * sizeof(double);
-    const size_t szNbVarsint = ProblemeAResoudre->NombreDeVariables * sizeof(int);
-    const size_t szNbContint = ProblemeAResoudre->NombreDeContraintes * sizeof(int);
+    const size_t nbVariables = ProblemeAResoudre->NombreDeVariables;
+    const size_t nbConstraints = ProblemeAResoudre->NombreDeContraintes;
 
-    ProblemeAResoudre->Sens.resize(ProblemeAResoudre->NombreDeContraintes);
-    ProblemeAResoudre->IndicesDebutDeLigne.assign(szNbContint, 0);
-    ProblemeAResoudre->NombreDeTermesDesLignes.assign(szNbContint, 0);
+    ProblemeAResoudre->Sens.resize(nbConstraints);
+    ProblemeAResoudre->IndicesDebutDeLigne.assign(nbConstraints, 0);
+    ProblemeAResoudre->NombreDeTermesDesLignes.assign(nbConstraints, 0);
 
     ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.assign(NbTermes, 0.);
     ProblemeAResoudre->IndicesColonnes.assign(NbTermes, 0);
@@ -69,53 +68,30 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
     ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
     ProblemeAResoudre->IncrementDAllocationMatriceDesContraintes = (int)(0.1 * NbTermes);
 
-    ProblemeAResoudre->CoutQuadratique.assign(szNbVarsDouble, 0.);
-    ProblemeAResoudre->CoutLineaire.assign(szNbVarsDouble, 0.);
-    ProblemeAResoudre->TypeDeVariable.assign(szNbVarsint, 0);
-    ProblemeAResoudre->Xmin.assign(szNbVarsDouble, 0.);
-    ProblemeAResoudre->Xmax.assign(szNbVarsDouble, 0.);
-    ProblemeAResoudre->X = (double*)MemAlloc(szNbVarsDouble);
+    ProblemeAResoudre->CoutQuadratique.assign(nbVariables, 0.);
+    ProblemeAResoudre->CoutLineaire.assign(nbVariables, 0.);
+    ProblemeAResoudre->TypeDeVariable.assign(nbVariables, 0);
+    ProblemeAResoudre->Xmin.assign(nbVariables, 0.);
+    ProblemeAResoudre->Xmax.assign(nbVariables, 0.);
+    ProblemeAResoudre->X.assign(nbVariables, 0.);
 
-    ProblemeAResoudre->SecondMembre.assign(ProblemeAResoudre->NombreDeContraintes, 0.);
+    ProblemeAResoudre->SecondMembre.assign(nbConstraints, 0.);
 
-    ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees
-      = (double**)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(void*));
-    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits
-      = (double**)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(void*));
-    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux
-      = (double**)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(void*));
+    ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees.assign(nbVariables, nullptr);
+    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits.assign(nbVariables, nullptr);
+    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux.assign(nbConstraints, nullptr);
 
-    ProblemeAResoudre->CoutsMarginauxDesContraintes.assign(ProblemeAResoudre->NombreDeContraintes, 0.);
-    ProblemeAResoudre->CoutsReduits = (double*)MemAlloc(szNbVarsDouble);
+    ProblemeAResoudre->CoutsMarginauxDesContraintes.assign(nbConstraints, 0.);
+    ProblemeAResoudre->CoutsReduits.assign(nbVariables, 0.);
 
-    ProblemeAResoudre->PositionDeLaVariable
-      = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
-    ProblemeAResoudre->ComplementDeLaBase
-      = (int*)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(int));
+    ProblemeAResoudre->PositionDeLaVariable.assign(nbVariables, 0);
+    ProblemeAResoudre->ComplementDeLaBase.assign(nbConstraints, 0);
 
-    ProblemeAResoudre->Pi
-      = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
-    ProblemeAResoudre->Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
+    ProblemeAResoudre->Pi.assign(nbVariables, 0.);
+    ProblemeAResoudre->Colonne.assign(nbVariables, 0);
 
-    ProblemeAResoudre->NomDesVariables.resize(ProblemeAResoudre->NombreDeVariables);
-    ProblemeAResoudre->NomDesContraintes.resize(ProblemeAResoudre->NombreDeContraintes);
-}
-
-void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
-{
-    MemFree(ProblemeAResoudre->X);
-    MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees);
-    MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits);
-    MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux);
-    MemFree(ProblemeAResoudre->CoutsReduits);
-
-    MemFree(ProblemeAResoudre->PositionDeLaVariable);
-    MemFree(ProblemeAResoudre->ComplementDeLaBase);
-    MemFree(ProblemeAResoudre->Pi);
-    MemFree(ProblemeAResoudre->Colonne);
-
-    ProblemeAResoudre->NomDesVariables.clear();
-    ProblemeAResoudre->NomDesContraintes.clear();
+    ProblemeAResoudre->NomDesVariables.resize(nbVariables);
+    ProblemeAResoudre->NomDesContraintes.resize(nbConstraints);
 }
 
 static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int mxPaliers)
@@ -175,10 +151,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
 
     int NbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
-    ProblemeAResoudre->ProblemesSpx = (PROBLEMES_SIMPLEXE*)MemAlloc(sizeof(PROBLEMES_SIMPLEXE));
-    ProblemeAResoudre->ProblemesSpx->ProblemeSpx = (void**)MemAlloc(NbIntervalles * sizeof(void*));
-    for (int NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
-        ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = NULL;
+    ProblemeAResoudre->ProblemesSpx.assign(NbIntervalles, nullptr);
 
     logs.info();
     logs.info() << " Status of Preliminary Allocations for Generic Problem Resolution : Successful";
@@ -187,9 +160,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
 
 void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
-    auto ProblemeAResoudre
-      = (PROBLEME_ANTARES_A_RESOUDRE*)MemAllocMemset(sizeof(PROBLEME_ANTARES_A_RESOUDRE));
-    problemeHebdo->ProblemeAResoudre = ProblemeAResoudre;
+    problemeHebdo->ProblemeAResoudre = new PROBLEME_ANTARES_A_RESOUDRE;
 
     int mxPaliers = OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(problemeHebdo);
 
@@ -217,14 +188,5 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     if (ProblemeAResoudre)
-    {
-        OPT_FreeOptimizationData(ProblemeAResoudre);
-        if (ProblemeAResoudre->ProblemesSpx)
-        {
-            MemFree(ProblemeAResoudre->ProblemesSpx->ProblemeSpx);
-            MemFree(ProblemeAResoudre->ProblemesSpx);
-        }
-        MemFree(ProblemeAResoudre);
-        ProblemeAResoudre = nullptr;
-    }
+        delete ProblemeAResoudre;
 }

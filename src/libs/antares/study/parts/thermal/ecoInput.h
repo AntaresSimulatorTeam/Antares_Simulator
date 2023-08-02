@@ -89,7 +89,7 @@ public:
     Matrix<double> fuelcost;
     Matrix<double> co2cost;
 
-}; // class PreproThermal
+}; // class EconomicInputData
 
 } // namespace Antares::Data
 #endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__

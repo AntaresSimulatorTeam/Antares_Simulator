@@ -190,6 +190,7 @@ public:
     //@}
 
     bool skipped() const;
+    bool isActive() const;
 
     //Ref to prevent copy. const ref to prevent modification.
     const Matrix<>& RHSTimeSeries() const;
@@ -282,14 +283,6 @@ public:
     ** \brief Get how many thermal clusters the binding constraint contains
     */
     uint clusterCount() const;
-
-    /*!
-    ** \brief Get how many thermal clusters the binding constraint contains
-    */
-    uint enabledClusterCount() const;
-
-    //@}
-
     //@}
 
     //! \name Type of the binding constraint
@@ -419,6 +412,7 @@ private:
     void clear();
 
     void copyFrom(BindingConstraint const *original);
+
 }; // class BindingConstraint
 
 // class BindConstList

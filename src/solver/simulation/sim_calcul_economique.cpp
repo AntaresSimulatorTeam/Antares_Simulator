@@ -108,8 +108,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.NumberOfShortTermStorages = study.runtime->shortTermStorageCount;
 
-    auto enabledBindingConstraints = study.bindingConstraints.enabled();
-    problem.NombreDeContraintesCouplantes = enabledBindingConstraints.size();
+    auto activeContraints = study.bindingConstraints.activeContraints();
+    problem.NombreDeContraintesCouplantes = activeContraints.size();
 
     problem.ExportMPS = study.parameters.include.exportMPS;
     problem.ExportStructure = study.parameters.include.exportStructure;
@@ -222,9 +222,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.PaysExtremiteDeLInterconnexion[i] = link.with->index;
     }
 
-    for (uint i = 0; i < enabledBindingConstraints.size(); ++i)
+    for (uint i = 0; i < activeContraints.size(); ++i)
     {
-        auto bc = enabledBindingConstraints[i];
+        auto bc = activeContraints[i];
         CONTRAINTES_COUPLANTES& PtMat = problem.MatriceDesContraintesCouplantes[i];
         PtMat.NombreDInterconnexionsDansLaContrainteCouplante = bc->linkCount();
         PtMat.NombreDePaliersDispatchDansLaContrainteCouplante = bc->clusterCount();
@@ -313,11 +313,11 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
 void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int PasDeTempsDebut,
                                const BindingConstraintsRepository &bindingConstraints, const uint weekFirstDay, int pasDeTemps) {
-    auto enabledConstraints = bindingConstraints.enabled();
-    const auto constraintCount = enabledConstraints.size();
+    auto activeContraints = bindingConstraints.activeContraints();
+    const auto constraintCount = activeContraints.size();
     for (unsigned constraintIndex = 0; constraintIndex != constraintCount; ++constraintIndex)
     {
-        auto bc = enabledConstraints[constraintIndex];
+        auto bc = activeContraints[constraintIndex];
         assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
         //If there is only one TS, always select it.
         const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc->group()];
