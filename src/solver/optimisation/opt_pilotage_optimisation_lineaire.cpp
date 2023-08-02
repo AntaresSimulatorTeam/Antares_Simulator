@@ -47,8 +47,6 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchPar
                 problemeHebdo->CoutDeDefaillanceEnReserve[pays] = 1.e+6;
             }
 
-            problemeHebdo->NombreDePasDeTempsDUneJourneeRef
-              = problemeHebdo->NombreDePasDeTempsDUneJournee;
             problemeHebdo->NombreDeJours = (int)(problemeHebdo->NombreDePasDeTemps
                                                  / problemeHebdo->NombreDePasDeTempsDUneJournee);
 

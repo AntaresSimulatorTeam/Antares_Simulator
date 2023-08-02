@@ -503,7 +503,6 @@ struct PROBLEME_HEBDO
     int NombreDeJours = 0;
 
     int NombreDePasDeTempsDUneJournee = 0;
-    int NombreDePasDeTempsDUneJourneeRef = 0;
 
     mutable std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattues;
     std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattuesRef;
