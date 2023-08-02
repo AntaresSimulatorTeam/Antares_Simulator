@@ -71,8 +71,6 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchPar
 
     OPT_VerifierPresenceReserveJmoins1(problemeHebdo);
 
-    OPT_SauvegarderLesPmaxThermiques(problemeHebdo);
-
     OPT_InitialiserLesPminHebdo(problemeHebdo);
 
     OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(problemeHebdo);
