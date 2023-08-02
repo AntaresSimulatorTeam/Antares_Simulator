@@ -133,17 +133,11 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         problem.ValeursDeNTC[k].ValeurDeNTCExtremiteVersOrigine.assign(linkCount, 0.);
         problem.ValeursDeNTC[k].ValeurDeLoopFlowOrigineVersExtremite.assign(linkCount, 0.);
         problem.ValeursDeNTC[k].ValeurDuFlux.assign(linkCount, 0.);
-        problem.ValeursDeNTC[k].ValeurDuFluxUp.assign(linkCount, 0.);
-        problem.ValeursDeNTC[k].ValeurDuFluxDown.assign(linkCount, 0.);
         problem.ValeursDeNTC[k].ResistanceApparente.assign(linkCount, 0.);
 
         problem.ValeursDeNTCRef[k].ValeurDeNTCOrigineVersExtremite.assign(linkCount, 0.);
         problem.ValeursDeNTCRef[k].ValeurDeNTCExtremiteVersOrigine.assign(linkCount, 0.);
         problem.ValeursDeNTCRef[k].ValeurDeLoopFlowOrigineVersExtremite.assign(linkCount, 0.);
-        problem.ValeursDeNTCRef[k].ValeurDuFlux.assign(linkCount, 0.);
-        problem.ValeursDeNTCRef[k].ValeurDuFluxUp.assign(linkCount, 0.);
-        problem.ValeursDeNTCRef[k].ValeurDuFluxDown.assign(linkCount, 0.);
-        problem.ValeursDeNTCRef[k].ResistanceApparente.assign(linkCount, 0.);
 
         // TODO VP: Remove this allocation
         problem.CorrespondanceVarNativesVarOptim[k]
@@ -447,13 +441,10 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
               .PuissanceDisponibleDuPalierThermiqueRef
               .assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              .PuissanceDisponibleDuPalierThermiqueRef_SV
-              .assign(NombreDePasDeTemps, 0.);
-            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
               .PuissanceMinDuPalierThermique
               .assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              .PuissanceMinDuPalierThermique_SV
+              .PuissanceMinDuPalierThermiqueRef
               .assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
               .NombreMaxDeGroupesEnMarcheDuPalierThermique

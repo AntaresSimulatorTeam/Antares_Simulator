@@ -47,9 +47,6 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchPar
                 problemeHebdo->CoutDeDefaillanceEnReserve[pays] = 1.e+6;
             }
 
-            problemeHebdo->NombreDePasDeTempsRef = problemeHebdo->NombreDePasDeTemps;
-            problemeHebdo->NombreDePasDeTempsDUneJourneeRef
-              = problemeHebdo->NombreDePasDeTempsDUneJournee;
             problemeHebdo->NombreDeJours = (int)(problemeHebdo->NombreDePasDeTemps
                                                  / problemeHebdo->NombreDePasDeTempsDUneJournee);
 
@@ -73,8 +70,6 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchPar
     }
 
     OPT_VerifierPresenceReserveJmoins1(problemeHebdo);
-
-    OPT_SauvegarderLesPmaxThermiques(problemeHebdo);
 
     OPT_InitialiserLesPminHebdo(problemeHebdo);
 

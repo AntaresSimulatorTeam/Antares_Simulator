@@ -81,7 +81,6 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO*,
                          std::shared_ptr<OptPeriodStringGenerator>);
 void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
 bool OPT_OptimisationLineaire(PROBLEME_HEBDO*, AdqPatchParams&);
-void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO*);
 void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO*, const int);
 /*------------------------------*/
 
