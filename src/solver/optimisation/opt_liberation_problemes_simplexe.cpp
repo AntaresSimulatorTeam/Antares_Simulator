@@ -67,8 +67,8 @@ void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO* problemeHebdo)
         for (int numIntervalle = 0; numIntervalle < nbIntervalles; numIntervalle++)
         {
             auto ProbSpx
-              = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[numIntervalle]);
-            auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[numIntervalle]);
+              = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
+            auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
 
             if (ortoolsUsed && solver != NULL)
             {

@@ -964,8 +964,6 @@ void ISimulation<Impl>::estimateMemoryForOptimizationPb(Antares::Data::StudyMemo
     requiredMemoryForOptPb += 2 * NombreDeVariables * sizeof(void*);
     requiredMemoryForOptPb += NombreDeContraintes * sizeof(void*);
 
-    requiredMemoryForOptPb += sizeof(PROBLEMES_SIMPLEXE);
-
     // ================================================
     // Adding memory from the optimization problem
     // ================================================

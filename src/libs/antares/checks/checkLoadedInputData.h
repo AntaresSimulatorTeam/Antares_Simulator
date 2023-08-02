@@ -24,26 +24,22 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-
-#include <stdlib.h>
-#include "mem-wrapper.h"
-#include <string.h>
-
-void* MemAllocMemset(const size_t blocksize)
+namespace Antares::Check
 {
-    void* p = (void*)malloc(blocksize);
-    memset(p, 0, blocksize);
-    return p;
-}
+void checkStudyVersion(const AnyString& optStudyFolder);
 
-void* MemAlloc(const size_t blocksize)
-{
-    void* p = (void*)malloc(blocksize);
-    return p;
-}
+void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
+                                   Antares::Data::HydroPricingMode hpMode);
 
-void* MemRealloc(void* p, const size_t blsize)
-{
-    void* np = (void*)realloc(p, blsize);
-    return np;
-}
+void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,
+                                         Antares::Data::UnitCommitmentMode ucMode);
+
+void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange,
+                                     const Antares::Data::AreaList& areas);
+
+void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas);
+
+void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas);
+void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas);
+
+} // namespace Antares::Check

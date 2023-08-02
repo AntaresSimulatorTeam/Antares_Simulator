@@ -33,12 +33,6 @@
 
 /*--------------------------------------------------------------------------------------*/
 
-/* Les problemes Simplexe */
-typedef struct
-{
-    void** ProblemeSpx;
-} PROBLEMES_SIMPLEXE;
-
 /* Le probleme a resoudre */
 typedef struct
 {
@@ -98,7 +92,7 @@ typedef struct
                                   matrice de base reguliere, et dans ce cas il n'y a pas de solution
                                 */
 
-    PROBLEMES_SIMPLEXE* ProblemesSpx;
+    std::vector<void*> ProblemesSpx;
 
     std::vector<int> PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
     std::vector<int> ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
