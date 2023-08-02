@@ -8,7 +8,7 @@
 
 #include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
-#include <antares/checks/checkApplication.h>
+#include <antares/checks/checkLoadedInputData.h>
 #include <antares/version.h>
 
 #include "misc/system-memory.h"
@@ -154,7 +154,8 @@ void Application::prepare(int argc, char* argv[])
 
     checkMinStablePower(tsGenThermal, pStudy->areas);
 
-    checkFuelAndCo2ColumnNumber(pStudy->areas);
+    checkFuelCostColumnNumber(pStudy->areas);
+    checkCO2CostColumnNumber(pStudy->areas);
 
     // Start the progress meter
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);

@@ -151,10 +151,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
 
     int NbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
-    ProblemeAResoudre->ProblemesSpx = (PROBLEMES_SIMPLEXE*)MemAlloc(sizeof(PROBLEMES_SIMPLEXE));
-    ProblemeAResoudre->ProblemesSpx->ProblemeSpx = (void**)MemAlloc(NbIntervalles * sizeof(void*));
-    for (int NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
-        ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = NULL;
+    ProblemeAResoudre->ProblemesSpx.assign(NbIntervalles, nullptr);
 
     logs.info();
     logs.info() << " Status of Preliminary Allocations for Generic Problem Resolution : Successful";
@@ -191,12 +188,5 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     if (ProblemeAResoudre)
-    {
-        if (ProblemeAResoudre->ProblemesSpx)
-        {
-            MemFree(ProblemeAResoudre->ProblemesSpx->ProblemeSpx);
-            MemFree(ProblemeAResoudre->ProblemesSpx);
-        }
         delete ProblemeAResoudre;
-    }
 }

@@ -370,6 +370,11 @@ AreaList::~AreaList()
     clear();
 }
 
+bool AreaList::empty() const
+{
+    return areas.empty();
+}
+
 AreaLink* AreaListAddLink(AreaList* l, const char area[], const char with[], bool warning)
 {
     // Asserts

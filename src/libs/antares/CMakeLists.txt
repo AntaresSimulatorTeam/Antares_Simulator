@@ -172,14 +172,12 @@ set(SRC_AREAS
 	study/area/store-timeseries-numbers.h
 	study/area/store-timeseries-numbers.hxx
 	study/area/list.cpp
-	study/area/list.hxx
 	)
 source_group("study\\area" FILES ${SRC_AREAS})
 
 
 set(SRC_STUDY_AREA_UI
 	study/area/ui.h
-	study/area/ui.hxx
 	study/area/ui.cpp
 	)
 source_group("study\\area\\ui" FILES ${SRC_STUDY_AREA_UI})
@@ -352,8 +350,8 @@ set(SRC_EXCEPTION
 source_group("exception" FILES ${SRC_EXCEPTION})
 
 set(SRC_CHECKS
-	checks/checkApplication.cpp
-	checks/checkApplication.h
+	checks/checkLoadedInputData.cpp
+	checks/checkLoadedInputData.h
 	)
 source_group("checks" FILES ${SRC_CHECKS})
 
@@ -385,9 +383,6 @@ set(SRC
 
 	solver.h
 	solver.cpp
-
-	# Memory wrapper
-	sys/mem-wrapper.h  sys/mem-wrapper.c
 
     # new check allocation
     memory/new_check.hxx

@@ -107,8 +107,8 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
     bool PremierPassage = true;
 
     auto ProbSpx
-      = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
-    auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
+      = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
+    auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
 
     auto study = Data::Study::Current::Get();
     bool ortoolsUsed = study->parameters.ortoolsUsed;
@@ -136,7 +136,7 @@ RESOLUTION:
             {
                 SPX_LibererProbleme(ProbSpx);
             }
-            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = nullptr;
+            ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
 
             ProbSpx = nullptr;
             solver = nullptr;
@@ -245,7 +245,7 @@ RESOLUTION:
         solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
         if (solver != nullptr)
         {
-            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)solver;
+            ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;
         }
     }
     else
@@ -253,7 +253,7 @@ RESOLUTION:
         ProbSpx = SPX_Simplexe(&Probleme, ProbSpx);
         if (ProbSpx != nullptr)
         {
-            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
+            ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)ProbSpx;
         }
     }
     measure.tick();

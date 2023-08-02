@@ -403,7 +403,6 @@ public:
 struct RESERVE_JMOINS1
 {
     std::vector<double> ReserveHoraireJMoins1;
-    std::vector<double> ReserveHoraireJMoins1Ref;
 };
 
 struct PRODUCTION_THERMIQUE_OPTIMALE
