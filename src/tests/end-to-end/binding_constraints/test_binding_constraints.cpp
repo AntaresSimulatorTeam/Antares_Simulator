@@ -270,9 +270,6 @@ void SimulationHandler::create()
     SIM_AllocationTableaux(*study_);
 }
 
-SimulationHandler::~SimulationHandler()
-= default;
-
 // ===============
 // The fixture
 // ===============
