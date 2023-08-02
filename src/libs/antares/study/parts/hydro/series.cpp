@@ -192,27 +192,6 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
     timeseriesNumbers.clear();
     timeseriesNumbersPowerCredits.clear();
 
-    if (study.header.version < 870)
-    {
-        Area* area = study.areas.find(areaID);
-
-        auto& MaxPowerGen = area->hydro.maxPower[area->hydro.genMaxP];
-        auto& MaxPowerPump = area->hydro.maxPower[area->hydro.pumpMaxP];
-
-        maxgen.reset(1, HOURS_PER_YEAR);
-        maxpump.reset(1, HOURS_PER_YEAR);
-
-        AutoTransferData(maxgen, MaxPowerGen);
-        AutoTransferData(maxpump, MaxPowerPump);
-
-        buffer.clear() << folder << SEP << areaID << SEP << "maxgen." << study.inputExtension;
-        ret = maxgen.saveToCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
-
-        buffer.clear() << folder << SEP << areaID << SEP << "maxpump." << study.inputExtension;
-        ret = maxpump.saveToCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
-
-    }
-
     return ret;
 }
 
@@ -359,6 +338,34 @@ uint64 DataSeriesHydro::memoryUsage() const
 {
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage()
            + maxgen.memoryUsage() + maxpump.memoryUsage();
+}
+
+bool DataSeriesHydro::SupportForOldStudies(Study& study, const AreaName& areaID, const AnyString& folder)
+{
+    bool ret = true;
+    auto& buffer = study.bufferLoadingTS;
+
+    if (study.header.version < 870)
+    {
+        Area* area = study.areas.find(areaID);
+
+        auto& MaxPowerGen = area->hydro.maxPower[area->hydro.genMaxP];
+        auto& MaxPowerPump = area->hydro.maxPower[area->hydro.pumpMaxP];
+
+        maxgen.reset(1, HOURS_PER_YEAR);
+        maxpump.reset(1, HOURS_PER_YEAR);
+
+        AutoTransferData(maxgen, MaxPowerGen);
+        AutoTransferData(maxpump, MaxPowerPump);
+
+        buffer.clear() << folder << SEP << areaID << SEP << "maxgen." << study.inputExtension;
+        ret = maxgen.saveToCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+
+        buffer.clear() << folder << SEP << areaID << SEP << "maxpump." << study.inputExtension;
+        ret = maxpump.saveToCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+    }
+
+    return ret;
 }
 
 void DataSeriesHydro::AutoTransferData(Matrix<double, Yuni::sint32>& matrix,

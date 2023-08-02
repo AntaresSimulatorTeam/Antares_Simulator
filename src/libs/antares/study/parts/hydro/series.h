@@ -181,6 +181,7 @@ public:
     */
     Matrix<Yuni::uint32> timeseriesNumbers;
     Matrix<Yuni::uint32> timeseriesNumbersPowerCredits;
+    bool SupportForOldStudies(Study& study, const AreaName& areaID, const AnyString& folder);
 
 }; // class DataSeriesHydro
 

@@ -119,10 +119,10 @@ inline bool CheckValidity<Data::BindingConstraintTimeSeriesNumbers>(uint, const 
 }
 
 template<class D>
-static inline bool CheckValidityHydroPowerCredits(uint value, const D& data)
+static inline bool CheckValidityHydroPowerCredits(uint value, const D& data, uint tsGenMax)
 {
     // TS Generator never used
-    return value < data.countpowercredits;
+    return (!tsGenMax) ? (value < data.countpowercredits) : (value < tsGenMax);
 }
 
 template<class StringT, class D>
@@ -174,7 +174,7 @@ template<class StringT, class D>
 bool ApplyToMatrixPowerCredits(uint& errors,
                                 StringT& logprefix,
                                 D& data,
-                                const TSNumberData::MatrixType::ColumnType& years)
+                                const TSNumberData::MatrixType::ColumnType& years, uint tsGenMax)
 {
     bool ret = true;
 
@@ -192,7 +192,7 @@ bool ApplyToMatrixPowerCredits(uint& errors,
             uint tsNum = years[y] - 1;
 
             // When the TS-Generators are not used
-            if (!CheckValidityHydroPowerCredits(tsNum, data))
+            if (!CheckValidityHydroPowerCredits(tsNum, data, tsGenMax))
             {
                 if (errors <= maxErrors)
                 {
@@ -393,6 +393,7 @@ bool hydroPowerCreditsTSNumberData::apply(Study& study)
     // The total number of areas;
     const uint areaCount = study.areas.size();
 
+    const uint tsGenCountHydroPowerCredits = get_tsGenCount(study);
 
     for (uint areaIndex = 0; areaIndex != areaCount; ++areaIndex)
     {
@@ -403,7 +404,7 @@ bool hydroPowerCreditsTSNumberData::apply(Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Hydro Power Credits: Area '" << area.name << "': ";
-        ret = ApplyToMatrixPowerCredits(errors, logprefix, *area.hydro.series, col) && ret;
+        ret = ApplyToMatrixPowerCredits(errors, logprefix, *area.hydro.series, col, tsGenCountHydroPowerCredits) && ret;
     }
     return ret;
 }

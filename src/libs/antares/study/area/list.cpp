@@ -909,6 +909,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = area.hydro.series->loadFromFolder(study, area.id, buffer) && ret;
         }
 
+        ret = area.hydro.series->SupportForOldStudies(study, area.id, buffer) && ret;
+
         ++options.progressTicks;
         options.pushProgressLogs();
     }
