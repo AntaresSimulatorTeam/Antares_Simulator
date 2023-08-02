@@ -225,8 +225,9 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-3
-        os: ${{ matrix.test-platform }}    - name: Solver archive creation
+        os: ${{ matrix.test-platform }}
 
+    - name: Solver archive creation
       shell: bash
       run: |
            cd _build
