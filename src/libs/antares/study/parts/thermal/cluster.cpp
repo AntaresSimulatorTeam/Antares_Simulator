@@ -138,7 +138,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
     forcedLaw(thermalLawUniform),
     plannedLaw(thermalLawUniform),
     PthetaInf(HOURS_PER_YEAR, 0),
-    thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries())
+    costsTimeSeries(1, CostsTimeSeries())
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");
@@ -872,7 +872,7 @@ void ThermalCluster::setProductionCost()
     }
     else
     {
-        const auto& marginalCostPerHour = thermalEconomicTimeSeries[0].marginalCostPerHourTs;
+        const auto& marginalCostPerHour = costsTimeSeries[0].marginalCostTS;
         for (uint h = 0; h != modulation.height; ++h)
             productionCost[h] = marginalCostPerHour[h] * modulationCost[h];
     }

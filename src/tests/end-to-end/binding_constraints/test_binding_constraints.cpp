@@ -60,16 +60,8 @@ StudyForBCTest::StudyForBCTest()
 {
     simulationBetweenDays(0, 7);
 
-double getLinkFlowAthour(const std::shared_ptr<ISimulation<Economy>>& simulation, AreaLink* link, unsigned int hour)
-{
-    // There is a problem here :
-    //    we cannot easly retrieve the hourly flow for a link and a year :
-    //    - Functions retrieveHourlyResultsForCurrentYear are not coded everywhere it should.
-    //    - Even if those functions were correctly implemented, there is another problem :
-    //      Each year results erase results of previous year, how can we retrieve results of year 1
-    //      if 2 year were run ?
-    //    We should be able to run each year independently, which is not possible now.
-    //    A workaround is to retrieve syntheses, and that's what we do here.
+    Area* area1 = addAreaToStudy("Area 1");
+    Area* area2 = addAreaToStudy("Area 2");
 
     double loadInAreaOne = 0.;
     addLoadToArea(area1, loadInAreaOne);
@@ -103,45 +95,14 @@ StudyWithBConLink::StudyWithBConLink()
 }
 
 
-// =====================
-// Simulation handler
-// =====================
-class SimulationHandler
-{
-public:
-    SimulationHandler(std::shared_ptr<Study> study)
-        : study_(study)
-    {}
-    ~SimulationHandler() = default;
-    void create();
-    void run() { simulation_->run(); }
-    std::shared_ptr<ISimulation<Economy>> get() { return simulation_; }
+// =======================================================
+// Study fixture containing a BC on the thermal cluster 
+// =======================================================
 
 struct StudyWithBConCluster : public StudyForBCTest
 {
-    BOOST_CHECK(study_->initializeRuntimeInfos());
-    addScratchpadToEachArea(study_);
-
-    simulation_ = std::make_shared<ISimulation<Economy>>(*study_,
-                                                         settings_,
-                                                         &nullDurationCollector_);
-
-    // Allocate arrays for time series
-    SIM_AllocationTableaux();
-}
-
-// ===============
-// The fixture
-// ===============
-struct Fixture {
-    Fixture();
-    void giveWeigthOnlyToYear(unsigned int year);
-
-    // Data members
-    AreaLink* link = nullptr;
-    std::shared_ptr<BindingConstraint> BC;
-    std::shared_ptr<SimulationHandler> simulation;
-    std::shared_ptr<Study> study;
+    using StudyForBCTest::StudyForBCTest;
+    StudyWithBConCluster();
 };
 
 StudyWithBConCluster::StudyWithBConCluster()
