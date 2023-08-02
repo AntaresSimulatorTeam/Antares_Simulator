@@ -51,12 +51,12 @@ void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO* problemeHebdo)
         {
             const std::vector<double>& PuissanceMinDuPalierThermique
               = PuissanceDisponibleEtCout[palier].PuissanceMinDuPalierThermique;
-            std::vector<double>& PuissanceMinDuPalierThermique_SV
-              = PuissanceDisponibleEtCout[palier].PuissanceMinDuPalierThermique_SV;
+            std::vector<double>& PuissanceMinDuPalierThermiqueRef
+              = PuissanceDisponibleEtCout[palier].PuissanceMinDuPalierThermiqueRef;
 
             for (int pdt = 0; pdt < NombreDePasDeTempsProblemeHebdo; pdt++)
             {
-                PuissanceMinDuPalierThermique_SV[pdt] = PuissanceMinDuPalierThermique[pdt];
+                PuissanceMinDuPalierThermiqueRef[pdt] = PuissanceMinDuPalierThermique[pdt];
             }
         }
     }
