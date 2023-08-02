@@ -968,9 +968,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             = problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimise;
         problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraireRef
             = problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire;
-
-        problem.ReserveJMoins1[k].ReserveHoraireJMoins1Ref
-            = problem.ReserveJMoins1[k].ReserveHoraireJMoins1;
     }
 
     for (unsigned int j = 0; j < problem.NombreDePasDeTemps; ++j)

@@ -82,19 +82,6 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
         }
     }
 
-    if (problemeHebdo->YaDeLaReserveJmoins1 && optimizationNumber == PREMIERE_OPTIMISATION)
-    {
-        for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
-        {
-            for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-            {
-                RESERVE_JMOINS1& ReserveJMoins1 = problemeHebdo->ReserveJMoins1[pays];
-                ReserveJMoins1.ReserveHoraireJMoins1[pdt]
-                  = ReserveJMoins1.ReserveHoraireJMoins1Ref[pdt];
-            }
-        }
-    }
-
     for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
