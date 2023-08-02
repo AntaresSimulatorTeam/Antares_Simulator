@@ -386,8 +386,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
 
         problem.ReserveJMoins1[k].ReserveHoraireJMoins1
           .assign(NombreDePasDeTemps, 0.);
-        problem.ReserveJMoins1[k].ReserveHoraireJMoins1Ref
-          .assign(NombreDePasDeTemps, 0.);
 
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive
           .assign(NombreDePasDeTemps, 0.);
