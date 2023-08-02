@@ -866,6 +866,5 @@ inline bool CheckForbiddenCharacterInAreaName(const AnyString& name)
 
 #include "../load-options.h"
 #include "area.hxx"
-#include "list.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_AREAS_H__

@@ -69,25 +69,24 @@ bool EconomicInputData::saveToFolder(const AnyString& folder) const
 bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
 {
     bool ret = true;
-    auto& buffer = study.bufferLoadingTS;
 
     if (study.header.version >= 870)
     {
-        buffer.clear() << folder << SEP << "fuelCost.txt";
-        if (IO::File::Exists(buffer))
+        YString filename;
+        Yuni::Clob dataBuffer;
+
+        filename << folder << SEP << "fuelCost.txt";
+        if (IO::File::Exists(filename))
         {
-            ret = fuelcost.loadFromCSVFile(
-                    buffer, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &study.dataBuffer)
-                  && ret;
+            ret = fuelcost.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &dataBuffer) && ret;
             if (study.usedByTheSolver && study.parameters.derated)
                 fuelcost.averageTimeseries();
         }
 
-        buffer.clear() << folder << SEP << "CO2Cost.txt";
-        if (IO::File::Exists(buffer))
+        filename.clear() << folder << SEP << "CO2Cost.txt";
+        if (IO::File::Exists(filename))
         {
-            ret = co2cost.loadFromCSVFile(
-                    buffer, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &study.dataBuffer)
+            ret = co2cost.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &dataBuffer)
                   && ret;
             if (study.usedByTheSolver && study.parameters.derated)
                 co2cost.averageTimeseries();
