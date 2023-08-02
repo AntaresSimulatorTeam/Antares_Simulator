@@ -729,7 +729,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
             for (; i != end; ++i)
             {
                 (*i)->fuelEfficiency = d;
-                (*i)->calculationOfMarketBidPerHourAndMarginalCostPerHour();
+                (*i)->ComputeCostTimeSeries();
             } // update
         }
         OnStudyThermalClusterCommonSettingsChanged();
@@ -755,7 +755,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         for (; i != end; ++i)
         {
             (*i)->costgeneration = costgeneration;    
-            (*i)->calculationOfMarketBidPerHourAndMarginalCostPerHour(); //update     
+            (*i)->ComputeCostTimeSeries(); //update     
         }
         // Notify
         OnStudyThermalClusterCommonSettingsChanged();
@@ -794,7 +794,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         for (; i != end; ++i)
         {
             (*i)->marginalCost = d;
-            (*i)->calculationOfMarketBidPerHourAndMarginalCostPerHour(); // update
+            (*i)->ComputeCostTimeSeries(); // update
         }
         
         pFrame.delayApply();
@@ -877,7 +877,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         for (; i != end; ++i)
         {
             (*i)->marketBidCost = d;
-            (*i)->calculationOfMarketBidPerHourAndMarginalCostPerHour();
+            (*i)->ComputeCostTimeSeries();
         }
         pFrame.delayApply();
 
@@ -920,7 +920,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
             for (; i != end; ++i)
             {
                 (*i)->variableomcost = d;
-                (*i)->calculationOfMarketBidPerHourAndMarginalCostPerHour(); // update
+                (*i)->ComputeCostTimeSeries(); // update
             }
         }
         OnStudyThermalClusterCommonSettingsChanged();

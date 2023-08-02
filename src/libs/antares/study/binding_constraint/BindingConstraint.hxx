@@ -81,9 +81,13 @@ inline void BindingConstraint::setTimeGranularity(Type t)
         pType = t;
 }
 
-        inline bool BindingConstraint::skipped() const
+inline bool BindingConstraint::skipped() const
 {
-    return linkCount() == 0 && enabledClusterCount() == 0;
+    return linkCount() == 0 && clusterCount() == 0;
+}
+
+inline bool BindingConstraint::isActive() const {
+    return enabled() && !skipped();
 }
 
 inline BindingConstraint::iterator BindingConstraint::begin() {

@@ -44,7 +44,6 @@ private:
     void setProblemCost();
     void solveProblem(uint week, int year);
     void allocateProblem();
-    void resetProblem();
 
     // variable construction
     void constructVariableENS();
@@ -88,10 +87,7 @@ public:
         allocateProblem();
     }
 
-    ~HourlyCSRProblem()
-    {
-        resetProblem();
-    }
+    ~HourlyCSRProblem() = default;
 
     HourlyCSRProblem(const HourlyCSRProblem&) = delete;
     HourlyCSRProblem& operator=(const HourlyCSRProblem&) = delete;

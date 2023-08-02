@@ -157,7 +157,7 @@ public:
 
             auto item = std::make_shared<Toolbox::Spotlight::ItemConstraint>(&constraint);
             if (constraint.enabled()
-                && (constraint.linkCount() > 0 || constraint.enabledClusterCount() > 0))
+                && (constraint.linkCount() > 0 || constraint.clusterCount() > 0))
             {
                 if (pBmpOn)
                     item->image(*pBmpOn);
