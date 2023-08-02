@@ -952,7 +952,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         for (uint l = 0; l != area.thermal.list.size(); ++l)
         {
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                .PuissanceDisponibleDuPalierThermiqueRef_SV
+                .PuissanceDisponibleDuPalierThermiqueRef
                 =
                 problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
                 .PuissanceDisponibleDuPalierThermique;
