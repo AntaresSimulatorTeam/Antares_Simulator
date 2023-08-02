@@ -116,20 +116,28 @@ public:
     }
 
     template<class ListT>
-    static void ApplyGreyColor(wxPGProperty* property_one,
-                               wxPGProperty* property_two,
+    static void ApplyGreyColor(wxPGProperty* property_MargCost,
+                               wxPGProperty* property_OperCost,
+                               wxPGProperty* property_FuelEff,
+                               wxPGProperty* property_VarOMcost,
                                const ListT& list)
     {
         assert(list.size() != 0);
-        assert(property_one != NULL);
-        assert(property_two != NULL);
+        assert(property_MargCost != NULL);
+        assert(property_OperCost != NULL);
+        assert(property_FuelEff != NULL);
+        assert(property_VarOMcost != NULL);
         if (list.size() == 1)
         {
             auto study = *list.begin();
-            property_one->GetGrid()->EnableProperty(property_one->GetBaseName(),
-                                                    PredicateT::Enable(study));
-            property_two->GetGrid()->EnableProperty(property_two->GetBaseName(),
-                                                    PredicateT::Enable(study));
+            property_MargCost->GetGrid()->EnableProperty(property_MargCost->GetBaseName(),
+                                                         PredicateT::Enable(study));
+            property_OperCost->GetGrid()->EnableProperty(property_OperCost->GetBaseName(),
+                                                         PredicateT::Enable(study));
+            property_FuelEff->GetGrid()->EnableProperty(property_FuelEff->GetBaseName(),
+                                                        !PredicateT::Enable(study));
+            property_VarOMcost->GetGrid()->EnableProperty(property_VarOMcost->GetBaseName(),
+                                                          !PredicateT::Enable(study));
         }
         else
         {
@@ -138,10 +146,14 @@ public:
             ++i;
             for (; i != end; ++i)
             {
-                property_one->GetGrid()->EnableProperty(property_one->GetBaseName(),
-                                                        PredicateT::Enable(*i));
-                property_two->GetGrid()->EnableProperty(property_two->GetBaseName(),
-                                                        PredicateT::Enable(*i));
+                property_MargCost->GetGrid()->EnableProperty(property_MargCost->GetBaseName(),
+                                                             PredicateT::Enable(*i));
+                property_OperCost->GetGrid()->EnableProperty(property_OperCost->GetBaseName(),
+                                                             PredicateT::Enable(*i));
+                property_FuelEff->GetGrid()->EnableProperty(property_FuelEff->GetBaseName(),
+                                                            !PredicateT::Enable(*i));
+                property_VarOMcost->GetGrid()->EnableProperty(property_VarOMcost->GetBaseName(),
+                                                              !PredicateT::Enable(*i));
             }
         }
     }

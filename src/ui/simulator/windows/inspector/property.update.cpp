@@ -758,10 +758,15 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
             (*i)->ComputeCostTimeSeries(); // update
         }
         AccumulatorCheck<PClusterMarginalCostEnable>::ApplyGreyColor(
-          pFrame.pPGThClusterMarginalCost, pFrame.pPGThClusterOperatingCost, data->ThClusters);
+          pFrame.pPGThClusterMarginalCost,
+          pFrame.pPGThClusterOperatingCost,
+          pFrame.pPGThClusterEfficiency,
+          pFrame.pPGThClusterVariableOMcost,
+          data->ThClusters);
+
         // Notify
         OnStudyThermalClusterCommonSettingsChanged();
-        pFrame.Refresh();        
+        pFrame.Refresh();
         return true;
     }
     // MBO 15/04/2014
