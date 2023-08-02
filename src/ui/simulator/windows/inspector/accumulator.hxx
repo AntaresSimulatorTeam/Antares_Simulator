@@ -114,6 +114,37 @@ public:
                                                            PredicateT::TextColor(*i));
         }
     }
+
+    template<class ListT>
+    static void ApplyGreyColor(wxPGProperty* property_one,
+                               wxPGProperty* property_two,
+                               const ListT& list)
+    {
+        assert(list.size() != 0);
+        assert(property_one != NULL);
+        assert(property_two != NULL);
+        if (list.size() == 1)
+        {
+            auto study = *list.begin();
+            property_one->GetGrid()->EnableProperty(property_one->GetBaseName(),
+                                                    PredicateT::Enable(study));
+            property_two->GetGrid()->EnableProperty(property_two->GetBaseName(),
+                                                    PredicateT::Enable(study));
+        }
+        else
+        {
+            auto i = list.cbegin();
+            const auto end = list.cend();
+            ++i;
+            for (; i != end; ++i)
+            {
+                property_one->GetGrid()->EnableProperty(property_one->GetBaseName(),
+                                                        PredicateT::Enable(*i));
+                property_two->GetGrid()->EnableProperty(property_two->GetBaseName(),
+                                                        PredicateT::Enable(*i));
+            }
+        }
+    }
 };
 
 struct PAreaColor
@@ -892,6 +923,17 @@ struct PClusterMarginalCost
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
+    }
+};
+
+struct PClusterMarginalCostEnable
+{
+    static bool Enable(Data::ThermalCluster* cluster)
+    {
+        if (cluster->costgeneration == Data::useCostTimeseries)
+            return false;
+
+        return true;
     }
 };
 
