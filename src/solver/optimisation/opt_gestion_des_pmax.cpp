@@ -45,8 +45,6 @@ void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO* problemeHebdo)
             PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDisponibleEtCout
                 = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[palier];
 
-            PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermiqueRef_SV
-                = PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermiqueRef;
         }
     }
     return;

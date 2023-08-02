@@ -245,7 +245,6 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 {
     std::vector<double> PuissanceDisponibleDuPalierThermique;
 
-    std::vector<double> PuissanceDisponibleDuPalierThermiqueRef;
     std::vector<double> PuissanceDisponibleDuPalierThermiqueRef_SV;
 
     std::vector<double> PuissanceMinDuPalierThermique;

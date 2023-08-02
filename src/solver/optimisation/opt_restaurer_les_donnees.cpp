@@ -192,7 +192,7 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
                 PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDisponibleEtCout
                   = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[palier];
                 PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt]
-                  = PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermiqueRef[pdt];
+                  = PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermiqueRef_SV[pdt];
 
                 if (PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt]
                     > PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt])
