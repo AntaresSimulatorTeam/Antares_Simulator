@@ -499,7 +499,6 @@ struct PROBLEME_HEBDO
     std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTCRef;
 
     unsigned int NombreDePasDeTemps = 0;
-    unsigned int NombreDePasDeTempsRef = 0;
     std::vector<int> NumeroDeJourDuPasDeTemps;
 
     int NombreDePasDeTempsPourUneOptimisation = 0;

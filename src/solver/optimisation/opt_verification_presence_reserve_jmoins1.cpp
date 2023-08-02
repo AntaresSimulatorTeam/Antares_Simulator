@@ -46,7 +46,7 @@ void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO* problemeHebdo)
     {
         const std::vector<double>& ReserveHoraireJMoins1Ref
             = ReserveJMoins1[pays].ReserveHoraireJMoins1Ref;
-        for (uint pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsRef; pdt++)
+        for (uint pdt = 0; pdt < problemeHebdo->NombreDePasDeTemps; pdt++)
         {
             if (fabs(ReserveHoraireJMoins1Ref[pdt]) > ZERO_RESERVE_J_MOINS1)
             {

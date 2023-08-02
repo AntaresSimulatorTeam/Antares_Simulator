@@ -50,7 +50,6 @@ bool OPT_OptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adq
 {
     int optimizationNumber = PREMIERE_OPTIMISATION;
 
-    problemeHebdo->NombreDePasDeTemps = problemeHebdo->NombreDePasDeTempsRef;
     problemeHebdo->NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJourneeRef;
 
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)

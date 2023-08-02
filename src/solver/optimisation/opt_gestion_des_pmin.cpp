@@ -39,7 +39,7 @@
 
 void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO* problemeHebdo)
 {
-    int NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTempsRef;
+    int NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTemps;
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
