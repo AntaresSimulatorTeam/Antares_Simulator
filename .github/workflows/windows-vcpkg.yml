@@ -10,6 +10,8 @@ on:
       - issue-*
       - release/*
       - doc/*
+  schedule:
+    - cron: '21 2 * * *'
 
 jobs:
   windows:
@@ -29,6 +31,7 @@ jobs:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_windows-latest_static_sirius.zip"
+      RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
 
     steps:
     - uses: actions/checkout@v3
@@ -192,7 +195,38 @@ jobs:
         batch-name: valid-mps
         os: ${{ matrix.test-platform }}
 
-    - name: Solver archive creation
+    - name: Run medium-tests
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: medium-tests
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-1
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-1
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-2
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-2
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-3
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-3
+        os: ${{ matrix.test-platform }}    - name: Solver archive creation
+
       shell: bash
       run: |
            cd _build
