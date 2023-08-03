@@ -42,6 +42,39 @@ void addScratchpadToEachArea(Study& study)
     }
 }
 
+
+ThermalClusterConfig::ThermalClusterConfig(ThermalCluster* cluster) : cluster_(cluster)
+{
+    tsAvailablePowerConfig_ = std::make_unique<TimeSeriesConfig<Matrix<double>>>(cluster_->series->timeSeries);
+}
+ThermalClusterConfig& ThermalClusterConfig::setNominalCapacity(double nominalCapacity)
+{ 
+    cluster_->nominalCapacity = nominalCapacity;
+    return *this;
+}
+ThermalClusterConfig& ThermalClusterConfig::setUnitCount(unsigned int unitCount)
+{ 
+    cluster_->unitCount = unitCount;
+    return *this;
+}
+ThermalClusterConfig& ThermalClusterConfig::setCosts(double cost)
+{
+    cluster_->marginalCost = cost;
+    cluster_->marketBidCost = cost; // Must define market bid cost otherwise all production is used
+    cluster_->setProductionCost();
+    return *this;
+}
+ThermalClusterConfig& ThermalClusterConfig::setAvailablePowerNumberOfTS(unsigned int nbColumns)
+{ 
+    tsAvailablePowerConfig_->setNumberColumns(nbColumns);
+    return *this;
+};
+ThermalClusterConfig& ThermalClusterConfig::setAvailablePower(unsigned int column, double value)
+{ 
+    tsAvailablePowerConfig_->fillColumnWith(column, value);
+    return *this;
+}
+
 // -------------------------------
 // Simulation results retrieval
 // -------------------------------

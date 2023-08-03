@@ -37,12 +37,12 @@ StudyFixture::StudyFixture()
 	loadTSconfig.setNumberColumns(1)
 				.fillColumnWith(0, loadInArea);
 
-	clusterConfig = std::move(ThermalClusterConfig(cluster.get()));
-	clusterConfig.setNominalCapacity(100.);
-	clusterConfig.setAvailablePower(0, 50.);
 	clusterCost = 2.;
-	clusterConfig.setCosts(clusterCost);
-	clusterConfig.setUnitCount(1);
+	clusterConfig = std::move(ThermalClusterConfig(cluster.get()));
+	clusterConfig.setNominalCapacity(100.)
+				 .setAvailablePower(0, 50.)
+				 .setCosts(clusterCost)
+				 .setUnitCount(1);
 };
 
 
@@ -79,9 +79,9 @@ BOOST_AUTO_TEST_CASE(two_mc_years__two_ts_identical)
 				.fillColumnWith(0, 7.0)
 				.fillColumnWith(1, 7.0);
 
-	clusterConfig.setAvailablePowerNumberOfTS(2);
-	clusterConfig.setAvailablePower(0, 50.);
-	clusterConfig.setAvailablePower(1, 50.);
+	clusterConfig.setAvailablePowerNumberOfTS(2)
+				 .setAvailablePower(0, 50.)
+				 .setAvailablePower(1, 50.);
 
 	simulation->create();
 	simulation->run();

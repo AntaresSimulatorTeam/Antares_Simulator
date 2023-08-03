@@ -44,11 +44,11 @@ StudyForBCTest::StudyForBCTest()
 
     cluster = addClusterToArea(area1, "some cluster");
 
-    ThermalClusterConfig clusterConfig(cluster.get());
-    clusterConfig.setNominalCapacity(100.);
-    clusterConfig.setAvailablePower(0, 100.);
-    clusterConfig.setCosts(50.);
-    clusterConfig.setUnitCount(1);
+    ThermalClusterConfig(cluster.get())
+        .setNominalCapacity(100.)
+        .setAvailablePower(0, 100.)
+        .setCosts(50.)
+        .setUnitCount(1);
 };
 
 // ======================================================

@@ -46,20 +46,12 @@ class ThermalClusterConfig
 {
 public:
     ThermalClusterConfig() = default;
-    ThermalClusterConfig(ThermalCluster* cluster) : cluster_(cluster) 
-    {
-        tsAvailablePowerConfig_ = std::make_unique<TimeSeriesConfig<Matrix<double>>>(cluster_->series->timeSeries);
-    }
-    void setNominalCapacity(double nominalCapacity) { cluster_->nominalCapacity = nominalCapacity; }
-    void setUnitCount(unsigned int unitCount) { cluster_->unitCount = unitCount; }
-    void setCosts(double cost)
-    {
-        cluster_->marginalCost = cost;
-        cluster_->marketBidCost = cost; // Must define market bid cost otherwise all production is used
-        cluster_->setProductionCost();
-    }
-    void setAvailablePowerNumberOfTS(unsigned int nbColumns) { tsAvailablePowerConfig_->setNumberColumns(nbColumns); };
-    void setAvailablePower(unsigned int column, double value) { tsAvailablePowerConfig_->fillColumnWith(column, value); }
+    ThermalClusterConfig(ThermalCluster* cluster);
+    ThermalClusterConfig& setNominalCapacity(double nominalCapacity);
+    ThermalClusterConfig& setUnitCount(unsigned int unitCount);
+    ThermalClusterConfig& setCosts(double cost);
+    ThermalClusterConfig& setAvailablePowerNumberOfTS(unsigned int nbColumns);
+    ThermalClusterConfig& setAvailablePower(unsigned int column, double value);
 
 private:
     ThermalCluster* cluster_ = nullptr;
