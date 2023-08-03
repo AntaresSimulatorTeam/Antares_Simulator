@@ -30,13 +30,13 @@ StudyForBCTest::StudyForBCTest()
     Area* area1 = addAreaToStudy("Area 1");
     Area* area2 = addAreaToStudy("Area 2");
 
-    auto loadTSconfig = std::make_shared<TimeSeriesConfig<Matrix<double, int32_t>>>(area1->load.series->timeSeries);
-    loadTSconfig->setNumberColumns(1);
-    loadTSconfig->fillColumnWith(0, 0);
+    auto loadTSconfig = TimeSeriesConfig<Matrix<double, int32_t>>(area1->load.series->timeSeries);
+    loadTSconfig.setNumberColumns(1);
+    loadTSconfig.fillColumnWith(0, 0);
 
-    loadTSconfig->setTargetTSmatrix(area2->load.series->timeSeries);
-    loadTSconfig->setNumberColumns(1);
-    loadTSconfig->fillColumnWith(0, 100);
+    loadTSconfig.setTargetTSmatrix(area2->load.series->timeSeries);
+    loadTSconfig.setNumberColumns(1);
+    loadTSconfig.fillColumnWith(0, 100);
 
     link = AreaAddLinkBetweenAreas(area1, area2);
 

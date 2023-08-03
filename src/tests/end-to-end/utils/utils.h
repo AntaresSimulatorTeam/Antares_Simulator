@@ -15,16 +15,16 @@ void initializeStudy(Study::Ptr study);
 void configureLinkCapacities(AreaLink* link);
 
 
-template<class MatixType>
+template<class MatrixType>
 class TimeSeriesConfig
 {
 public:
-    TimeSeriesConfig(MatixType& matrix) : ts_(&matrix) {}
-    void setTargetTSmatrix(MatixType& matrix) { ts_ = &matrix; }
+    TimeSeriesConfig(MatrixType& matrix) : ts_(&matrix) {}
+    void setTargetTSmatrix(MatrixType& matrix) { ts_ = &matrix; }
     void setNumberColumns(unsigned int nbColumns) { ts_->resize(nbColumns, HOURS_PER_YEAR);}
     void fillColumnWith(unsigned int column, double value) { ts_->fillColumn(column, value); }
 private:
-    MatixType* ts_;
+    MatrixType* ts_;
 };
 
 class ThermalClusterConfig
