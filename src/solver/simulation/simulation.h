@@ -47,11 +47,15 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
                                       Antares::Data::Study& study,
                                       unsigned NombreDePasDeTemps);
 
+void SIM_AllocationLinks(PROBLEME_HEBDO& problem,
+                         const uint linkCount,
+                         unsigned NombreDePasDeTemps);
+
 void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
                                Antares::Data::Study& study,
                                unsigned NombreDePasDeTemps);
 
-void SIM_AllocationNbPays(PROBLEME_HEBDO& problem,
+void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                                Antares::Data::Study& study,
                                unsigned NombreDePasDeTemps);
 /*!
