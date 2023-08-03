@@ -45,6 +45,7 @@ TimeSeriesConfig<MatrixType>& TimeSeriesConfig<MatrixType>::fillColumnWith(unsig
 class ThermalClusterConfig
 {
 public:
+    ThermalClusterConfig() = default;
     ThermalClusterConfig(ThermalCluster* cluster) : cluster_(cluster) 
     {
         tsAvailablePowerConfig_ = std::make_unique<TimeSeriesConfig<Matrix<double>>>(cluster_->series->timeSeries);
@@ -61,7 +62,7 @@ public:
     void setAvailablePower(unsigned int column, double value) { tsAvailablePowerConfig_->fillColumnWith(column, value); }
 
 private:
-    ThermalCluster* cluster_;
+    ThermalCluster* cluster_ = nullptr;
     std::unique_ptr<TimeSeriesConfig<Matrix<double>>> tsAvailablePowerConfig_;
 };
 

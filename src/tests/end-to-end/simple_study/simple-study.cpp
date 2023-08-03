@@ -22,7 +22,7 @@ struct StudyFixture : public StudyBuilder
 	Area* area = nullptr;
 	double loadInArea = 0.;
 	double clusterCost = 0.;
-	std::shared_ptr<ThermalClusterConfig> clusterConfig;
+	ThermalClusterConfig clusterConfig;
 	TimeSeriesConfig<Matrix<double, int32_t>> loadTSconfig;
 };
 
@@ -37,12 +37,12 @@ StudyFixture::StudyFixture()
 	loadTSconfig.setNumberColumns(1)
 				.fillColumnWith(0, loadInArea);
 
-	clusterConfig = std::make_shared<ThermalClusterConfig>(cluster.get());
-	clusterConfig->setNominalCapacity(100.);
-	clusterConfig->setAvailablePower(0, 50.);
+	clusterConfig = std::move(ThermalClusterConfig(cluster.get()));
+	clusterConfig.setNominalCapacity(100.);
+	clusterConfig.setAvailablePower(0, 50.);
 	clusterCost = 2.;
-	clusterConfig->setCosts(clusterCost);
-	clusterConfig->setUnitCount(1);
+	clusterConfig.setCosts(clusterCost);
+	clusterConfig.setUnitCount(1);
 };
 
 
@@ -79,9 +79,9 @@ BOOST_AUTO_TEST_CASE(two_mc_years__two_ts_identical)
 				.fillColumnWith(0, 7.0)
 				.fillColumnWith(1, 7.0);
 
-	clusterConfig->setAvailablePowerNumberOfTS(2);
-	clusterConfig->setAvailablePower(0, 50.);
-	clusterConfig->setAvailablePower(1, 50.);
+	clusterConfig.setAvailablePowerNumberOfTS(2);
+	clusterConfig.setAvailablePower(0, 50.);
+	clusterConfig.setAvailablePower(1, 50.);
 
 	simulation->create();
 	simulation->run();
