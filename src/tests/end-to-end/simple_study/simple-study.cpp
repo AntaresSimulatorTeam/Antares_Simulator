@@ -37,7 +37,7 @@ StudyFixture::StudyFixture()
 	loadTSconfig.setNumberColumns(1)
 				.fillColumnWith(0, loadInArea);
 
-	clusterConfig = std::make_shared<ThermalClusterConfig>(cluster);
+	clusterConfig = std::make_shared<ThermalClusterConfig>(cluster.get());
 	clusterConfig->setNominalCapacity(100.);
 	clusterConfig->setAvailablePower(0, 50.);
 	clusterCost = 2.;
