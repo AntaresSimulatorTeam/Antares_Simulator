@@ -134,7 +134,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
 
     // ... Hydro max pumping power and energy
      auto const& maxPumpingP = area.hydro.series->maxpump;
-     auto const& hoursPump = maxPowerHours[Data::PartHydro::genMaxP];
+     auto const& hoursPump = maxPowerHours[Data::PartHydro::pumpMaxE];
 
     // If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
     pumpHasMod = CheckForPositiveEnergy(maxPumpingP, hoursPump);
