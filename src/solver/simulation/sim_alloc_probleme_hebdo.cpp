@@ -32,6 +32,7 @@
 #include "simulation.h"
 #include "sim_structure_donnees.h"
 #include "sim_structure_probleme_economique.h"
+#include "sim_alloc_probleme_hebdo.h"
 #include "sim_structure_probleme_adequation.h"
 #include "sim_extern_variables_globales.h"
 
@@ -55,9 +56,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         problem.tempsResolution1.assign(7, 0.);
         problem.tempsResolution2.assign(7, 0.);
     }
-    catch(...)
+    catch(const std::bad_alloc& e)
     {
-        logs.error() << "Memory allocation for probleme hebdo fail, aborting";
+        logs.error() << "Memory allocation failed, aborting (" << e.what() << ")";
     }
 }
 
