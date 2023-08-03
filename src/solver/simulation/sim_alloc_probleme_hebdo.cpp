@@ -252,32 +252,11 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
     }
 }
 
-
-void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDeTemps)
+void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
+                               Antares::Data::Study& study,
+                               unsigned NombreDePasDeTemps)
 {
-    auto& study = *Data::Study::Current::Get();
-
-    uint nbPays = study.areas.size();
-
-    const uint linkCount = study.runtime->interconnectionsCount();
-
     auto activeConstraints = study.bindingConstraints.activeContraints();
-
-    SIM_AllocationProblemeDonneesGenerales(problem, study, NombreDePasDeTemps);
-    SIM_AllocationProblemePasDeTemps(problem, study, NombreDePasDeTemps);
-
-    for (unsigned k = 0; k < linkCount; ++k)
-    {
-        problem.CoutDeTransport[k].IntercoGereeAvecDesCouts = false;
-        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremite
-            .assign(NombreDePasDeTemps, 0.);
-        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigine
-            .assign(NombreDePasDeTemps, 0.);
-        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremiteRef
-            .assign(NombreDePasDeTemps, 0.);
-        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigineRef
-            .assign(NombreDePasDeTemps, 0.);
-    }
 
     problem.CorrespondanceCntNativesCntOptimJournalieres.resize(7);
     for (uint k = 0; k < 7; k++)
@@ -296,7 +275,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
 
     for (unsigned k = 0; k < bindingConstraintCount; k++)
     {
-        auto activeConstraints = study.bindingConstraints.activeContraints();
         assert(k < activeConstraints.size());
         assert(activeConstraints[k]->linkCount() < 50000000);
         assert(activeConstraints[k]->clusterCount() < 50000000);
@@ -344,6 +322,34 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         if (nbTimeSteps > 0)
             problem.ResultatsContraintesCouplantes[k].variablesDuales.assign(nbTimeSteps, 0.);
     }
+}
+
+
+void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDeTemps)
+{
+    auto& study = *Data::Study::Current::Get();
+
+    uint nbPays = study.areas.size();
+
+    const uint linkCount = study.runtime->interconnectionsCount();
+
+    SIM_AllocationProblemeDonneesGenerales(problem, study, NombreDePasDeTemps);
+    SIM_AllocationProblemePasDeTemps(problem, study, NombreDePasDeTemps);
+
+    for (unsigned k = 0; k < linkCount; ++k)
+    {
+        problem.CoutDeTransport[k].IntercoGereeAvecDesCouts = false;
+        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremite
+            .assign(NombreDePasDeTemps, 0.);
+        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigine
+            .assign(NombreDePasDeTemps, 0.);
+        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremiteRef
+            .assign(NombreDePasDeTemps, 0.);
+        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigineRef
+            .assign(NombreDePasDeTemps, 0.);
+    }
+
+    SIM_AllocationConstraints(problem, study, NombreDePasDeTemps);
 
     for (unsigned k = 0; k < nbPays; k++)
     {
