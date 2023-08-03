@@ -55,7 +55,7 @@ public:
 
 private:
     ThermalCluster* cluster_ = nullptr;
-    std::unique_ptr<TimeSeriesConfigurer<Matrix<double>>> tsAvailablePowerConfig_;
+    TimeSeriesConfigurer<Matrix<double>> tsAvailablePowerConfig_;
 };
 
 std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName);
