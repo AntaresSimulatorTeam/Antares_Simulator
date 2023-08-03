@@ -73,6 +73,9 @@ jobs:
            cmake --build _build -j2
            ccache -s
 
+    - name: Free up disk space
+      run: rm -rf _build/_deps
+
     - name: .tar.gz creation
       run: |
            cd _build
