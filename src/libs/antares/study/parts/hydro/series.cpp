@@ -102,19 +102,6 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
         ret = mingen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
     }
 
-    if (study.header.version >= 870)
-    {
-        buffer.clear() << folder << SEP << areaID << SEP << "maxgen." << study.inputExtension;
-        ret = maxgen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
-        buffer.clear() << folder << SEP << areaID << SEP << "maxpump." << study.inputExtension;
-        ret = maxpump.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
-    }
-
-    countpowercredits = maxgen.width;
-
-    if (maxpump.width > countpowercredits)
-        countpowercredits = maxpump.width;
-
     if (study.usedByTheSolver)
     {
         if (0 == count)
@@ -169,32 +156,16 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
             checkMinGenTsNumber(study, areaID);
         }
 
-        checkMaxGenPumpTsNumber(study, areaID);
-
         if (study.parameters.derated)
         {
             ror.averageTimeseries();
             storage.averageTimeseries();
             mingen.averageTimeseries();
-            maxgen.averageTimeseries();
-            maxpump.averageTimeseries();
             count = 1;
-            countpowercredits = 1;
-        }
-    }
-    else
-    {
-        // Is area hydro modulable ?
-        Area* area = study.areas.find(areaID);
-
-        if (MatrixTestForAtLeastOnePositiveValue(maxgen))
-        {
-            area->hydro.hydroModulable = true;
         }
     }
 
     timeseriesNumbers.clear();
-    timeseriesNumbersPowerCredits.clear();
 
     return ret;
 }
@@ -229,58 +200,98 @@ void DataSeriesHydro::checkMinGenTsNumber(Study& study, const AreaName& areaID)
     }
 }
 
-void DataSeriesHydro::checkMaxGenPumpTsNumber(Study& study, const AreaName& areaID)
+bool DataSeriesHydro::LoadHydroPowerCredits(Study& study, const AreaName& areaID, const AnyString& folder)
 {
-    if (countpowercredits == 0)
-    {
-        logs.error() << "Hydro Power Credits: `" << areaID
-                     << "`: empty matrix detected. Fixing it with default values";
+    bool ret = true;
+    auto& buffer = study.bufferLoadingTS;
 
-        maxgen.reset(1, HOURS_PER_YEAR);
-        maxpump.reset(1, HOURS_PER_YEAR);
+    if (study.header.version >= 870)
+    {
+        buffer.clear() << folder << SEP << areaID << SEP << "maxgen." << study.inputExtension;
+        ret = maxgen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+        buffer.clear() << folder << SEP << areaID << SEP << "maxpump." << study.inputExtension;
+        ret = maxpump.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+    }
+
+    countpowercredits = maxgen.width;
+
+    if (maxpump.width > countpowercredits)
+        countpowercredits = maxpump.width;
+
+    if (study.usedByTheSolver)
+    {
+        if (countpowercredits == 0)
+        {
+            logs.error() << "Hydro Power Credits: `" << areaID
+                         << "`: empty matrix detected. Fixing it with default values";
+
+            maxgen.reset(1, HOURS_PER_YEAR);
+            maxpump.reset(1, HOURS_PER_YEAR);
+        }
+        else
+        {
+            if (countpowercredits > 1 && maxgen.width != maxpump.width)
+            {
+                if (maxpump.width != 1 && maxgen.width != 1)
+                {
+                    logs.fatal() << "Hydro Power Credits: `" << areaID
+                                 << "`: The matrices Maximum Generation and Maximum Pumping must "
+                                    "have the same number of time-series.";
+                    study.gotFatalError = true;
+                }
+                else
+                {
+                    if (maxpump.width == 1)
+                    {
+                        maxpump.resizeWithoutDataLost(countpowercredits, maxpump.height);
+                        for (uint x = 1; x < countpowercredits; ++x)
+                            maxpump.pasteToColumn(x, maxpump[0]);
+                    }
+                    else
+                    {
+                        if (maxgen.width == 1)
+                        {
+                            maxgen.resizeWithoutDataLost(countpowercredits, maxgen.height);
+                            for (uint x = 1; x < countpowercredits; ++x)
+                                maxgen.pasteToColumn(x, maxgen[0]);
+                        }
+                    }
+                    Area* areaToInvalidate = study.areas.find(areaID);
+                    if (areaToInvalidate)
+                    {
+                        areaToInvalidate->invalidateJIT = true;
+                        logs.info() << "  '" << areaID
+                                    << "': The hydro power credits data have been normalized to "
+                                    << countpowercredits << " timeseries";
+                    }
+                    else
+                        logs.error()
+                          << "Impossible to find the area `" << areaID << "` to invalidate it";
+                }
+            }
+        }
+
+        if (study.parameters.derated)
+        {
+            maxgen.averageTimeseries();
+            maxpump.averageTimeseries();
+            countpowercredits = 1;
+        }
     }
     else
     {
-        if (countpowercredits > 1 && maxgen.width != maxpump.width)
+        // Is area hydro modulable ?
+        Area* area = study.areas.find(areaID);
+
+        if (MatrixTestForAtLeastOnePositiveValue(maxgen))
         {
-            if (maxpump.width != 1 && maxgen.width != 1)
-            {
-                logs.fatal() << "Hydro Power Credits: `" << areaID
-                             << "`: The matrices Maximum Generation and Maximum Pumping must "
-                                "have the same number of time-series.";
-                study.gotFatalError = true;
-            }
-            else
-            {
-                if (maxpump.width == 1)
-                {
-                    maxpump.resizeWithoutDataLost(countpowercredits, maxpump.height);
-                    for (uint x = 1; x < countpowercredits; ++x)
-                        maxpump.pasteToColumn(x, maxpump[0]);
-                }
-                else
-                {
-                    if (maxgen.width == 1)
-                    {
-                        maxgen.resizeWithoutDataLost(countpowercredits, maxgen.height);
-                        for (uint x = 1; x < countpowercredits; ++x)
-                            maxgen.pasteToColumn(x, maxgen[0]);
-                    }
-                }
-                Area* areaToInvalidate = study.areas.find(areaID);
-                if (areaToInvalidate)
-                {
-                    areaToInvalidate->invalidateJIT = true;
-                    logs.info() << "  '" << areaID
-                                << "': The hydro power credits data have been normalized to "
-                                << countpowercredits << " timeseries";
-                }
-                else
-                    logs.error() << "Impossible to find the area `" << areaID
-                                 << "` to invalidate it";
-            }
+            area->hydro.hydroModulable = true;
         }
     }
+
+    timeseriesNumbersPowerCredits.clear();
+
+    return ret;
 }
 
 bool DataSeriesHydro::forceReload(bool reload) const
