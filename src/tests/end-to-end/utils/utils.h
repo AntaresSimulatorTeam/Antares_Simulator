@@ -20,12 +20,26 @@ class TimeSeriesConfig
 {
 public:
     TimeSeriesConfig(MatrixType& matrix) : ts_(&matrix) {}
-    void setTargetTSmatrix(MatrixType& matrix) { ts_ = &matrix; }
-    void setNumberColumns(unsigned int nbColumns) { ts_->resize(nbColumns, HOURS_PER_YEAR);}
-    void fillColumnWith(unsigned int column, double value) { ts_->fillColumn(column, value); }
+    TimeSeriesConfig& setNumberColumns(unsigned int nbColumns);
+    TimeSeriesConfig& fillColumnWith(unsigned int column, double value);
 private:
     MatrixType* ts_;
 };
+
+template<class MatrixType>
+TimeSeriesConfig<MatrixType>& TimeSeriesConfig<MatrixType>::setNumberColumns(unsigned int nbColumns)
+{
+    ts_->resize(nbColumns, HOURS_PER_YEAR);
+    return *this;
+}
+
+template<class MatrixType>
+TimeSeriesConfig<MatrixType>& TimeSeriesConfig<MatrixType>::fillColumnWith(unsigned int column, double value)
+{
+    ts_->fillColumn(column, value);
+    return *this;
+}
+
 
 class ThermalClusterConfig
 {
