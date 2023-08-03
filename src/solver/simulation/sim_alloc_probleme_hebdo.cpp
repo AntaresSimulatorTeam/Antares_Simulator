@@ -37,14 +37,13 @@
 
 using namespace Antares;
 
-void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDeTemps)
+void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
+                                            Antares::Data::Study& study,
+                                            unsigned NombreDePasDeTemps)
 {
-    auto& study = *Data::Study::Current::Get();
-
     uint nbPays = study.areas.size();
 
     const uint linkCount = study.runtime->interconnectionsCount();
-    const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
 
     problem.DefaillanceNegativeUtiliserPMinThermique.assign(nbPays, false);
     problem.DefaillanceNegativeUtiliserHydro.assign(nbPays, false);
@@ -101,9 +100,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
     problem.CorrespondanceCntNativesCntOptim.resize(NombreDePasDeTemps);
     problem.VariablesDualesDesContraintesDeNTC.resize(NombreDePasDeTemps);
 
-    auto activeContraints = study.bindingConstraints.activeContraints();
-    problem.NombreDeContraintesCouplantes = activeContraints.size();
-    problem.MatriceDesContraintesCouplantes.resize(activeContraints.size());
+    auto activeConstraints = study.bindingConstraints.activeContraints();
+    problem.NombreDeContraintesCouplantes = activeConstraints.size();
+    problem.MatriceDesContraintesCouplantes.resize(activeConstraints.size());
     problem.PaliersThermiquesDuPays.resize(nbPays);
     problem.CaracteristiquesHydrauliques.resize(nbPays);
     problem.previousSimulationFinalLevel.assign(nbPays, 0.);
@@ -126,6 +125,19 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
 
     problem.ReserveJMoins1.resize(nbPays);
     problem.ResultatsHoraires.resize(nbPays);
+}
+
+void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDeTemps)
+{
+    auto& study = *Data::Study::Current::Get();
+
+    uint nbPays = study.areas.size();
+
+    const uint linkCount = study.runtime->interconnectionsCount();
+    const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
+
+    auto activeConstraints = study.bindingConstraints.activeContraints();
+
 
     for (uint k = 0; k < NombreDePasDeTemps; k++)
     {
@@ -223,7 +235,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDeDissociationDeFlux
           .assign(linkCount, 0);
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesContraintesCouplantes
-          .assign(activeContraints.size(), 0);
+          .assign(activeConstraints.size(), 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesDeDureeMinDeMarche
@@ -258,14 +270,14 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
     {
         problem.CorrespondanceCntNativesCntOptimJournalieres[k]
           .NumeroDeContrainteDesContraintesCouplantes
-          .assign(activeContraints.size(), 0);
+          .assign(activeConstraints.size(), 0);
     }
 
     problem.CorrespondanceCntNativesCntOptimHebdomadaires
         .NumeroDeContrainteDesContraintesCouplantes
-        .assign(activeContraints.size(), 0);
+        .assign(activeConstraints.size(), 0);
 
-    const auto& bindingConstraintCount = activeContraints.size();
+    const auto& bindingConstraintCount = activeConstraints.size();
     problem.ResultatsContraintesCouplantes.resize(bindingConstraintCount);
 
     for (unsigned k = 0; k < bindingConstraintCount; k++)
@@ -281,25 +293,25 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
           .assign(NombreDePasDeTemps, 0.);
 
         problem.MatriceDesContraintesCouplantes[k].NumeroDeLInterconnexion
-          .assign(activeContraints[k]->linkCount(), 0);
+          .assign(activeConstraints[k]->linkCount(), 0);
         problem.MatriceDesContraintesCouplantes[k].PoidsDeLInterconnexion
-          .assign(activeContraints[k]->linkCount(), 0.);
+          .assign(activeConstraints[k]->linkCount(), 0.);
         problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLInterco
-          .assign(activeContraints[k]->linkCount(), 0);
+          .assign(activeConstraints[k]->linkCount(), 0);
 
         problem.MatriceDesContraintesCouplantes[k].NumeroDuPalierDispatch
-          .assign(activeContraints[k]->clusterCount(), 0);
+          .assign(activeConstraints[k]->clusterCount(), 0);
         problem.MatriceDesContraintesCouplantes[k].PoidsDuPalierDispatch
-          .assign(activeContraints[k]->clusterCount(), 0.);
+          .assign(activeConstraints[k]->clusterCount(), 0.);
         problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLePalierDispatch
-          .assign(activeContraints[k]->clusterCount(), 0);
+          .assign(activeConstraints[k]->clusterCount(), 0);
         problem.MatriceDesContraintesCouplantes[k].PaysDuPalierDispatch
-          .assign(activeContraints[k]->clusterCount(), 0);
+          .assign(activeConstraints[k]->clusterCount(), 0);
 
 
         // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
         unsigned int nbTimeSteps;
-        switch (activeContraints[k]->type())
+        switch (activeConstraints[k]->type())
         {
             using namespace Antares::Data;
         case BindingConstraint::typeHourly:

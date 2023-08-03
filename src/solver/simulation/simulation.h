@@ -39,6 +39,11 @@ void SIM_AllocationTableaux(void);
 */
 void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemps);
 
+void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
+                                            Antares::Data::Study& study,
+                                            unsigned NombreDePasDeTemps);
+
+
 /*!
 ** \brief Alloue et initialise un probleme hebdo
 */
