@@ -33,14 +33,15 @@ namespace Antares::Solver::Optimization
 DefaultWeeklyOptimization::DefaultWeeklyOptimization(const OptimizationOptions& options,
                                                      PROBLEME_HEBDO* problemeHebdo,
                                                      AdqPatchParams& adqPatchParams,
-                                                     uint thread_number) :
- WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number)
+                                                     uint thread_number,
+                                                     IResultWriter& writer) :
+ WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer)
 {
 }
 
 void DefaultWeeklyOptimization::solve(uint, int)
 {
-    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_);
+    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
 }
 
 } // namespace Antares::Solver::Optimization

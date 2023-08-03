@@ -63,6 +63,7 @@ using namespace operations_research;
 using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
+using Antares::Solver::IResultWriter;
 
 class TimeMeasurement
 {
@@ -98,7 +99,8 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                          PROBLEME_HEBDO* problemeHebdo,
                          int NumIntervalle,
                          const int optimizationNumber,
-                         std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator)
+                         std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
+                         IResultWriter& writer)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
@@ -110,8 +112,6 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
     auto ProbSpx
       = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
     auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
-
-    auto study = Data::Study::Current::Get();
 
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
@@ -236,7 +236,7 @@ RESOLUTION:
                                         options.useOrtools,
                                         solver);
     auto mps_writer = mps_writer_factory.create();
-    mps_writer->runIfNeeded(study->resultWriter, filename);
+    mps_writer->runIfNeeded(writer, filename);
 
     TimeMeasurement measure;
     if (options.useOrtools)
@@ -362,26 +362,10 @@ RESOLUTION:
         }
 
         auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
-        mps_writer_on_error->runIfNeeded(study->resultWriter, filename);
+        mps_writer_on_error->runIfNeeded(writer, filename);
 
         return false;
     }
 
     return true;
-}
-
-void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
-  double optimalSolutionCost,
-  std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
-  int optimizationNumber)
-{
-    Yuni::Clob buffer;
-    auto study = Data::Study::Current::Get();
-    auto filename = createCriterionFilename(optPeriodStringGenerator, optimizationNumber);
-    auto writer = study->resultWriter;
-
-    logs.info() << "Solver Criterion File: `" << filename << "'";
-
-    buffer.appendFormat("* Optimal criterion value :   %11.10e\n", optimalSolutionCost);
-    writer->addEntryFromBuffer(filename, buffer);
 }

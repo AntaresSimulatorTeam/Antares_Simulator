@@ -41,16 +41,19 @@ public:
     static std::unique_ptr<WeeklyOptimization> create(const OptimizationOptions& options,
                                                       Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams,
                                                       PROBLEME_HEBDO* problemesHebdo,
-                                                      uint numSpace);
+                                                      uint numSpace,
+                                                      IResultWriter& writer);
 
 protected:
     explicit WeeklyOptimization(const OptimizationOptions& options,
                                 PROBLEME_HEBDO* problemesHebdo,
                                 Antares::Data::AdequacyPatch::AdqPatchParams&, 
-                                uint numSpace);
+                                uint numSpace,
+                                IResultWriter& writer);
     Antares::Solver::Optimization::OptimizationOptions options_;
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
     Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams_;
     const uint thread_number_ = 0;
+    IResultWriter& writer_;
 };
 } // namespace Antares::Solver::Optimization

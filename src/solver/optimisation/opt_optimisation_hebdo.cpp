@@ -47,11 +47,12 @@ using namespace Antares::Data;
 
 using Antares::Solver::Optimization::OptimizationOptions;
 
-void OPT_OptimisationHebdomadaire(const OptimizationOptions& options, PROBLEME_HEBDO* pProblemeHebdo, AdqPatchParams& adqPatchParams)
+void OPT_OptimisationHebdomadaire(const OptimizationOptions& options, PROBLEME_HEBDO* pProblemeHebdo, AdqPatchParams& adqPatchParams,
+                                  Solver::IResultWriter& writer)
 {
     if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
     {
-        if (!OPT_PilotageOptimisationLineaire(options, pProblemeHebdo, adqPatchParams))
+        if (!OPT_PilotageOptimisationLineaire(options, pProblemeHebdo, adqPatchParams, writer))
         {
             logs.error() << "Linear optimization failed";
             throw UnfeasibleProblemError("Linear optimization failed");
@@ -59,7 +60,7 @@ void OPT_OptimisationHebdomadaire(const OptimizationOptions& options, PROBLEME_H
     }
     else if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_QUADRATIQUE)
     {
-        OPT_LiberationProblemesSimplexe(pProblemeHebdo);
+        OPT_LiberationProblemesSimplexe(options, pProblemeHebdo);
         if (!OPT_PilotageOptimisationQuadratique(pProblemeHebdo))
         {
             logs.error() << "Quadratic optimization failed";

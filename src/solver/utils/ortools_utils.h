@@ -11,7 +11,7 @@
 using namespace operations_research;
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
-                                                   Antares::Solver::IResultWriter::Ptr writer,
+                                                   Antares::Solver::IResultWriter& writer,
                                                    const std::string& filename);
 
 /*!

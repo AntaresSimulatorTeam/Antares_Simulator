@@ -41,7 +41,8 @@ public:
     explicit AdequacyPatchOptimization(const OptimizationOptions& options,
                                        PROBLEME_HEBDO* problemeHebdo,
                                        Antares::Data::AdequacyPatch::AdqPatchParams&, 
-                                       uint numSpace);
+                                       uint numSpace,
+                                       IResultWriter& writer);
     ~AdequacyPatchOptimization() override = default;
     void solve(uint weekInTheYear, int hourInTheYear) override;
 };

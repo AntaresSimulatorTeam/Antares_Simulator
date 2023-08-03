@@ -105,7 +105,8 @@ bool Economy::simulationBegin()
                                                     options,
                                                     study.parameters.adqPatchParams,
                                                     pProblemesHebdo[numSpace],
-                                                    numSpace);
+                                                    numSpace,
+                                                    *study.resultWriter);
             postProcessesList_[numSpace] =
                 interfacePostProcessList::create(study.parameters.adqPatchParams,
                                                  pProblemesHebdo[numSpace],
