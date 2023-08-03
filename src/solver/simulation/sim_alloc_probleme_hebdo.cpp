@@ -49,12 +49,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         SIM_AllocationLinks(problem, study.runtime->interconnectionsCount(), NombreDePasDeTemps);
         SIM_AllocationConstraints(problem, study, NombreDePasDeTemps);
         SIM_AllocateAreas(problem, study, NombreDePasDeTemps);
-
-        problem.coutOptimalSolution1.assign(7, 0.);
-        problem.coutOptimalSolution2.assign(7, 0.);
-
-        problem.tempsResolution1.assign(7, 0.);
-        problem.tempsResolution2.assign(7, 0.);
     }
     catch(const std::bad_alloc& e)
     {
@@ -150,6 +144,12 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
 
     problem.ReserveJMoins1.resize(nbPays);
     problem.ResultatsHoraires.resize(nbPays);
+
+    problem.coutOptimalSolution1.assign(7, 0.);
+    problem.coutOptimalSolution2.assign(7, 0.);
+
+    problem.tempsResolution1.assign(7, 0.);
+    problem.tempsResolution2.assign(7, 0.);
 }
 
 void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
