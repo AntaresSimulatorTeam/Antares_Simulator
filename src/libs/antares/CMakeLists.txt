@@ -538,7 +538,6 @@ add_library(libantares-core
 	${SRC}
 	${SRC_LOGS}
 	${SRC_MEMORY}
-	${SRC_OBJECT}
 	${SRC_JIT}
 	${SRC_MATRIX}
 	${SRC_BENCHMARKING}
