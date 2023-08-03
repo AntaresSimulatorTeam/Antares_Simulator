@@ -127,17 +127,16 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
     problem.ResultatsHoraires.resize(nbPays);
 }
 
-void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDeTemps)
+void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
+                                      Antares::Data::Study& study,
+                                      unsigned NombreDePasDeTemps)
 {
-    auto& study = *Data::Study::Current::Get();
-
     uint nbPays = study.areas.size();
 
     const uint linkCount = study.runtime->interconnectionsCount();
     const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
 
     auto activeConstraints = study.bindingConstraints.activeContraints();
-
 
     for (uint k = 0; k < NombreDePasDeTemps; k++)
     {
@@ -251,6 +250,21 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
         problem.VariablesDualesDesContraintesDeNTC[k].VariableDualeParInterconnexion
           .assign(linkCount, 0.);
     }
+}
+
+
+void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDeTemps)
+{
+    auto& study = *Data::Study::Current::Get();
+
+    uint nbPays = study.areas.size();
+
+    const uint linkCount = study.runtime->interconnectionsCount();
+
+    auto activeConstraints = study.bindingConstraints.activeContraints();
+
+    SIM_AllocationProblemeDonneesGenerales(problem, study, NombreDePasDeTemps);
+    SIM_AllocationProblemePasDeTemps(problem, study, NombreDePasDeTemps);
 
     for (unsigned k = 0; k < linkCount; ++k)
     {
