@@ -35,10 +35,8 @@
 
 using namespace Antares;
 
-static void AllocateResultsForEconomicMode(void)
+static void AllocateResultsForEconomicMode(const Data::Study& study)
 {
-    auto& study = *Data::Study::Current::Get();
-
     transitMoyenInterconnexionsRecalculQuadratique.resize(study.runtime->interconnectionsCount());
 
     for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
@@ -46,10 +44,8 @@ static void AllocateResultsForEconomicMode(void)
             .assign(study.runtime->nbHoursPerYear , 0.);
 }
 
-void SIM_AllocationTableaux()
+void SIM_AllocationTableaux(const Data::Study& study)
 {
-    auto& study = *Data::Study::Current::Get();
-
     ValeursGenereesParPays.resize(study.maxNbYearsInParallel);
     NumeroChroniquesTireesParPays.resize(study.maxNbYearsInParallel);
 
@@ -85,5 +81,5 @@ void SIM_AllocationTableaux()
         NumeroChroniquesTireesParInterconnexion[numSpace].resize(intercoCount);
 
     NumeroChroniquesTireesParGroup.resize(study.maxNbYearsInParallel);
-    AllocateResultsForEconomicMode();
+    AllocateResultsForEconomicMode(study);
 }

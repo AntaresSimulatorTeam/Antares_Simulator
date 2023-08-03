@@ -30,7 +30,8 @@
 
 namespace Antares::Solver::Optimization
 {
-DefaultWeeklyOptimization::DefaultWeeklyOptimization(PROBLEME_HEBDO* problemeHebdo,
+DefaultWeeklyOptimization::DefaultWeeklyOptimization(const Antares::Data::Study& study,
+                                                     PROBLEME_HEBDO* problemeHebdo,
                                                      AdqPatchParams& adqPatchParams,
                                                      uint thread_number) :
  WeeklyOptimization(problemeHebdo, adqPatchParams, thread_number)

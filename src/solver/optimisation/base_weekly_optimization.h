@@ -38,12 +38,13 @@ class WeeklyOptimization
 public:
     virtual void solve(uint weekInTheYear, int hourInTheYear) = 0;
     virtual ~WeeklyOptimization() = default;
-    static std::unique_ptr<WeeklyOptimization> create(Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams,
+    static std::unique_ptr<WeeklyOptimization> create(const Antares::Data::Study& study,
+                                                      Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams,
                                                       PROBLEME_HEBDO* problemesHebdo,
                                                       uint numSpace);
 
 protected:
-    explicit WeeklyOptimization(PROBLEME_HEBDO* problemesHebdo, 
+    explicit WeeklyOptimization(PROBLEME_HEBDO* problemesHebdo,
                                 Antares::Data::AdequacyPatch::AdqPatchParams&, 
                                 uint numSpace);
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;

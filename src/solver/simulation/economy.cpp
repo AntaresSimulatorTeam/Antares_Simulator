@@ -101,6 +101,7 @@ bool Economy::simulationBegin()
 
             weeklyOptProblems_[numSpace] =
                 Antares::Solver::Optimization::WeeklyOptimization::create(
+                                                    study,
                                                     study.parameters.adqPatchParams,
                                                     pProblemesHebdo[numSpace],
                                                     numSpace);
@@ -155,7 +156,7 @@ bool Economy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->weekInTheYear = state.weekInTheYear = w;
         pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(
+        ::SIM_RenseignementProblemeHebdo(state.study,
           *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed
