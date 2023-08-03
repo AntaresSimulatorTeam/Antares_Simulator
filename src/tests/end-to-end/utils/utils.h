@@ -16,26 +16,26 @@ void configureLinkCapacities(AreaLink* link);
 
 
 template<class MatrixType>
-class TimeSeriesConfig
+class TimeSeriesConfigurer
 {
 public:
-    TimeSeriesConfig() = default;
-    TimeSeriesConfig(MatrixType& matrix) : ts_(&matrix) {}
-    TimeSeriesConfig& setNumberColumns(unsigned int nbColumns);
-    TimeSeriesConfig& fillColumnWith(unsigned int column, double value);
+    TimeSeriesConfigurer() = default;
+    TimeSeriesConfigurer(MatrixType& matrix) : ts_(&matrix) {}
+    TimeSeriesConfigurer& setNumberColumns(unsigned int nbColumns);
+    TimeSeriesConfigurer& fillColumnWith(unsigned int column, double value);
 private:
     MatrixType* ts_ = nullptr;
 };
 
 template<class MatrixType>
-TimeSeriesConfig<MatrixType>& TimeSeriesConfig<MatrixType>::setNumberColumns(unsigned int nbColumns)
+TimeSeriesConfigurer<MatrixType>& TimeSeriesConfigurer<MatrixType>::setNumberColumns(unsigned int nbColumns)
 {
     ts_->resize(nbColumns, HOURS_PER_YEAR);
     return *this;
 }
 
 template<class MatrixType>
-TimeSeriesConfig<MatrixType>& TimeSeriesConfig<MatrixType>::fillColumnWith(unsigned int column, double value)
+TimeSeriesConfigurer<MatrixType>& TimeSeriesConfigurer<MatrixType>::fillColumnWith(unsigned int column, double value)
 {
     ts_->fillColumn(column, value);
     return *this;
@@ -55,7 +55,7 @@ public:
 
 private:
     ThermalCluster* cluster_ = nullptr;
-    std::unique_ptr<TimeSeriesConfig<Matrix<double>>> tsAvailablePowerConfig_;
+    std::unique_ptr<TimeSeriesConfigurer<Matrix<double>>> tsAvailablePowerConfig_;
 };
 
 std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName);

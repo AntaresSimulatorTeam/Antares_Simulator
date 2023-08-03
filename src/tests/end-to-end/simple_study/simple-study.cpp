@@ -23,7 +23,7 @@ struct StudyFixture : public StudyBuilder
 	double loadInArea = 0.;
 	double clusterCost = 0.;
 	ThermalClusterConfig clusterConfig;
-	TimeSeriesConfig<Matrix<double, int32_t>> loadTSconfig;
+	TimeSeriesConfigurer<Matrix<double, int32_t>> loadTSconfig;
 };
 
 StudyFixture::StudyFixture()
@@ -33,7 +33,7 @@ StudyFixture::StudyFixture()
 	cluster = addClusterToArea(area, "some cluster");
 
 	loadInArea = 7.0;
-	loadTSconfig = std::move(TimeSeriesConfig<Matrix<double, int32_t>>(area->load.series->timeSeries));
+	loadTSconfig = std::move(TimeSeriesConfigurer<Matrix<double, int32_t>>(area->load.series->timeSeries));
 	loadTSconfig.setNumberColumns(1)
 				.fillColumnWith(0, loadInArea);
 
