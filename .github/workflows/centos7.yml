@@ -46,6 +46,11 @@ jobs:
            tar -xvf rte-antares-deps-centos7-Release.tar.gz
            rm -rf rte-antares-deps-centos7-Release.tar.gz
 
+    - name: Setup cmake
+      uses: jwlawson/actions-setup-cmake@v1.13
+      with:
+        cmake-version: '3.22.x'
+
     - name: Configure
       run: |
            source /opt/rh/devtoolset-9/enable
