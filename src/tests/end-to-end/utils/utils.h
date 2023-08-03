@@ -21,16 +21,16 @@ class TimeSeriesConfigurer
 public:
     TimeSeriesConfigurer() = default;
     TimeSeriesConfigurer(MatrixType& matrix) : ts_(&matrix) {}
-    TimeSeriesConfigurer& setNumberColumns(unsigned int nbColumns);
+    TimeSeriesConfigurer& setColumnCount(unsigned int columnCount);
     TimeSeriesConfigurer& fillColumnWith(unsigned int column, double value);
 private:
     MatrixType* ts_ = nullptr;
 };
 
 template<class MatrixType>
-TimeSeriesConfigurer<MatrixType>& TimeSeriesConfigurer<MatrixType>::setNumberColumns(unsigned int nbColumns)
+TimeSeriesConfigurer<MatrixType>& TimeSeriesConfigurer<MatrixType>::setColumnCount(unsigned int columnCount)
 {
-    ts_->resize(nbColumns, HOURS_PER_YEAR);
+    ts_->resize(columnCount, HOURS_PER_YEAR);
     return *this;
 }
 
@@ -50,7 +50,7 @@ public:
     ThermalClusterConfig& setNominalCapacity(double nominalCapacity);
     ThermalClusterConfig& setUnitCount(unsigned int unitCount);
     ThermalClusterConfig& setCosts(double cost);
-    ThermalClusterConfig& setAvailablePowerNumberOfTS(unsigned int nbColumns);
+    ThermalClusterConfig& setAvailablePowerNumberOfTS(unsigned int columnCount);
     ThermalClusterConfig& setAvailablePower(unsigned int column, double value);
 
 private:

@@ -34,7 +34,7 @@ StudyFixture::StudyFixture()
 
 	loadInArea = 7.0;
 	loadTSconfig = std::move(TimeSeriesConfigurer<Matrix<double, int32_t>>(area->load.series->timeSeries));
-	loadTSconfig.setNumberColumns(1)
+	loadTSconfig.setColumnCount(1)
 				.fillColumnWith(0, loadInArea);
 
 	clusterCost = 2.;
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(two_mc_years__two_ts_identical)
 {
 	setNumberMCyears(2);
 
-	loadTSconfig.setNumberColumns(2)
+	loadTSconfig.setColumnCount(2)
 				.fillColumnWith(0, 7.0)
 				.fillColumnWith(1, 7.0);
 
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(two_mc_years__two_ts_for_load)
 {
 	setNumberMCyears(2);
 
-	loadTSconfig.setNumberColumns(2)
+	loadTSconfig.setColumnCount(2)
 				.fillColumnWith(0, 7.0)
 				.fillColumnWith(1, 14.0);
 
@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(two_mc_years_with_different_weight__two_ts)
 	giveWeightToYear(10.f, 1);
 	float weightSum = study->parameters.getYearsWeightSum();
 
-	loadTSconfig.setNumberColumns(2)
+	loadTSconfig.setColumnCount(2)
 				.fillColumnWith(0, 7.0)
 				.fillColumnWith(1, 14.0);
 

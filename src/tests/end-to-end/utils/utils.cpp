@@ -64,9 +64,9 @@ ThermalClusterConfig& ThermalClusterConfig::setCosts(double cost)
     cluster_->setProductionCost();
     return *this;
 }
-ThermalClusterConfig& ThermalClusterConfig::setAvailablePowerNumberOfTS(unsigned int nbColumns)
+ThermalClusterConfig& ThermalClusterConfig::setAvailablePowerNumberOfTS(unsigned int columnCount)
 { 
-    tsAvailablePowerConfig_->setNumberColumns(nbColumns);
+    tsAvailablePowerConfig_->setColumnCount(columnCount);
     return *this;
 };
 ThermalClusterConfig& ThermalClusterConfig::setAvailablePower(unsigned int column, double value)
