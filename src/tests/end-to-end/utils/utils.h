@@ -19,11 +19,12 @@ template<class MatrixType>
 class TimeSeriesConfig
 {
 public:
+    TimeSeriesConfig() = default;
     TimeSeriesConfig(MatrixType& matrix) : ts_(&matrix) {}
     TimeSeriesConfig& setNumberColumns(unsigned int nbColumns);
     TimeSeriesConfig& fillColumnWith(unsigned int column, double value);
 private:
-    MatrixType* ts_;
+    MatrixType* ts_ = nullptr;
 };
 
 template<class MatrixType>

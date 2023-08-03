@@ -23,7 +23,7 @@ struct StudyFixture : public StudyBuilder
 	double loadInArea = 0.;
 	double clusterCost = 0.;
 	std::shared_ptr<ThermalClusterConfig> clusterConfig;
-	std::shared_ptr<TimeSeriesConfig<Matrix<double, int32_t>>> loadTSconfig;
+	TimeSeriesConfig<Matrix<double, int32_t>> loadTSconfig;
 };
 
 StudyFixture::StudyFixture()
@@ -32,10 +32,10 @@ StudyFixture::StudyFixture()
 	area = addAreaToStudy("Some area");
 	cluster = addClusterToArea(area, "some cluster");
 
-	loadTSconfig = std::make_shared<TimeSeriesConfig<Matrix<double, int32_t>>>(area->load.series->timeSeries);
-	loadTSconfig->setNumberColumns(1);
 	loadInArea = 7.0;
-	loadTSconfig->fillColumnWith(0, loadInArea);
+	loadTSconfig = std::move(TimeSeriesConfig<Matrix<double, int32_t>>(area->load.series->timeSeries));
+	loadTSconfig.setNumberColumns(1)
+				.fillColumnWith(0, loadInArea);
 
 	clusterConfig = std::make_shared<ThermalClusterConfig>(cluster);
 	clusterConfig->setNominalCapacity(100.);
@@ -75,9 +75,9 @@ BOOST_AUTO_TEST_CASE(two_mc_years__two_ts_identical)
 {
 	setNumberMCyears(2);
 
-	loadTSconfig->setNumberColumns(2);
-	loadTSconfig->fillColumnWith(0, 7.0);
-	loadTSconfig->fillColumnWith(1, 7.0);
+	loadTSconfig.setNumberColumns(2)
+				.fillColumnWith(0, 7.0)
+				.fillColumnWith(1, 7.0);
 
 	clusterConfig->setAvailablePowerNumberOfTS(2);
 	clusterConfig->setAvailablePower(0, 50.);
@@ -94,9 +94,9 @@ BOOST_AUTO_TEST_CASE(two_mc_years__two_ts_for_load)
 {
 	setNumberMCyears(2);
 
-	loadTSconfig->setNumberColumns(2);
-	loadTSconfig->fillColumnWith(0, 7.0);
-	loadTSconfig->fillColumnWith(1, 14.0);
+	loadTSconfig.setNumberColumns(2)
+				.fillColumnWith(0, 7.0)
+				.fillColumnWith(1, 14.0);
 
 	ScenarioBuilderRule scenarioBuilderRule(*study);
 	scenarioBuilderRule.load().setTSnumber(area->index, 0, 1);
@@ -118,9 +118,9 @@ BOOST_AUTO_TEST_CASE(two_mc_years_with_different_weight__two_ts)
 	giveWeightToYear(10.f, 1);
 	float weightSum = study->parameters.getYearsWeightSum();
 
-	loadTSconfig->setNumberColumns(2);
-	loadTSconfig->fillColumnWith(0, 7.0);
-	loadTSconfig->fillColumnWith(1, 14.0);
+	loadTSconfig.setNumberColumns(2)
+				.fillColumnWith(0, 7.0)
+				.fillColumnWith(1, 14.0);
 
 	ScenarioBuilderRule scenarioBuilderRule(*study);
 	scenarioBuilderRule.load().setTSnumber(area->index, 0, 1);
