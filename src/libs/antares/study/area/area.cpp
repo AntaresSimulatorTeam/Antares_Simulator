@@ -50,6 +50,7 @@ Area::Area() :
  enabled(true),
  reserves(fhrMax, HOURS_PER_YEAR),
  miscGen(fhhMax, HOURS_PER_YEAR),
+ hydro(*this),
  nodalOptimization(anoAll),
  spreadUnsuppliedEnergyCost(0.),
  spreadSpilledEnergyCost(0.),
@@ -66,6 +67,7 @@ Area::Area(const AnyString& name, uint nbParallelYears) :
  index((uint)(-1)),
  reserves(fhrMax, HOURS_PER_YEAR),
  miscGen(fhhMax, HOURS_PER_YEAR),
+ hydro(*this),
  nodalOptimization(anoAll),
  spreadUnsuppliedEnergyCost(0.),
  spreadSpilledEnergyCost(0.),
@@ -84,6 +86,7 @@ Area::Area(const AnyString& name, const AnyString& id, uint nbParallelYears, uin
  index(indx),
  reserves(fhrMax, HOURS_PER_YEAR),
  miscGen(fhhMax, HOURS_PER_YEAR),
+ hydro(*this),
  nodalOptimization(anoAll),
  spreadUnsuppliedEnergyCost(0.),
  spreadSpilledEnergyCost(0.),
@@ -530,4 +533,4 @@ void Area::buildLinksIndexes()
     }
 }
 
-} // namespace Antares
+} // namespace Antares::Data

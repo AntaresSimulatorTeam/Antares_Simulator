@@ -31,16 +31,10 @@
 #include "series.h"
 #include "../../fwd.h"
 #include "allocation.h"
-#include <memory>
+#include "finallevelinflowsmodifyer.h"
 
 namespace Antares::Data
 {
-/*!
- ** \brief Final Reservoir Level data for a single area
- */
-
-class FinalLevelInflowsModifier;
-
 /*!
 ** \brief Hydro for a single area
 */
@@ -100,7 +94,7 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    PartHydro();
+    PartHydro(const Data::Area& area);
     //! Destructor
     ~PartHydro();
 
@@ -180,11 +174,8 @@ public:
     DataSeriesHydro* series;
 
     //! Data for final reservoir level
-    
-    std::shared_ptr<FinalLevelInflowsModifier> finalLevelInflowsModifier;
-
+    FinalLevelInflowsModifier finalLevelInflowsModifier;
 }; // class PartHydro
-
 
 // Interpolates a water value from a table according to a level and a day.
 // As this function can be called a lot of times, we pass working variables and returned variables

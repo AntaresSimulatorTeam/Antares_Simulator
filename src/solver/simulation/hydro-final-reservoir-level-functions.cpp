@@ -40,13 +40,13 @@ void prepareFinalReservoirLevelDataPerMcY(Data::Study& study, uint year)
           auto& scenarioFinalHydroLevels = study.scenarioFinalHydroLevels;
           auto& parameters = study.parameters;
 
-          finalInflows->initializeData(
+          finalInflows.initializeData(
             scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
 
-          if (finalInflows->isActive())
+          if (finalInflows.isActive())
           {
-              finalInflows->updateInflows();
-              finalInflows->makeChecks();
+              finalInflows.updateInflows();
+              finalInflows.makeChecks();
           }
       });
 }

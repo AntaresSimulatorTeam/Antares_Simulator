@@ -1043,7 +1043,6 @@ void AreaList::ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded)
     AreaListEnsureDataHydroTimeSeries(this);
     AreaListEnsureDataThermalTimeSeries(this);
     AreaListEnsureDataRenewableTimeSeries(this);
-    AreaListEnsureFinalLevelInflowsModifyerAreaPtr(this);
 
     if (loadOnlyNeeded)
     {
@@ -1322,17 +1321,6 @@ void AreaListEnsureDataHydroTimeSeries(AreaList* l)
     l->each([&](Data::Area& area) {
         if (!area.hydro.series)
             area.hydro.series = new DataSeriesHydro();
-    });
-}
-
-void AreaListEnsureFinalLevelInflowsModifyerAreaPtr(AreaList* l)
-{
-    /* Asserts */
-    assert(l);
-
-    l->each([&](Data::Area& area) {
-        if (!area.hydro.finalLevelInflowsModifier->areaPtr)
-            area.hydro.finalLevelInflowsModifier->areaPtr = &area;
     });
 }
 
