@@ -26,7 +26,7 @@ namespace File
 enum
 {
     //! The maximum allowed size for a file in memory (Default: 80Go)
-    sizeHardLimit = 85899345920u, // 80Mo = 80 * 1024 * 1024 * 1024
+    sizeHardLimit = 85899345920u, // 80Gb = 80 * 1024 * 1024 * 1024
 };
 
 /*!
