@@ -13,7 +13,6 @@ using namespace Antares::Data::ScenarioBuilder;
 
 void initializeStudy(Study::Ptr study);
 void configureLinkCapacities(AreaLink* link);
-void addLoadToArea(Area* area, double loadInArea);
 
 
 template<class MatixType>
@@ -52,7 +51,7 @@ private:
 };
 
 std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName);
-void addScratchpadToEachArea(Study::Ptr study);
+void addScratchpadToEachArea(Study& study);
 
 // -------------------------------
 // Simulation results retrieval
@@ -124,7 +123,7 @@ OutputRetriever::retrieveResultsForThermalCluster(ThermalCluster* cluster)
 class ScenarioBuilderRule
 {
 public:
-    ScenarioBuilderRule(Study::Ptr study);
+    ScenarioBuilderRule(Study& study);
     loadTSNumberData& load() { return rules_->load; }
     BindingConstraintsTSNumberData& bcGroup() { return rules_->binding_constraints; }
 
@@ -141,7 +140,7 @@ using namespace Benchmarking;
 class SimulationHandler
 {
 public:
-    SimulationHandler(std::shared_ptr<Study> study)
+    SimulationHandler(Study& study)
         : study_(study)
     {}
     ~SimulationHandler() = default;
@@ -153,7 +152,7 @@ private:
     std::shared_ptr<ISimulation<Economy>> simulation_;
     NullDurationCollector nullDurationCollector_;
     Settings settings_;
-    std::shared_ptr<Study> study_;
+    Study& study_;
 };
 
 
@@ -177,7 +176,7 @@ struct StudyBuilder
     std::shared_ptr<OutputRetriever> output;
 };
 
-std::shared_ptr<Antares::Data::BindingConstraint> addBindingConstraints(Antares::Data::Study::Ptr study, std::string name, std::string group);
+std::shared_ptr<Antares::Data::BindingConstraint> addBindingConstraints(Antares::Data::Study& study, std::string name, std::string group);
 
 class NullResultWriter: public Solver::IResultWriter {
     void addEntryFromBuffer(const std::string &, Clob &) override;

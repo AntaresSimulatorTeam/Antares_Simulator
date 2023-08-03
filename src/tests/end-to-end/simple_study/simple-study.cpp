@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(two_mc_years__two_ts_for_load)
 	loadTSconfig->fillColumnWith(0, 7.0);
 	loadTSconfig->fillColumnWith(1, 14.0);
 
-	ScenarioBuilderRule scenarioBuilderRule(study);
+	ScenarioBuilderRule scenarioBuilderRule(*study);
 	scenarioBuilderRule.load().setTSnumber(area->index, 0, 1);
 	scenarioBuilderRule.load().setTSnumber(area->index, 1, 2);
 
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE(two_mc_years_with_different_weight__two_ts)
 	loadTSconfig->fillColumnWith(0, 7.0);
 	loadTSconfig->fillColumnWith(1, 14.0);
 
-	ScenarioBuilderRule scenarioBuilderRule(study);
+	ScenarioBuilderRule scenarioBuilderRule(*study);
 	scenarioBuilderRule.load().setTSnumber(area->index, 0, 1);
 	scenarioBuilderRule.load().setTSnumber(area->index, 1, 2);
 	

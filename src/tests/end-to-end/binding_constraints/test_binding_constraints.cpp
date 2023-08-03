@@ -63,7 +63,7 @@ struct StudyWithBConLink : public StudyForBCTest
 
 StudyWithBConLink::StudyWithBConLink()
 {
-    BC = addBindingConstraints(study, "BC1", "Group1");
+    BC = addBindingConstraints(*study, "BC1", "Group1");
     BC->weight(link, 1);
     BC->enabled(true);
 }
@@ -81,7 +81,7 @@ struct StudyWithBConCluster : public StudyForBCTest
 
 StudyWithBConCluster::StudyWithBConCluster()
 {
-    BC = addBindingConstraints(study, "BC1", "Group1");
+    BC = addBindingConstraints(*study, "BC1", "Group1");
     BC->weight(cluster.get(), 1);
     BC->enabled(true);
 }
@@ -227,7 +227,7 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
     bcRHStsConfig.fillColumnWith(0, bcGroupRHS1);
     bcRHStsConfig.fillColumnWith(1, bcGroupRHS2);
 
-    ScenarioBuilderRule scenarioBuilderRule(study);
+    ScenarioBuilderRule scenarioBuilderRule(*study);
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 0, 1);
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 1, 2);
 
@@ -255,7 +255,7 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
     bcRHStsConfig.fillColumnWith(5, 60.);
     bcRHStsConfig.fillColumnWith(6, 70.);
 
-    ScenarioBuilderRule scenarioBuilderRule(study);
+    ScenarioBuilderRule scenarioBuilderRule(*study);
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 0, 1);
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 1, 1);
     scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 2, 1);

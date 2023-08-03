@@ -19,13 +19,6 @@ void configureLinkCapacities(AreaLink* link)
     link->indirectCapacities.fill(linkCapacityInfinite);
 }
 
-void addLoadToArea(Area* area, double loadInArea)
-{
-    unsigned int loadNumberTS = 1;
-    area->load.series->timeSeries.resize(loadNumberTS, HOURS_PER_YEAR);
-    area->load.series->timeSeries.fill(loadInArea);
-}
-
 std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName)
 {
     auto cluster = std::make_shared<ThermalCluster>(area);
@@ -40,11 +33,11 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     return cluster;
 }
 
-void addScratchpadToEachArea(Study::Ptr study)
+void addScratchpadToEachArea(Study& study)
 {
-    for (auto [_, area] : study->areas) {
-        for (unsigned int i = 0; i < study->maxNbYearsInParallel; ++i) {
-            area->scratchpad.emplace_back(*study->runtime, *area);
+    for (auto [_, area] : study.areas) {
+        for (unsigned int i = 0; i < study.maxNbYearsInParallel; ++i) {
+            area->scratchpad.emplace_back(*study.runtime, *area);
         }
     }
 }
@@ -85,16 +78,16 @@ averageResults OutputRetriever::thermalGeneration(ThermalCluster* cluster)
     return averageResults((*result)[cluster->areaWideIndex].avgdata);
 }
 
-ScenarioBuilderRule::ScenarioBuilderRule(Study::Ptr study)
+ScenarioBuilderRule::ScenarioBuilderRule(Study& study)
 {
-    study->scenarioRulesCreate();
-    ScenarioBuilder::Sets* sets = study->scenarioRules;
+    study.scenarioRulesCreate();
+    ScenarioBuilder::Sets* sets = study.scenarioRules;
     if (sets && !sets->empty())
     {
         rules_ = sets->createNew("Custom");
 
-        study->parameters.useCustomScenario = true;
-        study->parameters.activeRulesScenario = "Custom";
+        study.parameters.useCustomScenario = true;
+        study.parameters.activeRulesScenario = "Custom";
     }
  }
 
@@ -105,10 +98,10 @@ ScenarioBuilderRule::ScenarioBuilderRule(Study::Ptr study)
 
 void SimulationHandler::create()
 {
-    study_->initializeRuntimeInfos();
+    study_.initializeRuntimeInfos();
     addScratchpadToEachArea(study_);
 
-    simulation_ = std::make_shared<ISimulation<Economy>>(*study_,
+    simulation_ = std::make_shared<ISimulation<Economy>>(study_,
                                                          settings_,
                                                          &nullDurationCollector_);
     SIM_AllocationTableaux();
@@ -124,7 +117,7 @@ StudyBuilder::StudyBuilder()
     logs.verbosityLevel = Logs::Verbosity::Error::level;
 
     study = std::make_shared<Study>();
-    simulation = std::make_shared<SimulationHandler>(study);
+    simulation = std::make_shared<SimulationHandler>(*study);
 
     initializeStudy(study);
     output = std::make_shared<OutputRetriever>(simulation->get());
@@ -177,8 +170,8 @@ Area* StudyBuilder::addAreaToStudy(const std::string& areaName)
     return area;
 }
 
-std::shared_ptr<BindingConstraint> addBindingConstraints(Study::Ptr study, std::string name, std::string group) {
-    auto bc = study->bindingConstraints.add(name);
+std::shared_ptr<BindingConstraint> addBindingConstraints(Study& study, std::string name, std::string group) {
+    auto bc = study.bindingConstraints.add(name);
     bc->group(group);
     return bc;
 }
