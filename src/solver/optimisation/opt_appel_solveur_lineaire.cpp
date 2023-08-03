@@ -94,7 +94,8 @@ private:
     clock::time_point start_;
     clock::time_point end_;
 };
-bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
+bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
+                         PROBLEME_HEBDO* problemeHebdo,
                          int NumIntervalle,
                          const int optimizationNumber,
                          std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator)
@@ -111,7 +112,6 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
     auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
 
     auto study = Data::Study::Current::Get();
-    bool ortoolsUsed = study->parameters.ortoolsUsed;
 
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
@@ -128,7 +128,7 @@ RESOLUTION:
     {
         if (problemeHebdo->ReinitOptimisation)
         {
-            if (ortoolsUsed && solver != nullptr)
+            if (options.useOrtools && solver != nullptr)
             {
                 ORTOOLS_LibererProbleme(solver);
             }
@@ -149,7 +149,7 @@ RESOLUTION:
             Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
 
             TimeMeasurement measure;
-            if (ortoolsUsed)
+            if (options.useOrtools)
             {
                 ORTOOLS_ModifierLeVecteurCouts(
                   solver, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
@@ -224,7 +224,7 @@ RESOLUTION:
 
     Probleme.NombreDeContraintesCoupes = 0;
 
-    if (ortoolsUsed)
+    if (options.useOrtools)
     {
         solver = ORTOOLS_ConvertIfNeeded(&Probleme, solver);
     }
@@ -233,13 +233,13 @@ RESOLUTION:
                                         problemeHebdo->exportMPSOnError,
                                         optimizationNumber,
                                         &Probleme,
-                                        ortoolsUsed,
+                                        options.useOrtools,
                                         solver);
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(study->resultWriter, filename);
 
     TimeMeasurement measure;
-    if (ortoolsUsed)
+    if (options.useOrtools)
     {
         const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
         solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
@@ -265,7 +265,7 @@ RESOLUTION:
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
-            if (ortoolsUsed && solver != nullptr)
+            if (options.useOrtools && solver != nullptr)
             {
                 ORTOOLS_LibererProbleme(solver);
             }

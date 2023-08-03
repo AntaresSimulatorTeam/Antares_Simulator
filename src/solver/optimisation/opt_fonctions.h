@@ -33,10 +33,12 @@
 #include "adequacy_patch_csr/hourly_csr_problem.h"
 #include "opt_period_string_generator_base.h"
 #include "antares/study/parameters/adq-patch-params.h"
+#include "opt_structure_probleme_a_resoudre.h"
 
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
 
-void OPT_OptimisationHebdomadaire(PROBLEME_HEBDO*, AdqPatchParams&);
+void OPT_OptimisationHebdomadaire(const OptimizationOptions& options, PROBLEME_HEBDO*, AdqPatchParams&);
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO*);
@@ -66,7 +68,7 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE&,
                    uint week,
                    int year);
 
-bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO*, AdqPatchParams&);
+bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options, PROBLEME_HEBDO*, AdqPatchParams&);
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO*);
 
@@ -75,12 +77,13 @@ bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO*);
 **
 ** \return True si l'operation s'est bien deroulee, false si le probleme n'a pas de solution
 */
-bool OPT_AppelDuSimplexe(PROBLEME_HEBDO*,
+bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
+                         PROBLEME_HEBDO*,
                          int,
                          const int,
                          std::shared_ptr<OptPeriodStringGenerator>);
 void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
-bool OPT_OptimisationLineaire(PROBLEME_HEBDO*, AdqPatchParams&);
+bool OPT_OptimisationLineaire(const OptimizationOptions& options, PROBLEME_HEBDO*, AdqPatchParams&);
 void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO*, const int);
 /*------------------------------*/
 

@@ -35,6 +35,7 @@
 
 using namespace Antares;
 using namespace Yuni;
+using Antares::Solver::Optimization::OptimizationOptions;
 
 double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
                                    const int NumeroDeLIntervalle,
@@ -46,7 +47,7 @@ double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
         return Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
 }
 
-bool OPT_OptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adqPatchParams)
+bool OPT_OptimisationLineaire(const OptimizationOptions& options, PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adqPatchParams)
 {
     int optimizationNumber = PREMIERE_OPTIMISATION;
 
@@ -105,7 +106,7 @@ OptimisationHebdo:
                                     problemeHebdo->weekInTheYear,
                                     problemeHebdo->year);
 
-        if (!OPT_AppelDuSimplexe(
+        if (!OPT_AppelDuSimplexe(options,
               problemeHebdo, numeroDeLIntervalle, optimizationNumber, optPeriodStringGenerator))
             return false;
 

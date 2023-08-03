@@ -30,16 +30,17 @@
 
 namespace Antares::Solver::Optimization
 {
-DefaultWeeklyOptimization::DefaultWeeklyOptimization(PROBLEME_HEBDO* problemeHebdo,
+DefaultWeeklyOptimization::DefaultWeeklyOptimization(const OptimizationOptions& options,
+                                                     PROBLEME_HEBDO* problemeHebdo,
                                                      AdqPatchParams& adqPatchParams,
                                                      uint thread_number) :
- WeeklyOptimization(problemeHebdo, adqPatchParams, thread_number)
+ WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number)
 {
 }
 
 void DefaultWeeklyOptimization::solve(uint, int)
 {
-    OPT_OptimisationHebdomadaire(problemeHebdo_, adqPatchParams_);
+    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_);
 }
 
 } // namespace Antares::Solver::Optimization

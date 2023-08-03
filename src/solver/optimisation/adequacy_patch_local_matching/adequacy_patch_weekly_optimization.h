@@ -38,7 +38,8 @@ namespace Antares::Solver::Optimization
 class AdequacyPatchOptimization : public WeeklyOptimization
 {
 public:
-    explicit AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHebdo, 
+    explicit AdequacyPatchOptimization(const OptimizationOptions& options,
+                                       PROBLEME_HEBDO* problemeHebdo,
                                        Antares::Data::AdequacyPatch::AdqPatchParams&, 
                                        uint numSpace);
     ~AdequacyPatchOptimization() override = default;
