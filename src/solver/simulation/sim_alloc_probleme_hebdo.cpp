@@ -518,31 +518,36 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
 
     const uint linkCount = study.runtime->interconnectionsCount();
 
-    SIM_AllocationProblemeDonneesGenerales(problem, study, NombreDePasDeTemps);
-    SIM_AllocationProblemePasDeTemps(problem, study, NombreDePasDeTemps);
-
-    for (unsigned k = 0; k < linkCount; ++k)
+    try
     {
-        problem.CoutDeTransport[k].IntercoGereeAvecDesCouts = false;
-        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremite
-            .assign(NombreDePasDeTemps, 0.);
-        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigine
-            .assign(NombreDePasDeTemps, 0.);
-        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremiteRef
-            .assign(NombreDePasDeTemps, 0.);
-        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigineRef
-            .assign(NombreDePasDeTemps, 0.);
+        SIM_AllocationProblemeDonneesGenerales(problem, study, NombreDePasDeTemps);
+        SIM_AllocationProblemePasDeTemps(problem, study, NombreDePasDeTemps);
+        SIM_AllocationConstraints(problem, study, NombreDePasDeTemps);
+        SIM_AllocationNbPays(problem, study, NombreDePasDeTemps);
+
+        for (unsigned k = 0; k < linkCount; ++k)
+        {
+            problem.CoutDeTransport[k].IntercoGereeAvecDesCouts = false;
+            problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremite
+                .assign(NombreDePasDeTemps, 0.);
+            problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigine
+                .assign(NombreDePasDeTemps, 0.);
+            problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremiteRef
+                .assign(NombreDePasDeTemps, 0.);
+            problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigineRef
+                .assign(NombreDePasDeTemps, 0.);
+        }
+
+        problem.coutOptimalSolution1.assign(7, 0.);
+        problem.coutOptimalSolution2.assign(7, 0.);
+
+        problem.tempsResolution1.assign(7, 0.);
+        problem.tempsResolution2.assign(7, 0.);
     }
-
-    SIM_AllocationConstraints(problem, study, NombreDePasDeTemps);
-    SIM_AllocationNbPays(problem, study, NombreDePasDeTemps);
-
-
-    problem.coutOptimalSolution1.assign(7, 0.);
-    problem.coutOptimalSolution2.assign(7, 0.);
-
-    problem.tempsResolution1.assign(7, 0.);
-    problem.tempsResolution2.assign(7, 0.);
+    catch(...)
+    {
+        logs.error() << "Memory allocation for probleme hebdo fail, aborting";
+    }
 }
 
 void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
