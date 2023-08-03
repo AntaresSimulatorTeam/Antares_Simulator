@@ -236,13 +236,13 @@ saveFixture::~saveFixture()
 // Tests section
 // ==================
 
-BOOST_FIXTURE_TEST_SUITE(s, saveFixture)
+BOOST_AUTO_TEST_SUITE(s)
 
 // ====================
 // Tests on Load
 // ====================
-BOOST_AUTO_TEST_CASE(
-  LOAD__on_area2_and_year_11_chosen_ts_number_is_6__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  LOAD__on_area2_and_year_11_chosen_ts_number_is_6__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
     my_rule->load.set(area_2->index, 11, 6);
 
@@ -256,8 +256,8 @@ BOOST_AUTO_TEST_CASE(
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
 }
 
-BOOST_AUTO_TEST_CASE(
-  LOAD__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  LOAD__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
     my_rule->load.set(area_3->index, 7, 2);
     my_rule->load.set(area_2->index, 11, 6);
@@ -284,8 +284,8 @@ BOOST_AUTO_TEST_CASE(
 // ====================
 // Tests on Wind
 // ====================
-BOOST_AUTO_TEST_CASE(
-  WIND__on_area3_and_year_19_chosen_ts_number_is_17__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  WIND__on_area3_and_year_19_chosen_ts_number_is_17__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
     my_rule->wind.set(area_3->index, 19, 17);
 
@@ -302,8 +302,8 @@ BOOST_AUTO_TEST_CASE(
 // ====================
 // Tests on Solar
 // ====================
-BOOST_AUTO_TEST_CASE(
-  SOLAR__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  SOLAR__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
     my_rule->solar.set(area_1->index, 9, 9);
     my_rule->solar.set(area_3->index, 18, 7);
@@ -324,8 +324,8 @@ BOOST_AUTO_TEST_CASE(
 // =================
 // Tests on Hydro
 // =================
-BOOST_AUTO_TEST_CASE(
-  HYDRO__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  HYDRO__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
     my_rule->hydro.set(area_2->index, 17, 12);
     my_rule->hydro.set(area_3->index, 18, 7);
@@ -346,8 +346,8 @@ BOOST_AUTO_TEST_CASE(
 // ===========================
 // Tests on Thermal clusters
 // ===========================
-BOOST_AUTO_TEST_CASE(
-  THERMAL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  THERMAL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
     my_rule->thermal[area_3->index].set(thCluster_31.get(), 5, 13);
     my_rule->thermal[area_1->index].set(thCluster_11.get(), 19, 8);
@@ -369,8 +369,8 @@ BOOST_AUTO_TEST_CASE(
 // =============================
 // Tests on Renewable clusters
 // =============================
-BOOST_AUTO_TEST_CASE(
-  RENEWABLE_CLUSTERS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  RENEWABLE_CLUSTERS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
     my_rule->renewable[area_3->index].set(rnCluster_32.get(), 5, 13);
     my_rule->renewable[area_2->index].set(rnCluster_21.get(), 19, 8);
@@ -392,8 +392,8 @@ BOOST_AUTO_TEST_CASE(
 // ========================
 // Tests on Hydro levels
 // ========================
-BOOST_AUTO_TEST_CASE(
-  HYDRO_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  HYDRO_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
     my_rule->hydroLevels.set(area_1->index, 9, 9);
     my_rule->hydroLevels.set(area_3->index, 18, 7);
@@ -414,8 +414,8 @@ BOOST_AUTO_TEST_CASE(
 // ======================
 // Tests on Links NTC
 // ======================
-BOOST_AUTO_TEST_CASE(
-  LINKS_NTC__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  LINKS_NTC__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
     my_rule->linksNTC[area_1->index].setDataForLink(link_12, 5, 13);
     my_rule->linksNTC[area_1->index].setDataForLink(link_13, 19, 8);
@@ -434,9 +434,8 @@ BOOST_AUTO_TEST_CASE(
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
 }
 
-BOOST_AUTO_TEST_CASE(
-    BC__TS_number_for_many_years__generated_and_ref_sc_buider_files_are_identical
-        ) {
+BOOST_FIXTURE_TEST_CASE(
+    BC__TS_number_for_many_years__generated_and_ref_sc_buider_files_are_identical, saveFixture) {
     my_rule->binding_constraints.setData("group1", 5, 20);
     my_rule->binding_constraints.setData("group2", 19, 1);
     my_rule->binding_constraints.setData("group3", 5, 43);
@@ -457,8 +456,8 @@ BOOST_AUTO_TEST_CASE(
 // ================================
 // Tests on All assets together
 // ================================
-BOOST_AUTO_TEST_CASE(
-  ALL_TOGETHER__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  ALL_TOGETHER__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
     my_rule->load.set(area_2->index, 11, 6);
     my_rule->load.set(area_3->index, 7, 2);
