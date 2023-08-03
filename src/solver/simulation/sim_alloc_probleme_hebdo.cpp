@@ -324,32 +324,12 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
     }
 }
 
-
-void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDeTemps)
+void SIM_AllocationNbPays(PROBLEME_HEBDO& problem,
+                          Antares::Data::Study& study,
+                          unsigned NombreDePasDeTemps)
 {
-    auto& study = *Data::Study::Current::Get();
 
     uint nbPays = study.areas.size();
-
-    const uint linkCount = study.runtime->interconnectionsCount();
-
-    SIM_AllocationProblemeDonneesGenerales(problem, study, NombreDePasDeTemps);
-    SIM_AllocationProblemePasDeTemps(problem, study, NombreDePasDeTemps);
-
-    for (unsigned k = 0; k < linkCount; ++k)
-    {
-        problem.CoutDeTransport[k].IntercoGereeAvecDesCouts = false;
-        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremite
-            .assign(NombreDePasDeTemps, 0.);
-        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigine
-            .assign(NombreDePasDeTemps, 0.);
-        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremiteRef
-            .assign(NombreDePasDeTemps, 0.);
-        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigineRef
-            .assign(NombreDePasDeTemps, 0.);
-    }
-
-    SIM_AllocationConstraints(problem, study, NombreDePasDeTemps);
 
     for (unsigned k = 0; k < nbPays; k++)
     {
@@ -530,6 +510,33 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDe
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].level.resize(nbShortTermStorage);
         }
     }
+}
+
+void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDeTemps)
+{
+    auto& study = *Data::Study::Current::Get();
+
+    const uint linkCount = study.runtime->interconnectionsCount();
+
+    SIM_AllocationProblemeDonneesGenerales(problem, study, NombreDePasDeTemps);
+    SIM_AllocationProblemePasDeTemps(problem, study, NombreDePasDeTemps);
+
+    for (unsigned k = 0; k < linkCount; ++k)
+    {
+        problem.CoutDeTransport[k].IntercoGereeAvecDesCouts = false;
+        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremite
+            .assign(NombreDePasDeTemps, 0.);
+        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigine
+            .assign(NombreDePasDeTemps, 0.);
+        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremiteRef
+            .assign(NombreDePasDeTemps, 0.);
+        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigineRef
+            .assign(NombreDePasDeTemps, 0.);
+    }
+
+    SIM_AllocationConstraints(problem, study, NombreDePasDeTemps);
+    SIM_AllocationNbPays(problem, study, NombreDePasDeTemps);
+
 
     problem.coutOptimalSolution1.assign(7, 0.);
     problem.coutOptimalSolution2.assign(7, 0.);

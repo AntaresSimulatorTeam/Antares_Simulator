@@ -50,6 +50,10 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
                                Antares::Data::Study& study,
                                unsigned NombreDePasDeTemps);
+
+void SIM_AllocationNbPays(PROBLEME_HEBDO& problem,
+                               Antares::Data::Study& study,
+                               unsigned NombreDePasDeTemps);
 /*!
 ** \brief Alloue et initialise un probleme hebdo
 */
