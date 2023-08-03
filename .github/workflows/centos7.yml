@@ -54,7 +54,8 @@ jobs:
     - name: Configure
       run: |
            source /opt/rh/devtoolset-9/enable
-           cmake3 -B _build -S src \
+           cmake --version
+           cmake -B _build -S src \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DDEPS_INSTALL_DIR=/rte-antares-deps-Release \
@@ -69,7 +70,7 @@ jobs:
       run: |
            source /opt/rh/devtoolset-9/enable
            source /opt/rh/rh-git227/enable
-           cmake3 --build _build -j2
+           cmake --build _build -j2
            ccache -s
 
     - name: .tar.gz creation
