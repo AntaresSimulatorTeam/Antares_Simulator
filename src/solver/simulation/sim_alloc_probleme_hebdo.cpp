@@ -37,10 +37,10 @@
 
 using namespace Antares;
 
-void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDeTemps)
+void SIM_AllocationProblemeHebdo(const Data::Study& study,
+                                 PROBLEME_HEBDO& problem,
+                                 unsigned NombreDePasDeTemps)
 {
-    auto& study = *Data::Study::Current::Get();
-
     uint nbPays = study.areas.size();
 
     const uint linkCount = study.runtime->interconnectionsCount();
