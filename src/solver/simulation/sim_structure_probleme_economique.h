@@ -246,7 +246,6 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
     std::vector<double> PuissanceMinDuPalierThermiqueRef;
 
     std::vector<double> CoutHoraireDeProductionDuPalierThermique;
-    std::vector<double> CoutHoraireDeProductionDuPalierThermiqueRef;
 
     std::vector<double> CoutHoraireDuPalierThermiqueUp;
     std::vector<double> CoutHoraireDuPalierThermiqueDown;
