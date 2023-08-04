@@ -43,9 +43,7 @@ struct Fixture {
     Fixture() {
         study = std::make_shared<Study>();
         study->header.version = version870;
-        auto tmp_dir = fs::temp_directory_path();
-        working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
-        fs::create_directories(working_tmp_dir);
+        working_tmp_dir = fs::temp_directory_path();
 
         std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
         constraints << "[1]\n"
