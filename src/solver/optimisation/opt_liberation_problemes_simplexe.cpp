@@ -45,7 +45,7 @@ extern "C"
 
 using namespace Antares;
 
-void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO* problemeHebdo)
+void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options, const PROBLEME_HEBDO* problemeHebdo)
 {
     int NombreDePasDeTempsPourUneOptimisation;
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
@@ -59,9 +59,6 @@ void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO* problemeHebdo)
     if (!ProblemeAResoudre)
         return;
 
-    const auto& study = *Data::Study::Current::Get();
-    bool ortoolsUsed = study.parameters.ortoolsUsed;
-
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         for (int numIntervalle = 0; numIntervalle < nbIntervalles; numIntervalle++)
@@ -70,7 +67,7 @@ void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO* problemeHebdo)
               = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
             auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
 
-            if (ortoolsUsed && solver != NULL)
+            if (options.useOrtools && solver != NULL)
             {
                 ORTOOLS_LibererProbleme(solver);
                 solver = NULL;

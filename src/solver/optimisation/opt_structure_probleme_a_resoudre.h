@@ -33,6 +33,16 @@
 
 /*--------------------------------------------------------------------------------------*/
 
+namespace Antares::Solver::Optimization {
+
+struct OptimizationOptions
+{
+    bool useOrtools;
+    std::string solverName;
+};
+
+}
+
 /* Le probleme a resoudre */
 typedef struct
 {

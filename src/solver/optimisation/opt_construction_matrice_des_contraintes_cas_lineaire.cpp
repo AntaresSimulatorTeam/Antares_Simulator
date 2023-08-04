@@ -154,13 +154,12 @@ static void shortTermStorageLevels(
     }
 }
 
-void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo)
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo, Solver::IResultWriter& writer)
 {
     int var;
 
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
 
-    Study::Ptr study = Study::Current::Get();
     const bool exportStructure = problemeHebdo->ExportStructure;
     const bool firstWeekOfSimulation = problemeHebdo->firstWeekOfSimulation;
 
@@ -1067,8 +1066,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     // Export structure
     if (exportStructure && firstWeekOfSimulation)
     {
-        OPT_ExportInterco(study->resultWriter, problemeHebdo);
-        OPT_ExportAreaName(study->resultWriter, study->areas);
+        OPT_ExportInterco(writer, problemeHebdo);
+        OPT_ExportAreaName(writer, problemeHebdo->NomsDesPays);
     }
 
     return;
