@@ -16,14 +16,12 @@ namespace Antares::Data {
 
     bool BindingConstraintGroupRepository::buildFrom(BindingConstraintsRepository &repository) {
         for (const auto& constraint: repository) {
-            auto group_found = std::find_if(groups_.begin(), groups_.end(), [constraint](const auto& group) {
-                return group->name() == constraint->group();
-            });
+            const auto group_found = operator[](constraint->group());
             BindingConstraintGroup* group;
-            if (group_found == groups_.end()) {
-                group = groups_.emplace_back(std::make_unique<BindingConstraintGroup>(constraint->group())).get();
+            if (group_found) {
+                group = group_found;
             } else {
-                group = group_found->get();
+                group = add(constraint->group());
             }
             group->add(constraint);
         }
