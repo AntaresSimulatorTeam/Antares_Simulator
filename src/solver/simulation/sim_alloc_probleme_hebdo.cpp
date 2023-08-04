@@ -42,8 +42,6 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
                                  PROBLEME_HEBDO& problem,
                                  unsigned NombreDePasDeTemps)
 {
-    auto& study = *Data::Study::Current::Get();
-
     try
     {
         SIM_AllocationProblemeDonneesGenerales(problem, study, NombreDePasDeTemps);
@@ -59,7 +57,7 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
 }
 
 void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
-                                            Antares::Data::Study& study,
+                                            const Antares::Data::Study& study,
                                             unsigned NombreDePasDeTemps)
 {
     uint nbPays = study.areas.size();
@@ -155,7 +153,7 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
 }
 
 void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
-                                      Antares::Data::Study& study,
+                                      const Antares::Data::Study& study,
                                       unsigned NombreDePasDeTemps)
 {
     uint nbPays = study.areas.size();
@@ -292,7 +290,7 @@ void SIM_AllocationLinks(PROBLEME_HEBDO& problem,
 }
 
 void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
-                               Antares::Data::Study& study,
+                               const Antares::Data::Study& study,
                                unsigned NombreDePasDeTemps)
 {
     auto activeConstraints = study.bindingConstraints.activeContraints();
@@ -364,7 +362,7 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
 }
 
 void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
-                          Antares::Data::Study& study,
+                          const Antares::Data::Study& study,
                           unsigned NombreDePasDeTemps)
 {
 

@@ -30,11 +30,11 @@
 #include <antares/study/study.h>
 
 void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
-                                            Antares::Data::Study& study,
+                                            const Antares::Data::Study& study,
                                             unsigned NombreDePasDeTemps);
 
 void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
-                                      Antares::Data::Study& study,
+                                      const Antares::Data::Study& study,
                                       unsigned NombreDePasDeTemps);
 
 void SIM_AllocationLinks(PROBLEME_HEBDO& problem,
@@ -42,9 +42,9 @@ void SIM_AllocationLinks(PROBLEME_HEBDO& problem,
                          unsigned NombreDePasDeTemps);
 
 void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
-                               Antares::Data::Study& study,
+                               const Antares::Data::Study& study,
                                unsigned NombreDePasDeTemps);
 
 void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
-                               Antares::Data::Study& study,
+                               const Antares::Data::Study& study,
                                unsigned NombreDePasDeTemps);
