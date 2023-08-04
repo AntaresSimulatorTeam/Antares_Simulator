@@ -89,7 +89,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options, PROBLEME_HEBDO
 
     OPT_NumeroDIntervalleOptimiseDuPasDeTemps(problemeHebdo);
 
-    OPT_RestaurerLesDonnees(problemeHebdo, optimizationNumber);
+    OPT_RestaurerLesDonnees(problemeHebdo);
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(problemeHebdo);
 

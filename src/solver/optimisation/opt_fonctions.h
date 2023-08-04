@@ -89,7 +89,7 @@ void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options, const P
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options, PROBLEME_HEBDO*, AdqPatchParams&,
                               Solver::IResultWriter& writer);
-void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO*, const int);
+void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO*);
 /*------------------------------*/
 
 void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO*);
