@@ -42,6 +42,7 @@
 #include "../components/htmllistbox/item/renewable-cluster-item.h"
 #include "../components/htmllistbox/datasource/renewable-cluster-order.h"
 #include "../components/htmllistbox/item/renewable-cluster-item.h"
+#include "area.h"
 
 namespace Antares
 {
