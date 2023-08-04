@@ -397,8 +397,6 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
           .assign(7, 0.);
         problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParJour
           .assign(7, 0.);
-        problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimiseRef
-          .assign(7, 0.);
         problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire
           .assign(NombreDePasDeTemps, 0.);
         problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraireRef

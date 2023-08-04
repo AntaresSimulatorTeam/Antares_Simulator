@@ -956,8 +956,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 .CoutHoraireDeProductionDuPalierThermique;
         }
 
-        problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimiseRef
-            = problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimise;
         problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraireRef
             = problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire;
     }
