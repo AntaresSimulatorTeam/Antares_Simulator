@@ -33,7 +33,6 @@
 
 #include "opt_fonctions.h"
 
-#include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
 
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO* problemeHebdo)

@@ -27,24 +27,16 @@
 
 #include "opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
 
 #include "opt_fonctions.h"
 #include "adequacy_patch_local_matching/adq_patch_local_matching.h"
-#include <math.h>
 #include <yuni/core/math.h>
-#include <limits.h>
 
 #include "spx_constantes_externes.h"
 
-#define EPSILON_DEFAILLANCE 1e-3
-#include <antares/logs.h>
-#include <antares/study.h>
-#include <antares/emergency.h>
 using namespace Antares;
 using namespace Antares::Data;
 

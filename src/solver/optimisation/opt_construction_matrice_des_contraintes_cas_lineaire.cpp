@@ -26,8 +26,6 @@
 */
 #include "opt_structure_probleme_a_resoudre.h"
 #include "opt_export_structure.h"
-
-#include "../simulation/simulation.h"
 #include "../utils/filename.h"
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"

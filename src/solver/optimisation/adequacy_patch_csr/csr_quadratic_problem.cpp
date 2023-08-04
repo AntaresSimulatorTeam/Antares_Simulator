@@ -28,8 +28,6 @@
 #include <vector>
 #include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "../solver/simulation/simulation.h"
-#include "../solver/simulation/sim_structure_donnees.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
 #include "../solver/optimisation/opt_fonctions.h"
 #include "csr_quadratic_problem.h"
