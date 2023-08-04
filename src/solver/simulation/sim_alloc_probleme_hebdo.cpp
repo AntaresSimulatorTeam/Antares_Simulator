@@ -311,8 +311,6 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
 
         problem.MatriceDesContraintesCouplantes[k].SecondMembreDeLaContrainteCouplante
           .assign(NombreDePasDeTemps, 0.);
-        problem.MatriceDesContraintesCouplantes[k].SecondMembreDeLaContrainteCouplanteRef
-          .assign(NombreDePasDeTemps, 0.);
 
         problem.MatriceDesContraintesCouplantes[k].NumeroDeLInterconnexion
           .assign(activeConstraints[k]->linkCount(), 0);

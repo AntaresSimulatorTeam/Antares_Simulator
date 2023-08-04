@@ -137,7 +137,6 @@ struct CONTRAINTES_COUPLANTES
     char SensDeLaContrainteCouplante;
 
     std::vector<double> SecondMembreDeLaContrainteCouplante;
-    std::vector<double> SecondMembreDeLaContrainteCouplanteRef;
 
     int NombreDElementsDansLaContrainteCouplante;
     int NombreDInterconnexionsDansLaContrainteCouplante;
