@@ -110,9 +110,6 @@ struct VALEURS_DE_NTC_ET_RESISTANCES
     std::vector<double> ValeurDeLoopFlowOrigineVersExtremite;
     std::vector<double> ValeurDuFlux;
 
-    std::vector<double> ValeurDuFluxUp;
-    std::vector<double> ValeurDuFluxDown;
-
     std::vector<double> ResistanceApparente;
 };
 
@@ -244,12 +241,10 @@ struct SOLDE_MOYEN_DES_ECHANGES
 struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 {
     std::vector<double> PuissanceDisponibleDuPalierThermique;
-
     std::vector<double> PuissanceDisponibleDuPalierThermiqueRef;
-    std::vector<double> PuissanceDisponibleDuPalierThermiqueRef_SV;
 
     std::vector<double> PuissanceMinDuPalierThermique;
-    std::vector<double> PuissanceMinDuPalierThermique_SV;
+    std::vector<double> PuissanceMinDuPalierThermiqueRef;
 
     std::vector<double> CoutHoraireDeProductionDuPalierThermique;
     std::vector<double> CoutHoraireDeProductionDuPalierThermiqueRef;
@@ -499,7 +494,6 @@ struct PROBLEME_HEBDO
     std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTCRef;
 
     unsigned int NombreDePasDeTemps = 0;
-    unsigned int NombreDePasDeTempsRef = 0;
     std::vector<int> NumeroDeJourDuPasDeTemps;
 
     int NombreDePasDeTempsPourUneOptimisation = 0;
@@ -507,7 +501,6 @@ struct PROBLEME_HEBDO
     int NombreDeJours = 0;
 
     int NombreDePasDeTempsDUneJournee = 0;
-    int NombreDePasDeTempsDUneJourneeRef = 0;
 
     mutable std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattues;
     std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattuesRef;

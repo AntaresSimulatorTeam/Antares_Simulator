@@ -88,9 +88,9 @@ void referenceIniFile::save_section(std::string_view sectionTitle, std::vector<s
 	file << std::endl;
 }
 
-BOOST_FIXTURE_TEST_SUITE(s, Fixture)
+BOOST_AUTO_TEST_SUITE(s)
 
-BOOST_AUTO_TEST_CASE(one_area_with_default_params)
+BOOST_FIXTURE_TEST_CASE(one_area_with_default_params, Fixture)
 {
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
 
@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(one_area_with_default_params)
 	BOOST_CHECK(files_identical(generatedIniFileName, referenceFile.name()));
 }
 
-BOOST_AUTO_TEST_CASE(one_area_with_none_default_params)
+BOOST_FIXTURE_TEST_CASE(one_area_with_none_default_params, Fixture)
 {
 	area->nodalOptimization = 0;
 	area->spreadUnsuppliedEnergyCost = 2.;
@@ -123,7 +123,7 @@ BOOST_AUTO_TEST_CASE(one_area_with_none_default_params)
 	BOOST_CHECK(files_identical(generatedIniFileName, referenceFile.name()));
 }
 
-BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_nonDispatchPower__other_params_to_default)
+BOOST_FIXTURE_TEST_CASE(one_area_with_nodal_opt_to_nonDispatchPower__other_params_to_default, Fixture)
 {
 	area->nodalOptimization = anoNonDispatchPower;
 
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_nonDispatchPower__other_params_t
 
 
 
-BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_dispatchHydroPower__other_params_to_default)
+BOOST_FIXTURE_TEST_CASE(one_area_with_nodal_opt_to_dispatchHydroPower__other_params_to_default, Fixture)
 {
 	area->nodalOptimization = anoDispatchHydroPower;
 
@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_dispatchHydroPower__other_params
 	BOOST_CHECK(files_identical(generatedIniFileName, referenceFile.name()));
 }
 
-BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_otherDispatchablePower__other_params_to_default)
+BOOST_FIXTURE_TEST_CASE(one_area_with_nodal_opt_to_otherDispatchablePower__other_params_to_default, Fixture)
 {
 	area->nodalOptimization = anoOtherDispatchPower;
 
@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_otherDispatchablePower__other_pa
 	BOOST_CHECK(files_identical(generatedIniFileName, referenceFile.name()));
 }
 
-BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_non_or_other_DispatchPower__other_params_to_default)
+BOOST_FIXTURE_TEST_CASE(one_area_with_nodal_opt_to_non_or_other_DispatchPower__other_params_to_default, Fixture)
 {
 	area->nodalOptimization = anoOtherDispatchPower | anoNonDispatchPower;
 
@@ -185,7 +185,7 @@ BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_non_or_other_DispatchPower__othe
 	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
 }
 
-BOOST_AUTO_TEST_CASE(one_area_with_unsupplied_energy_cost_negative__other_params_to_default)
+BOOST_FIXTURE_TEST_CASE(one_area_with_unsupplied_energy_cost_negative__other_params_to_default, Fixture)
 {
 	area->spreadUnsuppliedEnergyCost = -1.;
 
@@ -194,7 +194,7 @@ BOOST_AUTO_TEST_CASE(one_area_with_unsupplied_energy_cost_negative__other_params
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "spread-unsupplied-energy-cost = -1.000000"));
 }
 
-BOOST_AUTO_TEST_CASE(one_area_with_spilled_energy_cost_negative__other_params_to_default)
+BOOST_FIXTURE_TEST_CASE(one_area_with_spilled_energy_cost_negative__other_params_to_default, Fixture)
 {
 	area->spreadSpilledEnergyCost = -1.;
 
@@ -203,7 +203,7 @@ BOOST_AUTO_TEST_CASE(one_area_with_spilled_energy_cost_negative__other_params_to
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "spread-spilled-energy-cost = -1.000000"));
 }
 
-BOOST_AUTO_TEST_CASE(one_area_with_synthesis_to_hourly_monthly_annual__other_params_to_default)
+BOOST_FIXTURE_TEST_CASE(one_area_with_synthesis_to_hourly_monthly_annual__other_params_to_default, Fixture)
 {
 	area->filterSynthesis = filterWeekly | filterMonthly | filterAnnual;
 
@@ -212,7 +212,7 @@ BOOST_AUTO_TEST_CASE(one_area_with_synthesis_to_hourly_monthly_annual__other_par
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "filter-synthesis = weekly, monthly, annual"));
 }
 
-BOOST_AUTO_TEST_CASE(one_area_with_year_by_year_to_daily_monthly__other_params_to_default)
+BOOST_FIXTURE_TEST_CASE(one_area_with_year_by_year_to_daily_monthly__other_params_to_default, Fixture)
 {
 	area->filterYearByYear = filterDaily | filterMonthly;
 

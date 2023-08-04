@@ -99,7 +99,7 @@ Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(St
       *pStudy, pSettings, &nullDurationCollector);
 
     // Allocate all arrays
-    SIM_AllocationTableaux();
+    SIM_AllocationTableaux(*pStudy);
 
     // Let's go
     simulation->run();

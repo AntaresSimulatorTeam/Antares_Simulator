@@ -36,7 +36,10 @@
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
 
-bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adqPatchParams)
+using Antares::Solver::Optimization::OptimizationOptions;
+
+bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options, PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adqPatchParams,
+                                      Solver::IResultWriter& writer)
 {
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
@@ -47,9 +50,6 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchPar
                 problemeHebdo->CoutDeDefaillanceEnReserve[pays] = 1.e+6;
             }
 
-            problemeHebdo->NombreDePasDeTempsRef = problemeHebdo->NombreDePasDeTemps;
-            problemeHebdo->NombreDePasDeTempsDUneJourneeRef
-              = problemeHebdo->NombreDePasDeTempsDUneJournee;
             problemeHebdo->NombreDeJours = (int)(problemeHebdo->NombreDePasDeTemps
                                                  / problemeHebdo->NombreDePasDeTempsDUneJournee);
 
@@ -74,8 +74,6 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchPar
 
     OPT_VerifierPresenceReserveJmoins1(problemeHebdo);
 
-    OPT_SauvegarderLesPmaxThermiques(problemeHebdo);
-
     OPT_InitialiserLesPminHebdo(problemeHebdo);
 
     OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(problemeHebdo);
@@ -87,5 +85,5 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchPar
         OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(problemeHebdo);
     }
 
-    return OPT_OptimisationLineaire(problemeHebdo, adqPatchParams);
+    return OPT_OptimisationLineaire(options, problemeHebdo, adqPatchParams, writer);
 }

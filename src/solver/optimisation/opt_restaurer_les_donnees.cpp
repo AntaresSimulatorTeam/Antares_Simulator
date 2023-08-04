@@ -162,7 +162,7 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
                 PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDisponibleEtCout
                   = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[palier];
                 PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt]
-                  = PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique_SV[pdt];
+                  = PuissanceDisponibleEtCout.PuissanceMinDuPalierThermiqueRef[pdt];
             }
         }
     }
@@ -189,14 +189,14 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
 
                     if (PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt]
                         > PuissanceDisponibleEtCout
-                            .PuissanceDisponibleDuPalierThermiqueRef_SV[pdt])
+                            .PuissanceDisponibleDuPalierThermiqueRef[pdt])
                     {
                         PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt]
                           = PuissanceDisponibleEtCout
-                              .PuissanceDisponibleDuPalierThermiqueRef_SV[pdt];
+                              .PuissanceDisponibleDuPalierThermiqueRef[pdt];
                         PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt]
                           = PuissanceDisponibleEtCout
-                              .PuissanceDisponibleDuPalierThermiqueRef_SV[pdt];
+                              .PuissanceDisponibleDuPalierThermiqueRef[pdt];
                     }
                 }
 

@@ -38,7 +38,9 @@
 
 using namespace Antares;
 
-void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, unsigned NombreDePasDeTemps)
+void SIM_AllocationProblemeHebdo(const Data::Study& study,
+                                 PROBLEME_HEBDO& problem,
+                                 unsigned NombreDePasDeTemps)
 {
     auto& study = *Data::Study::Current::Get();
 
@@ -169,17 +171,11 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         problem.ValeursDeNTC[k].ValeurDeNTCExtremiteVersOrigine.assign(linkCount, 0.);
         problem.ValeursDeNTC[k].ValeurDeLoopFlowOrigineVersExtremite.assign(linkCount, 0.);
         problem.ValeursDeNTC[k].ValeurDuFlux.assign(linkCount, 0.);
-        problem.ValeursDeNTC[k].ValeurDuFluxUp.assign(linkCount, 0.);
-        problem.ValeursDeNTC[k].ValeurDuFluxDown.assign(linkCount, 0.);
         problem.ValeursDeNTC[k].ResistanceApparente.assign(linkCount, 0.);
 
         problem.ValeursDeNTCRef[k].ValeurDeNTCOrigineVersExtremite.assign(linkCount, 0.);
         problem.ValeursDeNTCRef[k].ValeurDeNTCExtremiteVersOrigine.assign(linkCount, 0.);
         problem.ValeursDeNTCRef[k].ValeurDeLoopFlowOrigineVersExtremite.assign(linkCount, 0.);
-        problem.ValeursDeNTCRef[k].ValeurDuFlux.assign(linkCount, 0.);
-        problem.ValeursDeNTCRef[k].ValeurDuFluxUp.assign(linkCount, 0.);
-        problem.ValeursDeNTCRef[k].ValeurDuFluxDown.assign(linkCount, 0.);
-        problem.ValeursDeNTCRef[k].ResistanceApparente.assign(linkCount, 0.);
 
         // TODO VP: Remove this allocation
         problem.CorrespondanceVarNativesVarOptim[k]
@@ -502,13 +498,10 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
               .PuissanceDisponibleDuPalierThermiqueRef
               .assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              .PuissanceDisponibleDuPalierThermiqueRef_SV
-              .assign(NombreDePasDeTemps, 0.);
-            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
               .PuissanceMinDuPalierThermique
               .assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              .PuissanceMinDuPalierThermique_SV
+              .PuissanceMinDuPalierThermiqueRef
               .assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
               .NombreMaxDeGroupesEnMarcheDuPalierThermique

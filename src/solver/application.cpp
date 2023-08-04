@@ -412,7 +412,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     study.performTransformationsBeforeLaunchingSimulation();
 
     // Allocate all arrays
-    SIM_AllocationTableaux();
+    SIM_AllocationTableaux(study);
 
     // Random-numbers generators
     initializeRandomNumberGenerators();
