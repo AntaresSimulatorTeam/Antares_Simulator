@@ -23,8 +23,7 @@ BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto tmp_dir = fs::temp_directory_path();
-    auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
+    auto working_tmp_dir = fs::temp_directory_path();
     fs::create_directories(working_tmp_dir);
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
@@ -70,8 +69,7 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto tmp_dir = fs::temp_directory_path();
-    auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
+    auto working_tmp_dir = fs::temp_directory_path();
     fs::create_directories(working_tmp_dir);
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
@@ -116,8 +114,7 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto tmp_dir = fs::temp_directory_path();
-    auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
+    auto working_tmp_dir = fs::temp_directory_path();
     fs::create_directories(working_tmp_dir);
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
@@ -180,8 +177,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto tmp_dir = fs::temp_directory_path();
-    auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
+    auto working_tmp_dir = fs::temp_directory_path();
     fs::create_directories(working_tmp_dir);
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
@@ -226,8 +222,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_range) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto tmp_dir = fs::temp_directory_path();
-    auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
+    auto working_tmp_dir = fs::temp_directory_path();
     fs::create_directories(working_tmp_dir);
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
