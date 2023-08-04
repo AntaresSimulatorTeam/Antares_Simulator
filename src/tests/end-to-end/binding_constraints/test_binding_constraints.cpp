@@ -30,11 +30,11 @@ StudyForBCTest::StudyForBCTest()
     Area* area1 = addAreaToStudy("Area 1");
     Area* area2 = addAreaToStudy("Area 2");
 
-    TimeSeriesConfigurer<Matrix<double, int32_t>>(area1->load.series->timeSeries)
+    TimeSeriesConfigurer(area1->load.series->timeSeries)
         .setColumnCount(1)
         .fillColumnWith(0, 0);
 
-    TimeSeriesConfigurer<Matrix<double, int32_t>>(area2->load.series->timeSeries)
+    TimeSeriesConfigurer(area2->load.series->timeSeries)
         .setColumnCount(1)
         .fillColumnWith(0, 100);
 
@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     BC->operatorType(BindingConstraint::opEquality);
 
     double rhsValue = 90.;
-    TimeSeriesConfigurer<Matrix<>>(BC->RHSTimeSeries())
+    TimeSeriesConfigurer(BC->RHSTimeSeries())
         .setColumnCount(1)
         .fillColumnWith(0, rhsValue);
 
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
     BC->operatorType(BindingConstraint::opEquality);
 
     double rhsValue = 50.;
-    TimeSeriesConfigurer<Matrix<>>(BC->RHSTimeSeries())
+    TimeSeriesConfigurer(BC->RHSTimeSeries())
         .setColumnCount(1)
         .fillColumnWith(0, rhsValue);
 
@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     BC->operatorType(BindingConstraint::opEquality);
 
     double rhsValue = 60.;
-    TimeSeriesConfigurer<Matrix<>>(BC->RHSTimeSeries())
+    TimeSeriesConfigurer(BC->RHSTimeSeries())
         .setColumnCount(1)
         .fillColumnWith(0, rhsValue);
 
@@ -156,7 +156,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     BC->operatorType(BindingConstraint::opLess);
 
     double rhsValue = 90.;
-    TimeSeriesConfigurer<Matrix<>>(BC->RHSTimeSeries())
+    TimeSeriesConfigurer(BC->RHSTimeSeries())
         .setColumnCount(1)
         .fillColumnWith(0, rhsValue);
 
@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
     BC->operatorType(BindingConstraint::opGreater);
 
     double rhsValue = 80.;
-    TimeSeriesConfigurer<Matrix<>>(BC->RHSTimeSeries())
+    TimeSeriesConfigurer(BC->RHSTimeSeries())
         .setColumnCount(1)
         .fillColumnWith(0, rhsValue);
 
@@ -197,7 +197,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90)
     BC->operatorType(BindingConstraint::opEquality);
 
     double rhsValue = 90.;
-    TimeSeriesConfigurer<Matrix<>>(BC->RHSTimeSeries())
+    TimeSeriesConfigurer(BC->RHSTimeSeries())
         .setColumnCount(1)
         .fillColumnWith(0, rhsValue);
 
@@ -222,7 +222,7 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
 
     double bcGroupRHS1 = 90.;
     double bcGroupRHS2 = 70.;
-    TimeSeriesConfigurer<Matrix<>> (BC->RHSTimeSeries())
+    TimeSeriesConfigurer(BC->RHSTimeSeries())
         .setColumnCount(2)
         .fillColumnWith(0, bcGroupRHS1)
         .fillColumnWith(1, bcGroupRHS2);
@@ -245,7 +245,7 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
     BC->setTimeGranularity(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
 
-    TimeSeriesConfigurer<Matrix<>>(BC->RHSTimeSeries())
+    TimeSeriesConfigurer(BC->RHSTimeSeries())
         .setColumnCount(7)
         .fillColumnWith(0, 10.)
         .fillColumnWith(1, 20.)

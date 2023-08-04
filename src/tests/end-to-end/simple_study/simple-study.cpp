@@ -33,12 +33,12 @@ StudyFixture::StudyFixture()
 	cluster = addClusterToArea(area, "some cluster");
 
 	loadInArea = 7.0;
-	loadTSconfig = std::move(TimeSeriesConfigurer<Matrix<double, int32_t>>(area->load.series->timeSeries));
+	loadTSconfig = TimeSeriesConfigurer(area->load.series->timeSeries);
 	loadTSconfig.setColumnCount(1)
 				.fillColumnWith(0, loadInArea);
 
 	clusterCost = 2.;
-	clusterConfig = std::move(ThermalClusterConfig(cluster.get()));
+	clusterConfig = ThermalClusterConfig(cluster.get());
 	clusterConfig.setNominalCapacity(100.)
 				 .setAvailablePower(0, 50.)
 				 .setCosts(clusterCost)
