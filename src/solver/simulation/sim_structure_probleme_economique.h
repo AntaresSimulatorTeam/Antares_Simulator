@@ -295,8 +295,6 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
 
     double MaxDesPmaxHydrauliques;
 
-    double MaxDesPmaxHydrauliquesRef;
-
     bool PresenceDePompageModulable;
     bool PresenceDHydrauliqueModulable;
 

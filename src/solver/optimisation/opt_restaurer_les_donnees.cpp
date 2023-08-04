@@ -107,17 +107,6 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo)
         }
     }
 
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        ENERGIES_ET_PUISSANCES_HYDRAULIQUES& CaracteristiquesHydrauliques
-          = problemeHebdo->CaracteristiquesHydrauliques[pays];
-        if (CaracteristiquesHydrauliques.PresenceDHydrauliqueModulable)
-        {
-            CaracteristiquesHydrauliques.MaxDesPmaxHydrauliques
-              = CaracteristiquesHydrauliques.MaxDesPmaxHydrauliquesRef;
-        }
-    }
-
     for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
