@@ -499,7 +499,6 @@ struct PROBLEME_HEBDO
     int NombreDePasDeTempsDUneJournee = 0;
 
     mutable std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattues;
-    std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattuesRef;
 
     std::vector<double> CoutDeDefaillancePositive;
     std::vector<double> CoutDeDefaillanceNegative;

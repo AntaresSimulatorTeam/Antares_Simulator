@@ -959,10 +959,4 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraireRef
             = problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire;
     }
-
-    for (unsigned int j = 0; j < problem.NombreDePasDeTemps; ++j)
-    {
-        problem.ConsommationsAbattuesRef[j].ConsommationAbattueDuPays
-            = problem.ConsommationsAbattues[j].ConsommationAbattueDuPays;
-    }
 }

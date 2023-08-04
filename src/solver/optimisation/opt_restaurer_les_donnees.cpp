@@ -55,18 +55,6 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo)
 
     for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
     {
-        const CONSOMMATIONS_ABATTUES& ConsommationsAbattuesRef
-          = problemeHebdo->ConsommationsAbattuesRef[pdt];
-        CONSOMMATIONS_ABATTUES& ConsommationsAbattues = problemeHebdo->ConsommationsAbattues[pdt];
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-        {
-            ConsommationsAbattues.ConsommationAbattueDuPays[pays]
-              = ConsommationsAbattuesRef.ConsommationAbattueDuPays[pays];
-        }
-    }
-
-    for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
-    {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             ENERGIES_ET_PUISSANCES_HYDRAULIQUES& CaracteristiquesHydrauliques
