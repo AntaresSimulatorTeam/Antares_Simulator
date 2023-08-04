@@ -148,7 +148,7 @@ private:
     Data::AreaLink* getLink(const AreaName& fromAreaName,
                             const AreaName& toAreaName,
                             bool updaterMode);
-    bool checkGroupExists(const std::string& groupName);
+    bool checkGroupExists(const std::string& groupName) const;
 
     // Member data
     Study& study_;

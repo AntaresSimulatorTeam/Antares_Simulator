@@ -309,7 +309,7 @@ bool Rules::readLink(const AreaName::Vector& splitKey, String value, bool update
     return true;
 }
 
-bool Rules::checkGroupExists(const std::string& groupName)
+bool Rules::checkGroupExists(const std::string& groupName) const
 {
     const auto& groups = study_.bindingConstraintsGroups;
     if (!groups[groupName])
