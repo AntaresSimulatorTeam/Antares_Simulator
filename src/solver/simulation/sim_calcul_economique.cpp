@@ -340,11 +340,10 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
                 std::vector<double>& sndMember
                     = problem.MatriceDesContraintesCouplantes[constraintIndex]
                         .SecondMembreDeLaContrainteCouplante;
+
                 for (unsigned day = 0; day != 7; ++day)
-                {
                     sndMember[day] = column[weekFirstDay + day];
-                    sndMemberRef[day] = sndMember[day];
-                }
+
                 break;
             }
             case BindingConstraint::typeWeekly:
