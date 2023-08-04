@@ -51,7 +51,7 @@ std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(const Antares::Da
     if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled)
         return std::make_unique<AdequacyPatchOptimization>(study, problemeHebdo, adqPatchParams, thread_number);
     else
-        return std::make_unique<DefaultWeeklyOptimization>(study, problemeHebdo, adqPatchParams, thread_number);
+        return std::make_unique<DefaultWeeklyOptimization>(problemeHebdo, adqPatchParams, thread_number);
 }
 
 } // namespace Antares::Solver::Optimization
