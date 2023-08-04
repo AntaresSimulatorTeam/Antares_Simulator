@@ -43,7 +43,7 @@ void HourlyCSRProblem::setBoundsOnENS()
     double* AdresseDuResultat;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
+      = &problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: ENS for each area inside adq patch
     for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
@@ -76,7 +76,7 @@ void HourlyCSRProblem::setBoundsOnENS()
 void HourlyCSRProblem::setBoundsOnSpilledEnergy()
 {
     const auto* CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
+      = &problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: Spilled Energy for each area inside adq patch
     for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
@@ -107,7 +107,7 @@ void HourlyCSRProblem::setBoundsOnSpilledEnergy()
 void HourlyCSRProblem::setBoundsOnFlows()
 {
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
+      = &problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
     std::vector<double>& Xmin = problemeAResoudre_.Xmin;
     std::vector<double>& Xmax = problemeAResoudre_.Xmax;
     VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo_->ValeursDeNTC[triggeredHour];

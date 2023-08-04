@@ -64,7 +64,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                     continue;
                 }
                 CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-                  = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+                  =  &problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
                 CorrespondanceVarNativesVarOptim
                   ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier]

@@ -61,7 +61,7 @@ void HourlyCSRProblem::setQuadraticCost()
 {
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
+      = &problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: ENS for each area inside adq patch
     // obj function term is: 1 / (PTO) * ENS * ENS
@@ -93,7 +93,7 @@ void HourlyCSRProblem::setLinearCost()
     int var;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
+      = &problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: transmission cost for links between nodes of type 2 (area inside adequacy patch)
     // obj function term is: Sum ( hurdle_cost_direct x flow_direct )+ Sum ( hurdle_cost_indirect x

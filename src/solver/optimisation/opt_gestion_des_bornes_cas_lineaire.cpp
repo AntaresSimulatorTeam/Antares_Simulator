@@ -100,7 +100,7 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
          pdtHebdo++, pdtJour++)
     {
         const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
+          = &problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
         const ALL_MUST_RUN_GENERATION& AllMustRunGeneration
           = problemeHebdo->AllMustRunGeneration[pdtHebdo];
         const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
@@ -162,7 +162,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
     {
         int hourInTheYear = weekFirstHour + pdtHebdo;
         const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
+          = &problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
         for (int areaIndex = 0; areaIndex < problemeHebdo->NombreDePays; areaIndex++)
         {
             int storageIndex = 0;
@@ -234,7 +234,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
     {
         VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo->ValeursDeNTC[pdtHebdo];
         const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
+          = &problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {

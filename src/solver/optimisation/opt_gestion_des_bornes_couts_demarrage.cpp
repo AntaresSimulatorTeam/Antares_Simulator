@@ -52,7 +52,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
          pdtHebdo++, pdtJour++)
     {
         const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
+          =  &problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {

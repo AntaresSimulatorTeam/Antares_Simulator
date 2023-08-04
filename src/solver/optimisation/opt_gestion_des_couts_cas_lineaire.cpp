@@ -41,7 +41,7 @@ static void shortTermStorageCost(
   int DernierPdtDeLIntervalle,
   int NombreDePays,
   const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
-  std::vector<CORRESPONDANCES_DES_VARIABLES*>& CorrespondanceVarNativesVarOptim,
+  std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim,
   std::vector<double>& linearCost)
 {
     SIM::SpreadGenerator spreadGenerator;
@@ -56,7 +56,7 @@ static void shortTermStorageCost(
                 auto VarCurrent = CorrespondanceVarNativesVarOptim[pdtJour];
                 const int clusterGlobalIndex = storage.clusterGlobalIndex;
                 if (const int varLevel
-                    = VarCurrent->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
+                    = VarCurrent.SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
                     varLevel >= 0)
                 {
                     linearCost[varLevel] = 0;
@@ -64,14 +64,14 @@ static void shortTermStorageCost(
 
                 const double cost = spreadGenerator.generate();
                 if (const int varInjection
-                    = VarCurrent->SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
+                    = VarCurrent.SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
                     varInjection >= 0)
                 {
                     linearCost[varInjection] = cost;
                 }
 
                 if (const int varWithdrawal
-                    = VarCurrent->SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
+                    = VarCurrent.SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
                     varWithdrawal >= 0)
                 {
                     linearCost[varWithdrawal] = storage.efficiency * cost;
@@ -101,7 +101,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
     for (int pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle; pdtHebdo++)
     {
         const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
+          = &problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {

@@ -41,7 +41,7 @@ void CsrQuadraticProblem::setConstraintsOnFlows(std::vector<double>& Pi, std::ve
 {
     int hour = hourlyCsrProblem_.triggeredHour;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour];
+      = &problemeHebdo_->CorrespondanceVarNativesVarOptim[hour];
 
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
     // type 2.
@@ -94,7 +94,7 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(std::vector<double>& Pi, std
 {
     int hour = hourlyCsrProblem_.triggeredHour;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour];
+      = &problemeHebdo_->CorrespondanceVarNativesVarOptim[hour];
 
     // constraint:
     // ENS(node A) +
@@ -225,7 +225,7 @@ void CsrQuadraticProblem::setBindingConstraints(std::vector<double>& Pi, std::ve
                      == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
                 int var = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour]
-                            ->NumeroDeVariableDeLInterconnexion[Interco];
+                            .NumeroDeVariableDeLInterconnexion[Interco];
 
                 if (var >= 0)
                 {
