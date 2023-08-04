@@ -45,10 +45,10 @@ using namespace Antares;
 using namespace Antares::Data;
 
 static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
+  const Study& study,
   double** thermalNoisesByArea,
   uint numSpace)
 {
-    auto& study = *Data::Study::Current::Get();
     auto& runtime = *study.runtime;
 
     uint year = runtime.timeseriesNumberYear[numSpace];
@@ -191,18 +191,21 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
     //To do this here we would have to check every BC for its width
     for (const auto& [group_name, _] : study.bindingConstraints.groupToTimeSeriesNumbers) {
 #ifndef NDEBUG
-        const auto number_of_ts_numbers = study.bindingConstraints.groupToTimeSeriesNumbers[group_name].timeseriesNumbers.height;
+        auto it = study.bindingConstraints.groupToTimeSeriesNumbers.find(group_name);
+        assert(it != study.bindingConstraints.groupToTimeSeriesNumbers.end());
+        auto tsNumbers = it->second;
+        const auto number_of_ts_numbers = tsNumbers.timeseriesNumbers.height;
         assert(year < number_of_ts_numbers); //If only 1 ts_number we suppose only one TS. Any "year" will be converted to "0" later
 #endif
-        NumeroChroniquesTireesParGroup[numSpace][group_name] = study.bindingConstraints.groupToTimeSeriesNumbers[group_name].timeseriesNumbers[0][year];
+        NumeroChroniquesTireesParGroup[numSpace][group_name] = tsNumbers.timeseriesNumbers[0][year];
     }
 }
 
-void ALEA_TirageAuSortChroniques(double** thermalNoisesByArea, uint numSpace)
+void ALEA_TirageAuSortChroniques(const Antares::Data::Study& study, double** thermalNoisesByArea, uint numSpace)
 {
     // Time-series numbers
     // Retrieve all time-series numbers
     // Initialize in the same time the production costs of all thermal clusters.
-    InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
+    InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(study,
       thermalNoisesByArea, numSpace);
 }
