@@ -24,30 +24,27 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#pragma once
 
-#include "opt_structure_probleme_a_resoudre.h"
+#include "../config.h"
+#include <antares/study/study.h>
 
-#include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_extern_variables_globales.h"
+void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
+                                            const Antares::Data::Study& study,
+                                            unsigned NombreDePasDeTemps);
 
-#include "opt_fonctions.h"
+void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
+                                      const Antares::Data::Study& study,
+                                      unsigned NombreDePasDeTemps);
 
-void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO* problemeHebdo)
-{
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
+void SIM_AllocationLinks(PROBLEME_HEBDO& problem,
+                         const uint linkCount,
+                         unsigned NombreDePasDeTemps);
 
-        for (int palier = 0; palier < PaliersThermiquesDuPays.NombreDePaliersThermiques; palier++)
-        {
-            PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDisponibleEtCout
-                = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[palier];
+void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
+                               const Antares::Data::Study& study,
+                               unsigned NombreDePasDeTemps);
 
-            PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermiqueRef_SV
-                = PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermiqueRef;
-        }
-    }
-    return;
-}
+void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
+                               const Antares::Data::Study& study,
+                               unsigned NombreDePasDeTemps);

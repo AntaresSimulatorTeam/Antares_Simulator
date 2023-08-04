@@ -27,18 +27,12 @@
 
 #include "opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
-
-#include "spx_constantes_externes.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
-
-#include <antares/logs.h>
 #include <antares/study.h>
-#include <antares/emergency.h>
+
 using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;

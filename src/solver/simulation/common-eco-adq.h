@@ -160,6 +160,9 @@ int retrieveAverageNTC(const Data::Study& study,
 
 void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
                                     Antares::Solver::Variable::State& state);
+
+OptimizationOptions createOptimizationOptions(const Data::Study& study);
+
 } // namespace Simulation
 } // namespace Solver
 } // namespace Antares

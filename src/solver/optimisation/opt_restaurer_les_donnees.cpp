@@ -32,28 +32,11 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
-#include <iostream>
 
-void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int optimizationNumber)
+void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo)
 {
     const std::vector<int>& NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
     const int DernierPasDeTemps = problemeHebdo->NombreDePasDeTemps;
-
-    for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
-    {
-        const VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTCRef = problemeHebdo->ValeursDeNTCRef[pdt];
-        VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo->ValeursDeNTC[pdt];
-
-        for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
-        {
-            ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco]
-              = ValeursDeNTCRef.ValeurDeNTCOrigineVersExtremite[interco];
-            ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco]
-              = ValeursDeNTCRef.ValeurDeNTCExtremiteVersOrigine[interco];
-            ValeursDeNTC.ValeurDeLoopFlowOrigineVersExtremite[interco]
-              = ValeursDeNTCRef.ValeurDeLoopFlowOrigineVersExtremite[interco];
-        }
-    }
 
     for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
     {
@@ -66,31 +49,6 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
                   = CoutDeTransport.CoutDeTransportOrigineVersExtremiteRef[pdt];
                 CoutDeTransport.CoutDeTransportExtremiteVersOrigine[pdt]
                   = CoutDeTransport.CoutDeTransportExtremiteVersOrigineRef[pdt];
-            }
-        }
-    }
-
-    for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
-    {
-        const CONSOMMATIONS_ABATTUES& ConsommationsAbattuesRef
-          = problemeHebdo->ConsommationsAbattuesRef[pdt];
-        CONSOMMATIONS_ABATTUES& ConsommationsAbattues = problemeHebdo->ConsommationsAbattues[pdt];
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-        {
-            ConsommationsAbattues.ConsommationAbattueDuPays[pays]
-              = ConsommationsAbattuesRef.ConsommationAbattueDuPays[pays];
-        }
-    }
-
-    if (problemeHebdo->YaDeLaReserveJmoins1 && optimizationNumber == PREMIERE_OPTIMISATION)
-    {
-        for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
-        {
-            for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-            {
-                RESERVE_JMOINS1& ReserveJMoins1 = problemeHebdo->ReserveJMoins1[pays];
-                ReserveJMoins1.ReserveHoraireJMoins1[pdt]
-                  = ReserveJMoins1.ReserveHoraireJMoins1Ref[pdt];
             }
         }
     }
@@ -136,33 +94,6 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
         }
     }
 
-    for (int pdt = 0; pdt < DernierPasDeTemps;)
-    {
-        int intervalle = problemeHebdo->NumeroDIntervalleOptimiseDuPasDeTemps[pdt];
-        pdt += problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-        {
-            ENERGIES_ET_PUISSANCES_HYDRAULIQUES& CaracteristiquesHydrauliques
-              = problemeHebdo->CaracteristiquesHydrauliques[pays];
-            if (CaracteristiquesHydrauliques.PresenceDHydrauliqueModulable)
-            {
-                CaracteristiquesHydrauliques.CntEnergieH2OParIntervalleOptimise[intervalle]
-                  = CaracteristiquesHydrauliques.CntEnergieH2OParIntervalleOptimiseRef[intervalle];
-            }
-        }
-    }
-
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        ENERGIES_ET_PUISSANCES_HYDRAULIQUES& CaracteristiquesHydrauliques
-          = problemeHebdo->CaracteristiquesHydrauliques[pays];
-        if (CaracteristiquesHydrauliques.PresenceDHydrauliqueModulable)
-        {
-            CaracteristiquesHydrauliques.MaxDesPmaxHydrauliques
-              = CaracteristiquesHydrauliques.MaxDesPmaxHydrauliquesRef;
-        }
-    }
-
     for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
@@ -175,7 +106,7 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
                 PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDisponibleEtCout
                   = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[palier];
                 PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt]
-                  = PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique_SV[pdt];
+                  = PuissanceDisponibleEtCout.PuissanceMinDuPalierThermiqueRef[pdt];
             }
         }
     }
@@ -202,14 +133,14 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
 
                     if (PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt]
                         > PuissanceDisponibleEtCout
-                            .PuissanceDisponibleDuPalierThermiqueRef_SV[pdt])
+                            .PuissanceDisponibleDuPalierThermiqueRef[pdt])
                     {
                         PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt]
                           = PuissanceDisponibleEtCout
-                              .PuissanceDisponibleDuPalierThermiqueRef_SV[pdt];
+                              .PuissanceDisponibleDuPalierThermiqueRef[pdt];
                         PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt]
                           = PuissanceDisponibleEtCout
-                              .PuissanceDisponibleDuPalierThermiqueRef_SV[pdt];
+                              .PuissanceDisponibleDuPalierThermiqueRef[pdt];
                     }
                 }
 

@@ -27,7 +27,6 @@
 
 #include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "../solver/simulation/simulation.h"
 #include "../solver/simulation/sim_structure_donnees.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
 
@@ -35,7 +34,6 @@
 
 #include "pi_constantes_externes.h"
 
-#include <math.h>
 #include <yuni/core/math.h>
 
 using namespace Yuni;

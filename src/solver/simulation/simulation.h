@@ -32,12 +32,14 @@
 
 struct PROBLEME_HEBDO;
 
-void SIM_AllocationTableaux(void);
+void SIM_AllocationTableaux(const Antares::Data::Study& study);
 
 /*!
 ** \brief Alloue toutes les donnees d'un probleme hebdo
 */
-void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemps);
+void SIM_AllocationProblemeHebdo(const Antares::Data::Study& study,
+                                 PROBLEME_HEBDO& problem,
+                                 uint NombreDePasDeTemps);
 
 /*!
 ** \brief Alloue et initialise un probleme hebdo
@@ -49,7 +51,8 @@ void SIM_InitialisationProblemeHebdo(Antares::Data::Study& study,
 
 void SIM_PreallocationTableaux(void);
 
-void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
+void SIM_RenseignementProblemeHebdo(const Antares::Data::Study& study,
+                                    PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
                                     uint numSpace,
                                     const int);

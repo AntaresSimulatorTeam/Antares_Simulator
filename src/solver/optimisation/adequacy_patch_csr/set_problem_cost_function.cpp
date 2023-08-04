@@ -25,12 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <algorithm>
-
 #include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
-#include "../solver/simulation/simulation.h"
-#include "../solver/simulation/sim_structure_donnees.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
 
 #include "../solver/optimisation/opt_fonctions.h"

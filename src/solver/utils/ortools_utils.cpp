@@ -224,7 +224,7 @@ void removeTemporaryFile(const std::string& tmpPath)
 }
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
-                                                   Antares::Solver::IResultWriter::Ptr writer,
+                                                   Antares::Solver::IResultWriter& writer,
                                                    const std::string& filename)
 {
     // 0. Logging file name
@@ -237,7 +237,7 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
     solver->Write(tmpPath);
 
     // 3. Copy to real output using generic writer
-    writer->addEntryFromFile(filename, tmpPath);
+    writer.addEntryFromFile(filename, tmpPath);
 
     // 4. Remove tmp file
     removeTemporaryFile(tmpPath);

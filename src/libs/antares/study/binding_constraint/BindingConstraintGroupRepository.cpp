@@ -25,7 +25,6 @@ namespace Antares::Data {
             }
             group->add(constraint);
         }
-
         return timeSeriesWidthConsistentInGroups();
     }
 

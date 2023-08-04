@@ -26,8 +26,6 @@
 */
 
 #include <yuni/yuni.h>
-#include <yuni/core/math.h>
-#include <limits>
 #include <antares/study/area/scratchpad.h>
 #include "opt_structure_probleme_a_resoudre.h"
 
@@ -37,12 +35,6 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
-#include "../aleatoire/alea_fonctions.h"
-
-extern "C"
-{
-#include "spx_constantes_externes.h"
-}
 
 static void shortTermStorageCost(
   int PremierPdtDeLIntervalle,
@@ -93,8 +85,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                                      const int PremierPdtDeLIntervalle,
                                      const int DernierPdtDeLIntervalle)
 {
-    const auto& study = *Antares::Data::Study::Current::Get();
-
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     int pdtJour = 0;
@@ -144,7 +134,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
         {
-            assert((unsigned int)pays < study.areas.size());
             const PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];
             int var;

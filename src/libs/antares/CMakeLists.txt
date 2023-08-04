@@ -7,15 +7,7 @@ set(SRC_MEMORY
 	memory/memory.cpp)
 source_group("memory" FILES ${SRC_MEMORY})
 
-set(SRC_OBJECT
-	object/intrusive-reference.h
-	object/intrusive-reference.hxx
-	object/object.h
-	object/object.hxx
-	object/object.cpp
-	object/ref.h
-)
-source_group("object" FILES ${SRC_OBJECT})
+add_subdirectory(object)
 
 add_subdirectory(array)
 add_subdirectory(correlation)
@@ -545,7 +537,6 @@ add_library(libantares-core
 	${SRC}
 	${SRC_LOGS}
 	${SRC_MEMORY}
-	${SRC_OBJECT}
 	${SRC_JIT}
 	${SRC_MATRIX}
 	${SRC_BENCHMARKING}
@@ -595,6 +586,7 @@ target_link_libraries(libantares-core
 		io
 		array
 		correlation
+		object
 	)
 
 import_std_libs(libantares-core)
