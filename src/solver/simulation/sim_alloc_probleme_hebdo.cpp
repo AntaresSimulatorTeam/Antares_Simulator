@@ -110,7 +110,6 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
     problem.ValeursDeNTC.resize(NombreDePasDeTemps);
 
     problem.ConsommationsAbattues.resize(NombreDePasDeTemps);
-    problem.ConsommationsAbattuesRef.resize(NombreDePasDeTemps);
 
     problem.AllMustRunGeneration.resize(NombreDePasDeTemps);
     problem.SoldeMoyenHoraire.resize(NombreDePasDeTemps);
@@ -175,7 +174,6 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
           = new CORRESPONDANCES_DES_VARIABLES;
 
         problem.ConsommationsAbattues[k].ConsommationAbattueDuPays.assign(nbPays, 0.);
-        problem.ConsommationsAbattuesRef[k].ConsommationAbattueDuPays.assign(nbPays, 0.);
 
         problem.AllMustRunGeneration[k].AllMustRunGenerationOfArea.assign(nbPays, 0.);
 
