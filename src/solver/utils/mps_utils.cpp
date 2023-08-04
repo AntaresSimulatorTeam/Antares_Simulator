@@ -106,7 +106,7 @@ private:
 };
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
-                                               const Solver::IResultWriter::Ptr& writer,
+                                               Solver::IResultWriter& writer,
                                                const std::string& filename)
 {
     logs.info() << "Solver MPS File: `" << filename << "'";
@@ -121,7 +121,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
         SRSwritempsprob(mps.get(), tmpPath.c_str());
     }
 
-    writer->addEntryFromFile(filename, tmpPath);
+    writer.addEntryFromFile(filename, tmpPath);
 
     removeTemporaryFile(tmpPath);
 }
@@ -134,7 +134,7 @@ fullMPSwriter::fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, uint o
 {
 }
 
-void fullMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string& filename)
+void fullMPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& filename)
 {
     OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(named_splx_problem_, writer, filename);
 }
@@ -146,7 +146,7 @@ fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver, uint optNumber) :
  I_MPS_writer(optNumber), solver_(solver)
 {
 }
-void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer,
+void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter& writer,
                                        const std::string& filename)
 {
     ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, writer, filename);

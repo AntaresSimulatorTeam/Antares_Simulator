@@ -33,26 +33,10 @@
 
 #include "opt_fonctions.h"
 
-void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int optimizationNumber)
+void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo)
 {
     const std::vector<int>& NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
     const int DernierPasDeTemps = problemeHebdo->NombreDePasDeTemps;
-
-    for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
-    {
-        const VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTCRef = problemeHebdo->ValeursDeNTCRef[pdt];
-        VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo->ValeursDeNTC[pdt];
-
-        for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
-        {
-            ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco]
-              = ValeursDeNTCRef.ValeurDeNTCOrigineVersExtremite[interco];
-            ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco]
-              = ValeursDeNTCRef.ValeurDeNTCExtremiteVersOrigine[interco];
-            ValeursDeNTC.ValeurDeLoopFlowOrigineVersExtremite[interco]
-              = ValeursDeNTCRef.ValeurDeLoopFlowOrigineVersExtremite[interco];
-        }
-    }
 
     for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
     {

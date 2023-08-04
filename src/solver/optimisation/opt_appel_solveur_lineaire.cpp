@@ -56,6 +56,7 @@ using namespace operations_research;
 using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
+using Antares::Solver::IResultWriter;
 
 class TimeMeasurement
 {
@@ -87,10 +88,12 @@ private:
     clock::time_point start_;
     clock::time_point end_;
 };
-bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
+bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
+                         PROBLEME_HEBDO* problemeHebdo,
                          int NumIntervalle,
                          const int optimizationNumber,
-                         std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator)
+                         std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
+                         IResultWriter& writer)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
@@ -102,9 +105,6 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
     auto ProbSpx
       = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
     auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
-
-    auto study = Data::Study::Current::Get();
-    bool ortoolsUsed = study->parameters.ortoolsUsed;
 
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
@@ -121,7 +121,7 @@ RESOLUTION:
     {
         if (problemeHebdo->ReinitOptimisation)
         {
-            if (ortoolsUsed && solver != nullptr)
+            if (options.useOrtools && solver != nullptr)
             {
                 ORTOOLS_LibererProbleme(solver);
             }
@@ -142,7 +142,7 @@ RESOLUTION:
             Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
 
             TimeMeasurement measure;
-            if (ortoolsUsed)
+            if (options.useOrtools)
             {
                 ORTOOLS_ModifierLeVecteurCouts(
                   solver, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
@@ -217,7 +217,7 @@ RESOLUTION:
 
     Probleme.NombreDeContraintesCoupes = 0;
 
-    if (ortoolsUsed)
+    if (options.useOrtools)
     {
         solver = ORTOOLS_ConvertIfNeeded(&Probleme, solver);
     }
@@ -226,13 +226,13 @@ RESOLUTION:
                                         problemeHebdo->exportMPSOnError,
                                         optimizationNumber,
                                         &Probleme,
-                                        ortoolsUsed,
+                                        options.useOrtools,
                                         solver);
     auto mps_writer = mps_writer_factory.create();
-    mps_writer->runIfNeeded(study->resultWriter, filename);
+    mps_writer->runIfNeeded(writer, filename);
 
     TimeMeasurement measure;
-    if (ortoolsUsed)
+    if (options.useOrtools)
     {
         const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
         solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
@@ -258,7 +258,7 @@ RESOLUTION:
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
-            if (ortoolsUsed && solver != nullptr)
+            if (options.useOrtools && solver != nullptr)
             {
                 ORTOOLS_LibererProbleme(solver);
             }
@@ -355,26 +355,10 @@ RESOLUTION:
         }
 
         auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
-        mps_writer_on_error->runIfNeeded(study->resultWriter, filename);
+        mps_writer_on_error->runIfNeeded(writer, filename);
 
         return false;
     }
 
     return true;
-}
-
-void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
-  double optimalSolutionCost,
-  std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
-  int optimizationNumber)
-{
-    Yuni::Clob buffer;
-    auto study = Data::Study::Current::Get();
-    auto filename = createCriterionFilename(optPeriodStringGenerator, optimizationNumber);
-    auto writer = study->resultWriter;
-
-    logs.info() << "Solver Criterion File: `" << filename << "'";
-
-    buffer.appendFormat("* Optimal criterion value :   %11.10e\n", optimalSolutionCost);
-    writer->addEntryFromBuffer(filename, buffer);
 }

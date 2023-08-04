@@ -96,7 +96,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.WaterValueAccurate
       = (study.parameters.hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP);
 
-    SIM_AllocationProblemeHebdo(problem, NombreDePasDeTemps);
+    SIM_AllocationProblemeHebdo(study, problem, NombreDePasDeTemps);
 
     problem.NombreDePasDeTemps = NombreDePasDeTemps;
 
@@ -383,12 +383,12 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
     }
 }
 
-void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
+void SIM_RenseignementProblemeHebdo(const Study& study,
+                                    PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
                                     uint numSpace,
                                     const int PasDeTempsDebut)
 {
-    auto& study = *Data::Study::Current::Get();
     const auto& parameters = study.parameters;
     auto& studyruntime = *study.runtime;
     const uint nbPays = study.areas.size();
@@ -564,14 +564,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 ntc.ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][indx];
             }
         }
-
-        problem.ValeursDeNTCRef[j].ValeurDeNTCOrigineVersExtremite
-            = ntc.ValeurDeNTCOrigineVersExtremite;
-        problem.ValeursDeNTCRef[j].ValeurDeNTCExtremiteVersOrigine
-            = ntc.ValeurDeNTCExtremiteVersOrigine;
-        problem.ValeursDeNTCRef[j].ValeurDeLoopFlowOrigineVersExtremite
-            = ntc.ValeurDeLoopFlowOrigineVersExtremite;
-
         preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, study.bindingConstraints, weekFirstDay, j);
 
         const uint dayInTheYear = study.calendar.hours[indx].dayYear;

@@ -161,7 +161,7 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->weekInTheYear = state.weekInTheYear = w;
         pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(
+        ::SIM_RenseignementProblemeHebdo(study,
           *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed
@@ -211,8 +211,10 @@ bool Adequacy::year(Progression::Task& progression,
 
             try
             {
-                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace],
-                                             study.parameters.adqPatchParams);
+                OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
+                                             pProblemesHebdo[numSpace],
+                                             study.parameters.adqPatchParams,
+                                             *study.resultWriter);
 
                 computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
 

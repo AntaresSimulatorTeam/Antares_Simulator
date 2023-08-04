@@ -973,6 +973,11 @@ void Frame::apply(const InspectorData::Ptr& data)
         // check Min. Stable Power with thermal modulation
         AccumulatorCheck<PClusterSpinningColor>::ApplyTextColor(pPGThClusterSpinning,
                                                                 data->ThClusters);
+        AccumulatorCheck<PClusterMarginalCostEnable>::ApplyGreyColor(pPGThClusterMarginalCost,
+                                                                     pPGThClusterOperatingCost,
+                                                                     pPGThClusterEfficiency,
+                                                                     pPGThClusterVariableOMcost,
+                                                                     data->ThClusters);
     }
 
     pPGThClusterParams->Hide(hide);
