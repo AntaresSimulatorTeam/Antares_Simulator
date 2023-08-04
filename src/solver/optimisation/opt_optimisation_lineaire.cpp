@@ -67,7 +67,7 @@ bool OPT_OptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adq
 
     OPT_NumeroDIntervalleOptimiseDuPasDeTemps(problemeHebdo);
 
-    OPT_RestaurerLesDonnees(problemeHebdo, optimizationNumber);
+    OPT_RestaurerLesDonnees(problemeHebdo);
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(problemeHebdo);
 

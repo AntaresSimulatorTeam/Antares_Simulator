@@ -564,14 +564,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 ntc.ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][indx];
             }
         }
-
-        problem.ValeursDeNTCRef[j].ValeurDeNTCOrigineVersExtremite
-            = ntc.ValeurDeNTCOrigineVersExtremite;
-        problem.ValeursDeNTCRef[j].ValeurDeNTCExtremiteVersOrigine
-            = ntc.ValeurDeNTCExtremiteVersOrigine;
-        problem.ValeursDeNTCRef[j].ValeurDeLoopFlowOrigineVersExtremite
-            = ntc.ValeurDeLoopFlowOrigineVersExtremite;
-
         preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, study.bindingConstraints, weekFirstDay, j);
 
         const uint dayInTheYear = study.calendar.hours[indx].dayYear;

@@ -90,7 +90,6 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
     problem.NumeroDeVariableDeTrancheDeStock.assign(nbPays, std::vector<int>(100));
 
     problem.ValeursDeNTC.resize(NombreDePasDeTemps);
-    problem.ValeursDeNTCRef.resize(NombreDePasDeTemps);
 
     problem.ConsommationsAbattues.resize(NombreDePasDeTemps);
     problem.ConsommationsAbattuesRef.resize(NombreDePasDeTemps);
@@ -134,10 +133,6 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
         problem.ValeursDeNTC[k].ValeurDeLoopFlowOrigineVersExtremite.assign(linkCount, 0.);
         problem.ValeursDeNTC[k].ValeurDuFlux.assign(linkCount, 0.);
         problem.ValeursDeNTC[k].ResistanceApparente.assign(linkCount, 0.);
-
-        problem.ValeursDeNTCRef[k].ValeurDeNTCOrigineVersExtremite.assign(linkCount, 0.);
-        problem.ValeursDeNTCRef[k].ValeurDeNTCExtremiteVersOrigine.assign(linkCount, 0.);
-        problem.ValeursDeNTCRef[k].ValeurDeLoopFlowOrigineVersExtremite.assign(linkCount, 0.);
 
         // TODO VP: Remove this allocation
         problem.CorrespondanceVarNativesVarOptim[k]
