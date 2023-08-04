@@ -211,8 +211,10 @@ bool Adequacy::year(Progression::Task& progression,
 
             try
             {
-                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace],
-                                             study.parameters.adqPatchParams);
+                OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
+                                             pProblemesHebdo[numSpace],
+                                             study.parameters.adqPatchParams,
+                                             *study.resultWriter);
 
                 computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
 

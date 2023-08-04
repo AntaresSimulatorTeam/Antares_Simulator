@@ -34,24 +34,31 @@ using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 
 namespace Antares::Solver::Optimization
 {
-WeeklyOptimization::WeeklyOptimization(PROBLEME_HEBDO* problemesHebdo,
+WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
+                                       PROBLEME_HEBDO* problemesHebdo,
                                        AdqPatchParams& adqPatchParams,
-                                       uint thread_number) :
+                                       uint thread_number,
+                                       IResultWriter& writer) :
+    options_(options),
     problemeHebdo_(problemesHebdo),
     adqPatchParams_(adqPatchParams),
-    thread_number_(thread_number)
+    thread_number_(thread_number),
+    writer_(writer)
 {
 }
 
-std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(const Antares::Data::Study& study,
-                                                               AdqPatchParams& adqPatchParams,
-                                                               PROBLEME_HEBDO* problemeHebdo,
-                                                               uint thread_number)
+std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(
+    const Antares::Data::Study& study,
+    const OptimizationOptions& options,
+    AdqPatchParams& adqPatchParams,
+    PROBLEME_HEBDO* problemeHebdo,
+    uint thread_number,
+    IResultWriter& writer)
 {
     if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled)
-        return std::make_unique<AdequacyPatchOptimization>(study, problemeHebdo, adqPatchParams, thread_number);
+        return std::make_unique<AdequacyPatchOptimization>(study, options, problemeHebdo, adqPatchParams, thread_number, writer);
     else
-        return std::make_unique<DefaultWeeklyOptimization>(problemeHebdo, adqPatchParams, thread_number);
+        return std::make_unique<DefaultWeeklyOptimization>(options, problemeHebdo, adqPatchParams, thread_number, writer);
 }
 
 } // namespace Antares::Solver::Optimization

@@ -99,12 +99,15 @@ bool Economy::simulationBegin()
                 return false;
             }
 
+            auto options = createOptimizationOptions(study);
             weeklyOptProblems_[numSpace] =
                 Antares::Solver::Optimization::WeeklyOptimization::create(
                                                     study,
+                                                    options,
                                                     study.parameters.adqPatchParams,
                                                     pProblemesHebdo[numSpace],
-                                                    numSpace);
+                                                    numSpace,
+                                                    *study.resultWriter);
             postProcessesList_[numSpace] =
                 interfacePostProcessList::create(study.parameters.adqPatchParams,
                                                  pProblemesHebdo[numSpace],
