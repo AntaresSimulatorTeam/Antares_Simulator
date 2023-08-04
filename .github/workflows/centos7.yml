@@ -76,12 +76,7 @@ jobs:
     - name: Free up disk space
       run: rm -rf _build/_deps src/tests/resources /rte-antares-deps-Release || true
 
-    - name: .tar.gz creation
-      run: |
-           cd _build
-           tar cvf solver.tar.gz solver
-
     - name: Installer TGZ push
       uses: actions/upload-artifact@v3
       with:
-        path: _build/*.tar.gz
+        path: _build/solver/antares-8.6-solver
