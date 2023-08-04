@@ -106,17 +106,11 @@ public:
     void checkMinGenTsNumber(Study& s, const AreaName& areaID);
 
 private:
-
     /*!
     ** \brief Support old studies due to new sets of data
     */
     void AutoTransferData(Matrix<double, Yuni::sint32>& matrix,
                           const Matrix<double>::ColumnType& maxPower);
-
-    /*!
-    ** \brief Checking whether or not matrices maxgen and maxpump have the same number of TS's
-    */
-    void checkMaxGenPumpTsNumber(Study& study, const AreaName& areaID);
 
 public:
     /*!
@@ -181,6 +175,13 @@ public:
     */
     Matrix<Yuni::uint32> timeseriesNumbers;
     Matrix<Yuni::uint32> timeseriesNumbersPowerCredits;
+    bool SupportForOldStudies(Study& study, const AreaName& areaID, const AnyString& folder);
+
+    /*!
+    ** \brief This function provides loading hydro power credits data from folder
+    ** New function is needed because LoadFromFolder function is not callable if TS generator is enabled for hydro
+    */
+    bool LoadHydroPowerCredits(Study& study, const AreaName& areaID, const AnyString& folder);
 
 }; // class DataSeriesHydro
 
