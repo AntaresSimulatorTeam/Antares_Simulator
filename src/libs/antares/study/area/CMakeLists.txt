@@ -13,7 +13,6 @@ set(SRC_AREAS
         store-timeseries-numbers.h
         store-timeseries-numbers.hxx
         list.cpp
-        list.hxx
         )
 source_group("study\\area" FILES ${SRC_AREAS})
 
