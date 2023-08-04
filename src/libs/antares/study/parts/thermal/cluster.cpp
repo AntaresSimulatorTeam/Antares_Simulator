@@ -555,12 +555,13 @@ void Data::ThermalCluster::reset()
     marketBidCost = 0.;
     variableomcost = 0.;
     costsTimeSeries.resize(1, CostsTimeSeries());
-    this->setProductionCost();
 
     // modulation
     modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
     modulation.fill(1.);
     modulation.fillColumn(thermalMinGenModulation, 0.);
+
+    this->setProductionCost();
 
     // prepro
     // warning: the variables `prepro` and `series` __must__ not be destroyed

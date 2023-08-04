@@ -8,13 +8,58 @@
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Simulation;
+using namespace Antares::Data::ScenarioBuilder;
 
 
 void initializeStudy(Study::Ptr study);
-void setNumberMCyears(Study::Ptr study, unsigned int nbYears);
 void configureLinkCapacities(AreaLink* link);
+
+
+template<class MatrixType>
+class TimeSeriesConfigurer
+{
+public:
+    TimeSeriesConfigurer() = default;
+    TimeSeriesConfigurer(MatrixType& matrix) : ts_(&matrix) {}
+    TimeSeriesConfigurer& setColumnCount(unsigned int columnCount);
+    TimeSeriesConfigurer& fillColumnWith(unsigned int column, double value);
+private:
+    MatrixType* ts_ = nullptr;
+};
+
+template<class MatrixType>
+TimeSeriesConfigurer<MatrixType>& TimeSeriesConfigurer<MatrixType>::setColumnCount(unsigned int columnCount)
+{
+    ts_->resize(columnCount, HOURS_PER_YEAR);
+    return *this;
+}
+
+template<class MatrixType>
+TimeSeriesConfigurer<MatrixType>& TimeSeriesConfigurer<MatrixType>::fillColumnWith(unsigned int column, double value)
+{
+    ts_->fillColumn(column, value);
+    return *this;
+}
+
+
+class ThermalClusterConfig
+{
+public:
+    ThermalClusterConfig() = default;
+    ThermalClusterConfig(ThermalCluster* cluster);
+    ThermalClusterConfig& setNominalCapacity(double nominalCapacity);
+    ThermalClusterConfig& setUnitCount(unsigned int unitCount);
+    ThermalClusterConfig& setCosts(double cost);
+    ThermalClusterConfig& setAvailablePowerNumberOfTS(unsigned int columnCount);
+    ThermalClusterConfig& setAvailablePower(unsigned int column, double value);
+
+private:
+    ThermalCluster* cluster_ = nullptr;
+    TimeSeriesConfigurer<Matrix<double>> tsAvailablePowerConfig_;
+};
+
 std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName);
-void addScratchpadToEachArea(Study::Ptr study);
+void addScratchpadToEachArea(Study& study);
 
 // -------------------------------
 // Simulation results retrieval
@@ -38,49 +83,60 @@ class OutputRetriever
 {
 public:
     OutputRetriever(std::shared_ptr<ISimulation<Economy>>& simulation) : simulation_(simulation) {}
+    averageResults overallCost(Area* area);
+    averageResults load(Area* area);
     averageResults flow(AreaLink* link);
     averageResults thermalGeneration(ThermalCluster* cluster);
 
 private:
-    Variable::Storage<Variable::Economy::VCardFlowLinear>::ResultsType*
-        retrieveLinkFlowResults(AreaLink* link);
+    template<class VCard>
+    typename Variable::Storage<VCard>::ResultsType* retrieveAreaResults(Area* area);
 
-    Variable::Storage<Variable::Economy::VCardProductionByDispatchablePlant>::ResultsType*
-        retrieveThermalClusterGenerationResults(ThermalCluster* cluster);
+    template<class VCard>
+    typename Variable::Storage<VCard>::ResultsType* retrieveLinkResults(AreaLink* link);
+
+    template<class VCard>
+    typename Variable::Storage<VCard>::ResultsType* retrieveResultsForThermalCluster(ThermalCluster* cluster);
 
     std::shared_ptr<ISimulation<Economy>>& simulation_;
 };
 
+template<class VCard>
+typename Variable::Storage<VCard>::ResultsType*
+OutputRetriever::retrieveAreaResults(Area* area)
+{
+    typename Variable::Storage<VCard>::ResultsType* result = nullptr;
+    simulation_->variables.retrieveResultsForArea<VCard>(&result, area);
+    return result;
+}
 
-// -----------------------
-// BC rhs configuration
-// -----------------------
-class BCrhsConfig
+template<class VCard>
+typename Variable::Storage<VCard>::ResultsType*
+OutputRetriever::retrieveLinkResults(AreaLink* link)
+{
+    typename Variable::Storage<VCard>::ResultsType* result = nullptr;
+    simulation_->variables.retrieveResultsForLink<VCard>(&result, link);
+    return result;
+}
+
+template<class VCard>
+typename Variable::Storage<VCard>::ResultsType*
+OutputRetriever::retrieveResultsForThermalCluster(ThermalCluster* cluster)
+{
+    typename Variable::Storage<VCard>::ResultsType* result = nullptr;
+    simulation_->variables.retrieveResultsForThermalCluster<VCard>(&result, cluster);
+    return result;
+}
+
+class ScenarioBuilderRule
 {
 public:
-    BCrhsConfig() = delete;
-    BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbTimeSeries);
-    void fillRHStimeSeriesWith(unsigned int TSnumber, double rhsValue);
+    ScenarioBuilderRule(Study& study);
+    loadTSNumberData& load() { return rules_->load; }
+    BindingConstraintsTSNumberData& bcGroup() { return rules_->binding_constraints; }
 
 private:
-    std::shared_ptr<BindingConstraint> BC_;
-    unsigned int nbOfTimeSeries_ = 0;
-};
-
-
-// --------------------------------------
-// BC group TS number configuration
-// --------------------------------------
-class BCgroupScenarioBuilder
-{
-public:
-    BCgroupScenarioBuilder() = delete;
-    BCgroupScenarioBuilder(Study::Ptr study, unsigned int nbYears);
-    void yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber);
-
-private:
-    unsigned int nbYears_ = 0;
-    ScenarioBuilder::Rules::Ptr rules_;
+    Rules::Ptr rules_;
 };
 
 
@@ -92,7 +148,7 @@ using namespace Benchmarking;
 class SimulationHandler
 {
 public:
-    SimulationHandler(std::shared_ptr<Study> study)
+    SimulationHandler(Study& study)
         : study_(study)
     {}
     ~SimulationHandler() = default;
@@ -104,7 +160,7 @@ private:
     std::shared_ptr<ISimulation<Economy>> simulation_;
     NullDurationCollector nullDurationCollector_;
     Settings settings_;
-    std::shared_ptr<Study> study_;
+    Study& study_;
 };
 
 
@@ -118,7 +174,9 @@ struct StudyBuilder
 
     void simulationBetweenDays(const unsigned int firstDay, const unsigned int lastDay);
     Area* addAreaToStudy(const std::string& areaName);
+    void setNumberMCyears(unsigned int nbYears);
     void playOnlyYear(unsigned int year);
+    void giveWeightToYear(float weight, unsigned int year);
 
     // Data members
     std::shared_ptr<Study> study;
@@ -126,25 +184,7 @@ struct StudyBuilder
     std::shared_ptr<OutputRetriever> output;
 };
 
-
-
-// ===========================================================
-
-void prepareStudy(Antares::Data::Study::Ptr pStudy, int nbYears);
-
-Antares::Data::Area* addArea(Antares::Data::Study::Ptr pStudy, const std::string& areaName, int nbTS);
-
-std::shared_ptr<Antares::Data::ThermalCluster> addCluster(Antares::Data::Area* pArea, const std::string& clusterName, double maximumPower, double cost, int nbTS, int unitCount = 1);
-
-std::shared_ptr<Antares::Data::BindingConstraint> addBindingConstraints(Antares::Data::Study::Ptr study, std::string name, std::string group);
-
-void cleanSimulation(Antares::Solver::Simulation::ISimulation< Antares::Solver::Simulation::Economy >* simulation);
-void cleanStudy(Antares::Data::Study::Ptr pStudy);
-
-float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight);
-
-ScenarioBuilder::Rules::Ptr createScenarioRules(Study::Ptr pStudy);
-
+std::shared_ptr<Antares::Data::BindingConstraint> addBindingConstraints(Antares::Data::Study& study, std::string name, std::string group);
 
 class NullResultWriter: public Solver::IResultWriter {
     void addEntryFromBuffer(const std::string &, Clob &) override;

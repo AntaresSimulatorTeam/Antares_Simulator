@@ -69,7 +69,7 @@ void TSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& fil
     }
 }
 
-void TSNumberData::set(uint areaindex, uint year, uint value)
+void TSNumberData::setTSnumber(uint areaindex, uint year, uint value)
 {
     assert(areaindex < pTSNumberRules.width);
     if (year < pTSNumberRules.height)
@@ -378,7 +378,7 @@ void thermalTSNumberData::saveToINIFile(const Study& /* study */,
     }
 }
 
-void thermalTSNumberData::set(const Antares::Data::ThermalCluster* cluster,
+void thermalTSNumberData::setTSnumber(const Antares::Data::ThermalCluster* cluster,
                               const uint year,
                               uint value)
 {
@@ -430,7 +430,7 @@ uint thermalTSNumberData::get_tsGenCount(const Study& study) const
 // ================================
 // Renewable clusters ...
 // ================================
-void renewableTSNumberData::set(const Antares::Data::RenewableCluster* cluster,
+void renewableTSNumberData::setTSnumber(const Antares::Data::RenewableCluster* cluster,
                                 const uint year,
                                 uint value)
 {
