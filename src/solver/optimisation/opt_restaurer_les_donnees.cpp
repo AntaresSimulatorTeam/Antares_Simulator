@@ -107,22 +107,6 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo)
         }
     }
 
-    for (int pdt = 0; pdt < DernierPasDeTemps;)
-    {
-        int intervalle = problemeHebdo->NumeroDIntervalleOptimiseDuPasDeTemps[pdt];
-        pdt += problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-        {
-            ENERGIES_ET_PUISSANCES_HYDRAULIQUES& CaracteristiquesHydrauliques
-              = problemeHebdo->CaracteristiquesHydrauliques[pays];
-            if (CaracteristiquesHydrauliques.PresenceDHydrauliqueModulable)
-            {
-                CaracteristiquesHydrauliques.CntEnergieH2OParIntervalleOptimise[intervalle]
-                  = CaracteristiquesHydrauliques.CntEnergieH2OParIntervalleOptimiseRef[intervalle];
-            }
-        }
-    }
-
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         ENERGIES_ET_PUISSANCES_HYDRAULIQUES& CaracteristiquesHydrauliques

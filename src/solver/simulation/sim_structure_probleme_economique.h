@@ -284,7 +284,6 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     std::vector<double> MinEnergieHydrauParIntervalleOptimise;
     std::vector<double> MaxEnergieHydrauParIntervalleOptimise;
 
-    std::vector<double> CntEnergieH2OParIntervalleOptimiseRef;
     std::vector<double> CntEnergieH2OParIntervalleOptimise;
     std::vector<double> CntEnergieH2OParJour;
 

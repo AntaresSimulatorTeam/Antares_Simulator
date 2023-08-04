@@ -342,8 +342,6 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
           .assign(7, 0.);
         problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParJour
           .assign(7, 0.);
-        problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimiseRef
-          .assign(7, 0.);
         problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire
           .assign(NombreDePasDeTemps, 0.);
         problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraireRef
