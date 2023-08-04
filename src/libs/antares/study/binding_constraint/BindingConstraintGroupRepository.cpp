@@ -67,7 +67,7 @@ namespace Antares::Data {
         });
     }
 
-    BindingConstraintGroup* BindingConstraintGroupRepository::operator[](std::string name) {
+    BindingConstraintGroup* BindingConstraintGroupRepository::operator[](const std::string& name) const {
         if (auto group = std::find_if(groups_.begin(), groups_.end(), [&name](auto& group_of_constraint) {
                                         return group_of_constraint->name() == name;
                                     });

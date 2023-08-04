@@ -309,11 +309,12 @@ bool Rules::readLink(const AreaName::Vector& splitKey, String value, bool update
     return true;
 }
 
-bool Rules::checkGroupExists(std::string& group_name)
+bool Rules::checkGroupExists(const std::string& groupName)
 {
-    if (!study_.bindingConstraintsGroups[group_name])
+    const auto& groups = study_.bindingConstraintsGroups;
+    if (!groups[groupName])
     {
-        logs.warning() << "[scenario-builder] The group '" << group_name << "' has not been found";
+        logs.warning() << "[scenario-builder] The binding constraint group '" << groupName << "' does not exist";
         return false;
     }
     return true;

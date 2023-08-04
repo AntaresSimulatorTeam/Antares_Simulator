@@ -24,7 +24,7 @@ public:
 
     void fixTSNumbersWhenWidthIsOne();
 
-    BindingConstraintGroup* operator[](std::string name);
+    BindingConstraintGroup* operator[](const std::string& name) const;
 
     using iterator = std::vector<std::unique_ptr<BindingConstraintGroup>>::iterator;
     using const_iterator = std::vector<std::unique_ptr<BindingConstraintGroup>>::const_iterator;
@@ -44,4 +44,4 @@ private:
     std::vector<std::unique_ptr<BindingConstraintGroup>> groups_;
 };
 
-} // DAta
+} // Data
