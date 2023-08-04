@@ -330,10 +330,6 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
                 problem.MatriceDesContraintesCouplantes[constraintIndex]
                         .SecondMembreDeLaContrainteCouplante[pasDeTemps]
                         = column[PasDeTempsDebut + pasDeTemps];
-                problem.MatriceDesContraintesCouplantes[constraintIndex]
-                        .SecondMembreDeLaContrainteCouplanteRef[pasDeTemps]
-                        = problem.MatriceDesContraintesCouplantes[constraintIndex]
-                        .SecondMembreDeLaContrainteCouplante[pasDeTemps];
                 break;
             }
             case BindingConstraint::typeDaily:
@@ -344,9 +340,6 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
                 std::vector<double>& sndMember
                     = problem.MatriceDesContraintesCouplantes[constraintIndex]
                         .SecondMembreDeLaContrainteCouplante;
-                std::vector<double>& sndMemberRef
-                    = problem.MatriceDesContraintesCouplantes[constraintIndex]
-                        .SecondMembreDeLaContrainteCouplanteRef;
                 for (unsigned day = 0; day != 7; ++day)
                 {
                     sndMember[day] = column[weekFirstDay + day];
@@ -365,9 +358,6 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
 
                 problem.MatriceDesContraintesCouplantes[constraintIndex]
                     .SecondMembreDeLaContrainteCouplante[0]
-                        = sum;
-                problem.MatriceDesContraintesCouplantes[constraintIndex]
-                    .SecondMembreDeLaContrainteCouplanteRef[0]
                         = sum;
                 break;
             }

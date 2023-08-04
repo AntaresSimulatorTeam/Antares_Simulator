@@ -163,58 +163,5 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo)
         }
     }
 
-    for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
-    {
-        for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
-             cntCouplante++)
-        {
-            CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-              = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-
-            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
-            {
-                MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[pdt]
-                  = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplanteRef[pdt];
-            }
-        }
-    }
-
-    for (int pdt = 0; pdt < DernierPasDeTemps;)
-    {
-        int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdt];
-        pdt += problemeHebdo->NombreDePasDeTempsDUneJournee;
-        for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
-             cntCouplante++)
-        {
-            CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-              = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante
-                == CONTRAINTE_JOURNALIERE)
-            {
-                MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[jour]
-                  = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplanteRef[jour];
-            }
-        }
-    }
-
-    if (problemeHebdo->NombreDePasDeTempsPourUneOptimisation
-        > problemeHebdo->NombreDePasDeTempsDUneJournee)
-    {
-        int semaine = 0;
-        for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
-             cntCouplante++)
-        {
-            CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-              = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante
-                == CONTRAINTE_HEBDOMADAIRE)
-            {
-                MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[semaine]
-                  = MatriceDesContraintesCouplantes
-                      .SecondMembreDeLaContrainteCouplanteRef[semaine];
-            }
-        }
-    }
-
     return;
 }
