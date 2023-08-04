@@ -37,12 +37,13 @@ using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Optimization
 {
-AdequacyPatchOptimization::AdequacyPatchOptimization(const OptimizationOptions& options,
+AdequacyPatchOptimization::AdequacyPatchOptimization(const Antares::Data::Study& study,
+                                                     const OptimizationOptions& options,
                                                      PROBLEME_HEBDO* problemeHebdo,
                                                      AdqPatchParams& adqPatchParams,
                                                      uint thread_number,
                                                      IResultWriter& writer) :
- WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer)
+  WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer), study_(study)
 {
 }
 
@@ -65,7 +66,7 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
 
     // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
     // part that we need
-    ::SIM_RenseignementProblemeHebdo(*problemeHebdo_, weekInTheYear, thread_number_, hourInTheYear);
+    ::SIM_RenseignementProblemeHebdo(study_, *problemeHebdo_, weekInTheYear, thread_number_, hourInTheYear);
     OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
 }
 
