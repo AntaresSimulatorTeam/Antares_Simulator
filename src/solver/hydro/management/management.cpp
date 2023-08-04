@@ -234,12 +234,13 @@ bool HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint tsIndex, con
     return true;
 }
 
-bool HydroManagement::checkYearlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const
+bool HydroManagement::checkYearlyMinGeneration(uint numSpace,
+                                               uint tsIndex,
+                                               const Data::Area& area) const
 {
     const auto& data = pAreas[numSpace][area.index];
-    if (area.hydro.followLoadModulations &&
-        area.hydro.reservoirManagement &&
-        data.totalYearMingen > data.totalYearInflows)
+    if (area.hydro.followLoadModulations && area.hydro.reservoirManagement
+        && data.totalYearMingen > data.totalYearInflows)
     {
         // Yearly minimum generation <= Yearly inflows
         logs.error() << "In Area " << area.name << " the minimum generation of "
@@ -333,8 +334,7 @@ bool HydroManagement::checkHourlyMinGeneration(uint tsIndex, Data::Area& area) c
 bool HydroManagement::checkMinGeneration(uint numSpace)
 {
     bool ret = true;
-    study.areas.each([this, &numSpace, &ret](Data::Area& area)
-    {
+    study.areas.each([this, &numSpace, &ret](Data::Area& area) {
         uint z = area.index;
         const auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
         auto tsIndex = (uint)ptchro.Hydraulique;
@@ -345,7 +345,7 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
             ret = checkYearlyMinGeneration(numSpace, tsIndex, area) && ret;
             ret = checkWeeklyMinGeneration(tsIndex, area) && ret;
         }
-          
+
         ret = checkHourlyMinGeneration(tsIndex, area) && ret;
     });
     return ret;
@@ -353,23 +353,21 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
 
 void HydroManagement::changeInflowsDueToFinalLevels(uint numSpace, uint year)
 {
-    study.areas.each(
-      [this, &numSpace, &year](Data::Area& area)
-      {
-          auto& data = pAreas[numSpace][area.index];
-          if (area.hydro.finalLevelInflowsModifier->deltaLevel.empty())
-              return;
+    study.areas.each([this, &numSpace, &year](Data::Area& area) {
+        auto& data = pAreas[numSpace][area.index];
+        if (area.hydro.finalLevelInflowsModifier.deltaLevel.empty())
+            return;
 
-          if (!area.hydro.finalLevelInflowsModifier->includeFinalReservoirLevel[year])
-              return;
+        if (!area.hydro.finalLevelInflowsModifier.includeFinalReservoirLevel[year])
+            return;
 
-          double delta = area.hydro.finalLevelInflowsModifier->deltaLevel[year];
-          // must be done before prepareMonthlyTargetGenerations
-          if (delta > 0)
-              data.inflows[0] += delta;
-          else if (delta < 0)
-              data.inflows[11] += delta;
-      });
+        double delta = area.hydro.finalLevelInflowsModifier.deltaLevel[year];
+        // must be done before prepareMonthlyTargetGenerations
+        if (delta > 0)
+            data.inflows[0] += delta;
+        else if (delta < 0)
+            data.inflows[11] += delta;
+    });
 }
 
 template<enum Data::StudyMode ModeT>

@@ -25,14 +25,18 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <antares/emergency.h>
 #include "finallevelinflowsmodifyer.h"
+#include "container.h"
 
 namespace Antares
 {
 namespace Data
 {
-
-FinalLevelInflowsModifier::FinalLevelInflowsModifier() : areaPtr(nullptr)
+FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
+                                                     const unsigned int& areaIndex,
+                                                     const AreaName& areaName) :
+ hydro(hydro), areaIndex(areaIndex), areaName(areaName)
 {
 }
 
@@ -53,21 +57,21 @@ void FinalLevelInflowsModifier::initializePerAreaData(
   const Matrix<double>& scenarioInitialHydroLevels,
   const Matrix<double>& scenarioFinalHydroLevels)
 {
-    initialReservoirLevel = scenarioInitialHydroLevels[areaPtr->index][yearIndex];
-    finalReservoirLevel = scenarioFinalHydroLevels[areaPtr->index][yearIndex];
+    initialReservoirLevel = scenarioInitialHydroLevels[areaIndex][yearIndex];
+    finalReservoirLevel = scenarioFinalHydroLevels[areaIndex][yearIndex];
     deltaReservoirLevel = initialReservoirLevel - finalReservoirLevel;
 }
 
 void FinalLevelInflowsModifier::initializePreCheckData()
 {
-    initReservoirLvlMonth = areaPtr->hydro.initializeReservoirLevelDate; // month [0-11]
-    reservoirCapacity = areaPtr->hydro.reservoirCapacity;
+    initReservoirLvlMonth = hydro.initializeReservoirLevelDate; // month [0-11]
+    reservoirCapacity = hydro.reservoirCapacity;
 }
 
 void FinalLevelInflowsModifier::ruleCurveForSimEndReal()
 {
-    lowLevelLastDay = areaPtr->hydro.reservoirLevel[Data::PartHydro::minimum][DAYS_PER_YEAR - 1];
-    highLevelLastDay = areaPtr->hydro.reservoirLevel[Data::PartHydro::maximum][DAYS_PER_YEAR - 1];
+    lowLevelLastDay = hydro.reservoirLevel[Data::PartHydro::minimum][DAYS_PER_YEAR - 1];
+    highLevelLastDay = hydro.reservoirLevel[Data::PartHydro::maximum][DAYS_PER_YEAR - 1];
 }
 
 void FinalLevelInflowsModifier::assignEndLevelAndDelta()
@@ -80,9 +84,9 @@ void FinalLevelInflowsModifier::assignEndLevelAndDelta()
 double FinalLevelInflowsModifier::calculateTotalInflows() const
 {
     // calculate yearly inflows
-    const Data::DataSeriesHydro& data = *areaPtr->hydro.series;
+    const Data::DataSeriesHydro& data = *hydro.series;
     uint tsHydroIndex = data.timeseriesNumbers[0][yearIndex];
-    auto& inflowsmatrix = areaPtr->hydro.series->storage;
+    auto& inflowsmatrix = hydro.series->storage;
     auto& srcinflows = inflowsmatrix[tsHydroIndex < inflowsmatrix.width ? tsHydroIndex : 0];
 
     double totalYearInflows = 0.0;
@@ -97,7 +101,7 @@ bool FinalLevelInflowsModifier::preCheckStartAndEndSim() const
         return true;
     else
     {
-        logs.error() << "Year: " << yearIndex + 1 << ". Area: " << areaPtr->name
+        logs.error() << "Year: " << yearIndex + 1 << ". Area: " << areaName
                      << ". Simulation must end on day 365 and reservoir level must be "
                         "initiated in January";
         return false;
@@ -110,7 +114,7 @@ bool FinalLevelInflowsModifier::preCheckYearlyInflow(double totalYearInflows) co
         > totalYearInflows) // ROR time-series in MW (power), SP time-series in MWh
                             // (energy)
     {
-        logs.error() << "Year: " << yearIndex + 1 << ". Area: " << areaPtr->name
+        logs.error() << "Year: " << yearIndex + 1 << ". Area: " << areaName
                      << ". Incompatible total inflows: " << totalYearInflows
                      << " with initial: " << initialReservoirLevel
                      << " and final: " << finalReservoirLevel << " reservoir levels.";
@@ -123,7 +127,7 @@ bool FinalLevelInflowsModifier::preCheckRuleCurves() const
 {
     if (finalReservoirLevel < lowLevelLastDay || finalReservoirLevel > highLevelLastDay)
     {
-        logs.error() << "Year: " << yearIndex + 1 << ". Area: " << areaPtr->name
+        logs.error() << "Year: " << yearIndex + 1 << ". Area: " << areaName
                      << ". Specifed final reservoir level: " << finalReservoirLevel
                      << " is incompatible with reservoir level rule curve [" << lowLevelLastDay
                      << " , " << highLevelLastDay << "]";
@@ -137,8 +141,6 @@ void FinalLevelInflowsModifier::initializeData(const Matrix<double>& scenarioIni
                                                const Data::Parameters& parameters,
                                                uint year)
 {
-    if (!areaPtr)
-        return;
     fillEmpty();
     initializeGeneralData(parameters, year);
     initializePerAreaData(scenarioInitialHydroLevels, scenarioFinalHydroLevels);
@@ -147,15 +149,8 @@ void FinalLevelInflowsModifier::initializeData(const Matrix<double>& scenarioIni
 
 bool FinalLevelInflowsModifier::isActive()
 {
-    if (areaPtr && areaPtr->hydro.reservoirManagement && !areaPtr->hydro.useWaterValue
-        && !isnan(finalReservoirLevel) && !isnan(initialReservoirLevel))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return hydro.reservoirManagement && !hydro.useWaterValue && !isnan(finalReservoirLevel)
+           && !isnan(initialReservoirLevel);
 }
 
 void FinalLevelInflowsModifier::updateInflows()
@@ -176,8 +171,7 @@ void FinalLevelInflowsModifier::makeChecks()
 
     // pre-check 1 -> reservoir_levelDay_365 – reservoir_levelDay_1 ≤
     // yearly_inflows
-    if (double totalInflows = calculateTotalInflows();
-        !preCheckYearlyInflow(totalInflows))
+    if (double totalInflows = calculateTotalInflows(); !preCheckYearlyInflow(totalInflows))
         preChecksPasses = false;
 
     // pre-check 2 -> final reservoir level set by the user is within the

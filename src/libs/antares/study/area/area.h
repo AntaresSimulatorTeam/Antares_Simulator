@@ -853,11 +853,6 @@ void AreaListEnsureDataRenewableTimeSeries(AreaList* l);
 */
 void AreaListEnsureDataThermalPrepro(AreaList* l);
 
- /*!
-** \brief Ensure data for FinalLevelInflowsModifier are initialized
-*/
-void AreaListEnsureFinalLevelInflowsModifyerAreaPtr(AreaList* l);
-
 /*!
 ** \brief to check that Area name does not contains character *
 */
