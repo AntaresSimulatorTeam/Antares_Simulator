@@ -32,6 +32,7 @@
 #include "simulation.h"
 #include "sim_structure_donnees.h"
 #include "sim_structure_probleme_economique.h"
+#include "sim_alloc_probleme_hebdo.h"
 #include "sim_structure_probleme_adequation.h"
 #include "sim_extern_variables_globales.h"
 
@@ -41,10 +42,27 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
                                  PROBLEME_HEBDO& problem,
                                  unsigned NombreDePasDeTemps)
 {
+    try
+    {
+        SIM_AllocationProblemeDonneesGenerales(problem, study, NombreDePasDeTemps);
+        SIM_AllocationProblemePasDeTemps(problem, study, NombreDePasDeTemps);
+        SIM_AllocationLinks(problem, study.runtime->interconnectionsCount(), NombreDePasDeTemps);
+        SIM_AllocationConstraints(problem, study, NombreDePasDeTemps);
+        SIM_AllocateAreas(problem, study, NombreDePasDeTemps);
+    }
+    catch(const std::bad_alloc& e)
+    {
+        logs.error() << "Memory allocation failed, aborting (" << e.what() << ")";
+    }
+}
+
+void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
+                                            const Antares::Data::Study& study,
+                                            unsigned NombreDePasDeTemps)
+{
     uint nbPays = study.areas.size();
 
     const uint linkCount = study.runtime->interconnectionsCount();
-    const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
 
     problem.DefaillanceNegativeUtiliserPMinThermique.assign(nbPays, false);
     problem.DefaillanceNegativeUtiliserHydro.assign(nbPays, false);
@@ -100,9 +118,9 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
     problem.CorrespondanceCntNativesCntOptim.resize(NombreDePasDeTemps);
     problem.VariablesDualesDesContraintesDeNTC.resize(NombreDePasDeTemps);
 
-    auto activeContraints = study.bindingConstraints.activeContraints();
-    problem.NombreDeContraintesCouplantes = activeContraints.size();
-    problem.MatriceDesContraintesCouplantes.resize(activeContraints.size());
+    auto activeConstraints = study.bindingConstraints.activeContraints();
+    problem.NombreDeContraintesCouplantes = activeConstraints.size();
+    problem.MatriceDesContraintesCouplantes.resize(activeConstraints.size());
     problem.PaliersThermiquesDuPays.resize(nbPays);
     problem.CaracteristiquesHydrauliques.resize(nbPays);
     problem.previousSimulationFinalLevel.assign(nbPays, 0.);
@@ -125,6 +143,24 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
 
     problem.ReserveJMoins1.resize(nbPays);
     problem.ResultatsHoraires.resize(nbPays);
+
+    problem.coutOptimalSolution1.assign(7, 0.);
+    problem.coutOptimalSolution2.assign(7, 0.);
+
+    problem.tempsResolution1.assign(7, 0.);
+    problem.tempsResolution2.assign(7, 0.);
+}
+
+void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
+                                      const Antares::Data::Study& study,
+                                      unsigned NombreDePasDeTemps)
+{
+    uint nbPays = study.areas.size();
+
+    const uint linkCount = study.runtime->interconnectionsCount();
+    const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
+
+    auto activeConstraints = study.bindingConstraints.activeContraints();
 
     for (uint k = 0; k < NombreDePasDeTemps; k++)
     {
@@ -212,7 +248,7 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDeDissociationDeFlux
           .assign(linkCount, 0);
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesContraintesCouplantes
-          .assign(activeContraints.size(), 0);
+          .assign(activeConstraints.size(), 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesDeDureeMinDeMarche
@@ -228,7 +264,12 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
         problem.VariablesDualesDesContraintesDeNTC[k].VariableDualeParInterconnexion
           .assign(linkCount, 0.);
     }
+}
 
+void SIM_AllocationLinks(PROBLEME_HEBDO& problem,
+                         const uint linkCount,
+                         unsigned NombreDePasDeTemps)
+{
     for (unsigned k = 0; k < linkCount; ++k)
     {
         problem.CoutDeTransport[k].IntercoGereeAvecDesCouts = false;
@@ -241,25 +282,31 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
         problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigineRef
             .assign(NombreDePasDeTemps, 0.);
     }
+}
+
+void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
+                               const Antares::Data::Study& study,
+                               unsigned NombreDePasDeTemps)
+{
+    auto activeConstraints = study.bindingConstraints.activeContraints();
 
     problem.CorrespondanceCntNativesCntOptimJournalieres.resize(7);
     for (uint k = 0; k < 7; k++)
     {
         problem.CorrespondanceCntNativesCntOptimJournalieres[k]
           .NumeroDeContrainteDesContraintesCouplantes
-          .assign(activeContraints.size(), 0);
+          .assign(activeConstraints.size(), 0);
     }
 
     problem.CorrespondanceCntNativesCntOptimHebdomadaires
         .NumeroDeContrainteDesContraintesCouplantes
-        .assign(activeContraints.size(), 0);
+        .assign(activeConstraints.size(), 0);
 
-    const auto& bindingConstraintCount = activeContraints.size();
+    const auto& bindingConstraintCount = activeConstraints.size();
     problem.ResultatsContraintesCouplantes.resize(bindingConstraintCount);
 
     for (unsigned k = 0; k < bindingConstraintCount; k++)
     {
-        auto activeConstraints = study.bindingConstraints.activeContraints();
         assert(k < activeConstraints.size());
         assert(activeConstraints[k]->linkCount() < 50000000);
         assert(activeConstraints[k]->clusterCount() < 50000000);
@@ -270,25 +317,25 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
           .assign(NombreDePasDeTemps, 0.);
 
         problem.MatriceDesContraintesCouplantes[k].NumeroDeLInterconnexion
-          .assign(activeContraints[k]->linkCount(), 0);
+          .assign(activeConstraints[k]->linkCount(), 0);
         problem.MatriceDesContraintesCouplantes[k].PoidsDeLInterconnexion
-          .assign(activeContraints[k]->linkCount(), 0.);
+          .assign(activeConstraints[k]->linkCount(), 0.);
         problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLInterco
-          .assign(activeContraints[k]->linkCount(), 0);
+          .assign(activeConstraints[k]->linkCount(), 0);
 
         problem.MatriceDesContraintesCouplantes[k].NumeroDuPalierDispatch
-          .assign(activeContraints[k]->clusterCount(), 0);
+          .assign(activeConstraints[k]->clusterCount(), 0);
         problem.MatriceDesContraintesCouplantes[k].PoidsDuPalierDispatch
-          .assign(activeContraints[k]->clusterCount(), 0.);
+          .assign(activeConstraints[k]->clusterCount(), 0.);
         problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLePalierDispatch
-          .assign(activeContraints[k]->clusterCount(), 0);
+          .assign(activeConstraints[k]->clusterCount(), 0);
         problem.MatriceDesContraintesCouplantes[k].PaysDuPalierDispatch
-          .assign(activeContraints[k]->clusterCount(), 0);
+          .assign(activeConstraints[k]->clusterCount(), 0);
 
 
         // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
         unsigned int nbTimeSteps;
-        switch (activeContraints[k]->type())
+        switch (activeConstraints[k]->type())
         {
             using namespace Antares::Data;
         case BindingConstraint::typeHourly:
@@ -307,6 +354,14 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
         if (nbTimeSteps > 0)
             problem.ResultatsContraintesCouplantes[k].variablesDuales.assign(nbTimeSteps, 0.);
     }
+}
+
+void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
+                          const Antares::Data::Study& study,
+                          unsigned NombreDePasDeTemps)
+{
+
+    uint nbPays = study.areas.size();
 
     for (unsigned k = 0; k < nbPays; k++)
     {
@@ -484,12 +539,6 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].level.resize(nbShortTermStorage);
         }
     }
-
-    problem.coutOptimalSolution1.assign(7, 0.);
-    problem.coutOptimalSolution2.assign(7, 0.);
-
-    problem.tempsResolution1.assign(7, 0.);
-    problem.tempsResolution2.assign(7, 0.);
 }
 
 void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)

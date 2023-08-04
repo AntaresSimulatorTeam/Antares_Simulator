@@ -3,6 +3,7 @@
 #
 set(SRC_SIMULATION
 		sim_alloc_probleme_hebdo.cpp
+		sim_alloc_probleme_hebdo.h
 		sim_allocation_tableaux.cpp
 		sim_calcul_economique.cpp
 		sim_extern_variables_globales.h
