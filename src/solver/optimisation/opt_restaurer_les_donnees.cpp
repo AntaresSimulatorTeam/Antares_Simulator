@@ -155,9 +155,6 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo)
                               .PuissanceDisponibleDuPalierThermiqueRef[pdt];
                     }
                 }
-
-                PuissanceDisponibleEtCout.CoutHoraireDeProductionDuPalierThermique[pdt]
-                  = PuissanceDisponibleEtCout.CoutHoraireDeProductionDuPalierThermiqueRef[pdt];
             }
         }
     }

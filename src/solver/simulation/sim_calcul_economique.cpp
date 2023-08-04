@@ -948,12 +948,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 =
                 problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
                 .PuissanceDisponibleDuPalierThermique;
-
-            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                .CoutHoraireDeProductionDuPalierThermiqueRef
-                =
-                problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                .CoutHoraireDeProductionDuPalierThermique;
         }
 
         problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraireRef
