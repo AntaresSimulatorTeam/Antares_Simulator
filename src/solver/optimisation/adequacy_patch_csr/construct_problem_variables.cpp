@@ -26,8 +26,6 @@
 */
 
 #include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "../solver/simulation/simulation.h"
-#include "../solver/simulation/sim_structure_donnees.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
 #include "hourly_csr_problem.h"
 

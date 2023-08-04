@@ -26,15 +26,10 @@
 */
 
 #include <yuni/yuni.h>
-#include <yuni/core/string.h>
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
-#include "../simulation/sim_extern_variables_globales.h"
-
 #include "opt_fonctions.h"
 
 extern "C"
@@ -46,11 +41,9 @@ extern "C"
 }
 
 #include <antares/logs.h>
-#include <antares/study.h>
 #include <antares/emergency.h>
 
 #include "../utils/mps_utils.h"
-#include "../utils/ortools_utils.h"
 #include "../utils/filename.h"
 
 #include "../infeasible-problem-analysis/problem.h"
