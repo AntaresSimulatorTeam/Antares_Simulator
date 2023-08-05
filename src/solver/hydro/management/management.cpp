@@ -351,7 +351,7 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
     return ret;
 }
 
-void HydroManagement::changeInflowsDueToFinalLevels(uint numSpace, uint year)
+void HydroManagement::changeInflowsToAccommodateFinalLevels(uint numSpace, uint year)
 {
     study.areas.each([this, &numSpace, &year](Data::Area& area) {
         auto& data = pAreas[numSpace][area.index];
@@ -526,7 +526,7 @@ void HydroManagement::operator()(double* randomReservoirLevel,
         AntaresSolverEmergencyShutdown();
     }
 
-    changeInflowsDueToFinalLevels(numSpace, y);
+    changeInflowsToAccommodateFinalLevels(numSpace, y);
 
     if (parameters.adequacy())
         prepareNetDemand<Data::stdmAdequacy>(numSpace);
