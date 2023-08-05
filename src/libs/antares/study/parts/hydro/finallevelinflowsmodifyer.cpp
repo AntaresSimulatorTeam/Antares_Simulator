@@ -25,7 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/emergency.h>
 #include "finallevelinflowsmodifyer.h"
 #include "container.h"
 
@@ -74,7 +73,7 @@ void FinalLevelInflowsModifier::ruleCurveForSimEndReal()
     highLevelLastDay = hydro.reservoirLevel[Data::PartHydro::maximum][DAYS_PER_YEAR - 1];
 }
 
-void FinalLevelInflowsModifier::assignEndLevelAndDelta()
+void FinalLevelInflowsModifier::updateInflows()
 {
     includeFinalReservoirLevel.at(yearIndex) = true;
     endLevel.at(yearIndex) = finalReservoirLevel;
@@ -145,6 +144,7 @@ void FinalLevelInflowsModifier::initializeData(const Matrix<double>& scenarioIni
     initializeGeneralData(parameters, year);
     initializePerAreaData(scenarioInitialHydroLevels, scenarioFinalHydroLevels);
     initializePreCheckData();
+    ruleCurveForSimEndReal();
 }
 
 bool FinalLevelInflowsModifier::isActive()
@@ -153,14 +153,7 @@ bool FinalLevelInflowsModifier::isActive()
            && !isnan(initialReservoirLevel);
 }
 
-void FinalLevelInflowsModifier::updateInflows()
-{
-    assignEndLevelAndDelta();
-    // rule curve values for simEndDayReal
-    ruleCurveForSimEndReal();
-}
-
-void FinalLevelInflowsModifier::makeChecks()
+bool FinalLevelInflowsModifier::makeChecks()
 {
     bool preChecksPasses = true;
 
@@ -182,8 +175,8 @@ void FinalLevelInflowsModifier::makeChecks()
     if (!preChecksPasses)
     {
         logs.fatal() << "At least one year has failed final reservoir level pre-checks.";
-        AntaresSolverEmergencyShutdown();
     }
+    return preChecksPasses;
 }
 
 } // namespace Data

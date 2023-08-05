@@ -80,8 +80,6 @@ private:
 
     void fillEmpty();
 
-    void assignEndLevelAndDelta();
-
     double calculateTotalInflows() const;
 
     bool preCheckStartAndEndSim() const;
@@ -107,7 +105,7 @@ public:
 
     void updateInflows();
 
-    void makeChecks();
+    bool makeChecks();
 };
 } // namespace Antares::Data
 
