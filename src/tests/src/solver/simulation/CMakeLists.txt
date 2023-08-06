@@ -91,8 +91,6 @@ set_property(TEST time_series PROPERTY LABELS unit)
 set(SRC_HYDRO_FINAL_LEVEL
 	${src_libs_antares_study}/parts/hydro/finallevelinflowsmodifyer.h
 	${src_libs_antares_study}/parts/hydro/finallevelinflowsmodifyer.cpp
-	${src_solver_simulation}/hydro-final-reservoir-level-functions.h
-	${src_solver_simulation}/hydro-final-reservoir-level-functions.cpp
 )
 
 add_executable(test-hydro_final
@@ -110,6 +108,11 @@ target_link_libraries(test-hydro_final
 	libantares-core
 	libantares-solver-simulation
 )
+
+# Linux
+if(UNIX AND NOT APPLE)
+	target_link_libraries(test-hydro_final PRIVATE stdc++fs)
+endif()
 
 set_target_properties(test-hydro_final PROPERTIES FOLDER Unit-tests)
 
