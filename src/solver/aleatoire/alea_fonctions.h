@@ -27,7 +27,9 @@
 #ifndef __SOLVER_ALEA_H__
 #define __SOLVER_ALEA_H__
 
-void ALEA_TirageAuSortChroniques(double** thermalNoisesByArea, uint numSpace);
+#include "antares/study/study.h"
+
+void ALEA_TirageAuSortChroniques(const Antares::Data::Study& study, double** thermalNoisesByArea, uint numSpace);
 
 void HydroVentilation();
 

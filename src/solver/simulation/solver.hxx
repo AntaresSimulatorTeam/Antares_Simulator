@@ -152,7 +152,7 @@ private:
 
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
-            ALEA_TirageAuSortChroniques(thermalNoisesByArea, numSpace);
+            ALEA_TirageAuSortChroniques(study, thermalNoisesByArea, numSpace);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
             simulationObj->prepareClustersInMustRunMode(numSpace);

@@ -30,17 +30,7 @@
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
-#include "../simulation/sim_extern_variables_globales.h"
-
 #include "opt_fonctions.h"
-#include <math.h>
-#include <yuni/core/math.h>
-#include <limits.h>
-
-#include "spx_constantes_externes.h"
-
-#define EPSILON_DEFAILLANCE 1e-3
 
 using namespace Yuni;
 

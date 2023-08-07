@@ -45,10 +45,10 @@ using namespace Antares;
 using namespace Antares::Data;
 
 static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
+  const Study& study,
   double** thermalNoisesByArea,
   uint numSpace)
 {
-    auto& study = *Data::Study::Current::Get();
     auto& runtime = *study.runtime;
 
     uint year = runtime.timeseriesNumberYear[numSpace];
@@ -196,11 +196,11 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
     }
 }
 
-void ALEA_TirageAuSortChroniques(double** thermalNoisesByArea, uint numSpace)
+void ALEA_TirageAuSortChroniques(const Antares::Data::Study& study, double** thermalNoisesByArea, uint numSpace)
 {
     // Time-series numbers
     // Retrieve all time-series numbers
     // Initialize in the same time the production costs of all thermal clusters.
-    InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
+    InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(study,
       thermalNoisesByArea, numSpace);
 }

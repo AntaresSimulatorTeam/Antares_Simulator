@@ -110,9 +110,6 @@ struct VALEURS_DE_NTC_ET_RESISTANCES
     std::vector<double> ValeurDeLoopFlowOrigineVersExtremite;
     std::vector<double> ValeurDuFlux;
 
-    std::vector<double> ValeurDuFluxUp;
-    std::vector<double> ValeurDuFluxDown;
-
     std::vector<double> ResistanceApparente;
 };
 
@@ -140,7 +137,6 @@ struct CONTRAINTES_COUPLANTES
     char SensDeLaContrainteCouplante;
 
     std::vector<double> SecondMembreDeLaContrainteCouplante;
-    std::vector<double> SecondMembreDeLaContrainteCouplanteRef;
 
     int NombreDElementsDansLaContrainteCouplante;
     int NombreDInterconnexionsDansLaContrainteCouplante;
@@ -244,15 +240,12 @@ struct SOLDE_MOYEN_DES_ECHANGES
 struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 {
     std::vector<double> PuissanceDisponibleDuPalierThermique;
-
     std::vector<double> PuissanceDisponibleDuPalierThermiqueRef;
-    std::vector<double> PuissanceDisponibleDuPalierThermiqueRef_SV;
 
     std::vector<double> PuissanceMinDuPalierThermique;
-    std::vector<double> PuissanceMinDuPalierThermique_SV;
+    std::vector<double> PuissanceMinDuPalierThermiqueRef;
 
     std::vector<double> CoutHoraireDeProductionDuPalierThermique;
-    std::vector<double> CoutHoraireDeProductionDuPalierThermiqueRef;
 
     std::vector<double> CoutHoraireDuPalierThermiqueUp;
     std::vector<double> CoutHoraireDuPalierThermiqueDown;
@@ -289,7 +282,6 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     std::vector<double> MinEnergieHydrauParIntervalleOptimise;
     std::vector<double> MaxEnergieHydrauParIntervalleOptimise;
 
-    std::vector<double> CntEnergieH2OParIntervalleOptimiseRef;
     std::vector<double> CntEnergieH2OParIntervalleOptimise;
     std::vector<double> CntEnergieH2OParJour;
 
@@ -300,8 +292,6 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     std::vector<double> ContrainteDePmaxPompageHoraire;
 
     double MaxDesPmaxHydrauliques;
-
-    double MaxDesPmaxHydrauliquesRef;
 
     bool PresenceDePompageModulable;
     bool PresenceDHydrauliqueModulable;
@@ -408,7 +398,6 @@ public:
 struct RESERVE_JMOINS1
 {
     std::vector<double> ReserveHoraireJMoins1;
-    std::vector<double> ReserveHoraireJMoins1Ref;
 };
 
 struct PRODUCTION_THERMIQUE_OPTIMALE
@@ -497,10 +486,8 @@ struct PROBLEME_HEBDO
     mutable std::vector<COUTS_DE_TRANSPORT> CoutDeTransport;
 
     mutable std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTC;
-    std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTCRef;
 
     unsigned int NombreDePasDeTemps = 0;
-    unsigned int NombreDePasDeTempsRef = 0;
     std::vector<int> NumeroDeJourDuPasDeTemps;
 
     int NombreDePasDeTempsPourUneOptimisation = 0;
@@ -508,10 +495,8 @@ struct PROBLEME_HEBDO
     int NombreDeJours = 0;
 
     int NombreDePasDeTempsDUneJournee = 0;
-    int NombreDePasDeTempsDUneJourneeRef = 0;
 
     mutable std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattues;
-    std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattuesRef;
 
     std::vector<double> CoutDeDefaillancePositive;
     std::vector<double> CoutDeDefaillanceNegative;

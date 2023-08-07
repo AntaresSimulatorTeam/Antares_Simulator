@@ -11,9 +11,9 @@ namespace Antares
 {
 namespace Optimization
 {
-InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
+InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
 {
-    mSolver = std::unique_ptr<MPSolver>(convert_to_MPSolver(ProbSpx));
+    mSolver = std::unique_ptr<MPSolver>(convert_to_MPSolver(solverName, ProbSpx));
 }
 
 void InfeasibleProblemAnalysis::addSlackVariables()
