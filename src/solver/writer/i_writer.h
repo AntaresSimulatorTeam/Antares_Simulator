@@ -1,7 +1,6 @@
 #pragma once
 
 #include <yuni/core/string.h>
-#include <antares/inifile/inifile.h>
 
 #include <memory>
 #include <string>

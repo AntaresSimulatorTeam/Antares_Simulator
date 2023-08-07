@@ -22,7 +22,6 @@ add_library(area
 target_include_directories(area
         PRIVATE
         ${CMAKE_SOURCE_DIR}/ext/yuni/src
-        ${CMAKE_SOURCE_DIR}/solver/writer
         ${CMAKE_SOURCE_DIR}/libs
         )
 
