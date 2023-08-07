@@ -41,8 +41,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* 
 
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-    const CORRESPONDANCES_DES_VARIABLES* correspondanceVarNativesVarOptim
-      = &problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+    const CORRESPONDANCES_DES_VARIABLES& correspondanceVarNativesVarOptim
+      = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays - 1; pays++)
     {
@@ -52,7 +52,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* 
         while (interco >= 0)
         {
             if (int var
-                = correspondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
+                = correspondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
                 var >= 0)
             {
                 Pi[nombreDeTermes] = 1.0;
@@ -65,7 +65,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* 
         while (interco >= 0)
         {
             if (int var
-                = correspondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
+                = correspondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
                 var >= 0)
             {
                 Pi[nombreDeTermes] = -1.0;
