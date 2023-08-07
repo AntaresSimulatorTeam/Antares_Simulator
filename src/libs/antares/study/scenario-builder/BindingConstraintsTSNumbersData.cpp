@@ -30,11 +30,26 @@
 
 #include <sstream>
 #include <iomanip>
-#include "scBuilderUtils.h"
-#include "TSnumberData.h"
+#include "BindingConstraintsTSNumbersData.h"
+#include "applyToMatrix.hxx"
 
 namespace Antares::Data::ScenarioBuilder
 {
+bool BindingConstraintsTSNumberData::apply(Study& study)
+{
+    return std::all_of(rules_.begin(), rules_.end(), [&study, this](const std::pair<std::string, MatrixType>& args){
+        const auto& [group_name, ts_numbers] = args;
+        auto group = study.bindingConstraintsGroups[group_name];
+        if (group == nullptr) {
+            logs.error("Group with name" + group_name + " does not exists");
+        }
+        uint errors = 0;
+        CString<512, false> logprefix;
+        return ApplyToMatrix(errors, logprefix, study.bindingConstraintsGroups[group_name]->timeSeriesNumbers(), ts_numbers[0],
+                             get_tsGenCount(study));
+    });
+}
+
 bool BindingConstraintsTSNumberData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;
