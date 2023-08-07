@@ -53,7 +53,7 @@ static void shortTermStorageCost(
                  pdtHebdo < DernierPdtDeLIntervalle;
                  pdtHebdo++, pdtJour++)
             {
-                auto VarCurrent = CorrespondanceVarNativesVarOptim[pdtJour];
+                const auto& VarCurrent = CorrespondanceVarNativesVarOptim[pdtJour];
                 const int clusterGlobalIndex = storage.clusterGlobalIndex;
                 if (const int varLevel
                     = VarCurrent.SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];

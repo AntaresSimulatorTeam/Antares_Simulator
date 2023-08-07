@@ -40,6 +40,11 @@ class AdequacyPatchRuntimeData;
 
 struct CORRESPONDANCES_DES_VARIABLES
 {
+    // Avoid accidental copies
+    CORRESPONDANCES_DES_VARIABLES() = default;
+    CORRESPONDANCES_DES_VARIABLES(const CORRESPONDANCES_DES_VARIABLES&) = delete;
+    CORRESPONDANCES_DES_VARIABLES(CORRESPONDANCES_DES_VARIABLES&&) = default;
+
     std::vector<int> NumeroDeVariableDeLInterconnexion;
     std::vector<int> NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;
     std::vector<int> NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
@@ -75,6 +80,11 @@ struct CORRESPONDANCES_DES_VARIABLES
 
 struct CORRESPONDANCES_DES_CONTRAINTES
 {
+    // Avoid accidental copies
+    CORRESPONDANCES_DES_CONTRAINTES() = default;
+    CORRESPONDANCES_DES_CONTRAINTES(const CORRESPONDANCES_DES_CONTRAINTES&) = delete;
+    CORRESPONDANCES_DES_CONTRAINTES(CORRESPONDANCES_DES_CONTRAINTES&&) = default;
+
     std::vector<int> NumeroDeContrainteDesBilansPays;
     std::vector<int> NumeroDeContraintePourEviterLesChargesFictives;
 
