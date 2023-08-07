@@ -206,6 +206,7 @@ Area* StudyBuilder::addAreaToStudy(const std::string& areaName)
 std::shared_ptr<BindingConstraint> addBindingConstraints(Study& study, std::string name, std::string group) {
     auto bc = study.bindingConstraints.add(name);
     bc->group(group);
+    study.bindingConstraintsGroups.add(group);
     return bc;
 }
 
