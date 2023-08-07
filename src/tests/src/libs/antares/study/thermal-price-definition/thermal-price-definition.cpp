@@ -123,8 +123,8 @@ struct FixtureStudyOnly
 // ==================
 
 // Here, we need the "lightweight fixture"
-BOOST_FIXTURE_TEST_SUITE(EconomicInputData_loadFromFolder, FixtureStudyOnly)
-BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_OK)
+BOOST_AUTO_TEST_SUITE(EconomicInputData_loadFromFolder)
+BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_OK, FixtureStudyOnly)
 {
     TimeSeriesFile fuelCostTSfile("fuelCost.txt", 8760);
     EconomicInputData eco;
@@ -133,14 +133,14 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_OK)
     BOOST_CHECK_EQUAL(eco.fuelcost[0][1432], 1);
 }
 
-BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_values)
+BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_values, FixtureStudyOnly)
 {
     TimeSeriesFile fuelCostTSfile("fuelCost.txt", 80);
     EconomicInputData eco;
     BOOST_CHECK(!eco.loadFromFolder(*study, fuelCostTSfile.getFolder()));
 }
 
-BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_working_with_many_values)
+BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_working_with_many_values, FixtureStudyOnly)
 {
     TimeSeriesFile co2CostTSfile("CO2Cost.txt", 10000);
     EconomicInputData eco;
@@ -148,8 +148,8 @@ BOOST_AUTO_TEST_CASE(EconomicInputData_loadFromFolder_working_with_many_values)
 }
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_FIXTURE_TEST_SUITE(s, FixtureFull)
-BOOST_AUTO_TEST_CASE(ThermalClusterList_loadFromFolder_basic)
+BOOST_AUTO_TEST_SUITE(s)
+BOOST_FIXTURE_TEST_CASE(ThermalClusterList_loadFromFolder_basic, FixtureFull)
 {
     clusterList.loadFromFolder(*study, folder, area);
     auto cluster = clusterList.mapping["some cluster"];
@@ -160,7 +160,7 @@ BOOST_AUTO_TEST_CASE(ThermalClusterList_loadFromFolder_basic)
     BOOST_CHECK(cluster->variableomcost == 12.12);
 }
 
-BOOST_AUTO_TEST_CASE(checkCo2_checkCO2CostColumnNumber_OK)
+BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_OK, FixtureFull)
 {
     area->thermal.list.loadFromFolder(*study, folder, area);
     auto cluster = area->thermal.list.mapping["some cluster"];
@@ -176,7 +176,7 @@ BOOST_AUTO_TEST_CASE(checkCo2_checkCO2CostColumnNumber_OK)
     BOOST_CHECK_NO_THROW(Antares::Check::checkCO2CostColumnNumber(study->areas));
 }
 
-BOOST_AUTO_TEST_CASE(checkCo2_checkCO2CostColumnNumber_KO)
+BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_KO, FixtureFull)
 {
     area->thermal.list.loadFromFolder(*study, folder, area);
     auto cluster = area->thermal.list.mapping["some cluster"];
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE(checkCo2_checkCO2CostColumnNumber_KO)
                       Antares::Error::IncompatibleCO2CostColumns);
 }
 
-BOOST_AUTO_TEST_CASE(checkFuelAndCo2_checkColumnNumber_OK)
+BOOST_FIXTURE_TEST_CASE(checkFuelAndCo2_checkColumnNumber_OK, FixtureFull)
 {
     area->thermal.list.loadFromFolder(*study, folder, area);
     auto cluster = area->thermal.list.mapping["some cluster"];
@@ -210,7 +210,7 @@ BOOST_AUTO_TEST_CASE(checkFuelAndCo2_checkColumnNumber_OK)
     BOOST_CHECK_NO_THROW(Antares::Check::checkCO2CostColumnNumber(study->areas));
 }
 
-BOOST_AUTO_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMarginalCostPerHour)
+BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMarginalCostPerHour, FixtureFull)
 {
     clusterList.loadFromFolder(*study, folder, area);
     auto cluster = clusterList.mapping["some cluster"];
@@ -222,7 +222,7 @@ BOOST_AUTO_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMargin
     BOOST_CHECK_EQUAL(cluster->costsTimeSeries[0].marginalCostTS[6737], 23);
 }
 
-BOOST_AUTO_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour)
+BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour, FixtureFull)
 {
     TimeSeriesFile fuel("fuelCost.txt", 8760);
     TimeSeriesFile co2("CO2Cost.txt", 8760);
@@ -240,7 +240,7 @@ BOOST_AUTO_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMa
     BOOST_CHECK_CLOSE(cluster->costsTimeSeries[0].marketBidCostTS[2637], 24.12, 0.001);
 }
 
-BOOST_AUTO_TEST_CASE(computeMarketBidCost)
+BOOST_FIXTURE_TEST_CASE(computeMarketBidCost, FixtureFull)
 {
     clusterList.loadFromFolder(*study, folder, area);
     auto cluster = clusterList.mapping["some cluster"];

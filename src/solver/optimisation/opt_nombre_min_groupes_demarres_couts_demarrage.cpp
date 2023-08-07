@@ -25,15 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include <yuni/yuni.h>
-#include <yuni/core/string.h>
 
 #include "opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
-#include <yuni/io/file.h>
 #include "opt_fonctions.h"
 
 extern "C"
@@ -41,10 +38,6 @@ extern "C"
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
 }
-
-#include <antares/logs.h>
-#include <antares/study.h>
-#include <antares/emergency.h>
 
 using namespace Antares;
 using namespace Antares::Data;

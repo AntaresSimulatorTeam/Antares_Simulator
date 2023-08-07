@@ -96,7 +96,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.WaterValueAccurate
       = (study.parameters.hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP);
 
-    SIM_AllocationProblemeHebdo(problem, NombreDePasDeTemps);
+    SIM_AllocationProblemeHebdo(study, problem, NombreDePasDeTemps);
 
     problem.NombreDePasDeTemps = NombreDePasDeTemps;
 
@@ -330,10 +330,6 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
                 problem.MatriceDesContraintesCouplantes[constraintIndex]
                         .SecondMembreDeLaContrainteCouplante[pasDeTemps]
                         = column[PasDeTempsDebut + pasDeTemps];
-                problem.MatriceDesContraintesCouplantes[constraintIndex]
-                        .SecondMembreDeLaContrainteCouplanteRef[pasDeTemps]
-                        = problem.MatriceDesContraintesCouplantes[constraintIndex]
-                        .SecondMembreDeLaContrainteCouplante[pasDeTemps];
                 break;
             }
             case BindingConstraint::typeDaily:
@@ -344,14 +340,10 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
                 std::vector<double>& sndMember
                     = problem.MatriceDesContraintesCouplantes[constraintIndex]
                         .SecondMembreDeLaContrainteCouplante;
-                std::vector<double>& sndMemberRef
-                    = problem.MatriceDesContraintesCouplantes[constraintIndex]
-                        .SecondMembreDeLaContrainteCouplanteRef;
+
                 for (unsigned day = 0; day != 7; ++day)
-                {
                     sndMember[day] = column[weekFirstDay + day];
-                    sndMemberRef[day] = sndMember[day];
-                }
+
                 break;
             }
             case BindingConstraint::typeWeekly:
@@ -365,9 +357,6 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
 
                 problem.MatriceDesContraintesCouplantes[constraintIndex]
                     .SecondMembreDeLaContrainteCouplante[0]
-                        = sum;
-                problem.MatriceDesContraintesCouplantes[constraintIndex]
-                    .SecondMembreDeLaContrainteCouplanteRef[0]
                         = sum;
                 break;
             }
@@ -383,12 +372,12 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
     }
 }
 
-void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
+void SIM_RenseignementProblemeHebdo(const Study& study,
+                                    PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
                                     uint numSpace,
                                     const int PasDeTempsDebut)
 {
-    auto& study = *Data::Study::Current::Get();
     const auto& parameters = study.parameters;
     auto& studyruntime = *study.runtime;
     const uint nbPays = study.areas.size();
@@ -564,14 +553,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 ntc.ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][indx];
             }
         }
-
-        problem.ValeursDeNTCRef[j].ValeurDeNTCOrigineVersExtremite
-            = ntc.ValeurDeNTCOrigineVersExtremite;
-        problem.ValeursDeNTCRef[j].ValeurDeNTCExtremiteVersOrigine
-            = ntc.ValeurDeNTCExtremiteVersOrigine;
-        problem.ValeursDeNTCRef[j].ValeurDeLoopFlowOrigineVersExtremite
-            = ntc.ValeurDeLoopFlowOrigineVersExtremite;
-
         preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, study.bindingConstraints, weekFirstDay, j);
 
         const uint dayInTheYear = study.calendar.hours[indx].dayYear;
@@ -956,26 +937,9 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 =
                 problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
                 .PuissanceDisponibleDuPalierThermique;
-
-            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                .CoutHoraireDeProductionDuPalierThermiqueRef
-                =
-                problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                .CoutHoraireDeProductionDuPalierThermique;
         }
 
-        problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimiseRef
-            = problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimise;
         problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraireRef
             = problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire;
-
-        problem.ReserveJMoins1[k].ReserveHoraireJMoins1Ref
-            = problem.ReserveJMoins1[k].ReserveHoraireJMoins1;
-    }
-
-    for (unsigned int j = 0; j < problem.NombreDePasDeTemps; ++j)
-    {
-        problem.ConsommationsAbattuesRef[j].ConsommationAbattueDuPays
-            = problem.ConsommationsAbattues[j].ConsommationAbattueDuPays;
     }
 }

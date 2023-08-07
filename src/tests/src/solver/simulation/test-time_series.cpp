@@ -107,9 +107,9 @@ struct Fixture {
     Matrix<double> expected_equality_series;
 };
 
-BOOST_FIXTURE_TEST_SUITE(BC_TimeSeries, Fixture)
+BOOST_AUTO_TEST_SUITE(BC_TimeSeries)
 
-BOOST_AUTO_TEST_CASE(load_binding_constraints_timeseries) {
+BOOST_FIXTURE_TEST_CASE(load_binding_constraints_timeseries, Fixture) {
     bool loading_ok = study->internalLoadBindingConstraints(options);
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(study->bindingConstraints.size(), 1);
@@ -146,7 +146,7 @@ BOOST_AUTO_TEST_CASE(load_binding_constraints_timeseries) {
     CheckEqual(study->bindingConstraints.find("dummy_name")->RHSTimeSeries(), expected_upper_bound_series);
 }
 
-BOOST_AUTO_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_of_time_series_error_case) {
+BOOST_FIXTURE_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_of_time_series_error_case, Fixture) {
     addConstraint("dummy_name_2", "dummy_group");
     Matrix values;
     values.resize(5, 8784);
@@ -156,7 +156,7 @@ BOOST_AUTO_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_of_t
     BOOST_CHECK_EQUAL(loading_ok, false);
 }
 
-BOOST_AUTO_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_of_time_series_good_case) {
+BOOST_FIXTURE_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_of_time_series_good_case, Fixture) {
     addConstraint("dummy_name_2", "dummy_group");
 
     Matrix values;
@@ -167,7 +167,7 @@ BOOST_AUTO_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_of_t
     BOOST_CHECK_EQUAL(loading_ok, true);
 }
 
-BOOST_AUTO_TEST_CASE(Check_empty_file_interpreted_as_all_zeroes) {
+BOOST_FIXTURE_TEST_CASE(Check_empty_file_interpreted_as_all_zeroes, Fixture) {
     std::vector file_names = {working_tmp_dir / "bindingconstraints"/ "dummy_name_lt.txt",
                               working_tmp_dir / "bindingconstraints"/ "dummy_name_gt.txt",
                               working_tmp_dir / "bindingconstraints"/ "dummy_name_eq.txt"};
@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_CASE(Check_empty_file_interpreted_as_all_zeroes) {
     CheckEqual(study->bindingConstraints.find("dummy_name")->RHSTimeSeries(), expectation);
 }
 
-BOOST_AUTO_TEST_CASE(Check_missing_file) {
+BOOST_FIXTURE_TEST_CASE(Check_missing_file, Fixture) {
     std::vector file_names = {working_tmp_dir / "bindingconstraints"/ "dummy_name_lt.txt",
                               working_tmp_dir / "bindingconstraints"/ "dummy_name_gt.txt",
                               working_tmp_dir / "bindingconstraints"/ "dummy_name_eq.txt"};

@@ -1,7 +1,6 @@
 set(RTESOLVER_OPT
 		opt_optimisation_hebdo.cpp
 		opt_appel_solveur_quadratique.cpp
-		opt_gestion_des_pmax.cpp
 		opt_gestion_second_membre_cas_lineaire.cpp
 		opt_optimisation_lineaire.cpp
 		opt_chainage_intercos.cpp

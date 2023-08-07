@@ -1,7 +1,6 @@
 #include "ortools_utils.h"
 
 #include <antares/logs.h>
-#include <antares/study.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hpp>
 #include <antares/emergency.h>
@@ -139,12 +138,11 @@ namespace Antares
 namespace Optimization
 {
 MPSolver* convert_to_MPSolver(
-  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+    const std::string& solverName,
+    const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
-    auto study = Data::Study::Current::Get();
-
     // Create the MPSolver
-    MPSolver* solver = MPSolverFactory(problemeSimplexe, study->parameters.ortoolsSolver);
+    MPSolver* solver = MPSolverFactory(problemeSimplexe, solverName);
 
     tuneSolverSpecificOptions(solver);
 
@@ -224,11 +222,11 @@ void removeTemporaryFile(const std::string& tmpPath)
 }
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
-                                                   Antares::Solver::IResultWriter::Ptr writer,
+                                                   Antares::Solver::IResultWriter& writer,
                                                    const std::string& filename)
 {
     // 0. Logging file name
-    logs.info() << "Solver OR-Tools MPS File: `" << filename << "'";
+    Antares::logs.info() << "Solver OR-Tools MPS File: `" << filename << "'";
 
     // 1. Determine filename
     const auto tmpPath = generateTempPath(filename);
@@ -237,7 +235,7 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
     solver->Write(tmpPath);
 
     // 3. Copy to real output using generic writer
-    writer->addEntryFromFile(filename, tmpPath);
+    writer.addEntryFromFile(filename, tmpPath);
 
     // 4. Remove tmp file
     removeTemporaryFile(tmpPath);
@@ -259,12 +257,13 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverPar
     return resultStatus == OUI_SPX;
 }
 
-MPSolver* ORTOOLS_ConvertIfNeeded(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
+MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
+                                  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                                   MPSolver* solver)
 {
     if (solver == nullptr)
     {
-        return Antares::Optimization::convert_to_MPSolver(Probleme);
+        return Antares::Optimization::convert_to_MPSolver(solverName, Probleme);
     }
     else
     {
@@ -391,7 +390,7 @@ MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* 
     }
     catch (...)
     {
-        logs.error() << "Solver creation failed";
+        Antares::logs.error() << "Solver creation failed";
         AntaresSolverEmergencyShutdown();
     }
 

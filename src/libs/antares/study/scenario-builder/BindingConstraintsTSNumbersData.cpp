@@ -35,10 +35,6 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-
-// ================================
-// Binding Constraints ...
-// ================================
 bool BindingConstraintsTSNumberData::apply(Study& study)
 {
     return std::all_of(rules_.begin(), rules_.end(), [&study, this](const std::pair<std::string, MatrixType>& args){

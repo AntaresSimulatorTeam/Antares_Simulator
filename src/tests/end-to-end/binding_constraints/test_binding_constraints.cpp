@@ -267,7 +267,7 @@ void SimulationHandler::create()
                                                          &nullDurationCollector_);
     
     // Allocate arrays for time series
-    SIM_AllocationTableaux();
+    SIM_AllocationTableaux(*study_);
 }
 
 // ===============
