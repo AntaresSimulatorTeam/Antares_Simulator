@@ -18,7 +18,7 @@ jobs:
         os: [ubuntu-20.04]
 
     env:
-      SONAR_SCANNER_VERSION: 5.0  # Find the latest version in the "Linux" link on this page:
+      SONAR_SCANNER_VERSION: 5.0.1.3006 # Find the latest version in the "Linux" link on this page:
       # https://sonarcloud.io/documentation/analysis/scan/sonarscanner/
       SONAR_SERVER_URL: "https://sonarcloud.io"
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
