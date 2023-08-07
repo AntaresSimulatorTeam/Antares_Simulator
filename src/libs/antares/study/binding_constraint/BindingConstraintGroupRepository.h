@@ -18,7 +18,7 @@ class BindingConstraintGroupRepository {
 public:
     [[nodiscard]] unsigned size() const;
 
-    [[nodiscard]] bool buildFrom(BindingConstraintsRepository& repository);
+    [[nodiscard]] bool buildFrom(const BindingConstraintsRepository& repository);
 
     void resizeAllTimeseriesNumbers(unsigned nb_years);
 
