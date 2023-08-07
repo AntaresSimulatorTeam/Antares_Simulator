@@ -45,7 +45,7 @@ void addScratchpadToEachArea(Study& study)
 
 ThermalClusterConfig::ThermalClusterConfig(ThermalCluster* cluster) : cluster_(cluster)
 {
-    tsAvailablePowerConfig_ = std::move(TimeSeriesConfigurer<Matrix<double>>(cluster_->series->timeSeries));
+    tsAvailablePowerConfig_ = std::move(TimeSeriesConfigurer(cluster_->series->timeSeries));
 }
 ThermalClusterConfig& ThermalClusterConfig::setNominalCapacity(double nominalCapacity)
 { 
