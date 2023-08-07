@@ -15,6 +15,15 @@
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
+fs::path generateAndCreateDirName()
+{
+    std::string dir = boost::unit_test::framework::current_test_case().p_name;
+    fs::path working_dir = fs::temp_directory_path() / dir;
+    fs::remove(working_dir);
+    fs::create_directories(working_dir);
+    return working_dir;
+}
+
 BOOST_AUTO_TEST_SUITE(BindingConstraintTests)
 
 BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
@@ -23,8 +32,7 @@ BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto working_tmp_dir = fs::temp_directory_path();
-    fs::create_directories(working_tmp_dir);
+    auto working_tmp_dir = generateAndCreateDirName();
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
     constraints << "[1]\n"
@@ -69,8 +77,7 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto working_tmp_dir = fs::temp_directory_path();
-    fs::create_directories(working_tmp_dir);
+    auto working_tmp_dir = generateAndCreateDirName();
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
     constraints << "[1]\n"
@@ -114,8 +121,7 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto working_tmp_dir = fs::temp_directory_path();
-    fs::create_directories(working_tmp_dir);
+    auto working_tmp_dir = generateAndCreateDirName();
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
     constraints << "[1]\n"
@@ -177,8 +183,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto working_tmp_dir = fs::temp_directory_path();
-    fs::create_directories(working_tmp_dir);
+    auto working_tmp_dir = generateAndCreateDirName();
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
     constraints << "[1]\n"
@@ -222,8 +227,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_range) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto working_tmp_dir = fs::temp_directory_path();
-    fs::create_directories(working_tmp_dir);
+    auto working_tmp_dir = generateAndCreateDirName();
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
     constraints << "[1]\n"
