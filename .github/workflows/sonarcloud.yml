@@ -13,6 +13,7 @@ jobs:
     name: Build and analyze
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
     env:
       BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
       - name: Install sonar-scanner and build-wrapper
