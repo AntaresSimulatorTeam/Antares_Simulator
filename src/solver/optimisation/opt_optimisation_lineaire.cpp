@@ -30,11 +30,31 @@
 #include "opt_fonctions.h"
 
 #include <antares/logs.h>
-#include <antares/emergency.h>
 #include "../utils/filename.h"
 
 using namespace Antares;
 using namespace Yuni;
+using Antares::Solver::Optimization::OptimizationOptions;
+
+namespace {
+
+void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
+        double optimalSolutionCost,
+        std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
+        int optimizationNumber,
+        Solver::IResultWriter& writer)
+{
+    Yuni::Clob buffer;
+    auto filename = createCriterionFilename(optPeriodStringGenerator, optimizationNumber);
+
+    logs.info() << "Solver Criterion File: `" << filename << "'";
+
+    buffer.appendFormat("* Optimal criterion value :   %11.10e\n", optimalSolutionCost);
+    writer.addEntryFromBuffer(filename, buffer);
+}
+
+}
+
 
 double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
                                    const int NumeroDeLIntervalle,
@@ -46,12 +66,10 @@ double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
         return Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
 }
 
-bool OPT_OptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adqPatchParams)
+bool OPT_OptimisationLineaire(const OptimizationOptions& options, PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adqPatchParams,
+                              Solver::IResultWriter& writer)
 {
     int optimizationNumber = PREMIERE_OPTIMISATION;
-
-    problemeHebdo->NombreDePasDeTemps = problemeHebdo->NombreDePasDeTempsRef;
-    problemeHebdo->NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJourneeRef;
 
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
     {
@@ -70,11 +88,11 @@ bool OPT_OptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adq
 
     OPT_NumeroDIntervalleOptimiseDuPasDeTemps(problemeHebdo);
 
-    OPT_RestaurerLesDonnees(problemeHebdo, optimizationNumber);
+    OPT_RestaurerLesDonnees(problemeHebdo);
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(problemeHebdo);
 
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(problemeHebdo);
+    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(problemeHebdo, writer);
 
 OptimisationHebdo:
     int DernierPdtDeLIntervalle;
@@ -108,8 +126,8 @@ OptimisationHebdo:
                                     problemeHebdo->weekInTheYear,
                                     problemeHebdo->year);
 
-        if (!OPT_AppelDuSimplexe(
-              problemeHebdo, numeroDeLIntervalle, optimizationNumber, optPeriodStringGenerator))
+        if (!OPT_AppelDuSimplexe(options,
+              problemeHebdo, numeroDeLIntervalle, optimizationNumber, optPeriodStringGenerator, writer))
             return false;
 
         if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT
@@ -118,7 +136,7 @@ OptimisationHebdo:
             double optimalSolutionCost
               = OPT_ObjectiveFunctionResult(problemeHebdo, numeroDeLIntervalle, optimizationNumber);
             OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
-              optimalSolutionCost, optPeriodStringGenerator, optimizationNumber);
+              optimalSolutionCost, optPeriodStringGenerator, optimizationNumber, writer);
         }
     }
 

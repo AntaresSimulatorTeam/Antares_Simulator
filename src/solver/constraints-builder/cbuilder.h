@@ -270,8 +270,7 @@ public:
     void buildAreaToLinkInfosMap()
     {
         areaToLinks.clear();
-        auto& study = *Data::Study::Current::Get();
-        for (auto& area : study.areas)
+        for (auto& area : pStudy->areas)
         {
             auto a = area.second;
             std::for_each(pLink.begin(), pLink.end(), [&a, this](linkInfo* edgeP) {

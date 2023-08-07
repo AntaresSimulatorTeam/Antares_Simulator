@@ -137,7 +137,7 @@ void SimulationHandler::create()
     simulation_ = std::make_shared<ISimulation<Economy>>(study_,
                                                          settings_,
                                                          &nullDurationCollector_);
-    SIM_AllocationTableaux();
+    SIM_AllocationTableaux(study_);
 }
 
 

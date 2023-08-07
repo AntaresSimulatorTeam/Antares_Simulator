@@ -52,6 +52,7 @@
 #include "antares/correlation/correlation.h"
 #include "area/store-timeseries-numbers.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
+#include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 
 #include <memory>
 
@@ -64,7 +65,7 @@ namespace Data
 */
 
 class UIRuntimeInfo;
-class Study final : public Yuni::NonCopyable<Study>, public IObject, public LayerData
+class Study: public Yuni::NonCopyable<Study>, public IObject, public LayerData
 {
 public:
     using Ptr = std::shared_ptr<Study>;
@@ -647,6 +648,7 @@ public:
     //@{
     //! Binding constraints
     BindingConstraintsRepository bindingConstraints;
+    BindingConstraintGroupRepository bindingConstraintsGroups;
     //@}
 
     //! \name Correlation matrices used by the prepro
@@ -755,7 +757,7 @@ protected:
     //! Load all correlation matrices
     bool internalLoadCorrelationMatrices(const StudyLoadOptions& options);
     //! Load all binding constraints
-    bool internalLoadBindingConstraints(const StudyLoadOptions& options);
+    virtual bool internalLoadBindingConstraints(const StudyLoadOptions& options);
     //! Load all set of areas and links
     bool internalLoadSets();
     //@}

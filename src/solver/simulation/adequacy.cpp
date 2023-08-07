@@ -161,7 +161,7 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->weekInTheYear = state.weekInTheYear = w;
         pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(
+        ::SIM_RenseignementProblemeHebdo(study,
           *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed
@@ -181,9 +181,6 @@ bool Adequacy::year(Progression::Task& progression,
                     double& conso = pProblemesHebdo[numSpace]
                                       ->ConsommationsAbattues[hw]
                                       .ConsommationAbattueDuPays[ar];
-                    double& conso2 = pProblemesHebdo[numSpace]
-                                       ->ConsommationsAbattuesRef[hw]
-                                       .ConsommationAbattueDuPays[ar];
                     double stratReserve
                       = area.reserves[Data::fhrStrategicReserve][hw + hourInTheYear];
                     assert(ar < state.resSpilled.width);
@@ -192,7 +189,6 @@ bool Adequacy::year(Progression::Task& progression,
                     if (conso < -stratReserve)
                     {
                         conso += stratReserve;
-                        conso2 += stratReserve;
                         state.resSpilled[ar][hw] = stratReserve;
                     }
                     else
@@ -201,7 +197,6 @@ bool Adequacy::year(Progression::Task& progression,
                         {
                             state.resSpilled[ar][hw] = -conso;
                             conso = 0.;
-                            conso2 = 0.;
                         }
                         else
                             state.resSpilled[ar][hw] = 0.;
@@ -211,8 +206,10 @@ bool Adequacy::year(Progression::Task& progression,
 
             try
             {
-                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace],
-                                             study.parameters.adqPatchParams);
+                OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
+                                             pProblemesHebdo[numSpace],
+                                             study.parameters.adqPatchParams,
+                                             *study.resultWriter);
 
                 computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
 

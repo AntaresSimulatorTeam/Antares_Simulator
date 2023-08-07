@@ -28,14 +28,12 @@
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
 
 #include "pi_constantes_externes.h"
 
-#include <math.h>
 #include <yuni/core/math.h>
 
 #define ZERO_POUR_LES_VARIABLES_FIXES 1.e-6

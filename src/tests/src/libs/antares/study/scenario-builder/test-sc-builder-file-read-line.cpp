@@ -133,8 +133,8 @@ struct Fixture
 
         auto bc = study->bindingConstraints.add("BC_1");
         bc->group("groupTest");
-        study->bindingConstraints.groupToTimeSeriesNumbers["groupTest"] = {};
-        study->bindingConstraints.resizeAllTimeseriesNumbers(study->parameters.nbYears);
+        auto group = study->bindingConstraintsGroups.add("groupTest");
+        study->bindingConstraintsGroups.resizeAllTimeseriesNumbers(study->parameters.nbYears);
         bc->RHSTimeSeries().resize(7, 1);
 
 		BOOST_CHECK(my_rule.reset());
@@ -164,12 +164,12 @@ struct Fixture
 // Tests section
 // ==================
 
-BOOST_FIXTURE_TEST_SUITE(s, Fixture)
+BOOST_AUTO_TEST_SUITE(s)
 
 // =================
 // Tests on Load
 // =================
-BOOST_AUTO_TEST_CASE(on_area2_and_on_year_18__load_TS_number_11_is_chosen__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_18__load_TS_number_11_is_chosen__reading_OK, Fixture)
 {
 	AreaName yearNumber = "18";
 	String tsNumber = "11";
@@ -185,7 +185,7 @@ BOOST_AUTO_TEST_CASE(on_area2_and_on_year_18__load_TS_number_11_is_chosen__readi
 // =================
 // Tests on Wind
 // =================
-BOOST_AUTO_TEST_CASE(on_area3_and_on_year_7__wind_TS_number_5_is_chosen__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_7__wind_TS_number_5_is_chosen__reading_OK, Fixture)
 {
 	AreaName yearNumber = "7";
 	String tsNumber = "5";
@@ -201,7 +201,7 @@ BOOST_AUTO_TEST_CASE(on_area3_and_on_year_7__wind_TS_number_5_is_chosen__reading
 // =================
 // Tests on Solar
 // =================
-BOOST_AUTO_TEST_CASE(on_area1_and_on_year_4__solar_TS_number_8_is_chosen__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_4__solar_TS_number_8_is_chosen__reading_OK, Fixture)
 {
 	AreaName yearNumber = "4";
 	String tsNumber = "8";
@@ -217,7 +217,7 @@ BOOST_AUTO_TEST_CASE(on_area1_and_on_year_4__solar_TS_number_8_is_chosen__readin
 // =================
 // Tests on Hydro
 // =================
-BOOST_AUTO_TEST_CASE(on_area2_and_on_year_15__solar_TS_number_3_is_chosen__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_15__solar_TS_number_3_is_chosen__reading_OK, Fixture)
 {
 	AreaName yearNumber = "15";
 	String tsNumber = "3";
@@ -234,7 +234,7 @@ BOOST_AUTO_TEST_CASE(on_area2_and_on_year_15__solar_TS_number_3_is_chosen__readi
 // ===========================
 // Tests on Thermal clusters
 // ===========================
-BOOST_AUTO_TEST_CASE(on_th_cluster11_of_area1_and_on_year_6__solar_TS_number_3_is_chosen__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_th_cluster11_of_area1_and_on_year_6__solar_TS_number_3_is_chosen__reading_OK, Fixture)
 {
 	AreaName yearNumber = "6";
 	String tsNumber = "3";
@@ -247,7 +247,7 @@ BOOST_AUTO_TEST_CASE(on_th_cluster11_of_area1_and_on_year_6__solar_TS_number_3_i
 	BOOST_CHECK_EQUAL(thCluster_11->series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
-BOOST_AUTO_TEST_CASE(on_th_cluster12_of_area1_and_on_year_13__solar_TS_number_5_is_chosen__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_th_cluster12_of_area1_and_on_year_13__solar_TS_number_5_is_chosen__reading_OK, Fixture)
 {
 	AreaName yearNumber = "13";
 	String tsNumber = "5";
@@ -260,7 +260,7 @@ BOOST_AUTO_TEST_CASE(on_th_cluster12_of_area1_and_on_year_13__solar_TS_number_5_
 	BOOST_CHECK_EQUAL(thCluster_12->series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
-BOOST_AUTO_TEST_CASE(on_th_cluster31_of_area3_and_on_year_10__solar_TS_number_7_is_chosen__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_th_cluster31_of_area3_and_on_year_10__solar_TS_number_7_is_chosen__reading_OK, Fixture)
 {
 	AreaName yearNumber = "10";
 	String tsNumber = "7";
@@ -277,7 +277,7 @@ BOOST_AUTO_TEST_CASE(on_th_cluster31_of_area3_and_on_year_10__solar_TS_number_7_
 // =============================
 // Tests on Renewable clusters
 // =============================
-BOOST_AUTO_TEST_CASE(on_rn_cluster21_of_area2_and_on_year_16__solar_TS_number_8_is_chosen__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_rn_cluster21_of_area2_and_on_year_16__solar_TS_number_8_is_chosen__reading_OK, Fixture)
 {
 	study->parameters.renewableGeneration.toClusters();
 
@@ -292,7 +292,7 @@ BOOST_AUTO_TEST_CASE(on_rn_cluster21_of_area2_and_on_year_16__solar_TS_number_8_
 	BOOST_CHECK_EQUAL(rnCluster_21->series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
-BOOST_AUTO_TEST_CASE(on_rn_cluster32_of_area3_and_on_year_2__solar_TS_number_4_is_chosen__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_rn_cluster32_of_area3_and_on_year_2__solar_TS_number_4_is_chosen__reading_OK, Fixture)
 {
 	study->parameters.renewableGeneration.toClusters();
 
@@ -311,7 +311,7 @@ BOOST_AUTO_TEST_CASE(on_rn_cluster32_of_area3_and_on_year_2__solar_TS_number_4_i
 // ========================
 // Tests on Hydro levels
 // ========================
-BOOST_AUTO_TEST_CASE(on_area1_and_on_year_17__hydro_level_0_123_is_chosen__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_17__hydro_level_0_123_is_chosen__reading_OK, Fixture)
 {
 	AreaName yearNumber = "17";
 	String level = "0.123";
@@ -324,7 +324,7 @@ BOOST_AUTO_TEST_CASE(on_area1_and_on_year_17__hydro_level_0_123_is_chosen__readi
 	BOOST_CHECK_EQUAL(study->scenarioHydroLevels[area_1->index][yearNumber.to<uint>()], level.to<double>());
 }
 
-BOOST_AUTO_TEST_CASE(on_area2_and_on_year_9__hydro_level_1_5_is_chosen_level_lowered_to_1__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_9__hydro_level_1_5_is_chosen_level_lowered_to_1__reading_OK, Fixture)
 {
 	AreaName yearNumber = "9";
 	String level = "1.5";
@@ -337,7 +337,7 @@ BOOST_AUTO_TEST_CASE(on_area2_and_on_year_9__hydro_level_1_5_is_chosen_level_low
 	BOOST_CHECK_EQUAL(study->scenarioHydroLevels[area_2->index][yearNumber.to<uint>()], 1.);
 }
 
-BOOST_AUTO_TEST_CASE(on_area3_and_on_year_5__hydro_level_neg_3_5_is_chosen__level_raised_to_0__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_5__hydro_level_neg_3_5_is_chosen__level_raised_to_0__reading_OK, Fixture)
 {
 	AreaName yearNumber = "5";
 	String level = "-3.5";
@@ -353,7 +353,7 @@ BOOST_AUTO_TEST_CASE(on_area3_and_on_year_5__hydro_level_neg_3_5_is_chosen__leve
 // ======================
 // Tests on Links NTC
 // ======================
-BOOST_AUTO_TEST_CASE(on_link_area1_area2_and_on_year_0__ntc_TS_number_10_is_chosen__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_link_area1_area2_and_on_year_0__ntc_TS_number_10_is_chosen__reading_OK, Fixture)
 {	
 	AreaName yearNumber = "0";
 	String tsNumber = "10";
@@ -366,7 +366,7 @@ BOOST_AUTO_TEST_CASE(on_link_area1_area2_and_on_year_0__ntc_TS_number_10_is_chos
 	BOOST_CHECK_EQUAL(link_12->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
-BOOST_AUTO_TEST_CASE(on_link_area1_area3_and_on_year_15__ntc_TS_number_7_is_chosen__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_link_area1_area3_and_on_year_15__ntc_TS_number_7_is_chosen__reading_OK, Fixture)
 {
 	AreaName yearNumber = "15";
 	String tsNumber = "7";
@@ -379,7 +379,7 @@ BOOST_AUTO_TEST_CASE(on_link_area1_area3_and_on_year_15__ntc_TS_number_7_is_chos
 	BOOST_CHECK_EQUAL(link_13->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
-BOOST_AUTO_TEST_CASE(on_link_area2_area3_and_on_year_19__ntc_TS_number_6_is_chosen__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_link_area2_area3_and_on_year_19__ntc_TS_number_6_is_chosen__reading_OK, Fixture)
 {
 	AreaName yearNumber = "19";
 	String tsNumber = "6";
@@ -395,7 +395,7 @@ BOOST_AUTO_TEST_CASE(on_link_area2_area3_and_on_year_19__ntc_TS_number_6_is_chos
 // ========================
 // Tests on Binding Constraints
 // ========================
-BOOST_AUTO_TEST_CASE(binding_constraints_group_groupTest__Load_TS_4_for_year_3__reading_OK)
+BOOST_FIXTURE_TEST_CASE(binding_constraints_group_groupTest__Load_TS_4_for_year_3__reading_OK, Fixture)
 {
     auto yearNumber = 3;
     auto tsNumber = 4;
@@ -405,7 +405,7 @@ BOOST_AUTO_TEST_CASE(binding_constraints_group_groupTest__Load_TS_4_for_year_3__
     BOOST_CHECK_EQUAL(my_rule.binding_constraints.get("groupTest", yearNumber), tsNumber);
 
     BOOST_CHECK(my_rule.apply());
-    auto actual = study->bindingConstraints.groupToTimeSeriesNumbers["groupTest"].timeseriesNumbers[0][yearNumber];
+    auto actual = study->bindingConstraintsGroups["groupTest"]->timeSeriesNumbers().timeseriesNumbers[0][yearNumber];
     BOOST_CHECK_EQUAL(actual, tsNumber-1);
 }
 
