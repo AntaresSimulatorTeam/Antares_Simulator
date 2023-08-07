@@ -12,13 +12,13 @@ jobs:
   build:
     name: Build and analyze
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     env:
       BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
       - name: Install sonar-scanner and build-wrapper
         uses: SonarSource/sonarcloud-github-c-cpp@v1
 
     env:
-      SONAR_SCANNER_VERSION: 5.0.1.3006 # Find the latest version in the "Linux" link on this page:
       # https://sonarcloud.io/documentation/analysis/scan/sonarscanner/
       SONAR_SERVER_URL: "https://sonarcloud.io"
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
