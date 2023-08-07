@@ -6,9 +6,9 @@
 
 namespace Antares::Solver
 {
-void initializeSignalHandlers(std::weak_ptr<Antares::Data::Study> study)
+void initializeSignalHandlers(std::weak_ptr<IResultWriter> writer)
 {
-    setApplicationStudy(study);
+    setApplicationResultWriter(writer);
     std::signal(SIGTERM, &signalCtrl_term);
     std::signal(SIGINT, signalCtrl_int);
 }

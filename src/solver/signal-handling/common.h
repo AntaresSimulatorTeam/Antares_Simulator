@@ -8,8 +8,8 @@ void signalCtrl_int(int);
 
 namespace Antares::Solver {
 /*!
- * Defines the provided study as the unique study managed by the running application.
+ * Defines the provided writer as the unique writer managed by the running application.
  */
-void setApplicationStudy(std::weak_ptr<Antares::Data::Study> study);
+void setApplicationResultWriter(std::weak_ptr<IResultWriter> writer);
 
 }

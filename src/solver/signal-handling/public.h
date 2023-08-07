@@ -5,5 +5,5 @@
 
 namespace Antares::Solver
 {
-void initializeSignalHandlers(std::weak_ptr<Antares::Data::Study> study);
+void initializeSignalHandlers(std::weak_ptr<IResultWriter> writer);
 }
