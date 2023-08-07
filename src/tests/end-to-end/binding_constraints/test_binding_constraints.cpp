@@ -261,11 +261,11 @@ void SimulationHandler::create()
     BOOST_CHECK(study_);
     BOOST_CHECK(study_->initializeRuntimeInfos());
     addScratchpadToEachArea(study_);
-
+    
     simulation_ = std::make_shared<ISimulation<Economy>>(*study_,
                                                          settings_,
                                                          &nullDurationCollector_);
-
+    
     // Allocate arrays for time series
     SIM_AllocationTableaux(*study_);
 }

@@ -59,8 +59,7 @@ double calculateQuadraticCost(const PROBLEME_HEBDO* problemeHebdo, const AdqPatc
 
 void HourlyCSRProblem::setQuadraticCost()
 {
-    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    CorrespondanceVarNativesVarOptim
+    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
       = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: ENS for each area inside adq patch
@@ -75,7 +74,7 @@ void HourlyCSRProblem::setQuadraticCost()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
+            int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[area];
             if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
             {
                 problemeAResoudre_.CoutQuadratique[var] = calculateQuadraticCost(problemeHebdo_, 
@@ -91,8 +90,7 @@ void HourlyCSRProblem::setQuadraticCost()
 void HourlyCSRProblem::setLinearCost()
 {
     int var;
-    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    CorrespondanceVarNativesVarOptim
+    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
       = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: transmission cost for links between nodes of type 2 (area inside adequacy patch)
@@ -117,7 +115,7 @@ void HourlyCSRProblem::setLinearCost()
 
         const COUTS_DE_TRANSPORT& TransportCost = problemeHebdo_->CoutDeTransport[Interco];
         // flow
-        var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+        var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[Interco];
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
             problemeAResoudre_.CoutLineaire[var] = 0.0;
@@ -125,7 +123,7 @@ void HourlyCSRProblem::setLinearCost()
         }
         // direct / indirect flow
         var = CorrespondanceVarNativesVarOptim
-                ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+                .NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
             if (!TransportCost.IntercoGereeAvecDesCouts)
@@ -137,7 +135,7 @@ void HourlyCSRProblem::setLinearCost()
         }
 
         var = CorrespondanceVarNativesVarOptim
-                ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+                .NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
             if (!TransportCost.IntercoGereeAvecDesCouts)
