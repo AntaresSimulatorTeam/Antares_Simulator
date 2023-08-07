@@ -41,8 +41,7 @@ using namespace Yuni;
 void HourlyCSRProblem::setBoundsOnENS()
 {
     double* AdresseDuResultat;
-    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    CorrespondanceVarNativesVarOptim
+    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
       = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: ENS for each area inside adq patch
@@ -51,7 +50,7 @@ void HourlyCSRProblem::setBoundsOnENS()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
+            int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[area];
 
             problemeAResoudre_.Xmin[var] = -belowThisThresholdSetToZero;
             problemeAResoudre_.Xmax[var]
@@ -75,7 +74,7 @@ void HourlyCSRProblem::setBoundsOnENS()
 
 void HourlyCSRProblem::setBoundsOnSpilledEnergy()
 {
-    const auto* CorrespondanceVarNativesVarOptim
+    const auto& CorrespondanceVarNativesVarOptim
       = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: Spilled Energy for each area inside adq patch
@@ -84,7 +83,7 @@ void HourlyCSRProblem::setBoundsOnSpilledEnergy()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[area];
+            int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillanceNegative[area];
 
             problemeAResoudre_.Xmin[var] = -belowThisThresholdSetToZero;
             problemeAResoudre_.Xmax[var] = LINFINI_ANTARES;
@@ -106,7 +105,7 @@ void HourlyCSRProblem::setBoundsOnSpilledEnergy()
 
 void HourlyCSRProblem::setBoundsOnFlows()
 {
-    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
       = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
     std::vector<double>& Xmin = problemeAResoudre_.Xmin;
     std::vector<double>& Xmax = problemeAResoudre_.Xmax;
@@ -127,7 +126,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
         }
 
         // flow
-        int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+        int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[Interco];
         Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco] + belowThisThresholdSetToZero;
         Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco]) - belowThisThresholdSetToZero;
         problemeAResoudre_.X[var] = ValeursDeNTC.ValeurDuFlux[Interco];
@@ -155,7 +154,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
 
         // direct / indirect flow
         var = CorrespondanceVarNativesVarOptim
-                ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+                .NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
 
         Xmin[var] = -belowThisThresholdSetToZero;
         Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco] + belowThisThresholdSetToZero;
@@ -169,7 +168,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
                      << problemeAResoudre_.Xmax[var];
 
         var = CorrespondanceVarNativesVarOptim
-                ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+                .NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
 
         Xmin[var] = -belowThisThresholdSetToZero;
         Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco] + belowThisThresholdSetToZero;
