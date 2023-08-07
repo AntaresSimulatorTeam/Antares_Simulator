@@ -11,6 +11,8 @@
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/version.h>
 
+#include "signal-handling/public.h"
+
 #include "misc/system-memory.h"
 #include "utils/ortools_utils.h"
 #include "../config.h"
@@ -127,8 +129,10 @@ void Application::prepare(int argc, char* argv[])
     // Allocate a study
     pStudy = std::make_shared<Antares::Data::Study>(true /* for the solver */);
 
+    // Initialize signal handlers for application study
+    Antares::Solver::initializeSignalHandlers(pStudy);
+
     // Setting global variables for backward compatibility
-    Data::Study::Current::Set(pStudy);
     pParameters = &(pStudy->parameters);
 
     // Loading the study

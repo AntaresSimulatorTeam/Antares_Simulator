@@ -137,9 +137,6 @@ int main(int argc, char** argv)
     // locale
     InitializeDefaultLocale();
 
-    // Initialize signal handler
-    Antares::Solver::initializeSignalHandlers();
-
     // Getting real UTF8 arguments
     argv = AntaresGetUTF8Arguments(argc, argv);
 

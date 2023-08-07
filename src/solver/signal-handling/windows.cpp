@@ -21,8 +21,9 @@ BOOL WINAPI ConsoleHandler(DWORD dwType)
 
 namespace Antares::Solver
 {
-void initializeSignalHandlers()
+void initializeSignalHandlers(std::weak_ptr<Antares::Data::Study> study)
 {
+    setApplicationStudy(study);
     SetConsoleCtrlHandler((PHANDLER_ROUTINE)ConsoleHandler, TRUE);
 }
 } // namespace Antares::Solver
