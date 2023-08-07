@@ -9,5 +9,5 @@ void WriteCommandLineIntoLogs(int argc, char** argv)
       if (arg + 1 != argc)
           buffer << " ";
   }
-  Antares::logs.info() << "  :: command = " << buffer.str();
+  Antares::logs.info() << "  :: command: " << buffer.str();
 }
