@@ -1,5 +1,4 @@
 #include <memory>
-#include <antares/logs.h>
 #include <yuni/io/file.h> // Yuni::IO::File::LoadFromFile
 
 #include "zip_writer.h"

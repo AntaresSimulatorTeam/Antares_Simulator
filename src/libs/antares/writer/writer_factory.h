@@ -3,10 +3,6 @@
 #include <yuni/core/string.h>
 #include <yuni/job/queue/service.h>
 
-#include <antares/study/fwd.h>
-#include <antares/benchmarking.h> // Timer
-
-#include <antares/writer/i_writer.h>
 #include "immediate_file_writer.h"
 #include "zip_writer.h"
 

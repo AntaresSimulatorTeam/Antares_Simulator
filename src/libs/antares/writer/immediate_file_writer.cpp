@@ -1,10 +1,6 @@
 #include <yuni/core/string.h>
 #include <yuni/io/file.h>
 
-#include <antares/logs.h>
-#include <antares/io/file.h> // IOFileSetContent
-#include <yuni/io/file.h>    // Yuni::IO::File::LoadFromFile
-
 #include "immediate_file_writer.h"
 
 // Create directory hierarchy (incl. root)

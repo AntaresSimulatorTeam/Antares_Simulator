@@ -1,5 +1,5 @@
 #pragma once
-#include <antares/writer/i_writer.h>
+#include "i_writer.h"
 
 #include <yuni/job/queue/service.h>
 

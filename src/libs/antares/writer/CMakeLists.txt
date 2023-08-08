@@ -19,12 +19,17 @@ add_library(result_writer
         zip_writer.cpp
         zip_writer.h)
 
-target_include_directories(result_writer PUBLIC
-        ${CMAKE_SOURCE_DIR}/solver/writer)
+target_include_directories(result_writer
+        PRIVATE
+        ${CMAKE_SOURCE_DIR}/ext/yuni/src
+)
 
 target_link_libraries(result_writer
         PRIVATE
-        libantares-core
-        MINIZIP::minizip)
+        MINIZIP::minizip
+        logs
+        inifile
+        benchmarking
+)
 
 

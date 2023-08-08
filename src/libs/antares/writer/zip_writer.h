@@ -3,13 +3,10 @@
 #include <mutex>
 #include <string>
 
-#include <antares/benchmarking.h> // Timer
-
 #include <yuni/job/queue/service.h>
 #include <yuni/job/job.h>
 #include <yuni/core/string.h>
-
-#include <antares/writer/i_writer.h>
+#include <antares/benchmarking/info_collectors.h>
 
 namespace Antares
 {
