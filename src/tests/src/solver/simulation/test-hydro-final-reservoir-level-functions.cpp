@@ -63,18 +63,15 @@ struct Fixture
         area_2->hydro.initializeReservoirLevelDate = 0;
 
         // Initialize reservoir capacity
-        auto& reservoirCapacityArea1 = area_1->hydro.reservoirCapacity;
-        auto& reservoirCapacityArea2 = area_2->hydro.reservoirCapacity;
-
-        reservoirCapacityArea1 = 340.;
-        reservoirCapacityArea2 = 300.;
+        area_1->hydro.reservoirCapacity = 340.;
+        area_2->hydro.reservoirCapacity = 300.;
 
         // Initialize reservoir max and min levels, but just for the last day in year
         auto& reservoirLevelArea1 = area_1->hydro.reservoirLevel;
         auto& reservoirLevelArea2 = area_2->hydro.reservoirLevel;
 
-        reservoirLevelArea1.reset(3, DAYS_PER_YEAR, true);
-        reservoirLevelArea2.reset(3, DAYS_PER_YEAR, true);
+        reservoirLevelArea1.resize(3, DAYS_PER_YEAR, true);
+        reservoirLevelArea2.resize(3, DAYS_PER_YEAR, true);
 
         auto& reservoirLevelArea1Min
           = reservoirLevelArea1[Data::PartHydro::minimum][DAYS_PER_YEAR - 1];
