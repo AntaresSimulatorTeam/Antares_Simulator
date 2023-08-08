@@ -65,11 +65,11 @@ double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
         return Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
 }
 
-static bool OptimisationHebdo(const OptimizationOptions& options,
-                              PROBLEME_HEBDO* problemeHebdo,
-                              const AdqPatchParams& adqPatchParams,
-                              Solver::IResultWriter& writer,
-                              int optimizationNumber)
+static bool runWeeklyOptimization(const OptimizationOptions& options,
+                                  PROBLEME_HEBDO* problemeHebdo,
+                                  const AdqPatchParams& adqPatchParams,
+                                  Solver::IResultWriter& writer,
+                                  int optimizationNumber)
 {
     const int NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
@@ -122,23 +122,19 @@ static bool OptimisationHebdo(const OptimizationOptions& options,
               optimalSolutionCost, optPeriodStringGenerator, optimizationNumber, writer);
         }
     }
-
-    if (optimizationNumber == PREMIERE_OPTIMISATION)
-    {
-        if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
-        {
-            OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(problemeHebdo);
-        }
-        else
-        {
-            OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(problemeHebdo);
-        }
-
-        if (!problemeHebdo->Expansion)
-            return OptimisationHebdo(
-              options, problemeHebdo, adqPatchParams, writer, DEUXIEME_OPTIMISATION);
-    }
     return true;
+}
+
+static void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
+{
+    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+    {
+        OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(problemeHebdo);
+    }
+    else
+    {
+        OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(problemeHebdo);
+    }
 }
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
@@ -146,7 +142,6 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               const AdqPatchParams& adqPatchParams,
                               Solver::IResultWriter& writer)
 {
-    int optimizationNumber = PREMIERE_OPTIMISATION;
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
     {
         problemeHebdo->NombreDePasDeTempsPourUneOptimisation
@@ -167,5 +162,15 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
 
     OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(problemeHebdo, writer);
 
-    return OptimisationHebdo(options, problemeHebdo, adqPatchParams, writer, optimizationNumber);
+    bool ret = runWeeklyOptimization(
+      options, problemeHebdo, adqPatchParams, writer, PREMIERE_OPTIMISATION);
+
+    if (ret && !problemeHebdo->Expansion)
+    {
+        // We need to adjust some stuff before running the 2nd optimisation
+        runThermalHeuristic(problemeHebdo);
+        return runWeeklyOptimization(
+          options, problemeHebdo, adqPatchParams, writer, DEUXIEME_OPTIMISATION);
+    }
+    return ret;
 }
