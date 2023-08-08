@@ -58,16 +58,9 @@ struct Fixture
         area_1->hydro.useWaterValue = false;
         area_2->hydro.useWaterValue = false;
 
-        // For extracting how many areas are in area map
-        AreaList& areas = study->areas;
-        Area::Map& areasMap = areas.areas;
-
         // Level date must be 0, see preCheckStartAndEndSim function
-        auto& initializeReservoirLevelDateArea1 = area_1->hydro.initializeReservoirLevelDate;
-        auto& initializeReservoirLevelDateArea2 = area_2->hydro.initializeReservoirLevelDate;
-
-        initializeReservoirLevelDateArea1 = 0;
-        initializeReservoirLevelDateArea2 = 0;
+        area_1->hydro.initializeReservoirLevelDate = 0;
+        area_2->hydro.initializeReservoirLevelDate = 0;
 
         // Initialize reservoir capacity
         auto& reservoirCapacityArea1 = area_1->hydro.reservoirCapacity;
@@ -105,7 +98,7 @@ struct Fixture
 
         // Initializing dimension of matrices
         uint width = nbYears;
-        uint height = areasMap.size();
+        uint height = study->areas.size();
 
         // Setting matrices dimension Scenario Builder Initial and Finals levels matrices
         scenarioInitialHydroLevels.resize(width, height);
