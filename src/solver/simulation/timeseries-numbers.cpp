@@ -37,6 +37,7 @@
 #include "antares/study/fwd.h"
 #include "timeseries-numbers.h"
 #include "ITimeSeriesNumbersWriter.h"
+#include "BindingConstraintsTimeSeriesNumbersWriter.h"
 
 using namespace Yuni;
 using namespace Antares::Data;
@@ -715,15 +716,14 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
     for (auto& group: study.bindingConstraintsGroups)
     {
         const auto nbTimeSeries = group->numberOfTimeseries();
-        auto& value = group->timeSeriesNumbers().timeseriesNumbers[0][year];
+        auto& value = group->timeseriesNumbers[0][year];
         if (nbTimeSeries == 1)
         {
             value = 0;
         }
         else
         {
-            value
-              = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+            value  = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
     }
 }
@@ -969,7 +969,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
     return true;
 }
 
-void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study, Simulation::ITimeSeriesNumbersWriter& writer)
+void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study)
 {
     using namespace Antares::Data;
 
@@ -983,7 +983,9 @@ void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study, Simu
         study.storeTimeSeriesNumbers<TimeSeries::timeSeriesThermal>();
         study.storeTimeSeriesNumbers<TimeSeries::timeSeriesRenewable>();
         study.storeTimeSeriesNumbers<TimeSeries::timeSeriesTransmissionCapacities>();
-        writer.write(study.bindingConstraintsGroups);
+
+        Simulation::BindingConstraintsTimeSeriesNumbersWriter ts_writer(study.resultWriter);
+        ts_writer.write(study.bindingConstraintsGroups);
     }
 }
 

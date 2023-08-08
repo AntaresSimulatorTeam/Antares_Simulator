@@ -307,8 +307,6 @@ set(SRC_STUDY_BINDING_CONSTRAINT
 	study/binding_constraint/BindingConstraintsRepository.h
 	study/binding_constraint/BindingConstraintsRepository.hxx
 	study/binding_constraint/BindingConstraintsRepository.cpp
-	study/binding_constraint/BindingConstraintTimeSeriesNumbers.cpp
-	study/binding_constraint/BindingConstraintTimeSeriesNumbers.h
 	study/binding_constraint/BindingConstraintLoader.cpp
 	study/binding_constraint/BindingConstraintLoader.h
 	study/binding_constraint/BindingConstraintSaver.cpp

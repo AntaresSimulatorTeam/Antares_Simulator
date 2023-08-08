@@ -137,7 +137,7 @@ public:
     /*!
     ** \brief Convert all weekly constraints into daily ones
     */
-    void mutateWeeklyConstraintsIntoDailyOnes();
+    void changeConstraintsWeeklyToDaily();
 
     /*!
     ** \brief Get the memory usage
