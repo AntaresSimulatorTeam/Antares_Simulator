@@ -41,7 +41,7 @@
 #include "solver.utils.h"
 #include "../hydro/management/management.h"
 
-#include <writer_factory.h>
+#include <antares/writer/writer_factory.h>
 
 namespace Antares::Solver::Simulation
 {

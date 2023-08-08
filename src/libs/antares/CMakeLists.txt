@@ -1,6 +1,8 @@
 
 OMESSAGE("Antares Core library")
 
+add_subdirectory(writer)
+
 set(SRC_MEMORY
 	memory/memory.h
 	memory/memory.hxx
@@ -544,7 +546,6 @@ target_include_directories(libantares-core-checks
 			${CMAKE_SOURCE_DIR}/libs/antares/study
             ${CMAKE_SOURCE_DIR}/libs/antares/logs
 			${CMAKE_SOURCE_DIR}/libs
-            ${CMAKE_SOURCE_DIR}/solver/writer
 )
 
 target_link_libraries(libantares-core-checks
@@ -554,9 +555,7 @@ target_link_libraries(libantares-core-checks
 add_library(libantares-core
 	antares.h
 	${SRC}
-	${SRC_LOGS}
 	${SRC_MEMORY}
-	${SRC_JIT}
 	${SRC_MATRIX}
 	${SRC_BENCHMARKING}
 	${SRC_AREAS}
@@ -588,7 +587,6 @@ target_include_directories(libantares-core
 		PUBLIC
 			${CMAKE_SOURCE_DIR}/libs
 			${CMAKE_SOURCE_DIR}/libs/antares/logs
-            ${CMAKE_SOURCE_DIR}/solver/writer
 		)
 
 target_link_libraries(libantares-core

@@ -33,7 +33,7 @@
 #include <yuni/core/noncopyable.h>
 #include <yuni/job/queue/service.h>
 
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 
 #include "../antares.h"
 #include "../object/object.h"

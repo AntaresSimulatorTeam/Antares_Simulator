@@ -34,7 +34,7 @@
 #include <antares/fatal-error.h>
 #include <antares/logs.h>
 #include <antares/study.h>
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 #include "../misc/cholesky.h"
 #include "../misc/matrix-dp-make.h"
 

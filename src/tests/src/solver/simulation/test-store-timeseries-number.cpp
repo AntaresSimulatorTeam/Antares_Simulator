@@ -7,9 +7,9 @@
 
 #include <boost/test/included/unit_test.hpp>
 #include <filesystem>
-#include "antares/study.h"
-#include "immediate_file_writer.h"
+#include <fstream>
 #include "timeseries-numbers.h"
+#include <antares/writer/immediate_file_writer.h>
 #include "BindingConstraintsTimeSeriesNumbersWriter.h"
 #include "utils.h"
 

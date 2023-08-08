@@ -3,7 +3,7 @@
 #include <string>
 #include <yuni/core/string.h>
 
-#include "i_writer.h"
+#include <antares/writer/i_writer.h>
 
 namespace Antares
 {

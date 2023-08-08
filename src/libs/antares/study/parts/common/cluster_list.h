@@ -5,7 +5,7 @@
 #include "../../../logs.h"
 #include "../../fwd.h"
 
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 
 #include <vector>
 #include <memory>

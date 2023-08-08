@@ -29,6 +29,7 @@
 #include "../simulation/adequacy_patch_runtime_data.h"
 
 #include "../solver/optimisation/opt_fonctions.h"
+#include "sim_structure_probleme_economique.h"
 
 namespace
 {

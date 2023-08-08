@@ -6,7 +6,7 @@
 #include <antares/benchmarking.h>
 #include "simulation/simulation.h"
 
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 
 #include <yuni/core/string.h>
 

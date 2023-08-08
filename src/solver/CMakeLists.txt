@@ -8,7 +8,6 @@ endif(MSVC)
 
 
 add_subdirectory(infeasible-problem-analysis)
-add_subdirectory(writer)
 add_subdirectory(variable)
 add_subdirectory(hydro)
 add_subdirectory(simulation)

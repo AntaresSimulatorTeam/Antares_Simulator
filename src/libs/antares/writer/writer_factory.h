@@ -6,7 +6,7 @@
 #include <antares/study/fwd.h>
 #include <antares/benchmarking.h> // Timer
 
-#include "i_writer.h"
+#include <antares/writer/i_writer.h>
 #include "immediate_file_writer.h"
 #include "zip_writer.h"
 
