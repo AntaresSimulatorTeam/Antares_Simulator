@@ -3,6 +3,7 @@ add_executable(test_constraint test_constraint.cpp)
 target_link_libraries(test_constraint
         PRIVATE
         libantares-core
+        test_utils_unit
         Boost::unit_test_framework
         )
 		

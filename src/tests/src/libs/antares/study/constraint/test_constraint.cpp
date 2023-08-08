@@ -5,24 +5,16 @@
 #define WIN32_LEAN_AND_MEAN
 #define BOOST_TEST_MODULE binding_constraints
 
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <fstream>
 #include "antares/study/constraint.h"
 #include "antares/study/area/area.h"
 #include "antares/study.h"
 #include <filesystem>
+#include "../../../../utils/utils.h"
 
 using namespace Antares::Data;
 namespace fs = std::filesystem;
-
-fs::path generateAndCreateDirName()
-{
-    std::string dir = boost::unit_test::framework::current_test_case().p_name;
-    fs::path working_dir = fs::temp_directory_path() / dir;
-    fs::remove(working_dir);
-    fs::create_directories(working_dir);
-    return working_dir;
-}
 
 BOOST_AUTO_TEST_SUITE(BindingConstraintTests)
 
