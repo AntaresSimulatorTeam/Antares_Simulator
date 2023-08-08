@@ -51,13 +51,9 @@ wxString HydroMonthlyPower::columnCaption(int colIndx) const
 {
     switch (colIndx)
     {
-    case Data::PartHydro::genMaxP:
-        return wxT("  Generating Max Power  \n   (MW)   ");
-    case Data::PartHydro::genMaxE:
+    case Data::PartHydro::genMaxHours:
         return wxT("  Generating Max Energy  \n   (Hours at Pmax)   ");
-    case Data::PartHydro::pumpMaxP:
-        return wxT(" Pumping Max Power  \n   (MW)   ");
-    case Data::PartHydro::pumpMaxE:
+    case Data::PartHydro::pumpMaxHours:
         return wxT("  Pumping Max Energy \n   (Hours at Pmax)   ");
     default:
         return wxEmptyString;
@@ -102,7 +98,7 @@ void HydroMonthlyPower::internalAreaChanged(Antares::Data::Area* area)
     Data::PartHydro* pHydro = (area) ? &(area->hydro) : nullptr;
     Renderer::ARendererArea::internalAreaChanged(area);
     if (pHydro)
-        MatrixAncestorType::matrix(&pHydro->maxPower);
+        MatrixAncestorType::matrix(&pHydro->maxHours);
     else
         MatrixAncestorType::matrix(nullptr);
 }
@@ -113,28 +109,14 @@ IRenderer::CellStyle HydroMonthlyPower::cellStyle(int col, int row) const
     {
     case 0:
     {
-        double genMaxP = MatrixAncestorType::cellNumericValue(0, row);
-        if (genMaxP < 0.)
+        double genMaxE = MatrixAncestorType::cellNumericValue(0, row);
+        if (genMaxE < 0. || genMaxE > 24.)
             return IRenderer::cellStyleError;
         break;
     }
     case 1:
     {
-        double genMaxE = MatrixAncestorType::cellNumericValue(1, row);
-        if (genMaxE < 0. || genMaxE > 24.)
-            return IRenderer::cellStyleError;
-        break;
-    }
-    case 2:
-    {
-        double PumpMaxP = MatrixAncestorType::cellNumericValue(2, row);
-        if (PumpMaxP < 0.)
-            return IRenderer::cellStyleError;
-        break;
-    }
-    case 3:
-    {
-        double PumpMaxE = MatrixAncestorType::cellNumericValue(3, row);
+        double PumpMaxE = MatrixAncestorType::cellNumericValue(1, row);
         if (PumpMaxE < 0. || PumpMaxE > 24.)
             return IRenderer::cellStyleError;
         break;

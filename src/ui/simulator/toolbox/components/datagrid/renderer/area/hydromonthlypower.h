@@ -60,7 +60,7 @@ public:
 
     virtual int width() const
     {
-        return 4;
+        return 2;
     }
     virtual int height() const
     {
