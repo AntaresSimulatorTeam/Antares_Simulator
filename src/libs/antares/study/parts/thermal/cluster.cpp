@@ -146,7 +146,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
 
 Data::ThermalCluster::~ThermalCluster()
 {
-    delete[] productionCost;
     delete prepro;
     delete series;
 }
@@ -160,15 +159,6 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
 {
     // Note: In this method, only the data can be copied (and not the name or
     //   the ID for example)
-
-    // production cost, even if this variable should not be used
-    if (productionCost)
-    {
-        if (cluster.productionCost)
-            memcpy(productionCost, cluster.productionCost, HOURS_PER_YEAR * sizeof(double));
-        else
-            memset(productionCost, 0, HOURS_PER_YEAR * sizeof(double));
-    }
 
     // mustrun
     mustrun = cluster.mustrun;
@@ -512,12 +502,6 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
 
 void Data::ThermalCluster::reset()
 {
-    // production cost
-    // reminder: this variable should be considered as valid only when used from the
-    // solver
-    if (productionCost)
-        (void)::memset(productionCost, 0, HOURS_PER_YEAR * sizeof(double));
-
     Cluster::reset();
 
     mustrun = false;
@@ -816,7 +800,8 @@ double ThermalCluster::getOperatingCost(uint serieIndex, uint hourInTheYear) con
 {
     if (costgeneration == Data::setManually)
     {
-        return productionCost[hourInTheYear];
+        const auto* modCost = modulation[thermalModulationCost];
+        return marginalCost * modCost[hourInTheYear];
     }
     else
     {

@@ -38,7 +38,6 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
         uint prepoCnt = Math::Max(cluster.ecoInput.co2cost.width, cluster.ecoInput.fuelcost.width);
         u.requiredMemoryForInput += sizeof(ThermalCluster);
         u.requiredMemoryForInput += sizeof(void*);
-        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR * prepoCnt; // productionCost
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // PthetaInf
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR * prepoCnt; // marketBidCostPerHour
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR * prepoCnt; // marginalCostPerHour
@@ -134,29 +133,6 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
         // Special operations when not ran from the interface (aka solver)
         if (study.usedByTheSolver)
         {
-            if (not cluster->productionCost)
-                cluster->productionCost = new double[HOURS_PER_YEAR];
-
-            // alias to the production cost
-            double* prodCost = cluster->productionCost;
-            // alias to the marginal cost
-            double marginalCost = cluster->marginalCost;
-            // Production cost
-            auto& modulation = cluster->modulation[thermalModulationCost];
-            if (cluster->costgeneration == Data::setManually)
-            {
-                // alias to the marginal cost
-                for (uint h = 0; h != cluster->modulation.height; ++h)
-                    prodCost[h] = marginalCost * modulation[h];
-            }
-            else
-            {
-                const auto& marginalCostPerHour
-                  = cluster->costsTimeSeries[0].marginalCostTS;
-                for (uint h = 0; h != cluster->modulation.height; ++h)
-                    prodCost[h] = marginalCostPerHour[h] * modulation[h];
-            }
-
             if (not study.parameters.include.thermal.minStablePower)
                 cluster->minStablePower = 0.;
             if (not study.parameters.include.thermal.minUPTime)
