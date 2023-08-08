@@ -14,6 +14,8 @@
 #include "signal-handling/public.h"
 
 #include "misc/system-memory.h"
+#include "misc/write-command-line.h"
+
 #include "utils/ortools_utils.h"
 #include "../config.h"
 
@@ -117,17 +119,20 @@ void Application::prepare(int argc, char* argv[])
     logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR;
 #endif
     WriteHostInfoIntoLogs();
-    logs.info();
 
-    // Initialize the main structures for the simulation
-    // Logs
-    Resources::WriteRootFolderToLogs();
+    // Write command-line options into logs
+    // Incidentally, it also seems to contain the full path to the executable
+    logs.info();
+    WriteCommandLineIntoLogs(argc, argv);
+
     logs.info() << "  :: log filename: " << logs.logfile();
     // Temporary use a callback to count the number of errors and warnings
     logs.callback.connect(this, &Application::onLogMessage);
 
     // Allocate a study
     pStudy = std::make_shared<Antares::Data::Study>(true /* for the solver */);
+    //TODO: still necessary for emergency shutdown, to be removed
+    Antares::Data::Study::Current::Set(pStudy);
 
     // Setting global variables for backward compatibility
     pParameters = &(pStudy->parameters);

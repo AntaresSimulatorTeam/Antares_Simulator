@@ -74,11 +74,6 @@ void GetRootFolder(Yuni::String& out)
     out = RootFolder;
 }
 
-void WriteRootFolderToLogs()
-{
-    logs.info() << "  :: from " << RootFolder;
-}
-
 bool FindExampleFolder(Yuni::String& folder)
 {
     // Temporary string

@@ -6,8 +6,6 @@ using namespace Antares;
 
 namespace Antares::Solver {
 
-using Antares::Solver::IResultWriter;
-
 // weak_ptr because the lifetime must not be managed by this feature.
 // If the study lifetime ends before we receive a signal, we shoud just do
 // nothing when receiving the signal.
@@ -21,10 +19,8 @@ void setApplicationResultWriter(std::weak_ptr<IResultWriter> writer)
 }
 
 namespace {
-
-static void finalizeWrite() {
-    auto writer = Antares::Solver::APPLICATION_WRITER.lock();
-    if (writer) {
+void finalizeWrite() {
+    if (auto writer = Antares::Solver::APPLICATION_WRITER.lock()) {
         writer->finalize(true);
     } else {
         logs.warning() << "Could not finalize write: invalid writer";
