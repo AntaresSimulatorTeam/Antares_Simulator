@@ -17,7 +17,6 @@ target_include_directories(benchmarking
         PRIVATE
         ${CMAKE_SOURCE_DIR}/ext/yuni/src
         ${CMAKE_SOURCE_DIR}/libs
-        ${CMAKE_SOURCE_DIR}/solver/writer
         )
 
 target_link_libraries(benchmarking
