@@ -11,6 +11,8 @@
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/version.h>
 
+#include "signal-handling/public.h"
+
 #include "misc/system-memory.h"
 #include "utils/ortools_utils.h"
 #include "../config.h"
@@ -126,9 +128,10 @@ void Application::prepare(int argc, char* argv[])
 
     // Allocate a study
     pStudy = std::make_shared<Antares::Data::Study>(true /* for the solver */);
+    //TODO: still necessary for emergency shutdown, to be removed
+    Antares::Data::Study::Current::Set(pStudy);
 
     // Setting global variables for backward compatibility
-    Data::Study::Current::Set(pStudy);
     pParameters = &(pStudy->parameters);
 
     // Loading the study
@@ -337,6 +340,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Initialize the result writer
     study.prepareWriter(&pDurationCollector);
+    Antares::Solver::initializeSignalHandlers(study.resultWriter);
 
     // Save about-the-study files (comments, notes, etc.)
     study.saveAboutTheStudy();
@@ -459,8 +463,9 @@ Application::~Application()
         logs.info() << LOG_UI_SOLVER_DONE;
 
         // Copy the log file
-        if (!pStudy->parameters.noOutput)
+        if (!pStudy->parameters.noOutput) {
             pStudy->importLogsToOutputFolder();
+        }
 
         // release all reference to the current study held by this class
         pStudy->clear();
