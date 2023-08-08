@@ -155,16 +155,15 @@ bool FinalLevelInflowsModifier::isActive()
 
 bool FinalLevelInflowsModifier::makeChecks()
 {
-    // pre-check 0 -> simulation must end on day 365 and reservoir level must be
+    // Simulation must end on day 365 and reservoir level must be
     // initiated in January
     bool checksOk = preCheckStartAndEndSim();
 
-    // pre-check 1 -> reservoir_levelDay_365 – reservoir_levelDay_1 ≤
-    // yearly_inflows
+    // Reservoir_levelDay_365 – reservoir_levelDay_1 ≤ yearly_inflows
     double totalInflows = calculateTotalInflows();
     checksOk = preCheckYearlyInflow(totalInflows) && checksOk;
 
-    // pre-check 2 -> final reservoir level set by the user is within the
+    // Final reservoir level set by the user is within the
     // rule curves for the final day
     checksOk = preCheckRuleCurves() && checksOk;
 
