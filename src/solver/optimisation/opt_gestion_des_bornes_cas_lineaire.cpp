@@ -82,7 +82,7 @@ double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO* problemeHebdo, int Pays,
 }
 
 void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
-                                  AdqPatchParams& adqPatchParams,
+                                  const AdqPatchParams& adqPatchParams,
                                   const int PremierPdtDeLIntervalle,
                                   const int DernierPdtDeLIntervalle,
                                   const int optimizationNumber)
@@ -175,29 +175,32 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                 int varInjection = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
                                      .InjectionVariable[clusterGlobalIndex];
                 Xmin[varInjection] = 0.;
-                Xmax[varInjection]
-                  = storage.injectionNominalCapacity * storage.series->maxInjectionModulation[hourInTheYear];
+                Xmax[varInjection] = storage.injectionNominalCapacity
+                                     * storage.series->maxInjectionModulation[hourInTheYear];
                 AddressForVars[varInjection] = &STSResult.injection[storageIndex];
 
                 // 2. Withdrwal
                 int varWithdrawal = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
                                       .WithdrawalVariable[clusterGlobalIndex];
                 Xmin[varWithdrawal] = 0.;
-                Xmax[varWithdrawal]
-                  = storage.withdrawalNominalCapacity * storage.series->maxWithdrawalModulation[hourInTheYear];
+                Xmax[varWithdrawal] = storage.withdrawalNominalCapacity
+                                      * storage.series->maxWithdrawalModulation[hourInTheYear];
                 AddressForVars[varWithdrawal] = &STSResult.withdrawal[storageIndex];
 
                 // 3. Levels
-                int varLevel
-                  = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
+                int varLevel = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
+                                 .LevelVariable[clusterGlobalIndex];
                 if (pdtHebdo == DernierPdtDeLIntervalle - 1 && storage.initialLevel.has_value())
                 {
-                    Xmin[varLevel] = Xmax[varLevel] = storage.reservoirCapacity * storage.initialLevel.value();
+                    Xmin[varLevel] = Xmax[varLevel]
+                      = storage.reservoirCapacity * storage.initialLevel.value();
                 }
                 else
                 {
-                    Xmin[varLevel] = storage.reservoirCapacity * storage.series->lowerRuleCurve[hourInTheYear];
-                    Xmax[varLevel] = storage.reservoirCapacity * storage.series->upperRuleCurve[hourInTheYear];
+                    Xmin[varLevel]
+                      = storage.reservoirCapacity * storage.series->lowerRuleCurve[hourInTheYear];
+                    Xmax[varLevel]
+                      = storage.reservoirCapacity * storage.series->upperRuleCurve[hourInTheYear];
                 }
                 AddressForVars[varLevel] = &STSResult.level[storageIndex];
 
@@ -208,7 +211,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
 }
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
-                                                            AdqPatchParams& adqPatchParams,
+                                                            const AdqPatchParams& adqPatchParams,
                                                             const int PremierPdtDeLIntervalle,
                                                             const int DernierPdtDeLIntervalle,
                                                             const int optimizationNumber)
@@ -241,7 +244,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
             const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
 
-            AdequacyPatch::setNTCbounds(Xmax[var], Xmin[var], ValeursDeNTC, interco, problemeHebdo, adqPatchParams);
+            AdequacyPatch::setNTCbounds(
+              Xmax[var], Xmin[var], ValeursDeNTC, interco, problemeHebdo, adqPatchParams);
 
             if (Math::Infinite(Xmax[var]) == 1)
             {
@@ -455,10 +459,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
         }
     }
 
-    setBoundsForUnsuppliedEnergy(problemeHebdo, 
-                                 adqPatchParams, 
-                                 PremierPdtDeLIntervalle, 
-                                 DernierPdtDeLIntervalle, 
+    setBoundsForUnsuppliedEnergy(problemeHebdo,
+                                 adqPatchParams,
+                                 PremierPdtDeLIntervalle,
+                                 DernierPdtDeLIntervalle,
                                  optimizationNumber);
 
     setBoundsForShortTermStorage(problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);

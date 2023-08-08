@@ -36,13 +36,13 @@ using namespace Antares;
 using namespace Yuni;
 using Antares::Solver::Optimization::OptimizationOptions;
 
-namespace {
-
+namespace
+{
 void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
-        double optimalSolutionCost,
-        std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
-        int optimizationNumber,
-        Solver::IResultWriter& writer)
+  double optimalSolutionCost,
+  std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
+  int optimizationNumber,
+  Solver::IResultWriter& writer)
 {
     Yuni::Clob buffer;
     auto filename = createCriterionFilename(optPeriodStringGenerator, optimizationNumber);
@@ -53,8 +53,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
     writer.addEntryFromBuffer(filename, buffer);
 }
 
-}
-
+} // namespace
 
 double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
                                    const int NumeroDeLIntervalle,
@@ -66,35 +65,15 @@ double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
         return Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
 }
 
-bool OPT_OptimisationLineaire(const OptimizationOptions& options, PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adqPatchParams,
-                              Solver::IResultWriter& writer)
+static bool OptimisationHebdo(const OptimizationOptions& options,
+                              PROBLEME_HEBDO* problemeHebdo,
+                              const AdqPatchParams& adqPatchParams,
+                              Solver::IResultWriter& writer,
+                              int optimizationNumber)
 {
-    int optimizationNumber = PREMIERE_OPTIMISATION;
-
-    if (!problemeHebdo->OptimisationAuPasHebdomadaire)
-    {
-        problemeHebdo->NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsDUneJournee;
-    }
-    else
-    {
-        problemeHebdo->NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTemps;
-    }
-
-    int NombreDePasDeTempsPourUneOptimisation
+    const int NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-    OPT_NumeroDeJourDuPasDeTemps(problemeHebdo);
-
-    OPT_NumeroDIntervalleOptimiseDuPasDeTemps(problemeHebdo);
-
-    OPT_RestaurerLesDonnees(problemeHebdo);
-
-    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(problemeHebdo);
-
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(problemeHebdo, writer);
-
-OptimisationHebdo:
     int DernierPdtDeLIntervalle;
     for (uint pdtHebdo = 0, numeroDeLIntervalle = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps;
          pdtHebdo = DernierPdtDeLIntervalle, numeroDeLIntervalle++)
@@ -127,7 +106,11 @@ OptimisationHebdo:
                                     problemeHebdo->year);
 
         if (!OPT_AppelDuSimplexe(options,
-              problemeHebdo, numeroDeLIntervalle, optimizationNumber, optPeriodStringGenerator, writer))
+                                 problemeHebdo,
+                                 numeroDeLIntervalle,
+                                 optimizationNumber,
+                                 optPeriodStringGenerator,
+                                 writer))
             return false;
 
         if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT
@@ -151,11 +134,38 @@ OptimisationHebdo:
             OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(problemeHebdo);
         }
 
-        optimizationNumber = DEUXIEME_OPTIMISATION;
-
         if (!problemeHebdo->Expansion)
-            goto OptimisationHebdo;
+            return OptimisationHebdo(
+              options, problemeHebdo, adqPatchParams, writer, DEUXIEME_OPTIMISATION);
+    }
+    return true;
+}
+
+bool OPT_OptimisationLineaire(const OptimizationOptions& options,
+                              PROBLEME_HEBDO* problemeHebdo,
+                              const AdqPatchParams& adqPatchParams,
+                              Solver::IResultWriter& writer)
+{
+    int optimizationNumber = PREMIERE_OPTIMISATION;
+    if (!problemeHebdo->OptimisationAuPasHebdomadaire)
+    {
+        problemeHebdo->NombreDePasDeTempsPourUneOptimisation
+          = problemeHebdo->NombreDePasDeTempsDUneJournee;
+    }
+    else
+    {
+        problemeHebdo->NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTemps;
     }
 
-    return true;
+    OPT_NumeroDeJourDuPasDeTemps(problemeHebdo);
+
+    OPT_NumeroDIntervalleOptimiseDuPasDeTemps(problemeHebdo);
+
+    OPT_RestaurerLesDonnees(problemeHebdo);
+
+    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(problemeHebdo);
+
+    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(problemeHebdo, writer);
+
+    return OptimisationHebdo(options, problemeHebdo, adqPatchParams, writer, optimizationNumber);
 }
