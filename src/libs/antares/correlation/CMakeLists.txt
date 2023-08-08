@@ -15,7 +15,6 @@ target_link_libraries(correlation
 
 target_include_directories(correlation
         PRIVATE
-        ${CMAKE_SOURCE_DIR}/ext/yuni/src
         ${CMAKE_SOURCE_DIR}/libs
         ${CMAKE_SOURCE_DIR}/libs/solver
         )

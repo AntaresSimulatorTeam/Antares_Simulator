@@ -515,11 +515,12 @@ add_library( libantares-core-calendar
 	date/date.h
 	date/date.cpp
 )
-#TODO : needed for include yuni : why yuni must be include first ???
-#TODO : needed for include
+
+target_link_libraries(libantares-core-calendar
+		PRIVATE yuni-static-core)
+
 target_include_directories(libantares-core-calendar
 		PRIVATE
-			${CMAKE_SOURCE_DIR}/ext/yuni/src/
 			${CMAKE_SOURCE_DIR}/libs
 		)
 
@@ -527,9 +528,11 @@ add_library(libantares-core-exceptions
     ${SRC_EXCEPTION}
 )
 
+target_link_libraries(libantares-core-exceptions
+	PRIVATE yuni-static-core)
+
 target_include_directories(libantares-core-exceptions
 		PRIVATE
-			${CMAKE_SOURCE_DIR}/ext/yuni/src/
 			${CMAKE_SOURCE_DIR}/libs
 		)
 
@@ -539,12 +542,15 @@ add_library(libantares-core-checks
 
 target_include_directories(libantares-core-checks
 		PRIVATE
-			${CMAKE_SOURCE_DIR}/ext/yuni/src/
 			${CMAKE_SOURCE_DIR}/libs/antares/study
             ${CMAKE_SOURCE_DIR}/libs/antares/logs
 			${CMAKE_SOURCE_DIR}/libs
             ${CMAKE_SOURCE_DIR}/solver/writer
 )
+
+target_link_libraries(libantares-core-checks
+	PRIVATE
+		yuni-static-core)
 
 add_library(libantares-core
 	antares.h
@@ -581,7 +587,6 @@ add_library(libantares-core
 #TODO : needed for include
 target_include_directories(libantares-core
 		PUBLIC
-			${CMAKE_SOURCE_DIR}/ext/yuni/src
 			${CMAKE_SOURCE_DIR}/libs
 			${CMAKE_SOURCE_DIR}/libs/antares/logs
             ${CMAKE_SOURCE_DIR}/solver/writer
