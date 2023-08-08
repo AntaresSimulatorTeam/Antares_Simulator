@@ -96,28 +96,23 @@ struct Fixture
         scenarioFinalHydroLevels[1][0] = 3.5;
         scenarioFinalHydroLevels[1][1] = 4.3;
 
-        // References for timeseriesNumbers data and instantiating timeseriesNumbers matrices
-        Matrix<Yuni::uint32>& timeseriesNumbersArea1 = area_1->hydro.series->timeseriesNumbers;
-        Matrix<Yuni::uint32>& timeseriesNumbersArea2 = area_2->hydro.series->timeseriesNumbers;
+        // Area 1 : inflows time series matrices 
+        // ... time series numbers for each year
+        area_1->hydro.series->timeseriesNumbers.resize(1, nbYears);
+        area_1->hydro.series->timeseriesNumbers[0][0] = 0;
+        area_1->hydro.series->timeseriesNumbers[0][1] = 1;
 
-        timeseriesNumbersArea1.resize(1, nbYears);
-        timeseriesNumbersArea2.resize(1, nbYears);
+        area_1->hydro.series->storage.resize(nbYears, 365);
+        InstantiateAreaHydroStorage(area_1->hydro.series->storage, 200., nbYears);
 
-        timeseriesNumbersArea1[0][0] = 0;
-        timeseriesNumbersArea1[0][1] = 1;
+        // Area 2 : inflows time series matrices 
+        // ... time series numbers for each year
+        area_2->hydro.series->timeseriesNumbers.resize(1, nbYears);
+        area_2->hydro.series->timeseriesNumbers[0][0] = 0;
+        area_2->hydro.series->timeseriesNumbers[0][1] = 1;
 
-        timeseriesNumbersArea2[0][0] = 0;
-        timeseriesNumbersArea2[0][1] = 1;
-
-        // Instantiating areas storage TS's
-        auto& storageArea1 = area_1->hydro.series->storage;
-        auto& storageArea2 = area_2->hydro.series->storage;
-
-        storageArea1.resize(nbYears, 365);
-        storageArea2.resize(nbYears, 365);
-
-        InstantiateAreaHydroStorage(storageArea1, 200., nbYears);
-        InstantiateAreaHydroStorage(storageArea2, 300., nbYears);
+        area_2->hydro.series->storage.resize(nbYears, 365);
+        InstantiateAreaHydroStorage(area_2->hydro.series->storage, 300., nbYears);
     }
 
     ~Fixture() = default;
