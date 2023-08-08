@@ -800,7 +800,7 @@ double ThermalCluster::getOperatingCost(uint serieIndex, uint hourInTheYear) con
 {
     if (costgeneration == Data::setManually)
     {
-        const auto& modCost = modulation[thermalModulationCost];
+        const auto* modCost = modulation[thermalModulationCost];
         return marginalCost * modCost[hourInTheYear];
     }
     else
