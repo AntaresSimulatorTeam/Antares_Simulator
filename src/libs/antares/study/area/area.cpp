@@ -25,13 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
 #include <cassert>
-#include "../study.h"
-#include <antares/study/area/area.h>
+#include "area.h"
 #include "constants.h"
 #include "scratchpad.h"
 #include "antares/study/parts/load/prepro.h"
+#include "antares/study/filter.h"
 
 using namespace Yuni;
 
