@@ -41,10 +41,8 @@ struct Fixture
         // endDay must be 365, see preCheckStartAndEndSim function
         Parameters& parameters = study->parameters;
 
-        uint& endDay = parameters.simulationDays.end;
-        uint& nbYears = parameters.nbYears;
-        endDay = 365;
-        nbYears = 2;
+        parameters.simulationDays.end = 365;
+        uint nbYears = parameters.nbYears = 2;
 
         // Creating two dummy areas and instantiating necessary values for testing
         area_1 = study->areaAdd("Area1");
@@ -66,40 +64,26 @@ struct Fixture
         area_1->hydro.reservoirCapacity = 340.;
         area_2->hydro.reservoirCapacity = 300.;
 
-        // Initialize reservoir max and min levels, but just for the last day in year
-        auto& reservoirLevelArea1 = area_1->hydro.reservoirLevel;
-        auto& reservoirLevelArea2 = area_2->hydro.reservoirLevel;
+        // Set reservoir max and min daily levels, but just for the last day in year
+        area_1->hydro.reservoirLevel.resize(3, DAYS_PER_YEAR);
+        area_1->hydro.reservoirLevel[PartHydro::minimum][DAYS_PER_YEAR - 1] = 2.4;
+        area_1->hydro.reservoirLevel[PartHydro::maximum][DAYS_PER_YEAR - 1] = 6.5;
 
-        reservoirLevelArea1.resize(3, DAYS_PER_YEAR, true);
-        reservoirLevelArea2.resize(3, DAYS_PER_YEAR, true);
+        area_2->hydro.reservoirLevel.resize(3, DAYS_PER_YEAR);
+        area_2->hydro.reservoirLevel[PartHydro::minimum][DAYS_PER_YEAR - 1] = 2.7;
+        area_2->hydro.reservoirLevel[PartHydro::maximum][DAYS_PER_YEAR - 1] = 6.4;
 
-        auto& reservoirLevelArea1Min
-          = reservoirLevelArea1[Data::PartHydro::minimum][DAYS_PER_YEAR - 1];
-        auto& reservoirLevelArea2Min
-          = reservoirLevelArea2[Data::PartHydro::minimum][DAYS_PER_YEAR - 1];
-
-        auto& reservoirLevelArea1Max
-          = reservoirLevelArea1[Data::PartHydro::maximum][DAYS_PER_YEAR - 1];
-        auto& reservoirLevelArea2Max
-          = reservoirLevelArea2[Data::PartHydro::maximum][DAYS_PER_YEAR - 1];
-
-        reservoirLevelArea1Min = 2.4;
-        reservoirLevelArea1Max = 6.5;
-
-        reservoirLevelArea2Min = 2.7;
-        reservoirLevelArea2Max = 6.4;
 
         // Defining necessary references for initial and final level matrices
         Matrix<double>& scenarioInitialHydroLevels = study->scenarioInitialHydroLevels;
         Matrix<double>& scenarioFinalHydroLevels = study->scenarioFinalHydroLevels;
 
         // Initializing dimension of matrices
-        uint width = nbYears;
-        uint height = study->areas.size();
+        uint areasCount = study->areas.size();
 
         // Setting matrices dimension Scenario Builder Initial and Finals levels matrices
-        scenarioInitialHydroLevels.resize(width, height);
-        scenarioFinalHydroLevels.resize(width, height);
+        scenarioInitialHydroLevels.resize(nbYears, areasCount);
+        scenarioFinalHydroLevels.resize(nbYears, areasCount);
 
         // Instantiating matrices with some random values
         scenarioInitialHydroLevels[0][0] = 2.3;
