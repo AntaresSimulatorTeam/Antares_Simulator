@@ -25,6 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <sstream>
+
 #include <antares/study.h>
 #include <antares/study/area/constants.h>
 #include <antares/study/area/scratchpad.h>
@@ -34,7 +36,7 @@
 #include "sim_structure_probleme_economique.h"
 #include "sim_extern_variables_globales.h"
 #include "adequacy_patch_runtime_data.h"
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -446,16 +448,18 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             double nivInit = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
             if (nivInit < 0.)
             {
-                logs.fatal() << "Area " << area.name << ", week " << weekInTheYear + 1
-                             << " : initial level < 0";
-                AntaresSolverEmergencyShutdown();
+                std::ostringstream msg;
+                msg << "Area " << area.name << ", week " << weekInTheYear + 1
+                    << " : initial level < 0";
+                throw FatalError(msg.str());
             }
 
             if (nivInit > area.hydro.reservoirCapacity)
             {
-                logs.fatal() << "Area " << area.name << ", week " << weekInTheYear + 1
-                             << " : initial level over capacity";
-                AntaresSolverEmergencyShutdown();
+                std::ostringstream msg;
+                msg << "Area " << area.name << ", week " << weekInTheYear + 1
+                    << " : initial level over capacity";
+                throw FatalError(msg.str());
             }
 
             if (area.hydro.powerToLevel)

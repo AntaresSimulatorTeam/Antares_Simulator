@@ -55,7 +55,7 @@ bool Open(bool expandEntries = true);
 void Close();
 
 /*!
-** \brief Check the root prefix, and abort immediatly if fails
+** \brief Check the root prefix, and throws a FatalError if fails.
 */
 void CheckRootPrefix(const char* argv0);
 

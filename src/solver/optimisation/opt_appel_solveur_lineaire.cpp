@@ -41,7 +41,7 @@ extern "C"
 }
 
 #include <antares/logs.h>
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 
 #include "../utils/mps_utils.h"
 #include "../utils/filename.h"
@@ -282,11 +282,7 @@ RESOLUTION:
 
         else
         {
-            logs.info();
-            logs.error() << "Internal error: insufficient memory";
-            logs.info();
-            AntaresSolverEmergencyShutdown();
-            return false;
+            throw FatalError("Internal error: insufficient memory");
         }
     }
 

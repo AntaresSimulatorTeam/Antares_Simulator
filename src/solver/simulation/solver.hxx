@@ -37,7 +37,7 @@
 #include "../aleatoire/alea_fonctions.h"
 #include "timeseries-numbers.h"
 #include "apply-scenario.h"
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 #include "../ts-generator/generator.h"
 
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
@@ -338,9 +338,7 @@ void ISimulation<Impl>::run()
         // Now, we will prepare the time-series numbers
         if (not TimeSeriesNumbers::Generate(study))
         {
-            logs.fatal() << "An unrecoverable error has occured. Can not continue.";
-            AntaresSolverEmergencyShutdown(); // will never return
-            return;
+            throw FatalError("An unrecoverable error has occured. Can not continue.");
         }
 
         if (parameters.useCustomScenario)
@@ -1582,8 +1580,9 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             // Si une année du lot d'années n'a pas trouvé de solution, on arrête tout
             if (failed)
             {
-                logs.fatal() << "Year " << year << " has failed in the previous set of parallel year.";
-                AntaresSolverEmergencyShutdown();
+                std::ostringstream msg;
+                msg << "Year " << year << " has failed in the previous set of parallel year.";
+                throw FatalError(msg.str());
             }
         }
         // Computing the summary : adding the contribution of MC years

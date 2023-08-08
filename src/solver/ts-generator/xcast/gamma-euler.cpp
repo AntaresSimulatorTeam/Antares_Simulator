@@ -30,7 +30,6 @@
 #include "xcast.h"
 #include <yuni/core/math.h>
 #include <antares/logs.h>
-#include <antares/emergency.h>
 #include <iostream>
 
 using namespace Yuni;

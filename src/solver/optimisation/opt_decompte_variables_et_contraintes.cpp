@@ -33,7 +33,7 @@
 #include "opt_fonctions.h"
 
 #include <antares/logs.h>
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 
 using namespace Antares;
 
@@ -214,8 +214,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
         }
         if (!Pump && !TurbEntreBornes && MonitorHourlyLev)
         {
-            logs.fatal() << "Level explicit modeling requires flexible generation";
-            AntaresSolverEmergencyShutdown();
+            throw FatalError("Level explicit modeling requires flexible generation");
         }
     }
 

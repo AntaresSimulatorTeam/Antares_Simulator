@@ -37,7 +37,7 @@
 #include <limits>
 #include <antares/logs.h>
 #include <antares/date.h>
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 #include <cassert>
 
 using namespace Yuni;

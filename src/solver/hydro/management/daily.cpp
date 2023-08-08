@@ -31,7 +31,7 @@
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
 #include "management.h"
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 #include <i_writer.h>
 #include "../daily/h2o_j_donnees_mensuelles.h"
 #include "../daily/h2o_j_fonctions.h"
@@ -47,6 +47,25 @@
 using namespace Yuni;
 
 #define SEP IO::Separator
+
+namespace
+{
+FatalError fatalError(const std::string& areaName, int year)
+{
+    std::ostringstream msg;
+    msg << "Year : " << year + 1 << " - hydro: " << areaName
+        << " [daily] fatal error";
+    return FatalError(msg.str());}
+
+FatalError solutionNotFound(const std::string& areaName, int year)
+{
+    std::ostringstream msg;
+    msg << "Year : " << year + 1 << " - hydro: " << areaName
+        << " [daily] no solution found";
+    return FatalError(msg.str());
+}
+
+}
 
 namespace Antares
 {
@@ -396,12 +415,10 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 }
                 break;
             case NON:
-                logs.fatal() << "Year : " << y + 1 << " - hydro: " << area.name
-                             << " [daily] no solution found";
-                AntaresSolverEmergencyShutdown();
+                throw solutionNotFound(area.name.c_str(), y);
                 break;
             case EMERGENCY_SHUT_DOWN:
-                AntaresSolverEmergencyShutdown();
+                throw fatalError(area.name.c_str(), y);
                 break;
             }
 
@@ -513,12 +530,10 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
                 break;
             case NON:
-                logs.fatal() << "Year : " << y + 1 << " - hydro: " << area.name
-                             << " [daily] no solution found";
-                AntaresSolverEmergencyShutdown();
+                throw solutionNotFound(area.name.c_str(), y);
                 break;
             case EMERGENCY_SHUT_DOWN:
-                AntaresSolverEmergencyShutdown();
+                throw fatalError(area.name.c_str(), y);
                 break;
             }
 
