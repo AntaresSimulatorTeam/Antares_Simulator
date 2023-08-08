@@ -33,23 +33,25 @@ namespace Antares::Solver
 
 void prepareFinalReservoirLevelDataPerMcY(Data::Study& study, uint year)
 {
-    study.areas.each(
-      [&study, &year](Data::Area& area)
-      {
-          auto& finalInflows = area.hydro.finalLevelInflowsModifier;
-          auto& scenarioInitialHydroLevels = study.scenarioInitialHydroLevels;
-          auto& scenarioFinalHydroLevels = study.scenarioFinalHydroLevels;
-          auto& parameters = study.parameters;
+    study.areas.each([&study, &year](Data::Area& area)
+    {
+        auto& finalInflows = area.hydro.finalLevelInflowsModifier;
+        auto& scenarioInitialHydroLevels = study.scenarioInitialHydroLevels;
+        auto& scenarioFinalHydroLevels = study.scenarioFinalHydroLevels;
+        auto& parameters = study.parameters;
 
-          finalInflows.initializeData(
-            scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
+        finalInflows.initializeData(scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
 
-          if (finalInflows.isActive())
-              if (finalInflows.makeChecks())
-                  finalInflows.updateInflows();
-              else
-                  AntaresSolverEmergencyShutdown();
-      });
+        if (!finalInflows.isActive())
+            return;
+
+        if (!finalInflows.makeChecks())
+        {
+            AntaresSolverEmergencyShutdown();
+        }
+        
+        finalInflows.updateInflows();
+    });
 }
 
 void prepareFinalReservoirLevelData(Data::Study& study)

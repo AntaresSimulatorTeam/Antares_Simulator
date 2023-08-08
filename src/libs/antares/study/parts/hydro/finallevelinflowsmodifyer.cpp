@@ -155,28 +155,20 @@ bool FinalLevelInflowsModifier::isActive()
 
 bool FinalLevelInflowsModifier::makeChecks()
 {
-    bool preChecksPasses = true;
-
     // pre-check 0 -> simulation must end on day 365 and reservoir level must be
     // initiated in January
-    if (!preCheckStartAndEndSim())
-        preChecksPasses = false;
+    bool checksOk = preCheckStartAndEndSim();
 
     // pre-check 1 -> reservoir_levelDay_365 – reservoir_levelDay_1 ≤
     // yearly_inflows
-    if (double totalInflows = calculateTotalInflows(); !preCheckYearlyInflow(totalInflows))
-        preChecksPasses = false;
+    double totalInflows = calculateTotalInflows();
+    checksOk = preCheckYearlyInflow(totalInflows) && checksOk;
 
     // pre-check 2 -> final reservoir level set by the user is within the
     // rule curves for the final day
-    if (!preCheckRuleCurves())
-        preChecksPasses = false;
+    checksOk = preCheckRuleCurves() && checksOk;
 
-    if (!preChecksPasses)
-    {
-        logs.fatal() << "At least one year has failed final reservoir level pre-checks.";
-    }
-    return preChecksPasses;
+    return checksOk;
 }
 
 } // namespace Data
