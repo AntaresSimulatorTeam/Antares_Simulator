@@ -62,6 +62,12 @@ public:
         pumpMaxE,
     };
 
+    enum hoursDaily
+    {
+        genMaxHours = 0,
+        pumpMaxHours,
+    };
+
     enum weeklyHydroMod
     {
         //! Weekly generating modulation
@@ -171,6 +177,12 @@ public:
     PreproHydro* prepro;
     //! Data for time-series
     DataSeriesHydro* series;
+
+    Matrix<double, double> maxHours;
+
+private:
+
+    bool AutoTransferHours(Study& study, const AreaName& areaID, const AnyString& folder);
 
 }; // class PartHydro
 

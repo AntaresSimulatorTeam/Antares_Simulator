@@ -89,6 +89,8 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
     e.add(buffer);
     buffer.clear() << "input/hydro/common/capacity/maxpower_" << id << ".txt";
     e.add(buffer);
+    buffer.clear() << "input/hydro/common/capacity/maxhours_" << id << ".txt";
+    e.add(buffer);
     buffer.clear() << "input/hydro/common/capacity/reservoir_" << id << ".txt";
     e.add(buffer);
     buffer.clear() << "input/hydro/series/" << id;
