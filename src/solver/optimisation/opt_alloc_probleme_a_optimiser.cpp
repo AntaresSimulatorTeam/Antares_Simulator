@@ -32,7 +32,6 @@
 #include "../simulation/sim_structure_probleme_economique.h"
 
 #include "opt_fonctions.h"
-#include <stdio.h>
 
 #include <antares/logs.h>
 

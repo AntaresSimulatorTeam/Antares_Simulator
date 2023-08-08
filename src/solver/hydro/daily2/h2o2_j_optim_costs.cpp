@@ -26,7 +26,6 @@
 */
 
 #include "h2o2_j_donnees_optimisation.h"
-#include "antares/study/fwd.h"
 
 Hydro_problem_costs::Hydro_problem_costs(const Data::Study& study)
 {

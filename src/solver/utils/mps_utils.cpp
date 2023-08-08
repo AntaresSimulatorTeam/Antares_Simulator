@@ -1,7 +1,4 @@
 #include <antares/study.h>
-#include <antares/emergency.h>
-
-#include "../simulation/simulation.h"
 
 #include "ortools_utils.h"
 #include "mps_utils.h"
@@ -44,7 +41,6 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include <antares/study.h>
 #include <string>
 #include <vector>
 #include <algorithm>

@@ -25,7 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
 #include "rawdata.h"
 
 using namespace Yuni;

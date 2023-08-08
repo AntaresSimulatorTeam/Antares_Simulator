@@ -31,7 +31,6 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
-#include <antares/study.h>
 
 using namespace Antares;
 using namespace Antares::Data;

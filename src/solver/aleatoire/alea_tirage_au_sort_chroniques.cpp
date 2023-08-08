@@ -24,20 +24,12 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include "alea_sys.h"
 #include <yuni/core/math.h>
 
 #include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
 #include "../simulation/sim_extern_variables_globales.h"
 #include "alea_fonctions.h"
 #include <algorithm>
-#include <iterator>
-#include <limits>
-#include <antares/logs.h>
-#include <antares/date.h>
-#include <antares/emergency.h>
 #include <cassert>
 
 using namespace Yuni;

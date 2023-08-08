@@ -25,7 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/study.h>
 #include <antares/study/area/constants.h>
 #include <antares/study/area/scratchpad.h>
 

@@ -29,6 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/fwd.h>
+#include <antares/study/progression/progression.h>
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include <i_writer.h>
 #include "studydata.h"

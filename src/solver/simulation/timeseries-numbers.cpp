@@ -25,8 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <algorithm>  // std::adjacent_find
-#include <iterator>   // std::back_inserter
 #include <functional> // std::not_equal_to
 #include <map>
 #include <string>

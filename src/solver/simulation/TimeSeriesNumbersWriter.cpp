@@ -4,7 +4,6 @@
 
 #include "BindingConstraintsTimeSeriesNumbersWriter.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
-#include <cstdint>
 #include <filesystem>
 #include <utility>
 

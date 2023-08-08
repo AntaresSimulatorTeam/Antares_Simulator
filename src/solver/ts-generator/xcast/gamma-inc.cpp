@@ -25,12 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
 #include <antares/study.h>
 #include "xcast.h"
 #include <yuni/core/math.h>
-#include <antares/logs.h>
-#include <antares/emergency.h>
 
 using namespace Yuni;
 

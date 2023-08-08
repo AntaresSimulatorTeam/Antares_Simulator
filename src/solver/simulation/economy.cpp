@@ -30,7 +30,6 @@
 #include <antares/exception/AssertionError.hpp>
 #include "simulation.h"
 #include "../optimisation/opt_fonctions.h"
-#include "../optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "common-eco-adq.h"
 #include "opt_time_writer.h"
 

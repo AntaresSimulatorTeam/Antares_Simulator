@@ -25,7 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
 #include <yuni/core/math.h>
 #include <antares/study/study.h>
 #include <antares/study/area/scratchpad.h>
@@ -33,11 +32,8 @@
 #include <antares/exception/UnfeasibleProblemError.hpp>
 
 #include "common-eco-adq.h"
-#include <antares/logs.h>
 #include <cassert>
 #include <map>
-#include "simulation.h"
-#include "../aleatoire/alea_fonctions.h"
 
 using namespace Yuni;
 

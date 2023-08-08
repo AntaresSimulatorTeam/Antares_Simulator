@@ -32,8 +32,6 @@
 
 #include "opt_fonctions.h"
 
-#include <antares/study.h>
-
 using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;

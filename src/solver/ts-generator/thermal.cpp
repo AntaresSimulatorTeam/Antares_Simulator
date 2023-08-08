@@ -31,16 +31,11 @@
 #include <yuni/core/math.h>
 #include <yuni/core/string.h>
 
-#include <antares/study.h>
 #include <antares/logs.h>
-#include <antares/emergency.h>
 #include <i_writer.h>
 
-#include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
-#include "../simulation/sim_extern_variables_globales.h"
 #include "../aleatoire/alea_fonctions.h"
 
 using namespace Yuni;

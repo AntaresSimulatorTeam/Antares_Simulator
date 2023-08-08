@@ -25,24 +25,18 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
 #include <yuni/core/system/process.h>
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
 
 #include <antares/logs.h>
 #include <antares/study/study.h>
-#include <cassert>
-#include <string.h>
-#include <limits>
 #include <algorithm>
 
 #include "options.h"
-#include "../config.h"
 
 #include "../../config.h"
 
-#include <antares/emergency.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/Enum.hpp>

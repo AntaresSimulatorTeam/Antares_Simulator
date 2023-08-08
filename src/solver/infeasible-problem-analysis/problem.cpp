@@ -3,7 +3,6 @@
 
 #include <fstream>
 #include <regex>
-#include <algorithm>
 
 using namespace operations_research;
 

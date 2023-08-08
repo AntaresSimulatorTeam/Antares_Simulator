@@ -25,11 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
 #include <antares/study/study.h>
 #include <antares/study/area/scratchpad.h>
 #include <yuni/io/file.h>
-#include <yuni/io/directory.h>
 #include "management.h"
 #include <antares/emergency.h>
 #include <i_writer.h>
