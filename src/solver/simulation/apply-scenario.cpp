@@ -27,7 +27,6 @@
 
 #include "apply-scenario.h"
 #include <antares/study/scenario-builder/sets.h>
-#include "hydro-final-reservoir-level-functions.h"
 
 namespace Antares::Solver
 {
@@ -56,8 +55,6 @@ void ApplyCustomScenario(Data::Study& study)
 
     study.scenarioRulesDestroy();
     logs.info();
-
-    prepareFinalReservoirLevelData(study);
 }
 
 } // namespace Antares::Solver

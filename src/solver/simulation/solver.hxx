@@ -45,6 +45,7 @@
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
 #include "BindingConstraintsTimeSeriesNumbersWriter.h"
+#include "hydro-final-reservoir-level-functions.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -344,7 +345,10 @@ void ISimulation<Impl>::run()
         }
 
         if (parameters.useCustomScenario)
+        {
             ApplyCustomScenario(study);
+            prepareFinalReservoirLevelData(study);
+        }
 
         // Launching the simulation for all years
         logs.info() << "MC-Years : [" << (study.runtime->rangeLimits.year[Data::rangeBegin] + 1)
