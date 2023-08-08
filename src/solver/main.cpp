@@ -139,7 +139,6 @@ int main(int argc, char** argv)
 
     // Getting real UTF8 arguments
     argv = AntaresGetUTF8Arguments(argc, argv);
-
     Antares::Solver::Application application;
     try
     {
