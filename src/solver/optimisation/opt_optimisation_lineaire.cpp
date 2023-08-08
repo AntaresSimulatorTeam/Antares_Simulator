@@ -38,6 +38,16 @@ using Antares::Solver::Optimization::OptimizationOptions;
 
 namespace
 {
+double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
+                                   const int NumeroDeLIntervalle,
+                                   const int optimizationNumber)
+{
+    if (optimizationNumber == PREMIERE_OPTIMISATION)
+        return Probleme->coutOptimalSolution1[NumeroDeLIntervalle];
+    else
+        return Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
+}
+
 void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
   double optimalSolutionCost,
   std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
@@ -53,19 +63,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
     writer.addEntryFromBuffer(filename, buffer);
 }
 
-} // namespace
-
-double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
-                                   const int NumeroDeLIntervalle,
-                                   const int optimizationNumber)
-{
-    if (optimizationNumber == PREMIERE_OPTIMISATION)
-        return Probleme->coutOptimalSolution1[NumeroDeLIntervalle];
-    else
-        return Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
-}
-
-static bool runWeeklyOptimization(const OptimizationOptions& options,
+bool runWeeklyOptimization(const OptimizationOptions& options,
                                   PROBLEME_HEBDO* problemeHebdo,
                                   const AdqPatchParams& adqPatchParams,
                                   Solver::IResultWriter& writer,
@@ -125,7 +123,7 @@ static bool runWeeklyOptimization(const OptimizationOptions& options,
     return true;
 }
 
-static void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
+void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 {
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
@@ -136,6 +134,8 @@ static void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
         OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(problemeHebdo);
     }
 }
+} // namespace
+
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
