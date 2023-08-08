@@ -4,6 +4,7 @@
 
 #include "BindingConstraintGroupRepository.h"
 #include <algorithm>
+#include <numeric>
 #include <memory>
 #include "BindingConstraintsRepository.h"
 #include "BindingConstraintGroup.h"
@@ -52,8 +53,8 @@ namespace Antares::Data {
 
     void BindingConstraintGroupRepository::resizeAllTimeseriesNumbers(unsigned int nb_years) {
         std::for_each(groups_.begin(), groups_.end(), [&](auto &group) {
-            group->timeSeriesNumbers().timeseriesNumbers.clear();
-            group->timeSeriesNumbers().timeseriesNumbers.resize(1, nb_years);
+            group->timeseriesNumbers.clear();
+            group->timeseriesNumbers.resize(1, nb_years);
         });
     }
 
@@ -63,7 +64,7 @@ namespace Antares::Data {
         });
     }
 
-    BindingConstraintGroup* BindingConstraintGroupRepository::operator[](std::string name) {
+    BindingConstraintGroup* BindingConstraintGroupRepository::operator[](const std::string& name) const {
         if (auto group = std::find_if(groups_.begin(), groups_.end(), [&name](auto& group_of_constraint) {
                                         return group_of_constraint->name() == name;
                                     });

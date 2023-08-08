@@ -6,7 +6,6 @@
 
 #include <cstdlib>
 #include "antares/study/parts/hydro/series.h"
-#include "antares/study/binding_constraint/BindingConstraintTimeSeriesNumbers.h"
 #include "yuni/core/system/stdint.h"
 
 namespace Antares::Data::ScenarioBuilder {
@@ -41,7 +40,7 @@ inline bool CheckValidity<Data::AreaLink>(uint value,
 }
 
 template<>
-inline bool CheckValidity<Data::BindingConstraintTimeSeriesNumbers>(uint, const Data::BindingConstraintTimeSeriesNumbers&, uint)
+inline bool CheckValidity<BindingConstraintGroup>(uint, const BindingConstraintGroup&, uint)
 {
     //TS-Generator never used
     //Should check for time-series width, but we are missing information at this point
