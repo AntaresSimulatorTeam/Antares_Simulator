@@ -88,7 +88,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                          PROBLEME_HEBDO*,
                          int,
                          const int,
-                         std::shared_ptr<OptPeriodStringGenerator>,
+                         const OptPeriodStringGenerator&,
                          Solver::IResultWriter& writer);
 void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options, const PROBLEME_HEBDO*);
 
