@@ -117,8 +117,10 @@ BOOST_AUTO_TEST_CASE(initialize_modifier_for_area_1___modifier_is_active)
 
     auto finLevInfModify = FinalLevelInflowsModifier(hydro, area_1->index, area_1->name);
 
-    finLevInfModify.initializeData(
-      scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
+    finLevInfModify.initialize(scenarioInitialHydroLevels,
+                               scenarioFinalHydroLevels,
+                               parameters.simulationDays.end,
+                               year);
 
     BOOST_CHECK_EQUAL(finLevInfModify.isActive(), true);
 }
@@ -135,8 +137,10 @@ BOOST_AUTO_TEST_CASE(Testing_initializeData_function_for_area_1_fail_resManageme
 
     auto finLevInfModify = FinalLevelInflowsModifier(hydro, 1, "Area1");
 
-    finLevInfModify.initializeData(
-      scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
+    finLevInfModify.initialize(scenarioInitialHydroLevels,
+                               scenarioFinalHydroLevels,
+                               parameters.simulationDays.end,
+                               year);
 
     // check when reservoirManagement = false
     BOOST_CHECK_EQUAL(finLevInfModify.isActive(), false);
@@ -154,8 +158,10 @@ BOOST_AUTO_TEST_CASE(Testing_initializeData_function_for_area_1_fail_watValues)
 
     auto finLevInfModify = FinalLevelInflowsModifier(hydro, 1, "Area1");
 
-    finLevInfModify.initializeData(
-      scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
+    finLevInfModify.initialize(scenarioInitialHydroLevels,
+                               scenarioFinalHydroLevels,
+                               parameters.simulationDays.end,
+                               year);
 
     // check when useWaterValue = true
     BOOST_CHECK_EQUAL(finLevInfModify.isActive(), false);
@@ -173,10 +179,12 @@ BOOST_AUTO_TEST_CASE(Testing_initializeData_function_for_area_1_fail_NaN)
 
     auto finLevInfModify = FinalLevelInflowsModifier(hydro, 1, "Area1");
 
-    finLevInfModify.initializeData(
-      scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
+    finLevInfModify.initialize(scenarioInitialHydroLevels, 
+                               scenarioFinalHydroLevels,
+                               parameters.simulationDays.end,
+                               year);
 
-    // check when finalReservoirLevel = nan
+    // check when finalReservoirLevel = -1
     BOOST_CHECK_EQUAL(finLevInfModify.isActive(), false);
 }
 
@@ -191,8 +199,10 @@ BOOST_AUTO_TEST_CASE(Testing_updateInflows_function_for_area_1)
 
     auto finLevInfModify = FinalLevelInflowsModifier(hydro, 0, "Area1");
 
-    finLevInfModify.initializeData(
-      scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
+    finLevInfModify.initialize(scenarioInitialHydroLevels,
+                               scenarioFinalHydroLevels,
+                               parameters.simulationDays.end,
+                               year);
     finLevInfModify.isActive();
     finLevInfModify.updateInflows();
 
@@ -218,10 +228,10 @@ BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_pass)
 
     auto finLevInfModify = FinalLevelInflowsModifier(hydro, 0, "Area1");
 
-    finLevInfModify.initializeData(
-      scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
-    finLevInfModify.isActive();
-    finLevInfModify.updateInflows();
+    finLevInfModify.initialize(scenarioInitialHydroLevels,
+                               scenarioFinalHydroLevels,
+                               parameters.simulationDays.end,
+                               year);
 
     BOOST_CHECK_EQUAL(finLevInfModify.makeChecks(), true);
 }
@@ -239,10 +249,10 @@ BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_fail_preCheckInitRes
 
     auto finLevInfModify = FinalLevelInflowsModifier(hydro, 0, "Area1");
 
-    finLevInfModify.initializeData(
-      scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
-    finLevInfModify.isActive();
-    finLevInfModify.updateInflows();
+    finLevInfModify.initialize(scenarioInitialHydroLevels,
+                               scenarioFinalHydroLevels,
+                               parameters.simulationDays.end,
+                               year);
 
     BOOST_CHECK_EQUAL(finLevInfModify.makeChecks(), false);
 }
@@ -260,10 +270,10 @@ BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_fail_EndSimDay)
 
     auto finLevInfModify = FinalLevelInflowsModifier(hydro, 0, "Area1");
 
-    finLevInfModify.initializeData(
-      scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
-    finLevInfModify.isActive();
-    finLevInfModify.updateInflows();
+    finLevInfModify.initialize(scenarioInitialHydroLevels,
+                               scenarioFinalHydroLevels,
+                               parameters.simulationDays.end,
+                               year);
 
     BOOST_CHECK_EQUAL(finLevInfModify.makeChecks(), false);
 }
@@ -281,10 +291,10 @@ BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_fail_RuleCurve)
 
     auto finLevInfModify = FinalLevelInflowsModifier(hydro, 0, "Area1");
 
-    finLevInfModify.initializeData(
-      scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
-    finLevInfModify.isActive();
-    finLevInfModify.updateInflows();
+    finLevInfModify.initialize(scenarioInitialHydroLevels,
+                               scenarioFinalHydroLevels,
+                               parameters.simulationDays.end,
+                               year);
 
     BOOST_CHECK_EQUAL(finLevInfModify.makeChecks(), false);
 }
@@ -306,10 +316,10 @@ BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_fail_ResCapacity)
 
     auto finLevInfModify = FinalLevelInflowsModifier(hydro, 0, "Area1");
 
-    finLevInfModify.initializeData(
-      scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
-    finLevInfModify.isActive();
-    finLevInfModify.updateInflows();
+    finLevInfModify.initialize(scenarioInitialHydroLevels,
+                               scenarioFinalHydroLevels,
+                               parameters.simulationDays.end,
+                               year);
 
     BOOST_CHECK_EQUAL(finLevInfModify.makeChecks(), false);
 }

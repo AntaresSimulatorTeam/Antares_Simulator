@@ -40,7 +40,10 @@ void prepareFinalReservoirLevelDataPerMcY(Data::Study& study, uint year)
         auto& scenarioFinalHydroLevels = study.scenarioFinalHydroLevels;
         auto& parameters = study.parameters;
 
-        finalInflows.initializeData(scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
+        finalInflows.initialize(scenarioInitialHydroLevels, 
+                                scenarioFinalHydroLevels, 
+                                parameters.simulationDays.end,
+                                year);
 
         if (!finalInflows.isActive())
             return;

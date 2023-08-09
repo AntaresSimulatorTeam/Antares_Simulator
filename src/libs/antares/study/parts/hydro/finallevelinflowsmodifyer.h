@@ -88,19 +88,19 @@ private:
 
     bool preCheckRuleCurves() const;
 
-    void initializeGeneralData(const Data::Parameters& parameters, uint year);
+    void setLastSiumlationDay(uint day);
+    void setCurrentYear(uint year);
 
     void initializePerAreaData(const Matrix<double>& scenarioInitialHydroLevels,
                                const Matrix<double>& scenarioFinalHydroLevels);
-    void initializePreCheckData();
 
     void ruleCurveForSimEndReal();
 
 public:
-    void initializeData(const Matrix<double>& scenarioInitialHydroLevels,
-                        const Matrix<double>& scenarioFinalHydroLevels,
-                        const Data::Parameters& parameters,
-                        uint year);
+    void initialize(const Matrix<double>& scenarioInitialHydroLevels,
+                    const Matrix<double>& scenarioFinalHydroLevels,
+                    const uint lastSimulationDay,
+                    uint year);
     bool isActive();
 
     void updateInflows();

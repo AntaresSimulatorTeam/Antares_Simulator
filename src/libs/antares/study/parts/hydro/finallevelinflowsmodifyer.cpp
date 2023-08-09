@@ -35,7 +35,11 @@ namespace Data
 FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
                                                      const unsigned int& areaIndex,
                                                      const AreaName& areaName) :
- hydro(hydro), areaIndex(areaIndex), areaName(areaName)
+    hydro(hydro), 
+    areaIndex(areaIndex), 
+    areaName(areaName),
+    initReservoirLvlMonth(hydro.initializeReservoirLevelDate), // month [0-11]
+    reservoirCapacity(hydro.reservoirCapacity)
 {
 }
 
@@ -46,9 +50,13 @@ void FinalLevelInflowsModifier::fillEmpty()
     deltaLevel.push_back(0.);
 }
 
-void FinalLevelInflowsModifier::initializeGeneralData(const Data::Parameters& parameters, uint year)
+void FinalLevelInflowsModifier::setLastSiumlationDay(uint day)
 {
-    simEndDay = parameters.simulationDays.end;
+    simEndDay = day;
+}
+
+void FinalLevelInflowsModifier::setCurrentYear(uint year)
+{
     yearIndex = year;
 }
 
@@ -59,12 +67,6 @@ void FinalLevelInflowsModifier::initializePerAreaData(
     initialReservoirLevel = scenarioInitialHydroLevels[areaIndex][yearIndex];
     finalReservoirLevel = scenarioFinalHydroLevels[areaIndex][yearIndex];
     deltaReservoirLevel = initialReservoirLevel - finalReservoirLevel;
-}
-
-void FinalLevelInflowsModifier::initializePreCheckData()
-{
-    initReservoirLvlMonth = hydro.initializeReservoirLevelDate; // month [0-11]
-    reservoirCapacity = hydro.reservoirCapacity;
 }
 
 void FinalLevelInflowsModifier::ruleCurveForSimEndReal()
@@ -135,15 +137,15 @@ bool FinalLevelInflowsModifier::preCheckRuleCurves() const
     return true;
 }
 
-void FinalLevelInflowsModifier::initializeData(const Matrix<double>& scenarioInitialHydroLevels,
-                                               const Matrix<double>& scenarioFinalHydroLevels,
-                                               const Data::Parameters& parameters,
-                                               uint year)
+void FinalLevelInflowsModifier::initialize(const Matrix<double>& scenarioInitialHydroLevels,
+                                           const Matrix<double>& scenarioFinalHydroLevels,
+                                           const uint lastSimulationDay,
+                                           uint year)
 {
     fillEmpty();
-    initializeGeneralData(parameters, year);
+    setLastSiumlationDay(lastSimulationDay);
+    setCurrentYear(year);
     initializePerAreaData(scenarioInitialHydroLevels, scenarioFinalHydroLevels);
-    initializePreCheckData();
     ruleCurveForSimEndReal();
 }
 
