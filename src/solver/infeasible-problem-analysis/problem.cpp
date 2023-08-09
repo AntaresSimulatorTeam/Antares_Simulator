@@ -25,11 +25,11 @@ void InfeasibleProblemAnalysis::addSlackVariables()
     */
     const unsigned int selectedConstraintsInverseRatio = 3;
     mSlackVariables.reserve(mSolver->NumConstraints() / selectedConstraintsInverseRatio);
-    std::regex rgx(mPattern);
+    std::regex rgx(constraint_name_pattern);
     const double infinity = MPSolver::infinity();
     for (MPConstraint* constraint : mSolver->constraints())
     {
-        if (std::regex_match(constraint->name(), rgx))
+        if (std::regex_search(constraint->name(), rgx))
         {
             if (constraint->lb() != -infinity)
             {
