@@ -1,10 +1,8 @@
 name: Centos7 CI (deps. compilation)
 
 on:
-  push:
-    branches:
-      - release/*
-      - develop
+  schedule:
+    - cron: '21 2 * * *'
 
 jobs:
 
