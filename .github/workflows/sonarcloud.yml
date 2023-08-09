@@ -17,7 +17,6 @@ jobs:
       matrix:
         os: [ubuntu-20.04]
 
-
     env:
       SONAR_SERVER_URL: "https://sonarcloud.io"
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
@@ -35,15 +34,6 @@ jobs:
         uses: hendrikmuhs/ccache-action@v1.2
         with:
           key: sonarcloud-${{ env.SONAR_SCANNER_VERSION }}
-
-      - name: Cache SonarCloud packages and analysis
-        uses: actions/cache@v3
-        id: sonarcloud-cache
-        with:
-          path: ~/.sonar
-          key: ${{ runner.os }}-sonar-${{ env.SONAR_SCANNER_VERSION }}
-          restore-keys: ${{ runner.os }}-sonar-${{ env.SONAR_SCANNER_VERSION }}
-
 
       - name: Install libraries
         run: |
