@@ -21,22 +21,18 @@ struct Fixture
     Fixture& operator=(const Fixture&& f) = delete;
     Fixture()
     {
-        // Parameters data
         // endDay must be 365, see preCheckStartAndEndSim function
         Parameters& parameters = study->parameters;
 
         parameters.simulationDays.end = 365;
         uint nbYears = parameters.nbYears = 2;
 
-        // Creating two dummy areas and instantiating necessary values for testing
         area_1 = study->areaAdd("Area1");
         area_2 = study->areaAdd("Area2");
 
-        // Enable reservoir management
         area_1->hydro.reservoirManagement = true;
         area_2->hydro.reservoirManagement = true;
 
-        // Disable water values
         area_1->hydro.useWaterValue = false;
         area_2->hydro.useWaterValue = false;
 
@@ -44,7 +40,6 @@ struct Fixture
         area_1->hydro.initializeReservoirLevelDate = 0;
         area_2->hydro.initializeReservoirLevelDate = 0;
 
-        // Initialize reservoir capacity
         area_1->hydro.reservoirCapacity = 340.;
         area_2->hydro.reservoirCapacity = 300.;
 
@@ -58,18 +53,16 @@ struct Fixture
         area_2->hydro.reservoirLevel[PartHydro::maximum][DAYS_PER_YEAR - 1] = 6.4;
 
 
-        // Defining necessary references for initial and final level matrices
+        // Scenario builder for initial and final reservoir levels
+        // -------------------------------------------------------
         Matrix<double>& scenarioInitialHydroLevels = study->scenarioInitialHydroLevels;
         Matrix<double>& scenarioFinalHydroLevels = study->scenarioFinalHydroLevels;
 
-        // Initializing dimension of matrices
         uint areasCount = study->areas.size();
 
-        // Setting matrices dimension Scenario Builder Initial and Finals levels matrices
         scenarioInitialHydroLevels.resize(nbYears, areasCount);
         scenarioFinalHydroLevels.resize(nbYears, areasCount);
 
-        // Instantiating matrices with some random values
         scenarioInitialHydroLevels[0][0] = 2.3;
         scenarioInitialHydroLevels[0][1] = 4.2;
         scenarioInitialHydroLevels[1][0] = 1.5;
@@ -80,7 +73,8 @@ struct Fixture
         scenarioFinalHydroLevels[1][0] = 3.5;
         scenarioFinalHydroLevels[1][1] = 4.3;
 
-        // Inflows time series matrices :
+        // Inflows time series matrices
+        // -----------------------------
         uint nbInflowTS = 2;
         // ... Area 1 : Inflows time series numbers for each year
         area_1->hydro.series->timeseriesNumbers.resize(1, nbInflowTS);
@@ -89,7 +83,7 @@ struct Fixture
         // ... Area 1 : Inflows time series
         area_1->hydro.series->storage.resize(nbInflowTS, 365);
         area_1->hydro.series->storage.fill(200.);
-        area_1->hydro.series->storage[0][0] = 200. + 1.; //DAYS_PER_YEAR
+        area_1->hydro.series->storage[0][0] = 200. + 1.;
         area_1->hydro.series->storage[0][DAYS_PER_YEAR - 1] = 200. + 2.;
 
         // ... Area 2 : time series numbers for each year
