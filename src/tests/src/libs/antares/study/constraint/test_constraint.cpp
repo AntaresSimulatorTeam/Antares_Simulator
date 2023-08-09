@@ -11,7 +11,7 @@
 #include "antares/study/area/area.h"
 #include "antares/study.h"
 #include <filesystem>
-#include "../../../../utils/utils.h"
+#include "utils.h"
 
 #define testName boost::unit_test::framework::current_test_case().p_name
 

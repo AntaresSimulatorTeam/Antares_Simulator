@@ -9,7 +9,7 @@
 #include "timeseries-numbers.h"
 #include "immediate_file_writer.h"
 #include "BindingConstraintsTimeSeriesNumbersWriter.h"
-#include "../../utils/utils.h"
+#include "utils.h"
 
 #define testName boost::unit_test::framework::current_test_case().p_name
 

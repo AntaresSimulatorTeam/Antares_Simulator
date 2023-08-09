@@ -4,11 +4,11 @@
 #define BOOST_TEST_MODULE rhsTimeSeries
 #define WIN32_LEAN_AND_MEAN
 
-#include "../../utils/utils.h"
 #include <boost/test/unit_test.hpp>
 #include "antares/study.h"
 #include <filesystem>
 #include <fstream>
+#include "utils.h"
 
 using namespace Antares::Solver;
 using namespace Antares::Data;
