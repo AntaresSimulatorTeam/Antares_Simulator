@@ -157,10 +157,6 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
 void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideIndex)
 {
-    // Reminder: the variable 'productionCost' is a vector only valid when used
-    //   from the solver, which is, for each hour in the year, the product
-    //   of the market bid price with the modulation vector
-
     uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
 
     if (thermal[area->index].thermalClustersProductions[clusterAreaWideIndex] > 0.)
@@ -199,7 +195,6 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
 
         // calculating the operating cost for the current hour
         // O(h) = MA * P(h) * Modulation
-        assert(thermalCluster->productionCost != NULL && "invalid production cost");
         thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
           = (p * thermalCluster->getOperatingCost(serieIndex, hourInTheYear));
 

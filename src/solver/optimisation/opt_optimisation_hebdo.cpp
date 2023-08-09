@@ -45,7 +45,9 @@ using namespace Antares::Data;
 
 using Antares::Solver::Optimization::OptimizationOptions;
 
-void OPT_OptimisationHebdomadaire(const OptimizationOptions& options, PROBLEME_HEBDO* pProblemeHebdo, AdqPatchParams& adqPatchParams,
+void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
+                                  PROBLEME_HEBDO* pProblemeHebdo,
+                                  const AdqPatchParams& adqPatchParams,
                                   Solver::IResultWriter& writer)
 {
     if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)

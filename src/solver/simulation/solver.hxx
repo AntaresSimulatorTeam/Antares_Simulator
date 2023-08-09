@@ -44,7 +44,6 @@
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
-#include "BindingConstraintsTimeSeriesNumbersWriter.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -152,7 +151,7 @@ private:
 
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
-            ALEA_TirageAuSortChroniques(thermalNoisesByArea, numSpace);
+            ALEA_TirageAuSortChroniques(study, thermalNoisesByArea, numSpace);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
             simulationObj->prepareClustersInMustRunMode(numSpace);
@@ -380,8 +379,7 @@ void ISimulation<Impl>::run()
         ImplementationType::variables.simulationEnd();
 
         // Export ts-numbers into output
-        BindingConstraintsTimeSeriesNumbersWriter time_series_writer(pResultWriter);
-        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, time_series_writer);
+        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.

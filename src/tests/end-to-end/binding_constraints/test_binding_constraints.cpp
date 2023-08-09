@@ -2,6 +2,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
+#include <utility>
 #include "utils.h"
 #include "simulation.h"
 
@@ -30,7 +31,7 @@ void initializeStudy(Study::Ptr study)
 void setNumberMCyears(Study::Ptr study, unsigned int nbYears)
 {
     study->parameters.resetPlaylist(nbYears);
-    study->bindingConstraints.resizeAllTimeseriesNumbers(nbYears);
+    study->bindingConstraintsGroups.resizeAllTimeseriesNumbers(nbYears);
 }
 
 void simulationBetweenDays(Study::Ptr study, const unsigned int firstDay, const unsigned int lastDay)
@@ -98,21 +99,6 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     cluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
     cluster->modulation.fill(1.);
     cluster->modulation.fillColumn(thermalMinGenModulation, 0.);
-
-    //Initialize production cost from modulation
-    if (not cluster->productionCost)
-        cluster->productionCost = new double[HOURS_PER_YEAR];
-
-
-    double* prodCost	= cluster->productionCost;
-    double marginalCost = cluster->marginalCost;
-
-    // Production cost
-    auto& modulation = cluster->modulation[thermalModulationCost];
-    for (uint h = 0; h != cluster->modulation.height; ++h)
-        prodCost[h] = marginalCost * modulation[h];
-
-
     cluster->nominalCapacityWithSpinning = cluster->nominalCapacity;
 
     auto added = area->thermal.list.add(cluster);
@@ -185,7 +171,7 @@ class BCrhsConfig
 {
 public:
     BCrhsConfig() = delete;
-    BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbTimeSeries);
+    BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbOfTimeSeries);
     void fillTimeSeriesWith(unsigned int TSnumber, double rhsValue);
 
 private:
@@ -194,7 +180,7 @@ private:
 };
 
 BCrhsConfig::BCrhsConfig(std::shared_ptr<BindingConstraint> BC, unsigned int nbOfTimeSeries)
-    : nbOfTimeSeries_(nbOfTimeSeries), BC_(BC)
+    : BC_(std::move(BC)), nbOfTimeSeries_(nbOfTimeSeries)
 {
     BC_->RHSTimeSeries().resize(nbOfTimeSeries_, 8760);
 }
@@ -214,7 +200,7 @@ class BCgroupScenarioBuilder
 public:
     BCgroupScenarioBuilder() = delete;
     BCgroupScenarioBuilder(Study::Ptr study, unsigned int nbYears);
-    void yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber);
+    void yearGetsTSnumber(const std::string& groupName, unsigned int year, unsigned int TSnumber);
 
 private:
     unsigned int nbYears_ = 0;
@@ -225,10 +211,10 @@ BCgroupScenarioBuilder::BCgroupScenarioBuilder(Study::Ptr study, unsigned int nb
     : nbYears_(nbYears)
 
 {
-    rules_ = createScenarioRules(study);
+    rules_ = createScenarioRules(std::move(study));
 }
 
-void BCgroupScenarioBuilder::yearGetsTSnumber(std::string groupName, unsigned int year, unsigned int TSnumber)
+void BCgroupScenarioBuilder::yearGetsTSnumber(const std::string& groupName, unsigned int year, unsigned int TSnumber)
 {
     BOOST_CHECK(year < nbYears_);
     rules_->binding_constraints.setData(groupName, year, TSnumber + 1);
@@ -240,8 +226,8 @@ void BCgroupScenarioBuilder::yearGetsTSnumber(std::string groupName, unsigned in
 class SimulationHandler
 {
 public:
-    SimulationHandler(std::shared_ptr<Study> study)
-        : study_(study)
+    explicit SimulationHandler(std::shared_ptr<Study> study)
+        : study_(std::move(study))
     {}
     ~SimulationHandler() = default;
     void create();
@@ -257,13 +243,14 @@ private:
 
 void SimulationHandler::create()
 {
+    BOOST_CHECK(study_);
     BOOST_CHECK(study_->initializeRuntimeInfos());
     addScratchpadToEachArea(study_);
-
+    
     simulation_ = std::make_shared<ISimulation<Economy>>(*study_,
                                                          settings_,
                                                          &nullDurationCollector_);
-
+    
     // Allocate arrays for time series
     SIM_AllocationTableaux(*study_);
 }
@@ -299,19 +286,18 @@ Fixture::Fixture()
 
     double loadInAreaOne = 0.;
     Area* area1 = addAreaToStudy(study, "Area 1", loadInAreaOne);
-
     double loadInAreaTwo = 100.;
-    Area* area2 = addAreaToStudy(study, "Area 2", loadInAreaTwo);
 
+    Area* area2 = addAreaToStudy(study, "Area 2", loadInAreaTwo);
     link = AreaAddLinkBetweenAreas(area1, area2);
 
     configureLinkCapacities(link);
-
     addClusterToArea(area1, "some cluster");
 
-    BC = addBindingConstraints(study, "BC1", "Group1");
+    BC = addBindingConstraints(*(study), "BC1", "Group1");
     BC->weight(link, 1);
     BC->enabled(true);
+    study->bindingConstraintsGroups.buildFrom(study->bindingConstraints);
 };
 
 void Fixture::giveWeigthOnlyToYear(unsigned int year)

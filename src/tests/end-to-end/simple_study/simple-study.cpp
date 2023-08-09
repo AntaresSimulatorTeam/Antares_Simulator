@@ -52,21 +52,6 @@ std::shared_ptr<ThermalCluster> addCluster(Area* pArea, const std::string& clust
     pCluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
     pCluster->modulation.fill(1.);
     pCluster->modulation.fillColumn(thermalMinGenModulation, 0.);
-
-    //Initialize production cost from modulation
-    if (not pCluster->productionCost)
-        pCluster->productionCost = new double[HOURS_PER_YEAR];
-
-
-    double* prodCost	= pCluster->productionCost;
-    double marginalCost = pCluster->marginalCost;
-
-    // Production cost
-    auto& modulation = pCluster->modulation[thermalModulationCost];
-    for (uint h = 0; h != pCluster->modulation.height; ++h)
-        prodCost[h] = marginalCost * modulation[h];
-
-
     pCluster->nominalCapacityWithSpinning = pCluster->nominalCapacity;
 
     auto added = pArea->thermal.list.add(pCluster);

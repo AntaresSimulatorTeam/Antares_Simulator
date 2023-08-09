@@ -169,64 +169,56 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         problem.ValeursDeNTC[k].ValeurDuFlux.assign(linkCount, 0.);
         problem.ValeursDeNTC[k].ResistanceApparente.assign(linkCount, 0.);
 
-        // TODO VP: Remove this allocation
-        problem.CorrespondanceVarNativesVarOptim[k]
-          = new CORRESPONDANCES_DES_VARIABLES;
-
         problem.ConsommationsAbattues[k].ConsommationAbattueDuPays.assign(nbPays, 0.);
 
         problem.AllMustRunGeneration[k].AllMustRunGenerationOfArea.assign(nbPays, 0.);
 
         problem.SoldeMoyenHoraire[k].SoldeMoyenDuPays.assign(nbPays, 0.);
 
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDeLInterconnexion
+        auto& variablesMapping = problem.CorrespondanceVarNativesVarOptim[k];
+        variablesMapping.NumeroDeVariableDeLInterconnexion
           .assign(linkCount, 0);
-        problem.CorrespondanceVarNativesVarOptim[k]
-          ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion
+        variablesMapping
+          .NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion
           .assign(linkCount, 0);
-        problem.CorrespondanceVarNativesVarOptim[k]
-          ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion
+        variablesMapping.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion
           .assign(linkCount, 0);
 
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermique
+        variablesMapping.NumeroDeVariableDuPalierThermique
           .assign(study.runtime->thermalPlantTotalCount, 0);
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHyd
+        variablesMapping.NumeroDeVariablesDeLaProdHyd
           .assign(nbPays, 0);
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDePompage
+        variablesMapping.NumeroDeVariablesDePompage
           .assign(nbPays, 0);
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeNiveau
+        variablesMapping.NumeroDeVariablesDeNiveau
           .assign(nbPays, 0);
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeDebordement
+        variablesMapping.NumeroDeVariablesDeDebordement
           .assign(nbPays, 0);
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositive
+        variablesMapping.NumeroDeVariableDefaillancePositive
           .assign(nbPays, 0);
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegative
+        variablesMapping.NumeroDeVariableDefaillanceNegative
           .assign(nbPays, 0);
 
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse
+        variablesMapping.NumeroDeVariablesVariationHydALaBaisse
           .assign(nbPays, 0);
 
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausse
+        variablesMapping.NumeroDeVariablesVariationHydALaHausse
           .assign(nbPays, 0);
 
-        problem.CorrespondanceVarNativesVarOptim[k]
-          ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique
+        variablesMapping.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique
           .assign(study.runtime->thermalPlantTotalCount, 0);
-        problem.CorrespondanceVarNativesVarOptim[k]
-          ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique
+        variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique
           .assign(study.runtime->thermalPlantTotalCount, 0);
-        problem.CorrespondanceVarNativesVarOptim[k]
-          ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique
+        variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique
           .assign(study.runtime->thermalPlantTotalCount, 0);
-        problem.CorrespondanceVarNativesVarOptim[k]
-          ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
+        variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
           .assign(study.runtime->thermalPlantTotalCount, 0);
 
-        problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.InjectionVariable
+        variablesMapping.SIM_ShortTermStorage.InjectionVariable
           .assign(shortTermStorageCount, 0);
-        problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.WithdrawalVariable
+        variablesMapping.SIM_ShortTermStorage.WithdrawalVariable
           .assign(shortTermStorageCount, 0);
-        problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.LevelVariable
+        variablesMapping.SIM_ShortTermStorage.LevelVariable
           .assign(shortTermStorageCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesBilansPays
@@ -476,9 +468,6 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
               .CoutHoraireDeProductionDuPalierThermique
               .assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
-              .CoutHoraireDeProductionDuPalierThermiqueRef
-              .assign(NombreDePasDeTemps, 0.);
-            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
               .PuissanceDisponibleDuPalierThermique
               .assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[j]
@@ -535,10 +524,3 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
     }
 }
 
-void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
-{
-    for (uint k = 0; k < problem.NombreDePasDeTemps; k++)
-    {
-        delete problem.CorrespondanceVarNativesVarOptim[k];
-    }
-}

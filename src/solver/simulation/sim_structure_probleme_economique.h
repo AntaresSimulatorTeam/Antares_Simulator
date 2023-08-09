@@ -40,6 +40,11 @@ class AdequacyPatchRuntimeData;
 
 struct CORRESPONDANCES_DES_VARIABLES
 {
+    // Avoid accidental copies
+    CORRESPONDANCES_DES_VARIABLES() = default;
+    CORRESPONDANCES_DES_VARIABLES(const CORRESPONDANCES_DES_VARIABLES&) = delete;
+    CORRESPONDANCES_DES_VARIABLES(CORRESPONDANCES_DES_VARIABLES&&) = default;
+
     std::vector<int> NumeroDeVariableDeLInterconnexion;
     std::vector<int> NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;
     std::vector<int> NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
@@ -75,6 +80,11 @@ struct CORRESPONDANCES_DES_VARIABLES
 
 struct CORRESPONDANCES_DES_CONTRAINTES
 {
+    // Avoid accidental copies
+    CORRESPONDANCES_DES_CONTRAINTES() = default;
+    CORRESPONDANCES_DES_CONTRAINTES(const CORRESPONDANCES_DES_CONTRAINTES&) = delete;
+    CORRESPONDANCES_DES_CONTRAINTES(CORRESPONDANCES_DES_CONTRAINTES&&) = default;
+
     std::vector<int> NumeroDeContrainteDesBilansPays;
     std::vector<int> NumeroDeContraintePourEviterLesChargesFictives;
 
@@ -246,7 +256,6 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
     std::vector<double> PuissanceMinDuPalierThermiqueRef;
 
     std::vector<double> CoutHoraireDeProductionDuPalierThermique;
-    std::vector<double> CoutHoraireDeProductionDuPalierThermiqueRef;
 
     std::vector<double> CoutHoraireDuPalierThermiqueUp;
     std::vector<double> CoutHoraireDuPalierThermiqueDown;
@@ -537,7 +546,7 @@ struct PROBLEME_HEBDO
     bool firstWeekOfSimulation = false;
 
     // TODO VP: Not working if we're not using a pointer, need more investigation
-    std::vector<CORRESPONDANCES_DES_VARIABLES*> CorrespondanceVarNativesVarOptim;
+    std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES> CorrespondanceCntNativesCntOptimJournalieres;
     CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES CorrespondanceCntNativesCntOptimHebdomadaires;

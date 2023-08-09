@@ -219,7 +219,7 @@ RESOLUTION:
 
     if (options.useOrtools)
     {
-        solver = ORTOOLS_ConvertIfNeeded(&Probleme, solver);
+        solver = ORTOOLS_ConvertIfNeeded(options.solverName, &Probleme, solver);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
@@ -338,7 +338,7 @@ RESOLUTION:
             logs.info() << " Solver: Safe resolution failed";
         }
 
-        Optimization::InfeasibleProblemAnalysis analysis(&Probleme);
+        Optimization::InfeasibleProblemAnalysis analysis(options.solverName, &Probleme);
         logs.notice() << " Solver: Starting infeasibility analysis...";
         try
         {

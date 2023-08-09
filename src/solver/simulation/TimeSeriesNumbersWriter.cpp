@@ -3,6 +3,7 @@
 //
 
 #include "BindingConstraintsTimeSeriesNumbersWriter.h"
+#include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 #include <cstdint>
 #include <filesystem>
 #include <utility>
@@ -45,11 +46,11 @@ static void genericStoreTimeseriesNumbers(const Solver::IResultWriter::Ptr& writ
     writer->addEntryFromBuffer(path.string(), buffer);
 }
 
-void BindingConstraintsTimeSeriesNumbersWriter::write(const Data::BindingConstraintsRepository &list) {
-    for (auto const& [group, timeSeries]: list.TimeSeriesNumbers()) {
+void BindingConstraintsTimeSeriesNumbersWriter::write(const Data::BindingConstraintGroupRepository &bindingConstraintGroupRepository) {
+    for (auto const& group: bindingConstraintGroupRepository) {
         genericStoreTimeseriesNumbers(writer_,
-                                      timeSeries.timeseriesNumbers,
-                                      group,
+                                      group->timeseriesNumbers,
+                                      group->name(),
                                       "bindingconstraints");
     }
 

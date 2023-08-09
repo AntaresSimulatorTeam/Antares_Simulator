@@ -46,7 +46,6 @@ Adequacy::~Adequacy()
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             OPT_LiberationMemoireDuProblemeAOptimiser(pProblemesHebdo[numSpace]);
-            SIM_DesallocationProblemeHebdo(*pProblemesHebdo[numSpace]);
             delete pProblemesHebdo[numSpace];
         }
         delete[] pProblemesHebdo;

@@ -28,6 +28,22 @@ set(SRC_STUDY_SCENARIO_BUILDER
 	study/scenario-builder/scBuilderUtils.h
 	study/scenario-builder/scBuilderUtils.cpp
 	study/scenario-builder/BindingConstraintsTSNumbersData.cpp
+	study/scenario-builder/NTCTSNumberData.cpp
+	study/scenario-builder/NTCTSNumberData.h
+	study/scenario-builder/BindingConstraintsTSNumbersData.h
+	study/scenario-builder/RenewableTSNumberData.h
+	study/scenario-builder/RenewableTSNumberData.cpp
+	study/scenario-builder/ThermalTSNumberData.cpp
+	study/scenario-builder/ThermalTSNumberData.h
+	study/scenario-builder/HydroTSNumberData.h
+	study/scenario-builder/HydroTSNumberData.cpp
+	study/scenario-builder/SolarTSNumberData.cpp
+	study/scenario-builder/solarTSNumberData.h
+	study/scenario-builder/WindTSNumberData.h
+	study/scenario-builder/WindTSNumberData.cpp
+	study/scenario-builder/LoadTSNumberData.h
+	study/scenario-builder/LoadTSNumberData.cpp
+	study/scenario-builder/applyToMatrix.hxx
 )
 source_group("study\\scenario builder" FILES ${SRC_MATRIX})
 
@@ -291,14 +307,16 @@ set(SRC_STUDY_BINDING_CONSTRAINT
 	study/binding_constraint/BindingConstraintsRepository.h
 	study/binding_constraint/BindingConstraintsRepository.hxx
 	study/binding_constraint/BindingConstraintsRepository.cpp
-	study/binding_constraint/BindingConstraintTimeSeriesNumbers.cpp
-	study/binding_constraint/BindingConstraintTimeSeriesNumbers.h
 	study/binding_constraint/BindingConstraintLoader.cpp
 	study/binding_constraint/BindingConstraintLoader.h
 	study/binding_constraint/BindingConstraintSaver.cpp
 	study/binding_constraint/BindingConstraintSaver.h
 	study/binding_constraint/EnvForLoading.h
 	study/binding_constraint/BindingConstraintStructures.h
+	study/binding_constraint/BindingConstraintGroup.cpp
+	study/binding_constraint/BindingConstraintGroup.h
+	study/binding_constraint/BindingConstraintGroupRepository.cpp
+	study/binding_constraint/BindingConstraintGroupRepository.h
 	)
 
 source_group("study\\constraint" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
