@@ -12,17 +12,6 @@
 using namespace Antares::Solver;
 using namespace Antares::Data;
 
-void fillMatrixWithValue(Matrix<double, Yuni::sint32>& storage, double value)
-{
-    uint nbTimeSeries = storage.width;
-    for (uint ts = 0; ts < nbTimeSeries; ts++)
-    {
-        for (uint days = 0; days < DAYS_PER_YEAR; days++)
-        {
-            storage[ts][days] = value;
-        }
-    }
-}
 
 struct Fixture
 {
@@ -99,7 +88,7 @@ struct Fixture
         area_1->hydro.series->timeseriesNumbers[0][1] = 1;
         // ... Area 1 : Inflows time series
         area_1->hydro.series->storage.resize(nbInflowTS, 365);
-        fillMatrixWithValue(area_1->hydro.series->storage, 200.);
+        area_1->hydro.series->storage.fill(200.);
         area_1->hydro.series->storage[0][0] = 200. + 1.; //DAYS_PER_YEAR
         area_1->hydro.series->storage[0][DAYS_PER_YEAR - 1] = 200. + 2.;
 
@@ -109,9 +98,9 @@ struct Fixture
         area_2->hydro.series->timeseriesNumbers[0][1] = 1;
         // ... Area 2 : Inflows time series
         area_2->hydro.series->storage.resize(nbInflowTS, 365);
-        fillMatrixWithValue(area_2->hydro.series->storage, 300.);
-        area_1->hydro.series->storage[0][0] = 300. + 1.; //DAYS_PER_YEAR
-        area_1->hydro.series->storage[0][DAYS_PER_YEAR - 1] = 300. + 2.;
+        area_2->hydro.series->storage.fill(300.);
+        area_2->hydro.series->storage[0][0] = 300. + 1.; //DAYS_PER_YEAR
+        area_2->hydro.series->storage[0][DAYS_PER_YEAR - 1] = 300. + 2.;
     }
 
     ~Fixture() = default;
