@@ -50,6 +50,11 @@ std::vector<std::string> split(const std::string& s, char delimiter)
    }
    return tokens;
 }
+
+std::string StringBetweenAngleBrackets(const std::string& str){
+  return split(split(str, '<')[1], '>')[0];
+}
+
 std::string Constraint::getAreaName() const
 {
     if ((getType() == ConstraintType::binding_constraint_hourly)
@@ -58,7 +63,7 @@ std::string Constraint::getAreaName() const
     {
         return "<none>";
     }
-    return split(split(mItems.at(1), '<')[1], '>')[1];
+    return StringBetweenAngleBrackets(mItems.at(1));
 }
 
 std::string Constraint::getTimeStepInYear() const
@@ -67,10 +72,9 @@ std::string Constraint::getTimeStepInYear() const
     {
     case ConstraintType::binding_constraint_hourly:
     case ConstraintType::binding_constraint_daily:
-        return mItems.at(2);
     case ConstraintType::fictitious_load:
     case ConstraintType::hydro_reservoir_level:
-        return mItems.at(1);
+        return StringBetweenAngleBrackets (mItems.at(mItems.size()-2));
     default:
         return "-1";
     }
