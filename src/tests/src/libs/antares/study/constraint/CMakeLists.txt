@@ -29,6 +29,7 @@ add_executable(test_groups
 target_link_libraries(test_groups
         PRIVATE
         libantares-core
+        test_utils_unit
         Boost::unit_test_framework
         )
 
