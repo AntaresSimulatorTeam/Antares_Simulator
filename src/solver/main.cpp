@@ -51,12 +51,6 @@
 
 #include "signal-handling/public.h"
 
-#ifdef YUNI_OS_WINDOWS
-#include <conio.h>
-#else
-#include <unistd.h>
-#endif
-
 using namespace Antares;
 using namespace Yuni;
 
