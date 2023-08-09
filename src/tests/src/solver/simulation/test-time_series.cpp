@@ -44,8 +44,7 @@ struct Fixture {
     Fixture() {
         study = std::make_shared<Study>();
         study->header.version = version870;
-        std::string testName = boost::unit_test::framework::current_test_case().p_name;
-        working_tmp_dir = generateAndCreateDirName(testName);
+        working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
         std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
         constraints << "[1]\n"
