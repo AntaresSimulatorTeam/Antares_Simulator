@@ -92,7 +92,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                          PROBLEME_HEBDO* problemeHebdo,
                          int NumIntervalle,
                          const int optimizationNumber,
-                         OptPeriodStringGenerator& optPeriodStringGenerator,
+                         const OptPeriodStringGenerator& optPeriodStringGenerator,
                          IResultWriter& writer)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
