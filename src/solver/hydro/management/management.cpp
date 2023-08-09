@@ -353,16 +353,18 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
 
 void HydroManagement::changeInflowsToAccommodateFinalLevels(uint numSpace, uint year)
 {
-    study.areas.each([this, &numSpace, &year](Data::Area& area) {
+    study.areas.each([this, &numSpace, &year](Data::Area& area) 
+    {
         auto& data = pAreas[numSpace][area.index];
+
         if (area.hydro.finalLevelInflowsModifier.deltaLevel.empty())
             return;
 
         if (!area.hydro.finalLevelInflowsModifier.includeFinalReservoirLevel[year])
             return;
 
+        // Must be done before prepareMonthlyTargetGenerations
         double delta = area.hydro.finalLevelInflowsModifier.deltaLevel[year];
-        // must be done before prepareMonthlyTargetGenerations
         if (delta > 0)
             data.inflows[0] += delta;
         else if (delta < 0)

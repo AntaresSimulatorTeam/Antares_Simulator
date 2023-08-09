@@ -64,10 +64,10 @@ private:
     double highLevelLastDay;
     int initReservoirLvlMonth;
 
-public:
     const PartHydro& hydro;
     const unsigned int& areaIndex;
     const AreaName& areaName;
+public:
     // vectors containing data necessary for final reservoir level calculation
     // for one area and all MC years
     // vector indexes correspond to the MC years
