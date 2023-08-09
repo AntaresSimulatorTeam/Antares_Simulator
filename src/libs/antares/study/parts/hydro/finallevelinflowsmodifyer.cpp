@@ -149,8 +149,10 @@ void FinalLevelInflowsModifier::initializeData(const Matrix<double>& scenarioIni
 
 bool FinalLevelInflowsModifier::isActive()
 {
-    return hydro.reservoirManagement && !hydro.useWaterValue && !isnan(finalReservoirLevel)
-           && !isnan(initialReservoirLevel);
+    return  hydro.reservoirManagement && 
+            !hydro.useWaterValue &&
+            finalReservoirLevel >= 0. &&
+            initialReservoirLevel >= 0.;
 }
 
 bool FinalLevelInflowsModifier::makeChecks()

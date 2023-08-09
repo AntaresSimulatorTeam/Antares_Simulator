@@ -56,8 +56,8 @@ private:
 
     // data per area
     // data overwritten after each MC year
-    double initialReservoirLevel;
-    double finalReservoirLevel;
+    double initialReservoirLevel = -1.;
+    double finalReservoirLevel = -1.;
     double deltaReservoirLevel;
     double reservoirCapacity;
     double lowLevelLastDay;

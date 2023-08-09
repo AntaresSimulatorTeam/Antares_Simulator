@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(Testing_initializeData_function_for_area_1_pass)
     auto& hydro = area_1->hydro;
     year = 1;
 
-    auto finLevInfModify = FinalLevelInflowsModifier(hydro, 1, "Area1");
+    auto finLevInfModify = FinalLevelInflowsModifier(hydro, area_1->index, area_1->name);
 
     finLevInfModify.initializeData(
       scenarioInitialHydroLevels, scenarioFinalHydroLevels, parameters, year);
