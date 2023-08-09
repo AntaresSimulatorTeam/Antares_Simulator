@@ -28,7 +28,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/io/directory/iterator.h>
-#include "../study.h"
+
 #include "finder.h"
 
 using namespace Yuni;

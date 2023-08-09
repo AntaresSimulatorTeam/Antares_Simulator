@@ -29,8 +29,9 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include "../study.h"
+
 #include <yuni/io/directory/iterator.h>
+#include "antares/study/version.h"
 
 namespace Antares
 {

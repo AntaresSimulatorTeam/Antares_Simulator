@@ -9,8 +9,6 @@ add_library(finder
 
 target_include_directories(finder
         PRIVATE
-        ${CMAKE_SOURCE_DIR}/ext/yuni/src
-        ${CMAKE_SOURCE_DIR}/solver/writer
         ${CMAKE_SOURCE_DIR}/libs
         )
 
