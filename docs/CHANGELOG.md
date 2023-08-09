@@ -1,6 +1,51 @@
 Antares Changelog
 =================
 
+8.7.0-rc2 (08/2023)
+--------------------
+## Improvements
+* Write full command-line instead of solver location in logs (#1518)
+
+## Bugfixes
+* Fix invalid study after update to v8.7.0 - Add default group to existing BCs (#1462)
+* Fix incomplete check on constraint group (#1461)
+* Handle case when a binding constraint group in scenariobuilder.dat does not match any group of the study (#1480)
+* Fix error when fetching Antares_test submodule (#1456)
+* Fix error when writing files over 80Mb into a zip (#1488)
+* Fix memory leaks (#1468)
+
+## GUI
+* Thermal price definition (RTEi's -> CR20) - UI remarks from Paul (#1485)
+
+## Docs
+* Fix possible values for ST storage (#1455)
+
+## Tests
+* Add named MPS tests  (#1408)
+* Enforce better unit test isolation (#1486)
+* Add tests for Windows CI when job is scheduled (#1483)
+* Improve unit tests for CR20 (#1422)
+
+## For developers
+* Remove platform-specific headers (#1523)
+* Remove one `goto` instruction in OPT (#1522)
+* Remove study singleton in application signal handlers (#1513)
+* Remove barely-used `ThermalCluster::productionCost` temporary (#1517)
+* Bindings constraints scenario :  handling last remarks (#1466)
+* Replace remaining vector of pointers by plain vector (#1505)
+* Split ts numbers data classes in different files (#1398)
+* Remove more usage of study singleton (#1509)
+* Group of constraints (#1388)
+* Remove unused headers in optimization module (#1495)
+* Refactor ProblemeHebdo allocation (#1489)
+* Remove use of study singleton in optimization module (#1492)
+* Remove Study::Get from SIM, pass as function argument instead (#1494)
+* Objects in CMakeFiles (#1465)
+* Variables with a Ref or Ref_SV suffix (#1475, #1481, #1497, #1498, #1500, #1501, #1502)
+* Use std::vector instread of MemAlloc/MemFree, clean up (#1471)
+* Use ~class() = default (#1473)
+* Memory allocation for ProblemeAResoudre, use std::vector (#1432)
+* Improve clarity for constraints that should be used (#1452)
 
 8.7.0-rc1 (07/2023)
 --------------------
