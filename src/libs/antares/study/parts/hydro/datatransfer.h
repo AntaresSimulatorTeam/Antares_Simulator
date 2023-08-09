@@ -24,41 +24,47 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_H__
-#define __ANTARES_LIBS_STUDY_PARTS_H__
 
-// Load
-#include "load/series.h"
-#include "load/container.h"
+#ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_DATA_TRANSFER_H__
+#define __ANTARES_LIBS_STUDY_PARTS_HYDRO_DATA_TRANSFER_H__
 
-// Solar
-#include "solar/series.h"
-#include "solar/prepro.h"
-#include "solar/container.h"
+#include "../../../array/matrix.h"
 
-// Hydro
-#include "hydro/prepro.h"
-#include "hydro/series.h"
-#include "hydro/container.h"
-#include "hydro/datatransfer.h"
+namespace Antares::Data
+{
+/*!
+** \brief Hydro for a single area
+*/
+class DataTransfer
+{
 
-// Wind
-#include "wind/prepro.h"
-#include "wind/series.h"
-#include "wind/container.h"
+public:
 
-// Thermal
-#include "thermal/defines.h"
-#include "thermal/prepro.h"
-#include "thermal/cluster.h"
-#include "thermal/container.h"
+    DataTransfer();
 
-// Renewable
-#include "renewable/defines.h"
-#include "renewable/cluster.h"
-#include "renewable/container.h"
+    enum powerDailyE
+    {
+        //! Generated max power
+        genMaxP = 0,
+        //! Generated max energy
+        genMaxE,
+        //! Pumping max Power
+        pumpMaxP,
+        // Pumping max Energy
+        pumpMaxE,
+    };
 
-// Short-term storage
-#include "short-term-storage/container.h"
+    Matrix<double, double> maxPower;
 
-#endif // __ANTARES_LIBS_STUDY_PARTS_H__
+    bool LoadFromFolder(Study& study, const AnyString& folder, Area& area);
+    bool AutoTransferHours(Study& study, const AnyString& folder, Area& area);
+    void AutoTransferPower(Matrix<double, Yuni::sint32>& matrix,
+                                       const Matrix<double>::ColumnType& maxPower);
+    bool SupportForOldStudies(Study& study, const AnyString& folder, Area& area);
+
+
+};
+
+} // Antares::Data
+
+#endif /*__ANTARES_LIBS_STUDY_PARTS_HYDRO_DATA_TRANSFER_H__*/

@@ -175,12 +175,6 @@ public:
     */
     Matrix<Yuni::uint32> timeseriesNumbers;
     Matrix<Yuni::uint32> timeseriesNumbersPowerCredits;
-    bool SupportForOldStudies(Study& study, const AreaName& areaID, const AnyString& folder);
-
-    /*!
-    ** \brief This function provides loading hydro power credits data from folder
-    ** New function is needed because LoadFromFolder function is not callable if TS generator is enabled for hydro
-    */
     bool LoadHydroPowerCredits(Study& study, const AreaName& areaID, const AnyString& folder);
 
 }; // class DataSeriesHydro

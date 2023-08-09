@@ -50,18 +50,6 @@ public:
         maximum,
     };
 
-    enum powerDailyE
-    {
-        //! Generated max power
-        genMaxP = 0,
-        //! Generated max energy
-        genMaxE,
-        //! Pumping max Power
-        pumpMaxP,
-        // Pumping max Energy
-        pumpMaxE,
-    };
-
     enum hoursDaily
     {
         genMaxHours = 0,
@@ -152,9 +140,6 @@ public:
     double leewayUpperBound;
     //! Puming efficiency
     double pumpingEfficiency;
-    //! Daily max power ({generating max Power, generating max energy, pumping max power, pumping
-    //! max energy}x365)
-    Matrix<double, double> maxPower;
     //! Credit Modulation (default 0, 101 * 2)
     Matrix<double, double> creditModulation;
 
@@ -180,12 +165,9 @@ public:
 
     Matrix<double, double> maxHours;
 
-private:
-
-    bool AutoTransferHours(Study& study, const AreaName& areaID, const AnyString& folder);
+    bool isDeleted;
 
 }; // class PartHydro
-
 
 // Interpolates a water value from a table according to a level and a day.
 // As this function can be called a lot of times, we pass working variables and returned variables

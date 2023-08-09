@@ -263,6 +263,8 @@ set(SRC_STUDY_PART_HYDRO
 	study/parts/hydro/allocation.h
 	study/parts/hydro/allocation.hxx
 	study/parts/hydro/allocation.cpp
+	study/parts/hydro/datatransfer.h
+	study/parts/hydro/datatransfer.cpp
 	)
 source_group("study\\part\\hydro" FILES ${SRC_STUDY_PART_HYDRO})
 

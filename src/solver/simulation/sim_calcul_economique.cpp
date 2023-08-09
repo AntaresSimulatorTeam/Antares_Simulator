@@ -722,7 +722,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                               = 0.;
                             problem.CaracteristiquesHydrauliques[k]
                               .MaxEnergieHydrauParIntervalleOptimise[j]
-                              = meanPower * area.hydro.maxPower[area.hydro.genMaxE][day]
+                              = meanPower * area.hydro.maxHours[area.hydro.genMaxHours][day]
                                 * problem.CaracteristiquesHydrauliques[k]
                                     .WeeklyGeneratingModulation;
                         }
@@ -773,7 +773,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                             uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
                             auto meanPower = CalculateDailyMeanPower(day, srcmaxgen);
 
-                            double DGC = meanPower * area.hydro.maxPower[area.hydro.genMaxE][day];
+                            double DGC = meanPower * area.hydro.maxHours[area.hydro.genMaxHours][day];
 
                             DGU_tmp[j] = DNT[day] * LUB;
                             DGL_tmp[j] = DNT[day] * LLB;
@@ -882,7 +882,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
                                 problem.CaracteristiquesHydrauliques[k]
                                   .MaxEnergiePompageParIntervalleOptimise[j]
-                                  = meanPump * area.hydro.maxPower[area.hydro.pumpMaxE][day]
+                                  = meanPump * area.hydro.maxHours[area.hydro.pumpMaxHours][day]
                                     * problem.CaracteristiquesHydrauliques[k]
                                         .WeeklyPumpingModulation;
                             }
@@ -916,7 +916,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                                 auto meanPump = CalculateDailyMeanPower(day, srcmaxpump);
 
                                 double DPC
-                                  = meanPump * area.hydro.maxPower[area.hydro.pumpMaxE][day];
+                                  = meanPump * area.hydro.maxHours[area.hydro.pumpMaxHours][day];
 
                                 WPU += DPC;
                             }
@@ -928,7 +928,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                                 uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
                                 auto meanPump = CalculateDailyMeanPower(day, srcmaxpump);
                                 double DPC
-                                  = meanPump * area.hydro.maxPower[area.hydro.pumpMaxE][day];
+                                  = meanPump * area.hydro.maxHours[area.hydro.pumpMaxHours][day];
                                 double rc = area.hydro.reservoirCapacity;
 
                                 if (not area.hydro.hardBoundsOnRuleCurves)
