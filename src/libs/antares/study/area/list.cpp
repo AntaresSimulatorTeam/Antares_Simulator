@@ -909,11 +909,27 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = area.hydro.series->loadFromFolder(study, area.id, buffer) && ret;
         }
 
+        if (area.hydro.series && study.header.version < 870)
+        {
+            std::shared_ptr<DataTransfer> datatransfer = std::make_shared<DataTransfer>();
+            buffer.clear() << study.folderInput << SEP << "hydro";
+
+            datatransfer->LoadFromFolder(study, buffer, area);
+            datatransfer->SupportForOldStudies(study, buffer, area);
+        }
+
         if (area.hydro.series)
         {
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->SupportForOldStudies(study, area.id, buffer) && ret;
             ret = area.hydro.series->LoadHydroPowerCredits(study, area.id, buffer) && ret;
+        }
+
+        if (study.header.version >= 870 && !area.hydro.isDeleted)
+        {
+            buffer.clear() << study.folderInput << SEP << "common" << SEP << "capacity" << SEP
+                           << "maxpower_" << area.id << '.' << study.inputExtension;
+            IO::File::Delete(buffer);
+            area.hydro.isDeleted = true;
         }
 
         ++options.progressTicks;

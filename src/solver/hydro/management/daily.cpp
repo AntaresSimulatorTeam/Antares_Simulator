@@ -233,14 +233,14 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     uint dayYear = 0;
 
-    auto const& maxPowerHours = area.hydro.maxPower;
+    auto const& maxPowerHours = area.hydro.maxHours;
     auto const& maxPower = area.hydro.series->maxgen;
 
     uint tsIndexPowerCredits
       = (NumeroChroniquesTireesParPays[numSpace][z]).HydrauliquePowerCredits;
 
     auto const& maxP = maxPower[tsIndexPowerCredits < maxPower.width ? tsIndexPowerCredits : 0];
-    auto const& maxE = maxPowerHours[Data::PartHydro::genMaxE];
+    auto const& maxE = maxPowerHours[Data::PartHydro::genMaxHours];
 
     auto& valgen = ValeursGenereesParPays[numSpace][z];
 
