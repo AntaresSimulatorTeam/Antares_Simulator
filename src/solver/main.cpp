@@ -127,7 +127,7 @@ int main(int argc, char** argv)
         logs.applicationName("solver");
 
         if (not memory.initializeTemporaryFolder())
-            return EXIT_FAILURE;
+            throw FatalError("Could not initialize temporary folder");
 
         // locale
         InitializeDefaultLocale();

@@ -193,35 +193,35 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
             }
 
             H2O_M_OptimiserUneAnnee(&problem, 0);
-            switch (problem.ResultatsValides)
-            {
-            case OUI:
-            {
-                if (Logs::Verbosity::Debug::enabled)
-                    CheckHydroAllocationProblem(area, problem, initReservoirLvlMonth, lvi);
+            switch (problem.ResultatsValides) {
+                case OUI: {
+                    if (Logs::Verbosity::Debug::enabled)
+                        CheckHydroAllocationProblem(area, problem, initReservoirLvlMonth, lvi);
 
-                for (uint month = 0; month != 12; ++month)
-                {
-                    uint realmonth = (initReservoirLvlMonth + month) % 12;
+                    for (uint month = 0; month != 12; ++month) {
+                        uint realmonth = (initReservoirLvlMonth + month) % 12;
 
-                    data.MOG[realmonth] = problem.Turbine[month] * area.hydro.reservoirCapacity;
-                    data.MOL[realmonth] = problem.Volume[month];
+                        data.MOG[realmonth] = problem.Turbine[month] * area.hydro.reservoirCapacity;
+                        data.MOL[realmonth] = problem.Volume[month];
+                    }
+                    data.MOL[initReservoirLvlMonth] = lvi;
+                    solutionCost = problem.ProblemeHydraulique->CoutDeLaSolution;
+                    solutionCostNoised = problem.ProblemeHydraulique->CoutDeLaSolutionBruite;
+
+                    break;
                 }
-                data.MOL[initReservoirLvlMonth] = lvi;
-                solutionCost = problem.ProblemeHydraulique->CoutDeLaSolution;
-                solutionCostNoised = problem.ProblemeHydraulique->CoutDeLaSolutionBruite;
-
-                break;
-            }
-            case NON:
-            {
-                std::ostringstream msg;
-                msg << "Year : " << y + 1 << " - hydro: " << area.name
-                    << " [month] no solution found";
-                throw FatalError(msg.str());
-            }
-            case EMERGENCY_SHUT_DOWN:
-                throw FatalError("msg.str()");
+                case NON: {
+                    std::ostringstream msg;
+                    msg << "Year : " << y + 1 << " - hydro: " << area.name
+                        << " [month] no solution found";
+                    throw FatalError(msg.str());
+                }
+                case EMERGENCY_SHUT_DOWN: {
+                    std::ostringstream msg;
+                    msg << "Year : " << y + 1 << " - hydro: " << area.name
+                        << " [month] fatal error";
+                    throw FatalError(msg.str());
+                }
             }
 
             H2O_M_Free(&problem);

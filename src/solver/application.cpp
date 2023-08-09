@@ -271,7 +271,7 @@ void Application::resetLogFilename() const
 
     if (!logs.logfileIsOpened())
     {
-        throw FatalError(std::string("Impossible to create ") + logfile.c_str());
+        throw FatalError(std::string("Impossible to create the log file at ") + logfile.c_str());
     }
 }
 

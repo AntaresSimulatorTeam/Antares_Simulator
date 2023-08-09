@@ -37,7 +37,7 @@ namespace Antares {
 class FatalError : public std::runtime_error
 {
 public:
-    explicit FatalError(const std::string& message);
+    using std::runtime_error::runtime_error;
 };
 
 }

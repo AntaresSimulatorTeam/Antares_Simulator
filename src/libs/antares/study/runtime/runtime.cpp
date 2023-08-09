@@ -240,10 +240,6 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     // weeks, this value must be greater than or equal to 168
     if (limits.hour[rangeCount] < 168)
     {
-        logs.fatal() << "At least one week is required to run a simulation.";
-        // Since this method is only called by the solver, we will abort now.
-        // However, we have to release all locks held by the study before to avoid
-        // a timeout for a future use of the study
         throw FatalError("At least one week is required to run a simulation.");
     }
 }
