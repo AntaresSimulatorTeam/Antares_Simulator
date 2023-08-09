@@ -13,6 +13,8 @@
 #include <filesystem>
 #include "../../../../utils/utils.h"
 
+#define testName boost::unit_test::framework::current_test_case().p_name
+
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
@@ -24,7 +26,7 @@ BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto working_tmp_dir = generateAndCreateDirName();
+    auto working_tmp_dir = generateAndCreateDirName(testName);
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
     constraints << "[1]\n"
@@ -69,7 +71,7 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto working_tmp_dir = generateAndCreateDirName();
+    auto working_tmp_dir = generateAndCreateDirName(testName);
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
     constraints << "[1]\n"
@@ -113,7 +115,7 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto working_tmp_dir = generateAndCreateDirName();
+    auto working_tmp_dir = generateAndCreateDirName(testName);
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
     constraints << "[1]\n"
@@ -175,7 +177,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto working_tmp_dir = generateAndCreateDirName();
+    auto working_tmp_dir = generateAndCreateDirName(testName);
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
     constraints << "[1]\n"
@@ -219,7 +221,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_range) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto working_tmp_dir = generateAndCreateDirName();
+    auto working_tmp_dir = generateAndCreateDirName(testName);
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
     constraints << "[1]\n"

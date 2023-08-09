@@ -4,7 +4,8 @@
 #define BOOST_TEST_MODULE rhsTimeSeries
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/included/unit_test.hpp>
+#include "../../utils/utils.h"
+#include <boost/test/unit_test.hpp>
 #include "antares/study.h"
 #include <filesystem>
 #include <fstream>
@@ -29,15 +30,6 @@ void initializeStudy(Study& study)
     study.parameters.timeSeriesToRefresh = 0;
 }
 
-fs::path generateAndCreateDirName()
-{
-    std::string dir = boost::unit_test::framework::current_test_case().p_name;
-    fs::path working_dir = fs::temp_directory_path() / dir;
-    fs::remove(working_dir);
-    fs::create_directories(working_dir);
-    return working_dir;
-}
-
 template<class Ta, class Tb>
 void CheckEqual(const Matrix<Ta>& a, const Matrix<Tb>& b) {
     BOOST_CHECK_EQUAL(a.width, b.width);
@@ -52,7 +44,8 @@ struct Fixture {
     Fixture() {
         study = std::make_shared<Study>();
         study->header.version = version870;
-        working_tmp_dir = generateAndCreateDirName();
+        std::string testName = boost::unit_test::framework::current_test_case().p_name;
+        working_tmp_dir = generateAndCreateDirName(testName);
 
         std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
         constraints << "[1]\n"
