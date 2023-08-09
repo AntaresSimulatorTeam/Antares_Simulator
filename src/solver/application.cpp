@@ -3,7 +3,7 @@
 #include <antares/sys/policy.h>
 #include <antares/resources/resources.h>
 #include <antares/hostinfo.h>
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 #include <antares/benchmarking/timer.h>
 
 #include <antares/exception/InitializationError.hpp>
@@ -226,33 +226,21 @@ void Application::execute()
     memoryReport.start();
 
     pStudy->computePThetaInfForThermalClusters();
-    try
+
+    // Run the simulation
+    switch (pStudy->runtime->mode)
     {
-        // Run the simulation
-        switch (pStudy->runtime->mode)
-        {
-        case Data::stdmEconomy:
-            runSimulationInEconomicMode();
-            break;
-        case Data::stdmAdequacy:
-            runSimulationInAdequacyMode();
-            break;
-        default:
-            break;
-        }
+    case Data::stdmEconomy:
+        runSimulationInEconomicMode();
+        break;
+    case Data::stdmAdequacy:
+        runSimulationInAdequacyMode();
+        break;
+    default:
+        break;
     }
     // TODO : make an interface class for ISimulation, check writer & queue before
     // runSimulationIn<XXX>Mode()
-    catch (Solver::Initialization::Error::NoResultWriter e)
-    {
-        logs.error() << "No result writer";
-        AntaresSolverEmergencyShutdown(); // no return
-    }
-    catch (Solver::Initialization::Error::NoQueueService e)
-    {
-        logs.error() << "No queue service";
-        AntaresSolverEmergencyShutdown(); // no return
-    }
 
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();
@@ -270,9 +258,7 @@ void Application::resetLogFilename() const
     // Making sure that the folder
     if (!Yuni::IO::Directory::Create(logfile))
     {
-        logs.fatal() << "Impossible to create the log folder. Aborting now.";
-        logs.info() << "  Target: " << logfile;
-        AntaresSolverEmergencyShutdown(); // no return
+        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.c_str() + ". Aborting now.");
     }
 
     // Date/time
@@ -285,8 +271,7 @@ void Application::resetLogFilename() const
 
     if (!logs.logfileIsOpened())
     {
-        logs.error() << "Impossible to create " << logfile;
-        AntaresSolverEmergencyShutdown(); // will never return
+        throw FatalError(std::string("Impossible to create the log file at ") + logfile.c_str());
     }
 }
 
@@ -370,7 +355,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             // The loading of the study produces warnings and/or errors
             // As the option '--force' is not given, we can not continue
             LogDisplayErrorInfos(pErrorCount, pWarningCount, "The simulation must stop.");
-            AntaresSolverEmergencyShutdown();
+            throw FatalError("The simulation must stop.");
         }
         else
         {

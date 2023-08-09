@@ -1,5 +1,4 @@
 #include <antares/study.h>
-#include <antares/emergency.h>
 
 #include "../simulation/simulation.h"
 

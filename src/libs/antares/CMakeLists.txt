@@ -382,9 +382,9 @@ set(SRC
 	locale.h
 	locale.cpp
 
-	emergency.h emergency.cpp
+	fatal-error.h
 
-	# wx-wrapper
+		# wx-wrapper
 	wx-wrapper.h
 
 	# resource

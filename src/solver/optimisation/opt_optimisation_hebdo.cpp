@@ -31,7 +31,7 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 #include <antares/logs.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 
@@ -69,8 +69,7 @@ void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
     }
     else
     {
-        logs.fatal() << "Bug: TypeDOptimisation, OPTIMISATION_LINEAIRE ou OPTIMISATION_QUADRATIQUE "
-                        "non initialise";
-        AntaresSolverEmergencyShutdown();
+        throw FatalError("Bug: TypeDOptimisation, OPTIMISATION_LINEAIRE ou OPTIMISATION_QUADRATIQUE "
+                         "non initialise");
     }
 }

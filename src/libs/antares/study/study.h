@@ -326,17 +326,6 @@ public:
     bool readonly() const;
     //@}
 
-    //! \name Locks
-    //@{
-    /*!
-    ** \brief Release all locks held by the study
-    **
-    ** This method should only be used when the program want to abort
-    ** immediatly without freing allocated data.
-    */
-    void releaseAllLocks();
-    //@}
-
     //! \name Time-series
     //@{
     /*!
