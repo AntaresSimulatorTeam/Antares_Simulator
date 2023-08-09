@@ -46,6 +46,7 @@ Antares Changelog
 * Use ~class() = default (#1473)
 * Memory allocation for ProblemeAResoudre, use std::vector (#1432)
 * Improve clarity for constraints that should be used (#1452)
+* Automatically include yuni include directory in dependents (#1525)
 
 8.7.0-rc1 (07/2023)
 --------------------
