@@ -12,19 +12,14 @@
 using namespace Antares::Solver;
 using namespace Antares::Data;
 
-void InstantiateAreaHydroStorage(Matrix<double, Yuni::sint32>& storage, double seed, uint nbYears)
+void fillMatrixWithValue(Matrix<double, Yuni::sint32>& storage, double value)
 {
-    for (uint i = 0; i < nbYears; i++)
+    uint nbTimeSeries = storage.width;
+    for (uint ts = 0; ts < nbTimeSeries; ts++)
     {
         for (uint days = 0; days < DAYS_PER_YEAR; days++)
         {
-            if (days == 0)
-                storage[i][days] = seed + 1;
-
-            if (days == DAYS_PER_YEAR - 1)
-                storage[i][days] = seed + 2;
-
-            storage[i][days] = seed;
+            storage[ts][days] = value;
         }
     }
 }
@@ -96,23 +91,27 @@ struct Fixture
         scenarioFinalHydroLevels[1][0] = 3.5;
         scenarioFinalHydroLevels[1][1] = 4.3;
 
-        // Area 1 : inflows time series matrices 
-        // ... time series numbers for each year
-        area_1->hydro.series->timeseriesNumbers.resize(1, nbYears);
+        // Inflows time series matrices :
+        uint nbInflowTS = 2;
+        // ... Area 1 : Inflows time series numbers for each year
+        area_1->hydro.series->timeseriesNumbers.resize(1, nbInflowTS);
         area_1->hydro.series->timeseriesNumbers[0][0] = 0;
         area_1->hydro.series->timeseriesNumbers[0][1] = 1;
+        // ... Area 1 : Inflows time series
+        area_1->hydro.series->storage.resize(nbInflowTS, 365);
+        fillMatrixWithValue(area_1->hydro.series->storage, 200.);
+        area_1->hydro.series->storage[0][0] = 200. + 1.; //DAYS_PER_YEAR
+        area_1->hydro.series->storage[0][DAYS_PER_YEAR - 1] = 200. + 2.;
 
-        area_1->hydro.series->storage.resize(nbYears, 365);
-        InstantiateAreaHydroStorage(area_1->hydro.series->storage, 200., nbYears);
-
-        // Area 2 : inflows time series matrices 
-        // ... time series numbers for each year
-        area_2->hydro.series->timeseriesNumbers.resize(1, nbYears);
+        // ... Area 2 : time series numbers for each year
+        area_2->hydro.series->timeseriesNumbers.resize(1, nbInflowTS);
         area_2->hydro.series->timeseriesNumbers[0][0] = 0;
         area_2->hydro.series->timeseriesNumbers[0][1] = 1;
-
-        area_2->hydro.series->storage.resize(nbYears, 365);
-        InstantiateAreaHydroStorage(area_2->hydro.series->storage, 300., nbYears);
+        // ... Area 2 : Inflows time series
+        area_2->hydro.series->storage.resize(nbInflowTS, 365);
+        fillMatrixWithValue(area_2->hydro.series->storage, 300.);
+        area_1->hydro.series->storage[0][0] = 300. + 1.; //DAYS_PER_YEAR
+        area_1->hydro.series->storage[0][DAYS_PER_YEAR - 1] = 300. + 2.;
     }
 
     ~Fixture() = default;
