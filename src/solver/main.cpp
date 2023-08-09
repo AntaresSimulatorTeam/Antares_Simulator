@@ -157,4 +157,9 @@ int main(int argc, char** argv)
         logAbortion();
         return EXIT_FAILURE;
     }
+    catch (...) {
+        logs.fatal() << "An unexpected error occurred.";
+        logAbortion();
+        return EXIT_FAILURE;
+    }
 }

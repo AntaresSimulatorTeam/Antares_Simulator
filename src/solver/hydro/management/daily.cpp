@@ -55,7 +55,8 @@ FatalError fatalError(const std::string& areaName, int year)
     std::ostringstream msg;
     msg << "Year : " << year + 1 << " - hydro: " << areaName
         << " [daily] fatal error";
-    return FatalError(msg.str());}
+    return FatalError(msg.str());
+}
 
 FatalError solutionNotFound(const std::string& areaName, int year)
 {
