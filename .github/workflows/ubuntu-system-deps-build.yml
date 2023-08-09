@@ -2,7 +2,7 @@ name: Ubuntu CI (deps. compilation)
 
 on:
   schedule:
-    - cron: '21 2 * * *'
+    - cron: '21 2 * * 1'
 
 jobs:
 
