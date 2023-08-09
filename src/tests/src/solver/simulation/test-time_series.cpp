@@ -103,8 +103,7 @@ struct Fixture {
 
     std::shared_ptr<PublicStudy> study = std::make_shared<PublicStudy>();
     StudyLoadOptions options;
-    std::filesystem::path tmp_dir = fs::temp_directory_path();
-    std::filesystem::path working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
+    std::filesystem::path working_tmp_dir;;
     Matrix<double> expected_lower_bound_series;
     Matrix<double> expected_upper_bound_series;
     Matrix<double> expected_equality_series;

@@ -2,7 +2,7 @@
 
 namespace fs = std::filesystem;
 
-fs::path generateAndCreateDirName(std::string dirName)
+fs::path generateAndCreateDirName(const std::string& dirName)
 {
     fs::path working_dir = fs::temp_directory_path() / dirName;
     fs::remove_all(working_dir);
