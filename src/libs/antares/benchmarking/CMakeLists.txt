@@ -22,4 +22,6 @@ target_include_directories(benchmarking
 target_link_libraries(benchmarking
         PRIVATE
         yuni-static-core
+        inifile
+        result_writer
         )

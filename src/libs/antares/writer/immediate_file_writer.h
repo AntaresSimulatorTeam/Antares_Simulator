@@ -2,6 +2,7 @@
 
 #include <string>
 #include <yuni/core/string.h>
+#include "i_writer.h"
 
 namespace Antares
 {

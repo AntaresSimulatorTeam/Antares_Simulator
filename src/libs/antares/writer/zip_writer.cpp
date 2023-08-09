@@ -2,6 +2,7 @@
 #include <yuni/io/file.h> // Yuni::IO::File::LoadFromFile
 
 #include "zip_writer.h"
+#include <antares/benchmarking/timer.h>
 
 extern "C"
 {

@@ -3,16 +3,15 @@
 #include <mutex>
 #include <string>
 
-#include <antares/benchmarking/benchmarking.h> // Timer
-
 #include <yuni/job/queue/service.h>
 #include <yuni/job/job.h>
 #include <yuni/core/string.h>
-#include <antares/benchmarking/info_collectors.h>
 
-namespace Antares
-{
-namespace Solver
+#include "i_writer.h"
+#include "antares/benchmarking/info_collectors.h"
+
+
+namespace Antares::Solver
 {
 enum class ZipState
 {
@@ -80,7 +79,7 @@ private:
     template<class ContentType>
     void addEntryFromBufferHelper(const std::string& entryPath, ContentType& entryContent);
 };
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver
+
 
 #include "zip_writer.hxx"

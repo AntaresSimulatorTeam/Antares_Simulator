@@ -2,6 +2,9 @@
 #include <yuni/io/file.h>
 
 #include "immediate_file_writer.h"
+#include "antares/io/file.h"
+#include <antares/logs/logs.h>
+
 
 // Create directory hierarchy (incl. root)
 // Don't complain if directories already exist

@@ -5,8 +5,8 @@
 #include <string>
 #include <mutex>
 
-#include <antares/study.h>
 #include "file_content.h"
+#include <antares/study/study.h>
 
 namespace Benchmarking
 {
