@@ -42,7 +42,7 @@ Antares Changelog
 * Remove Study::Get from SIM, pass as function argument instead (#1494)
 * Objects in CMakeFiles (#1465)
 * Variables with a Ref or Ref_SV suffix (#1475, #1481, #1497, #1498, #1500, #1501, #1502)
-* Use std::vector instread of MemAlloc/MemFree, clean up (#1471)
+* Use std::vector instead of MemAlloc/MemFree, clean up (#1471)
 * Use ~class() = default (#1473)
 * Memory allocation for ProblemeAResoudre, use std::vector (#1432)
 * Improve clarity for constraints that should be used (#1452)
