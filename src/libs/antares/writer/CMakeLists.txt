@@ -21,12 +21,12 @@ add_library(result_writer
 
 target_include_directories(result_writer
         PRIVATE
-        ${CMAKE_SOURCE_DIR}/ext/yuni/src
         ${CMAKE_SOURCE_DIR}/libs
 )
 
 target_link_libraries(result_writer
         PRIVATE
+        yuni-static-core
         MINIZIP::minizip
         logs
         inifile
