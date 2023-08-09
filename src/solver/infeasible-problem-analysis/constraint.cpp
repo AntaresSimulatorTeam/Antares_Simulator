@@ -1,6 +1,7 @@
 #include <cassert>
 
 #include "constraint.h"
+#include <sstream>
 
 namespace Antares
 {
@@ -38,7 +39,17 @@ double Constraint::getSlackValue() const
 {
     return mSlackValue;
 }
-
+std::vector<std::string> split(const std::string& s, char delimiter)
+{
+   std::vector<std::string> tokens;
+   std::string token;
+   std::istringstream tokenStream(s);
+   while (std::getline(tokenStream, token, delimiter))
+   {
+      tokens.push_back(token);
+   }
+   return tokens;
+}
 std::string Constraint::getAreaName() const
 {
     if ((getType() == ConstraintType::binding_constraint_hourly)
@@ -47,7 +58,7 @@ std::string Constraint::getAreaName() const
     {
         return "<none>";
     }
-    return mItems.at(2);
+    return split(split(mItems.at(1), '<')[1], '>')[1];
 }
 
 std::string Constraint::getTimeStepInYear() const
@@ -65,35 +76,26 @@ std::string Constraint::getTimeStepInYear() const
     }
 }
 
-static ConstraintType bindingConstraintPeriodicity(const std::string& in)
-{
-    if (in == "hourly")
-    {
-        return ConstraintType::binding_constraint_hourly;
-    }
-    if (in == "daily")
-    {
-        return ConstraintType::binding_constraint_daily;
-    }
-    if (in == "weekly")
-    {
-        return ConstraintType::binding_constraint_weekly;
-    }
-    return ConstraintType::none;
-}
-
 ConstraintType Constraint::getType() const
 {
     assert(mItems.size() > 1);
-    if (mItems.at(0) == "bc")
+    if (mItems.at(1) == "hourly")
     {
-        return bindingConstraintPeriodicity(mItems.at(1));
+        return ConstraintType::binding_constraint_hourly;
     }
-    if (mItems.at(0) == "fict_load")
+    if (mItems.at(1) == "daily")
+    {
+        return ConstraintType::binding_constraint_daily;
+    }
+    if (mItems.at(1) == "weekly")
+    {
+        return ConstraintType::binding_constraint_weekly;
+    }
+    if (mItems.at(0) == "FictiveLoads")
     {
         return ConstraintType::fictitious_load;
     }
-    if (mItems.at(0) == "hydro_level")
+    if (mItems.at(0) == "AreaHydroLevel")
     {
         return ConstraintType::hydro_reservoir_level;
     }
@@ -106,9 +108,8 @@ std::string Constraint::getBindingConstraintName() const
     {
     case ConstraintType::binding_constraint_hourly:
     case ConstraintType::binding_constraint_daily:
-        return mItems.at(3);
     case ConstraintType::binding_constraint_weekly:
-        return mItems.at(2);
+        return mItems.at(0);
     default:
         return "<unknown>";
     }
