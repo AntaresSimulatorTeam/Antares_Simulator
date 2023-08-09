@@ -29,13 +29,12 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <chrono>
 
 #include <yuni/io/directory/iterator.h>
 #include "antares/study/version.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Look for study folders asynchronously
@@ -45,16 +44,11 @@ class StudyFinder : public Yuni::Policy::ObjectLevelLockable<StudyFinder>
 public:
     //! The threading policy
     using ThreadingPolicy = Yuni::Policy::ObjectLevelLockable<StudyFinder>;
-    enum
-    {
-        //! The default value for the timeout
-        defaultTimeout = 10000, // 10s
-    };
+    static constexpr std::chrono::seconds defaultTimeout{10};
 
     //! List of folders
     using FolderVector = std::vector<Yuni::String::Ptr>;
 
-public:
     //! \name Constructor
     //@{
     /*!
@@ -95,7 +89,7 @@ public:
     /*!
     ** \brief Stop a lookup currently in progress
     */
-    void stop(uint timeout = defaultTimeout);
+    void stop(std::chrono::milliseconds = defaultTimeout);
 
     /*!
     ** \brief Wait Indefinitely for the end of the lookup
@@ -136,7 +130,7 @@ private:
 
 }; // class StudyFinder
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+
 
 #endif // __ANTARES_LIB_FINDER_FINDER_H__

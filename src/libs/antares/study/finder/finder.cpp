@@ -113,11 +113,11 @@ StudyFinder::~StudyFinder()
     }
 }
 
-void StudyFinder::stop(uint timeout)
+void StudyFinder::stop(std::chrono::milliseconds timeout)
 {
     ThreadingPolicy::MutexLocker locker(*this);
     if (pLycos)
-        pLycos->stop(timeout);
+        pLycos->stop(timeout.count());
 }
 
 void StudyFinder::wait()
