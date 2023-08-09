@@ -50,7 +50,7 @@ double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
 
 void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
   double optimalSolutionCost,
-  std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
+  const OptPeriodStringGenerator& optPeriodStringGenerator,
   int optimizationNumber,
   Solver::IResultWriter& writer)
 {
@@ -107,7 +107,7 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                                  problemeHebdo,
                                  numeroDeLIntervalle,
                                  optimizationNumber,
-                                 optPeriodStringGenerator,
+                                 *optPeriodStringGenerator,
                                  writer))
             return false;
 
@@ -117,7 +117,7 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
             double optimalSolutionCost
               = OPT_ObjectiveFunctionResult(problemeHebdo, numeroDeLIntervalle, optimizationNumber);
             OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
-              optimalSolutionCost, optPeriodStringGenerator, optimizationNumber, writer);
+              optimalSolutionCost, *optPeriodStringGenerator, optimizationNumber, writer);
         }
     }
     return true;
