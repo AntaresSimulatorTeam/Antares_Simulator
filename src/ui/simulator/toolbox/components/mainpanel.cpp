@@ -249,7 +249,7 @@ void MainPanel::refreshFromStudy()
         return;
     }
 
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
     {
         pStudyCaption.clear();
         pAuthor.clear();

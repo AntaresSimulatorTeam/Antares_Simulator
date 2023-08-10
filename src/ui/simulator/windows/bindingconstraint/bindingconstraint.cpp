@@ -107,7 +107,7 @@ public:
         assert(linkWeightsGrid && "Invalid pointer to linkWeightsGrid");
         assert(GetSizer() && "Invalid sizer");
 
-        if (CurrentIsValid())
+        if (CurrentStudyIsValid())
         {
             linkWeightsGrid->InvalidateBestSize();
             linkWeightsGrid->forceRefresh();
@@ -199,7 +199,7 @@ public:
         assert(linkOffsetsGrid && "Invalid pointer to linkOffsetsGrid");
         assert(GetSizer() && "Invalid sizer");
 
-        if (CurrentIsValid())
+        if (CurrentStudyIsValid())
         {
             linkOffsetsGrid->InvalidateBestSize();
             linkOffsetsGrid->forceRefresh();
@@ -534,12 +534,12 @@ void BindingConstraint::onDeleteAll(void*)
 
 void BindingConstraint::onSelectedConstraint(Data::BindingConstraint* constraint)
 {
-    pSelected = (CurrentIsValid() ? constraint : nullptr);
+    pSelected = (CurrentStudyIsValid() ? constraint : nullptr);
 }
 
 void BindingConstraint::onDblClickConstraint(Data::BindingConstraint* constraint)
 {
-    pSelected = (CurrentIsValid() ? constraint : nullptr);
+    pSelected = (CurrentStudyIsValid() ? constraint : nullptr);
     auto* editor = new BindingConstraintInfoEditor(Forms::ApplWnd::Instance(), pSelected);
     editor->ShowModal();
     editor->Destroy();

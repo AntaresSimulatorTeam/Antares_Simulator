@@ -64,7 +64,7 @@ void Remover::draw(DrawingContext& dc,
 
 bool Remover::onMouseUp(const int, const int)
 {
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
         return false;
 
     auto& mainFrm = *Forms::ApplWnd::Instance();
@@ -112,7 +112,7 @@ bool Remover::onMouseUp(const int, const int)
         bool r = (0 != pManager.removeAllSelected());
 
         // post-check about the study - paranoid
-        if (not CurrentIsValid())
+        if (not CurrentStudyIsValid())
             return false;
 
         // Force the refresh of runtime data

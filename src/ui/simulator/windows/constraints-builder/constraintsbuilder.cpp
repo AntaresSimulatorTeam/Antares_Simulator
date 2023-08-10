@@ -529,7 +529,7 @@ void ConstraintsBuilderWizard::onCancel(void*)
 void ConstraintsBuilderWizard::onBuild(void*)
 {
     // Check for restrictions
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
         return;
 
     if (StudyHasBeenModified())
@@ -602,7 +602,7 @@ void ConstraintsBuilderWizard::onBuild(void*)
 void ConstraintsBuilderWizard::onDelete(void*)
 {
     // Check for restrictions
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
         return;
     auto studyptr = GetCurrentStudy();
     if (!studyptr)

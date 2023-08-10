@@ -556,7 +556,7 @@ wxTextCtrl* AdequacyPatchOptions::insertEdit(wxWindow* parent,
 
 void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
 {
-    if (!CurrentIsValid())
+    if (!CurrentStudyIsValid())
         return;
     auto& study = *GetCurrentStudy();
 

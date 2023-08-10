@@ -181,7 +181,7 @@ void Notes::onUserNotesStyleChanged(wxRichTextEvent&)
 
 void Notes::notifyChanges()
 {
-    if (CurrentIsValid() and not pLocked)
+    if (CurrentStudyIsValid() and not pLocked)
     {
         saveToStudy();
         MarkTheStudyAsModified();
@@ -399,7 +399,7 @@ void Notes::loadFromStudy()
     if (!pRichEdit)
         return;
 
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
         return;
     auto& study = *GetCurrentStudy();
 

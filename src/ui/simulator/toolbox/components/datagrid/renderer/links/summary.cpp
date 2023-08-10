@@ -94,7 +94,7 @@ double Summary::cellNumericValue(int x, int y) const
 
 wxString Summary::cellValue(int x, int y) const
 {
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
         return wxEmptyString;
     assert(GetCurrentStudy()->uiinfo);
     auto& uiinfo = *(GetCurrentStudy()->uiinfo);
@@ -138,7 +138,7 @@ wxString Summary::columnCaption(int x) const
 IRenderer::CellStyle Summary::cellStyle(int x, int y) const
 {
     using namespace Data;
-    if (!CurrentIsValid())
+    if (!CurrentStudyIsValid())
         return IRenderer::cellStyleDefault;
     assert(GetCurrentStudy()->uiinfo);
     auto& uiinfo = *(GetCurrentStudy()->uiinfo);
@@ -162,7 +162,7 @@ IRenderer::CellStyle Summary::cellStyle(int x, int y) const
 bool Summary::cellValue(int x, int y, const String& value)
 {
     using namespace Data;
-    if (!CurrentIsValid())
+    if (!CurrentStudyIsValid())
         return false;
     assert(GetCurrentStudy()->uiinfo);
     auto& uiinfo = *(GetCurrentStudy()->uiinfo);

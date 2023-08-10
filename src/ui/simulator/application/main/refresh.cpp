@@ -76,7 +76,7 @@ static inline bool OutputTimestampToString(S& out, sint64 timestamp)
 
 void ApplWnd::refreshMenuInput()
 {
-    if (not CurrentIsValid() or IsGUIAboutToQuit())
+    if (not CurrentStudyIsValid() or IsGUIAboutToQuit())
     {
         pMenuInputCreation->SetItemLabel(wxT("No study"));
         pMenuInputLastSaved->SetItemLabel(wxT("Last save: never"));
@@ -330,7 +330,7 @@ void ApplWnd::refreshMenuOutput()
 
 void ApplWnd::refreshMenuOptions(Data::Study::Ptr study)
 {
-    if (not CurrentIsValid() or IsGUIAboutToQuit())
+    if (not CurrentStudyIsValid() or IsGUIAboutToQuit())
         return;
 
     // Disabling the Configure menu's scenario builder item after loading a study

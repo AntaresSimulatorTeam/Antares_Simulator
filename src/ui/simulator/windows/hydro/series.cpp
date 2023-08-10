@@ -76,7 +76,7 @@ Series::~Series()
 
 void Series::onAreaChanged(Data::Area* area)
 {
-    pLastArea = CurrentIsValid() ? area : nullptr;
+    pLastArea = CurrentStudyIsValid() ? area : nullptr;
 }
 
 void Series::onStudyClosed()

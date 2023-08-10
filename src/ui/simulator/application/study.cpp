@@ -141,7 +141,7 @@ inline static void ResetLastOpenedFilepath()
 
 static void TheSimulationIsComplete(const wxString& duration)
 {
-    if (IsGUIAboutToQuit() || !CurrentIsValid())
+    if (IsGUIAboutToQuit() || !CurrentStudyIsValid())
         return;
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
@@ -863,7 +863,7 @@ SaveResult SaveStudy()
 
 SaveResult SaveStudyAs(const String& path, bool copyoutput, bool copyuserdata, bool copylogs)
 {
-    if (!CurrentIsValid() || path.empty())
+    if (!CurrentStudyIsValid() || path.empty())
         return svsCancel;
 
     // alias to the current study
@@ -934,7 +934,7 @@ SaveResult ExportMap(const Yuni::String& path,
                      int nbSplitParts,
                      Antares::Map::mapImageFormat format)
 {
-    if (!CurrentIsValid() || path.empty())
+    if (!CurrentStudyIsValid() || path.empty())
         return svsCancel;
 
     // alias to the current study
@@ -989,7 +989,7 @@ void UpdateGUIFromStudyState()
 {
     auto* mainform = Forms::ApplWnd::Instance();
     if (mainform)
-        mainform->requestUpdateGUIAfterStudyIO(CurrentIsValid());
+        mainform->requestUpdateGUIAfterStudyIO(CurrentStudyIsValid());
 }
 
 void OpenStudyFromFolder(wxString folder)
@@ -1045,7 +1045,7 @@ void OpenStudyFromFolder(wxString folder)
     // enabling the logs
     mainFrm.endUpdateLogs();
 
-    if (CurrentIsValid())
+    if (CurrentStudyIsValid())
     {
         auto study = GetCurrentStudy();
         if (!study->folder.empty())
@@ -1345,7 +1345,7 @@ std::shared_ptr<Data::Study> GetCurrentStudy()
     return CURRENT_STUDY;
 }
 
-bool CurrentIsValid()
+bool CurrentStudyIsValid()
 {
     return !(!CURRENT_STUDY);
 }

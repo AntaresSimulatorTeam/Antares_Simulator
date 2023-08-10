@@ -240,7 +240,7 @@ void RenewableCluster::evtPopupDeleteAll(wxCommandEvent&)
 void RenewableCluster::internalDeletePlant(void*)
 {
     // Nothing is/was selected. Aborting.
-    if (!pArea || !pLastSelectedRenewableCluster || not CurrentIsValid())
+    if (!pArea || !pLastSelectedRenewableCluster || not CurrentStudyIsValid())
         return;
 
     // The renewable cluster to delete

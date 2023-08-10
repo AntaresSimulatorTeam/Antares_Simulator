@@ -298,7 +298,7 @@ void Connections::update()
     // Set all items at once
     pListbox->DeleteAllItems();
 
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
         return;
     auto& study = *GetCurrentStudy();
 

@@ -49,35 +49,35 @@ void ApplWnd::evtOnOptionsTempFolder(wxCommandEvent&)
 void ApplWnd::evtOnOptionsSelectOutput(wxCommandEvent&)
 {
     Forms::Disabler<ApplWnd> disabler(*this);
-    if (CurrentIsValid())
+    if (CurrentStudyIsValid())
         Dispatcher::GUI::CreateAndShowModal<Window::Options::SelectOutput>(this);
 }
 
 void ApplWnd::evtOnOptionsSelectAreasTrimming(wxCommandEvent&)
 {
     Forms::Disabler<ApplWnd> disabler(*this);
-    if (CurrentIsValid())
+    if (CurrentStudyIsValid())
         Dispatcher::GUI::CreateAndShowModal<Window::Options::areasTrimming>(this);
 }
 
 void ApplWnd::evtOnOptionsSelectLinksTrimming(wxCommandEvent&)
 {
     Forms::Disabler<ApplWnd> disabler(*this);
-    if (CurrentIsValid())
+    if (CurrentStudyIsValid())
         Dispatcher::GUI::CreateAndShowModal<Window::Options::linksTrimming>(this);
 }
 
 void ApplWnd::evtOnOptionsMCPlaylist(wxCommandEvent&)
 {
     Forms::Disabler<ApplWnd> disabler(*this);
-    if (CurrentIsValid())
+    if (CurrentStudyIsValid())
         Dispatcher::GUI::CreateAndShowModal<Window::Options::MCPlaylist>(this);
 }
 
 void ApplWnd::evtOnOptionsDistricts(wxCommandEvent&)
 {
     Forms::Disabler<ApplWnd> disabler(*this);
-    if (CurrentIsValid())
+    if (CurrentStudyIsValid())
     {
         assert(NULL != pNotebook);
         pNotebook->select("sets");
@@ -115,28 +115,28 @@ void ApplWnd::evtOnOptionsMCScenarioBuilder(wxCommandEvent&)
 void ApplWnd::evtOnOptionsOptimizationPrefs(wxCommandEvent&)
 {
     Forms::Disabler<ApplWnd> disabler(*this);
-    if (CurrentIsValid())
+    if (CurrentStudyIsValid())
         Dispatcher::GUI::CreateAndShowModal<Window::Options::Optimization>(this);
 }
 
 void ApplWnd::evtOnOptionsAdvanced(wxCommandEvent&)
 {
     Forms::Disabler<ApplWnd> disabler(*this);
-    if (CurrentIsValid())
+    if (CurrentStudyIsValid())
         Dispatcher::GUI::CreateAndShowModal<Window::Options::AdvancedParameters>(this);
 }
 
 void ApplWnd::evtOnOptionsAdequacyPatchOptions(wxCommandEvent&)
 {
     Forms::Disabler<ApplWnd> disabler(*this);
-    if (CurrentIsValid())
+    if (CurrentStudyIsValid())
         Dispatcher::GUI::CreateAndShowModal<Window::Options::AdequacyPatchOptions>(this);
 }
 
 void ApplWnd::evtOnOptionsAdequacyPatchAreas(wxCommandEvent&)
 {
     Forms::Disabler<ApplWnd> disabler(*this);
-    if (CurrentIsValid())
+    if (CurrentStudyIsValid())
         Dispatcher::GUI::CreateAndShowModal<Window::Options::AdequacyPatchAreas>(this);
 }
 

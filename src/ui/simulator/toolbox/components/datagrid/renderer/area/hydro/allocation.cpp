@@ -49,7 +49,7 @@ HydroAllocation::~HydroAllocation()
 
 bool HydroAllocation::valid() const
 {
-    return CurrentIsValid();
+    return CurrentStudyIsValid();
 }
 
 int HydroAllocation::width() const

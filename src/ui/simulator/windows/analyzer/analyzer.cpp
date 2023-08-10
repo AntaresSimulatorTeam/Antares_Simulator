@@ -519,7 +519,7 @@ void FileSearchProvider::onFileSearchClear()
 void AnalyzerWizard::ResetLastFolderToCurrentStudyUser()
 {
     // nothing to do if there is no study
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
     {
         gLastFolderForTSAnalyzer.clear();
         return;
@@ -1037,7 +1037,7 @@ void AnalyzerWizard::onCancel(void*)
 void AnalyzerWizard::onProceed(void*)
 {
     // Check for restrictions
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
         return;
 
     if (pTSSelected == Data::timeSeriesCount) // invalid in our case
@@ -1390,7 +1390,7 @@ void AnalyzerWizard::evtLimitsChanged(wxCommandEvent& evt)
 
 bool AnalyzerWizard::saveToFile(const String& filename) const
 {
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
         return false;
     String tmp;
     auto& study = *GetCurrentStudy();
@@ -1604,7 +1604,7 @@ void AnalyzerWizard::onBrowseOpenInExplorer(wxCommandEvent&)
 
 void AnalyzerWizard::onBrowseReset(wxCommandEvent&)
 {
-    if (pUpdating or not CurrentIsValid())
+    if (pUpdating or not CurrentStudyIsValid())
         return;
     auto& study = *GetCurrentStudy();
     wxString path = wxStringFromUTF8(study.folder);

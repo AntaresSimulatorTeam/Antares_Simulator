@@ -1066,7 +1066,7 @@ void Frame::apply(const InspectorData::Ptr& data)
 
 void Frame::onLoadUserNotes()
 {
-    if (pNotes and CurrentIsValid())
+    if (pNotes and CurrentStudyIsValid())
         pNotes->loadFromStudy();
 }
 

@@ -93,7 +93,7 @@ public:
                         const Spotlight::SearchToken::Vector& tokens,
                         const Yuni::String& text)
     {
-        if (not CurrentIsValid())
+        if (not CurrentStudyIsValid())
             return;
 
         String tmp;
@@ -173,7 +173,7 @@ public:
 
     virtual bool onSelect(Spotlight::IItem::Ptr& item)
     {
-        if (not CurrentIsValid())
+        if (not CurrentStudyIsValid())
             return false;
 
         GUILocker locker;
@@ -189,7 +189,7 @@ public:
 
     virtual bool onDoubleClickSelect(Spotlight::IItem::Ptr& item)
     {
-        if (not CurrentIsValid())
+        if (not CurrentStudyIsValid())
             return false;
 
         GUILocker locker;

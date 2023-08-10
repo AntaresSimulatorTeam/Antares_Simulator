@@ -94,7 +94,7 @@ void MainFormData::onToolbarFullscreen(void*)
 
 void MainFormData::onToolbarInspector(void*)
 {
-    if (CurrentIsValid())
+    if (CurrentStudyIsValid())
         Antares::Window::Inspector::Show();
 }
 
@@ -106,7 +106,7 @@ void MainFormData::onToolbarOptimizationPreferences(void*)
 
 void ApplWnd::evtOnInspector(wxCommandEvent&)
 {
-    if (CurrentIsValid())
+    if (CurrentStudyIsValid())
         Antares::Window::Inspector::Show();
 }
 

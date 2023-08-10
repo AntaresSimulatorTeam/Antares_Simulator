@@ -655,7 +655,7 @@ int Run::checkForLowResources()
 
 void Run::onRun(void*)
 {
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
         return;
 
     bool canNotifyUserForLowResources = true;
@@ -776,7 +776,7 @@ void Run::updateMonteCarloYears()
     }
     else
     {
-        if (CurrentIsValid())
+        if (CurrentStudyIsValid())
         {
             uint y = GetCurrentStudy()->parameters.nbYears;
             if (y)
@@ -816,7 +816,7 @@ void Run::updateNbCores()
     assert(pNbCores);
     assert(pBtnRun);
 
-    if (CurrentIsValid())
+    if (CurrentStudyIsValid())
     {
         // Minimum number of years in a set of parallel years (reduction from raw number of cores
         // chosen by user).

@@ -220,7 +220,7 @@ void ThermalCluster::renameAggregate(Antares::Data::ThermalCluster* cluster,
 {
     using namespace Data;
     WIP::Locker wip;
-    if (cluster && pArea && CurrentIsValid())
+    if (cluster && pArea && CurrentStudyIsValid())
     {
         ClusterName newPlantName;
         wxStringToString(newName, newPlantName);
@@ -257,7 +257,7 @@ void ThermalCluster::evtPopupDeleteAll(wxCommandEvent&)
 void ThermalCluster::internalDeletePlant(void*)
 {
     // Nothing is/was selected. Aborting.
-    if (!pArea || !pLastSelectedThermalCluster || not CurrentIsValid())
+    if (!pArea || !pLastSelectedThermalCluster || not CurrentStudyIsValid())
         return;
 
     // The thermal cluster to delete

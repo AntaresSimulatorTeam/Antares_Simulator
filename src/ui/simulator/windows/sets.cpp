@@ -179,7 +179,7 @@ void Sets::onUserNotesStyleChanged(wxRichTextEvent&)
 
 void Sets::notifyChanges()
 {
-    if (CurrentIsValid() and not pLocked)
+    if (CurrentStudyIsValid() and not pLocked)
     {
         saveToStudy();
         MarkTheStudyAsModified();
@@ -209,7 +209,7 @@ void Sets::onSetsModified(Sets* sender)
 void Sets::onNewSet(void*)
 {
     assert(pRichEdit);
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
         return;
     auto& study = *GetCurrentStudy();
     int numberOfSets = study.setsOfAreas.size() + 1;
@@ -531,7 +531,7 @@ void Sets::loadFromStudy()
 {
     if (!pRichEdit)
         return;
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
         return;
     auto& study = *GetCurrentStudy();
 

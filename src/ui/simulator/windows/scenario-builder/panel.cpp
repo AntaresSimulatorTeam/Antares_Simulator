@@ -143,7 +143,7 @@ void Panel::scenarioBuilderDataAreLoaded()
 
 void Panel::update()
 {
-    if (not CurrentIsValid()) // should never happen here
+    if (not CurrentStudyIsValid()) // should never happen here
         return;
     auto& study = *GetCurrentStudy();
     if (!study.scenarioRules)
@@ -240,7 +240,7 @@ void Panel::onFileMenu(Antares::Component::Button&, wxMenu& menu, void*)
                  nullptr,
                  this);
 
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
     {
         logs.error() << "[scenario-builder] new ruleset: The data are not loaded";
         return;
@@ -393,7 +393,7 @@ void Panel::onFileMenu(Antares::Component::Button&, wxMenu& menu, void*)
 
 void Panel::onActiveMenu(Antares::Component::Button&, wxMenu& menu, void*)
 {
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
     {
         logs.error() << "[scenario-builder] new ruleset: The data are not loaded";
         return;
@@ -449,7 +449,7 @@ void Panel::onActiveMenu(Antares::Component::Button&, wxMenu& menu, void*)
 
 void Panel::onFileNew(wxCommandEvent&)
 {
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
     {
         logs.error() << "[scenario-builder] new ruleset: The data are not loaded";
         return;
@@ -505,7 +505,7 @@ void Panel::onFileDelete(wxCommandEvent& evt)
     if (!rules)
         return;
 
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
     {
         logs.error() << "[scenario-builder] delete: The data are not loaded";
         return;
@@ -559,7 +559,7 @@ void Panel::onFileRename(wxCommandEvent& evt)
     if (!rules)
         return;
 
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
     {
         logs.error() << "[scenario-builder] new ruleset: The data are not loaded";
         return;
@@ -662,7 +662,7 @@ void Panel::onActiveRuleset(wxCommandEvent& evt)
     if (!rules)
         return;
 
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
     {
         logs.error() << "[scenario-builder] active: The data are not loaded";
         return;

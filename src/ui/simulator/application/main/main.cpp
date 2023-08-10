@@ -563,13 +563,13 @@ void ApplWnd::updateOpenWindowsMenu()
 
 void ApplWnd::saveStudy()
 {
-    if (CurrentIsValid())
+    if (CurrentStudyIsValid())
         Antares::SaveStudy();
 }
 
 void ApplWnd::saveStudyAs(const String& path, bool copyoutput, bool copyuserdata, bool copylogs)
 {
-    if (CurrentIsValid())
+    if (CurrentStudyIsValid())
         Antares::SaveStudyAs(path, copyoutput, copyuserdata, copylogs);
 }
 
@@ -580,7 +580,7 @@ void ApplWnd::exportMap(const Yuni::String& path,
                         int nbSplitParts,
                         Antares::Map::mapImageFormat format)
 {
-    if (CurrentIsValid())
+    if (CurrentStudyIsValid())
         Antares::ExportMap(
           path, transparentBackground, backgroundColor, layers, nbSplitParts, format);
 }

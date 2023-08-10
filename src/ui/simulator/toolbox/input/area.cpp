@@ -81,7 +81,7 @@ public:
                         const Spotlight::SearchToken::Vector& tokens,
                         const Yuni::String& text) override
     {
-        if (not CurrentIsValid())
+        if (not CurrentStudyIsValid())
             return;
         auto& study = *GetCurrentStudy();
         if (study.areas.empty())
@@ -124,7 +124,7 @@ public:
                         const Spotlight::SearchToken::Vector& tokens,
                         std::vector<Antares::Data::Area*>& in)
     {
-        if (not CurrentIsValid())
+        if (not CurrentStudyIsValid())
             return;
         auto& study = *GetCurrentStudy();
         if (study.areas.empty())
@@ -173,7 +173,7 @@ public:
 
     virtual bool onSelect(Spotlight::IItem::Ptr& item) override
     {
-        if (!CurrentIsValid() || GUIIsLock())
+        if (!CurrentStudyIsValid() || GUIIsLock())
             return false;
         GUILocker locker;
         auto itemarea = std::dynamic_pointer_cast<Toolbox::Spotlight::ItemArea>(item);
@@ -203,7 +203,7 @@ public:
 
     virtual bool onSelect(const Spotlight::IItem::Vector&) override
     {
-        if (!CurrentIsValid() || GUIIsLock())
+        if (!CurrentStudyIsValid() || GUIIsLock())
             return false;
         GUILocker locker;
         return true;
@@ -264,7 +264,7 @@ protected:
 
     void refresh()
     {
-        if (CurrentIsValid())
+        if (CurrentStudyIsValid())
         {
             GUILocker locker;
             redoResearch();

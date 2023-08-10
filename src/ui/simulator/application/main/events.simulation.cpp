@@ -115,7 +115,7 @@ void ApplWnd::evtOnRunTSAnalyzer(wxCommandEvent&)
 
 void ApplWnd::evtOnRunTSAnalyzerDelayed()
 {
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
     {
         logs.error() << "No study opened";
         return;
@@ -155,7 +155,7 @@ void ApplWnd::evtOnRunConstraintsBuilder(wxCommandEvent&)
 
 void ApplWnd::evtOnRunConstraintsBuilderDelayed()
 {
-    if (not CurrentIsValid())
+    if (not CurrentStudyIsValid())
     {
         logs.error() << "No study opened";
         return;
