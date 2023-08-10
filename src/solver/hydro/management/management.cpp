@@ -357,7 +357,7 @@ void HydroManagement::changeInflowsToAccommodateFinalLevels(uint numSpace, uint 
     {
         auto& data = pAreas[numSpace][area.index];
 
-        if (!area.hydro.finalLevelInflowsModifier.includeFinalReservoirLevel[year])
+        if (!area.hydro.finalLevelInflowsModifier.isApplicable(year))
             return;
 
         // Must be done before prepareMonthlyTargetGenerations

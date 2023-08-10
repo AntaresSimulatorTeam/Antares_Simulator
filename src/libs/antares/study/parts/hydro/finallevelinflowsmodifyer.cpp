@@ -132,7 +132,7 @@ void FinalLevelInflowsModifier::initialize(const Matrix<double>& scenarioInitial
                                            const uint lastSimulationDay,
                                            const uint nbYears)
 {
-    includeFinalReservoirLevel = std::move(std::vector<bool>(nbYears, false));
+    isApplicable_ = std::move(std::vector<bool>(nbYears, false));
     deltaLevel = std::move(std::vector<double>(nbYears, 0.));
 
     InitialLevels_ = &(scenarioInitialHydroLevels.entry[areaIndex_]);
@@ -163,9 +163,14 @@ bool FinalLevelInflowsModifier::makeChecks(uint year)
     // rule curves for the final day
     checksOk = preCheckRuleCurves(year) && checksOk;
 
-    includeFinalReservoirLevel.at(year) = checksOk;
+    isApplicable_.at(year) = checksOk;
 
     return checksOk;
+}
+
+bool FinalLevelInflowsModifier::isApplicable(uint year)
+{
+    return isApplicable_.at(year);
 }
 
 } // namespace Data

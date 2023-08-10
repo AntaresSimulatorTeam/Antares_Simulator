@@ -205,8 +205,8 @@ BOOST_AUTO_TEST_CASE(Testing_updateInflows_function_for_area_1)
     finLevInfModify.CheckInfeasibility(year);
 
     double expectedDeltaLevel = -1.1;
-    bool calculatedIncludeFinResLev = finLevInfModify.includeFinalReservoirLevel.at(0);
-    double calculatedDeltaLevel = finLevInfModify.deltaLevel.at(0);
+    bool calculatedIncludeFinResLev = finLevInfModify.isApplicable(year);
+    double calculatedDeltaLevel = finLevInfModify.deltaLevel.at(year);
 
     BOOST_CHECK_EQUAL(calculatedIncludeFinResLev, true);
     BOOST_CHECK_EQUAL(calculatedDeltaLevel, expectedDeltaLevel);
@@ -327,8 +327,8 @@ BOOST_AUTO_TEST_CASE(Testing_prepareFinalReservoirLevelData_function_for_area_1_
     CheckFinalReservoirLevelsInput(*study);
 
     // extract data area 1 - year 1 and 2
-    bool area_1_year_1_include_calculated = modifierArea1.includeFinalReservoirLevel.at(0);
-    bool area_1_year_2_include_calculated = modifierArea1.includeFinalReservoirLevel.at(1);
+    bool area_1_year_1_include_calculated = modifierArea1.isApplicable(0);
+    bool area_1_year_2_include_calculated = modifierArea1.isApplicable(1);
     double area_1_year_1_deltaLev_calculated = modifierArea1.deltaLevel.at(0);
     double area_1_year_2_deltaLev_calculated = modifierArea1.deltaLevel.at(1);
     double area_1_year_1_deltaLev_expected = 2.3 - 3.4;
@@ -340,8 +340,8 @@ BOOST_AUTO_TEST_CASE(Testing_prepareFinalReservoirLevelData_function_for_area_1_
     BOOST_CHECK_EQUAL(area_1_year_2_deltaLev_calculated, area_1_year_2_deltaLev_expected);
 
     // extract data area 2 - year 1 and 2
-    bool area_2_year_1_include_calculated = modifierArea2.includeFinalReservoirLevel.at(0);
-    bool area_2_year_2_include_calculated = modifierArea2.includeFinalReservoirLevel.at(1);
+    bool area_2_year_1_include_calculated = modifierArea2.isApplicable(0);
+    bool area_2_year_2_include_calculated = modifierArea2.isApplicable(1);
     double area_2_year_1_deltaLev_calculated = modifierArea2.deltaLevel.at(0);
     double area_2_year_2_deltaLev_calculated = modifierArea2.deltaLevel.at(1);
     double area_2_year_1_deltaLev_expected = 1.5 - 3.5;

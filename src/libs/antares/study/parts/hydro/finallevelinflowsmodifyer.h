@@ -62,11 +62,12 @@ private:
     double finalReservoirLevel_ = -1.;
     double deltaReservoirLevel_;
 
+    std::vector<bool> isApplicable_;
+
 public:
     // vectors containing data necessary for final reservoir level calculation
     // for one area and all MC years
     // vector indexes correspond to the MC years
-    std::vector<bool> includeFinalReservoirLevel;
     std::vector<double> deltaLevel;
 
 private:
@@ -85,6 +86,7 @@ public:
                     const uint nbYears);
 
     bool CheckInfeasibility(uint year);
+    bool isApplicable(uint year);
     bool isActive();
 };
 } // namespace Antares::Data
