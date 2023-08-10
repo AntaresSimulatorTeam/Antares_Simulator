@@ -1,6 +1,6 @@
 set(PROJ date)
 set(HEADERS
-        ${PROJ}
+        antares/${PROJ}
 )
 set(SRC_DATE
         date.cpp

@@ -26,7 +26,7 @@
 */
 
 #include <antares/wx-wrapper.h>
-#include <antares/array/matrix.h>
+#include <array/matrix.h>
 #include <yuni/io/file.h>
 #ifndef YUNI_OS_WINDOWS
 #include <yuni/core/system/environment.h>

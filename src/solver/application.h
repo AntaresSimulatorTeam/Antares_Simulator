@@ -7,7 +7,7 @@
 #include <benchmarking/timer.h>
 #include "simulation/simulation.h"
 
-#include <writer/i_writer.h>
+#include <antares/writer/i_writer.h>
 
 #include <yuni/core/string.h>
 

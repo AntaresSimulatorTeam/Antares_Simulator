@@ -46,4 +46,5 @@ target_link_libraries(libantares-solver-ts-generator
 		libantares-core
 		result_writer
 		array
+		benchmarking
 )

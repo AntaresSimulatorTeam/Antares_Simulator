@@ -47,7 +47,7 @@
 #include "sets.h"
 #include "progression/progression.h"
 #include "load-options.h"
-#include "date/date.h"
+#include <antares/date/date.h>
 #include "layerdata.h"
 #include "antares/correlation/correlation.h"
 #include "area/store-timeseries-numbers.h"

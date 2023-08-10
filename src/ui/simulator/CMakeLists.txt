@@ -146,7 +146,7 @@ set(ANTARES_LIBS
 		libantares-solver-constraints-builder
 		libantares-solver-variable-info
 		libantares-core
-		libantares-core-calendar
+		date
 		yuni-static-core
 		yuni-static-uuid
 		libmodel_antares

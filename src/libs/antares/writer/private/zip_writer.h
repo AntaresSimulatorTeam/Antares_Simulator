@@ -7,7 +7,7 @@
 #include <yuni/job/job.h>
 #include <yuni/core/string.h>
 
-#include "i_writer.h"
+#include "antares/writer/i_writer.h"
 #include "benchmarking/info_collectors.h"
 
 

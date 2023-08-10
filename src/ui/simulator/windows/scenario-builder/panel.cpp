@@ -26,7 +26,7 @@
 */
 
 #include "panel.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include <wx/statline.h>
 #include <antares/study/scenario-builder/rules.h>
 #include <antares/study/scenario-builder/sets.h>

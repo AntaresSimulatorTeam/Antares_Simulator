@@ -26,7 +26,7 @@
 */
 
 #include "week.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include <antares/study/study.h>
 #include "application/study.h"
 

@@ -2,11 +2,9 @@
 
 #include <string>
 #include <yuni/core/string.h>
-#include "i_writer.h"
+#include "antares/writer/i_writer.h"
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 class ImmediateFileResultWriter : public IResultWriter
 {
@@ -23,5 +21,5 @@ public:
 private:
     Yuni::String pOutputFolder;
 };
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver
+

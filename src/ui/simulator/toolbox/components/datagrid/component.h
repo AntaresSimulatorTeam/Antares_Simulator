@@ -29,7 +29,7 @@
 
 #include <antares/wx-wrapper.h>
 #include <ui/common/component/panel.h>
-#include <date/date.h>
+#include <antares/date/date.h>
 
 namespace Antares
 {

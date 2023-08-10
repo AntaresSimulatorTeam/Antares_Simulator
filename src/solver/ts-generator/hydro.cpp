@@ -28,7 +28,7 @@
 #include <yuni/yuni.h>
 #include "../simulation/sim_extern_variables_globales.h"
 #include "../aleatoire/alea_fonctions.h"
-#include <benchmarking/benchmarking.h>
+#include <benchmarking/info_collectors.h>
 #include <antares/fatal-error.h>
 #include <antares/writer/i_writer.h>
 #include "../misc/cholesky.h"

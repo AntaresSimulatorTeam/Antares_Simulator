@@ -53,7 +53,7 @@
 #include "../../windows/message.h"
 #include "../components/refresh.h"
 #include <antares/study/progression/progression.h>
-#include <antares/io/statistics.h>
+#include <io/statistics.h>
 
 #define PROGRESSBAR_MAX_RANGE 1000000
 #define PROGRESSBAR_MAX_RANGE_F 1000000.0

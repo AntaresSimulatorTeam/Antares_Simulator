@@ -28,7 +28,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <cassert>
-#include "date/date.h"
+#include <antares/date/date.h>
 #include <ctime>
 #include "../study/parameters.h"
 #include <yuni/io/file.h>

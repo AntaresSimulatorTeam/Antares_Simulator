@@ -34,7 +34,7 @@
 #include "input.h"
 #include "../gridhelper.h"
 #include "filter.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include "component/panel.h"
 
 namespace Antares

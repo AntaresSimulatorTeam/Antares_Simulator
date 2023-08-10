@@ -30,7 +30,7 @@
 #include <yuni/core/system/environment.h>
 #include <antares/study/area.h>
 #include <inifile/inifile.h>
-#include <antares/io/statistics.h>
+#include <io/statistics.h>
 
 #include <ui/common/component/spotlight/spotlight.h>
 
@@ -40,7 +40,7 @@
 #include <antares/solver.h>
 #include "../toolbox/execute/execute.h"
 #include "../windows/message.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include "../windows/saveas.h"
 #include "main.h"
 #include "menus.h"

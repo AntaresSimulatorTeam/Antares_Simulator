@@ -1,4 +1,6 @@
 #include "antares/writer/writer_factory.h"
+#include "private/immediate_file_writer.h"
+#include "private/zip_writer.h"
 
 namespace Antares
 {

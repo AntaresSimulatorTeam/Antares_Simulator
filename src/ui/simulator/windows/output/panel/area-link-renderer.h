@@ -30,7 +30,7 @@
 #include <antares/wx-wrapper.h>
 #include "../../../toolbox/components/datagrid/renderer.h"
 #include <yuni/core/string.h>
-#include <antares/array/matrix.h>
+#include <array/matrix.h>
 #include "../output.h"
 
 namespace Antares

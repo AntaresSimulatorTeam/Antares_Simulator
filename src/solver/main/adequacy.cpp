@@ -28,7 +28,7 @@
 #include "../application.h"
 #include "../simulation/solver.h"
 #include "../simulation/adequacy.h"
-#include <benchmarking/benchmarking.h>
+#include <benchmarking/info_collectors.h>
 #include <logs/logs.h>
 
 namespace Antares

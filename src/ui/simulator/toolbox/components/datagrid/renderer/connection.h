@@ -30,7 +30,7 @@
 #include <antares/wx-wrapper.h>
 #include "../../../input/connection.h"
 #include "../renderer.h"
-#include <date/date.h>
+#include <antares/date/date.h>
 #include "matrix.h"
 #include <yuni/core/event.h>
 
