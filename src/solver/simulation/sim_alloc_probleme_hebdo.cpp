@@ -105,7 +105,7 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
     problem.NumeroDeContrainteExpressionStockFinal.assign(nbPays, 0);
 
     problem.NumeroDeVariableStockFinal.assign(nbPays, 0);
-    problem.NumeroDeVariableDeTrancheDeStock.assign(nbPays, std::vector<int>(100));
+    problem.NumeroDeVariableDeTrancheDeStock.assign(nbPays, std::vector<uint32_t>(100));
 
     problem.ValeursDeNTC.resize(NombreDePasDeTemps);
 
