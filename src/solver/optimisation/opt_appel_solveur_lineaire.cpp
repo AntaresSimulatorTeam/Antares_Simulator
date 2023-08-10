@@ -110,6 +110,12 @@ bool OPT_TryToCallSimplex(const OptimizationOptions& options,
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics* optimizationStatistics = &(problemeHebdo->optimizationStatistics[opt]);
 
+    if (!PremierPassage)
+    {
+        ProbSpx = nullptr;
+        solver = nullptr;
+    }
+
     if (ProbSpx == nullptr && solver == nullptr)
     {
         Probleme.Contexte = SIMPLEXE_SEUL;
