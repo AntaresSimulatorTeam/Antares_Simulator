@@ -28,16 +28,12 @@
 #include "finallevelinflowsmodifyer.h"
 #include "container.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
                                                      const unsigned int& areaIndex,
                                                      const AreaName& areaName) :
-    hydro_(hydro), 
-    areaIndex_(areaIndex), 
-    areaName_(areaName)
+    hydro_(hydro), areaIndex_(areaIndex), areaName_(areaName)
 {
 }
 
@@ -88,13 +84,11 @@ bool FinalLevelInflowsModifier::preCheckStartAndEndSim(uint year) const
     int initReservoirLvlMonth = hydro_.initializeReservoirLevelDate; // month [0-11]
     if (lastSimulationDay_ == DAYS_PER_YEAR && initReservoirLvlMonth == 0)
         return true;
-    else
-    {
-        logs.error() << "Year: " << year + 1 << ". Area: " << areaName_
-                     << ". Simulation must end on day 365 and reservoir level must be "
-                        "initiated in January";
-        return false;
-    }
+
+    logs.error() << "Year: " << year + 1 << ". Area: " << areaName_
+                    << ". Simulation must end on day 365 and reservoir level must be "
+                    "initiated in January";
+    return false;
 }
 
 bool FinalLevelInflowsModifier::preCheckYearlyInflow(double totalYearInflows, uint year) const
@@ -134,10 +128,8 @@ void FinalLevelInflowsModifier::initialize(const Matrix<double>& scenarioInitial
 {
     isApplicable_ = std::move(std::vector<bool>(nbYears, false));
     deltaLevel = std::move(std::vector<double>(nbYears, 0.));
-
     InitialLevels_ = &(scenarioInitialHydroLevels.entry[areaIndex_]);
     FinalLevels_ = &(scenarioFinalHydroLevels.entry[areaIndex_]);
-
     lastSimulationDay_ = lastSimulationDay;
 }
 
@@ -151,8 +143,7 @@ bool FinalLevelInflowsModifier::isActive()
 
 bool FinalLevelInflowsModifier::makeChecks(uint year)
 {
-    // Simulation must end on day 365 and reservoir level must be
-    // initiated in January
+    // Simulation must end on day 365 and reservoir level must be initiated in January
     bool checksOk = preCheckStartAndEndSim(year);
 
     // Reservoir_levelDay_365 – reservoir_levelDay_1 ≤ yearly_inflows
@@ -173,5 +164,4 @@ bool FinalLevelInflowsModifier::isApplicable(uint year)
     return isApplicable_.at(year);
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
