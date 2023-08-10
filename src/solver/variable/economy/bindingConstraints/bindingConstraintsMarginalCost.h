@@ -155,7 +155,6 @@ public:
 
         // Set the associated binding constraint
         associatedBC_ = study.bindingConstraints.activeContraints()[bindConstraintGlobalIndex_];
-
         NextType::initializeFromStudy(study);
     }
 
