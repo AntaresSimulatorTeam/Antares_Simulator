@@ -70,6 +70,9 @@ public:
     std::vector<double> deltaLevel;
 
 private:
+    void ComputeDelta(uint year);
+    bool makeChecks(uint year);
+    void storeDeltaLevels(uint year);
     double calculateTotalInflows(uint year) const;
     bool preCheckStartAndEndSim(uint year) const;
     bool preCheckYearlyInflow(double totalYearInflows, uint year) const;
@@ -81,10 +84,8 @@ public:
                     const uint lastSimulationDay,
                     const uint nbYears);
 
-    void ComputeDelta(uint year);
+    bool CheckInfeasibility(uint year);
     bool isActive();
-    void storeDeltaLevels(uint year);
-    bool makeChecks(uint year);
 };
 } // namespace Antares::Data
 

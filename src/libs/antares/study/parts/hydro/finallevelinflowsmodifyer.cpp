@@ -41,6 +41,21 @@ FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
 {
 }
 
+bool FinalLevelInflowsModifier::CheckInfeasibility(uint year)
+{
+    ComputeDelta(year);
+
+    if (!isActive())
+        return true;
+
+    if (!makeChecks(year))
+        return false;
+
+    storeDeltaLevels(year);
+    return true;
+
+}
+
 void FinalLevelInflowsModifier::ComputeDelta(uint year)
 {
     initialReservoirLevel_ = (*InitialLevels_)[year];

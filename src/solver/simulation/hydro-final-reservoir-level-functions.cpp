@@ -31,34 +31,17 @@
 namespace Antares::Solver
 {
 
-
-    void initializeFinalLevelData(Data::Study& study)
-    {
-        study.areas.each([&study](Data::Area& area)
-        {
-            auto& finalInflows = area.hydro.finalLevelInflowsModifier;
-
-            finalInflows.initialize(study.scenarioInitialHydroLevels,
-                                    study.scenarioFinalHydroLevels,
-                                    study.parameters.simulationDays.end,
-                                    study.parameters.nbYears);
-        });
-    }
-
-
-
-bool CheckInfeasibilityForFinalLevelsInArea(Data::FinalLevelInflowsModifier & finalInflows, uint year)
+void initializeFinalLevelData(Data::Study& study)
 {
-    finalInflows.ComputeDelta(year);
+    study.areas.each([&study](Data::Area& area)
+    {
+        auto& finalInflows = area.hydro.finalLevelInflowsModifier;
 
-    if (!finalInflows.isActive())
-        return true;
-
-    if (!finalInflows.makeChecks(year))
-        return false;
-
-    finalInflows.storeDeltaLevels(year);
-    return true;
+        finalInflows.initialize(study.scenarioInitialHydroLevels,
+                                study.scenarioFinalHydroLevels,
+                                study.parameters.simulationDays.end,
+                                study.parameters.nbYears);
+    });
 }
 
 void CheckFinalReservoirLevelsForYear(Data::Study& study, uint year)
@@ -66,7 +49,7 @@ void CheckFinalReservoirLevelsForYear(Data::Study& study, uint year)
     study.areas.each([&study, &year](Data::Area& area)
     {
         auto& finalInflows = area.hydro.finalLevelInflowsModifier;
-        if (!CheckInfeasibilityForFinalLevelsInArea(finalInflows, year))
+        if (!finalInflows.CheckInfeasibility(year))
         {
             AntaresSolverEmergencyShutdown();
         }
