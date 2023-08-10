@@ -70,4 +70,12 @@ void BeautifyName(YString& out, AnyString oldname)
     out.trim(" \t\r\n");
 }
 
+void BeautifyName(std::string& out, const std::string& oldname)
+{
+    YString yuniOut;
+    BeautifyName(yuniOut, oldname);
+    out = yuniOut.c_str();
+}
+
+
 } // namespace Antares
