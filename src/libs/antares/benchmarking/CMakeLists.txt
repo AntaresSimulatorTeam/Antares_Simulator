@@ -19,6 +19,7 @@ target_include_directories(benchmarking
         ${CMAKE_SOURCE_DIR}/libs/antares/array #links
         ${CMAKE_SOURCE_DIR}/libs/antares/logs #study -> binding constraint -> matrix -> jit
         ${CMAKE_SOURCE_DIR}/libs/antares/io #study -> binding constraint -> matrix
+        ${CMAKE_SOURCE_DIR}/libs/antares/writer #study
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
         )
@@ -27,5 +28,4 @@ target_link_libraries(benchmarking
         PRIVATE
         yuni-static-core
         inifile
-        result_writer
         )
