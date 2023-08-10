@@ -47,7 +47,7 @@ namespace Antares::Solver
 
 
 
-bool CheckFinalReservoirLevelsForArea(Data::FinalLevelInflowsModifier & finalInflows, uint year)
+bool CheckInfeasibilityForFinalLevelsInArea(Data::FinalLevelInflowsModifier & finalInflows, uint year)
 {
     finalInflows.setCurrentYear(year);
     finalInflows.ComputeDelta();
@@ -67,7 +67,7 @@ void CheckFinalReservoirLevelsForYear(Data::Study& study, uint year)
     study.areas.each([&study, &year](Data::Area& area)
     {
         auto& finalInflows = area.hydro.finalLevelInflowsModifier;
-        if (!CheckFinalReservoirLevelsForArea(finalInflows, year))
+        if (!CheckInfeasibilityForFinalLevelsInArea(finalInflows, year))
         {
             AntaresSolverEmergencyShutdown();
         }

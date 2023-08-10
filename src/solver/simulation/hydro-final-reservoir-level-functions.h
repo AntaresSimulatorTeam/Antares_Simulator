@@ -31,7 +31,7 @@
 
 namespace Antares::Solver
 {
-bool CheckFinalReservoirLevelsForArea(Data::FinalLevelInflowsModifier& finalInflows, uint year);
+bool CheckInfeasibilityForFinalLevelsInArea(Data::FinalLevelInflowsModifier& finalInflows, uint year);
 void CheckFinalReservoirLevelsInput(Data::Study& study);
 } // namespace Antares::Solver
 
