@@ -357,9 +357,6 @@ void HydroManagement::changeInflowsToAccommodateFinalLevels(uint numSpace, uint 
     {
         auto& data = pAreas[numSpace][area.index];
 
-        if (area.hydro.finalLevelInflowsModifier.deltaLevel.empty())
-            return;
-
         if (!area.hydro.finalLevelInflowsModifier.includeFinalReservoirLevel[year])
             return;
 
