@@ -89,17 +89,17 @@ private:
     clock::time_point end_;
 };
 
-bool OPT_TryToCallSimplex(const OptimizationOptions& options,
-        PROBLEME_HEBDO* problemeHebdo,
-        Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
-        const int NumIntervalle,
-        const int optimizationNumber,
-        const OptPeriodStringGenerator& optPeriodStringGenerator,
-        bool PremierPassage,
-        IResultWriter& writer,
-        long long& solveTime,
-        mpsWriterFactory& mps_writer_factory
-    )
+static bool OPT_TryToCallSimplex(const OptimizationOptions& options,
+                                 PROBLEME_HEBDO* problemeHebdo,
+                                 Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
+                                 const int NumIntervalle,
+                                 const int optimizationNumber,
+                                 const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                 bool PremierPassage,
+                                 IResultWriter& writer,
+                                 long long& solveTime,
+                                 mpsWriterFactory& mps_writer_factory
+                                 )
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     auto ProbSpx
@@ -310,11 +310,11 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
     bool PremierPassage = true;
 
     if (!OPT_TryToCallSimplex(options, problemeHebdo, Probleme,  NumIntervalle, optimizationNumber,
-            optPeriodStringGenerator, true, writer, solveTime, mps_writer_factory))
+            optPeriodStringGenerator, PremierPassage, writer, solveTime, mps_writer_factory))
     {
         PremierPassage = false;
         OPT_TryToCallSimplex(options, problemeHebdo, Probleme,  NumIntervalle, optimizationNumber,
-                optPeriodStringGenerator, false, writer, solveTime, mps_writer_factory);
+                optPeriodStringGenerator, PremierPassage, writer, solveTime, mps_writer_factory);
     }
 
 
