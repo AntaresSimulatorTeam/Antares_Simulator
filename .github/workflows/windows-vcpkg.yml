@@ -32,6 +32,7 @@ jobs:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_windows-latest_static_sirius.zip"
       RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
+      BUILD_ROOT: _build
 
     steps:
     - uses: actions/checkout@v3
@@ -102,10 +103,16 @@ jobs:
     - name: Enable git longpaths
       run:  git config --system core.longpaths true
 
+    - name: Restore build directory from cache
+      uses: actions/cache@v3
+      with:
+        path: ${{env.BUILD_ROOT}}
+        key: windows-build
+
     - name: Configure
       shell: bash
       run: |
-           cmake -B _build -S src \
+           cmake -B ${{env.BUILD_ROOT}} -S src \
            -DDEPS_INSTALL_DIR=rte-antares-deps-Release \
            -DCMAKE_PREFIX_PATH="${{ env.ORTOOLS_DIR }}/install" \
            -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
@@ -118,16 +125,16 @@ jobs:
     - name: Build
       shell: bash
       run: |
-           cmake --build _build --config release -j2
+           cmake --build ${{env.BUILD_ROOT}} --config release -j2
 
     - name: Run unfeasibility-related tests
       run: |
-           cd _build
+           cd ${{env.BUILD_ROOT}}
            ctest -C Release --output-on-failure -R unfeasible
 
     - name: Run unit and end-to-end tests
       run: |
-           cd _build
+           cd ${{env.BUILD_ROOT}}
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end" -LE ortools
 
     - name: Run kirchhoff-constraint-tests
@@ -135,7 +142,7 @@ jobs:
       shell: bash
       run: |
            tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
-           cd _build
+           cd ${{env.BUILD_ROOT}}
            ctest -C Release --output-on-failure -R kirchhoff
 
     - name: Upload build on failure
@@ -231,14 +238,14 @@ jobs:
     - name: Solver archive creation
       shell: bash
       run: |
-           cd _build
+           cd ${{env.BUILD_ROOT}}
            zip -r antares-solver_windows.zip solver/Release/antares-*-solver.exe solver/Release/*.dll
 
     - name: NSIS Installer creation
       shell: bash
       run: |
            rm -rf src/tests/resources/Antares_Simulator_Tests
-           cd _build
+           cd ${{env.BUILD_ROOT}}
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
@@ -248,19 +255,19 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: NSISError.log
-        path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
+        path: ${{env.BUILD_ROOT}}/_CPack_Packages/win64/NSIS/NSISOutput.log
 
     - name: .zip creation
       run: |
-           cd _build
+           cd ${{env.BUILD_ROOT}}
            cpack -G ZIP
 
     - name: Installer upload
       uses: actions/upload-artifact@v3
       with:
-        path: _build/${{env.NSIS_NAME}}
+        path: ${{env.BUILD_ROOT}}/${{env.NSIS_NAME}}
 
     - name: Archive upload
       uses: actions/upload-artifact@v3
       with:
-        path: _build/*.zip
+        path: ${{env.BUILD_ROOT}}/*.zip
