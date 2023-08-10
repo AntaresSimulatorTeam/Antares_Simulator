@@ -44,7 +44,6 @@ FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
 void FinalLevelInflowsModifier::fillEmpty()
 {
     includeFinalReservoirLevel.push_back(false);
-    endLevel.push_back(0.);
     deltaLevel.push_back(0.);
 }
 
@@ -68,7 +67,6 @@ void FinalLevelInflowsModifier::ComputeDeltaForCurrentYear()
 void FinalLevelInflowsModifier::updateInflows()
 {
     includeFinalReservoirLevel.at(yearIndex) = true;
-    endLevel.at(yearIndex) = finalReservoirLevel;
     deltaLevel.at(yearIndex) = deltaReservoirLevel;
 }
 

@@ -72,7 +72,6 @@ public:
     // for one area and all MC years
     // vector indexes correspond to the MC years
     std::vector<bool> includeFinalReservoirLevel;
-    std::vector<double> endLevel;
     std::vector<double> deltaLevel;
 
 private:

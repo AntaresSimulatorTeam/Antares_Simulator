@@ -207,14 +207,11 @@ BOOST_AUTO_TEST_CASE(Testing_updateInflows_function_for_area_1)
     finLevInfModify.isActive();
     finLevInfModify.updateInflows();
 
-    double expectedEndLevel = 3.4;
     double expectedDeltaLevel = -1.1;
     bool calculatedIncludeFinResLev = finLevInfModify.includeFinalReservoirLevel.at(0);
-    double calculatedEndLevel = finLevInfModify.endLevel.at(0);
     double calculatedDeltaLevel = finLevInfModify.deltaLevel.at(0);
 
     BOOST_CHECK_EQUAL(calculatedIncludeFinResLev, true);
-    BOOST_CHECK_EQUAL(calculatedEndLevel, expectedEndLevel);
     BOOST_CHECK_EQUAL(calculatedDeltaLevel, expectedDeltaLevel);
 }
 
@@ -340,8 +337,6 @@ BOOST_AUTO_TEST_CASE(Testing_prepareFinalReservoirLevelData_function_for_area_1_
     // extract data area 1 - year 1 and 2
     bool area_1_year_1_include_calculated = modifierArea1.includeFinalReservoirLevel.at(0);
     bool area_1_year_2_include_calculated = modifierArea1.includeFinalReservoirLevel.at(1);
-    double area_1_year_1_endLev_calculated = modifierArea1.endLevel.at(0);
-    double area_1_year_2_endLev_calculated = modifierArea1.endLevel.at(1);
     double area_1_year_1_deltaLev_calculated = modifierArea1.deltaLevel.at(0);
     double area_1_year_2_deltaLev_calculated = modifierArea1.deltaLevel.at(1);
     double area_1_year_1_deltaLev_expected = 2.3 - 3.4;
@@ -349,16 +344,12 @@ BOOST_AUTO_TEST_CASE(Testing_prepareFinalReservoirLevelData_function_for_area_1_
     // check data area 1 - year 1 and 2
     BOOST_CHECK_EQUAL(area_1_year_1_include_calculated, true);
     BOOST_CHECK_EQUAL(area_1_year_2_include_calculated, true);
-    BOOST_CHECK_EQUAL(area_1_year_1_endLev_calculated, 3.4);
-    BOOST_CHECK_EQUAL(area_1_year_2_endLev_calculated, 5.1);
     BOOST_CHECK_EQUAL(area_1_year_1_deltaLev_calculated, area_1_year_1_deltaLev_expected);
     BOOST_CHECK_EQUAL(area_1_year_2_deltaLev_calculated, area_1_year_2_deltaLev_expected);
 
     // extract data area 2 - year 1 and 2
     bool area_2_year_1_include_calculated = modifierArea2.includeFinalReservoirLevel.at(0);
     bool area_2_year_2_include_calculated = modifierArea2.includeFinalReservoirLevel.at(1);
-    double area_2_year_1_endLev_calculated = modifierArea2.endLevel.at(0);
-    double area_2_year_2_endLev_calculated = modifierArea2.endLevel.at(1);
     double area_2_year_1_deltaLev_calculated = modifierArea2.deltaLevel.at(0);
     double area_2_year_2_deltaLev_calculated = modifierArea2.deltaLevel.at(1);
     double area_2_year_1_deltaLev_expected = 1.5 - 3.5;
@@ -366,8 +357,6 @@ BOOST_AUTO_TEST_CASE(Testing_prepareFinalReservoirLevelData_function_for_area_1_
     // check data area 2 - year 1 and 2
     BOOST_CHECK_EQUAL(area_2_year_1_include_calculated, true);
     BOOST_CHECK_EQUAL(area_2_year_2_include_calculated, true);
-    BOOST_CHECK_EQUAL(area_2_year_1_endLev_calculated, 3.5);
-    BOOST_CHECK_EQUAL(area_2_year_2_endLev_calculated, 4.3);
     BOOST_CHECK_EQUAL(area_2_year_1_deltaLev_calculated, area_2_year_1_deltaLev_expected);
     BOOST_CHECK_EQUAL(area_2_year_2_deltaLev_calculated, area_2_year_2_deltaLev_expected);
 }
