@@ -30,29 +30,23 @@
 #include "../../variable.h"
 #include <antares/study/area/constants.h>
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy
 {
 struct VCardCongestionProbability
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "CONG. PROB. (+/-)";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "%";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Probability for the line to be congested in the upstream-downstream way";
     }
@@ -91,7 +85,7 @@ struct VCardCongestionProbability
 
     struct Multiple
     {
-        static const char* Caption(uint indx)
+        static std::string Caption(uint indx)
         {
             switch (indx)
             {
@@ -102,6 +96,11 @@ struct VCardCongestionProbability
             default:
                 return "<unknown>";
             }
+        }
+
+        static std::string Unit([[maybe_unused]] const unsigned int indx)
+        {
+            return VCardCongestionProbability::Unit();
         }
     };
 
@@ -282,11 +281,11 @@ public:
         const int tsIndex = NumeroChroniquesTireesParInterconnexion[numSpace][state.link->index]
                               .TransmissionCapacities;
         // CONG. PROB +
-        if (state.ntc->ValeurDuFlux[state.link->index]
+        if (state.ntc.ValeurDuFlux[state.link->index]
             > +linkDirectCapa.entry[tsIndex][state.hourInTheYear] - 10e-6)
             pValuesForTheCurrentYear[numSpace][0].hour[state.hourInTheYear] += 100.0 * ratio;
         // CONG. PROB -
-        if (state.ntc->ValeurDuFlux[state.link->index]
+        if (state.ntc.ValeurDuFlux[state.link->index]
             < -linkIndirectCapa.entry[tsIndex][state.hourInTheYear] + 10e-6)
             pValuesForTheCurrentYear[numSpace][1].hour[state.hourInTheYear] += 100.0 * ratio;
 
@@ -340,6 +339,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = VCardType::Multiple::Caption(i);
+                results.variableUnit = VCardType::Multiple::Unit(i);
                 pValuesForYearLocalReport[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }
@@ -357,9 +357,6 @@ private:
 
 }; // class CongestionProbability
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
 } // namespace Antares
 
 #endif // __SOLVER_VARIABLE_ECONOMY_CongestionProbability_H__

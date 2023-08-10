@@ -80,15 +80,81 @@ uint Antares::CBuilder::cycleCount(linkInfo* lnkI)
     return n;
 }
 
-bool CBuilder::update()
+bool CBuilder::checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour)
 {
-    buildAreaToLinkInfosMap();
-    // Keep only enabled AC lines, remove disabled or DC lines
-    Vector enabledACLines;
-    pMesh.clear();
+    Data::AreaLink* link = linkInfo->ptr;
 
-    // Update impedances from study file and compute impedance changes
+    for (uint tsIndex = 0; tsIndex < link->indirectCapacities.width; ++tsIndex)
+    {
+        if ((-1.0 * link->indirectCapacities[tsIndex][hour]
+                    > link->parameters[Data::fhlLoopFlow][hour])
+                || (link->directCapacities[tsIndex][hour]
+                    < link->parameters[Data::fhlLoopFlow][hour]))
+        {
+            logs.error() << "Error on loop flow to NTC comparison validity at hour "
+                << hour + 1 << " for line " << linkInfo->getName();
+            return false;
+        }
+    }
+    if (checkNodalLoopFlow) // check validity of loop flow values (sum = 0 at node)
+    {
+        double sum = 0.0;
+        for (auto lnk : areaToLinks[link->from])
+        {
+            sum += link->from == lnk->ptr->from
+                ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
+                : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
+        }
 
+        if (sum != 0.0)
+        {
+            logs.error() << "Error on loop flow sum validity (!= 0) at hour " << hour + 1
+                << " on node " << link->from->id;
+            return false;
+        }
+
+        sum = 0.0;
+        for (auto lnk : areaToLinks[link->with])
+        {
+            sum += link->with == lnk->ptr->from
+                ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
+                : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
+        }
+
+        if (sum != 0.0)
+        {
+            logs.error() << "Error on loop flow sum validity (!= 0) at hour " << hour + 1
+                << " on node " << link->with->id;
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool CBuilder::checkLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
+{
+    if (Data::AreaLink* link = linkInfo->ptr;
+            link->parameters[Data::fhlPShiftMinus][hour]
+            > link->parameters[Data::fhlPShiftPlus][hour])
+    {
+        logs.error() << "Error on phase shift calendar validity at hour " << hour + 1
+            << " for line " << linkInfo->getName();
+        return false;
+    }
+    return true;
+}
+
+void CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
+{
+    if (Data::AreaLink* link = linkInfo->ptr;
+            link->parameters[Data::fhlPShiftMinus][hour]
+            != link->parameters[Data::fhlPShiftPlus][hour])
+        linkInfo->hasPShiftsEqual = false;
+}
+
+bool CBuilder::updateLinks()
+{
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
     {
         auto linkInfo = *linkInfoIt;
@@ -107,79 +173,24 @@ bool CBuilder::update()
         // Can probably be improved (below) !!!
         linkInfo->nImpedanceChanges = 0;
         linkInfo->avgImpedance = link->parameters[columnImpedance][0];
-        uint hour;
-        for (uint x = 1; x < HOURS_PER_YEAR; x++)
+        for (size_t hour = 0; hour < HOURS_PER_YEAR - 1; hour++)
         {
-            hour = x - 1;
-            if (link->parameters[columnImpedance][x] != link->parameters[columnImpedance][hour])
+            if (link->parameters[columnImpedance][hour + 1] != link->parameters[columnImpedance][hour])
             {
-                impedances.insert(link->parameters[columnImpedance][x]);
+                impedances.insert(link->parameters[columnImpedance][hour + 1]);
             }
 
-            if (includeLoopFlow) // check validity of loopflow against NTC
-            {
-                for (uint tsIndex = 0; tsIndex < link->indirectCapacities.width; ++tsIndex)
-                {
-                    if ((-1.0 * link->indirectCapacities[tsIndex][hour]
-                         > link->parameters[Data::fhlLoopFlow][hour])
-                        || (link->directCapacities[tsIndex][hour]
-                            < link->parameters[Data::fhlLoopFlow][hour]))
-                    {
-                        logs.error() << "Error on loop flow to NTC comparison validity at hour "
-                                     << x << " for line " << linkInfo->getName();
-                        return false;
-                    }
-                }
-                if (checkNodalLoopFlow) // check validity of loop flow values (sum = 0 at node)
-                {
-                    double sum = 0.0;
-                    for (auto lnk : areaToLinks[link->from])
-                    {
-                        sum += link->from == lnk->ptr->from
-                                 ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
-                                 : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
-                    }
+            // check validity of loopflow against NTC
+            if (includeLoopFlow && !checkValidityOfNodalLoopFlow(linkInfo, hour))
+                return false;
 
-                    if (sum != 0.0)
-                    {
-                        logs.error() << "Error on loop flow sum validity (!= 0) at hour " << x
-                                     << " on node " << link->from->id;
-                        return false;
-                    }
+            if (!includePhaseShift)
+                continue;
 
-                    sum = 0.0;
-                    for (auto lnk : areaToLinks[link->with])
-                    {
-                        sum += link->with == lnk->ptr->from
-                                 ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
-                                 : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
-                    }
+            updateLinkPhaseShift(linkInfo, hour);
+            if (!checkLinkPhaseShift(linkInfo, hour))
+                return false;
 
-                    if (sum != 0.0)
-                    {
-                        logs.error() << "Error on loop flow sum validity (!= 0) at hour " << x
-                                     << " on node " << link->with->id;
-                        return false;
-                    }
-                }
-            }
-
-            if (includePhaseShift) // check validity of phase-shift
-            {
-                if (link->parameters[Data::fhlPShiftMinus][hour]
-                    != link->parameters[Data::fhlPShiftPlus][hour])
-                {
-                    linkInfo->hasPShiftsEqual = false;
-                }
-
-                if (link->parameters[Data::fhlPShiftMinus][hour]
-                    > link->parameters[Data::fhlPShiftPlus][hour])
-                {
-                    logs.error() << "Error on phase shift calendar validity at hour " << x
-                                 << " for line " << linkInfo->getName();
-                    return false;
-                }
-            }
         }
 
         linkInfo->nImpedanceChanges = (uint)impedances.size();
@@ -202,6 +213,20 @@ bool CBuilder::update()
 
         linkInfo->weight = linkInfo->getWeightWithImpedance();
     }
+    return true;
+
+}
+
+bool CBuilder::update()
+{
+    buildAreaToLinkInfosMap();
+    // Keep only enabled AC lines, remove disabled or DC lines
+    Vector enabledACLines;
+    pMesh.clear();
+
+    // Update impedances from study file and compute impedance changes
+    if(!updateLinks())
+        return false;
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
     {
@@ -268,8 +293,7 @@ bool CBuilder::runConstraintsBuilder(bool standalone)
 
     if (standalone)
     {
-        auto& study = *Data::Study::Current::Get();
-        study.saveToFolder(study.folder);
+        pStudy->saveToFolder(pStudy->folder);
     }
     // return result;
     return result;
@@ -283,7 +307,7 @@ bool CBuilder::deletePreviousConstraints()
     logs.info() << "Deleting previously built network constraints (with prefix  " << pPrefixDelete
                 << ")";
 
-    // Data::BindConstList::iterator it = pStudy->bindingConstraints.begin();
+    // Data::BindingConstraintsList::iterator it = pStudy->bindingConstraints.begin();
     pStudy->bindingConstraints.removeConstraintsWhoseNameConstains(pPrefixDelete);
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
@@ -301,16 +325,15 @@ bool CBuilder::deletePreviousConstraints()
 
 bool CBuilder::saveCBuilderToFile(const String& filename) const
 {
-    if (!Data::Study::Current::Valid())
+    if (!pStudy)
         return false;
     String tmp;
-    auto& study = *Data::Study::Current::Get();
 
     IniFile ini;
     auto* mainSection = ini.addSection(".general");
 
     // Study
-    mainSection->add("study", study.folder);
+    mainSection->add("study", pStudy->folder);
 
     // Tmp
     /*wxStringToString(pPathTemp->GetValue(), tmp);
@@ -332,7 +355,7 @@ bool CBuilder::saveCBuilderToFile(const String& filename) const
     {
         YString buffer;
 
-        buffer.clear() << study.folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
+        buffer.clear() << pStudy->folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
                        << "constraintbuilder.ini";
         return ini.save(buffer);
     }
@@ -345,9 +368,7 @@ bool CBuilder::completeCBuilderFromFile(const String& filename)
     YString buffer;
     if (filename == "")
     {
-        auto& study = *Data::Study::Current::Get();
-
-        buffer.clear() << study.folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
+        buffer.clear() << pStudy->folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
                        << "constraintbuilder.ini";
         if (!IO::File::Exists(buffer))
         {
@@ -444,9 +465,8 @@ bool CBuilder::completeCBuilderFromFile(const String& filename)
 
 int CBuilder::alreadyExistingNetworkConstraints(const Yuni::String& prefix) const
 {
-    auto& study = *Data::Study::Current::Get();
     int nSubCount = 0;
-    for (auto j = study.bindingConstraints.begin(); j != study.bindingConstraints.end(); j++)
+    for (auto j = pStudy->bindingConstraints.begin(); j != pStudy->bindingConstraints.end(); j++)
     {
         std::string name = (*j)->name().c_str();
         if (name.find(prefix.to<std::string>()) == 0) // name starts with the prefix

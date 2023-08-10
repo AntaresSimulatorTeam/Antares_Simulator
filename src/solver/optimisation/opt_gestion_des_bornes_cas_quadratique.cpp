@@ -28,14 +28,12 @@
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
 
 #include "pi_constantes_externes.h"
 
-#include <math.h>
 #include <yuni/core/math.h>
 
 #define ZERO_POUR_LES_VARIABLES_FIXES 1.e-6
@@ -50,15 +48,15 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* p
     for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i] = nullptr;
 
-    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC = problemeHebdo->ValeursDeNTC[PdtHebdo];
-    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+    VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo->ValeursDeNTC[PdtHebdo];
+    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
       = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
     for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
-        ProblemeAResoudre->Xmax[var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[interco];
-        ProblemeAResoudre->Xmin[var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[interco]);
+        int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
+        ProblemeAResoudre->Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco];
+        ProblemeAResoudre->Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco]);
 
         if (ProblemeAResoudre->Xmax[var] - ProblemeAResoudre->Xmin[var]
             < ZERO_POUR_LES_VARIABLES_FIXES)
@@ -84,7 +82,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* p
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
             }
         }
-        double* adresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[interco]);
+        double* adresseDuResultat = &(ValeursDeNTC.ValeurDuFlux[interco]);
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
     }
 }

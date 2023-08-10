@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include "atsp.h"
-#include <antares/inifile.h>
+#include <antares/inifile/inifile.h>
 #include "../../config.h"
 
 using namespace Yuni;
@@ -297,7 +297,7 @@ bool ATSP::loadFromINIFile(const String& filename)
 
 bool ATSP::checkStudyVersion() const
 {
-    auto v = Data::StudyTryToFindTheVersion(pStudyFolder, false);
+    auto v = Data::StudyTryToFindTheVersion(pStudyFolder);
     switch (v)
     {
     case Data::versionUnknown:

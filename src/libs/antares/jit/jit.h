@@ -27,8 +27,8 @@
 #ifndef __ANTARES_LIBS_JIT_JIT_H__
 #define __ANTARES_LIBS_JIT_JIT_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
+#include <yuni/core/fwd.h>
+#include <yuni/core/string/string.h>
 
 namespace Antares
 {
@@ -75,7 +75,7 @@ public:
          jit_(jit), file_name_(filename)
         {
         }
-        void record_current_jit_state(uint width, uint height);
+        void record_current_jit_state(unsigned width, unsigned height);
         inline JIT::Informations* jit_recorded_state()
         {
             return jit_record_;
@@ -149,22 +149,22 @@ public:
         bool loadDataIfNotAlreadyDone;
 
         //! The option to the matrix
-        uint options;
+        unsigned options;
         /*!
         ** \brief Minimum width expected (for Matrices)
         **
         ** It is the 'width' if fixedSize != 0
         */
-        uint minWidth;
+        unsigned minWidth;
         /*!
         ** \brief Minimum height expected (for Matrices)
         **
         ** It is the 'height' if fixedSize != 0
         */
-        uint maxHeight;
+        unsigned maxHeight;
 
         //! The estimated number of columns and rows
-        uint estimatedSize[2];
+        unsigned estimatedSize[2];
 
         //! Timestamp of the last modification
         Yuni::sint64 lastModification;

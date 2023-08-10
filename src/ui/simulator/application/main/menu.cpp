@@ -574,12 +574,6 @@ wxMenu* ApplWnd::createMenuHelp()
     pMenuHelp = new wxMenu();
 
     Menu::CreateItem(pMenuHelp,
-                     mnIDHelpPDFGeneralReferenceGuide,
-                     wxT("General reference guide    \tF1"),
-                     "images/16x16/help.png",
-                     wxT("Open PDF : General reference guide"));
-
-    Menu::CreateItem(pMenuHelp,
                      mnIDHelpPDFSystemMapEditorReferenceGuide,
                      wxT("System Map Editor reference guide"),
                      "images/16x16/help.png",
@@ -633,7 +627,7 @@ void ApplWnd::evtOnOpenRecentsClearHistory(wxCommandEvent&)
 
 void ApplWnd::evtOnOpenStudyFolderInExplorer(wxCommandEvent&)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         if (System::windows)

@@ -29,13 +29,13 @@
 #include "sim_structure_probleme_economique.h"
 #include "sim_structure_probleme_adequation.h"
 
-DONNEES_PAR_PAYS** DonneesParPays;
-
-VALEURS_GENEREES_PAR_PAYS*** ValeursGenereesParPays;
-NUMERO_CHRONIQUES_TIREES_PAR_PAYS*** NumeroChroniquesTireesParPays;
-NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION** NumeroChroniquesTireesParInterconnexion;
+std::vector<std::vector<VALEURS_GENEREES_PAR_PAYS>> ValeursGenereesParPays;
+std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_PAYS>> NumeroChroniquesTireesParPays;
+std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION>> NumeroChroniquesTireesParInterconnexion;
 
 PROBLEME_HORAIRE_ADEQUATION ProblemeHoraireAdequation;
 VALEURS_ANNUELLES** ValeursAnnuellesAdequation;
 
-RESULTATS_PAR_INTERCONNEXION** ResultatsParInterconnexion;
+std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
+
+std::vector<std::map<std::string, unsigned>> NumeroChroniquesTireesParGroup; //Vector size = num_parallel_year

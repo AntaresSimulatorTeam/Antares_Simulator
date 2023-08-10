@@ -35,7 +35,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "../date.h"
-#include "../inifile.h"
+#include <antares/inifile/inifile.h>
 #include "fwd.h"
 #include "variable-print-info.h"
 #include "parameters/adq-patch-params.h"
@@ -327,7 +327,7 @@ public:
     ** All generated timeseries will be re-written into the input
     ** \see TimeSeries
     */
-    uint timeSeriesToImport;
+    uint exportTimeSeriesInInput;
     //@}
 
     //! \name Correlated draws
@@ -521,6 +521,9 @@ public:
     // Format of results. Currently, only single files or zip archive are supported
     ResultFormat resultFormat = legacyFilesDirectories;
 
+    // Naming constraints and variables in problems
+    bool namedProblems;
+
 private:
     //! Load data from an INI file
     bool loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options);
@@ -547,7 +550,5 @@ const char* StudyModeToCString(StudyMode mode);
 bool StringToStudyMode(StudyMode& mode, Yuni::CString<20, false> text);
 
 } // namespace Antares::Data
-
-#include "parameters.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_PARAMETERS_H__

@@ -2,8 +2,13 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
 set(ANTARES_VERSION_HI	      8)
-set(ANTARES_VERSION_LO	      5)
+set(ANTARES_VERSION_LO	      7)
 set(ANTARES_VERSION_REVISION  0)
+
+# Beta release
+set(ANTARES_BETA 0)
+set(ANTARES_RC 2)
+
 set(ANTARES_VERSION_YEAR      2023)
 
 project(antares
@@ -13,9 +18,6 @@ set(ANTARES_PUBLISHER "RTE France")
 set(ANTARES_WEBSITE "https://antares-simulator.org/")
 set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
-# Beta release
-set(ANTARES_BETA 0)
-set(ANTARES_RC 0)
 
 # OR-Tools tag
 file(READ "../ortools_tag" ORTOOLS_TAG)
@@ -176,11 +178,14 @@ endif ()
 option(BUILD_UI "Build antares ui simulator" ON)
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
+option(BUILD_TOOLS "Build antares tools" OFF)
+message(STATUS "Build antares tools: ${BUILD_TOOLS}")
+
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
-message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
+message(STATUS "Build OR-Tools: ${BUILD_ORTOOLS}")
 
 option(BUILD_MINIZIP "Build minizip" OFF)
-message(STATUS "Build minizip ${BUILD_MINIZIP}")
+message(STATUS "Build minizip: ${BUILD_MINIZIP}")
 
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
@@ -247,7 +252,7 @@ endif()
 set(GFLAGS_USE_TARGET_NAMESPACE TRUE) 
 find_package(gflags)
 
-find_package(ortools QUIET)
+find_package(ortools)
 if(NOT ortools_FOUND OR BUILD_ORTOOLS)
 message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_Declare(ortools
@@ -324,7 +329,9 @@ add_subdirectory(solver)	#antares solver and all associated libs
 add_subdirectory(analyzer)	#antares analyser
 
 # Tools
+if (BUILD_TOOLS)
 add_subdirectory(tools)	#All antares tools
+endif()
 
 # Tests
 # 	Not setting BUILD_TESTING as a command line argument is equivalent to use -DBUILD_TESTING=OFF

@@ -36,6 +36,7 @@
 #include <wx/button.h>
 #include <wx/textctrl.h>
 #include <wx/choice.h>
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 
@@ -240,7 +241,7 @@ void BindingConstraintInfoEditor::onCancel(void*)
 
 void BindingConstraintInfoEditor::onSave(void*)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
 
@@ -326,7 +327,7 @@ void BindingConstraintInfoEditor::onSave(void*)
             logs.error() << "A binding constraint with this name already exists.";
             return;
         }
-        auto* constraint = study.bindingConstraints.add(newname);
+        auto constraint = study.bindingConstraints.add(newname);
         if (!constraint)
         {
             logs.error() << "Impossible to add a new binding constraint";
@@ -360,7 +361,7 @@ void BindingConstraintInfoEditor::onSave(void*)
 
         // Reload runtime data
         study.uiinfo->reloadBindingConstraints();
-        OnStudyConstraintAdded(constraint);
+        OnStudyConstraintAdded(constraint.get());
     }
 
     // Disable the window

@@ -31,13 +31,14 @@
 #include <yuni/core/string.h>
 #include <yuni/core/noncopyable.h>
 #include <stdlib.h>
-#include <i_writer.h>
+#include <antares/study/parameters/adq-patch-params.h>
 #include "../../array/matrix.h"
 #include "../parts/parts.h"
 #include <vector>
 #include <set>
 #include "links.h"
 #include "ui.h"
+#include "antares/study/parameters/adq-patch-params.h"
 
 namespace Antares
 {
@@ -128,7 +129,7 @@ public:
     */
     void detachLinkFromID(const AreaName& id);
 
-    void detachLink(const AreaLink* lnk);
+    static void detachLink(const AreaLink* lnk);
 
     /*!
     ** \brief Remove a link from its raw pointer
@@ -153,9 +154,6 @@ public:
     ** \param n A number of years
     */
     void resizeAllTimeseriesNumbers(uint n);
-
-    template<int TimeSeriesT>
-    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
 
     /*!
     ** \brief Check if a link with another area is already established
@@ -279,6 +277,8 @@ public:
     PartRenewable renewable;
     //@}
 
+    ShortTermStorage::STStorageInput shortTermStorage;
+
     //! \name Interconnections
     //@{
     //! All connections with this area
@@ -321,7 +321,7 @@ public:
     /*!
     ** \brief Scratchpad used temporary calculations (solver only)
     */
-    mutable AreaScratchpad** scratchpad;
+    mutable std::vector<AreaScratchpad> scratchpad;
     //@}
 
     //! \name Data
@@ -338,14 +338,7 @@ public:
 private:
     void internalInitialize();
 
-    // Store time-series numbers
-    void storeTimeseriesNumbersForLoad(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForSolar(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForWind(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForHydro(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForThermal(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForRenewable(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter::Ptr writer) const;
+
 }; // class Area
 
 bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);
@@ -551,8 +544,6 @@ public:
     //! Get if the container is empty
     bool empty() const;
 
-    template<int TimeSeriesT>
-    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
 
     /*!
     ** \brief Invalidate all areas
@@ -649,7 +640,7 @@ public:
     /*!
     ** \brief Fix all invalid orientations
     */
-    void fixOrientationForAllInterconnections(BindConstList& bindingconstraints);
+    void fixOrientationForAllInterconnections(BindingConstraintsRepository& bindingconstraints);
 
     //! Remove all load timeseries
     void removeLoadTimeseries();
@@ -862,11 +853,18 @@ void AreaListEnsureDataRenewableTimeSeries(AreaList* l);
 */
 void AreaListEnsureDataThermalPrepro(AreaList* l);
 
+/*!
+** \brief to check that Area name does not contains character *
+*/
+inline bool CheckForbiddenCharacterInAreaName(const AnyString& name)
+{
+    return name.contains('*');
+}
+
 } // namespace Data
 } // namespace Antares
 
 #include "../load-options.h"
 #include "area.hxx"
-#include "list.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_AREAS_H__

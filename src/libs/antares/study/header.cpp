@@ -31,7 +31,6 @@
 #include <assert.h>
 #include "../inifile/inifile.h"
 #include "../logs.h"
-#include "../sys/mem-wrapper.h"
 #include "version.h"
 
 using namespace Yuni;
@@ -165,7 +164,7 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
             logs.error() << "The main section has not been found. The study seems invalid.";
     }
 
-    if (version >= 200 || version == 2)
+    if (version >= 700)
     {
         if (version > static_cast<uint>(Data::versionLatest))
         {

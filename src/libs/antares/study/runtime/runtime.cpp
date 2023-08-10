@@ -25,25 +25,14 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../../sys/mem-wrapper.h"
 #include "runtime.h"
-#include "../parameters.h"
-#include "../../date.h"
-#include <algorithm>
-#include <limits>
-#include <functional>
-#include "../../emergency.h"
-#include "../memory-usage.h"
-#include "../../config.h"
-#include "../filter.h"
-#include "../area/constants.h"
+#include "antares/fatal-error.h"
+
 #include "../area/scratchpad.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos& r)
 {
@@ -100,13 +89,15 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
             area.thermal.mustrunList.calculationOfSpinning();
         }
 
-        area.scratchpad = new AreaScratchpad*[area.nbYearsInParallel];
+        area.scratchpad.reserve(area.nbYearsInParallel);
         for (uint numSpace = 0; numSpace < area.nbYearsInParallel; numSpace++)
-            area.scratchpad[numSpace] = new AreaScratchpad(r, area);
+            area.scratchpad.emplace_back(r, area);
 
         // statistics
         r.thermalPlantTotalCount += area.thermal.list.size();
         r.thermalPlantTotalCountMustRun += area.thermal.mustrunList.size();
+
+        r.shortTermStorageCount += area.shortTermStorage.count();
     }
 }
 
@@ -131,53 +122,6 @@ static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos
     });
 }
 
-template<enum BindingConstraint::Column C>
-static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
-{
-    switch (C)
-    {
-    case BindingConstraint::columnInferior:
-        rti.operatorType = '<';
-        break;
-    case BindingConstraint::columnSuperior:
-        rti.operatorType = '>';
-        break;
-    case BindingConstraint::columnEquality:
-        rti.operatorType = '=';
-        break;
-    case BindingConstraint::columnMax:
-        rti.operatorType = '?';
-        break;
-    }
-    logs.debug() << "copying constraint " << rti.operatorType << ' ' << b.name();
-    rti.name = b.name().c_str();
-    rti.filterYearByYear_ = b.yearByYearFilter();
-    rti.filterSynthesis_ = b.synthesisFilter();
-    rti.linkCount = b.linkCount();
-    rti.clusterCount = b.enabledClusterCount();
-    assert(rti.linkCount < 50000000 and "Seems a bit large...");    // arbitrary value
-    assert(rti.clusterCount < 50000000 and "Seems a bit large..."); // arbitrary value
-    rti.bounds.resize(1, b.matrix().height);
-    rti.bounds.pasteToColumn(0, b.matrix()[C]);
-
-    rti.linkWeight = new double[rti.linkCount];
-    rti.linkOffset = new int[rti.linkCount];
-    rti.linkIndex = new long[rti.linkCount];
-
-    rti.clusterWeight = new double[rti.clusterCount];
-    rti.clusterOffset = new int[rti.clusterCount];
-    rti.clusterIndex = new long[rti.clusterCount];
-    rti.clustersAreaIndex = new long[rti.clusterCount];
-
-    b.initLinkArrays(rti.linkWeight,
-                     rti.clusterWeight,
-                     rti.linkOffset,
-                     rti.clusterOffset,
-                     rti.linkIndex,
-                     rti.clusterIndex,
-                     rti.clustersAreaIndex);
-}
-
 void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimits& limits)
 {
     // Hour
@@ -198,9 +142,9 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
             // We have here too much hours, the interval will be reduced
             // Log Entry
             logs.info() << "    Partial week detected. Not allowed in "
-                << StudyModeToCString(study.parameters.mode);
+                        << StudyModeToCString(study.parameters.mode);
             logs.info() << "    Time interval that has been requested: " << (1 + a) << ".."
-                << (1 + b);
+                        << (1 + b);
             // Reducing
             while (b > a and 0 != ((b - a + 1) % 168))
                 --b;
@@ -208,8 +152,8 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
 
     // Getting informations about the given hours
-    auto& ca = study.calendar.hours[a]; // Antares::Date::StudyHourlyCalendar[a];
-    auto& cb = study.calendar.hours[b]; // Antares::Date::StudyHourlyCalendar[b];
+    auto& ca = study.calendar.hours[a];
+    auto& cb = study.calendar.hours[b];
 
     assert(ca.dayYear < 400 and "Trivial check failed");
     assert(cb.dayYear < 400 and "Trivial check failed");
@@ -261,8 +205,7 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
         simulationDaysPerMonth[(uint)ca.month] = (uint)(cb.dayYear - ca.dayYear + 1);
         if (simulationDaysPerMonth[(uint)ca.month] > study.calendar.months[(uint)ca.month].days)
         {
-            logs.fatal() << "Internal error when preparing the calendar";
-            AntaresSolverEmergencyShutdown(); // will never return
+            throw FatalError("Internal error when preparing the calendar");
         }
     }
     else
@@ -297,105 +240,8 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     // weeks, this value must be greater than or equal to 168
     if (limits.hour[rangeCount] < 168)
     {
-        logs.info();
-        logs.fatal() << "At least one week is required to run a simulation.";
-        // Since this method is only called by the solver, we will abort now.
-        // However, we have to release all locks held by the study before to avoid
-        // a timeout for a future use of the study
-        AntaresSolverEmergencyShutdown(); // will never return
+        throw FatalError("At least one week is required to run a simulation.");
     }
-}
-
-BindingConstraintRTI::BindingConstraintRTI() :
- linkWeight(nullptr),
- linkOffset(nullptr),
- linkIndex(nullptr),
- clusterWeight(nullptr),
- clusterOffset(nullptr),
- clusterIndex(nullptr)
-{
-}
-
-BindingConstraintRTI::~BindingConstraintRTI()
-{
-    delete[] linkWeight;
-    delete[] linkOffset;
-    delete[] linkIndex;
-    delete[] clusterWeight;
-    delete[] clusterOffset;
-    delete[] clusterIndex;
-}
-
-void StudyRuntimeInfos::initializeBindingConstraints(BindConstList& list)
-{
-    // Calculating the total number of binding constraints
-    bindingConstraintCount = 0;
-
-    list.eachEnabled([&](const BindingConstraint& constraint) {
-        bindingConstraintCount
-          += ((constraint.operatorType() == BindingConstraint::opBoth) ? 2 : 1);
-    });
-
-    switch (bindingConstraintCount)
-    {
-    case 0:
-        logs.info() << "  No binding constraint to consider";
-        return;
-    case 1:
-        logs.info() << "Optimizing 1 binding constraint";
-        break;
-    default:
-        logs.info() << "Optimizing " << bindingConstraintCount << " binding constraints";
-    }
-
-    bindingConstraint = new BindingConstraintRTI[bindingConstraintCount];
-
-    uint index = 0;
-    list.eachEnabled([&](const BindingConstraint& constraint) {
-        assert(index < bindingConstraintCount and "Not enough slots for binding constraints");
-
-        auto& rti = bindingConstraint[index];
-        rti.type = constraint.type();
-        switch (constraint.operatorType())
-        {
-        case BindingConstraint::opEquality:
-        {
-            CopyBCData<BindingConstraint::columnEquality>(rti, constraint);
-            break;
-        }
-        case BindingConstraint::opLess:
-        {
-            CopyBCData<BindingConstraint::columnInferior>(rti, constraint);
-            break;
-        }
-        case BindingConstraint::opGreater:
-        {
-            CopyBCData<BindingConstraint::columnSuperior>(rti, constraint);
-            break;
-        }
-        case BindingConstraint::opBoth:
-        {
-            CopyBCData<BindingConstraint::columnInferior>(rti, constraint);
-            ++index;
-            bindingConstraint[index].type = constraint.type();
-            CopyBCData<BindingConstraint::columnSuperior>(bindingConstraint[index], constraint);
-            break;
-        }
-        case BindingConstraint::opUnknown:
-        {
-            rti.operatorType = '?';
-            rti.linkCount = 0;
-            rti.bounds.clear();
-            break;
-        }
-        case BindingConstraint::opMax:
-            break;
-        }
-        ++index;
-    });
-
-    logs.debug() << "Releasing " << (list.memoryUsage() / 1024) << "Ko unused";
-    list.clear();
 }
 
 StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
@@ -405,8 +251,6 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  nbMonthsPerYear(0),
  parameters(nullptr),
  timeseriesNumberYear(nullptr),
- bindingConstraintCount(0),
- bindingConstraint(nullptr),
  thermalPlantTotalCount(0),
  thermalPlantTotalCountMustRun(0),
  quadraticOptimizationHasFailed(false)
@@ -446,7 +290,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     mode = gd.mode;
     thermalPlantTotalCount = 0;
     thermalPlantTotalCountMustRun = 0;
-
     // Calendar
     logs.info() << "Generating calendar informations";
     if (study.usedByTheSolver)
@@ -483,17 +326,11 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Must-run mode
     initializeThermalClustersInMustRunMode(study);
 
-    // Max number of thermal/renewable clusters
-    initializeMaxClusters(study);
-
     // Areas
     StudyRuntimeInfosInitializeAllAreas(study, *this);
 
     // Area links
     StudyRuntimeInfosInitializeAreaLinks(study, *this);
-
-    // Binding constraints
-    initializeBindingConstraints(study.bindingConstraints);
 
     // Check if some clusters request TS generation
     checkThermalTSGeneration(study);
@@ -507,7 +344,8 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "     links: " << interconnectionsCount();
     logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
     logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
-    logs.info() << "     binding constraints: " << bindingConstraintCount;
+    logs.info() << "     short-term storages: " << shortTermStorageCount;
+    logs.info() << "     binding constraints: " << study.bindingConstraints.activeContraints().size();
     logs.info() << "     geographic trimming:" << (gd.geographicTrimming ? "true" : "false");
     logs.info() << "     memory : " << ((study.memoryUsage()) / 1024 / 1024) << "Mo";
     logs.info();
@@ -515,93 +353,9 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     return true;
 }
 
-namespace CompareAreasByNumberOfClusters
-{
-// Compare areas by number of thermal clusters
-struct thermal
-{
-    bool operator()(const AreaList::value_type& a, const AreaList::value_type& b) const
-    {
-        assert(a.second);
-        assert(b.second);
-        return a.second->thermal.clusterCount() < b.second->thermal.clusterCount();
-    }
-    size_t getNbClusters(const Area* area) const
-    {
-        assert(area);
-        return area->thermal.clusterCount();
-    }
-};
-// Compare areas by number of renewable clusters
-struct renewable
-{
-    bool operator()(const AreaList::value_type& a, const AreaList::value_type& b) const
-    {
-        assert(a.second);
-        assert(b.second);
-        return a.second->renewable.clusterCount() < b.second->renewable.clusterCount();
-    }
-    size_t getNbClusters(const Area* area) const
-    {
-        assert(area);
-        return area->renewable.clusterCount();
-    }
-};
-} // namespace CompareAreasByNumberOfClusters
-
-template<class CompareGetT>
-static size_t maxNumberOfClusters(const Study& study)
-{
-    CompareGetT cmp;
-    auto pairWithMostClusters = std::max_element(study.areas.begin(), study.areas.end(), cmp);
-    if (pairWithMostClusters != study.areas.end())
-    {
-        auto area = pairWithMostClusters->second;
-        return cmp.getNbClusters(area);
-    }
-    return 0;
-}
-
-void StudyRuntimeInfos::initializeMaxClusters(const Study& study)
-{
-    this->maxThermalClustersForSingleArea
-      = maxNumberOfClusters<CompareAreasByNumberOfClusters::thermal>(study);
-    this->maxRenewableClustersForSingleArea
-      = maxNumberOfClusters<CompareAreasByNumberOfClusters::renewable>(study);
-}
-
 uint StudyRuntimeInfos::interconnectionsCount() const
 {
     return static_cast<uint>(areaLink.size());
-}
-
-static bool isBindingConstraintTypeInequality(const Data::BindingConstraintRTI& bc)
-{
-    return bc.operatorType == '<' || bc.operatorType == '>';
-}
-
-uint StudyRuntimeInfos::getNumberOfInequalityBindingConstraints() const
-{
-    const auto* firstBC = this->bindingConstraint;
-    const auto* lastBC = firstBC + this->bindingConstraintCount;
-    return static_cast<uint>(std::count_if(firstBC, lastBC, isBindingConstraintTypeInequality));
-}
-
-std::vector<uint> StudyRuntimeInfos::getIndicesForInequalityBindingConstraints() const
-{
-    const auto* firstBC = this->bindingConstraint;
-    const auto* lastBC = firstBC + this->bindingConstraintCount;
-
-    std::vector<uint> indices;
-    for (auto bc = firstBC; bc < lastBC; bc++)
-    {
-        if (isBindingConstraintTypeInequality(*bc))
-        {
-            auto index = static_cast<uint>(std::distance(firstBC, bc));
-            indices.push_back(index);
-        }
-    }
-    return indices;
 }
 
 void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study) const
@@ -700,17 +454,6 @@ StudyRuntimeInfos::~StudyRuntimeInfos()
     logs.debug() << "Releasing runtime data";
 
     delete[] timeseriesNumberYear;
-    delete[] bindingConstraint;
-}
-
-Yuni::uint64 StudyRuntimeInfosMemoryUsage(StudyRuntimeInfos* r)
-{
-    if (r)
-    {
-        return sizeof(StudyRuntimeInfos) + sizeof(AreaLink*) * r->interconnectionsCount()
-               + sizeof(BindingConstraint*) * r->bindingConstraintCount;
-    }
-    return 0;
 }
 
 void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& u)
@@ -719,9 +462,6 @@ void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& u)
     u.study.areas.each([&](const Data::Area& area) {
         u.requiredMemoryForInput += sizeof(AreaLink*) * area.links.size();
     });
-
-    // Binding constraints
-    // see BindConstList::estimateMemoryUsage
 }
 
 #ifndef NDEBUG
@@ -753,5 +493,4 @@ void StudyRuntimeInfos::disableAllFilters(Study& study)
     });
 }
 
-} // namespace Data
 } // namespace Antares

@@ -43,7 +43,7 @@ namespace Antares
 {
 namespace Solver
 {
-bool FindLocation(String& location, Data::Version /*version*/, Solver::Feature features)
+bool FindLocation(String& location)
 {
     // reset
     location.clear();

@@ -42,10 +42,9 @@ inline Links::Links()
     // Do nothing
 }
 
-inline void Links::initializeFromStudy(Data::Study& study)
+inline void Links::initializeFromStudy([[maybe_unused]] Data::Study& study)
 {
-    // Do nothing but resetting the pointer on print info collection
-    study.parameters.variablesPrintInfo.resetInfoIterator();
+    // Do nothing
 }
 
 inline void Links::initializeFromAreaLink(Data::Study*, Data::AreaLink*)
@@ -68,6 +67,12 @@ inline void Links::getPrintStatusFromStudy(Data::Study& study)
 {
     for (uint i = 0; i != pLinkCount; ++i)
         pLinks[i].getPrintStatusFromStudy(study);
+}
+
+inline void Links::supplyMaxNumberOfColumns(Data::Study& study)
+{
+    for (uint i = 0; i != pLinkCount; ++i)
+        pLinks[i].supplyMaxNumberOfColumns(study);
 }
 
 inline void Links::yearBegin(uint year, unsigned int numSpace)
@@ -152,18 +157,6 @@ inline void Links::hourForEachArea(State& state, unsigned int numSpace)
 inline void Links::hourForEachLink(State& state, unsigned int numSpace)
 {
     pLinks[state.link->indexForArea].hourForEachLink(state, numSpace);
-}
-
-inline void Links::hourForEachThermalCluster(State& state, unsigned int numSpace)
-{
-    for (uint i = 0; i != pLinkCount; ++i)
-        pLinks[i].hourForEachThermalCluster(state, numSpace);
-}
-
-inline void Links::hourForEachRenewableCluster(State& state, unsigned int numSpace)
-{
-    for (uint i = 0; i != pLinkCount; ++i)
-        pLinks[i].hourForEachRenewableCluster(state, numSpace);
 }
 
 inline void Links::hourEnd(State& state, uint hourInTheYear)

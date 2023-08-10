@@ -54,16 +54,11 @@ int DataSeriesSolarLoadFromFolder(Study& study,
 
     int ret = 1;
     /* Solar the matrix */
-    if (study.header.version >= 330)
-    {
-        buffer.clear() << folder << SEP << "solar_" << areaID << '.' << study.inputExtension;
-        ret = s->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+    buffer.clear() << folder << SEP << "solar_" << areaID << '.' << study.inputExtension;
+    ret = s->timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
 
-        if (study.usedByTheSolver && study.parameters.derated)
-            s->series.averageTimeseries();
-    }
-    else
-        s->series.reset(1, HOURS_PER_YEAR);
+    if (study.usedByTheSolver && study.parameters.derated)
+        s->timeSeries.averageTimeseries();
 
     s->timeseriesNumbers.clear();
 
@@ -85,7 +80,7 @@ int DataSeriesSolarSaveToFolder(DataSeriesSolar* s, const AreaName& areaID, cons
 
         String buffer;
         buffer.clear() << folder << SEP << "solar_" << areaID << ".txt";
-        res = s->series.saveToCSVFile(buffer, /*decimal*/ 0) && res;
+        res = s->timeSeries.saveToCSVFile(buffer, /*decimal*/ 0) && res;
 
         return res;
     }
@@ -94,22 +89,22 @@ int DataSeriesSolarSaveToFolder(DataSeriesSolar* s, const AreaName& areaID, cons
 
 bool DataSeriesSolar::forceReload(bool reload) const
 {
-    return series.forceReload(reload);
+    return timeSeries.forceReload(reload);
 }
 
 void DataSeriesSolar::markAsModified() const
 {
-    series.markAsModified();
+    timeSeries.markAsModified();
 }
 
 void DataSeriesSolar::estimateMemoryUsage(StudyMemoryUsage& u) const
 {
     u.requiredMemoryForInput += sizeof(DataSeriesSolar);
     timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-    series.estimateMemoryUsage(u,
+    timeSeries.estimateMemoryUsage(u,
                                0 != (timeSeriesSolar & u.study.parameters.timeSeriesToGenerate),
-                               u.study.parameters.nbTimeSeriesSolar,
-                               HOURS_PER_YEAR);
+                                    u.study.parameters.nbTimeSeriesSolar,
+                                    HOURS_PER_YEAR);
 }
 
 } // namespace Data

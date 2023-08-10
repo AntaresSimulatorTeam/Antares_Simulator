@@ -185,10 +185,29 @@ public:
     IncompatibleHurdleCostCSR();
 };
 
+class AdqPatchDisabledLMR : public LoadingError
+{
+public:
+    AdqPatchDisabledLMR();
+};
+
 class IncompatibleOutputOptions : public LoadingError
 {
 public:
     explicit IncompatibleOutputOptions(const std::string& text);
 };
+
+class IncompatibleCO2CostColumns : public LoadingError
+{
+public:
+    IncompatibleCO2CostColumns();
+};
+
+class IncompatibleFuelCostColumns : public LoadingError
+{
+public:
+    IncompatibleFuelCostColumns();
+};
+
 } // namespace Error
 } // namespace Antares

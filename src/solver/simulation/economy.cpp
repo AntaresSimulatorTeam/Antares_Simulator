@@ -35,14 +35,10 @@
 #include "opt_time_writer.h"
 
 using namespace Yuni;
+using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-enum
-{
-    nbHoursInAWeek = 168,
-};
-
 Economy::Economy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
 {
 }
@@ -54,7 +50,6 @@ Economy::~Economy()
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             OPT_LiberationMemoireDuProblemeAOptimiser(pProblemesHebdo[numSpace]);
-            SIM_DesallocationProblemeHebdo(*pProblemesHebdo[numSpace]);
             delete pProblemesHebdo[numSpace];
         }
         delete[] pProblemesHebdo;
@@ -103,13 +98,17 @@ bool Economy::simulationBegin()
                 return false;
             }
 
+            auto options = createOptimizationOptions(study);
             weeklyOptProblems_[numSpace] =
                 Antares::Solver::Optimization::WeeklyOptimization::create(
-                                                    study.parameters.adqPatchParams.enabled,
+                                                    study,
+                                                    options,
+                                                    study.parameters.adqPatchParams,
                                                     pProblemesHebdo[numSpace],
-                                                    numSpace);
+                                                    numSpace,
+                                                    *study.resultWriter);
             postProcessesList_[numSpace] =
-                interfacePostProcessList::create(study.parameters.adqPatchParams.enabled,
+                interfacePostProcessList::create(study.parameters.adqPatchParams,
                                                  pProblemesHebdo[numSpace],
                                                  numSpace,
                                                  study.areas,
@@ -117,8 +116,6 @@ bool Economy::simulationBegin()
                                                  study.parameters.simplexOptimizationRange,
                                                  study.calendar);
         }
-
-        SIM_InitialisationResultats();
     }
 
     if (pProblemesHebdo)
@@ -128,7 +125,7 @@ bool Economy::simulationBegin()
     }
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
-    pNbWeeks = (study.parameters.simulationDays.end - study.parameters.simulationDays.first) / 7;
+    pNbWeeks = study.parameters.simulationDays.numberOfWeeks();
     return true;
 }
 
@@ -161,7 +158,7 @@ bool Economy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->weekInTheYear = state.weekInTheYear = w;
         pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(
+        ::SIM_RenseignementProblemeHebdo(state.study,
           *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed

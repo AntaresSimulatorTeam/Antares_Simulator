@@ -51,19 +51,19 @@ public:
     Yuni::CString<32, false> simplexOptimRange;
 
     //! Ignore error/warnings
-    int ignoreWarningsErrors;
+    int ignoreWarningsErrors = 0;
     //! Ignore constraints
-    bool ignoreConstraints;
+    bool ignoreConstraints = false;
     //!
-    bool tsGeneratorsOnly;
+    bool tsGeneratorsOnly = false;
     //! True to disable the writing in the output folder
-    bool noOutput;
+    bool noOutput = false;
     //! Progression
-    bool displayProgression;
+    bool displayProgression = false;
 
     Yuni::String PID;
 
-    bool forceZipOutput;
+    bool forceZipOutput = false;
 
     void checkAndSetStudyFolder(Yuni::String folder);
     void reset();

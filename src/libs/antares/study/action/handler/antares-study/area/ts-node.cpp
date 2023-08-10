@@ -110,8 +110,9 @@ bool NodeTimeseries::performWL(Context& ctx)
     case Data::timeSeriesThermal:
         if (ctx.cluster)
         {
-            ctx.cluster->series->series.reset(1, HOURS_PER_YEAR);
+            ctx.cluster->series->timeSeries.reset(1, HOURS_PER_YEAR);
             ctx.cluster->prepro->reset();
+            ctx.cluster->ecoInput.reset();
         }
         break;
     default:

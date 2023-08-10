@@ -38,7 +38,9 @@ class output_compare(check_interface):
 
         simulation_files = find_simulation_files(ref_simulation_folder, other_folder)
 
-        check(compare_simulation_files(simulation_files, self.tol), "Results comparison failed")
+        (comparison_ok, output_var_if_failure) = compare_simulation_files(simulation_files, self.tol)
+        error_msg = "Results comparison failed on : %s" % output_var_if_failure
+        check(comparison_ok, error_msg)
 
     def name(self):
         return "output compare"
@@ -81,6 +83,7 @@ def compare_simulation_files(simulation_files, tol):
     REF_INDEX = 0
     OTHER_INDEX = 1
     at_least_one_diff = False
+    col_name_where_diff = ""
     for file_pair in simulation_files:
         # Read reference and simulation (other) files
         ref_data_frame = read_csv(file_pair[REF_INDEX])
@@ -103,8 +106,10 @@ def compare_simulation_files(simulation_files, tol):
 
                 print_comparison_report(ref_data_frame, other_data_frame, file_path, col_name)
                 at_least_one_diff = True
+                col_name_where_diff = col_name
 
-    return not at_least_one_diff
+
+    return (not at_least_one_diff, col_name_where_diff)
 
 
 def print_comparison_report(ref_data_frame, other_data_frame, file_path, col_name):

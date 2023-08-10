@@ -25,13 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <stdio.h>
 #include "logs.h"
-#include <yuni/core/logs.h>
-#include "../emergency.h"
 
 namespace Antares
 {

@@ -74,6 +74,14 @@ IniFile::Property* IniFile::Section::add(const AnyString& key, const U& value)
     return p;
 }
 
+template<class U>
+IniFile::Property* IniFile::Section::add(const AnyString& key, const std::optional<U>& value)
+{
+    if (value.has_value())
+        return add(key, value.value());
+    return nullptr;
+}
+
 template<class U, class StringT>
 inline U IniFile::Section::read(const StringT& key, const U& defValue) const
 {

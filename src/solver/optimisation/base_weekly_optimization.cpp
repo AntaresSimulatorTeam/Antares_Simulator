@@ -30,21 +30,35 @@
 #include "weekly_optimization.h"
 #include "adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
 
+using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+
 namespace Antares::Solver::Optimization
 {
-WeeklyOptimization::WeeklyOptimization(PROBLEME_HEBDO* problemesHebdo, uint thread_number) :
- problemeHebdo_(problemesHebdo), thread_number_(thread_number)
+WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
+                                       PROBLEME_HEBDO* problemesHebdo,
+                                       AdqPatchParams& adqPatchParams,
+                                       uint thread_number,
+                                       IResultWriter& writer) :
+    options_(options),
+    problemeHebdo_(problemesHebdo),
+    adqPatchParams_(adqPatchParams),
+    thread_number_(thread_number),
+    writer_(writer)
 {
 }
 
-std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(bool adqPatchEnabled,
-                                                               PROBLEME_HEBDO* problemeHebdo,
-                                                               uint thread_number)
+std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(
+    const Antares::Data::Study& study,
+    const OptimizationOptions& options,
+    AdqPatchParams& adqPatchParams,
+    PROBLEME_HEBDO* problemeHebdo,
+    uint thread_number,
+    IResultWriter& writer)
 {
-    if (adqPatchEnabled)
-        return std::make_unique<AdequacyPatchOptimization>(problemeHebdo, thread_number);
+    if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled)
+        return std::make_unique<AdequacyPatchOptimization>(study, options, problemeHebdo, adqPatchParams, thread_number, writer);
     else
-        return std::make_unique<DefaultWeeklyOptimization>(problemeHebdo, thread_number);
+        return std::make_unique<DefaultWeeklyOptimization>(options, problemeHebdo, adqPatchParams, thread_number, writer);
 }
 
 } // namespace Antares::Solver::Optimization

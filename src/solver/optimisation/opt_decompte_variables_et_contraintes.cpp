@@ -28,13 +28,12 @@
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
 
 #include <antares/logs.h>
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 
 using namespace Antares;
 
@@ -52,21 +51,21 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         ProblemeAResoudre->NombreDeVariables
-          += problemeHebdo->PaliersThermiquesDuPays[pays]->NombreDePaliersThermiques;
+          += problemeHebdo->PaliersThermiquesDuPays[pays].NombreDePaliersThermiques;
 
-        mxPaliers += problemeHebdo->PaliersThermiquesDuPays[pays]->NombreDePaliersThermiques;
+        mxPaliers += problemeHebdo->PaliersThermiquesDuPays[pays].NombreDePaliersThermiques;
 
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
         {
             ProblemeAResoudre->NombreDeVariables++;
         }
 
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
         {
             ProblemeAResoudre->NombreDeVariables++;
         }
 
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->SuiviNiveauHoraire)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
         {
             ProblemeAResoudre->NombreDeVariables++;
             ProblemeAResoudre->NombreDeVariables++;
@@ -78,7 +77,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
         {
             ProblemeAResoudre->NombreDeVariables += 1;   /* Final Stock Level */
             ProblemeAResoudre->NombreDeVariables += 100; /* Reservoir layers  */
@@ -94,7 +93,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)
     {
-        if (problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante]->TypeDeContrainteCouplante
+        if (problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante].TypeDeContrainteCouplante
             == CONTRAINTE_HORAIRE)
         {
             ProblemeAResoudre->NombreDeContraintes++;
@@ -114,7 +113,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)
     {
-        if (problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante]->TypeDeContrainteCouplante
+        if (problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante].TypeDeContrainteCouplante
             == CONTRAINTE_JOURNALIERE)
         {
             ProblemeAResoudre->NombreDeContraintes += nombreDeJoursDansUnIntervalleOptimise;
@@ -127,7 +126,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
              cntCouplante++)
         {
             if (problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante]
-                  ->TypeDeContrainteCouplante
+                  .TypeDeContrainteCouplante
                 == CONTRAINTE_HEBDOMADAIRE)
             {
                 ProblemeAResoudre->NombreDeContraintes++;
@@ -137,14 +136,14 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        char Pump = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable;
+        char Pump = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable;
         char TurbEntreBornes
-          = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
         char MonitorHourlyLev
-          = problemeHebdo->CaracteristiquesHydrauliques[pays]->SuiviNiveauHoraire;
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire;
 
         if (!Pump && !TurbEntreBornes && !MonitorHourlyLev
-            && problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
+            && problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
         {
             ProblemeAResoudre->NombreDeContraintes++;
         }
@@ -215,14 +214,22 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
         }
         if (!Pump && !TurbEntreBornes && MonitorHourlyLev)
         {
-            logs.fatal() << "Level explicit modeling requires flexible generation";
-            AntaresSolverEmergencyShutdown();
+            throw FatalError("Level explicit modeling requires flexible generation");
         }
+    }
+
+    // Short term storage
+    {
+        const uint nbSTS = problemeHebdo->NumberOfShortTermStorages;
+        // Level, injection, withdrawal
+        ProblemeAResoudre->NombreDeVariables += 3 * nbSTS * nombreDePasDeTempsPourUneOptimisation;
+        // Level equation (Level[h+1] = Level[h] + ...)
+        ProblemeAResoudre->NombreDeContraintes += nbSTS * nombreDePasDeTempsPourUneOptimisation;
     }
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
         {
             if (problemeHebdo->TypeDeLissageHydraulique
                 == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
@@ -242,7 +249,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
         {
             ProblemeAResoudre->NombreDeContraintes
               += 2; /* Final Stock Level : (1 equivalence cnt + 1 expression cnt )*/

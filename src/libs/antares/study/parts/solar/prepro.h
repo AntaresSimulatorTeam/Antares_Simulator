@@ -27,7 +27,6 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_H__
 #define __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_H__
 
-#include "../../fwd.h"
 #include "../../xcast.h"
 
 namespace Antares
@@ -60,7 +59,7 @@ public:
     /*!
     ** \brief Solar data from a folder
     */
-    bool loadFromFolder(Study& study, const AnyString& folder);
+    bool loadFromFolder(const AnyString& folder);
 
     /*!
     ** \brief Save data to a folder

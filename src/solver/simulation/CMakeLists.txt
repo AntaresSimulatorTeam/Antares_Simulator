@@ -3,6 +3,7 @@
 #
 set(SRC_SIMULATION
 		sim_alloc_probleme_hebdo.cpp
+		sim_alloc_probleme_hebdo.h
 		sim_allocation_tableaux.cpp
 		sim_calcul_economique.cpp
 		sim_extern_variables_globales.h
@@ -11,6 +12,8 @@ set(SRC_SIMULATION
 		sim_structure_probleme_economique.h
 		sim_variables_globales.cpp
 		sim_constants.h
+        sim_spread_generator.h
+        sim_spread_generator.cpp
 		simulation.h
 		solver.h
 		solver.hxx
@@ -40,7 +43,9 @@ set(SRC_SIMULATION
 		opt_time_writer.cpp
 		adequacy_patch_runtime_data.h
 		adequacy_patch_runtime_data.cpp
-		)
+		ITimeSeriesNumbersWriter.h
+		TimeSeriesNumbersWriter.cpp
+        BindingConstraintsTimeSeriesNumbersWriter.h)
 source_group("simulation" FILES ${SRC_SIMULATION})
 
 

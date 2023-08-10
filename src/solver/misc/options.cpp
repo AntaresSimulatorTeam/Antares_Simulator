@@ -42,7 +42,6 @@
 
 #include "../../config.h"
 
-#include <antares/emergency.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/Enum.hpp>
@@ -168,6 +167,12 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
                     ' ',
                     "mps-export",
                     "Export in the mps format the optimization problems.");
+
+    // --named-problems
+    parser->addFlag(options.namedProblems,
+                    ' ',
+                    "named-mps-problems",
+                    "Naming constraints and variables in problems.");
 
     parser->addParagraph("\nMisc.");
     // --progress

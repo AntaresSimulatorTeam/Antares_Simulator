@@ -25,15 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <limits>
-
 #include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
 #include "../solver/simulation/simulation.h"
-#include "../solver/simulation/sim_structure_donnees.h"
 #include "../solver/simulation/sim_structure_probleme_economique.h"
-#include "../solver/simulation/sim_structure_probleme_adequation.h"
-#include "../solver/simulation/sim_extern_variables_globales.h"
 
 #include "../solver/optimisation/opt_fonctions.h"
 
@@ -61,24 +56,24 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
     auto Probleme = std::make_unique<PROBLEME_POINT_INTERIEUR>();
 
     Probleme->NombreMaxDIterations = -1;
-    Probleme->CoutQuadratique = ProblemeAResoudre.CoutQuadratique;
-    Probleme->CoutLineaire = ProblemeAResoudre.CoutLineaire;
-    Probleme->X = ProblemeAResoudre.X;
-    Probleme->Xmin = ProblemeAResoudre.Xmin;
-    Probleme->Xmax = ProblemeAResoudre.Xmax;
+    Probleme->CoutQuadratique = ProblemeAResoudre.CoutQuadratique.data();
+    Probleme->CoutLineaire = ProblemeAResoudre.CoutLineaire.data();
+    Probleme->X = ProblemeAResoudre.X.data();
+    Probleme->Xmin = ProblemeAResoudre.Xmin.data();
+    Probleme->Xmax = ProblemeAResoudre.Xmax.data();
     Probleme->NombreDeVariables = ProblemeAResoudre.NombreDeVariables;
-    Probleme->TypeDeVariable = ProblemeAResoudre.TypeDeVariable;
+    Probleme->TypeDeVariable = ProblemeAResoudre.TypeDeVariable.data();
 
-    Probleme->VariableBinaire = (char*)ProblemeAResoudre.CoutsReduits;
+    Probleme->VariableBinaire = (char*)ProblemeAResoudre.CoutsReduits.data();
 
     Probleme->NombreDeContraintes = ProblemeAResoudre.NombreDeContraintes;
-    Probleme->IndicesDebutDeLigne = ProblemeAResoudre.IndicesDebutDeLigne;
-    Probleme->NombreDeTermesDesLignes = ProblemeAResoudre.NombreDeTermesDesLignes;
-    Probleme->IndicesColonnes = ProblemeAResoudre.IndicesColonnes;
+    Probleme->IndicesDebutDeLigne = ProblemeAResoudre.IndicesDebutDeLigne.data();
+    Probleme->NombreDeTermesDesLignes = ProblemeAResoudre.NombreDeTermesDesLignes.data();
+    Probleme->IndicesColonnes = ProblemeAResoudre.IndicesColonnes.data();
     Probleme->CoefficientsDeLaMatriceDesContraintes
-      = ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes;
-    Probleme->Sens = ProblemeAResoudre.Sens;
-    Probleme->SecondMembre = ProblemeAResoudre.SecondMembre;
+      = ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes.data();
+    Probleme->Sens = ProblemeAResoudre.Sens.data();
+    Probleme->SecondMembre = ProblemeAResoudre.SecondMembre.data();
 
     Probleme->AffichageDesTraces = NON_PI;
 
@@ -86,10 +81,10 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
     Probleme->UtiliserLaToleranceDeStationnariteParDefaut = OUI_PI;
     Probleme->UtiliserLaToleranceDeComplementariteParDefaut = OUI_PI;
 
-    Probleme->CoutsMarginauxDesContraintes = ProblemeAResoudre.CoutsMarginauxDesContraintes;
+    Probleme->CoutsMarginauxDesContraintes = ProblemeAResoudre.CoutsMarginauxDesContraintes.data();
 
-    Probleme->CoutsMarginauxDesContraintesDeBorneInf = ProblemeAResoudre.CoutsReduits;
-    Probleme->CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre.CoutsReduits;
+    Probleme->CoutsMarginauxDesContraintesDeBorneInf = ProblemeAResoudre.CoutsReduits.data();
+    Probleme->CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre.CoutsReduits.data();
 
     return Probleme;
 }
@@ -120,14 +115,14 @@ void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResou
 
 void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                                           const HourlyCSRProblem& hourlyCsrProblem,
+                                          const AdqPatchParams& adqPatchParams,
                                           uint weekNb,
                                           int yearNb,
                                           double costPriorToCsr,
                                           double costAfterCsr)
 {
     const int hoursInWeek = 168;
-    const bool checkCost
-      = hourlyCsrProblem.problemeHebdo_->adqPatchParams->CheckCsrCostFunctionValue;
+    const bool checkCost = adqPatchParams.curtailmentSharing.checkCsrCostFunction;
     double deltaCost = costAfterCsr - costPriorToCsr;
 
     if (checkCost)
@@ -146,14 +141,15 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& Pro
           << yearNb + 1 << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.triggeredHour + 1;
 }
 
-double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
-                                     const HourlyCSRProblem& hourlyCsrProblem)
+double calculateCSRcost(const PROBLEME_POINT_INTERIEUR& Probleme,
+                        const HourlyCSRProblem& hourlyCsrProblem,
+                        const AdqPatchParams& adqPatchParams)
 {
-    logs.debug() << "calculateCsrCostFunctionValue! ";
+    logs.debug() << "calculate CSR cost : ";
     double cost = 0.0;
-    if (!hourlyCsrProblem.problemeHebdo_->adqPatchParams->CheckCsrCostFunctionValue)
+    if (!adqPatchParams.curtailmentSharing.checkCsrCostFunction)
     {
-        logs.debug() << "CheckCsrCostFunctionValue = FALSE";
+        logs.debug() << "CSR Cost is FALSE";
         return cost;
     }
 
@@ -171,7 +167,7 @@ double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
 
         auto itLink = hourlyCsrProblem.linkInsideAdqPatch.find(i);
         if ((itLink == hourlyCsrProblem.linkInsideAdqPatch.end())
-                || hourlyCsrProblem.problemeHebdo_->adqPatchParams->IncludeHurdleCostCsr
+                || adqPatchParams.curtailmentSharing.includeHurdleCost
                 || !itLink->second.check())
             continue;
 
@@ -256,23 +252,29 @@ void handleInteriorPointError(const PROBLEME_POINT_INTERIEUR& Probleme,
 
 bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                    HourlyCSRProblem& hourlyCsrProblem,
+                   const AdqPatchParams& adqPatchParams,
                    uint weekNb,
                    int yearNb)
 {
-    auto Probleme = buildInteriorPointProblem(ProblemeAResoudre);
-    double costPriorToCsr = calculateCsrCostFunctionValue(*Probleme, hourlyCsrProblem);
-    PI_Quamin(Probleme.get()); // resolution
-    if (Probleme->ExistenceDUneSolution == OUI_PI)
+    auto interiorPointProblem = buildInteriorPointProblem(ProblemeAResoudre);
+    double costPriorToCsr = calculateCSRcost(*interiorPointProblem, hourlyCsrProblem, adqPatchParams);
+    PI_Quamin(interiorPointProblem.get()); // resolution
+    if (interiorPointProblem->ExistenceDUneSolution == OUI_PI)
     {
         setToZeroIfBelowThreshold(ProblemeAResoudre, hourlyCsrProblem);
-        double costAfterCsr = calculateCsrCostFunctionValue(*Probleme, hourlyCsrProblem);
-        storeOrDisregardInteriorPointResults(
-          ProblemeAResoudre, hourlyCsrProblem, weekNb, yearNb, costPriorToCsr, costAfterCsr);
+        double costAfterCsr = calculateCSRcost(*interiorPointProblem, hourlyCsrProblem, adqPatchParams);
+        storeOrDisregardInteriorPointResults(ProblemeAResoudre, 
+                                             hourlyCsrProblem,
+                                             adqPatchParams,
+                                             weekNb,
+                                             yearNb,
+                                             costPriorToCsr,
+                                             costAfterCsr);
         return true;
     }
     else
     {
-        handleInteriorPointError(*Probleme, hourlyCsrProblem.triggeredHour, weekNb, yearNb);
+        handleInteriorPointError(*interiorPointProblem, hourlyCsrProblem.triggeredHour, weekNb, yearNb);
         return false;
     }
 }

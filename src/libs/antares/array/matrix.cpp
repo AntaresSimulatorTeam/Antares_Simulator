@@ -25,16 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
-#include <yuni/core/system/windows.hdr.h>
-#include <yuni/core/math.h>
-#include <yuni/io/file.h>
-
-#include "matrix.h"
-#include <logs.h>
-#include <math.h>
-#include "../benchmarking.h"
-#include "../study/memory-usage.h"
+#include <cstdlib>
+#include "antares/study/memory-usage.h"
 
 using namespace Yuni;
 

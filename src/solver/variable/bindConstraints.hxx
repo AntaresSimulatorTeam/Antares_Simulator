@@ -28,7 +28,9 @@
 
 #include <vector>
 #include <utility>
-#include "antares/study/constraint/constraint.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
+#include "antares/study/fwd.h"
+#include "bindConstraints.h"
 
 namespace Antares::Solver::Variable
 {
@@ -99,12 +101,12 @@ inline void BindingConstraints<NextT>::provideInformations(I& infos)
 template<class NextT>
 void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 {
-    const std::vector<uint> InequalityBCnumbers
-      = study.runtime->getIndicesForInequalityBindingConstraints();
+    const std::vector<uint> InequalityBCindices
+      = study.bindingConstraints.getIndicesForInequalityBindingConstraints();
 
     // The total number of inequality binding constraints count
     // (we don't count BCs with equality sign)
-    pBCcount = (uint)InequalityBCnumbers.size();
+    pBCcount = (uint)InequalityBCindices.size();
 
     // Reserving the memory
     if (pBCcount > 0)
@@ -116,11 +118,29 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
     {
         NextType& bc = pBindConstraints[i];
 
-        bc.setBindConstraintGlobalNumber(InequalityBCnumbers[i]);
+        bc.setBindConstraintGlobalIndex(InequalityBCindices[i]);
         bc.initializeFromStudy(study);
 
         // Does user want to print output results related to the current binding constraint ?
         bc.getPrintStatusFromStudy(study);
+    }
+
+    // Here we supply the max number of columns to the variable print info collector 
+    // This is a ugly hack (it's a work around).
+    // We should have a simple call to :
+    //      NextType::supplyMaxNumberOfColumns(study);
+    // Instead, we have a few lines as a hack.
+    // What we have to do is add to the print info collector a single VariablePrintInfo
+    // that has a max columns size of : (nb of inequality BCs) x ResultsType::count
+    // But note that for now, BC output variables are chained statically (one output variable per inequality BC).
+    // The hack is to make the first BC output variable able to supply max columns size for all BC output variables
+    // with its method getMaxNumberColumns().
+    // A solution would be to make BC output variables (like BindingConstMarginCost) some DYNAMIC variables.
+    if (pBCcount > 0)
+    {
+        NextType& bc = pBindConstraints[0];
+        bc.setBindConstraintsCount(pBCcount);
+        bc.supplyMaxNumberOfColumns(study);
     }
 }
 

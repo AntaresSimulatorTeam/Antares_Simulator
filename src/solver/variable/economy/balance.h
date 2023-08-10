@@ -41,17 +41,17 @@ namespace Economy
 struct VCardBalance
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "BALANCE";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "MWh";
     }
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Nodal energy balance, throughout all MC years";
     }
@@ -246,14 +246,14 @@ public:
         pInterco[numSpace] = state.problemeHebdo->IndexDebutIntercoOrigine[state.area->index];
         while (pInterco[numSpace] >= 0)
         {
-            bilanPays[numSpace] += state.ntc->ValeurDuFlux[pInterco[numSpace]];
+            bilanPays[numSpace] += state.ntc.ValeurDuFlux[pInterco[numSpace]];
             pInterco[numSpace]
               = state.problemeHebdo->IndexSuivantIntercoOrigine[pInterco[numSpace]];
         }
         pInterco[numSpace] = state.problemeHebdo->IndexDebutIntercoExtremite[state.area->index];
         while (pInterco[numSpace] >= 0)
         {
-            bilanPays[numSpace] -= state.ntc->ValeurDuFlux[pInterco[numSpace]];
+            bilanPays[numSpace] -= state.ntc.ValeurDuFlux[pInterco[numSpace]];
             pInterco[numSpace]
               = state.problemeHebdo->IndexSuivantIntercoExtremite[pInterco[numSpace]];
         }
@@ -282,6 +282,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

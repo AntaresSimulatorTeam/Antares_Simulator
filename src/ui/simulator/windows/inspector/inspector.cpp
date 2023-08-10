@@ -31,6 +31,7 @@
 #include <wx/sizer.h>
 #include "../../application/main.h"
 #include <wx/aui/aui.h>
+#include <memory>
 
 #include "inspector.h"
 #include "frame.h"
@@ -161,7 +162,7 @@ void Show()
 void SelectStudy(const Data::Study::Ptr& study)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
     if (study)
@@ -177,7 +178,7 @@ void SelectStudy(const Data::Study::Ptr& study)
 void AddStudy(const Data::Study::Ptr& study)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     if (gData->studies.insert(study).second)
     {
@@ -190,7 +191,7 @@ void AddStudy(const Data::Study::Ptr& study)
 void SelectArea(const Data::Area* area)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
     if (area)
@@ -206,7 +207,7 @@ void SelectArea(const Data::Area* area)
 void AddArea(const Data::Area* area)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     if (gData->areas.insert(const_cast<Data::Area*>(area)).second)
     {
@@ -222,7 +223,7 @@ void AddAreas(const Data::Area::Vector& list)
         return;
 
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     bool notEmpty = false;
     Data::Area::Vector::const_iterator end = list.end();
@@ -247,7 +248,7 @@ void AddAreas(const Data::Area::Set& list)
         return;
 
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     bool notEmpty = false;
     Data::Area::Set::const_iterator end = list.end();
@@ -272,7 +273,7 @@ void AddLinks(const Data::AreaLink::Vector& list)
         return;
 
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     bool notEmpty = false;
     Data::AreaLink::Vector::const_iterator end = list.end();
@@ -292,7 +293,7 @@ void AddLinks(const Data::AreaLink::Set& list)
     if (list.empty())
         return;
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     bool notEmpty = false;
     Data::AreaLink::Set::const_iterator end = list.end();
@@ -312,33 +313,18 @@ const Data::AreaLink::Set& getLinks()
     return gData->links;
 }
 
-void AddBindingConstraint(const Data::BindingConstraint* constraint)
-{
-    if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
-
-    using ConstraintPtr = Data::BindingConstraint*;
-    if (gData->constraints.insert(const_cast<ConstraintPtr>(constraint)).second)
-    {
-        gData->empty = false;
-        if (gInspector)
-            gInspector->apply(gData);
-    }
-}
-
-void AddBindingConstraints(const Data::BindingConstraint::Set& list)
+void AddBindingConstraints(const Data::BindingConstraintsRepository::Set& list)
 {
     if (list.empty())
         return;
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
-    using StudyConstraintType = Data::BindingConstraint;
     bool notEmpty = false;
-    StudyConstraintType::Set::const_iterator end = list.end();
-    for (StudyConstraintType::Set::const_iterator i = list.begin(); i != end; ++i)
+    auto end = list.end();
+    for (auto i = list.begin(); i != end; ++i)
         notEmpty
-          = gData->constraints.insert(const_cast<StudyConstraintType*>(*i)).second || notEmpty;
+          = gData->constraints.insert(*i).second || notEmpty;
 
     if (notEmpty)
     {
@@ -351,7 +337,7 @@ void AddBindingConstraints(const Data::BindingConstraint::Set& list)
 void AddLink(const Data::AreaLink* link)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     if (gData->links.insert(const_cast<Data::AreaLink*>(link)).second)
     {
@@ -365,7 +351,7 @@ void AddLink(const Data::AreaLink* link)
 void AddThermalCluster(const Data::ThermalCluster* cluster)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     if (gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
     {
@@ -381,7 +367,7 @@ void AddThermalClusters(const Data::ThermalCluster::Vector& list)
     if (list.empty())
         return;
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     bool notEmpty = false;
     Data::ThermalCluster::Vector::const_iterator end = list.end();
@@ -403,7 +389,7 @@ void AddThermalClusters(const Data::ThermalCluster::Set& list)
     if (list.empty())
         return;
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     bool notEmpty = false;
     Data::ThermalCluster::Set::const_iterator end = list.end();
@@ -422,16 +408,6 @@ void AddThermalClusters(const Data::ThermalCluster::Set& list)
 void RemoveArea(const Data::Area* area)
 {
     if (!(!gData) && gData->areas.erase(const_cast<Data::Area*>(area)))
-    {
-        gData->determineEmpty();
-        if (gInspector)
-            gInspector->apply(gData);
-    }
-}
-
-void RemoveBindingConstraint(const Data::BindingConstraint* constraint)
-{
-    if (!(!gData) && gData->constraints.erase(const_cast<Data::BindingConstraint*>(constraint)))
     {
         gData->determineEmpty();
         if (gInspector)
@@ -472,7 +448,7 @@ void RemoveRenewableCluster(const Data::RenewableCluster* cluster)
 void SelectAreas(const Data::Area::Vector& areas)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
     if (!areas.empty())
@@ -495,7 +471,7 @@ void SelectAreas(const Data::Area::Vector& areas)
 void SelectAreas(const Data::Area::Set& areas)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
     if (!areas.empty())
@@ -515,30 +491,10 @@ void SelectAreas(const Data::Area::Set& areas)
         gInspector->apply(gData);
 }
 
-void SelectBindingConstraints(const Data::BindingConstraint::Vector& list)
-{
-    if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
-
-    gData->clear();
-    if (!list.empty())
-    {
-        using ConstraintPtr = Data::BindingConstraint*;
-        bool notEmpty = false;
-        const Data::BindingConstraint::Vector::const_iterator end = list.end();
-        for (Data::BindingConstraint::Vector::const_iterator i = list.begin(); i != end; ++i)
-            notEmpty = gData->constraints.insert(const_cast<ConstraintPtr>(*i)).second || notEmpty;
-        if (notEmpty)
-            gData->empty = false;
-    }
-    if (gInspector)
-        gInspector->apply(gData);
-}
-
 void SelectLink(const Data::AreaLink* lnk)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
     if (lnk)
@@ -553,7 +509,7 @@ void SelectLink(const Data::AreaLink* lnk)
 void SelectLinks(const Data::AreaLink::Vector& lnks)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
     if (!lnks.empty())
@@ -572,7 +528,7 @@ void SelectLinks(const Data::AreaLink::Vector& lnks)
 void SelectThermalCluster(const Data::ThermalCluster* cluster)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
     if (cluster)
@@ -588,7 +544,7 @@ void SelectThermalCluster(const Data::ThermalCluster* cluster)
 void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
 
@@ -610,7 +566,7 @@ void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
 void SelectRenewableCluster(const Data::RenewableCluster* cluster)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
     if (cluster)
@@ -624,7 +580,7 @@ void SelectRenewableCluster(const Data::RenewableCluster* cluster)
 
 uint CopyToClipboard()
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr || !gData)
         return 0; // nothing was copied
 
@@ -748,7 +704,7 @@ bool isConstraintSelected(const Yuni::String& constraintName)
     auto end = gData->constraints.end();
     for (auto i = gData->constraints.begin(); i != end; ++i)
     {
-        Data::BindingConstraint* constraint = *i;
+        auto constraint = *i;
         if (constraint->name() == constraintName)
         {
             return true;
@@ -764,7 +720,7 @@ bool ConstraintsSelected(const std::set<Yuni::String>& set)
     auto end = gData->constraints.end();
     for (auto i = gData->constraints.begin(); i != end; ++i)
     {
-        Data::BindingConstraint* constraint = *i;
+       auto constraint = *i;
         if (set.find(constraint->name()) == set.end())
         {
             return false;

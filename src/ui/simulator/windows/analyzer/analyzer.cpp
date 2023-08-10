@@ -52,7 +52,7 @@
 #include "../../application/menus.h"
 #include "../message.h"
 #include <antares/logs.h>
-#include <antares/inifile.h>
+#include <antares/inifile/inifile.h>
 #include "../../application/study.h"
 #include <antares/config.h>
 #include <antares/io/statistics.h>
@@ -519,14 +519,14 @@ void FileSearchProvider::onFileSearchClear()
 void AnalyzerWizard::ResetLastFolderToCurrentStudyUser()
 {
     // nothing to do if there is no study
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
     {
         gLastFolderForTSAnalyzer.clear();
         return;
     }
 
     // the current study
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
     if (study.folder.empty())
     {
         // The study must be saved for using the analyzer
@@ -674,7 +674,7 @@ AnalyzerWizard::AnalyzerWizard(wxFrame* parent) :
         // \_ renderer
         // using RendererType = Component::Datagrid::Renderer::Analyzer::Areas;
         pRenderer = new RendererType();
-        pRenderer->study = Data::Study::Current::Get();
+        pRenderer->study = GetCurrentStudy();
         pRenderer->initializeFromStudy();
         onUpdateTimeseriesType.connect(pRenderer, &RendererType::reloadDistributionLawsFromStudy);
         // \_ grid
@@ -1037,7 +1037,7 @@ void AnalyzerWizard::onCancel(void*)
 void AnalyzerWizard::onProceed(void*)
 {
     // Check for restrictions
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return;
 
     if (pTSSelected == Data::timeSeriesCount) // invalid in our case
@@ -1237,7 +1237,7 @@ void AnalyzerWizard::updateInfoForTempFolder()
         if (pTmpUseStudyUserDir->GetValue())
         {
             String s;
-            s << Data::Study::Current::Get()->folder << SEP << "user" << SEP << "analyzer";
+            s << GetCurrentStudy()->folder << SEP << "user" << SEP << "analyzer";
             pPathTemp->SetValue(wxStringFromUTF8(s));
         }
     }
@@ -1390,10 +1390,10 @@ void AnalyzerWizard::evtLimitsChanged(wxCommandEvent& evt)
 
 bool AnalyzerWizard::saveToFile(const String& filename) const
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return false;
     String tmp;
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     IniFile ini;
     auto* mainSection = ini.addSection(".general");
@@ -1604,9 +1604,9 @@ void AnalyzerWizard::onBrowseOpenInExplorer(wxCommandEvent&)
 
 void AnalyzerWizard::onBrowseReset(wxCommandEvent&)
 {
-    if (pUpdating or not Data::Study::Current::Valid())
+    if (pUpdating or not CurrentStudyIsValid())
         return;
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
     wxString path = wxStringFromUTF8(study.folder);
     path << IO::Constant<wchar_t>::Separator << wxT("user");
     browseDataFolder(path);

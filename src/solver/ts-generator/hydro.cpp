@@ -31,7 +31,7 @@
 #include "../simulation/sim_extern_variables_globales.h"
 #include "../aleatoire/alea_fonctions.h"
 #include <antares/benchmarking.h>
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 #include <antares/logs.h>
 #include <antares/study.h>
 #include <i_writer.h>
@@ -110,8 +110,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
                                   QCHOLTemp,
                                   true))
     {
-        logs.error() << "TS Generator: Hydro: Invalid correlation matrix";
-        AntaresSolverEmergencyShutdown();
+        throw FatalError("TS Generator: Hydro: Invalid correlation matrix");
     }
 
     Matrix<double> CORRE;
@@ -147,7 +146,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
         {
             logs.warning() << " TS Generator: Hydro correlation matrix was shrinked by " << r;
             if (r < 0.)
-                AntaresSolverEmergencyShutdown();
+                throw FatalError("TS Generator: r must be positive");
         }
     }
 
@@ -297,21 +296,24 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
         else
         {
             logs.info() << "Archiving the hydro time-series";
+            const int precision = 0;
             String output;
             study.areas.each([&](const Data::Area& area) {
                 study.buffer.clear() << "ts-generator" << SEP << "hydro" << SEP << "mc-"
                                      << currentYear << SEP << area.id;
 
                 {
-                    std::string ror_buffer;
+                    std::string buffer;
+                    area.hydro.series->ror.saveToBuffer(buffer, precision);
                     output.clear() << study.buffer << SEP << "ror.txt";
-                    writer->addEntryFromBuffer(output.c_str(), ror_buffer);
+                    writer->addEntryFromBuffer(output.c_str(), buffer);
                 }
 
                 {
-                    std::string storage_buffer;
+                    std::string buffer;
+                    area.hydro.series->storage.saveToBuffer(buffer, precision);
                     output.clear() << study.buffer << SEP << "storage.txt";
-                    writer->addEntryFromBuffer(output.c_str(), storage_buffer);
+                    writer->addEntryFromBuffer(output.c_str(), buffer);
                 }
                 ++progression;
             });

@@ -28,6 +28,7 @@
 #include <yuni/yuni.h>
 #include "../../study.h"
 #include "container.h"
+#include "antares/study/parts/parts.h"
 
 using namespace Yuni;
 
@@ -74,7 +75,7 @@ Yuni::uint64 Container::memoryUsage() const
 void Container::resetToDefault()
 {
     if (series)
-        series->series.reset(1, HOURS_PER_YEAR);
+        series->timeSeries.reset(1, HOURS_PER_YEAR);
     if (prepro)
         prepro->resetToDefault();
 }

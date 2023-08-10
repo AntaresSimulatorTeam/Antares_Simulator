@@ -10,6 +10,8 @@ on:
       - issue-*
       - release/*
       - doc/*
+  schedule:
+    - cron: '21 2 * * *'
 
 jobs:
   windows:
@@ -28,7 +30,8 @@ jobs:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.1/ortools_cxx_windows-latest_static_sirius.zip"
+      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_windows-latest_static_sirius.zip"
+      RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
 
     steps:
     - uses: actions/checkout@v3
@@ -93,7 +96,8 @@ jobs:
 
     - name: Init submodule
       run: |
-           git submodule update --init --recursive src
+        git submodule update --init src/antares-deps
+        git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
 
     - name: Enable git longpaths
       run:  git config --system core.longpaths true
@@ -108,6 +112,7 @@ jobs:
            -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON  \
+           -DBUILD_TOOLS=ON \
            -DBUILD_not_system=OFF
 
     - name: Build
@@ -126,6 +131,7 @@ jobs:
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end" -LE ortools
 
     - name: Run kirchhoff-constraint-tests
+      if: ${{ false }}
       shell: bash
       run: |
            tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
@@ -147,6 +153,14 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
+    - name: Run named mps tests
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-named-mps
+        os: ${{ matrix.test-platform }}
+        variant: "named-mps"
+
     - name: Run tests for adequacy patch (CSR)
       uses: ./.github/workflows/run-tests
       with:
@@ -159,6 +173,13 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v830
+        os: ${{ matrix.test-platform }}
+
+    - name: Run tests introduced in v860
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-v860
         os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
@@ -175,6 +196,38 @@ jobs:
         batch-name: valid-mps
         os: ${{ matrix.test-platform }}
 
+    - name: Run medium-tests
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: medium-tests
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-1
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-1
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-2
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-2
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-3
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-3
+        os: ${{ matrix.test-platform }}
+
     - name: Solver archive creation
       shell: bash
       run: |
@@ -185,7 +238,6 @@ jobs:
       shell: bash
       run: |
            rm -rf src/tests/resources/Antares_Simulator_Tests
-           rm -rf src/tests/resources/NonRegTests
            cd _build
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)

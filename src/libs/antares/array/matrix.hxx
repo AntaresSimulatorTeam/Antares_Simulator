@@ -30,7 +30,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/core/math.h>
-#include <logs.h>
+#include <antares/logs/logs.h>
 #include <utility>
 #include <cstdlib>
 #include "../io/statistics.h"
@@ -661,7 +661,7 @@ bool Matrix<T, ReadWriteT>::loadFromBuffer(const AnyString& filename,
     using namespace Yuni;
 
 #ifndef NDEBUG
-    logs.debug() << "  :: loading `" << filename << "'";
+    logs.debug() << "  :: loading `" << filename << "`";
 #endif
 
     // Detecting BOM

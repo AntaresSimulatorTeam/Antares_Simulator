@@ -98,6 +98,7 @@ void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
     free(ProblemeHydraulique);
 
     free(DonneesMensuelles->TurbineMax);
+    free(DonneesMensuelles->TurbineMin);
     free(DonneesMensuelles->TurbineCible);
     free(DonneesMensuelles->Turbine);
     free(DonneesMensuelles);

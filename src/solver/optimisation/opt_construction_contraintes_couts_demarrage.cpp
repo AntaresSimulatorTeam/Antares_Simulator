@@ -25,57 +25,49 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <math.h>
-
 #include "opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
-#include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
+#include "opt_rename_problem.h"
 
-#include <antares/study.h>
-#include <antares/study/area/scratchpad.h>
-#include "../simulation/sim_structure_donnees.h"
+using namespace Antares::Data;
 
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
   PROBLEME_HEBDO* problemeHebdo,
   bool Simulation)
 {
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptimTmoins1;
-
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-    double* Pi = ProblemeAResoudre->Pi;
-    int* Colonne = ProblemeAResoudre->Colonne;
-
+    std::vector<double>& Pi = ProblemeAResoudre->Pi;
+    std::vector<int>& Colonne = ProblemeAResoudre->Colonne;
+    ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
+                                    problemeHebdo->NamedProblems);
     int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
-
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-
-        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
+        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             double pminDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays->pminDUnGroupeDuPalierThermique[index];
+              = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[index];
             double pmaxDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays->PmaxDUnGroupeDuPalierThermique[index];
+              = PaliersThermiquesDuPays.PmaxDUnGroupeDuPalierThermique[index];
             const int palier
-              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+              = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                CorrespondanceVarNativesVarOptim
+                auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                constraintNamer.UpdateTimeStep(timeStepInYear);
+                CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
                 int nombreDeTermes = 0;
@@ -83,7 +75,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 if (!Simulation)
                 {
                     int var
-                      = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
+                      = CorrespondanceVarNativesVarOptim.NumeroDeVariableDuPalierThermique[palier];
                     if (var >= 0)
                     {
                         Pi[nombreDeTermes] = 1.0;
@@ -98,7 +90,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     int var
                       = CorrespondanceVarNativesVarOptim
-                          ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
+                          .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
                     if (var >= 0)
                     {
                         Pi[nombreDeTermes] = -pmaxDUnGroupeDuPalierThermique;
@@ -113,6 +105,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
+                        constraintNamer.PMaxDispatchableGeneration(
+                          ProblemeAResoudre->NombreDeContraintes,
+                          PaliersThermiquesDuPays.NomsDesPaliersThermiques[index]);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
                     }
@@ -125,7 +120,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 if (!Simulation)
                 {
                     int var
-                      = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
+                      = CorrespondanceVarNativesVarOptim.NumeroDeVariableDuPalierThermique[palier];
                     if (var >= 0)
                     {
                         Pi[nombreDeTermes] = 1.0;
@@ -140,7 +135,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     int var
                       = CorrespondanceVarNativesVarOptim
-                          ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
+                          .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
                     if (var >= 0)
                     {
                         Pi[nombreDeTermes] = -pminDUnGroupeDuPalierThermique;
@@ -155,6 +150,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
+                        constraintNamer.PMinDispatchableGeneration(
+                          ProblemeAResoudre->NombreDeContraintes,
+                          PaliersThermiquesDuPays.NomsDesPaliersThermiques[index]);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
                     }
@@ -167,23 +165,25 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-
-        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
+        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             const int palier
-              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+              = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                CorrespondanceVarNativesVarOptim
-                  = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+                auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                constraintNamer.UpdateTimeStep(timeStepInYear);
+                CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
+                  =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
                 int Pdtmoins1 = pdt - 1;
                 if (Pdtmoins1 < 0)
                     Pdtmoins1 = nombreDePasDeTempsPourUneOptimisation + Pdtmoins1;
-                CorrespondanceVarNativesVarOptimTmoins1
+                CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptimTmoins1
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdtmoins1];
 
                 int nombreDeTermes = 0;
@@ -191,7 +191,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     int var
                       = CorrespondanceVarNativesVarOptim
-                          ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
+                          .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
                     if (var >= 0)
                     {
                         Pi[nombreDeTermes] = 1.0;
@@ -206,7 +206,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     int var
                       = CorrespondanceVarNativesVarOptimTmoins1
-                          ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
+                          .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
                     if (var >= 0)
                     {
                         Pi[nombreDeTermes] = -1;
@@ -221,7 +221,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     int var
                       = CorrespondanceVarNativesVarOptim
-                          ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier];
+                          .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier];
                     if (var >= 0)
                     {
                         Pi[nombreDeTermes] = -1;
@@ -236,7 +236,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     int var
                       = CorrespondanceVarNativesVarOptim
-                          ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
+                          .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
                     if (var >= 0)
                     {
                         Pi[nombreDeTermes] = 1;
@@ -251,6 +251,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
+                        constraintNamer.ConsistenceNODU(
+                          ProblemeAResoudre->NombreDeContraintes,
+                          PaliersThermiquesDuPays.NomsDesPaliersThermiques[index]);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
                     }
@@ -263,28 +266,31 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
+        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             const int palier
-              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+              = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                CorrespondanceCntNativesCntOptim
+                auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                constraintNamer.UpdateTimeStep(timeStepInYear);
+                CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
-                  ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
+                  .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
                   = -1;
 
                 int nombreDeTermes = 0;
                 if (!Simulation)
                 {
                     int var
-                      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                          ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
+                      =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
+                          .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
                             [palier];
                     if (var >= 0)
                     {
@@ -299,8 +305,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 if (!Simulation)
                 {
                     int var
-                      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                          ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
+                      =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
+                          .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
                     if (var >= 0)
                     {
                         Pi[nombreDeTermes] = -1.0;
@@ -315,6 +321,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
+                        constraintNamer.NbUnitsOutageLessThanNbUnitsStop(
+                          ProblemeAResoudre->NombreDeContraintes,
+                          PaliersThermiquesDuPays.NomsDesPaliersThermiques[index]);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
                     }
@@ -327,32 +336,35 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
+        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index];
+              = PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index];
             if (DureeMinimaleDeMarcheDUnGroupeDuPalierThermique <= 0)
                 continue;
             const int palier
-              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+              = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                CorrespondanceCntNativesCntOptim
+                auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                constraintNamer.UpdateTimeStep(timeStepInYear);
+                CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
-                  ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
+                  .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
                   = -1;
 
                 int nombreDeTermes = 0;
                 if (!Simulation)
                 {
                     int var
-                      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                          ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
+                      =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
+                          .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
                     if (var >= 0)
                     {
                         Pi[nombreDeTermes] = 1.0;
@@ -372,8 +384,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
                     if (!Simulation)
                     {
-                        int var = problemeHebdo->CorrespondanceVarNativesVarOptim[t1]
-                                    ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique
+                        int var =  problemeHebdo->CorrespondanceVarNativesVarOptim[t1]
+                                    .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique
                                       [palier];
                         if (var >= 0)
                         {
@@ -388,8 +400,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     if (!Simulation)
                     {
                         int var
-                          = problemeHebdo->CorrespondanceVarNativesVarOptim[t1]
-                              ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
+                          =  problemeHebdo->CorrespondanceVarNativesVarOptim[t1]
+                              .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
                                 [palier];
                         if (var >= 0)
                         {
@@ -407,9 +419,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     if (nombreDeTermes > 1)
                     {
                         CorrespondanceCntNativesCntOptim
-                          ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
+                          .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
                           = ProblemeAResoudre->NombreDeContraintes;
 
+                        constraintNamer.NbDispUnitsMinBoundSinceMinUpTime(
+                          ProblemeAResoudre->NombreDeContraintes,
+                          PaliersThermiquesDuPays.NomsDesPaliersThermiques[index]);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
                     }
@@ -422,40 +437,36 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
+        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             int DureeMinimaleDArretDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays->DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
+              = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
             const int palier
-              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+              = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                CorrespondanceCntNativesCntOptim
+                auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                constraintNamer.UpdateTimeStep(timeStepInYear);
+                CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
-                  ->NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
+                  .NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
                   = -1;
 
-                CorrespondanceVarNativesVarOptim
-                  = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-
-                if (!Simulation)
-                {
-                    CorrespondanceCntNativesCntOptim
-                      ->NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
-                      = -1;
-                }
+                CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
+                  =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
                 int nombreDeTermes = 0;
                 if (!Simulation)
                 {
                     int var
                       = CorrespondanceVarNativesVarOptim
-                          ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
+                          .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
                     if (var >= 0)
                     {
                         Pi[nombreDeTermes] = 1.0;
@@ -472,12 +483,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     if (t1 < 0)
                         t1 = nombreDePasDeTempsPourUneOptimisation + t1;
 
-                    CorrespondanceVarNativesVarOptim
-                      = problemeHebdo->CorrespondanceVarNativesVarOptim[t1];
+                    const auto& CorrespondanceVarNativesVarOptim_t1
+                      =  problemeHebdo->CorrespondanceVarNativesVarOptim[t1];
                     if (!Simulation)
                     {
-                        int var = CorrespondanceVarNativesVarOptim
-                                    ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique
+                        int var = CorrespondanceVarNativesVarOptim_t1
+                                    .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique
                                       [palier];
                         if (var >= 0)
                         {
@@ -494,9 +505,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     if (nombreDeTermes > 1)
                     {
                         CorrespondanceCntNativesCntOptim
-                          ->NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
+                          .NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
                           = ProblemeAResoudre->NombreDeContraintes;
 
+                        constraintNamer.MinDownTime(
+                          ProblemeAResoudre->NombreDeContraintes,
+                          PaliersThermiquesDuPays.NomsDesPaliersThermiques[index]);
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
                     }

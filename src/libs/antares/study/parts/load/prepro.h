@@ -24,8 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_H__
-#define __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_H__
+#pragma once
 
 #include "../../fwd.h"
 #include "../../xcast.h"
@@ -60,7 +59,7 @@ public:
     /*!
     ** \brief Load data from a folder
     */
-    bool loadFromFolder(Study& study, const AnyString& folder);
+    bool loadFromFolder(const AnyString& folder);
 
     /*!
     ** \brief Save data to a folder
@@ -93,7 +92,6 @@ public:
 
 private:
     bool internalLoadFromFolder(Study& study, const char* folder, uint length);
-    bool internalLoadFormatBefore33(Study& study, const YString& folder);
 
 }; // Prepro
 
@@ -102,5 +100,3 @@ private:
 } // namespace Antares
 
 #include "prepro.hxx"
-
-#endif // __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_H__

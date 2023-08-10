@@ -41,20 +41,20 @@
 
 #include "simulation.h"
 #include "parameters.h"
-#include "constraint/constraint.h"
+#include "binding_constraint/BindingConstraint.h"
 #include "header.h"
 #include "version.h"
 #include "sets.h"
-#include "ui-runtimeinfos.h"
-#include "../array/correlation.h"
 #include "progression/progression.h"
 #include "load-options.h"
 #include "../date.h"
 #include "layerdata.h"
+#include "antares/correlation/correlation.h"
+#include "area/store-timeseries-numbers.h"
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
+#include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 
 #include <memory>
-
-//# include "../../../solver/variable/state.h"
 
 namespace Antares
 {
@@ -64,7 +64,8 @@ namespace Data
 ** \brief Antares Study
 */
 
-class Study final : public Yuni::NonCopyable<Study>, public IObject, public LayerData
+class UIRuntimeInfo;
+class Study: public Yuni::NonCopyable<Study>, public IObject, public LayerData
 {
 public:
     using Ptr = std::shared_ptr<Study>;
@@ -97,26 +98,6 @@ public:
     using FileExtension = Yuni::CString<8, false>;
 
 public:
-    /*!
-    ** \brief Operations related to the global current study
-    **
-    ** \warning These methods should be removed as soon as possible
-    */
-    struct Current
-    {
-        /*!
-        ** \brief Retrieve the current Study (if any)
-        */
-        static Study::Ptr Get();
-        /*!
-        ** \brief Set the current study
-        */
-        static void Set(Study::Ptr study);
-        //! Get if the current study is valid
-        static bool Valid();
-
-    }; // Current
-
     /*!
     ** \brief Extract the title of a study
     **
@@ -325,17 +306,6 @@ public:
     bool readonly() const;
     //@}
 
-    //! \name Locks
-    //@{
-    /*!
-    ** \brief Release all locks held by the study
-    **
-    ** This method should only be used when the program want to abort
-    ** immediatly without freing allocated data.
-    */
-    void releaseAllLocks();
-    //@}
-
     //! \name Time-series
     //@{
     /*!
@@ -351,7 +321,7 @@ public:
     ** \tparam TimeSeriesT The time-series set to store
     ** \return True if the operation succeeded (the file have been written), false otherwise
     */
-    template<int TimeSeriesT>
+    template<unsigned int TimeSeriesT>
     void storeTimeSeriesNumbers() const;
     //@}
 
@@ -646,7 +616,8 @@ public:
     //! \name Binding constraints
     //@{
     //! Binding constraints
-    BindConstList bindingConstraints;
+    BindingConstraintsRepository bindingConstraints;
+    BindingConstraintGroupRepository bindingConstraintsGroups;
     //@}
 
     //! \name Correlation matrices used by the prepro
@@ -697,7 +668,7 @@ public:
     ** Since the v3.1, the file extensions in the input have been renamed into .txt,
     ** (instead of .csv)
     */
-    FileExtension inputExtension;
+    FileExtension inputExtension = "txt";
 
     //! Progression about the current action performed on the study
     mutable Solver::Progression progression;
@@ -755,7 +726,7 @@ protected:
     //! Load all correlation matrices
     bool internalLoadCorrelationMatrices(const StudyLoadOptions& options);
     //! Load all binding constraints
-    bool internalLoadBindingConstraints(const StudyLoadOptions& options);
+    virtual bool internalLoadBindingConstraints(const StudyLoadOptions& options);
     //! Load all set of areas and links
     bool internalLoadSets();
     //@}
@@ -766,8 +737,6 @@ protected:
 
     //! \name Misc
     //@{
-    //! Reset the input extension according the study version
-    void inputExtensionCompatibility();
     //! Release all unnecessary buffers
     void reduceMemoryUsage();
     //@}
@@ -778,9 +747,6 @@ protected:
 ** \brief Icon to use for studies
 */
 extern YString StudyIconFile;
-
-bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
-                                                std::map<int, YString>& areaClusterNames);
 
 YString StudyCreateOutputPath(StudyMode mode,
                               ResultFormat fmt,

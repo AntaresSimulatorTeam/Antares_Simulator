@@ -36,10 +36,10 @@ inline bool Study::readonly() const
     return (parameters.readonly);
 }
 
-template<int TimeSeriesT>
+template<unsigned int TimeSeriesT>
 inline void Study::storeTimeSeriesNumbers() const
 {
-    areas.storeTimeseriesNumbers<TimeSeriesT>(resultWriter);
+    storeTimeseriesNumbers<TimeSeriesT>(resultWriter, areas);
 }
 
 template<enum TimeSeries TS>
@@ -47,22 +47,22 @@ inline void Study::destroyTSGeneratorData()
 {
     switch (TS)
     {
-    case timeSeriesLoad:
+    case TimeSeries::timeSeriesLoad:
         destroyAllLoadTSGeneratorData();
         break;
-    case timeSeriesSolar:
+    case TimeSeries::timeSeriesSolar:
         destroyAllSolarTSGeneratorData();
         break;
-    case timeSeriesWind:
+    case TimeSeries::timeSeriesWind:
         destroyAllWindTSGeneratorData();
         break;
-    case timeSeriesHydro:
+    case TimeSeries::timeSeriesHydro:
         destroyAllHydroTSGeneratorData();
         break;
-    case timeSeriesThermal:
+    case TimeSeries::timeSeriesThermal:
         destroyAllThermalTSGeneratorData();
         break;
-    case timeSeriesCount:
+    case TimeSeries::timeSeriesCount:
         break;
     }
 }

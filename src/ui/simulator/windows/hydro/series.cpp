@@ -51,7 +51,11 @@ Series::Series(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
 
     com = new Component::Datagrid::Component(notebook);
     com->renderer(new Component::Datagrid::Renderer::TimeSeriesHydroMod(com, notifier));
-    notebook->add(com, wxT("Hydro Storage"));
+    pPageFatal = notebook->add(com, wxT("Hydro Storage"));
+
+    com = new Component::Datagrid::Component(notebook);
+    com->renderer(new Component::Datagrid::Renderer::TimeSeriesHydroMinGen(com, notifier));
+    pPageFatal = notebook->add(com, wxT("Minimum Generation"));
 
     // Connection to the notifier
     if (pNotifier)
@@ -72,7 +76,7 @@ Series::~Series()
 
 void Series::onAreaChanged(Data::Area* area)
 {
-    pLastArea = Data::Study::Current::Valid() ? area : nullptr;
+    pLastArea = CurrentStudyIsValid() ? area : nullptr;
 }
 
 void Series::onStudyClosed()

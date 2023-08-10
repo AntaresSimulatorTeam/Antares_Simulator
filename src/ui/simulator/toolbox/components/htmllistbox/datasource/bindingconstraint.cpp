@@ -67,8 +67,8 @@ struct SortAlphaReverseOrder
 
 void GetBindingConstraintList(Data::Study& study, BindingConstraintList& l, const wxString& search)
 {
-    Data::BindConstList::iterator end = study.bindingConstraints.end();
-    for (Data::BindConstList::iterator i = study.bindingConstraints.begin(); i != end; ++i)
+    Data::BindingConstraintsRepository::iterator end = study.bindingConstraints.end();
+    for (Data::BindingConstraintsRepository::iterator i = study.bindingConstraints.begin(); i != end; ++i)
     {
         if (search.empty())
             l.push_back(*i);
@@ -91,10 +91,10 @@ void ByAlphaOrder::refresh(const wxString& search)
 {
     pParent.clear();
 
-    if (Data::Study::Current::Valid())
+    if (CurrentIsValid())
     {
         BindingConstraintList l;
-        GetBindingConstraintList(*Data::Study::Current::Get(), l, search);
+        GetBindingConstraintList(*GetCurrentStudy(), l, search);
         if (!l.empty())
         {
             l.sort(SortAlphaOrder());
@@ -122,10 +122,10 @@ void ByAlphaReverseOrder::refresh(const wxString& search)
 {
     pParent.clear();
 
-    if (Data::Study::Current::Valid())
+    if (CurrentIsValid())
     {
         BindingConstraintList l;
-        GetBindingConstraintList(*Data::Study::Current::Get(), l, search);
+        GetBindingConstraintList(*GetCurrentStudy(), l, search);
         if (!l.empty())
         {
             l.sort(SortAlphaReverseOrder());

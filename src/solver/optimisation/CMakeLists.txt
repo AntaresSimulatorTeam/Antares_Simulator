@@ -1,7 +1,6 @@
 set(RTESOLVER_OPT
 		opt_optimisation_hebdo.cpp
 		opt_appel_solveur_quadratique.cpp
-		opt_gestion_des_pmax.cpp
 		opt_gestion_second_membre_cas_lineaire.cpp
 		opt_optimisation_lineaire.cpp
 		opt_chainage_intercos.cpp
@@ -18,7 +17,6 @@ set(RTESOLVER_OPT
 		opt_gestion_des_pmin.cpp
 		opt_calcul_des_pmin_MUT_MDT.cpp
 		opt_numero_de_jour_du_pas_de_temps.cpp
-		opt_donnees_pas_de_temps_variable.h
 		opt_construction_variables_optimisees_quadratique.cpp
 		opt_decompte_variables_et_contraintes.cpp
 		opt_construction_matrice_des_contraintes_cas_quadratique.cpp
@@ -72,6 +70,9 @@ set(RTESOLVER_OPT
 		opt_period_string_generator_base.h
 		constraint_builder.cpp
 		constraint_builder.h
+
+		opt_rename_problem.h
+		opt_rename_problem.cpp
 	)
 
 

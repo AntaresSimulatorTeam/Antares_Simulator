@@ -58,7 +58,7 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
     areas.each([&](const Data::Area& area) {
         auto index = area.index;
 
-        auto& weeklyResults = *(problem.ResultatsHoraires[index]);
+        auto& weeklyResults = problem.ResultatsHoraires[index];
 
         auto& D = weeklyResults.ValeursHorairesDeDefaillancePositive;
 
@@ -97,13 +97,13 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
             double bottom = std::numeric_limits<double>::max();
             double top = 0;
 
-            uint loadTS = NumeroChroniquesTireesParPays[numSpace][index]->Consommation;
-            auto& load = area.load.series->series;
+            uint loadTS = NumeroChroniquesTireesParPays[numSpace][index].Consommation;
+            auto& load = area.load.series->timeSeries;
             assert(load.width > 0);
 
             auto& L = (loadTS < load.width) ? load[loadTS] : load[0];
 
-            const double* M = area.scratchpad[numSpace]->dispatchableGenerationMargin;
+            const double* M = area.scratchpad[numSpace].dispatchableGenerationMargin;
 
             for (uint i = offset; i < endHour; ++i)
             {
@@ -125,8 +125,8 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
                 }
             }
 
-            auto& P
-              = problem.CaracteristiquesHydrauliques[index]->ContrainteDePmaxHydrauliqueHoraire;
+            const auto& P
+              = problem.CaracteristiquesHydrauliques[index].ContrainteDePmaxHydrauliqueHoraire;
 
             double ecart = 1.;
             uint loop = 100;

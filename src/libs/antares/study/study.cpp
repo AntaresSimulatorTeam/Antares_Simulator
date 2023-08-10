@@ -38,17 +38,15 @@
 
 #include "study.h"
 #include "runtime.h"
-#include "../logs.h"
-#include "../array/correlation.h"
 #include "scenario-builder/sets.h"
 #include "correlation-updater.hxx"
 #include "scenario-builder/updater.hxx"
 #include "area/constants.h"
-#include "filter.h"
 
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
 #include <math.h>                 // For use of floor(...) and ceil(...)
 #include <writer_factory.h>
+#include "ui-runtimeinfos.h"
 
 using namespace Yuni;
 
@@ -133,6 +131,7 @@ void Study::clear()
     preproHydroCorrelation.clear();
 
     bindingConstraints.clear();
+    bindingConstraintsGroups.clear();
     areas.clear();
 
     // no folder
@@ -598,7 +597,7 @@ void Study::performTransformationsBeforeLaunchingSimulation()
         }
 
         // Informations about time-series for the load
-        auto& matrix = area.load.series->series;
+        auto& matrix = area.load.series->timeSeries;
         auto& dsmvalues = area.reserves[fhrDSM];
 
         // Adding DSM values
@@ -779,6 +778,11 @@ Area* Study::areaAdd(const AreaName& name)
 {
     if (name.empty())
         return nullptr;
+    if (CheckForbiddenCharacterInAreaName(name))
+    {
+        logs.error() << "character '*' is forbidden in area name: `" << name << "`";
+        return nullptr;
+    }
 
     // Result
     Area* area = nullptr;
@@ -1136,10 +1140,10 @@ void Study::destroyAllThermalTSGeneratorData()
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
 {
-    foreach (auto* constraint, bindingConstraints)
+    for(const auto& constraint: bindingConstraints)
     {
-        if (not JIT::IsReady(constraint->matrix().jit))
-            constraint->matrix().forceReload(true);
+        if (not JIT::IsReady(constraint->RHSTimeSeries().jit))
+            constraint->forceReload(true);
     }
 }
 
@@ -1247,15 +1251,15 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
 
     // Import
     n = 0;
-    if (0 != (timeSeriesLoad & parameters.timeSeriesToImport))
+    if (0 != (timeSeriesLoad & parameters.exportTimeSeriesInInput))
         n += (int)areas.size();
-    if (0 != (timeSeriesSolar & parameters.timeSeriesToImport))
+    if (0 != (timeSeriesSolar & parameters.exportTimeSeriesInInput))
         n += (int)areas.size();
-    if (0 != (timeSeriesWind & parameters.timeSeriesToImport))
+    if (0 != (timeSeriesWind & parameters.exportTimeSeriesInInput))
         n += (int)areas.size();
-    if (0 != (timeSeriesHydro & parameters.timeSeriesToImport))
+    if (0 != (timeSeriesHydro & parameters.exportTimeSeriesInInput))
         n += (int)areas.size();
-    if (0 != (timeSeriesThermal & parameters.timeSeriesToImport))
+    if (0 != (timeSeriesThermal & parameters.exportTimeSeriesInInput))
         n += (int)areas.size();
     if (n)
         progression.add(Solver::Progression::sectImportTS, n);
@@ -1272,14 +1276,12 @@ bool Study::forceReload(bool reload) const
     // Invalidate all areas
     ret = areas.forceReload(reload) and ret;
     // Binding constraints
-    ret = bindingConstraints.forceReload(reload) and ret;
+    bindingConstraints.forceReload(reload);
 
     ret = preproLoadCorrelation.forceReload(reload) and ret;
     ret = preproSolarCorrelation.forceReload(reload) and ret;
     ret = preproWindCorrelation.forceReload(reload) and ret;
     ret = preproHydroCorrelation.forceReload(reload) and ret;
-
-    ret = bindingConstraints.forceReload(reload) and ret;
 
     ret = setsOfAreas.forceReload(reload) and ret;
     ret = setsOfLinks.forceReload(reload) and ret;
@@ -1313,6 +1315,7 @@ void Study::resizeAllTimeseriesNumbers(uint n)
 {
     logs.debug() << "  resizing timeseries numbers";
     areas.resizeAllTimeseriesNumbers(n);
+    bindingConstraintsGroups.resizeAllTimeseriesNumbers(n);
 }
 
 bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
@@ -1544,35 +1547,6 @@ void Study::prepareWriter(Benchmarking::IDurationCollector* duration_collector)
 {
     resultWriter = Solver::resultWriterFactory(
       parameters.resultFormat, folderOutput, pQueueService, duration_collector);
-}
-
-bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
-                                                std::map<int, YString>& areaClusterNames)
-{
-    YString areaname = "";
-    bool resultat = true;
-    auto endarea = areas.end();
-    int count = 0;
-
-    for (auto areait = areas.begin(); areait != endarea; areait++)
-    {
-        areaname = areait->second->name;
-        logs.debug() << "areaname : " << areaname;
-
-        std::vector<YString> clusternames;
-
-        if (not areait->second->thermalClustersMinStablePowerValidity(clusternames))
-        {
-            for (auto it = clusternames.begin(); it != clusternames.end(); it++)
-            {
-                logs.debug() << "areaname : " << areaname << " ; clustername : " << (*it);
-                YString res = "Area : " + areaname + " cluster name : " + (*it).c_str();
-                areaClusterNames.insert(std::pair<int, YString>(count++, res));
-            }
-            resultat = false;
-        }
-    }
-    return resultat;
 }
 
 } // namespace Data

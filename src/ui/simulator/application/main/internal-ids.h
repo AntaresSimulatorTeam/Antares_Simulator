@@ -159,7 +159,6 @@ enum MenusID
     //! \name Help
     //@{
     mnIDHelpHelp,
-    mnIDHelpPDFGeneralReferenceGuide,
     mnIDHelpPDFSystemMapEditorReferenceGuide,
     mnIDHelpPDFExamplesLibrary,
     mnIDHelpAbout,

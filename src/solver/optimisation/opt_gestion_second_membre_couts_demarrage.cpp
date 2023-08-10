@@ -27,18 +27,13 @@
 
 #include "opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
 
-#include "spx_constantes_externes.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
-
-#include <antares/logs.h>
 #include <antares/study.h>
-#include <antares/emergency.h>
+
 using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
@@ -48,9 +43,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
                                                                      int DernierPdtDeLIntervalle)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    double* SecondMembre = ProblemeAResoudre->SecondMembre;
+    std::vector<double>& SecondMembre = ProblemeAResoudre->SecondMembre;
 
-    double** AdresseOuPlacerLaValeurDesCoutsMarginaux
+    std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
 
     int NombreDePasDeTempsPourUneOptimisation
@@ -58,27 +53,27 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            const int* NombreMaxDeGroupesEnMarcheDuPalierThermique
-              = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[index]
-                  ->NombreMaxDeGroupesEnMarcheDuPalierThermique;
+            const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
+              = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index]
+                  .NombreMaxDeGroupesEnMarcheDuPalierThermique;
             const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays->DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
+              = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
             const int palier
-              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+              = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
             for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
                  pdtHebdo < DernierPdtDeLIntervalle;
                  pdtHebdo++, pdtJour++)
             {
-                const CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim
+                const CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdtJour];
                 int cnt = CorrespondanceCntNativesCntOptim
-                        ->NumeroDeContrainteDesContraintesDeDureeMinDArret[palier];
+                        .NumeroDeContrainteDesContraintesDeDureeMinDArret[palier];
                 if (cnt >= 0)
                 {
                     int t1 = pdtHebdo - DureeMinimaleDArretDUnGroupeDuPalierThermique;

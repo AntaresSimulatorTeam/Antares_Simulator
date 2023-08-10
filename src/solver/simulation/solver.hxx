@@ -37,7 +37,7 @@
 #include "../aleatoire/alea_fonctions.h"
 #include "timeseries-numbers.h"
 #include "apply-scenario.h"
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 #include "../ts-generator/generator.h"
 
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
@@ -145,13 +145,13 @@ private:
             double* randomReservoirLevel = nullptr;
 
             if (hydroHotStart && firstSetParallelWithAPerformedYearWasRun)
-                randomReservoirLevel = state[numSpace].problemeHebdo->previousYearFinalLevels;
+                randomReservoirLevel = state[numSpace].problemeHebdo->previousYearFinalLevels.data();
             else
                 randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
-            ALEA_TirageAuSortChroniques(thermalNoisesByArea, numSpace);
+            ALEA_TirageAuSortChroniques(study, thermalNoisesByArea, numSpace);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
             simulationObj->prepareClustersInMustRunMode(numSpace);
@@ -280,6 +280,8 @@ void ISimulation<Impl>::run()
 
     // Initialize all data
     ImplementationType::variables.initializeFromStudy(study);
+    // Computing the max number columns a report of any kind can contain.
+    study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
 
     logs.info() << "Allocating resources...";
 
@@ -335,9 +337,7 @@ void ISimulation<Impl>::run()
         // Now, we will prepare the time-series numbers
         if (not TimeSeriesNumbers::Generate(study))
         {
-            logs.fatal() << "An unrecoverable error has occured. Can not continue.";
-            AntaresSolverEmergencyShutdown(); // will never return
-            return;
+            throw FatalError("An unrecoverable error has occured. Can not continue.");
         }
 
         if (parameters.useCustomScenario)
@@ -377,7 +377,7 @@ void ISimulation<Impl>::run()
         ImplementationType::variables.simulationEnd();
 
         // Export ts-numbers into output
-        TimeSeriesNumbers::StoreTimeseriesIntoOuput(study);
+        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
@@ -666,7 +666,6 @@ void ISimulation<Impl>::estimateMemoryForWeeklyPb(Antares::Data::StudyMemoryUsag
 
         requiredMemoryForWeeklyPb += sizeof(PALIERS_THERMIQUES);
         requiredMemoryForWeeklyPb += sizeof(ENERGIES_ET_PUISSANCES_HYDRAULIQUES);
-        requiredMemoryForWeeklyPb += sizeof(COUTS_MARGINAUX_ZONES_DE_RESERVE);
         requiredMemoryForWeeklyPb += sizeof(RESERVE_JMOINS1);
         requiredMemoryForWeeklyPb += sizeof(RESULTATS_HORAIRES);
         requiredMemoryForWeeklyPb += nbPaliers * sizeof(int);
@@ -962,8 +961,6 @@ void ISimulation<Impl>::estimateMemoryForOptimizationPb(Antares::Data::StudyMemo
     requiredMemoryForOptPb += 2 * szNbContDouble;
     requiredMemoryForOptPb += 2 * NombreDeVariables * sizeof(void*);
     requiredMemoryForOptPb += NombreDeContraintes * sizeof(void*);
-
-    requiredMemoryForOptPb += sizeof(PROBLEMES_SIMPLEXE);
 
     // ================================================
     // Adding memory from the optimization problem
@@ -1576,21 +1573,15 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             pFirstSetParallelWithAPerformedYearWasRun = true;
 
         // On regarde si au moins une année du lot n'a pas trouvé de solution
-        std::map<uint, bool>::iterator it;
-        bool foundFailure = false;
-        for (it = set_it->yearFailed.begin(); it != set_it->yearFailed.end(); it++)
+        for (auto& [year, failed] : set_it->yearFailed)
         {
-            if (it->second)
+            // Si une année du lot d'années n'a pas trouvé de solution, on arrête tout
+            if (failed)
             {
-                foundFailure = true;
-                break;
+                std::ostringstream msg;
+                msg << "Year " << year << " has failed in the previous set of parallel year.";
+                throw FatalError(msg.str());
             }
-        }
-        // Si une année du lot d'années n'a pas trouvé de solution, on arrête tout
-        if (foundFailure)
-        {
-            logs.fatal() << "At least one year has failed in the previous set of parallel year.";
-            AntaresSolverEmergencyShutdown();
         }
         // Computing the summary : adding the contribution of MC years
         // previously computed in parallel

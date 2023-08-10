@@ -25,6 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <numeric>
+#include <algorithm>
+
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
 #include <yuni/core/math.h>
@@ -32,9 +35,10 @@
 #include "../../study.h"
 #include "../../memory-usage.h"
 #include "cluster.h"
-#include "../../../inifile.h"
+#include <antares/inifile/inifile.h>
 #include "../../../logs.h"
 #include "../../../utils.h"
+
 
 using namespace Yuni;
 using namespace Antares;
@@ -63,6 +67,25 @@ bool Into<Antares::Data::ThermalLaw>::Perform(AnyString string, TargetType& out)
     if (string.equalsInsensitive("geometric"))
     {
         out = Antares::Data::thermalLawGeometric;
+        return true;
+    }
+    return false;
+}
+
+bool Into<Antares::Data::CostGeneration>::Perform(AnyString string, TargetType& out)
+{
+    string.trim();
+    if (string.empty())
+        return false;
+
+    if (string.equalsInsensitive("setManually"))
+    {
+        out = Antares::Data::setManually;
+        return true;
+    }
+    if (string.equalsInsensitive("useCostTimeseries"))
+    {
+        out = Antares::Data::useCostTimeseries;
         return true;
     }
     return false;
@@ -100,49 +123,6 @@ namespace Antares
 {
 namespace Data
 {
-Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
- Cluster(parent),
- groupID(thermalDispatchGrpOther1),
- mustrun(false),
- mustrunOrigin(false),
- nominalCapacityWithSpinning(0.),
- minStablePower(0.),
- minUpTime(1),
- minDownTime(1),
- spinning(0.),
- forcedVolatility(0.),
- plannedVolatility(0.),
- forcedLaw(thermalLawUniform),
- plannedLaw(thermalLawUniform),
- marginalCost(0.),
- spreadCost(0.),
- fixedCost(0.),
- startupCost(0.),
- marketBidCost(0.),
- groupMinCount(0),
- groupMaxCount(0),
- annuityInvestment(0),
- PthetaInf(HOURS_PER_YEAR, 0),
- prepro(nullptr),
- productionCost(nullptr),
- unitCountLastHour(nullptr),
- productionLastHour(nullptr),
- pminOfAGroup(nullptr)
-{
-    // assert
-    assert(parent and "A parent for a thermal dispatchable cluster can not be null");
-
-    unitCountLastHour = new uint[nbParallelYears];
-    productionLastHour = new double[nbParallelYears];
-    pminOfAGroup = new double[nbParallelYears];
-    for (uint numSpace = 0; numSpace < nbParallelYears; ++numSpace)
-    {
-        unitCountLastHour[numSpace] = 0;
-        productionLastHour[numSpace] = 0.;
-        pminOfAGroup[numSpace] = 0.;
-    }
-}
-
 Data::ThermalCluster::ThermalCluster(Area* parent) :
  Cluster(parent),
  groupID(thermalDispatchGrpOther1),
@@ -157,20 +137,8 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  plannedVolatility(0.),
  forcedLaw(thermalLawUniform),
  plannedLaw(thermalLawUniform),
- marginalCost(0.),
- spreadCost(0.),
- fixedCost(0.),
- startupCost(0.),
- marketBidCost(0.),
- groupMinCount(0),
- groupMaxCount(0),
- annuityInvestment(0),
  PthetaInf(HOURS_PER_YEAR, 0),
- prepro(nullptr),
- productionCost(nullptr),
- unitCountLastHour(nullptr),
- productionLastHour(nullptr),
- pminOfAGroup(nullptr)
+ costsTimeSeries(1, CostsTimeSeries())
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");
@@ -178,16 +146,8 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
 
 Data::ThermalCluster::~ThermalCluster()
 {
-    delete[] productionCost;
     delete prepro;
     delete series;
-
-    if (unitCountLastHour)
-        delete[] unitCountLastHour;
-    if (productionLastHour)
-        delete[] productionLastHour;
-    if (pminOfAGroup)
-        delete[] pminOfAGroup;
 }
 
 uint ThermalCluster::groupId() const
@@ -199,15 +159,6 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
 {
     // Note: In this method, only the data can be copied (and not the name or
     //   the ID for example)
-
-    // production cost, even if this variable should not be used
-    if (productionCost)
-    {
-        if (cluster.productionCost)
-            memcpy(productionCost, cluster.productionCost, HOURS_PER_YEAR * sizeof(double));
-        else
-            memset(productionCost, 0, HOURS_PER_YEAR * sizeof(double));
-    }
 
     // mustrun
     mustrun = cluster.mustrun;
@@ -235,8 +186,11 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     // spinning
     spinning = cluster.spinning;
 
-    //emissions
+    // emissions
     emissions = cluster.emissions;
+
+    // efficiency
+    fuelEfficiency = cluster.fuelEfficiency;
 
     // volatility
     forcedVolatility = cluster.forcedVolatility;
@@ -246,18 +200,15 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     plannedLaw = cluster.plannedLaw;
 
     // costs
+    costgeneration = cluster.costgeneration;
     marginalCost = cluster.marginalCost;
     spreadCost = cluster.spreadCost;
+    variableomcost = cluster.variableomcost;
     fixedCost = cluster.fixedCost;
     startupCost = cluster.startupCost;
     marketBidCost = cluster.marketBidCost;
-
-    // group {min,max}
-    groupMinCount = cluster.groupMinCount;
-    groupMaxCount = cluster.groupMaxCount;
-
-    // Annuity investment (kEuros/MW)
-    annuityInvestment = cluster.annuityInvestment;
+    // assignment “=” operator can be used to copy-paste vector by value
+    costsTimeSeries = cluster.costsTimeSeries;
 
     // modulation
     modulation = cluster.modulation;
@@ -271,10 +222,11 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
         series = new DataSeriesCommon();
 
     prepro->copyFrom(*cluster.prepro);
+    ecoInput.copyFrom(cluster.ecoInput);
     // timseries
 
-    series->series = cluster.series->series;
-    cluster.series->series.unloadFromMemory();
+    series->timeSeries = cluster.series->timeSeries;
+    cluster.series->timeSeries.unloadFromMemory();
     series->timeseriesNumbers.clear();
 
     // The parent must be invalidated to make sure that the clusters are really
@@ -383,6 +335,7 @@ bool Data::ThermalCluster::forceReload(bool reload) const
         ret = series->forceReload(reload) and ret;
     if (prepro)
         ret = prepro->forceReload(reload) and ret;
+    ret = ecoInput.forceReload(reload) && ret;
     return ret;
 }
 
@@ -393,6 +346,7 @@ void Data::ThermalCluster::markAsModified() const
         series->markAsModified();
     if (prepro)
         prepro->markAsModified();
+    ecoInput.markAsModified();
 }
 
 void Data::ThermalCluster::calculationOfSpinning()
@@ -408,7 +362,7 @@ void Data::ThermalCluster::calculationOfSpinning()
     {
         logs.debug() << "  Calculation of spinning... " << parentArea->name << "::" << pName;
 
-        auto& ts = series->series;
+        auto& ts = series->timeSeries;
         // The formula
         // const double s = 1. - cluster.spinning / 100.; */
 
@@ -419,6 +373,107 @@ void Data::ThermalCluster::calculationOfSpinning()
         nominalCapacityWithSpinning *= 1 - (spinning / 100.);
         ts.multiplyAllEntriesBy(1. - (spinning / 100.));
     }
+}
+
+
+void Data::ThermalCluster::ComputeCostTimeSeries()
+{
+    switch (costgeneration)
+    {
+    case Data::setManually:
+        fillMarketBidCostTS();
+        fillMarginalCostTS();
+        break;
+    case Data::useCostTimeseries:
+        resizeCostTS();
+        ComputeMarketBidTS();
+        MarginalCostEqualsMarketBid();
+        ComputeProductionCostTS();
+        break;
+    }
+}
+
+void Data::ThermalCluster::fillMarketBidCostTS()
+{
+    std::fill(costsTimeSeries[0].marketBidCostTS.begin(),
+              costsTimeSeries[0].marketBidCostTS.end(),
+              marketBidCost);
+}
+
+void Data::ThermalCluster::fillMarginalCostTS()
+{
+    std::fill(costsTimeSeries[0].marginalCostTS.begin(),
+              costsTimeSeries[0].marginalCostTS.end(),
+              marginalCost);
+}
+
+
+void ThermalCluster::resizeCostTS()
+{
+    const uint fuelCostWidth = ecoInput.fuelcost.width;
+    const uint co2CostWidth = ecoInput.co2cost.width;
+    const uint tsCount = std::max(fuelCostWidth, co2CostWidth);
+
+    costsTimeSeries.resize(tsCount, CostsTimeSeries());
+}
+
+void ThermalCluster::ComputeMarketBidTS()
+{
+    const uint fuelCostWidth = ecoInput.fuelcost.width;
+    const uint co2CostWidth = ecoInput.co2cost.width;
+
+    double& co2EmissionFactor = emissions.factors[Pollutant::CO2];
+
+    for (uint tsIndex = 0; tsIndex < costsTimeSeries.size(); ++tsIndex)
+    {
+        uint tsIndexFuel = std::min(fuelCostWidth - 1, tsIndex);
+        uint tsIndexCo2 = std::min(co2CostWidth - 1, tsIndex);
+        for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
+        {
+            double& marketBidCostTS = costsTimeSeries[tsIndex].marketBidCostTS[hour];
+
+            double& fuelcost = ecoInput.fuelcost[tsIndexFuel][hour];
+            double& co2cost = ecoInput.co2cost[tsIndexCo2][hour];
+
+            marketBidCostTS = computeMarketBidCost(fuelcost, co2EmissionFactor, co2cost);
+        }
+    }
+}
+
+void ThermalCluster::MarginalCostEqualsMarketBid()
+{
+    for (auto& timeSeries : costsTimeSeries)
+    {
+        auto& source = timeSeries.marketBidCostTS;
+        auto& destination = timeSeries.marginalCostTS;
+        std::copy(source.begin(), source.end(), destination.begin());
+    }
+}
+
+void ThermalCluster::ComputeProductionCostTS()
+{
+    if (modulation.width == 0)
+        return;
+
+    for (auto& timeSeries : costsTimeSeries)
+    {
+        auto& productionCostTS = timeSeries.productionCostTs;
+        auto& marginalCostTS = timeSeries.marginalCostTS;
+
+        for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
+        {
+            double& houtlyModulation = modulation[Data::thermalModulationCost][hour];
+            productionCostTS[hour] = marginalCostTS[hour] * houtlyModulation;
+        }
+    }
+}
+
+
+double Data::ThermalCluster::computeMarketBidCost(double fuelCost,
+                                                         double co2EmissionFactor,
+                                                         double co2cost)
+{
+    return fuelCost * 360.0 / fuelEfficiency + co2EmissionFactor * co2cost + variableomcost;
 }
 
 void Data::ThermalCluster::reverseCalculationOfSpinning()
@@ -432,7 +487,7 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
         logs.debug() << "  Calculation of spinning (reverse)... " << parentArea->name
                      << "::" << pName;
 
-        auto& ts = series->series;
+        auto& ts = series->timeSeries;
         // The formula
         // const double s = 1. - cluster.spinning / 100.;
 
@@ -447,12 +502,6 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
 
 void Data::ThermalCluster::reset()
 {
-    // production cost
-    // reminder: this variable should be considered as valid only when used from the
-    // solver
-    if (productionCost)
-        (void)::memset(productionCost, 0, HOURS_PER_YEAR * sizeof(double));
-
     Cluster::reset();
 
     mustrun = false;
@@ -467,7 +516,10 @@ void Data::ThermalCluster::reset()
     // spinning
     spinning = 0.;
 
-    //pollutant emissions array
+    // efficiency
+    fuelEfficiency = 100.0;
+
+    // pollutant emissions array
     emissions.factors.fill(0);
     // volatility
     forcedVolatility = 0.;
@@ -477,16 +529,14 @@ void Data::ThermalCluster::reset()
     forcedLaw = thermalLawUniform;
 
     // costs
+    costgeneration = setManually;
     marginalCost = 0.;
     spreadCost = 0.;
     fixedCost = 0.;
     startupCost = 0.;
     marketBidCost = 0.;
-
-    // group{min,max}
-    groupMinCount = 0;
-    groupMaxCount = 0;
-    annuityInvestment = 0;
+    variableomcost = 0.;
+    costsTimeSeries.resize(1, CostsTimeSeries());
 
     // modulation
     modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
@@ -500,9 +550,7 @@ void Data::ThermalCluster::reset()
     if (not prepro)
         prepro = new PreproThermal(this->weak_from_this());
     prepro->reset();
-
-    // Links
-    coupling.clear();
+    ecoInput.reset();
 }
 
 bool Data::ThermalCluster::integrityCheck()
@@ -567,23 +615,35 @@ bool Data::ThermalCluster::integrityCheck()
         ret = false;
         nominalCapacityWithSpinning = nominalCapacity;
     }
-    //emissions
+    // emissions
     for (auto i = 0; i < Pollutant::POLLUTANT_MAX; i++)
     {
         if (emissions.factors[i] < 0)
         {
-            logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                << ": The " << Pollutant::getPollutantName(i)
-                << " pollutant factor must be >= 0";
+            logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName << ": The "
+                         << Pollutant::getPollutantName(i) << " pollutant factor must be >= 0";
         }
-
     }
-
+    if (fuelEfficiency <= 0. || fuelEfficiency > 100.)
+    {
+        fuelEfficiency = 100.;
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
+                     << ": The efficiency must be within the range (0,+100] (rounded to "
+                     << fuelEfficiency << ')';
+        ret = false;
+    }
     if (spreadCost < 0.)
     {
         logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
                      << ": The spread must be positive or null";
         spreadCost = 0.;
+        ret = false;
+    }
+    if (variableomcost < 0.)
+    {
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
+                     << ": The variable operation & maintenance cost must be positive or null";
+        variableomcost = 0.;
         ret = false;
     }
 
@@ -647,6 +707,7 @@ uint64 ThermalCluster::memoryUsage() const
         amount += prepro->memoryUsage();
     if (series)
         amount += DataSeriesMemoryUsage(series);
+    amount += ecoInput.memoryUsage();
     return amount;
 }
 
@@ -733,6 +794,88 @@ bool ThermalCluster::doWeGenerateTS(bool globalTSgeneration) const
 unsigned int ThermalCluster::precision() const
 {
     return 0;
+}
+
+double ThermalCluster::getOperatingCost(uint serieIndex, uint hourInTheYear) const
+{
+    if (costgeneration == Data::setManually)
+    {
+        const auto* modCost = modulation[thermalModulationCost];
+        return marginalCost * modCost[hourInTheYear];
+    }
+    else
+    {
+        const uint tsIndex = Math::Min(serieIndex, costsTimeSeries.size() - 1);
+        return costsTimeSeries[tsIndex].productionCostTs[hourInTheYear];
+    }
+}
+
+double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) const
+{
+    const double mod = modulation[Data::thermalModulationCost][hourInTheYear];
+
+    if (costgeneration == Data::setManually)
+    {
+        return marginalCost * mod;
+    }
+    else
+    {
+        const uint tsIndex = Math::Min(serieIndex, costsTimeSeries.size() - 1);
+        return costsTimeSeries[tsIndex].marginalCostTS[hourInTheYear] * mod;
+    }
+    /* Math::Min is necessary in case Availability has e.g 10 TS and both FuelCost & Co2Cost have
+     only 1TS. Then - > In order to save memory marginalCostTS vector has only one array
+     inside -> that is used for all (e.g.10) TS*/
+}
+
+double ThermalCluster::getMarketBidCost(uint serieIndex, uint hourInTheYear) const
+{
+    double mod = modulation[thermalModulationMarketBid][serieIndex];
+
+    if (costgeneration == Data::setManually)
+    {
+        return marketBidCost * mod;
+    }
+    else
+    {
+        const uint tsIndex = Math::Min(serieIndex, costsTimeSeries.size() - 1);
+        return costsTimeSeries[tsIndex].marketBidCostTS[hourInTheYear] * mod;
+    }
+}
+
+void ThermalCluster::checkAndCorrectAvailability()
+{
+    const auto PmaxDUnGroupeDuPalierThermique = nominalCapacityWithSpinning;
+    const auto PminDUnGroupeDuPalierThermique = (nominalCapacityWithSpinning < minStablePower)
+                                                  ? nominalCapacityWithSpinning
+                                                  : minStablePower;
+
+    bool condition = false;
+    bool report = false;
+
+    for (uint y = 0; y != series->timeSeries.height; ++y)
+    {
+        for (uint x = 0; x != series->timeSeries.width; ++x)
+        {
+            auto rightpart
+              = PminDUnGroupeDuPalierThermique
+                * ceil(series->timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
+            condition = rightpart > series->timeSeries.entry[x][y];
+            if (condition)
+            {
+                series->timeSeries.entry[x][y] = rightpart;
+                report = true;
+            }
+        }
+    }
+
+    if (report)
+        logs.warning() << "Area : " << parentArea->name << " cluster name : " << name()
+                       << " available power lifted to match Pmin and Pnom requirements";
+}
+
+bool ThermalCluster::isActive() const {
+    return enabled && !mustrun;
 }
 
 } // namespace Data

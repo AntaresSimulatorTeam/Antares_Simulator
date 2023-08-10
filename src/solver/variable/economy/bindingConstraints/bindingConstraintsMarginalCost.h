@@ -27,7 +27,7 @@
 #pragma once
 
 #include "../../variable.h"
-#include "antares/study/constraint/constraint.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
 
 namespace Antares
 {
@@ -40,18 +40,18 @@ namespace Economy
 struct VCardBindingConstMarginCost
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "BC. MARG. COST";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "Euro";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Marginal cost for binding constraints";
     }
@@ -93,7 +93,7 @@ struct VCardBindingConstMarginCost
     Marginal cost associated to binding constraints :
     Suppose that the BC is hourly,
     - if binding constraint is not saturated (rhs is not reached) for a given hour, the value is 0;
-    - if binding constraint is saturated (rhs is reached), the value is the total benefit (€/MW) for
+    - if binding constraint is saturated (rhs is reached), the value is the total benefit (ï¿½/MW) for
    the system that would result in increasing the BC's rhs of 1 MW.
 */
 template<class NextT = Container::EndOfList>
@@ -154,7 +154,7 @@ public:
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
         // Set the associated binding constraint
-        associatedBC_ = &(study.runtime->bindingConstraint[bindConstraintGlobalNumber_]);
+        associatedBC_ = study.bindingConstraints.activeContraints()[bindConstraintGlobalIndex_];
 
         NextType::initializeFromStudy(study);
     }
@@ -165,9 +165,19 @@ public:
         VariableAccessorType::InitializeAndReset(results, study);
     }
 
-    void setBindConstraintGlobalNumber(uint bcNumber)
+    void setBindConstraintGlobalIndex(uint bc_index)
     {
-        bindConstraintGlobalNumber_ = bcNumber;
+        bindConstraintGlobalIndex_ = bc_index;
+    }
+
+    void setBindConstraintsCount(uint bcCount)
+    {
+        nbCount_ = bcCount;
+    }
+
+    size_t getMaxNumberColumns() const
+    {
+        return nbCount_ * ResultsType::count;
     }
 
     void yearBegin(unsigned int year, unsigned int numSpace)
@@ -187,7 +197,7 @@ public:
         // Compute statistics for the current year depending on
         // the BC type (hourly, daily, weekly)
         using namespace Data;
-        switch (associatedBC_->type)
+        switch (associatedBC_->type())
         {
         case BindingConstraint::typeHourly:
             pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromHourlyResults();
@@ -229,7 +239,7 @@ public:
         auto numSpace = state.numSpace;
         // For daily binding constraints, getting daily marginal price
         using namespace Data;
-        switch (associatedBC_->type)
+        switch (associatedBC_->type())
         {
         case BindingConstraint::typeHourly:
         case BindingConstraint::typeUnknown:
@@ -243,7 +253,7 @@ public:
             {
                 pValuesForTheCurrentYear[numSpace].day[dayInTheYear]
                   -= state.problemeHebdo
-                       ->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
+                       ->ResultatsContraintesCouplantes[bindConstraintGlobalIndex_]
                        .variablesDuales[dayInTheWeek];
 
                 dayInTheYear++;
@@ -256,7 +266,7 @@ public:
         {
             uint weekInTheYear = state.weekInTheYear;
             double weeklyValue
-              = -state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
+              = -state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalIndex_]
                    .variablesDuales[0];
 
             pValuesForTheCurrentYear[numSpace].week[weekInTheYear] = weeklyValue;
@@ -284,10 +294,10 @@ public:
             return;
 
         auto numSpace = state.numSpace;
-        if (associatedBC_->type == Data::BindingConstraint::typeHourly)
+        if (associatedBC_->type() == Data::BindingConstraint::typeHourly)
         {
             pValuesForTheCurrentYear[numSpace][hourInTheYear]
-              -= state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
+              -= state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalIndex_]
                    .variablesDuales[state.hourInTheWeek];
         }
 
@@ -307,7 +317,7 @@ public:
       int precision /* printed results : hourly, daily, weekly, ...*/,
       unsigned int numSpace) const
     {
-        if (!(precision & associatedBC_->filterYearByYear_))
+        if (!(precision & associatedBC_->yearByYearFilter()))
             return;
 
         // Initializing external pointer on current variable non applicable status
@@ -317,6 +327,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = getBindConstraintCaption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }
@@ -329,7 +340,7 @@ public:
     {
         // Building syntheses results
         // ------------------------------
-        if (!(precision & associatedBC_->filterSynthesis_))
+        if (!(precision & associatedBC_->yearByYearFilter()))
             return;
 
         // And only if we match the current data level _and_ precision level
@@ -350,12 +361,13 @@ private:
     // ---------------
     std::string getBindConstraintCaption() const
     {
-        return associatedBC_->name + " (" + associatedBC_->operatorType + ")";
+        std::string mathOperator(Antares::Data::BindingConstraint::MathOperatorToCString(associatedBC_->operatorType()));
+        return std::string() + associatedBC_->name().c_str() + " (" + mathOperator + ")";
     }
 
     bool isInitialized()
     {
-        return (bindConstraintGlobalNumber_ >= 0) && associatedBC_;
+        return (bindConstraintGlobalIndex_ >= 0) && associatedBC_;
     }
 
     bool isCurrentOutputNonApplicable(int precision) const
@@ -365,13 +377,13 @@ private:
         // (hour, day, week, ...) smaller than the associated binding constraint granularity.
         // Ex : if the BC is daily and we try to print hourly associated marginal prices,
         //      then these prices are set to N/A
-        switch (associatedBC_->type)
+        switch (associatedBC_->type())
         {
         case BindingConstraint::typeUnknown:
         case BindingConstraint::typeMax:
             return true;
         default:
-            const auto precision_bc = 1 << (associatedBC_->type - 1);
+            const auto precision_bc = 1 << (associatedBC_->type() - 1);
             return precision < precision_bc;
         }
     }
@@ -381,8 +393,9 @@ private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear = nullptr;
     unsigned int pNbYearsParallel = 0;
-    Data::BindingConstraintRTI* associatedBC_ = nullptr;
-    int bindConstraintGlobalNumber_ = -1;
+    std::shared_ptr<Data::BindingConstraint> associatedBC_ = nullptr;
+    int bindConstraintGlobalIndex_ = -1;
+    uint nbCount_ = 0; // Number of inequality BCs 
 
 }; // class BindingConstMarginCost
 

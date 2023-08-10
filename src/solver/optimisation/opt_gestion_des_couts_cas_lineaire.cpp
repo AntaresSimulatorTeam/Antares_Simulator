@@ -26,121 +26,132 @@
 */
 
 #include <yuni/yuni.h>
-#include <yuni/core/math.h>
-#include <limits>
 #include <antares/study/area/scratchpad.h>
 #include "opt_structure_probleme_a_resoudre.h"
 
+#include "../simulation/sim_spread_generator.h"
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
-#include "../aleatoire/alea_fonctions.h"
 
-#include "spx_constantes_externes.h"
-
-static void ComputeMinMaxValueForLoad(PROBLEME_HEBDO* problemeHebdo,
-                                      const int PremierPasDeTempsHebdo,
-                                      const int DernierPasDeTempsHebdo,
-                                      uint numSpace)
+static void shortTermStorageCost(
+  int PremierPdtDeLIntervalle,
+  int DernierPdtDeLIntervalle,
+  int NombreDePays,
+  const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
+  std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim,
+  std::vector<double>& linearCost)
 {
-    using namespace Antares::Data;
-
-    const auto& study = *Antares::Data::Study::Current::Get();
-    const auto end = study.areas.end();
-    for (auto i = study.areas.begin(); i != end; ++i)
+    SIM::SpreadGenerator spreadGenerator;
+    for (int pays = 0; pays < NombreDePays; ++pays)
     {
-        const Area& area = *(i->second);
-        auto& scratchpad = *(area.scratchpad[numSpace]);
-        scratchpad.consoMin = +std::numeric_limits<double>::infinity();
-        scratchpad.consoMax = -std::numeric_limits<double>::infinity();
-
-        for (int i = PremierPasDeTempsHebdo; i < DernierPasDeTempsHebdo; ++i)
+        for (const auto& storage : shortTermStorageInput[pays])
         {
-            double d
-              = problemeHebdo->ConsommationsAbattues[i]->ConsommationAbattueDuPays[area.index];
-            if (d < scratchpad.consoMin)
-                scratchpad.consoMin = d;
-            if (d > scratchpad.consoMax)
-                scratchpad.consoMax = d;
+            for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0;
+                 pdtHebdo < DernierPdtDeLIntervalle;
+                 pdtHebdo++, pdtJour++)
+            {
+                const auto& VarCurrent = CorrespondanceVarNativesVarOptim[pdtJour];
+                const int clusterGlobalIndex = storage.clusterGlobalIndex;
+                if (const int varLevel
+                    = VarCurrent.SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
+                    varLevel >= 0)
+                {
+                    linearCost[varLevel] = 0;
+                }
+
+                const double cost = spreadGenerator.generate();
+                if (const int varInjection
+                    = VarCurrent.SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
+                    varInjection >= 0)
+                {
+                    linearCost[varInjection] = cost;
+                }
+
+                if (const int varWithdrawal
+                    = VarCurrent.SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
+                    varWithdrawal >= 0)
+                {
+                    linearCost[varWithdrawal] = storage.efficiency * cost;
+                }
+            }
         }
     }
 }
 
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                                      const int PremierPdtDeLIntervalle,
-                                     const int DernierPdtDeLIntervalle,
-                                     uint numSpace)
+                                     const int DernierPdtDeLIntervalle)
 {
-    const auto& study = *Antares::Data::Study::Current::Get();
-
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     int pdtJour = 0;
 
-    memset((char*)ProblemeAResoudre->CoutQuadratique,
-           0,
-           ProblemeAResoudre->NombreDeVariables * sizeof(double));
+    ProblemeAResoudre->CoutQuadratique.assign(ProblemeAResoudre->NombreDeVariables, 0.);
 
-    ComputeMinMaxValueForLoad(
-      problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, numSpace);
+    shortTermStorageCost(PremierPdtDeLIntervalle,
+                         DernierPdtDeLIntervalle,
+                         problemeHebdo->NombreDePays,
+                         problemeHebdo->ShortTermStorage,
+                         problemeHebdo->CorrespondanceVarNativesVarOptim,
+                         ProblemeAResoudre->CoutLineaire);
 
     for (int pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle; pdtHebdo++)
     {
-        const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+        const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
           = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
-            const COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
+            const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
 
-            int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
+            int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
                 ProblemeAResoudre->CoutLineaire[var] = 0.0;
             }
 
-            if (CoutDeTransport->IntercoGereeAvecDesCouts)
+            if (CoutDeTransport.IntercoGereeAvecDesCouts)
             {
                 var = CorrespondanceVarNativesVarOptim
-                        ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[interco];
+                        .NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[interco];
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     ProblemeAResoudre->CoutLineaire[var]
-                      = CoutDeTransport->CoutDeTransportOrigineVersExtremite[pdtHebdo];
+                      = CoutDeTransport.CoutDeTransportOrigineVersExtremite[pdtHebdo];
                 }
                 var = CorrespondanceVarNativesVarOptim
-                        ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[interco];
+                        .NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[interco];
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     ProblemeAResoudre->CoutLineaire[var]
-                      = CoutDeTransport->CoutDeTransportExtremiteVersOrigine[pdtHebdo];
+                      = CoutDeTransport.CoutDeTransportExtremiteVersOrigine[pdtHebdo];
                 }
             }
         }
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
         {
-            assert((unsigned int)pays < study.areas.size());
-            const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];
             int var;
 
-            for (int Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+            for (int Index = 0; Index < PaliersThermiquesDuPays.NombreDePaliersThermiques; Index++)
             {
                 int palier
-                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
-                var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
+                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
+                var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDuPalierThermique[palier];
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     ProblemeAResoudre->CoutLineaire[var]
-                      = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Index]
-                          ->CoutHoraireDeProductionDuPalierThermique[pdtHebdo];
+                      = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[Index]
+                          .CoutHoraireDeProductionDuPalierThermique[pdtHebdo];
                 }
             }
 
-            var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays];
+            var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 ProblemeAResoudre->CoutLineaire[var] = 0.0;
 
@@ -150,27 +161,27 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                   = problemeHebdo
                       ->BruitSurCoutHydraulique[pays][problemeHebdo->HeureDansLAnnee + pdtHebdo];
 
-                if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue)
+                if (!problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
                     ProblemeAResoudre->CoutLineaire[var]
                       += problemeHebdo->CaracteristiquesHydrauliques[pays]
-                           ->WeeklyWaterValueStateRegular;
+                           .WeeklyWaterValueStateRegular;
             }
 
-            if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
+            if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
             {
                 double P;
                 if (problemeHebdo->TypeDeLissageHydraulique
                     == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
                 {
                     P = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                          ->PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations;
+                          .PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations;
 
                     var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariablesVariationHydALaBaisse[pays];
+                            .NumeroDeVariablesVariationHydALaBaisse[pays];
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                         ProblemeAResoudre->CoutLineaire[var] = P;
                     var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariablesVariationHydALaHausse[pays];
+                            .NumeroDeVariablesVariationHydALaHausse[pays];
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                         ProblemeAResoudre->CoutLineaire[var] = P;
                 }
@@ -179,19 +190,19 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                          && pdtJour == 0)
                 {
                     P = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                          ->PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax;
+                          .PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax;
                     var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariablesVariationHydALaBaisse[pays];
+                            .NumeroDeVariablesVariationHydALaBaisse[pays];
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                         ProblemeAResoudre->CoutLineaire[var] = P;
                     var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariablesVariationHydALaHausse[pays];
+                            .NumeroDeVariablesVariationHydALaHausse[pays];
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                         ProblemeAResoudre->CoutLineaire[var] = -P;
                 }
             }
 
-            var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[pays];
+            var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDePompage[pays];
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
                 /* Sets the cost of the pumping variable when such a variable is actually defined
@@ -216,14 +227,14 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
                 */
 
-                if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue)
+                if (!problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
                 {
                     ProblemeAResoudre->CoutLineaire[var]
                       = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                          ->WeeklyWaterValueStateRegular;
+                          .WeeklyWaterValueStateRegular;
 
                     ProblemeAResoudre->CoutLineaire[var]
-                      *= problemeHebdo->CaracteristiquesHydrauliques[pays]->PumpingRatio;
+                      *= problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
                     ProblemeAResoudre->CoutLineaire[var] *= -1.;
 
                     ProblemeAResoudre->CoutLineaire[var]
@@ -242,7 +253,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 }
             }
 
-            var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeDebordement[pays];
+            var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeDebordement[pays];
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
                 /* Sets the cost of the overflow variable when such a variable is actually defined
@@ -263,14 +274,14 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
               */
 
-                if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue)
+                if (!problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
                 {
                     ProblemeAResoudre->CoutLineaire[var]
                       = problemeHebdo->CoutDeDefaillanceNegative[pays];
 
                     ProblemeAResoudre->CoutLineaire[var]
                       += problemeHebdo->CaracteristiquesHydrauliques[pays]
-                           ->WeeklyWaterValueStateRegular;
+                           .WeeklyWaterValueStateRegular;
                 }
                 else
                 {
@@ -279,20 +290,20 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 }
             }
 
-            var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeNiveau[pays];
+            var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeNiveau[pays];
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
                 ProblemeAResoudre->CoutLineaire[var] = 0;
             }
 
-            var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[pays];
+            var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[pays];
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
                 ProblemeAResoudre->CoutLineaire[var]
                   = problemeHebdo->CoutDeDefaillancePositive[pays];
             }
 
-            var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[pays];
+            var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillanceNegative[pays];
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
                 ProblemeAResoudre->CoutLineaire[var]
@@ -305,7 +316,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
     {
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
         {
             int var = problemeHebdo->NumeroDeVariableStockFinal[pays];
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
@@ -320,7 +331,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 {
                     ProblemeAResoudre->CoutLineaire[var]
                       = -problemeHebdo->CaracteristiquesHydrauliques[pays]
-                           ->WaterLayerValues[layerindex];
+                           .WaterLayerValues[layerindex];
                 }
             }
         }

@@ -31,7 +31,7 @@
 #include "../../study.h"
 #include "../../memory-usage.h"
 #include "prepro.h"
-#include "../../../inifile.h"
+#include <antares/inifile/inifile.h>
 #include "../../../array/array1d.h"
 #include "../../../logs.h"
 
@@ -169,102 +169,8 @@ bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const char* f
             intermonthlyCorrelation = 1.;
     }
 
-    if (s.header.version < 350)
-    {
-        data.reset(hydroPreproMax, 12, true);
-
-        if (s.header.version <= 320)
-        {
-            Matrix<> tmpExpectationMtx;
-            Matrix<> tmpStdDeviationMtx;
-
-            buffer.clear() << folder << SEP << areaID << SEP << "logexpectation."
-                           << s.inputExtension;
-            ret = tmpExpectationMtx.loadFromCSVFile(buffer, 1, 12, mtrxOption) && ret;
-            buffer.clear() << folder << SEP << areaID << SEP << "standarddeviation."
-                           << s.inputExtension;
-            ret = tmpStdDeviationMtx.loadFromCSVFile(buffer, 1, 12, mtrxOption) && ret;
-
-            if (tmpExpectationMtx.height != 12 || tmpExpectationMtx.width != 1)
-                tmpExpectationMtx.reset(1, 12, true);
-            if (tmpStdDeviationMtx.height != 12 || tmpStdDeviationMtx.width != 1)
-                tmpStdDeviationMtx.reset(1, 12, true);
-
-            auto& tmpExpectation = tmpExpectationMtx[0];
-            auto& tmpStdDeviation = tmpStdDeviationMtx[0];
-
-            double e, s;
-            for (uint i = 0; i != 12; ++i)
-            {
-                // E = exp(E' + S'*S'/2)
-                e = exp(tmpExpectation[i] + tmpStdDeviation[i] * tmpStdDeviation[i] / 2.);
-                // S = exp(E' + S'*S'/2) * sqrt(exp(S'*S') - 1)
-                s = e * sqrt(exp(tmpStdDeviation[i] * tmpStdDeviation[i]) - 1.);
-
-                tmpExpectation[i] = e;
-                tmpStdDeviation[i] = s;
-            }
-            data.pasteToColumn(expectation, tmpExpectation);
-            data.pasteToColumn(stdDeviation, tmpStdDeviation);
-        }
-        else
-        {
-            {
-                buffer.clear() << folder << SEP << areaID << SEP << "expectation."
-                               << s.inputExtension;
-                Matrix<> m;
-                if (!m.loadFromCSVFile(buffer, 1, 12, mtrxOption) || m.width != 1 || m.height != 12)
-                    m.reset(1, 12, true);
-                data.pasteToColumn(expectation, m[0]);
-            }
-            {
-                buffer.clear() << folder << SEP << areaID << SEP << "standarddeviation."
-                               << s.inputExtension;
-                Matrix<> m;
-                if (!m.loadFromCSVFile(buffer, 1, 12, mtrxOption) || m.width != 1 || m.height != 12)
-                    m.reset(1, 12, true);
-                data.pasteToColumn(stdDeviation, m[0]);
-            }
-        }
-        {
-            buffer.clear() << folder << SEP << areaID << SEP << "minenergy." << s.inputExtension;
-            Matrix<> m;
-            if (!m.loadFromCSVFile(buffer, 1, 12, mtrxOption) || m.width != 1 || m.height != 12)
-                m.reset(1, 12, true);
-            data.pasteToColumn(minimumEnergy, m[0]);
-        }
-        {
-            buffer.clear() << folder << SEP << areaID << SEP << "maxenergy." << s.inputExtension;
-            Matrix<> m;
-            if (!m.loadFromCSVFile(buffer, 1, 12, mtrxOption) || m.width != 1 || m.height != 12)
-                m.reset(1, 12, true);
-            data.pasteToColumn(maximumEnergy, m[0]);
-        }
-        {
-            buffer.clear() << folder << SEP << areaID << SEP << "poweroverwater."
-                           << s.inputExtension;
-            Matrix<> m;
-            if (!m.loadFromCSVFile(buffer, 1, 12, mtrxOption) || m.width != 1 || m.height != 12)
-                m.reset(1, 12, true);
-            data.pasteToColumn(powerOverWater, m[0]);
-        }
-    }
-    else
-    {
-        buffer.clear() << folder << SEP << areaID << SEP << "energy.txt";
-        ret = data.loadFromCSVFile(buffer, hydroPreproMax, 12, mtrxOption, &s.dataBuffer) && ret;
-    }
-
-    if (s.header.version < 640)
-    {
-        // Converting into MWh just after loading generation parameters
-        data.multiplyColumnBy(expectation, 1000.);
-        data.multiplyColumnBy(stdDeviation, 1000.);
-        data.multiplyColumnBy(minimumEnergy, 1000.);
-        data.multiplyColumnBy(maximumEnergy, 1000.);
-
-        data.markAsModified();
-    }
+    buffer.clear() << folder << SEP << areaID << SEP << "energy.txt";
+    ret = data.loadFromCSVFile(buffer, hydroPreproMax, 12, mtrxOption, &s.dataBuffer) && ret;
 
     if (JIT::enabled)
         return ret;

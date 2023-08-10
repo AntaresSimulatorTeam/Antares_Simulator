@@ -25,11 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
-#include <yuni/io/file.h>
 #include <i_writer.h>
 #include "../study.h"
 #include "../../logs.h"
+
+#include "store-timeseries-numbers.h"
 
 using namespace Yuni;
 
@@ -68,53 +68,53 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer,
     writer->addEntryFromBuffer(path.c_str(), buffer);
 }
 
-void Area::storeTimeseriesNumbersForLoad(Solver::IResultWriter::Ptr writer) const
+void storeTimeseriesNumbersForLoad(Solver::IResultWriter::Ptr writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, load.series->timeseriesNumbers, id, "load");
+    genericStoreTimeseriesNumbers(writer, area.load.series->timeseriesNumbers, area.id, "load");
 }
 
-void Area::storeTimeseriesNumbersForSolar(Solver::IResultWriter::Ptr writer) const
+void storeTimeseriesNumbersForSolar(Solver::IResultWriter::Ptr writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, solar.series->timeseriesNumbers, id, "solar");
+    genericStoreTimeseriesNumbers(writer, area.solar.series->timeseriesNumbers, area.id, "solar");
 }
 
-void Area::storeTimeseriesNumbersForHydro(Solver::IResultWriter::Ptr writer) const
+void storeTimeseriesNumbersForHydro(Solver::IResultWriter::Ptr writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, hydro.series->timeseriesNumbers, id, "hydro");
+    genericStoreTimeseriesNumbers(writer, area.hydro.series->timeseriesNumbers, area.id, "hydro");
 }
 
-void Area::storeTimeseriesNumbersForWind(Solver::IResultWriter::Ptr writer) const
+void storeTimeseriesNumbersForWind(Solver::IResultWriter::Ptr writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, wind.series->timeseriesNumbers, id, "wind");
+    genericStoreTimeseriesNumbers(writer, area.wind.series->timeseriesNumbers, area.id, "wind");
 }
 
-void Area::storeTimeseriesNumbersForThermal(Solver::IResultWriter::Ptr writer) const
+void storeTimeseriesNumbersForThermal(Solver::IResultWriter::Ptr writer, const Area& area)
 {
-    thermal.list.storeTimeseriesNumbers(writer);
-    thermal.mustrunList.storeTimeseriesNumbers(writer);
+    area.thermal.list.storeTimeseriesNumbers(writer);
+    area.thermal.mustrunList.storeTimeseriesNumbers(writer);
 }
 
-void Area::storeTimeseriesNumbersForRenewable(Solver::IResultWriter::Ptr writer) const
+void storeTimeseriesNumbersForRenewable(Solver::IResultWriter::Ptr writer, const Area& area)
 {
-    renewable.list.storeTimeseriesNumbers(writer);
+    area.renewable.list.storeTimeseriesNumbers(writer);
 }
 
-void Area::storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter::Ptr writer) const
+void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter::Ptr writer, const Area& area)
 {
     // No links originating from this area
     // do not create an empty directory
-    if (links.empty())
+    if (area.links.empty())
         return;
 
-    for (const auto& link : links)
+    for (const auto& [key, value] : area.links)
     {
-        if (link.second == nullptr)
+        if (value == nullptr)
         {
-            logs.error() << "Unexpected nullptr encountered for area " << id;
+            logs.error() << "Unexpected nullptr encountered for area " << area.id;
             return;
         }
         else
-            link.second->storeTimeseriesNumbers(writer);
+            value->storeTimeseriesNumbers(writer);
     }
 }
 } // namespace Data

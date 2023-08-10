@@ -41,18 +41,18 @@ namespace Economy
 struct VCardTimeSeriesValuesWind
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "WIND";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "MWh";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Wind generation, thoughout all MC years";
     }
@@ -198,9 +198,9 @@ public:
         {
             // The current wind time-series
             (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour,
-                           pArea->wind.series->series
-                             .entry[NumeroChroniquesTireesParPays[numSpace][pArea->index]->Eolien],
-                           sizeof(double) * pArea->wind.series->series.height);
+                           pArea->wind.series->timeSeries
+                             .entry[NumeroChroniquesTireesParPays[numSpace][pArea->index].Eolien],
+                           sizeof(double) * pArea->wind.series->timeSeries.height);
         }
 
         // Next variable
@@ -267,6 +267,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

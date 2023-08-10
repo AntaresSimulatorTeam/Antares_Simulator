@@ -40,18 +40,18 @@ namespace Economy
 struct VCardCongestionFee
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "CONG. FEE (ALG.)";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "Euro";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Congestion fee collected throughout all MC years (Alg.)";
     }
@@ -229,14 +229,14 @@ public:
     {
 #define UPSTREAM_PRICE                                              \
     state.problemeHebdo->ResultatsHoraires[state.link->from->index] \
-      ->CoutsMarginauxHoraires[state.hourInTheWeek]
+      .CoutsMarginauxHoraires[state.hourInTheWeek]
 #define DOWNSTREAM_PRICE                                            \
     state.problemeHebdo->ResultatsHoraires[state.link->with->index] \
-      ->CoutsMarginauxHoraires[state.hourInTheWeek]
+      .CoutsMarginauxHoraires[state.hourInTheWeek]
 
         // Congestion Fee
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
-          = state.ntc->ValeurDuFlux[state.link->index] * (UPSTREAM_PRICE - DOWNSTREAM_PRICE);
+          = state.ntc.ValeurDuFlux[state.link->index] * (UPSTREAM_PRICE - DOWNSTREAM_PRICE);
         // Next item in the list
         NextType::hourForEachLink(state, numSpace);
 
@@ -269,6 +269,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

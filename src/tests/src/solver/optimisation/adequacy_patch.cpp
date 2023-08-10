@@ -7,6 +7,9 @@
 #include "adequacy_patch_local_matching/adq_patch_local_matching.h"
 #include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include <adequacy_patch_runtime_data.h>
+#include "antares/study/parameters/adq-patch-params.h"
+#include <antares/exception/LoadingError.hpp>
+#include <fstream>
 
 #include <vector>
 #include <tuple>
@@ -32,22 +35,23 @@ std::pair<double, double> setNTCboundsForOneTimeStep(AdequacyPatchMode originTyp
 
     problem.adequacyPatchRuntimeData->originAreaMode[0] = originType;
     problem.adequacyPatchRuntimeData->extremityAreaMode[0] = extremityType;
-    problem.adqPatchParams
-      = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
-    auto& adqPatchParams = problem.adqPatchParams;
+    problem.adequacyPatchRuntimeData->AdequacyFirstStep = true;
 
-    adqPatchParams->AdequacyFirstStep = true;
-    adqPatchParams->SetNTCOutsideToOutsideToZero = SetNTCOutsideToOutsideToZero;
-    adqPatchParams->SetNTCOutsideToInsideToZero = SetNTCOutsideToInsideToZero;
+    AdqPatchParams adqPatchParams;
+    adqPatchParams.enabled = true;
+    adqPatchParams.localMatching.setToZeroOutsideOutsideLinks = SetNTCOutsideToOutsideToZero;
+    adqPatchParams.localMatching.setToZeroOutsideInsideLinks = SetNTCOutsideToInsideToZero;
 
     VALEURS_DE_NTC_ET_RESISTANCES ValeursDeNTC;
-    ValeursDeNTC.ValeurDeNTCOrigineVersExtremite = &origineExtremite;
-    ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine = &extremiteOrigine;
+    ValeursDeNTC.ValeurDeNTCOrigineVersExtremite.assign(1, 0.);
+    ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine.assign(1, 0.);
+    ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[0] = origineExtremite;
+    ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[0] = extremiteOrigine;
 
-    double Xmin;
-    double Xmax;
+    double Xmin(0.);
+    double Xmax(0.);
 
-    setNTCbounds(Xmax, Xmin, &ValeursDeNTC, 0, &problem);
+    setNTCbounds(Xmax, Xmin, ValeursDeNTC, 0, &problem, adqPatchParams);
 
     return std::make_pair(Xmin, Xmax);
 }
@@ -75,55 +79,50 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     problem.adequacyPatchRuntimeData->originAreaMode.resize(3);
     problem.adequacyPatchRuntimeData->extremityAreaMode.resize(3);
 
-    auto& adqPatchParams = problem.adqPatchParams;
-    adqPatchParams = std::make_shared<AdequacyPatchParameters>();
+    AdqPatchParams adqPatchParams;
 
-    problem.ResultatsHoraires = new RESULTATS_HORAIRES*;
-    problem.ResultatsHoraires[0] = new RESULTATS_HORAIRES;
-    problem.ResultatsHoraires[0]->ValeursHorairesDeDefaillancePositive = new double;
-    problem.ValeursDeNTC = new VALEURS_DE_NTC_ET_RESISTANCES*;
-    problem.ValeursDeNTC[0] = new VALEURS_DE_NTC_ET_RESISTANCES;
-    problem.ValeursDeNTC[0]->ValeurDuFlux = new double[3];
-    problem.IndexSuivantIntercoOrigine = new int[3];
-    problem.IndexSuivantIntercoExtremite = new int[3];
-    problem.IndexDebutIntercoOrigine = new int[1];
-    problem.IndexDebutIntercoExtremite = new int[1];
+    problem.ResultatsHoraires.resize(1);
+    problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive = std::vector<double>(1);
+    problem.ValeursDeNTC = std::vector<VALEURS_DE_NTC_ET_RESISTANCES>(1);
+    problem.ValeursDeNTC[0].ValeurDuFlux = std::vector<double>(3);
+    problem.IndexSuivantIntercoOrigine = std::vector<int>(3);
+    problem.IndexSuivantIntercoExtremite = std::vector<int>(3);
+    problem.IndexDebutIntercoOrigine = std::vector<int>(1);
+    problem.IndexDebutIntercoExtremite = std::vector<int>(1);
 
     // input values
-    adqPatchParams->SetNTCOutsideToInsideToZero = !includeFlowsOutsideAdqPatchToDensNew;
-    problem.ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour] = ensInit;
+    adqPatchParams.localMatching.setToZeroOutsideInsideLinks = !includeFlowsOutsideAdqPatchToDensNew;
+    problem.ResultatsHoraires[Area].ValeursHorairesDeDefaillancePositive[hour] = ensInit;
     int Interco = 1;
     problem.IndexDebutIntercoOrigine[Area] = Interco;
     problem.adequacyPatchRuntimeData->extremityAreaMode[Interco] = Area1Mode;
-    problem.ValeursDeNTC[hour]->ValeurDuFlux[Interco] = flowToArea1;
+    problem.ValeursDeNTC[hour].ValeurDuFlux[Interco] = flowToArea1;
     problem.IndexSuivantIntercoOrigine[Interco] = -1;
 
     Interco = 2;
     problem.IndexDebutIntercoExtremite[Area] = Interco;
     problem.adequacyPatchRuntimeData->originAreaMode[Interco] = Area2Mode;
-    problem.ValeursDeNTC[hour]->ValeurDuFlux[Interco] = flowFromArea2;
+    problem.ValeursDeNTC[hour].ValeurDuFlux[Interco] = flowFromArea2;
     problem.IndexSuivantIntercoExtremite[Interco] = -1;
 
     // get results
     double netPositionInit;
     double densNew;
     std::tie(netPositionInit, densNew, std::ignore)
-      = calculateAreaFlowBalance(&problem, Area, hour);
+        = calculateAreaFlowBalance(&problem, adqPatchParams.localMatching.setToZeroOutsideInsideLinks, Area, hour);
 
-    // free memory
-    delete[] problem.IndexDebutIntercoExtremite;
-    delete[] problem.IndexSuivantIntercoExtremite;
-    delete[] problem.IndexDebutIntercoOrigine;
-    delete[] problem.IndexSuivantIntercoOrigine;
-    delete[] problem.ValeursDeNTC[0]->ValeurDuFlux;
-    delete problem.ValeursDeNTC[0];
-    delete problem.ValeursDeNTC;
-    delete problem.ResultatsHoraires[0]->ValeursHorairesDeDefaillancePositive;
-    delete problem.ResultatsHoraires[0];
-    delete problem.ResultatsHoraires;
-
-    // return
     return std::make_pair(netPositionInit, densNew);
+}
+
+AdqPatchParams createParams()
+{
+    AdqPatchParams p;
+    p.enabled = true;
+    p.curtailmentSharing.includeHurdleCost = true;
+    p.localMatching.enabled = true;
+    p.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isDens;
+
+    return p;
 }
 
 // Virtual -> Virtual (0 -> 0)
@@ -482,4 +481,32 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_inside_Inclu
                                                flowArea2toArea0_negative);
     BOOST_CHECK_EQUAL(netPositionInit, -flowArea0toArea1_positive + flowArea2toArea0_negative);
     BOOST_CHECK_EQUAL(densNew, 0.0);
+}
+
+BOOST_AUTO_TEST_CASE(check_valid_adq_param)
+{
+    auto p = createParams();
+    BOOST_CHECK_NO_THROW(p.checkAdqPatchStudyModeEconomyOnly(Antares::Data::stdmEconomy));
+    BOOST_CHECK_NO_THROW(p.checkAdqPatchIncludeHurdleCost(true));
+    BOOST_CHECK_NO_THROW(p.checkAdqPatchDisabledLocalMatching());
+}
+
+BOOST_AUTO_TEST_CASE(check_adq_param_wrong_mode)
+{
+    auto p = createParams();
+    BOOST_CHECK_THROW(p.checkAdqPatchStudyModeEconomyOnly(Antares::Data::stdmAdequacy),
+            Error::IncompatibleStudyModeForAdqPatch);
+}
+
+BOOST_AUTO_TEST_CASE(check_adq_param_wrong_hurdle_cost)
+{
+    auto p = createParams();
+    BOOST_CHECK_THROW(p.checkAdqPatchIncludeHurdleCost(false), Error::IncompatibleHurdleCostCSR);
+}
+
+BOOST_AUTO_TEST_CASE(check_adq_param_wrong_lmr_disabled)
+{
+    auto p = createParams();
+    p.localMatching.enabled = false;
+    BOOST_CHECK_THROW(p.checkAdqPatchDisabledLocalMatching(), Error::AdqPatchDisabledLMR);
 }

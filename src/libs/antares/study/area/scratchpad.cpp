@@ -37,7 +37,7 @@ namespace Antares
 namespace Data
 {
 AreaScratchpad::TimeseriesData::TimeseriesData(Area& area) :
- load(area.load.series->series), solar(area.solar.series->series), wind(area.wind.series->series)
+        load(area.load.series->timeSeries), solar(area.solar.series->timeSeries), wind(area.wind.series->timeSeries)
 {
 }
 
@@ -155,11 +155,9 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
 
     // If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
     pumpHasMod = (valuePumping > 0.);
-
-    // Spinning reserves
-    memcpy(
-      spinningReserve, area.reserves[fhrPrimaryReserve], sizeof(double) * rinfos.nbHoursPerYear);
 }
+
+AreaScratchpad::~AreaScratchpad() = default;
 
 } // namespace Data
 } // namespace Antares

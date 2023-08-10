@@ -41,22 +41,6 @@ namespace Antares
 {
 namespace Data
 {
-namespace Enum
-{
-/*! Enum class to define export structure dictionnary */
-enum class ExportStructDict : unsigned char
-{
-    ValeurDeNTCOrigineVersExtremite,
-    PalierThermique,
-    ProdHyd,
-    DefaillancePositive,
-    DefaillanceNegative,
-    BilansPays,
-    CoutOrigineVersExtremiteDeLInterconnexion,
-    CoutExtremiteVersOrigineDeLInterconnexion,
-    CorrespondanceVarNativesVarOptim
-};
-} // namespace Enum
 
 class Study;
 } // namespace Data
@@ -64,18 +48,9 @@ class Study;
 
 struct PROBLEME_HEBDO;
 
-void OPT_Export_add_variable(std::vector<std::string>& varname,
-                             int var,
-                             Antares::Data::Enum::ExportStructDict structDict,
-                             int ts, // TODO remove
-                             int firstVal,
-                             std::optional<int> secondVal = std::nullopt);
-void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
+void OPT_ExportInterco(Antares::Solver::IResultWriter& writer,
                        PROBLEME_HEBDO* problemeHebdo);
-void OPT_ExportAreaName(Antares::Solver::IResultWriter::Ptr writer,
-                        const Antares::Data::AreaList& areas);
-void OPT_ExportVariables(const Antares::Solver::IResultWriter::Ptr writer,
-                         const std::vector<std::string>& varname,
-                         const std::string& filename);
+void OPT_ExportAreaName(Antares::Solver::IResultWriter& writer,
+                        const std::vector<const char*>& areaNames);
 
 #endif

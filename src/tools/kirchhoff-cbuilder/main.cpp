@@ -145,7 +145,6 @@ bool initComponents(std::shared_ptr<Data::Study> study, const std::string& study
       = Data::StudyHeader::ReadVersionFromFile(studyPath + Yuni::IO::Separator + "study.antares");
     study->folder = studyPath;
     study->folderInput = studyPath + Yuni::IO::Separator + "input";
-    study->inputExtension = "txt";
 
     logs.info() << "Study version: " << study->header.version;
 
@@ -168,9 +167,6 @@ bool initComponents(std::shared_ptr<Data::Study> study, const std::string& study
         return false;
     }
     logs.info() << "Binding constraints loaded.";
-
-    Data::Study::Current::Set(study);
-
     logs.notice() << studyPath << " is loaded.";
 
     return true;

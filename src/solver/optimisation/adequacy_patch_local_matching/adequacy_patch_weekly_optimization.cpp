@@ -32,40 +32,42 @@
 #include "antares/study/area/scratchpad.h"
 #include "antares/study/fwd.h"
 
-const int nbHoursInAWeek = 168;
-
 using namespace Antares::Data::AdequacyPatch;
+using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Optimization
 {
-AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHebdo,
-                                                     uint thread_number) :
- WeeklyOptimization(problemeHebdo, thread_number)
+AdequacyPatchOptimization::AdequacyPatchOptimization(const Antares::Data::Study& study,
+                                                     const OptimizationOptions& options,
+                                                     PROBLEME_HEBDO* problemeHebdo,
+                                                     AdqPatchParams& adqPatchParams,
+                                                     uint thread_number,
+                                                     IResultWriter& writer) :
+  WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer), study_(study)
 {
 }
+
 void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
 {
-    problemeHebdo_->adqPatchParams->AdequacyFirstStep = true;
-    OPT_OptimisationHebdomadaire(problemeHebdo_, thread_number_);
-    problemeHebdo_->adqPatchParams->AdequacyFirstStep = false;
+    problemeHebdo_->adequacyPatchRuntimeData->AdequacyFirstStep = true;
+    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
+    problemeHebdo_->adequacyPatchRuntimeData->AdequacyFirstStep = false;
 
     for (int pays = 0; pays < problemeHebdo_->NombreDePays; ++pays)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[pays]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            memcpy(problemeHebdo_->ResultatsHoraires[pays]->ValeursHorairesDENS,
-                   problemeHebdo_->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive,
-                   problemeHebdo_->NombreDePasDeTemps * sizeof(double));
+            problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS
+                = problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDeDefaillancePositive;
         else
-            memset(problemeHebdo_->ResultatsHoraires[pays]->ValeursHorairesDENS,
-                   0,
-                   problemeHebdo_->NombreDePasDeTemps * sizeof(double));
+            std::fill(problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS.begin(),
+                    problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS.end(), 0);
     }
 
     // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
     // part that we need
-    ::SIM_RenseignementProblemeHebdo(*problemeHebdo_, weekInTheYear, thread_number_, hourInTheYear);
-    OPT_OptimisationHebdomadaire(problemeHebdo_, thread_number_);
+    ::SIM_RenseignementProblemeHebdo(study_, *problemeHebdo_, weekInTheYear, thread_number_, hourInTheYear);
+    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
 }
 
 } // namespace Antares::Solver::Optimization

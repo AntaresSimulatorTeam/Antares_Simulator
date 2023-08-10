@@ -26,12 +26,13 @@
 */
 #include <fstream>
 #include "study.h"
+#include "version.h"
 #include "../benchmarking.h"
-#include "../array/correlation.h"
-#include "../inifile/inifile.h"
 #include "scenario-builder/sets.h"
+#include "ui-runtimeinfos.h"
 
 using namespace Yuni;
+using Antares::Constants::nbHoursInAWeek;
 
 #define SEP IO::Separator
 
@@ -43,7 +44,7 @@ bool Study::internalLoadHeader(const String& path)
 {
     // Header
     buffer.clear() << path << SEP << "study.antares";
-    if (not header.loadFromFile(buffer))
+    if (!header.loadFromFile(buffer))
     {
         logs.error() << path << ": impossible to open the header file";
         return false;
@@ -67,21 +68,21 @@ bool Study::loadFromFolder(const AnyString& path, const StudyLoadOptions& option
 
 bool Study::internalLoadIni(const String& path, const StudyLoadOptions& options)
 {
-    if (not internalLoadHeader(path))
+    if (!internalLoadHeader(path))
     {
         if (options.loadOnlyNeeded)
             return false;
     }
 
     // The simulation settings
-    if (not simulationComments.loadFromFolder(options))
+    if (!simulationComments.loadFromFolder(options))
     {
         if (options.loadOnlyNeeded)
             return false;
     }
     // Load the general data
     buffer.clear() << folderSettings << SEP << "generaldata.ini";
-    if (not parameters.loadFromFile(buffer, header.version, options))
+    if (!parameters.loadFromFile(buffer, header.version, options))
     {
         if (options.loadOnlyNeeded)
             return false;
@@ -96,7 +97,7 @@ bool Study::internalLoadIni(const String& path, const StudyLoadOptions& options)
 
 void Study::parameterFiller(const StudyLoadOptions& options)
 {
-    if (usedByTheSolver and not options.prepareOutput)
+    if (usedByTheSolver && !options.prepareOutput)
     {
         parameters.noOutput = true;
         parameters.yearByYear = false;
@@ -105,7 +106,7 @@ void Study::parameterFiller(const StudyLoadOptions& options)
         parameters.synthesis = false;
     }
 
-    if (options.loadOnlyNeeded and !parameters.timeSeriesToGenerate)
+    if (options.loadOnlyNeeded && !parameters.timeSeriesToGenerate)
         // Nothing to refresh
         parameters.timeSeriesToRefresh = 0;
 
@@ -114,11 +115,13 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     if (usedByTheSolver)
     {
         // We have time-series to import
-        if (parameters.timeSeriesToImport and (uint) header.version != (uint)versionLatest)
+        StudyVersion studyVersion;
+        if (parameters.exportTimeSeriesInInput && studyVersion.isStudyLatestVersion(folder.c_str()))
         {
-            logs.error() << "Stochastic TS stored in input : study must be upgraded to "
-                         << Data::VersionToCStr((Data::Version)Data::versionLatest);
-            // it is useless to continue at this point
+            logs.info() << "Stochastic TS stored in input parametrized."
+                           " Disabling Store in input because study is not at latest version"
+                           "Prevents writing data in unsupported format at the study version";
+            parameters.exportTimeSeriesInInput = 0;
         }
     }
 
@@ -131,7 +134,7 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     // may still exist.
     scenarioRulesDestroy();
 
-    if (JIT::usedFromGUI and uiinfo)
+    if (JIT::usedFromGUI && uiinfo)
     {
         // Post-processing when loaded from the User-Interface
         uiinfo->reload();
@@ -171,15 +174,12 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     // Initialize all internal paths
     relocate(path);
 
-    // Compatibility - The extension according the study version
-    inputExtensionCompatibility();
-
     // Reserving enough space in buffer to avoid several calls to realloc
     this->dataBuffer.reserve(4 * 1024 * 1024); // For matrices, reserving 4Mo
     this->bufferLoadingTS.reserve(2096);
     assert(this->bufferLoadingTS.capacity() > 0);
 
-    if (not internalLoadIni(path, options))
+    if (!internalLoadIni(path, options))
     {
         return false;
     }
@@ -202,62 +202,39 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
 
     logs.info() << "Loading correlation matrices...";
     // Correlation matrices
-    ret = internalLoadCorrelationMatrices(options) and ret;
+    ret = internalLoadCorrelationMatrices(options) && ret;
     // Binding constraints
-    ret = internalLoadBindingConstraints(options) and ret;
+    ret = internalLoadBindingConstraints(options) && ret;
     // Sets of areas & links
-    ret = internalLoadSets() and ret;
+    ret = internalLoadSets() && ret;
 
     parameterFiller(options);
     return ret;
 }
 
-void Study::inputExtensionCompatibility()
-{
-    // The extension to use according the version
-    if (header.version < 310)
-    {
-        // Since v3.1, all extensions have been changed into .txt in the input folder.
-        inputExtension = "csv";
-        // In order to properly save the study from the interface, the Just-In-Time
-        // mecanism must be temporary disabled
-        JIT::enabled = 0;
-    }
-    else
-        inputExtension = "txt";
-}
-
 bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
 {
-    if ((uint)header.version > (uint)version320)
-    {
-        // Load
-        if (!options.loadOnlyNeeded or timeSeriesLoad & parameters.timeSeriesToRefresh
+    // Load
+    if (!options.loadOnlyNeeded || timeSeriesLoad & parameters.timeSeriesToRefresh
             || timeSeriesLoad & parameters.timeSeriesToGenerate)
-        {
-            buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP
-                           << "correlation.ini";
-            preproLoadCorrelation.loadFromFile(*this, buffer);
-        }
-
-        // Solar
-        if (!options.loadOnlyNeeded or timeSeriesSolar & parameters.timeSeriesToRefresh
-            || timeSeriesSolar & parameters.timeSeriesToGenerate)
-        {
-            buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP
-                           << "correlation.ini";
-            preproSolarCorrelation.loadFromFile(*this, buffer);
-        }
-    }
-    else
     {
-        preproLoadCorrelation.reset(*this);
-        preproSolarCorrelation.reset(*this);
+        buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP
+            << "correlation.ini";
+        preproLoadCorrelation.loadFromFile(*this, buffer);
+    }
+
+    // Solar
+    if (!options.loadOnlyNeeded || timeSeriesSolar & parameters.timeSeriesToRefresh
+            || timeSeriesSolar & parameters.timeSeriesToGenerate)
+    {
+        buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP
+            << "correlation.ini";
+        preproSolarCorrelation.loadFromFile(*this, buffer);
     }
 
     // Wind
     {
-        if (!options.loadOnlyNeeded or timeSeriesWind & parameters.timeSeriesToRefresh
+        if (!options.loadOnlyNeeded || timeSeriesWind & parameters.timeSeriesToRefresh
             || timeSeriesWind & parameters.timeSeriesToGenerate)
         {
             buffer.clear() << folderInput << SEP << "wind" << SEP << "prepro" << SEP
@@ -268,8 +245,8 @@ bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
 
     // Hydro
     {
-        if (not options.loadOnlyNeeded or (timeSeriesHydro & parameters.timeSeriesToRefresh)
-            or (timeSeriesHydro & parameters.timeSeriesToGenerate))
+        if (!options.loadOnlyNeeded || (timeSeriesHydro & parameters.timeSeriesToRefresh)
+            || (timeSeriesHydro & parameters.timeSeriesToGenerate))
         {
             buffer.clear() << folderInput << SEP << "hydro" << SEP << "prepro" << SEP
                            << "correlation.ini";
@@ -284,8 +261,11 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
     // All checks are performed in 'loadFromFolder'
     // (actually internalLoadFromFolder)
     buffer.clear() << folderInput << SEP << "bindingconstraints";
-    const bool r = bindingConstraints.loadFromFolder(*this, options, buffer);
-    return (!r and options.loadOnlyNeeded) ? false : r;
+    bool r = bindingConstraints.loadFromFolder(*this, options, buffer);
+    if (r) {
+        r &= bindingConstraintsGroups.buildFrom(bindingConstraints);
+    }
+    return (!r && options.loadOnlyNeeded) ? false : r;
 }
 
 class SetHandlerAreas
@@ -416,13 +396,13 @@ bool Study::reloadXCastData()
 
         // Load
         buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP << area.id;
-        ret = area.load.prepro->loadFromFolder(*this, buffer) and ret;
+        ret = area.load.prepro->loadFromFolder(buffer) && ret;
         // Solar
         buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP << area.id;
-        ret = area.solar.prepro->loadFromFolder(*this, buffer) and ret;
+        ret = area.solar.prepro->loadFromFolder(buffer) && ret;
         // Wind
         buffer.clear() << folderInput << SEP << "wind" << SEP << "prepro" << SEP << area.id;
-        ret = area.wind.prepro->loadFromFolder(*this, buffer) and ret;
+        ret = area.wind.prepro->loadFromFolder(buffer) && ret;
     });
     return ret;
 }

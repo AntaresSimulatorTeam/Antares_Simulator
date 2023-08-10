@@ -32,6 +32,7 @@
 #include <antares/wx-wrapper.h>
 #include <yuni/core/math.h>
 #include <wx/window.h>
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 
@@ -131,7 +132,7 @@ wxString LinkWeights::cellValue(int x, int y) const
 
 wxString LinkWeights::columnCaption(int x) const
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return wxEmptyString;
 
     if ((uint)x < study->uiinfo->constraintCount())
@@ -141,7 +142,7 @@ wxString LinkWeights::columnCaption(int x) const
 
 IRenderer::CellStyle LinkWeights::cellStyle(int x, int y) const
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return IRenderer::cellStyleConstraintDisabled;
 
     if ((uint)x >= study->uiinfo->constraintCount())
@@ -422,7 +423,7 @@ wxString ClusterWeights::cellValue(int x, int y) const
 
 wxString ClusterWeights::columnCaption(int x) const
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return wxEmptyString;
 
     if ((uint)x < study->uiinfo->constraintCount())
@@ -432,7 +433,7 @@ wxString ClusterWeights::columnCaption(int x) const
 
 IRenderer::CellStyle ClusterWeights::cellStyle(int x, int y) const
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return IRenderer::cellStyleConstraintDisabled;
 
     if ((uint)x >= study->uiinfo->constraintCount())

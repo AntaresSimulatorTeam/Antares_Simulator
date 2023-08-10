@@ -104,9 +104,9 @@ void saveAreaLinksOntoDisk(Area* area)
 	BOOST_CHECK(saveAreaLinksConfigurationFileToFolder(area, fs::current_path().string().c_str()));
 }
 
-BOOST_FIXTURE_TEST_SUITE(s, Fixture)
+BOOST_AUTO_TEST_SUITE(s)
 
-BOOST_AUTO_TEST_CASE(one_link_with_default_values)
+BOOST_FIXTURE_TEST_CASE(one_link_with_default_values, Fixture)
 {
 	createLinkBetweenAreas(area_1, area_2);
 
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_default_values)
 }
 
 
-BOOST_AUTO_TEST_CASE(one_link_with_none_default_values)
+BOOST_FIXTURE_TEST_CASE(one_link_with_none_default_values, Fixture)
 {
 	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->useHurdlesCost = true;
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_none_default_values)
 }
 
 
-BOOST_AUTO_TEST_CASE(one_link_with_transmission_capacity_to_ignore__all_others_properties_are_default)
+BOOST_FIXTURE_TEST_CASE(one_link_with_transmission_capacity_to_ignore__all_others_properties_are_default, Fixture)
 {
 	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->transmissionCapacities = LocalTransmissionCapacities::null;
@@ -172,7 +172,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_transmission_capacity_to_ignore__all_others_p
 	BOOST_CHECK(files_identical(generatedIniFileName, referenceFile.name()));
 }
 
-BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_gas__ini_file_contains_matching_line)
+BOOST_FIXTURE_TEST_CASE(one_link_with_asset_type_to_gas__ini_file_contains_matching_line, Fixture)
 {
 	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->assetType = atGas;
@@ -182,7 +182,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_gas__ini_file_contains_matching
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "asset-type = gaz"));
 }
 
-BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_virtual__ini_file_contains_matching_line)
+BOOST_FIXTURE_TEST_CASE(one_link_with_asset_type_to_virtual__ini_file_contains_matching_line, Fixture)
 {
 	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->assetType = atVirt;
@@ -192,7 +192,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_virtual__ini_file_contains_matc
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "asset-type = virt"));
 }
 
-BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_other__ini_file_contains_matching_line)
+BOOST_FIXTURE_TEST_CASE(one_link_with_asset_type_to_other__ini_file_contains_matching_line, Fixture)
 {
 	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->assetType = atOther;
@@ -202,7 +202,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_other__ini_file_contains_matchi
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "asset-type = other"));
 }
 
-BOOST_AUTO_TEST_CASE(one_link_with_style_to_dot__ini_file_contains_matching_line)
+BOOST_FIXTURE_TEST_CASE(one_link_with_style_to_dot__ini_file_contains_matching_line, Fixture)
 {
 	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->style = stDot;
@@ -212,7 +212,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_style_to_dot__ini_file_contains_matching_line
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "link-style = dot"));
 }
 
-BOOST_AUTO_TEST_CASE(one_link_with_style_to_dotdash__ini_file_contains_matching_line)
+BOOST_FIXTURE_TEST_CASE(one_link_with_style_to_dotdash__ini_file_contains_matching_line, Fixture)
 {
 	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->style = stDotDash;
@@ -222,7 +222,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_style_to_dotdash__ini_file_contains_matching_
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "link-style = dotdash"));
 }
 
-BOOST_AUTO_TEST_CASE(one_link_with_synthesis_to_hourly_monthly_annual__ini_file_contains_matching_line)
+BOOST_FIXTURE_TEST_CASE(one_link_with_synthesis_to_hourly_monthly_annual__ini_file_contains_matching_line, Fixture)
 {
 	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->filterSynthesis = filterWeekly | filterMonthly | filterAnnual;
@@ -232,7 +232,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_synthesis_to_hourly_monthly_annual__ini_file_
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "filter-synthesis = weekly, monthly, annual"));
 }
 
-BOOST_AUTO_TEST_CASE(one_link_with_year_by_year_to_daily_monthly__ini_file_contains_matching_line)
+BOOST_FIXTURE_TEST_CASE(one_link_with_year_by_year_to_daily_monthly__ini_file_contains_matching_line, Fixture)
 {
 	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->filterYearByYear = filterDaily | filterMonthly;

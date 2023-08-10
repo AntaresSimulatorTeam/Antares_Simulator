@@ -1,5 +1,4 @@
 #include <antares/study.h>
-#include <antares/emergency.h>
 
 #include "../simulation/simulation.h"
 
@@ -55,6 +54,15 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 
+static char** VectorOfStringToCharPP(std::vector<std::string>& in, std::vector<char*>& pointerVec)
+{
+    std::transform(in.begin(),
+                   in.end(),
+                   std::back_inserter(pointerVec),
+                   [](std::string& str) { return str.empty() ? nullptr : str.data(); });
+    return pointerVec.data();
+}
+
 class ProblemConverter
 {
 public:
@@ -84,14 +92,20 @@ public:
         dest->NbTerm = src->NombreDeTermesDesLignes;
         dest->B = src->SecondMembre;
         dest->SensDeLaContrainte = src->Sens;
+
+        // Names
+        dest->LabelDeLaVariable = VectorOfStringToCharPP(src->NomDesVariables, mVariableNames);
+        dest->LabelDeLaContrainte = VectorOfStringToCharPP(src->NomDesContraintes, mConstraintNames);
     }
 
 private:
     std::vector<int> mVariableType;
+    std::vector<char*> mVariableNames;
+    std::vector<char*> mConstraintNames;
 };
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
-                                               Solver::IResultWriter::Ptr writer,
+                                               Solver::IResultWriter& writer,
                                                const std::string& filename)
 {
     logs.info() << "Solver MPS File: `" << filename << "'";
@@ -106,7 +120,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
         SRSwritempsprob(mps.get(), tmpPath.c_str());
     }
 
-    writer->addEntryFromFile(filename, tmpPath);
+    writer.addEntryFromFile(filename, tmpPath);
 
     removeTemporaryFile(tmpPath);
 }
@@ -119,7 +133,7 @@ fullMPSwriter::fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, uint o
 {
 }
 
-void fullMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string& filename)
+void fullMPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& filename)
 {
     OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(named_splx_problem_, writer, filename);
 }
@@ -131,7 +145,7 @@ fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver, uint optNumber) :
  I_MPS_writer(optNumber), solver_(solver)
 {
 }
-void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer,
+void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter& writer,
                                        const std::string& filename)
 {
     ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, writer, filename);

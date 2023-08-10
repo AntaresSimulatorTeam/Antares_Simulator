@@ -186,12 +186,6 @@ inline void List<NextT>::hourForEachArea(State& state, unsigned int numSpace)
 }
 
 template<class NextT>
-inline void List<NextT>::hourForEachThermalCluster(State& state)
-{
-    NextType::hourForEachThermalCluster(state);
-}
-
-template<class NextT>
 inline void List<NextT>::hourForEachLink(State& state)
 {
     NextType::hourForEachLink(state);
@@ -344,13 +338,7 @@ void List<NextT>::exportSurveyResults(bool global,
     else
         logs.info() << "Exporting the annual results";
 
-    // Structure for the survey results
-    // Getting the any report's max number of columns
-    uint nbColumnsNeededForExportation = pStudy->parameters.variablesPrintInfo.getMaxColumnsCount();
-    logs.debug() << "  (for " << nbColumnsNeededForExportation << " columns)";
-
-    auto survey
-      = std::make_shared<SurveyResults>(nbColumnsNeededForExportation, *pStudy, output, writer);
+    auto survey = std::make_shared<SurveyResults>(*pStudy, output, writer);
 
     // Year by year ?
     survey->yearByYearResults = !global;

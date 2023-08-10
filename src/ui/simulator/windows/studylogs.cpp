@@ -300,7 +300,7 @@ bool FileListProvider::onSelect(const Spotlight::IItem::Vector&)
 
 void FileListProvider::refreshFileList(bool showAll)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     wxRegEx regex(wxT("([a-zA-Z_]+)-([0-9]{8})-([0-9]{6})\\.log"));
     String folder;
     pAllSimuLogs.clear();
@@ -518,10 +518,10 @@ protected:
         //
         if (line.size() < 38 /*arbitrary*/ or line.at(0) != '[')
             return false;
-        if (line.at(25) != ']' or line.at(26) != '[')
+        if (line.at(20) != ']' or line.at(21) != '[')
             return false;
 
-        const BufferType::Size applR = line.find(']', 27);
+        const BufferType::Size applR = line.find(']', 22);
         if (BufferType::npos == applR)
             return false;
         const BufferType::Size verbosityR = line.find(']', applR + 1);
@@ -547,11 +547,11 @@ protected:
         if (message.empty() or message.startsWith(LOG_UI))
             return false;
 
-        date.adapt(bcstr + 1, 24);
+        date.adapt(bcstr + 1, 19);
 
         // Application
         if (applR > 27)
-            application.adapt(bcstr + 27, applR - 27);
+            application.adapt(bcstr + 22, applR - 22);
         else
             application.clear();
 
