@@ -35,41 +35,31 @@ namespace Data
 FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
                                                      const unsigned int& areaIndex,
                                                      const AreaName& areaName) :
-    hydro(hydro), 
-    areaIndex(areaIndex), 
-    areaName(areaName)
+    hydro_(hydro), 
+    areaIndex_(areaIndex), 
+    areaName_(areaName)
 {
-}
-
-void FinalLevelInflowsModifier::setLastSiumlationDay(uint day)
-{
-    lastSimulationDay_ = day;
-}
-
-void FinalLevelInflowsModifier::setCurrentYear(uint year)
-{
-    yearIndex = year;
 }
 
 void FinalLevelInflowsModifier::ComputeDeltaForCurrentYear()
 {
-    initialReservoirLevel = (*scenarioInitialHydroLevels_)[areaIndex][yearIndex];
-    finalReservoirLevel = (*scenarioFinalHydroLevels_)[areaIndex][yearIndex];
-    deltaReservoirLevel = initialReservoirLevel - finalReservoirLevel;
+    initialReservoirLevel_ = (*scenarioInitialHydroLevels_)[areaIndex_][yearIndex_];
+    finalReservoirLevel_ = (*scenarioFinalHydroLevels_)[areaIndex_][yearIndex_];
+    deltaReservoirLevel_ = initialReservoirLevel_ - finalReservoirLevel_;
 }
 
 void FinalLevelInflowsModifier::updateInflows()
 {
-    includeFinalReservoirLevel.at(yearIndex) = true;
-    deltaLevel.at(yearIndex) = deltaReservoirLevel;
+    includeFinalReservoirLevel.at(yearIndex_) = true;
+    deltaLevel.at(yearIndex_) = deltaReservoirLevel_;
 }
 
 double FinalLevelInflowsModifier::calculateTotalInflows() const
 {
     // calculate yearly inflows
-    const Data::DataSeriesHydro& data = *hydro.series;
-    uint tsHydroIndex = data.timeseriesNumbers[0][yearIndex];
-    auto& inflowsmatrix = hydro.series->storage;
+    const Data::DataSeriesHydro& data = *hydro_.series;
+    uint tsHydroIndex = data.timeseriesNumbers[0][yearIndex_];
+    auto& inflowsmatrix = hydro_.series->storage;
     auto& srcinflows = inflowsmatrix[tsHydroIndex < inflowsmatrix.width ? tsHydroIndex : 0];
 
     double totalYearInflows = 0.0;
@@ -81,12 +71,12 @@ double FinalLevelInflowsModifier::calculateTotalInflows() const
 bool FinalLevelInflowsModifier::preCheckStartAndEndSim() const
 {
     
-    int initReservoirLvlMonth = hydro.initializeReservoirLevelDate; // month [0-11]
+    int initReservoirLvlMonth = hydro_.initializeReservoirLevelDate; // month [0-11]
     if (lastSimulationDay_ == DAYS_PER_YEAR && initReservoirLvlMonth == 0)
         return true;
     else
     {
-        logs.error() << "Year: " << yearIndex + 1 << ". Area: " << areaName
+        logs.error() << "Year: " << yearIndex_ + 1 << ". Area: " << areaName_
                      << ". Simulation must end on day 365 and reservoir level must be "
                         "initiated in January";
         return false;
@@ -95,15 +85,15 @@ bool FinalLevelInflowsModifier::preCheckStartAndEndSim() const
 
 bool FinalLevelInflowsModifier::preCheckYearlyInflow(double totalYearInflows) const
 {
-    double reservoirCapacity = hydro.reservoirCapacity;
-    if ((-deltaReservoirLevel) * reservoirCapacity
+    double reservoirCapacity = hydro_.reservoirCapacity;
+    if ((-deltaReservoirLevel_) * reservoirCapacity
         > totalYearInflows) // ROR time-series in MW (power), SP time-series in MWh
                             // (energy)
     {
-        logs.error() << "Year: " << yearIndex + 1 << ". Area: " << areaName
+        logs.error() << "Year: " << yearIndex_ + 1 << ". Area: " << areaName_
                      << ". Incompatible total inflows: " << totalYearInflows
-                     << " with initial: " << initialReservoirLevel
-                     << " and final: " << finalReservoirLevel << " reservoir levels.";
+                     << " with initial: " << initialReservoirLevel_
+                     << " and final: " << finalReservoirLevel_ << " reservoir levels.";
         return false;
     }
     return true;
@@ -111,13 +101,13 @@ bool FinalLevelInflowsModifier::preCheckYearlyInflow(double totalYearInflows) co
 
 bool FinalLevelInflowsModifier::preCheckRuleCurves() const
 {
-    double lowLevelLastDay  = hydro.reservoirLevel[Data::PartHydro::minimum][DAYS_PER_YEAR - 1];
-    double highLevelLastDay = hydro.reservoirLevel[Data::PartHydro::maximum][DAYS_PER_YEAR - 1];
+    double lowLevelLastDay  = hydro_.reservoirLevel[Data::PartHydro::minimum][DAYS_PER_YEAR - 1];
+    double highLevelLastDay = hydro_.reservoirLevel[Data::PartHydro::maximum][DAYS_PER_YEAR - 1];
 
-    if (finalReservoirLevel < lowLevelLastDay || finalReservoirLevel > highLevelLastDay)
+    if (finalReservoirLevel_ < lowLevelLastDay || finalReservoirLevel_ > highLevelLastDay)
     {
-        logs.error() << "Year: " << yearIndex + 1 << ". Area: " << areaName
-                     << ". Specifed final reservoir level: " << finalReservoirLevel
+        logs.error() << "Year: " << yearIndex_ + 1 << ". Area: " << areaName_
+                     << ". Specifed final reservoir level: " << finalReservoirLevel_
                      << " is incompatible with reservoir level rule curve [" << lowLevelLastDay
                      << " , " << highLevelLastDay << "]";
         return false;
@@ -136,22 +126,22 @@ void FinalLevelInflowsModifier::initialize(const Matrix<double>& scenarioInitial
     scenarioInitialHydroLevels_ = &scenarioInitialHydroLevels;
     scenarioFinalHydroLevels_ = &scenarioFinalHydroLevels;
 
-    setLastSiumlationDay(lastSimulationDay);
+    lastSimulationDay_ = lastSimulationDay;
 }
 
 void FinalLevelInflowsModifier::initialize(uint year)
 {
-    setCurrentYear(year);
+    yearIndex_ = year;
     ComputeDeltaForCurrentYear();
 }
 
 
 bool FinalLevelInflowsModifier::isActive()
 {
-    return  hydro.reservoirManagement && 
-            !hydro.useWaterValue &&
-            finalReservoirLevel >= 0. &&
-            initialReservoirLevel >= 0.;
+    return  hydro_.reservoirManagement && 
+            !hydro_.useWaterValue &&
+            finalReservoirLevel_ >= 0. &&
+            initialReservoirLevel_ >= 0.;
 }
 
 bool FinalLevelInflowsModifier::makeChecks()

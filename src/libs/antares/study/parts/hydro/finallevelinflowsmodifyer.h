@@ -52,17 +52,17 @@ private:
 
     // simulation year
     // overwritten after each MC year
-    uint yearIndex;
+    uint yearIndex_;
 
     // data per area
     // data overwritten after each MC year
-    double initialReservoirLevel = -1.;
-    double finalReservoirLevel = -1.;
-    double deltaReservoirLevel;
+    double initialReservoirLevel_ = -1.;
+    double finalReservoirLevel_ = -1.;
+    double deltaReservoirLevel_;
 
-    const PartHydro& hydro;
-    const unsigned int& areaIndex;
-    const AreaName& areaName;
+    const PartHydro& hydro_;
+    const unsigned int& areaIndex_;
+    const AreaName& areaName_;
 
     const Matrix<double>* scenarioInitialHydroLevels_ = nullptr;
     const Matrix<double>* scenarioFinalHydroLevels_ = nullptr;
@@ -76,9 +76,7 @@ public:
 
 private:
     // methods:
-    void setCurrentYear(uint year);
     void ComputeDeltaForCurrentYear();
-
 
     double calculateTotalInflows() const;
 
@@ -87,9 +85,6 @@ private:
     bool preCheckYearlyInflow(double totalYearInflows) const;
 
     bool preCheckRuleCurves() const;
-
-    void setLastSiumlationDay(uint day);
-
 
 public:
     void initialize(const Matrix<double>& scenarioInitialHydroLevels,
