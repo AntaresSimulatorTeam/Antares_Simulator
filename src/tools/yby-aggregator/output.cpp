@@ -26,7 +26,7 @@
 */
 
 #include "output.h"
-#include <antares/logs.h>
+#include <logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;

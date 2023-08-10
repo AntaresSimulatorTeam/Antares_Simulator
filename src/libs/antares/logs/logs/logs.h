@@ -28,7 +28,7 @@
 #define __ANTARES_LIBS_LOGS_LOGS_H__
 
 #include <yuni/yuni.h>
-#include "../constants.h"
+#include "../../constants.h"
 
 /*!
 ** \defgroup logs Logs

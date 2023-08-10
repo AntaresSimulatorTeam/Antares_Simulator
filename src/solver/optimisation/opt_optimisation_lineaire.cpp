@@ -28,7 +28,7 @@
 #include "sim_structure_probleme_economique.h"
 #include "opt_fonctions.h"
 
-#include <antares/logs.h>
+#include <logs/logs.h>
 #include "../utils/filename.h"
 
 using namespace Antares;

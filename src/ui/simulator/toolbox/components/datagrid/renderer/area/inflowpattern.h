@@ -30,7 +30,7 @@
 #include <antares/wx-wrapper.h>
 #include "../area.h"
 #include "../matrix.h"
-#include <antares/date.h>
+#include <date/date.h>
 #include <antares/study/parts/wind/prepro.h>
 
 namespace Antares

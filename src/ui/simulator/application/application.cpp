@@ -36,7 +36,7 @@
 #include <antares/hostinfo.h>
 #include <yuni/io/file.h>
 #include <antares/jit.h>
-#include <antares/logs.h>
+#include <logs/logs.h>
 #include <antares/memory/memory.h>
 #include <wx/config.h>
 #include "../windows/message.h"

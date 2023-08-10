@@ -31,7 +31,7 @@
 #include <wx/settings.h>
 #include <wx/menu.h>
 #include <wx/sizer.h>
-#include <antares/logs.h>
+#include <logs/logs.h>
 
 using namespace Yuni;
 

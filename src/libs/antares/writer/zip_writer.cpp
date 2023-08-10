@@ -1,8 +1,8 @@
 #include <memory>
 #include <yuni/io/file.h> // Yuni::IO::File::LoadFromFile
 
-#include "zip_writer.h"
-#include <antares/benchmarking/timer.h>
+#include "private/zip_writer.h"
+#include <benchmarking/timer.h>
 
 extern "C"
 {

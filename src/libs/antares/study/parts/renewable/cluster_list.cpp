@@ -1,5 +1,5 @@
 #include "cluster_list.h"
-#include <antares/inifile/inifile.h>
+#include <inifile/inifile.h>
 #include "../../study.h"
 #include "../../area.h"
 

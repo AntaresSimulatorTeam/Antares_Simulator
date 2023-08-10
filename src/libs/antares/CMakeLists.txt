@@ -351,12 +351,6 @@ set(SRC_EXCEPTION
 	)
 source_group("exception" FILES ${SRC_EXCEPTION})
 
-set(SRC_CHECKS
-	checks/checkLoadedInputData.cpp
-	checks/checkLoadedInputData.h
-	)
-source_group("checks" FILES ${SRC_CHECKS})
-
 set(SRC_STDCXX
 	stdcxx/demangle.cpp
     # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
@@ -498,23 +492,7 @@ set(SRC
     Enum.hpp
     Enum.hxx
 )
-
-
-add_library( libantares-core-calendar
-	# separated target to reduce multiple unit compilations introduced by swap mode
-	date.h
-	date/date.h
-	date/date.cpp
-)
-
-target_link_libraries(libantares-core-calendar
-		PRIVATE yuni-static-core)
-
-target_include_directories(libantares-core-calendar
-		PRIVATE
-			${CMAKE_SOURCE_DIR}/libs
-		)
-
+add_subdirectory(date)
 add_library(libantares-core-exceptions
     ${SRC_EXCEPTION}
 )
@@ -527,26 +505,12 @@ target_include_directories(libantares-core-exceptions
 			${CMAKE_SOURCE_DIR}/libs
 		)
 
-add_library(libantares-core-checks
-    ${SRC_CHECKS}
-)
-
-target_include_directories(libantares-core-checks
-		PRIVATE
-			${CMAKE_SOURCE_DIR}/libs/antares/study
-            ${CMAKE_SOURCE_DIR}/libs/antares/logs
-			${CMAKE_SOURCE_DIR}/libs
-)
-
-target_link_libraries(libantares-core-checks
-	PRIVATE
-		yuni-static-core)
+add_subdirectory(checks)
 
 add_library(libantares-core
 	antares.h
 	${SRC}
 	${SRC_MEMORY}
-	${SRC_MATRIX}
 	${SRC_BENCHMARKING}
 	${SRC_AREAS}
 	${SRC_XCAST}
@@ -574,18 +538,18 @@ add_library(libantares-core
 #TODO : needed for include yuni : why yuni must be include first ??? cheat : made it public so everybody will have this include (should be done in yuni)
 #TODO : needed for include
 target_include_directories(libantares-core
-		PUBLIC
+		PRIVATE
 			${CMAKE_SOURCE_DIR}/libs
-			${CMAKE_SOURCE_DIR}/libs/antares/logs
 		)
 
 target_link_libraries(libantares-core
 	PUBLIC
 		yuni-static-core
 		yuni-static-uuid
-		libantares-core-calendar
+		date
+		logs
         libantares-core-exceptions
-        libantares-core-checks
+        checks
 		libantares-solver-variable-info
         result_writer
 		inifile

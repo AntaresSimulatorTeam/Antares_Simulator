@@ -26,7 +26,7 @@
 */
 
 #include <antares/antares.h>
-#include <antares/logs.h>
+#include <logs/logs.h>
 #include <antares/resources/resources.h>
 #include <map>
 #include <iostream>

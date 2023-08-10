@@ -5,8 +5,8 @@
 #pragma once
 
 #include "yuni/core/fwd.h"
-#include "antares/inifile/inifile.h"
-#include "antares/array/matrix.h"
+#include <inifile/inifile.h>
+#include "array/matrix.h"
 
 namespace Antares::Data {
 

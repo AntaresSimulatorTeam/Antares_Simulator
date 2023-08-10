@@ -34,7 +34,7 @@ set(SRC_UI_COMMON
 add_library(libantares-ui-common ${SRC_UI_COMMON})
 target_include_directories(libantares-ui-common
 		PUBLIC
-			.
+			${CMAKE_CURRENT_SOURCE_DIR}
 			${CMAKE_SOURCE_DIR}
 		)
 
@@ -89,7 +89,11 @@ set(SRC_COMPONENT_PANEL
 	component/panel/group.cpp
 )
 add_library(libantares-ui-component-panel  ${SRC_COMPONENT_PANEL})
-
+target_include_directories(
+		libantares-ui-component-panel
+		PRIVATE
+		${CMAKE_SOURCE_DIR}/libs
+)
 target_link_libraries(libantares-ui-component-panel
 		PUBLIC
 			${wxWidgets_LIBRARIES}

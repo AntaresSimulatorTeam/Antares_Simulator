@@ -28,17 +28,16 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <cassert>
-#include "date.h"
-#include <time.h>
+#include "date/date.h"
+#include <ctime>
 #include "../study/parameters.h"
 #include <yuni/io/file.h>
-#include "../logs.h"
+#include "logs/logs.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Date
+
+namespace Antares::Date
 {
 static const uint StandardDaysPerMonths[12] = {
   31, // january
@@ -684,5 +683,5 @@ void Calendar::reset()
     }
 }
 
-} // namespace Date
-} // namespace Antares
+} // namespace Antares::Date
+

@@ -1,4 +1,4 @@
-#include "ensure_queue_started.h"
+#include "private/ensure_queue_started.h"
 
 namespace Antares
 {

@@ -28,8 +28,8 @@
 #define __ANTARES_LIBS_ARRAY_CORRELATION_H__
 
 #include <yuni/yuni.h>
-#include "antares/array/matrix.h"
-#include <antares/inifile/inifile.h>
+#include "array/matrix.h"
+#include <inifile/inifile.h>
 #include "../study/fwd.h"
 #include "../study/version.h"
 

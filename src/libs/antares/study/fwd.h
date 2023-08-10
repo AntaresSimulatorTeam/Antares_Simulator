@@ -520,15 +520,6 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
 */
 RenewableGenerationModelling StringToRenewableGenerationModelling(const AnyString& text);
 
-// Format of results
-enum ResultFormat
-{
-    // Store outputs as files inside directories
-    legacyFilesDirectories = 0,
-    // Store outputs inside a single zip archive
-    zipArchive
-};
-
 // ------------------------
 // MPS export status
 // ------------------------

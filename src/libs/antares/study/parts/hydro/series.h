@@ -27,7 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 
-#include "../../../array/matrix.h"
+#include "array/matrix.h"
 #include "../../fwd.h"
 
 namespace Antares

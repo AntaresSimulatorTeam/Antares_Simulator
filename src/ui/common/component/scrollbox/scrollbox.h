@@ -27,7 +27,7 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_SCROLLBOX_H__
 #define __ANTARES_TOOLBOX_COMPONENTS_SCROLLBOX_H__
 
-#include <antares/wx-wrapper.h>
+#include <wx-wrapper.h>
 #include <wx/scrolwin.h>
 
 namespace Antares

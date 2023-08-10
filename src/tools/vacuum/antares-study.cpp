@@ -27,7 +27,7 @@
 
 #include "antares-study.h"
 #include <antares/study/study.h>
-#include <antares/logs.h>
+#include <logs/logs.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/io/directory/info.h>
 #include "io.h"

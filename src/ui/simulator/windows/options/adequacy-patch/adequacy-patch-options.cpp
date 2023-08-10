@@ -36,7 +36,7 @@
 #include "../../../application/menus.h"
 #include "../../../windows/message.h"
 #include <ui/common/component/panel.h>
-#include <antares/logs.h>
+#include <logs/logs.h>
 
 using namespace Yuni;
 using namespace Data::AdequacyPatch;

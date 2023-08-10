@@ -34,7 +34,7 @@
 #include "opt_fonctions.h"
 #include <stdio.h>
 
-#include <antares/logs.h>
+#include <logs/logs.h>
 
 using namespace Antares;
 

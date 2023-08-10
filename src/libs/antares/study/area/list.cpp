@@ -31,9 +31,9 @@
 #include "../study.h"
 #include <assert.h>
 #include "area.h"
-#include "../../array/array1d.h"
-#include "../../inifile/inifile.h"
-#include "../../logs.h"
+#include "array/array1d.h"
+#include "inifile/inifile.h"
+#include "logs/logs.h"
 #include "../memory-usage.h"
 #include "../../config.h"
 #include "../filter.h"

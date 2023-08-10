@@ -28,7 +28,7 @@
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__
 
 #include "cluster.h"
-#include "../../../array/matrix.h"
+#include "array/matrix.h"
 #include "defines.h"
 #include "../../fwd.h"
 #include <memory>

@@ -32,10 +32,11 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include "../constants.h"
-#include <stdlib.h>
-#include <assert.h>
-#include "../date.h"
-#include <antares/inifile/inifile.h>
+#include <cstdlib>
+#include <cassert>
+#include "antares/writer/antares/writer/result_format.h" //Conflit between ${CMake_Source_dir}/libs and result_writer findong "antares"
+#include "date/date.h"
+#include <inifile/inifile.h>
 #include "fwd.h"
 #include "variable-print-info.h"
 #include "parameters/adq-patch-params.h"

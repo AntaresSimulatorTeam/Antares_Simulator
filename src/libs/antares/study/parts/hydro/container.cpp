@@ -27,8 +27,8 @@
 
 #include "../../study.h"
 #include "container.h"
-#include <antares/inifile/inifile.h>
-#include "../../../array/array1d.h"
+#include <inifile/inifile.h>
+#include "array/array1d.h"
 
 using namespace Antares;
 using namespace Yuni;

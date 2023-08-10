@@ -5,7 +5,7 @@
 
 #include <antares/study/fwd.h>
 #include <yuni/core/string.h>
-#include "antares/inifile/inifile.h"
+#include <inifile/inifile.h>
 
 using namespace Yuni;
 

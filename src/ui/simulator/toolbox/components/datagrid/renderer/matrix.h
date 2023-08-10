@@ -32,7 +32,7 @@
 #include "../../../input/area.h"
 
 #include "../component.h"
-#include <antares/date.h>
+#include <date/date.h>
 #include "../../../../application/study.h"
 #include <ui/common/lock.h>
 

@@ -27,7 +27,7 @@
 
 #include <antares/writer/i_writer.h>
 #include "../study.h"
-#include "../../logs.h"
+#include "logs/logs.h"
 
 #include "store-timeseries-numbers.h"
 

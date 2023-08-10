@@ -1,5 +1,5 @@
 #include "adq-patch-params.h"
-#include "antares/logs.h"
+#include "logs/logs.h"
 
 #include <antares/study.h>
 

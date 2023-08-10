@@ -29,9 +29,9 @@
 #include <yuni/yuni.h>
 #include <fstream>
 
-#include "../inifile/inifile.h"
+#include <inifile/inifile.h>
 #include "layerdata.h"
-#include "../logs.h"
+#include "logs/logs.h"
 
 using namespace Yuni;
 

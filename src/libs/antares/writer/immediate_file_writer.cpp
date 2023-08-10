@@ -1,9 +1,9 @@
 #include <yuni/core/string.h>
 #include <yuni/io/file.h>
 
-#include "immediate_file_writer.h"
-#include "antares/io/file.h"
-#include <antares/logs/logs.h>
+#include "private/immediate_file_writer.h"
+#include <io/file.h>
+#include <logs/logs.h>
 
 
 // Create directory hierarchy (incl. root)

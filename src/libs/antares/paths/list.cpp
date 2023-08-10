@@ -33,7 +33,7 @@
 #ifdef YUNI_OS_WINDOWS
 #include <direct.h>
 #endif
-#include "../logs.h"
+#include "logs/logs.h"
 
 using namespace Yuni;
 using namespace Antares;

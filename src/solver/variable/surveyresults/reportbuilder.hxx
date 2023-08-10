@@ -32,7 +32,7 @@
 #include <yuni/core/static/types.h>
 #include <yuni/io/directory.h>
 
-#include <antares/logs.h>
+#include <logs/logs.h>
 
 #include "../endoflist.h"
 #include "../categories.h"

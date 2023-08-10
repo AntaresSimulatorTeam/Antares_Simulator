@@ -31,7 +31,7 @@
 #include <yuni/core/string.h>
 #include <yuni/core/noncopyable.h>
 #include "../fwd.h"
-#include "../../array/matrix.h"
+#include "array/matrix.h"
 #include <vector>
 #include <set>
 

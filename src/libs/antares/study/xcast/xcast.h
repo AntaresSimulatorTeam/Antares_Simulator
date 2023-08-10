@@ -28,7 +28,7 @@
 #define __ANTARES_LIBS_STUDY_XCAST_XCAST_H__
 
 #include <yuni/yuni.h>
-#include "../../array/matrix.h"
+#include "array/matrix.h"
 #include <vector>
 #include <yuni/core/noncopyable.h>
 

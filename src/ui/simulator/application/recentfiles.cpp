@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/logs.h>
+#include <logs/logs.h>
 #include "recentfiles.h"
 #include <wx/config.h>
 #include <wx/dir.h>

@@ -31,9 +31,9 @@
 #include "../../study.h"
 #include "../../memory-usage.h"
 #include "prepro.h"
-#include <antares/inifile/inifile.h>
-#include "../../../array/array1d.h"
-#include "../../../logs.h"
+#include <inifile/inifile.h>
+#include "array/array1d.h"
+#include "logs/logs.h"
 
 using namespace Antares;
 using namespace Yuni;

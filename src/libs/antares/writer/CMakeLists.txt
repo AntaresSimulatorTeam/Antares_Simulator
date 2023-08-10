@@ -1,27 +1,30 @@
 project(result-writer)
 add_library(result_writer
         # Interface class (public API)
-        i_writer.h
+        antares/writer/i_writer.h
+        antares/writer/result_format.h
 
         # Helper class
-        ensure_queue_started.h
+        private/ensure_queue_started.h
         ensure_queue_started.cpp
 
         # Generic factory (public API)
-        writer_factory.h
+        antares/writer/writer_factory.h
         writer_factory.cpp
 
         # Immediate file writer (private)
-        immediate_file_writer.h
+        private/immediate_file_writer.h
         immediate_file_writer.cpp
 
         # Add entry to zip, using a job queue (private)
         zip_writer.cpp
-        zip_writer.h)
+        private/zip_writer.h
+        antares/writer/result_format.h
+)
 
 target_include_directories(result_writer
-        PRIVATE
-        ${CMAKE_SOURCE_DIR}/libs
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 target_link_libraries(result_writer

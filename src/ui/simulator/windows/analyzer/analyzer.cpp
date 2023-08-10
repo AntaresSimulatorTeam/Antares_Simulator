@@ -51,11 +51,11 @@
 #include "../../application/main/main.h"
 #include "../../application/menus.h"
 #include "../message.h"
-#include <antares/logs.h>
-#include <antares/inifile/inifile.h>
+#include <logs/logs.h>
+#include <inifile/inifile.h>
 #include "../../application/study.h"
 #include <antares/config.h>
-#include <antares/io/statistics.h>
+#include <io/statistics.h>
 
 using namespace Yuni;
 

@@ -28,7 +28,7 @@
 #include <algorithm>
 #include "rules.h"
 #include "../study.h"
-#include "../../logs.h"
+#include "logs/logs.h"
 #include "scBuilderUtils.h"
 #include "TSnumberData.h"
 

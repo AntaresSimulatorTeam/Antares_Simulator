@@ -35,7 +35,7 @@
 #include <wx/richtext/richtextxml.h>
 #include <wx/richtext/richtexthtml.h>
 
-#include <antares/logs.h>
+#include <logs/logs.h>
 #include "toolbox/resources.h"
 #include "toolbox/locales.h"
 #include "internal-data.h"

@@ -30,7 +30,7 @@
 // TODO[FOM] Remove this, it is only required for PROBLEME_HEBDO
 // but this problem has nothing to do with PROBLEME_HEBDO
 #include <set>
-#include <antares/logs/logs.h>
+#include <logs/logs.h>
 #include <antares/study/parameters/adq-patch-params.h>
 #include "../opt_structure_probleme_a_resoudre.h"
 

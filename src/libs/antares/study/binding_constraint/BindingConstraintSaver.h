@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "antares/inifile/inifile.h"
+#include <inifile/inifile.h>
 #include "antares/study/fwd.h"
 
 namespace Antares::Data {

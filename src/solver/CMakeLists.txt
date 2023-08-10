@@ -46,8 +46,6 @@ OMESSAGE("  :: application solver")
 set(exec_name "antares-${ANTARES_PRG_VERSION}-solver")
 
 add_executable(antares-solver
-	memory/mem.h
-
 	misc/options.h
 	misc/options.cpp
 	misc/process-priority.cpp
@@ -96,6 +94,8 @@ set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
 target_link_libraries(antares-solver
 		PRIVATE
 			${ANTARES_SOLVER_LIBS}
+			benchmarking
+			result_writer
 		)
 
 target_include_directories(antares-solver

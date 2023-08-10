@@ -31,7 +31,7 @@
 #include <yuni/core/slist.h>
 #include <yuni/core/system/cpu.h>
 #include "action.h"
-#include <antares/logs.h>
+#include <logs/logs.h>
 #include "settings.h"
 #include <wx/frame.h>
 

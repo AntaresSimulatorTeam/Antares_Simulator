@@ -28,7 +28,7 @@
 #include "mini-frame.h"
 #include <ui/common/dispatcher/gui.h>
 #include <wx/timer.h>
-#include <antares/logs.h>
+#include <logs/logs.h>
 
 using namespace Yuni;
 

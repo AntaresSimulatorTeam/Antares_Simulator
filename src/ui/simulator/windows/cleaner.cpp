@@ -42,7 +42,7 @@
 #include "../toolbox/create.h"
 #include "../application/main.h"
 #include "../application/wait.h"
-#include <antares/logs.h>
+#include <logs/logs.h>
 
 using namespace Yuni;
 

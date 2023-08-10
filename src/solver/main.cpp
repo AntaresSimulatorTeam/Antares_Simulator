@@ -26,7 +26,7 @@
 */
 #include <yuni/core/system/suspend.h>
 
-#include <antares/logs.h>
+#include <logs/logs.h>
 #include "application.h"
 #include "../ui/common/winmain.hxx"  //TODO: remove that reverse dependency to UI
 

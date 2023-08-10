@@ -27,7 +27,7 @@
 #ifndef __ANTARES_APPLICATION_ABOUTBOX_ABOUTBOX_H__
 #define __ANTARES_APPLICATION_ABOUTBOX_ABOUTBOX_H__
 
-#include <antares/wx-wrapper.h>
+#include <wx-wrapper.h>
 #include <wx/dialog.h>
 
 namespace Antares

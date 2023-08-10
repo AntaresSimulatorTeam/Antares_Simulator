@@ -26,7 +26,7 @@
 */
 
 #include "atsp.h"
-#include <antares/inifile/inifile.h>
+#include <inifile/inifile.h>
 #include <yuni/io/directory.h>
 
 using namespace Yuni;

@@ -28,9 +28,9 @@
 #define __SOLVER_SIMULATION_SOLVER_HXX__
 
 #include "../variable/constants.h"
-#include <antares/logs.h>
-#include <antares/date.h>
-#include <antares/benchmarking/benchmarking.h>
+#include <logs/logs.h>
+#include <date/date.h>
+#include <benchmarking/timer.h>
 #include <antares/exception/InitializationError.hpp>
 #include "../variable/print.h"
 #include <yuni/io/io.h>

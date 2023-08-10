@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "timer.h"
+#include "benchmarking/timer.h"
 #include <yuni/core/system/gettimeofday.h>
 
 using namespace Yuni;

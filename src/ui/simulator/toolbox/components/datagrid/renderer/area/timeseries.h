@@ -32,7 +32,7 @@
 #include "../matrix.h"
 #include "../../../../input/thermal-cluster.h"
 #include "../../../../input/renewable-cluster.h"
-#include <antares/date.h>
+#include <date/date.h>
 #include "../../../../../application/study.h"
 
 namespace Antares

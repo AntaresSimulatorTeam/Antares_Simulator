@@ -30,7 +30,7 @@
 #include <yuni/yuni.h>
 #include <yuni/thread/timer.h>
 #include <yuni/core/atomic/int.h>
-#include <antares/logs.h>
+#include <logs/logs.h>
 
 class Progress final : public Yuni::Thread::Timer
 {

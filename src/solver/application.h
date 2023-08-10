@@ -3,10 +3,11 @@
 #include "misc/options.h"
 #include <antares/study.h>
 #include <antares/study/load-options.h>
-#include <antares/benchmarking/benchmarking.h>
+#include <benchmarking/info_collectors.h>
+#include <benchmarking/timer.h>
 #include "simulation/simulation.h"
 
-#include <antares/writer/i_writer.h>
+#include <writer/i_writer.h>
 
 #include <yuni/core/string.h>
 

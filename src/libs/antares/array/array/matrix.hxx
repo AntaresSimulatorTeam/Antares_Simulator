@@ -30,10 +30,10 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/core/math.h>
-#include <antares/logs/logs.h>
+#include <logs/logs.h>
 #include <utility>
 #include <cstdlib>
-#include "../io/statistics.h"
+#include "io/statistics.h"
 #include "matrix-to-buffer.h"
 
 #define ANTARES_MATRIX_CSV_COMMA "\t;,"

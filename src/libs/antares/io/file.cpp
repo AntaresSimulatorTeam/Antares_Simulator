@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "file.h"
+#include "io/file.h"
 #include <yuni/io/file.h>
 #include <yuni/core/system/suspend.h>
 #include <yuni/datetime/timestamp.h>
@@ -37,7 +37,7 @@
 #include <sys/types.h>
 #endif
 #include <errno.h>
-#include "../logs.h"
+#include "logs/logs.h"
 
 using namespace Yuni;
 using namespace Antares;

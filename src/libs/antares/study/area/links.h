@@ -31,7 +31,7 @@
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
 #include "../fwd.h"
-#include "../../array/matrix.h"
+#include "array/matrix.h"
 #include <antares/writer/i_writer.h>
 #include <set>
 

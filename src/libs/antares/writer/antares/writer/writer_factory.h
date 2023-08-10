@@ -4,9 +4,8 @@
 #include <yuni/job/queue/service.h>
 
 #include "i_writer.h"
-#include "immediate_file_writer.h"
-#include "zip_writer.h"
-
+#include "result_format.h"
+#include <benchmarking/info_collectors.h>
 
 namespace Antares::Solver
 {

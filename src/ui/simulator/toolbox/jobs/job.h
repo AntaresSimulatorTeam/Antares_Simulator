@@ -28,7 +28,7 @@
 #define __ANTARES_TOOLBOX_JOB_H__
 
 #include <antares/wx-wrapper.h>
-#include <antares/logs.h>
+#include <logs/logs.h>
 #include <yuni/core/slist/slist.h>
 #include <yuni/thread/thread.h>
 #include <yuni/thread/timer.h>

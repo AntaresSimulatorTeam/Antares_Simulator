@@ -29,8 +29,8 @@
 #include <map>
 #include <yuni/io/file.h>
 #include "appdata.h"
-#include "../logs.h"
-#include "../inifile/inifile.h"
+#include "logs/logs.h"
+#include <inifile/inifile.h>
 #include "hostname.hxx"
 #include "../config.h"
 #include <antares/fatal-error.h>

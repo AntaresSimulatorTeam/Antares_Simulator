@@ -4,11 +4,11 @@
 #include <antares/resources/resources.h>
 #include <antares/hostinfo.h>
 #include <antares/fatal-error.h>
-#include <antares/benchmarking/timer.h>
+#include <benchmarking/timer.h>
 
 #include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
-#include <antares/checks/checkLoadedInputData.h>
+#include <checks/checkLoadedInputData.h>
 #include <antares/version.h>
 
 #include "signal-handling/public.h"
