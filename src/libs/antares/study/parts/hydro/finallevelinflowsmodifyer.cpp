@@ -43,8 +43,8 @@ FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
 
 void FinalLevelInflowsModifier::ComputeDeltaForCurrentYear()
 {
-    initialReservoirLevel_ = (*scenarioInitialHydroLevels_)[areaIndex_][yearIndex_];
-    finalReservoirLevel_ = (*scenarioFinalHydroLevels_)[areaIndex_][yearIndex_];
+    initialReservoirLevel_ = (*InitialLevels_)[yearIndex_];
+    finalReservoirLevel_ = (*FinalLevels_)[yearIndex_];
     deltaReservoirLevel_ = initialReservoirLevel_ - finalReservoirLevel_;
 }
 
@@ -123,8 +123,8 @@ void FinalLevelInflowsModifier::initialize(const Matrix<double>& scenarioInitial
     includeFinalReservoirLevel = std::move(std::vector<bool>(nbYears, false));
     deltaLevel = std::move(std::vector<double>(nbYears, 0.));
 
-    scenarioInitialHydroLevels_ = &scenarioInitialHydroLevels;
-    scenarioFinalHydroLevels_ = &scenarioFinalHydroLevels;
+    InitialLevels_ = &(scenarioInitialHydroLevels.entry[areaIndex_]);
+    FinalLevels_ = &(scenarioFinalHydroLevels.entry[areaIndex_]);
 
     lastSimulationDay_ = lastSimulationDay;
 }

@@ -47,25 +47,21 @@ public:
                               const AreaName& areaName);
 
 private:
-    // Simulation Data
     uint lastSimulationDay_ = 0;
 
-    // simulation year
-    // overwritten after each MC year
-    uint yearIndex_;
-
-    // data per area
-    // data overwritten after each MC year
-    double initialReservoirLevel_ = -1.;
-    double finalReservoirLevel_ = -1.;
-    double deltaReservoirLevel_;
-
+    // Data from area (remaining unchanged throughout simulation)
     const PartHydro& hydro_;
     const unsigned int& areaIndex_;
     const AreaName& areaName_;
+    const Matrix<double>::ColumnType* InitialLevels_ = nullptr;
+    const Matrix<double>::ColumnType* FinalLevels_ = nullptr;
 
-    const Matrix<double>* scenarioInitialHydroLevels_ = nullptr;
-    const Matrix<double>* scenarioFinalHydroLevels_ = nullptr;
+    
+    // Data changing at each MC year
+    uint yearIndex_;
+    double initialReservoirLevel_ = -1.;
+    double finalReservoirLevel_ = -1.;
+    double deltaReservoirLevel_;
 
 public:
     // vectors containing data necessary for final reservoir level calculation
@@ -75,15 +71,10 @@ public:
     std::vector<double> deltaLevel;
 
 private:
-    // methods:
     void ComputeDeltaForCurrentYear();
-
     double calculateTotalInflows() const;
-
     bool preCheckStartAndEndSim() const;
-
     bool preCheckYearlyInflow(double totalYearInflows) const;
-
     bool preCheckRuleCurves() const;
 
 public:
@@ -93,11 +84,8 @@ public:
                     const uint nbYears);
 
     void initialize(uint year);
-
     bool isActive();
-
     void updateInflows();
-
     bool makeChecks();
 };
 } // namespace Antares::Data
