@@ -40,7 +40,8 @@ namespace Antares::Solver
 
             finalInflows.initialize(study.scenarioInitialHydroLevels,
                                     study.scenarioFinalHydroLevels,
-                                    study.parameters.simulationDays.end);
+                                    study.parameters.simulationDays.end,
+                                    study.parameters.nbYears);
         });
     }
 

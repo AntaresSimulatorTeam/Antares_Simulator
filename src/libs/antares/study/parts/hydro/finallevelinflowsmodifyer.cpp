@@ -41,15 +41,9 @@ FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
 {
 }
 
-void FinalLevelInflowsModifier::fillEmpty()
-{
-    includeFinalReservoirLevel.push_back(false);
-    deltaLevel.push_back(0.);
-}
-
 void FinalLevelInflowsModifier::setLastSiumlationDay(uint day)
 {
-    simEndDay = day;
+    lastSimulationDay_ = day;
 }
 
 void FinalLevelInflowsModifier::setCurrentYear(uint year)
@@ -88,7 +82,7 @@ bool FinalLevelInflowsModifier::preCheckStartAndEndSim() const
 {
     
     int initReservoirLvlMonth = hydro.initializeReservoirLevelDate; // month [0-11]
-    if (simEndDay == DAYS_PER_YEAR && initReservoirLvlMonth == 0)
+    if (lastSimulationDay_ == DAYS_PER_YEAR && initReservoirLvlMonth == 0)
         return true;
     else
     {
@@ -133,8 +127,12 @@ bool FinalLevelInflowsModifier::preCheckRuleCurves() const
 
 void FinalLevelInflowsModifier::initialize(const Matrix<double>& scenarioInitialHydroLevels,
                                            const Matrix<double>& scenarioFinalHydroLevels,
-                                           const uint lastSimulationDay)
+                                           const uint lastSimulationDay,
+                                           const uint nbYears)
 {
+    includeFinalReservoirLevel = std::move(std::vector<bool>(nbYears, false));
+    deltaLevel = std::move(std::vector<double>(nbYears, 0.));
+
     scenarioInitialHydroLevels_ = &scenarioInitialHydroLevels;
     scenarioFinalHydroLevels_ = &scenarioFinalHydroLevels;
 
@@ -143,7 +141,6 @@ void FinalLevelInflowsModifier::initialize(const Matrix<double>& scenarioInitial
 
 void FinalLevelInflowsModifier::initialize(uint year)
 {
-    fillEmpty();
     setCurrentYear(year);
     ComputeDeltaForCurrentYear();
 }

@@ -48,7 +48,7 @@ public:
 
 private:
     // Simulation Data
-    uint simEndDay;
+    uint lastSimulationDay_ = 0;
 
     // simulation year
     // overwritten after each MC year
@@ -77,7 +77,6 @@ public:
 private:
     // methods:
     void setCurrentYear(uint year);
-    void fillEmpty();
     void ComputeDeltaForCurrentYear();
 
 
@@ -95,7 +94,8 @@ private:
 public:
     void initialize(const Matrix<double>& scenarioInitialHydroLevels,
                     const Matrix<double>& scenarioFinalHydroLevels,
-                    const uint lastSimulationDay);
+                    const uint lastSimulationDay,
+                    const uint nbYears);
 
     void initialize(uint year);
 
