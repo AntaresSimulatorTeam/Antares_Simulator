@@ -95,7 +95,7 @@ bool OPT_TryToCallSimplex(const OptimizationOptions& options,
         const int NumIntervalle,
         const int optimizationNumber,
         const OptPeriodStringGenerator& optPeriodStringGenerator,
-        bool& PremierPassage,
+        bool PremierPassage,
         IResultWriter& writer,
         long long& solveTime,
         mpsWriterFactory& mps_writer_factory
@@ -219,7 +219,7 @@ bool OPT_TryToCallSimplex(const OptimizationOptions& options,
     {
         solver = ORTOOLS_ConvertIfNeeded(options.solverName, &Probleme, solver);
     }
-    const std::string& filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
+    const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(writer, filename);
@@ -267,9 +267,6 @@ bool OPT_TryToCallSimplex(const OptimizationOptions& options,
             {
                 logs.info() << " solver: resetting";
             }
-            ProbSpx = nullptr;
-            solver = nullptr;
-            PremierPassage = false;
             return false;
         }
 
@@ -293,12 +290,8 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                                                    ProblemeAResoudre->NomDesContraintes,
                                                    ProblemeAResoudre->StatutDesVariables,
                                                    ProblemeAResoudre->StatutDesContraintes);
-    bool PremierPassage = true;
-
     long long solveTime;
 
-    auto ProbSpx
-      = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
     auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
 
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
@@ -308,10 +301,15 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                                         options.useOrtools,
                                         solver);
 
+    bool PremierPassage = true;
+
     if (!OPT_TryToCallSimplex(options, problemeHebdo, Probleme,  NumIntervalle, optimizationNumber,
-            optPeriodStringGenerator, PremierPassage, writer, solveTime, mps_writer_factory))
+            optPeriodStringGenerator, true, writer, solveTime, mps_writer_factory))
+    {
+        PremierPassage = false;
         OPT_TryToCallSimplex(options, problemeHebdo, Probleme,  NumIntervalle, optimizationNumber,
-                optPeriodStringGenerator, PremierPassage, writer, solveTime, mps_writer_factory);
+                optPeriodStringGenerator, false, writer, solveTime, mps_writer_factory);
+    }
 
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
@@ -379,7 +377,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         }
 
         auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
-        const std::string& filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
+        const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
         mps_writer_on_error->runIfNeeded(writer, filename);
 
         return false;
