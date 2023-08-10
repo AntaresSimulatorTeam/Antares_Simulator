@@ -95,7 +95,7 @@ public:
     using DisabledThermalClusterList = std::set<ClusterName>;
 
     //! Extension filename
-    using FileExtension = Yuni::CString<8, false>;
+    using FileExtension = std::string;
 
 public:
     /*!
