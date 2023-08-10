@@ -52,7 +52,10 @@ bool CheckFinalReservoirLevelsForArea(Data::FinalLevelInflowsModifier & finalInf
     finalInflows.setCurrentYear(year);
     finalInflows.ComputeDelta();
 
-    if (!finalInflows.isActive() || !finalInflows.makeChecks())
+    if (!finalInflows.isActive())
+        return true;
+
+    if (!finalInflows.makeChecks())
         return false;
 
     finalInflows.storeDeltaLevels();
