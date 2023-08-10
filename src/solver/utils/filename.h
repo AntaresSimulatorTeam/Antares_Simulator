@@ -3,7 +3,6 @@
 #include <string>
 #include <memory>
 #include "../optimisation/opt_period_string_generator_base.h"
-#include <yuni/core/string.h> // TODO[FOM] Remove this include
 
 std::shared_ptr<OptPeriodStringGenerator> createOptPeriodAsString(bool isOptimizationWeekly,
                                                                   unsigned int day,
