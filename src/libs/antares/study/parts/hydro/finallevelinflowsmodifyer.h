@@ -59,14 +59,14 @@ private:
     double initialReservoirLevel = -1.;
     double finalReservoirLevel = -1.;
     double deltaReservoirLevel;
-    double reservoirCapacity;
-    double lowLevelLastDay;
-    double highLevelLastDay;
-    int initReservoirLvlMonth;
 
     const PartHydro& hydro;
     const unsigned int& areaIndex;
     const AreaName& areaName;
+
+    const Matrix<double>* scenarioInitialHydroLevels_ = nullptr;
+    const Matrix<double>* scenarioFinalHydroLevels_ = nullptr;
+
 public:
     // vectors containing data necessary for final reservoir level calculation
     // for one area and all MC years
@@ -77,8 +77,10 @@ public:
 
 private:
     // methods:
-
+    void setCurrentYear(uint year);
     void fillEmpty();
+    void ComputeDeltaForCurrentYear();
+
 
     double calculateTotalInflows() const;
 
@@ -89,18 +91,15 @@ private:
     bool preCheckRuleCurves() const;
 
     void setLastSiumlationDay(uint day);
-    void setCurrentYear(uint year);
 
-    void initializePerAreaData(const Matrix<double>& scenarioInitialHydroLevels,
-                               const Matrix<double>& scenarioFinalHydroLevels);
-
-    void ruleCurveForSimEndReal();
 
 public:
     void initialize(const Matrix<double>& scenarioInitialHydroLevels,
                     const Matrix<double>& scenarioFinalHydroLevels,
-                    const uint lastSimulationDay,
-                    uint year);
+                    const uint lastSimulationDay);
+
+    void initialize(uint year);
+
     bool isActive();
 
     void updateInflows();

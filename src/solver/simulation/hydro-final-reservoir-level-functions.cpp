@@ -31,19 +31,27 @@
 namespace Antares::Solver
 {
 
-void prepareFinalReservoirLevelDataPerMcY(Data::Study& study, uint year)
+
+    void initializeFinalLevelData(Data::Study& study)
+    {
+        study.areas.each([&study](Data::Area& area)
+        {
+            auto& finalInflows = area.hydro.finalLevelInflowsModifier;
+
+            finalInflows.initialize(study.scenarioInitialHydroLevels,
+                                    study.scenarioFinalHydroLevels,
+                                    study.parameters.simulationDays.end);
+        });
+    }
+
+
+void updateInflowsDueToFinalLevels(Data::Study& study, uint year)
 {
     study.areas.each([&study, &year](Data::Area& area)
     {
         auto& finalInflows = area.hydro.finalLevelInflowsModifier;
-        auto& scenarioInitialHydroLevels = study.scenarioInitialHydroLevels;
-        auto& scenarioFinalHydroLevels = study.scenarioFinalHydroLevels;
-        auto& parameters = study.parameters;
-
-        finalInflows.initialize(scenarioInitialHydroLevels, 
-                                scenarioFinalHydroLevels, 
-                                parameters.simulationDays.end,
-                                year);
+        
+        finalInflows.initialize(year);
 
         if (!finalInflows.isActive())
             return;
@@ -59,11 +67,13 @@ void prepareFinalReservoirLevelDataPerMcY(Data::Study& study, uint year)
 
 void prepareFinalReservoirLevelData(Data::Study& study)
 {
-    uint numberMCYears = study.scenarioFinalHydroLevels.height;
+    initializeFinalLevelData(study);
+    
+    uint nbYears = study.parameters.nbYears;
 
-    for (uint yearIndex = 0; yearIndex != numberMCYears; ++yearIndex)
+    for (uint year = 0; year != nbYears; ++year)
     {
-        prepareFinalReservoirLevelDataPerMcY(study, yearIndex);
+        updateInflowsDueToFinalLevels(study, year);
     }
 }
 
