@@ -347,7 +347,7 @@ void ISimulation<Impl>::run()
         if (parameters.useCustomScenario)
         {
             ApplyCustomScenario(study);
-            prepareFinalReservoirLevelData(study);
+            CheckFinalReservoirLevelsInput(study);
         }
 
         // Launching the simulation for all years
