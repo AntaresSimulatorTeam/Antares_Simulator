@@ -210,7 +210,7 @@ void MapNotebook::MapTabs::drawOrientationTop(wxDC& dc)
     if (pNotebook.pDisplayTitle && pNotebook.pTabsVisible)
     {
         if (pNotebook.pAlwaysDisplayTab || pNotebook.pPages.size() > 2
-            || (pNotebook.pPages.size() == 2 && Data::Study::Current::Get()->showAllLayer))
+            || (pNotebook.pPages.size() == 2 && GetCurrentStudy()->showAllLayer))
         {
             switch (pNotebook.pAlignment)
             {
@@ -664,7 +664,7 @@ void MapNotebook::TabTextCtrl::OnTextEnter(wxCommandEvent& evt)
     }
     if (pPage != pNotebook->pPages[0])
     {
-        auto study = Data::Study::Current::Get();
+        auto study = GetCurrentStudy();
 
         auto layerItEnd = study->layers.end();
         for (auto layerIt = study->layers.begin(); layerIt != layerItEnd; layerIt++)

@@ -151,7 +151,7 @@ MemoryStatistics::MemoryStatistics(wxWindow* parent) :
     pData = new Antares::Private::Window::MemoryStatisticsData();
 
     // Informations about the study
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     wxColour defaultBgColor = GetBackgroundColour();
     SetBackgroundColour(wxColour(255, 255, 255));
@@ -371,7 +371,7 @@ void MemoryStatistics::refreshInformation()
     }
 
     // The study
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     // Disk free
     {

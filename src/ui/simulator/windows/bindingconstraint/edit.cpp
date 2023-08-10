@@ -241,7 +241,7 @@ void BindingConstraintInfoEditor::onCancel(void*)
 
 void BindingConstraintInfoEditor::onSave(void*)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
 

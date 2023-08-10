@@ -220,12 +220,12 @@ void ThermalCluster::renameAggregate(Antares::Data::ThermalCluster* cluster,
 {
     using namespace Data;
     WIP::Locker wip;
-    if (cluster && pArea && Study::Current::Valid())
+    if (cluster && pArea && CurrentStudyIsValid())
     {
         ClusterName newPlantName;
         wxStringToString(newName, newPlantName);
 
-        Study::Current::Get()->clusterRename(cluster, newPlantName);
+        GetCurrentStudy()->clusterRename(cluster, newPlantName);
         MarkTheStudyAsModified();
     }
     if (broadcast)
@@ -257,7 +257,7 @@ void ThermalCluster::evtPopupDeleteAll(wxCommandEvent&)
 void ThermalCluster::internalDeletePlant(void*)
 {
     // Nothing is/was selected. Aborting.
-    if (!pArea || !pLastSelectedThermalCluster || not Data::Study::Current::Valid())
+    if (!pArea || !pLastSelectedThermalCluster || not CurrentStudyIsValid())
         return;
 
     // The thermal cluster to delete
@@ -294,7 +294,7 @@ void ThermalCluster::internalDeletePlant(void*)
         OnStudyBeginUpdate();
 
         // Because we may need to update this afterwards
-        auto study = Data::Study::Current::Get();
+        auto study = GetCurrentStudy();
         study->scenarioRulesLoadIfNotAvailable();
 
         // Update the list
@@ -365,7 +365,7 @@ void ThermalCluster::internalDeleteAll(void*)
 
     Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     // If the pointer has been, it is guaranteed to be valid
     Window::Message message(
@@ -383,7 +383,7 @@ void ThermalCluster::internalDeleteAll(void*)
         OnStudyBeginUpdate();
 
         // We have to rebuild the scenario builder data, if required
-        ScenarioBuilderUpdater updaterSB(*Data::Study::Current::Get());
+        ScenarioBuilderUpdater updaterSB(*GetCurrentStudy());
 
         // invalidating the parent area
         pArea->forceReload();
@@ -422,7 +422,7 @@ void ThermalCluster::internalDeleteAll(void*)
 void ThermalCluster::internalAddPlant(void*)
 {
     WIP::Locker wip;
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     if (!(!study) && pArea)
     {
@@ -484,7 +484,7 @@ void ThermalCluster::internalClonePlant(void*)
     const Antares::Data::ThermalCluster& selectedPlant
       = *pLastSelectedThermalCluster->thermalAggregate();
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study) && pArea)
     {
         onThermalClusterChanged(nullptr);
@@ -588,7 +588,7 @@ void ThermalCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr i
 
         Data::BindingConstraintsRepository::Set constraintlist;
 
-        auto study = Data::Study::Current::Get();
+        auto study = GetCurrentStudy();
 
         const auto cEnd = study->bindingConstraints.end();
         for (auto i = study->bindingConstraints.begin(); i != cEnd; ++i)
