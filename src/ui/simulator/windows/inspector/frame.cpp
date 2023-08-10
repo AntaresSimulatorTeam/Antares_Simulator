@@ -703,7 +703,7 @@ void Frame::apply(const InspectorData::Ptr& data)
 
     wxSizer* sizer = GetSizer();
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     wxPGProperty* p;
     bool hide;
     bool multiple;
@@ -1066,7 +1066,7 @@ void Frame::apply(const InspectorData::Ptr& data)
 
 void Frame::onLoadUserNotes()
 {
-    if (pNotes and Data::Study::Current::Valid())
+    if (pNotes and CurrentIsValid())
         pNotes->loadFromStudy();
 }
 

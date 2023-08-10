@@ -141,7 +141,7 @@ void PreparePasteFromClipboard(const String& text, bool forceDialog)
     //   in order to check conflicts.
     if (handler == "com.rte-france.antares.study")
     {
-        auto study = Data::Study::Current::Get();
+        auto study = GetCurrentStudy();
         if (!(!study))
             Antares::ExtSource::Handler::AntaresStudy(study, text, line + 1, map, forceDialog);
         return;

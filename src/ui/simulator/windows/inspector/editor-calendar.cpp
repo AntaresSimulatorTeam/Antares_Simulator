@@ -73,7 +73,7 @@ bool StudyCalendarBtnEditor::OnEvent(wxPropertyGrid* grid,
 {
     if (event.GetEventType() == wxEVT_COMMAND_BUTTON_CLICKED)
     {
-        auto study = Data::Study::Current::Get();
+        auto study = GetCurrentStudy();
         if (!study)
             return false;
 

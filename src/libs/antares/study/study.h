@@ -99,26 +99,6 @@ public:
 
 public:
     /*!
-    ** \brief Operations related to the global current study
-    **
-    ** \warning These methods should be removed as soon as possible
-    */
-    struct Current
-    {
-        /*!
-        ** \brief Retrieve the current Study (if any)
-        */
-        static Study::Ptr Get();
-        /*!
-        ** \brief Set the current study
-        */
-        static void Set(Study::Ptr study);
-        //! Get if the current study is valid
-        static bool Valid();
-
-    }; // Current
-
-    /*!
     ** \brief Extract the title of a study
     **
     ** \param folder A study folder

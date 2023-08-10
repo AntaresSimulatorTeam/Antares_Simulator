@@ -452,8 +452,7 @@ set(SRC
 	study/runtime.h
 	study/study.h
 	study/study.hxx
-	study/current.cpp
-	study/fwd.h
+        study/fwd.h
 	study/fwd.cpp
 	study.h
 	study/estimate.memory-footprint.cpp

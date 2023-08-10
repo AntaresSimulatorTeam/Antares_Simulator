@@ -131,8 +131,6 @@ void Application::prepare(int argc, char* argv[])
 
     // Allocate a study
     pStudy = std::make_shared<Antares::Data::Study>(true /* for the solver */);
-    //TODO: still necessary for emergency shutdown, to be removed
-    Antares::Data::Study::Current::Set(pStudy);
 
     // Setting global variables for backward compatibility
     pParameters = &(pStudy->parameters);

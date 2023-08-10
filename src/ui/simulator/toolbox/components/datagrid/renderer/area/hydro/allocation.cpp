@@ -49,24 +49,24 @@ HydroAllocation::~HydroAllocation()
 
 bool HydroAllocation::valid() const
 {
-    return Data::Study::Current::Valid();
+    return CurrentIsValid();
 }
 
 int HydroAllocation::width() const
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     return !(!study) ? study->areas.size() : 0;
 }
 
 int HydroAllocation::height() const
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     return !(!study) ? study->areas.size() : 0;
 }
 
 wxString HydroAllocation::columnCaption(int colIndx) const
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     return (study && (uint)colIndx < study->areas.size())
              ? wxStringFromUTF8(" hydro \n " + study->areas[colIndx]->name)
              : wxString(); // MBO 21/05/2014 - #22
@@ -74,7 +74,7 @@ wxString HydroAllocation::columnCaption(int colIndx) const
 
 wxString HydroAllocation::rowCaption(int rowIndx) const
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     return (study && (uint)rowIndx < study->areas.size())
              ? wxStringFromUTF8("load " + study->areas[rowIndx]->name)
              : wxString(); // MBO 21/05/2014 - #22
@@ -82,7 +82,7 @@ wxString HydroAllocation::rowCaption(int rowIndx) const
 
 wxString HydroAllocation::cellValue(int x, int y) const
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         auto colArea = (uint)x;
@@ -103,7 +103,7 @@ wxString HydroAllocation::cellValue(int x, int y) const
 
 double HydroAllocation::cellNumericValue(int x, int y) const
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         auto colArea = (uint)x;
@@ -125,7 +125,7 @@ bool HydroAllocation::cellValue(int x, int y, const String& value)
     if (!value.to(v))
         return false;
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         auto colArea = (uint)x;

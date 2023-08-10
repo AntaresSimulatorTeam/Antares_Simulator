@@ -93,11 +93,11 @@ public:
                         const Spotlight::SearchToken::Vector& tokens,
                         const Yuni::String& text)
     {
-        if (not Data::Study::Current::Valid())
+        if (not CurrentIsValid())
             return;
 
         String tmp;
-        auto& study = *Data::Study::Current::Get();
+        auto& study = *GetCurrentStudy();
 
         const Spotlight::SearchToken::Vector::const_iterator tend = tokens.end();
         Data::BindingConstraintsRepository::iterator end = study.bindingConstraints.end();
@@ -173,7 +173,7 @@ public:
 
     virtual bool onSelect(Spotlight::IItem::Ptr& item)
     {
-        if (not Data::Study::Current::Valid())
+        if (not CurrentIsValid())
             return false;
 
         GUILocker locker;
@@ -189,7 +189,7 @@ public:
 
     virtual bool onDoubleClickSelect(Spotlight::IItem::Ptr& item)
     {
-        if (not Data::Study::Current::Valid())
+        if (not CurrentIsValid())
             return false;
 
         GUILocker locker;

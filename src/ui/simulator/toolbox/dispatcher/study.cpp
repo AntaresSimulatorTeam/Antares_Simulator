@@ -52,7 +52,7 @@ protected:
     virtual void onExecute()
     {
         Forms::ApplWnd* mainFrm = Forms::ApplWnd::Instance();
-        if (Data::Study::Current::Valid())
+        if (CurrentIsValid())
         {
             if (pForce || mainFrm->wouldYouLikeToSaveTheStudy())
                 ::Antares::CloseTheStudy(true);
@@ -170,7 +170,7 @@ private:
 
 void StudyOpen(const String& folder, bool force)
 {
-    if (force || not Data::Study::Current::Valid() || !StudyHasBeenModified())
+    if (force || not CurrentIsValid() || !StudyHasBeenModified())
     {
         // Close the study first
         StudyClose(true);

@@ -298,9 +298,9 @@ void Connections::update()
     // Set all items at once
     pListbox->DeleteAllItems();
 
-    if (not Data::Study::Current::Valid())
+    if (not CurrentIsValid())
         return;
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     pListbox->Freeze();
 

@@ -25,7 +25,6 @@ void initializeStudy(Study::Ptr study)
     study->resultWriter = std::make_shared<NoOPResultWriter>();
     study->parameters.reset();
     study->maxNbYearsInParallel = 1;
-    Data::Study::Current::Set(study);
 }
 
 void setNumberMCyears(Study::Ptr study, unsigned int nbYears)
@@ -235,10 +234,10 @@ public:
     std::shared_ptr<ISimulation<Economy>> get() { return simulation_; }
 
 private:
+    std::shared_ptr<Study> study_;  //FIXME: study_ needs to outlive simulation_, because hydro management destructions uses study
     std::shared_ptr<ISimulation<Economy>> simulation_;
     NullDurationCollector nullDurationCollector_;
     Settings settings_;
-    std::shared_ptr<Study> study_;
 };
 
 void SimulationHandler::create()

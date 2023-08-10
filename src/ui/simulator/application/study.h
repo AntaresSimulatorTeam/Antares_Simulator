@@ -74,6 +74,11 @@ SaveResult SaveStudy();
 */
 SaveResult SaveStudyAs(const Yuni::String& path, bool copyoutput, bool copyuserdata, bool copylogs);
 
+void SetCurrentStudy(std::shared_ptr<Data::Study> study);
+std::shared_ptr<Data::Study> GetCurrentStudy();
+bool CurrentIsValid();
+
+
 /*!
 ** \brief Export the current study map into a folder
 */

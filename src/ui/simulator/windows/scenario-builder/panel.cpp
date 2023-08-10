@@ -143,9 +143,9 @@ void Panel::scenarioBuilderDataAreLoaded()
 
 void Panel::update()
 {
-    if (not Data::Study::Current::Valid()) // should never happen here
+    if (not CurrentIsValid()) // should never happen here
         return;
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
     if (!study.scenarioRules)
     {
         // This may happen sometimes, especially at the creation of the component
@@ -240,13 +240,13 @@ void Panel::onFileMenu(Antares::Component::Button&, wxMenu& menu, void*)
                  nullptr,
                  this);
 
-    if (not Data::Study::Current::Valid())
+    if (not CurrentIsValid())
     {
         logs.error() << "[scenario-builder] new ruleset: The data are not loaded";
         return;
     }
 
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
     if (!study.scenarioRules)
     {
         logs.error() << "[scenario-builder] new ruleset: The data are not loaded";
@@ -393,13 +393,13 @@ void Panel::onFileMenu(Antares::Component::Button&, wxMenu& menu, void*)
 
 void Panel::onActiveMenu(Antares::Component::Button&, wxMenu& menu, void*)
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentIsValid())
     {
         logs.error() << "[scenario-builder] new ruleset: The data are not loaded";
         return;
     }
 
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
     if (!study.scenarioRules)
     {
         logs.error() << "[scenario-builder] new ruleset: The data are not loaded";
@@ -449,13 +449,13 @@ void Panel::onActiveMenu(Antares::Component::Button&, wxMenu& menu, void*)
 
 void Panel::onFileNew(wxCommandEvent&)
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentIsValid())
     {
         logs.error() << "[scenario-builder] new ruleset: The data are not loaded";
         return;
     }
 
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
     if (!study.scenarioRules)
     {
         logs.error() << "[scenario-builder] new ruleset: The data are not loaded";
@@ -505,13 +505,13 @@ void Panel::onFileDelete(wxCommandEvent& evt)
     if (!rules)
         return;
 
-    if (not Data::Study::Current::Valid())
+    if (not CurrentIsValid())
     {
         logs.error() << "[scenario-builder] delete: The data are not loaded";
         return;
     }
 
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
     if (!study.scenarioRules)
     {
         logs.error() << "[scenario-builder] delete: The data are not loaded";
@@ -559,13 +559,13 @@ void Panel::onFileRename(wxCommandEvent& evt)
     if (!rules)
         return;
 
-    if (not Data::Study::Current::Valid())
+    if (not CurrentIsValid())
     {
         logs.error() << "[scenario-builder] new ruleset: The data are not loaded";
         return;
     }
 
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
     if (!study.scenarioRules)
     {
         logs.error() << "[scenario-builder] new ruleset: The data are not loaded";
@@ -662,13 +662,13 @@ void Panel::onActiveRuleset(wxCommandEvent& evt)
     if (!rules)
         return;
 
-    if (not Data::Study::Current::Valid())
+    if (not CurrentIsValid())
     {
         logs.error() << "[scenario-builder] active: The data are not loaded";
         return;
     }
 
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
     if (!study.scenarioRules)
     {
         logs.error() << "[scenario-builder] active: The data are not loaded";

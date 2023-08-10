@@ -122,7 +122,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
     SetLabel(wxT("Adequacy Patch Options"));
     SetTitle(wxT("Adequacy Patch Options"));
 
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     // Background color
     wxColour defaultBgColor = GetBackgroundColour();
@@ -316,7 +316,7 @@ void AdequacyPatchOptions::onClose(const void*)
 
 void AdequacyPatchOptions::onResetToDefault(void*)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!(!studyptr))
     {
         Window::Message message(this,
@@ -344,7 +344,7 @@ void AdequacyPatchOptions::onInternalMotion(wxMouseEvent&)
 
 void AdequacyPatchOptions::refresh()
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
     // The current study
@@ -517,7 +517,7 @@ void AdequacyPatchOptions::onSelectModeIgnore(wxCommandEvent&)
 
 void AdequacyPatchOptions::onSelectPtoIsDens(wxCommandEvent&)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if ((!(!study))
         && (study->parameters.adqPatchParams.curtailmentSharing.priceTakingOrder != AdqPatchPTO::isDens))
     {
@@ -529,7 +529,7 @@ void AdequacyPatchOptions::onSelectPtoIsDens(wxCommandEvent&)
 
 void AdequacyPatchOptions::onSelectPtoIsLoad(wxCommandEvent&)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if ((!(!study))
         && (study->parameters.adqPatchParams.curtailmentSharing.priceTakingOrder != AdqPatchPTO::isLoad))
     {
@@ -556,9 +556,9 @@ wxTextCtrl* AdequacyPatchOptions::insertEdit(wxWindow* parent,
 
 void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
 {
-    if (!Data::Study::Current::Valid())
+    if (!CurrentIsValid())
         return;
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     int id = evt.GetId();
 

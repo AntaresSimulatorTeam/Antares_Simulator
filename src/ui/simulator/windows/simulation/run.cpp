@@ -206,7 +206,7 @@ Run::Run(wxWindow* parent, bool preproOnly) :
     assert(parent);
 
     // Informations about the study
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     pThread = study.createThreadToEstimateInputMemoryUsage();
     pThread->start();
@@ -355,9 +355,9 @@ Run::Run(wxWindow* parent, bool preproOnly) :
     // When opening the Run window, the solver mode is default.
     // Therefore, the number of cores must be set (back) to the value associated with default mode
     // (== 1).
-    uint& minNbCores = Data::Study::Current::Get()
+    uint& minNbCores = GetCurrentStudy()
                          ->minNbYearsInParallel; // For run window's simulation cores field.
-    uint& maxNbCores = Data::Study::Current::Get()->maxNbYearsInParallel; // For RAM estimation
+    uint& maxNbCores = GetCurrentStudy()->maxNbYearsInParallel; // For RAM estimation
     minNbCores = 1;
     maxNbCores = 1;
 
@@ -470,7 +470,7 @@ void Run::estimateMemoryUsage()
     pWarnAboutMemoryLimit = false;
     pWarnAboutDiskLimit = false;
 
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     // The study
     if (!studyptr)
         return;
@@ -655,7 +655,7 @@ int Run::checkForLowResources()
 
 void Run::onRun(void*)
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentIsValid())
         return;
 
     bool canNotifyUserForLowResources = true;
@@ -740,7 +740,7 @@ void Run::onRun(void*)
     Hide();
 
     // Run the simulation
-    RunSimulationOnTheStudy(Data::Study::Current::Get(),
+    RunSimulationOnTheStudy(GetCurrentStudy(),
                             simulationName,
                             commentFile,
                             pIgnoreWarnings->GetValue(),                     // Ignore warnings
@@ -776,9 +776,9 @@ void Run::updateMonteCarloYears()
     }
     else
     {
-        if (Data::Study::Current::Valid())
+        if (CurrentIsValid())
         {
-            uint y = Data::Study::Current::Get()->parameters.nbYears;
+            uint y = GetCurrentStudy()->parameters.nbYears;
             if (y)
             {
                 pMonteCarloYears->SetLabel(wxString() << y);
@@ -816,15 +816,15 @@ void Run::updateNbCores()
     assert(pNbCores);
     assert(pBtnRun);
 
-    if (Data::Study::Current::Valid())
+    if (CurrentIsValid())
     {
         // Minimum number of years in a set of parallel years (reduction from raw number of cores
         // chosen by user).
-        uint minNbCores = Data::Study::Current::Get()->minNbYearsInParallel;
+        uint minNbCores = GetCurrentStudy()->minNbYearsInParallel;
 
         // Number of cores before any reduction, that is based on nb of cores level (advanced
         // parameters)
-        uint nbCoresRaw = Data::Study::Current::Get()->nbYearsParallelRaw;
+        uint nbCoresRaw = GetCurrentStudy()->nbYearsParallelRaw;
 
         if (minNbCores)
         {
@@ -890,12 +890,12 @@ void Run::onSelectMode(wxCommandEvent& evt)
     // of cores is set to 1)
 
     // Needed For RAM estimation
-    uint& maxNbCores = Data::Study::Current::Get()->maxNbYearsInParallel;
-    uint maxNbCoresParallelMode = Data::Study::Current::Get()->maxNbYearsInParallel_save;
+    uint& maxNbCores = GetCurrentStudy()->maxNbYearsInParallel;
+    uint maxNbCoresParallelMode = GetCurrentStudy()->maxNbYearsInParallel_save;
 
     // Needed for run window's simulation cores field
-    uint& minNbCores = Data::Study::Current::Get()->minNbYearsInParallel;
-    uint minNbCoresParallelMode = Data::Study::Current::Get()->minNbYearsInParallel_save;
+    uint& minNbCores = GetCurrentStudy()->minNbYearsInParallel;
+    uint minNbCoresParallelMode = GetCurrentStudy()->minNbYearsInParallel_save;
 
     if (featuresAlias[pFeatureIndex] == Solver::parallel)
     {

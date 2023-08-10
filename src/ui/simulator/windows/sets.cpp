@@ -179,7 +179,7 @@ void Sets::onUserNotesStyleChanged(wxRichTextEvent&)
 
 void Sets::notifyChanges()
 {
-    if (Data::Study::Current::Valid() and not pLocked)
+    if (CurrentIsValid() and not pLocked)
     {
         saveToStudy();
         MarkTheStudyAsModified();
@@ -209,9 +209,9 @@ void Sets::onSetsModified(Sets* sender)
 void Sets::onNewSet(void*)
 {
     assert(pRichEdit);
-    if (not Data::Study::Current::Valid())
+    if (not CurrentIsValid())
         return;
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
     int numberOfSets = study.setsOfAreas.size() + 1;
     long x;
     long y;
@@ -313,7 +313,7 @@ void Sets::onAdd(void*)
     long y;
     pRichEdit->PositionToXY(pRichEdit->GetInsertionPoint(), &x, &y);
     bool first = true;
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (Antares::Window::Inspector::SelectionAreaCount())
     {
         auto end = study->areas.end();
@@ -352,7 +352,7 @@ void Sets::onRemove(void*)
     long y;
     pRichEdit->PositionToXY(pRichEdit->GetInsertionPoint(), &x, &y);
     bool first = true;
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (Antares::Window::Inspector::SelectionAreaCount())
     {
         auto end = study->areas.end();
@@ -395,7 +395,7 @@ void Sets::onCheck(void*)
       pRichEdit->XYToPosition(pRichEdit->GetLineLength(pRichEdit->GetNumberOfLines() - 1),
                               pRichEdit->GetNumberOfLines() - 1),
       blackTxt);
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     int max = pRichEdit->GetNumberOfLines();
     auto end = study->areas.end();
     for (int i = 0; i < max; i++)
@@ -531,9 +531,9 @@ void Sets::loadFromStudy()
 {
     if (!pRichEdit)
         return;
-    if (not Data::Study::Current::Valid())
+    if (not CurrentIsValid())
         return;
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     if (not pTempFile)
     {
@@ -569,7 +569,7 @@ void Sets::loadFromStudy()
 
 void Sets::saveToStudy()
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!pRichEdit || !study)
         return;
     if (!pTempFile)

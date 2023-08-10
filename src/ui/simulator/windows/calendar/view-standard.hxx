@@ -167,7 +167,7 @@ static const wxFont fontBold(
   wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).Bold().FaceName("Tahoma"));
 
 CalendarViewStandard::CalendarViewStandard(wxWindow* parent, CalendarSelect& dialog) :
- Panel(parent), calendar(Data::Study::Current::Get()->calendar), pDialog(dialog)
+ Panel(parent), calendar(GetCurrentStudy()->calendar), pDialog(dialog)
 {
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Required by both GTK and Windows
     SetSize(recommendedWindowWidth, recommendedWindowHeight);
