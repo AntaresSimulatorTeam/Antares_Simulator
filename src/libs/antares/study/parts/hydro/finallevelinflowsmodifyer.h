@@ -58,7 +58,6 @@ private:
 
     
     // Data changing at each MC year
-    uint yearIndex_;
     double initialReservoirLevel_ = -1.;
     double finalReservoirLevel_ = -1.;
     double deltaReservoirLevel_;
@@ -71,10 +70,10 @@ public:
     std::vector<double> deltaLevel;
 
 private:
-    double calculateTotalInflows() const;
-    bool preCheckStartAndEndSim() const;
-    bool preCheckYearlyInflow(double totalYearInflows) const;
-    bool preCheckRuleCurves() const;
+    double calculateTotalInflows(uint year) const;
+    bool preCheckStartAndEndSim(uint year) const;
+    bool preCheckYearlyInflow(double totalYearInflows, uint year) const;
+    bool preCheckRuleCurves(uint year) const;
 
 public:
     void initialize(const Matrix<double>& scenarioInitialHydroLevels,
@@ -82,11 +81,10 @@ public:
                     const uint lastSimulationDay,
                     const uint nbYears);
 
-    void setCurrentYear(uint year);
-    void ComputeDelta();
+    void ComputeDelta(uint year);
     bool isActive();
-    void storeDeltaLevels();
-    bool makeChecks();
+    void storeDeltaLevels(uint year);
+    bool makeChecks(uint year);
 };
 } // namespace Antares::Data
 

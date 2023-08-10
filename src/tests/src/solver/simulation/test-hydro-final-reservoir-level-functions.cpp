@@ -120,8 +120,7 @@ BOOST_AUTO_TEST_CASE(initialize_modifier_for_area_1___modifier_is_active)
                                scenarioFinalHydroLevels,
                                parameters.simulationDays.end,
                                parameters.nbYears);
-    finLevInfModify.setCurrentYear(year);
-    finLevInfModify.ComputeDelta();
+    finLevInfModify.ComputeDelta(year);
 
     BOOST_CHECK_EQUAL(finLevInfModify.isActive(), true);
 }
@@ -141,8 +140,7 @@ BOOST_AUTO_TEST_CASE(Testing_initializeData_function_for_area_1_fail_resManageme
                                scenarioFinalHydroLevels,
                                parameters.simulationDays.end, 
                                parameters.nbYears);
-    finLevInfModify.setCurrentYear(year);
-    finLevInfModify.ComputeDelta();
+    finLevInfModify.ComputeDelta(year);
 
     // check when reservoirManagement = false
     BOOST_CHECK_EQUAL(finLevInfModify.isActive(), false);
@@ -163,8 +161,7 @@ BOOST_AUTO_TEST_CASE(Testing_initializeData_function_for_area_1_fail_watValues)
                                scenarioFinalHydroLevels,
                                parameters.simulationDays.end,
                                parameters.nbYears);
-    finLevInfModify.setCurrentYear(year);
-    finLevInfModify.ComputeDelta();
+    finLevInfModify.ComputeDelta(year);
 
     // check when useWaterValue = true
     BOOST_CHECK_EQUAL(finLevInfModify.isActive(), false);
@@ -185,8 +182,7 @@ BOOST_AUTO_TEST_CASE(Testing_initializeData_function_for_area_1_fail_NaN)
                                scenarioFinalHydroLevels,
                                parameters.simulationDays.end,
                                parameters.nbYears);
-    finLevInfModify.setCurrentYear(year);
-    finLevInfModify.ComputeDelta();
+    finLevInfModify.ComputeDelta(year);
 
     // check when finalReservoirLevel = -1
     BOOST_CHECK_EQUAL(finLevInfModify.isActive(), false);
@@ -206,11 +202,10 @@ BOOST_AUTO_TEST_CASE(Testing_updateInflows_function_for_area_1)
                                scenarioFinalHydroLevels,
                                parameters.simulationDays.end,
                                parameters.nbYears);
-    finLevInfModify.setCurrentYear(year);
-    finLevInfModify.ComputeDelta();
+    finLevInfModify.ComputeDelta(year);
 
-    finLevInfModify.makeChecks();
-    finLevInfModify.storeDeltaLevels();
+    finLevInfModify.makeChecks(year);
+    finLevInfModify.storeDeltaLevels(year);
 
     double expectedDeltaLevel = -1.1;
     bool calculatedIncludeFinResLev = finLevInfModify.includeFinalReservoirLevel.at(0);
@@ -234,10 +229,9 @@ BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_pass)
                                scenarioFinalHydroLevels,
                                parameters.simulationDays.end,
                                parameters.nbYears);
-    finLevInfModify.setCurrentYear(year);
-    finLevInfModify.ComputeDelta();
+    finLevInfModify.ComputeDelta(year);
 
-    BOOST_CHECK_EQUAL(finLevInfModify.makeChecks(), true);
+    BOOST_CHECK_EQUAL(finLevInfModify.makeChecks(year), true);
 }
 
 BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_fail_preCheckInitResLevel)
@@ -256,10 +250,9 @@ BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_fail_preCheckInitRes
                                scenarioFinalHydroLevels,
                                parameters.simulationDays.end,
                                parameters.nbYears);
-    finLevInfModify.setCurrentYear(year);
-    finLevInfModify.ComputeDelta();
+    finLevInfModify.ComputeDelta(year);
 
-    BOOST_CHECK_EQUAL(finLevInfModify.makeChecks(), false);
+    BOOST_CHECK_EQUAL(finLevInfModify.makeChecks(year), false);
 }
 
 BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_fail_EndSimDay)
@@ -278,10 +271,9 @@ BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_fail_EndSimDay)
                                scenarioFinalHydroLevels,
                                parameters.simulationDays.end,
                                parameters.nbYears);
-    finLevInfModify.setCurrentYear(year);
-    finLevInfModify.ComputeDelta();
+    finLevInfModify.ComputeDelta(year);
 
-    BOOST_CHECK_EQUAL(finLevInfModify.makeChecks(), false);
+    BOOST_CHECK_EQUAL(finLevInfModify.makeChecks(year), false);
 }
 
 BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_fail_RuleCurve)
@@ -300,10 +292,9 @@ BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_fail_RuleCurve)
                                scenarioFinalHydroLevels,
                                parameters.simulationDays.end,
                                parameters.nbYears);
-    finLevInfModify.setCurrentYear(year);
-    finLevInfModify.ComputeDelta();
+    finLevInfModify.ComputeDelta(year);
 
-    BOOST_CHECK_EQUAL(finLevInfModify.makeChecks(), false);
+    BOOST_CHECK_EQUAL(finLevInfModify.makeChecks(year), false);
 }
 
 BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_fail_ResCapacity)
@@ -326,10 +317,9 @@ BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_fail_ResCapacity)
                                scenarioFinalHydroLevels,
                                parameters.simulationDays.end, 
                                parameters.nbYears);
-    finLevInfModify.setCurrentYear(year);
-    finLevInfModify.ComputeDelta();
+    finLevInfModify.ComputeDelta(year);
 
-    BOOST_CHECK_EQUAL(finLevInfModify.makeChecks(), false);
+    BOOST_CHECK_EQUAL(finLevInfModify.makeChecks(year), false);
 }
 
 BOOST_AUTO_TEST_CASE(Testing_prepareFinalReservoirLevelData_function_for_area_1_and_area_2)

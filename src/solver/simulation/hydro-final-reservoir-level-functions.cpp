@@ -49,16 +49,15 @@ namespace Antares::Solver
 
 bool CheckInfeasibilityForFinalLevelsInArea(Data::FinalLevelInflowsModifier & finalInflows, uint year)
 {
-    finalInflows.setCurrentYear(year);
-    finalInflows.ComputeDelta();
+    finalInflows.ComputeDelta(year);
 
     if (!finalInflows.isActive())
         return true;
 
-    if (!finalInflows.makeChecks())
+    if (!finalInflows.makeChecks(year))
         return false;
 
-    finalInflows.storeDeltaLevels();
+    finalInflows.storeDeltaLevels(year);
     return true;
 }
 
