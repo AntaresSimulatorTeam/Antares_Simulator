@@ -5,12 +5,16 @@
 #define WIN32_LEAN_AND_MEAN
 #define BOOST_TEST_MODULE binding_constraints
 
-#include <boost/test/included/unit_test.hpp>
+// Why this header ? See here
+// https://www.boost.org/doc/libs/1_82_0/libs/test/doc/html/boost_test/adv_scenarios/single_header_customizations/multiple_translation_units.html
+#include <boost/test/unit_test.hpp>
+
 #include <fstream>
 #include "antares/study/constraint.h"
 #include "antares/study/area/area.h"
 #include "antares/study.h"
 #include <filesystem>
+#include "utils.h"
 
 using namespace Antares::Data;
 namespace fs = std::filesystem;
@@ -23,9 +27,7 @@ BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto tmp_dir = fs::temp_directory_path();
-    auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
-    fs::create_directories(working_tmp_dir);
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
     constraints << "[1]\n"
@@ -70,9 +72,7 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto tmp_dir = fs::temp_directory_path();
-    auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
-    fs::create_directories(working_tmp_dir);
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
     constraints << "[1]\n"
@@ -116,9 +116,7 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto tmp_dir = fs::temp_directory_path();
-    auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
-    fs::create_directories(working_tmp_dir);
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
     constraints << "[1]\n"
@@ -180,9 +178,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto tmp_dir = fs::temp_directory_path();
-    auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
-    fs::create_directories(working_tmp_dir);
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
     constraints << "[1]\n"
@@ -226,9 +222,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_range) {
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
-    auto tmp_dir = fs::temp_directory_path();
-    auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
-    fs::create_directories(working_tmp_dir);
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
     std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
     constraints << "[1]\n"
