@@ -169,6 +169,13 @@ BOOST_AUTO_TEST_CASE(initial_level_from_scenariobuilder_is_NaN_for_area_1_and_ye
     BOOST_CHECK_EQUAL(finLevInfModify.isActive(), false);
 }
 
+BOOST_AUTO_TEST_CASE(final_level_modifier_not_initialized____modifier_not_applicable)
+{
+    auto finLevInfModify = FinalLevelInflowsModifier(area_1->hydro, area_1->index, area_1->name);
+    uint year = 0;
+    BOOST_CHECK_EQUAL(finLevInfModify.isApplicable(year), false);
+}
+
 BOOST_AUTO_TEST_CASE(checking_level_configuration_is_ok_for_area_1_and_year_0___delta_level_as_expected)
 {
     uint year = 0;
