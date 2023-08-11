@@ -56,12 +56,11 @@ enum class Constraint {
 class ConstraintBuilder
 {
 public:
-    ConstraintBuilder(PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
-                      std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim,
-                      std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim) :
-      problemeAResoudre(ProblemeAResoudre),
-      varNative(CorrespondanceVarNativesVarOptim),
-      cntNative(CorrespondanceCntNativesCntOptim)
+    ConstraintBuilder(PROBLEME_HEBDO& problemeHebdo,
+                      std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim) :
+      problemeHebdo(problemeHebdo),
+      problemeAResoudre(*problemeHebdo.ProblemeAResoudre),
+      varNative(CorrespondanceVarNativesVarOptim)
     {
     }
 
@@ -79,38 +78,56 @@ public:
     {
       int pdt = hourInWeek_ + timeShift;
       // TODO remove 168
-      if (pdt < 0 || pdt > 168)
+      if (pdt < 0 || pdt >= 168)
       {
           return -1;
       }
 
-      CORRESPONDANCES_DES_VARIABLES& nativeOptimVar = varNative[pdt];
+      const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar = varNative[pdt];
       switch (variable)
       {
       case Variable::DispatchableProduction:
         return nativeOptimVar.NumeroDeVariableDuPalierThermique[index_];
       case Variable::NODU:
         return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[index_];
-      // TODO rest of cases
-      // case NumberStoppingDispatchableUnits:
-      // case NumberStartingDispatchableUnits:
-      // case NumberBreakingDownDispatchableUnits:
-      // case NTCDirect:
-      // case IntercoDirectCost:
-      // case IntercoIndirectCost:
-      // case ShortTermStorageInjection:
-      // case ShortTermStorageWithdrawal:
-      // case ShortTermStorageLevel:
-      // case HydProd:
-      // case HydProdDown:
-      // case HydProdUp:
-      // case Pumping:
-      // case HydroLevel:
-      // case Overflow:
-      // case FinalStorage:
-      // case LayerStorage:
-      // case PositiveUnsuppliedEnergy:
-      // case NegativeUnsuppliedEnergy:
+      case Variable::NumberStoppingDispatchableUnits:
+        return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[index_];
+      case Variable::NumberStartingDispatchableUnits:
+        return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[index_];
+      case Variable::NumberBreakingDownDispatchableUnits:
+        return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[index_];
+      case Variable::NTCDirect:
+        return nativeOptimVar.NumeroDeVariableDeLInterconnexion[index_];
+      case Variable::IntercoDirectCost:
+        return nativeOptimVar.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[index_];
+      case Variable::IntercoIndirectCost:
+        return nativeOptimVar.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[index_];
+      case Variable::ShortTermStorageInjection:
+        return nativeOptimVar.SIM_ShortTermStorage.InjectionVariable[index_];
+      case Variable::ShortTermStorageWithdrawal:
+        return nativeOptimVar.SIM_ShortTermStorage.WithdrawalVariable[index_];
+      case Variable::ShortTermStorageLevel:
+        return nativeOptimVar.SIM_ShortTermStorage.LevelVariable[index_];
+      case Variable::HydProd:
+        return nativeOptimVar.NumeroDeVariablesDeLaProdHyd[index_];
+      case Variable::HydProdDown:
+        return nativeOptimVar.NumeroDeVariablesVariationHydALaBaisse[index_];
+      case Variable::HydProdUp:
+        return nativeOptimVar.NumeroDeVariablesVariationHydALaHausse[index_];
+      case Variable::Pumping:
+        return nativeOptimVar.NumeroDeVariablesDePompage[index_];
+      case Variable::HydroLevel:
+        return nativeOptimVar.NumeroDeVariablesDeNiveau[index_];
+      case Variable::Overflow:
+        return nativeOptimVar.NumeroDeVariablesDeDebordement[index_];
+      case Variable::FinalStorage:
+        return problemeHebdo.NumeroDeVariableStockFinal[index_];
+      case Variable::LayerStorage:
+        return problemeHebdo.NumeroDeVariableDeTrancheDeStock[index_][0]; // TODO FIXMEEE
+      case Variable::PositiveUnsuppliedEnergy:
+        return nativeOptimVar.NumeroDeVariableDefaillancePositive[index_];
+      case Variable::NegativeUnsuppliedEnergy:
+        return nativeOptimVar.NumeroDeVariableDefaillanceNegative[index_];
       default:
         return -1;
     }
@@ -145,12 +162,12 @@ public:
       return *this;
     }
 
-    [[nodiscard]] int build();
+    void build(Constraint cnt);
 
 private:
     PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre;
+    PROBLEME_HEBDO& problemeHebdo;
     std::vector<CORRESPONDANCES_DES_VARIABLES>& varNative;
-    std::vector<CORRESPONDANCES_DES_CONTRAINTES>& cntNative;
 
     unsigned int hourInWeek_ = 0;
     // TODO: vérifier que l'index correspond bien à l'objet concerné (zone, lien, cluster thermique, etc.)

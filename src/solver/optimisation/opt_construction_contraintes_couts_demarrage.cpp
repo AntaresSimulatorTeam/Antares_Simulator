@@ -279,11 +279,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             {
                 auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 constraintNamer.UpdateTimeStep(timeStepInYear);
-                CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-                  = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-                CorrespondanceCntNativesCntOptim
-                  .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
-                  = -1;
 
                 int nombreDeTermes = 0;
                 if (!Simulation)
@@ -353,11 +348,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             {
                 auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 constraintNamer.UpdateTimeStep(timeStepInYear);
-                CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-                  = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-                CorrespondanceCntNativesCntOptim
-                  .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
-                  = -1;
 
                 int nombreDeTermes = 0;
                 if (!Simulation)
@@ -418,10 +408,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 1)
                     {
-                        CorrespondanceCntNativesCntOptim
-                          .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
-                          = ProblemeAResoudre->NombreDeContraintes;
-
                         constraintNamer.NbDispUnitsMinBoundSinceMinUpTime(
                           ProblemeAResoudre->NombreDeContraintes,
                           PaliersThermiquesDuPays.NomsDesPaliersThermiques[index]);
@@ -452,11 +438,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             {
                 auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 constraintNamer.UpdateTimeStep(timeStepInYear);
-                CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-                  = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-                CorrespondanceCntNativesCntOptim
-                  .NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
-                  = -1;
 
                 CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
                   =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
@@ -504,10 +485,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 1)
                     {
-                        CorrespondanceCntNativesCntOptim
-                          .NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
-                          = ProblemeAResoudre->NombreDeContraintes;
-
                         constraintNamer.MinDownTime(
                           ProblemeAResoudre->NombreDeContraintes,
                           PaliersThermiquesDuPays.NomsDesPaliersThermiques[index]);

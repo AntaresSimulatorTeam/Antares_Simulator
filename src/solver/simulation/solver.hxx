@@ -646,14 +646,10 @@ void ISimulation<Impl>::estimateMemoryForWeeklyPb(Antares::Data::StudyMemoryUsag
         requiredMemoryForWeeklyPb += 2 * sizeof(CONSOMMATIONS_ABATTUES);
         requiredMemoryForWeeklyPb += sizeof(SOLDE_MOYEN_DES_ECHANGES);
         requiredMemoryForWeeklyPb += sizeof(CORRESPONDANCES_DES_VARIABLES);
-        requiredMemoryForWeeklyPb += sizeof(CORRESPONDANCES_DES_CONTRAINTES);
         requiredMemoryForWeeklyPb += sizeof(VARIABLES_DUALES_INTERCONNEXIONS);
     }
 
     requiredMemoryForWeeklyPb += 7 * sizeof(void*);
-
-    for (int k = 0; k < 7; k++)
-        requiredMemoryForWeeklyPb += sizeof(CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES);
 
     for (int k = 0; k < (int)nbBindingConstraints; k++)
     {

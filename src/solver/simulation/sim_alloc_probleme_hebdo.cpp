@@ -114,7 +114,6 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
     problem.AllMustRunGeneration.resize(NombreDePasDeTemps);
     problem.SoldeMoyenHoraire.resize(NombreDePasDeTemps);
     problem.CorrespondanceVarNativesVarOptim.resize(NombreDePasDeTemps);
-    problem.CorrespondanceCntNativesCntOptim.resize(NombreDePasDeTemps);
     problem.VariablesDualesDesContraintesDeNTC.resize(NombreDePasDeTemps);
 
     auto activeConstraints = study.bindingConstraints.activeContraints();
@@ -221,36 +220,6 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         variablesMapping.SIM_ShortTermStorage.LevelVariable
           .assign(shortTermStorageCount, 0);
 
-        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesBilansPays
-          .assign(nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContraintePourEviterLesChargesFictives
-          .assign(nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesNiveauxPays
-          .assign(nbPays, 0);
-
-        problem.CorrespondanceCntNativesCntOptim[k].ShortTermStorageLevelConstraint
-          .assign(shortTermStorageCount, 0);
-
-        problem.CorrespondanceCntNativesCntOptim[k].NumeroPremiereContrainteDeReserveParZone
-          .assign(nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeuxiemeContrainteDeReserveParZone
-          .assign(nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDeDissociationDeFlux
-          .assign(linkCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesContraintesCouplantes
-          .assign(activeConstraints.size(), 0);
-
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDesContraintesDeDureeMinDeMarche
-          .assign(study.runtime->thermalPlantTotalCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDesContraintesDeDureeMinDArret
-          .assign(study.runtime->thermalPlantTotalCount, 0);
-
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
-          .assign(study.runtime->thermalPlantTotalCount, 0);
-
         problem.VariablesDualesDesContraintesDeNTC[k].VariableDualeParInterconnexion
           .assign(linkCount, 0.);
     }
@@ -279,18 +248,6 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
                                unsigned NombreDePasDeTemps)
 {
     auto activeConstraints = study.bindingConstraints.activeContraints();
-
-    problem.CorrespondanceCntNativesCntOptimJournalieres.resize(7);
-    for (uint k = 0; k < 7; k++)
-    {
-        problem.CorrespondanceCntNativesCntOptimJournalieres[k]
-          .NumeroDeContrainteDesContraintesCouplantes
-          .assign(activeConstraints.size(), 0);
-    }
-
-    problem.CorrespondanceCntNativesCntOptimHebdomadaires
-        .NumeroDeContrainteDesContraintesCouplantes
-        .assign(activeConstraints.size(), 0);
 
     const auto& bindingConstraintCount = activeConstraints.size();
     problem.ResultatsContraintesCouplantes.resize(bindingConstraintCount);

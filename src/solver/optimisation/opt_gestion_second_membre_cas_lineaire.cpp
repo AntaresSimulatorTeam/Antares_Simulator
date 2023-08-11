@@ -41,7 +41,6 @@ static void shortTermStorageLevelsRHS(
     const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
     int numberOfAreas,
     std::vector<double>& SecondMembre,
-    const CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim,
     int hourInTheYear)
 {
     for (int areaIndex = 0; areaIndex < numberOfAreas; areaIndex++)
@@ -49,8 +48,7 @@ static void shortTermStorageLevelsRHS(
         for (auto& storage : shortTermStorageInput[areaIndex])
         {
             const int clusterGlobalIndex = storage.clusterGlobalIndex;
-            const int cnt
-              = CorrespondanceCntNativesCntOptim.ShortTermStorageLevelConstraint[clusterGlobalIndex];
+            const int cnt = 2; // TODO
             SecondMembre[cnt] = storage.series->inflows[hourInTheYear];
         }
     }
@@ -98,16 +96,13 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
     for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        const CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-          = problemeHebdo->CorrespondanceCntNativesCntOptim[pdtJour];
-
         const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
           = problemeHebdo->ConsommationsAbattues[pdtHebdo];
         const ALL_MUST_RUN_GENERATION& AllMustRunGeneration
           = problemeHebdo->AllMustRunGeneration[pdtHebdo];
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            int cnt = CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesBilansPays[pays];
+            int cnt = 2; // TODO
             SecondMembre[cnt] = -ConsommationsAbattues.ConsommationAbattueDuPays[pays];
 
             bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
@@ -122,8 +117,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
               = &(problemeHebdo->ResultatsHoraires[pays].CoutsMarginauxHoraires[pdtHebdo]);
             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = adresseDuResultat;
 
-            cnt = CorrespondanceCntNativesCntOptim
-                    .NumeroDeContraintePourEviterLesChargesFictives[pays];
+            cnt = 2; // TODOg
             SecondMembre[cnt] = 0.0;
 
             double MaxAllMustRunGeneration = 0.0;
@@ -153,7 +147,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         shortTermStorageLevelsRHS(problemeHebdo->ShortTermStorage,
                                   problemeHebdo->NombreDePays,
                                   ProblemeAResoudre->SecondMembre,
-                                  CorrespondanceCntNativesCntOptim,
                                   hourInTheYear);
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
@@ -161,8 +154,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
                     CoutDeTransport.IntercoGereeAvecDesCouts)
             {
-                int cnt = CorrespondanceCntNativesCntOptim
-                            .NumeroDeContrainteDeDissociationDeFlux[interco];
+                int cnt = 2;
                 if (CoutDeTransport.IntercoGereeAvecLoopFlow)
                     SecondMembre[cnt] = problemeHebdo->ValeursDeNTC[pdtHebdo]
                                           .ValeurDeLoopFlowOrigineVersExtremite[interco];
@@ -180,8 +172,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
                 continue;
 
-            int cnt = CorrespondanceCntNativesCntOptim
-                        .NumeroDeContrainteDesContraintesCouplantes[cntCouplante];
+            int cnt = 2;
             if (cnt >= 0)
             {
                 SecondMembre[cnt]
@@ -198,9 +189,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         int jour = NumeroDeJourDuPasDeTemps[pdtHebdo];
         int indexCorrespondanceCnt = (!problemeHebdo->OptimisationAuPasHebdomadaire) ? 0 : jour;
 
-        CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES& CorrespondanceCntNativesCntOptimJournalieres
-              = problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[indexCorrespondanceCnt];
-
         for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
@@ -209,8 +197,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante
                 == CONTRAINTE_JOURNALIERE)
             {
-                int cnt = CorrespondanceCntNativesCntOptimJournalieres
-                            .NumeroDeContrainteDesContraintesCouplantes[cntCouplante];
+                int cnt = 2;
                 if (cnt >= 0)
                 {
                     SecondMembre[cnt]
@@ -227,10 +214,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
     if (problemeHebdo->NombreDePasDeTempsPourUneOptimisation
         > problemeHebdo->NombreDePasDeTempsDUneJournee)
     {
-        const CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES&
-          CorrespondanceCntNativesCntOptimHebdomadaires
-          = problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires;
-
         for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
@@ -241,8 +224,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                 != CONTRAINTE_HEBDOMADAIRE)
                 continue;
 
-            int cnt = CorrespondanceCntNativesCntOptimHebdomadaires
-                        .NumeroDeContrainteDesContraintesCouplantes[cntCouplante];
+            int cnt = 2;
             if (cnt >= 0)
             {
                 SecondMembre[cnt]
@@ -319,15 +301,12 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
     for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        const CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-          = problemeHebdo->CorrespondanceCntNativesCntOptim[pdtJour];
-
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             if (!problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
                 continue;
 
-            int cnt = CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays];
+            int cnt = 2;
             if (cnt >= 0)
             {
                 SecondMembre[cnt] = problemeHebdo->CaracteristiquesHydrauliques[pays]
