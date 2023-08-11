@@ -52,7 +52,6 @@ public:
 
     bool CheckInfeasibility(uint year);
     bool isApplicable(uint year);
-    bool isActive();
 
     // vectors containing data necessary for final reservoir level calculation
     // for one area and all MC years
@@ -61,6 +60,7 @@ public:
 
 
 private:
+    bool isActive();
     void ComputeDelta(uint year);
     bool makeChecks(uint year);
     void storeDeltaLevels(uint year);

@@ -101,7 +101,7 @@ struct Fixture
 
 BOOST_FIXTURE_TEST_SUITE(s, Fixture)
 
-BOOST_AUTO_TEST_CASE(initialize_modifier_for_area_1___modifier_is_active)
+BOOST_AUTO_TEST_CASE(initialize_modifier_for_area_1___modifier_is_applicable)
 {
     uint year = 0;
     auto finLevInfModify = FinalLevelInflowsModifier(area_1->hydro, area_1->index, area_1->name);
@@ -113,10 +113,10 @@ BOOST_AUTO_TEST_CASE(initialize_modifier_for_area_1___modifier_is_active)
 
     finLevInfModify.CheckInfeasibility(year);
 
-    BOOST_CHECK_EQUAL(finLevInfModify.isActive(), true);
+    BOOST_CHECK_EQUAL(finLevInfModify.isApplicable(year), true);
 }
 
-BOOST_AUTO_TEST_CASE(reservoir_management_is_false_for_area_1___modifier_is_not_active)
+BOOST_AUTO_TEST_CASE(reservoir_management_is_false_for_area_1___modifier_is_not_applicable)
 {
     area_1->hydro.reservoirManagement = false;
     uint year = 0;
@@ -131,10 +131,10 @@ BOOST_AUTO_TEST_CASE(reservoir_management_is_false_for_area_1___modifier_is_not_
     finLevInfModify.CheckInfeasibility(year);
 
     // check when reservoirManagement = false
-    BOOST_CHECK_EQUAL(finLevInfModify.isActive(), false);
+    BOOST_CHECK_EQUAL(finLevInfModify.isApplicable(year), false);
 }
 
-BOOST_AUTO_TEST_CASE(use_water_value_is_true_for_area_1___modifier_is_not_active)
+BOOST_AUTO_TEST_CASE(use_water_value_is_true_for_area_1___modifier_is_not_applicable)
 {
     area_1->hydro.useWaterValue = true;
     uint year = 0;
@@ -149,10 +149,10 @@ BOOST_AUTO_TEST_CASE(use_water_value_is_true_for_area_1___modifier_is_not_active
     finLevInfModify.CheckInfeasibility(year);
 
     // check when useWaterValue = true
-    BOOST_CHECK_EQUAL(finLevInfModify.isActive(), false);
+    BOOST_CHECK_EQUAL(finLevInfModify.isApplicable(year), false);
 }
 
-BOOST_AUTO_TEST_CASE(initial_level_from_scenariobuilder_is_NaN_for_area_1_and_year_0____modifier_is_not_active)
+BOOST_AUTO_TEST_CASE(initial_level_from_scenariobuilder_is_NaN_for_area_1_and_year_0____modifier_not_applicable)
 {
     uint year = 0;
     study->scenarioInitialHydroLevels[area_1->index][year] = std::numeric_limits<double>::quiet_NaN();
@@ -166,7 +166,7 @@ BOOST_AUTO_TEST_CASE(initial_level_from_scenariobuilder_is_NaN_for_area_1_and_ye
 
     finLevInfModify.CheckInfeasibility(year);
 
-    BOOST_CHECK_EQUAL(finLevInfModify.isActive(), false);
+    BOOST_CHECK_EQUAL(finLevInfModify.isApplicable(year), false);
 }
 
 BOOST_AUTO_TEST_CASE(final_level_modifier_not_initialized____modifier_not_applicable)
