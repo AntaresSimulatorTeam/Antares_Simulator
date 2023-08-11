@@ -486,25 +486,25 @@ struct PROBLEME_HEBDO
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
     bool WaterValueAccurate = false;
     bool OptimisationAvecCoutsDeDemarrage = false;
-    uint32_t NombreDePays = 0;
+    int32_t NombreDePays = 0;
     std::vector<const char*> NomsDesPays;
-    uint32_t NombreDePaliersThermiques = 0;
+    int32_t NombreDePaliersThermiques = 0;
 
-    uint32_t NombreDInterconnexions = 0;
-    std::vector<uint32_t> PaysOrigineDeLInterconnexion;
-    std::vector<uint32_t> PaysExtremiteDeLInterconnexion;
+    int32_t NombreDInterconnexions = 0;
+    std::vector<int> PaysOrigineDeLInterconnexion;
+    std::vector<int> PaysExtremiteDeLInterconnexion;
     mutable std::vector<COUTS_DE_TRANSPORT> CoutDeTransport;
 
     mutable std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTC;
 
     uint32_t NombreDePasDeTemps = 0;
-    std::vector<uint32_t> NumeroDeJourDuPasDeTemps;
+    std::vector<int32_t> NumeroDeJourDuPasDeTemps;
 
-    uint32_t NombreDePasDeTempsPourUneOptimisation = 0;
-    std::vector<uint32_t> NumeroDIntervalleOptimiseDuPasDeTemps;
-    uint32_t NombreDeJours = 0;
+    int32_t NombreDePasDeTempsPourUneOptimisation = 0;
+    std::vector<int32_t> NumeroDIntervalleOptimiseDuPasDeTemps;
+    int32_t NombreDeJours = 0;
 
-    uint32_t NombreDePasDeTempsDUneJournee = 0;
+    int32_t NombreDePasDeTempsDUneJournee = 0;
 
     mutable std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattues;
 
@@ -515,12 +515,12 @@ struct PROBLEME_HEBDO
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     mutable std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
-    uint32_t NumberOfShortTermStorages = 0;
+    int32_t NumberOfShortTermStorages = 0;
     // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;
     std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
 
     /* Optimization problem */
-    uint32_t NbTermesContraintesPourLesCoutsDeDemarrage = 0;
+    int32_t NbTermesContraintesPourLesCoutsDeDemarrage = 0;
     std::vector<bool> DefaillanceNegativeUtiliserPMinThermique;
     std::vector<bool> DefaillanceNegativeUtiliserHydro;
     std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue;
@@ -528,7 +528,7 @@ struct PROBLEME_HEBDO
     char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
     std::vector<std::vector<double>> BruitSurCoutHydraulique;
 
-    uint32_t NombreDeContraintesCouplantes = 0;
+    int32_t NombreDeContraintesCouplantes = 0;
     mutable std::vector<CONTRAINTES_COUPLANTES> MatriceDesContraintesCouplantes;
     std::vector<RESULTATS_CONTRAINTES_COUPLANTES> ResultatsContraintesCouplantes;
 
@@ -553,24 +553,24 @@ struct PROBLEME_HEBDO
 
     mutable std::vector<RESERVE_JMOINS1> ReserveJMoins1;
 
-    std::vector<uint32_t> IndexDebutIntercoOrigine;
-    std::vector<uint32_t> IndexSuivantIntercoOrigine;
-    std::vector<uint32_t> IndexDebutIntercoExtremite;
-    std::vector<uint32_t> IndexSuivantIntercoExtremite;
+    std::vector<int> IndexDebutIntercoOrigine;
+    std::vector<int> IndexSuivantIntercoOrigine;
+    std::vector<int> IndexDebutIntercoExtremite;
+    std::vector<int> IndexSuivantIntercoExtremite;
 
     bool Expansion = false;
 
-    std::vector<uint32_t> NumeroDeContrainteEnergieHydraulique;
-    std::vector<uint32_t> NumeroDeContrainteMinEnergieHydraulique;
-    std::vector<uint32_t> NumeroDeContrainteMaxEnergieHydraulique;
-    std::vector<uint32_t> NumeroDeContrainteMaxPompage;
-    std::vector<uint32_t> NumeroDeContrainteDeSoldeDEchange;
+    std::vector<int> NumeroDeContrainteEnergieHydraulique;
+    std::vector<int> NumeroDeContrainteMinEnergieHydraulique;
+    std::vector<int> NumeroDeContrainteMaxEnergieHydraulique;
+    std::vector<int> NumeroDeContrainteMaxPompage;
+    std::vector<int> NumeroDeContrainteDeSoldeDEchange;
 
-    std::vector<uint32_t> NumeroDeContrainteEquivalenceStockFinal;
-    std::vector<uint32_t> NumeroDeContrainteExpressionStockFinal;
+    std::vector<int> NumeroDeContrainteEquivalenceStockFinal;
+    std::vector<int> NumeroDeContrainteExpressionStockFinal;
 
-    std::vector<uint32_t> NumeroDeVariableStockFinal;
-    std::vector<std::vector<uint32_t>> NumeroDeVariableDeTrancheDeStock;
+    std::vector<int> NumeroDeVariableStockFinal;
+    std::vector<std::vector<int>> NumeroDeVariableDeTrancheDeStock;
 
     bool YaDeLaReserveJmoins1 = false;
 
