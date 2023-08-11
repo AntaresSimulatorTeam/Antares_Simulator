@@ -220,17 +220,17 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           Pi,
                           Colonne);
             ConstraintBuilder constraint_builder(ProblemeAResoudre);
-            CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesBilansPays[pays]
+            CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesBilansPays[pays]
               = constraint_builder
-                  .AddVariable(CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays],
+                  .AddVariable(CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays],
                                -1.0)
-                  .AddVariable(CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[pays],
+                  .AddVariable(CorrespondanceVarNativesVarOptim.NumeroDeVariablesDePompage[pays],
                                1.0)
                   .AddVariable(
-                    CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[pays],
+                    CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[pays],
                     -1.0)
                   .AddVariable(
-                    CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[pays],
+                    CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillanceNegative[pays],
                     1.0)
                   .build('=');
             constraintNamer.AreaBalance(ProblemeAResoudre->NombreDeContraintes);

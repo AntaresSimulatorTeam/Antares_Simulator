@@ -201,11 +201,6 @@ void VariableNamer::NegativeUnsuppliedEnergy(unsigned int variable)
     SetAreaElementNameHour(variable, "NegativeUnsuppliedEnergy");
 }
 
-void VariableNamer::AreaBalance(unsigned int variable)
-{
-    SetAreaElementNameHour(variable, "AreaBalance");
-}
-
 void ConstraintNamer::FlowDissociation(unsigned int constraint,
                                        const std::string& origin,
                                        const std::string& destination)

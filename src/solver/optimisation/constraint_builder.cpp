@@ -2,8 +2,8 @@
 
 ConstraintBuilder& ConstraintBuilder::AddVariable(int var, double coeff)
 {
-    double* Pi = ProblemeAResoudre_->Pi;
-    int* Colonne = ProblemeAResoudre_->Colonne;
+    std::vector<double>& Pi = ProblemeAResoudre_->Pi;
+    std::vector<int>& Colonne = ProblemeAResoudre_->Colonne;
 
     if (var >= 0)
     {
@@ -11,13 +11,12 @@ ConstraintBuilder& ConstraintBuilder::AddVariable(int var, double coeff)
         Colonne[nombreDeTermes_] = var;
         nombreDeTermes_++;
     }
-
     return *this;
 }
 [[nodiscard]] int ConstraintBuilder::build(char constraint_operator)
 {
-    double* Pi = ProblemeAResoudre_->Pi;
-    int* Colonne = ProblemeAResoudre_->Colonne;
+    std::vector<double>& Pi = ProblemeAResoudre_->Pi;
+    std::vector<int>& Colonne = ProblemeAResoudre_->Colonne;
     if (nombreDeTermes_ > 0)
     {
         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(

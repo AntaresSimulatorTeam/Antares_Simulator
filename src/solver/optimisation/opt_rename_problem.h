@@ -91,7 +91,6 @@ public:
     void LayerStorage(unsigned int variable, int layerIndex);
     void PositiveUnsuppliedEnergy(unsigned int variable);
     void NegativeUnsuppliedEnergy(unsigned int variable);
-    void AreaBalance(unsigned int variable);
 
 private:
     void SetAreaVariableName(unsigned int variable,
