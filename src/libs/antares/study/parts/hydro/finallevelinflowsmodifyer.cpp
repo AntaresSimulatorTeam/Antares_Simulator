@@ -167,7 +167,9 @@ bool FinalLevelInflowsModifier::makeChecks(uint year)
 
 bool FinalLevelInflowsModifier::isApplicable(uint year)
 {
-    return isApplicable_.at(year);
+    // If isApplicable_.size() == 0, then instance was not properly initialized
+    // and is not applicable.
+    return isApplicable_.size() && isApplicable_.at(year);
 }
 
 } // namespace Antares::Data
