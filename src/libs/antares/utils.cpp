@@ -26,6 +26,7 @@
 */
 
 #include <algorithm>
+#include <locale>
 #include "utils.h"
 
 using namespace Yuni;
