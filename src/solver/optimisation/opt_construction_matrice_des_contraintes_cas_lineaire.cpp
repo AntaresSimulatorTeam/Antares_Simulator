@@ -219,20 +219,19 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           nombreDeTermes,
                           Pi,
                           Colonne);
-            ConstraintBuilder constraint_builder(ProblemeAResoudre);
+            ConstraintBuilder constraint_builder(*ProblemeAResoudre,
+                                                 problemeHebdo->CorrespondanceVarNativesVarOptim,
+                                                 problemeHebdo->CorrespondanceCntNativesCntOptim);
+
             CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesBilansPays[pays]
               = constraint_builder
-                  .AddVariable(CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays],
-                               -1.0)
-                  .AddVariable(CorrespondanceVarNativesVarOptim.NumeroDeVariablesDePompage[pays],
-                               1.0)
-                  .AddVariable(
-                    CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[pays],
-                    -1.0)
-                  .AddVariable(
-                    CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillanceNegative[pays],
-                    1.0)
-                  .build('=');
+              .include(Variable::HydroLevel, 1.0)
+              .include(Variable::HydroLevel, -1.0, -1) // shift -1, sauf pour le 1er pas de temps
+              .include(Variable::HydProd, 1.0)
+              .include(Variable::Overflow, 1.0)
+              .equal(2) // TODO
+              .build();
+
             constraintNamer.AreaBalance(ProblemeAResoudre->NombreDeContraintes);
             nombreDeTermes = 0;
 
