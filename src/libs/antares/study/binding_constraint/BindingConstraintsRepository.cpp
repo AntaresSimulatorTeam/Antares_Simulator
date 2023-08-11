@@ -182,13 +182,13 @@ bool BindingConstraintsRepository::loadFromFolder(Study &study,
     // When ran from the solver and if the simplex is in `weekly` mode,
     // all weekly constraints will become daily ones.
     if (study.usedByTheSolver && sorDay == study.parameters.simplexOptimizationRange) {
-        mutateWeeklyConstraintsIntoDailyOnes();
+        changeConstraintsWeeklyToDaily();
     }
 
     return true;
 }
 
-void BindingConstraintsRepository::mutateWeeklyConstraintsIntoDailyOnes()
+void BindingConstraintsRepository::changeConstraintsWeeklyToDaily()
 {
     each([](BindingConstraint &constraint) {
         if (constraint.type() == BindingConstraint::typeWeekly)

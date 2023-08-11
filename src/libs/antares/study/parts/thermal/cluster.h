@@ -354,23 +354,6 @@ public:
     //! Data for the preprocessor
     PreproThermal* prepro = nullptr;
 
-    //! \name Temporary data for simulation
-    //@{
-    /*!
-    ** \brief Production cost for the thermal cluster
-    **
-    ** This value is computed from `modulation` and the reference annual cost of
-    ** the thermal cluster. The formula is :
-    ** \code
-    ** each hour (h) in the year do
-    **     productionCost[h] = marginalCost * modulation[0][h]
-    ** \endcode
-    **
-    ** This value is only set when loaded from a folder
-    ** 8760 (HOURS_PER_YEAR) array
-    */
-    double* productionCost = nullptr;
-
     /*!
     ** \brief Production Cost, Market Bid Cost and Marginal Cost Matrixes - Per Hour and per Time
     *Series

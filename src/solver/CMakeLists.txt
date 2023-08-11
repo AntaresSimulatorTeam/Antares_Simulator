@@ -60,6 +60,9 @@ add_executable(antares-solver
 	misc/system-memory.h
 	misc/system-memory.cpp
 
+    misc/write-command-line.h
+    misc/write-command-line.cpp
+
 	${SRCS}
 	main.cpp
 	application.h application.cpp

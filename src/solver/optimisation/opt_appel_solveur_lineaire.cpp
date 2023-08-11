@@ -41,7 +41,7 @@ extern "C"
 }
 
 #include <antares/logs.h>
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 
 #include "../utils/mps_utils.h"
 #include "../utils/filename.h"
@@ -92,7 +92,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                          PROBLEME_HEBDO* problemeHebdo,
                          int NumIntervalle,
                          const int optimizationNumber,
-                         std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
+                         const OptPeriodStringGenerator& optPeriodStringGenerator,
                          IResultWriter& writer)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
@@ -282,11 +282,7 @@ RESOLUTION:
 
         else
         {
-            logs.info();
-            logs.error() << "Internal error: insufficient memory";
-            logs.info();
-            AntaresSolverEmergencyShutdown();
-            return false;
+            throw FatalError("Internal error: insufficient memory");
         }
     }
 

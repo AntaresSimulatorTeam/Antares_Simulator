@@ -24,38 +24,22 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#ifndef __ANTARES_LIB_FATAL_ERROR_H__
+#define __ANTARES_LIB_FATAL_ERROR_H__
 
-#include "emergency.h"
-#include "logs.h"
-#include "study/study.h"
-#include <yuni/core/system/suspend.h>
+#include <stdexcept>
 
-using namespace Antares;
-using namespace Antares::Data;
-using namespace Yuni;
+namespace Antares {
 
-void AntaresSolverEmergencyShutdown(int code)
+/*!
+** \brief A generic exception for errors that should end the program.
+*/
+class FatalError : public std::runtime_error
 {
-    {
-        // Releasing all locks held by the study
-        auto currentStudy = Data::Study::Current::Get();
-        if (!(!currentStudy))
-            currentStudy->releaseAllLocks();
+public:
+    using std::runtime_error::runtime_error;
+};
 
-        // Importing logs
-        if (!logs.logfile())
-        {
-            logs.fatal() << "Aborting now. (warning: no file log available)";
-            logs.warning() << "No log file available";
-        }
-        else
-        {
-            if (!(!currentStudy))
-                currentStudy->importLogsToOutputFolder();
-            logs.error() << "Aborting now. See logs for more details";
-        }
-        // release currentStudy
-    }
-
-    exit(code);
 }
+
+#endif // __ANTARES_LIB_FATAL_ERROR_H__

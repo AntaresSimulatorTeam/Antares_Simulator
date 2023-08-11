@@ -34,7 +34,9 @@
 
 using Antares::Solver::Optimization::OptimizationOptions;
 
-bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options, PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adqPatchParams,
+bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
+                                      PROBLEME_HEBDO* problemeHebdo,
+                                      const AdqPatchParams& adqPatchParams,
                                       Solver::IResultWriter& writer)
 {
     if (!problemeHebdo->LeProblemeADejaEteInstancie)

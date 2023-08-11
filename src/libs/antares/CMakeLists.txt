@@ -307,8 +307,6 @@ set(SRC_STUDY_BINDING_CONSTRAINT
 	study/binding_constraint/BindingConstraintsRepository.h
 	study/binding_constraint/BindingConstraintsRepository.hxx
 	study/binding_constraint/BindingConstraintsRepository.cpp
-	study/binding_constraint/BindingConstraintTimeSeriesNumbers.cpp
-	study/binding_constraint/BindingConstraintTimeSeriesNumbers.h
 	study/binding_constraint/BindingConstraintLoader.cpp
 	study/binding_constraint/BindingConstraintLoader.h
 	study/binding_constraint/BindingConstraintSaver.cpp
@@ -384,9 +382,9 @@ set(SRC
 	locale.h
 	locale.cpp
 
-	emergency.h emergency.cpp
+	fatal-error.h
 
-	# wx-wrapper
+		# wx-wrapper
 	wx-wrapper.h
 
 	# resource
@@ -454,8 +452,7 @@ set(SRC
 	study/runtime.h
 	study/study.h
 	study/study.hxx
-	study/current.cpp
-	study/fwd.h
+        study/fwd.h
 	study/fwd.cpp
 	study.h
 	study/estimate.memory-footprint.cpp
@@ -517,11 +514,12 @@ add_library( libantares-core-calendar
 	date/date.h
 	date/date.cpp
 )
-#TODO : needed for include yuni : why yuni must be include first ???
-#TODO : needed for include
+
+target_link_libraries(libantares-core-calendar
+		PRIVATE yuni-static-core)
+
 target_include_directories(libantares-core-calendar
 		PRIVATE
-			${CMAKE_SOURCE_DIR}/ext/yuni/src/
 			${CMAKE_SOURCE_DIR}/libs
 		)
 
@@ -529,9 +527,11 @@ add_library(libantares-core-exceptions
     ${SRC_EXCEPTION}
 )
 
+target_link_libraries(libantares-core-exceptions
+	PRIVATE yuni-static-core)
+
 target_include_directories(libantares-core-exceptions
 		PRIVATE
-			${CMAKE_SOURCE_DIR}/ext/yuni/src/
 			${CMAKE_SOURCE_DIR}/libs
 		)
 
@@ -541,12 +541,15 @@ add_library(libantares-core-checks
 
 target_include_directories(libantares-core-checks
 		PRIVATE
-			${CMAKE_SOURCE_DIR}/ext/yuni/src/
 			${CMAKE_SOURCE_DIR}/libs/antares/study
             ${CMAKE_SOURCE_DIR}/libs/antares/logs
 			${CMAKE_SOURCE_DIR}/libs
             ${CMAKE_SOURCE_DIR}/solver/writer
 )
+
+target_link_libraries(libantares-core-checks
+	PRIVATE
+		yuni-static-core)
 
 add_library(libantares-core
 	antares.h
@@ -583,7 +586,6 @@ add_library(libantares-core
 #TODO : needed for include
 target_include_directories(libantares-core
 		PUBLIC
-			${CMAKE_SOURCE_DIR}/ext/yuni/src
 			${CMAKE_SOURCE_DIR}/libs
 			${CMAKE_SOURCE_DIR}/libs/antares/logs
             ${CMAKE_SOURCE_DIR}/solver/writer

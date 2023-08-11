@@ -45,7 +45,10 @@ bool BindingConstraintsTSNumberData::apply(Study& study)
         }
         uint errors = 0;
         CString<512, false> logprefix;
-        return ApplyToMatrix(errors, logprefix, study.bindingConstraintsGroups[group_name]->timeSeriesNumbers(), ts_numbers[0],
+        return ApplyToMatrix(errors,
+                             logprefix,
+                             *group,
+                             ts_numbers[0],
                              get_tsGenCount(study));
     });
 }

@@ -49,7 +49,7 @@ static void genericStoreTimeseriesNumbers(const Solver::IResultWriter::Ptr& writ
 void BindingConstraintsTimeSeriesNumbersWriter::write(const Data::BindingConstraintGroupRepository &bindingConstraintGroupRepository) {
     for (auto const& group: bindingConstraintGroupRepository) {
         genericStoreTimeseriesNumbers(writer_,
-                                      group->timeSeriesNumbers().timeseriesNumbers,
+                                      group->timeseriesNumbers,
                                       group->name(),
                                       "bindingconstraints");
     }

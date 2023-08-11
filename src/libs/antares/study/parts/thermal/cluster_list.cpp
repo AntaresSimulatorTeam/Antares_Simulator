@@ -38,7 +38,6 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
         uint prepoCnt = Math::Max(cluster.ecoInput.co2cost.width, cluster.ecoInput.fuelcost.width);
         u.requiredMemoryForInput += sizeof(ThermalCluster);
         u.requiredMemoryForInput += sizeof(void*);
-        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR * prepoCnt; // productionCost
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // PthetaInf
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR * prepoCnt; // marketBidCostPerHour
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR * prepoCnt; // marginalCostPerHour
@@ -134,8 +133,6 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
         // Special operations when not ran from the interface (aka solver)
         if (study.usedByTheSolver)
         {
-            cluster->setProductionCost();
-
             if (not study.parameters.include.thermal.minStablePower)
                 cluster->minStablePower = 0.;
             if (not study.parameters.include.thermal.minUPTime)
