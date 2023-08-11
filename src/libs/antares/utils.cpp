@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <algorithm>
 #include "utils.h"
 
 using namespace Yuni;
@@ -94,6 +95,17 @@ char charToLower(char in)
 void toLower(std::string& str)
 {
     std::transform(str.begin(), str.end(), str.begin(), &charToLower);
+}
+
+//Again: boost already has it too
+void trim(std::string& s)
+{
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](char ch) {
+        return !std::isspace(ch);
+    }));
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }).base(), s.end());
 }
 
 } // namespace Antares

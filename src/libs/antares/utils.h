@@ -48,6 +48,12 @@ void BeautifyName(std::string& out, const std::string& oldname);
 
 void toLower(std::string& str);
 
+/*!
+** \brief Remove all white-spaces from the beginning and the end
+**   of the string
+*/
+void trim(std::string& str);
+
 } // namespace Antares
 
 #include "utils.hxx"
