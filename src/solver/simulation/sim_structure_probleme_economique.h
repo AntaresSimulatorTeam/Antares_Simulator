@@ -522,15 +522,6 @@ struct PROBLEME_HEBDO
 
     bool Expansion = false;
 
-    std::vector<int> NumeroDeContrainteEnergieHydraulique;
-    std::vector<int> NumeroDeContrainteMinEnergieHydraulique;
-    std::vector<int> NumeroDeContrainteMaxEnergieHydraulique;
-    std::vector<int> NumeroDeContrainteMaxPompage;
-    std::vector<int> NumeroDeContrainteDeSoldeDEchange;
-
-    std::vector<int> NumeroDeContrainteEquivalenceStockFinal;
-    std::vector<int> NumeroDeContrainteExpressionStockFinal;
-
     std::vector<int> NumeroDeVariableStockFinal;
     std::vector<std::vector<int>> NumeroDeVariableDeTrancheDeStock;
 

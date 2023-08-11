@@ -27,31 +27,31 @@ enum class Variable {
   NegativeUnsuppliedEnergy,
 };
 
-enum class Constraint {
-  FlowDissociation,
-  AreaBalance,
-  FictiveLoads,
-  HydroPower,
-  HydroPowerSmoothingUsingVariationSum,
-  HydroPowerSmoothingUsingVariationMaxDown,
-  HydroPowerSmoothingUsingVariationMaxUp,
-  MinHydroPower,
-  MaxHydroPower,
-  MaxPumping,
-  AreaHydroLevel,
-  FinalStockEquivalent,
-  FinalStockExpression,
-  NbUnitsOutageLessThanNbUnitsStop,
-  NbDispUnitsMinBoundSinceMinUpTime,
-  MinDownTime,
-  PMaxDispatchableGeneration,
-  PMinDispatchableGeneration,
-  ConsistenceNODU,
-  ShortTermStorageLevel,
-  BindingConstraintHour,
-  BindingConstraintDay,
-  BindingConstraintWeek
-};
+// enum class Constraint {
+//   FlowDissociation,
+//   AreaBalance,
+//   FictiveLoads,
+//   HydroPower,
+//   HydroPowerSmoothingUsingVariationSum,
+//   HydroPowerSmoothingUsingVariationMaxDown,
+//   HydroPowerSmoothingUsingVariationMaxUp,
+//   MinHydroPower,
+//   MaxHydroPower,
+//   MaxPumping,
+//   AreaHydroLevel,
+//   FinalStockEquivalent,
+//   FinalStockExpression,
+//   NbUnitsOutageLessThanNbUnitsStop,
+//   NbDispUnitsMinBoundSinceMinUpTime,
+//   MinDownTime,
+//   PMaxDispatchableGeneration,
+//   PMinDispatchableGeneration,
+//   ConsistenceNODU,
+//   ShortTermStorageLevel,
+//   BindingConstraintHour,
+//   BindingConstraintDay,
+//   BindingConstraintWeek
+// };
 
 class ConstraintBuilder
 {
@@ -74,9 +74,12 @@ public:
         index_ = index;
     }
 
-    int getVariableIndex(Variable variable, int timeShift) const
+private:
+    int getVariableIndex(Variable variable, int timeShift, bool wrap) const
     {
       int pdt = hourInWeek_ + timeShift;
+      // TODO remove 168
+      if (wrap) pdt %= 168;
       // TODO remove 168
       if (pdt < 0 || pdt >= 168)
       {
@@ -133,11 +136,12 @@ public:
     }
     }
 
-    ConstraintBuilder& include(Variable var, double coeff, int timeShift = 0)
+public:
+    ConstraintBuilder& include(Variable var, double coeff, int timeShift = 0, bool wrap = false)
     {
       std::vector<double>& Pi = problemeAResoudre.Pi;
       std::vector<int>& Colonne = problemeAResoudre.Colonne;
-      int varIndex = getVariableIndex(var, timeShift);
+      int varIndex = getVariableIndex(var, timeShift, wrap);
       if (varIndex >= 0)
       {
         Pi[nombreDeTermes_] = coeff;
@@ -146,23 +150,26 @@ public:
       }
       return *this;
     }
-    ConstraintBuilder& equal(double)
+    ConstraintBuilder& equal(double rhs)
     {
       operator_ = '=';
+      rhs_ = rhs;
       return *this;
     }
-    ConstraintBuilder& less(double)
+    ConstraintBuilder& less(double rhs)
     {
       operator_ = '<';
+      rhs_ = rhs;
       return *this;
     }
-    ConstraintBuilder& greater(double)
+    ConstraintBuilder& greater(double rhs)
     {
       operator_ = '>';
+      rhs_ = rhs;
       return *this;
     }
 
-    void build(Constraint cnt);
+    void build();
 
 private:
     PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre;
@@ -173,6 +180,6 @@ private:
     // TODO: vérifier que l'index correspond bien à l'objet concerné (zone, lien, cluster thermique, etc.)
     unsigned int index_ = 0;
     char operator_;
-
+    double rhs_ = 0;
     int nombreDeTermes_ = 0;
 };

@@ -1,6 +1,6 @@
 #include "constraint_builder.h"
 
-void ConstraintBuilder::build(Constraint cnt)
+void ConstraintBuilder::build()
 {
     std::vector<double>& Pi = problemeAResoudre.Pi;   // TODO const
     std::vector<int>& Colonne = problemeAResoudre.Colonne;  // TODO const

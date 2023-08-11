@@ -75,9 +75,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* 
             interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
         }
 
-        problemeHebdo->NumeroDeContrainteDeSoldeDEchange[pays]
-          = ProblemeAResoudre->NombreDeContraintes;
-
         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
     }

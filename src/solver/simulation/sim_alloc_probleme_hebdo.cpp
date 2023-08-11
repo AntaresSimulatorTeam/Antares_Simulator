@@ -95,15 +95,6 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
     problem.CoutDeDefaillanceNegative.assign(nbPays, 0);
     problem.CoutDeDefaillanceEnReserve.assign(nbPays, 0);
 
-    problem.NumeroDeContrainteEnergieHydraulique.assign(nbPays, 0);
-    problem.NumeroDeContrainteMinEnergieHydraulique.assign(nbPays, 0);
-    problem.NumeroDeContrainteMaxEnergieHydraulique.assign(nbPays, 0);
-    problem.NumeroDeContrainteMaxPompage.assign(nbPays, 0);
-    problem.NumeroDeContrainteDeSoldeDEchange.assign(nbPays, 0);
-
-    problem.NumeroDeContrainteEquivalenceStockFinal.assign(nbPays, 0);
-    problem.NumeroDeContrainteExpressionStockFinal.assign(nbPays, 0);
-
     problem.NumeroDeVariableStockFinal.assign(nbPays, 0);
     problem.NumeroDeVariableDeTrancheDeStock.assign(nbPays, std::vector<int>(100));
 

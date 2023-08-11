@@ -31,34 +31,71 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
+#include "opt_rename_problem.h"
+#include "constraint_builder.h"
 #include <antares/study.h>
 
 using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
 
-static void shortTermStorageLevelsRHS(
-    const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
-    int numberOfAreas,
-    std::vector<double>& SecondMembre,
-    int hourInTheYear)
+void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
+                   ConstraintBuilder& constraintBuilder,
+                   int pays)
 {
-    for (int areaIndex = 0; areaIndex < numberOfAreas; areaIndex++)
+    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo.PaliersThermiquesDuPays[pays];
+
+    for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
     {
-        for (auto& storage : shortTermStorageInput[areaIndex])
-        {
-            const int clusterGlobalIndex = storage.clusterGlobalIndex;
-            const int cnt = 2; // TODO
-            SecondMembre[cnt] = storage.series->inflows[hourInTheYear];
-        }
+        const int palier
+          = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+        constraintBuilder.updateIndex(palier);
+        constraintBuilder.include(Variable::DispatchableProduction, -1.0);
     }
 }
 
-void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
-                                                     int PremierPdtDeLIntervalle,
-                                                     int DernierPdtDeLIntervalle,
-                                                     int NumeroDeLIntervalle,
-                                                     const int optimizationNumber)
+static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+                                    ConstraintBuilder& constraintBuilder)
+{
+    for (const auto& storage : shortTermStorageInput)
+    {
+        const int clusterGlobalIndex = storage.clusterGlobalIndex;
+        constraintBuilder.updateIndex(clusterGlobalIndex);
+        constraintBuilder
+          .include(Variable::ShortTermStorageInjection, 1.0)
+          .include(Variable::ShortTermStorageWithdrawal, -1.0);
+    }
+}
+
+static void shortTermStorageLevels(
+  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+  unsigned int hourInTheYear,
+  ConstraintNamer& constraintNamer,
+  ConstraintBuilder& constraintBuilder)
+{
+    for (const auto& storage : shortTermStorageInput)
+    {
+        // L[h] - L[h-1] - efficiency * injection[h] + withdrawal[h] = inflows[h]
+        constraintBuilder.updateIndex(storage.clusterGlobalIndex);
+        constraintBuilder
+          .include(Variable::ShortTermStorageLevel, 1.0)
+          .include(Variable::ShortTermStorageLevel, -1.0, -1, true)
+          .include(Variable::ShortTermStorageInjection, -1.0 * storage.efficiency)
+          .include(Variable::ShortTermStorageWithdrawal, 1.0)
+          .equal(storage.series->inflows[hourInTheYear])
+          .build();
+
+        constraintNamer.ShortTermStorageLevel(ProblemeAResoudre->NombreDeContraintes, storage.name);
+    }
+}
+
+
+void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
+                          int PremierPdtDeLIntervalle,
+                          int DernierPdtDeLIntervalle,
+                          int NumeroDeLIntervalle,
+                          const int optimizationNumber)
 {
     int weekFirstHour = problemeHebdo->weekInTheYear * 168;
 
@@ -72,15 +109,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
     int NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
 
     const std::vector<int>& NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
-    const std::vector<int>& NumeroDeContrainteEnergieHydraulique
-      = problemeHebdo->NumeroDeContrainteEnergieHydraulique;
-    const std::vector<int>& NumeroDeContrainteMinEnergieHydraulique
-      = problemeHebdo->NumeroDeContrainteMinEnergieHydraulique;
-    const std::vector<int>& NumeroDeContrainteMaxEnergieHydraulique
-      = problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique;
-    const std::vector<int>& NumeroDeContrainteMaxPompage
-      = problemeHebdo->NumeroDeContrainteMaxPompage;
-
     const std::vector<bool>& DefaillanceNegativeUtiliserConsoAbattue
       = problemeHebdo->DefaillanceNegativeUtiliserConsoAbattue;
     const std::vector<bool>& DefaillanceNegativeUtiliserPMinThermique
@@ -93,61 +121,116 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         SecondMembre[i] = 0.0;
     }
 
-    for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
-         pdtHebdo++, pdtJour++)
+    ProblemeAResoudre->NombreDeContraintes = 0;
+    ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
+    
+    ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
+                                    problemeHebdo->NamedProblems);
+
+    for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
+         pdtHebdo++, pdt++)
     {
         const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
           = problemeHebdo->ConsommationsAbattues[pdtHebdo];
         const ALL_MUST_RUN_GENERATION& AllMustRunGeneration
           = problemeHebdo->AllMustRunGeneration[pdtHebdo];
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+      for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+      {
         {
-            int cnt = 2; // TODO
-            SecondMembre[cnt] = -ConsommationsAbattues.ConsommationAbattueDuPays[pays];
+           ConstraintBuilder areaBalance(*problemeHebdo,
+                                         problemeHebdo->CorrespondanceVarNativesVarOptim);
+            areaBalance.updateHourWithinWeek(pdt);
+
+            int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
+            constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            while (interco >= 0)
+            {
+                areaBalance.updateIndex(interco);
+                areaBalance.include(Variable::NTCDirect, 1.0);
+                interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
+            }
+            interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
+            while (interco >= 0)
+            {
+                areaBalance.updateIndex(interco);
+                areaBalance.include(Variable::NTCDirect, -1.0);
+                interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
+            }
+
+            exportPaliers(*problemeHebdo, areaBalance, pays);
+
+            areaBalance
+              .include(Variable::HydProd, -1.0)
+              .include(Variable::Pumping, 1.0)
+              .include(Variable::PositiveUnsuppliedEnergy, -1.0)
+              .include(Variable::NegativeUnsuppliedEnergy, 1.0);
+            
+            shortTermStorageBalance(problemeHebdo->ShortTermStorage[pays],
+                                    areaBalance);
+
+            const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
+              = problemeHebdo->ConsommationsAbattues[pdtHebdo];
+
+            double rhs = -ConsommationsAbattues.ConsommationAbattueDuPays[pays];
 
             bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
             bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
             if (reserveJm1 && opt1)
             {
-                SecondMembre[cnt]
-                  -= problemeHebdo->ReserveJMoins1[pays].ReserveHoraireJMoins1[pdtHebdo];
+                rhs -= problemeHebdo->ReserveJMoins1[pays].ReserveHoraireJMoins1[pdtHebdo];
             }
 
-            double* adresseDuResultat
-              = &(problemeHebdo->ResultatsHoraires[pays].CoutsMarginauxHoraires[pdtHebdo]);
-            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = adresseDuResultat;
+            areaBalance
+              .equal(rhs)
+              .build();
+            constraintNamer.AreaBalance(ProblemeAResoudre->NombreDeContraintes);
+            }
 
-            cnt = 2; // TODOg
-            SecondMembre[cnt] = 0.0;
-
-            double MaxAllMustRunGeneration = 0.0;
-            if (AllMustRunGeneration.AllMustRunGenerationOfArea[pays] > 0.0)
+            {
+              double rhs = 0;
+              double MaxAllMustRunGeneration = 0.0;
+              if (AllMustRunGeneration.AllMustRunGenerationOfArea[pays] > 0.0)
                 MaxAllMustRunGeneration = AllMustRunGeneration.AllMustRunGenerationOfArea[pays];
 
-            double MaxMoinsConsommationBrute = 0.0;
-            if (-(ConsommationsAbattues.ConsommationAbattueDuPays[pays]
-                  + AllMustRunGeneration.AllMustRunGenerationOfArea[pays])
-                > 0.0)
+              double MaxMoinsConsommationBrute = 0.0;
+              if (-(ConsommationsAbattues.ConsommationAbattueDuPays[pays]
+                    + AllMustRunGeneration.AllMustRunGenerationOfArea[pays])
+                  > 0.0)
                 MaxMoinsConsommationBrute
                   = -(ConsommationsAbattues.ConsommationAbattueDuPays[pays]
                       + AllMustRunGeneration.AllMustRunGenerationOfArea[pays]);
 
-            SecondMembre[cnt] = DefaillanceNegativeUtiliserConsoAbattue[pays]
-                                * (MaxAllMustRunGeneration + MaxMoinsConsommationBrute);
+              rhs = DefaillanceNegativeUtiliserConsoAbattue[pays]
+                * (MaxAllMustRunGeneration + MaxMoinsConsommationBrute);
 
-            if (DefaillanceNegativeUtiliserPMinThermique[pays] == 0)
-            {
-                SecondMembre[cnt] -= OPT_SommeDesPminThermiques(problemeHebdo, pays, pdtHebdo);
+              if (DefaillanceNegativeUtiliserPMinThermique[pays] == 0)
+                {
+                  rhs -= OPT_SommeDesPminThermiques(problemeHebdo, pays, pdtHebdo);
+                }
+
+
+              ConstraintBuilder fictiveLoad(*problemeHebdo,
+                                            problemeHebdo->CorrespondanceVarNativesVarOptim);
+              exportPaliers(*problemeHebdo, fictiveLoad, pays);            
+
+              fictiveLoad
+                .include(Variable::HydProd, -problemeHebdo->DefaillanceNegativeUtiliserHydro[pays])
+                .include(Variable::NegativeUnsuppliedEnergy, 1.0)
+                .less(rhs)
+                .build();
             }
 
-            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
-        }
-
-        int hourInTheYear = weekFirstHour + pdtHebdo;
-        shortTermStorageLevelsRHS(problemeHebdo->ShortTermStorage,
-                                  problemeHebdo->NombreDePays,
-                                  ProblemeAResoudre->SecondMembre,
-                                  hourInTheYear);
+            {
+              int hourInTheYear = weekFirstHour + pdtHebdo;
+              ConstraintBuilder STLevel_Builder(*problemeHebdo,
+                                                problemeHebdo->CorrespondanceVarNativesVarOptim);
+              STLevel_Builder.updateHourWithinWeek(pdt);
+              shortTermStorageLevels(problemeHebdo->ShortTermStorage[pays],
+                                     problemeHebdo->ProblemeAResoudre,
+                                     hourInTheYear,
+                                     constraintNamer,
+                                     STLevel_Builder);
+            }
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
@@ -182,6 +265,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                     + pdtHebdo;
             }
         }
+    }
     }
 
     for (int pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;)
@@ -237,7 +321,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        int cnt = NumeroDeContrainteEnergieHydraulique[pays];
+        int cnt = 2;
         if (cnt >= 0)
         {
             SecondMembre[cnt] = problemeHebdo->CaracteristiquesHydrauliques[pays]
@@ -255,7 +339,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         if (presenceHydro && (TurbEntreBornes
                 || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
         {
-            int cnt = NumeroDeContrainteMinEnergieHydraulique[pays];
+            int cnt =  2;//NumeroDeContrainteMinEnergieHydraulique[pays];
             if (cnt >= 0)
             {
                 SecondMembre[cnt] = problemeHebdo->CaracteristiquesHydrauliques[pays]
@@ -274,7 +358,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         if (presenceHydro && (TurbEntreBornes
                 || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
         {
-            int cnt = NumeroDeContrainteMaxEnergieHydraulique[pays];
+          int cnt = 2; //NumeroDeContrainteMaxEnergieHydraulique[pays];
             if (cnt >= 0)
             {
                 SecondMembre[cnt] = problemeHebdo->CaracteristiquesHydrauliques[pays]
@@ -288,7 +372,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
     {
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
         {
-            int cnt = NumeroDeContrainteMaxPompage[pays];
+          int cnt = 2;//NumeroDeContrainteMaxPompage[pays];
             if (cnt >= 0)
             {
                 SecondMembre[cnt] = problemeHebdo->CaracteristiquesHydrauliques[pays]
@@ -298,8 +382,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         }
     }
 
-    for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
-         pdtHebdo++, pdtJour++)
+    for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
+         pdtHebdo++, pdt++)
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
@@ -326,7 +410,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue
             && problemeHebdo->CaracteristiquesHydrauliques[pays].DirectLevelAccess)
         {
-            int cnt = problemeHebdo->NumeroDeContrainteEquivalenceStockFinal[pays];
+          int cnt = 2;//problemeHebdo->NumeroDeContrainteEquivalenceStockFinal[pays];
             if (cnt >= 0)
             {
                 SecondMembre[cnt] = 0;
@@ -336,7 +420,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         }
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
         {
-            int cnt = problemeHebdo->NumeroDeContrainteExpressionStockFinal[pays];
+          int cnt = 2; //problemeHebdo->NumeroDeContrainteExpressionStockFinal[pays];
             if (cnt >= 0)
             {
                 SecondMembre[cnt] = 0;

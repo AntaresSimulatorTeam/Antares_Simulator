@@ -35,122 +35,10 @@
 
 using namespace Antares::Data;
 
-void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
-                   const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
-                   int pays,
-                   int& nombreDeTermes,
-                   std::vector<double>& Pi,
-                   std::vector<int>& Colonne)
-{
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo.PaliersThermiquesDuPays[pays];
+// TODO DELETE THIS FILE
 
-    for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
-    {
-        const int palier
-          = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-        int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDuPalierThermique[palier];
-        if (var >= 0)
-        {
-            Pi[nombreDeTermes] = -1.0;
-            Colonne[nombreDeTermes] = var;
-            nombreDeTermes++;
-        }
-    }
-}
-
-static void shortTermStorageBalance(
-  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-  const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
-  int& nombreDeTermes,
-  std::vector<double>& Pi,
-  std::vector<int>& Colonne)
-{
-    for (const auto& storage : shortTermStorageInput)
-    {
-        const int clusterGlobalIndex = storage.clusterGlobalIndex;
-        if (const int varInjection = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
-                                       .InjectionVariable[clusterGlobalIndex];
-            varInjection >= 0)
-        {
-            Pi[nombreDeTermes] = 1.0;
-            Colonne[nombreDeTermes] = varInjection;
-            nombreDeTermes++;
-        }
-
-        if (const int varWithdrawal = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
-                                        .WithdrawalVariable[clusterGlobalIndex];
-            varWithdrawal >= 0)
-        {
-            Pi[nombreDeTermes] = -1.0;
-            Colonne[nombreDeTermes] = varWithdrawal;
-            nombreDeTermes++;
-        }
-    }
-}
-
-static void shortTermStorageLevels(
-  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-  std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim,
-  std::vector<double>& Pi,
-  std::vector<int>& Colonne,
-  int nombreDePasDeTempsPourUneOptimisation,
-  int pdt,
-  ConstraintNamer& constraintNamer)
-{
-    const auto& VarOptimCurrent = CorrespondanceVarNativesVarOptim[pdt];
-    // Cycle over the simulation period
-    const int timestepPrevious
-      = (pdt - 1 + nombreDePasDeTempsPourUneOptimisation) % nombreDePasDeTempsPourUneOptimisation;
-    const auto& VarOptimPrevious = CorrespondanceVarNativesVarOptim[timestepPrevious];
-    for (auto& storage : shortTermStorageInput)
-    {
-        int nombreDeTermes = 0;
-        const int clusterGlobalIndex = storage.clusterGlobalIndex;
-        // L[h] - L[h-1] - efficiency * injection[h] + withdrawal[h] = inflows[h]
-        if (const int varLevel
-            = VarOptimCurrent.SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
-            varLevel >= 0)
-        {
-            Pi[nombreDeTermes] = 1.0;
-            Colonne[nombreDeTermes] = varLevel;
-            nombreDeTermes++;
-        }
-
-        if (const int varLevel_previous
-            = VarOptimPrevious.SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
-            varLevel_previous >= 0)
-        {
-            Pi[nombreDeTermes] = -1.0;
-            Colonne[nombreDeTermes] = varLevel_previous;
-            nombreDeTermes++;
-        }
-
-        if (const int varInjection
-            = VarOptimCurrent.SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
-            varInjection >= 0)
-        {
-            Pi[nombreDeTermes] = -1.0 * storage.efficiency;
-            Colonne[nombreDeTermes] = varInjection;
-            nombreDeTermes++;
-        }
-
-        if (const int varWithdrawal
-            = VarOptimCurrent.SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
-            varWithdrawal >= 0)
-        {
-            Pi[nombreDeTermes] = 1.0;
-            Colonne[nombreDeTermes] = varWithdrawal;
-            nombreDeTermes++;
-        }
-
-        constraintNamer.ShortTermStorageLevel(ProblemeAResoudre->NombreDeContraintes, storage.name);
-        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-    }
-}
-
-void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo, Solver::IResultWriter& writer)
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
+                                                             Solver::IResultWriter& writer)
 {
     int var;
 
@@ -170,92 +58,22 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo->NamedProblems);
-
+    
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
+      auto& CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
         constraintNamer.UpdateTimeStep(timeStepInYear);
-        CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
+
+            // Some other constraint
             int nombreDeTermes = 0;
 
-            int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
-            constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-
-            while (interco >= 0)
-            {
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-                interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
-            }
-            interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
-            while (interco >= 0)
-            {
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = -1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-                interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
-            }
-
-            exportPaliers(
-              *problemeHebdo, CorrespondanceVarNativesVarOptim, pays, nombreDeTermes, Pi, Colonne);
-
-            var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = -1.0;
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
-
-            var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDePompage[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = 1.0;
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
-
-            var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = -1.0;
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
-            var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillanceNegative[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = 1.0;
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
-
-            shortTermStorageBalance(problemeHebdo->ShortTermStorage[pays],
-                                    CorrespondanceVarNativesVarOptim,
-                                    nombreDeTermes,
-                                    Pi,
-                                    Colonne);
-
-            constraintNamer.AreaBalance(ProblemeAResoudre->NombreDeContraintes);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-            nombreDeTermes = 0;
-
-            exportPaliers(
-              *problemeHebdo, CorrespondanceVarNativesVarOptim, pays, nombreDeTermes, Pi, Colonne);
-            var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
+            // exportPaliers(
+            //   *problemeHebdo, CorrespondanceVarNativesVarOptim, pays, nombreDeTermes, Pi, Colonne);
+            // var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
             if (var >= 0)
             {
                 Pi[nombreDeTermes] = -problemeHebdo->DefaillanceNegativeUtiliserHydro[pays];
@@ -275,14 +93,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
             // Short term storage
-            shortTermStorageLevels(problemeHebdo->ShortTermStorage[pays],
-                                   ProblemeAResoudre,
-                                   problemeHebdo->CorrespondanceVarNativesVarOptim,
-                                   Pi,
-                                   Colonne,
-                                   nombreDePasDeTempsPourUneOptimisation,
-                                   pdt,
-                                   constraintNamer);
+            // shortTermStorageLevels(problemeHebdo->ShortTermStorage[pays],
+            //                        ProblemeAResoudre,
+            //                        problemeHebdo->CorrespondanceVarNativesVarOptim,
+            //                        Pi,
+            //                        Colonne,
+            //                        nombreDePasDeTempsPourUneOptimisation,
+            //                        pdt,
+            //                        constraintNamer);
         }
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
@@ -660,15 +478,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 }
             }
 
-            problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays]
-              = ProblemeAResoudre->NombreDeContraintes;
             constraintNamer.UpdateTimeStep(problemeHebdo->weekInTheYear);
             constraintNamer.HydroPower(ProblemeAResoudre->NombreDeContraintes);
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
         }
-        else
-            problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays] = -1;
     }
 
     if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
@@ -815,15 +629,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 }
             }
 
-            problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays]
-              = ProblemeAResoudre->NombreDeContraintes;
             constraintNamer.UpdateTimeStep(problemeHebdo->weekInTheYear);
             constraintNamer.MinHydroPower(ProblemeAResoudre->NombreDeContraintes);
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
         }
-        else
-            problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays] = -1;
 
         if (presenceHydro
             && (TurbEntreBornes
@@ -843,15 +653,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 }
             }
 
-            problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays]
-              = ProblemeAResoudre->NombreDeContraintes;
             constraintNamer.UpdateTimeStep(problemeHebdo->weekInTheYear);
             constraintNamer.MaxHydroPower(ProblemeAResoudre->NombreDeContraintes);
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
         }
-        else
-            problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays] = -1;
     }
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
@@ -872,16 +678,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 }
             }
 
-            problemeHebdo->NumeroDeContrainteMaxPompage[pays]
-              = ProblemeAResoudre->NombreDeContraintes;
-
             constraintNamer.UpdateTimeStep(problemeHebdo->weekInTheYear);
             constraintNamer.MaxPumping(ProblemeAResoudre->NombreDeContraintes);
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
         }
-        else
-            problemeHebdo->NumeroDeContrainteMaxPompage[pays] = -1;
     }
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
@@ -978,8 +779,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 Colonne[nombreDeTermes] = var;
                 nombreDeTermes++;
             }
-            problemeHebdo->NumeroDeContrainteEquivalenceStockFinal[pays]
-              = ProblemeAResoudre->NombreDeContraintes;
 
             constraintNamer.FinalStockEquivalent(ProblemeAResoudre->NombreDeContraintes);
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
@@ -1007,9 +806,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     nombreDeTermes++;
                 }
             }
-
-            problemeHebdo->NumeroDeContrainteExpressionStockFinal[pays]
-              = ProblemeAResoudre->NombreDeContraintes;
 
             constraintNamer.FinalStockExpression(ProblemeAResoudre->NombreDeContraintes);
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(

@@ -85,11 +85,11 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                                                                DernierPdtDeLIntervalle,
                                                                optimizationNumber);
 
-        OPT_InitialiserLeSecondMembreDuProblemeLineaire(problemeHebdo,
-                                                        PremierPdtDeLIntervalle,
-                                                        DernierPdtDeLIntervalle,
-                                                        numeroDeLIntervalle,
-                                                        optimizationNumber);
+        OPT_BuildConstraints(problemeHebdo,
+                             PremierPdtDeLIntervalle,
+                             DernierPdtDeLIntervalle,
+                             numeroDeLIntervalle,
+                             optimizationNumber);
 
         OPT_InitialiserLesCoutsLineaire(
           problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
@@ -160,7 +160,8 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(problemeHebdo);
 
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(problemeHebdo, writer);
+    // OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(problemeHebdo,
+    //                                                         writer);
 
     bool ret = runWeeklyOptimization(
       options, problemeHebdo, adqPatchParams, writer, PREMIERE_OPTIMISATION);
