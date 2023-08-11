@@ -45,30 +45,20 @@ public:
     FinalLevelInflowsModifier(const PartHydro& hydro,
                               const unsigned int& areaIndex,
                               const AreaName& areaName);
+    void initialize(const Matrix<double>& scenarioInitialHydroLevels,
+                    const Matrix<double>& scenarioFinalHydroLevels,
+                    const uint lastSimulationDay,
+                    const uint nbYears);
 
-private:
-    uint lastSimulationDay_ = 0;
+    bool CheckInfeasibility(uint year);
+    bool isApplicable(uint year);
+    bool isActive();
 
-    // Data from area (remaining unchanged throughout simulation)
-    const PartHydro& hydro_;
-    const unsigned int& areaIndex_;
-    const AreaName& areaName_;
-    const Matrix<double>::ColumnType* InitialLevels_ = nullptr;
-    const Matrix<double>::ColumnType* FinalLevels_ = nullptr;
-
-    
-    // Data changing at each MC year
-    double initialReservoirLevel_ = -1.;
-    double finalReservoirLevel_ = -1.;
-    double deltaReservoirLevel_;
-
-    std::vector<bool> isApplicable_;
-
-public:
     // vectors containing data necessary for final reservoir level calculation
     // for one area and all MC years
     // vector indexes correspond to the MC years
     std::vector<double> deltaLevel;
+
 
 private:
     void ComputeDelta(uint year);
@@ -79,15 +69,21 @@ private:
     bool preCheckYearlyInflow(double totalYearInflows, uint year) const;
     bool preCheckRuleCurves(uint year) const;
 
-public:
-    void initialize(const Matrix<double>& scenarioInitialHydroLevels,
-                    const Matrix<double>& scenarioFinalHydroLevels,
-                    const uint lastSimulationDay,
-                    const uint nbYears);
+    uint lastSimulationDay_ = 0;
 
-    bool CheckInfeasibility(uint year);
-    bool isApplicable(uint year);
-    bool isActive();
+    // Data from area (remaining unchanged throughout simulation)
+    const PartHydro& hydro_;
+    const unsigned int& areaIndex_;
+    const AreaName& areaName_;
+    const Matrix<double>::ColumnType* InitialLevels_ = nullptr;
+    const Matrix<double>::ColumnType* FinalLevels_ = nullptr;
+
+    // Data changing at each MC year
+    double initialReservoirLevel_ = -1.;
+    double finalReservoirLevel_ = -1.;
+    double deltaReservoirLevel_;
+
+    std::vector<bool> isApplicable_;
 };
 } // namespace Antares::Data
 
