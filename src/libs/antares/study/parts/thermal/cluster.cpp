@@ -237,14 +237,14 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
 
 void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
 {
-    if (not newgrp)
+    if (newgrp.empty())
     {
         groupID = thermalDispatchGrpOther1;
         pGroup.clear();
         return;
     }
     pGroup = newgrp;
-    newgrp.toLower();
+    toLower(newgrp);
 
     switch (newgrp[0])
     {

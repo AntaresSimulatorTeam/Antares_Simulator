@@ -46,6 +46,8 @@ void TransformNameIntoID(const AnyString& name, StringT& out);
 void BeautifyName(YString& out, AnyString oldname);
 void BeautifyName(std::string& out, const std::string& oldname);
 
+void toLower(std::string& str);
+
 } // namespace Antares
 
 #include "utils.hxx"

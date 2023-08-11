@@ -103,5 +103,5 @@ target_link_libraries(test-utils
 		libantares-core
 		Boost::unit_test_framework
 )
-add_test(NAME test-utils COMMAND tests-utils)
+add_test(NAME test-utils COMMAND test-utils)
 

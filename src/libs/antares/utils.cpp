@@ -70,6 +70,14 @@ void BeautifyName(YString& out, AnyString oldname)
     out.trim(" \t\r\n");
 }
 
+template<>
+void TransformNameIntoID(const AnyString& name, std::string& out)
+{
+    Yuni::String yuniOut;
+    TransformNameIntoID(name, yuniOut);
+    out = yuniOut;
+}
+
 void BeautifyName(std::string& out, const std::string& oldname)
 {
     YString yuniOut;
@@ -77,5 +85,15 @@ void BeautifyName(std::string& out, const std::string& oldname)
     out = yuniOut.c_str();
 }
 
+char charToLower(char in)
+{
+    return std::tolower(in, std::locale());
+}
+
+//Note: boost already has it: use it instead ?
+void toLower(std::string& str)
+{
+    std::transform(str.begin(), str.end(), str.begin(), &charToLower);
+}
 
 } // namespace Antares

@@ -47,6 +47,9 @@ check_include_file_cxx(iostream YUNI_HAS_IOSTREAM)
 # cassert
 check_include_file_cxx(cassert YUNI_HAS_CASSERT)
 
+# cassert
+check_include_file_cxx(string YUNI_HAS_STD_STRING)
+
 # dirent.h
 check_include_file(dirent.h YUNI_HAS_DIRENT_H)
 

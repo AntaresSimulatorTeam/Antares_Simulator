@@ -99,14 +99,14 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
 
 void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
 {
-    if (not newgrp)
+    if (newgrp.empty())
     {
         groupID = renewableOther1;
         pGroup.clear();
         return;
     }
     pGroup = newgrp;
-    newgrp.toLower();
+    toLower(newgrp);
 
     if (newgrp == "solar thermal")
     {

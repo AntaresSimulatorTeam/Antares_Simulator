@@ -1018,12 +1018,12 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     BeautifyName(beautifyname, newName);
     if (!beautifyname)
         return false;
-    newName = beautifyname;
+    newName = beautifyname.c_str();
 
     // Preparing the new area ID
     ClusterName newID;
     TransformNameIntoID(newName, newID);
-    if (!newID)
+    if (newID.empty())
     {
         logs.error() << "invalid id transformation";
         return false;
