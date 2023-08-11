@@ -30,6 +30,12 @@
 
 namespace Antares::Data
 {
+
+bool isValidLevel(double level)
+{
+    return (level < 0. || isnan(level)) ? false : true;
+}
+
 FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
                                                      const unsigned int& areaIndex,
                                                      const AreaName& areaName) :
@@ -137,8 +143,8 @@ bool FinalLevelInflowsModifier::isActive()
 {
     return  hydro_.reservoirManagement && 
             !hydro_.useWaterValue &&
-            finalReservoirLevel_ >= 0. &&
-            initialReservoirLevel_ >= 0.;
+            isValidLevel(finalReservoirLevel_) &&
+            isValidLevel(initialReservoirLevel_);
 }
 
 bool FinalLevelInflowsModifier::makeChecks(uint year)

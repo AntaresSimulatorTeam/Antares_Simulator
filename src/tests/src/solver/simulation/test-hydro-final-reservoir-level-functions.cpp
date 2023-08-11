@@ -21,11 +21,9 @@ struct Fixture
     Fixture& operator=(const Fixture&& f) = delete;
     Fixture()
     {
-        // endDay must be 365, see preCheckStartAndEndSim function
-        Parameters& parameters = study->parameters;
-
-        parameters.simulationDays.end = 365;
-        uint nbYears = parameters.nbYears = 2;
+        // Simulation last day must be 365 so that final level checks succeeds 
+        study->parameters.simulationDays.end = 365;
+        uint nbYears = study->parameters.nbYears = 2;
 
         area_1 = study->areaAdd("Area1");
         area_2 = study->areaAdd("Area2");
@@ -55,23 +53,20 @@ struct Fixture
 
         // Scenario builder for initial and final reservoir levels
         // -------------------------------------------------------
-        Matrix<double>& scenarioInitialHydroLevels = study->scenarioInitialHydroLevels;
-        Matrix<double>& scenarioFinalHydroLevels = study->scenarioFinalHydroLevels;
-
         uint areasCount = study->areas.size();
 
-        scenarioInitialHydroLevels.resize(nbYears, areasCount);
-        scenarioFinalHydroLevels.resize(nbYears, areasCount);
+        study->scenarioInitialHydroLevels.resize(nbYears, areasCount);
+        study->scenarioFinalHydroLevels.resize(nbYears, areasCount);
 
-        scenarioInitialHydroLevels[0][0] = 2.3;
-        scenarioInitialHydroLevels[0][1] = 4.2;
-        scenarioInitialHydroLevels[1][0] = 1.5;
-        scenarioInitialHydroLevels[1][1] = 2.4;
+        study->scenarioInitialHydroLevels[0][0] = 2.3;
+        study->scenarioInitialHydroLevels[0][1] = 4.2;
+        study->scenarioInitialHydroLevels[1][0] = 1.5;
+        study->scenarioInitialHydroLevels[1][1] = 2.4;
 
-        scenarioFinalHydroLevels[0][0] = 3.4;
-        scenarioFinalHydroLevels[0][1] = 5.1;
-        scenarioFinalHydroLevels[1][0] = 3.5;
-        scenarioFinalHydroLevels[1][1] = 4.3;
+        study->scenarioFinalHydroLevels[0][0] = 3.4;
+        study->scenarioFinalHydroLevels[0][1] = 5.1;
+        study->scenarioFinalHydroLevels[1][0] = 3.5;
+        study->scenarioFinalHydroLevels[1][1] = 4.3;
 
         // Inflows time series matrices
         // -----------------------------
@@ -108,208 +103,165 @@ BOOST_FIXTURE_TEST_SUITE(s, Fixture)
 
 BOOST_AUTO_TEST_CASE(initialize_modifier_for_area_1___modifier_is_active)
 {
-    auto& parameters = study->parameters;
-    Matrix<double>& scenarioInitialHydroLevels = study->scenarioInitialHydroLevels;
-    Matrix<double>& scenarioFinalHydroLevels = study->scenarioFinalHydroLevels;
-    auto& hydro = area_1->hydro;
     uint year = 0;
+    auto finLevInfModify = FinalLevelInflowsModifier(area_1->hydro, area_1->index, area_1->name);
 
-    auto finLevInfModify = FinalLevelInflowsModifier(hydro, area_1->index, area_1->name);
+    finLevInfModify.initialize(study->scenarioInitialHydroLevels,
+                               study->scenarioFinalHydroLevels,
+                               study->parameters.simulationDays.end,
+                               study->parameters.nbYears);
 
-    finLevInfModify.initialize(scenarioInitialHydroLevels,
-                               scenarioFinalHydroLevels,
-                               parameters.simulationDays.end,
-                               parameters.nbYears);
     finLevInfModify.CheckInfeasibility(year);
 
     BOOST_CHECK_EQUAL(finLevInfModify.isActive(), true);
 }
 
-BOOST_AUTO_TEST_CASE(Testing_initializeData_function_for_area_1_fail_resManagement)
+BOOST_AUTO_TEST_CASE(reservoir_management_is_false_for_area_1___modifier_is_not_active)
 {
-    auto& parameters = study->parameters;
-    Matrix<double>& scenarioInitialHydroLevels = study->scenarioInitialHydroLevels;
-    Matrix<double>& scenarioFinalHydroLevels = study->scenarioFinalHydroLevels;
-    auto& hydro = area_1->hydro;
-    hydro.reservoirManagement = false;
-    uint year = 1;
+    area_1->hydro.reservoirManagement = false;
+    uint year = 0;
 
-    auto finLevInfModify = FinalLevelInflowsModifier(hydro, 1, "Area1");
+    auto finLevInfModify = FinalLevelInflowsModifier(area_1->hydro, area_1->index, area_1->name);
 
-    finLevInfModify.initialize(scenarioInitialHydroLevels,
-                               scenarioFinalHydroLevels,
-                               parameters.simulationDays.end, 
-                               parameters.nbYears);
+    finLevInfModify.initialize(study->scenarioInitialHydroLevels,
+                               study->scenarioFinalHydroLevels,
+                               study->parameters.simulationDays.end,
+                               study->parameters.nbYears);
+
     finLevInfModify.CheckInfeasibility(year);
 
     // check when reservoirManagement = false
     BOOST_CHECK_EQUAL(finLevInfModify.isActive(), false);
 }
 
-BOOST_AUTO_TEST_CASE(Testing_initializeData_function_for_area_1_fail_watValues)
+BOOST_AUTO_TEST_CASE(use_water_value_is_true_for_area_1___modifier_is_not_active)
 {
-    auto& parameters = study->parameters;
-    Matrix<double>& scenarioInitialHydroLevels = study->scenarioInitialHydroLevels;
-    Matrix<double>& scenarioFinalHydroLevels = study->scenarioFinalHydroLevels;
-    auto& hydro = area_1->hydro;
-    hydro.useWaterValue = true;
-    uint year = 1;
+    area_1->hydro.useWaterValue = true;
+    uint year = 0;
 
-    auto finLevInfModify = FinalLevelInflowsModifier(hydro, 1, "Area1");
+    auto finLevInfModify = FinalLevelInflowsModifier(area_1->hydro, area_1->index, area_1->name);
 
-    finLevInfModify.initialize(scenarioInitialHydroLevels,
-                               scenarioFinalHydroLevels,
-                               parameters.simulationDays.end,
-                               parameters.nbYears);
+    finLevInfModify.initialize(study->scenarioInitialHydroLevels,
+                               study->scenarioFinalHydroLevels,
+                               study->parameters.simulationDays.end,
+                               study->parameters.nbYears);
+
     finLevInfModify.CheckInfeasibility(year);
 
     // check when useWaterValue = true
     BOOST_CHECK_EQUAL(finLevInfModify.isActive(), false);
 }
 
-BOOST_AUTO_TEST_CASE(Testing_initializeData_function_for_area_1_fail_NaN)
+BOOST_AUTO_TEST_CASE(initial_level_from_scenariobuilder_is_NaN_for_area_1_and_year_0____modifier_is_not_active)
 {
-    auto& parameters = study->parameters;
-    Matrix<double>& scenarioInitialHydroLevels = study->scenarioInitialHydroLevels;
-    Matrix<double>& scenarioFinalHydroLevels = study->scenarioFinalHydroLevels;
-    scenarioInitialHydroLevels[1][1] = std::numeric_limits<double>::quiet_NaN();
-    auto& hydro = area_1->hydro;
-    uint year = 1;
+    uint year = 0;
+    study->scenarioInitialHydroLevels[area_1->index][year] = std::numeric_limits<double>::quiet_NaN();
 
-    auto finLevInfModify = FinalLevelInflowsModifier(hydro, 1, "Area1");
+    auto finLevInfModify = FinalLevelInflowsModifier(area_1->hydro, area_1->index, area_1->name);
 
-    finLevInfModify.initialize(scenarioInitialHydroLevels, 
-                               scenarioFinalHydroLevels,
-                               parameters.simulationDays.end,
-                               parameters.nbYears);
+    finLevInfModify.initialize(study->scenarioInitialHydroLevels,
+                               study->scenarioFinalHydroLevels,
+                               study->parameters.simulationDays.end,
+                               study->parameters.nbYears);
+
     finLevInfModify.CheckInfeasibility(year);
 
-    // check when finalReservoirLevel = -1
     BOOST_CHECK_EQUAL(finLevInfModify.isActive(), false);
 }
 
-BOOST_AUTO_TEST_CASE(Testing_updateInflows_function_for_area_1)
+BOOST_AUTO_TEST_CASE(checking_level_configuration_is_ok_for_area_1_and_year_0___delta_level_as_expected)
 {
-    auto& parameters = study->parameters;
-    Matrix<double>& scenarioInitialHydroLevels = study->scenarioInitialHydroLevels;
-    Matrix<double>& scenarioFinalHydroLevels = study->scenarioFinalHydroLevels;
-    auto& hydro = area_1->hydro;
     uint year = 0;
 
-    auto finLevInfModify = FinalLevelInflowsModifier(hydro, 0, "Area1");
+    auto finLevInfModify = FinalLevelInflowsModifier(area_1->hydro, area_1->index, area_1->name);
 
-    finLevInfModify.initialize(scenarioInitialHydroLevels,
-                               scenarioFinalHydroLevels,
-                               parameters.simulationDays.end,
-                               parameters.nbYears);
+    finLevInfModify.initialize(study->scenarioInitialHydroLevels,
+                               study->scenarioFinalHydroLevels,
+                               study->parameters.simulationDays.end,
+                               study->parameters.nbYears);
+
     finLevInfModify.CheckInfeasibility(year);
 
     double expectedDeltaLevel = -1.1;
-    bool calculatedIncludeFinResLev = finLevInfModify.isApplicable(year);
-    double calculatedDeltaLevel = finLevInfModify.deltaLevel.at(year);
-
-    BOOST_CHECK_EQUAL(calculatedIncludeFinResLev, true);
-    BOOST_CHECK_EQUAL(calculatedDeltaLevel, expectedDeltaLevel);
+    BOOST_CHECK_EQUAL(finLevInfModify.isApplicable(year), true);
+    BOOST_CHECK_EQUAL(finLevInfModify.deltaLevel.at(year), expectedDeltaLevel);
 }
 
-BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_pass)
+BOOST_AUTO_TEST_CASE(input_level_configuration_has_nothing_wrong_for_area_1___check_succeeds)
 {
-    auto& parameters = study->parameters;
-    Matrix<double>& scenarioInitialHydroLevels = study->scenarioInitialHydroLevels;
-    Matrix<double>& scenarioFinalHydroLevels = study->scenarioFinalHydroLevels;
-    auto& hydro = area_1->hydro;
     uint year = 0;
+    auto finLevInfModify = FinalLevelInflowsModifier(area_1->hydro, area_1->index, area_1->name);
 
-    auto finLevInfModify = FinalLevelInflowsModifier(hydro, 0, "Area1");
-
-    finLevInfModify.initialize(scenarioInitialHydroLevels,
-                               scenarioFinalHydroLevels,
-                               parameters.simulationDays.end,
-                               parameters.nbYears);
+    finLevInfModify.initialize(study->scenarioInitialHydroLevels,
+                               study->scenarioFinalHydroLevels,
+                               study->parameters.simulationDays.end,
+                               study->parameters.nbYears);
 
     BOOST_CHECK_EQUAL(finLevInfModify.CheckInfeasibility(year), true);
 }
 
-BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_fail_preCheckInitResLevel)
+BOOST_AUTO_TEST_CASE(initial_level_month_for_area_1_is_not_january___check_fails)
 {
-    auto& parameters = study->parameters;
-    Matrix<double>& scenarioInitialHydroLevels = study->scenarioInitialHydroLevels;
-    Matrix<double>& scenarioFinalHydroLevels = study->scenarioFinalHydroLevels;
-    auto& hydro = area_1->hydro;
     uint year = 0;
-    // initialize reservoir level != January
-    hydro.initializeReservoirLevelDate = 3;
+    area_1->hydro.initializeReservoirLevelDate = 3; // initialize reservoir level != January
 
-    auto finLevInfModify = FinalLevelInflowsModifier(hydro, 0, "Area1");
+    auto finLevInfModify = FinalLevelInflowsModifier(area_1->hydro, area_1->index, area_1->name);
 
-    finLevInfModify.initialize(scenarioInitialHydroLevels,
-                               scenarioFinalHydroLevels,
-                               parameters.simulationDays.end,
-                               parameters.nbYears);
+    finLevInfModify.initialize(study->scenarioInitialHydroLevels,
+                               study->scenarioFinalHydroLevels,
+                               study->parameters.simulationDays.end,
+                               study->parameters.nbYears);
 
     BOOST_CHECK_EQUAL(finLevInfModify.CheckInfeasibility(year), false);
 }
 
-BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_fail_EndSimDay)
+BOOST_AUTO_TEST_CASE(simulation_last_day_is_not_365___check_fails)
 {
-    auto& parameters = study->parameters;
-    Matrix<double>& scenarioInitialHydroLevels = study->scenarioInitialHydroLevels;
-    Matrix<double>& scenarioFinalHydroLevels = study->scenarioFinalHydroLevels;
-    auto& hydro = area_1->hydro;
     uint year = 0;
-    // simulation End Day != 365
-    parameters.simulationDays.end = 300;
+    study->parameters.simulationDays.end = 300;
 
-    auto finLevInfModify = FinalLevelInflowsModifier(hydro, 0, "Area1");
+    auto finLevInfModify = FinalLevelInflowsModifier(area_1->hydro, area_1->index, area_1->name);
 
-    finLevInfModify.initialize(scenarioInitialHydroLevels,
-                               scenarioFinalHydroLevels,
-                               parameters.simulationDays.end,
-                               parameters.nbYears);
+    finLevInfModify.initialize(study->scenarioInitialHydroLevels,
+                               study->scenarioFinalHydroLevels,
+                               study->parameters.simulationDays.end,
+                               study->parameters.nbYears);
 
     BOOST_CHECK_EQUAL(finLevInfModify.CheckInfeasibility(year), false);
 }
 
-BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_fail_RuleCurve)
+BOOST_AUTO_TEST_CASE(Final_level_not_between_rule_curves_for_area_1___check_fails)
 {
-    auto& parameters = study->parameters;
-    Matrix<double>& scenarioInitialHydroLevels = study->scenarioInitialHydroLevels;
-    Matrix<double>& scenarioFinalHydroLevels = study->scenarioFinalHydroLevels;
-    auto& hydro = area_1->hydro;
     uint year = 0;
-    // Lat Day Rule Curve = [2.4 - 6.5]
-    scenarioFinalHydroLevels[0][0] = 6.6;
+    // Rule Curves on last simulation day = [2.4 - 6.5]
+    study->scenarioFinalHydroLevels[area_1->index][year] = 6.6;
 
-    auto finLevInfModify = FinalLevelInflowsModifier(hydro, 0, "Area1");
+    auto finLevInfModify = FinalLevelInflowsModifier(area_1->hydro, area_1->index, area_1->name);
 
-    finLevInfModify.initialize(scenarioInitialHydroLevels,
-                               scenarioFinalHydroLevels,
-                               parameters.simulationDays.end,
-                               parameters.nbYears);
+    finLevInfModify.initialize(study->scenarioInitialHydroLevels,
+                               study->scenarioFinalHydroLevels,
+                               study->parameters.simulationDays.end,
+                               study->parameters.nbYears);
 
     BOOST_CHECK_EQUAL(finLevInfModify.CheckInfeasibility(year), false);
 }
 
-BOOST_AUTO_TEST_CASE(Testing_makeChecks_function_for_area_1_fail_ResCapacity)
+BOOST_AUTO_TEST_CASE(diff_between_init_and_final_levels_are_bigger_than_yearly_inflows_for_area_1___check_fails)
 {
-    auto& parameters = study->parameters;
-    Matrix<double>& scenarioInitialHydroLevels = study->scenarioInitialHydroLevels;
-    Matrix<double>& scenarioFinalHydroLevels = study->scenarioFinalHydroLevels;
-    auto& hydro = area_1->hydro;
+    area_1->hydro.reservoirCapacity = 185000;
     uint year = 0;
-    hydro.reservoirCapacity = 185000;
-    scenarioInitialHydroLevels[0][0] = 10;
-    scenarioFinalHydroLevels[0][0] = 50;
+    study->scenarioInitialHydroLevels[area_1->index][year] = 10;
+    study->scenarioFinalHydroLevels[area_1->index][year] = 50;
 
-    // inflows = 200 MWh/day = 73 000 MWh/year
-    // res capacity =  185 000 -> 40% of reservoir is 74 000. So we are missing 1k.
+    // Inflows = 200 MWh/day = 73 000 MWh/year
+    // (50 - 10) x Reservoir capacity == 74 000 > 73 000.
 
-    auto finLevInfModify = FinalLevelInflowsModifier(hydro, 0, "Area1");
+    auto finLevInfModify = FinalLevelInflowsModifier(area_1->hydro, area_1->index, area_1->name);
 
-    finLevInfModify.initialize(scenarioInitialHydroLevels,
-                               scenarioFinalHydroLevels,
-                               parameters.simulationDays.end, 
-                               parameters.nbYears);
+    finLevInfModify.initialize(study->scenarioInitialHydroLevels,
+                               study->scenarioFinalHydroLevels,
+                               study->parameters.simulationDays.end,
+                               study->parameters.nbYears);
 
     BOOST_CHECK_EQUAL(finLevInfModify.CheckInfeasibility(year), false);
 }
@@ -321,8 +273,8 @@ BOOST_AUTO_TEST_CASE(Testing_prepareFinalReservoirLevelData_function_for_area_1_
     auto& modifierArea1 = hydro1.finalLevelInflowsModifier;
     auto& modifierArea2 = hydro2.finalLevelInflowsModifier;
 
-    FinalLevelInflowsModifier(hydro1, 0, "Area1");
-    FinalLevelInflowsModifier(hydro2, 1, "Area2");
+    FinalLevelInflowsModifier(area_1->hydro, area_1->index, area_1->name);
+    FinalLevelInflowsModifier(area_2->hydro, area_2->index, area_2->name);
 
     CheckFinalReservoirLevelsInput(*study);
 
