@@ -156,7 +156,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     const bool exportStructure = problemeHebdo->ExportStructure;
     const bool firstWeekOfSimulation = problemeHebdo->firstWeekOfSimulation;
-    // TODO use share from this // create shared ptr
+
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     int nombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
@@ -208,24 +208,49 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
             }
 
-            exportPaliers(*problemeHebdo,
-                          CorrespondanceVarNativesVarOptim,
-                          pays,
-                          nombreDeTermes,
-                          Pi,
-                          Colonne);
-            ConstraintBuilder constraint_builder(*problemeHebdo,
-                                                 problemeHebdo->CorrespondanceVarNativesVarOptim);
+            exportPaliers(
+              *problemeHebdo, CorrespondanceVarNativesVarOptim, pays, nombreDeTermes, Pi, Colonne);
 
-            constraint_builder
-              .include(Variable::HydroLevel, 1.0)
-              .include(Variable::HydroLevel, -1.0, -1) // shift -1, sauf pour le 1er pas de temps
-              .include(Variable::HydProd, 1.0)
-              .include(Variable::Overflow, 1.0)
-              .equal(2) // TODO
-              .build(Constraint::AreaBalance);
+            var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
+            if (var >= 0)
+            {
+                Pi[nombreDeTermes] = -1.0;
+                Colonne[nombreDeTermes] = var;
+                nombreDeTermes++;
+            }
+
+            var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDePompage[pays];
+            if (var >= 0)
+            {
+                Pi[nombreDeTermes] = 1.0;
+                Colonne[nombreDeTermes] = var;
+                nombreDeTermes++;
+            }
+
+            var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[pays];
+            if (var >= 0)
+            {
+                Pi[nombreDeTermes] = -1.0;
+                Colonne[nombreDeTermes] = var;
+                nombreDeTermes++;
+            }
+            var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillanceNegative[pays];
+            if (var >= 0)
+            {
+                Pi[nombreDeTermes] = 1.0;
+                Colonne[nombreDeTermes] = var;
+                nombreDeTermes++;
+            }
+
+            shortTermStorageBalance(problemeHebdo->ShortTermStorage[pays],
+                                    CorrespondanceVarNativesVarOptim,
+                                    nombreDeTermes,
+                                    Pi,
+                                    Colonne);
 
             constraintNamer.AreaBalance(ProblemeAResoudre->NombreDeContraintes);
+            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
             nombreDeTermes = 0;
 
             exportPaliers(
