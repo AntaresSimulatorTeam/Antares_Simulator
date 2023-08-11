@@ -50,12 +50,6 @@ public:
         maximum,
     };
 
-    enum hoursDaily
-    {
-        genMaxHours = 0,
-        pumpMaxHours,
-    };
-
     enum weeklyHydroMod
     {
         //! Weekly generating modulation
@@ -163,7 +157,8 @@ public:
     //! Data for time-series
     DataSeriesHydro* series;
 
-    Matrix<double, double> maxHours;
+    Matrix<double, double> maxHoursGen;
+    Matrix<double, double> maxHoursPump;
 
     bool isDeleted;
 

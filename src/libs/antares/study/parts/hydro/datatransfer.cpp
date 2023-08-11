@@ -95,25 +95,33 @@ bool DataTransfer::LoadFromFolder(Study& study, const AnyString& folder, Area& a
     return ret;
 }
 
-bool DataTransfer::AutoTransferHours(Study& study,  const AnyString& folder, Area& area)
+bool DataTransfer::AutoTransferHours(Study& study, const AnyString& folder, Area& area)
 {
     auto& buffer = study.bufferLoadingTS;
     bool ret = true;
-    auto& maxHours = area.hydro.maxHours;
 
-    maxHours.reset(2, DAYS_PER_YEAR, true);
-    maxHours.fillColumn(area.hydro.genMaxHours, 24.);
-    maxHours.fillColumn(area.hydro.pumpMaxHours, 24.);
+    auto& maxHoursGen = area.hydro.maxHoursGen;
+    auto& maxHoursPump = area.hydro.maxHoursPump;
 
-    for(uint day = 0; day < DAYS_PER_YEAR; ++day)
+    maxHoursGen.reset(1, DAYS_PER_YEAR, true);
+    maxHoursGen.fillColumn(0, 24.);
+
+    maxHoursPump.reset(1, DAYS_PER_YEAR, true);
+    maxHoursPump.fillColumn(0, 24.);
+
+    for (uint day = 0; day < DAYS_PER_YEAR; ++day)
     {
-        maxHours[PartHydro::genMaxHours][day] = maxPower[genMaxE][day];
-        maxHours[PartHydro::pumpMaxHours][day] = maxPower[pumpMaxE][day];
+        maxHoursGen[0][day] = maxPower[genMaxE][day];
+        maxHoursPump[0][day] = maxPower[pumpMaxE][day];
     }
 
-    buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxhours_"
+    buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxhoursGen_"
                    << area.id << ".txt";
-    ret = maxHours.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+    ret = maxHoursGen.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+
+    buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxhoursPump_"
+                   << area.id << ".txt";
+    ret = maxHoursPump.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
 
     return ret;
 }
