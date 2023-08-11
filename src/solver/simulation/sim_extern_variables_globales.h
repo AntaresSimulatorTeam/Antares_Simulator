@@ -37,13 +37,6 @@ extern std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_PAYS>> NumeroChroniq
 extern std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION>> NumeroChroniquesTireesParInterconnexion;
 extern std::vector<std::map<std::string, unsigned>> NumeroChroniquesTireesParGroup;
 
-/* Optimisation */
-/*-Economique-*/
-// extern PROBLEME_HEBDO                        problemeHebdo;
-/*-Adequation-*/
-extern PROBLEME_HORAIRE_ADEQUATION ProblemeHoraireAdequation;
-extern VALEURS_ANNUELLES** ValeursAnnuellesAdequation;
-
 /* Resultats */
 /*-Economique-*/
 extern std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
