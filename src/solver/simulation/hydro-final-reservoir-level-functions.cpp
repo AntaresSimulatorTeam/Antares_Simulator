@@ -35,12 +35,10 @@ void initializeFinalLevelData(Data::Study& study)
 {
     study.areas.each([&study](Data::Area& area)
     {
-        auto& finalInflows = area.hydro.finalLevelInflowsModifier;
-
-        finalInflows.initialize(study.scenarioInitialHydroLevels,
-                                study.scenarioFinalHydroLevels,
-                                study.parameters.simulationDays.end,
-                                study.parameters.nbYears);
+        area.hydro.finalLevelInflowsModifier.initialize(study.scenarioInitialHydroLevels,
+                                                        study.scenarioFinalHydroLevels,
+                                                        study.parameters.simulationDays.end,
+                                                        study.parameters.nbYears);
     });
 }
 
@@ -48,8 +46,7 @@ void CheckFinalReservoirLevelsForYear(Data::Study& study, uint year)
 {
     study.areas.each([&study, &year](Data::Area& area)
     {
-        auto& finalInflows = area.hydro.finalLevelInflowsModifier;
-        if (!finalInflows.CheckInfeasibility(year))
+        if (!area.hydro.finalLevelInflowsModifier.CheckInfeasibility(year))
         {
             AntaresSolverEmergencyShutdown();
         }
@@ -57,7 +54,7 @@ void CheckFinalReservoirLevelsForYear(Data::Study& study, uint year)
 
 }
 
-void CheckFinalReservoirLevelsInput(Data::Study& study)
+void CheckFinalReservoirLevelsConfiguration(Data::Study& study)
 {
     initializeFinalLevelData(study);
     

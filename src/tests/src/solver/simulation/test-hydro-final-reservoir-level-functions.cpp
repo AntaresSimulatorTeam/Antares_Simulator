@@ -266,43 +266,21 @@ BOOST_AUTO_TEST_CASE(diff_between_init_and_final_levels_are_bigger_than_yearly_i
     BOOST_CHECK_EQUAL(finLevInfModify.CheckInfeasibility(year), false);
 }
 
-BOOST_AUTO_TEST_CASE(Testing_prepareFinalReservoirLevelData_function_for_area_1_and_area_2)
+BOOST_AUTO_TEST_CASE(check_all_areas_final_reservoir_levels_when_config_is_ok___all_checks_succeed)
 {
-    auto& hydro1 = area_1->hydro;
-    auto& hydro2 = area_2->hydro;
-    auto& modifierArea1 = hydro1.finalLevelInflowsModifier;
-    auto& modifierArea2 = hydro2.finalLevelInflowsModifier;
+    CheckFinalReservoirLevelsConfiguration(*study);
 
-    FinalLevelInflowsModifier(area_1->hydro, area_1->index, area_1->name);
-    FinalLevelInflowsModifier(area_2->hydro, area_2->index, area_2->name);
+    // Checks on Area 1 modifier
+    BOOST_CHECK_EQUAL(area_1->hydro.finalLevelInflowsModifier.isApplicable(0), true);
+    BOOST_CHECK_EQUAL(area_1->hydro.finalLevelInflowsModifier.isApplicable(1), true);
+    BOOST_CHECK_EQUAL(area_1->hydro.finalLevelInflowsModifier.deltaLevel.at(0), 2.3 - 3.4);
+    BOOST_CHECK_EQUAL(area_1->hydro.finalLevelInflowsModifier.deltaLevel.at(1), 4.2 - 5.1);
 
-    CheckFinalReservoirLevelsInput(*study);
-
-    // extract data area 1 - year 1 and 2
-    bool area_1_year_1_include_calculated = modifierArea1.isApplicable(0);
-    bool area_1_year_2_include_calculated = modifierArea1.isApplicable(1);
-    double area_1_year_1_deltaLev_calculated = modifierArea1.deltaLevel.at(0);
-    double area_1_year_2_deltaLev_calculated = modifierArea1.deltaLevel.at(1);
-    double area_1_year_1_deltaLev_expected = 2.3 - 3.4;
-    double area_1_year_2_deltaLev_expected = 4.2 - 5.1;
-    // check data area 1 - year 1 and 2
-    BOOST_CHECK_EQUAL(area_1_year_1_include_calculated, true);
-    BOOST_CHECK_EQUAL(area_1_year_2_include_calculated, true);
-    BOOST_CHECK_EQUAL(area_1_year_1_deltaLev_calculated, area_1_year_1_deltaLev_expected);
-    BOOST_CHECK_EQUAL(area_1_year_2_deltaLev_calculated, area_1_year_2_deltaLev_expected);
-
-    // extract data area 2 - year 1 and 2
-    bool area_2_year_1_include_calculated = modifierArea2.isApplicable(0);
-    bool area_2_year_2_include_calculated = modifierArea2.isApplicable(1);
-    double area_2_year_1_deltaLev_calculated = modifierArea2.deltaLevel.at(0);
-    double area_2_year_2_deltaLev_calculated = modifierArea2.deltaLevel.at(1);
-    double area_2_year_1_deltaLev_expected = 1.5 - 3.5;
-    double area_2_year_2_deltaLev_expected = 2.4 - 4.3;
-    // check data area 2 - year 1 and 2
-    BOOST_CHECK_EQUAL(area_2_year_1_include_calculated, true);
-    BOOST_CHECK_EQUAL(area_2_year_2_include_calculated, true);
-    BOOST_CHECK_EQUAL(area_2_year_1_deltaLev_calculated, area_2_year_1_deltaLev_expected);
-    BOOST_CHECK_EQUAL(area_2_year_2_deltaLev_calculated, area_2_year_2_deltaLev_expected);
+    // Checks on Area 2 modifier
+    BOOST_CHECK_EQUAL(area_2->hydro.finalLevelInflowsModifier.isApplicable(0), true);
+    BOOST_CHECK_EQUAL(area_2->hydro.finalLevelInflowsModifier.isApplicable(1), true);
+    BOOST_CHECK_EQUAL(area_2->hydro.finalLevelInflowsModifier.deltaLevel.at(0), 1.5 - 3.5);
+    BOOST_CHECK_EQUAL(area_2->hydro.finalLevelInflowsModifier.deltaLevel.at(1), 2.4 - 4.3);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
