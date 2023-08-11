@@ -99,12 +99,22 @@ void Dailypower::createComponents()
     ssGridsLow->Add(
       new Component::Datagrid::Component(
         pSupport,
-        new Component::Datagrid::Renderer::HydroMonthlyPower(this, pInputAreaSelector),
-        wxT("Standard Credits (calendar)")),
+        new Component::Datagrid::Renderer::HydroMonthlyHoursGen(this, pInputAreaSelector),
+        wxT("Standard Credits Calendar (Maximum Generation)")),
       3,
       wxALL | wxEXPAND,
       5);
+
     sizer->Add(ssGridsLow, 4, wxALL | wxEXPAND | wxFIXED_MINSIZE);
+
+    ssGridsLow->Add(
+      new Component::Datagrid::Component(
+        pSupport,
+        new Component::Datagrid::Renderer::HydroMonthlyHoursPump(this, pInputAreaSelector),
+        wxT("Standard Credits Calendar (Maximum Pumping)")),
+      3,
+      wxALL | wxEXPAND,
+      5);
 
     sizer->Layout();
 }
