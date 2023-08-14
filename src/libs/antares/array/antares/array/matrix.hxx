@@ -33,7 +33,7 @@
 #include <logs/logs.h>
 #include <utility>
 #include <cstdlib>
-#include "io/statistics.h"
+#include <antares/io/statistics.h>
 #include "matrix-to-buffer.h"
 
 #define ANTARES_MATRIX_CSV_COMMA "\t;,"

@@ -1,6 +1,6 @@
 set(HEADERS
-        io/statistics.h
-        io/file.h
+        antares/io/statistics.h
+        antares/io/file.h
 )
 set(SRC_IO
         ${HEADERS}

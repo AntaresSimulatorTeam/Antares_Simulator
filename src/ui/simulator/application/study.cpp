@@ -30,7 +30,7 @@
 #include <yuni/core/system/environment.h>
 #include <antares/study/area.h>
 #include <antares/inifile/inifile.h>
-#include <io/statistics.h>
+#include <antares/io/statistics.h>
 
 #include <ui/common/component/spotlight/spotlight.h>
 

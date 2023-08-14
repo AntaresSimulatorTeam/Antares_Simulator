@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "io/statistics.h"
+#include "antares/io/statistics.h"
 #include <yuni/core/atomic/int.h>
 #include "logs/logs.h"
 

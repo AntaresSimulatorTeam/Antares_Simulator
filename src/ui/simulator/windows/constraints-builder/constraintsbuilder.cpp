@@ -60,7 +60,7 @@
 #include <antares/inifile/inifile.h>
 #include "../../application/study.h"
 #include <antares/config.h>
-#include <io/statistics.h>
+#include <antares/io/statistics.h>
 #include "../../application/main.h"
 
 using namespace Yuni;
