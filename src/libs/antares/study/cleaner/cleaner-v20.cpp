@@ -28,7 +28,7 @@
 #include <yuni/yuni.h>
 #include "../study.h"
 #include "../cleaner.h"
-#include <inifile/inifile.h>
+#include <antares/inifile/inifile.h>
 
 using namespace Yuni;
 using namespace Antares;

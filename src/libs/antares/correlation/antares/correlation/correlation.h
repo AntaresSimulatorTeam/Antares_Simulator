@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <antares/array/matrix.h>
-#include <inifile/inifile.h>
+#include <antares/inifile/inifile.h>
 #include "../study/fwd.h"
 #include "../study/version.h"
 

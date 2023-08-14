@@ -57,7 +57,7 @@
 #include "../message.h"
 #include <logs/logs.h>
 #include <antares/memory/memory.h>
-#include <inifile/inifile.h>
+#include <antares/inifile/inifile.h>
 #include "../../application/study.h"
 #include <antares/config.h>
 #include <io/statistics.h>

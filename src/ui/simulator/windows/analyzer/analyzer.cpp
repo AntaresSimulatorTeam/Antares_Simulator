@@ -52,7 +52,7 @@
 #include "../../application/menus.h"
 #include "../message.h"
 #include <logs/logs.h>
-#include <inifile/inifile.h>
+#include <antares/inifile/inifile.h>
 #include "../../application/study.h"
 #include <antares/config.h>
 #include <io/statistics.h>

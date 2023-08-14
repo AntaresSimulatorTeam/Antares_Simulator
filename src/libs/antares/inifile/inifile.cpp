@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "inifile/inifile.h"
+#include "antares/inifile/inifile.h"
 
 #include "logs/logs.h"
 #include "io/statistics.h"

@@ -33,7 +33,7 @@
 #include <memory>
 #include <set>
 #include <cassert>
-#include <inifile/inifile.h>
+#include <antares/inifile/inifile.h>
 #include "logs/logs.h"
 
 namespace Antares

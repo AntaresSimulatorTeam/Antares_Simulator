@@ -27,7 +27,7 @@
 
 #include "xcast.h"
 #include "logs/logs.h"
-#include <inifile/inifile.h>
+#include <antares/inifile/inifile.h>
 #include "../study.h"
 #include "../memory-usage.h"
 #include <limits>

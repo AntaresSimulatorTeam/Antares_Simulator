@@ -32,7 +32,7 @@
 #include <cassert>
 #include "area.h"
 #include <antares/array/array1d.h>
-#include "inifile/inifile.h"
+#include <antares/inifile/inifile.h>
 #include "logs/logs.h"
 #include "../memory-usage.h"
 #include "../../config.h"

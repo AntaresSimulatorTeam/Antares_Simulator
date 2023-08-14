@@ -1,6 +1,6 @@
 set(SRC_INI
-        inifile/inifile.h
-        inifile/inifile.hxx
+        antares/inifile/inifile.h
+        antares/inifile/inifile.hxx
         inifile.cpp
         )
 

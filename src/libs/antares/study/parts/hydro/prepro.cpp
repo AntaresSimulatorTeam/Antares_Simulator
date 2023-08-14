@@ -31,7 +31,7 @@
 #include "../../study.h"
 #include "../../memory-usage.h"
 #include "prepro.h"
-#include <inifile/inifile.h>
+#include <antares/inifile/inifile.h>
 #include <antares/array/array1d.h>
 #include "logs/logs.h"
 

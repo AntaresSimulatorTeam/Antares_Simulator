@@ -27,7 +27,7 @@
 
 #include "../../study.h"
 #include "container.h"
-#include <inifile/inifile.h>
+#include <antares/inifile/inifile.h>
 #include <antares/array/array1d.h>
 
 using namespace Antares;

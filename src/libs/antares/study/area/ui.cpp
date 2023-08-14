@@ -28,7 +28,7 @@
 #include "ui.h"
 #include "logs/logs.h"
 #include <yuni/core/math.h>
-#include <inifile/inifile.h>
+#include <antares/inifile/inifile.h>
 #include <sstream>
 
 using namespace Yuni;

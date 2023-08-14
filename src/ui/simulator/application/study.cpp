@@ -29,7 +29,7 @@
 #include <yuni/io/directory.h>
 #include <yuni/core/system/environment.h>
 #include <antares/study/area.h>
-#include <inifile/inifile.h>
+#include <antares/inifile/inifile.h>
 #include <io/statistics.h>
 
 #include <ui/common/component/spotlight/spotlight.h>

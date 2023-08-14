@@ -35,7 +35,7 @@
 
 #include "../constants.h"
 #include "parameters.h"
-#include <inifile/inifile.h>
+#include <antares/inifile/inifile.h>
 #include "logs/logs.h"
 #include "load-options.h"
 #include <limits.h>

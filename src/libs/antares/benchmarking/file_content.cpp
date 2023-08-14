@@ -1,4 +1,4 @@
-#include <inifile/inifile.h>
+#include <antares/inifile/inifile.h>
 
 #include <antares/benchmarking/file_content.h>
 
