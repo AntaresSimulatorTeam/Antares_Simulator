@@ -1,8 +1,9 @@
 set(PROJ date)
 set(HEADERS
-        antares/${PROJ}
+        antares/${PROJ}/date.h
 )
 set(SRC_DATE
+        ${HEADERS}
         date.cpp
 )
 source_group("misc\\${PROJ}" FILES ${SRC_DATE})
