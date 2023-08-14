@@ -26,7 +26,7 @@
 */
 
 #include "study.h"
-#include <benchmarking/info_collectors.h>
+#include <antares/benchmarking/info_collectors.h>
 #include "scenario-builder/sets.h"
 #include <yuni/core/string/wstring.h>
 #include <fstream>

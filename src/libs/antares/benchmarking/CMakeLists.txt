@@ -1,9 +1,9 @@
 set(SRC_BENCHMARKING
         timer.cpp
         info_collectors.cpp
-        benchmarking/file_content.h
-        benchmarking/timer.h
-        benchmarking/info_collectors.h
+        antares/benchmarking/file_content.h
+        antares/benchmarking/timer.h
+        antares/benchmarking/info_collectors.h
         file_content.cpp
         )
 source_group("misc\\benchmarking" FILES ${SRC_BENCHMARKING})

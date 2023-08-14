@@ -31,7 +31,7 @@
 #include <antares/study.h>
 #include <logs/logs.h>
 #include <antares/study/fwd.h> // PowerFluctuations
-#include <benchmarking/info_collectors.h>
+#include <antares/benchmarking/info_collectors.h>
 
 #include <yuni/core/string.h>
 #include <yuni/job/queue/service.h>

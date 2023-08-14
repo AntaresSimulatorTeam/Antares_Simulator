@@ -1,6 +1,6 @@
 #include <inifile/inifile.h>
 
-#include "benchmarking/file_content.h"
+#include <antares/benchmarking/file_content.h>
 
 using namespace std;
 

@@ -4,7 +4,7 @@
 #include <antares/resources/resources.h>
 #include <antares/hostinfo.h>
 #include <antares/fatal-error.h>
-#include <benchmarking/timer.h>
+#include <antares/benchmarking/timer.h>
 
 #include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>

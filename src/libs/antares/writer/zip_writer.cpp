@@ -2,7 +2,7 @@
 #include <yuni/io/file.h> // Yuni::IO::File::LoadFromFile
 
 #include "private/zip_writer.h"
-#include <benchmarking/timer.h>
+#include <antares/benchmarking/timer.h>
 
 extern "C"
 {
@@ -13,19 +13,20 @@ extern "C"
 }
 
 #include <ctime> // std::time
+#include <utility>
 
 namespace Antares::Solver
 {
 // Class ZipWriteJob
 template<class ContentT>
 ZipWriteJob<ContentT>::ZipWriteJob(ZipWriter& writer,
-                                   const std::string& entryPath,
+                                   std::string entryPath,
                                    ContentT& content,
                                    Benchmarking::IDurationCollector* duration_collector) :
  pZipHandle(writer.pZipHandle),
  pZipMutex(writer.pZipMutex),
  pState(writer.pState),
- pEntryPath(entryPath),
+ pEntryPath(std::move(entryPath)),
  pContent(std::move(content)),
  pDurationCollector(duration_collector)
 {

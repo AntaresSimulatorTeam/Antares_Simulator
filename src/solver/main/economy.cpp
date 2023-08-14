@@ -28,7 +28,7 @@
 #include "../application.h"
 #include "../simulation/solver.h"
 #include "../simulation/economy.h"
-#include <benchmarking/info_collectors.h>
+#include <antares/benchmarking/info_collectors.h>
 #include <logs/logs.h>
 
 namespace Antares

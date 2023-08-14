@@ -5,7 +5,7 @@
 
 #include "i_writer.h"
 #include "result_format.h"
-#include <benchmarking/info_collectors.h>
+#include <antares/benchmarking/info_collectors.h>
 
 namespace Antares::Solver
 {

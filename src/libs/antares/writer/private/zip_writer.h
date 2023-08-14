@@ -8,7 +8,7 @@
 #include <yuni/core/string.h>
 
 #include "antares/writer/i_writer.h"
-#include "benchmarking/info_collectors.h"
+#include <antares/benchmarking/info_collectors.h>
 
 
 namespace Antares::Solver
@@ -25,7 +25,7 @@ class ZipWriteJob final : public Yuni::Job::IJob
 {
 public:
     ZipWriteJob(ZipWriter& writer,
-                const std::string& entryPath,
+                std::string  entryPath,
                 ContentT& content,
                 Benchmarking::IDurationCollector* duration_collector);
     virtual void onExecute() override;

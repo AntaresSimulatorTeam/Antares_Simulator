@@ -3,8 +3,8 @@
 #include "misc/options.h"
 #include <antares/study.h>
 #include <antares/study/load-options.h>
-#include <benchmarking/info_collectors.h>
-#include <benchmarking/timer.h>
+#include <antares/benchmarking/info_collectors.h>
+#include <antares/benchmarking/timer.h>
 #include "simulation/simulation.h"
 
 #include <antares/writer/i_writer.h>
