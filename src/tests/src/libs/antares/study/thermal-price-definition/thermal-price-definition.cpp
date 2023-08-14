@@ -8,7 +8,7 @@
 #include <fstream>
 
 #include <study.h>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/exception/LoadingError.hpp>
 
 #include <antares/checks/checkLoadedInputData.h>

@@ -31,7 +31,7 @@
 #include <wx/sizer.h>
 #include <wx/font.h>
 #include "../../components/map/settings.h"
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include "../../../application/wait.h"
 #include <ui/common/lock.h>
 #include <wx/wupdlock.h>

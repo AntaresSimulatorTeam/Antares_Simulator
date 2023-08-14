@@ -28,7 +28,7 @@
 #include "mini-frame.h"
 #include "../../dispatcher/gui.h"
 #include <wx/timer.h>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include <wx/app.h>
 #include <wx/sizer.h>
 

@@ -29,7 +29,7 @@
 #ifdef YUNI_OS_WINDOWS
 #include <yuni/core/system/windows.hdr.h>
 #include <yuni/core/system/cpu.h>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;

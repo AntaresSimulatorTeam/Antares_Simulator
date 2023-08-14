@@ -28,7 +28,7 @@
 #include <string>
 #include <yuni/yuni.h>
 #include "study.h"
-#include "logs/logs.h"
+#include <antares/logs/logs.h>
 #include <yuni/io/file.h>
 
 using namespace Yuni;

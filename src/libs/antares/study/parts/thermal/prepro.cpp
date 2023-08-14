@@ -32,7 +32,7 @@
 #include "../../study.h"
 #include "../../memory-usage.h"
 #include "prepro.h"
-#include "logs/logs.h"
+#include <antares/logs/logs.h>
 #include <antares/array/array1d.h>
 
 using namespace Yuni;

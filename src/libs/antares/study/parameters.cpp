@@ -36,7 +36,7 @@
 #include "../constants.h"
 #include "parameters.h"
 #include <antares/inifile/inifile.h>
-#include "logs/logs.h"
+#include <antares/logs/logs.h>
 #include "load-options.h"
 #include <limits.h>
 #include <antares/study/memory-usage.h>

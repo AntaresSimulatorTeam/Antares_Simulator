@@ -28,7 +28,7 @@
 #include "create.h"
 #include <wx/statline.h>
 #include <ui/common/component/panel.h>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include <wx/stattext.h>
 
 namespace Antares

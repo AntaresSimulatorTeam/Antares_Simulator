@@ -27,7 +27,7 @@
 
 #include "antares/io/statistics.h"
 #include <yuni/core/atomic/int.h>
-#include "logs/logs.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 

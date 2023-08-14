@@ -31,7 +31,7 @@
 #include <antares/locale.h>
 #include <antares/utils.h>
 #include <antares/study.h>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include <string>
 
 #include "../../solver/constraints-builder/cbuilder.h"

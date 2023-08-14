@@ -1,8 +1,11 @@
 set(PROJ logs)
 set(HEADERS
-        ${PROJ}
+        antares/${PROJ}/cleaner.h
+        antares/${PROJ}/logs.h
+        antares/${PROJ}/logs.hxx
 )
 set(SRC_LOGS
+        ${HEADERS}
         logs.cpp
         cleaner.cpp
         )

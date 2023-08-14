@@ -32,7 +32,7 @@
 #include <yuni/core/string.h>
 
 #include <antares/study.h>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/writer/i_writer.h>
 
 #include "../simulation/simulation.h"

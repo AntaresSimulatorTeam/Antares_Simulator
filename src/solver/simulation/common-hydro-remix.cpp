@@ -31,7 +31,7 @@
 #include <antares/study/memory-usage.h>
 #include <antares/exception/AssertionError.hpp>
 #include "common-eco-adq.h"
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include <cassert>
 #include "simulation.h"
 #include <antares/study/area/scratchpad.h>

@@ -29,7 +29,7 @@
 #include "component.h"
 #include "../gridhelper.h"
 #include <wx/grid.h>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 

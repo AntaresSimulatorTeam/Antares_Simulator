@@ -31,7 +31,7 @@
 #include <wx/image.h>
 #include <wx/filename.h>
 #include <vector>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 

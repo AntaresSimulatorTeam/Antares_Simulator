@@ -30,7 +30,7 @@
 #include "../study.h"
 #include "links.h"
 #include "area.h"
-#include "logs/logs.h"
+#include <antares/logs/logs.h>
 #include "../memory-usage.h"
 #include "../filter.h"
 #include "constants.h"

@@ -26,7 +26,7 @@
 */
 
 #include <yuni/yuni.h>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include <yuni/core/getopt.h>
 #include "../../ui/common/winmain.hxx"
 #include <antares/utils.h>

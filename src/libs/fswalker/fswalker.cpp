@@ -38,7 +38,7 @@
 #include <algorithm>
 #include "registry.inc.hxx"
 #include "filejob.inc.hxx"
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;

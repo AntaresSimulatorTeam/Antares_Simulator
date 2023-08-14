@@ -28,7 +28,7 @@
 #include <antares/wx-wrapper.h>
 #include <wx/intl.h>
 #include <iostream>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 
 namespace Antares
 {

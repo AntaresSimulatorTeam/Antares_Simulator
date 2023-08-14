@@ -34,7 +34,7 @@
 #include <set>
 #include <cassert>
 #include <antares/inifile/inifile.h>
-#include "logs/logs.h"
+#include <antares/logs/logs.h>
 
 namespace Antares
 {

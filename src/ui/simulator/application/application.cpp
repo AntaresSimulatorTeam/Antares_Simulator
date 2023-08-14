@@ -36,7 +36,7 @@
 #include <antares/hostinfo.h>
 #include <yuni/io/file.h>
 #include <antares/jit.h>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/memory/memory.h>
 #include <wx/config.h>
 #include "../windows/message.h"
@@ -44,7 +44,7 @@
 #include <antares/sys/policy.h>
 #include "study.h"
 #include <yuni/datetime/timestamp.h>
-#include <logs/cleaner.h>
+#include <antares/logs/cleaner.h>
 #include <antares/locale.h>
 #ifndef YUNI_OS_WINDOWS
 #include <signal.h>

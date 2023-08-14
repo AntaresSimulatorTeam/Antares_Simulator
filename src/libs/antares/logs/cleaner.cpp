@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "logs/cleaner.h"
+#include "antares/logs/cleaner.h"
 #include "../constants.h"
 #include <yuni/io/directory/info.h>
 #include <yuni/datetime/timestamp.h>

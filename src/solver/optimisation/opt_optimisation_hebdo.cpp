@@ -32,7 +32,7 @@
 
 #include "opt_fonctions.h"
 #include <antares/fatal-error.h>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 
 extern "C"

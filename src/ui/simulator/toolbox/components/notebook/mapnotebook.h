@@ -29,7 +29,7 @@
 
 #include "notebook.h"
 #include <wx/textctrl.h>
-#include "logs/logs.h"
+#include <antares/logs/logs.h>
 namespace Antares
 {
 namespace Component

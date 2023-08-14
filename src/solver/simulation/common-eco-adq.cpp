@@ -33,7 +33,7 @@
 #include <antares/exception/UnfeasibleProblemError.hpp>
 
 #include "common-eco-adq.h"
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include <cassert>
 #include <map>
 #include "simulation.h"

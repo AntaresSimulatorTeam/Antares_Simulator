@@ -26,7 +26,7 @@
 */
 
 #include "gui.h"
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include <wx/window.h>
 #include <wx/dialog.h>
 #include <wx/sizer.h>

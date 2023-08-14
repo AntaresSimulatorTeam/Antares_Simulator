@@ -28,7 +28,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/system/cpu.h>
 #include "hostinfo.h"
-#include "logs/logs.h"
+#include <antares/logs/logs.h>
 
 #include "sys/hostname.hxx"
 

@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/xcast/xcast.h>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 
 namespace Antares
 {

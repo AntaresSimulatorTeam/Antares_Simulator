@@ -35,7 +35,7 @@
 #include "../../../application/study.h"
 #include "../../../windows/message.h"
 #include <ui/common/component/panel.h>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 

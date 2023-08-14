@@ -26,7 +26,7 @@
 */
 
 #include "hourly_csr_problem.h"
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include <sim_structure_probleme_economique.h>
 #include "adequacy_patch_runtime_data.h"
 

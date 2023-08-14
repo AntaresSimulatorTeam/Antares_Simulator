@@ -30,7 +30,7 @@
 #include <cassert>
 #include "main/main.h"
 #include <yuni/core/atomic/int.h>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 
 namespace Antares
 {

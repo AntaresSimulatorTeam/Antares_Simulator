@@ -33,7 +33,7 @@
 #include "prepro.h"
 #include <antares/inifile/inifile.h>
 #include <antares/array/array1d.h>
-#include "logs/logs.h"
+#include <antares/logs/logs.h>
 
 using namespace Antares;
 using namespace Yuni;

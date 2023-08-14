@@ -40,7 +40,7 @@ extern "C"
 #include "srs_api.h"
 }
 
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/fatal-error.h>
 
 #include "../utils/mps_utils.h"

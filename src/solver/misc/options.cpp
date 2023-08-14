@@ -30,7 +30,7 @@
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
 
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/study/study.h>
 #include <cassert>
 #include <string.h>

@@ -37,7 +37,7 @@
 #include <wx/dirdlg.h>
 #include <wx/config.h>
 #include <antares/memory/memory.h>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include "../../../toolbox/components/wizardheader.h"
 #include "../../../toolbox/create.h"
 #include <yuni/io/directory.h>

@@ -31,7 +31,7 @@
 #include <yuni/core/string.h>
 #include <yuni/core/static/types.h>
 
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 
 #include "endoflist.h"
 #include "categories.h"

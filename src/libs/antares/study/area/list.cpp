@@ -33,7 +33,7 @@
 #include "area.h"
 #include <antares/array/array1d.h>
 #include <antares/inifile/inifile.h>
-#include "logs/logs.h"
+#include <antares/logs/logs.h>
 #include "../memory-usage.h"
 #include "../../config.h"
 #include "../filter.h"

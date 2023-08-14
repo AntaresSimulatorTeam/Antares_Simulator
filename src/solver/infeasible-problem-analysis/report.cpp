@@ -1,6 +1,6 @@
 #include "report.h"
 #include "constraint.h"
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include <algorithm>
 
 static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,

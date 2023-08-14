@@ -29,7 +29,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cassert>
-#include "logs/logs.h"
+#include <antares/logs/logs.h>
 #include "version.h"
 
 using namespace Yuni;

@@ -29,7 +29,7 @@
 
 #include <antares/study/memory-usage.h>
 #include <antares/study.h>
-#include <logs/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/study/fwd.h> // PowerFluctuations
 #include <antares/benchmarking/info_collectors.h>
 
