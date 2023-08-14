@@ -127,6 +127,12 @@ struct commonFixture
         area_2->hydro.series->count = nbReadyMadeTS;
         area_3->hydro.series->count = nbReadyMadeTS;
 
+        // Hydro Power Credits : set the nb of ready made TS
+        nbReadyMadeTS = 15;
+        area_1->hydro.series->count = nbReadyMadeTS;
+        area_2->hydro.series->count = nbReadyMadeTS;
+        area_3->hydro.series->count = nbReadyMadeTS;
+
         // Links
         link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
         link_12->directCapacities.resize(15, 1);
@@ -338,6 +344,28 @@ BOOST_AUTO_TEST_CASE(
     referenceFile.append("h,area 1,5 = 8");
     referenceFile.append("h,area 2,17 = 12");
     referenceFile.append("h,area 3,18 = 7");
+    referenceFile.write();
+
+    BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
+// =================
+// Tests on Hydro Power Credits
+// =================
+BOOST_AUTO_TEST_CASE(
+  HYDRO_POWER_CREDITS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+{
+    my_rule->hydroPowerCredits.set(area_2->index, 10, 7);
+    my_rule->hydroPowerCredits.set(area_3->index, 4, 11);
+    my_rule->hydroPowerCredits.set(area_1->index, 11, 3);
+
+    saveScenarioBuilder();
+
+    // Build reference scenario builder file
+    referenceFile.append("[my rule name]");
+    referenceFile.append("hgp,area 1,11 = 3");
+    referenceFile.append("hgp,area 2,10 = 7");
+    referenceFile.append("hgp,area 3,4 = 11");
     referenceFile.write();
 
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
