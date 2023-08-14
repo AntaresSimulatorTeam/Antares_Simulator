@@ -924,12 +924,15 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = area.hydro.series->LoadHydroPowerCredits(study, area.id, buffer) && ret;
         }
 
-        if (study.header.version >= 870 && !area.hydro.isDeleted)
+        buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "common" << SEP
+                       << "capacity" << SEP << "maxpower_" << area.id << '.'
+                       << study.inputExtension;
+
+        bool exists = IO::File::Exists(buffer);
+
+        if (study.header.version >= 870 && exists)
         {
-            buffer.clear() << study.folderInput << SEP << "common" << SEP << "capacity" << SEP
-                           << "maxpower_" << area.id << '.' << study.inputExtension;
             IO::File::Delete(buffer);
-            area.hydro.isDeleted = true;
         }
 
         ++options.progressTicks;
