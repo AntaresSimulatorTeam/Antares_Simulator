@@ -49,6 +49,7 @@ target_include_directories(tests-matrix-save
 								PRIVATE
 									"${src_libs_antares}/array"
 									"${src_libs_antares}/io"
+									"${src_libs_antares}/jit"
 									"${CMAKE_CURRENT_SOURCE_DIR}/logs"
 									"${CMAKE_CURRENT_SOURCE_DIR}/jit"
 									"${CMAKE_SOURCE_DIR}/tests/src/libs"
@@ -82,6 +83,7 @@ target_include_directories(tests-matrix-load
 								PRIVATE
 									"${src_libs_antares}/array"
 									"${src_libs_antares}/io"
+									"${src_libs_antares}/jit"
 									"${CMAKE_CURRENT_SOURCE_DIR}/logs"
 									"${CMAKE_CURRENT_SOURCE_DIR}/jit"
 									"${CMAKE_SOURCE_DIR}/tests/src/libs"

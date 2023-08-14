@@ -17,6 +17,7 @@ target_include_directories(checks
         ${CMAKE_SOURCE_DIR}/libs/antares/io #area -> matrix -> io
         ${CMAKE_SOURCE_DIR}/libs/antares/date #area -> parameter -> date
         ${CMAKE_SOURCE_DIR}/libs/antares/writer #area -> antares/parts/thermal/cluster -> writer
+        ${CMAKE_SOURCE_DIR}/libs/antares/jit #area -> matrix -> jit
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
 )

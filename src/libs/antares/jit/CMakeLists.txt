@@ -1,7 +1,7 @@
 set(SRC_JIT
         # JIT (Just in Time)
-        jit.h
-        jit.hxx
+        antares/jit/jit.h
+        antares/jit/jit.hxx
         jit.cpp
         )
 source_group("misc\\jit" FILES ${SRC_JIT})
