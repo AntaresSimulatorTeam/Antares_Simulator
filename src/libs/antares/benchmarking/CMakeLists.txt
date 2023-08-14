@@ -20,6 +20,7 @@ target_include_directories(benchmarking
         ${CMAKE_SOURCE_DIR}/libs/antares/logs #study -> binding constraint -> matrix -> jit
         ${CMAKE_SOURCE_DIR}/libs/antares/io #study -> binding constraint -> matrix
         ${CMAKE_SOURCE_DIR}/libs/antares/writer #study
+        ${CMAKE_SOURCE_DIR}/libs/antares/exception #enum -> exception
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
         )

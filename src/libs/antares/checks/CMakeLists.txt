@@ -25,4 +25,5 @@ target_link_libraries(checks
         PRIVATE
         logs
         yuni-static-core
+        exception
 )

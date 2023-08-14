@@ -32,7 +32,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/string.h>
-#include <antares/study/fwd.h>
+#include "antares/study/fwd.h"
 
 namespace Antares
 {

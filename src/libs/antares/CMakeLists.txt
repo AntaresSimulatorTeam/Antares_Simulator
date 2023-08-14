@@ -337,19 +337,7 @@ source_group("study\\xcast" FILES ${SRC_XCAST})
 
 add_subdirectory(benchmarking)
 add_subdirectory(io)
-
-set(SRC_EXCEPTION
-	exception/AssertionError.cpp
-    # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
-	exception/AssertionError.hpp
-	exception/UnfeasibleProblemError.cpp
-    # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
-	exception/UnfeasibleProblemError.hpp
-
-    exception/LoadingError.cpp
-    exception/LoadingError.hpp
-	)
-source_group("exception" FILES ${SRC_EXCEPTION})
+add_subdirectory(exception)
 
 set(SRC_STDCXX
 	stdcxx/demangle.cpp
@@ -493,17 +481,6 @@ set(SRC
     Enum.hxx
 )
 add_subdirectory(date)
-add_library(libantares-core-exceptions
-    ${SRC_EXCEPTION}
-)
-
-target_link_libraries(libantares-core-exceptions
-	PRIVATE yuni-static-core)
-
-target_include_directories(libantares-core-exceptions
-		PRIVATE
-			${CMAKE_SOURCE_DIR}/libs
-		)
 
 add_subdirectory(checks)
 
@@ -548,7 +525,7 @@ target_link_libraries(libantares-core
 		yuni-static-uuid
 		date
 		logs
-        libantares-core-exceptions
+        exception
         checks
 		libantares-solver-variable-info
         result_writer
