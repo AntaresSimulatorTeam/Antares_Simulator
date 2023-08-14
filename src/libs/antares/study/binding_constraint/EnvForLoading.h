@@ -6,7 +6,7 @@
 
 #include "yuni/core/fwd.h"
 #include <inifile/inifile.h>
-#include "array/matrix.h"
+#include <antares/array/matrix.h>
 
 namespace Antares::Data {
 

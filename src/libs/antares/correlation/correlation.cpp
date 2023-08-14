@@ -28,7 +28,7 @@
 #include "antares/correlation/correlation.h"
 #include "antares/study/study.h"
 #include "antares/study/area/area.h"
-#include "array/matrix.h"
+#include <antares/array/matrix.h>
 
 using namespace Yuni;
 using namespace Antares;

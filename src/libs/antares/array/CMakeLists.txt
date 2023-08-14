@@ -1,8 +1,8 @@
 set(SRC_MATRIX
-        array/matrix.h
-        array/array1d.h
+        antares/array/matrix.h
+        antares/array/array1d.h
+        antares/array/matrix.hxx
         matrix.cpp
-        array/matrix.hxx
         )
 source_group("array" FILES ${SRC_MATRIX})
 

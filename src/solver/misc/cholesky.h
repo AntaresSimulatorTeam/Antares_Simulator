@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
-#include <array/matrix.h>
+#include <antares/array/matrix.h>
 
 namespace Antares
 {

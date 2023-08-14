@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
-#include "array/matrix.h"
+#include <antares/array/matrix.h>
 #include "defines.h"
 #include "../common/cluster.h"
 #include "../../fwd.h"

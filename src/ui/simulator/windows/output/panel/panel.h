@@ -33,7 +33,7 @@
 #include <vector>
 #include <wx/sizer.h>
 #include <wx/statbmp.h>
-#include <array/matrix.h>
+#include <antares/array/matrix.h>
 #include <yuni/core/event.h>
 
 #include <memory>

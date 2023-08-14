@@ -28,14 +28,13 @@
 #define __ANTARES_TOOLBOX_CLIPBOARD_CLIPBOARD_H__
 
 #include <antares/wx-wrapper.h>
-#include <array/matrix.h>
+#include <antares/array/matrix.h>
 #include <memory>
 #include <vector>
 #include "../components/datagrid/gridhelper.h"
 
-namespace Antares
-{
-namespace Toolbox
+
+namespace Antares::Toolbox
 {
 class Clipboard final
 {
@@ -93,7 +92,7 @@ private:
 
 }; // class Clipboard
 
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox
+
 
 #endif // __ANTARES_TOOLBOX_CLIPBOARD_CLIPBOARD_H__

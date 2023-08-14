@@ -7,8 +7,8 @@ set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
 
 set(SRC_MATRIX_LIB
 	# For confort in IDE, but not necessary
-	${src_libs_antares}/array/array/matrix.h
-	${src_libs_antares}/array/array/matrix.hxx
+	${src_libs_antares}/array/antares/array/matrix.h
+	${src_libs_antares}/array/antares/array/matrix.hxx
 	
 	# Necessary cpp files
 	${src_libs_antares}/jit/jit.cpp
