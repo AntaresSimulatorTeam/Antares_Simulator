@@ -85,6 +85,12 @@ struct Fixture
 		area_1->hydro.series->count = nbReadyMadeTS;
 		area_2->hydro.series->count = nbReadyMadeTS;
 		area_3->hydro.series->count = nbReadyMadeTS;
+		
+		// Hydro Power Credits: set the nb of ready made TS
+		nbReadyMadeTS = 15;
+		area_1->hydro.series->countpowercredits = nbReadyMadeTS;
+		area_2->hydro.series->countpowercredits = nbReadyMadeTS;
+		area_3->hydro.series->countpowercredits = nbReadyMadeTS;
 
 		// Links
 		link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
@@ -228,6 +234,22 @@ BOOST_AUTO_TEST_CASE(on_area2_and_on_year_15__solar_TS_number_3_is_chosen__readi
 
 	BOOST_CHECK(my_rule.apply());
 	BOOST_CHECK_EQUAL(area_2->hydro.series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+}
+
+// =================
+// Tests on Hydro Power Credits
+// =================
+BOOST_AUTO_TEST_CASE(on_area3_and_on_year_10__hydro_power_credits_TS_number_6_is_chosen__reading_OK)
+{
+	AreaName yearNumber = "7";
+	String tsNumber = "6";
+	AreaName::Vector splitKey = { "hgp", "area 3", yearNumber };
+	BOOST_CHECK(my_rule.readLine(splitKey, tsNumber, false));
+
+	BOOST_CHECK_EQUAL(my_rule.hydroPowerCredits.get_value(yearNumber.to<uint>(), area_3->index), tsNumber.to<uint>());
+
+	BOOST_CHECK(my_rule.apply());
+	BOOST_CHECK_EQUAL(area_3->hydro.series->timeseriesNumbersPowerCredits[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 
