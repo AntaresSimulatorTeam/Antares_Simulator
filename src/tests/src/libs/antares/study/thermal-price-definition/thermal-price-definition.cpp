@@ -11,7 +11,7 @@
 #include <logs/logs.h>
 #include <antares/exception/LoadingError.hpp>
 
-#include "checks/checkLoadedInputData.h"
+#include <antares/checks/checkLoadedInputData.h>
 #include "cluster_list.h"
 #include "container.h"
 

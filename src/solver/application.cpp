@@ -8,7 +8,7 @@
 
 #include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
-#include <checks/checkLoadedInputData.h>
+#include <antares/checks/checkLoadedInputData.h>
 #include <antares/version.h>
 
 #include "signal-handling/public.h"
