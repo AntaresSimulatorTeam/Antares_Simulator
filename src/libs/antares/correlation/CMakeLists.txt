@@ -1,7 +1,7 @@
 set(SRC_CORRELATION
         correlation.cpp
-        correlation.h
-        correlation.hxx
+        antares/correlation/correlation.h
+        antares/correlation/correlation.hxx
         )
 source_group("correlation" FILES ${SRC_CORRELATION})
 
@@ -12,6 +12,8 @@ target_link_libraries(correlation
         yuni-static-core
         inifile
         array
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
         )
 
 target_include_directories(correlation

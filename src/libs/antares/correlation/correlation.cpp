@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "correlation.h"
+#include "antares/correlation/correlation.h"
 #include "antares/study/study.h"
 #include "antares/study/area/area.h"
 #include "array/matrix.h"
@@ -33,9 +33,7 @@
 using namespace Yuni;
 using namespace Antares;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 static inline void InterAreaCorrelationSetValue(Matrix<>& m,
                                                 const char filename[],
@@ -730,5 +728,5 @@ void Correlation::copyFrom(const Correlation& source,
     }
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+
