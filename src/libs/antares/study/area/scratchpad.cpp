@@ -55,13 +55,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
         originalMustrunSum[h] = std::numeric_limits<double>::quiet_NaN();
     }
 
-    for (uint d = 0; d != DAYS_PER_YEAR; ++d)
-    {
-        optimalMaxPower[d] = std::numeric_limits<double>::quiet_NaN();
-        pumpingMaxPower[d] = std::numeric_limits<double>::quiet_NaN();
-    }
-
-    // Fatal hors hydro
+     // Fatal hors hydro
     {
         double sum;
         uint w;
