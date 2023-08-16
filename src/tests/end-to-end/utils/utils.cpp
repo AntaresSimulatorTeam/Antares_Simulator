@@ -1,5 +1,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include "utils.h"
+
+#include <utility>
 #include "simulation/simulation.h"
 
 using namespace Antares::Data;
@@ -19,14 +21,16 @@ void prepareStudy(Study::Ptr pStudy, int nbYears)
     // Getting the number of logical cores to use before loading and creating the areas :
     // Areas need this number to be up-to-date at construction.
     pStudy->getNumberOfCores(false, 0);
-
-    // Define as current study
-    Data::Study::Current::Set(pStudy);
 }
 
-std::shared_ptr<BindingConstraint> addBindingConstraints(Study::Ptr study, std::string name, std::string group) {
-    auto bc = study->bindingConstraints.add(name);
+std::shared_ptr<BindingConstraint> addBindingConstraints(Study &study, const std::string& name, const std::string& group) {
+    auto bc = study.bindingConstraints.add(name);
     bc->group(group);
+    if (auto groupOfConstraint = study.bindingConstraintsGroups[group]; groupOfConstraint != nullptr) {
+        groupOfConstraint->add(bc);
+    } else {
+        study.bindingConstraintsGroups.add(group)->add(bc);
+    }
     return bc;
 }
 
@@ -67,9 +71,6 @@ void cleanSimulation(Solver::Simulation::ISimulation< Solver::Simulation::Econom
 void cleanStudy(Study::Ptr pStudy)
 {
     pStudy->clear();
-
-    // Remove any global reference
-    Data::Study::Current::Set(nullptr);
 }
 
 void NoOPResultWriter::addEntryFromBuffer(const std::string&, Clob&)

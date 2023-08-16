@@ -31,7 +31,15 @@
 #include <yuni/core/string.h>
 #include "../fwd.h"
 #include "TSnumberData.h"
+#include "ThermalTSNumberData.h"
 #include "hydroLevelsData.h"
+#include "NTCTSNumberData.h"
+#include "BindingConstraintsTSNumbersData.h"
+#include "RenewableTSNumberData.h"
+#include "solarTSNumberData.h"
+#include "HydroTSNumberData.h"
+#include "WindTSNumberData.h"
+#include "LoadTSNumberData.h"
 #include <map>
 #include <memory>
 
@@ -54,7 +62,6 @@ public:
     //! Map ID
     using MappingID = std::map<int, Ptr>;
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -77,7 +84,7 @@ public:
     /*!
     ** \brief Load information from a single line (extracted from an INI file)
     */
-    bool readLine(const AreaName::Vector& splitKey, String value, bool updaterMode);
+    bool readLine(const AreaName::Vector& splitKey, String value, bool updaterMode = false);
 
     /*!
     ** \brief Export the data into a mere INI file
@@ -102,7 +109,6 @@ public:
     // When current rule is the active one, sends warnings for disabled clusters.
     void sendWarningsForDisabledClusters();
 
-public:
     //! Load
     loadTSNumberData load;
     //! Solar
@@ -145,6 +151,7 @@ private:
     Data::AreaLink* getLink(const AreaName& fromAreaName,
                             const AreaName& toAreaName,
                             bool updaterMode);
+    bool checkGroupExists(const std::string& groupName) const;
 
     // Member data
     Study& study_;

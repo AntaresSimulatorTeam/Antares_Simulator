@@ -18,6 +18,5 @@ target_link_libraries(jit
 
 target_include_directories(jit
         PRIVATE
-        ${CMAKE_SOURCE_DIR}/ext/yuni/src
         ${CMAKE_SOURCE_DIR}/libs
         )

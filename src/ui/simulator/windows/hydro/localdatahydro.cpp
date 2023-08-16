@@ -81,7 +81,7 @@ Localdatahydro::~Localdatahydro()
 
 void Localdatahydro::onAreaChanged(Data::Area* area)
 {
-    pLastArea = Data::Study::Current::Valid() ? area : nullptr;
+    pLastArea = CurrentStudyIsValid() ? area : nullptr;
 }
 
 void Localdatahydro::onStudyClosed()

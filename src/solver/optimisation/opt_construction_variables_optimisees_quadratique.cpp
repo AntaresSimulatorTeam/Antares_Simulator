@@ -42,12 +42,12 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_H
 
     int nombreDeVariables = 0;
 
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+    CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
       = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
     for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco]
+        CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco]
           = nombreDeVariables;
         ProblemeAResoudre->TypeDeVariable[nombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
         nombreDeVariables++;

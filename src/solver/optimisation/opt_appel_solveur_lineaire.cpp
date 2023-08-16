@@ -26,15 +26,10 @@
 */
 
 #include <yuni/yuni.h>
-#include <yuni/core/string.h>
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
-#include "../simulation/sim_extern_variables_globales.h"
-
 #include "opt_fonctions.h"
 
 extern "C"
@@ -46,11 +41,9 @@ extern "C"
 }
 
 #include <antares/logs.h>
-#include <antares/study.h>
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 
 #include "../utils/mps_utils.h"
-#include "../utils/ortools_utils.h"
 #include "../utils/filename.h"
 
 #include "../infeasible-problem-analysis/problem.h"
@@ -63,6 +56,7 @@ using namespace operations_research;
 using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
+using Antares::Solver::IResultWriter;
 
 class TimeMeasurement
 {
@@ -94,10 +88,12 @@ private:
     clock::time_point start_;
     clock::time_point end_;
 };
-bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
+bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
+                         PROBLEME_HEBDO* problemeHebdo,
                          int NumIntervalle,
                          const int optimizationNumber,
-                         std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator)
+                         const OptPeriodStringGenerator& optPeriodStringGenerator,
+                         IResultWriter& writer)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
@@ -107,11 +103,8 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
     bool PremierPassage = true;
 
     auto ProbSpx
-      = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
-    auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
-
-    auto study = Data::Study::Current::Get();
-    bool ortoolsUsed = study->parameters.ortoolsUsed;
+      = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
+    auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
 
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
@@ -128,7 +121,7 @@ RESOLUTION:
     {
         if (problemeHebdo->ReinitOptimisation)
         {
-            if (ortoolsUsed && solver != nullptr)
+            if (options.useOrtools && solver != nullptr)
             {
                 ORTOOLS_LibererProbleme(solver);
             }
@@ -136,7 +129,7 @@ RESOLUTION:
             {
                 SPX_LibererProbleme(ProbSpx);
             }
-            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = nullptr;
+            ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
 
             ProbSpx = nullptr;
             solver = nullptr;
@@ -149,7 +142,7 @@ RESOLUTION:
             Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
 
             TimeMeasurement measure;
-            if (ortoolsUsed)
+            if (options.useOrtools)
             {
                 ORTOOLS_ModifierLeVecteurCouts(
                   solver, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
@@ -181,7 +174,7 @@ RESOLUTION:
     Probleme.DureeMaxDuCalcul = -1.;
 
     Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire.data();
-    Probleme.X = ProblemeAResoudre->X;
+    Probleme.X = ProblemeAResoudre->X.data();
     Probleme.Xmin = ProblemeAResoudre->Xmin.data();
     Probleme.Xmax = ProblemeAResoudre->Xmax.data();
     Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
@@ -204,9 +197,9 @@ RESOLUTION:
 
     Probleme.StrategieAntiDegenerescence = AGRESSIF;
 
-    Probleme.PositionDeLaVariable = ProblemeAResoudre->PositionDeLaVariable;
+    Probleme.PositionDeLaVariable = ProblemeAResoudre->PositionDeLaVariable.data();
     Probleme.NbVarDeBaseComplementaires = 0;
-    Probleme.ComplementDeLaBase = ProblemeAResoudre->ComplementDeLaBase;
+    Probleme.ComplementDeLaBase = ProblemeAResoudre->ComplementDeLaBase.data();
 
     Probleme.LibererMemoireALaFin = NON_SPX;
 
@@ -214,7 +207,7 @@ RESOLUTION:
     Probleme.CoutMax = 0.0;
 
     Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes.data();
-    Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits;
+    Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits.data();
 
 #ifndef NDEBUG
     Probleme.AffichageDesTraces = ( PremierPassage ? OUI_SPX : NON_SPX );
@@ -224,28 +217,28 @@ RESOLUTION:
 
     Probleme.NombreDeContraintesCoupes = 0;
 
-    if (ortoolsUsed)
+    if (options.useOrtools)
     {
-        solver = ORTOOLS_ConvertIfNeeded(&Probleme, solver);
+        solver = ORTOOLS_ConvertIfNeeded(options.solverName, &Probleme, solver);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                         problemeHebdo->exportMPSOnError,
                                         optimizationNumber,
                                         &Probleme,
-                                        ortoolsUsed,
+                                        options.useOrtools,
                                         solver);
     auto mps_writer = mps_writer_factory.create();
-    mps_writer->runIfNeeded(study->resultWriter, filename);
+    mps_writer->runIfNeeded(writer, filename);
 
     TimeMeasurement measure;
-    if (ortoolsUsed)
+    if (options.useOrtools)
     {
         const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
         solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
         if (solver != nullptr)
         {
-            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)solver;
+            ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;
         }
     }
     else
@@ -253,7 +246,7 @@ RESOLUTION:
         ProbSpx = SPX_Simplexe(&Probleme, ProbSpx);
         if (ProbSpx != nullptr)
         {
-            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
+            ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)ProbSpx;
         }
     }
     measure.tick();
@@ -265,7 +258,7 @@ RESOLUTION:
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
-            if (ortoolsUsed && solver != nullptr)
+            if (options.useOrtools && solver != nullptr)
             {
                 ORTOOLS_LibererProbleme(solver);
             }
@@ -289,11 +282,7 @@ RESOLUTION:
 
         else
         {
-            logs.info();
-            logs.error() << "Internal error: insufficient memory";
-            logs.info();
-            AntaresSolverEmergencyShutdown();
-            return false;
+            throw FatalError("Internal error: insufficient memory");
         }
     }
 
@@ -345,7 +334,7 @@ RESOLUTION:
             logs.info() << " Solver: Safe resolution failed";
         }
 
-        Optimization::InfeasibleProblemAnalysis analysis(&Probleme);
+        Optimization::InfeasibleProblemAnalysis analysis(options.solverName, &Probleme);
         logs.notice() << " Solver: Starting infeasibility analysis...";
         try
         {
@@ -362,26 +351,10 @@ RESOLUTION:
         }
 
         auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
-        mps_writer_on_error->runIfNeeded(study->resultWriter, filename);
+        mps_writer_on_error->runIfNeeded(writer, filename);
 
         return false;
     }
 
     return true;
-}
-
-void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
-  double optimalSolutionCost,
-  std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
-  int optimizationNumber)
-{
-    Yuni::Clob buffer;
-    auto study = Data::Study::Current::Get();
-    auto filename = createCriterionFilename(optPeriodStringGenerator, optimizationNumber);
-    auto writer = study->resultWriter;
-
-    logs.info() << "Solver Criterion File: `" << filename << "'";
-
-    buffer.appendFormat("* Optimal criterion value :   %11.10e\n", optimalSolutionCost);
-    writer->addEntryFromBuffer(filename, buffer);
 }

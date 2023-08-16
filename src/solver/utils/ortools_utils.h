@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <string>
 
 #include <i_writer.h>
 
@@ -11,7 +12,7 @@
 using namespace operations_research;
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
-                                                   Antares::Solver::IResultWriter::Ptr writer,
+                                                   Antares::Solver::IResultWriter& writer,
                                                    const std::string& filename);
 
 /*!
@@ -47,6 +48,7 @@ namespace Antares
 namespace Optimization
 {
 MPSolver* convert_to_MPSolver(
+  const std::string& solverName,
   const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
 }
 } // namespace Antares

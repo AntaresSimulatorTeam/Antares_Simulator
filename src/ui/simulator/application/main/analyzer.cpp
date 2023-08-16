@@ -64,7 +64,7 @@ void ApplWnd::evtLaunchAnalyzer(wxCommandEvent& evt)
     String filename;
     wxStringToString(wfilename, filename);
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!study) // A valid study would be better
     {
         logs.fatal() << "Internal error: Please provide a valid study";

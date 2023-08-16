@@ -37,14 +37,13 @@
 #include "../aleatoire/alea_fonctions.h"
 #include "timeseries-numbers.h"
 #include "apply-scenario.h"
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 #include "../ts-generator/generator.h"
 
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
-#include "BindingConstraintsTimeSeriesNumbersWriter.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -152,7 +151,7 @@ private:
 
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
-            ALEA_TirageAuSortChroniques(thermalNoisesByArea, numSpace);
+            ALEA_TirageAuSortChroniques(study, thermalNoisesByArea, numSpace);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
             simulationObj->prepareClustersInMustRunMode(numSpace);
@@ -338,9 +337,7 @@ void ISimulation<Impl>::run()
         // Now, we will prepare the time-series numbers
         if (not TimeSeriesNumbers::Generate(study))
         {
-            logs.fatal() << "An unrecoverable error has occured. Can not continue.";
-            AntaresSolverEmergencyShutdown(); // will never return
-            return;
+            throw FatalError("An unrecoverable error has occured. Can not continue.");
         }
 
         if (parameters.useCustomScenario)
@@ -380,8 +377,7 @@ void ISimulation<Impl>::run()
         ImplementationType::variables.simulationEnd();
 
         // Export ts-numbers into output
-        BindingConstraintsTimeSeriesNumbersWriter time_series_writer(pResultWriter);
-        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, time_series_writer);
+        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
@@ -965,8 +961,6 @@ void ISimulation<Impl>::estimateMemoryForOptimizationPb(Antares::Data::StudyMemo
     requiredMemoryForOptPb += 2 * szNbContDouble;
     requiredMemoryForOptPb += 2 * NombreDeVariables * sizeof(void*);
     requiredMemoryForOptPb += NombreDeContraintes * sizeof(void*);
-
-    requiredMemoryForOptPb += sizeof(PROBLEMES_SIMPLEXE);
 
     // ================================================
     // Adding memory from the optimization problem
@@ -1584,8 +1578,9 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             // Si une année du lot d'années n'a pas trouvé de solution, on arrête tout
             if (failed)
             {
-                logs.fatal() << "Year " << year << " has failed in the previous set of parallel year.";
-                AntaresSolverEmergencyShutdown();
+                std::ostringstream msg;
+                msg << "Year " << year << " has failed in the previous set of parallel year.";
+                throw FatalError(msg.str());
             }
         }
         // Computing the summary : adding the contribution of MC years

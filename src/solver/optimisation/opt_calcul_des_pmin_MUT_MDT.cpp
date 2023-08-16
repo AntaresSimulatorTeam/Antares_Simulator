@@ -32,7 +32,6 @@
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
-#include <yuni/io/file.h>
 #include "opt_fonctions.h"
 
 constexpr double ZERO_PMIN = 1.e-2;

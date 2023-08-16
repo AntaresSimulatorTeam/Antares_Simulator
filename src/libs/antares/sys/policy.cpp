@@ -33,7 +33,7 @@
 #include "../inifile/inifile.h"
 #include "hostname.hxx"
 #include "../config.h"
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 #include <yuni/core/system/environment.h>
 #include <yuni/core/system/process.h>
 #include <yuni/core/system/username.h>
@@ -397,14 +397,14 @@ void CheckRootPrefix(const char* argv0)
         if (IO::IsAbsolute(adapter))
         {
             if (0 != adapter.ifind(i->second))
-                AntaresSolverEmergencyShutdown(EXIT_FAILURE);
+                throw FatalError("Invalid root prefix.");
         }
         else
         {
             String absfilename;
             IO::MakeAbsolute(absfilename, adapter);
             if (0 != absfilename.ifind(i->second))
-                AntaresSolverEmergencyShutdown(EXIT_FAILURE);
+                throw FatalError("Invalid root prefix.");
         }
     }
 }

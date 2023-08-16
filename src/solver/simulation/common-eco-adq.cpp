@@ -96,7 +96,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
     try
     {
-        OPT_OptimisationHebdomadaire(&problem, study.parameters.adqPatchParams);
+        OPT_OptimisationHebdomadaire(createOptimizationOptions(study), &problem, study.parameters.adqPatchParams, *study.resultWriter);
     }
     catch (Data::UnfeasibleProblemError&)
     {
@@ -400,5 +400,14 @@ void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
     state.averageOptimizationTime2 = secondOptStat.getAverageSolveTime();
     secondOptStat.reset();
 }
+
+OptimizationOptions createOptimizationOptions(const Data::Study& study)
+{
+    return {
+        study.parameters.ortoolsUsed,
+        study.parameters.ortoolsSolver
+    };
+}
+
 
 } // namespace Antares::Solver::Simulation

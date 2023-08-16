@@ -52,6 +52,7 @@
 #include "antares/correlation/correlation.h"
 #include "area/store-timeseries-numbers.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
+#include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 
 #include <memory>
 
@@ -64,7 +65,7 @@ namespace Data
 */
 
 class UIRuntimeInfo;
-class Study final : public Yuni::NonCopyable<Study>, public IObject, public LayerData
+class Study: public Yuni::NonCopyable<Study>, public IObject, public LayerData
 {
 public:
     using Ptr = std::shared_ptr<Study>;
@@ -97,26 +98,6 @@ public:
     using FileExtension = Yuni::CString<8, false>;
 
 public:
-    /*!
-    ** \brief Operations related to the global current study
-    **
-    ** \warning These methods should be removed as soon as possible
-    */
-    struct Current
-    {
-        /*!
-        ** \brief Retrieve the current Study (if any)
-        */
-        static Study::Ptr Get();
-        /*!
-        ** \brief Set the current study
-        */
-        static void Set(Study::Ptr study);
-        //! Get if the current study is valid
-        static bool Valid();
-
-    }; // Current
-
     /*!
     ** \brief Extract the title of a study
     **
@@ -323,17 +304,6 @@ public:
     ** \brief Get if the study is in readonly mode
     */
     bool readonly() const;
-    //@}
-
-    //! \name Locks
-    //@{
-    /*!
-    ** \brief Release all locks held by the study
-    **
-    ** This method should only be used when the program want to abort
-    ** immediatly without freing allocated data.
-    */
-    void releaseAllLocks();
     //@}
 
     //! \name Time-series
@@ -647,6 +617,7 @@ public:
     //@{
     //! Binding constraints
     BindingConstraintsRepository bindingConstraints;
+    BindingConstraintGroupRepository bindingConstraintsGroups;
     //@}
 
     //! \name Correlation matrices used by the prepro
@@ -755,7 +726,7 @@ protected:
     //! Load all correlation matrices
     bool internalLoadCorrelationMatrices(const StudyLoadOptions& options);
     //! Load all binding constraints
-    bool internalLoadBindingConstraints(const StudyLoadOptions& options);
+    virtual bool internalLoadBindingConstraints(const StudyLoadOptions& options);
     //! Load all set of areas and links
     bool internalLoadSets();
     //@}

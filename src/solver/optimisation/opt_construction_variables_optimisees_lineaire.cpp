@@ -25,14 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include "opt_structure_probleme_a_resoudre.h"
-
-#include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
-
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"
-#include <math.h>
 
 #include "spx_constantes_externes.h"
 
@@ -48,12 +43,12 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
     for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
     {
         variableNamer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+        auto& CorrespondanceVarNativesVarOptim
           = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
-            CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco]
+            CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco]
               = NombreDeVariables;
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
 
@@ -67,14 +62,14 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             if (problemeHebdo->CoutDeTransport[interco].IntercoGereeAvecDesCouts)
             {
                 CorrespondanceVarNativesVarOptim
-                  ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[interco]
+                  .NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[interco]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.IntercoDirectCost(NombreDeVariables, origin, destination);
                 NombreDeVariables++;
                 CorrespondanceVarNativesVarOptim
-                  ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[interco]
+                  .NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[interco]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -93,7 +88,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 const int palier
                   = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
                 const auto& clusterName = PaliersThermiquesDuPays.NomsDesPaliersThermiques[index];
-                CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier]
+                CorrespondanceVarNativesVarOptim.NumeroDeVariableDuPalierThermique[palier]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -105,21 +100,21 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             {
                 const int clusterGlobalIndex = storage.clusterGlobalIndex;
                 // 1. Injection
-                CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex]
+                CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ShortTermStorageInjection(NombreDeVariables, storage.name);
                 NombreDeVariables++;
                 // 2. Withdrawal
-                CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex]
+                CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ShortTermStorageWithdrawal(NombreDeVariables, storage.name);
                 NombreDeVariables++;
                 // 3. Level
-                CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex]
+                CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -127,14 +122,14 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 NombreDeVariables++;
             }
 
-            CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[pays]
+            CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[pays]
               = NombreDeVariables;
 
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             variableNamer.PositiveUnsuppliedEnergy(NombreDeVariables);
             NombreDeVariables++;
 
-            CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[pays]
+            CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillanceNegative[pays]
               = NombreDeVariables;
 
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
@@ -147,7 +142,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
             if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
             {
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays]
+                CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -155,22 +150,22 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 NombreDeVariables++;
             }
             else
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays] = -1;
+                CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays] = -1;
 
-            CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaBaisse[pays] = -1;
-            CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaHausse[pays] = -1;
+            CorrespondanceVarNativesVarOptim.NumeroDeVariablesVariationHydALaBaisse[pays] = -1;
+            CorrespondanceVarNativesVarOptim.NumeroDeVariablesVariationHydALaHausse[pays] = -1;
             if (problemeHebdo->TypeDeLissageHydraulique
                 == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
             {
                 if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
                 {
-                    CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaBaisse[pays]
+                    CorrespondanceVarNativesVarOptim.NumeroDeVariablesVariationHydALaBaisse[pays]
                       = NombreDeVariables;
                     ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                       = VARIABLE_BORNEE_INFERIEUREMENT;
                     variableNamer.HydProdDown(NombreDeVariables);
                     NombreDeVariables++;
-                    CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaHausse[pays]
+                    CorrespondanceVarNativesVarOptim.NumeroDeVariablesVariationHydALaHausse[pays]
                       = NombreDeVariables;
                     ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                       = VARIABLE_BORNEE_INFERIEUREMENT;
@@ -184,14 +179,14 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                           .PresenceDHydrauliqueModulable
                      && pdt == 0)
             {
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaBaisse[pays]
+                CorrespondanceVarNativesVarOptim.NumeroDeVariablesVariationHydALaBaisse[pays]
                   = NombreDeVariables;
 
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.HydProdDown(NombreDeVariables);
                 NombreDeVariables++;
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaHausse[pays]
+                CorrespondanceVarNativesVarOptim.NumeroDeVariablesVariationHydALaHausse[pays]
                   = NombreDeVariables;
 
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
@@ -202,7 +197,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 
             if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
             {
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[pays]
+                CorrespondanceVarNativesVarOptim.NumeroDeVariablesDePompage[pays]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -210,17 +205,17 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 NombreDeVariables++;
             }
             else
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[pays] = -1;
+                CorrespondanceVarNativesVarOptim.NumeroDeVariablesDePompage[pays] = -1;
 
             if (problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
             {
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeNiveau[pays]
+                CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeNiveau[pays]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.HydroLevel(NombreDeVariables);
                 NombreDeVariables++;
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeDebordement[pays]
+                CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeDebordement[pays]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -229,8 +224,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             }
             else
             {
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeNiveau[pays] = -1;
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeDebordement[pays] = -1;
+                CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeNiveau[pays] = -1;
+                CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeDebordement[pays] = -1;
             }
         }
     }

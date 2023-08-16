@@ -27,7 +27,7 @@ bool ClusterUpdater::changeName(const wxVariant& value)
         return false;
 
     Data::Cluster* cluster = *(clusters.begin());
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study) && study->clusterRename(cluster, name))
     {
         // Notify

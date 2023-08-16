@@ -37,6 +37,7 @@
 #include "antares/study/fwd.h"
 #include "timeseries-numbers.h"
 #include "ITimeSeriesNumbersWriter.h"
+#include "BindingConstraintsTimeSeriesNumbersWriter.h"
 
 using namespace Yuni;
 using namespace Antares::Data;
@@ -766,19 +767,17 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         }
     });
     // Binding constraints
-    for (auto& [group, timeSeries] : study.bindingConstraints.groupToTimeSeriesNumbers)
+    for (auto& group: study.bindingConstraintsGroups)
     {
-        const auto nbTimeSeries
-          = BindingConstraintsRepository::NumberOfTimeseries(study.bindingConstraints.activeContraints(), group);
-        auto& value = timeSeries.timeseriesNumbers[0][year];
+        const auto nbTimeSeries = group->numberOfTimeseries();
+        auto& value = group->timeseriesNumbers[0][year];
         if (nbTimeSeries == 1)
         {
             value = 0;
         }
         else
         {
-            value
-              = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+            value  = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
     }
 }
@@ -927,7 +926,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
                             link->timeseriesNumbers, link->directCapacities.width, years);
                       });
     });
-    study.bindingConstraints.fixTSNumbersWhenWidthIsOne();
+    study.bindingConstraintsGroups.fixTSNumbersWhenWidthIsOne();
 }
 
 bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(const std::vector<uint>& w)
@@ -1036,7 +1035,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
     return true;
 }
 
-void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study, Simulation::ITimeSeriesNumbersWriter& writer)
+void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study)
 {
     using namespace Antares::Data;
 
@@ -1051,7 +1050,9 @@ void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study, Simu
         study.storeTimeSeriesNumbers<TimeSeries::timeSeriesRenewable>();
         study.storeTimeSeriesNumbers<TimeSeries::timeSeriesTransmissionCapacities>();
         study.storeTimeSeriesNumbers<TimeSeries::timeSeriesHydroPowerCredits>();
-        writer.write(study.bindingConstraints);
+        Simulation::BindingConstraintsTimeSeriesNumbersWriter ts_writer(study.resultWriter);
+        ts_writer.write(study.bindingConstraintsGroups);
+
     }
 }
 
