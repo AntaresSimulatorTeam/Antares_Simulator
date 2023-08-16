@@ -238,7 +238,7 @@ public:
     ** This value is computed from the field 'group' in 'group()
     ** \see group()
     */
-    enum ThermalDispatchableGroup groupID;
+    ThermalDispatchableGroup groupID;
 
     //! Mustrun
     bool mustrun;
