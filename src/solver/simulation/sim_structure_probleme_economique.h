@@ -679,7 +679,7 @@ public:
     std::vector<int> NbGrpCourbeGuide; // ?
     std::vector<int> NbGrpOpt;         // ?
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = nullptr;
+    std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE> ProblemeAResoudre;
 
     double maxPminThermiqueByDay[366];
 };

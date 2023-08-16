@@ -39,6 +39,8 @@
 #include "links.h"
 #include "ui.h"
 #include "antares/study/parameters/adq-patch-params.h"
+#include "constants.h"
+#include "antares/study/filter.h"
 
 namespace Antares
 {
@@ -74,14 +76,14 @@ public:
     **
     ** \param name The name of the area
     */
-    explicit Area(const AnyString& name, uint nbParallelYears);
+    explicit Area(const AnyString& name);
     /*!
     ** \brief Constructor
     **
     ** \param name Name of the area
     ** \param id id of the area
     */
-    Area(const AnyString& name, const AnyString& id, uint nbParallelYears, uint indx = (uint)-1);
+    Area(const AnyString& name, const AnyString& id, uint indx = (uint)-1);
     /*!
     ** \brief Destructor
     */
@@ -141,7 +143,7 @@ public:
     /*!
     ** \brief Ensure all data are created
     */
-    void ensureAllDataAreCreated();
+    void createMissingData();
 
     /*!
     ** \brief Reset all values to their default one
@@ -221,7 +223,7 @@ public:
     //! Name of the area in lowercase format
     AreaName id;
     //! Index of the area  - only valid when already added to an area list
-    uint index;
+    uint index = (uint)(-1);
     //! Enabled
     bool enabled;
     //! Use adequacy patch for this area
@@ -288,34 +290,31 @@ public:
     //! \name Nodal Optimization
     //@{
     //! Nodal optimization (see AreaNodalOptimization)
-    uint nodalOptimization;
+    uint nodalOptimization = anoAll;
     //@}
 
     //! \name Spread
     //@{
     //! Spread for the unsupplied energy cost
-    double spreadUnsuppliedEnergyCost;
+    double spreadUnsuppliedEnergyCost = 0.;
     //! Spread for the spilled energy cost
-    double spreadSpilledEnergyCost;
+    double spreadSpilledEnergyCost = 0.;
     //@}
 
     //! \name Output filtering
     //@{
     //! Print results for the area in the simulation synthesis
-    uint filterSynthesis;
+    uint filterSynthesis = filterAll;
     //! Print results for the area in the year-by-year mode
-    uint filterYearByYear;
+    uint filterYearByYear = filterAll;
     //@}
 
     //! \name UI
     //@{
     //! Information for the UI
-    AreaUI* ui;
+    AreaUI* ui = nullptr;
     //@}
-
-    // Number of years actually run in parallel
-    uint nbYearsInParallel;
-
+    
     //! \name Dynamic
     //@{
     /*!
@@ -332,12 +331,14 @@ public:
     ** A non-zero value if the missing data must be loaded from HDD for the next
     ** save (only valid if JIT enabled).
     */
-    mutable bool invalidateJIT;
+    mutable bool invalidateJIT = false;
     //@}
 
 private:
     void internalInitialize();
-    
+    void createMissingTimeSeries();
+    void createMissingPrepros();
+
 }; // class Area
 
 bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);
@@ -771,7 +772,7 @@ Area* AreaListFindPtr(AreaList* l, const Area* ptr);
 ** \param name The name of the area
 ** \return A valid pointer to the area if successful, NULL otherwise
 */
-Area* AreaListAddFromName(AreaList& list, const AnyString& name, uint nbParallelYears);
+Area* addAreaToListOfAreas(AreaList& list, const AnyString& name);
 
 /*!
 ** \brief Add an area in the list from a given name
@@ -783,8 +784,7 @@ Area* AreaListAddFromName(AreaList& list, const AnyString& name, uint nbParallel
 */
 Area* AreaListAddFromNames(AreaList& list,
                            const AnyString& name,
-                           const AnyString& lname,
-                           uint nbParallelYears);
+                           const AnyString& lname);
 
 /*!
 ** \brief Try to establish a link between two areas
