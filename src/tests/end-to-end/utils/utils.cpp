@@ -6,7 +6,6 @@ void initializeStudy(Study::Ptr study)
 {
     study->resultWriter = std::make_shared<NullResultWriter>();
     study->parameters.reset();
-    Data::Study::Current::Set(study);
 }
 
 void configureLinkCapacities(AreaLink* link)
@@ -61,7 +60,6 @@ ThermalClusterConfig& ThermalClusterConfig::setCosts(double cost)
 {
     cluster_->marginalCost = cost;
     cluster_->marketBidCost = cost; // Must define market bid cost otherwise all production is used
-    cluster_->setProductionCost();
     return *this;
 }
 ThermalClusterConfig& ThermalClusterConfig::setAvailablePowerNumberOfTS(unsigned int columnCount)

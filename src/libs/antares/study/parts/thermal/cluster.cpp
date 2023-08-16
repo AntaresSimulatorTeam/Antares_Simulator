@@ -142,8 +142,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");
-
-    productionCost = new double[HOURS_PER_YEAR];
 }
 
 Data::ThermalCluster::~ThermalCluster()
@@ -545,8 +543,6 @@ void Data::ThermalCluster::reset()
     modulation.fill(1.);
     modulation.fillColumn(thermalMinGenModulation, 0.);
 
-    this->setProductionCost();
-
     // prepro
     // warning: the variables `prepro` and `series` __must__ not be destroyed
     //   since the interface may still have a pointer to them.
@@ -844,23 +840,6 @@ double ThermalCluster::getMarketBidCost(uint serieIndex, uint hourInTheYear) con
     {
         const uint tsIndex = Math::Min(serieIndex, costsTimeSeries.size() - 1);
         return costsTimeSeries[tsIndex].marketBidCostTS[hourInTheYear] * mod;
-    }
-}
-
-void ThermalCluster::setProductionCost()
-{
-    auto& modulationCost = modulation[thermalModulationCost];
-    if (costgeneration == Data::setManually)
-    {
-        // alias to the marginal cost
-        for (uint h = 0; h != modulation.height; ++h)
-            productionCost[h] = marginalCost * modulationCost[h];
-    }
-    else
-    {
-        const auto& marginalCostPerHour = costsTimeSeries[0].marginalCostTS;
-        for (uint h = 0; h != modulation.height; ++h)
-            productionCost[h] = marginalCostPerHour[h] * modulationCost[h];
     }
 }
 
