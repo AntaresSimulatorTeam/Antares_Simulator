@@ -234,7 +234,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
         parentArea->forceReload();
 }
 
-static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(const Data::ClusterName& newgrp)
+static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(Data::ClusterName& newgrp)
 {
     using namespace Antares::Data;
     const static std::map<ClusterName, ThermalCluster::ThermalDispatchableGroup> mapping
@@ -249,9 +249,11 @@ static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(const Data::
          {"other 2", ThermalCluster::thermalDispatchGrpOther2},
          {"other 3", ThermalCluster::thermalDispatchGrpOther3},
          {"other 4", ThermalCluster::thermalDispatchGrpOther4}};
-    if (mapping.count(newgrp) > 0)
+
+    newgrp.toLower();
+    if (auto res = mapping.find(newgrp);res != mapping.end())
     {
-        return mapping.at(newgrp);
+        return res->second;
     }
     // assigning a default value
     return ThermalCluster::thermalDispatchGrpOther1;
@@ -266,7 +268,6 @@ void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
         return;
     }
     pGroup = newgrp;
-    newgrp.toLower();
     groupID = stringToGroup(newgrp);
 }
 
