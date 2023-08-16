@@ -421,7 +421,7 @@ BOOST_FIXTURE_TEST_CASE(
 // Tests on Hydro final levels
 // ========================
 BOOST_FIXTURE_TEST_CASE(
-  HYDRO_FINAL_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+  HYDRO_FINAL_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
     my_rule->hydroFinalLevels.setTSnumber(area_1->index, 4, 8);
     my_rule->hydroFinalLevels.setTSnumber(area_2->index, 11, 3);

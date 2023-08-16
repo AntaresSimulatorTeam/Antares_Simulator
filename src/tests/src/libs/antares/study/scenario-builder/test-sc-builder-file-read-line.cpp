@@ -353,7 +353,7 @@ BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_5__hydro_level_neg_3_5_is_chosen__l
 // ========================
 // Tests on Hydro final levels
 // ========================
-BOOST_AUTO_TEST_CASE(on_area1_and_on_year_8__hydro_level_0_342_is_chosen__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_8__hydro_level_0_342_is_chosen__reading_OK, Fixture)
 {
         AreaName yearNumber = "8";
         String level = "0.342";
@@ -368,8 +368,8 @@ BOOST_AUTO_TEST_CASE(on_area1_and_on_year_8__hydro_level_0_342_is_chosen__readin
                           level.to<double>());
 }
 
-BOOST_AUTO_TEST_CASE(
-  on_area2_and_on_year_1__hydro_level_2_4_is_chosen_level_lowered_to_1__reading_OK)
+BOOST_FIXTURE_TEST_CASE(
+  on_area2_and_on_year_1__hydro_level_2_4_is_chosen_level_lowered_to_1__reading_OK, Fixture)
 {
         AreaName yearNumber = "1";
         String level = "2.4";
@@ -384,8 +384,8 @@ BOOST_AUTO_TEST_CASE(
                           1.);
 }
 
-BOOST_AUTO_TEST_CASE(
-  on_area3_and_on_year_3__hydro_level_neg_5_2_is_chosen__level_raised_to_0__reading_OK)
+BOOST_FIXTURE_TEST_CASE(
+  on_area3_and_on_year_3__hydro_level_neg_5_2_is_chosen__level_raised_to_0__reading_OK, Fixture)
 {
         AreaName yearNumber = "3";
         String level = "-5.2";
