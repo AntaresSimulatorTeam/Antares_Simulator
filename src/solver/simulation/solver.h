@@ -45,6 +45,15 @@
 
 namespace Antares::Solver::Simulation
 {
+
+struct RANDOM_ARRAYS
+{
+    std::vector<std::vector<VALEURS_GENEREES_PAR_PAYS>> ValeursGenereesParPays;
+    std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_PAYS>> NumeroChroniquesTireesParPays;
+    std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION>> NumeroChroniquesTireesParInterconnexion;
+    std::vector<std::map<std::string, unsigned>> NumeroChroniquesTireesParGroup;
+};
+
 template<class Impl>
 class yearJob;
 
@@ -183,6 +192,8 @@ public:
     std::shared_ptr<Yuni::Job::QueueService> pQueueService = nullptr;
     //! Result writer
     Antares::Solver::IResultWriter::Ptr pResultWriter = nullptr;
+
+    RANDOM_ARRAYS randomArrays;
 }; // class ISimulation
 } // namespace Antares::Solver::Simulation
 
