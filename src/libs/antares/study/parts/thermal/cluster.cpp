@@ -236,24 +236,25 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
 
 static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(const Data::ClusterName& newgrp)
 {
-    const static std::map<Data::ClusterName, ThermalDispatchableGroup> mapping
-      = {{"nuclear", thermalDispatchGrpNuclear},
-         {"lignite", thermalDispatchGrpLignite},
-         {"hard coal", thermalDispatchGrpHardCoal},
-         {"gas", thermalDispatchGrpGas},
-         {"oil", thermalDispatchGrpOil},
-         {"mixed fuel", thermalDispatchGrpMixedFuel},
-         {"other", thermalDispatchGrpOther1},
-         {"other 1", thermalDispatchGrpOther1},
-         {"other 2", thermalDispatchGrpOther2},
-         {"other 3", thermalDispatchGrpOther3},
-         {"other 4", thermalDispatchGrpOther4}};
+    using namespace Antares::Data;
+    const static std::map<ClusterName, ThermalCluster::ThermalDispatchableGroup> mapping
+      = {{"nuclear", ThermalCluster::thermalDispatchGrpNuclear},
+         {"lignite", ThermalCluster::thermalDispatchGrpLignite},
+         {"hard coal", ThermalCluster::thermalDispatchGrpHardCoal},
+         {"gas", ThermalCluster::thermalDispatchGrpGas},
+         {"oil", ThermalCluster::thermalDispatchGrpOil},
+         {"mixed fuel", ThermalCluster::thermalDispatchGrpMixedFuel},
+         {"other", ThermalCluster::thermalDispatchGrpOther1},
+         {"other 1", ThermalCluster::thermalDispatchGrpOther1},
+         {"other 2", ThermalCluster::thermalDispatchGrpOther2},
+         {"other 3", ThermalCluster::thermalDispatchGrpOther3},
+         {"other 4", ThermalCluster::thermalDispatchGrpOther4}};
     if (mapping.count(newgrp) > 0)
     {
         return mapping.at(newgrp);
     }
     // assigning a default value
-    return thermalDispatchGrpOther1;
+    return ThermalCluster::thermalDispatchGrpOther1;
 }
 
 void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
