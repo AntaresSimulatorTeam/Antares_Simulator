@@ -36,7 +36,7 @@ set_target_properties(lib-matrix PROPERTIES FOLDER Unit-tests)
 
 # Building tests on Matrix save operations
 set(SRC_TEST_MATRIX_SAVE
-	logs/logs/logs.h
+	logs/antares/logs/logs.h
 	array/fill-matrix.h
 	array/matrix-bypass-load.h
 	array/tests-matrix-save.h
