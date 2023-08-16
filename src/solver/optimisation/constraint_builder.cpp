@@ -2,8 +2,8 @@
 
 void ConstraintBuilder::build()
 {
-    std::vector<double>& Pi = problemeAResoudre.Pi;   // TODO const
-    std::vector<int>& Colonne = problemeAResoudre.Colonne;  // TODO const
+    const std::vector<double>& Pi = problemeAResoudre.Pi;
+    const std::vector<int>& Colonne = problemeAResoudre.Colonne;
     // TODO check operator_
     if (nombreDeTermes_ > 0)
     {
