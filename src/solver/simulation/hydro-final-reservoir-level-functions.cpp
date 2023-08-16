@@ -26,7 +26,6 @@
 */
 
 #include "hydro-final-reservoir-level-functions.h"
-#include <antares/emergency.h>
 
 namespace Antares::Solver
 {
@@ -47,8 +46,8 @@ void prepareFinalReservoirLevelDataPerMcY(Data::Study& study, uint year)
           if (finalInflows.isActive())
               if (finalInflows.makeChecks())
                   finalInflows.updateInflows();
-              else
-                  AntaresSolverEmergencyShutdown();
+              // else
+                  // AntaresSolverEmergencyShutdown();
       });
 }
 
