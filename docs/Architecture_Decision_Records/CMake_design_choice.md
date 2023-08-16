@@ -20,15 +20,16 @@ The current Cmake project design generates some difficulties:
   * Consequence: each module folder should look like the following representation where foo.h is a public header and bar.h a private implementation detail:
     ```
     Foo/
-    ├── antares
-    │   └── Foo
-    │       └── foo.h
+    ├── include
+    │   └──antares
+    │       └── Foo
+    │           └── foo.h
     ├── bar.cpp
     ├── bar.h
     ├── CMakeList.txt
     └── foo.cpp
     ```
-* In the future all public headers will be grouped in a dedicated folder at the top level of the source directory to ease export and install
+  * Public includes should be made public with: `target_include_directories(foo PUBLIC include)`
 
 ## Consequences
 
