@@ -222,8 +222,6 @@ public:
     AreaName id;
     //! Index of the area  - only valid when already added to an area list
     uint index;
-    //! Enabled
-    bool enabled;
     //! Use adequacy patch for this area
     AdequacyPatch::AdequacyPatchMode adequacyPatchMode = AdequacyPatch::physicalAreaOutsideAdqPatch;
     /*@}*/
