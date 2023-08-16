@@ -1,9 +1,13 @@
+#pragma once
+
 #include "TSnumberData.h"
 
 // =====================
 // Hydro Power Credits...
 // =====================
 
+namespace Antares::Data::ScenarioBuilder
+{
 class hydroPowerCreditsTSNumberData : public TSNumberData
 {
 public:
@@ -15,4 +19,5 @@ public:
 inline CString<512, false> hydroPowerCreditsTSNumberData::get_prefix() const
 {
     return "hgp,";
+}
 }

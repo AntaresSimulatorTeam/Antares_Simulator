@@ -7,6 +7,8 @@
 // Hydro Energy Credits...
 // ================================
 
+namespace Antares::Data::ScenarioBuilder
+{
 uint hydroPowerCreditsTSNumberData::get_tsGenCount(const Study& study) const
 {
     //This function must be overriden because it is inherited from abstract class
@@ -37,4 +39,5 @@ bool hydroPowerCreditsTSNumberData::apply(Study& study)
         ret = ApplyToMatrixPowerCredits(errors, logprefix, *area.hydro.series, col, tsGenCountHydroPowerCredits) && ret;
     }
     return ret;
+}
 }

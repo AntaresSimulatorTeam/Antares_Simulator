@@ -357,8 +357,8 @@ BOOST_FIXTURE_TEST_CASE(
 // =================
 // Tests on Hydro Power Credits
 // =================
-BOOST_AUTO_TEST_CASE(
-  HYDRO_POWER_CREDITS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  HYDRO_POWER_CREDITS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
     my_rule->hydroPowerCredits.set(area_2->index, 10, 7);
     my_rule->hydroPowerCredits.set(area_3->index, 4, 11);

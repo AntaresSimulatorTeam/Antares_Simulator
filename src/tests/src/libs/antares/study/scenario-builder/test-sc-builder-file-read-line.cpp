@@ -239,7 +239,7 @@ BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_15__solar_TS_number_3_is_chosen__re
 // =================
 // Tests on Hydro Power Credits
 // =================
-BOOST_AUTO_TEST_CASE(on_area3_and_on_year_10__hydro_power_credits_TS_number_6_is_chosen__reading_OK)
+BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_10__hydro_power_credits_TS_number_6_is_chosen__reading_OK, Fixture)
 {
 	AreaName yearNumber = "7";
 	String tsNumber = "6";
