@@ -32,6 +32,7 @@
 #include <yuni/io/file.h>
 #include <yuni/core/math.h>
 #include <cassert>
+#include <boost/algorithm/string/case_conv.hpp>
 #include "../../study.h"
 #include "../../memory-usage.h"
 #include "cluster.h"
@@ -244,7 +245,7 @@ void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
         return;
     }
     pGroup = newgrp;
-    toLower(newgrp);
+    boost::to_lower(newgrp);
 
     switch (newgrp[0])
     {

@@ -226,6 +226,9 @@ add_subdirectory(antares-deps)
 #Add needed definition in case of external dependencies compilation
 include (antares-deps/cmake/additionnal-definitions.cmake)
 
+#Boost header libraries
+find_package(Boost REQUIRED)
+
 #TODO : Add ZLIB if  VCPKG used why is this needed
 if (VCPKG_TOOLCHAIN) 
     #zlib

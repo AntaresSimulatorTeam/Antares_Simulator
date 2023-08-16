@@ -1,7 +1,7 @@
+#include <boost/algorithm/string/case_conv.hpp>
 #include "cluster_list.h"
 #include "../../../utils.h"
 #include "../../study.h"
-#include "../../area.h"
 
 using namespace Yuni;
 namespace // anonymous
@@ -247,7 +247,7 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     // Consequently, the parameters `idToFind` and `newName` shall not be `const &`.
 
     // Making sure that the id is lowercase
-    toLower(idToFind);
+    boost::to_lower(idToFind);
 
     // The new ID
     Data::ClusterName newID;
