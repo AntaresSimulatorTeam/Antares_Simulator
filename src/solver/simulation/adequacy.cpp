@@ -35,20 +35,19 @@ using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-Adequacy::Adequacy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
+Adequacy::Adequacy(Data::Study& study) : study(study), preproOnly(false)
 {
 }
 
 Adequacy::~Adequacy()
 {
-    if (pProblemesHebdo)
+    if (!pProblemesHebdo.empty())
     {
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             OPT_LiberationMemoireDuProblemeAOptimiser(pProblemesHebdo[numSpace]);
             delete pProblemesHebdo[numSpace];
         }
-        delete[] pProblemesHebdo;
     }
 }
 
@@ -80,7 +79,7 @@ bool Adequacy::simulationBegin()
 {
     if (!preproOnly)
     {
-        pProblemesHebdo = new PROBLEME_HEBDO*[pNbMaxPerformedYearsInParallel];
+        pProblemesHebdo.resize(pNbMaxPerformedYearsInParallel);
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             pProblemesHebdo[numSpace] = new PROBLEME_HEBDO();
@@ -96,7 +95,7 @@ bool Adequacy::simulationBegin()
         }
     }
 
-    if (pProblemesHebdo)
+    if (!pProblemesHebdo.empty())
     {
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
             pProblemesHebdo[numSpace]->TypeDOptimisation = OPTIMISATION_LINEAIRE;
