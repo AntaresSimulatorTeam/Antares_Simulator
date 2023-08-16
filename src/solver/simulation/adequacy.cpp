@@ -45,7 +45,7 @@ Adequacy::~Adequacy()
     {
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
-            OPT_LiberationMemoireDuProblemeAOptimiser(pProblemesHebdo[numSpace]);
+            OPT_LiberationMemoireDuProblemeAOptimiser(&pProblemesHebdo[numSpace]);
             delete pProblemesHebdo[numSpace];
         }
     }

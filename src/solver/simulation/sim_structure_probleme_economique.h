@@ -478,6 +478,11 @@ struct VARIABLES_DUALES_INTERCONNEXIONS
 
 struct PROBLEME_HEBDO
 {
+    PROBLEME_HEBDO() = default;
+    PROBLEME_HEBDO(const PROBLEME_HEBDO&) = delete;
+    PROBLEME_HEBDO(PROBLEME_HEBDO&&) = default;
+    PROBLEME_HEBDO& operator=(PROBLEME_HEBDO&& other) = default;
+
     unsigned int weekInTheYear = 0;
     unsigned int year = 0;
 
@@ -545,7 +550,6 @@ struct PROBLEME_HEBDO
     bool LeProblemeADejaEteInstancie = false;
     bool firstWeekOfSimulation = false;
 
-    // TODO VP: Not working if we're not using a pointer, need more investigation
     std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES> CorrespondanceCntNativesCntOptimJournalieres;
