@@ -78,8 +78,8 @@
 /* cassert */
 #cmakedefine YUNI_HAS_CASSERT
 
-/* <string> std::string ... */
-#cmakedefine YUNI_HAS_STD_STRING
+
+
 
 
 

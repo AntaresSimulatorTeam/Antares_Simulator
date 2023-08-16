@@ -3193,8 +3193,6 @@ inline bool CString<ChunkSizeT, ExpandableT>::append(const wchar_t* wbuffer, Siz
     return false;
 }
 
-#ifdef YUNI_HAS_STD_STRING
-
 template<uint ChunkSizeT, bool ExpandableT>
 CString<ChunkSizeT, ExpandableT>::CString(const std::string& rhs):
     CString(rhs.c_str())
@@ -3213,6 +3211,5 @@ CString<ChunkSizeT, ExpandableT>::operator std::string() const
 {
     return this->c_str();
 }
-#endif
 
 } // namespace Yuni
