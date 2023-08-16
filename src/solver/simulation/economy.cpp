@@ -39,20 +39,19 @@ using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-Economy::Economy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
+Economy::Economy(Data::Study& study) : study(study), preproOnly(false)
 {
 }
 
 Economy::~Economy()
 {
-    if (pProblemesHebdo)
+    if (!pProblemesHebdo.empty())
     {
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             OPT_LiberationMemoireDuProblemeAOptimiser(pProblemesHebdo[numSpace]);
             delete pProblemesHebdo[numSpace];
         }
-        delete[] pProblemesHebdo;
     }
 }
 
@@ -83,7 +82,7 @@ bool Economy::simulationBegin()
 {
     if (!preproOnly)
     {
-        pProblemesHebdo = new PROBLEME_HEBDO*[pNbMaxPerformedYearsInParallel];
+        pProblemesHebdo.resize(pNbMaxPerformedYearsInParallel);
         weeklyOptProblems_.resize(pNbMaxPerformedYearsInParallel);
         postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 
@@ -118,7 +117,7 @@ bool Economy::simulationBegin()
         }
     }
 
-    if (pProblemesHebdo)
+    if (!pProblemesHebdo.empty())
     {
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
             pProblemesHebdo[numSpace]->TypeDOptimisation = OPTIMISATION_LINEAIRE;
