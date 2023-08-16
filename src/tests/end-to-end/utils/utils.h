@@ -82,7 +82,7 @@ private:
 class OutputRetriever
 {
 public:
-    OutputRetriever(std::shared_ptr<ISimulation<Economy>>& simulation) : simulation_(simulation) {}
+    OutputRetriever(ISimulation<Economy>& simulation) : simulation_(simulation) {}
     averageResults overallCost(Area* area);
     averageResults load(Area* area);
     averageResults flow(AreaLink* link);
@@ -98,7 +98,7 @@ private:
     template<class VCard>
     typename Variable::Storage<VCard>::ResultsType* retrieveResultsForThermalCluster(ThermalCluster* cluster);
 
-    std::shared_ptr<ISimulation<Economy>>& simulation_;
+    ISimulation<Economy>& simulation_;
 };
 
 template<class VCard>
@@ -106,7 +106,7 @@ typename Variable::Storage<VCard>::ResultsType*
 OutputRetriever::retrieveAreaResults(Area* area)
 {
     typename Variable::Storage<VCard>::ResultsType* result = nullptr;
-    simulation_->variables.retrieveResultsForArea<VCard>(&result, area);
+    simulation_.variables.retrieveResultsForArea<VCard>(&result, area);
     return result;
 }
 
@@ -115,7 +115,7 @@ typename Variable::Storage<VCard>::ResultsType*
 OutputRetriever::retrieveLinkResults(AreaLink* link)
 {
     typename Variable::Storage<VCard>::ResultsType* result = nullptr;
-    simulation_->variables.retrieveResultsForLink<VCard>(&result, link);
+    simulation_.variables.retrieveResultsForLink<VCard>(&result, link);
     return result;
 }
 
@@ -124,7 +124,7 @@ typename Variable::Storage<VCard>::ResultsType*
 OutputRetriever::retrieveResultsForThermalCluster(ThermalCluster* cluster)
 {
     typename Variable::Storage<VCard>::ResultsType* result = nullptr;
-    simulation_->variables.retrieveResultsForThermalCluster<VCard>(&result, cluster);
+    simulation_.variables.retrieveResultsForThermalCluster<VCard>(&result, cluster);
     return result;
 }
 
@@ -154,7 +154,7 @@ public:
     ~SimulationHandler() = default;
     void create();
     void run() { simulation_->run(); }
-    std::shared_ptr<ISimulation<Economy>>& get() { return simulation_; }
+    ISimulation<Economy>& rawSimu() { return *simulation_; }
 
 private:
     std::shared_ptr<ISimulation<Economy>> simulation_;
@@ -181,7 +181,6 @@ struct StudyBuilder
     // Data members
     std::shared_ptr<Study> study;
     std::shared_ptr<SimulationHandler> simulation;
-    std::shared_ptr<OutputRetriever> output;
 };
 
 std::shared_ptr<Antares::Data::BindingConstraint> addBindingConstraints(Antares::Data::Study& study, std::string name, std::string group);

@@ -55,6 +55,7 @@ BOOST_AUTO_TEST_CASE(thermal_cluster_fullfills_area_demand)
 	simulation->create();
 	simulation->run();
 
+	std::shared_ptr<OutputRetriever> output = std::make_shared<OutputRetriever>(simulation->rawSimu());
 	BOOST_TEST(output->overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
 	BOOST_TEST(output->load(area).hour(0) == loadInArea, tt::tolerance(0.001));
 }
@@ -67,6 +68,7 @@ BOOST_AUTO_TEST_CASE(two_MC_years__thermal_cluster_fullfills_area_demand_on_2nd_
 	playOnlyYear(1);
 	simulation->run();
 
+	std::shared_ptr<OutputRetriever> output = std::make_shared<OutputRetriever>(simulation->rawSimu());
 	BOOST_TEST(output->overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
 	BOOST_TEST(output->load(area).hour(0) == loadInArea, tt::tolerance(0.001));
 }
@@ -86,6 +88,7 @@ BOOST_AUTO_TEST_CASE(two_mc_years__two_ts_identical)
 	simulation->create();
 	simulation->run();
 
+	std::shared_ptr<OutputRetriever> output = std::make_shared<OutputRetriever>(simulation->rawSimu());
 	BOOST_TEST(output->overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
 	BOOST_TEST(output->load(area).hour(0) == loadInArea, tt::tolerance(0.001));
 }
@@ -105,6 +108,7 @@ BOOST_AUTO_TEST_CASE(two_mc_years__two_ts_for_load)
 	simulation->create();
 	simulation->run();
 
+	std::shared_ptr<OutputRetriever> output = std::make_shared<OutputRetriever>(simulation->rawSimu());
 	double averageLoad = (7. + 14.) / 2.;
 	BOOST_TEST(output->thermalGeneration(cluster.get()).hour(10) == averageLoad, tt::tolerance(0.001));
 	BOOST_TEST(output->overallCost(area).hour(0) == averageLoad * clusterCost, tt::tolerance(0.001));
@@ -129,6 +133,7 @@ BOOST_AUTO_TEST_CASE(two_mc_years_with_different_weight__two_ts)
 	simulation->create();
 	simulation->run();
 	
+	std::shared_ptr<OutputRetriever> output = std::make_shared<OutputRetriever>(simulation->rawSimu());
 	double averageLoad = (4 * 7. + 10. * 14.) / weightSum;
 	BOOST_TEST(output->thermalGeneration(cluster.get()).hour(10) == averageLoad, tt::tolerance(0.001));
 	BOOST_TEST(output->overallCost(area).hour(0) == averageLoad * clusterCost, tt::tolerance(0.001));

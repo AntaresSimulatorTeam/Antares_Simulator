@@ -151,7 +151,6 @@ StudyBuilder::StudyBuilder()
     simulation = std::make_shared<SimulationHandler>(*study);
 
     initializeStudy(study);
-    output = std::make_shared<OutputRetriever>(simulation->get());
 }
 
 void StudyBuilder::simulationBetweenDays(const unsigned int firstDay, const unsigned int lastDay)
