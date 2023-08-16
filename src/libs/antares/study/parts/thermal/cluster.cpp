@@ -123,21 +123,21 @@ namespace Antares
 namespace Data
 {
 Data::ThermalCluster::ThermalCluster(Area* parent) :
- Cluster(parent),
- groupID(thermalDispatchGrpOther1),
- mustrun(false),
- mustrunOrigin(false),
- nominalCapacityWithSpinning(0.),
- minStablePower(0.),
- minUpTime(1),
- minDownTime(1),
- spinning(0.),
- forcedVolatility(0.),
- plannedVolatility(0.),
- forcedLaw(thermalLawUniform),
- plannedLaw(thermalLawUniform),
- PthetaInf(HOURS_PER_YEAR, 0),
- costsTimeSeries(1, CostsTimeSeries())
+    Cluster(parent),
+    groupID(thermalDispatchGrpOther1),
+    mustrun(false),
+    mustrunOrigin(false),
+    nominalCapacityWithSpinning(0.),
+    minStablePower(0.),
+    minUpTime(1),
+    minDownTime(1),
+    spinning(0.),
+    forcedVolatility(0.),
+    plannedVolatility(0.),
+    forcedLaw(thermalLawUniform),
+    plannedLaw(thermalLawUniform),
+    PthetaInf(HOURS_PER_YEAR, 0),
+    costsTimeSeries(1, CostsTimeSeries())
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");
