@@ -46,9 +46,9 @@ struct Fixture
     fs::path outputRoot;
 };
 
-BOOST_FIXTURE_TEST_SUITE(s, Fixture)
+BOOST_AUTO_TEST_SUITE(s)
 
-BOOST_AUTO_TEST_CASE(economy_legacyfiles_emptylabel)
+BOOST_FIXTURE_TEST_CASE(economy_legacyfiles_emptylabel, Fixture)
 {
     StudyMode mode = stdmEconomy;
     ResultFormat fmt = legacyFilesDirectories;
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(economy_legacyfiles_emptylabel)
     BOOST_CHECK_EQUAL(actualOutput, expectedOutput);
 }
 
-BOOST_AUTO_TEST_CASE(economy_legacyfiles_label_now)
+BOOST_FIXTURE_TEST_CASE(economy_legacyfiles_label_now, Fixture)
 {
     StudyMode mode = stdmEconomy;
     ResultFormat fmt = legacyFilesDirectories;
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(economy_legacyfiles_label_now)
     BOOST_CHECK_EQUAL(actualOutput, expectedOutput);
 }
 
-BOOST_AUTO_TEST_CASE(adequacy_legacyfiles_label_now)
+BOOST_FIXTURE_TEST_CASE(adequacy_legacyfiles_label_now, Fixture)
 {
     StudyMode mode = stdmAdequacy;
     ResultFormat fmt = legacyFilesDirectories;
@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_CASE(adequacy_legacyfiles_label_now)
     BOOST_CHECK_EQUAL(actualOutput_suffix, expectedOutput_suffix);
 }
 
-BOOST_AUTO_TEST_CASE(adequacy_zip_label_now)
+BOOST_FIXTURE_TEST_CASE(adequacy_zip_label_now, Fixture)
 {
     StudyMode mode = stdmAdequacy;
     ResultFormat fmt = zipArchive;

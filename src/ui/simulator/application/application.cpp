@@ -38,7 +38,6 @@
 #include <antares/jit.h>
 #include <antares/logs.h>
 #include <antares/memory/memory.h>
-#include <antares/emergency.h>
 #include <wx/config.h>
 #include "../windows/message.h"
 #include <antares/sys/appdata.h>
@@ -141,6 +140,30 @@ static void OnNotifyStudyClosed()
     // logs.info() << "notify study closing immediatly";
 }
 
+static void AbortProgram(int code)
+{
+    {
+        // Releasing all locks held by the study
+        auto currentStudy = GetCurrentStudy();
+
+        // Importing logs
+        if (!logs.logfile())
+        {
+            logs.fatal() << "Aborting now. (warning: no file log available)";
+            logs.warning() << "No log file available";
+        }
+        else
+        {
+            if (!(!currentStudy))
+                currentStudy->importLogsToOutputFolder();
+            logs.error() << "Aborting now. See logs for more details";
+        }
+        // release currentStudy
+    }
+
+    exit(code);
+}
+
 static void NotEnoughMemory()
 {
     // Displaying a message in its own scope to make it is released
@@ -154,7 +177,7 @@ static void NotEnoughMemory()
         message.showModal();
     }
     logs.error() << "Not enough memory. aborting.";
-    AntaresSolverEmergencyShutdown(42);
+    AbortProgram(42);
 }
 
 #ifndef YUNI_OS_WINDOWS

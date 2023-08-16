@@ -15,7 +15,7 @@ namespace Antares
 		class Buffer
 		{
 		public:
-			Buffer() {}
+			Buffer() = default;
 
 			template<typename U> 
 			Buffer& operator << (const U& u)
@@ -37,7 +37,7 @@ namespace Antares
 		class fakeLogger
 		{
 		public:
-			fakeLogger() {}
+			fakeLogger() = default;
 
 			Buffer& error() { return error_buffer_; }
 			Buffer& info() { return info_buffer_; }

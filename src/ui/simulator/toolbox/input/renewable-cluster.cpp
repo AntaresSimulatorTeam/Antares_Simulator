@@ -240,7 +240,7 @@ void RenewableCluster::evtPopupDeleteAll(wxCommandEvent&)
 void RenewableCluster::internalDeletePlant(void*)
 {
     // Nothing is/was selected. Aborting.
-    if (!pArea || !pLastSelectedRenewableCluster || not Data::Study::Current::Valid())
+    if (!pArea || !pLastSelectedRenewableCluster || not CurrentStudyIsValid())
         return;
 
     // The renewable cluster to delete
@@ -268,7 +268,7 @@ void RenewableCluster::internalDeletePlant(void*)
         OnStudyBeginUpdate();
 
         // Because we may need to update this afterwards
-        auto study = Data::Study::Current::Get();
+        auto study = GetCurrentStudy();
         study->scenarioRulesLoadIfNotAvailable();
 
         // Update the list
@@ -318,7 +318,7 @@ void RenewableCluster::internalDeleteAll(void*)
 
     Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     // If the pointer has been, it is guaranteed to be valid
     Window::Message message(
@@ -336,7 +336,7 @@ void RenewableCluster::internalDeleteAll(void*)
         OnStudyBeginUpdate();
 
         // We have to rebuild the scenario builder data, if required
-        ScenarioBuilderUpdater updaterSB(*Data::Study::Current::Get());
+        ScenarioBuilderUpdater updaterSB(*GetCurrentStudy());
 
         // invalidating the parent area
         pArea->forceReload();
@@ -363,7 +363,7 @@ void RenewableCluster::internalDeleteAll(void*)
 void RenewableCluster::internalAddPlant(void*)
 {
     WIP::Locker wip;
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     if (!(!study) && pArea)
     {
@@ -424,7 +424,7 @@ void RenewableCluster::internalClonePlant(void*)
     const Antares::Data::RenewableCluster& selectedPlant
       = *pLastSelectedRenewableCluster->renewableAggregate();
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study) && pArea)
     {
         onClusterChanged(nullptr);

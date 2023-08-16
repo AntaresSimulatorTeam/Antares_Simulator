@@ -703,7 +703,7 @@ void Frame::apply(const InspectorData::Ptr& data)
 
     wxSizer* sizer = GetSizer();
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     wxPGProperty* p;
     bool hide;
     bool multiple;
@@ -973,6 +973,11 @@ void Frame::apply(const InspectorData::Ptr& data)
         // check Min. Stable Power with thermal modulation
         AccumulatorCheck<PClusterSpinningColor>::ApplyTextColor(pPGThClusterSpinning,
                                                                 data->ThClusters);
+        AccumulatorCheck<PClusterMarginalCostEnable>::ApplyGreyColor(pPGThClusterMarginalCost,
+                                                                     pPGThClusterOperatingCost,
+                                                                     pPGThClusterEfficiency,
+                                                                     pPGThClusterVariableOMcost,
+                                                                     data->ThClusters);
     }
 
     pPGThClusterParams->Hide(hide);
@@ -1061,7 +1066,7 @@ void Frame::apply(const InspectorData::Ptr& data)
 
 void Frame::onLoadUserNotes()
 {
-    if (pNotes and Data::Study::Current::Valid())
+    if (pNotes and CurrentStudyIsValid())
         pNotes->loadFromStudy();
 }
 

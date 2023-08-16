@@ -293,8 +293,7 @@ bool CBuilder::runConstraintsBuilder(bool standalone)
 
     if (standalone)
     {
-        auto& study = *Data::Study::Current::Get();
-        study.saveToFolder(study.folder);
+        pStudy->saveToFolder(pStudy->folder);
     }
     // return result;
     return result;
@@ -326,16 +325,15 @@ bool CBuilder::deletePreviousConstraints()
 
 bool CBuilder::saveCBuilderToFile(const String& filename) const
 {
-    if (!Data::Study::Current::Valid())
+    if (!pStudy)
         return false;
     String tmp;
-    auto& study = *Data::Study::Current::Get();
 
     IniFile ini;
     auto* mainSection = ini.addSection(".general");
 
     // Study
-    mainSection->add("study", study.folder);
+    mainSection->add("study", pStudy->folder);
 
     // Tmp
     /*wxStringToString(pPathTemp->GetValue(), tmp);
@@ -357,7 +355,7 @@ bool CBuilder::saveCBuilderToFile(const String& filename) const
     {
         YString buffer;
 
-        buffer.clear() << study.folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
+        buffer.clear() << pStudy->folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
                        << "constraintbuilder.ini";
         return ini.save(buffer);
     }
@@ -370,9 +368,7 @@ bool CBuilder::completeCBuilderFromFile(const String& filename)
     YString buffer;
     if (filename == "")
     {
-        auto& study = *Data::Study::Current::Get();
-
-        buffer.clear() << study.folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
+        buffer.clear() << pStudy->folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
                        << "constraintbuilder.ini";
         if (!IO::File::Exists(buffer))
         {
@@ -469,9 +465,8 @@ bool CBuilder::completeCBuilderFromFile(const String& filename)
 
 int CBuilder::alreadyExistingNetworkConstraints(const Yuni::String& prefix) const
 {
-    auto& study = *Data::Study::Current::Get();
     int nSubCount = 0;
-    for (auto j = study.bindingConstraints.begin(); j != study.bindingConstraints.end(); j++)
+    for (auto j = pStudy->bindingConstraints.begin(); j != pStudy->bindingConstraints.end(); j++)
     {
         std::string name = (*j)->name().c_str();
         if (name.find(prefix.to<std::string>()) == 0) // name starts with the prefix

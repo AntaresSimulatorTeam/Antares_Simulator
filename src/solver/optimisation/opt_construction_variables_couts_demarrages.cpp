@@ -27,13 +27,10 @@
 
 #include "opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"
-#include <math.h>
 
 #include "spx_constantes_externes.h"
 
@@ -41,7 +38,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
   PROBLEME_HEBDO* problemeHebdo,
   bool Simulation)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
 
     int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
@@ -66,11 +63,11 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                     nombreDeVariables += 4;
                     continue;
                 }
-                CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-                  = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+                CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
+                  =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
                 CorrespondanceVarNativesVarOptim
-                  ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier]
+                  .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier]
                   = nombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -78,7 +75,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 nombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
-                  ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier]
+                  .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier]
                   = nombreDeVariables;
 
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
@@ -87,7 +84,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 nombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
-                  ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier]
+                  .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier]
                   = nombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
@@ -95,7 +92,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 nombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
-                  ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier]
+                  .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier]
                   = nombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;

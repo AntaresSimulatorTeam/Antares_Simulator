@@ -39,7 +39,7 @@ SelectOutput::SelectOutput(wxFrame* parent) :
     assert(parent);
 
     // The current study
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     // Title of the Form
     SetLabel(wxT("Output Selection"));
@@ -157,7 +157,7 @@ void SelectOutput::onClose(void*)
 
 void SelectOutput::onSelectAll(void*)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
     auto& study = *studyptr;
@@ -173,7 +173,7 @@ void SelectOutput::onSelectAll(void*)
 
 void SelectOutput::onUnselectAll(void*)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
     auto& study = *studyptr;
@@ -189,7 +189,7 @@ void SelectOutput::onUnselectAll(void*)
 
 void SelectOutput::onToggle(void*)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
     auto& study = *studyptr;
@@ -211,7 +211,7 @@ void SelectOutput::mouseMoved(wxMouseEvent&)
 
 void SelectOutput::updateCaption()
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
     auto& study = *studyptr;
@@ -234,7 +234,7 @@ void SelectOutput::updateCaption()
 
 void SelectOutput::onUpdateStatus()
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
     auto& study = *studyptr;
@@ -256,7 +256,7 @@ void SelectOutput::onUpdateStatus()
 
 void SelectOutput::evtEnabled(wxCommandEvent& evt)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
 
     Freeze();
     if (!(!studyptr))

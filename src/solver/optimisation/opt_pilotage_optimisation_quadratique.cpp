@@ -26,10 +26,8 @@
 */
 
 #include <math.h>
-#include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
@@ -67,7 +65,7 @@ bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* problemeHebdo)
             OPT_InitialiserLesCoutsQuadratiques(problemeHebdo, pdtHebdo);
 
             result
-              = OPT_AppelDuSolveurQuadratique(problemeHebdo->ProblemeAResoudre, pdtHebdo) && result;
+              = OPT_AppelDuSolveurQuadratique(problemeHebdo->ProblemeAResoudre.get(), pdtHebdo) && result;
         }
     }
 

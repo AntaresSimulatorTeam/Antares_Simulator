@@ -29,7 +29,6 @@
 #include <cassert>
 #include "../study.h"
 #include "area.h"
-#include "constants.h"
 #include "ui.h"
 #include "scratchpad.h"
 #include "antares/study/parts/load/prepro.h"
@@ -46,55 +45,22 @@ void Area::internalInitialize()
 }
 
 Area::Area() :
- index((uint)(-1)),
- enabled(true),
- reserves(fhrMax, HOURS_PER_YEAR),
- miscGen(fhhMax, HOURS_PER_YEAR),
- hydro(*this),
- nodalOptimization(anoAll),
- spreadUnsuppliedEnergyCost(0.),
- spreadSpilledEnergyCost(0.),
- filterSynthesis(filterAll),
- filterYearByYear(filterAll),
- ui(nullptr),
- nbYearsInParallel(0),
- invalidateJIT(false)
+
+ hydro(*this), enabled(true), reserves(fhrMax, HOURS_PER_YEAR), miscGen(fhhMax, HOURS_PER_YEAR)
 {
     internalInitialize();
 }
 
-Area::Area(const AnyString& name, uint nbParallelYears) :
- index((uint)(-1)),
- reserves(fhrMax, HOURS_PER_YEAR),
- miscGen(fhhMax, HOURS_PER_YEAR),
- hydro(*this),
- nodalOptimization(anoAll),
- spreadUnsuppliedEnergyCost(0.),
- spreadSpilledEnergyCost(0.),
- filterSynthesis(filterAll),
- filterYearByYear(filterAll),
- ui(nullptr),
- nbYearsInParallel(nbParallelYears),
- invalidateJIT(false)
+Area::Area(const AnyString& name) :
+ reserves(fhrMax, HOURS_PER_YEAR), hydro(*this), miscGen(fhhMax, HOURS_PER_YEAR)
 {
     internalInitialize();
     this->name = name;
     Antares::TransformNameIntoID(this->name, this->id);
 }
 
-Area::Area(const AnyString& name, const AnyString& id, uint nbParallelYears, uint indx) :
- index(indx),
- reserves(fhrMax, HOURS_PER_YEAR),
- miscGen(fhhMax, HOURS_PER_YEAR),
- hydro(*this),
- nodalOptimization(anoAll),
- spreadUnsuppliedEnergyCost(0.),
- spreadSpilledEnergyCost(0.),
- filterSynthesis(filterAll),
- filterYearByYear(filterAll),
- ui(nullptr),
- nbYearsInParallel(nbParallelYears),
- invalidateJIT(false)
+Area::Area(const AnyString& name, const AnyString& id, uint indx) :
+ reserves(fhrMax, HOURS_PER_YEAR), hydro(*this), miscGen(fhhMax, HOURS_PER_YEAR)
 {
     internalInitialize();
     this->name = name;
@@ -220,10 +186,6 @@ Yuni::uint64 Area::memoryUsage() const
     if (ui)
         ret += ui->memoryUsage();
 
-    // scratchpad
-    if (!scratchpad.empty())
-        ret += sizeof(AreaScratchpad) * nbYearsInParallel;
-
     // links
     auto end = links.end();
     for (auto i = links.begin(); i != end; ++i)
@@ -232,9 +194,14 @@ Yuni::uint64 Area::memoryUsage() const
     return ret;
 }
 
-void Area::ensureAllDataAreCreated()
+void Area::createMissingData()
 {
-    // Timeseries
+    createMissingTimeSeries();
+    createMissingPrepros();
+}
+
+void Area::createMissingTimeSeries()
+{
     if (!load.series)
         load.series = new DataSeriesLoad();
     if (!solar.series)
@@ -245,8 +212,9 @@ void Area::ensureAllDataAreCreated()
         hydro.series = new DataSeriesHydro();
     thermal.list.ensureDataTimeSeries();
     renewable.list.ensureDataTimeSeries();
-
-    // Prepro
+}
+void Area::createMissingPrepros()
+{
     if (!load.prepro)
         load.prepro = new Data::Load::Prepro();
     if (!solar.prepro)
@@ -291,29 +259,6 @@ void Area::resetToDefaultValues()
 
     // invalidate the whole area
     invalidateJIT = true;
-
-    // -- No thermal cluster by default, since 3.6.3348
-
-    // -- Code for creating a new thermal cluster
-    // if (JIT::usedFromGUI)
-    // {
-    // 	if (thermal.list.empty())
-    // 	{
-    // 		ThermalCluster* ag = new ThermalCluster(this);
-    // 		if (!ag)
-    // 		{
-    // 			logs.error() << "Impossible to allocate in memory a new thermal cluster.";
-    // 			return;
-    // 		}
-    // 		ag->reset();
-    // 		ag->name("default");
-
-    // 		thermal.list.add(ag);
-    // 		thermal.list.rebuildIndex();
-    // 		thermal.list.ensureDataPrepro();
-    // 		thermal.list.ensureDataTimeSeries();
-    // 	}
-    // }
 }
 
 void Area::resizeAllTimeseriesNumbers(uint n)

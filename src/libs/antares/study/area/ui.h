@@ -113,6 +113,4 @@ private:
 } // namespace Data
 } // namespace Antares
 
-#include "ui.hxx"
-
 #endif // __ANTARES_LIBS_STUDY_UI_H__

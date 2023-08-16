@@ -17,6 +17,5 @@ target_link_libraries(array
 
 target_include_directories(array
         PRIVATE
-        ${CMAKE_SOURCE_DIR}/ext/yuni/src
         ${CMAKE_SOURCE_DIR}/libs
         )

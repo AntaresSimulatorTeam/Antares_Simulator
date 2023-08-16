@@ -37,7 +37,6 @@
 #include "../../inifile/inifile.h"
 #include "EnvForLoading.h"
 #include "antares/study/filter.h"
-#include "BindingConstraintTimeSeriesNumbers.h"
 #include "BindingConstraintStructures.h"
 #include <memory>
 #include <utility>
@@ -295,7 +294,7 @@ public:
     /*!
     ** \brief Set the type of the binding constraint
     */
-    void mutateTypeWithoutCheck(Type t);
+    void setTimeGranularity(Type t);
     //@}
 
     //! \name Operator

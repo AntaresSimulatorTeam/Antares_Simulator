@@ -90,7 +90,7 @@ bool Create::prepareWL(Context& ctx)
 
     // Computing the futur ID of the area
     Antares::Data::ConstraintName id;
-    std::shared_ptr<Antares::Data::BindingConstraint> constraintFound = nullptr;
+    std::shared_ptr<Antares::Data::BindingConstraint> constraintFound;
 
     // the suffix
     const String& suffix = ctx.property["constraint.name.suffix"];

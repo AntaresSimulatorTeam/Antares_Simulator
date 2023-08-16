@@ -133,6 +133,9 @@ void ZipWriter::addEntryFromFile(const std::string& entryPath, const std::string
     case errReadFailed:
         logs.error() << "Read failed '" << filePath << "'";
         break;
+    case errMemoryLimit:
+        logs.error() << "Size limit hit for file '" << filePath << "'";
+        break;
     default:
         logs.error() << "Unhandled error";
         break;

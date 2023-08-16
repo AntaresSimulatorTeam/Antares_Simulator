@@ -29,12 +29,6 @@
 
 #include "opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
-#include "../simulation/sim_extern_variables_globales.h"
-
 #include "opt_fonctions.h"
 
 /*
@@ -72,13 +66,13 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     Probleme.NombreMaxDIterations = -1;
     Probleme.CoutQuadratique = ProblemeAResoudre->CoutQuadratique.data();
     Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire.data();
-    Probleme.X = ProblemeAResoudre->X;
+    Probleme.X = ProblemeAResoudre->X.data();
     Probleme.Xmin = ProblemeAResoudre->Xmin.data();
     Probleme.Xmax = ProblemeAResoudre->Xmax.data();
     Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
     Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable.data();
 
-    Probleme.VariableBinaire = (char*)ProblemeAResoudre->CoutsReduits;
+    Probleme.VariableBinaire = (char*)ProblemeAResoudre->CoutsReduits.data();
 
     Probleme.NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
     Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne.data();
@@ -104,8 +98,8 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
 
     Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes.data();
 
-    Probleme.CoutsMarginauxDesContraintesDeBorneInf = ProblemeAResoudre->CoutsReduits;
-    Probleme.CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre->CoutsReduits;
+    Probleme.CoutsMarginauxDesContraintesDeBorneInf = ProblemeAResoudre->CoutsReduits.data();
+    Probleme.CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre->CoutsReduits.data();
 
     PI_Quamin(&Probleme);
 

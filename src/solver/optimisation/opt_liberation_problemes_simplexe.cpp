@@ -25,7 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <math.h>
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
@@ -33,8 +32,6 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
-#include <antares/emergency.h>
-#include <antares/logs.h>
 
 #include "../utils/ortools_utils.h"
 
@@ -45,7 +42,7 @@ extern "C"
 
 using namespace Antares;
 
-void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO* problemeHebdo)
+void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options, const PROBLEME_HEBDO* problemeHebdo)
 {
     int NombreDePasDeTempsPourUneOptimisation;
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
@@ -55,22 +52,19 @@ void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO* problemeHebdo)
 
     int nbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
-    const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
     if (!ProblemeAResoudre)
         return;
-
-    const auto& study = *Data::Study::Current::Get();
-    bool ortoolsUsed = study.parameters.ortoolsUsed;
 
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         for (int numIntervalle = 0; numIntervalle < nbIntervalles; numIntervalle++)
         {
             auto ProbSpx
-              = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[numIntervalle]);
-            auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[numIntervalle]);
+              = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
+            auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
 
-            if (ortoolsUsed && solver != NULL)
+            if (options.useOrtools && solver != NULL)
             {
                 ORTOOLS_LibererProbleme(solver);
                 solver = NULL;

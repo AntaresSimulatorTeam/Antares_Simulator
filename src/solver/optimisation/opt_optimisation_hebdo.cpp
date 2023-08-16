@@ -25,15 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <math.h>
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 #include <antares/logs.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 
@@ -45,11 +43,16 @@ extern "C"
 using namespace Antares;
 using namespace Antares::Data;
 
-void OPT_OptimisationHebdomadaire(PROBLEME_HEBDO* pProblemeHebdo, AdqPatchParams& adqPatchParams)
+using Antares::Solver::Optimization::OptimizationOptions;
+
+void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
+                                  PROBLEME_HEBDO* pProblemeHebdo,
+                                  const AdqPatchParams& adqPatchParams,
+                                  Solver::IResultWriter& writer)
 {
     if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
     {
-        if (!OPT_PilotageOptimisationLineaire(pProblemeHebdo, adqPatchParams))
+        if (!OPT_PilotageOptimisationLineaire(options, pProblemeHebdo, adqPatchParams, writer))
         {
             logs.error() << "Linear optimization failed";
             throw UnfeasibleProblemError("Linear optimization failed");
@@ -57,7 +60,7 @@ void OPT_OptimisationHebdomadaire(PROBLEME_HEBDO* pProblemeHebdo, AdqPatchParams
     }
     else if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_QUADRATIQUE)
     {
-        OPT_LiberationProblemesSimplexe(pProblemeHebdo);
+        OPT_LiberationProblemesSimplexe(options, pProblemeHebdo);
         if (!OPT_PilotageOptimisationQuadratique(pProblemeHebdo))
         {
             logs.error() << "Quadratic optimization failed";
@@ -66,8 +69,7 @@ void OPT_OptimisationHebdomadaire(PROBLEME_HEBDO* pProblemeHebdo, AdqPatchParams
     }
     else
     {
-        logs.fatal() << "Bug: TypeDOptimisation, OPTIMISATION_LINEAIRE ou OPTIMISATION_QUADRATIQUE "
-                        "non initialise";
-        AntaresSolverEmergencyShutdown();
+        throw FatalError("Bug: TypeDOptimisation, OPTIMISATION_LINEAIRE ou OPTIMISATION_QUADRATIQUE "
+                         "non initialise");
     }
 }

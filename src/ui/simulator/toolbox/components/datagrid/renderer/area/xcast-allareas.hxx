@@ -61,14 +61,14 @@ inline int XCastAllAreas<T>::width() const
 template<enum Data::TimeSeries T>
 inline int XCastAllAreas<T>::height() const
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     return !study ? 0 : study->areas.size();
 }
 
 template<enum Data::TimeSeries T>
 inline bool XCastAllAreas<T>::valid() const
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     return !(!study) and study->areas.size() != 0;
 }
 
@@ -92,7 +92,7 @@ wxString XCastAllAreas<T>::columnCaption(int colIndx) const
 template<enum Data::TimeSeries T>
 wxString XCastAllAreas<T>::rowCaption(int rowIndx) const
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!study || (uint)rowIndx >= study->areas.size())
         return wxEmptyString;
     return wxStringFromUTF8(study->areas.byIndex[rowIndx]->name);
@@ -101,7 +101,7 @@ wxString XCastAllAreas<T>::rowCaption(int rowIndx) const
 template<enum Data::TimeSeries T>
 IRenderer::CellStyle XCastAllAreas<T>::cellStyle(int x, int y) const
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!study)
         return IRenderer::cellStyleDefaultCenterDisabled;
 
@@ -135,7 +135,7 @@ IRenderer::CellStyle XCastAllAreas<T>::cellStyle(int x, int y) const
 template<enum Data::TimeSeries T>
 wxColour XCastAllAreas<T>::cellBackgroundColor(int, int y) const
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!study)
         return wxColour(0, 0, 0);
     auto& area = *(study->areas.byIndex[y]);
@@ -145,7 +145,7 @@ wxColour XCastAllAreas<T>::cellBackgroundColor(int, int y) const
 template<enum Data::TimeSeries T>
 wxString XCastAllAreas<T>::cellValue(int x, int y) const
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!study)
         return wxEmptyString;
 
@@ -179,7 +179,7 @@ wxString XCastAllAreas<T>::cellValue(int x, int y) const
 template<enum Data::TimeSeries T>
 double XCastAllAreas<T>::cellNumericValue(int x, int y) const
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!study)
         return 0.;
     auto& area = *(study->areas.byIndex[y]);
@@ -212,7 +212,7 @@ double XCastAllAreas<T>::cellNumericValue(int x, int y) const
 template<enum Data::TimeSeries T>
 bool XCastAllAreas<T>::cellValue(int x, int y, const Yuni::String& value)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!study)
         return false;
 

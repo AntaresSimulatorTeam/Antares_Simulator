@@ -28,6 +28,5 @@
 #define __SOLVER_MEMORY_H__
 
 #include <antares/logs.h>
-#include <antares/sys/mem-wrapper.h>
 
 #endif /* __SOLVER_MEMORY_H__ */

@@ -31,6 +31,7 @@
 #include "../filter.h"
 #include <antares/date.h>
 #include <antares/study/study.h>
+#include "application/study.h"
 
 namespace Antares
 {
@@ -86,7 +87,7 @@ public:
     virtual bool rowIsValid(int row) const
     {
         // TODO Do not use global study
-        auto studyptr = Data::Study::Current::Get();
+        auto studyptr = GetCurrentStudy();
         if (!studyptr)
             return false;
         auto& study = *studyptr;
