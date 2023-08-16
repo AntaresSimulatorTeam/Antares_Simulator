@@ -7,17 +7,16 @@
 
 namespace {
 
-std::string beautifyStd(const std::string& in) {
-    std::string out;
+template <class T>
+T beautify(const T& in) {
+    T out;
     Antares::BeautifyName(out, in);
     return out;
 }
 
-Yuni::String beautifyYuni(const Yuni::String in) {
-    Yuni::String out;
-    Antares::BeautifyName(out, in);
-    return out;
-}
+constexpr auto beautifyStd = beautify<std::string>;
+constexpr auto beautifyYuni = beautify<Yuni::String>;
+
 }
 
 BOOST_AUTO_TEST_CASE(test_beautify_name_std)
