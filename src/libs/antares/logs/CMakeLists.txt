@@ -13,8 +13,3 @@ target_link_libraries(logs
         PRIVATE
         yuni-static-core
         )
-
-target_include_directories(logs
-        PRIVATE
-        ${CMAKE_SOURCE_DIR}/ext/yuni/src
-        )

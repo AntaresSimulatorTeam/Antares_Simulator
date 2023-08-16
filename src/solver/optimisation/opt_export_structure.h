@@ -48,9 +48,9 @@ class Study;
 
 struct PROBLEME_HEBDO;
 
-void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
+void OPT_ExportInterco(Antares::Solver::IResultWriter& writer,
                        PROBLEME_HEBDO* problemeHebdo);
-void OPT_ExportAreaName(Antares::Solver::IResultWriter::Ptr writer,
-                        const Antares::Data::AreaList& areas);
+void OPT_ExportAreaName(Antares::Solver::IResultWriter& writer,
+                        const std::vector<const char*>& areaNames);
 
 #endif

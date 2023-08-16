@@ -239,7 +239,7 @@ void CorrelationPanel::reload()
     // Reset to nullptr
     pData->pCorrelation = nullptr;
     // Retrieving the good pointer to the correlation coefficients
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         switch (pData->timeseries)

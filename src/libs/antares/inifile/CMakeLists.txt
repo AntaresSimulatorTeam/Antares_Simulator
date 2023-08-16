@@ -18,5 +18,4 @@ target_link_libraries(inifile
 
 target_include_directories(inifile
         PRIVATE
-        ${CMAKE_SOURCE_DIR}/ext/yuni/src
         )

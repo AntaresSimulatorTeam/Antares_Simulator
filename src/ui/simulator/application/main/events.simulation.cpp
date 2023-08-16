@@ -62,7 +62,7 @@ static bool SimulationCheck(const Data::Study& study)
 template<class ParentT>
 static void ShowSimulationPanel(ParentT* parent, bool preproOnly)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         if (SimulationCheck(*study))
@@ -115,12 +115,12 @@ void ApplWnd::evtOnRunTSAnalyzer(wxCommandEvent&)
 
 void ApplWnd::evtOnRunTSAnalyzerDelayed()
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
     {
         logs.error() << "No study opened";
         return;
     }
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     if (SimulationCheck(study))
     {
@@ -155,12 +155,12 @@ void ApplWnd::evtOnRunConstraintsBuilder(wxCommandEvent&)
 
 void ApplWnd::evtOnRunConstraintsBuilderDelayed()
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
     {
         logs.error() << "No study opened";
         return;
     }
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     if (SimulationCheck(study))
     {

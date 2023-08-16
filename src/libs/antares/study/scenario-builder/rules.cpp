@@ -30,6 +30,7 @@
 #include "../study.h"
 #include "../../logs.h"
 #include "scBuilderUtils.h"
+#include "TSnumberData.h"
 
 using namespace Yuni;
 
@@ -325,15 +326,30 @@ bool Rules::readLink(const AreaName::Vector& splitKey, String value, bool update
     return true;
 }
 
+bool Rules::checkGroupExists(const std::string& groupName) const
+{
+    const auto& groups = study_.bindingConstraintsGroups;
+    if (!groups[groupName])
+    {
+        logs.warning() << "[scenario-builder] The binding constraint group '" << groupName << "' does not exist";
+        return false;
+    }
+    return true;
+}
+
 bool Rules::readBindingConstraints(const AreaName::Vector &splitKey, String value) {
     std::string group_name = splitKey[1].c_str();
     auto year = std::stoi(splitKey[2].c_str());
+
+    if (!checkGroupExists(group_name))
+        return false;
+
     auto tsNumber = fromStringToTSnumber(value);
     binding_constraints.setData(group_name, year, tsNumber);
     return true;
 }
 
-bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool updaterMode = false)
+bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool updaterMode)
 {
     if (splitKey.size() <= 2)
         return false;

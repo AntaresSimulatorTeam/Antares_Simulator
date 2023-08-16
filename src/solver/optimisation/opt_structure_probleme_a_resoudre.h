@@ -33,11 +33,15 @@
 
 /*--------------------------------------------------------------------------------------*/
 
-/* Les problemes Simplexe */
-typedef struct
+namespace Antares::Solver::Optimization {
+
+struct OptimizationOptions
 {
-    void** ProblemeSpx;
-} PROBLEMES_SIMPLEXE;
+    bool useOrtools;
+    std::string solverName;
+};
+
+}
 
 /* Le probleme a resoudre */
 typedef struct
@@ -75,19 +79,19 @@ typedef struct
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a X, il permet
        de renseigner directement les structures de description du reseau avec les
        resultats contenus dans X */
-    double** AdresseOuPlacerLaValeurDesVariablesOptimisees;
+    std::vector<double*> AdresseOuPlacerLaValeurDesVariablesOptimisees;
     /* Resultat */
-    double* X;
+    std::vector<double> X;
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a CoutsMarginauxDesContraintes,
        il permet de renseigner directement les structures de description du reseau avec les
        resultats sur les couts marginaux */
-    double** AdresseOuPlacerLaValeurDesCoutsMarginaux;
+    std::vector<double*> AdresseOuPlacerLaValeurDesCoutsMarginaux;
     std::vector<double> CoutsMarginauxDesContraintes;
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a CoutsMarginauxDesContraintes,
        il permet de renseigner directement les structures de description du reseau avec les
        resultats sur les couts reduits */
-    double** AdresseOuPlacerLaValeurDesCoutsReduits;
-    double* CoutsReduits;
+    std::vector<double*> AdresseOuPlacerLaValeurDesCoutsReduits;
+    std::vector<double> CoutsReduits;
     /* En Entree ou en Sortie */
     int ExistenceDUneSolution; /* En sortie, vaut :
                                    OUI_SPX s'il y a une solution,
@@ -98,14 +102,14 @@ typedef struct
                                   matrice de base reguliere, et dans ce cas il n'y a pas de solution
                                 */
 
-    PROBLEMES_SIMPLEXE* ProblemesSpx;
+    std::vector<void*> ProblemesSpx;
 
-    int* PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    int* ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    std::vector<int> PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    std::vector<int> ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
 
     /* Vecteurs de travail pour contruire la matrice des contraintes lineaires */
-    double* Pi;
-    int* Colonne;
+    std::vector<double> Pi;
+    std::vector<int> Colonne;
 
     /* Nommage des variables & contraintes */
     std::vector<std::string> NomDesVariables;

@@ -131,6 +131,7 @@ void Study::clear()
     preproHydroCorrelation.clear();
 
     bindingConstraints.clear();
+    bindingConstraintsGroups.clear();
     areas.clear();
 
     // no folder
@@ -1314,7 +1315,7 @@ void Study::resizeAllTimeseriesNumbers(uint n)
 {
     logs.debug() << "  resizing timeseries numbers";
     areas.resizeAllTimeseriesNumbers(n);
-    bindingConstraints.resizeAllTimeseriesNumbers(n);
+    bindingConstraintsGroups.resizeAllTimeseriesNumbers(n);
 }
 
 bool Study::checkForFilenameLimits(bool output, const String& chfolder) const

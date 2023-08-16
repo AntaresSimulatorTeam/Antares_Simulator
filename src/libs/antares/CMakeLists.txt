@@ -7,15 +7,7 @@ set(SRC_MEMORY
 	memory/memory.cpp)
 source_group("memory" FILES ${SRC_MEMORY})
 
-set(SRC_OBJECT
-	object/intrusive-reference.h
-	object/intrusive-reference.hxx
-	object/object.h
-	object/object.hxx
-	object/object.cpp
-	object/ref.h
-)
-source_group("object" FILES ${SRC_OBJECT})
+add_subdirectory(object)
 
 add_subdirectory(array)
 add_subdirectory(correlation)
@@ -36,6 +28,24 @@ set(SRC_STUDY_SCENARIO_BUILDER
 	study/scenario-builder/scBuilderUtils.h
 	study/scenario-builder/scBuilderUtils.cpp
 	study/scenario-builder/BindingConstraintsTSNumbersData.cpp
+	study/scenario-builder/NTCTSNumberData.cpp
+	study/scenario-builder/NTCTSNumberData.h
+	study/scenario-builder/BindingConstraintsTSNumbersData.h
+	study/scenario-builder/RenewableTSNumberData.h
+	study/scenario-builder/RenewableTSNumberData.cpp
+	study/scenario-builder/ThermalTSNumberData.cpp
+	study/scenario-builder/ThermalTSNumberData.h
+	study/scenario-builder/HydroTSNumberData.h
+	study/scenario-builder/HydroTSNumberData.cpp
+	study/scenario-builder/HydroPowerCreditsTSNumberData.h
+	study/scenario-builder/HydroPowerCreditsTSNumberData.cpp
+	study/scenario-builder/SolarTSNumberData.cpp
+	study/scenario-builder/solarTSNumberData.h
+	study/scenario-builder/WindTSNumberData.h
+	study/scenario-builder/WindTSNumberData.cpp
+	study/scenario-builder/LoadTSNumberData.h
+	study/scenario-builder/LoadTSNumberData.cpp
+	study/scenario-builder/applyToMatrix.hxx
 )
 source_group("study\\scenario builder" FILES ${SRC_MATRIX})
 
@@ -172,14 +182,12 @@ set(SRC_AREAS
 	study/area/store-timeseries-numbers.h
 	study/area/store-timeseries-numbers.hxx
 	study/area/list.cpp
-	study/area/list.hxx
 	)
 source_group("study\\area" FILES ${SRC_AREAS})
 
 
 set(SRC_STUDY_AREA_UI
 	study/area/ui.h
-	study/area/ui.hxx
 	study/area/ui.cpp
 	)
 source_group("study\\area\\ui" FILES ${SRC_STUDY_AREA_UI})
@@ -303,14 +311,16 @@ set(SRC_STUDY_BINDING_CONSTRAINT
 	study/binding_constraint/BindingConstraintsRepository.h
 	study/binding_constraint/BindingConstraintsRepository.hxx
 	study/binding_constraint/BindingConstraintsRepository.cpp
-	study/binding_constraint/BindingConstraintTimeSeriesNumbers.cpp
-	study/binding_constraint/BindingConstraintTimeSeriesNumbers.h
 	study/binding_constraint/BindingConstraintLoader.cpp
 	study/binding_constraint/BindingConstraintLoader.h
 	study/binding_constraint/BindingConstraintSaver.cpp
 	study/binding_constraint/BindingConstraintSaver.h
 	study/binding_constraint/EnvForLoading.h
 	study/binding_constraint/BindingConstraintStructures.h
+	study/binding_constraint/BindingConstraintGroup.cpp
+	study/binding_constraint/BindingConstraintGroup.h
+	study/binding_constraint/BindingConstraintGroupRepository.cpp
+	study/binding_constraint/BindingConstraintGroupRepository.h
 	)
 
 source_group("study\\constraint" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
@@ -354,8 +364,8 @@ set(SRC_EXCEPTION
 source_group("exception" FILES ${SRC_EXCEPTION})
 
 set(SRC_CHECKS
-	checks/checkApplication.cpp
-	checks/checkApplication.h
+	checks/checkLoadedInputData.cpp
+	checks/checkLoadedInputData.h
 	)
 source_group("checks" FILES ${SRC_CHECKS})
 
@@ -376,9 +386,9 @@ set(SRC
 	locale.h
 	locale.cpp
 
-	emergency.h emergency.cpp
+	fatal-error.h
 
-	# wx-wrapper
+		# wx-wrapper
 	wx-wrapper.h
 
 	# resource
@@ -387,9 +397,6 @@ set(SRC
 
 	solver.h
 	solver.cpp
-
-	# Memory wrapper
-	sys/mem-wrapper.h  sys/mem-wrapper.c
 
     # new check allocation
     memory/new_check.hxx
@@ -449,8 +456,7 @@ set(SRC
 	study/runtime.h
 	study/study.h
 	study/study.hxx
-	study/current.cpp
-	study/fwd.h
+        study/fwd.h
 	study/fwd.cpp
 	study.h
 	study/estimate.memory-footprint.cpp
@@ -512,11 +518,12 @@ add_library( libantares-core-calendar
 	date/date.h
 	date/date.cpp
 )
-#TODO : needed for include yuni : why yuni must be include first ???
-#TODO : needed for include
+
+target_link_libraries(libantares-core-calendar
+		PRIVATE yuni-static-core)
+
 target_include_directories(libantares-core-calendar
 		PRIVATE
-			${CMAKE_SOURCE_DIR}/ext/yuni/src/
 			${CMAKE_SOURCE_DIR}/libs
 		)
 
@@ -524,9 +531,11 @@ add_library(libantares-core-exceptions
     ${SRC_EXCEPTION}
 )
 
+target_link_libraries(libantares-core-exceptions
+	PRIVATE yuni-static-core)
+
 target_include_directories(libantares-core-exceptions
 		PRIVATE
-			${CMAKE_SOURCE_DIR}/ext/yuni/src/
 			${CMAKE_SOURCE_DIR}/libs
 		)
 
@@ -536,19 +545,21 @@ add_library(libantares-core-checks
 
 target_include_directories(libantares-core-checks
 		PRIVATE
-			${CMAKE_SOURCE_DIR}/ext/yuni/src/
 			${CMAKE_SOURCE_DIR}/libs/antares/study
             ${CMAKE_SOURCE_DIR}/libs/antares/logs
 			${CMAKE_SOURCE_DIR}/libs
             ${CMAKE_SOURCE_DIR}/solver/writer
 )
 
+target_link_libraries(libantares-core-checks
+	PRIVATE
+		yuni-static-core)
+
 add_library(libantares-core
 	antares.h
 	${SRC}
 	${SRC_LOGS}
 	${SRC_MEMORY}
-	${SRC_OBJECT}
 	${SRC_JIT}
 	${SRC_MATRIX}
 	${SRC_BENCHMARKING}
@@ -579,7 +590,6 @@ add_library(libantares-core
 #TODO : needed for include
 target_include_directories(libantares-core
 		PUBLIC
-			${CMAKE_SOURCE_DIR}/ext/yuni/src
 			${CMAKE_SOURCE_DIR}/libs
 			${CMAKE_SOURCE_DIR}/libs/antares/logs
             ${CMAKE_SOURCE_DIR}/solver/writer
@@ -598,6 +608,7 @@ target_link_libraries(libantares-core
 		io
 		array
 		correlation
+		object
 	)
 
 import_std_libs(libantares-core)

@@ -6,12 +6,8 @@ on:
   push:
     branches:
       - develop
-      - feature/*
-      - features/*
-      - fix/*
-      - issue-*
-      - release/*
-      - doc/*
+  schedule:
+    - cron: '21 2 * * *'
 
 env:
   GITHUB_TOKEN: ${{ github.token }}

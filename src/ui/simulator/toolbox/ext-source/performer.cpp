@@ -450,7 +450,7 @@ void PerformerDialog::closeWindow()
             }
 
             // Reload runtime data
-            auto currentStudy = Data::Study::Current::Get();
+            auto currentStudy = GetCurrentStudy();
             if (currentStudy != study)
                 currentStudy->uiinfo->reloadAll();
         }
