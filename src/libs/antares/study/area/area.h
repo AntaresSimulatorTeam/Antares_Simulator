@@ -39,6 +39,8 @@
 #include "links.h"
 #include "ui.h"
 #include "antares/study/parameters/adq-patch-params.h"
+#include "constants.h"
+#include "antares/study/filter.h"
 
 namespace Antares
 {
@@ -221,7 +223,7 @@ public:
     //! Name of the area in lowercase format
     AreaName id;
     //! Index of the area  - only valid when already added to an area list
-    uint index;
+    uint index = (uint)(-1);
     //! Enabled
     bool enabled;
     //! Use adequacy patch for this area
@@ -288,29 +290,29 @@ public:
     //! \name Nodal Optimization
     //@{
     //! Nodal optimization (see AreaNodalOptimization)
-    uint nodalOptimization;
+    uint nodalOptimization = anoAll;
     //@}
 
     //! \name Spread
     //@{
     //! Spread for the unsupplied energy cost
-    double spreadUnsuppliedEnergyCost;
+    double spreadUnsuppliedEnergyCost = 0.;
     //! Spread for the spilled energy cost
-    double spreadSpilledEnergyCost;
+    double spreadSpilledEnergyCost = 0.;
     //@}
 
     //! \name Output filtering
     //@{
     //! Print results for the area in the simulation synthesis
-    uint filterSynthesis;
+    uint filterSynthesis = filterAll;
     //! Print results for the area in the year-by-year mode
-    uint filterYearByYear;
+    uint filterYearByYear = filterAll;
     //@}
 
     //! \name UI
     //@{
     //! Information for the UI
-    AreaUI* ui;
+    AreaUI* ui = nullptr;
     //@}
     
     //! \name Dynamic
@@ -329,7 +331,7 @@ public:
     ** A non-zero value if the missing data must be loaded from HDD for the next
     ** save (only valid if JIT enabled).
     */
-    mutable bool invalidateJIT;
+    mutable bool invalidateJIT = false;
     //@}
 
 private:

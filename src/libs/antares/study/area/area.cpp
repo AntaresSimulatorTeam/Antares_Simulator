@@ -29,7 +29,6 @@
 #include <cassert>
 #include "../study.h"
 #include "area.h"
-#include "constants.h"
 #include "ui.h"
 #include "scratchpad.h"
 #include "antares/study/parts/load/prepro.h"
@@ -46,32 +45,16 @@ void Area::internalInitialize()
 }
 
 Area::Area() :
-     index((uint)(-1)),
      enabled(true),
      reserves(fhrMax, HOURS_PER_YEAR),
-     miscGen(fhhMax, HOURS_PER_YEAR),
-     nodalOptimization(anoAll),
-     spreadUnsuppliedEnergyCost(0.),
-     spreadSpilledEnergyCost(0.),
-     filterSynthesis(filterAll),
-     filterYearByYear(filterAll),
-     ui(nullptr),
-     invalidateJIT(false)
+     miscGen(fhhMax, HOURS_PER_YEAR)
 {
     internalInitialize();
 }
 
 Area::Area(const AnyString& name) :
- index((uint)(-1)),
  reserves(fhrMax, HOURS_PER_YEAR),
- miscGen(fhhMax, HOURS_PER_YEAR),
- nodalOptimization(anoAll),
- spreadUnsuppliedEnergyCost(0.),
- spreadSpilledEnergyCost(0.),
- filterSynthesis(filterAll),
- filterYearByYear(filterAll),
- ui(nullptr),
- invalidateJIT(false)
+ miscGen(fhhMax, HOURS_PER_YEAR)
 {
     internalInitialize();
     this->name = name;
@@ -79,16 +62,8 @@ Area::Area(const AnyString& name) :
 }
 
 Area::Area(const AnyString& name, const AnyString& id, uint indx) :
- index(indx),
  reserves(fhrMax, HOURS_PER_YEAR),
- miscGen(fhhMax, HOURS_PER_YEAR),
- nodalOptimization(anoAll),
- spreadUnsuppliedEnergyCost(0.),
- spreadSpilledEnergyCost(0.),
- filterSynthesis(filterAll),
- filterYearByYear(filterAll),
- ui(nullptr),
- invalidateJIT(false)
+ miscGen(fhhMax, HOURS_PER_YEAR)
 {
     internalInitialize();
     this->name = name;

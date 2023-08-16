@@ -72,18 +72,8 @@ static inline void FreeAndNil(T*& pointer)
 Study::Study(bool forTheSolver) :
  LayerData(0, true),
  simulationComments(*this),
- maxNbYearsInParallel(1),
- maxNbYearsInParallel_save(0),
- nbYearsParallelRaw(1),
- minNbYearsInParallel(0),
- minNbYearsInParallel_save(0),
  areas(*this),
- scenarioRules(nullptr),
- runtime(nullptr),
- // state(nullptr),
- uiinfo(nullptr),
  pQueueService(std::make_shared<Yuni::Job::QueueService>()),
- gotFatalError(false),
  usedByTheSolver(forTheSolver)
 {
     // TS generators
