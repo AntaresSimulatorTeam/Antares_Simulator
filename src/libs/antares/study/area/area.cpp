@@ -45,7 +45,6 @@ void Area::internalInitialize()
 }
 
 Area::Area() :
-    invalidateJIT(false),
     reserves(fhrMax, HOURS_PER_YEAR),
     miscGen(fhhMax, HOURS_PER_YEAR)
 {
