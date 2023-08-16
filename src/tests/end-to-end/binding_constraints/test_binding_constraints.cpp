@@ -104,8 +104,9 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
     simulation->create();
     simulation->run();
 
-    std::shared_ptr<OutputRetriever> output = std::make_shared<OutputRetriever>(simulation->rawSimu());
-    BOOST_TEST(output->flow(link).hour(0) == rhsValue, tt::tolerance(0.001));
+    OutputRetriever output(simulation->rawSimu());
+
+    BOOST_TEST(output.flow(link).hour(0) == rhsValue, tt::tolerance(0.001));
 }
 
 
@@ -125,9 +126,9 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
     simulation->create();
     simulation->run();
 
-    std::shared_ptr<OutputRetriever> output = std::make_shared<OutputRetriever>(simulation->rawSimu());
+    OutputRetriever output(simulation->rawSimu());
     unsigned int nbDaysInWeek = 7;
-    BOOST_TEST(output->flow(link).week(0) == rhsValue * nbDaysInWeek, tt::tolerance(0.001));
+    BOOST_TEST(output.flow(link).week(0) == rhsValue * nbDaysInWeek, tt::tolerance(0.001));
 }
 
 
@@ -146,8 +147,8 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
     simulation->create();
     simulation->run();
 
-    std::shared_ptr<OutputRetriever> output = std::make_shared<OutputRetriever>(simulation->rawSimu());
-    BOOST_TEST(output->flow(link).day(0) == rhsValue, tt::tolerance(0.001));
+    OutputRetriever output(simulation->rawSimu());
+    BOOST_TEST(output.flow(link).day(0) == rhsValue, tt::tolerance(0.001));
 }
 
 
@@ -166,8 +167,8 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     simulation->create();
     simulation->run();
 
-    std::shared_ptr<OutputRetriever> output = std::make_shared<OutputRetriever>(simulation->rawSimu());
-    BOOST_TEST(output->flow(link).hour(100) <= rhsValue, tt::tolerance(0.001));
+    OutputRetriever output(simulation->rawSimu());
+    BOOST_TEST(output.flow(link).hour(100) <= rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
@@ -185,8 +186,8 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
     simulation->create();
     simulation->run();
 
-    std::shared_ptr<OutputRetriever> output = std::make_shared<OutputRetriever>(simulation->rawSimu());
-    BOOST_TEST(output->flow(link).hour(100) >= rhsValue, tt::tolerance(0.001));
+    OutputRetriever output(simulation->rawSimu());
+    BOOST_TEST(output.flow(link).hour(100) >= rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -209,8 +210,8 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90)
     simulation->create();
     simulation->run();
 
-    std::shared_ptr<OutputRetriever> output = std::make_shared<OutputRetriever>(simulation->rawSimu());
-    BOOST_TEST(output->thermalGeneration(cluster.get()).hour(10) == rhsValue, tt::tolerance(0.001));
+    OutputRetriever output(simulation->rawSimu());
+    BOOST_TEST(output.thermalGeneration(cluster.get()).hour(10) == rhsValue, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -241,8 +242,8 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
     playOnlyYear(1);
     simulation->run();
 
-    std::shared_ptr<OutputRetriever> output = std::make_shared<OutputRetriever>(simulation->rawSimu());
-    BOOST_TEST(output->flow(link).hour(0) == bcGroupRHS2, tt::tolerance(0.001));
+    OutputRetriever output(simulation->rawSimu());
+    BOOST_TEST(output.flow(link).hour(0) == bcGroupRHS2, tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
@@ -278,8 +279,8 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
     playOnlyYear(8);
     simulation->run();
 
-    std::shared_ptr<OutputRetriever> output = std::make_shared<OutputRetriever>(simulation->rawSimu());
-    BOOST_TEST(output->flow(link).hour(0) == 40., tt::tolerance(0.001));
+    OutputRetriever output(simulation->rawSimu());
+    BOOST_TEST(output.flow(link).hour(0) == 40., tt::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
