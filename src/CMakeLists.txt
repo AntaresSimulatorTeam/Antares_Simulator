@@ -226,12 +226,6 @@ add_subdirectory(antares-deps)
 #Add needed definition in case of external dependencies compilation
 include (antares-deps/cmake/additionnal-definitions.cmake)
 
-#TODO : Add ZLIB if  VCPKG used why is this needed
-if (VCPKG_TOOLCHAIN) 
-    #zlib
-    find_package(ZLIB REQUIRED)
-endif()
-
 #Sirius solver
 if(POLICY CMP0074)
 	cmake_policy(SET CMP0074 NEW)
