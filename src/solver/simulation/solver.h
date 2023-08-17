@@ -46,8 +46,6 @@
 namespace Antares::Solver::Simulation
 {
 
-typedef std::vector<std::vector<VALEURS_GENEREES_PAR_PAYS>> VAL_GEN_PAR_PAYS;
-
 struct RANDOM_ARRAYS
 {
     std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_PAYS>> NumeroChroniquesTireesParPays;
