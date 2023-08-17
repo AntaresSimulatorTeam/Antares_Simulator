@@ -46,9 +46,10 @@
 namespace Antares::Solver::Simulation
 {
 
+typedef std::vector<std::vector<VALEURS_GENEREES_PAR_PAYS>> VAL_GEN_PAR_PAYS;
+
 struct RANDOM_ARRAYS
 {
-    std::vector<std::vector<VALEURS_GENEREES_PAR_PAYS>> ValeursGenereesParPays;
     std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_PAYS>> NumeroChroniquesTireesParPays;
     std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION>> NumeroChroniquesTireesParInterconnexion;
     std::vector<std::map<std::string, unsigned>> NumeroChroniquesTireesParGroup;
@@ -192,6 +193,8 @@ public:
     std::shared_ptr<Yuni::Job::QueueService> pQueueService = nullptr;
     //! Result writer
     Antares::Solver::IResultWriter::Ptr pResultWriter = nullptr;
+
+    VAL_GEN_PAR_PAYS ValeursGenereesParPays;
 
     RANDOM_ARRAYS randomArrays;
 }; // class ISimulation
