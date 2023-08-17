@@ -54,7 +54,7 @@ Summary::~Summary()
 
 wxString Summary::rowCaption(int rowIndx) const
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         auto* lnk = study->uiinfo->link((uint)(rowIndx));
@@ -72,7 +72,7 @@ wxString Summary::rowCaption(int rowIndx) const
 
 double Summary::cellNumericValue(int x, int y) const
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!study)
         return 0;
 
@@ -94,10 +94,10 @@ double Summary::cellNumericValue(int x, int y) const
 
 wxString Summary::cellValue(int x, int y) const
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return wxEmptyString;
-    assert(Data::Study::Current::Get()->uiinfo);
-    auto& uiinfo = *(Data::Study::Current::Get()->uiinfo);
+    assert(GetCurrentStudy()->uiinfo);
+    auto& uiinfo = *(GetCurrentStudy()->uiinfo);
     auto* link = (uint)y < uiinfo.linkCount() ? uiinfo.link((uint)y) : nullptr;
     if (not link)
         return wxEmptyString;
@@ -138,10 +138,10 @@ wxString Summary::columnCaption(int x) const
 IRenderer::CellStyle Summary::cellStyle(int x, int y) const
 {
     using namespace Data;
-    if (!Study::Current::Valid())
+    if (!CurrentStudyIsValid())
         return IRenderer::cellStyleDefault;
-    assert(Study::Current::Get()->uiinfo);
-    auto& uiinfo = *(Study::Current::Get()->uiinfo);
+    assert(GetCurrentStudy()->uiinfo);
+    auto& uiinfo = *(GetCurrentStudy()->uiinfo);
     Data::AreaLink* link = (uint)y < uiinfo.linkCount() ? uiinfo.link((uint)y) : nullptr;
     if (!link)
         return IRenderer::cellStyleDefault;
@@ -162,10 +162,10 @@ IRenderer::CellStyle Summary::cellStyle(int x, int y) const
 bool Summary::cellValue(int x, int y, const String& value)
 {
     using namespace Data;
-    if (!Study::Current::Valid())
+    if (!CurrentStudyIsValid())
         return false;
-    assert(Study::Current::Get()->uiinfo);
-    auto& uiinfo = *(Study::Current::Get()->uiinfo);
+    assert(GetCurrentStudy()->uiinfo);
+    auto& uiinfo = *(GetCurrentStudy()->uiinfo);
     auto* link = (uint)y < uiinfo.linkCount() ? uiinfo.link((uint)y) : nullptr;
     if (not link)
         return false;
@@ -200,7 +200,7 @@ bool Summary::cellValue(int x, int y, const String& value)
 
 int Summary::height() const
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     return !study ? 0 : study->uiinfo->linkCount();
 }
 

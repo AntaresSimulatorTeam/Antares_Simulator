@@ -97,7 +97,7 @@ void HydroMonthlyPower::internalAreaChanged(Antares::Data::Area* area)
 {
     // FIXME for some reasons, the variable study here is not properly initialized
     if (area && !study)
-        study = Data::Study::Current::Get();
+        study = GetCurrentStudy();
 
     Data::PartHydro* pHydro = (area) ? &(area->hydro) : nullptr;
     Renderer::ARendererArea::internalAreaChanged(area);

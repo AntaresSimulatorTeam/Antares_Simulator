@@ -31,7 +31,6 @@
 #include <assert.h>
 #include "../inifile/inifile.h"
 #include "../logs.h"
-#include "../sys/mem-wrapper.h"
 #include "version.h"
 
 using namespace Yuni;

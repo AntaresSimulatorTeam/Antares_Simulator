@@ -75,6 +75,22 @@ SaveResult SaveStudy();
 SaveResult SaveStudyAs(const Yuni::String& path, bool copyoutput, bool copyuserdata, bool copylogs);
 
 /*!
+** \brief Defines the study to be managed by the application.
+*/
+void SetCurrentStudy(std::shared_ptr<Data::Study> study);
+
+/*!
+** \brief Get the study currently managed by the application.
+*/
+std::shared_ptr<Data::Study> GetCurrentStudy();
+
+/*!
+** \brief True if a study is defined as the current application study.
+*/
+bool CurrentStudyIsValid();
+
+
+/*!
 ** \brief Export the current study map into a folder
 */
 SaveResult ExportMap(const Yuni::String& path,

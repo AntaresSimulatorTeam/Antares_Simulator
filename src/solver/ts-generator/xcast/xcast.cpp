@@ -25,12 +25,14 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <string>
+#include <sstream>
 #include <yuni/yuni.h>
 #include <antares/study.h>
 #include "xcast.h"
 #include "predicate.hxx"
 #include <antares/logs.h>
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 #include <limits>
 #include <yuni/io/directory.h>
 #include <antares/study/area/constants.h>
@@ -145,9 +147,10 @@ void XCast::applyTransferFunction(PredicateT& predicate)
                 auto& p1 = tf[i + 1];
                 if (p1[x] <= p0[x])
                 {
-                    logs.fatal() << "Transfer function: invalid X-coordinate at index (" << i
-                                 << ", " << (i + 1) << ")";
-                    AntaresSolverEmergencyShutdown();
+                    std::ostringstream msg;
+                    msg << "Transfer function: invalid X-coordinate at index (" << i
+                        << ", " << (i + 1) << ")";
+                    throw FatalError(msg.str());
                 }
                 a[i] = (p1[y] - p0[y]) / (p1[x] - p0[x]);
                 b[i] = (p0[y] * p1[x] - p1[y] * p0[x]) / (p1[x] - p0[x]);
@@ -356,6 +359,9 @@ void XCast::destroyTemporaryData()
         delete[] TREN;
         delete[] WIEN;
         delete[] BROW;
+        delete[] BASI;
+        delete[] ALPH;
+        delete[] BETA;
         delete[] pQCHOLTotal;
         delete[] pUseConversion;
     }
@@ -489,7 +495,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
             for (uint j = 0; j != nbDaysPerMonth; ++j)
             {
                 if (not generateValuesForTheCurrentDay())
-                    AntaresSolverEmergencyShutdown();
+                    throw FatalError("xcast: Failed to generate values.");
 
 #ifndef NDEBUG
 
@@ -661,7 +667,7 @@ bool XCast::run()
 
     default:
     {
-        AntaresSolverEmergencyShutdown(1);
+        throw FatalError("xcast: Invalid time series type.");
     }
     }
     return false;

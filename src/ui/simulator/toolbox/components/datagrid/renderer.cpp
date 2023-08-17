@@ -184,7 +184,7 @@ IRenderer::~IRenderer()
 
 void IRenderer::onStudyLoaded()
 {
-    study = Data::Study::Current::Get();
+    study = GetCurrentStudy();
 }
 
 void IRenderer::onStudyClosed()

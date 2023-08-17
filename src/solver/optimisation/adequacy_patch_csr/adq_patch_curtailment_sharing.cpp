@@ -144,11 +144,6 @@ void HourlyCSRProblem::calculateCsrParameters()
     }
 }
 
-void HourlyCSRProblem::resetProblem()
-{
-    OPT_FreeOptimizationData(&problemeAResoudre_);
-}
-
 void HourlyCSRProblem::allocateProblem()
 {
     using namespace Antares::Data::AdequacyPatch;

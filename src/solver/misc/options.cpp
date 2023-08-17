@@ -42,7 +42,6 @@
 
 #include "../../config.h"
 
-#include <antares/emergency.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/Enum.hpp>

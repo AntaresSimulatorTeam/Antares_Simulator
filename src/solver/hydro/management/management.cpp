@@ -28,7 +28,7 @@
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 #include <antares/study/area/scratchpad.h>
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 #include "management.h"
 #include "../../simulation/sim_extern_variables_globales.h"
 #include <yuni/core/math.h>
@@ -522,7 +522,7 @@ void HydroManagement::operator()(double* randomReservoirLevel,
     minGenerationScaling(numSpace);
     if (!checkMinGeneration(numSpace))
     {
-        AntaresSolverEmergencyShutdown();
+        throw FatalError("hydro management: invalid minimum generation");
     }
 
     changeInflowsToAccommodateFinalLevels(numSpace, y);

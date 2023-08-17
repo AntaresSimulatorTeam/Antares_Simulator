@@ -76,7 +76,7 @@ public:
         {
             SelectAll();
         };
-        ~TabTextCtrl(){};
+        ~TabTextCtrl() = default;
         void OnTextEnter(wxCommandEvent& evt);
         void SetPage(Page* p)
         {

@@ -33,7 +33,6 @@
 
 #include <antares/study.h>
 #include <antares/logs.h>
-#include <antares/emergency.h>
 #include <i_writer.h>
 
 #include "../simulation/simulation.h"

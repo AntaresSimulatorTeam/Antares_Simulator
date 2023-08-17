@@ -300,7 +300,7 @@ bool FileListProvider::onSelect(const Spotlight::IItem::Vector&)
 
 void FileListProvider::refreshFileList(bool showAll)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     wxRegEx regex(wxT("([a-zA-Z_]+)-([0-9]{8})-([0-9]{6})\\.log"));
     String folder;
     pAllSimuLogs.clear();

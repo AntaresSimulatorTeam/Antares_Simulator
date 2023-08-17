@@ -27,16 +27,14 @@
 
 #include "opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
 
 void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-  double* Pi,
-  int* Colonne,
+  std::vector<double>& Pi,
+  std::vector<int>& Colonne,
   int NombreDeTermesDeLaContrainte,
   char SensContrainte)
 {
