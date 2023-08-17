@@ -76,7 +76,7 @@ void Adequacy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
-bool Adequacy::simulationBegin()
+bool Adequacy::simulationBegin(VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     if (!preproOnly)
     {
@@ -137,7 +137,8 @@ bool Adequacy::year(Progression::Task& progression,
                     uint numSpace,
                     yearRandomNumbers& randomForYear,
                     std::list<uint>& failedWeekList,
-                    bool isFirstPerformedYearOfSimulation)
+                    bool isFirstPerformedYearOfSimulation,
+                    VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -161,7 +162,8 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(study,
-          *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
+          *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear,
+          valeursGenereesParPays);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim;

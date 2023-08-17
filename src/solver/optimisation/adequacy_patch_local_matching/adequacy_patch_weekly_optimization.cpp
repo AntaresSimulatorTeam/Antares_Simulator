@@ -42,8 +42,10 @@ AdequacyPatchOptimization::AdequacyPatchOptimization(const Antares::Data::Study&
                                                      PROBLEME_HEBDO* problemeHebdo,
                                                      AdqPatchParams& adqPatchParams,
                                                      uint thread_number,
-                                                     IResultWriter& writer) :
-  WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer), study_(study)
+                                                     IResultWriter& writer,
+                                                     VAL_GEN_PAR_PAYS& valeursGenereesParPays) :
+  WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer), study_(study),
+    valeursGenereesParPays_(&valeursGenereesParPays)
 {
 }
 
@@ -66,7 +68,8 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
 
     // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
     // part that we need
-    ::SIM_RenseignementProblemeHebdo(study_, *problemeHebdo_, weekInTheYear, thread_number_, hourInTheYear);
+    ::SIM_RenseignementProblemeHebdo(study_, *problemeHebdo_, weekInTheYear, thread_number_,
+            hourInTheYear, *valeursGenereesParPays_);
     OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
 }
 

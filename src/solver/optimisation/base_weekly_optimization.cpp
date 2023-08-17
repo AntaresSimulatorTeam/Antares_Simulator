@@ -53,10 +53,11 @@ std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(
     AdqPatchParams& adqPatchParams,
     PROBLEME_HEBDO* problemeHebdo,
     uint thread_number,
-    IResultWriter& writer)
+    IResultWriter& writer,
+    VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled)
-        return std::make_unique<AdequacyPatchOptimization>(study, options, problemeHebdo, adqPatchParams, thread_number, writer);
+        return std::make_unique<AdequacyPatchOptimization>(study, options, problemeHebdo, adqPatchParams, thread_number, writer, valeursGenereesParPays);
     else
         return std::make_unique<DefaultWeeklyOptimization>(options, problemeHebdo, adqPatchParams, thread_number, writer);
 }

@@ -151,7 +151,8 @@ private:
 
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
-            ALEA_TirageAuSortChroniques(study, thermalNoisesByArea, numSpace, simulationObj->valeursGenereesParPays);
+            ALEA_TirageAuSortChroniques(study, thermalNoisesByArea, numSpace,
+                    simulationObj->valeursGenereesParPays);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
             simulationObj->prepareClustersInMustRunMode(numSpace);
@@ -180,7 +181,8 @@ private:
                                                  numSpace,
                                                  randomForCurrentYear,
                                                  failedWeekList,
-                                                 isFirstPerformedYearOfSimulation);
+                                                 isFirstPerformedYearOfSimulation,
+                                                 simulationObj->valeursGenereesParPays);
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
@@ -322,7 +324,7 @@ void ISimulation<Impl>::run()
     }
     else
     {
-        if (not ImplementationType::simulationBegin())
+        if (not ImplementationType::simulationBegin(valeursGenereesParPays))
             return;
         // Allocating the memory
         ImplementationType::variables.simulationBegin();

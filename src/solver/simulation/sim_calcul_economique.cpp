@@ -378,7 +378,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                     PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
                                     uint numSpace,
-                                    const int PasDeTempsDebut)
+                                    const int PasDeTempsDebut,
+                                    VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     const auto& parameters = study.parameters;
     auto& studyruntime = *study.runtime;
