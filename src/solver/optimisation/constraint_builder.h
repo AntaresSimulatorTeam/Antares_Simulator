@@ -1,5 +1,7 @@
 #pragma once
+
 #include "opt_structure_probleme_a_resoudre.h"
+#include "opt_rename_problem.h"
 #include "opt_fonctions.h"
 
 // TODO namespace
@@ -57,7 +59,7 @@ class ConstraintBuilder
 {
 public:
     ConstraintBuilder(PROBLEME_HEBDO& problemeHebdo,
-                      std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim) :
+                      const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim) :
       problemeHebdo(problemeHebdo),
       problemeAResoudre(*problemeHebdo.ProblemeAResoudre),
       varNative(CorrespondanceVarNativesVarOptim)
@@ -174,7 +176,7 @@ public:
 private:
     PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre;
     PROBLEME_HEBDO& problemeHebdo;
-    std::vector<CORRESPONDANCES_DES_VARIABLES>& varNative;
+    const std::vector<CORRESPONDANCES_DES_VARIABLES>& varNative;
 
     unsigned int hourInWeek_ = 0;
     // TODO: vérifier que l'index correspond bien à l'objet concerné (zone, lien, cluster thermique, etc.)
@@ -183,3 +185,18 @@ private:
     double rhs_ = 0;
     int nombreDeTermes_ = 0;
 };
+
+
+class IConstraint {
+public:
+  IConstraint(PROBLEME_HEBDO* problemeHebdo) : problemeHebdo(problemeHebdo), builder(*problemeHebdo, problemeHebdo->CorrespondanceVarNativesVarOptim)
+  {
+  }
+
+  virtual void add(int pdt, int pdtHebdo, int index, int optimizationNumber) = 0; // index = area, link, binding constraint
+protected:
+  PROBLEME_HEBDO* problemeHebdo; // TODO remove
+  ConstraintBuilder builder;
+};
+
+

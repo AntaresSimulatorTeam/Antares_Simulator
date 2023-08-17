@@ -67,28 +67,217 @@ static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortT
     }
 }
 
-static void shortTermStorageLevels(
-  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-  unsigned int hourInTheYear,
-  ConstraintNamer& constraintNamer,
-  ConstraintBuilder& constraintBuilder)
+struct AreaBalance : public IConstraint
 {
-    for (const auto& storage : shortTermStorageInput)
-    {
-        // L[h] - L[h-1] - efficiency * injection[h] + withdrawal[h] = inflows[h]
-        constraintBuilder.updateIndex(storage.clusterGlobalIndex);
-        constraintBuilder
-          .include(Variable::ShortTermStorageLevel, 1.0)
-          .include(Variable::ShortTermStorageLevel, -1.0, -1, true)
-          .include(Variable::ShortTermStorageInjection, -1.0 * storage.efficiency)
-          .include(Variable::ShortTermStorageWithdrawal, 1.0)
-          .equal(storage.series->inflows[hourInTheYear])
-          .build();
+  using IConstraint::IConstraint;
+              
+  void add(int pdt, int pdtHebdo, int pays, int optimizationNumber) override
+  {
+    builder.updateHourWithinWeek(pdt);
+    int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
+      // constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+      while (interco >= 0)
+        {
+          builder.updateIndex(interco);
+          builder.include(Variable::NTCDirect, 1.0);
+          interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
+        }
+      interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
+      while (interco >= 0)
+        {
+          builder.updateIndex(interco);
+          builder.include(Variable::NTCDirect, -1.0);
+          interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
+        }
 
-        constraintNamer.ShortTermStorageLevel(ProblemeAResoudre->NombreDeContraintes, storage.name);
+      exportPaliers(*problemeHebdo, builder, pays);
+      builder.updateIndex(pays);
+      builder
+        .include(Variable::HydProd, -1.0)
+        .include(Variable::Pumping, 1.0)
+        .include(Variable::PositiveUnsuppliedEnergy, -1.0)
+        .include(Variable::NegativeUnsuppliedEnergy, 1.0);
+
+      shortTermStorageBalance(problemeHebdo->ShortTermStorage[pays],
+                              builder);
+
+    {
+      const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
+        = problemeHebdo->ConsommationsAbattues[pdtHebdo];
+      double rhs = -ConsommationsAbattues.ConsommationAbattueDuPays[pays];
+
+      bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
+      bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
+      if (reserveJm1 && opt1)
+        {
+          rhs -= problemeHebdo->ReserveJMoins1[pays].ReserveHoraireJMoins1[pdtHebdo];
+        }
+      builder.equal(rhs);
     }
-}
+    builder.build();
+  }
+};
+
+struct FictiveLoad : public IConstraint
+{
+  using IConstraint::IConstraint;
+  void add(int pdt, int pdtHebdo, int pays, int optimizationNumber) override
+  {
+    builder.updateHourWithinWeek(pdt);
+    exportPaliers(*problemeHebdo, builder, pays);
+    builder
+      .include(Variable::HydProd, -problemeHebdo->DefaillanceNegativeUtiliserHydro[pays])
+      .include(Variable::NegativeUnsuppliedEnergy, 1.0);
+
+    {
+        double rhs = 0;
+        // Private members ?
+        const ALL_MUST_RUN_GENERATION& AllMustRunGeneration
+          = problemeHebdo->AllMustRunGeneration[pdtHebdo];
+        const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
+              = problemeHebdo->ConsommationsAbattues[pdtHebdo];
+        const std::vector<bool>& DefaillanceNegativeUtiliserConsoAbattue
+          = problemeHebdo->DefaillanceNegativeUtiliserConsoAbattue;
+        const std::vector<bool>& DefaillanceNegativeUtiliserPMinThermique
+          = problemeHebdo->DefaillanceNegativeUtiliserPMinThermique;
+
+        double MaxAllMustRunGeneration = 0.0;
+
+        if (AllMustRunGeneration.AllMustRunGenerationOfArea[pays] > 0.0)
+          MaxAllMustRunGeneration = AllMustRunGeneration.AllMustRunGenerationOfArea[pays];
+
+        double MaxMoinsConsommationBrute = 0.0;
+        if (-(ConsommationsAbattues.ConsommationAbattueDuPays[pays]
+              + AllMustRunGeneration.AllMustRunGenerationOfArea[pays])
+            > 0.0)
+          MaxMoinsConsommationBrute
+            = -(ConsommationsAbattues.ConsommationAbattueDuPays[pays]
+                + AllMustRunGeneration.AllMustRunGenerationOfArea[pays]);
+
+        rhs = DefaillanceNegativeUtiliserConsoAbattue[pays]
+          * (MaxAllMustRunGeneration + MaxMoinsConsommationBrute);
+
+        if (DefaillanceNegativeUtiliserPMinThermique[pays] == 0)
+          {
+            rhs -= OPT_SommeDesPminThermiques(problemeHebdo, pays, pdtHebdo);
+          }
+        builder.less(rhs);
+          }
+      builder.build();
+  }
+};
+
+struct ShortTermStorageLevel : public IConstraint
+{
+  using IConstraint::IConstraint;
+  void add(int pdt, int pdtHebdo, int pays, int optimizationNumber) override
+  {
+    builder.updateHourWithinWeek(pdt);
+    for (const auto& storage : problemeHebdo->ShortTermStorage[pays])
+    {
+      // L[h] - L[h-1] - efficiency * injection[h] + withdrawal[h] = inflows[h]
+      builder.updateIndex(storage.clusterGlobalIndex);
+      builder
+        .include(Variable::ShortTermStorageLevel, 1.0)
+        .include(Variable::ShortTermStorageLevel, -1.0, -1, true)
+        .include(Variable::ShortTermStorageInjection, -1.0 * storage.efficiency)
+        .include(Variable::ShortTermStorageWithdrawal, 1.0)
+        .equal(storage.series->inflows[pdtHebdo])
+        .build();
+    }
+  }
+};
+
+struct FlowDissociation : public IConstraint
+{
+  using IConstraint::IConstraint;
+  void add(int pdt, int pdtHebdo, int interco, int optimizationNumber) override
+  {
+    
+    if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
+        CoutDeTransport.IntercoGereeAvecDesCouts)
+      {
+        {
+          const auto origin
+            = problemeHebdo
+            ->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
+          const auto destination
+            = problemeHebdo
+            ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
+        }
+
+        builder.updateHourWithinWeek(pdt);
+        builder.updateIndex(interco);
+        builder.include(Variable::NTCDirect, 1.0)
+          .include(Variable::IntercoDirectCost, -1.0)
+          .include(Variable::IntercoIndirectCost, 1.0);
+
+        if (CoutDeTransport.IntercoGereeAvecLoopFlow)
+          builder.equal(problemeHebdo->ValeursDeNTC[pdtHebdo]
+                        .ValeurDeLoopFlowOrigineVersExtremite[interco]);
+        else
+          builder.equal(0.);
+
+        builder.build();
+      }
+  }
+};
+
+struct BindingConstraintHour: public IConstraint
+{
+  using IConstraint::IConstraint;
+  void add(int pdt, int pdtHebdo, int cntCouplante, int optimizationNumber) override
+  {
+    const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+      = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
+
+    // Links
+    const int nbInterco
+      = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
+    for (int index = 0; index < nbInterco; index++)
+    {
+      const int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
+      builder.updateIndex(interco);
+      const double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
+      const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
+      builder.include(Variable::NTCDirect, poids, offset, true);
+    }
+
+    // Thermal clusters
+    const int nbClusters
+              = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
+    for (int index = 0; index < nbClusters; index++)
+    {
+      const int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
+      const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+        = problemeHebdo->PaliersThermiquesDuPays[pays];
+      const int palier
+        = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
+        [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
+      const double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
+      const int offset
+                  = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
+      builder.updateIndex(palier);
+      builder.include(Variable::DispatchableProduction, poids, offset, true);
+    }
+
+    double rhs = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[pdtHebdo];
+    switch(MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante) {
+    case '=':
+      builder.equal(rhs);
+      break;
+    case '<':
+      builder.less(rhs);
+      break;
+    case '>':
+      builder.greater(rhs);
+      break;
+      //TODO default case ?
+    }
+
+    builder.build();
+  }
+};
 
 
 void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
@@ -109,164 +298,48 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
     int NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
 
     const std::vector<int>& NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
-    const std::vector<bool>& DefaillanceNegativeUtiliserConsoAbattue
-      = problemeHebdo->DefaillanceNegativeUtiliserConsoAbattue;
-    const std::vector<bool>& DefaillanceNegativeUtiliserPMinThermique
-      = problemeHebdo->DefaillanceNegativeUtiliserPMinThermique;
 
     for (int i = 0; i < ProblemeAResoudre->NombreDeContraintes; i++)
     {
         AdresseOuPlacerLaValeurDesCoutsMarginaux[i] = nullptr;
-
         SecondMembre[i] = 0.0;
     }
 
+    // TODO reset selectively
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
     
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo->NamedProblems);
 
+    AreaBalance areaBalance(problemeHebdo);
+    FictiveLoad fictiveLoad(problemeHebdo);
+    ShortTermStorageLevel shortTermStorageLevels(problemeHebdo);
+    FlowDissociation flowDissociation(problemeHebdo);
+    BindingConstraintHour bindingConstraintHour(problemeHebdo);
+
     for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdt++)
     {
-        const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
-          = problemeHebdo->ConsommationsAbattues[pdtHebdo];
-        const ALL_MUST_RUN_GENERATION& AllMustRunGeneration
-          = problemeHebdo->AllMustRunGeneration[pdtHebdo];
       for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
       {
-        {
-           ConstraintBuilder areaBalance(*problemeHebdo,
-                                         problemeHebdo->CorrespondanceVarNativesVarOptim);
-            areaBalance.updateHourWithinWeek(pdt);
+        areaBalance.add(pdt, pdtHebdo, pays, optimizationNumber);
+        fictiveLoad.add(pdt, pdtHebdo, pays, optimizationNumber);
+        shortTermStorageLevels.add(pdt, pdtHebdo, pays, optimizationNumber);
+      }
 
-            int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
-            constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-            while (interco >= 0)
-            {
-                areaBalance.updateIndex(interco);
-                areaBalance.include(Variable::NTCDirect, 1.0);
-                interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
-            }
-            interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
-            while (interco >= 0)
-            {
-                areaBalance.updateIndex(interco);
-                areaBalance.include(Variable::NTCDirect, -1.0);
-                interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
-            }
+      for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
+      {
+        flowDissociation.add(pdt, pdtHebdo, interco, optimizationNumber);
+      }
 
-            exportPaliers(*problemeHebdo, areaBalance, pays);
-
-            areaBalance
-              .include(Variable::HydProd, -1.0)
-              .include(Variable::Pumping, 1.0)
-              .include(Variable::PositiveUnsuppliedEnergy, -1.0)
-              .include(Variable::NegativeUnsuppliedEnergy, 1.0);
-            
-            shortTermStorageBalance(problemeHebdo->ShortTermStorage[pays],
-                                    areaBalance);
-
-            const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
-              = problemeHebdo->ConsommationsAbattues[pdtHebdo];
-
-            double rhs = -ConsommationsAbattues.ConsommationAbattueDuPays[pays];
-
-            bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
-            bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
-            if (reserveJm1 && opt1)
-            {
-                rhs -= problemeHebdo->ReserveJMoins1[pays].ReserveHoraireJMoins1[pdtHebdo];
-            }
-
-            areaBalance
-              .equal(rhs)
-              .build();
-            constraintNamer.AreaBalance(ProblemeAResoudre->NombreDeContraintes);
-            }
-
-            {
-              double rhs = 0;
-              double MaxAllMustRunGeneration = 0.0;
-              if (AllMustRunGeneration.AllMustRunGenerationOfArea[pays] > 0.0)
-                MaxAllMustRunGeneration = AllMustRunGeneration.AllMustRunGenerationOfArea[pays];
-
-              double MaxMoinsConsommationBrute = 0.0;
-              if (-(ConsommationsAbattues.ConsommationAbattueDuPays[pays]
-                    + AllMustRunGeneration.AllMustRunGenerationOfArea[pays])
-                  > 0.0)
-                MaxMoinsConsommationBrute
-                  = -(ConsommationsAbattues.ConsommationAbattueDuPays[pays]
-                      + AllMustRunGeneration.AllMustRunGenerationOfArea[pays]);
-
-              rhs = DefaillanceNegativeUtiliserConsoAbattue[pays]
-                * (MaxAllMustRunGeneration + MaxMoinsConsommationBrute);
-
-              if (DefaillanceNegativeUtiliserPMinThermique[pays] == 0)
-                {
-                  rhs -= OPT_SommeDesPminThermiques(problemeHebdo, pays, pdtHebdo);
-                }
-
-
-              ConstraintBuilder fictiveLoad(*problemeHebdo,
-                                            problemeHebdo->CorrespondanceVarNativesVarOptim);
-              exportPaliers(*problemeHebdo, fictiveLoad, pays);            
-
-              fictiveLoad
-                .include(Variable::HydProd, -problemeHebdo->DefaillanceNegativeUtiliserHydro[pays])
-                .include(Variable::NegativeUnsuppliedEnergy, 1.0)
-                .less(rhs)
-                .build();
-            }
-
-            {
-              int hourInTheYear = weekFirstHour + pdtHebdo;
-              ConstraintBuilder STLevel_Builder(*problemeHebdo,
-                                                problemeHebdo->CorrespondanceVarNativesVarOptim);
-              STLevel_Builder.updateHourWithinWeek(pdt);
-              shortTermStorageLevels(problemeHebdo->ShortTermStorage[pays],
-                                     problemeHebdo->ProblemeAResoudre,
-                                     hourInTheYear,
-                                     constraintNamer,
-                                     STLevel_Builder);
-            }
-
-        for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
-        {
-            if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
-                    CoutDeTransport.IntercoGereeAvecDesCouts)
-            {
-                int cnt = 2;
-                if (CoutDeTransport.IntercoGereeAvecLoopFlow)
-                    SecondMembre[cnt] = problemeHebdo->ValeursDeNTC[pdtHebdo]
-                                          .ValeurDeLoopFlowOrigineVersExtremite[interco];
-                else
-                    SecondMembre[cnt] = 0.;
-                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
-            }
-        }
-
-        for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+      for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
-        {
-            const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-              = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
-                continue;
-
-            int cnt = 2;
-            if (cnt >= 0)
-            {
-                SecondMembre[cnt]
-                  = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[pdtHebdo];
-                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
-                  = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales.data()
-                    + pdtHebdo;
-            }
-        }
+      {
+        bindingConstraintHour.add(pdt, pdtHebdo, cntCouplante, optimizationNumber);
+      }
     }
-    }
+    
 
     for (int pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;)
     {
