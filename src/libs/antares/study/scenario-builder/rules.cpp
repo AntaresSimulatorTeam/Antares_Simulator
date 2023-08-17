@@ -256,7 +256,7 @@ bool Rules::readHydroPowerCredits(const AreaName::Vector& splitKey, String value
         return false;
 
     uint val = fromStringToTSnumber(value);
-    hydroPowerCredits.set(area->index, year, val);
+    hydroPowerCredits.setTSnumber(area->index, year, val);
     return true;
 }
 
