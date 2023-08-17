@@ -30,7 +30,7 @@
 #include "hostinfo.h"
 #include <antares/logs/logs.h>
 
-#include "sys/hostname.hxx"
+#include "antares/sys/hostname.hxx"
 
 using namespace Yuni;
 using namespace Antares;

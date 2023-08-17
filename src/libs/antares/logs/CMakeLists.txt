@@ -12,6 +12,7 @@ set(SRC_LOGS
 source_group("misc\\logs" FILES ${SRC_LOGS})
 
 add_library(${PROJ} ${SRC_LOGS})
+add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 target_link_libraries(${PROJ}
         PRIVATE

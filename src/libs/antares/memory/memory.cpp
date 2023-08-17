@@ -44,7 +44,7 @@
 #include <WinIoCtl.h>
 #endif
 #include "../study/memory-usage.h"
-#include "../sys/policy.h"
+#include <antares/sys/policy.h>
 #include "antares/memory/include/antares/memory/memory.h"
 #include <yuni/core/system/process.h>
 

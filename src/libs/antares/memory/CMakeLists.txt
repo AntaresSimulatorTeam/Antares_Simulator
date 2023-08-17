@@ -16,6 +16,7 @@ target_link_libraries(${PROJ}
         PRIVATE
         yuni-static-core
         logs
+        Antares::sys
 )
 
 target_include_directories(${PROJ}

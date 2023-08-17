@@ -341,6 +341,8 @@ set(SRC_STDCXX
 	)
 source_group("stdcxx" FILES ${SRC_STDCXX})
 
+add_subdirectory(sys)
+
 set(SRC
     config.h
     constants.h
@@ -362,13 +364,6 @@ set(SRC
 
 	solver.h
 	solver.cpp
-
-	# appdata
-	sys/appdata.h
-	sys/appdata.cpp
-	sys/policy.h
-	sys/policy.cpp
-	sys/hostname.hxx
 
 	# Host info
 	hostinfo.h hostinfo.cpp
@@ -514,6 +509,7 @@ target_link_libraries(libantares-core
 		yuni-static-core
 		yuni-static-uuid
 		Antares::memory
+		Antares::sys
 		date
 		logs
         exception
