@@ -33,7 +33,7 @@ namespace Antares::Data
 
 bool isValidLevel(double level)
 {
-    return (level < 0. || isnan(level)) ? false : true;
+    return level >= 0. && !isnan(level);
 }
 
 FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
@@ -132,8 +132,8 @@ void FinalLevelInflowsModifier::initialize(const Matrix<double>& scenarioInitial
                                            const uint lastSimulationDay,
                                            const uint nbYears)
 {
-    isApplicable_ = std::move(std::vector<bool>(nbYears, false));
-    deltaLevel = std::move(std::vector<double>(nbYears, 0.));
+    isApplicable_.assign(nbYears, false);
+    deltaLevel.assign(nbYears, 0.);
     InitialLevels_ = &(scenarioInitialHydroLevels.entry[areaIndex_]);
     FinalLevels_ = &(scenarioFinalHydroLevels.entry[areaIndex_]);
     lastSimulationDay_ = lastSimulationDay;
