@@ -81,7 +81,11 @@ private:
     {
       int pdt = hourInWeek_ + timeShift;
       // TODO remove 168
-      if (wrap) pdt %= 168;
+      if (wrap)
+      {
+        pdt %= 168;
+        if (pdt < 0) pdt += 168;
+      }
       // TODO remove 168
       if (pdt < 0 || pdt >= 168)
       {

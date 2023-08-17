@@ -192,8 +192,8 @@ struct ShortTermStorageLevel : public IConstraint
   {
     // TODO improve this
     ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes, problemeHebdo->NamedProblems);
-    
-    namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+    const int hourInTheYear = problemeHebdo->weekInTheYear * 168 + pdt;
+    namer.UpdateTimeStep(hourInTheYear);
     namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
 
     builder.updateHourWithinWeek(pdt);
@@ -207,7 +207,7 @@ struct ShortTermStorageLevel : public IConstraint
         .include(Variable::ShortTermStorageLevel, -1.0, -1, true)
         .include(Variable::ShortTermStorageInjection, -1.0 * storage.efficiency)
         .include(Variable::ShortTermStorageWithdrawal, 1.0)
-        .equal(storage.series->inflows[pdtHebdo])
+        .equal(storage.series->inflows[hourInTheYear])
         .build();
     }
   }
