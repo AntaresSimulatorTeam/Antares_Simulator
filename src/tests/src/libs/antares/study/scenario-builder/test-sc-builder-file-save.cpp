@@ -4,6 +4,7 @@
 
 #include <string>
 #include <filesystem>
+#include <fstream>
 
 #include <study.h>
 #include <rules.h>

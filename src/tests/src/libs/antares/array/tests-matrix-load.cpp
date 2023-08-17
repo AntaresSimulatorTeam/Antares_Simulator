@@ -8,6 +8,7 @@
 #include "tests-matrix-load.h"
 
 #include <iostream>
+#include <fstream>
 #include <stdio.h>
 
 namespace utf = boost::unit_test;

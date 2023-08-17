@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include <filesystem>
+#include <fstream>
 
 #include <study.h>
 #include <filter.h>

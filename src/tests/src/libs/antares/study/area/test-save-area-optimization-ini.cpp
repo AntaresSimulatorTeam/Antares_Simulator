@@ -6,6 +6,7 @@
 #include <boost/test/unit_test.hpp>
 #include <string>
 #include <filesystem>
+#include <fstream>
 
 #include <study.h>
 #include <filter.h>
