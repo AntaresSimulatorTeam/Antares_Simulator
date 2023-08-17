@@ -318,7 +318,7 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
 {
     int weekFirstHour = problemeHebdo->weekInTheYear * 168;
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     std::vector<double>& SecondMembre = ProblemeAResoudre->SecondMembre;
 
