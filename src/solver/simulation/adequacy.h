@@ -99,7 +99,7 @@ private:
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
-    std::vector<PROBLEME_HEBDO*> pProblemesHebdo;
+    std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     Matrix<> pRES;
 
 }; // class Adequacy
