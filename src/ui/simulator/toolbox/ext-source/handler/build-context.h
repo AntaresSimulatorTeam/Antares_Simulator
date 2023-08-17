@@ -41,7 +41,7 @@ public:
     //! Set of area' names
     using AreaSet = std::set<Data::AreaName>;
     using LinkSet = std::map<Data::AreaName, std::map<Data::AreaName, bool>>;
-    using ThermalClusterSet = std::map<Data::AreaName, std::map<Data::ClusterName, bool>>;
+    using ThermalClusterSet = std::map<Data::AreaName, std::map<YString, bool>>;
     using ConstraintSet = std::set<Yuni::String>;
 
 public:

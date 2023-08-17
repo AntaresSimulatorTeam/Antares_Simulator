@@ -595,6 +595,7 @@ target_link_libraries(libantares-core
 	PUBLIC
 		yuni-static-core
 		yuni-static-uuid
+		Boost::boost
 		libantares-core-calendar
         libantares-core-exceptions
         libantares-core-checks
