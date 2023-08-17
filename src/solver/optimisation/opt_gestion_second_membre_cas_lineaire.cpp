@@ -81,19 +81,16 @@ struct AreaBalance : public IConstraint
       namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
       namer.AreaBalance(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
     }
-
     builder.updateHourWithinWeek(pdt);
 
-
     int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
-
-
     while (interco >= 0)
       {
         builder.updateIndex(interco);
         builder.include(Variable::NTCDirect, 1.0);
         interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
       }
+
     interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
     while (interco >= 0)
       {
@@ -117,13 +114,12 @@ struct AreaBalance : public IConstraint
       const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
         = problemeHebdo->ConsommationsAbattues[pdtHebdo];
       double rhs = -ConsommationsAbattues.ConsommationAbattueDuPays[pays];
-
       bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
       bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
       if (reserveJm1 && opt1)
-        {
+      {
           rhs -= problemeHebdo->ReserveJMoins1[pays].ReserveHoraireJMoins1[pdtHebdo];
-        }
+      }
       builder.equal(rhs);
     }
     builder.build();
