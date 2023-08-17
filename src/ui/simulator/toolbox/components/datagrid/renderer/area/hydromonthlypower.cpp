@@ -49,14 +49,14 @@ HydroMonthlyHoursGen::~HydroMonthlyHoursGen()
 
 wxString HydroMonthlyHoursGen::columnCaption(int colIndx) const
 {
-    switch (colIndx)
+    if (colIndx == 0)
     {
-    case 0:
         return wxT("  Generating Max Energy  \n   (Hours at Pmax)   ");
-    default:
+    }
+    else
+    {
         return wxEmptyString;
     }
-    return wxEmptyString;
 }
 
 wxString HydroMonthlyHoursGen::cellValue(int x, int y) const
@@ -149,14 +149,14 @@ HydroMonthlyHoursPump::~HydroMonthlyHoursPump()
 
 wxString HydroMonthlyHoursPump::columnCaption(int colIndx) const
 {
-    switch (colIndx)
+    if (colIndx == 0)
     {
-    case 0:
         return wxT("  Pumping Max Energy \n   (Hours at Pmax)   ");
-    default:
+    }
+    else
+    {
         return wxEmptyString;
     }
-    return wxEmptyString;
 }
 
 wxString HydroMonthlyHoursPump::cellValue(int x, int y) const
