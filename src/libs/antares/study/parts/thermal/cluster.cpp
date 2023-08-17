@@ -32,6 +32,7 @@
 #include <yuni/io/file.h>
 #include <yuni/core/math.h>
 #include <cassert>
+#include <boost/algorithm/string/case_conv.hpp>
 #include "../../study.h"
 #include "../../memory-usage.h"
 #include "cluster.h"
@@ -250,7 +251,7 @@ static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(Data::Cluste
          {"other 3", ThermalCluster::thermalDispatchGrpOther3},
          {"other 4", ThermalCluster::thermalDispatchGrpOther4}};
 
-    newgrp.toLower();
+    boost::to_lower(newgrp);
     if (auto res = mapping.find(newgrp);res != mapping.end())
     {
         return res->second;
@@ -261,7 +262,7 @@ static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(Data::Cluste
 
 void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
 {
-    if (not newgrp)
+    if (newgrp.empty())
     {
         groupID = thermalDispatchGrpOther1;
         pGroup.clear();

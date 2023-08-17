@@ -44,6 +44,7 @@ void TransformNameIntoID(const AnyString& name, StringT& out);
 ** \brief Beautify a name, for renaming an area for example
 */
 void BeautifyName(YString& out, AnyString oldname);
+void BeautifyName(std::string& out, const std::string& oldname);
 
 } // namespace Antares
 

@@ -131,7 +131,7 @@ void Study::clear()
     ClearAndShrink(folderInput);
     ClearAndShrink(folderOutput);
     ClearAndShrink(folderSettings);
-    ClearAndShrink(inputExtension);
+    inputExtension.clear();
 
     gotFatalError = false;
 }
@@ -1002,19 +1002,19 @@ bool Study::areaRename(Area* area, AreaName newName)
 bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 {
     // A name must not be empty
-    if (!cluster or !newName)
+    if (!cluster or !newName.empty())
         return false;
 
     String beautifyname;
     BeautifyName(beautifyname, newName);
     if (!beautifyname)
         return false;
-    newName = beautifyname;
+    newName = beautifyname.c_str();
 
     // Preparing the new area ID
     ClusterName newID;
     TransformNameIntoID(newName, newID);
-    if (!newID)
+    if (newID.empty())
     {
         logs.error() << "invalid id transformation";
         return false;
