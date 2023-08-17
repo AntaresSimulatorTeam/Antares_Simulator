@@ -28,12 +28,12 @@ public:
         this->reset();
     }
 
-    OptimizationStatistics(const OptimizationStatistics &o)
+    OptimizationStatistics(const OptimizationStatistics &rhs)
         :
-        totalSolveTime(o.totalSolveTime.load()),
-        nbSolve(o.nbSolve.load()),
-        totalUpdateTime(o.totalUpdateTime.load()),
-        nbUpdate(o.nbUpdate.load())
+        totalSolveTime(rhs.totalSolveTime.load()),
+        nbSolve(rhs.nbSolve.load()),
+        totalUpdateTime(rhs.totalUpdateTime.load()),
+        nbUpdate(rhs.nbUpdate.load())
     {}
 
     void add(const OptimizationStatistics& other)
