@@ -46,6 +46,11 @@ jobs:
            git config --global safe.directory '*'
            git submodule update --init --remote src/antares-deps src/tests/resources/Antares_Simulator_Tests
 
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: 'oraclelinux-8'
+
     - name: Install dependencies
       run: |
           pip3 install -r src/tests/examples/requirements.txt
@@ -54,16 +59,23 @@ jobs:
       run: |
            source /opt/rh/gcc-toolset-9/enable
            cmake -B _build -S src \
-           -DCMAKE_BUILD_TYPE=release \
-           -DBUILD_TESTING=ON \
-           -DBUILD_TOOLS=OFF \
-           -DBUILD_UI=OFF \
-
+             -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+             -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+             -DCMAKE_BUILD_TYPE=release \
+             -DBUILD_TESTING=ON \
+             -DBUILD_TOOLS=OFF \
+             -DBUILD_UI=OFF \
 
     - name: Build
       run: |
            source /opt/rh/gcc-toolset-9/enable
            cmake --build _build --config Release -j2
+
+    - name: Run unit and end-to-end tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      run: |
+        cd _build
+        ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end"
 
     - name: Installer .rpm creation
       run: |
