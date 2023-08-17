@@ -121,7 +121,7 @@ Panel::~Panel()
 
 void Panel::onRenewableGenerationModellingChanged(bool)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!study)
         return;
 
@@ -144,7 +144,7 @@ void Panel::onRenewableGenerationModellingChanged(bool)
 
 void Panel::onDelayedStudyLoaded()
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         auto data = std::make_shared<Window::Inspector::InspectorData>(study);
@@ -157,7 +157,7 @@ void Panel::onDelayedStudyLoaded()
 
 void Panel::onUpdatePlaylist()
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         auto data = std::make_shared<Window::Inspector::InspectorData>(study);

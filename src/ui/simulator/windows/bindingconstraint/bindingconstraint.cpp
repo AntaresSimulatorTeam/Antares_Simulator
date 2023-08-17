@@ -107,21 +107,21 @@ public:
         assert(linkWeightsGrid && "Invalid pointer to linkWeightsGrid");
         assert(GetSizer() && "Invalid sizer");
 
-        if (Data::Study::Current::Valid())
+        if (CurrentStudyIsValid())
         {
             linkWeightsGrid->InvalidateBestSize();
             linkWeightsGrid->forceRefresh();
             clusterWeightsGrid->InvalidateBestSize();
             clusterWeightsGrid->forceRefresh();
-            Data::UIRuntimeInfo& uiinfo = *(Data::Study::Current::Get()->uiinfo);
+            Data::UIRuntimeInfo& uiinfo = *(GetCurrentStudy()->uiinfo);
             wxString s;
             uint c;
 
-            c = uiinfo.visibleLinksCount(Data::Study::Current::Get()->activeLayerID);
+            c = uiinfo.visibleLinksCount(GetCurrentStudy()->activeLayerID);
             s << wxT("  Links  (") << c << wxT(") ");
             pPageLinkWeights->caption(s);
 
-            c = uiinfo.visibleClustersCount(Data::Study::Current::Get()->activeLayerID);
+            c = uiinfo.visibleClustersCount(GetCurrentStudy()->activeLayerID);
             s.clear();
             s << wxT("  Thermal Clusters  (") << c << wxT(") ");
             pPageclusterWeights->caption(s);
@@ -199,21 +199,21 @@ public:
         assert(linkOffsetsGrid && "Invalid pointer to linkOffsetsGrid");
         assert(GetSizer() && "Invalid sizer");
 
-        if (Data::Study::Current::Valid())
+        if (CurrentStudyIsValid())
         {
             linkOffsetsGrid->InvalidateBestSize();
             linkOffsetsGrid->forceRefresh();
             clusterOffsetsGrid->InvalidateBestSize();
             clusterOffsetsGrid->forceRefresh();
-            Data::UIRuntimeInfo& uiinfo = *(Data::Study::Current::Get()->uiinfo);
+            Data::UIRuntimeInfo& uiinfo = *(GetCurrentStudy()->uiinfo);
             wxString s;
             uint c;
 
-            c = uiinfo.visibleLinksCount(Data::Study::Current::Get()->activeLayerID);
+            c = uiinfo.visibleLinksCount(GetCurrentStudy()->activeLayerID);
             s << wxT("  Links  (") << c << wxT(") ");
             pPageLinkOffsets->caption(s);
 
-            c = uiinfo.visibleClustersCount(Data::Study::Current::Get()->activeLayerID);
+            c = uiinfo.visibleClustersCount(GetCurrentStudy()->activeLayerID);
             s.clear();
             s << wxT("  Thermal Clusters  (") << c << wxT(") ");
             pPageclusterOffsets->caption(s);
@@ -406,7 +406,7 @@ void BindingConstraint::onEditFromMouse(wxMouseEvent& evt)
 
 void BindingConstraint::onAdd(void*)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (not studyptr)
         return;
     auto& study = *studyptr;
@@ -440,7 +440,7 @@ void BindingConstraint::onDelete(void*)
 {
     if (not pSelected)
         return;
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (not studyptr)
         return;
     auto& study = *studyptr;
@@ -487,7 +487,7 @@ void BindingConstraint::onEdit(void*)
 
 void BindingConstraint::onDeleteAll(void*)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (not studyptr)
         return;
     auto& study = *studyptr;
@@ -534,12 +534,12 @@ void BindingConstraint::onDeleteAll(void*)
 
 void BindingConstraint::onSelectedConstraint(Data::BindingConstraint* constraint)
 {
-    pSelected = (Data::Study::Current::Valid() ? constraint : nullptr);
+    pSelected = (CurrentStudyIsValid() ? constraint : nullptr);
 }
 
 void BindingConstraint::onDblClickConstraint(Data::BindingConstraint* constraint)
 {
-    pSelected = (Data::Study::Current::Valid() ? constraint : nullptr);
+    pSelected = (CurrentStudyIsValid() ? constraint : nullptr);
     auto* editor = new BindingConstraintInfoEditor(Forms::ApplWnd::Instance(), pSelected);
     editor->ShowModal();
     editor->Destroy();

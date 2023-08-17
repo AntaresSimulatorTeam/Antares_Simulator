@@ -65,7 +65,7 @@ MCPlaylist::MCPlaylist(wxFrame* parent) :
     assert(parent);
 
     // The current study
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     // Title of the Form
     SetLabel(wxT("MC Playlist"));
@@ -192,7 +192,7 @@ void MCPlaylist::onClose(void*)
 
 void MCPlaylist::onSelectAll(void*)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
     auto& study = *studyptr;
@@ -212,7 +212,7 @@ void MCPlaylist::onSelectAll(void*)
 
 void MCPlaylist::onUnselectAll(void*)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
     auto& study = *studyptr;
@@ -232,7 +232,7 @@ void MCPlaylist::onUnselectAll(void*)
 
 void MCPlaylist::onToggle(void*)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
     auto& study = *studyptr;
@@ -254,7 +254,7 @@ void MCPlaylist::onToggle(void*)
 
 void MCPlaylist::onResetYearsWeight(void*)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
     auto& study = *studyptr;
@@ -271,7 +271,7 @@ void MCPlaylist::mouseMoved(wxMouseEvent&)
 
 void MCPlaylist::updateCaption()
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
     auto& study = *studyptr;
@@ -329,7 +329,7 @@ void MCPlaylist::updateCaption()
 
 void MCPlaylist::onUpdateStatus()
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
     auto& study = *studyptr;
@@ -351,7 +351,7 @@ void MCPlaylist::onUpdateStatus()
 
 void MCPlaylist::evtEnabled(wxCommandEvent& evt)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
 
     Freeze();
     if (!(!studyptr))

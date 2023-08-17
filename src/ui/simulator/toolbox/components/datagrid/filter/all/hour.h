@@ -85,7 +85,7 @@ public:
     virtual bool rowIsValid(int row) const
     {
         // TODO Do not use global study
-        auto studyptr = Data::Study::Current::Get();
+        auto studyptr = GetCurrentStudy();
         if (!(!studyptr) && row < studyptr->calendar.maxHoursInYear)
             return currentOperator->compute((int)studyptr->calendar.hours[row].dayHour + 1);
         return false;

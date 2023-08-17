@@ -203,7 +203,7 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
         flexSz->AddSpacer(3);
 
         std::string layerName
-          = Data::Study::Current::Get()->layers.at(Data::Study::Current::Get()->activeLayerID);
+          = GetCurrentStudy()->layers.at(GetCurrentStudy()->activeLayerID);
         mapName = Antares::Component::CreateLabel(panelGrid, wxString(layerName));
 
         flexSz->Add(Antares::Component::CreateLabel(panelGrid, wxT("Map name : "), true),
@@ -239,7 +239,7 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
 
         // time frame
         String::Vector split;
-        Data::Study::Current::Get()->calendar.text.hours[0].split(split, "-");
+        GetCurrentStudy()->calendar.text.hours[0].split(split, "-");
         auto labelText = wxString("(") << wxStringFromUTF8(split[1]) << ")";
         startingHourLabel = Antares::Component::CreateLabel(panelGrid, labelText, true, true);
         vS->Add(startingHourLabel, 0, wxALIGN_CENTER);
@@ -266,7 +266,7 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
 
         vS = new wxBoxSizer(wxVERTICAL);
         split.clear();
-        Data::Study::Current::Get()->calendar.text.hours[8759].split(split, "-");
+        GetCurrentStudy()->calendar.text.hours[8759].split(split, "-");
         labelText = wxString("(") << wxStringFromUTF8(split[1]) << ")";
         endHourLabel = Antares::Component::CreateLabel(panelGrid, labelText, true, true);
         vS->Add(endHourLabel, 0, wxALIGN_CENTER);
@@ -343,7 +343,7 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
     sLinks->AddSpacer(6);
 
     // Constraint builder object
-    pCBuilder = new CBuilder(Data::Study::Current::Get());
+    pCBuilder = new CBuilder(GetCurrentStudy());
     pCBuilder->completeFromStudy();
     pCBuilder->completeCBuilderFromFile();
     pIncludeLoopFlow->SetValue(pCBuilder->getLoopFlowInclusion());
@@ -356,7 +356,7 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
     // Mapping links
     // \_ renderer
     pRenderer = new RendererType(pCBuilder);
-    pRenderer->study = Data::Study::Current::Get();
+    pRenderer->study = GetCurrentStudy();
     pRenderer->initializeFromStudy();
 
     pGrid
@@ -529,7 +529,7 @@ void ConstraintsBuilderWizard::onCancel(void*)
 void ConstraintsBuilderWizard::onBuild(void*)
 {
     // Check for restrictions
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return;
 
     if (StudyHasBeenModified())
@@ -602,9 +602,9 @@ void ConstraintsBuilderWizard::onBuild(void*)
 void ConstraintsBuilderWizard::onDelete(void*)
 {
     // Check for restrictions
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return;
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
     auto& study = *studyptr;
@@ -719,7 +719,7 @@ void ConstraintsBuilderWizard::updateBeginningHourLabel(wxEvent& /* evt */)
     if (num > 0 && num < 8760)
     {
         String::Vector split;
-        Data::Study::Current::Get()->calendar.text.hours[num - 1].split(split, "-");
+        GetCurrentStudy()->calendar.text.hours[num - 1].split(split, "-");
         auto labelText = wxString("(") << wxStringFromUTF8(split[1]) << ")";
         startingHourLabel->SetLabel(labelText);
         pCBuilder->setCalendarStart(num);
@@ -741,7 +741,7 @@ void ConstraintsBuilderWizard::updateEndHourLabel(wxEvent& /* evt */)
     if (num > 0 && num < 8761)
     {
         String::Vector split;
-        Data::Study::Current::Get()->calendar.text.hours[num - 1].split(split, "-");
+        GetCurrentStudy()->calendar.text.hours[num - 1].split(split, "-");
         auto labelText = wxString("(") << wxStringFromUTF8(split[1]) << ")";
         endHourLabel->SetLabel(labelText);
         pCBuilder->setCalendarEnd(num);

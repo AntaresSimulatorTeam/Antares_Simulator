@@ -195,7 +195,7 @@ void BindingConstraintsRepository::changeConstraintsWeeklyToDaily()
         {
             logs.info() << "  The type of the constraint '" << constraint.name()
                         << "' is now 'daily'";
-            constraint.mutateTypeWithoutCheck(BindingConstraint::typeDaily);
+            constraint.setTimeGranularity(BindingConstraint::typeDaily);
         }
     });
 }

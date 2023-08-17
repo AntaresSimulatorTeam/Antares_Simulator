@@ -11,6 +11,7 @@
 #include "immediate_file_writer.h"
 #include "timeseries-numbers.h"
 #include "BindingConstraintsTimeSeriesNumbersWriter.h"
+#include "utils.h"
 
 using namespace Antares::Solver;
 using namespace Antares::Data;
@@ -38,9 +39,7 @@ BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file) {
     study->bindingConstraintsGroups.add("TestGroup");
     study->bindingConstraintsGroups["TestGroup"]->timeseriesNumbers.resize(1, 1);
 
-    auto tmp_dir = fs::temp_directory_path();
-    auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
-    fs::create_directories(working_tmp_dir);
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
     study->resultWriter = std::make_shared<ImmediateFileResultWriter>(working_tmp_dir.string().c_str());
     fs::path bc_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "TestGroup.txt";
@@ -61,9 +60,7 @@ BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group) {
     study->bindingConstraintsGroups["test1"]->timeseriesNumbers.resize(1, 1);
     study->bindingConstraintsGroups["test2"]->timeseriesNumbers.resize(1, 1);
 
-    auto tmp_dir = fs::temp_directory_path();
-    auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
-    fs::create_directories(working_tmp_dir);
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
     study->resultWriter = std::make_shared<ImmediateFileResultWriter>(working_tmp_dir.string().c_str());
 
@@ -87,9 +84,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
     group->add(bc);
     study->bindingConstraintsGroups["test1"]->timeseriesNumbers.resize(1, 1);
 
-    auto tmp_dir = fs::temp_directory_path();
-    auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
-    fs::create_directories(working_tmp_dir);
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
     study->resultWriter = std::make_shared<ImmediateFileResultWriter>(working_tmp_dir.string().c_str());
 

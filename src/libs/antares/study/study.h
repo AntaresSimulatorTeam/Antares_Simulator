@@ -99,26 +99,6 @@ public:
 
 public:
     /*!
-    ** \brief Operations related to the global current study
-    **
-    ** \warning These methods should be removed as soon as possible
-    */
-    struct Current
-    {
-        /*!
-        ** \brief Retrieve the current Study (if any)
-        */
-        static Study::Ptr Get();
-        /*!
-        ** \brief Set the current study
-        */
-        static void Set(Study::Ptr study);
-        //! Get if the current study is valid
-        static bool Valid();
-
-    }; // Current
-
-    /*!
     ** \brief Extract the title of a study
     **
     ** \param folder A study folder
@@ -252,7 +232,7 @@ public:
     ** \param basename The root base name
     ** \return True if a new name has been found, false otherwise
     */
-    bool areaFindNameForANewArea(AreaName& out, const AreaName& basename);
+    bool modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename);
 
     /*!
     ** \brief Add an area and make all required initialization
@@ -577,19 +557,19 @@ public:
     // This raw number of cores is possibly reduced by the smallest TS refresh span or the total
     // number of MC years. In GUI, used for RAM estimation only. In solver, it is the max number of
     // years (actually run, not skipped) a set of parallel years can contain.
-    uint maxNbYearsInParallel;
+    uint maxNbYearsInParallel = 1;
 
     // Used in GUI only.
     // ----------------
     // Allows storing the maximum number of years in a set of parallel years.
     // Useful to estimate the RAM when the run window's parallel mode is chosen.
-    uint maxNbYearsInParallel_save;
+    uint maxNbYearsInParallel_save = 0;
 
     // Used in GUI and solver.
     // ----------------------
     // Raw numbers of cores (== nb of MC years run in parallel) based on the number
     // of cores level (see advanced parameters).
-    uint nbYearsParallelRaw;
+    uint nbYearsParallelRaw = 1;
 
     // Used in GUI only.
     // -----------------
@@ -601,13 +581,13 @@ public:
     //	- In the Run window, if either Default or swap support mode is enabled, then parallel
     //	  computation is disabled, and the number of cores is 1
     // Useful to populate the run window's simulation cores field.
-    uint minNbYearsInParallel;
+    uint minNbYearsInParallel = 0;
 
     // Used in GUI only.
     // ----------------
     // Allows storing the minimum number of years in a set of parallel years.
     // Useful to populate the run window's simulation cores field.
-    uint minNbYearsInParallel_save;
+    uint minNbYearsInParallel_save = 0;
 
     //! Parameters
     Parameters parameters;
@@ -663,7 +643,7 @@ public:
     //! \name Scenario Builder
     //@{
     //! Rules for building scenarios (can be null)
-    ScenarioBuilder::Sets* scenarioRules;
+    ScenarioBuilder::Sets* scenarioRules = nullptr;
     //@}
 
     Matrix<double> scenarioHydroLevels;
@@ -673,14 +653,14 @@ public:
     **
     ** These informations are only needed when a study is processed.
     */
-    StudyRuntimeInfos* runtime;
+    StudyRuntimeInfos* runtime = nullptr;
 
     // Antares::Solver::Variable::State* state;
 
     /*!
     ** \brief Specific data related to the User Interface
     */
-    UIRuntimeInfo* uiinfo;
+    UIRuntimeInfo* uiinfo = nullptr;
 
     /*!
     ** \brief The file extension for file within the input ('txt' or 'csv')
@@ -726,7 +706,7 @@ public:
     /*!
     ** \brief
     */
-    bool gotFatalError;
+    bool gotFatalError = false;
 
     /*!
     ** \brief A non-zero value when the study will be used by the solver

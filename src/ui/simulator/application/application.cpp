@@ -144,7 +144,7 @@ static void AbortProgram(int code)
 {
     {
         // Releasing all locks held by the study
-        auto currentStudy = Data::Study::Current::Get();
+        auto currentStudy = GetCurrentStudy();
 
         // Importing logs
         if (!logs.logfile())

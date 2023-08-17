@@ -255,7 +255,7 @@ namespace Forms
 {
 static inline bool IsCurrentStudyReadonly()
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     return !(!study) && study->parameters.readonly;
 }
 
@@ -324,7 +324,7 @@ void ApplWnd::evtOnSave(wxCommandEvent&)
 {
     if (GUIIsLock())
         return;
-    if (Data::Study::Current::Valid())
+    if (CurrentStudyIsValid())
     {
         if (IsCurrentStudyReadonly())
         {
@@ -346,7 +346,7 @@ void MainFormData::onToolbarSave(void*)
     if (GUIIsLock())
         return;
 
-    if (Data::Study::Current::Valid())
+    if (CurrentStudyIsValid())
     {
         if (IsCurrentStudyReadonly())
         {
@@ -369,7 +369,7 @@ void ApplWnd::evtOnSaveAs(wxCommandEvent&)
         return;
 
     // Save the current study
-    if (Data::Study::Current::Valid())
+    if (CurrentStudyIsValid())
         Dispatcher::GUI::CreateAndShowModal<Window::SaveAs>(this);
 }
 
@@ -379,7 +379,7 @@ void ApplWnd::evtOnExportMap(wxCommandEvent&)
         return;
 
     // Export the current study map
-    if (Data::Study::Current::Valid())
+    if (CurrentStudyIsValid())
         Dispatcher::GUI::CreateAndShowModal<Window::ExportMap>(this);
 }
 
