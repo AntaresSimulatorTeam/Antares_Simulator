@@ -27,7 +27,6 @@
 
 #include "sim_structure_donnees.h"
 #include "sim_structure_probleme_economique.h"
-#include "sim_structure_probleme_adequation.h"
 
 std::vector<std::vector<VALEURS_GENEREES_PAR_PAYS>> ValeursGenereesParPays;
 std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_PAYS>> NumeroChroniquesTireesParPays;

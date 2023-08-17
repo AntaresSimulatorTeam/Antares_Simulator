@@ -27,7 +27,6 @@
 
 #include <yuni/yuni.h>
 #include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
 #include "../simulation/sim_extern_variables_globales.h"
 #include "../aleatoire/alea_fonctions.h"
 #include <antares/benchmarking.h>
