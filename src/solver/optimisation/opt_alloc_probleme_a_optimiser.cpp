@@ -178,7 +178,7 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*
 
 void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO& problemeHebdo)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo.ProblemeAResoudre;
     if (ProblemeAResoudre)
         delete ProblemeAResoudre;
 }

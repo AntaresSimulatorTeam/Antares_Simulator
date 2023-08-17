@@ -28,6 +28,14 @@ public:
         this->reset();
     }
 
+    OptimizationStatistics(const OptimizationStatistics &o)
+        :
+        totalSolveTime(o.totalSolveTime.load()),
+        nbSolve(o.nbSolve.load()),
+        totalUpdateTime(o.totalUpdateTime.load()),
+        nbUpdate(o.nbUpdate.load())
+    {}
+
     void add(const OptimizationStatistics& other)
     {
         totalSolveTime += other.totalSolveTime;
