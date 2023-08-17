@@ -318,7 +318,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         OPT_TryToCallSimplex(options, problemeHebdo, Probleme, NumIntervalle, optimizationNumber,
                 optPeriodStringGenerator, PremierPassage, writer, mps_writer_factory);
 
-    if (!simplexResult.simplexReturnValue)
+    if (!simplexResult.success)
     {
         PremierPassage = false;
         simplexResult = OPT_TryToCallSimplex(options, problemeHebdo, Probleme,  NumIntervalle, optimizationNumber,
