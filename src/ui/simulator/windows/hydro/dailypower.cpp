@@ -96,25 +96,29 @@ void Dailypower::createComponents()
 
     wxBoxSizer* ssGridsLow = new wxBoxSizer(wxHORIZONTAL);
 
-    ssGridsLow->Add(
-      new Component::Datagrid::Component(
-        pSupport,
-        new Component::Datagrid::Renderer::HydroMonthlyHoursGen(this, pInputAreaSelector),
-        wxT("Standard Credits Calendar (Maximum Generation)")),
-      3,
-      wxALL | wxEXPAND,
-      5);
+    ssGridsLow->Add(new Component::Datagrid::Component(
+                      pSupport,
+                      new Component::Datagrid::Renderer::HydroMonthlyHours(
+                        this,
+                        pInputAreaSelector,
+                        Component::Datagrid::Renderer::HydroMonthlyHours::HoursType::Generation),
+                      wxT("Standard Credits Calendar (Maximum Generation)")),
+                    3,
+                    wxALL | wxEXPAND,
+                    5);
 
     sizer->Add(ssGridsLow, 4, wxALL | wxEXPAND | wxFIXED_MINSIZE);
 
-    ssGridsLow->Add(
-      new Component::Datagrid::Component(
-        pSupport,
-        new Component::Datagrid::Renderer::HydroMonthlyHoursPump(this, pInputAreaSelector),
-        wxT("Standard Credits Calendar (Maximum Pumping)")),
-      3,
-      wxALL | wxEXPAND,
-      5);
+    ssGridsLow->Add(new Component::Datagrid::Component(
+                      pSupport,
+                      new Component::Datagrid::Renderer::HydroMonthlyHours(
+                        this,
+                        pInputAreaSelector,
+                        Component::Datagrid::Renderer::HydroMonthlyHours::HoursType::Pumping),
+                      wxT("Standard Credits Calendar (Maximum Pumping)")),
+                    3,
+                    wxALL | wxEXPAND,
+                    5);
 
     sizer->Layout();
 }

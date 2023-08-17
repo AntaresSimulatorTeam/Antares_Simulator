@@ -41,11 +41,17 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class HydroMonthlyHoursGen final : public Renderer::Matrix<double, double, 2>,
+
+class HydroMonthlyHours final : public Renderer::Matrix<double, double, 2>,
                                 public Renderer::ARendererArea
 {
 public:
     using MatrixAncestorType = Renderer::Matrix<double, double, 2>;
+    enum class HoursType
+    {
+        Generation = 0,
+        Pumping
+    };
 
 public:
     //! \name Constructor & Destructor
@@ -53,9 +59,9 @@ public:
     /*!
     ** \brief Constructor
     */
-    HydroMonthlyHoursGen(wxWindow* control, Toolbox::InputSelector::Area* notifier);
+    HydroMonthlyHours(wxWindow* control, Toolbox::InputSelector::Area* notifier, HoursType type);
     //! Destructor
-    virtual ~HydroMonthlyHoursGen();
+    virtual ~HydroMonthlyHours();
     //@}
 
     virtual int width() const
@@ -67,75 +73,7 @@ public:
         return DAYS_PER_YEAR;
     }
 
-    virtual wxString columnCaption(int colIndx) const;
-
-    virtual wxString rowCaption(int rowIndx) const;
-
-    virtual wxString cellValue(int x, int y) const;
-
-    virtual double cellNumericValue(int x, int y) const;
-
-    virtual bool cellValue(int, int, const Yuni::String&);
-
-    virtual void resetColors(int, int, wxColour&, wxColour&) const
-    { /*Do nothing*/
-    }
-
-    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
-
-    virtual Date::Precision precision()
-    {
-        return Date::daily;
-    }
-
-    virtual bool valid() const
-    {
-        return MatrixAncestorType::valid();
-    }
-
-    virtual uint maxWidthResize() const
-    {
-        return 0;
-    }
-    virtual uint maxHeightResize() const
-    {
-        return 0;
-    }
-
-protected:
-    virtual void internalAreaChanged(Antares::Data::Area* area);
-    //! Event: the study has been closed
-    virtual void onStudyClosed() override;
-    //! Event: the study has been loaded
-    virtual void onStudyLoaded() override;
-
-}; // class HydroMonthlyHoursGen
-
-class HydroMonthlyHoursPump final : public Renderer::Matrix<double, double, 2>,
-                                public Renderer::ARendererArea
-{
-public:
-    using MatrixAncestorType = Renderer::Matrix<double, double, 2>;
-
-public:
-    //! \name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Constructor
-    */
-    HydroMonthlyHoursPump(wxWindow* control, Toolbox::InputSelector::Area* notifier);
-    //! Destructor
-    virtual ~HydroMonthlyHoursPump();
-    //@}
-
-    virtual int width() const
-    {
-        return 1;
-    }
-    virtual int height() const
-    {
-        return DAYS_PER_YEAR;
-    }
+    HoursType hoursType;
 
     virtual wxString columnCaption(int colIndx) const;
 
