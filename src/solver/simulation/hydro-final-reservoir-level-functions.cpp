@@ -31,7 +31,7 @@
 namespace Antares::Solver
 {
 
-void initializeFinalLevelData(Data::Study& study)
+void initializeFinalLevelData(const Data::Study& study)
 {
     study.areas.each([&study](Data::Area& area)
     {
@@ -42,7 +42,7 @@ void initializeFinalLevelData(Data::Study& study)
     });
 }
 
-void CheckFinalReservoirLevelsForYear(Data::Study& study, uint year)
+void CheckFinalReservoirLevelsForYear(const Data::Study& study, uint year)
 {
     study.areas.each([&study, &year](Data::Area& area)
     {
@@ -54,7 +54,7 @@ void CheckFinalReservoirLevelsForYear(Data::Study& study, uint year)
 
 }
 
-void CheckFinalReservoirLevelsConfiguration(Data::Study& study)
+void CheckFinalReservoirLevelsConfiguration(const Data::Study& study)
 {
     initializeFinalLevelData(study);
     

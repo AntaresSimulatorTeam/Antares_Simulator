@@ -31,7 +31,7 @@
 
 namespace Antares::Solver
 {
-void CheckFinalReservoirLevelsConfiguration(Data::Study& study);
+void CheckFinalReservoirLevelsConfiguration(const Data::Study& study);
 } // namespace Antares::Solver
 
 #endif // __SOLVER_SIMULATION_HYDRO_FINAL_RESERVOIR_PRE_CHECKS_H__
