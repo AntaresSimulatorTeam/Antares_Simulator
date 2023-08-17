@@ -166,6 +166,8 @@ private:
     */
     void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State>& state);
 
+    void allocateValeursGenereesParPays();
+
 private:
     //! Some temporary to avoid performing useless complex checks
     Solver::Private::Simulation::CacheData pData;
@@ -194,7 +196,7 @@ public:
     //! Result writer
     Antares::Solver::IResultWriter::Ptr pResultWriter = nullptr;
 
-    VAL_GEN_PAR_PAYS ValeursGenereesParPays;
+    VAL_GEN_PAR_PAYS valeursGenereesParPays;
 
     RANDOM_ARRAYS randomArrays;
 }; // class ISimulation

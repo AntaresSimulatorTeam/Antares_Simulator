@@ -296,6 +296,8 @@ void ISimulation<Impl>::run()
     // The general data
     auto& parameters = *(study.runtime->parameters);
 
+    allocateValeursGenereesParPays();
+
     // Preprocessors
     // Determine if we have to use the preprocessors at least one time.
     pData.initialize(parameters);
@@ -310,7 +312,6 @@ void ISimulation<Impl>::run()
         // Only the preprocessors can be used
         // We only have to regenerate time-series according the settings
         // in general data of the study.
-        logs.info();
         logs.info() << " Only the preprocessors are enabled.";
 
         regenerateTimeSeries(0);
@@ -1608,6 +1609,34 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
         pAnnualCostsStatistics.writeToOutput(pResultWriter);
     }
 }
+
+template<class Impl>
+void ISimulation<Impl>::allocateValeursGenereesParPays()
+{
+    valeursGenereesParPays.resize(study.maxNbYearsInParallel);
+    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
+    {
+        valeursGenereesParPays[numSpace].resize(study.areas.size());
+        for (uint i = 0; i < study.areas.size(); ++i)
+        {
+            auto& area = *study.areas.byIndex[i];
+
+            valeursGenereesParPays[numSpace][i].HydrauliqueModulableQuotidien
+                .assign(study.runtime->nbDaysPerYear,0 );
+            valeursGenereesParPays[numSpace][i].AleaCoutDeProductionParPalier
+                .assign(area.thermal.clusterCount(), 0.);
+
+            if (area.hydro.reservoirManagement)
+            {
+                valeursGenereesParPays[numSpace][i].NiveauxReservoirsDebutJours
+                    .assign(study.runtime->nbDaysPerYear, 0.);
+                valeursGenereesParPays[numSpace][i].NiveauxReservoirsFinJours
+                    .assign(study.runtime->nbDaysPerYear, 0.);
+            }
+        }
+    }
+}
+
 
 } // namespace Antares::Solver::Simulation
 
