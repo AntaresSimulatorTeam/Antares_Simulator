@@ -486,11 +486,11 @@ struct PROBLEME_HEBDO
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
     bool WaterValueAccurate = false;
     bool OptimisationAvecCoutsDeDemarrage = false;
-    int32_t NombreDePays = 0;
+    uint32_t NombreDePays = 0;
     std::vector<const char*> NomsDesPays;
-    int32_t NombreDePaliersThermiques = 0;
+    uint32_t NombreDePaliersThermiques = 0;
 
-    int32_t NombreDInterconnexions = 0;
+    uint32_t NombreDInterconnexions = 0;
     std::vector<int> PaysOrigineDeLInterconnexion;
     std::vector<int> PaysExtremiteDeLInterconnexion;
     mutable std::vector<COUTS_DE_TRANSPORT> CoutDeTransport;
@@ -500,10 +500,10 @@ struct PROBLEME_HEBDO
     uint32_t NombreDePasDeTemps = 0;
     std::vector<int32_t> NumeroDeJourDuPasDeTemps;
 
-    int32_t NombreDePasDeTempsPourUneOptimisation = 0;
+    uint32_t NombreDePasDeTempsPourUneOptimisation = 0;
     std::vector<int32_t> NumeroDIntervalleOptimiseDuPasDeTemps;
-    int32_t NombreDeJours = 0;
-
+    uint32_t NombreDeJours = 0;
+u
     int32_t NombreDePasDeTempsDUneJournee = 0;
 
     mutable std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattues;
@@ -520,7 +520,7 @@ struct PROBLEME_HEBDO
     std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
 
     /* Optimization problem */
-    int32_t NbTermesContraintesPourLesCoutsDeDemarrage = 0;
+    uint32_t NbTermesContraintesPourLesCoutsDeDemarrage = 0;
     std::vector<bool> DefaillanceNegativeUtiliserPMinThermique;
     std::vector<bool> DefaillanceNegativeUtiliserHydro;
     std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue;
@@ -528,7 +528,7 @@ struct PROBLEME_HEBDO
     char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
     std::vector<std::vector<double>> BruitSurCoutHydraulique;
 
-    int32_t NombreDeContraintesCouplantes = 0;
+    uint32_t NombreDeContraintesCouplantes = 0;
     mutable std::vector<CONTRAINTES_COUPLANTES> MatriceDesContraintesCouplantes;
     std::vector<RESULTATS_CONTRAINTES_COUPLANTES> ResultatsContraintesCouplantes;
 
