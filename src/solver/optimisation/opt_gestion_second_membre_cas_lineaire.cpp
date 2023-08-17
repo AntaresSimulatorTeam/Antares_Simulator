@@ -334,12 +334,12 @@ struct BindingConstraintDaily : public IConstraint
         double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
         int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
 
+        builder.updateIndex(interco);
         for (int pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
-          {
-            builder.updateIndex(interco);
+        {
             builder.updateHourWithinWeek(pdt);
             builder.include(Variable::NTCDirect, poids, offset, true);
-          }
+        }
       }
 
     for (int index = 0; index < nbClusters; index++)
@@ -354,9 +354,9 @@ struct BindingConstraintDaily : public IConstraint
         int offset
           = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
 
+        builder.updateIndex(palier);
         for (int pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
           {
-            builder.updateIndex(palier);
             builder.updateHourWithinWeek(pdt);
             builder.include(Variable::DispatchableProduction, poids, offset, true);
           }
@@ -441,9 +441,9 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
          cntCouplante++)
       {
         for (int pdtDebut = 0; pdtDebut < nombreDePasDeTempsPourUneOptimisation; pdtDebut += NombreDePasDeTempsDUneJournee)
-          {
+        {
             bindingConstraintDaily.add(pdtDebut, 0, cntCouplante, optimizationNumber);
-          }
+        }
       }
 
 
