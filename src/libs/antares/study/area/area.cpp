@@ -45,6 +45,7 @@ void Area::internalInitialize()
 }
 
 Area::Area() :
+    hydro(*this),
     reserves(fhrMax, HOURS_PER_YEAR),
     miscGen(fhhMax, HOURS_PER_YEAR)
 {
@@ -52,6 +53,7 @@ Area::Area() :
 }
 
 Area::Area(const AnyString& name) :
+    hydro(*this),
     reserves(fhrMax, HOURS_PER_YEAR),
     miscGen(fhhMax, HOURS_PER_YEAR)
 {
@@ -61,6 +63,7 @@ Area::Area(const AnyString& name) :
 }
 
 Area::Area(const AnyString& name, const AnyString& id, uint indx) :
+    hydro(*this),
     reserves(fhrMax, HOURS_PER_YEAR),
     miscGen(fhhMax, HOURS_PER_YEAR)
 {

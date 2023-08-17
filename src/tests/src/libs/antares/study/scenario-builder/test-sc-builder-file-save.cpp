@@ -397,12 +397,11 @@ BOOST_FIXTURE_TEST_CASE(
 // ========================
 // Tests on Hydro initial levels
 // ========================
-BOOST_FIXTURE_TEST_CASE(
-  HYDRO_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+BOOST_FIXTURE_TEST_CASE(HYDRO_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
-    my_rule->hydroLevels.setTSnumber(area_1->index, 9, 9);
-    my_rule->hydroLevels.setTSnumber(area_3->index, 18, 7);
-    my_rule->hydroLevels.setTSnumber(area_1->index, 5, 8);
+    my_rule->hydroInitialLevels.setTSnumber(area_1->index, 9, 9);
+    my_rule->hydroInitialLevels.setTSnumber(area_3->index, 18, 7);
+    my_rule->hydroInitialLevels.setTSnumber(area_1->index, 5, 8);
 
     saveScenarioBuilder();
 
@@ -419,12 +418,11 @@ BOOST_FIXTURE_TEST_CASE(
 // ========================
 // Tests on Hydro final levels
 // ========================
-BOOST_AUTO_TEST_CASE(
-  HYDRO_FINAL_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(HYDRO_FINAL_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
-    my_rule->hydroFinalLevels.set(area_1->index, 4, 8);
-    my_rule->hydroFinalLevels.set(area_2->index, 11, 3);
-    my_rule->hydroFinalLevels.set(area_3->index, 15, 2);
+    my_rule->hydroFinalLevels.setTSnumber(area_1->index, 4, 8);
+    my_rule->hydroFinalLevels.setTSnumber(area_2->index, 11, 3);
+    my_rule->hydroFinalLevels.setTSnumber(area_3->index, 15, 2);
 
     saveScenarioBuilder();
 
@@ -497,7 +495,7 @@ BOOST_FIXTURE_TEST_CASE(
     my_rule->renewable[area_3->index].setTSnumber(rnCluster_32.get(), 5, 13);
     my_rule->linksNTC[area_1->index].setDataForLink(link_13, 19, 8);
     my_rule->linksNTC[area_2->index].setDataForLink(link_23, 2, 4);
-    my_rule->hydroLevels.setTSnumber(area_1->index, 5, 8);
+    my_rule->hydroInitialLevels.setTSnumber(area_1->index, 5, 8);
     my_rule->binding_constraints.setTSnumber("group3", 10, 6);
 
     saveScenarioBuilder();

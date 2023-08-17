@@ -26,7 +26,7 @@
 */
 
 #include "hydro-final-reservoir-level-functions.h"
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 
 namespace Antares::Solver
 {
@@ -48,7 +48,7 @@ void CheckFinalReservoirLevelsForYear(Data::Study& study, uint year)
     {
         if (!area.hydro.finalLevelInflowsModifier.CheckInfeasibility(year))
         {
-            AntaresSolverEmergencyShutdown();
+            throw FatalError("hydro final level : infeasibility");
         }
     });
 

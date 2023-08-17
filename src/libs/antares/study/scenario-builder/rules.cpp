@@ -269,7 +269,7 @@ bool Rules::readInitialHydroLevels(const AreaName::Vector& splitKey, String valu
         return false;
 
     double val = fromStringToHydroLevel(value, 1.);
-    hydroLevels.setTSnumber(area->index, year, val);
+    hydroInitialLevels.setTSnumber(area->index, year, val);
     return true;
 }
 
@@ -283,7 +283,7 @@ bool Rules::readFinalHydroLevels(const AreaName::Vector& splitKey, String value,
         return false;
 
     double finalLevel = fromStringToHydroLevel(value, 1.);
-    hydroFinalLevels.set(area->index, year, finalLevel);
+    hydroFinalLevels.setTSnumber(area->index, year, finalLevel);
     return true;
 }
 
