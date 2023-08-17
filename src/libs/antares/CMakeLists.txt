@@ -506,7 +506,6 @@ target_link_libraries(libantares-core
 		yuni-static-core
 		yuni-static-uuid
 		Antares::memory
-		date
 		logs
         exception
         checks
@@ -518,6 +517,8 @@ target_link_libraries(libantares-core
 		correlation
 		object
         benchmarking
+	PRIVATE
+		Antares::date
 	)
 
 import_std_libs(libantares-core)

@@ -51,8 +51,8 @@ INSTALL(EXPORT antares-analyzer
 target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
 		PRIVATE
 			libantares-core
-			Antares::date
 			Antares::sys
+			Antares::date
 			yuni-static-core
 			${CMAKE_THREADS_LIBS_INIT}
 		)
