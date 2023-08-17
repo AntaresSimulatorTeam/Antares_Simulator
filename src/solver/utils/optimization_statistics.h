@@ -36,6 +36,10 @@ public:
         nbUpdate(rhs.nbUpdate.load())
     {}
 
+    OptimizationStatistics(OptimizationStatistics&&) = default;
+    OptimizationStatistics& operator=(const OptimizationStatistics&) = delete;
+    OptimizationStatistics& operator=( OptimizationStatistics&&) = delete;
+
     void add(const OptimizationStatistics& other)
     {
         totalSolveTime += other.totalSolveTime;

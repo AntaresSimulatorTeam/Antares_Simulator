@@ -478,11 +478,6 @@ struct VARIABLES_DUALES_INTERCONNEXIONS
 
 struct PROBLEME_HEBDO
 {
-    PROBLEME_HEBDO() = default;
-    PROBLEME_HEBDO(const PROBLEME_HEBDO&) = delete;
-    PROBLEME_HEBDO(PROBLEME_HEBDO&&) = default;
-    PROBLEME_HEBDO& operator=(PROBLEME_HEBDO&& other) = default;
-
     unsigned int weekInTheYear = 0;
     unsigned int year = 0;
 
