@@ -51,7 +51,6 @@ void CheckFinalReservoirLevelsForYear(const Data::Study& study, uint year)
             throw FatalError("hydro final level : infeasibility");
         }
     });
-
 }
 
 void CheckFinalReservoirLevelsConfiguration(const Data::Study& study)
