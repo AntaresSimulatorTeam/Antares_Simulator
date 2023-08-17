@@ -46,6 +46,7 @@ FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
 bool FinalLevelInflowsModifier::CheckInfeasibility(uint year)
 {
     ComputeDelta(year);
+    logInfoFinLvlNotApplicable(year);
 
     if (!isActive())
         return true;
@@ -145,6 +146,18 @@ bool FinalLevelInflowsModifier::isActive()
             !hydro_.useWaterValue &&
             isValidLevel(finalReservoirLevel_) &&
             isValidLevel(initialReservoirLevel_);
+}
+
+// if the user specifies the final reservoir level, but does not specifies initial reservoir level
+// or uses wrong hydro options
+// we should inform the user that the final reservoir level wont be reached
+void FinalLevelInflowsModifier::logInfoFinLvlNotApplicable(uint year)
+{
+    if (isValidLevel(finalReservoirLevel_)
+        && (!hydro_.reservoirManagement || hydro_.useWaterValue
+            || !isValidLevel(initialReservoirLevel_)))
+        logs.info() << "Final reservoir level not applicable! Year:" << year + 1
+                    << ", Area:" << areaName_;
 }
 
 bool FinalLevelInflowsModifier::makeChecks(uint year)
