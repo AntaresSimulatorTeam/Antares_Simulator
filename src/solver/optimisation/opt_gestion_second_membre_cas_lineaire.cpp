@@ -253,7 +253,7 @@ struct FlowDissociation : public IConstraint
   }
 };
 
-struct BindingConstraintHour: public IConstraint
+struct BindingConstraintHour : public IConstraint
 {
   using IConstraint::IConstraint;
   void add(int pdt, int pdtHebdo, int cntCouplante, int optimizationNumber) override
@@ -263,6 +263,7 @@ struct BindingConstraintHour: public IConstraint
     if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
         return;
 
+    builder.updateHourWithinWeek(pdt);
     // Links
     const int nbInterco
       = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
@@ -306,19 +307,21 @@ struct BindingConstraintHour: public IConstraint
       break;
       //TODO default case ?
     }
-
+    {
+      ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes, problemeHebdo->NamedProblems);
+      namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+      namer.BindingConstraintHour(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+                                  MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
+    }
     builder.build();
   }
 };
 
-
-struct BindingConstraintDaily : public IConstraint
+struct BindingConstraintDay : public IConstraint
 {
   using IConstraint::IConstraint;
   void add(int pdtDebut, int, int cntCouplante, int optimizationNumber) override
   {
-    const int nombreDePasDeTempsDUneJournee = 24; // TODO pass to constructor
-
     const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
       = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
     if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_JOURNALIERE)
@@ -328,22 +331,27 @@ struct BindingConstraintDaily : public IConstraint
       = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
     const int nbClusters
       = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
+
+    const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation; // TODO
+    const int NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
+    for (int pdtDebut = 0; pdtDebut < NombreDePasDeTempsPourUneOptimisation; pdtDebut += NombreDePasDeTempsDUneJournee)
+    {
     for (int index = 0; index < nbInterco; index++)
-      {
+    {
         int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
         double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
         int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
 
         builder.updateIndex(interco);
-        for (int pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
+        for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
         {
             builder.updateHourWithinWeek(pdt);
             builder.include(Variable::NTCDirect, poids, offset, true);
         }
-      }
+    }
 
     for (int index = 0; index < nbClusters; index++)
-      {
+    {
         int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
@@ -355,12 +363,13 @@ struct BindingConstraintDaily : public IConstraint
           = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
 
         builder.updateIndex(palier);
-        for (int pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
-          {
+        for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
+        {
             builder.updateHourWithinWeek(pdt);
             builder.include(Variable::DispatchableProduction, poids, offset, true);
-          }
-      }
+        }
+    }
+    // TODO probably wrong from the 2nd week, check
     const int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
     double rhs = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[jour];
     switch(MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante) {
@@ -375,7 +384,14 @@ struct BindingConstraintDaily : public IConstraint
       break;
       //TODO default case ?
     }
+    {
+      ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes, problemeHebdo->NamedProblems);
+      namer.UpdateTimeStep(jour);
+      namer.BindingConstraintDay(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+                                 MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
+    }
     builder.build();
+    }
   }
 };
 
@@ -411,7 +427,7 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
     ShortTermStorageLevel shortTermStorageLevels(problemeHebdo);
     FlowDissociation flowDissociation(problemeHebdo);
     BindingConstraintHour bindingConstraintHour(problemeHebdo);
-    BindingConstraintDaily bindingConstraintDaily(problemeHebdo);
+    BindingConstraintDay bindingConstraintDay(problemeHebdo);
 
     for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdt++)
@@ -435,18 +451,11 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
       }
     }
     
-    const int nombreDePasDeTempsPourUneOptimisation = 168; // TODO
-    const int NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
     for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)
-      {
-        for (int pdtDebut = 0; pdtDebut < nombreDePasDeTempsPourUneOptimisation; pdtDebut += NombreDePasDeTempsDUneJournee)
-        {
-            bindingConstraintDaily.add(pdtDebut, 0, cntCouplante, optimizationNumber);
-        }
-      }
-
-
+    {
+        bindingConstraintDay.add(0, 0, cntCouplante, optimizationNumber);
+    }
 
     if (problemeHebdo->NombreDePasDeTempsPourUneOptimisation
         > problemeHebdo->NombreDePasDeTempsDUneJournee)
