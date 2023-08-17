@@ -2,12 +2,7 @@
 OMESSAGE("Antares Core library")
 
 add_subdirectory(writer)
-
-set(SRC_MEMORY
-	memory/memory.h
-	memory/memory.hxx
-	memory/memory.cpp)
-source_group("memory" FILES ${SRC_MEMORY})
+add_subdirectory(memory)
 
 add_subdirectory(object)
 
@@ -368,9 +363,6 @@ set(SRC
 	solver.h
 	solver.cpp
 
-    # new check allocation
-    memory/new_check.hxx
-
 	# appdata
 	sys/appdata.h
 	sys/appdata.cpp
@@ -487,8 +479,6 @@ add_subdirectory(checks)
 add_library(libantares-core
 	antares.h
 	${SRC}
-	${SRC_MEMORY}
-	${SRC_BENCHMARKING}
 	${SRC_AREAS}
 	${SRC_XCAST}
 	${SRC_STUDY_AREA_UI}
@@ -523,6 +513,7 @@ target_link_libraries(libantares-core
 	PUBLIC
 		yuni-static-core
 		yuni-static-uuid
+		Antares::memory
 		date
 		logs
         exception

@@ -25,29 +25,27 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "memory.h"
 #include <yuni/io/directory.h>
 #include <yuni/core/system/windows.hdr.h>
 #include <yuni/core/system/environment.h>
-#include <yuni/io/directory/info.h>
-#include <yuni/core/system/windows.hdr.h>
 #include <antares/logs/logs.h>
 #ifndef YUNI_OS_WINDOWS
 #include <unistd.h>
 #include <sys/types.h>
-#include <stdio.h>
+#include <cstdio>
 #include <fcntl.h>
 #include <sys/mman.h>
-#include <errno.h>
+#include <cerrno>
 // man 2 kill
 #include <sys/types.h>
-#include <signal.h>
+#include <csignal>
 #endif
 #ifdef YUNI_OS_WINDOWS
 #include <WinIoCtl.h>
 #endif
 #include "../study/memory-usage.h"
 #include "../sys/policy.h"
+#include "antares/memory/include/antares/memory/memory.h"
 #include <yuni/core/system/process.h>
 
 using namespace Yuni;

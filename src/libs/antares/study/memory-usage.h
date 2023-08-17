@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include "fwd.h"
-#include <antares/array/matrix.h>
+#include <antares/array/antares/array/matrix.h> //TODO
 
 namespace Antares::Data
 {

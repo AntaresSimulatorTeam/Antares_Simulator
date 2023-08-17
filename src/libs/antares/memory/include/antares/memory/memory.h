@@ -31,13 +31,11 @@
 #include <yuni/core/string.h>
 #include <yuni/core/bit/array.h>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 class StudyMemoryUsage;
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+
 
 namespace Antares
 {

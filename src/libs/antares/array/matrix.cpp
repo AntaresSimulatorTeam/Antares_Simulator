@@ -27,6 +27,7 @@
 
 #include <cstdlib>
 #include "antares/study/memory-usage.h"
+#include "antares/jit/antares/jit/jit.h"
 
 using namespace Yuni;
 

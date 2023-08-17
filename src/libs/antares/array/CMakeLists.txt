@@ -14,11 +14,13 @@ target_link_libraries(array
         PUBLIC
         io #matrix.hxx
         jit #jit.hxx require logs
+        Antares::memory
         )
 
 target_include_directories(array
         PRIVATE
         ${CMAKE_SOURCE_DIR}/libs #memory usage
+        ${CMAKE_SOURCE_DIR}/libs/memory/include #memory usage -> memory
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
         )
