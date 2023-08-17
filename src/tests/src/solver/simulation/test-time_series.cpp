@@ -4,7 +4,7 @@
 #define BOOST_TEST_MODULE rhsTimeSeries
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "antares/study.h"
 #include <filesystem>
 #include <fstream>

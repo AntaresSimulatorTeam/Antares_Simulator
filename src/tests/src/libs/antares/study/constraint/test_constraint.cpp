@@ -7,7 +7,7 @@
 
 // Why this header ? See here
 // https://www.boost.org/doc/libs/1_82_0/libs/test/doc/html/boost_test/adv_scenarios/single_header_customizations/multiple_translation_units.html
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 
 #include <fstream>
 #include "antares/study/constraint.h"
