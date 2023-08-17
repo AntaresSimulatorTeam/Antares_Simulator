@@ -89,23 +89,23 @@ private:
     clock::time_point end_;
 };
 
-struct returnSimplexSuccessAndTime
+struct SimplexResult
 {
-    bool simplexReturnValue;
-    long long solveTime;
+    bool success = false;
+    long long solveTime = 0;
 };
 
-static returnSimplexSuccessAndTime OPT_TryToCallSimplex(
-                                    const OptimizationOptions& options,
-                                    PROBLEME_HEBDO* problemeHebdo,
-                                    Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
-                                    const int NumIntervalle,
-                                    const int optimizationNumber,
-                                    const OptPeriodStringGenerator& optPeriodStringGenerator,
-                                    bool PremierPassage,
-                                    IResultWriter& writer,
-                                    mpsWriterFactory& mps_writer_factory
-                                 )
+static SimplexResult OPT_TryToCallSimplex(
+        const OptimizationOptions& options,
+        PROBLEME_HEBDO* problemeHebdo,
+        Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
+        const int NumIntervalle,
+        const int optimizationNumber,
+        const OptPeriodStringGenerator& optPeriodStringGenerator,
+        bool PremierPassage,
+        IResultWriter& writer,
+        mpsWriterFactory& mps_writer_factory
+        )
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
     auto ProbSpx
@@ -258,10 +258,6 @@ static returnSimplexSuccessAndTime OPT_TryToCallSimplex(
     long long solveTime = measure.duration_ms();
     optimizationStatistics->addSolveTime(solveTime);
 
-    struct returnSimplexSuccessAndTime returnValues;
-    returnValues.simplexReturnValue = false;
-    returnValues.solveTime = solveTime;
-
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
     if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage)
     {
@@ -283,7 +279,7 @@ static returnSimplexSuccessAndTime OPT_TryToCallSimplex(
             {
                 logs.info() << " solver: resetting";
             }
-            return returnValues;
+            return {.success=false, .solveTime=solveTime};
         }
 
         else
@@ -291,8 +287,7 @@ static returnSimplexSuccessAndTime OPT_TryToCallSimplex(
             throw FatalError("Internal error: insufficient memory");
         }
     }
-    returnValues.simplexReturnValue = true;
-    return returnValues;
+    return {.success=true, .solveTime=solveTime};
 }
 
 bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
@@ -319,18 +314,18 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
     bool PremierPassage = true;
 
-    struct returnSimplexSuccessAndTime ret =
+    struct SimplexResult simplexResult =
         OPT_TryToCallSimplex(options, problemeHebdo, Probleme, NumIntervalle, optimizationNumber,
                 optPeriodStringGenerator, PremierPassage, writer, mps_writer_factory);
 
-    if (!ret.simplexReturnValue)
+    if (!simplexResult.simplexReturnValue)
     {
         PremierPassage = false;
-        ret = OPT_TryToCallSimplex(options, problemeHebdo, Probleme,  NumIntervalle, optimizationNumber,
+        simplexResult = OPT_TryToCallSimplex(options, problemeHebdo, Probleme,  NumIntervalle, optimizationNumber,
                 optPeriodStringGenerator, PremierPassage, writer, mps_writer_factory);
     }
 
-    long long solveTime = ret.solveTime;
+    long long solveTime = simplexResult.solveTime;
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
     {
