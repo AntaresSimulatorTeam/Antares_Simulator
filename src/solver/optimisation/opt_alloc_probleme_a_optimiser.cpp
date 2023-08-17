@@ -175,8 +175,3 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*
 
     ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
 }
-
-void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO& problemeHebdo)
-{
-    problemeHebdo.ProblemeAResoudre.reset();
-}

@@ -39,17 +39,6 @@ Adequacy::Adequacy(Data::Study& study) : study(study), preproOnly(false)
 {
 }
 
-Adequacy::~Adequacy()
-{
-    if (!pProblemesHebdo.empty())
-    {
-        for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
-        {
-            OPT_LiberationMemoireDuProblemeAOptimiser(pProblemesHebdo[numSpace]);
-        }
-    }
-}
-
 Benchmarking::OptimizationInfo Adequacy::getOptimizationInfo() const
 {
     const uint numSpace = 0;

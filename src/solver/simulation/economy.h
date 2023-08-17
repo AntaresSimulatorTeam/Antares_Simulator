@@ -57,7 +57,7 @@ public:
     */
     Economy(Data::Study& study);
     //! Destructor
-    ~Economy();
+    ~Economy() = default;
     //@}
 
     Benchmarking::OptimizationInfo getOptimizationInfo() const;

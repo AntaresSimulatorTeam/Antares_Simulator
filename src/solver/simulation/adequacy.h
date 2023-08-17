@@ -56,7 +56,7 @@ public:
     */
     Adequacy(Data::Study& study);
     //! Destructor
-    ~Adequacy();
+    ~Adequacy() = default;
     //@}
 
     Benchmarking::OptimizationInfo getOptimizationInfo() const;

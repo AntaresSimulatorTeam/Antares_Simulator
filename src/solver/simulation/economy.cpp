@@ -43,17 +43,6 @@ Economy::Economy(Data::Study& study) : study(study), preproOnly(false)
 {
 }
 
-Economy::~Economy()
-{
-    if (!pProblemesHebdo.empty())
-    {
-        for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
-        {
-            OPT_LiberationMemoireDuProblemeAOptimiser(pProblemesHebdo[numSpace]);
-        }
-    }
-}
-
 Benchmarking::OptimizationInfo Economy::getOptimizationInfo() const
 {
     const uint numSpace = 0;
