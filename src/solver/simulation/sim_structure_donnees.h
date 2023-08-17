@@ -34,7 +34,7 @@ typedef struct
     std::vector<int> ThermiqueParPalier;
     std::vector<int> RenouvelableParPalier;
     int Hydraulique;
-    int HydrauliquePowerCredits;
+    unsigned int HydrauliquePowerCredits;
     int Eolien;
     int Consommation;
     int Solar;

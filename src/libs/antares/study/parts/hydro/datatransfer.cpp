@@ -77,10 +77,10 @@ bool DataTransfer::LoadFromFolder(Study& study, const AnyString& folder, Area& a
               && ret;
 
         bool errorPowers = false;
-        for (int i = 0; i < 4; i++)
+        for (uint i = 0; i < 4; ++i)
         {
             auto& col = maxPower[i];
-            for (int day = 0; day < DAYS_PER_YEAR; day++)
+            for (uint day = 0; day < DAYS_PER_YEAR; ++day)
             {
                 if (!errorPowers && (col[day] < 0 || (i % 2 /*column hours*/ && col[day] > 24)))
                 {

@@ -166,12 +166,12 @@ public:
     hydroPowerCreditsAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
     {
     }
-    std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
+    std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
         std::vector<uint> to_return = {area.hydro.series->countpowercredits};
         return to_return;
     }
-    uint getGeneratedTimeSeriesNumber()
+    uint getGeneratedTimeSeriesNumber() override
     {
         return 1;
     }
