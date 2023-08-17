@@ -34,9 +34,9 @@
 
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo, int PdtHebdo)
 {
-    // TODO
-    // PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
 
+    // TODO
     // for (int pays = 0; pays < problemeHebdo->NombreDePays - 1; pays++)
     // {
     //     int cnt = problemeHebdo->NumeroDeContrainteDeSoldeDEchange[pays];

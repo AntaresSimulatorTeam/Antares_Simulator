@@ -372,7 +372,7 @@ void RenewableCluster::internalAddPlant(void*)
         uint indx = 1;
 
         // Trying to find an uniq name
-        Antares::Data::ClusterName sFl;
+        YString sFl;
         sFl.clear() << "new cluster";
         while (pArea->renewable.list.find(sFl))
         {
@@ -432,23 +432,23 @@ void RenewableCluster::internalClonePlant(void*)
         uint indx = 2;
 
         // Trying to find an uniq name
-        Antares::Data::ClusterName copy = selectedPlant.name();
+        YString copy = selectedPlant.name();
 
-        Data::ClusterName::Size sepPos = copy.find_last_of(' ');
+        YString::Size sepPos = copy.find_last_of(' ');
         if (sepPos != YString::npos)
         {
-            Data::ClusterName suffixChain(copy, sepPos + 1);
+            YString suffixChain(copy, sepPos + 1);
             int suffixNumber = suffixChain.to<int>();
             if (suffixNumber > 0)
             {
-                Data::ClusterName suffixLess(copy, 0, sepPos);
+                YString suffixLess(copy, 0, sepPos);
                 copy = suffixLess;
             }
         }
 
         copy += ' ';
 
-        Antares::Data::ClusterName sFl;
+        YString sFl;
         sFl << copy << indx; // lowercase
         while (pArea->renewable.list.find(sFl))
         {

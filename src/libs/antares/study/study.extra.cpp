@@ -79,7 +79,7 @@ void Study::scenarioRulesLoadIfNotAvailable()
     }
 }
 
-bool Study::areaFindNameForANewArea(AreaName& out, const AreaName& basename)
+bool Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename)
 {
     out = basename;
     AreaName id = out;

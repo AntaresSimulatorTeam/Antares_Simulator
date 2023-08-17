@@ -72,18 +72,8 @@ static inline void FreeAndNil(T*& pointer)
 Study::Study(bool forTheSolver) :
  LayerData(0, true),
  simulationComments(*this),
- maxNbYearsInParallel(0),
- maxNbYearsInParallel_save(0),
- nbYearsParallelRaw(0),
- minNbYearsInParallel(0),
- minNbYearsInParallel_save(0),
  areas(*this),
- scenarioRules(nullptr),
- runtime(nullptr),
- // state(nullptr),
- uiinfo(nullptr),
  pQueueService(std::make_shared<Yuni::Job::QueueService>()),
- gotFatalError(false),
  usedByTheSolver(forTheSolver)
 {
     // TS generators
@@ -141,7 +131,7 @@ void Study::clear()
     ClearAndShrink(folderInput);
     ClearAndShrink(folderOutput);
     ClearAndShrink(folderSettings);
-    ClearAndShrink(inputExtension);
+    inputExtension.clear();
 
     gotFatalError = false;
 }
@@ -796,21 +786,22 @@ Area* Study::areaAdd(const AreaName& name)
 
         // Adding an area
         AreaName newName;
-        if (not areaFindNameForANewArea(newName, name) or newName.empty())
+        if (not modifyAreaNameIfAlreadyTaken(newName, name) or newName.empty())
         {
             logs.error() << "Impossible to find a name for a new area";
             return nullptr;
         }
 
         // Adding an area
-        area = AreaListAddFromName(areas, newName, maxNbYearsInParallel);
+        area = addAreaToListOfAreas(areas, newName);
         if (not area)
             return nullptr;
+
         // Rebuild indexes for all areas
         areas.rebuildIndexes();
 
         // Default values for the area
-        area->ensureAllDataAreCreated();
+        area->createMissingData();
         area->resetToDefaultValues();
     }
 
@@ -1011,19 +1002,19 @@ bool Study::areaRename(Area* area, AreaName newName)
 bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 {
     // A name must not be empty
-    if (!cluster or !newName)
+    if (!cluster or !newName.empty())
         return false;
 
     String beautifyname;
     BeautifyName(beautifyname, newName);
     if (!beautifyname)
         return false;
-    newName = beautifyname;
+    newName = beautifyname.c_str();
 
     // Preparing the new area ID
     ClusterName newID;
     TransformNameIntoID(newName, newID);
-    if (!newID)
+    if (newID.empty())
     {
         logs.error() << "invalid id transformation";
         return false;

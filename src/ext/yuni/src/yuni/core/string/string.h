@@ -262,6 +262,9 @@ public:
     //! Copy constructor
     CString(const CString& rhs);
 
+    //! Conversion constructor for transition purpose
+    CString(const std::string& rhs);
+
     //! Constructor with a null-terminated string
     CString(const char* const text);
 
@@ -2035,6 +2038,11 @@ public:
     //! The operator `=` (assign)
     template<class U>
     CString& operator=(const U& rhs);
+
+    //! Assignment for transition purpose
+    CString& operator=(const std::string& rhs);
+    //! Conversion for transition purpose
+    operator std::string() const;
 
 #ifdef YUNI_HAS_CPP_MOVE
     //! Move operator

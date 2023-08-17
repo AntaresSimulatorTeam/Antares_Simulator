@@ -30,6 +30,7 @@
 #include <yuni/core/math.h>
 #include <cassert>
 #include <cmath>
+#include <boost/algorithm/string/case_conv.hpp>
 #include "../../study.h"
 #include "../../memory-usage.h"
 #include "cluster.h"
@@ -99,14 +100,14 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
 
 void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
 {
-    if (not newgrp)
+    if (newgrp.empty())
     {
         groupID = renewableOther1;
         pGroup.clear();
         return;
     }
     pGroup = newgrp;
-    newgrp.toLower();
+    boost::to_lower(newgrp);
 
     if (newgrp == "solar thermal")
     {
