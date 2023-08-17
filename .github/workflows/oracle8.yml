@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - develop
+      - fix/*
   schedule:
     - cron: '21 2 * * *'
 
