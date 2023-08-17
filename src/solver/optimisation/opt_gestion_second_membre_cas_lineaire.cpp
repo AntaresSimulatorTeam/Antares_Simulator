@@ -73,33 +73,45 @@ struct AreaBalance : public IConstraint
               
   void add(int pdt, int pdtHebdo, int pays, int optimizationNumber) override
   {
+    // TODO improve this
+    {
+      ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                          problemeHebdo->NamedProblems);
+      namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+      namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+      namer.AreaBalance(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+    }
+
     builder.updateHourWithinWeek(pdt);
+
+
     int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
-      // constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-      while (interco >= 0)
-        {
-          builder.updateIndex(interco);
-          builder.include(Variable::NTCDirect, 1.0);
-          interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
-        }
-      interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
-      while (interco >= 0)
-        {
-          builder.updateIndex(interco);
-          builder.include(Variable::NTCDirect, -1.0);
-          interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
-        }
 
-      exportPaliers(*problemeHebdo, builder, pays);
-      builder.updateIndex(pays);
-      builder
-        .include(Variable::HydProd, -1.0)
-        .include(Variable::Pumping, 1.0)
-        .include(Variable::PositiveUnsuppliedEnergy, -1.0)
-        .include(Variable::NegativeUnsuppliedEnergy, 1.0);
 
-      shortTermStorageBalance(problemeHebdo->ShortTermStorage[pays],
-                              builder);
+    while (interco >= 0)
+      {
+        builder.updateIndex(interco);
+        builder.include(Variable::NTCDirect, 1.0);
+        interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
+      }
+    interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
+    while (interco >= 0)
+      {
+        builder.updateIndex(interco);
+        builder.include(Variable::NTCDirect, -1.0);
+        interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
+      }
+
+    exportPaliers(*problemeHebdo, builder, pays);
+    builder.updateIndex(pays);
+    builder
+      .include(Variable::HydProd, -1.0)
+      .include(Variable::Pumping, 1.0)
+      .include(Variable::PositiveUnsuppliedEnergy, -1.0)
+      .include(Variable::NegativeUnsuppliedEnergy, 1.0);
+
+    shortTermStorageBalance(problemeHebdo->ShortTermStorage[pays],
+                            builder);
 
     {
       const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
@@ -123,8 +135,18 @@ struct FictiveLoad : public IConstraint
   using IConstraint::IConstraint;
   void add(int pdt, int pdtHebdo, int pays, int optimizationNumber) override
   {
+    // TODO improve this
+    {
+      ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes, problemeHebdo->NamedProblems);
+    
+      namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+      namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+      namer.FictiveLoads(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+    }
+
     builder.updateHourWithinWeek(pdt);
     exportPaliers(*problemeHebdo, builder, pays);
+    builder.updateIndex(pays);
     builder
       .include(Variable::HydProd, -problemeHebdo->DefaillanceNegativeUtiliserHydro[pays])
       .include(Variable::NegativeUnsuppliedEnergy, 1.0);
@@ -172,10 +194,17 @@ struct ShortTermStorageLevel : public IConstraint
   using IConstraint::IConstraint;
   void add(int pdt, int pdtHebdo, int pays, int optimizationNumber) override
   {
+    // TODO improve this
+    ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes, problemeHebdo->NamedProblems);
+    
+    namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+    namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+
     builder.updateHourWithinWeek(pdt);
     for (const auto& storage : problemeHebdo->ShortTermStorage[pays])
     {
       // L[h] - L[h-1] - efficiency * injection[h] + withdrawal[h] = inflows[h]
+      namer.ShortTermStorageLevel(problemeHebdo->ProblemeAResoudre->NombreDeContraintes, storage.name);
       builder.updateIndex(storage.clusterGlobalIndex);
       builder
         .include(Variable::ShortTermStorageLevel, 1.0)
@@ -197,6 +226,8 @@ struct FlowDissociation : public IConstraint
     if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
         CoutDeTransport.IntercoGereeAvecDesCouts)
       {
+        // TODO improve this
+
         {
           const auto origin
             = problemeHebdo
@@ -204,6 +235,9 @@ struct FlowDissociation : public IConstraint
           const auto destination
             = problemeHebdo
             ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
+          ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes, problemeHebdo->NamedProblems);
+          namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+          namer.FlowDissociation(problemeHebdo->ProblemeAResoudre->NombreDeContraintes, origin, destination);
         }
 
         builder.updateHourWithinWeek(pdt);
@@ -308,9 +342,6 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
     // TODO reset selectively
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-    
-    ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
-                                    problemeHebdo->NamedProblems);
 
     AreaBalance areaBalance(problemeHebdo);
     FictiveLoad fictiveLoad(problemeHebdo);
