@@ -260,6 +260,8 @@ struct BindingConstraintHour: public IConstraint
   {
     const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
       = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
+    if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
+        return;
 
     // Links
     const int nbInterco
@@ -310,6 +312,73 @@ struct BindingConstraintHour: public IConstraint
 };
 
 
+struct BindingConstraintDaily : public IConstraint
+{
+  using IConstraint::IConstraint;
+  void add(int pdtDebut, int, int cntCouplante, int optimizationNumber) override
+  {
+    const int nombreDePasDeTempsDUneJournee = 24; // TODO pass to constructor
+
+    const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+      = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
+    if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_JOURNALIERE)
+      return;
+
+    const int nbInterco
+      = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
+    const int nbClusters
+      = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
+    for (int index = 0; index < nbInterco; index++)
+      {
+        int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
+        double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
+        int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
+
+        for (int pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
+          {
+            builder.updateIndex(interco);
+            builder.updateHourWithinWeek(pdt);
+            builder.include(Variable::NTCDirect, poids, offset, true);
+          }
+      }
+
+    for (int index = 0; index < nbClusters; index++)
+      {
+        int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+          = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const int palier
+          = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
+          [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
+        double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
+        int offset
+          = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
+
+        for (int pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
+          {
+            builder.updateIndex(palier);
+            builder.updateHourWithinWeek(pdt);
+            builder.include(Variable::DispatchableProduction, poids, offset, true);
+          }
+      }
+    const int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
+    double rhs = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[jour];
+    switch(MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante) {
+    case '=':
+      builder.equal(rhs);
+      break;
+    case '<':
+      builder.less(rhs);
+      break;
+    case '>':
+      builder.greater(rhs);
+      break;
+      //TODO default case ?
+    }
+    builder.build();
+  }
+};
+
 void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
                           int PremierPdtDeLIntervalle,
                           int DernierPdtDeLIntervalle,
@@ -324,8 +393,6 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
 
     std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
-
-    int NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
 
     const std::vector<int>& NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
 
@@ -344,6 +411,7 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
     ShortTermStorageLevel shortTermStorageLevels(problemeHebdo);
     FlowDissociation flowDissociation(problemeHebdo);
     BindingConstraintHour bindingConstraintHour(problemeHebdo);
+    BindingConstraintDaily bindingConstraintDaily(problemeHebdo);
 
     for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdt++)
@@ -367,33 +435,18 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
       }
     }
     
+    const int nombreDePasDeTempsPourUneOptimisation = 168; // TODO
+    const int NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
+    for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+         cntCouplante++)
+      {
+        for (int pdtDebut = 0; pdtDebut < nombreDePasDeTempsPourUneOptimisation; pdtDebut += NombreDePasDeTempsDUneJournee)
+          {
+            bindingConstraintDaily.add(pdtDebut, 0, cntCouplante, optimizationNumber);
+          }
+      }
 
-    for (int pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;)
-    {
-        int jour = NumeroDeJourDuPasDeTemps[pdtHebdo];
-        int indexCorrespondanceCnt = (!problemeHebdo->OptimisationAuPasHebdomadaire) ? 0 : jour;
 
-        for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
-             cntCouplante++)
-        {
-            const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-              = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante
-                == CONTRAINTE_JOURNALIERE)
-            {
-                int cnt = 2;
-                if (cnt >= 0)
-                {
-                    SecondMembre[cnt]
-                      = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[jour];
-                    AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
-                      = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales.data()
-                        + jour;
-                }
-            }
-        }
-        pdtHebdo += NombreDePasDeTempsDUneJournee;
-    }
 
     if (problemeHebdo->NombreDePasDeTempsPourUneOptimisation
         > problemeHebdo->NombreDePasDeTempsDUneJournee)
