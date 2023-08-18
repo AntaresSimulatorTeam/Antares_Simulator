@@ -40,7 +40,7 @@
 #include "fwd.h"
 
 #include "simulation.h"
-#include "parameters.h"
+
 #include "binding_constraint/BindingConstraint.h"
 #include "header.h"
 #include "version.h"
@@ -56,9 +56,7 @@
 
 #include <memory>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Antares Study
@@ -753,8 +751,8 @@ YString StudyCreateOutputPath(StudyMode mode,
                               const YString& folder,
                               const YString& label,
                               Yuni::sint64 startTime);
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+
 
 #include "study.hxx"
 #include "runtime.h"
