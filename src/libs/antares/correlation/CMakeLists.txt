@@ -12,8 +12,6 @@ target_link_libraries(correlation
         yuni-static-core
         inifile
         array
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
         )
 
 target_include_directories(correlation
