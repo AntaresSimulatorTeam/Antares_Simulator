@@ -32,6 +32,7 @@
 #include "../solver/optimisation/opt_fonctions.h"
 #include "csr_quadratic_problem.h"
 #include "hourly_csr_problem.h"
+#include "sim_structure_probleme_economique.h"
 
 using namespace Antares::Data;
 

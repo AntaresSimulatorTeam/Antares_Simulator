@@ -9,10 +9,10 @@
 #include <fstream>
 
 #include <study.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/exception/LoadingError.hpp>
 
-#include "checkLoadedInputData.h"
+#include <antares/checks/checkLoadedInputData.h>
 #include "cluster_list.h"
 #include "container.h"
 

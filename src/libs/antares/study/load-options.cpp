@@ -26,8 +26,7 @@
 */
 
 #include "load-options.h"
-#include "../logs.h"
-#include "../config.h"
+#include <antares/logs/logs.h>
 
 #include <antares/exception/LoadingError.hpp>
 

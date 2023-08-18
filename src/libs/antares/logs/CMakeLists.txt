@@ -1,15 +1,24 @@
+set(PROJ logs)
+set(HEADERS
+        antares/${PROJ}/cleaner.h
+        antares/${PROJ}/logs.h
+        antares/${PROJ}/logs.hxx
+)
 set(SRC_LOGS
-        logs.h
-        logs.hxx
+        ${HEADERS}
         logs.cpp
-        cleaner.h
         cleaner.cpp
         )
 source_group("misc\\logs" FILES ${SRC_LOGS})
 
-add_library(logs ${SRC_LOGS})
+add_library(${PROJ} ${SRC_LOGS})
 
-target_link_libraries(logs
+target_link_libraries(${PROJ}
         PRIVATE
         yuni-static-core
         )
+
+target_include_directories(${PROJ}
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
+)

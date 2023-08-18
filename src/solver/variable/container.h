@@ -31,20 +31,14 @@
 #include <yuni/core/string.h>
 #include <yuni/core/static/types.h>
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 #include "endoflist.h"
 #include "categories.h"
 #include "surveyresults.h"
 #include "info.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Container
+namespace Antares::Solver::Variable::Container
 {
 /*!
 ** \brief Static list for all output variables
@@ -250,10 +244,10 @@ private:
 
 }; // class List
 
-} // namespace Container
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Container
+
+
+
 
 #include "surveyresults/reportbuilder.hxx"
 #include "container.hxx"

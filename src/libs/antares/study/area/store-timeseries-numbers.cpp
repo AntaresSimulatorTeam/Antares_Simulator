@@ -25,9 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 #include "../study.h"
-#include "../../logs.h"
+#include <antares/logs/logs.h>
 
 #include "store-timeseries-numbers.h"
 

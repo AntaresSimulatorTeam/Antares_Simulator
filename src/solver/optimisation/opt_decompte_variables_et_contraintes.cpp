@@ -32,7 +32,7 @@
 
 #include "opt_fonctions.h"
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/fatal-error.h>
 
 using namespace Antares;

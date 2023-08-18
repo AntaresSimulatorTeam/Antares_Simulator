@@ -8,11 +8,12 @@
 
 #include <boost/test/unit_test.hpp>
 #include <filesystem>
-#include "antares/study.h"
-#include "immediate_file_writer.h"
+#include <fstream>
 #include "timeseries-numbers.h"
 #include "BindingConstraintsTimeSeriesNumbersWriter.h"
 #include "utils.h"
+#include "antares/writer/writer_factory.h"
+#include "antares/writer/result_format.h"
 
 using namespace Antares::Solver;
 using namespace Antares::Data;
@@ -42,7 +43,8 @@ BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file) {
 
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    study->resultWriter = std::make_shared<ImmediateFileResultWriter>(working_tmp_dir.string().c_str());
+    study->resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories, working_tmp_dir.string().c_str(),
+                                              nullptr, nullptr);
     fs::path bc_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "TestGroup.txt";
 
     initializeStudy(*study);
@@ -63,7 +65,8 @@ BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group) {
 
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    study->resultWriter = std::make_shared<ImmediateFileResultWriter>(working_tmp_dir.string().c_str());
+    study->resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories, working_tmp_dir.string().c_str(),
+                                              nullptr, nullptr);
 
     initializeStudy(*study);
     TimeSeriesNumbers::Generate(*study);
@@ -87,7 +90,8 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
 
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    study->resultWriter = std::make_shared<ImmediateFileResultWriter>(working_tmp_dir.string().c_str());
+    study->resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories, working_tmp_dir.string().c_str(),
+                                              nullptr, nullptr);
 
     initializeStudy(*study);
     TimeSeriesNumbers::Generate(*study);

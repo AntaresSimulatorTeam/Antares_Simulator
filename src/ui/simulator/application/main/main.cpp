@@ -32,7 +32,7 @@
 #include "../menus.h"
 #include "../study.h"
 
-#include <antares/date.h>
+#include <antares/date/date.h>
 
 // Map
 #include "../../toolbox/components/map/component.h"

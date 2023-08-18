@@ -29,7 +29,7 @@
 
 #include <antares/wx-wrapper.h>
 #include <yuni/core/event.h>
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include <wx/colour.h>
 #include "default.h"
 #include <antares/study/study.h>

@@ -51,7 +51,7 @@ INSTALL(EXPORT antares-analyzer
 target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
 		PRIVATE
 			libantares-core
-			libantares-core-calendar
+			date
 			yuni-static-core
 			${CMAKE_THREADS_LIBS_INIT}
 		)
