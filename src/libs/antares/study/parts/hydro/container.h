@@ -99,6 +99,11 @@ public:
     */
     void markAsModified() const;
 
+    /*!
+    ** \brief Load hours data
+    */
+    bool LoadHours(Study& study, Area& area, const AnyString& folder);
+
 public:
     //! Inter-daily breakdown (previously called Smoothing Factor or alpha)
     double interDailyBreakdown;

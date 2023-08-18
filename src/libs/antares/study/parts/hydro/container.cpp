@@ -150,38 +150,14 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                     enabledModeIsChanged = true;
                 }
 
-                buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                               << "maxhoursGen_" << area.id << '.' << study.inputExtension;
-
-                ret = area.hydro.maxHoursGen.loadFromCSVFile(
-                        buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
-                      && ret;
-
-                buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                               << "maxhoursPump_" << area.id << '.' << study.inputExtension;
-
-                ret = area.hydro.maxHoursPump.loadFromCSVFile(
-                        buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
-                      && ret;
+                ret = area.hydro.LoadHours(study, area, folder);
 
                 if (enabledModeIsChanged)
                     JIT::enabled = true; // Back to the previous loading mode.
             }
             else
             {
-                buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                               << "maxhoursGen_" << area.id << '.' << study.inputExtension;
-
-                ret = area.hydro.maxHoursGen.loadFromCSVFile(
-                        buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
-                      && ret;
-
-                buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                               << "maxhoursPump_" << area.id << '.' << study.inputExtension;
-
-                ret = area.hydro.maxHoursPump.loadFromCSVFile(
-                        buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
-                      && ret;
+                ret = area.hydro.LoadHours(study, area, folder);
             }
         }
 
@@ -855,6 +831,28 @@ void PartHydro::copyFrom(const PartHydro& rhs)
         maxHoursPump.unloadFromMemory();
         rhs.maxHoursPump.unloadFromMemory();
     }
+}
+
+bool PartHydro::LoadHours(Study& study, Area& area, const AnyString& folder)
+{
+    auto& buffer = study.bufferLoadingTS;
+    bool ret = true;
+
+    buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxhoursGen_"
+                   << area.id << '.' << study.inputExtension;
+
+    ret = area.hydro.maxHoursGen.loadFromCSVFile(
+            buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+          && ret;
+
+    buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxhoursPump_"
+                   << area.id << '.' << study.inputExtension;
+
+    ret = area.hydro.maxHoursPump.loadFromCSVFile(
+            buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+          && ret;
+
+    return ret;
 }
 
 void getWaterValue(const double& level /* format : in % of reservoir capacity */,

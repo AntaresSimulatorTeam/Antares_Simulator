@@ -176,9 +176,7 @@ public:
         return 1;
     }
 
-    virtual ~hydroPowerCreditsAreaNumberOfTSretriever()
-    {
-    }
+    virtual ~hydroPowerCreditsAreaNumberOfTSretriever() = default;
 };
 
 class windAreaNumberOfTSretriever : public areaNumberOfTSretriever
