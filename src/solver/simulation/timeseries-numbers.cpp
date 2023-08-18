@@ -163,7 +163,7 @@ public:
 class hydroPowerCreditsAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    hydroPowerCreditsAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
+    explicit hydroPowerCreditsAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
     {
     }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
@@ -174,6 +174,10 @@ public:
     uint getGeneratedTimeSeriesNumber() override
     {
         return 1;
+    }
+
+    virtual ~hydroPowerCreditsAreaNumberOfTSretriever()
+    {
     }
 };
 
@@ -689,8 +693,8 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
             uint nbTimeSeries = area.hydro.series->maxgen.width;
             if (nbTimeSeries != 1)
             {
-                area.hydro.series->timeseriesNumbersPowerCredits[0][year] = (uint32)(floor(
-                  study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+                area.hydro.series->timeseriesNumbersPowerCredits[0][year] = static_cast<uint32>(
+                  (floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries)));
             }
         }
 
@@ -963,7 +967,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
          (bool)(timeSeriesRenewable & parameters.intraModal)
            && parameters.renewableGeneration.isClusters(),
          (bool)(timeSeriesTransmissionCapacities & parameters.intraModal),
-         (bool)(timeSeriesHydroPowerCredits & parameters.intraModal)};
+         static_cast<bool>(timeSeriesHydroPowerCredits & parameters.intraModal)};
 
     array<uint, timeSeriesCount> nbTimeseriesByMode;
 
@@ -1010,7 +1014,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
          (bool)(timeSeriesRenewable & parameters.interModal)
            && parameters.renewableGeneration.isClusters(),
          false, // links transmission capacities time series cannot be inter-modal
-         (bool)(timeSeriesHydroPowerCredits & parameters.interModal)};
+         static_cast<bool>(timeSeriesHydroPowerCredits & parameters.interModal)};
 
     if (std::any_of(std::begin(isTSintermodal), std::end(isTSintermodal), [](bool x) { return x; }))
     {

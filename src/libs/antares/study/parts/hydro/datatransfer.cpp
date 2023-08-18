@@ -152,7 +152,7 @@ bool DataTransfer::SupportForOldStudies(Study& study, const AnyString& folder, A
 }
 
 void DataTransfer::AutoTransferPower(Matrix<double, Yuni::sint32>& matrix,
-                                       const Matrix<double>::ColumnType& maxPower)
+                                       const Matrix<double>::ColumnType& maxP)
 {
     uint hours = 0;
     uint days = 0;
@@ -161,7 +161,7 @@ void DataTransfer::AutoTransferPower(Matrix<double, Yuni::sint32>& matrix,
     {
         for (uint i = 0; i < 24; ++i)
         {
-            matrix[0][hours] = maxPower[days];
+            matrix[0][hours] = maxP[days];
             ++hours;
         }
     ++days;

@@ -42,7 +42,7 @@ namespace Antares
 {
 namespace Data
 {
-DataSeriesHydro::DataSeriesHydro() : count(0), countpowercredits(0)
+DataSeriesHydro::DataSeriesHydro() : count(0)
 {
     // Pmin was introduced in v8.6
     // The previous behavior was Pmin=0

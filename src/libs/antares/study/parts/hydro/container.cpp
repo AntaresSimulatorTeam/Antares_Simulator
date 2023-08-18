@@ -58,8 +58,7 @@ PartHydro::PartHydro() :
  pumpingEfficiency(1.),
  hydroModulable(false),
  prepro(nullptr),
- series(nullptr),
- isDeleted(false)
+ series(nullptr)
 {
 }
 

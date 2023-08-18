@@ -168,7 +168,7 @@ public:
     ** (for example using `maxgen.width` and `maxpump.width` in the same routine, it might
     ** indicate that the two values are not strictly equal)
     */
-    uint countpowercredits;
+    uint countpowercredits = 0;
 
     /*!
     ** \brief Monte-Carlo

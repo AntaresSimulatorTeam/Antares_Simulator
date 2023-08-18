@@ -326,7 +326,7 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
         uint z = area.index;
         const auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
         auto tsIndex = (uint)ptchro.Hydraulique;
-        auto tsIndexPowerCredits = (uint)ptchro.HydrauliquePowerCredits;
+        auto tsIndexPowerCredits = ptchro.HydrauliquePowerCredits;
 
         if (area.hydro.useHeuristicTarget)
         {

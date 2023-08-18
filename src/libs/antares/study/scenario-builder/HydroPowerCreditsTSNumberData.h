@@ -14,6 +14,8 @@ public:
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;
     uint get_tsGenCount(const Study& study) const override;
+
+    virtual ~hydroPowerCreditsTSNumberData(){}
 };
 
 inline CString<512, false> hydroPowerCreditsTSNumberData::get_prefix() const

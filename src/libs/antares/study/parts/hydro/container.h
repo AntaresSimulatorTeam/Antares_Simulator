@@ -160,8 +160,6 @@ public:
     Matrix<double, double> maxHoursGen;
     Matrix<double, double> maxHoursPump;
 
-    bool isDeleted;
-
 }; // class PartHydro
 
 // Interpolates a water value from a table according to a level and a day.

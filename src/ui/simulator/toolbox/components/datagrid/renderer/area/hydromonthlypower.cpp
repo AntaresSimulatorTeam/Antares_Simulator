@@ -111,17 +111,15 @@ void HydroMonthlyHours::internalAreaChanged(Antares::Data::Area* area)
 
 IRenderer::CellStyle HydroMonthlyHours::cellStyle(int col, int row) const
 {
-    switch (col)
+    if (double MaxE = MatrixAncestorType::cellNumericValue(0, row);
+        col == 0 && (MaxE < 0. || MaxE > 24.))
     {
-    case 0:
+        return IRenderer::cellStyleError;
+    }
+    else
     {
-        double genMaxE = MatrixAncestorType::cellNumericValue(0, row);
-        if (genMaxE < 0. || genMaxE > 24.)
-            return IRenderer::cellStyleError;
-        break;
+        return IRenderer::cellStyleWithNumericCheck(col, row);
     }
-    }
-    return IRenderer::cellStyleWithNumericCheck(col, row);
 }
 
 wxString HydroMonthlyHours::rowCaption(int row) const
