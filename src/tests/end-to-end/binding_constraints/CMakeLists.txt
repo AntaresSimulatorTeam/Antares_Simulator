@@ -8,7 +8,7 @@ endif(MSVC)
 
 add_executable(tests-binding_constraints
         test_binding_constraints.cpp
-        )
+    )
 
 target_link_libraries(tests-binding_constraints
         PRIVATE
@@ -19,7 +19,7 @@ target_link_libraries(tests-binding_constraints
         libantares-solver-hydro
         libantares-solver-ts-generator
         libantares-solver-aleatoire
-        )
+    )
 
 target_include_directories(tests-binding_constraints
         PRIVATE

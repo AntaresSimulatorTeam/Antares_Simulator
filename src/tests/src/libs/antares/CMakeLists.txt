@@ -104,3 +104,13 @@ set_target_properties(tests-matrix-load PROPERTIES FOLDER Unit-tests)
 add_test(NAME load-matrix COMMAND tests-matrix-load)
 
 set_property(TEST load-matrix PROPERTY LABELS unit)
+
+
+add_executable(test-utils test_utils.cpp)
+target_link_libraries(test-utils
+		PRIVATE
+		libantares-core
+		Boost::unit_test_framework
+)
+add_test(NAME test-utils COMMAND test-utils)
+

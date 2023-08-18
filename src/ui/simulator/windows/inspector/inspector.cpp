@@ -772,7 +772,7 @@ bool LinksSelected(std::map<Data::AreaName, std::map<Data::AreaName, bool>>& set
 }
 
 // gp : never used - to be removed
-bool IsThermalClusterSelected(const Data::AreaName& area, const Data::ClusterName& name)
+bool IsThermalClusterSelected(const Data::AreaName& area, const YString& name)
 {
     (void)area;
     (void)name;
