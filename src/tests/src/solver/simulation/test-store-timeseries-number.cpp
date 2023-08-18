@@ -2,10 +2,11 @@
 // Created by marechaljas on 15/03/23.
 //
 #define BOOST_TEST_MODULE store-timeseries-number
+#define BOOST_TEST_DYN_LINK
 #define WIN32_LEAN_AND_MEAN
 
 
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <filesystem>
 #include <fstream>
 #include "timeseries-numbers.h"

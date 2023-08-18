@@ -508,6 +508,7 @@ target_link_libraries(libantares-core
 	PUBLIC
 		yuni-static-core
 		yuni-static-uuid
+        Boost::boost
 		Antares::memory
 		Antares::sys
 		date
