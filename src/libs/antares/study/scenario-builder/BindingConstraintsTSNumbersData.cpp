@@ -41,7 +41,7 @@ bool BindingConstraintsTSNumberData::apply(Study& study)
         const auto& [groupName, tsNumbers] = args;
         auto group = study.bindingConstraintsGroups[groupName];
         if (group == nullptr) {
-            logs.error("Group with name" + groupName + " does not exists");
+            logs.error("Group with name '" + groupName + "' does not exists");
         }
         uint errors = 0;
         CString<512, false> logprefix;
