@@ -498,10 +498,10 @@ struct PROBLEME_HEBDO
     mutable std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTC;
 
     uint32_t NombreDePasDeTemps = 0;
-    std::vector<uint32_t> NumeroDeJourDuPasDeTemps;
+    std::vector<int32_t> NumeroDeJourDuPasDeTemps;
 
     uint32_t NombreDePasDeTempsPourUneOptimisation = 0;
-    std::vector<uint32_t> NumeroDIntervalleOptimiseDuPasDeTemps;
+    std::vector<int32_t> NumeroDIntervalleOptimiseDuPasDeTemps;
     uint32_t NombreDeJours = 0;
 
     int32_t NombreDePasDeTempsDUneJournee = 0;
