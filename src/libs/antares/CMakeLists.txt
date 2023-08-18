@@ -514,11 +514,12 @@ target_link_libraries(libantares-core
 		inifile
 		io
 		array
-		correlation
 		object
         benchmarking
+
 	PRIVATE
 		Antares::date
+		Antares::correlation
 	)
 
 import_std_libs(libantares-core)
