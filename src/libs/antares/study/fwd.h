@@ -67,7 +67,7 @@ using AreaName = Yuni::CString<ant_k_area_name_max_length, false>;
 //! Name of a single link
 using AreaLinkName = Yuni::CString<ant_k_area_name_max_length * 2 + 1, false>;
 //! Name of a single thermal
-using ClusterName = Yuni::CString<ant_k_cluster_name_max_length, false>;
+using ClusterName = std::string;
 
 using ConstraintName = Yuni::CString<ant_k_constraint_name_max_length, false>;
 
@@ -519,15 +519,6 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
 ** \brief Convert a text into a renewable generation modelling
 */
 RenewableGenerationModelling StringToRenewableGenerationModelling(const AnyString& text);
-
-// Format of results
-enum ResultFormat
-{
-    // Store outputs as files inside directories
-    legacyFilesDirectories = 0,
-    // Store outputs inside a single zip archive
-    zipArchive
-};
 
 // ------------------------
 // MPS export status

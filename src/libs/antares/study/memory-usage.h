@@ -29,11 +29,9 @@
 
 #include <yuni/yuni.h>
 #include "fwd.h"
-#include "../array/matrix.h"
+#include <antares/array/matrix.h>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Estimate the amount of memory (RAM, disk) required for a simulation
@@ -125,7 +123,7 @@ private:
 
 }; // class StudyMemoryUsage
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+
 
 #endif // __ANTARES_LIBS_STUDY_MEMORYUSAGE_H__

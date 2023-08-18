@@ -31,8 +31,6 @@ target_include_directories(tests-simple-study
 							${CMAKE_CURRENT_SOURCE_DIR}/../utils
 							)
 
-target_compile_definitions(tests-simple-study PRIVATE "BOOST_TEST_DYN_LINK=1")
-
 add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)
 set_property(TEST end-to-end-simple-study PROPERTY LABELS end-to-end)
 set_target_properties(tests-simple-study PROPERTIES FOLDER Unit-tests/end_to_end)

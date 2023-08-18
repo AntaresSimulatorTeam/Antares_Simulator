@@ -29,11 +29,11 @@
 #include <yuni/io/file.h>
 #include <yuni/core/string.h>
 #include "../study.h"
-#include <assert.h>
+#include <cassert>
 #include "area.h"
-#include "../../array/array1d.h"
-#include "../../inifile/inifile.h"
-#include "../../logs.h"
+#include <antares/array/array1d.h>
+#include <antares/inifile/inifile.h>
+#include <antares/logs/logs.h>
 #include "../memory-usage.h"
 #include "../../config.h"
 #include "../filter.h"
@@ -45,9 +45,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 namespace // anonymous
 {
@@ -488,7 +486,7 @@ Area* AreaList::add(Area* a)
     }
     return a;
 }
-Area* AreaListAddFromName(AreaList& list, const AnyString& name, uint nbParallelYears)
+Area* addAreaToListOfAreas(AreaList& list, const AnyString& name)
 {
     // Initializing names
     AreaName cname;
@@ -497,20 +495,19 @@ Area* AreaListAddFromName(AreaList& list, const AnyString& name, uint nbParallel
     TransformNameIntoID(cname, lname);
 
     // Add the area
-    return AreaListAddFromNames(list, cname, lname, nbParallelYears);
+    return AreaListAddFromNames(list, cname, lname);
 }
 
 Area* AreaListAddFromNames(AreaList& list,
                            const AnyString& name,
-                           const AnyString& lname,
-                           uint nbParallelYears)
+                           const AnyString& lname)
 {
     if (!name || !lname)
         return nullptr;
     // Look up
     if (!AreaListLFind(&list, lname.c_str()))
     {
-        Area* area = new Area(name, lname, nbParallelYears);
+        Area* area = new Area(name, lname);
         // Adding it
         Area* ret = list.add(area);
         if (!ret)
@@ -568,7 +565,7 @@ bool AreaList::loadListFromFile(const AnyString& filename)
             continue;
         }
         // Add the area in the list
-        AreaListAddFromNames(*this, name, lname, pStudy.maxNbYearsInParallel);
+        AreaListAddFromNames(*this, name, lname);
     }
 
     switch (areas.size())
@@ -1658,5 +1655,5 @@ void AreaList::removeThermalTimeseries()
     });
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

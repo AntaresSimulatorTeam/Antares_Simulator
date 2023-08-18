@@ -32,13 +32,13 @@
 #include <yuni/io/file.h>
 #include <yuni/core/math.h>
 #include <cassert>
+#include <boost/algorithm/string/case_conv.hpp>
 #include "../../study.h"
 #include "../../memory-usage.h"
 #include "cluster.h"
 #include <antares/inifile/inifile.h>
-#include "../../../logs.h"
+#include <antares/logs/logs.h>
 #include "../../../utils.h"
-
 
 using namespace Yuni;
 using namespace Antares;
@@ -124,21 +124,21 @@ namespace Antares
 namespace Data
 {
 Data::ThermalCluster::ThermalCluster(Area* parent) :
- Cluster(parent),
- groupID(thermalDispatchGrpOther1),
- mustrun(false),
- mustrunOrigin(false),
- nominalCapacityWithSpinning(0.),
- minStablePower(0.),
- minUpTime(1),
- minDownTime(1),
- spinning(0.),
- forcedVolatility(0.),
- plannedVolatility(0.),
- forcedLaw(thermalLawUniform),
- plannedLaw(thermalLawUniform),
- PthetaInf(HOURS_PER_YEAR, 0),
- costsTimeSeries(1, CostsTimeSeries())
+    Cluster(parent),
+    groupID(thermalDispatchGrpOther1),
+    mustrun(false),
+    mustrunOrigin(false),
+    nominalCapacityWithSpinning(0.),
+    minStablePower(0.),
+    minUpTime(1),
+    minDownTime(1),
+    spinning(0.),
+    forcedVolatility(0.),
+    plannedVolatility(0.),
+    forcedLaw(thermalLawUniform),
+    plannedLaw(thermalLawUniform),
+    PthetaInf(HOURS_PER_YEAR, 0),
+    costsTimeSeries(1, CostsTimeSeries())
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");
@@ -235,96 +235,41 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
         parentArea->forceReload();
 }
 
+static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(Data::ClusterName& newgrp)
+{
+    using namespace Antares::Data;
+    const static std::map<ClusterName, ThermalCluster::ThermalDispatchableGroup> mapping
+      = {{"nuclear", ThermalCluster::thermalDispatchGrpNuclear},
+         {"lignite", ThermalCluster::thermalDispatchGrpLignite},
+         {"hard coal", ThermalCluster::thermalDispatchGrpHardCoal},
+         {"gas", ThermalCluster::thermalDispatchGrpGas},
+         {"oil", ThermalCluster::thermalDispatchGrpOil},
+         {"mixed fuel", ThermalCluster::thermalDispatchGrpMixedFuel},
+         {"other", ThermalCluster::thermalDispatchGrpOther1},
+         {"other 1", ThermalCluster::thermalDispatchGrpOther1},
+         {"other 2", ThermalCluster::thermalDispatchGrpOther2},
+         {"other 3", ThermalCluster::thermalDispatchGrpOther3},
+         {"other 4", ThermalCluster::thermalDispatchGrpOther4}};
+
+    boost::to_lower(newgrp);
+    if (auto res = mapping.find(newgrp);res != mapping.end())
+    {
+        return res->second;
+    }
+    // assigning a default value
+    return ThermalCluster::thermalDispatchGrpOther1;
+}
+
 void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
 {
-    if (not newgrp)
+    if (newgrp.empty())
     {
         groupID = thermalDispatchGrpOther1;
         pGroup.clear();
         return;
     }
     pGroup = newgrp;
-    newgrp.toLower();
-
-    switch (newgrp[0])
-    {
-    case 'g':
-    {
-        if (newgrp == "gas")
-        {
-            groupID = thermalDispatchGrpGas;
-            return;
-        }
-        break;
-    }
-    case 'h':
-    {
-        if (newgrp == "hard coal")
-        {
-            groupID = thermalDispatchGrpHardCoal;
-            return;
-        }
-        break;
-    }
-    case 'l':
-    {
-        if (newgrp == "lignite")
-        {
-            groupID = thermalDispatchGrpLignite;
-            return;
-        }
-        break;
-    }
-    case 'm':
-    {
-        if (newgrp == "mixed fuel")
-        {
-            groupID = thermalDispatchGrpMixedFuel;
-            return;
-        }
-        break;
-    }
-    case 'n':
-    {
-        if (newgrp == "nuclear")
-        {
-            groupID = thermalDispatchGrpNuclear;
-            return;
-        }
-        break;
-    }
-    case 'o':
-    {
-        if (newgrp == "oil")
-        {
-            groupID = thermalDispatchGrpOil;
-            return;
-        }
-        else if (newgrp == "other" || newgrp == "other 1")
-        {
-            groupID = thermalDispatchGrpOther1;
-            return;
-        }
-        else if (newgrp == "other 2")
-        {
-            groupID = thermalDispatchGrpOther2;
-            return;
-        }
-        else if (newgrp == "other 3")
-        {
-            groupID = thermalDispatchGrpOther3;
-            return;
-        }
-        else if (newgrp == "other 4")
-        {
-            groupID = thermalDispatchGrpOther4;
-            return;
-        }
-        break;
-    }
-    }
-    // assigning a default value
-    groupID = thermalDispatchGrpOther1;
+    groupID = stringToGroup(newgrp);
 }
 
 bool Data::ThermalCluster::forceReload(bool reload) const
@@ -375,7 +320,6 @@ void Data::ThermalCluster::calculationOfSpinning()
     }
 }
 
-
 void Data::ThermalCluster::ComputeCostTimeSeries()
 {
     switch (costgeneration)
@@ -406,7 +350,6 @@ void Data::ThermalCluster::fillMarginalCostTS()
               costsTimeSeries[0].marginalCostTS.end(),
               marginalCost);
 }
-
 
 void ThermalCluster::resizeCostTS()
 {

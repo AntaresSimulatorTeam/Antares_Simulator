@@ -29,7 +29,7 @@
 #include <yuni/string.h>
 #include "../cleaner.h"
 #include "versions.h"
-#include "../../logs.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 

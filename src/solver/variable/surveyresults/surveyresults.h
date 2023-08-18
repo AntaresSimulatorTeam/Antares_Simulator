@@ -34,7 +34,7 @@
 #include "../categories.h"
 #include "data.h"
 #include <antares/study/variable-print-info.h>
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 
 namespace Antares
 {

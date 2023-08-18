@@ -32,14 +32,14 @@
 
 #include "opt_fonctions.h"
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/fatal-error.h>
 
 using namespace Antares;
 
 int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
     int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 

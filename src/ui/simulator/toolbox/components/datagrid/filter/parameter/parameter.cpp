@@ -26,13 +26,13 @@
 */
 
 #include "parameter.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include "../../../../validator.h"
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/choice.h>
 #include "../operator.h"
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 namespace Antares
 {

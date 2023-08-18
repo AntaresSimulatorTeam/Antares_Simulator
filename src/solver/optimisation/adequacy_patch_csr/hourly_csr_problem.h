@@ -29,9 +29,12 @@
 
 // TODO[FOM] Remove this, it is only required for PROBLEME_HEBDO
 // but this problem has nothing to do with PROBLEME_HEBDO
-#include "../simulation/sim_structure_probleme_economique.h"
+#include <set>
+#include <antares/logs/logs.h>
 #include <antares/study/parameters/adq-patch-params.h>
+#include "../opt_structure_probleme_a_resoudre.h"
 
+struct PROBLEME_HEBDO;
 class HourlyCSRProblem
 {
 private:
@@ -118,9 +121,9 @@ public:
         inline bool check() const
         {
             if (directVar < 0)
-                logs.warning() << "directVar < 0 detected, this should not happen";
+                Antares::logs.warning() << "directVar < 0 detected, this should not happen";
             if (indirectVar < 0)
-                logs.warning() << "indirectVar < 0 detected, this should not happen";
+                Antares::logs.warning() << "indirectVar < 0 detected, this should not happen";
 
             return (directVar >= 0) && (indirectVar >= 0);
         }

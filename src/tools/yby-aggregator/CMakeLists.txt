@@ -48,7 +48,7 @@ INSTALL(EXPORT antares-ybyaggregator
 
 set(YBY_AGGREGATOR_LIBS
 	libantares-core
-	libantares-core-calendar
+	date
 	yuni-static-core
 	${wxWidgets_LIBRARIES} ${CMAKE_THREADS_LIBS_INIT})
 

@@ -27,6 +27,7 @@
 
 #include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
+#include "sim_structure_probleme_economique.h"
 #include "hourly_csr_problem.h"
 
 #include "pi_constantes_externes.h"

@@ -26,7 +26,7 @@
 */
 
 #include "xcast.h"
-#include "../../logs.h"
+#include <antares/logs/logs.h>
 #include <antares/inifile/inifile.h>
 #include "../study.h"
 #include "../memory-usage.h"

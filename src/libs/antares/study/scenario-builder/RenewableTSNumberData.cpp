@@ -7,9 +7,9 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-void renewableTSNumberData::set(const Antares::Data::RenewableCluster* cluster,
-                                const uint year,
-                                uint value)
+void renewableTSNumberData::setTSnumber(const Antares::Data::RenewableCluster* cluster,
+                                        const uint year,
+                                        uint value)
 {
     assert(cluster != nullptr);
     if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)

@@ -20,7 +20,7 @@ public:
         pArea = area;
     }
 
-    void set(const Antares::Data::ThermalCluster* cluster, const uint year, uint value);
+    void setTSnumber(const Antares::Data::ThermalCluster* cluster, const uint year, uint value);
     uint get(const Antares::Data::ThermalCluster* cluster, const uint year) const;
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;

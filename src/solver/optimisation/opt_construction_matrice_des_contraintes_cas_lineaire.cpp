@@ -29,6 +29,7 @@
 #include "../utils/filename.h"
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"
+#include "sim_structure_probleme_economique.h"
 
 #include <antares/study.h>
 
@@ -159,7 +160,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     const bool exportStructure = problemeHebdo->ExportStructure;
     const bool firstWeekOfSimulation = problemeHebdo->firstWeekOfSimulation;
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
 
     int nombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
     int nombreDePasDeTempsPourUneOptimisation

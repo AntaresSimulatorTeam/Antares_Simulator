@@ -32,8 +32,8 @@
 #include "../../study.h"
 #include "../../memory-usage.h"
 #include "ecoInput.h"
-#include "../../../logs.h"
-#include "../../../array/array1d.h"
+#include <antares/logs/logs.h>
+#include <antares/array/array1d.h>
 
 using namespace Yuni;
 

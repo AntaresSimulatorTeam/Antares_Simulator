@@ -137,9 +137,9 @@ using JobVector = std::vector<JobPtr>;
 //! Output panel
 class Panel;
 
-using ThermalNameSet = std::set<Data::ClusterName>;
+using ThermalNameSet = std::set<YString>;
 //! List of thermal clusters, for all areas
-using ThermalNameSetPerArea = std::map<Data::AreaName, std::set<Data::ClusterName>>;
+using ThermalNameSetPerArea = std::map<Data::AreaName, std::set<YString>>;
 
 } // namespace OutputViewerData
 } // namespace Private
