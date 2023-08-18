@@ -291,7 +291,7 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_out_of_bound_use_random_fallback
     BC->operatorType(BindingConstraint::opEquality);
 
     TimeSeriesConfigurer(BC->RHSTimeSeries())
-            .setColumnCount(7)
+            .setColumnCount(1)
             .fillColumnWith(0, 0.);
 
     ScenarioBuilderRule scenarioBuilderRule(*study);
