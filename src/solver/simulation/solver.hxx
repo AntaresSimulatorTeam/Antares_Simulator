@@ -160,7 +160,8 @@ private:
             // 4 - Hydraulic ventilation
             {
                 Benchmarking::Timer timer;
-                simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y, numSpace);
+                simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y,
+                        numSpace, simulationObj->valeursGenereesParPays);
                 timer.stop();
                 pDurationCollector->addDuration("hydro_ventilation", timer.get_duration());
             }

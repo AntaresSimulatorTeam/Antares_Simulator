@@ -76,7 +76,8 @@ void Adequacy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
-bool Adequacy::simulationBegin(VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+// valGen maybe_unused to match simulationBegin() declaration in economy.cpp
+bool Adequacy::simulationBegin([[maybe_unused]] VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     if (!preproOnly)
     {
@@ -107,7 +108,8 @@ bool Adequacy::simulationBegin(VAL_GEN_PAR_PAYS& valeursGenereesParPays)
     return true;
 }
 
-bool Adequacy::simplexIsRequired(uint hourInTheYear, uint numSpace) const
+bool Adequacy::simplexIsRequired(uint hourInTheYear, uint numSpace,
+        VAL_GEN_PAR_PAYS& valeursGenereesParPays) const
 {
     uint areaCount = study.areas.size();
     uint indx = hourInTheYear;
@@ -118,7 +120,7 @@ bool Adequacy::simplexIsRequired(uint hourInTheYear, uint numSpace) const
 
         for (uint k = 0; k != areaCount; ++k)
         {
-            auto& valgen = ValeursGenereesParPays[numSpace][k];
+            auto& valgen = valeursGenereesParPays[numSpace][k];
 
             double quantity
               = pProblemesHebdo[numSpace]->ConsommationsAbattues[j].ConsommationAbattueDuPays[k]
@@ -169,7 +171,7 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim;
         reinitOptim = false;
 
-        state.simplexHasBeenRan = (w == 0) || simplexIsRequired(hourInTheYear, numSpace);
+        state.simplexHasBeenRan = (w == 0) || simplexIsRequired(hourInTheYear, numSpace, valeursGenereesParPays);
         if (state.simplexHasBeenRan) // Call to Solver is mandatory for the first week and optional
                                      // otherwise
         {
@@ -304,7 +306,7 @@ bool Adequacy::year(Progression::Task& progression,
                 {
                     assert(k < state.resSpilled.width);
                     assert(j < state.resSpilled.height);
-                    auto& valgen = ValeursGenereesParPays[numSpace][k];
+                    auto& valgen = valeursGenereesParPays[numSpace][k];
                     auto& hourlyResults = pProblemesHebdo[numSpace]->ResultatsHoraires[k];
 
                     hourlyResults.TurbinageHoraire[j]
