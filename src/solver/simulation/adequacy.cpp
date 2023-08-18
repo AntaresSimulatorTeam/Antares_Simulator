@@ -109,7 +109,7 @@ bool Adequacy::simulationBegin([[maybe_unused]] VAL_GEN_PAR_PAYS& valeursGeneree
 }
 
 bool Adequacy::simplexIsRequired(uint hourInTheYear, uint numSpace,
-        VAL_GEN_PAR_PAYS& valeursGenereesParPays) const
+        const VAL_GEN_PAR_PAYS& valeursGenereesParPays) const
 {
     uint areaCount = study.areas.size();
     uint indx = hourInTheYear;
@@ -140,7 +140,7 @@ bool Adequacy::year(Progression::Task& progression,
                     yearRandomNumbers& randomForYear,
                     std::list<uint>& failedWeekList,
                     bool isFirstPerformedYearOfSimulation,
-                    VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+                    const VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     // No failed week at year start
     failedWeekList.clear();

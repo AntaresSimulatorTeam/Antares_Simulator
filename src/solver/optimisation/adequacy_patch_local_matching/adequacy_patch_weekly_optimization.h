@@ -45,12 +45,12 @@ public:
                                        Antares::Data::AdequacyPatch::AdqPatchParams&,
                                        uint numSpace,
                                        IResultWriter& writer,
-                                       VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+                                       const VAL_GEN_PAR_PAYS& valeursGenereesParPays);
 
     ~AdequacyPatchOptimization() override = default;
     void solve(uint weekInTheYear, int hourInTheYear) override;
 private:
     const Antares::Data::Study& study_;
-    VAL_GEN_PAR_PAYS* valeursGenereesParPays_;
+    const VAL_GEN_PAR_PAYS* valeursGenereesParPays_;
 };
 } // namespace Antares::Solver::Optimization

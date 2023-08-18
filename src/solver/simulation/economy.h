@@ -73,7 +73,7 @@ public:
 protected:
     void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
 
-    bool simulationBegin(VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+    bool simulationBegin(const VAL_GEN_PAR_PAYS& valeursGenereesParPays);
 
     bool year(Progression::Task& progression,
               Variable::State& state,

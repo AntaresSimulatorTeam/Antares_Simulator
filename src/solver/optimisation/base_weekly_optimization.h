@@ -45,7 +45,7 @@ public:
                                                       PROBLEME_HEBDO* problemesHebdo,
                                                       uint numSpace,
                                                       IResultWriter& writer,
-                                                      VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+                                                      const VAL_GEN_PAR_PAYS& valeursGenereesParPays);
 
 protected:
     explicit WeeklyOptimization(const OptimizationOptions& options,

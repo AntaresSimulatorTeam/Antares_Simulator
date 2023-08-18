@@ -46,13 +46,6 @@
 namespace Antares::Solver::Simulation
 {
 
-struct RANDOM_ARRAYS
-{
-    std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_PAYS>> NumeroChroniquesTireesParPays;
-    std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION>> NumeroChroniquesTireesParInterconnexion;
-    std::vector<std::map<std::string, unsigned>> NumeroChroniquesTireesParGroup;
-};
-
 template<class Impl>
 class yearJob;
 
@@ -164,7 +157,7 @@ private:
     */
     void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State>& state);
 
-    void allocateValeursGenereesParPays();
+    VAL_GEN_PAR_PAYS allocateValeursGenereesParPays();
 
 private:
     //! Some temporary to avoid performing useless complex checks
@@ -196,7 +189,6 @@ public:
 
     VAL_GEN_PAR_PAYS valeursGenereesParPays;
 
-    RANDOM_ARRAYS randomArrays;
 }; // class ISimulation
 } // namespace Antares::Solver::Simulation
 

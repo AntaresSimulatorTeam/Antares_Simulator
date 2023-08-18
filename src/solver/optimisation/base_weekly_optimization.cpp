@@ -54,7 +54,7 @@ std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(
     PROBLEME_HEBDO* problemeHebdo,
     uint thread_number,
     IResultWriter& writer,
-    VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+    const VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled)
         return std::make_unique<AdequacyPatchOptimization>(study, options, problemeHebdo, adqPatchParams, thread_number, writer, valeursGenereesParPays);

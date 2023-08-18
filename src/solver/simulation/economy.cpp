@@ -79,7 +79,7 @@ void Economy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
-bool Economy::simulationBegin(VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+bool Economy::simulationBegin(const VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     if (!preproOnly)
     {

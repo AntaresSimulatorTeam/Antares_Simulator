@@ -379,7 +379,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                     uint weekInTheYear,
                                     uint numSpace,
                                     const int PasDeTempsDebut,
-                                    VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+                                    const VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     const auto& parameters = study.parameters;
     auto& studyruntime = *study.runtime;
@@ -708,7 +708,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                         std::vector<double>& DGL = problem.CaracteristiquesHydrauliques[k]
                                         .MinEnergieHydrauParIntervalleOptimise;
 
-                        std::vector<double>& DNT
+                        const std::vector<double>& DNT
                           = valeursGenereesParPays[numSpace][k].HydrauliqueModulableQuotidien;
 
                         double WSL

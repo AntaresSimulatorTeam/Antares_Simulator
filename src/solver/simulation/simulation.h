@@ -57,7 +57,7 @@ void SIM_RenseignementProblemeHebdo(const Antares::Data::Study& study,
                                     uint weekInTheYear,
                                     uint numSpace,
                                     const int,
-                                    VAL_GEN_PAR_PAYS&);
+                                    const VAL_GEN_PAR_PAYS&);
 
 void SIM_RenseignementProblemeHoraireAdequation(uint);
 

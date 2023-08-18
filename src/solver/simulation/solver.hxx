@@ -299,7 +299,7 @@ void ISimulation<Impl>::run()
     // The general data
     auto& parameters = *(study.runtime->parameters);
 
-    allocateValeursGenereesParPays();
+    valeursGenereesParPays = allocateValeursGenereesParPays();
 
     // Preprocessors
     // Determine if we have to use the preprocessors at least one time.
@@ -1614,30 +1614,32 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
 }
 
 template<class Impl>
-void ISimulation<Impl>::allocateValeursGenereesParPays()
+VAL_GEN_PAR_PAYS ISimulation<Impl>::allocateValeursGenereesParPays()
 {
-    valeursGenereesParPays.resize(study.maxNbYearsInParallel);
+    VAL_GEN_PAR_PAYS val;
+    val.resize(study.maxNbYearsInParallel);
     for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
     {
-        valeursGenereesParPays[numSpace].resize(study.areas.size());
+        val[numSpace].resize(study.areas.size());
         for (uint i = 0; i < study.areas.size(); ++i)
         {
             auto& area = *study.areas.byIndex[i];
 
-            valeursGenereesParPays[numSpace][i].HydrauliqueModulableQuotidien
+            val[numSpace][i].HydrauliqueModulableQuotidien
                 .assign(study.runtime->nbDaysPerYear,0 );
-            valeursGenereesParPays[numSpace][i].AleaCoutDeProductionParPalier
+            val[numSpace][i].AleaCoutDeProductionParPalier
                 .assign(area.thermal.clusterCount(), 0.);
 
             if (area.hydro.reservoirManagement)
             {
-                valeursGenereesParPays[numSpace][i].NiveauxReservoirsDebutJours
+                val[numSpace][i].NiveauxReservoirsDebutJours
                     .assign(study.runtime->nbDaysPerYear, 0.);
-                valeursGenereesParPays[numSpace][i].NiveauxReservoirsFinJours
+                val[numSpace][i].NiveauxReservoirsFinJours
                     .assign(study.runtime->nbDaysPerYear, 0.);
             }
         }
     }
+    return val;
 }
 
 

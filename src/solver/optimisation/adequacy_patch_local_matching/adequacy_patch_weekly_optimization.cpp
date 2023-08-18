@@ -43,7 +43,7 @@ AdequacyPatchOptimization::AdequacyPatchOptimization(const Antares::Data::Study&
                                                      AdqPatchParams& adqPatchParams,
                                                      uint thread_number,
                                                      IResultWriter& writer,
-                                                     VAL_GEN_PAR_PAYS& valeursGenereesParPays) :
+                                                     const VAL_GEN_PAR_PAYS& valeursGenereesParPays) :
   WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer), study_(study),
     valeursGenereesParPays_(&valeursGenereesParPays)
 {
