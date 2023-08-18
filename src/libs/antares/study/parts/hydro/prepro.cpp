@@ -32,7 +32,6 @@
 #include "../../memory-usage.h"
 #include "prepro.h"
 #include <antares/inifile/inifile.h>
-#include <antares/array/array1d.h>
 #include <antares/logs/logs.h>
 
 using namespace Antares;
