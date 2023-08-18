@@ -184,10 +184,10 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
     {
         auto greater_bc = std::make_shared<BindingConstraint>();
         greater_bc->copyFrom(bc.get());
-        greater_bc->name(bc->name());
+        greater_bc->name(bc->name()+"_gt");
         greater_bc->pID = bc->pID;
         greater_bc->operatorType(BindingConstraint::opGreater);
-
+        bc->name(bc->name()+ "_lt");
         bc->operatorType(BindingConstraint::opLess);
 
         if (loadTimeSeries(env, bc.get()) && loadTimeSeries(env, greater_bc.get()))
