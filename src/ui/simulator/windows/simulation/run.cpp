@@ -32,7 +32,6 @@
 #include <yuni/core/system/process.h>
 #include <yuni/io/file.h>
 #include <antares/study/parameters.h>
-#include <antares/study/memory-usage.h>
 
 #include <wx/stattext.h>
 #include <wx/button.h>
@@ -119,7 +118,7 @@ public:
 
     void Notify() override
     {
-        pForm.estimateMemoryUsage();
+
     }
 
 private:
@@ -207,9 +206,6 @@ Run::Run(wxWindow* parent, bool preproOnly) :
 
     // Informations about the study
     auto& study = *GetCurrentStudy();
-
-    pThread = study.createThreadToEstimateInputMemoryUsage();
-    pThread->start();
 
     // The main sizer
     auto* mnSizer = new wxBoxSizer(wxVERTICAL);
@@ -431,8 +427,6 @@ Run::Run(wxWindow* parent, bool preproOnly) :
 
     updateNbCores();
 
-    estimateMemoryUsage();
-
     pTimer = new ResourcesInfoTimer(*this);
     pTimer->Start(150);
 
@@ -460,101 +454,6 @@ Run::~Run()
         pThread->stop();
         pThread = nullptr;
     }
-}
-
-void Run::estimateMemoryUsage()
-{
-    if (pTimer)
-        pTimer->Stop();
-
-    pWarnAboutMemoryLimit = false;
-    pWarnAboutDiskLimit = false;
-
-    auto studyptr = GetCurrentStudy();
-    // The study
-    if (!studyptr)
-        return;
-    auto& study = *studyptr;
-
-    // flag to know if the gui has been updated, to avoid a call to Layout,
-    // and to avoid flickering
-    bool guiUpdated = false;
-
-    const bool updating = (!pTimer or (pThread->started()));
-    if (not updating)
-    {
-        // Total of memory available on the system
-        uint64 memFree = System::Memory::Available();
-        uint64 diskFree = DiskFreeSpace(study.folder);
-
-        Data::StudyMemoryUsage m(study);
-        if (pPreproOnly->GetValue())
-            m.years = 0;
-
-        m.estimate();
-
-        uint64 amountNeeded = m.requiredMemory;
-        pWarnAboutMemoryLimit = memFree < amountNeeded;
-        pWarnAboutDiskLimit = (diskFree != (uint64)-1)
-                              and (not study.folder.empty() and (diskFree < m.requiredDiskSpace));
-
-        wxString s;
-        s = wxT("   ~");
-        BytesToStringW(s, amountNeeded);
-        UpdateLabel(guiUpdated, pLblEstimation, s);
-
-        s = wxT("/  ");
-        BytesToStringW(s, memFree) << wxT(" available");
-        UpdateLabel(guiUpdated, pLblEstimationAvailable, s);
-
-        s = wxT("  ");
-        switch (featuresAlias[pFeatureIndex])
-        {
-        case Solver::parallel:
-        case Solver::standard:
-        {
-            s << wxT(" < ");
-            BytesToStringW(s, m.requiredDiskSpace);
-            break;
-        }
-        default:
-            break;
-        }
-        UpdateLabel(guiUpdated, pLblDiskEstimation, s);
-
-        // Free space
-        s.clear();
-        if (diskFree != (uint64)-1)
-        {
-            s = wxT("/  ");
-            BytesToStringW(s, diskFree) << wxT(" available");
-        }
-        UpdateLabel(guiUpdated, pLblDiskEstimationAvailable, s);
-    }
-    else
-    {
-        UpdateLabel(guiUpdated, pLblEstimation, wxEmptyString);
-        UpdateLabel(guiUpdated, pLblDiskEstimation, wxEmptyString);
-        UpdateLabel(guiUpdated, pLblEstimationAvailable, wxT("updating..."));
-        UpdateLabel(guiUpdated, pLblDiskEstimationAvailable, wxT("updating..."));
-        pWarnAboutMemoryLimit = false;
-        pWarnAboutDiskLimit = false;
-    }
-
-    // rebuild the layout
-    if (guiUpdated)
-    {
-        auto* sizer = pBigDaddy->GetSizer();
-        if (sizer)
-            sizer->Layout();
-        sizer = GetSizer();
-        if (sizer)
-            sizer->Layout();
-    }
-
-    // Restoring the timer
-    if (pTimer)
-        pTimer->Start(updating ? 500 : timerInterval);
 }
 
 void Run::onCancel(void*)
@@ -692,9 +591,6 @@ void Run::onRun(void*)
         }
     }
 
-    // Memory limit
-    estimateMemoryUsage();
-
     if (canNotifyUserForLowResources and 1 == checkForLowResources())
         return;
 
@@ -761,7 +657,6 @@ void Run::onRun(void*)
 void Run::evtOnPreprocessorsOnlyClick(wxCommandEvent&)
 {
     updateMonteCarloYears();
-    estimateMemoryUsage();
 }
 
 void Run::updateMonteCarloYears()
@@ -913,9 +808,6 @@ void Run::onSelectMode(wxCommandEvent& evt)
         pTitleSimCores->Hide();
         pOptionSpacer->Show(true);
     }
-
-    // Update the estimation of the memory consumption
-    estimateMemoryUsage();
 
     // Update the nb of cores in the Run window
     updateNbCores();

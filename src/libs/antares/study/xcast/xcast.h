@@ -170,7 +170,7 @@ public:
     /*!
     ** \brief Estimate the amount of memory required by this class for a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
     //@}
 
 public:

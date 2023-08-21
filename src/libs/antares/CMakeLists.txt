@@ -426,15 +426,12 @@ set(SRC
 	study/runtime.h
 	study/study.h
 	study/study.hxx
-        study/fwd.h
+	study/fwd.h
 	study/fwd.cpp
 	study.h
-	study/estimate.memory-footprint.cpp
 	study/study.cpp
 	study/correlation-updater.hxx
 	study/study.importprepro.cpp
-	study/memory-usage.h
-	study/memory-usage.cpp
 	study/importlogs.cpp
 	study/load.cpp
 	study/save.cpp

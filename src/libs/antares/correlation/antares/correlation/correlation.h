@@ -143,11 +143,6 @@ public:
     Yuni::uint64 memoryUsage() const;
 
     /*!
-    ** \brief Estimate
-    */
-    void estimateMemoryUsage(StudyMemoryUsage& u) const;
-
-    /*!
     ** \brief Invalidate all matrices
     */
     bool forceReload(bool reload = false) const;
