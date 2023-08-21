@@ -28,7 +28,7 @@ public:
         this->reset();
     }
 
-    OptimizationStatistics(const OptimizationStatistics &rhs)
+    OptimizationStatistics(OptimizationStatistics &&rhs)
         :
         totalSolveTime(rhs.totalSolveTime.load()),
         nbSolve(rhs.nbSolve.load()),
@@ -36,7 +36,7 @@ public:
         nbUpdate(rhs.nbUpdate.load())
     {}
 
-    OptimizationStatistics(OptimizationStatistics&&) = default;
+    OptimizationStatistics(const OptimizationStatistics&) = delete;
     OptimizationStatistics& operator=(const OptimizationStatistics&) = delete;
     OptimizationStatistics& operator=( OptimizationStatistics&&) = delete;
 
