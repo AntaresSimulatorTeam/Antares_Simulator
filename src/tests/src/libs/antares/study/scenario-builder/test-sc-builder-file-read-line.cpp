@@ -134,6 +134,7 @@ struct Fixture
         auto bc = study->bindingConstraints.add("BC_1");
         bc->group("groupTest");
         auto group = study->bindingConstraintsGroups.add("groupTest");
+		group->add(bc);
         study->bindingConstraintsGroups.resizeAllTimeseriesNumbers(study->parameters.nbYears);
         bc->RHSTimeSeries().resize(7, 1);
 

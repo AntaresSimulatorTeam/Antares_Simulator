@@ -74,9 +74,14 @@ void cleanSimulation(Solver::Simulation::ISimulation< Solver::Simulation::Econom
 void cleanStudy(Study::Ptr pStudy)
 {
     pStudy->clear();
+}
 
-    // Remove any global reference
-    Data::Study::Current::Set(nullptr);
+std::shared_ptr<BindingConstraint> addBindingConstraints(Study& study, std::string name, std::string group) {
+    auto bc = study.bindingConstraints.add(name);
+    bc->group(group);
+    auto g = study.bindingConstraintsGroups.add(group);
+    g->add(bc);
+    return bc;
 }
 
 void NoOPResultWriter::addEntryFromBuffer(const std::string&, Clob&)

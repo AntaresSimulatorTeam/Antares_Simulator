@@ -92,7 +92,7 @@ bool thermalTSNumberData::apply(Study& study)
         assert(clusterIndex < pTSNumberRules.width);
         const auto& col = pTSNumberRules[clusterIndex];
 
-        logprefix.clear() << "Thermal: Area '" << area.name << "', cluster: '" << cluster.name()
+        logprefix.clear() << "Thermal: area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
         ret = ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountThermal) && ret;
     }

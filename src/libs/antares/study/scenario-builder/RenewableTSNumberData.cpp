@@ -40,7 +40,7 @@ bool renewableTSNumberData::apply(Study& study)
         assert(clusterIndex < pTSNumberRules.width);
         const auto& col = pTSNumberRules[clusterIndex];
 
-        logprefix.clear() << "Renewable: Area '" << area.name << "', cluster: '" << cluster.name()
+        logprefix.clear() << "Renewable: area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
         ret = ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountRenewable) && ret;
     }
