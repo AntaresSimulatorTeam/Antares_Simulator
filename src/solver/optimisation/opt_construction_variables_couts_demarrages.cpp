@@ -40,7 +40,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
 
-    int nombreDePasDeTempsPourUneOptimisation
+    uint32_t nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
     int nombreDeVariables = ProblemeAResoudre->NombreDeVariables;
     VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables, problemeHebdo->NamedProblems);
@@ -55,7 +55,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
             const auto& clusterName = PaliersThermiquesDuPays.NomsDesPaliersThermiques[index];
 
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 variableNamer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
                 if (Simulation)

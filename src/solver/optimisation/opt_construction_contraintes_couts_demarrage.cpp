@@ -41,7 +41,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
 
-    int nombreDePasDeTempsPourUneOptimisation
+    uint32_t nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
     std::vector<double>& Pi = ProblemeAResoudre->Pi;
@@ -63,7 +63,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 constraintNamer.UpdateTimeStep(timeStepInYear);
@@ -173,7 +173,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 constraintNamer.UpdateTimeStep(timeStepInYear);
@@ -275,7 +275,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 constraintNamer.UpdateTimeStep(timeStepInYear);
@@ -349,7 +349,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 constraintNamer.UpdateTimeStep(timeStepInYear);
@@ -448,7 +448,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 constraintNamer.UpdateTimeStep(timeStepInYear);
