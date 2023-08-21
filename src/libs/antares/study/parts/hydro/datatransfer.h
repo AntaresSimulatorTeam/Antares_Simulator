@@ -28,7 +28,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_DATA_TRANSFER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_DATA_TRANSFER_H__
 
-#include "../../../array/matrix.h"
+#include "../../../array/antares//array/matrix.h"
 
 namespace Antares::Data
 {

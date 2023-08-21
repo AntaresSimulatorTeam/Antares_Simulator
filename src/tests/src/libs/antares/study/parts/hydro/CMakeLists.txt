@@ -8,7 +8,7 @@ target_include_directories(test-hydro-data-transfer
    						   PRIVATE
 							"${src_libs_antares_study}"
 						    "${src_libs_antares_study}/parts/hydro"
-						    "${src_libs_antares}/array"
+						    "${src_libs_antares}/array/antares/array"
 )
 
 target_link_libraries(test-hydro-data-transfer
