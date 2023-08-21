@@ -64,6 +64,7 @@ typedef struct
     double* ParLigne;
 } MATRICE_2D;
 
+// vector of [numSpace][area]
 using VAL_GEN_PAR_PAYS = std::vector<std::vector<VALEURS_GENEREES_PAR_PAYS>>;
 
 /* Old define */
