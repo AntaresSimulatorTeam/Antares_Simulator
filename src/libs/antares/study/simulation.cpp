@@ -32,7 +32,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "simulation.h"
-#include "../logs.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 

@@ -84,7 +84,7 @@ bool ntcTSNumberData::apply(Study& study)
         uint linkIndex = link->indexForArea;
         assert(linkIndex < pTSNumberRules.width);
         const auto& col = pTSNumberRules[linkIndex];
-        logprefix.clear() << "NTC: Area '" << area.name << "', link: '" << link->getName() << "': ";
+        logprefix.clear() << "NTC: area '" << area.name << "', link: '" << link->getName() << "': ";
         ret = ApplyToMatrix(errors, logprefix, *link, col, ntcGeneratedTScount) && ret;
     }
     return ret;

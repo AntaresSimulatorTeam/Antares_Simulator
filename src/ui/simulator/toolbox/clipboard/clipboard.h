@@ -33,9 +33,8 @@
 #include <vector>
 #include "../components/datagrid/gridhelper.h"
 
-namespace Antares
-{
-namespace Toolbox
+
+namespace Antares::Toolbox
 {
 class Clipboard final
 {
@@ -93,7 +92,7 @@ private:
 
 }; // class Clipboard
 
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox
+
 
 #endif // __ANTARES_TOOLBOX_CLIPBOARD_CLIPBOARD_H__

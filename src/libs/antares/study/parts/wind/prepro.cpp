@@ -29,7 +29,7 @@
 #include "prepro.h"
 #include <yuni/io/directory.h>
 #include "../../study.h"
-#include "../../../logs.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;

@@ -31,8 +31,8 @@
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
 #include "../fwd.h"
-#include "../../array/matrix.h"
-#include <i_writer.h>
+#include <antares/array/matrix.h>
+#include <antares/writer/i_writer.h>
 #include <set>
 
 //! The minimal allowed value for hurdle costs when not null

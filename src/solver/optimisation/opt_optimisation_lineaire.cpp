@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../simulation/simulation.h"
-
+#include "sim_structure_probleme_economique.h"
 #include "opt_fonctions.h"
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include "../utils/filename.h"
 
 using namespace Antares;

@@ -31,7 +31,7 @@
 #include "runtime.h"
 #include "../../../solver/simulation/simulation.h"
 #include "../../../solver/variable/economy/all.h"
-#include "../logs.h"
+#include <antares/logs/logs.h>
 #include "../../../solver/simulation/economy.h"
 #include "../../../solver/simulation/solver.h"
 

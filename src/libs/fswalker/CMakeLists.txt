@@ -13,8 +13,6 @@ add_library(libantares-fswalker
 	job.cpp
 )
 
-#TODO : needed for include yuni : why yuni must be include first ???
-#TODO : needed for include
 target_include_directories(libantares-fswalker
 		PRIVATE
 			${CMAKE_SOURCE_DIR}/libs
@@ -22,4 +20,5 @@ target_include_directories(libantares-fswalker
 target_link_libraries(libantares-fswalker
 		PRIVATE
 			yuni-static-core
+			logs
 		)

@@ -40,7 +40,7 @@
 #include <antares/solver.h>
 #include "../toolbox/execute/execute.h"
 #include "../windows/message.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include "../windows/saveas.h"
 #include "main.h"
 #include "menus.h"

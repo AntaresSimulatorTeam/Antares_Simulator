@@ -1,6 +1,6 @@
 #include "ortools_utils.h"
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hpp>
 #include <antares/fatal-error.h>

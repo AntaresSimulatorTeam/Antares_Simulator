@@ -29,7 +29,7 @@
 #include "../../study.h"
 #include "../../memory-usage.h"
 #include "container.h"
-#include "../../../logs.h"
+#include <antares/logs/logs.h>
 
 #include <algorithm>
 #include <functional>

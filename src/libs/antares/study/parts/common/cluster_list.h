@@ -2,10 +2,10 @@
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_CLUSTER_LIST_H__
 
 #include "../../memory-usage.h"
-#include "../../../logs.h"
+#include <antares/logs/logs.h>
 #include "../../fwd.h"
 
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 
 #include <vector>
 #include <memory>

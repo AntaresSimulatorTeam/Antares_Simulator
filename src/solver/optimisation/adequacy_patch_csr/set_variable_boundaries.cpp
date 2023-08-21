@@ -33,6 +33,7 @@
 #include "../solver/optimisation/opt_fonctions.h"
 
 #include "pi_constantes_externes.h"
+#include "sim_structure_probleme_economique.h"
 
 #include <yuni/core/math.h>
 

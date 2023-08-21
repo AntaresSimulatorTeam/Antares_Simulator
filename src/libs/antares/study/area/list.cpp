@@ -29,11 +29,11 @@
 #include <yuni/io/file.h>
 #include <yuni/core/string.h>
 #include "../study.h"
-#include <assert.h>
+#include <cassert>
 #include "area.h"
-#include "../../array/array1d.h"
-#include "../../inifile/inifile.h"
-#include "../../logs.h"
+#include <antares/array/array1d.h>
+#include <antares/inifile/inifile.h>
+#include <antares/logs/logs.h>
 #include "../memory-usage.h"
 #include "../../config.h"
 #include "../filter.h"
@@ -45,9 +45,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 namespace // anonymous
 {
@@ -1657,5 +1655,5 @@ void AreaList::removeThermalTimeseries()
     });
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

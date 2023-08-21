@@ -1,5 +1,5 @@
 #include <numeric>
-#include "info_collectors.h"
+#include <antares/benchmarking/info_collectors.h>
 #include <antares/config.h>
 #include <antares/Enum.hpp>
 #include <antares/study/area.h>

@@ -32,7 +32,7 @@
 #include <yuni/core/noncopyable.h>
 #include <stdlib.h>
 #include <antares/study/parameters/adq-patch-params.h>
-#include "../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include "../parts/parts.h"
 #include <vector>
 #include <set>

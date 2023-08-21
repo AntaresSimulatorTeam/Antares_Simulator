@@ -27,7 +27,7 @@
 
 #include "study.h"
 #include "memory-usage.h"
-#include "../date.h"
+#include <antares/date/date.h>
 
 using namespace Yuni;
 
