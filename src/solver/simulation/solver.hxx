@@ -141,7 +141,7 @@ private:
 
             // Getting random tables for this year
             yearRandomNumbers& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
-            double** thermalNoisesByArea = randomForCurrentYear.pThermalNoisesByArea;
+            double const* const* thermalNoisesByArea = randomForCurrentYear.pThermalNoisesByArea;
             double* randomReservoirLevel = nullptr;
 
             if (hydroHotStart && firstSetParallelWithAPerformedYearWasRun)

@@ -44,7 +44,7 @@ using namespace Antares::Data;
 
 static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
   const Study& study,
-  double** thermalNoisesByArea,
+  double const* const* thermalNoisesByArea,
   uint numSpace,
   VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
@@ -195,7 +195,10 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
     }
 }
 
-void ALEA_TirageAuSortChroniques(const Antares::Data::Study& study, double** thermalNoisesByArea, uint numSpace, VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+void ALEA_TirageAuSortChroniques(const Antares::Data::Study& study,
+                                 double const* const* thermalNoisesByArea,
+                                 uint numSpace,
+                                 VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     // Time-series numbers
     // Retrieve all time-series numbers

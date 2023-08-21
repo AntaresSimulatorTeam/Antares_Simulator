@@ -102,7 +102,11 @@ private:
     // \return The total inflow for the whole year
     double prepareMonthlyTargetGenerations(Data::Area& area, PerArea& data);
 
-    void prepareDailyOptimalGenerations(Solver::Variable::State& state, uint y, uint numSpace, VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+    void prepareDailyOptimalGenerations(Solver::Variable::State& state,
+                                        uint y,
+                                        uint numSpace,
+                                        VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+
     void prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                         Data::Area& area,
                                         uint y,

@@ -30,8 +30,10 @@
 #include "../simulation/sim_structure_donnees.h"
 #include "antares/study/study.h"
 
-void ALEA_TirageAuSortChroniques(const Antares::Data::Study& study, double** thermalNoisesByArea,
-                                 uint numSpace, VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+void ALEA_TirageAuSortChroniques(const Antares::Data::Study& study,
+                                 double const* const* thermalNoisesByArea,
+                                 uint numSpace,
+                                 VAL_GEN_PAR_PAYS& valeursGenereesParPays);
 
 void HydroVentilation();
 
