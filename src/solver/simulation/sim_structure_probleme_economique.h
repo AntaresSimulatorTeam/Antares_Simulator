@@ -500,7 +500,7 @@ struct PROBLEME_HEBDO
     uint32_t NombreDePasDeTemps = 0;
     std::vector<int32_t> NumeroDeJourDuPasDeTemps;
 
-    uint32_t NombreDePasDeTempsPourUneOptimisation = 0;
+    int32_t NombreDePasDeTempsPourUneOptimisation = 0;
     std::vector<int32_t> NumeroDIntervalleOptimiseDuPasDeTemps;
     uint32_t NombreDeJours = 0;
 
