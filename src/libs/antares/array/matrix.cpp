@@ -25,9 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <cstdlib>
 #include "antares/study/memory-usage.h"
-#include "antares/jit/antares/jit/jit.h"
+#include "antares/jit/jit.h"
 
 using namespace Yuni;
 
