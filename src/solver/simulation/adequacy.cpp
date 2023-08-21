@@ -82,6 +82,8 @@ bool Adequacy::simulationBegin()
         }
     }
 
+    // classic loop to avoid different results on windows tests
+    // for (auto& pb : pProblemesHebdo) causes CSR tests to have a different results
     if (!pProblemesHebdo.empty())
     {
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)

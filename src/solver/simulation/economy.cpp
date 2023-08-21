@@ -104,11 +104,8 @@ bool Economy::simulationBegin()
         }
     }
 
-    if (!pProblemesHebdo.empty())
-    {
-        for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
-            pProblemesHebdo[numSpace].TypeDOptimisation = OPTIMISATION_LINEAIRE;
-    }
+    for (auto& pb : pProblemesHebdo)
+        pb.TypeDOptimisation = OPTIMISATION_LINEAIRE;
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
     pNbWeeks = study.parameters.simulationDays.numberOfWeeks();
