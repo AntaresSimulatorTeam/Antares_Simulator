@@ -35,7 +35,7 @@
 #include <sstream> // std::ostringstream
 #include <cassert>
 #include <climits>
-#include <memory>
+#include <optional>
 
 #include "study.h"
 #include "runtime.h"
@@ -783,12 +783,15 @@ Area* Study::areaAdd(const AreaName& name, bool updateMode)
     // and the scenario builder data
     {
         // These are only useful for the GUI, remove afterwards
-        std::unique_ptr<CorrelationUpdater> updater;
-        std::unique_ptr<ScenarioBuilderUpdater> updaterSB;
+        // We need the constructors to be called here, and the destructors
+        // to be called at the end of the scope. Using std::optional is merely
+        // a means to that end.
+        std::optional<CorrelationUpdater> updater;
+        std::optional<ScenarioBuilderUpdater> updaterSB;
         if (updateMode)
         {
-            updater.reset(new CorrelationUpdater(*this));
-            updaterSB.reset(new ScenarioBuilderUpdater(*this));
+            updater.emplace(*this);
+            updaterSB.emplace(*this);
         }
         // Adding an area
         AreaName newName;
