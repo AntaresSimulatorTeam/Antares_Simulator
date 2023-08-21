@@ -26,18 +26,16 @@
 */
 
 #include "header.h"
-#include <stdlib.h>
-#include <time.h>
-#include <assert.h>
-#include "../inifile/inifile.h"
-#include "../logs.h"
+#include <cstdlib>
+#include <ctime>
+#include <cassert>
+#include <antares/logs/logs.h>
 #include "version.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 // TODO this method should be removed - use Yuni::String instead
 static inline int ConvertCStrToTimeT(const char* s, time_t* var)
@@ -208,5 +206,5 @@ uint StudyHeader::ReadVersionFromFile(const AnyString& filename)
     return (uint)versionUnknown;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

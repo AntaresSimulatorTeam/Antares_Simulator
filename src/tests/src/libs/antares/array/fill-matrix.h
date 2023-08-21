@@ -3,7 +3,7 @@
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_FILL_MTX_H__
 #define __ANTARES_LIBS_ARRAY_MATRIX_FILL_MTX_H__
 
-#include <matrix.h>
+#include <antares/array/matrix.h>
 #include <vector>
 
 using namespace std;

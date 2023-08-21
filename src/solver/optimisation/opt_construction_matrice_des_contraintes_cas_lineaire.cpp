@@ -29,6 +29,7 @@
 #include "../utils/filename.h"
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"
+#include "sim_structure_probleme_economique.h"
 
 #include <antares/study.h>
 

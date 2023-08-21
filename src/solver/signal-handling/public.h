@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <writer/i_writer.h>
 
 namespace Antares::Solver
 {

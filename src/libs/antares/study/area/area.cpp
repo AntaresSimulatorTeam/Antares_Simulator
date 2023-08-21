@@ -45,16 +45,15 @@ void Area::internalInitialize()
 }
 
 Area::Area() :
-     enabled(true),
-     reserves(fhrMax, HOURS_PER_YEAR),
-     miscGen(fhhMax, HOURS_PER_YEAR)
+    reserves(fhrMax, HOURS_PER_YEAR),
+    miscGen(fhhMax, HOURS_PER_YEAR)
 {
     internalInitialize();
 }
 
 Area::Area(const AnyString& name) :
- reserves(fhrMax, HOURS_PER_YEAR),
- miscGen(fhhMax, HOURS_PER_YEAR)
+    reserves(fhrMax, HOURS_PER_YEAR),
+    miscGen(fhhMax, HOURS_PER_YEAR)
 {
     internalInitialize();
     this->name = name;
@@ -62,8 +61,8 @@ Area::Area(const AnyString& name) :
 }
 
 Area::Area(const AnyString& name, const AnyString& id, uint indx) :
- reserves(fhrMax, HOURS_PER_YEAR),
- miscGen(fhhMax, HOURS_PER_YEAR)
+    reserves(fhrMax, HOURS_PER_YEAR),
+    miscGen(fhhMax, HOURS_PER_YEAR)
 {
     internalInitialize();
     this->name = name;

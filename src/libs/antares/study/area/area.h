@@ -32,7 +32,7 @@
 #include <yuni/core/noncopyable.h>
 #include <stdlib.h>
 #include <antares/study/parameters/adq-patch-params.h>
-#include "../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include "../parts/parts.h"
 #include <vector>
 #include <set>
@@ -224,8 +224,6 @@ public:
     AreaName id;
     //! Index of the area  - only valid when already added to an area list
     uint index = (uint)(-1);
-    //! Enabled
-    bool enabled;
     //! Use adequacy patch for this area
     AdequacyPatch::AdequacyPatchMode adequacyPatchMode = AdequacyPatch::physicalAreaOutsideAdqPatch;
     /*@}*/

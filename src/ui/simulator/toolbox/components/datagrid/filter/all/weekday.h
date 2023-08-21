@@ -29,7 +29,7 @@
 
 #include <antares/wx-wrapper.h>
 #include "../filter.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include <antares/study/study.h>
 #include "application/study.h"
 

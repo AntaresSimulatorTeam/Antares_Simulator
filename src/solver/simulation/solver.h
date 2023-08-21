@@ -29,9 +29,9 @@
 
 #include <antares/study/memory-usage.h>
 #include <antares/study.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/study/fwd.h> // PowerFluctuations
-#include <antares/benchmarking.h>
+#include <antares/benchmarking/info_collectors.h>
 
 #include <yuni/core/string.h>
 #include <yuni/job/queue/service.h>
@@ -41,7 +41,7 @@
 #include "solver.utils.h"
 #include "../hydro/management/management.h"
 
-#include <writer_factory.h>
+#include <antares/writer/writer_factory.h>
 
 namespace Antares::Solver::Simulation
 {

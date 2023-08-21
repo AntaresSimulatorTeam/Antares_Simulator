@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 
 #include "ortools/linear_solver/linear_solver.h"
 

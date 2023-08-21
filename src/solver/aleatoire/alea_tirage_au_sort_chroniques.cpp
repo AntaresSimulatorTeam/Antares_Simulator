@@ -35,8 +35,8 @@
 #include <algorithm>
 #include <iterator>
 #include <limits>
-#include <antares/logs.h>
-#include <antares/date.h>
+#include <antares/logs/logs.h>
+#include <antares/date/date.h>
 #include <antares/fatal-error.h>
 #include <cassert>
 

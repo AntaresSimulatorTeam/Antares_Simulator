@@ -32,7 +32,7 @@
 #include <yuni/io/directory.h>
 #include "management.h"
 #include <antares/fatal-error.h>
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 #include "../daily/h2o_j_donnees_mensuelles.h"
 #include "../daily/h2o_j_fonctions.h"
 #include "../daily2/h2o2_j_donnees_mensuelles.h"

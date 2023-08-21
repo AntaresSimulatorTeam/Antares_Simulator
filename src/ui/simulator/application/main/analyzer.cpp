@@ -26,7 +26,7 @@
 */
 
 #include "main.h"
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include "../study.h"
 #include "../../toolbox/execute/execute.h"
 #include "../../windows/message.h"
