@@ -35,6 +35,7 @@
 #include <sstream> // std::ostringstream
 #include <cassert>
 #include <climits>
+#include <memory>
 
 #include "study.h"
 #include "runtime.h"
@@ -44,7 +45,7 @@
 #include "area/constants.h"
 
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
-#include <math.h>                 // For use of floor(...) and ceil(...)
+#include <cmath>                 // For use of floor(...) and ceil(...)
 #include <antares/writer/writer_factory.h>
 #include "ui-runtimeinfos.h"
 
@@ -764,7 +765,7 @@ void Study::saveAboutTheStudy()
     }
 }
 
-Area* Study::areaAdd(const AreaName& name)
+Area* Study::areaAdd(const AreaName& name, bool updateMode)
 {
     if (name.empty())
         return nullptr;
@@ -781,9 +782,14 @@ Area* Study::areaAdd(const AreaName& name)
     // The new scope is mandatory to rebuild the correlation matrices
     // and the scenario builder data
     {
-        CorrelationUpdater updater(*this);
-        ScenarioBuilderUpdater updaterSB(*this);
-
+        // These are only useful for the GUI, remove afterwards
+        std::unique_ptr<CorrelationUpdater> updater;
+        std::unique_ptr<ScenarioBuilderUpdater> updaterSB;
+        if (updateMode)
+        {
+            updater.reset(new CorrelationUpdater(*this));
+            updaterSB.reset(new ScenarioBuilderUpdater(*this));
+        }
         // Adding an area
         AreaName newName;
         if (not modifyAreaNameIfAlreadyTaken(newName, name) or newName.empty())
