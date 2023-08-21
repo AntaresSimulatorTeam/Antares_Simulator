@@ -60,7 +60,7 @@ Area::Area(const AnyString& name) :
     Antares::TransformNameIntoID(this->name, this->id);
 }
 
-Area::Area(const AnyString& name, const AnyString& id, uint indx) :
+Area::Area(const AnyString& name, const AnyString& id, uint) :
     reserves(fhrMax, HOURS_PER_YEAR),
     miscGen(fhhMax, HOURS_PER_YEAR)
 {
@@ -299,56 +299,6 @@ void Area::resizeAllTimeseriesNumbers(uint n)
     }
     thermal.resizeAllTimeseriesNumbers(n);
     renewable.resizeAllTimeseriesNumbers(n);
-}
-
-void Area::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += sizeof(Area);
-
-    // reserves
-    Matrix<>::EstimateMemoryUsage(u, fhrMax, HOURS_PER_YEAR);
-    // Misc Gen.
-    Matrix<>::EstimateMemoryUsage(u, fhhMax, HOURS_PER_YEAR);
-
-    // Load
-    if (load.series)
-        load.series->estimateMemoryUsage(u);
-    if (load.prepro)
-        load.prepro->estimateMemoryUsage(u);
-    // Solar
-    if (solar.series)
-        solar.series->estimateMemoryUsage(u);
-    if (solar.prepro)
-        solar.prepro->estimateMemoryUsage(u);
-    // Wind
-    if (wind.series)
-        wind.series->estimateMemoryUsage(u);
-    if (wind.prepro)
-        wind.prepro->estimateMemoryUsage(u);
-
-    // Hydro
-    if (hydro.series)
-        hydro.series->estimateMemoryUsage(u);
-    if (hydro.prepro)
-        hydro.prepro->estimateMemoryUsage(u);
-
-    // Thermal
-    thermal.estimateMemoryUsage(u);
-
-    // Renewable
-    renewable.estimateMemoryUsage(u);
-
-    // Scratchpad
-    u.requiredMemoryForInput += sizeof(AreaScratchpad) * u.nbYearsParallel;
-
-    // Links
-    if (not links.empty())
-    {
-        u.requiredMemoryForInput += (sizeof(AreaLink*) * 2) * links.size();
-        auto end = links.end();
-        for (auto i = links.begin(); i != end; ++i)
-            (i->second)->estimateMemoryUsage(u);
-    }
 }
 
 bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) const

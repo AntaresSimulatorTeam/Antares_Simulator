@@ -57,11 +57,6 @@ inline const IntermediateValues::Type& IntermediateValues::operator[](
     return hour[index];
 }
 
-inline void IntermediateValues::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-{
-    Antares::Memory::EstimateMemoryUsage(sizeof(double), maxHoursInAYear, u, true);
-}
-
 inline Yuni::uint64 IntermediateValues::MemoryUsage()
 {
     return +sizeof(Type) * maxHoursInAYear;

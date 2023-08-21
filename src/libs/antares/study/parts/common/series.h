@@ -40,8 +40,6 @@ namespace Data
 class DataSeriesCommon
 {
 public:
-    void estimateMemoryUsage(StudyMemoryUsage&, enum TimeSeries) const;
-
     bool forceReload(bool reload = false) const;
 
     void markAsModified() const;

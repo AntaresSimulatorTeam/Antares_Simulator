@@ -145,11 +145,6 @@ public:
     [[nodiscard]] yuint64 memoryUsage() const;
 
     /*!
-    ** \brief Estimate
-    */
-    void estimateMemoryUsage(Data::StudyMemoryUsage& u) const;
-
-    /*!
     ** \brief Invalidate all matrices of all binding constraints
     */
     void forceReload(bool reload = false) const;

@@ -30,7 +30,6 @@
 #include <stdio.h>
 #include "series.h"
 #include "../../study.h"
-#include "../../memory-usage.h"
 
 using namespace Yuni;
 
@@ -95,16 +94,6 @@ bool DataSeriesSolar::forceReload(bool reload) const
 void DataSeriesSolar::markAsModified() const
 {
     timeSeries.markAsModified();
-}
-
-void DataSeriesSolar::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += sizeof(DataSeriesSolar);
-    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-    timeSeries.estimateMemoryUsage(u,
-                               0 != (timeSeriesSolar & u.study.parameters.timeSeriesToGenerate),
-                                    u.study.parameters.nbTimeSeriesSolar,
-                                    HOURS_PER_YEAR);
 }
 
 } // namespace Data

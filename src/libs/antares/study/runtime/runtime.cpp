@@ -457,14 +457,6 @@ StudyRuntimeInfos::~StudyRuntimeInfos()
     delete[] timeseriesNumberYear;
 }
 
-void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& u)
-{
-    u.requiredMemoryForInput += sizeof(StudyRuntimeInfos);
-    u.study.areas.each([&](const Data::Area& area) {
-        u.requiredMemoryForInput += sizeof(AreaLink*) * area.links.size();
-    });
-}
-
 #ifndef NDEBUG
 void StudyRangeLimits::checkIntegrity() const
 {

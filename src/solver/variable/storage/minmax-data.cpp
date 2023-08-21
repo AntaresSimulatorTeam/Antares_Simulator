@@ -26,22 +26,13 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/study/memory-usage.h>
 #include "intermediate.h"
 #include "minmax-data.h"
-#include <float.h>
+#include <cfloat>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace R
-{
-namespace AllYears
+namespace Antares::Solver::Variable::R::AllYears
 {
 namespace // anonymous
 {
@@ -224,8 +215,8 @@ void MinMaxData::mergeSup(uint year, const IntermediateValues& rhs)
     MergeArray<false, 1>::Do(year, &annual, &rhs.year);
 }
 
-} // namespace AllYears
-} // namespace R
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::R::AllYears
+
+
+
+

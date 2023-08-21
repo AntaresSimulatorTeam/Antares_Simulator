@@ -92,11 +92,6 @@ public:
 
 public:
     /*!
-    ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
-    */
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u);
-
-    /*!
     ** \brief Initialize the results of the variable
     **
     ** \param results The results
