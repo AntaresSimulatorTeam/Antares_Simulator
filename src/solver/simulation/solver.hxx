@@ -276,6 +276,33 @@ inline ISimulation<Impl>::~ISimulation()
 {
 }
 
+static void allocateValeursGenereesParPays(VAL_GEN_PAR_PAYS& val,
+                                           const Data::Study& study)
+{
+    val.resize(study.maxNbYearsInParallel);
+    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
+    {
+        val[numSpace].resize(study.areas.size());
+        for (uint i = 0; i < study.areas.size(); ++i)
+        {
+            auto& area = *study.areas.byIndex[i];
+
+            val[numSpace][i].HydrauliqueModulableQuotidien
+                .assign(study.runtime->nbDaysPerYear,0 );
+            val[numSpace][i].AleaCoutDeProductionParPalier
+                .assign(area.thermal.clusterCount(), 0.);
+
+            if (area.hydro.reservoirManagement)
+            {
+                val[numSpace][i].NiveauxReservoirsDebutJours
+                    .assign(study.runtime->nbDaysPerYear, 0.);
+                val[numSpace][i].NiveauxReservoirsFinJours
+                    .assign(study.runtime->nbDaysPerYear, 0.);
+            }
+        }
+    }
+}
+
 template<class Impl>
 void ISimulation<Impl>::run()
 {
@@ -299,7 +326,7 @@ void ISimulation<Impl>::run()
     // The general data
     auto& parameters = *(study.runtime->parameters);
 
-    valeursGenereesParPays = allocateValeursGenereesParPays();
+    allocateValeursGenereesParPays(valeursGenereesParPays, study);
 
     // Preprocessors
     // Determine if we have to use the preprocessors at least one time.
@@ -1612,36 +1639,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
         pAnnualCostsStatistics.writeToOutput(pResultWriter);
     }
 }
-
-template<class Impl>
-VAL_GEN_PAR_PAYS ISimulation<Impl>::allocateValeursGenereesParPays()
-{
-    VAL_GEN_PAR_PAYS val;
-    val.resize(study.maxNbYearsInParallel);
-    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
-    {
-        val[numSpace].resize(study.areas.size());
-        for (uint i = 0; i < study.areas.size(); ++i)
-        {
-            auto& area = *study.areas.byIndex[i];
-
-            val[numSpace][i].HydrauliqueModulableQuotidien
-                .assign(study.runtime->nbDaysPerYear,0 );
-            val[numSpace][i].AleaCoutDeProductionParPalier
-                .assign(area.thermal.clusterCount(), 0.);
-
-            if (area.hydro.reservoirManagement)
-            {
-                val[numSpace][i].NiveauxReservoirsDebutJours
-                    .assign(study.runtime->nbDaysPerYear, 0.);
-                val[numSpace][i].NiveauxReservoirsFinJours
-                    .assign(study.runtime->nbDaysPerYear, 0.);
-            }
-        }
-    }
-    return val;
-}
-
 
 } // namespace Antares::Solver::Simulation
 

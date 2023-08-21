@@ -64,7 +64,7 @@ typedef struct
     double* ParLigne;
 } MATRICE_2D;
 
-typedef std::vector<std::vector<VALEURS_GENEREES_PAR_PAYS>> VAL_GEN_PAR_PAYS;
+using VAL_GEN_PAR_PAYS = std::vector<std::vector<VALEURS_GENEREES_PAR_PAYS>>;
 
 /* Old define */
 #define DEFINITION_STRUCTURES_DONNEES

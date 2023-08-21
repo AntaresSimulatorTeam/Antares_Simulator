@@ -157,7 +157,6 @@ private:
     */
     void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State>& state);
 
-    VAL_GEN_PAR_PAYS allocateValeursGenereesParPays();
 
 private:
     //! Some temporary to avoid performing useless complex checks
