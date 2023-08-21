@@ -178,8 +178,8 @@ public:
     void build();
 
 private:
-    PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre;
     PROBLEME_HEBDO& problemeHebdo;
+    PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre;
     const std::vector<CORRESPONDANCES_DES_VARIABLES>& varNative;
 
     unsigned int hourInWeek_ = 0;
@@ -191,13 +191,12 @@ private:
 };
 
 
-class IConstraint {
+class Constraint {
 public:
-  IConstraint(PROBLEME_HEBDO* problemeHebdo) : problemeHebdo(problemeHebdo), builder(*problemeHebdo, problemeHebdo->CorrespondanceVarNativesVarOptim)
+  Constraint(PROBLEME_HEBDO* problemeHebdo) : problemeHebdo(problemeHebdo), builder(*problemeHebdo, problemeHebdo->CorrespondanceVarNativesVarOptim)
   {
   }
 
-  virtual void add(int pdt, int pdtHebdo, int index, int optimizationNumber) = 0; // index = area, link, binding constraint
 protected:
   PROBLEME_HEBDO* problemeHebdo; // TODO remove
   ConstraintBuilder builder;

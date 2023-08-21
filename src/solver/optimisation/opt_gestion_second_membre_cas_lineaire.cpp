@@ -67,11 +67,11 @@ static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortT
     }
 }
 
-struct AreaBalance : public IConstraint
+struct AreaBalance : public Constraint
 {
-  using IConstraint::IConstraint;
+  using Constraint::Constraint;
               
-  void add(int pdt, int pdtHebdo, int pays, int optimizationNumber) override
+  void add(int pdt, int pdtHebdo, int pays, int optimizationNumber)
   {
     // TODO improve this
     {
@@ -126,10 +126,10 @@ struct AreaBalance : public IConstraint
   }
 };
 
-struct FictiveLoad : public IConstraint
+struct FictitiousLoad : public Constraint
 {
-  using IConstraint::IConstraint;
-  void add(int pdt, int pdtHebdo, int pays, int optimizationNumber) override
+  using Constraint::Constraint;
+  void add(int pdt, int pdtHebdo, int pays)
   {
     // TODO improve this
     {
@@ -185,10 +185,10 @@ struct FictiveLoad : public IConstraint
   }
 };
 
-struct ShortTermStorageLevel : public IConstraint
+struct ShortTermStorageLevel : public Constraint
 {
-  using IConstraint::IConstraint;
-  void add(int pdt, int pdtHebdo, int pays, int optimizationNumber) override
+  using Constraint::Constraint;
+  void add(int pdt, int pays)
   {
     // TODO improve this
     ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes, problemeHebdo->NamedProblems);
@@ -213,10 +213,10 @@ struct ShortTermStorageLevel : public IConstraint
   }
 };
 
-struct FlowDissociation : public IConstraint
+struct FlowDissociation : public Constraint
 {
-  using IConstraint::IConstraint;
-  void add(int pdt, int pdtHebdo, int interco, int optimizationNumber) override
+  using Constraint::Constraint;
+  void add(int pdt, int pdtHebdo, int interco)
   {
     
     if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
@@ -253,10 +253,10 @@ struct FlowDissociation : public IConstraint
   }
 };
 
-struct BindingConstraintHour : public IConstraint
+struct BindingConstraintHour : public Constraint
 {
-  using IConstraint::IConstraint;
-  void add(int pdt, int pdtHebdo, int cntCouplante, int optimizationNumber) override
+  using Constraint::Constraint;
+  void add(int pdt, int pdtHebdo, int cntCouplante)
   {
     const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
       = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
@@ -317,10 +317,10 @@ struct BindingConstraintHour : public IConstraint
   }
 };
 
-struct BindingConstraintDay : public IConstraint
+struct BindingConstraintDay : public Constraint
 {
-  using IConstraint::IConstraint;
-  void add(int pdtDebut, int, int cntCouplante, int optimizationNumber) override
+  using Constraint::Constraint;
+  void add(int cntCouplante)
   {
     const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
       = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
@@ -423,7 +423,7 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
 
     AreaBalance areaBalance(problemeHebdo);
-    FictiveLoad fictiveLoad(problemeHebdo);
+    FictitiousLoad fictitiousLoad(problemeHebdo);
     ShortTermStorageLevel shortTermStorageLevels(problemeHebdo);
     FlowDissociation flowDissociation(problemeHebdo);
     BindingConstraintHour bindingConstraintHour(problemeHebdo);
@@ -435,26 +435,26 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
       for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
       {
         areaBalance.add(pdt, pdtHebdo, pays, optimizationNumber);
-        fictiveLoad.add(pdt, pdtHebdo, pays, optimizationNumber);
-        shortTermStorageLevels.add(pdt, pdtHebdo, pays, optimizationNumber);
+        fictitiousLoad.add(pdt, pdtHebdo, pays);
+        shortTermStorageLevels.add(pdt, pays);
       }
 
       for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
       {
-        flowDissociation.add(pdt, pdtHebdo, interco, optimizationNumber);
+        flowDissociation.add(pdt, pdtHebdo, interco);
       }
 
       for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
       {
-        bindingConstraintHour.add(pdt, pdtHebdo, cntCouplante, optimizationNumber);
+        bindingConstraintHour.add(pdt, pdtHebdo, cntCouplante);
       }
     }
     
     for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)
     {
-        bindingConstraintDay.add(0, 0, cntCouplante, optimizationNumber);
+        bindingConstraintDay.add(cntCouplante);
     }
 
     if (problemeHebdo->NombreDePasDeTempsPourUneOptimisation
