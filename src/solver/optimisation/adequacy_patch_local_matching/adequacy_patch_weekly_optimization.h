@@ -51,6 +51,6 @@ public:
     void solve(uint weekInTheYear, int hourInTheYear) override;
 private:
     const Antares::Data::Study& study_;
-    const VAL_GEN_PAR_PAYS* valeursGenereesParPays_;
+    const VAL_GEN_PAR_PAYS& valeursGenereesParPays_;
 };
 } // namespace Antares::Solver::Optimization
