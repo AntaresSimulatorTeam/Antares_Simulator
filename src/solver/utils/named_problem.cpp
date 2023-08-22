@@ -17,7 +17,7 @@ PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>&
  NomDesContraintes(NomDesContraintes),
  StatutDesVariables(StatutDesVariables),
  StatutDesContraintes(StatutDesContraintes),
- UseNamedProblems(UseNamedProblems)
+ useNamedProblems_(UseNamedProblems)
 {
 }
 

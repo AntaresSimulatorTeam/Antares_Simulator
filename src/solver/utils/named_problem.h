@@ -38,7 +38,7 @@ public:
 private:
     std::vector<std::string> NomDesVariables;
     std::vector<std::string> NomDesContraintes;
-    bool UseNamedProblems;
+    bool useNamedProblems_;
 
 public:
     std::vector<int>& StatutDesVariables;
@@ -47,9 +47,14 @@ public:
     bool isMIP() const;
     bool basisExists() const;
 
+    bool UseNamedProblems() const
+    {
+        return useNamedProblems_;
+    }
+
     char** VariableNamesAsCharPP(std::vector<char*>& pointerVec)
     {
-        if (UseNamedProblems)
+        if (useNamedProblems_)
         {
             return VectorOfStringToCharPP(NomDesVariables, pointerVec);
         }
@@ -59,7 +64,7 @@ public:
 
     char** ConstraintNamesAsCharPP(std::vector<char*>& pointerVec)
     {
-        if (UseNamedProblems)
+        if (useNamedProblems_)
         {
             return VectorOfStringToCharPP(NomDesContraintes, pointerVec);
         }
