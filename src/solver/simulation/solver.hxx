@@ -283,20 +283,20 @@ static void allocateValeursGenereesParPays(VAL_GEN_PAR_PAYS& val,
     for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
     {
         val[numSpace].resize(study.areas.size());
-        for (uint i = 0; i < study.areas.size(); ++i)
+        for (uint areaIndex = 0; areaIndex < study.areas.size(); ++areaIndex)
         {
-            auto& area = *study.areas.byIndex[i];
+            auto& area = *study.areas.byIndex[areaIndex];
 
-            val[numSpace][i].HydrauliqueModulableQuotidien
+            val[numSpace][areaIndex].HydrauliqueModulableQuotidien
                 .assign(study.runtime->nbDaysPerYear,0 );
-            val[numSpace][i].AleaCoutDeProductionParPalier
+            val[numSpace][areaIndex].AleaCoutDeProductionParPalier
                 .assign(area.thermal.clusterCount(), 0.);
 
             if (area.hydro.reservoirManagement)
             {
-                val[numSpace][i].NiveauxReservoirsDebutJours
+                val[numSpace][areaIndex].NiveauxReservoirsDebutJours
                     .assign(study.runtime->nbDaysPerYear, 0.);
-                val[numSpace][i].NiveauxReservoirsFinJours
+                val[numSpace][areaIndex].NiveauxReservoirsFinJours
                     .assign(study.runtime->nbDaysPerYear, 0.);
             }
         }
