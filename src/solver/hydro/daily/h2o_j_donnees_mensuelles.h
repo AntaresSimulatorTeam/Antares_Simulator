@@ -34,39 +34,30 @@
 
 #include "h2o_j_donnees_optimisation.h"
 
-#ifdef __cplusplus
-extern "C"
+/*************************************************************************************************/
+/*                    Structure contenant les champs a renseigner par l'appelant */
+
+typedef struct
 {
-#endif
+    /* En entree: seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
+       avoir appele H2O_J_Instanciation */
+    int NombreDeJoursDuMois; /* A renseigner par l'appelant */
+    double TurbineDuMois;    /* A renseigner par l'appelant (c'est le turbine opt du mois) */
+    double* TurbineMax;      /* A renseigner par l'appelant : 1 valeur par jour */
+    double* TurbineMin;
+    double* TurbineCible;    /* A renseigner par l'appelant : 1 valeur par jour */
+    /* Les resultats */
+    char
+      ResultatsValides; /* Vaut:
+                           OUI si la solution est exploitable pour le reservoir
+                           NON s'il y a eu un probleme dans la resolution
+                                                                                                                     EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne
+                                                                                                      */
+    double* Turbine;    /* Resultat a recuperer par l'appelant */
 
-    /*************************************************************************************************/
-    /*                    Structure contenant les champs a renseigner par l'appelant */
-
-    typedef struct
-    {
-        /* En entree: seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
-           avoir appele H2O_J_Instanciation */
-        int NombreDeJoursDuMois; /* A renseigner par l'appelant */
-        double TurbineDuMois;    /* A renseigner par l'appelant (c'est le turbine opt du mois) */
-        double* TurbineMax;      /* A renseigner par l'appelant : 1 valeur par jour */
-        double* TurbineMin;
-        double* TurbineCible;    /* A renseigner par l'appelant : 1 valeur par jour */
-        /* Les resultats */
-        char
-          ResultatsValides; /* Vaut:
-                               OUI si la solution est exploitable pour le reservoir
-                               NON s'il y a eu un probleme dans la resolution
-                                                                                                                         EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne
-                                                                                                          */
-        double* Turbine;    /* Resultat a recuperer par l'appelant */
-
-        /******************************************************************************************/
-        /* Problemes internes (utilise uniquement par l'optimisation) */
-        PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
-    } DONNEES_MENSUELLES;
-
-#ifdef __cplusplus
-}
-#endif
+    /******************************************************************************************/
+    /* Problemes internes (utilise uniquement par l'optimisation) */
+    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+} DONNEES_MENSUELLES;
 
 #endif
