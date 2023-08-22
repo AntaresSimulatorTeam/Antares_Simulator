@@ -37,6 +37,8 @@
 #define JOURS_31 31
 #define NOMBRE_DE_TYPE_DE_MOIS 4
 
+#include <string>
+
 /*--------------------------------------------------------------------------------------*/
 /* Matrice des contraintes: il y aura une seule instance pour tous les reservoirs */
 /* Dans ce struct il n'y a que des donnees qui sont lues et surtout pas ecrites   */
@@ -55,7 +57,7 @@ typedef struct
                                            */
     /* La matrice des contraintes */
     int NombreDeContraintes;
-    char* Sens;
+    std::string Sens;
     int* IndicesDebutDeLigne;
     int* NombreDeTermesDesLignes;
     double* CoefficientsDeLaMatriceDesContraintes;

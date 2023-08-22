@@ -96,7 +96,7 @@ RESOLUTION:
 
         SPX_ModifierLeVecteurSecondMembre(ProbSpx,
                                           ProblemeLineairePartieVariable->SecondMembre,
-                                          ProblemeLineairePartieFixe->Sens,
+                                          ProblemeLineairePartieFixe->Sens.data(),
                                           ProblemeLineairePartieFixe->NombreDeContraintes);
     }
 
@@ -116,7 +116,7 @@ RESOLUTION:
     Probleme->IndicesColonnes = ProblemeLineairePartieFixe->IndicesColonnes;
     Probleme->CoefficientsDeLaMatriceDesContraintes
       = ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes;
-    Probleme->Sens = ProblemeLineairePartieFixe->Sens;
+    Probleme->Sens = ProblemeLineairePartieFixe->Sens.data();
     Probleme->SecondMembre = ProblemeLineairePartieVariable->SecondMembre;
 
     Probleme->ChoixDeLAlgorithme = SPX_DUAL;

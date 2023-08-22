@@ -212,11 +212,7 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
         NombreDeContraintes += NbPdt;
 
         PlFixe->NombreDeContraintes = NombreDeContraintes;
-        PlFixe->Sens = (char*)malloc(NombreDeContraintes * sizeof(char));
-        if (PlFixe->Sens == NULL)
-        {
-            return (0);
-        }
+        PlFixe->Sens.resize(NombreDeContraintes);
         PlFixe->IndicesDebutDeLigne = (int*)malloc(NombreDeContraintes * sizeof(int));
         if (PlFixe->IndicesDebutDeLigne == NULL)
         {
