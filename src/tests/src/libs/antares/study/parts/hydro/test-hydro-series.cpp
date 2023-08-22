@@ -73,7 +73,7 @@ struct Fixture
         study->inputExtension = "txt";
         studyNoSolver = make_shared<Study>();
         studyNoSolver->inputExtension = "txt";
-        // Add area
+        // Add areas
         area_1 = study->areaAdd("Area1");
         study->areas.rebuildIndexes();
         area_No_Solver = studyNoSolver->areaAdd("Area");
