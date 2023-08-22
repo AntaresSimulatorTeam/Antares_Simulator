@@ -206,19 +206,32 @@ public:
         }
         return *this;
     }
-    ConstraintBuilder& equal(double rhs)
+    ConstraintBuilder& operatorRHS(char op, double rhs)
+    {
+        if (op == '<' || op == '=' || op == '>')
+        {
+            operator_ = op;
+            rhs_ = rhs;
+        }
+        else
+            throw std::runtime_error("Invalid operator");
+
+        return *this;
+    }
+
+    ConstraintBuilder& equalTo(double rhs)
     {
         operator_ = '=';
         rhs_ = rhs;
         return *this;
     }
-    ConstraintBuilder& less(double rhs)
+    ConstraintBuilder& lessThan(double rhs)
     {
         operator_ = '<';
         rhs_ = rhs;
         return *this;
     }
-    ConstraintBuilder& greater(double rhs)
+    ConstraintBuilder& greaterThan(double rhs)
     {
         operator_ = '>';
         rhs_ = rhs;

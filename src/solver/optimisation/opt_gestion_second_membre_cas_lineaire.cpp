@@ -113,7 +113,7 @@ struct AreaBalance : public Constraint
             {
                 rhs -= problemeHebdo->ReserveJMoins1[pays].ReserveHoraireJMoins1[pdtHebdo];
             }
-            builder.equal(rhs);
+            builder.equalTo(rhs);
         }
         builder.build();
     }
@@ -172,7 +172,7 @@ struct FictitiousLoad : public Constraint
             {
                 rhs -= OPT_SommeDesPminThermiques(problemeHebdo, pays, pdtHebdo);
             }
-            builder.less(rhs);
+            builder.lessThan(rhs);
         }
         builder.build();
     }
@@ -201,7 +201,7 @@ struct ShortTermStorageLevel : public Constraint
               .include(Variable::ShortTermStorageLevel, -1.0, -1, true)
               .include(Variable::ShortTermStorageInjection, -1.0 * storage.efficiency)
               .include(Variable::ShortTermStorageWithdrawal, 1.0)
-              .equal(storage.series->inflows[hourInTheYear])
+              .equalTo(storage.series->inflows[hourInTheYear])
               .build();
         }
     }
@@ -238,10 +238,10 @@ struct FlowDissociation : public Constraint
               .include(Variable::IntercoIndirectCost, 1.0);
 
             if (CoutDeTransport.IntercoGereeAvecLoopFlow)
-                builder.equal(problemeHebdo->ValeursDeNTC[pdtHebdo]
+                builder.equalTo(problemeHebdo->ValeursDeNTC[pdtHebdo]
                                 .ValeurDeLoopFlowOrigineVersExtremite[interco]);
             else
-                builder.equal(0.);
+                builder.equalTo(0.);
 
             builder.build();
         }
@@ -289,19 +289,8 @@ struct BindingConstraintHour : public Constraint
         }
 
         double rhs = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[pdtHebdo];
-        switch (MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante)
-        {
-        case '=':
-            builder.equal(rhs);
-            break;
-        case '<':
-            builder.less(rhs);
-            break;
-        case '>':
-            builder.greater(rhs);
-            break;
-            // TODO default case ?
-        }
+        char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
+        builder.operatorRHS(op, rhs);
         {
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
@@ -370,19 +359,8 @@ struct BindingConstraintDay : public Constraint
             // TODO probably wrong from the 2nd week, check
             const int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
             double rhs = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[jour];
-            switch (MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante)
-            {
-            case '=':
-                builder.equal(rhs);
-                break;
-            case '<':
-                builder.less(rhs);
-                break;
-            case '>':
-                builder.greater(rhs);
-                break;
-                // TODO default case ?
-            }
+            char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
+            builder.operatorRHS(op, rhs);
             {
                 ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                       problemeHebdo->NamedProblems);
