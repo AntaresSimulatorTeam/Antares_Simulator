@@ -95,7 +95,7 @@ static void shortTermStorageLevels(
   std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim,
   std::vector<double>& Pi,
   std::vector<int>& Colonne,
-  uint32_t nombreDePasDeTempsPourUneOptimisation,
+  int nombreDePasDeTempsPourUneOptimisation,
   int pdt,
   ConstraintNamer& constraintNamer)
 {
@@ -162,8 +162,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
 
-    uint32_t nombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
-    uint32_t nombreDePasDeTempsPourUneOptimisation
+    int nombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
+    int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
     std::vector<double>& Pi = ProblemeAResoudre->Pi;
@@ -174,7 +174,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo->NamedProblems);
 
-    for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+    for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
         constraintNamer.UpdateTimeStep(timeStepInYear);
@@ -443,7 +443,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
           = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
         int nbClusters
           = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
-        uint32_t pdtDebut = 0;
+        int pdtDebut = 0;
         while (pdtDebut < nombreDePasDeTempsPourUneOptimisation)
         {
             int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
@@ -458,9 +458,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
                 int Offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
 
-                for (uint32_t pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
+                for (int pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
                 {
-                    uint32_t pdt1;
+                    int pdt1;
                     if (Offset >= 0)
                     {
                         pdt1 = (pdt + Offset) % nombreDePasDeTempsPourUneOptimisation;
@@ -494,9 +494,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 int Offset
                   = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
 
-                for (uint32_t pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
+                for (int pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
                 {
-                    uint32_t pdt1;
+                    int pdt1;
                     if (Offset >= 0)
                     {
                         pdt1 = (pdt + Offset) % nombreDePasDeTempsPourUneOptimisation;
@@ -558,7 +558,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
                 double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
                 int Offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
-                for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+                for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
                 {
                     int pdt1;
                     if (Offset >= 0)
@@ -595,7 +595,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
                 int Offset
                   = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
-                for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+                for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
                 {
                     int pdt1;
                     if (Offset >= 0)
@@ -651,7 +651,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         {
             if (presencePompage)
             {
-                for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+                for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
                 {
                     var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                             .NumeroDeVariablesDeLaProdHyd[pays];
@@ -676,7 +676,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             }
             else
             {
-                for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+                for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
                 {
                     var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                             .NumeroDeVariablesDeLaProdHyd[pays];
@@ -708,7 +708,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 continue;
 
             constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-            for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 constraintNamer.UpdateTimeStep(timeStepInYear);
@@ -722,7 +722,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
                 }
-                uint32_t pdt1 = pdt + 1;
+                int pdt1 = pdt + 1;
                 if (pdt1 >= nombreDePasDeTempsPourUneOptimisation)
                     pdt1 = 0;
 
@@ -768,7 +768,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 continue;
 
             constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-            for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 constraintNamer.UpdateTimeStep(timeStepInYear);
@@ -832,7 +832,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         if (presenceHydro && (TurbEntreBornes || presencePompage))
         {
             int nombreDeTermes = 0;
-            for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                         .NumeroDeVariablesDeLaProdHyd[pays];
@@ -859,7 +859,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
         {
             int nombreDeTermes = 0;
-            for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 constraintNamer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
                 var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
@@ -889,7 +889,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
         {
             int nombreDeTermes = 0;
-            for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                         .NumeroDeVariablesDePompage[pays];
@@ -913,7 +913,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             problemeHebdo->NumeroDeContrainteMaxPompage[pays] = -1;
     }
 
-    for (uint32_t pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+    for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
         const auto& CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
         CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
