@@ -99,7 +99,8 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
                                                    ProblemeAResoudre->NomDesContraintes,
                                                    ProblemeAResoudre->StatutDesVariables,
-                                                   ProblemeAResoudre->StatutDesContraintes);
+                                                   ProblemeAResoudre->StatutDesContraintes,
+                                                   problemeHebdo->NamedProblems);
     bool PremierPassage = true;
 
     auto ProbSpx

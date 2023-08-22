@@ -10,12 +10,14 @@ namespace Optimization
 PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                                                  const std::vector<std::string>& NomDesContraintes,
                                                  std::vector<int>& StatutDesVariables,
-                                                 std::vector<int>& StatutDesContraintes) :
+                                                 std::vector<int>& StatutDesContraintes,
+                                                 bool UseNamedProblems) :
 
  NomDesVariables(NomDesVariables),
  NomDesContraintes(NomDesContraintes),
  StatutDesVariables(StatutDesVariables),
- StatutDesContraintes(StatutDesContraintes)
+ StatutDesContraintes(StatutDesContraintes),
+ UseNamedProblems(UseNamedProblems)
 {
 }
 

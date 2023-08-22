@@ -21,17 +21,24 @@ static inline char** VectorOfStringToCharPP(std::vector<std::string>& in,
                    [](std::string& str) { return str.empty() ? nullptr : str.data(); });
     return pointerVec.data();
 }
+static inline char** CharPP(size_t Size, std::vector<char*>& pointerVec)
+{
+    pointerVec = std::vector<char*>(Size, nullptr);
+    return pointerVec.data();
+}
 struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
 {
 public:
     PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                             const std::vector<std::string>& NomDesContraintes,
                             std::vector<int>& StatutDesVariables,
-                            std::vector<int>& StatutDesContraintes);
+                            std::vector<int>& StatutDesContraintes,
+                            bool UseNamedProblems);
 
 private:
     std::vector<std::string> NomDesVariables;
     std::vector<std::string> NomDesContraintes;
+    bool UseNamedProblems;
 
 public:
     std::vector<int>& StatutDesVariables;
@@ -39,18 +46,31 @@ public:
 
     bool isMIP() const;
     bool basisExists() const;
+
     char** VariableNamesAsCharPP(std::vector<char*>& pointerVec)
     {
-        return VectorOfStringToCharPP(NomDesVariables, pointerVec);
+        if (UseNamedProblems)
+        {
+            return VectorOfStringToCharPP(NomDesVariables, pointerVec);
+        }
+
+        return CharPP(NomDesVariables.size(), pointerVec);
     }
+
     char** ConstraintNamesAsCharPP(std::vector<char*>& pointerVec)
     {
-        return VectorOfStringToCharPP(NomDesContraintes, pointerVec);
+        if (UseNamedProblems)
+        {
+            return VectorOfStringToCharPP(NomDesContraintes, pointerVec);
+        }
+        return CharPP(NomDesContraintes.size(), pointerVec);
     }
+
     const std::vector<std::string>& VariableNames() const
     {
         return NomDesVariables;
     }
+
     const std::vector<std::string>& ConstraintNames() const
     {
         return NomDesContraintes;
