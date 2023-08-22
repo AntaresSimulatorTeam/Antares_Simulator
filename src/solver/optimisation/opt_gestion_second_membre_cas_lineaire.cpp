@@ -239,7 +239,7 @@ struct FlowDissociation : public Constraint
 
             if (CoutDeTransport.IntercoGereeAvecLoopFlow)
                 builder.equalTo(problemeHebdo->ValeursDeNTC[pdtHebdo]
-                                .ValeurDeLoopFlowOrigineVersExtremite[interco]);
+                                  .ValeurDeLoopFlowOrigineVersExtremite[interco]);
             else
                 builder.equalTo(0.);
 
@@ -374,6 +374,72 @@ struct BindingConstraintDay : public Constraint
     }
 };
 
+struct BindingConstraintWeek : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int cntCouplante)
+    {
+        const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+          = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
+        if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HEBDOMADAIRE)
+            return;
+
+        const int nbInterco
+          = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
+        const int nbClusters
+          = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
+
+        const int NombreDePasDeTempsPourUneOptimisation
+          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation; // TODO
+
+        for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
+        {
+            builder.updateHourWithinWeek(pdt);
+            for (int index = 0; index < nbInterco; index++)
+            {
+                int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
+                double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
+                int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
+
+                builder
+                  .link(interco)
+                  .include(Variable::NTCDirect, poids, offset, true);
+            }
+
+            for (int index = 0; index < nbClusters; index++)
+            {
+                int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
+                const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+                  = problemeHebdo->PaliersThermiquesDuPays[pays];
+                const int palier
+                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
+                      [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
+                double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
+                int offset
+                  = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
+                builder
+                  .thermalCluster(palier)
+                  .include(Variable::DispatchableProduction, poids, offset, true);
+            }
+        }
+        // RHS
+        {
+            double rhs = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[0];
+            char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
+            builder.operatorRHS(op, rhs);
+        }
+        // Name
+        {
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
+            namer.BindingConstraintWeek(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+                                        MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
+        }
+        builder.build();
+    }
+};
+
 void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
                           int PremierPdtDeLIntervalle,
                           int DernierPdtDeLIntervalle,
@@ -407,6 +473,7 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
     FlowDissociation flowDissociation(problemeHebdo);
     BindingConstraintHour bindingConstraintHour(problemeHebdo);
     BindingConstraintDay bindingConstraintDay(problemeHebdo);
+    BindingConstraintWeek bindingConstraintWeek(problemeHebdo);
 
     for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdt++)
@@ -436,28 +503,15 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
         bindingConstraintDay.add(cntCouplante);
     }
 
+    // Weekly binding constraints are only added if the opt period is a week
+    // ignored otherwise
     if (problemeHebdo->NombreDePasDeTempsPourUneOptimisation
         > problemeHebdo->NombreDePasDeTempsDUneJournee)
     {
         for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-              = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-
-            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante
-                != CONTRAINTE_HEBDOMADAIRE)
-                continue;
-
-            int cnt = 2;
-            if (cnt >= 0)
-            {
-                SecondMembre[cnt]
-                  = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[0];
-                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
-                  = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante]
-                      .variablesDuales.data();
-            }
+            bindingConstraintWeek.add(cntCouplante);
         }
     }
 
