@@ -289,15 +289,14 @@ private:
     int getVariableIndex(const Variable::Variant& variable, int shift, bool wrap) const
     {
         int pdt = hourInWeek_ + shift;
-        // TODO remove 168
+        const int nbTimeSteps = problemeHebdo.NombreDePasDeTempsPourUneOptimisation;
         if (wrap)
         {
-            pdt %= 168;
+            pdt %= nbTimeSteps;
             if (pdt < 0)
-                pdt += 168;
+                pdt += nbTimeSteps;
         }
-        // TODO remove 168
-        if (pdt < 0 || pdt >= 168)
+        if (pdt < 0 || pdt >= nbTimeSteps)
         {
             return -1;
         }

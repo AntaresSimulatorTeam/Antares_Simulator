@@ -385,7 +385,7 @@ struct BindingConstraintWeek : public Constraint
           = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
 
         const int NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation; // TODO
+          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
         for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
