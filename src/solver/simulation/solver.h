@@ -45,6 +45,7 @@
 
 namespace Antares::Solver::Simulation
 {
+
 template<class Impl>
 class yearJob;
 
@@ -156,6 +157,7 @@ private:
     */
     void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State>& state);
 
+
 private:
     //! Some temporary to avoid performing useless complex checks
     Solver::Private::Simulation::CacheData pData;
@@ -178,11 +180,14 @@ private:
     // Collecting durations inside the simulation
     Benchmarking::IDurationCollector* pDurationCollector;
 
+    VAL_GEN_PAR_PAYS valeursGenereesParPays;
+
 public:
     //! The queue service that runs every set of parallel years
     std::shared_ptr<Yuni::Job::QueueService> pQueueService = nullptr;
     //! Result writer
     Antares::Solver::IResultWriter::Ptr pResultWriter = nullptr;
+
 }; // class ISimulation
 } // namespace Antares::Solver::Simulation
 

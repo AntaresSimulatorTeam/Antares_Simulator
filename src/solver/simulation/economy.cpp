@@ -79,7 +79,7 @@ void Economy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
-bool Economy::simulationBegin()
+bool Economy::simulationBegin(const VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     if (!preproOnly)
     {
@@ -106,7 +106,8 @@ bool Economy::simulationBegin()
                                                     study.parameters.adqPatchParams,
                                                     pProblemesHebdo[numSpace],
                                                     numSpace,
-                                                    *study.resultWriter);
+                                                    *study.resultWriter,
+                                                    valeursGenereesParPays);
             postProcessesList_[numSpace] =
                 interfacePostProcessList::create(study.parameters.adqPatchParams,
                                                  pProblemesHebdo[numSpace],
@@ -135,7 +136,8 @@ bool Economy::year(Progression::Task& progression,
                    uint numSpace,
                    yearRandomNumbers& randomForYear,
                    std::list<uint>& failedWeekList,
-                   bool isFirstPerformedYearOfSimulation)
+                   bool isFirstPerformedYearOfSimulation,
+                   VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -159,7 +161,8 @@ bool Economy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(state.study,
-          *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
+          *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear,
+          valeursGenereesParPays);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim;
