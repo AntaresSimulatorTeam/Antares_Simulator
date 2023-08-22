@@ -152,14 +152,14 @@ MPSolver* convert_to_MPSolver(
                       problemeSimplexe->Xmax,
                       problemeSimplexe->CoutLineaire,
                       problemeSimplexe->NombreDeVariables,
-                      problemeSimplexe->NomDesVariables);
+                      problemeSimplexe->VariableNames());
 
     // Create constraints and set coefs
     transferRows(solver,
                  problemeSimplexe->SecondMembre,
                  problemeSimplexe->Sens,
                  problemeSimplexe->NombreDeContraintes,
-                 problemeSimplexe->NomDesContraintes);
+                 problemeSimplexe->ConstraintNames());
     transferMatrix(solver,
                    problemeSimplexe->IndicesDebutDeLigne,
                    problemeSimplexe->NombreDeTermesDesLignes,

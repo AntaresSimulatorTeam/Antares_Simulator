@@ -55,15 +55,6 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 
-static char** VectorOfStringToCharPP(std::vector<std::string>& in, std::vector<char*>& pointerVec)
-{
-    std::transform(in.begin(),
-                   in.end(),
-                   std::back_inserter(pointerVec),
-                   [](std::string& str) { return str.empty() ? nullptr : str.data(); });
-    return pointerVec.data();
-}
-
 class ProblemConverter
 {
 public:
@@ -95,8 +86,8 @@ public:
         dest->SensDeLaContrainte = src->Sens;
 
         // Names
-        dest->LabelDeLaVariable = VectorOfStringToCharPP(src->NomDesVariables, mVariableNames);
-        dest->LabelDeLaContrainte = VectorOfStringToCharPP(src->NomDesContraintes, mConstraintNames);
+        dest->LabelDeLaVariable = src->VariableNamesAsCharPP(mVariableNames);
+        dest->LabelDeLaContrainte = src->ConstraintNamesAsCharPP(mConstraintNames);
     }
 
 private:
