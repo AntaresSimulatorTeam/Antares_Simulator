@@ -66,7 +66,7 @@ void InstantiateMatrix(Matrix<double, Yuni::sint32>& matrix, double seed)
     }
 }
 
-void InstantiateMatrixDays(Matrix<double>::ColumnType& col, double seed)
+void InstantiateColumn(Matrix<double>::ColumnType& col, double seed)
 {
     for (uint days = 0; days < DAYS_PER_YEAR; days++)
     {
@@ -84,7 +84,7 @@ struct Fixture
 {
     Fixture()
     {
-        study = make_shared<Study>();
+        study = make_shared<Study>(true);
         datatransfer = make_shared<DataTransfer>();
         study->inputExtension = "txt";
         // Add areas
@@ -96,16 +96,22 @@ struct Fixture
         createFolders();
 
         auto& gen = datatransfer->maxPower[DataTransfer::genMaxP];
-        InstantiateMatrixDays(gen, 300.);
+        InstantiateColumn(gen, 300.);
 
         auto& pump = datatransfer->maxPower[DataTransfer::pumpMaxP];
-        InstantiateMatrixDays(pump, 200.);
+        InstantiateColumn(pump, 200.);
 
         auto& hoursGen = datatransfer->maxPower[DataTransfer::genMaxE];
-        InstantiateMatrixDays(hoursGen, 20.);
+        InstantiateColumn(hoursGen, 20.);
 
         auto& hoursPump = datatransfer->maxPower[DataTransfer::pumpMaxE];
-        InstantiateMatrixDays(hoursPump, 14.);
+        InstantiateColumn(hoursPump, 14.);
+
+        my_string buffer;
+        my_string file_name = "maxpower_" + area_2->id + ".txt";
+        buffer.clear() << base_folder << SEP << hydro_folder << SEP << common_folder << SEP
+                       << capacity_folder << SEP << file_name;
+        datatransfer->maxPower.saveToCSVFile(buffer, 2);
     }
 
     void createFolders()
@@ -140,9 +146,11 @@ struct Fixture
                        << capacity_folder;
         my_string file1_name = "maxhoursGen_" + area_2->id + ".txt";
         my_string file2_name = "maxhoursPump_" + area_2->id + ".txt";
+        my_string file3_name = "maxpower_" + area_2->id + ".txt";
 
         createFile(buffer, file1_name);
         createFile(buffer, file2_name);
+        createFile(buffer, file3_name);
     }
 
     shared_ptr<Study> study;
@@ -195,6 +203,36 @@ BOOST_FIXTURE_TEST_CASE(Testing_auto_transfer_hours, Fixture)
     buffer.clear() << base_folder << SEP << hydro_folder;
     ret = datatransfer->AutoTransferHours(*study, buffer, *area_2);
     BOOST_CHECK(ret);
+}
+
+BOOST_FIXTURE_TEST_CASE(Testing_load_from_folder_when_retuns_true, Fixture)
+{
+    my_string buffer;
+    bool ret = false;
+    datatransfer->maxPower.reset(4, DAYS_PER_YEAR, true);
+
+    buffer.clear() << base_folder << SEP << hydro_folder;
+    ret = datatransfer->LoadFromFolder(*study, buffer, *area_2);
+    BOOST_CHECK(ret);
+}
+
+BOOST_FIXTURE_TEST_CASE(Testing_load_from_folder_when_retuns_false, Fixture)
+{
+    my_string buffer;
+    bool ret = false;
+
+    auto& hoursGen = datatransfer->maxPower[DataTransfer::genMaxE];
+    InstantiateColumn(hoursGen, 25.);
+
+    my_string file_name = "maxpower_" + area_2->id + ".txt";
+    buffer.clear() << base_folder << SEP << hydro_folder << SEP << common_folder << SEP
+                   << capacity_folder << SEP << file_name;
+    datatransfer->maxPower.saveToCSVFile(buffer, 2);
+    datatransfer->maxPower.reset(4, DAYS_PER_YEAR, true);
+
+    buffer.clear() << base_folder << SEP << hydro_folder;
+    ret = datatransfer->LoadFromFolder(*study, buffer, *area_2);
+    BOOST_CHECK(!ret);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
