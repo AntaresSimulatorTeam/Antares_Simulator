@@ -284,4 +284,35 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
     BOOST_TEST(output.flow(link).hour(0) == 40., tt::tolerance(0.001));
 }
 
+BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_out_of_bound_use_random_fallback_to_Oth_column)
+{
+    setNumberMCyears(10);
+
+    BC->setTimeGranularity(BindingConstraint::typeHourly);
+    BC->operatorType(BindingConstraint::opEquality);
+
+    TimeSeriesConfigurer(BC->RHSTimeSeries())
+            .setColumnCount(1)
+            .fillColumnWith(0, 0.);
+
+    ScenarioBuilderRule scenarioBuilderRule(*study);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 0, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 1, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 2, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 3, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 4, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 5, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 6, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 7, 1);
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 8, 42);  // Here year 9
+    scenarioBuilderRule.bcGroup().setTSnumber(BC->group(), 9, 1);
+
+    simulation->create();
+    playOnlyYear(8);
+    simulation->run();
+
+    OutputRetriever output(simulation->rawSimu());
+    BOOST_TEST(output.flow(link).hour(0) == 0., tt::tolerance(0.001));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

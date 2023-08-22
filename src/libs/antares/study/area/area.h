@@ -83,7 +83,7 @@ public:
     ** \param name Name of the area
     ** \param id id of the area
     */
-    Area(const AnyString& name, const AnyString& id, uint indx = (uint)-1);
+    Area(const AnyString& name, const AnyString& id);
     /*!
     ** \brief Destructor
     */

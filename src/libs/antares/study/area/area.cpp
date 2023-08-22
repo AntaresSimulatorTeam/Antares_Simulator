@@ -60,7 +60,8 @@ Area::Area(const AnyString& name) :
     Antares::TransformNameIntoID(this->name, this->id);
 }
 
-Area::Area(const AnyString& name, const AnyString& id, uint) :
+Area::Area(const AnyString& name, const AnyString& id) :
+
     reserves(fhrMax, HOURS_PER_YEAR),
     miscGen(fhhMax, HOURS_PER_YEAR)
 {

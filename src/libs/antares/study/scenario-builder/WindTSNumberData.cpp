@@ -35,7 +35,7 @@ bool windTSNumberData::apply(/*const*/ Study& study)
         assert(areaIndex < pTSNumberRules.width);
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
-        logprefix.clear() << "Wind: Area '" << area.name << "': ";
+        logprefix.clear() << "Wind: area '" << area.name << "': ";
         ret = ApplyToMatrix(errors, logprefix, *area.wind.series, col, tsGenCountWind) && ret;
     }
     return ret;
