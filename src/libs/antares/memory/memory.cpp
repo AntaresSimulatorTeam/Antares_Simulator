@@ -43,6 +43,7 @@
 #ifdef YUNI_OS_WINDOWS
 #include <WinIoCtl.h>
 #endif
+#include "antares/memory/memory.h"
 #include <antares/sys/policy.h>
 #include <yuni/core/system/process.h>
 
@@ -52,7 +53,8 @@ using namespace Yuni;
 
 namespace Antares
 {
-/*extern*/ Memory memory;
+/*extern*/
+Memory memory;
 
 namespace // anonymous
 {
