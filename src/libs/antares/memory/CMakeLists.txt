@@ -20,10 +20,6 @@ target_link_libraries(${PROJ}
 )
 
 target_include_directories(${PROJ}
-        PRIVATE
-        ${CMAKE_SOURCE_DIR}/libs
-        ${CMAKE_SOURCE_DIR}/libs/antares/jit #memory-usage -> matrix -> jit
-        ${CMAKE_SOURCE_DIR}/libs/antares/io #memory-usage -> matrix -> io
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
