@@ -39,6 +39,7 @@ using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
 
+// Helper functions
 void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
                    ConstraintBuilder& constraintBuilder,
                    int pays)
@@ -64,6 +65,7 @@ static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortT
     }
 }
 
+// Constraint definitions
 struct AreaBalance : public Constraint
 {
     using Constraint::Constraint;
@@ -673,6 +675,4 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
         OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(
           problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
     }
-
-    return;
 }
