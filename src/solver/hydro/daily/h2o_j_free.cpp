@@ -61,8 +61,6 @@ void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
 
         free(ProblemeHydraulique->ProblemeLineairePartieFixe[i]->CoutLineaire);
         free(ProblemeHydraulique->ProblemeLineairePartieFixe[i]->TypeDeVariable);
-        free((ProblemeHydraulique->ProblemeLineairePartieFixe[i])
-               ->CoefficientsDeLaMatriceDesContraintes);
         free(ProblemeHydraulique->ProblemeLineairePartieFixe[i]->IndicesColonnes);
         free(ProblemeHydraulique->ProblemeLineairePartieFixe[i]);
 

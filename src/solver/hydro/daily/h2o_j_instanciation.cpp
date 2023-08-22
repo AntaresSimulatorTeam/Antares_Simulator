@@ -213,6 +213,8 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 
         PlFixe->NombreDeContraintes = NombreDeContraintes;
         PlFixe->Sens.resize(NombreDeContraintes);
+        PlFixe->IndicesDebutDeLigne.assign(NombreDeContraintes, 0);
+        PlFixe->NombreDeTermesDesLignes.assign(NombreDeContraintes, 0);
 
         NombreDeTermesAlloues = 0;
         NombreDeTermesAlloues += NbPdt;
@@ -220,12 +222,7 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
         NombreDeTermesAlloues += (2 * NbPdt);
 
         PlFixe->NombreDeTermesAlloues = NombreDeTermesAlloues;
-        PlFixe->CoefficientsDeLaMatriceDesContraintes
-          = (double*)malloc(NombreDeTermesAlloues * sizeof(double));
-        if (PlFixe->CoefficientsDeLaMatriceDesContraintes == NULL)
-        {
-            return (0);
-        }
+        PlFixe->CoefficientsDeLaMatriceDesContraintes.assign(NombreDeTermesAlloues, 0.);
         PlFixe->IndicesColonnes = (int*)malloc(NombreDeTermesAlloues * sizeof(int));
         if (PlFixe->IndicesColonnes == NULL)
         {

@@ -39,7 +39,7 @@ void H2O_J_ConstruireLesContraintes(int,
                                     std::vector<int>&,
                                     std::string&,
                                     std::vector<int>&,
-                                    double*,
+                                    std::vector<double>&,
                                     int*,
                                     CORRESPONDANCE_DES_CONTRAINTES*);
 void H2O_j_ConstruireLesVariables(int,

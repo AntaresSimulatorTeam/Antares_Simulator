@@ -61,7 +61,7 @@ typedef struct
     std::string Sens;
     std::vector<int> IndicesDebutDeLigne;
     std::vector<int> NombreDeTermesDesLignes;
-    double* CoefficientsDeLaMatriceDesContraintes;
+    std::vector<double> CoefficientsDeLaMatriceDesContraintes;
     int* IndicesColonnes;
     int NombreDeTermesAlloues;
 } PROBLEME_LINEAIRE_PARTIE_FIXE;

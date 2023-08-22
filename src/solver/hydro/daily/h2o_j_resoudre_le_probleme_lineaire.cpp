@@ -115,7 +115,7 @@ RESOLUTION:
     Probleme->NombreDeTermesDesLignes = ProblemeLineairePartieFixe->NombreDeTermesDesLignes.data();
     Probleme->IndicesColonnes = ProblemeLineairePartieFixe->IndicesColonnes;
     Probleme->CoefficientsDeLaMatriceDesContraintes
-      = ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes;
+      = ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes.data();
     Probleme->Sens = ProblemeLineairePartieFixe->Sens.data();
     Probleme->SecondMembre = ProblemeLineairePartieVariable->SecondMembre;
 
