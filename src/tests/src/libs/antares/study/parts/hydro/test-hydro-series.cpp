@@ -69,11 +69,13 @@ struct Fixture
 {
     Fixture()
     {
+        // Create studies
         study = make_shared<Study>(true);
         study->inputExtension = "txt";
         studyNoSolver = make_shared<Study>();
         studyNoSolver->inputExtension = "txt";
-        // Add areas
+
+        // Add areas to studies
         area_1 = study->areaAdd("Area1");
         study->areas.rebuildIndexes();
         area_No_Solver = studyNoSolver->areaAdd("Area");
@@ -82,6 +84,7 @@ struct Fixture
         // Create necessary folders and files for these two areas
         createFolders();
 
+        // Instantiating neccessary studies parameters
         study->header.version = 870;
         study->parameters.derated = false;
 
@@ -91,9 +94,8 @@ struct Fixture
 
     void createFolders()
     {
-        // hydro folder
+        // series folder
         my_string buffer;
-
         createFolder(base_folder, series_folder);
 
         // areas folder
@@ -103,13 +105,13 @@ struct Fixture
         createFolder(buffer, area1_folder);
         createFolder(buffer, area_folder);
 
-        buffer.clear() << base_folder << SEP << series_folder << SEP << area1_folder;
         // maxgen and maxpump files
+        buffer.clear() << base_folder << SEP << series_folder << SEP << area1_folder;
         createFile(buffer, maxgentxt);
         createFile(buffer, maxpumptxt);
 
-        buffer.clear() << base_folder << SEP << series_folder << SEP << area_folder;
         // maxgen and maxpump files
+        buffer.clear() << base_folder << SEP << series_folder << SEP << area_folder;
         createFile(buffer, maxgentxt);
         createFile(buffer, maxpumptxt);
     }
@@ -232,16 +234,19 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_no_solver, Fixture)
     InstantiateMatrix(maxpump, 200.);
 
     my_string buffer;
-    buffer.clear() << base_folder << SEP << series_folder << SEP << area_No_Solver->id << SEP << maxgentxt;
+    buffer.clear() << base_folder << SEP << series_folder << SEP << area_No_Solver->id << SEP
+                   << maxgentxt;
     maxgen.saveToCSVFile(buffer, 0);
-    buffer.clear() << base_folder << SEP << series_folder << SEP << area_No_Solver->id << SEP << maxpumptxt;
+    buffer.clear() << base_folder << SEP << series_folder << SEP << area_No_Solver->id << SEP
+                   << maxpumptxt;
     maxpump.saveToCSVFile(buffer, 0);
 
     maxgen.reset(3, HOURS_PER_YEAR);
     maxpump.reset(3, HOURS_PER_YEAR);
 
     buffer.clear() << base_folder << SEP << series_folder;
-    ret = area_No_Solver->hydro.series->LoadHydroPowerCredits(*studyNoSolver, area_No_Solver->id, buffer);
+    ret = area_No_Solver->hydro.series->LoadHydroPowerCredits(
+      *studyNoSolver, area_No_Solver->id, buffer);
     BOOST_CHECK(ret);
     BOOST_CHECK(area_No_Solver->hydro.hydroModulable);
 }
