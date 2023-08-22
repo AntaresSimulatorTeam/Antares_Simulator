@@ -52,6 +52,11 @@ public:
         return useNamedProblems_;
     }
 
+    void SetUseNamedProblems(bool useNamedProblems)
+    {
+        useNamedProblems_ = useNamedProblems;
+    }
+
     char** VariableNamesAsCharPP(std::vector<char*>& pointerVec)
     {
         if (useNamedProblems_)

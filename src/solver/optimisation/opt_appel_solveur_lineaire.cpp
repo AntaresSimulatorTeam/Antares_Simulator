@@ -339,6 +339,7 @@ RESOLUTION:
             logs.info() << " Solver: Safe resolution failed";
         }
 
+        Probleme.SetUseNamedProblems(true);
         Optimization::InfeasibleProblemAnalysis analysis(options.solverName, &Probleme);
         logs.notice() << " Solver: Starting infeasibility analysis...";
         try

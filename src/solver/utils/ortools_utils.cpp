@@ -187,9 +187,8 @@ namespace Antares
 {
 namespace Optimization
 {
-MPSolver* convert_to_MPSolver(
-    const std::string& solverName,
-    const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+MPSolver* convert_to_MPSolver(const std::string& solverName,
+                              const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
     // Create the MPSolver
     MPSolver* solver = MPSolverFactory(problemeSimplexe, solverName);
