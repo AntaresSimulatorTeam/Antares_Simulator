@@ -301,9 +301,9 @@ private:
         {
             return -1;
         }
-        const auto visitor = Variable::Visitor(varNative[pdt],
-                                               problemeHebdo.NumeroDeVariableStockFinal,
-                                               problemeHebdo.NumeroDeVariableDeTrancheDeStock);
+        const Variable::Visitor visitor(varNative[pdt],
+                                        problemeHebdo.NumeroDeVariableStockFinal,
+                                        problemeHebdo.NumeroDeVariableDeTrancheDeStock);
         return std::visit(visitor, variable);
     }
 
