@@ -38,6 +38,7 @@
 #define NOMBRE_DE_TYPE_DE_MOIS 4
 
 #include <string>
+#include <vector>
 
 /*--------------------------------------------------------------------------------------*/
 /* Matrice des contraintes: il y aura une seule instance pour tous les reservoirs */
@@ -58,8 +59,8 @@ typedef struct
     /* La matrice des contraintes */
     int NombreDeContraintes;
     std::string Sens;
-    int* IndicesDebutDeLigne;
-    int* NombreDeTermesDesLignes;
+    std::vector<int> IndicesDebutDeLigne;
+    std::vector<int> NombreDeTermesDesLignes;
     double* CoefficientsDeLaMatriceDesContraintes;
     int* IndicesColonnes;
     int NombreDeTermesAlloues;

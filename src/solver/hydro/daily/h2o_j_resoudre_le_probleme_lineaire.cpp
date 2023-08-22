@@ -111,8 +111,8 @@ RESOLUTION:
     Probleme->TypeDeVariable = ProblemeLineairePartieFixe->TypeDeVariable;
 
     Probleme->NombreDeContraintes = ProblemeLineairePartieFixe->NombreDeContraintes;
-    Probleme->IndicesDebutDeLigne = ProblemeLineairePartieFixe->IndicesDebutDeLigne;
-    Probleme->NombreDeTermesDesLignes = ProblemeLineairePartieFixe->NombreDeTermesDesLignes;
+    Probleme->IndicesDebutDeLigne = ProblemeLineairePartieFixe->IndicesDebutDeLigne.data();
+    Probleme->NombreDeTermesDesLignes = ProblemeLineairePartieFixe->NombreDeTermesDesLignes.data();
     Probleme->IndicesColonnes = ProblemeLineairePartieFixe->IndicesColonnes;
     Probleme->CoefficientsDeLaMatriceDesContraintes
       = ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes;
