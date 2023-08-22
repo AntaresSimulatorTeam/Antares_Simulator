@@ -49,8 +49,8 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
     {
         const int palier
           = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-        constraintBuilder.updateIndex(palier);
-        constraintBuilder.include(Variable::DispatchableProduction, -1.0);
+        constraintBuilder.thermalCluster(palier)
+          .include(Variable::DispatchableProduction, -1.0);
     }
 }
 
@@ -59,9 +59,7 @@ static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortT
 {
     for (const auto& storage : shortTermStorageInput)
     {
-        const int clusterGlobalIndex = storage.clusterGlobalIndex;
-        constraintBuilder.updateIndex(clusterGlobalIndex);
-        constraintBuilder
+        constraintBuilder.shortTermStorage(storage.clusterGlobalIndex)
           .include(Variable::ShortTermStorageInjection, 1.0)
           .include(Variable::ShortTermStorageWithdrawal, -1.0);
     }
@@ -86,22 +84,21 @@ struct AreaBalance : public Constraint
     int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
     while (interco >= 0)
       {
-        builder.updateIndex(interco);
-        builder.include(Variable::NTCDirect, 1.0);
+        builder.link(interco)
+          .include(Variable::NTCDirect, 1.0);
         interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
       }
 
     interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
     while (interco >= 0)
       {
-        builder.updateIndex(interco);
-        builder.include(Variable::NTCDirect, -1.0);
+        builder.link(interco)
+          .include(Variable::NTCDirect, -1.0);
         interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
       }
 
     exportPaliers(*problemeHebdo, builder, pays);
-    builder.updateIndex(pays);
-    builder
+    builder.area(pays)
       .include(Variable::HydProd, -1.0)
       .include(Variable::Pumping, 1.0)
       .include(Variable::PositiveUnsuppliedEnergy, -1.0)
@@ -142,8 +139,7 @@ struct FictitiousLoad : public Constraint
 
     builder.updateHourWithinWeek(pdt);
     exportPaliers(*problemeHebdo, builder, pays);
-    builder.updateIndex(pays);
-    builder
+    builder.area(pays)
       .include(Variable::HydProd, -problemeHebdo->DefaillanceNegativeUtiliserHydro[pays])
       .include(Variable::NegativeUnsuppliedEnergy, 1.0);
 
@@ -201,8 +197,7 @@ struct ShortTermStorageLevel : public Constraint
     {
       // L[h] - L[h-1] - efficiency * injection[h] + withdrawal[h] = inflows[h]
       namer.ShortTermStorageLevel(problemeHebdo->ProblemeAResoudre->NombreDeContraintes, storage.name);
-      builder.updateIndex(storage.clusterGlobalIndex);
-      builder
+      builder.shortTermStorage(storage.clusterGlobalIndex)
         .include(Variable::ShortTermStorageLevel, 1.0)
         .include(Variable::ShortTermStorageLevel, -1.0, -1, true)
         .include(Variable::ShortTermStorageInjection, -1.0 * storage.efficiency)
@@ -237,8 +232,8 @@ struct FlowDissociation : public Constraint
         }
 
         builder.updateHourWithinWeek(pdt);
-        builder.updateIndex(interco);
-        builder.include(Variable::NTCDirect, 1.0)
+        builder.link(interco)
+          .include(Variable::NTCDirect, 1.0)
           .include(Variable::IntercoDirectCost, -1.0)
           .include(Variable::IntercoIndirectCost, 1.0);
 
@@ -270,10 +265,10 @@ struct BindingConstraintHour : public Constraint
     for (int index = 0; index < nbInterco; index++)
     {
       const int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
-      builder.updateIndex(interco);
       const double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
       const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
-      builder.include(Variable::NTCDirect, poids, offset, true);
+      builder.link(interco)
+        .include(Variable::NTCDirect, poids, offset, true);
     }
 
     // Thermal clusters
@@ -290,8 +285,8 @@ struct BindingConstraintHour : public Constraint
       const double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
       const int offset
                   = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
-      builder.updateIndex(palier);
-      builder.include(Variable::DispatchableProduction, poids, offset, true);
+      builder.thermalCluster(palier)
+        .include(Variable::DispatchableProduction, poids, offset, true);
     }
 
     double rhs = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[pdtHebdo];
@@ -342,7 +337,7 @@ struct BindingConstraintDay : public Constraint
         double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
         int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
 
-        builder.updateIndex(interco);
+        builder.link(interco);
         for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
         {
             builder.updateHourWithinWeek(pdt);
@@ -362,7 +357,7 @@ struct BindingConstraintDay : public Constraint
         int offset
           = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
 
-        builder.updateIndex(palier);
+        builder.thermalCluster(palier);
         for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
         {
             builder.updateHourWithinWeek(pdt);
