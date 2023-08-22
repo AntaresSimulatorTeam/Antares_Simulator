@@ -2,8 +2,7 @@
 // Created by marechaljas on 22/08/23.
 //
 
-#include "antares/benchmarking/StudyInfoCollector.h"
-#include "antares/benchmarking/DurationCollector.h"
+#include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/benchmarking/file_content.h"
 #include "../../../config.h"

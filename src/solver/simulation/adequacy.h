@@ -34,7 +34,7 @@
 #include "common-eco-adq.h"
 
 #include "solver.h" // for definition of type yearRandomNumbers
-#include "antares/benchmarking/StudyInfoCollector.h"
+#include "antares/infoCollection/StudyInfoCollector.h"
 
 namespace Antares::Solver::Simulation
 {

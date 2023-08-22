@@ -18,7 +18,7 @@
 
 #include "utils/ortools_utils.h"
 #include "../config.h"
-#include <antares/benchmarking/StudyInfoCollector.h>
+#include <antares/infoCollection/StudyInfoCollector.h>
 
 #include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>

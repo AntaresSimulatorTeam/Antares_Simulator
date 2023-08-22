@@ -1,7 +1,5 @@
 #include <numeric>
-#include <antares/config.h>
-#include <antares/Enum.hpp>
-#include <antares/study/area.h>
+#include <string>
 #include "antares/benchmarking/DurationCollector.h"
 
 namespace Benchmarking {

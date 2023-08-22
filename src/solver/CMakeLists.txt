@@ -94,8 +94,9 @@ set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
 target_link_libraries(antares-solver
 		PRIVATE
 			${ANTARES_SOLVER_LIBS}
-			benchmarking
+			Antares::benchmarking
 			result_writer
+			Antares::infoCollection
 		)
 
 target_include_directories(antares-solver

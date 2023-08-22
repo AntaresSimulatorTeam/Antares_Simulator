@@ -6,7 +6,7 @@
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/benchmarking/timer.h>
 #include "simulation/simulation.h"
-#include "antares/benchmarking/StudyInfoCollector.h"
+#include "antares/infoCollection/StudyInfoCollector.h"
 
 #include <antares/writer/i_writer.h>
 
