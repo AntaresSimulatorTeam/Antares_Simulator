@@ -482,6 +482,42 @@ struct HydroPower : public Constraint
     }
 };
 
+struct MaxHydroPower : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays, int NumeroDeLIntervalle)
+    {
+        bool presenceHydro
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
+        bool TurbEntreBornes
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
+        if (presenceHydro && (TurbEntreBornes
+                || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
+        {
+          const int NombreDePasDeTempsPourUneOptimisation
+            = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+
+          for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
+          {
+              builder.updateHourWithinWeek(pdt);
+              builder.include(Variable::HydProd(pays), 1.0);
+          }
+
+          ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                problemeHebdo->NamedProblems);
+          namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+          namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
+          namer.MaxHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+
+          const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
+            .MaxEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
+          builder
+            .lessThan(rhs)
+            .build();
+        }
+    }
+};
+
 void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
                           int PremierPdtDeLIntervalle,
                           int DernierPdtDeLIntervalle,
@@ -517,6 +553,7 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
     BindingConstraintDay bindingConstraintDay(problemeHebdo);
     BindingConstraintWeek bindingConstraintWeek(problemeHebdo);
     HydroPower hydroPower(problemeHebdo);
+    MaxHydroPower maxHydroPower(problemeHebdo);
 
     for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdt++)
@@ -563,27 +600,12 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
         hydroPower.add(pays, NumeroDeLIntervalle);
     }
 
-    // TODO after this
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        bool presenceHydro
-          = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
-        bool TurbEntreBornes
-          = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-        if (presenceHydro
-            && (TurbEntreBornes
-                || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
-        {
-            int cnt = 2; // NumeroDeContrainteMaxEnergieHydraulique[pays];
-            if (cnt >= 0)
-            {
-                SecondMembre[cnt] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                                      .MaxEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
-                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
-            }
-        }
+        maxHydroPower.add(pays, NumeroDeLIntervalle);
     }
 
+    // TODO after this
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
