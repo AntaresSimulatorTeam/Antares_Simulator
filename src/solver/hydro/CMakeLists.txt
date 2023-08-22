@@ -18,18 +18,18 @@ set(SRC_EXT_SOLVER_H2O_DAILY
 )
 
 set(SRC_EXT_SOLVER_H2O_MONTHLY
-	monthly/h2o_m_construire_les_contraintes.c
-	monthly/h2o_m_construire_les_variables.c
+	monthly/h2o_m_construire_les_contraintes.cpp
+	monthly/h2o_m_construire_les_variables.cpp
 	monthly/h2o_m_donnees_annuelles.h
 	monthly/h2o_m_donnees_optimisation.h
 	monthly/h2o_m_fonctions.h
-	monthly/h2o_m_free.c
-	monthly/h2o_m_initialiser_les_bornes_des_variables.c
-	monthly/h2o_m_initialiser_les_second_membre.c
-	monthly/h2o_m_instanciation.c
-	monthly/h2o_m_optimiser_une_annee.c
+	monthly/h2o_m_free.cpp
+	monthly/h2o_m_initialiser_les_bornes_des_variables.cpp
+	monthly/h2o_m_initialiser_les_second_membre.cpp
+	monthly/h2o_m_instanciation.cpp
+	monthly/h2o_m_optimiser_une_annee.cpp
     monthly/h2o_m_ajouter_bruit.cpp
-	monthly/h2o_m_resoudre_le_probleme_lineaire.c
+	monthly/h2o_m_resoudre_le_probleme_lineaire.cpp
 	monthly/h2o_m_sys.h
 )
 
