@@ -400,7 +400,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
 
-    // Allocate all arrays
+    //alloc global vectors
     SIM_AllocationTableaux(study);
 
     // Random-numbers generators

@@ -28,6 +28,7 @@
 #pragma once
 
 #include <yuni/yuni.h> // for "uint" definition
+#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
 #include <antares/study/parameters/adq-patch-params.h>
 
@@ -43,7 +44,8 @@ public:
                                                       Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams,
                                                       PROBLEME_HEBDO* problemesHebdo,
                                                       uint numSpace,
-                                                      IResultWriter& writer);
+                                                      IResultWriter& writer,
+                                                      const VAL_GEN_PAR_PAYS& valeursGenereesParPays);
 
 protected:
     explicit WeeklyOptimization(const OptimizationOptions& options,
