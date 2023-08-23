@@ -365,9 +365,6 @@ set(SRC
 	solver.h
 	solver.cpp
 
-	# Host info
-	hostinfo.h hostinfo.cpp
-
 	# files & paths
 	paths/list.h   paths/list.cpp
 
@@ -507,7 +504,6 @@ target_link_libraries(libantares-core
 		yuni-static-uuid
         Boost::boost
 		Antares::memory
-		Antares::sys
 		date
 		logs
         exception
