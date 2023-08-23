@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <cstdlib>
 #include "antares/array/matrix.h"
-#include "antares/jit/jit.h"
 
 using namespace Yuni;
 

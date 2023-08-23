@@ -33,7 +33,6 @@
 #include "sim_structure_donnees.h"
 #include "sim_structure_probleme_economique.h"
 #include "sim_alloc_probleme_hebdo.h"
-#include "sim_structure_probleme_adequation.h"
 #include "sim_extern_variables_globales.h"
 
 using namespace Antares;
