@@ -64,7 +64,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
     double eps_prodTherm = 1.0;
     double eps_nbGroupes = 1.0;
 
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
     {
         const RESULTATS_HORAIRES& ResultatsHoraires = problemeHebdo->ResultatsHoraires[pays];
         const std::vector<PRODUCTION_THERMIQUE_OPTIMALE>& ProductionThermique
