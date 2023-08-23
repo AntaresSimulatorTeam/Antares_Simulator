@@ -51,6 +51,7 @@ static void UpdateCoefficients(MPSolver* solver,
     const MPVariable* var = solver->MakeNumVar(min_l, max_l, varName);
     objective->SetCoefficient(var, costs[idxVar]);
 }
+
 static void transferVariables(MPSolver* solver,
                               const double* bMin,
                               const double* bMax,
@@ -65,6 +66,7 @@ static void transferVariables(MPSolver* solver,
           solver, objective, bMin, bMax, costs, idxVar, varName, MATRIX_ELEMENT_TYPE::VARIABLE);
     }
 }
+
 static void transferVariables(MPSolver* solver,
                               const double* bMin,
                               const double* bMax,
@@ -105,6 +107,7 @@ static void UpdateContraints(MPSolver* solver,
 
     solver->MakeRowConstraint(bMin, bMax, constraintName);
 }
+
 static void transferRows(MPSolver* solver,
                          const double* rhs,
                          const char* sens,
@@ -117,6 +120,7 @@ static void transferRows(MPSolver* solver,
         UpdateContraints(solver, rhs, sens, idxRow, constraintName);
     }
 }
+
 static void transferRows(MPSolver* solver, const double* rhs, const char* sens, int nbRow)
 {
     for (int idxRow = 0; idxRow < nbRow; ++idxRow)
