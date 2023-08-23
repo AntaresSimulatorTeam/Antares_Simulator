@@ -44,7 +44,7 @@
 #include "drag-drop.hxx"
 
 // Antares study
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <antares/sys/appdata.h>
 
 // Antares memory allocation check

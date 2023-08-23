@@ -28,7 +28,7 @@
 #define __ANTARES_APPLICATION_WINDOWS_STUDY_LOGS_H__
 
 #include <antares/wx-wrapper.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <yuni/core/event.h>
 
 #include <wx/htmllbox.h>

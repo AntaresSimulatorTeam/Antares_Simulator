@@ -202,52 +202,6 @@ public:
         maxWeeksInYear = 54,
     };
 
-public:
-    //!\name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Default constructor
-    */
-    Calendar();
-    //! Destructor
-    ~Calendar()
-    {
-    }
-    //@}
-
-    /*!
-    ** \brief Reset the calendar from the given settings
-    */
-    void reset();
-
-    /*!
-    ** \brief Reset the calendar from the given settings
-    **
-    ** Reset the calendar from an instance of the class \p Parameters,
-    ** \param parameters Simulation settings
-    */
-    void reset(const Data::Parameters& parameters);
-
-    /*!
-    ** \brief Reset the calendar from the given settings
-    **
-    ** Reset the calendar from an instance of the class \p Parameters,
-    ** except for the leap year flag, which will be taken
-    ** from \p leapyear
-    **
-    ** \param parameters Simulation settings
-    ** \param leapYear Force the value of the leap year
-    */
-    void reset(const Data::Parameters& parameters, bool leapyear);
-
-    /*!
-    ** \brief Export the whole calendar into a CSV file
-    **
-    ** This method is mainly used for debug purposes
-    */
-    bool saveToCSVFile(const AnyString& filename) const;
-
-public:
     //! informations about hours in the year according the current
     // calendar settings
     struct
@@ -338,7 +292,7 @@ public:
     } mapping;
 
     //! The calendar settings
-    struct
+    struct settings
     {
         //! Day of the week for the 1rst January
         DayOfTheWeek weekday1rstJanuary;
@@ -348,7 +302,7 @@ public:
         MonthName firstMonth;
         //! Leap year ?
         bool leapYear;
-    } settings;
+    };
 
     //! Human string representations for any time interval of our calendar
     struct
@@ -376,6 +330,42 @@ public:
     {
         std::wstring hours[maxHoursInYear];
     } wtext;
+
+public:
+    //!\name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    Calendar();
+    //! Destructor
+    ~Calendar()
+    {
+    }
+    //@}
+
+    /*!
+    ** \brief Reset the calendar from the given settings
+    */
+    void reset();
+
+    /*!
+    ** \brief Reset the calendar from the given settings
+    **
+    ** Reset the calendar from an instance of the class \p Parameters,
+    ** \param parameters Simulation settings
+    */
+    void reset(settings settings);
+
+    /*!
+    ** \brief Export the whole calendar into a CSV file
+    **
+    ** This method is mainly used for debug purposes
+    */
+    bool saveToCSVFile(const AnyString& filename) const;
+
+private:
+    settings settings_;
 
 }; // class Calendar
 } // namespace Date

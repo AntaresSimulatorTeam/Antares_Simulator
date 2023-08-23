@@ -31,7 +31,7 @@
 #include "opt_rename_problem.h"
 #include "sim_structure_probleme_economique.h"
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 using namespace Antares::Data;
 

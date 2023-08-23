@@ -28,7 +28,7 @@
 #define __ANTARES_WINDOWS_INSPECTOR_GRID_H__
 
 #include <antares/wx-wrapper.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <wx/propgrid/propgrid.h>
 #include <wx/propgrid/advprops.h>
 #include <wx/propgrid/manager.h>

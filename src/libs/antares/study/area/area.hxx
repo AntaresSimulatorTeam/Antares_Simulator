@@ -26,7 +26,7 @@
 */
 #pragma once
 
-#include "../../utils.h"
+#include <antares/utils/utils.h>
 #include "antares/study/parts/parts.h"
 #include "antares/study/parts/load/prepro.h"
 

@@ -28,7 +28,7 @@
 #define __SOLVER_SIMULATION_GENERATE_TIMESERIES_H__
 
 #include <yuni/yuni.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <vector>
 #include "ITimeSeriesNumbersWriter.h"
 

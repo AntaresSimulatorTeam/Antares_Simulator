@@ -28,7 +28,7 @@
 #define __ANTARES_APPLICATION_EXT_SOURCE_PERFORMER_H__
 
 #include <antares/wx-wrapper.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <yuni/thread/thread.h>
 #include <wx/timer.h>
 #include <wx/dialog.h>

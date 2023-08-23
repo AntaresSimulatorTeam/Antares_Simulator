@@ -6,6 +6,7 @@ set(SRC_CORRELATION
 source_group("correlation" FILES ${SRC_CORRELATION})
 
 add_library(correlation ${SRC_CORRELATION})
+add_library(Antares::correlation ALIAS correlation)
 
 target_link_libraries(correlation
         PRIVATE
@@ -14,6 +15,7 @@ target_link_libraries(correlation
         array
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
+        Antares::study #correlation.h -> area.h
         )
 
 target_include_directories(correlation

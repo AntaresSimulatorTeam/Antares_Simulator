@@ -30,7 +30,7 @@
 #include <antares/wx-wrapper.h>
 #include "../../gridhelper.h"
 #include "../../renderer.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <yuni/core/event.h>
 
 namespace Antares

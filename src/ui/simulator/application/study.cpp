@@ -1074,10 +1074,16 @@ void OpenStudyFromFolder(wxString folder)
 void StudyRefreshCalendar()
 {
     auto studyptr = GetCurrentStudy();
-    if (!(!studyptr))
+    if (studyptr)
     {
-        studyptr->calendar.reset(studyptr->parameters);
-        studyptr->calendarOutput.reset(studyptr->parameters);
+        studyptr->calendar.reset({studyptr->parameters.dayOfThe1stJanuary,
+                                  studyptr->parameters.firstWeekday,
+                                  studyptr->parameters.firstMonthInYear,
+                                  studyptr->parameters.leapYear});
+        studyptr->calendarOutput.reset({studyptr->parameters.dayOfThe1stJanuary,
+                                        studyptr->parameters.firstWeekday,
+                                        studyptr->parameters.firstMonthInYear,
+                                        studyptr->parameters.leapYear});
     }
 }
 

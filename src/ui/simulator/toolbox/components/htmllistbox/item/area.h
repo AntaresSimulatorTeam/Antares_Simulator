@@ -28,7 +28,7 @@
 #define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_AREA_H__
 
 #include "item.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 #include <memory>
 

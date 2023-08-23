@@ -28,4 +28,5 @@ target_link_libraries(checks
         logs
         yuni-static-core
         exception
+        Antares::study # cpp -> area
 )

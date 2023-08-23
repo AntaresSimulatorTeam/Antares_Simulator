@@ -29,7 +29,7 @@
 
 #include <antares/wx-wrapper.h>
 #include "../../renderer.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <map>
 #include <yuni/core/bind.h>
 #include <yuni/core/event.h>

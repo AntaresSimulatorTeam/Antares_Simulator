@@ -44,15 +44,14 @@
 #include "area/constants.h"
 
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
-#include <math.h>                 // For use of floor(...) and ceil(...)
+#include <cmath>                 // For use of floor(...) and ceil(...)
 #include <antares/writer/writer_factory.h>
 #include "ui-runtimeinfos.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 //! Clear then shrink a string
 template<class StringT>
@@ -1540,5 +1539,5 @@ void Study::prepareWriter(Benchmarking::IDurationCollector* duration_collector)
       parameters.resultFormat, folderOutput, pQueueService, duration_collector);
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

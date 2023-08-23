@@ -29,7 +29,7 @@
 
 #include <antares/wx-wrapper.h>
 #include <yuni/thread/thread.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 #include <wx/dialog.h>
 #include <wx/sizer.h>

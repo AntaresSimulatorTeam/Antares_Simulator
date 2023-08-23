@@ -30,7 +30,7 @@
 // gp : remove useless header includes
 // #include <antares/wx-wrapper.h>
 #include <yuni/core/event.h>
-// #include <antares/study.h>
+// #include <antares/study/study.h>
 #include "input.h"
 #include "area.h"
 // #include <wx/panel.h>

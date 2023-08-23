@@ -32,7 +32,7 @@
 #include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/input/area.h"
 #include <yuni/core/event.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <wx/stattext.h>
 #include <wx/sizer.h>
 #include <wx/checkbox.h>

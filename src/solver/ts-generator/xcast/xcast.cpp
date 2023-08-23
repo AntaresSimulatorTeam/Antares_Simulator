@@ -28,7 +28,7 @@
 #include <string>
 #include <sstream>
 #include <yuni/yuni.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "xcast.h"
 #include "predicate.hxx"
 #include <antares/logs/logs.h>

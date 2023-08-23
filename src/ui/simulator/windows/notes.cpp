@@ -41,7 +41,7 @@
 #include <wx/richtext/richtextstyledlg.h>
 #include <wx/richtext/richtextprint.h>
 #include <wx/statline.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "../application/study.h"
 
 using namespace Yuni;

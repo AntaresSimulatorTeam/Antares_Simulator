@@ -31,22 +31,16 @@
 #include "../../application/main/main.h"
 #include "../../toolbox/components/wizardheader.h"
 #include "../../toolbox/create.h"
-#include <antares/utils.h>
 
 #include <wx/dialog.h>
 #include <wx/sizer.h>
-#include <wx/button.h>
-#include <wx/checkbox.h>
 #include <wx/textctrl.h>
-#include <wx/choice.h>
 #include <wx/window.h>
 #include <wx/stattext.h>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 namespace // anonymous
 {
@@ -191,5 +185,5 @@ bool AskForInput(wxString& out, const wxString& title, const wxString& caption)
     return false;
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window
+

@@ -28,7 +28,7 @@
 #define __SOLVER_VARIABLE_SET_OF_AREAS_H__
 
 #include "state.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 namespace Antares
 {
