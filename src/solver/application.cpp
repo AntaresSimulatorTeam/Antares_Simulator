@@ -2,7 +2,7 @@
 
 #include <antares/sys/policy.h>
 #include <antares/resources/resources.h>
-#include <antares/hostinfo.h>
+#include <antares/logs/hostinfo.h>
 #include <antares/fatal-error.h>
 #include <antares/benchmarking/timer.h>
 
