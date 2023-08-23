@@ -1,62 +1,10 @@
 #define BOOST_TEST_MODULE test hydro series
 
 #define WIN32_LEAN_AND_MEAN
-#define SEP IO::Separator
 
 #include <boost/test/included/unit_test.hpp>
-#include <matrix.h>
-#include <string>
-#include <filesystem>
-#include <fstream>
+#include "help-functions.h"
 #include <study.h>
-
-using namespace Antares::Data;
-using my_string = Yuni::CString<256, false>;
-using namespace std;
-namespace fs = std::filesystem;
-
-void createFolder(const my_string& path, const my_string& folder_name)
-{
-    fs::path folder_path = fs::path(path.c_str()) / folder_name.c_str();
-    fs::create_directory(folder_path);
-}
-
-bool createFile(const my_string& folder_path, const my_string& file_name)
-{
-    // Construct the full path to the file
-    fs::path path = fs::path(folder_path.c_str()) / file_name.c_str();
-
-    // Create an output file stream
-    std::ofstream outputFile(path);
-
-    if (outputFile.is_open())
-    {
-        // File was successfully created and is open
-        outputFile.close();
-        return true;
-    }
-    else
-    {
-        // Failed to create or open the file
-        return false;
-    }
-}
-
-void InstantiateMatrix(Matrix<double, Yuni::sint32>& matrix, double seed)
-{
-    for (uint i = 0; i < matrix.width; i++)
-    {
-        for (uint hours = 0; hours < HOURS_PER_YEAR; hours++)
-        {
-            if (hours != 0 && hours != HOURS_PER_YEAR - 1)
-                matrix[i][hours] = seed;
-            else if (hours == 0)
-                matrix[i][hours] = seed + 1;
-            else if (hours == HOURS_PER_YEAR - 1)
-                matrix[i][hours] = seed + 2;
-        }
-    }
-}
 
 struct Fixture
 {
@@ -148,8 +96,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width, Fixt
     maxgen.reset(3, HOURS_PER_YEAR);
     maxpump.reset(3, HOURS_PER_YEAR);
 
-    InstantiateMatrix(maxgen, 400.);
-    InstantiateMatrix(maxpump, 200.);
+    InstantiateMatrix(maxgen, 400., HOURS_PER_YEAR);
+    InstantiateMatrix(maxpump, 200., HOURS_PER_YEAR);
 
     my_string buffer;
     buffer.clear() << base_folder << SEP << series_folder << SEP << area_1->id << SEP << maxgentxt;
@@ -173,8 +121,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_different_width_case
     maxgen.reset(1, HOURS_PER_YEAR);
     maxpump.reset(3, HOURS_PER_YEAR);
 
-    InstantiateMatrix(maxgen, 400.);
-    InstantiateMatrix(maxpump, 200.);
+    InstantiateMatrix(maxgen, 400., HOURS_PER_YEAR);
+    InstantiateMatrix(maxpump, 200., HOURS_PER_YEAR);
 
     my_string buffer;
     buffer.clear() << base_folder << SEP << series_folder << SEP << area_1->id << SEP << maxgentxt;
@@ -199,8 +147,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_different_width_case
     maxgen.reset(3, HOURS_PER_YEAR);
     maxpump.reset(1, HOURS_PER_YEAR);
 
-    InstantiateMatrix(maxgen, 400.);
-    InstantiateMatrix(maxpump, 200.);
+    InstantiateMatrix(maxgen, 400., HOURS_PER_YEAR);
+    InstantiateMatrix(maxpump, 200., HOURS_PER_YEAR);
 
     my_string buffer;
     buffer.clear() << base_folder << SEP << series_folder << SEP << area_1->id << SEP << maxgentxt;
@@ -225,8 +173,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_no_solver, Fixture)
     maxgen.reset(3, HOURS_PER_YEAR);
     maxpump.reset(3, HOURS_PER_YEAR);
 
-    InstantiateMatrix(maxgen, 400.);
-    InstantiateMatrix(maxpump, 200.);
+    InstantiateMatrix(maxgen, 400., HOURS_PER_YEAR);
+    InstantiateMatrix(maxpump, 200., HOURS_PER_YEAR);
 
     my_string buffer;
     buffer.clear() << base_folder << SEP << series_folder << SEP << area_No_Solver->id << SEP

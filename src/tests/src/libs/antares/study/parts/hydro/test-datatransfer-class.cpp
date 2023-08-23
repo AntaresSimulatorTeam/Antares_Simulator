@@ -1,78 +1,10 @@
 #define BOOST_TEST_MODULE test data transfer
 
 #define WIN32_LEAN_AND_MEAN
-#define SEP IO::Separator
 
 #include <boost/test/included/unit_test.hpp>
-#include <matrix.h>
-#include <string>
-#include <filesystem>
-#include <fstream>
+#include "help-functions.h"
 #include <study.h>
-
-using namespace Antares::Data;
-using my_string = Yuni::CString<256, false>;
-using namespace std;
-namespace fs = std::filesystem;
-
-void createFolder(const my_string& path, const my_string& folder_name)
-{
-    fs::path folder_path = fs::path(path.c_str()) / folder_name.c_str();
-    fs::create_directory(folder_path);
-}
-
-bool createFile(const my_string& folder_path, const my_string& file_name)
-{
-    // Construct the full path to the file
-    fs::path path = fs::path(folder_path.c_str()) / file_name.c_str();
-
-    // Create an output file stream
-    std::ofstream outputFile(path);
-
-    if (outputFile.is_open())
-    {
-        // File was successfully created and is open
-        outputFile << "This is a sample content." << std::endl;
-        outputFile.close();
-        return true;
-    }
-    else
-    {
-        // Failed to create or open the file
-        return false;
-    }
-}
-
-void InstantiateMatrix(Matrix<double, Yuni::sint32>& matrix, double seed)
-{
-    for (uint i = 0; i < matrix.width; i++)
-    {
-        for (uint hours = 0; hours < HOURS_PER_YEAR; hours++)
-        {
-            if (hours == 0)
-                matrix[i][hours] = seed + 1;
-
-            if (hours == HOURS_PER_YEAR - 1)
-                matrix[i][hours] = seed + 2;
-
-            matrix[i][hours] = seed;
-        }
-    }
-}
-
-void InstantiateColumn(Matrix<double>::ColumnType& col, double seed)
-{
-    for (uint days = 0; days < DAYS_PER_YEAR; days++)
-    {
-        if (days == 0)
-            col[days] = seed + 1;
-
-        if (days == DAYS_PER_YEAR - 1)
-            col[days] = seed + 2;
-
-        col[days] = seed;
-    }
-}
 
 struct Fixture
 {
@@ -90,16 +22,16 @@ struct Fixture
         createFolders();
 
         auto& gen = datatransfer->maxPower[DataTransfer::genMaxP];
-        InstantiateColumn(gen, 300.);
+        InstantiateColumn(gen, 300., DAYS_PER_YEAR);
 
         auto& pump = datatransfer->maxPower[DataTransfer::pumpMaxP];
-        InstantiateColumn(pump, 200.);
+        InstantiateColumn(pump, 200., DAYS_PER_YEAR);
 
         auto& hoursGen = datatransfer->maxPower[DataTransfer::genMaxE];
-        InstantiateColumn(hoursGen, 20.);
+        InstantiateColumn(hoursGen, 20., DAYS_PER_YEAR);
 
         auto& hoursPump = datatransfer->maxPower[DataTransfer::pumpMaxE];
-        InstantiateColumn(hoursPump, 14.);
+        InstantiateColumn(hoursPump, 14., DAYS_PER_YEAR);
 
         my_string buffer;
         my_string file_name = "maxpower_" + area_2->id + ".txt";
@@ -221,7 +153,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_from_folder_when_retuns_false, Fixture)
     bool ret = false;
 
     auto& hoursGen = datatransfer->maxPower[DataTransfer::genMaxE];
-    InstantiateColumn(hoursGen, 25.);
+    InstantiateColumn(hoursGen, 25., DAYS_PER_YEAR);
 
     my_string file_name = "maxpower_" + area_2->id + ".txt";
     buffer.clear() << base_folder << SEP << hydro_folder << SEP << common_folder << SEP
