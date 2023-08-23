@@ -11,15 +11,9 @@
 #include <study.h>
 
 using namespace Antares::Data;
-
 using my_string = Yuni::CString<256, false>;
-
 using namespace std;
-using namespace Antares::Data;
 namespace fs = std::filesystem;
-
-const my_string maxgentxt = "maxgen.txt";
-const my_string maxpumptxt = "maxpump.txt";
 
 void createFolder(const my_string& path, const my_string& folder_name)
 {
@@ -54,13 +48,12 @@ void InstantiateMatrix(Matrix<double, Yuni::sint32>& matrix, double seed)
     {
         for (uint hours = 0; hours < HOURS_PER_YEAR; hours++)
         {
-            if (hours == 0)
+            if (hours != 0 && hours != HOURS_PER_YEAR - 1)
+                matrix[i][hours] = seed;
+            else if (hours == 0)
                 matrix[i][hours] = seed + 1;
-
-            if (hours == HOURS_PER_YEAR - 1)
+            else if (hours == HOURS_PER_YEAR - 1)
                 matrix[i][hours] = seed + 2;
-
-            matrix[i][hours] = seed;
         }
     }
 }
@@ -78,11 +71,11 @@ struct Fixture
         // Add areas to studies
         area_1 = study->areaAdd("Area1");
         study->areas.rebuildIndexes();
-        area_No_Solver = studyNoSolver->areaAdd("Area");
+        area_No_Solver = studyNoSolver->areaAdd("AreaNoSolver");
         studyNoSolver->areas.rebuildIndexes();
 
         // Create necessary folders and files for these two areas
-        createFolders();
+        createFoldersAndFiles();
 
         // Instantiating neccessary studies parameters
         study->header.version = 870;
@@ -92,7 +85,7 @@ struct Fixture
         studyNoSolver->parameters.derated = false;
     }
 
-    void createFolders()
+    void createFoldersAndFiles()
     {
         // series folder
         my_string buffer;
@@ -100,10 +93,10 @@ struct Fixture
 
         // areas folder
         my_string area1_folder = area_1->id;
-        my_string area_folder = area_No_Solver->id;
+        my_string area_No_Solver_folder = area_No_Solver->id;
         buffer.clear() << base_folder << SEP << series_folder;
         createFolder(buffer, area1_folder);
-        createFolder(buffer, area_folder);
+        createFolder(buffer, area_No_Solver_folder);
 
         // maxgen and maxpump files
         buffer.clear() << base_folder << SEP << series_folder << SEP << area1_folder;
@@ -111,7 +104,7 @@ struct Fixture
         createFile(buffer, maxpumptxt);
 
         // maxgen and maxpump files
-        buffer.clear() << base_folder << SEP << series_folder << SEP << area_folder;
+        buffer.clear() << base_folder << SEP << series_folder << SEP << area_No_Solver_folder;
         createFile(buffer, maxgentxt);
         createFile(buffer, maxpumptxt);
     }
@@ -122,6 +115,8 @@ struct Fixture
     Area* area_No_Solver;
     my_string base_folder = fs::current_path().string();
     my_string series_folder = "series";
+    my_string maxgentxt = "maxgen.txt";
+    my_string maxpumptxt = "maxpump.txt";
 
     ~Fixture()
     {
