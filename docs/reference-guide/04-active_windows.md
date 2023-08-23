@@ -377,10 +377,10 @@ the weekly optimal hydro-thermal unit-commitment and dispatch process.
 Standard credits (Bottom part)
 
 The bottom part displays two daily time-series (365 values) defined for energy generation/storage
-(hydro turbines or hydro pumps). First and third column are deprecated due to new implementation of Maximum Generation and Maximum Pumping time-series. In each case, the first array defines the maximum power (generated or absorbed),
-and the second defines the maximum daily energy (either generated or stored).
+(hydro turbines or hydro pumps). Both arrays represents the maximum daily energy (either generated or stored).
 
-For the sake of clarity, maximum daily energies are expressed as a number of hours at maximum power.
+For the sake of clarity, maximum daily energies are expressed as a number of hours at maximum power and these values
+are used along with the Maximum Generation and Maximum Pumping TS's to calculate daily mean energy.
 
 Credit modulation (Upper part)
 
