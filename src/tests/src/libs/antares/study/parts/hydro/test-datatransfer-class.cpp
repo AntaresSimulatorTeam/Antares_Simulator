@@ -11,15 +11,9 @@
 #include <study.h>
 
 using namespace Antares::Data;
-
 using my_string = Yuni::CString<256, false>;
-
 using namespace std;
-using namespace Antares::Data;
 namespace fs = std::filesystem;
-
-const my_string maxgentxt = "maxgen.txt";
-const my_string maxpumptxt = "maxpump.txt";
 
 void createFolder(const my_string& path, const my_string& folder_name)
 {
@@ -116,13 +110,13 @@ struct Fixture
 
     void createFolders()
     {
-        // hydro folder
         my_string buffer;
 
+        // hydro folder
         createFolder(base_folder, hydro_folder);
 
+        // series folder
         buffer.clear() << base_folder << SEP << hydro_folder;
-
         createFolder(buffer, series_folder);
 
         // area1 folder
@@ -144,9 +138,9 @@ struct Fixture
         // maxhours files
         buffer.clear() << base_folder << SEP << hydro_folder << SEP << common_folder << SEP
                        << capacity_folder;
-        my_string file1_name = "maxhoursGen_" + area_2->id + ".txt";
-        my_string file2_name = "maxhoursPump_" + area_2->id + ".txt";
-        my_string file3_name = "maxpower_" + area_2->id + ".txt";
+        my_string file1_name = maxhoursGen << SEP << area_2->id << SEP << ".txt";
+        my_string file2_name = maxhoursPump << SEP << area_2->id << SEP << ".txt";
+        my_string file3_name = maxpower << SEP << area_2->id << SEP << ".txt";
 
         createFile(buffer, file1_name);
         createFile(buffer, file2_name);
@@ -162,6 +156,11 @@ struct Fixture
     my_string series_folder = "series";
     my_string common_folder = "common";
     my_string capacity_folder = "capacity";
+    my_string maxhoursGen = "maxhoursGen_";
+    my_string maxhoursPump = "maxhoursPump_";
+    my_string maxpower = "maxpower_";
+    my_string maxgentxt = "maxgen.txt";
+    my_string maxpumptxt = "maxpump.txt";
 
     ~Fixture()
     {
