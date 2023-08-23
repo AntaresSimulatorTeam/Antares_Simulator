@@ -43,9 +43,6 @@ set(SRC
 	solver.h
 	solver.cpp
 
-	# Host info
-	hostinfo.h hostinfo.cpp
-
 	# version
 	version.h
 	version.cpp
