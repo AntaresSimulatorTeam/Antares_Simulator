@@ -100,11 +100,6 @@ public:
         return DecoratorType::memoryUsage();
     }
 
-    static void EstimateMemoryUsage(Antares::Data::StudyMemoryUsage& u)
-    {
-        DecoratorType::EstimateMemoryUsage(u);
-    }
-
     Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
     {
         return DecoratorType::template hourlyValuesForSpatialAggregate<

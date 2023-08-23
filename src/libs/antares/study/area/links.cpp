@@ -30,8 +30,7 @@
 #include "../study.h"
 #include "links.h"
 #include "area.h"
-#include "../../logs.h"
-#include "../memory-usage.h"
+#include <antares/logs/logs.h>
 #include "../filter.h"
 #include "constants.h"
 #include "../fwd.h"
@@ -717,15 +716,6 @@ void AreaLinkRemove(AreaLink* link)
     }
 
     delete link;
-}
-
-void AreaLink::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += sizeof(AreaLink);
-    Matrix<>::EstimateMemoryUsage(u, fhlMax, HOURS_PER_YEAR);
-
-    // From the solver
-    u.requiredMemoryForInput += 1 * 1024 * 1024;
 }
 
 Yuni::uint64 AreaLink::memoryUsage() const

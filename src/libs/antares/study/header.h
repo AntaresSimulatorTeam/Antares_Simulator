@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <time.h>
+#include <ctime>
 #include <antares/inifile/inifile.h>
 
 //! Default author

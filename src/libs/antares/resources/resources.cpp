@@ -28,7 +28,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include "resources.h"
-#include "../logs.h"
+#include <antares/logs/logs.h>
 #include "../config.h"
 
 using namespace Yuni;
@@ -72,11 +72,6 @@ bool FindFile(Yuni::String& out, const AnyString& filename)
 void GetRootFolder(Yuni::String& out)
 {
     out = RootFolder;
-}
-
-void WriteRootFolderToLogs()
-{
-    logs.info() << "  :: from " << RootFolder;
 }
 
 bool FindExampleFolder(Yuni::String& folder)

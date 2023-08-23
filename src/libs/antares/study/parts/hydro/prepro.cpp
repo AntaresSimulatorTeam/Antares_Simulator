@@ -29,11 +29,10 @@
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "prepro.h"
 #include <antares/inifile/inifile.h>
-#include "../../../array/array1d.h"
-#include "../../../logs.h"
+#include <antares/array/array1d.h>
+#include <antares/logs/logs.h>
 
 using namespace Antares;
 using namespace Yuni;
@@ -250,15 +249,6 @@ bool PreproHydro::forceReload(bool reload) const
 void PreproHydro::markAsModified() const
 {
     return data.markAsModified();
-}
-
-void PreproHydro::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    if (timeSeriesHydro & u.study.parameters.timeSeriesToGenerate)
-    {
-        data.estimateMemoryUsage(u, true, hydroPreproMax, 12);
-        u.requiredMemoryForInput += sizeof(PreproHydro);
-    }
 }
 
 } // namespace Data

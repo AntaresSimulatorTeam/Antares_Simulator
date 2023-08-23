@@ -27,7 +27,6 @@
 
 #include <yuni/yuni.h>
 #include <antares/study.h>
-#include <antares/study/memory-usage.h>
 #include "offsets.h"
 #include <antares/wx-wrapper.h>
 #include <yuni/core/math.h>
@@ -134,7 +133,7 @@ wxString LinkOffsets::cellValue(int x, int y) const
 
 wxString LinkOffsets::columnCaption(int x) const
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return wxEmptyString;
 
     if ((uint)x < study->uiinfo->constraintCount())
@@ -144,7 +143,7 @@ wxString LinkOffsets::columnCaption(int x) const
 
 IRenderer::CellStyle LinkOffsets::cellStyle(int x, int y) const
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return IRenderer::cellStyleConstraintDisabled;
 
     if ((uint)x >= study->uiinfo->constraintCount())
@@ -211,7 +210,7 @@ bool LinkOffsets::cellValue(int x, int y, const String& value)
             if (type == Data::BindingConstraint::typeDaily
                 || type == Data::BindingConstraint::typeWeekly)
             {
-                constraint->mutateTypeWithoutCheck(type);
+                constraint->setTimeGranularity(type);
                 OnStudyConstraintModified(constraint);
                 return true;
             }
@@ -429,7 +428,7 @@ wxString ClusterOffsets::cellValue(int x, int y) const
 
 wxString ClusterOffsets::columnCaption(int x) const
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return wxEmptyString;
 
     if ((uint)x < study->uiinfo->constraintCount())
@@ -439,7 +438,7 @@ wxString ClusterOffsets::columnCaption(int x) const
 
 IRenderer::CellStyle ClusterOffsets::cellStyle(int x, int y) const
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return IRenderer::cellStyleConstraintDisabled;
 
     if ((uint)x >= study->uiinfo->constraintCount())
@@ -506,7 +505,7 @@ bool ClusterOffsets::cellValue(int x, int y, const String& value)
             if (type == Data::BindingConstraint::typeDaily
                 || type == Data::BindingConstraint::typeWeekly)
             {
-                constraint->mutateTypeWithoutCheck(type);
+                constraint->setTimeGranularity(type);
                 OnStudyConstraintModified(constraint);
                 return true;
             }

@@ -135,35 +135,6 @@ public:
         };
     };
 
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-    {
-        if (u.area)
-        {
-            for (unsigned int i = 0; i != u.area->thermal.list.size(); ++i)
-            {
-                Solver::Variable::IntermediateValues::EstimateMemoryUsage(u);
-                ResultsType::EstimateMemoryUsage(u);
-                u.requiredMemoryForOutput += sizeof(Solver::Variable::IntermediateValues);
-                u.requiredMemoryForOutput += sizeof(typename VCardType::ResultsType);
-                u.requiredMemoryForOutput += sizeof(void*) * 2;
-
-                // See variable "pminOfTheClusterForYear"
-                u.requiredMemoryForOutput += maxHoursInAYear * u.nbYearsParallel;
-
-                // year-by-year
-                if (!u.gatheringInformationsForInput)
-                {
-                    if (u.study.parameters.yearByYear)
-                    {
-                        for (unsigned int i = 0; i != u.years; ++i)
-                            u.takeIntoConsiderationANewTimeserieForDiskOutput(false);
-                    }
-                }
-            }
-        }
-        NextType::EstimateMemoryUsage(u);
-    }
-
 public:
     ProductionByDispatchablePlant() :
      pValuesForTheCurrentYear(nullptr), pminOfTheClusterForYear(nullptr), pSize(0)

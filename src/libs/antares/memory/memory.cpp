@@ -31,7 +31,7 @@
 #include <yuni/core/system/environment.h>
 #include <yuni/io/directory/info.h>
 #include <yuni/core/system/windows.hdr.h>
-#include "../logs.h"
+#include <antares/logs/logs.h>
 #ifndef YUNI_OS_WINDOWS
 #include <unistd.h>
 #include <sys/types.h>
@@ -46,7 +46,6 @@
 #ifdef YUNI_OS_WINDOWS
 #include <WinIoCtl.h>
 #endif
-#include "../study/memory-usage.h"
 #include "../sys/policy.h"
 #include <yuni/core/system/process.h>
 
@@ -117,21 +116,6 @@ bool Memory::initializeTemporaryFolder()
         pCacheFolder.clear();
     }
     return true;
-}
-
-void Memory::EstimateMemoryUsage(size_t bytes,
-                                 uint count,
-                                 Data::StudyMemoryUsage& u,
-                                 bool duplicateForParallelYears)
-{
-    size_t total = bytes * count;
-    if (duplicateForParallelYears)
-        total = total * u.nbYearsParallel;
-
-    if (u.gatheringInformationsForInput)
-        u.requiredMemoryForInput += total;
-    else
-        u.requiredMemoryForOutput += total;
 }
 
 void Memory::displayInfo() const

@@ -132,16 +132,6 @@ public:
 
 public:
     /*!
-    ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
-    */
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-    {
-        LeftType::EstimateMemoryUsage(u);
-        RightType::EstimateMemoryUsage(u);
-        BindConstType::EstimateMemoryUsage(u);
-    }
-
-    /*!
     ** \brief Retrieve the list of all individual variables
     **
     ** The predicate must implement the method `add(name, unit, comment)`.

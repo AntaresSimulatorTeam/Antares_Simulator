@@ -3,7 +3,7 @@
 #include <antares/sys/policy.h>
 #include <antares/resources/resources.h>
 #include <antares/hostinfo.h>
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 #include <antares/benchmarking/timer.h>
 
 #include <antares/exception/InitializationError.hpp>
@@ -11,7 +11,11 @@
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/version.h>
 
+#include "signal-handling/public.h"
+
 #include "misc/system-memory.h"
+#include "misc/write-command-line.h"
+
 #include "utils/ortools_utils.h"
 #include "../config.h"
 
@@ -115,11 +119,12 @@ void Application::prepare(int argc, char* argv[])
     logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR;
 #endif
     WriteHostInfoIntoLogs();
-    logs.info();
 
-    // Initialize the main structures for the simulation
-    // Logs
-    Resources::WriteRootFolderToLogs();
+    // Write command-line options into logs
+    // Incidentally, it also seems to contain the full path to the executable
+    logs.info();
+    WriteCommandLineIntoLogs(argc, argv);
+
     logs.info() << "  :: log filename: " << logs.logfile();
     // Temporary use a callback to count the number of errors and warnings
     logs.callback.connect(this, &Application::onLogMessage);
@@ -128,7 +133,6 @@ void Application::prepare(int argc, char* argv[])
     pStudy = std::make_shared<Antares::Data::Study>(true /* for the solver */);
 
     // Setting global variables for backward compatibility
-    Data::Study::Current::Set(pStudy);
     pParameters = &(pStudy->parameters);
 
     // Loading the study
@@ -220,33 +224,21 @@ void Application::execute()
     memoryReport.start();
 
     pStudy->computePThetaInfForThermalClusters();
-    try
+
+    // Run the simulation
+    switch (pStudy->runtime->mode)
     {
-        // Run the simulation
-        switch (pStudy->runtime->mode)
-        {
-        case Data::stdmEconomy:
-            runSimulationInEconomicMode();
-            break;
-        case Data::stdmAdequacy:
-            runSimulationInAdequacyMode();
-            break;
-        default:
-            break;
-        }
+    case Data::stdmEconomy:
+        runSimulationInEconomicMode();
+        break;
+    case Data::stdmAdequacy:
+        runSimulationInAdequacyMode();
+        break;
+    default:
+        break;
     }
     // TODO : make an interface class for ISimulation, check writer & queue before
     // runSimulationIn<XXX>Mode()
-    catch (Solver::Initialization::Error::NoResultWriter e)
-    {
-        logs.error() << "No result writer";
-        AntaresSolverEmergencyShutdown(); // no return
-    }
-    catch (Solver::Initialization::Error::NoQueueService e)
-    {
-        logs.error() << "No queue service";
-        AntaresSolverEmergencyShutdown(); // no return
-    }
 
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();
@@ -264,9 +256,7 @@ void Application::resetLogFilename() const
     // Making sure that the folder
     if (!Yuni::IO::Directory::Create(logfile))
     {
-        logs.fatal() << "Impossible to create the log folder. Aborting now.";
-        logs.info() << "  Target: " << logfile;
-        AntaresSolverEmergencyShutdown(); // no return
+        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.c_str() + ". Aborting now.");
     }
 
     // Date/time
@@ -279,8 +269,7 @@ void Application::resetLogFilename() const
 
     if (!logs.logfileIsOpened())
     {
-        logs.error() << "Impossible to create " << logfile;
-        AntaresSolverEmergencyShutdown(); // will never return
+        throw FatalError(std::string("Impossible to create the log file at ") + logfile.c_str());
     }
 }
 
@@ -337,6 +326,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Initialize the result writer
     study.prepareWriter(&pDurationCollector);
+    Antares::Solver::initializeSignalHandlers(study.resultWriter);
 
     // Save about-the-study files (comments, notes, etc.)
     study.saveAboutTheStudy();
@@ -363,7 +353,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             // The loading of the study produces warnings and/or errors
             // As the option '--force' is not given, we can not continue
             LogDisplayErrorInfos(pErrorCount, pWarningCount, "The simulation must stop.");
-            AntaresSolverEmergencyShutdown();
+            throw FatalError("The simulation must stop.");
         }
         else
         {
@@ -411,7 +401,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
 
-    // Allocate all arrays
+    //alloc global vectors
     SIM_AllocationTableaux(study);
 
     // Random-numbers generators
@@ -459,8 +449,9 @@ Application::~Application()
         logs.info() << LOG_UI_SOLVER_DONE;
 
         // Copy the log file
-        if (!pStudy->parameters.noOutput)
+        if (!pStudy->parameters.noOutput) {
             pStudy->importLogsToOutputFolder();
+        }
 
         // release all reference to the current study held by this class
         pStudy->clear();

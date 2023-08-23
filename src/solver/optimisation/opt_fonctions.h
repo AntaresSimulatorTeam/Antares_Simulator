@@ -29,28 +29,31 @@
 
 #include "../config.h"
 #include "opt_structure_probleme_a_resoudre.h"
-#include "../simulation/sim_structure_donnees.h"
 #include "adequacy_patch_csr/hourly_csr_problem.h"
 #include "opt_period_string_generator_base.h"
 #include "antares/study/parameters/adq-patch-params.h"
 #include "opt_structure_probleme_a_resoudre.h"
+#include <antares/writer/i_writer.h>
 
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
 
-void OPT_OptimisationHebdomadaire(const OptimizationOptions& options, PROBLEME_HEBDO*, AdqPatchParams&,
-                                  Solver::IResultWriter& writer);
+void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
+                                  PROBLEME_HEBDO*,
+                                  const AdqPatchParams&,
+                                  Antares::Solver::IResultWriter& writer);
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_HEBDO*);
-void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO*, Solver::IResultWriter& writer);
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO*,
+                                                             Antares::Solver::IResultWriter& writer);
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO*);
 void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO*);
 void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO*);
 void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO*);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*,
-                                                            AdqPatchParams&,
+                                                            const AdqPatchParams&,
                                                             const int,
                                                             const int,
                                                             const int);
@@ -69,8 +72,10 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE&,
                    uint week,
                    int year);
 
-bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options, PROBLEME_HEBDO*, AdqPatchParams&,
-                                      Solver::IResultWriter& writer);
+bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
+                                      PROBLEME_HEBDO*,
+                                      const AdqPatchParams&,
+                                      Antares::Solver::IResultWriter& writer);
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO*);
 
@@ -83,12 +88,14 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                          PROBLEME_HEBDO*,
                          int,
                          const int,
-                         std::shared_ptr<OptPeriodStringGenerator>,
-                         Solver::IResultWriter& writer);
+                         const OptPeriodStringGenerator&,
+                         Antares::Solver::IResultWriter& writer);
 void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options, const PROBLEME_HEBDO*);
 
-bool OPT_OptimisationLineaire(const OptimizationOptions& options, PROBLEME_HEBDO*, AdqPatchParams&,
-                              Solver::IResultWriter& writer);
+bool OPT_OptimisationLineaire(const OptimizationOptions& options,
+                              PROBLEME_HEBDO*,
+                              const AdqPatchParams&,
+                              Antares::Solver::IResultWriter& writer);
 void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO*);
 /*------------------------------*/
 
@@ -109,7 +116,6 @@ void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO*);
 int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*);
 void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*);
 void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO*);
-
 
 /*------------------------------*/
 

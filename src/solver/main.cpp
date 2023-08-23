@@ -24,43 +24,22 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include <yuni/yuni.h>
-#include <yuni/datetime/timestamp.h>
-#include <yuni/core/process/rename.h>
 #include <yuni/core/system/suspend.h>
-#include <stdarg.h>
-#include <new>
 
-#include "config.h"
-#include <antares/study/study.h>
-#include <antares/logs.h>
-#include <antares/exception/LoadingError.hpp>
+#include <antares/logs/logs.h>
 #include "application.h"
-#include "../ui/common/winmain.hxx"
+#include "../ui/common/winmain.hxx"  //TODO: remove that reverse dependency to UI
 
-#include <time.h>
-#include <antares/hostinfo.h>
-
-#include <antares/resources/resources.h>
-#include "../config.h"
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 #include <antares/memory/memory.h>
-#include <antares/sys/policy.h>
 #include <antares/locale.h>
-#include "misc/system-memory.h"
-
-#include "signal-handling/public.h"
-
-#ifdef YUNI_OS_WINDOWS
-#include <conio.h>
-#else
-#include <unistd.h>
-#endif
 
 using namespace Antares;
 using namespace Yuni;
 
 #define SEP Yuni::IO::Separator
+
+namespace {
 
 const char* const GPL_ANNOUNCEMENT
   = "Copyright 2007-2023 RTE  - Authors: The Antares_Simulator Team \n"
@@ -112,10 +91,21 @@ const char* const ANTARES_LOGO = "\n\n"
                                  "                . : = * # % % % % # + - .                   \n"
                                  "                    . . : : : : : . .                       \n\n";
 
-static void NotEnoughMemory()
+constexpr int ALLOCATION_FAILURE_EXIT_CODE = 42;
+
+void logAbortion()
 {
-    logs.fatal() << "Not enough memory. aborting.";
-    AntaresSolverEmergencyShutdown(42);
+    if (!logs.logfile())
+    {
+        logs.fatal() << "Aborting now. (warning: no file log available)";
+        logs.warning() << "No log file available";
+    }
+    else
+    {
+        logs.error() << "Aborting now. See logs for more details";
+    }
+}
+
 }
 
 /*!
@@ -123,46 +113,47 @@ static void NotEnoughMemory()
 */
 int main(int argc, char** argv)
 {
-    logs.info(ANTARES_LOGO);
-    logs.info(GPL_ANNOUNCEMENT);
-    // Name of the running application for the logger
-    logs.applicationName("solver");
+    try {
 
-    // Dealing with the lack of memory
-    std::set_new_handler(&NotEnoughMemory);
+        logs.info(ANTARES_LOGO);
+        logs.info(GPL_ANNOUNCEMENT);
+        // Name of the running application for the logger
+        logs.applicationName("solver");
 
-    if (not memory.initializeTemporaryFolder())
-        return EXIT_FAILURE;
+        if (not memory.initializeTemporaryFolder())
+            throw FatalError("Could not initialize temporary folder");
 
-    // locale
-    InitializeDefaultLocale();
+        // locale
+        InitializeDefaultLocale();
 
-    // Initialize signal handler
-    Antares::Solver::initializeSignalHandlers();
+        // Getting real UTF8 arguments
+        argv = AntaresGetUTF8Arguments(argc, argv);
 
-    // Getting real UTF8 arguments
-    argv = AntaresGetUTF8Arguments(argc, argv);
-
-    Antares::Solver::Application application;
-    try
-    {
+        Antares::Solver::Application application;
         application.prepare(argc, argv);
+        application.execute();
+        application.writeExectutionInfo();
+
+        FreeUTF8Arguments(argc, argv);
+
+        // to avoid a bug from wxExecute, we should wait a little before returning
+        SuspendMilliSeconds(200 /*ms*/);
+
+        return EXIT_SUCCESS;
     }
-    // Catch errors
-    catch (const Error::LoadingError& e)
-    {
-        logs.error() << e.what();
-        AntaresSolverEmergencyShutdown();
+    catch (const std::bad_alloc& exc) {
+        logs.fatal() << exc.what();
+        logAbortion();
+        return ALLOCATION_FAILURE_EXIT_CODE;
     }
-
-    application.execute();
-
-    application.writeExectutionInfo();
-
-    FreeUTF8Arguments(argc, argv);
-
-    // to avoid a bug from wxExecute, we should wait a little before returning
-    SuspendMilliSeconds(200 /*ms*/);
-
-    return EXIT_SUCCESS;
+    catch (const std::exception& exc) {
+        logs.fatal() << exc.what();
+        logAbortion();
+        return EXIT_FAILURE;
+    }
+    catch (...) {
+        logs.fatal() << "An unexpected error occurred.";
+        logAbortion();
+        return EXIT_FAILURE;
+    }
 }

@@ -7,9 +7,9 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-void renewableTSNumberData::set(const Antares::Data::RenewableCluster* cluster,
-                                const uint year,
-                                uint value)
+void renewableTSNumberData::setTSnumber(const Antares::Data::RenewableCluster* cluster,
+                                        const uint year,
+                                        uint value)
 {
     assert(cluster != nullptr);
     if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
@@ -40,7 +40,7 @@ bool renewableTSNumberData::apply(Study& study)
         assert(clusterIndex < pTSNumberRules.width);
         const auto& col = pTSNumberRules[clusterIndex];
 
-        logprefix.clear() << "Renewable: Area '" << area.name << "', cluster: '" << cluster.name()
+        logprefix.clear() << "Renewable: area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
         ret = ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountRenewable) && ret;
     }

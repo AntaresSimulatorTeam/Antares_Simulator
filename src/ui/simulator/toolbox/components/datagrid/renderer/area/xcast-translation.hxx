@@ -28,7 +28,7 @@
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_XCAST_TRANSLATION_HXX__
 
 #include <antares/study/xcast/xcast.h>
-#include <antares/date.h>
+#include <antares/date/date.h>
 
 namespace Antares
 {

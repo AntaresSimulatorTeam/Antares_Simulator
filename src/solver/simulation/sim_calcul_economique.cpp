@@ -25,6 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <sstream>
+
 #include <antares/study.h>
 #include <antares/study/area/constants.h>
 #include <antares/study/area/scratchpad.h>
@@ -34,7 +36,7 @@
 #include "sim_structure_probleme_economique.h"
 #include "sim_extern_variables_globales.h"
 #include "adequacy_patch_runtime_data.h"
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -376,7 +378,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                     PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
                                     uint numSpace,
-                                    const int PasDeTempsDebut)
+                                    const int PasDeTempsDebut,
+                                    const VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     const auto& parameters = study.parameters;
     auto& studyruntime = *study.runtime;
@@ -446,16 +449,18 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             double nivInit = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
             if (nivInit < 0.)
             {
-                logs.fatal() << "Area " << area.name << ", week " << weekInTheYear + 1
-                             << " : initial level < 0";
-                AntaresSolverEmergencyShutdown();
+                std::ostringstream msg;
+                msg << "Area " << area.name << ", week " << weekInTheYear + 1
+                    << " : initial level < 0";
+                throw FatalError(msg.str());
             }
 
             if (nivInit > area.hydro.reservoirCapacity)
             {
-                logs.fatal() << "Area " << area.name << ", week " << weekInTheYear + 1
-                             << " : initial level over capacity";
-                AntaresSolverEmergencyShutdown();
+                std::ostringstream msg;
+                msg << "Area " << area.name << ", week " << weekInTheYear + 1
+                    << " : initial level over capacity";
+                throw FatalError(msg.str());
             }
 
             if (area.hydro.powerToLevel)
@@ -614,7 +619,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
                 auto& Pt
                   = problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[cluster.index];
-                auto& PtValGen = ValeursGenereesParPays[numSpace][k];
+                auto& PtValGen = valeursGenereesParPays[numSpace][k];
 
                 Pt.PuissanceDisponibleDuPalierThermique[j]
                   = cluster.series
@@ -703,8 +708,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                         std::vector<double>& DGL = problem.CaracteristiquesHydrauliques[k]
                                         .MinEnergieHydrauParIntervalleOptimise;
 
-                        std::vector<double>& DNT
-                          = ValeursGenereesParPays[numSpace][k].HydrauliqueModulableQuotidien;
+                        const std::vector<double>& DNT
+                          = valeursGenereesParPays[numSpace][k].HydrauliqueModulableQuotidien;
 
                         double WSL
                           = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
@@ -793,7 +798,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                     for (uint j = 0; j < 7; ++j)
                     {
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
-                        weekTarget_tmp += ValeursGenereesParPays[numSpace][k]
+                        weekTarget_tmp += valeursGenereesParPays[numSpace][k]
                                             .HydrauliqueModulableQuotidien[day];
                     }
 
@@ -814,7 +819,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
                         problem.CaracteristiquesHydrauliques[k]
                           .CntEnergieH2OParIntervalleOptimise[j]
-                          = ValeursGenereesParPays[numSpace][k].HydrauliqueModulableQuotidien[day]
+                          = valeursGenereesParPays[numSpace][k].HydrauliqueModulableQuotidien[day]
                             * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation
                             * marginGen / weekGenerationTarget;
                     }

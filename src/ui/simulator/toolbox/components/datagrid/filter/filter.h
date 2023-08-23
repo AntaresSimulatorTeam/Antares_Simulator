@@ -31,7 +31,7 @@
 #include <wx/panel.h>
 #include "operator.h"
 #include "operator.list.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 
 namespace Antares
 {

@@ -30,10 +30,9 @@
 #include <yuni/io/directory.h>
 #include <yuni/core/math.h>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "prepro.h"
-#include "../../../logs.h"
-#include "../../../array/array1d.h"
+#include <antares/logs/logs.h>
+#include <antares/array/array1d.h>
 
 using namespace Yuni;
 
@@ -171,15 +170,6 @@ bool PreproThermal::forceReload(bool reload) const
 void PreproThermal::markAsModified() const
 {
     data.markAsModified();
-}
-
-void PreproThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    if (timeSeriesThermal & u.study.parameters.timeSeriesToGenerate)
-    {
-        data.estimateMemoryUsage(u, true, thermalPreproMax, DAYS_PER_YEAR);
-        u.requiredMemoryForInput += sizeof(PreproThermal);
-    }
 }
 
 void PreproThermal::reset()

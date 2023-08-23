@@ -32,7 +32,7 @@
 #include "../menus.h"
 #include "../study.h"
 
-#include <antares/date.h>
+#include <antares/date/date.h>
 
 // Map
 #include "../../toolbox/components/map/component.h"
@@ -366,7 +366,7 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
     assert(wxIsMainThread() == true and "Must be ran from the main thread");
 
     // Get the study, for any purpose
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     // No UI controls
     if (not pBigDaddy)
@@ -563,13 +563,13 @@ void ApplWnd::updateOpenWindowsMenu()
 
 void ApplWnd::saveStudy()
 {
-    if (Data::Study::Current::Valid())
+    if (CurrentStudyIsValid())
         Antares::SaveStudy();
 }
 
 void ApplWnd::saveStudyAs(const String& path, bool copyoutput, bool copyuserdata, bool copylogs)
 {
-    if (Data::Study::Current::Valid())
+    if (CurrentStudyIsValid())
         Antares::SaveStudyAs(path, copyoutput, copyuserdata, copylogs);
 }
 
@@ -580,7 +580,7 @@ void ApplWnd::exportMap(const Yuni::String& path,
                         int nbSplitParts,
                         Antares::Map::mapImageFormat format)
 {
-    if (Data::Study::Current::Valid())
+    if (CurrentStudyIsValid())
         Antares::ExportMap(
           path, transparentBackground, backgroundColor, layers, nbSplitParts, format);
 }
@@ -701,7 +701,7 @@ void ApplWnd::onSectionNotebookPageChanging(Component::Notebook::Page& page)
         pScenarioBuilderNotebook->select(wxT("load"), true);
 
     // Scenario Builder
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (page.name() == wxT("scenariobuilder"))
     {
         if (!(!study) and not study->scenarioRules)
@@ -775,7 +775,7 @@ void ApplWnd::refreshInputMenuOnRenewableModellingChanged(bool aggregated)
 
 void ApplWnd::onRenewableGenerationModellingChanged(bool init)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!study)
         return;
 
@@ -826,7 +826,7 @@ bool ApplWnd::wouldYouLikeToSaveTheStudy()
 {
     assert(wxIsMainThread() == true and "Must be ran from the main thread");
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         if (StudyHasBeenModified())
@@ -866,7 +866,7 @@ void ApplWnd::evtOnUpdateInterfaceAfterLoadedStudy(wxCommandEvent&)
 {
     assert(wxIsMainThread() == true and "Must be ran from the main thread");
 
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (not studyptr)
     {
         requestUpdateGUIAfterStudyIO(false);

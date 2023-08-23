@@ -43,8 +43,10 @@ add_executable(test-store-timeseries-number ${SRC_STORE_TS})
 target_link_libraries(test-store-timeseries-number
 		PRIVATE
 		Boost::unit_test_framework
+        test_utils_unit
 		libantares-core
 		libantares-solver-simulation
+		result_writer
 		)
 
 # Linux
@@ -69,6 +71,7 @@ add_executable(test-time_series ${SRC_STORE_TS})
 target_link_libraries(test-time_series
 		PRIVATE
 		Boost::unit_test_framework
+        test_utils_unit
 		libantares-core
 		libantares-solver-simulation
 		)

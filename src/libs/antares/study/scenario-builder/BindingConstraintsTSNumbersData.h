@@ -17,7 +17,7 @@ public:
     bool reset(const Study& study) override;
     void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
 
-    void setData(const std::string& group_name, unsigned year, unsigned value);
+    void setTSnumber(const std::string& group_name, unsigned year, unsigned value);
     unsigned get(const std::string& group_name, unsigned year) const;
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;

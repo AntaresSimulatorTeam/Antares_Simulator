@@ -1,6 +1,8 @@
 
 OMESSAGE("Antares Core library")
 
+add_subdirectory(writer)
+
 set(SRC_MEMORY
 	memory/memory.h
 	memory/memory.hxx
@@ -333,37 +335,9 @@ set(SRC_XCAST
 	)
 source_group("study\\xcast" FILES ${SRC_XCAST})
 
-set(SRC_BENCHMARKING
-	benchmarking.h
-	benchmarking/timer.h
-	benchmarking/timer.cpp
-    benchmarking/info_collectors.h
-    benchmarking/info_collectors.cpp
-	benchmarking/file_content.h
-    benchmarking/file_content.cpp
-	)
-source_group("misc\\benchmarking" FILES ${SRC_BENCHMARKING})
-
+add_subdirectory(benchmarking)
 add_subdirectory(io)
-
-set(SRC_EXCEPTION
-	exception/AssertionError.cpp
-    # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
-	exception/AssertionError.hpp
-	exception/UnfeasibleProblemError.cpp
-    # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
-	exception/UnfeasibleProblemError.hpp
-
-    exception/LoadingError.cpp
-    exception/LoadingError.hpp
-	)
-source_group("exception" FILES ${SRC_EXCEPTION})
-
-set(SRC_CHECKS
-	checks/checkLoadedInputData.cpp
-	checks/checkLoadedInputData.h
-	)
-source_group("checks" FILES ${SRC_CHECKS})
+add_subdirectory(exception)
 
 set(SRC_STDCXX
 	stdcxx/demangle.cpp
@@ -382,9 +356,9 @@ set(SRC
 	locale.h
 	locale.cpp
 
-	emergency.h emergency.cpp
+	fatal-error.h
 
-	# wx-wrapper
+		# wx-wrapper
 	wx-wrapper.h
 
 	# resource
@@ -452,16 +426,12 @@ set(SRC
 	study/runtime.h
 	study/study.h
 	study/study.hxx
-	study/current.cpp
 	study/fwd.h
 	study/fwd.cpp
 	study.h
-	study/estimate.memory-footprint.cpp
 	study/study.cpp
 	study/correlation-updater.hxx
 	study/study.importprepro.cpp
-	study/memory-usage.h
-	study/memory-usage.cpp
 	study/importlogs.cpp
 	study/load.cpp
 	study/save.cpp
@@ -507,52 +477,14 @@ set(SRC
     Enum.hpp
     Enum.hxx
 )
+add_subdirectory(date)
 
-
-add_library( libantares-core-calendar
-	# separated target to reduce multiple unit compilations introduced by swap mode
-	date.h
-	date/date.h
-	date/date.cpp
-)
-#TODO : needed for include yuni : why yuni must be include first ???
-#TODO : needed for include
-target_include_directories(libantares-core-calendar
-		PRIVATE
-			${CMAKE_SOURCE_DIR}/ext/yuni/src/
-			${CMAKE_SOURCE_DIR}/libs
-		)
-
-add_library(libantares-core-exceptions
-    ${SRC_EXCEPTION}
-)
-
-target_include_directories(libantares-core-exceptions
-		PRIVATE
-			${CMAKE_SOURCE_DIR}/ext/yuni/src/
-			${CMAKE_SOURCE_DIR}/libs
-		)
-
-add_library(libantares-core-checks
-    ${SRC_CHECKS}
-)
-
-target_include_directories(libantares-core-checks
-		PRIVATE
-			${CMAKE_SOURCE_DIR}/ext/yuni/src/
-			${CMAKE_SOURCE_DIR}/libs/antares/study
-            ${CMAKE_SOURCE_DIR}/libs/antares/logs
-			${CMAKE_SOURCE_DIR}/libs
-            ${CMAKE_SOURCE_DIR}/solver/writer
-)
+add_subdirectory(checks)
 
 add_library(libantares-core
 	antares.h
 	${SRC}
-	${SRC_LOGS}
 	${SRC_MEMORY}
-	${SRC_JIT}
-	${SRC_MATRIX}
 	${SRC_BENCHMARKING}
 	${SRC_AREAS}
 	${SRC_XCAST}
@@ -580,20 +512,19 @@ add_library(libantares-core
 #TODO : needed for include yuni : why yuni must be include first ??? cheat : made it public so everybody will have this include (should be done in yuni)
 #TODO : needed for include
 target_include_directories(libantares-core
-		PUBLIC
-			${CMAKE_SOURCE_DIR}/ext/yuni/src
+		PRIVATE
 			${CMAKE_SOURCE_DIR}/libs
-			${CMAKE_SOURCE_DIR}/libs/antares/logs
-            ${CMAKE_SOURCE_DIR}/solver/writer
 		)
 
 target_link_libraries(libantares-core
 	PUBLIC
 		yuni-static-core
 		yuni-static-uuid
-		libantares-core-calendar
-        libantares-core-exceptions
-        libantares-core-checks
+		Boost::boost
+		date
+		logs
+        exception
+        checks
 		libantares-solver-variable-info
         result_writer
 		inifile
@@ -601,6 +532,7 @@ target_link_libraries(libantares-core
 		array
 		correlation
 		object
+        benchmarking
 	)
 
 import_std_libs(libantares-core)

@@ -31,7 +31,7 @@
 #include <antares/locale.h>
 #include <antares/utils.h>
 #include <antares/study.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <string>
 
 #include "../../solver/constraints-builder/cbuilder.h"
@@ -167,9 +167,6 @@ bool initComponents(std::shared_ptr<Data::Study> study, const std::string& study
         return false;
     }
     logs.info() << "Binding constraints loaded.";
-
-    Data::Study::Current::Set(study);
-
     logs.notice() << studyPath << " is loaded.";
 
     return true;

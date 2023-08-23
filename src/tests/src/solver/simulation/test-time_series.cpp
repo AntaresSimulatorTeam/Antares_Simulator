@@ -2,12 +2,14 @@
 // Created by marechaljas on 07/04/23.
 //
 #define BOOST_TEST_MODULE rhsTimeSeries
+#define BOOST_TEST_DYN_LINK
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include "antares/study.h"
 #include <filesystem>
 #include <fstream>
+#include "utils.h"
 
 using namespace Antares::Solver;
 using namespace Antares::Data;
@@ -49,6 +51,8 @@ void CheckEqual(const Matrix<Ta>& a, const Matrix<Tb>& b) {
 struct Fixture {
     Fixture() {
         study->header.version = version870;
+        working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+
         study->folderInput = working_tmp_dir.string();
         fs::create_directories(working_tmp_dir / "bindingconstraints");
 
@@ -100,8 +104,7 @@ struct Fixture {
 
     std::shared_ptr<PublicStudy> study = std::make_shared<PublicStudy>();
     StudyLoadOptions options;
-    std::filesystem::path tmp_dir = fs::temp_directory_path();
-    std::filesystem::path working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
+    std::filesystem::path working_tmp_dir;;
     Matrix<double> expected_lower_bound_series;
     Matrix<double> expected_upper_bound_series;
     Matrix<double> expected_equality_series;

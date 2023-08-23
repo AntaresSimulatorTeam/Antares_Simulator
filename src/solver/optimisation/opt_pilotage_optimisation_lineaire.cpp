@@ -34,14 +34,16 @@
 
 using Antares::Solver::Optimization::OptimizationOptions;
 
-bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options, PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adqPatchParams,
+bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
+                                      PROBLEME_HEBDO* problemeHebdo,
+                                      const AdqPatchParams& adqPatchParams,
                                       Solver::IResultWriter& writer)
 {
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         if (problemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
         {
-            for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+            for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
             {
                 problemeHebdo->CoutDeDefaillanceEnReserve[pays] = 1.e+6;
             }

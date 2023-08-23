@@ -1,6 +1,6 @@
 set(SRC_INI
-        inifile.h
-        inifile.hxx
+        antares/inifile/inifile.h
+        antares/inifile/inifile.hxx
         inifile.cpp
         )
 
@@ -13,10 +13,11 @@ add_library(inifile
 target_link_libraries(inifile
         PRIVATE
         io
+        logs
         yuni-static-core
         )
 
 target_include_directories(inifile
-        PRIVATE
-        ${CMAKE_SOURCE_DIR}/ext/yuni/src
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
         )

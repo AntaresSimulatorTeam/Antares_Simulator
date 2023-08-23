@@ -43,6 +43,8 @@ void BeautifyName(YString& out, AnyString oldname)
 
     out.reserve(oldname.size());
 
+
+
     auto end = oldname.utf8end();
     for (auto i = oldname.utf8begin(); i != end; ++i)
     {
@@ -66,6 +68,21 @@ void BeautifyName(YString& out, AnyString oldname)
         out.replace("  ", " ");
 
     out.trim(" \t\r\n");
+}
+
+template<>
+void TransformNameIntoID(const AnyString& name, std::string& out)
+{
+    Yuni::String yuniOut;
+    TransformNameIntoID(name, yuniOut);
+    out = yuniOut;
+}
+
+void BeautifyName(std::string& out, const std::string& oldname)
+{
+    YString yuniOut;
+    BeautifyName(yuniOut, oldname);
+    out = yuniOut.c_str();
 }
 
 } // namespace Antares

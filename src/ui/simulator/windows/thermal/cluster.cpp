@@ -89,7 +89,7 @@ void CommonProperties::onThermalClusterChanged(Data::ThermalCluster* cluster)
 {
     if (cluster)
     {
-        auto data = std::make_shared<Window::Inspector::InspectorData>(Data::Study::Current::Get());
+        auto data = std::make_shared<Window::Inspector::InspectorData>(GetCurrentStudy());
         data->ThClusters.insert(cluster);
         pUpdateInfoAboutPlant(data);
     }

@@ -30,7 +30,7 @@
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/study/study.h>
 #include <cassert>
 #include <string.h>
@@ -42,7 +42,6 @@
 
 #include "../../config.h"
 
-#include <antares/emergency.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/Enum.hpp>

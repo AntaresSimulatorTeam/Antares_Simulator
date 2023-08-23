@@ -26,15 +26,11 @@
 */
 
 #include <yuni/yuni.h>
-#include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
 #include "../simulation/sim_extern_variables_globales.h"
 #include "../aleatoire/alea_fonctions.h"
-#include <antares/benchmarking.h>
-#include <antares/emergency.h>
-#include <antares/logs.h>
-#include <antares/study.h>
-#include <i_writer.h>
+#include <antares/benchmarking/info_collectors.h>
+#include <antares/fatal-error.h>
+#include <antares/writer/i_writer.h>
 #include "../misc/cholesky.h"
 #include "../misc/matrix-dp-make.h"
 
@@ -110,8 +106,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
                                   QCHOLTemp,
                                   true))
     {
-        logs.error() << "TS Generator: Hydro: Invalid correlation matrix";
-        AntaresSolverEmergencyShutdown();
+        throw FatalError("TS Generator: Hydro: Invalid correlation matrix");
     }
 
     Matrix<double> CORRE;
@@ -147,7 +142,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
         {
             logs.warning() << " TS Generator: Hydro correlation matrix was shrinked by " << r;
             if (r < 0.)
-                AntaresSolverEmergencyShutdown();
+                throw FatalError("TS Generator: r must be positive");
         }
     }
 

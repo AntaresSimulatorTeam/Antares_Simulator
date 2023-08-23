@@ -26,7 +26,7 @@
 */
 
 #include "ui.h"
-#include "../../logs.h"
+#include <antares/logs/logs.h>
 #include <yuni/core/math.h>
 #include <antares/inifile/inifile.h>
 #include <sstream>
