@@ -21,11 +21,13 @@ static inline char** VectorOfStringToCharPP(std::vector<std::string>& in,
                    [](std::string& str) { return str.empty() ? nullptr : str.data(); });
     return pointerVec.data();
 }
+
 static inline char** CharPP(size_t Size, std::vector<char*>& pointerVec)
 {
     pointerVec = std::vector<char*>(Size, nullptr);
     return pointerVec.data();
 }
+
 struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
 {
 public:
