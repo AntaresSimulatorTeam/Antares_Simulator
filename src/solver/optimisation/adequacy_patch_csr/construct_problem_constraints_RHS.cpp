@@ -25,15 +25,16 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "../simulation/adequacy_patch_runtime_data.h"
 #include "hourly_csr_problem.h"
+#include <antares/logs/logs.h>
+#include <sim_structure_probleme_economique.h>
+#include "adequacy_patch_runtime_data.h"
 
 void HourlyCSRProblem::setRHSvalueOnFlows()
 {
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
     // type 2.
-    for (int Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; Interco++)
+    for (uint32_t Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; Interco++)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
               == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
@@ -61,7 +62,7 @@ void HourlyCSRProblem::setRHSnodeBalanceValue()
     // ] – spillage(node A) = ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
     // for all areas inside adequacy patch
 
-    for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
+    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
@@ -86,7 +87,7 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
     // constraint:
     // user defined Binding constraints between transmission flows
     // and/or power generated from generating units.
-    for (int CntCouplante = 0; CntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
+    for (uint32_t CntCouplante = 0; CntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
          CntCouplante++)
     {
         if (numberOfConstraintCsrHourlyBinding.find(CntCouplante)

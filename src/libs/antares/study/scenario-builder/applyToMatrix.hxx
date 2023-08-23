@@ -40,11 +40,9 @@ inline bool CheckValidity<Data::AreaLink>(uint value,
 }
 
 template<>
-inline bool CheckValidity<BindingConstraintGroup>(uint, const BindingConstraintGroup&, uint)
+inline bool CheckValidity<BindingConstraintGroup>(uint value, const BindingConstraintGroup& group, uint)
 {
-    //TS-Generator never used
-    //Should check for time-series width, but we are missing information at this point
-    return true;
+    return value < group.numberOfTimeseries();
 }
 
 template<class StringT, class D>

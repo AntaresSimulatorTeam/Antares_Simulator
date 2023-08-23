@@ -29,7 +29,7 @@
 #include "modified-inode.h"
 #include <yuni/datetime/timestamp.h>
 #include <yuni/io/file.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <unordered_set>
 #include <yuni/core/noncopyable.h>
 #include "io.h"

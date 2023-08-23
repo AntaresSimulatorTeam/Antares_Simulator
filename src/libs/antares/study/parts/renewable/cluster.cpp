@@ -32,10 +32,9 @@
 #include <cmath>
 #include <boost/algorithm/string/case_conv.hpp>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "cluster.h"
 #include <antares/inifile/inifile.h>
-#include "../../../logs.h"
+#include <antares/logs/logs.h>
 #include "../../../utils.h"
 
 using namespace Yuni;

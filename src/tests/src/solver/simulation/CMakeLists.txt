@@ -46,6 +46,7 @@ target_link_libraries(test-store-timeseries-number
         test_utils_unit
 		libantares-core
 		libantares-solver-simulation
+		result_writer
 		)
 
 # Linux

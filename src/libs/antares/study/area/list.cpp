@@ -29,12 +29,11 @@
 #include <yuni/io/file.h>
 #include <yuni/core/string.h>
 #include "../study.h"
-#include <assert.h>
+#include <cassert>
 #include "area.h"
-#include "../../array/array1d.h"
-#include "../../inifile/inifile.h"
-#include "../../logs.h"
-#include "../memory-usage.h"
+#include <antares/array/array1d.h>
+#include <antares/inifile/inifile.h>
+#include <antares/logs/logs.h>
 #include "../../config.h"
 #include "../filter.h"
 #include "constants.h"
@@ -45,9 +44,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 namespace // anonymous
 {
@@ -1364,23 +1361,6 @@ uint64 AreaList::memoryUsage() const
     return ret;
 }
 
-void AreaList::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += (sizeof(void*) * 3) * areas.size();
-    each([&](const Data::Area& area) { area.estimateMemoryUsage(u); });
-}
-
-double AreaList::memoryUsageAveragePerArea() const
-{
-    if (!areas.empty()) // avoid division by 0
-    {
-        Yuni::uint64 ret = 0;
-        each([&](const Data::Area& area) { ret += area.memoryUsage(); });
-        return (double)((double)ret / (double)areas.size());
-    }
-    return 0;
-}
-
 uint AreaList::areaLinkCount() const
 {
     uint ret = 0;
@@ -1657,5 +1637,5 @@ void AreaList::removeThermalTimeseries()
     });
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

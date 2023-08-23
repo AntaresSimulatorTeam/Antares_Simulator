@@ -63,7 +63,8 @@ void Adequacy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
-bool Adequacy::simulationBegin()
+// valGen maybe_unused to match simulationBegin() declaration in economy.cpp
+bool Adequacy::simulationBegin([[maybe_unused]] const VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     if (!preproOnly)
     {
@@ -90,7 +91,8 @@ bool Adequacy::simulationBegin()
     return true;
 }
 
-bool Adequacy::simplexIsRequired(uint hourInTheYear, uint numSpace) const
+bool Adequacy::simplexIsRequired(uint hourInTheYear, uint numSpace,
+        const VAL_GEN_PAR_PAYS& valeursGenereesParPays) const
 {
     uint areaCount = study.areas.size();
     uint indx = hourInTheYear;
@@ -101,7 +103,7 @@ bool Adequacy::simplexIsRequired(uint hourInTheYear, uint numSpace) const
 
         for (uint k = 0; k != areaCount; ++k)
         {
-            auto& valgen = ValeursGenereesParPays[numSpace][k];
+            auto& valgen = valeursGenereesParPays[numSpace][k];
 
             double quantity
               = pProblemesHebdo[numSpace].ConsommationsAbattues[j].ConsommationAbattueDuPays[k]
@@ -120,7 +122,8 @@ bool Adequacy::year(Progression::Task& progression,
                     uint numSpace,
                     yearRandomNumbers& randomForYear,
                     std::list<uint>& failedWeekList,
-                    bool isFirstPerformedYearOfSimulation)
+                    bool isFirstPerformedYearOfSimulation,
+                    const VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -144,13 +147,14 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace].HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(study,
-          pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
+          pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear,
+          valeursGenereesParPays);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;
         reinitOptim = false;
 
-        state.simplexHasBeenRan = (w == 0) || simplexIsRequired(hourInTheYear, numSpace);
+        state.simplexHasBeenRan = (w == 0) || simplexIsRequired(hourInTheYear, numSpace, valeursGenereesParPays);
         if (state.simplexHasBeenRan) // Call to Solver is mandatory for the first week and optional
                                      // otherwise
         {
@@ -285,7 +289,7 @@ bool Adequacy::year(Progression::Task& progression,
                 {
                     assert(k < state.resSpilled.width);
                     assert(j < state.resSpilled.height);
-                    auto& valgen = ValeursGenereesParPays[numSpace][k];
+                    auto& valgen = valeursGenereesParPays[numSpace][k];
                     auto& hourlyResults = pProblemesHebdo[numSpace].ResultatsHoraires[k];
 
                     hourlyResults.TurbinageHoraire[j]

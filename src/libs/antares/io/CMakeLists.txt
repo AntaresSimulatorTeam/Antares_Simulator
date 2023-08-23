@@ -1,7 +1,10 @@
+set(HEADERS
+        antares/io/statistics.h
+        antares/io/file.h
+)
 set(SRC_IO
-        statistics.h
+        ${HEADERS}
         statistics.cpp
-        file.h
         file.cpp
         )
 source_group("io" FILES ${SRC_IO})
@@ -13,8 +16,10 @@ add_library(io
 target_link_libraries(io
         PRIVATE
         yuni-static-core
+        logs
         )
 
 target_include_directories(io
-        PRIVATE
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
         )

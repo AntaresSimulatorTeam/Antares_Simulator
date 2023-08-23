@@ -1,4 +1,4 @@
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <sstream>
 
 namespace Antares::Solver

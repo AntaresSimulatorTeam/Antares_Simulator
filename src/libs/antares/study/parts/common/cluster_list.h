@@ -1,11 +1,10 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_CLUSTER_LIST_H__
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_CLUSTER_LIST_H__
 
-#include "../../memory-usage.h"
-#include "../../../logs.h"
+#include <antares/logs/logs.h>
 #include "../../fwd.h"
 
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 
 #include <vector>
 #include <memory>
@@ -218,12 +217,6 @@ public:
     ** \return A size (in bytes)
     */
     Yuni::uint64 memoryUsage() const;
-
-    /*!
-    ** \brief Try to estimate the amount of memory which will be used by the solver
-    */
-    virtual void estimateMemoryUsage(StudyMemoryUsage&) const = 0;
-    //@}
 
 public:
     //! All clusters by their index

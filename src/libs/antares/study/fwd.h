@@ -40,7 +40,6 @@ namespace Data
 {
 // Forward declarations
 class Study;
-class StudyMemoryUsage;
 class StudyLoadOptions;
 class Area;
 class AreaLink;
@@ -519,15 +518,6 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
 ** \brief Convert a text into a renewable generation modelling
 */
 RenewableGenerationModelling StringToRenewableGenerationModelling(const AnyString& text);
-
-// Format of results
-enum ResultFormat
-{
-    // Store outputs as files inside directories
-    legacyFilesDirectories = 0,
-    // Store outputs inside a single zip archive
-    zipArchive
-};
 
 // ------------------------
 // MPS export status

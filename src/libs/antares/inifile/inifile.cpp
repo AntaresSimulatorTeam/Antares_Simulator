@@ -25,9 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "inifile.h"
-#include "../io/statistics.h"
-#include "../logs.h"
+#include "antares/inifile/inifile.h"
+
+#include <antares/logs/logs.h>
+#include <antares/io/statistics.h>
 #include <sstream>
 
 using namespace Yuni;

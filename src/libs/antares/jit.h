@@ -27,6 +27,6 @@
 #ifndef __ANTARES_LIBS_JIT_H__
 #define __ANTARES_LIBS_JIT_H__
 
-#include "jit/jit.h"
+#include <antares/jit/jit.h>
 
 #endif // __ANTARES_LIBS_JIT_H__

@@ -81,11 +81,6 @@ protected:
         return 0;
     }
 
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage&)
-    {
-        // Does nothing
-    }
-
     template<template<class, int> class DecoratorT>
     static Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate()
     {

@@ -27,7 +27,7 @@
 
 #include "sets.h"
 #include "../study.h"
-#include "../../logs.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 

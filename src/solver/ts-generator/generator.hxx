@@ -28,7 +28,7 @@
 #define __ANTARES_SOLVER_timeSeries_GENERATOR_HXX__
 
 #include "../aleatoire/alea_fonctions.h"
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 namespace Antares
 {

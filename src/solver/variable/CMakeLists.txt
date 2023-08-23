@@ -156,7 +156,11 @@ add_library(libantares-solver-variable
 		${SRC_VARIABLE_ADEQUACY}
 		${SRC_VARIABLE_ECONOMY}  )
 
-target_include_directories(libantares-solver-variable PUBLIC .)
+target_include_directories(libantares-solver-variable
+		PRIVATE
+		${CMAKE_SOURCE_DIR}/libs
+		PUBLIC
+		.)
 target_link_libraries(libantares-solver-variable PRIVATE libantares-core)
 
 
@@ -171,6 +175,10 @@ add_library(libantares-solver-variable-info
 		surveyresults/surveyresults.h
 		surveyresults/data.h
 		surveyresults/surveyresults.cpp
+)
+target_include_directories(libantares-solver-variable-info
+		PRIVATE
+		${CMAKE_SOURCE_DIR}/libs
 )
 target_link_libraries(libantares-solver-variable-info PRIVATE libantares-core result_writer)
 

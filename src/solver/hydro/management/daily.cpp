@@ -32,7 +32,7 @@
 #include <yuni/io/directory.h>
 #include "management.h"
 #include <antares/fatal-error.h>
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 #include "../daily/h2o_j_donnees_mensuelles.h"
 #include "../daily/h2o_j_fonctions.h"
 #include "../daily2/h2o2_j_donnees_mensuelles.h"
@@ -226,7 +226,8 @@ struct DebugData
 inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                                             Data::Area& area,
                                                             uint y,
-                                                            uint numSpace)
+                                                            uint numSpace,
+                                                            VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     uint z = area.index;
     assert(z < study.areas.size());
@@ -257,7 +258,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     auto const& maxP = maxPower[Data::PartHydro::genMaxP];
     auto const& maxE = maxPower[Data::PartHydro::genMaxE];
 
-    auto& valgen = ValeursGenereesParPays[numSpace][z];
+    auto& valgen = valeursGenereesParPays[numSpace][z];
 
     std::shared_ptr<DebugData> debugData(nullptr);
 
@@ -554,10 +555,13 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
 void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                                      uint y,
-                                                     uint numSpace)
+                                                     uint numSpace,
+                                                     VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     study.areas.each(
-      [&](Data::Area& area) { prepareDailyOptimalGenerations(state, area, y, numSpace); });
+      [&](Data::Area& area) {
+          prepareDailyOptimalGenerations(state, area, y, numSpace, valeursGenereesParPays);
+          });
 }
 
 } // namespace Antares

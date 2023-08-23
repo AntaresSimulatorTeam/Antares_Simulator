@@ -28,7 +28,7 @@
 #include "operator.list.h"
 #include "operator/all.h"
 #include "filter.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 
 namespace Antares
 {

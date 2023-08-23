@@ -28,8 +28,8 @@
 #include "../application.h"
 #include "../simulation/solver.h"
 #include "../simulation/adequacy.h"
-#include <antares/benchmarking.h>
-#include <antares/logs.h>
+#include <antares/benchmarking/info_collectors.h>
+#include <antares/logs/logs.h>
 
 namespace Antares
 {

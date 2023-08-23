@@ -27,9 +27,8 @@
 
 #include <yuni/yuni.h>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "container.h"
-#include "../../../logs.h"
+#include <antares/logs/logs.h>
 
 #include <algorithm>
 #include <functional>
@@ -59,12 +58,6 @@ void PartThermal::markAsModified() const
 {
     list.markAsModified();
     mustrunList.markAsModified();
-}
-
-void PartThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += sizeof(PartThermal);
-    list.estimateMemoryUsage(u);
 }
 
 PartThermal::~PartThermal()

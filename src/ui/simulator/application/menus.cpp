@@ -26,7 +26,7 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include "menus.h"
 #include <wx/image.h>
 #include "../toolbox/resources.h"

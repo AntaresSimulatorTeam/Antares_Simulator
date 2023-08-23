@@ -32,6 +32,7 @@
 #include "../solver/optimisation/opt_fonctions.h"
 #include "csr_quadratic_problem.h"
 #include "hourly_csr_problem.h"
+#include "sim_structure_probleme_economique.h"
 
 using namespace Antares::Data;
 
@@ -45,7 +46,7 @@ void CsrQuadraticProblem::setConstraintsOnFlows(std::vector<double>& Pi, std::ve
 
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
     // type 2.
-    for (int Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; Interco++)
+    for (uint32_t Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; Interco++)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
               == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
@@ -103,7 +104,7 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(std::vector<double>& Pi, std
     // ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
     // for all areas inside adequacy patch
 
-    for (int Area = 0; Area < problemeHebdo_->NombreDePays; ++Area)
+    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; ++Area)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
             != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
@@ -202,7 +203,7 @@ void CsrQuadraticProblem::setBindingConstraints(std::vector<double>& Pi, std::ve
     int hour = hourlyCsrProblem_.triggeredHour;
 
     // Special case of the binding constraints
-    for (int CntCouplante = 0; CntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
+    for (uint32_t CntCouplante = 0; CntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
          CntCouplante++)
     {
         const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes

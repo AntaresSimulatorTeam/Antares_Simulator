@@ -28,7 +28,7 @@
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__
 
 #include "cluster.h"
-#include "../../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include "defines.h"
 #include "../../fwd.h"
 #include <memory>
@@ -53,7 +53,7 @@ public:
 
     void markAsModified() const;
 
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     /*!
     ** \brief Reset all values to their default ones

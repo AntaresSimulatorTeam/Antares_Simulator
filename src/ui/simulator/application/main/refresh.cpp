@@ -28,7 +28,7 @@
 #include "main.h"
 #include "../study.h"
 #include "../menus.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include <wx/menuitem.h>
 #include "../../toolbox/components/refresh.h"
 #include "../../../common/lock.h"
