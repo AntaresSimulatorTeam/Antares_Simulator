@@ -96,6 +96,7 @@ target_link_libraries(antares-solver
 			${ANTARES_SOLVER_LIBS}
 			Antares::benchmarking
 			result_writer
+			Antares::sys
 			Antares::infoCollection
 		)
 

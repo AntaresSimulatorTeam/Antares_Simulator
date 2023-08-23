@@ -114,7 +114,7 @@ static SimplexResult OPT_TryToCallSimplex(
 
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
-    OptimizationStatistics* optimizationStatistics = &(problemeHebdo->optimizationStatistics[opt]);
+    OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
 
     if (!PremierPassage)
     {
@@ -176,7 +176,7 @@ static SimplexResult OPT_TryToCallSimplex(
                                                   ProblemeAResoudre->NombreDeContraintes);
             }
             measure.tick();
-            optimizationStatistics->addUpdateTime(measure.duration_ms());
+            optimizationStatistics.addUpdateTime(measure.duration_ms());
         }
     }
 
@@ -256,7 +256,7 @@ static SimplexResult OPT_TryToCallSimplex(
     }
     measure.tick();
     long long solveTime = measure.duration_ms();
-    optimizationStatistics->addSolveTime(solveTime);
+    optimizationStatistics.addSolveTime(solveTime);
 
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
     if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage)

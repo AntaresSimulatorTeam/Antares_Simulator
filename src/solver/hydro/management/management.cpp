@@ -496,7 +496,8 @@ double HydroManagement::randomReservoirLevel(double min, double avg, double max)
 void HydroManagement::operator()(double* randomReservoirLevel,
                                  Solver::Variable::State& state,
                                  uint y,
-                                 uint numSpace)
+                                 uint numSpace,
+                                 VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     memset(pAreas[numSpace], 0, sizeof(PerArea) * study.areas.size());
 
@@ -515,7 +516,7 @@ void HydroManagement::operator()(double* randomReservoirLevel,
     prepareEffectiveDemand(numSpace);
 
     prepareMonthlyOptimalGenerations(randomReservoirLevel, y, numSpace);
-    prepareDailyOptimalGenerations(state, y, numSpace);
+    prepareDailyOptimalGenerations(state, y, numSpace, valeursGenereesParPays);
 }
 
 } // namespace Antares

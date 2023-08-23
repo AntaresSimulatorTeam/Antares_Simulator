@@ -378,7 +378,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                     PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
                                     uint numSpace,
-                                    const int PasDeTempsDebut)
+                                    const int PasDeTempsDebut,
+                                    const VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     const auto& parameters = study.parameters;
     auto& studyruntime = *study.runtime;
@@ -618,7 +619,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
                 auto& Pt
                   = problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[cluster.index];
-                auto& PtValGen = ValeursGenereesParPays[numSpace][k];
+                auto& PtValGen = valeursGenereesParPays[numSpace][k];
 
                 Pt.PuissanceDisponibleDuPalierThermique[j]
                   = cluster.series
@@ -707,8 +708,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                         std::vector<double>& DGL = problem.CaracteristiquesHydrauliques[k]
                                         .MinEnergieHydrauParIntervalleOptimise;
 
-                        std::vector<double>& DNT
-                          = ValeursGenereesParPays[numSpace][k].HydrauliqueModulableQuotidien;
+                        const std::vector<double>& DNT
+                          = valeursGenereesParPays[numSpace][k].HydrauliqueModulableQuotidien;
 
                         double WSL
                           = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
@@ -797,7 +798,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                     for (uint j = 0; j < 7; ++j)
                     {
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
-                        weekTarget_tmp += ValeursGenereesParPays[numSpace][k]
+                        weekTarget_tmp += valeursGenereesParPays[numSpace][k]
                                             .HydrauliqueModulableQuotidien[day];
                     }
 
@@ -818,7 +819,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
                         problem.CaracteristiquesHydrauliques[k]
                           .CntEnergieH2OParIntervalleOptimise[j]
-                          = ValeursGenereesParPays[numSpace][k].HydrauliqueModulableQuotidien[day]
+                          = valeursGenereesParPays[numSpace][k].HydrauliqueModulableQuotidien[day]
                             * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation
                             * marginGen / weekGenerationTarget;
                     }

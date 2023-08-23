@@ -38,7 +38,7 @@
 #include <yuni/core/system/suspend.h>
 #include <yuni/io/file.h>
 #include <antares/memory/memory.h>
-#include <antares/hostinfo.h>
+#include <antares/logs/hostinfo.h>
 #include <antares/locale.h>
 #include "../../config.h"
 

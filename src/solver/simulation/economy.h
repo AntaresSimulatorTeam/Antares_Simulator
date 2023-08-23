@@ -74,14 +74,15 @@ public:
 protected:
     void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
 
-    bool simulationBegin();
+    bool simulationBegin(const VAL_GEN_PAR_PAYS& valeursGenereesParPays);
 
     bool year(Progression::Task& progression,
               Variable::State& state,
               uint numSpace,
               yearRandomNumbers& randomForYear,
               std::list<uint>& failedWeekList,
-              bool isFirstPerformedYearOfSimulation);
+              bool isFirstPerformedYearOfSimulation,
+              VAL_GEN_PAR_PAYS& valeursGenereesParPays);
 
     void incrementProgression(Progression::Task& progression);
 

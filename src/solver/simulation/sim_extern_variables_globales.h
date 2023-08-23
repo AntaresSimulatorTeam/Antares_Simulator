@@ -28,21 +28,12 @@
 #define __SOLVER_SIMULATION_EXTERN_H__
 
 #include "sim_structure_donnees.h"
-#include "sim_structure_probleme_adequation.h"
 #include "sim_structure_probleme_economique.h"
 
 /* Valeurs generees de maniere aleatoire */
-extern std::vector<std::vector<VALEURS_GENEREES_PAR_PAYS>> ValeursGenereesParPays;
 extern std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_PAYS>> NumeroChroniquesTireesParPays;
 extern std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION>> NumeroChroniquesTireesParInterconnexion;
 extern std::vector<std::map<std::string, unsigned>> NumeroChroniquesTireesParGroup;
-
-/* Optimisation */
-/*-Economique-*/
-// extern PROBLEME_HEBDO                        problemeHebdo;
-/*-Adequation-*/
-extern PROBLEME_HORAIRE_ADEQUATION ProblemeHoraireAdequation;
-extern VALEURS_ANNUELLES** ValeursAnnuellesAdequation;
 
 /* Resultats */
 /*-Economique-*/

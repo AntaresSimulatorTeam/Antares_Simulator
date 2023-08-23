@@ -29,7 +29,6 @@
 
 #include "../config.h"
 #include "opt_structure_probleme_a_resoudre.h"
-#include "../simulation/sim_structure_donnees.h"
 #include "adequacy_patch_csr/hourly_csr_problem.h"
 #include "opt_period_string_generator_base.h"
 #include "antares/study/parameters/adq-patch-params.h"

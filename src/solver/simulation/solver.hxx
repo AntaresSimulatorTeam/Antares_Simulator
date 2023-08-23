@@ -141,7 +141,7 @@ private:
 
             // Getting random tables for this year
             yearRandomNumbers& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
-            double** thermalNoisesByArea = randomForCurrentYear.pThermalNoisesByArea;
+            double const* const* thermalNoisesByArea = randomForCurrentYear.pThermalNoisesByArea;
             double* randomReservoirLevel = nullptr;
 
             if (hydroHotStart && firstSetParallelWithAPerformedYearWasRun)
@@ -151,7 +151,8 @@ private:
 
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
-            ALEA_TirageAuSortChroniques(study, thermalNoisesByArea, numSpace);
+            ALEA_TirageAuSortChroniques(study, thermalNoisesByArea, numSpace,
+                    simulationObj->valeursGenereesParPays);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
             simulationObj->prepareClustersInMustRunMode(numSpace);
@@ -159,7 +160,8 @@ private:
             // 4 - Hydraulic ventilation
             {
                 Benchmarking::Timer timer;
-                simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y, numSpace);
+                simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y,
+                        numSpace, simulationObj->valeursGenereesParPays);
                 timer.stop();
                 pDurationCollector->addDuration("hydro_ventilation", timer.get_duration());
             }
@@ -180,7 +182,8 @@ private:
                                                  numSpace,
                                                  randomForCurrentYear,
                                                  failedWeekList,
-                                                 isFirstPerformedYearOfSimulation);
+                                                 isFirstPerformedYearOfSimulation,
+                                                 simulationObj->valeursGenereesParPays);
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
@@ -273,6 +276,33 @@ inline ISimulation<Impl>::~ISimulation()
 {
 }
 
+static void allocateValeursGenereesParPays(VAL_GEN_PAR_PAYS& val,
+                                           const Data::Study& study)
+{
+    val.resize(study.maxNbYearsInParallel);
+    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
+    {
+        val[numSpace].resize(study.areas.size());
+        for (uint areaIndex = 0; areaIndex < study.areas.size(); ++areaIndex)
+        {
+            auto& area = *study.areas.byIndex[areaIndex];
+
+            val[numSpace][areaIndex].HydrauliqueModulableQuotidien
+                .assign(study.runtime->nbDaysPerYear,0 );
+            val[numSpace][areaIndex].AleaCoutDeProductionParPalier
+                .assign(area.thermal.clusterCount(), 0.);
+
+            if (area.hydro.reservoirManagement)
+            {
+                val[numSpace][areaIndex].NiveauxReservoirsDebutJours
+                    .assign(study.runtime->nbDaysPerYear, 0.);
+                val[numSpace][areaIndex].NiveauxReservoirsFinJours
+                    .assign(study.runtime->nbDaysPerYear, 0.);
+            }
+        }
+    }
+}
+
 template<class Impl>
 void ISimulation<Impl>::run()
 {
@@ -296,6 +326,8 @@ void ISimulation<Impl>::run()
     // The general data
     auto& parameters = *(study.runtime->parameters);
 
+    allocateValeursGenereesParPays(valeursGenereesParPays, study);
+
     // Preprocessors
     // Determine if we have to use the preprocessors at least one time.
     pData.initialize(parameters);
@@ -310,7 +342,6 @@ void ISimulation<Impl>::run()
         // Only the preprocessors can be used
         // We only have to regenerate time-series according the settings
         // in general data of the study.
-        logs.info();
         logs.info() << " Only the preprocessors are enabled.";
 
         regenerateTimeSeries(0);
@@ -321,7 +352,7 @@ void ISimulation<Impl>::run()
     }
     else
     {
-        if (not ImplementationType::simulationBegin())
+        if (not ImplementationType::simulationBegin(valeursGenereesParPays))
             return;
         // Allocating the memory
         ImplementationType::variables.simulationBegin();

@@ -84,7 +84,6 @@ target_link_libraries(libantares-core
 		Antares::study
         Boost::boost
 		Antares::memory
-		Antares::sys
 		date
 		logs
         exception

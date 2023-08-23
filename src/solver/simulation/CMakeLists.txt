@@ -8,7 +8,6 @@ set(SRC_SIMULATION
 		sim_calcul_economique.cpp
 		sim_extern_variables_globales.h
 		sim_structure_donnees.h
-		sim_structure_probleme_adequation.h
 		sim_structure_probleme_economique.h
 		sim_variables_globales.cpp
 		sim_constants.h
