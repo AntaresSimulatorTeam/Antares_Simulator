@@ -84,7 +84,7 @@ public:
     PreproHydro();
     //@}
 
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     /*!
     ** \brief Reset all data to their default values

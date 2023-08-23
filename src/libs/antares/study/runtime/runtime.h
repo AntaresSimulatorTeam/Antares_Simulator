@@ -160,12 +160,6 @@ private:
     void checkThermalTSGeneration(Study& study);
 }; // struct StudyRuntimeInfos
 
-/*!
-** \brief Get the size (bytes) occupied in memory by a StudyRuntimeInfos structure
-** \ingroup runtimedata
-*/
-void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& study);
-
 } // namespace Antares::Data
 
 #include "runtime.hxx"

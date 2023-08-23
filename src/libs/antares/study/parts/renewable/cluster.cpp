@@ -32,7 +32,6 @@
 #include <cmath>
 #include <boost/algorithm/string/case_conv.hpp>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "cluster.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>

@@ -53,7 +53,7 @@ public:
 
     void markAsModified() const;
 
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     /*!
     ** \brief Reset all values to their default ones

@@ -62,11 +62,6 @@ public:
     virtual ~Run();
     //@}
 
-    /*!
-    ** \brief Update all visual components and internal variables about the resources status
-    */
-    void estimateMemoryUsage();
-
 private:
     void gridAppend(wxFlexGridSizer& sizer,
                     const wxString& title,

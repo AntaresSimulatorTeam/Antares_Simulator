@@ -1545,42 +1545,6 @@ void Matrix<T, ReadWriteT>::unloadFromMemory() const
     }
 }
 
-template<class T, class ReadWriteT>
-inline void Matrix<T, ReadWriteT>::EstimateMemoryUsage(Antares::Data::StudyMemoryUsage& u,
-                                                       uint w,
-                                                       uint h)
-{
-    MatrixEstimateMemoryUsage(sizeof(T), u, w, h);
-}
-
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::estimateMemoryUsage(Antares::Data::StudyMemoryUsage& u,
-                                                bool cond,
-                                                uint w,
-                                                uint h) const
-{
-    if (cond)
-        EstimateMemoryUsage(u, w, h);
-    else
-        estimateMemoryUsage(u);
-}
-
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::estimateMemoryUsage(Antares::Data::StudyMemoryUsage& u) const
-{
-    using namespace Yuni;
-
-    // We already have the data. No need to estimate the value.
-    if (JIT::IsReady(jit))
-    {
-        EstimateMemoryUsage(u, width, height);
-        return;
-    }
-
-    // The data are actually not loaded. We will have to rely on the JIT structure
-    MatrixEstimateMemoryUsageFromJIT(sizeof(T), u, jit);
-}
-
 template<class T1, class T2>
 bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T1, T2>& m)
 {
