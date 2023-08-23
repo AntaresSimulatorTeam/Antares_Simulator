@@ -166,9 +166,6 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
         {
             std::shared_ptr<DataTransfer> datatransfer = std::make_shared<DataTransfer>();
 
-            buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
-                           << area.id << '.' << study.inputExtension;
-
             ret = datatransfer->LoadFromFolder(study, folder, area);
             ret = datatransfer->AutoTransferHours(study, folder, area);
         }
