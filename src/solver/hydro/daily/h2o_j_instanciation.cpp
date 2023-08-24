@@ -213,17 +213,10 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
         {
             PlVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees[j] = NULL;
         }
-        PlVariable.PositionDeLaVariable = (int*)malloc(NombreDeVariables * sizeof(int));
-        if (PlVariable.PositionDeLaVariable == NULL)
-        {
-            return (0);
-        }
-        PlVariable.ComplementDeLaBase = (int*)malloc(NombreDeContraintes * sizeof(int));
-        if (PlVariable.ComplementDeLaBase == NULL)
-        {
-            return (0);
-        }
+        PlVariable.PositionDeLaVariable.assign(NombreDeVariables, 0);
+        PlVariable.ComplementDeLaBase.assign(NombreDeContraintes, 0);
         PlVariable.CoutsReduits = (double*)malloc(NombreDeVariables * sizeof(double));
+
         if (PlVariable.CoutsReduits == NULL)
         {
             return (0);
