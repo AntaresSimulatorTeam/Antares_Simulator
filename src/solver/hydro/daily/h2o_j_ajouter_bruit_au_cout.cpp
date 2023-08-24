@@ -12,7 +12,7 @@ void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES* donnesMensuelles)
 {
     auto ProblemeHydraulique = donnesMensuelles->ProblemeHydraulique;
     auto& ProblemeLineairePartieFixe = ProblemeHydraulique->ProblemeLineairePartieFixe;
-    auto CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables;
+    auto& CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables;
     auto NombreDeProblemes = ProblemeHydraulique->NombreDeProblemes;
     Antares::MersenneTwister noiseGenerator;
     noiseGenerator.reset(Constants::seed); // Arbitrary seed, hard-coded since we don't really want
@@ -27,10 +27,10 @@ void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES* donnesMensuelles)
         }
 
         ProblemeLineairePartieFixe[i]
-          .CoutLineaire[CorrespondanceDesVariables[i]->NumeroDeLaVariableMu]
+          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableMu]
           += noiseGenerator() * Constants::noiseAmplitude;
         ProblemeLineairePartieFixe[i]
-          .CoutLineaire[CorrespondanceDesVariables[i]->NumeroDeLaVariableXi]
+          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi]
           += noiseGenerator() * Constants::noiseAmplitude;
     }
 }

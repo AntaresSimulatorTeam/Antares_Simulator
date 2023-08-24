@@ -123,7 +123,7 @@ struct PROBLEME_HYDRAULIQUE
     int NombreDeProblemes;
     int* NbJoursDUnProbleme;
 
-    CORRESPONDANCE_DES_VARIABLES** CorrespondanceDesVariables;
+    std::vector<CORRESPONDANCE_DES_VARIABLES> CorrespondanceDesVariables;
     std::vector<CORRESPONDANCE_DES_CONTRAINTES> CorrespondanceDesContraintes;
 
     std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE> ProblemeLineairePartieFixe;

@@ -45,7 +45,7 @@ void H2O_j_ConstruireLesVariables(int NbPdt,
                                   std::vector<double>& Xmax,
                                   std::vector<int>& TypeDeVariable,
                                   std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees,
-                                  CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables)
+                                  CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables)
 {
     int Var;
     int Pdt;
@@ -61,14 +61,14 @@ void H2O_j_ConstruireLesVariables(int NbPdt,
         Var++;
     }
 
-    CorrespondanceDesVariables->NumeroDeLaVariableMu = Var;
+    CorrespondanceDesVariables.NumeroDeLaVariableMu = Var;
     Xmin[Var] = 0.0;
     Xmax[Var] = LINFINI;
     TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
     AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
     Var++;
 
-    CorrespondanceDesVariables->NumeroDeLaVariableXi = Var;
+    CorrespondanceDesVariables.NumeroDeLaVariableXi = Var;
     Xmin[Var] = 0.0;
     Xmax[Var] = LINFINI;
     TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
