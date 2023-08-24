@@ -9,126 +9,6 @@
 using namespace operations_research;
 
 const char* const XPRESS_PARAMS = "THREADS 1";
-enum class MATRIX_ELEMENT_TYPE
-{
-    VARIABLE,
-    CONSTRAINT
-};
-
-char FromMatrixElementTypeToChar(MATRIX_ELEMENT_TYPE type)
-{
-    if (type == MATRIX_ELEMENT_TYPE::VARIABLE)
-    {
-        return 'x';
-    }
-    return 'c';
-}
-
-void CheckName(std::string& var_name, unsigned idxVar, MATRIX_ELEMENT_TYPE type)
-{
-    if (var_name.empty())
-    {
-        var_name = FromMatrixElementTypeToChar(type) + std::to_string(idxVar);
-    }
-}
-
-static void UpdateCoefficients(MPSolver* solver,
-                               MPObjective* const objective,
-                               const double* bMin,
-                               const double* bMax,
-                               const double* costs,
-                               unsigned idxVar,
-                               std::string& varName,
-                               MATRIX_ELEMENT_TYPE type)
-{
-    double min_l = 0.0;
-    if (bMin != NULL)
-    {
-        min_l = bMin[idxVar];
-    }
-    double max_l = bMax[idxVar];
-    CheckName(varName, idxVar, type);
-    const MPVariable* var = solver->MakeNumVar(min_l, max_l, varName);
-    objective->SetCoefficient(var, costs[idxVar]);
-}
-
-static void transferVariables(MPSolver* solver,
-                              const double* bMin,
-                              const double* bMax,
-                              const double* costs,
-                              int nbVar)
-{
-    MPObjective* const objective = solver->MutableObjective();
-    for (int idxVar = 0; idxVar < nbVar; ++idxVar)
-    {
-        std::string varName;
-        UpdateCoefficients(
-          solver, objective, bMin, bMax, costs, idxVar, varName, MATRIX_ELEMENT_TYPE::VARIABLE);
-    }
-}
-
-static void transferVariables(MPSolver* solver,
-                              const double* bMin,
-                              const double* bMax,
-                              const double* costs,
-                              int nbVar,
-                              const std::vector<std::string>& NomDesVariables)
-{
-    MPObjective* const objective = solver->MutableObjective();
-    for (int idxVar = 0; idxVar < nbVar; ++idxVar)
-    {
-        std::string varName = NomDesVariables[idxVar];
-        UpdateCoefficients(
-          solver, objective, bMin, bMax, costs, idxVar, varName, MATRIX_ELEMENT_TYPE::VARIABLE);
-    }
-}
-
-static void UpdateContraints(MPSolver* solver,
-                             const double* rhs,
-                             const char* sens,
-                             unsigned idxRow,
-                             std::string& constraintName)
-{
-    double bMin = -MPSolver::infinity(), bMax = MPSolver::infinity();
-    if (sens[idxRow] == '=')
-    {
-        bMin = bMax = rhs[idxRow];
-    }
-    else if (sens[idxRow] == '<')
-    {
-        bMax = rhs[idxRow];
-    }
-    else if (sens[idxRow] == '>')
-    {
-        bMin = rhs[idxRow];
-    }
-
-    CheckName(constraintName, idxRow, MATRIX_ELEMENT_TYPE::CONSTRAINT);
-
-    solver->MakeRowConstraint(bMin, bMax, constraintName);
-}
-
-static void transferRows(MPSolver* solver,
-                         const double* rhs,
-                         const char* sens,
-                         int nbRow,
-                         const std::vector<std::string>& NomDesContraintes)
-{
-    for (int idxRow = 0; idxRow < nbRow; ++idxRow)
-    {
-        std::string constraintName = NomDesContraintes[idxRow];
-        UpdateContraints(solver, rhs, sens, idxRow, constraintName);
-    }
-}
-
-static void transferRows(MPSolver* solver, const double* rhs, const char* sens, int nbRow)
-{
-    for (int idxRow = 0; idxRow < nbRow; ++idxRow)
-    {
-        std::string constraintName;
-        UpdateContraints(solver, rhs, sens, idxRow, constraintName);
-    }
-}
 
 static void transferMatrix(const MPSolver* solver,
                            const int* indexRows,
@@ -191,51 +71,134 @@ namespace Antares
 {
 namespace Optimization
 {
+ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
+  const std::string& solverName,
+  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe) :
+ solverName_(solverName), problemeSimplexe_(problemeSimplexe)
+{
+    if (problemeSimplexe_->UseNamedProblems())
+    {
+        variableNameManager_.SetTarget(problemeSimplexe_->VariableNames());
+    }
+}
+
+MPSolver* ProblemSimplexeNommeConverter::Convert()
+{
+    MPSolver* solver = MPSolverFactory(problemeSimplexe_, solverName_);
+    tuneSolverSpecificOptions(solver);
+
+    // Create the variables and set objective cost.
+    CopyVariables(solver);
+
+    // Create constraints and set coefs
+    CopyRows(solver);
+
+    transferMatrix(solver,
+                   problemeSimplexe_->IndicesDebutDeLigne,
+                   problemeSimplexe_->NombreDeTermesDesLignes,
+                   problemeSimplexe_->IndicesColonnes,
+                   problemeSimplexe_->CoefficientsDeLaMatriceDesContraintes,
+                   problemeSimplexe_->NombreDeContraintes);
+
+    return solver;
+}
+
+void ProblemSimplexeNommeConverter::UpdateCoefficient(unsigned idxVar,
+                                                      MPSolver* solver,
+                                                      MPObjective* const objective)
+{
+    double min_l = 0.0;
+    if (problemeSimplexe_->Xmin != NULL)
+    {
+        min_l = problemeSimplexe_->Xmin[idxVar];
+    }
+    double max_l = problemeSimplexe_->Xmax[idxVar];
+    const MPVariable* var = solver->MakeNumVar(min_l, max_l, variableNameManager_.GetName(idxVar));
+    objective->SetCoefficient(var, problemeSimplexe_->CoutLineaire[idxVar]);
+}
+
+void ProblemSimplexeNommeConverter::CopyVariables(MPSolver* solver)
+
+{
+    MPObjective* const objective = solver->MutableObjective();
+
+    for (int idxVar = 0; idxVar < problemeSimplexe_->NombreDeVariables; ++idxVar)
+    {
+        UpdateCoefficient(idxVar, solver, objective);
+    }
+}
+
+void ProblemSimplexeNommeConverter::UpdateContraints(unsigned idxRow, MPSolver* solver)
+{
+    double bMin = -MPSolver::infinity(), bMax = MPSolver::infinity();
+    if (problemeSimplexe_->Sens[idxRow] == '=')
+    {
+        bMin = bMax = problemeSimplexe_->SecondMembre[idxRow];
+    }
+    else if (problemeSimplexe_->Sens[idxRow] == '<')
+    {
+        bMax = problemeSimplexe_->SecondMembre[idxRow];
+    }
+    else if (problemeSimplexe_->Sens[idxRow] == '>')
+    {
+        bMin = problemeSimplexe_->SecondMembre[idxRow];
+    }
+
+    solver->MakeRowConstraint(bMin, bMax, constraintNameManager_.GetName(idxRow));
+}
+void ProblemSimplexeNommeConverter::CopyRows(MPSolver* solver)
+{
+    for (int idxRow = 0; idxRow < problemeSimplexe_->NombreDeContraintes; ++idxRow)
+    {
+        UpdateContraints(idxRow, solver);
+    }
+}
+
 MPSolver* convert_to_MPSolver(const std::string& solverName,
                               const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
-    // Create the MPSolver
+    // // Create the MPSolver
     MPSolver* solver = MPSolverFactory(problemeSimplexe, solverName);
 
-    tuneSolverSpecificOptions(solver);
-    if (problemeSimplexe->UseNamedProblems())
-    {
-        // Create the variables and set objective cost.
-        transferVariables(solver,
-                          problemeSimplexe->Xmin,
-                          problemeSimplexe->Xmax,
-                          problemeSimplexe->CoutLineaire,
-                          problemeSimplexe->NombreDeVariables,
-                          problemeSimplexe->VariableNames());
+    // tuneSolverSpecificOptions(solver);
+    // if (problemeSimplexe->UseNamedProblems())
+    // {
+    //     // Create the variables and set objective cost.
+    //     transferVariables(solver,
+    //                       problemeSimplexe->Xmin,
+    //                       problemeSimplexe->Xmax,
+    //                       problemeSimplexe->CoutLineaire,
+    //                       problemeSimplexe->NombreDeVariables,
+    //                       problemeSimplexe->VariableNames());
 
-        // Create constraints and set coefs
-        transferRows(solver,
-                     problemeSimplexe->SecondMembre,
-                     problemeSimplexe->Sens,
-                     problemeSimplexe->NombreDeContraintes,
-                     problemeSimplexe->ConstraintNames());
-    }
-    else
-    {
-        // Create the variables and set objective cost.
-        transferVariables(solver,
-                          problemeSimplexe->Xmin,
-                          problemeSimplexe->Xmax,
-                          problemeSimplexe->CoutLineaire,
-                          problemeSimplexe->NombreDeVariables);
+    //     // Create constraints and set coefs
+    //     transferRows(solver,
+    //                  problemeSimplexe->SecondMembre,
+    //                  problemeSimplexe->Sens,
+    //                  problemeSimplexe->NombreDeContraintes,
+    //                  problemeSimplexe->ConstraintNames());
+    // }
+    // else
+    // {
+    //     // Create the variables and set objective cost.
+    //     transferVariables(solver,
+    //                       problemeSimplexe->Xmin,
+    //                       problemeSimplexe->Xmax,
+    //                       problemeSimplexe->CoutLineaire,
+    //                       problemeSimplexe->NombreDeVariables);
 
-        // Create constraints and set coefs
-        transferRows(solver,
-                     problemeSimplexe->SecondMembre,
-                     problemeSimplexe->Sens,
-                     problemeSimplexe->NombreDeContraintes);
-    }
-    transferMatrix(solver,
-                   problemeSimplexe->IndicesDebutDeLigne,
-                   problemeSimplexe->NombreDeTermesDesLignes,
-                   problemeSimplexe->IndicesColonnes,
-                   problemeSimplexe->CoefficientsDeLaMatriceDesContraintes,
-                   problemeSimplexe->NombreDeContraintes);
+    //     // Create constraints and set coefs
+    //     transferRows(solver,
+    //                  problemeSimplexe->SecondMembre,
+    //                  problemeSimplexe->Sens,
+    //                  problemeSimplexe->NombreDeContraintes);
+    // }
+    // transferMatrix(solver,
+    //                problemeSimplexe->IndicesDebutDeLigne,
+    //                problemeSimplexe->NombreDeTermesDesLignes,
+    //                problemeSimplexe->IndicesColonnes,
+    //                problemeSimplexe->CoefficientsDeLaMatriceDesContraintes,
+    //                problemeSimplexe->NombreDeContraintes);
 
     return solver;
 }

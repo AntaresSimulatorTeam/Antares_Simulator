@@ -13,7 +13,8 @@ namespace Optimization
 {
 InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
 {
-    mSolver = std::unique_ptr<MPSolver>(convert_to_MPSolver(solverName, ProbSpx));
+    mSolver
+      = std::unique_ptr<MPSolver>(ProblemSimplexeNommeConverter(solverName, ProbSpx).Convert());
 }
 
 void InfeasibleProblemAnalysis::addSlackVariables()
