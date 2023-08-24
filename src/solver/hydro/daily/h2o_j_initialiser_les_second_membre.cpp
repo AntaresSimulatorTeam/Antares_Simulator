@@ -40,7 +40,6 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int 
 
     int NumeroDeContrainteDEnergieMensuelle;
     int* NumeroDeContrainteSurXi;
-    double* SecondMembre;
 
     TurbineCible = DonneesMensuelles->TurbineCible;
 
@@ -54,7 +53,8 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int 
     NumeroDeContrainteDEnergieMensuelle
       = CorrespondanceDesContraintes->NumeroDeContrainteDEnergieMensuelle;
 
-    SecondMembre = ProblemeHydraulique->ProblemeLineairePartieVariable[NumeroDeProbleme].SecondMembre;
+    std::vector<double>& SecondMembre
+        = ProblemeHydraulique->ProblemeLineairePartieVariable[NumeroDeProbleme].SecondMembre;
 
     SecondMembre[NumeroDeContrainteDEnergieMensuelle] = DonneesMensuelles->TurbineDuMois;
 

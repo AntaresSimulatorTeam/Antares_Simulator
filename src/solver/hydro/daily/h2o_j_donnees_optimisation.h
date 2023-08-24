@@ -72,15 +72,15 @@ struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
     /* Donnees variables de la matrice des contraintes */
     /* On met quand-meme les bornes dans la partie variable pour le cas ou on voudrait avoir
              un jour des bornes min et max variables dans le temps et en fonction des reservoirs */
-    double* Xmin;
-    double* Xmax;
-    double* SecondMembre;
+    std::vector<double> Xmin;
+    std::vector<double> Xmax;
+    std::vector<double> SecondMembre;
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a X, il permet
        de renseigner directement les structures de description du reseau avec les
        resultats contenus dans X */
     double** AdresseOuPlacerLaValeurDesVariablesOptimisees;
     /* Resultat */
-    double* X;
+    std::vector<double> X;
     /* En Entree ou en Sortie */
     int ExistenceDUneSolution; /* En sortie, vaut :
                                   OUI_SPX s'il y a une solution,

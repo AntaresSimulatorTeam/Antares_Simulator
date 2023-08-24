@@ -198,29 +198,14 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 
         PROBLEME_LINEAIRE_PARTIE_VARIABLE& PlVariable = ProblemeLineairePartieVariable[i];
 
-        PlVariable.Xmin = (double*)malloc(NombreDeVariables * sizeof(double));
-        if (PlVariable.Xmin == NULL)
-        {
-            return (0);
-        }
-        PlVariable.Xmax = (double*)malloc(NombreDeVariables * sizeof(double));
-        if (PlVariable.Xmax == NULL)
-        {
-            return (0);
-        }
-        PlVariable.SecondMembre = (double*)malloc(NombreDeContraintes * sizeof(double));
-        if (PlVariable.SecondMembre == NULL)
-        {
-            return (0);
-        }
+        PlVariable.Xmin.assign(NombreDeVariables, 0.);
+        PlVariable.Xmax.assign(NombreDeVariables, 0.);
+        PlVariable.SecondMembre.assign(NombreDeContraintes, 0.);
+        PlVariable.X.assign(NombreDeVariables, 0.);
+
         PlVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees
           = (double**)malloc(NombreDeVariables * sizeof(double*));
         if (PlVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees == NULL)
-        {
-            return (0);
-        }
-        PlVariable.X = (double*)malloc(NombreDeVariables * sizeof(double));
-        if (PlVariable.X == NULL)
         {
             return (0);
         }

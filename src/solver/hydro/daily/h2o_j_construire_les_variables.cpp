@@ -41,8 +41,8 @@ extern "C"
 
 void H2O_j_ConstruireLesVariables(int NbPdt,
                                   int* NumeroDeVariableTurbine,
-                                  double* Xmin,
-                                  double* Xmax,
+                                  std::vector<double>& Xmin,
+                                  std::vector<double>& Xmax,
                                   std::vector<int>& TypeDeVariable,
                                   double** AdresseOuPlacerLaValeurDesVariablesOptimisees,
                                   CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables)

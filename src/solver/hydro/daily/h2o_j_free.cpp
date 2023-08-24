@@ -56,12 +56,8 @@ void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
         free(ProblemeHydraulique->CorrespondanceDesContraintes[i]->NumeroDeContrainteSurXi);
         free(ProblemeHydraulique->CorrespondanceDesContraintes[i]);
 
-        free(ProblemeHydraulique->ProblemeLineairePartieVariable[i].Xmin);
-        free(ProblemeHydraulique->ProblemeLineairePartieVariable[i].Xmax);
-        free(ProblemeHydraulique->ProblemeLineairePartieVariable[i].SecondMembre);
         free((ProblemeHydraulique->ProblemeLineairePartieVariable[i])
                .AdresseOuPlacerLaValeurDesVariablesOptimisees);
-        free(ProblemeHydraulique->ProblemeLineairePartieVariable[i].X);
         free(ProblemeHydraulique->ProblemeLineairePartieVariable[i].PositionDeLaVariable);
         free(ProblemeHydraulique->ProblemeLineairePartieVariable[i].ComplementDeLaBase);
         free(ProblemeHydraulique->ProblemeLineairePartieVariable[i].CoutsReduits);

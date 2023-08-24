@@ -55,7 +55,7 @@ void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int Numer
     Turbine = DonneesMensuelles->Turbine;
     TurbineCible = DonneesMensuelles->TurbineCible;
 
-    Flag = (char*) ProblemeHydraulique->ProblemeLineairePartieVariable[NumeroDeProbleme].Xmax;
+    Flag = (char*) ProblemeHydraulique->ProblemeLineairePartieVariable[NumeroDeProbleme].Xmax.data();
 
     NbPdt = ProblemeHydraulique->NbJoursDUnProbleme[NumeroDeProbleme];
 
