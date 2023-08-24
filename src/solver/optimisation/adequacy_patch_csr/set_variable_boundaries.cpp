@@ -46,7 +46,7 @@ void HourlyCSRProblem::setBoundsOnENS()
       = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: ENS for each area inside adq patch
-    for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
+    for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
@@ -79,7 +79,7 @@ void HourlyCSRProblem::setBoundsOnSpilledEnergy()
       = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: Spilled Energy for each area inside adq patch
-    for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
+    for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
@@ -115,7 +115,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
     // variables bounds: transmissin flows (flow, direct_direct and flow_indirect). For links
     // between nodes of type 2. Set hourly bounds for links between nodes of type 2, depending on
     // the user input (max direct and indirect flow).
-    for (int Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; ++Interco)
+    for (uint32_t Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; ++Interco)
     {
         // only consider link between 2 and 2
         if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]

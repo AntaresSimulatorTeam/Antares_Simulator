@@ -98,7 +98,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
     std::vector<int>& NbGrpCourbeGuide = problemeHebdo->NbGrpCourbeGuide;
     std::vector<int>& NbGrpOpt = problemeHebdo->NbGrpOpt;
 
-    for (int Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
+    for (uint32_t Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
     {
         const RESULTATS_HORAIRES& ResultatsHoraires = problemeHebdo->ResultatsHoraires[Pays];
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays

@@ -595,19 +595,6 @@ Yuni::uint64 Correlation::memoryUsage() const
     return r;
 }
 
-void Correlation::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    if (pMode == modeAnnual)
-    {
-        Matrix<>::EstimateMemoryUsage(u, u.study.areas.size(), u.study.areas.size());
-    }
-    else
-    {
-        for (uint i = 0; i != 12; ++i)
-            Matrix<>::EstimateMemoryUsage(u, u.study.areas.size(), u.study.areas.size());
-    }
-}
-
 bool Correlation::forceReload(bool reload) const
 {
     bool ret = true;

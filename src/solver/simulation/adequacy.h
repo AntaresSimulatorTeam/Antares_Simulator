@@ -56,7 +56,7 @@ public:
     */
     Adequacy(Data::Study& study);
     //! Destructor
-    ~Adequacy();
+    ~Adequacy() = default;
     //@}
 
     Benchmarking::OptimizationInfo getOptimizationInfo() const;
@@ -101,7 +101,7 @@ private:
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
-    PROBLEME_HEBDO** pProblemesHebdo;
+    std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     Matrix<> pRES;
 
 }; // class Adequacy

@@ -194,7 +194,7 @@ public:
     /*!
     ** \brief Try to estimate the amount of memory required by the area for a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
     //@}
 
     //! \name Thermal clusters min stable power validity checking
@@ -658,7 +658,7 @@ public:
     /*!
     ** \brief Try to estimate the amount of memory required by the class for a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     /*!
     ** \brief Get the average amount of memory currently used by each area

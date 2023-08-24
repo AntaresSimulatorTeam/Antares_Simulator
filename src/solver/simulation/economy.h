@@ -57,7 +57,7 @@ public:
     */
     Economy(Data::Study& study);
     //! Destructor
-    ~Economy();
+    ~Economy() = default;
     //@}
 
     Benchmarking::OptimizationInfo getOptimizationInfo() const;
@@ -99,7 +99,7 @@ private:
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
-    PROBLEME_HEBDO** pProblemesHebdo;
+    std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     std::vector<std::unique_ptr<Antares::Solver::Optimization::WeeklyOptimization>> weeklyOptProblems_;
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
 }; // class Economy

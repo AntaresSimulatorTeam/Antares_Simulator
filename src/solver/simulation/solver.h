@@ -27,7 +27,6 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_H__
 #define __SOLVER_SIMULATION_SOLVER_H__
 
-#include <antares/study/memory-usage.h>
 #include <antares/study.h>
 #include <antares/logs/logs.h>
 #include <antares/study/fwd.h> // PowerFluctuations
@@ -87,16 +86,6 @@ public:
     ** \param year The current year, if applicable
     */
     void writeResults(bool synthesis, uint year = 0, uint numSpace = 9999);
-
-    static void estimateMemoryUsage(Antares::Data::StudyMemoryUsage& u);
-    static void estimateMemoryForRandomNumbers(Antares::Data::StudyMemoryUsage& u);
-    static void estimateMemoryForWeeklyPb(Antares::Data::StudyMemoryUsage& u);
-    static void estimateMemoryForOptimizationPb(Antares::Data::StudyMemoryUsage& u,
-                                                int& nbVars,
-                                                int& nbConstraints);
-    static void estimateMemoryForSplxPb(Antares::Data::StudyMemoryUsage& u,
-                                        int& nbVars,
-                                        int& nbConstraints);
 
 public:
     //! Reference to the current study

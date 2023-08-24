@@ -55,7 +55,7 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
     OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
     problemeHebdo_->adequacyPatchRuntimeData->AdequacyFirstStep = false;
 
-    for (int pays = 0; pays < problemeHebdo_->NombreDePays; ++pays)
+    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; ++pays)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[pays]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)

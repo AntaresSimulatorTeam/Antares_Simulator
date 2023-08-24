@@ -30,31 +30,6 @@ ThermalClusterList::~ThermalClusterList()
     clear();
 }
 
-void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += (sizeof(void*) * 4 /*overhead map*/) * cluster.size();
-
-    each([&](const ThermalCluster& cluster) {
-        uint prepoCnt = Math::Max(cluster.ecoInput.co2cost.width, cluster.ecoInput.fuelcost.width);
-        u.requiredMemoryForInput += sizeof(ThermalCluster);
-        u.requiredMemoryForInput += sizeof(void*);
-        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // PthetaInf
-        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR * prepoCnt; // marketBidCostPerHour
-        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR * prepoCnt; // marginalCostPerHour
-        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // dispatchedUnitsCount
-        cluster.modulation.estimateMemoryUsage(u, true, thermalModulationMax, HOURS_PER_YEAR);
-
-        if (cluster.series)
-            cluster.series->estimateMemoryUsage(u, timeSeriesThermal);
-        if (cluster.prepro)
-            cluster.prepro->estimateMemoryUsage(u);
-        cluster.ecoInput.estimateMemoryUsage(u);
-
-        // From the solver
-        u.requiredMemoryForInput += 70 * 1024;
-    });
-}
-
 #define SEP IO::Separator
 
 static bool ThermalClusterLoadFromSection(const AnyString& filename,

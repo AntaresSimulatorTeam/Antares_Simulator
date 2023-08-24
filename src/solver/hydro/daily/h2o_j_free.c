@@ -42,16 +42,13 @@ extern "C"
 
 void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
 {
-    unsigned int i;
-    unsigned int NombreDeProblemes;
     PROBLEME_SPX* ProbSpx;
 
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE* ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
-    ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
-    NombreDeProblemes = ProblemeHydraulique->NombreDeProblemes;
+    int NombreDeProblemes = ProblemeHydraulique->NombreDeProblemes;
 
-    for (i = 0; i < NombreDeProblemes; i++)
+    for (int i = 0; i < NombreDeProblemes; i++)
     {
         free(ProblemeHydraulique->CorrespondanceDesVariables[i]->NumeroDeVariableTurbine);
         free(ProblemeHydraulique->CorrespondanceDesVariables[i]);
