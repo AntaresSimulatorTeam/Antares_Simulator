@@ -35,9 +35,6 @@ void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int Numer
     int Pdt;
     int Cnt;
     int NbPdt;
-    double* TurbineCible;
-    double* Turbine;
-    double* TurbineMax;
     double X;
     int Np;
     char* Flag;
@@ -49,9 +46,9 @@ void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int Numer
     double SurTurbine;
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
-    TurbineMax = DonneesMensuelles->TurbineMax;
-    Turbine = DonneesMensuelles->Turbine;
-    TurbineCible = DonneesMensuelles->TurbineCible;
+    std::vector<double>& TurbineMax = DonneesMensuelles->TurbineMax;
+    std::vector<double>& Turbine = DonneesMensuelles->Turbine;
+    std::vector<double>& TurbineCible = DonneesMensuelles->TurbineCible;
 
     Flag = (char*) ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme].Xmax.data();
 

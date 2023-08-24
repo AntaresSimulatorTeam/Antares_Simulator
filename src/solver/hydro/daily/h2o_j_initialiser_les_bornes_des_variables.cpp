@@ -34,16 +34,12 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
 {
     int NbPdt;
     int Var;
-    const double* TurbineMax;
-    const double* TurbineMin;
-    double* Turbine;
-    const double* TurbineCible;
 
 
-    TurbineMax = DonneesMensuelles->TurbineMax;
-    TurbineMin = DonneesMensuelles->TurbineMin;
-    Turbine = DonneesMensuelles->Turbine;
-    TurbineCible = DonneesMensuelles->TurbineCible;
+    const std::vector<double>& TurbineMax = DonneesMensuelles->TurbineMax;
+    const std::vector<double>& TurbineMin = DonneesMensuelles->TurbineMin;
+    const std::vector<double>& TurbineCible = DonneesMensuelles->TurbineCible;
+    std::vector<double>& Turbine = DonneesMensuelles->Turbine;
 
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 

@@ -33,12 +33,8 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int 
     int Pdt;
     int Cnt;
     int NbPdt;
-    double* TurbineCible;
-
 
     int NumeroDeContrainteDEnergieMensuelle;
-
-    TurbineCible = DonneesMensuelles->TurbineCible;
 
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
@@ -58,7 +54,7 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int 
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         Cnt = CorrespondanceDesContraintes.NumeroDeContrainteSurXi[Pdt];
-        SecondMembre[Cnt] = TurbineCible[Pdt];
+        SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
     }
 
     return;

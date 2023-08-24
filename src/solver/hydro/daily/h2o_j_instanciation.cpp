@@ -52,26 +52,10 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
     NbJoursDUnProbleme[2] = 30;
     NbJoursDUnProbleme[3] = 31;
 
-    DonneesMensuelles.TurbineMax = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuelles.TurbineMax == NULL)
-    {
-        return DonneesMensuelles;
-    }
-    DonneesMensuelles.TurbineMin = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuelles.TurbineMin == NULL)
-    {
-        return DonneesMensuelles;
-    }
-    DonneesMensuelles.TurbineCible = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuelles.TurbineCible == NULL)
-    {
-        return DonneesMensuelles;
-    }
-    DonneesMensuelles.Turbine = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuelles.Turbine == NULL)
-    {
-        return DonneesMensuelles;
-    }
+    DonneesMensuelles.TurbineMax.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles.TurbineMin.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles.TurbineCible.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles.Turbine.assign(NbJoursDUnProbleme[3], 0.);
 
     NombreDeProblemes = ProblemeHydraulique.NombreDeProblemes;
 
