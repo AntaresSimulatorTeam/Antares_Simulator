@@ -103,7 +103,7 @@ struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
 struct CORRESPONDANCE_DES_CONTRAINTES
 {
     int NumeroDeContrainteDEnergieMensuelle;
-    int* NumeroDeContrainteSurXi;
+    std::vector<int> NumeroDeContrainteSurXi;
 };
 
 /* Les correspondances des variables */
@@ -124,7 +124,7 @@ struct PROBLEME_HYDRAULIQUE
     int* NbJoursDUnProbleme;
 
     CORRESPONDANCE_DES_VARIABLES** CorrespondanceDesVariables;
-    CORRESPONDANCE_DES_CONTRAINTES** CorrespondanceDesContraintes;
+    std::vector<CORRESPONDANCE_DES_CONTRAINTES> CorrespondanceDesContraintes;
 
     std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE> ProblemeLineairePartieFixe;
     std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE> ProblemeLineairePartieVariable;

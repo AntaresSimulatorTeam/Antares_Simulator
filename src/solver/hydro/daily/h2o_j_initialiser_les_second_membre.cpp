@@ -36,10 +36,8 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int 
     double* TurbineCible;
 
     PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
-    CORRESPONDANCE_DES_CONTRAINTES* CorrespondanceDesContraintes;
 
     int NumeroDeContrainteDEnergieMensuelle;
-    int* NumeroDeContrainteSurXi;
 
     TurbineCible = DonneesMensuelles->TurbineCible;
 
@@ -47,22 +45,20 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int 
 
     NbPdt = ProblemeHydraulique->NbJoursDUnProbleme[NumeroDeProbleme];
 
-    CorrespondanceDesContraintes
-      = ProblemeHydraulique->CorrespondanceDesContraintes[NumeroDeProbleme];
+    CORRESPONDANCE_DES_CONTRAINTES& CorrespondanceDesContraintes
+        = ProblemeHydraulique->CorrespondanceDesContraintes[NumeroDeProbleme];
 
     NumeroDeContrainteDEnergieMensuelle
-      = CorrespondanceDesContraintes->NumeroDeContrainteDEnergieMensuelle;
+      = CorrespondanceDesContraintes.NumeroDeContrainteDEnergieMensuelle;
 
     std::vector<double>& SecondMembre
         = ProblemeHydraulique->ProblemeLineairePartieVariable[NumeroDeProbleme].SecondMembre;
 
     SecondMembre[NumeroDeContrainteDEnergieMensuelle] = DonneesMensuelles->TurbineDuMois;
 
-    NumeroDeContrainteSurXi = CorrespondanceDesContraintes->NumeroDeContrainteSurXi;
-
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        Cnt = NumeroDeContrainteSurXi[Pdt];
+        Cnt = CorrespondanceDesContraintes.NumeroDeContrainteSurXi[Pdt];
         SecondMembre[Cnt] = TurbineCible[Pdt];
     }
 

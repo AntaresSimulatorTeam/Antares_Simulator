@@ -42,9 +42,7 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
     PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
 
     CORRESPONDANCE_DES_VARIABLES** CorrespondanceDesVariables;
-    CORRESPONDANCE_DES_CONTRAINTES** CorrespondanceDesContraintes;
     CORRESPONDANCE_DES_VARIABLES* CorrVar;
-    CORRESPONDANCE_DES_CONTRAINTES* CorrCnt;
 
     DonneesMensuelles = new DONNEES_MENSUELLES;
     if (DonneesMensuelles == NULL)
@@ -102,12 +100,8 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
     {
         return (0);
     }
-    ProblemeHydraulique->CorrespondanceDesContraintes = (CORRESPONDANCE_DES_CONTRAINTES**)malloc(
-      NombreDeProblemes * sizeof(CORRESPONDANCE_DES_CONTRAINTES));
-    if (ProblemeHydraulique->CorrespondanceDesContraintes == NULL)
-    {
-        return (0);
-    }
+
+    ProblemeHydraulique->CorrespondanceDesContraintes.resize(NombreDeProblemes);
 
     ProblemeHydraulique->ProblemeLineairePartieFixe.resize(NombreDeProblemes);
 
@@ -126,7 +120,8 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
     ProblemeHydraulique->Probleme = NULL;
 
     CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables;
-    CorrespondanceDesContraintes = ProblemeHydraulique->CorrespondanceDesContraintes;
+    std::vector<CORRESPONDANCE_DES_CONTRAINTES>& CorrespondanceDesContraintes
+        = ProblemeHydraulique->CorrespondanceDesContraintes;
 
     std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE>& ProblemeLineairePartieFixe
         = ProblemeHydraulique->ProblemeLineairePartieFixe;
@@ -139,12 +134,6 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
         CorrespondanceDesVariables[i]
           = (CORRESPONDANCE_DES_VARIABLES*)malloc(sizeof(CORRESPONDANCE_DES_VARIABLES));
         if (CorrespondanceDesVariables[i] == NULL)
-        {
-            return (0);
-        }
-        CorrespondanceDesContraintes[i]
-          = (CORRESPONDANCE_DES_CONTRAINTES*)malloc(sizeof(CORRESPONDANCE_DES_CONTRAINTES));
-        if (CorrespondanceDesContraintes[i] == NULL)
         {
             return (0);
         }
@@ -161,12 +150,8 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
             return (0);
         }
 
-        CorrCnt = CorrespondanceDesContraintes[i];
-        CorrCnt->NumeroDeContrainteSurXi = (int*)malloc(NbPdt * sizeof(int));
-        if (CorrCnt->NumeroDeContrainteSurXi == NULL)
-        {
-            return (0);
-        }
+        CorrespondanceDesContraintes[i].NumeroDeContrainteSurXi.assign(NbPdt, 0);
+
         PROBLEME_LINEAIRE_PARTIE_FIXE& PlFixe = ProblemeLineairePartieFixe[i];
 
         NombreDeVariables = 0;

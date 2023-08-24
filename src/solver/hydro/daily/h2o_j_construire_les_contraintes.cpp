@@ -37,15 +37,12 @@ void H2O_J_ConstruireLesContraintes(int NbPdt,
                                     std::vector<int>& NombreDeTermesDesLignes,
                                     std::vector<double>& CoefficientsDeLaMatriceDesContraintes,
                                     std::vector<int>& IndicesColonnes,
-                                    CORRESPONDANCE_DES_CONTRAINTES* CorrespondanceDesContraintes)
+                                    CORRESPONDANCE_DES_CONTRAINTES& CorrespondanceDesContraintes)
 {
     int NombreDeContraintes;
     int il;
     int Pdt;
     int NombreDeTermes;
-    int* NumeroDeContrainteSurXi;
-
-    NumeroDeContrainteSurXi = CorrespondanceDesContraintes->NumeroDeContrainteSurXi;
 
     NombreDeContraintes = 0;
     il = 0;
@@ -67,7 +64,7 @@ void H2O_J_ConstruireLesContraintes(int NbPdt,
     Sens[NombreDeContraintes] = '=';
     NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
 
-    CorrespondanceDesContraintes->NumeroDeContrainteDEnergieMensuelle = NombreDeContraintes;
+    CorrespondanceDesContraintes.NumeroDeContrainteDEnergieMensuelle = NombreDeContraintes;
     NombreDeContraintes++;
 
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
@@ -88,7 +85,7 @@ void H2O_J_ConstruireLesContraintes(int NbPdt,
         Sens[NombreDeContraintes] = '>';
         NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
 
-        NumeroDeContrainteSurXi[Pdt] = NombreDeContraintes;
+        CorrespondanceDesContraintes.NumeroDeContrainteSurXi[Pdt] = NombreDeContraintes;
         NombreDeContraintes++;
     }
 

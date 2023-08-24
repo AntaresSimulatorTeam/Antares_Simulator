@@ -53,9 +53,6 @@ void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
         free(ProblemeHydraulique->CorrespondanceDesVariables[i]->NumeroDeVariableTurbine);
         free(ProblemeHydraulique->CorrespondanceDesVariables[i]);
 
-        free(ProblemeHydraulique->CorrespondanceDesContraintes[i]->NumeroDeContrainteSurXi);
-        free(ProblemeHydraulique->CorrespondanceDesContraintes[i]);
-
         ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique->ProblemeSpx[i];
         if (ProbSpx != NULL)
         {
@@ -65,7 +62,6 @@ void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
 
     free(ProblemeHydraulique->NbJoursDUnProbleme);
     free(ProblemeHydraulique->CorrespondanceDesVariables);
-    free(ProblemeHydraulique->CorrespondanceDesContraintes);
     free(ProblemeHydraulique->ProblemeSpx);
     free(ProblemeHydraulique->Probleme);
     delete ProblemeHydraulique;
