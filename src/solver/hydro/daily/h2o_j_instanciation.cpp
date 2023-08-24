@@ -43,10 +43,8 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 
     CORRESPONDANCE_DES_VARIABLES** CorrespondanceDesVariables;
     CORRESPONDANCE_DES_CONTRAINTES** CorrespondanceDesContraintes;
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE** ProblemeLineairePartieVariable;
     CORRESPONDANCE_DES_VARIABLES* CorrVar;
     CORRESPONDANCE_DES_CONTRAINTES* CorrCnt;
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE* PlVariable;
 
     DonneesMensuelles = new DONNEES_MENSUELLES;
     if (DonneesMensuelles == NULL)
@@ -113,13 +111,7 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 
     ProblemeHydraulique->ProblemeLineairePartieFixe.resize(NombreDeProblemes);
 
-    ProblemeHydraulique->ProblemeLineairePartieVariable
-      = (PROBLEME_LINEAIRE_PARTIE_VARIABLE**)malloc(NombreDeProblemes
-                                                    * sizeof(PROBLEME_LINEAIRE_PARTIE_VARIABLE));
-    if (ProblemeHydraulique->ProblemeLineairePartieVariable == NULL)
-    {
-        return (0);
-    }
+    ProblemeHydraulique->ProblemeLineairePartieVariable.resize(NombreDeProblemes);
 
     ProblemeHydraulique->ProblemeSpx = (void**)malloc(NombreDeProblemes * sizeof(void*));
     if (ProblemeHydraulique->ProblemeSpx == NULL)
@@ -135,9 +127,12 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 
     CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables;
     CorrespondanceDesContraintes = ProblemeHydraulique->CorrespondanceDesContraintes;
+
     std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE>& ProblemeLineairePartieFixe
         = ProblemeHydraulique->ProblemeLineairePartieFixe;
-    ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable;
+
+    std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE>& ProblemeLineairePartieVariable
+        = ProblemeHydraulique->ProblemeLineairePartieVariable;
 
     for (i = 0; i < NombreDeProblemes; i++)
     {
@@ -154,12 +149,6 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
             return (0);
         }
 
-        ProblemeLineairePartieVariable[i]
-          = (PROBLEME_LINEAIRE_PARTIE_VARIABLE*)malloc(sizeof(PROBLEME_LINEAIRE_PARTIE_VARIABLE));
-        if (ProblemeLineairePartieVariable[i] == NULL)
-        {
-            return (0);
-        }
     }
 
     for (i = 0; i < NombreDeProblemes; i++)
@@ -207,55 +196,56 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
         PlFixe.CoefficientsDeLaMatriceDesContraintes.assign(NombreDeTermesAlloues, 0.);
         PlFixe.IndicesColonnes.assign(NombreDeTermesAlloues, 0);
 
-        PlVariable = ProblemeLineairePartieVariable[i];
-        PlVariable->Xmin = (double*)malloc(NombreDeVariables * sizeof(double));
-        if (PlVariable->Xmin == NULL)
+        PROBLEME_LINEAIRE_PARTIE_VARIABLE& PlVariable = ProblemeLineairePartieVariable[i];
+
+        PlVariable.Xmin = (double*)malloc(NombreDeVariables * sizeof(double));
+        if (PlVariable.Xmin == NULL)
         {
             return (0);
         }
-        PlVariable->Xmax = (double*)malloc(NombreDeVariables * sizeof(double));
-        if (PlVariable->Xmax == NULL)
+        PlVariable.Xmax = (double*)malloc(NombreDeVariables * sizeof(double));
+        if (PlVariable.Xmax == NULL)
         {
             return (0);
         }
-        PlVariable->SecondMembre = (double*)malloc(NombreDeContraintes * sizeof(double));
-        if (PlVariable->SecondMembre == NULL)
+        PlVariable.SecondMembre = (double*)malloc(NombreDeContraintes * sizeof(double));
+        if (PlVariable.SecondMembre == NULL)
         {
             return (0);
         }
-        PlVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees
+        PlVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees
           = (double**)malloc(NombreDeVariables * sizeof(double*));
-        if (PlVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees == NULL)
+        if (PlVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees == NULL)
         {
             return (0);
         }
-        PlVariable->X = (double*)malloc(NombreDeVariables * sizeof(double));
-        if (PlVariable->X == NULL)
+        PlVariable.X = (double*)malloc(NombreDeVariables * sizeof(double));
+        if (PlVariable.X == NULL)
         {
             return (0);
         }
         for (j = 0; j < NombreDeVariables; j++)
         {
-            PlVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[j] = NULL;
+            PlVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees[j] = NULL;
         }
-        PlVariable->PositionDeLaVariable = (int*)malloc(NombreDeVariables * sizeof(int));
-        if (PlVariable->PositionDeLaVariable == NULL)
+        PlVariable.PositionDeLaVariable = (int*)malloc(NombreDeVariables * sizeof(int));
+        if (PlVariable.PositionDeLaVariable == NULL)
         {
             return (0);
         }
-        PlVariable->ComplementDeLaBase = (int*)malloc(NombreDeContraintes * sizeof(int));
-        if (PlVariable->ComplementDeLaBase == NULL)
+        PlVariable.ComplementDeLaBase = (int*)malloc(NombreDeContraintes * sizeof(int));
+        if (PlVariable.ComplementDeLaBase == NULL)
         {
             return (0);
         }
-        PlVariable->CoutsReduits = (double*)malloc(NombreDeVariables * sizeof(double));
-        if (PlVariable->CoutsReduits == NULL)
+        PlVariable.CoutsReduits = (double*)malloc(NombreDeVariables * sizeof(double));
+        if (PlVariable.CoutsReduits == NULL)
         {
             return (0);
         }
-        PlVariable->CoutsMarginauxDesContraintes
+        PlVariable.CoutsMarginauxDesContraintes
           = (double*)malloc(NombreDeContraintes * sizeof(double));
-        if (PlVariable->CoutsMarginauxDesContraintes == NULL)
+        if (PlVariable.CoutsMarginauxDesContraintes == NULL)
         {
             return (0);
         }
@@ -266,10 +256,10 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
         H2O_j_ConstruireLesVariables(
           NbJoursDUnProbleme[i],
           CorrespondanceDesVariables[i]->NumeroDeVariableTurbine,
-          ProblemeLineairePartieVariable[i]->Xmin,
-          ProblemeLineairePartieVariable[i]->Xmax,
+          ProblemeLineairePartieVariable[i].Xmin,
+          ProblemeLineairePartieVariable[i].Xmax,
           ProblemeLineairePartieFixe[i].TypeDeVariable,
-          ProblemeLineairePartieVariable[i]->AdresseOuPlacerLaValeurDesVariablesOptimisees,
+          ProblemeLineairePartieVariable[i].AdresseOuPlacerLaValeurDesVariablesOptimisees,
           CorrespondanceDesVariables[i]);
 
         H2O_J_ConstruireLesContraintes(

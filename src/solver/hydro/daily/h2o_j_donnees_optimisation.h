@@ -127,7 +127,7 @@ struct PROBLEME_HYDRAULIQUE
     CORRESPONDANCE_DES_CONTRAINTES** CorrespondanceDesContraintes;
 
     std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE> ProblemeLineairePartieFixe;
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE** ProblemeLineairePartieVariable;
+    std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE> ProblemeLineairePartieVariable;
 
     void** ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
     void* Probleme;     /* Le probleme en cours passe au simplexe */
