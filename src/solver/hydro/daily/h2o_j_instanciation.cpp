@@ -215,18 +215,9 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
         }
         PlVariable.PositionDeLaVariable.assign(NombreDeVariables, 0);
         PlVariable.ComplementDeLaBase.assign(NombreDeContraintes, 0);
-        PlVariable.CoutsReduits = (double*)malloc(NombreDeVariables * sizeof(double));
 
-        if (PlVariable.CoutsReduits == NULL)
-        {
-            return (0);
-        }
-        PlVariable.CoutsMarginauxDesContraintes
-          = (double*)malloc(NombreDeContraintes * sizeof(double));
-        if (PlVariable.CoutsMarginauxDesContraintes == NULL)
-        {
-            return (0);
-        }
+        PlVariable.CoutsReduits.assign(NombreDeVariables, 0.);
+        PlVariable.CoutsMarginauxDesContraintes.assign(NombreDeContraintes, 0.);
     }
 
     for (i = 0; i < NombreDeProblemes; i++)

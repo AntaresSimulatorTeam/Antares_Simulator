@@ -135,8 +135,8 @@ RESOLUTION:
     Probleme->CoutMax = 0.0;
 
     Probleme->CoutsMarginauxDesContraintes
-      = ProblemeLineairePartieVariable.CoutsMarginauxDesContraintes;
-    Probleme->CoutsReduits = ProblemeLineairePartieVariable.CoutsReduits;
+      = ProblemeLineairePartieVariable.CoutsMarginauxDesContraintes.data();
+    Probleme->CoutsReduits = ProblemeLineairePartieVariable.CoutsReduits.data();
 
 #ifndef NDEBUG
     if (PremierPassage == OUI)

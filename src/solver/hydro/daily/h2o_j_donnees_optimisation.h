@@ -94,8 +94,8 @@ struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
 
     std::vector<int> PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
     std::vector<int> ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    double* CoutsReduits;      /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
-    double* CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer les couts
+    std::vector<double> CoutsReduits;      /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
+    std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer les couts
                                              marginaux */
 };
 
