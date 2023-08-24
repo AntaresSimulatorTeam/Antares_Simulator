@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOWS_EXPORTMAP_H__
 #define __ANTARES_APPLICATION_WINDOWS_EXPORTMAP_H__
 
-#include <antares/wx-wrapper.h>
 #include <antares/study/study.h>
 #include <yuni/core/string.h>
 #include "../application/study.h"

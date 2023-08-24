@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_INPUT_THERMAL_CLUSTER_H__
 #define __ANTARES_TOOLBOX_INPUT_THERMAL_CLUSTER_H__
 
-#include <antares/wx-wrapper.h>
 #include <yuni/core/event.h>
 #include <antares/study/study.h>
 #include "input.h"

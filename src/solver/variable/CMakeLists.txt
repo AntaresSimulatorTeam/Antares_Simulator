@@ -161,7 +161,9 @@ target_include_directories(libantares-solver-variable
 		${CMAKE_SOURCE_DIR}/libs
 		PUBLIC
 		.)
-target_link_libraries(libantares-solver-variable PRIVATE libantares-core)
+target_link_libraries(libantares-solver-variable PRIVATE libantares-core
+	Antares::study
+)
 
 
 add_library(libantares-solver-variable-info
@@ -180,5 +182,7 @@ target_include_directories(libantares-solver-variable-info
 		PRIVATE
 		${CMAKE_SOURCE_DIR}/libs
 )
-target_link_libraries(libantares-solver-variable-info PRIVATE libantares-core result_writer)
+target_link_libraries(libantares-solver-variable-info PRIVATE libantares-core
+	Antares::study
+)
 

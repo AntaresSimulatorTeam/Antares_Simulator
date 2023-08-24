@@ -47,6 +47,7 @@ target_link_libraries(test-store-timeseries-number
 		libantares-core
 		libantares-solver-simulation
 		result_writer
+		Antares::study
 		)
 
 # Linux
@@ -74,6 +75,7 @@ target_link_libraries(test-time_series
         test_utils_unit
 		libantares-core
 		libantares-solver-simulation
+		Antares::study
 		)
 
 # Linux

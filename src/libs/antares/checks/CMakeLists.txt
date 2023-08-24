@@ -7,6 +7,7 @@ source_group("checks" FILES ${SRC_CHECKS})
 add_library(checks
         ${SRC_CHECKS}
 )
+add_library(Antares::checks ALIAS checks)
 
 target_include_directories(checks
         PRIVATE

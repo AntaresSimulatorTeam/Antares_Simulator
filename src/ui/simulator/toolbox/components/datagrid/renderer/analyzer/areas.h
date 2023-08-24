@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_CORRELATION_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_CORRELATION_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../renderer.h"
 #include <antares/study/study.h>
 #include <map>

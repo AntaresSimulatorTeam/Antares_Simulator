@@ -23,6 +23,7 @@ target_link_libraries(thermal-price-definition
 							Boost::unit_test_framework
 							libantares-core
 							checks
+							Antares::study
 )
 # Linux
 if(UNIX AND NOT APPLE)

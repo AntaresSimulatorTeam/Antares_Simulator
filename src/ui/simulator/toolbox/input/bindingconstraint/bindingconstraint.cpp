@@ -25,7 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/wx-wrapper.h>
 #include "bindingconstraint.h"
 #include <wx/sizer.h>
 #include <wx/stattext.h>

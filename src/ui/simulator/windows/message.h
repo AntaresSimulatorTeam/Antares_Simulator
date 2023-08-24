@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_MESSAGE_H__
 #define __ANTARES_APPLICATION_MESSAGE_H__
 
-#include <antares/wx-wrapper.h>
 #include <yuni/thread/thread.h>
 #include <wx/dialog.h>
 #include <ui/common/component/spotlight.h>

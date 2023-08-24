@@ -66,9 +66,12 @@ add_library(libantares-solver-hydro
 	${SRC_MANAGEMENT} )
 
 target_link_libraries(libantares-solver-hydro
-	PRIVATE
-	libmodel_antares
-	libantares-solver-variable PUBLIC sirius_solver)
+		PRIVATE
+		libmodel_antares
+		libantares-solver-variable
+		Antares::study
+		Antares::mersenne
+		PUBLIC sirius_solver)
 
 target_include_directories(libantares-solver-hydro
 		PRIVATE

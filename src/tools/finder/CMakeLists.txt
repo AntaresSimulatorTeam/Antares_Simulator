@@ -34,6 +34,8 @@ set(FINDER_LIBS
 target_link_libraries(${execname}
 		PRIVATE
 			${FINDER_LIBS}
+		PUBLIC
+			Antares::study
 		)
 
 import_std_libs(${execname})

@@ -28,8 +28,7 @@
 #define __ANTARES_TOOLBOX_INPUT_RENEWABLE_CLUSTER_H__
 
 // gp : remove useless header includes
-// #include <antares/wx-wrapper.h>
-#include <yuni/core/event.h>
+// #include <yuni/core/event.h>
 // #include <antares/study/study.h>
 #include "input.h"
 #include "area.h"

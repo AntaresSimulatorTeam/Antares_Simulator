@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOW_CONSTRAINTSBUILDER_H__
 #define __ANTARES_APPLICATION_WINDOW_CONSTRAINTSBUILDER_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/dialog.h>
 #include <wx/sizer.h>
 #include <wx/checkbox.h>

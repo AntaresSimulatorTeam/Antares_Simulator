@@ -28,6 +28,7 @@ set(UPDATER_LIBS
 		libantares-core
 		yuni-static-core
 		Antares::sys
+		Antares::study
 		${CMAKE_THREADS_LIBS_INIT}
 		)
 

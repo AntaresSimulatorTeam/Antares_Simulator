@@ -29,7 +29,6 @@
 
 #include <wx/propgrid/propgrid.h>
 
-#include <antares/wx-wrapper.h>
 #include <antares/study/study.h>
 #include "../notes.h"
 #include "data.h"

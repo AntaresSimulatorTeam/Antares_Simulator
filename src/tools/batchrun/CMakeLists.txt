@@ -41,6 +41,7 @@ set(BATCHRUN_LIBS
 		yuni-static-core
 		inifile
 		${CMAKE_THREADS_LIBS_INIT}
+		Antares::study
 )
 
 target_link_libraries(${execname}

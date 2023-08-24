@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_MAP_CONNECTION_H__
 #define __ANTARES_TOOLBOX_MAP_CONNECTION_H__
 
-#include <antares/wx-wrapper.h>
 #include "item.h"
 #include "node.h"
 #include "../tools/tool.h"

@@ -146,7 +146,8 @@ set(ANTARES_LIBS
 		libantares-solver-constraints-builder
 		libantares-solver-variable-info
 		libantares-core
-		date
+		Antares::date
+		Antares::study
 		yuni-static-core
 		yuni-static-uuid
 		libmodel_antares

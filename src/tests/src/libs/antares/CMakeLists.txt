@@ -113,6 +113,7 @@ target_link_libraries(test-utils
 		PRIVATE
 		libantares-core
 		Boost::unit_test_framework
+		Antares::utils
 )
 add_test(NAME test-utils COMMAND test-utils)
 

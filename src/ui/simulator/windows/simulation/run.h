@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOWS_SIMULATION_RUN_H__
 #define __ANTARES_APPLICATION_WINDOWS_SIMULATION_RUN_H__
 
-#include <antares/wx-wrapper.h>
 #include <yuni/thread/thread.h>
 #include <antares/study/study.h>
 

@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_CLIPBOARD_CLIPBOARD_H__
 #define __ANTARES_TOOLBOX_CLIPBOARD_CLIPBOARD_H__
 
-#include <antares/wx-wrapper.h>
 #include <antares/array/matrix.h>
 #include <memory>
 #include <vector>

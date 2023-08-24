@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_INPUT_CONNECTIONS_H__
 #define __ANTARES_TOOLBOX_INPUT_CONNECTIONS_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/panel.h>
 #include <antares/study/study.h>
 #include "input.h"

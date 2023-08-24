@@ -435,8 +435,9 @@ target_link_libraries(study
         Antares::correlation
         Antares::path
         Antares::mersenne
+        Antares::result_writer #study.h
+        Antares::object
     PRIVATE
-        result_writer
         Antares::exception
 )
 

@@ -55,6 +55,8 @@ target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
 			Antares::sys
 			yuni-static-core
 			${CMAKE_THREADS_LIBS_INIT}
+		PUBLIC
+			Antares::study #atsp -> xcast
 		)
 
 import_std_libs(antares-${ANTARES_PRG_VERSION}-analyzer)

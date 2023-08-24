@@ -29,7 +29,6 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/event.h>
-#include <antares/wx-wrapper.h>
 #include <antares/study/study.h>
 
 #include <wx/panel.h>

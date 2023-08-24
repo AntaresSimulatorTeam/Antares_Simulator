@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_MAP_NODE_H__
 #define __ANTARES_TOOLBOX_MAP_NODE_H__
 
-#include <antares/wx-wrapper.h>
 #include <antares/study/study.h>
 #include <set>
 #include "item.h"

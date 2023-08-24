@@ -12,6 +12,7 @@ target_link_libraries(test-folder-output
     				  PRIVATE
 					  Boost::unit_test_framework
 					  libantares-core
+						Antares::study
 )
 
 # Linux

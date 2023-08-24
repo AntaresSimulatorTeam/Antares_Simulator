@@ -33,9 +33,6 @@ set(SRC
 
 	fatal-error.h
 
-		# wx-wrapper
-	wx-wrapper.h
-
 	# resource
 	resources/resources.h
 	resources/resources.cpp
@@ -77,21 +74,8 @@ target_include_directories(libantares-core
 target_link_libraries(libantares-core
 	PUBLIC
 		yuni-static-core
-		yuni-static-uuid
-		Antares::study
-        Boost::boost
-		Antares::memory
-		date
-		logs
-        exception
-        checks
-		libantares-solver-variable-info
-        result_writer
-		inifile
-		io
-		array
-		correlation
-		object
+		Antares::logs
+        Antares::exception
 	)
 
 import_std_libs(libantares-core)

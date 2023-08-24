@@ -26,6 +26,7 @@
 */
 
 #include "area.h"
+#include "wx-wrapper.h"
 #include <wx/colour.h>
 
 namespace Antares

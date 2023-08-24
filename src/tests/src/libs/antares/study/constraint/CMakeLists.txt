@@ -7,6 +7,7 @@ target_link_libraries(test_constraint
         libantares-core
         test_utils_unit
         Boost::unit_test_framework
+        Antares::study
         )
 		
 # Storing test_constraint under the folder Unit-tests in the IDE
@@ -31,6 +32,7 @@ target_link_libraries(test_groups
         libantares-core
         test_utils_unit
         Boost::unit_test_framework
+        Antares::study
         )
 
 # Storing test_constraint under the folder Unit-tests in the IDE

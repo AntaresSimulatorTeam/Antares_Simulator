@@ -37,6 +37,7 @@ set(VACUUM_LIBS
 	libantares-fswalker
 	yuni-static-core
 	${CMAKE_THREADS_LIBS_INIT}
+	Antares::study
 )
 
 target_link_libraries(${execname}

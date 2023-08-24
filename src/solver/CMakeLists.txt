@@ -98,6 +98,7 @@ target_link_libraries(antares-solver
 			result_writer
 			Antares::sys
 			Antares::infoCollection
+			Antares::checks
 		)
 
 target_include_directories(antares-solver

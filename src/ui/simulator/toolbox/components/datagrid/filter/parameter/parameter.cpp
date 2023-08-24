@@ -32,6 +32,7 @@
 #include <wx/textctrl.h>
 #include <wx/choice.h>
 #include "../operator.h"
+#include "wx-wrapper.h"
 #include <antares/logs/logs.h>
 
 namespace Antares

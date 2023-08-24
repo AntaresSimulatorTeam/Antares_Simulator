@@ -47,4 +47,5 @@ target_link_libraries(libantares-solver-ts-generator
 		result_writer
 		array
 		benchmarking
+		Antares::study
 )

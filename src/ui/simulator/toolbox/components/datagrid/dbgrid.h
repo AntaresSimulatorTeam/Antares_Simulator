@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_DBGRID_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_DBGRID_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/grid.h>
 
 namespace Antares

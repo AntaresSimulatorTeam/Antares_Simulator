@@ -28,7 +28,6 @@
 
 #include "data.h"
 #include <antares/study/study.h>
-#include <antares/wx-wrapper.h>
 #include <yuni/core/math.h>
 #include <wx/window.h>
 #include "antares/study/ui-runtimeinfos.h"

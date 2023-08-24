@@ -27,8 +27,8 @@
 #ifndef __ANTARES_TOOLBOX_FILTER_OPERATOR_LIST_H__
 #define __ANTARES_TOOLBOX_FILTER_OPERATOR_LIST_H__
 
+#include <wx/string.h>
 #include <vector>
-#include <antares/wx-wrapper.h>
 
 namespace Antares
 {

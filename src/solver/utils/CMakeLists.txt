@@ -25,4 +25,6 @@ target_link_libraries(utils
         ortools::ortools
         sirius_solver
         libantares-core
+        Antares::result_writer
+        Antares::study
         )
