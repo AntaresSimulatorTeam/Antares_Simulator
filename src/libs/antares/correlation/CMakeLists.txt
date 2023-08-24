@@ -12,8 +12,6 @@ target_link_libraries(correlation
         yuni-static-core
         inifile
         array
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
         )
 
 target_include_directories(correlation
@@ -22,4 +20,6 @@ target_include_directories(correlation
         ${CMAKE_SOURCE_DIR}/libs/ #area -> antares/study/parameters/adq-patch-params.h
         ${CMAKE_SOURCE_DIR}/libs/antares/date #area -> antares/study/parameters/adq-patch-params.h -> date
         ${CMAKE_SOURCE_DIR}/libs/antares/writer #area -> antares/parts/thermal/cluster -> writer
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
         )
