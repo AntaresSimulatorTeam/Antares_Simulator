@@ -44,7 +44,7 @@
 /* Matrice des contraintes: il y aura une seule instance pour tous les reservoirs */
 /* Dans ce struct il n'y a que des donnees qui sont lues et surtout pas ecrites   */
 /* Ce struct est instancie une seule fois                                         */
-typedef struct
+struct PROBLEME_LINEAIRE_PARTIE_FIXE
 {
     int NombreDeVariables;
     std::vector<double> CoutLineaire;
@@ -58,16 +58,16 @@ typedef struct
                                            */
     /* La matrice des contraintes */
     int NombreDeContraintes;
-    std::string Sens;
+    std::vector<char> Sens;
     std::vector<int> IndicesDebutDeLigne;
     std::vector<int> NombreDeTermesDesLignes;
     std::vector<double> CoefficientsDeLaMatriceDesContraintes;
     std::vector<int> IndicesColonnes;
     int NombreDeTermesAlloues;
-} PROBLEME_LINEAIRE_PARTIE_FIXE;
+};
 
 /* Partie variable renseignee avant le lancement de l'optimisation de chaque reservoir */
-typedef struct
+struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
 {
     /* Donnees variables de la matrice des contraintes */
     /* On met quand-meme les bornes dans la partie variable pour le cas ou on voudrait avoir
@@ -97,26 +97,26 @@ typedef struct
     double* CoutsReduits;      /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
     double* CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer les couts
                                              marginaux */
-} PROBLEME_LINEAIRE_PARTIE_VARIABLE;
+};
 
 /* Les correspondances fixes des contraintes */
-typedef struct
+struct CORRESPONDANCE_DES_CONTRAINTES
 {
     int NumeroDeContrainteDEnergieMensuelle;
     int* NumeroDeContrainteSurXi;
-} CORRESPONDANCE_DES_CONTRAINTES;
+};
 
 /* Les correspondances des variables */
-typedef struct
+struct CORRESPONDANCE_DES_VARIABLES
 {
     int* NumeroDeVariableTurbine; /* Turbines */
     int NumeroDeLaVariableMu;     /* Variable de deversement (total sur la periode) */
     int NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible quand le turbine
                                  est inferieur au turbine cible */
-} CORRESPONDANCE_DES_VARIABLES;
+};
 
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */
-typedef struct
+struct PROBLEME_HYDRAULIQUE
 {
     char LesCoutsOntEteInitialises; /* Vaut OUI ou NON */
 
@@ -132,6 +132,6 @@ typedef struct
     void** ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
     void* Probleme;     /* Le probleme en cours passe au simplexe */
 
-} PROBLEME_HYDRAULIQUE;
+};
 
 #endif
