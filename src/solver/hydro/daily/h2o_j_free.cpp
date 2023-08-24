@@ -57,7 +57,6 @@ void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
         }
     }
 
-    free(ProblemeHydraulique.NbJoursDUnProbleme);
     free(ProblemeHydraulique.ProblemeSpx);
     free(ProblemeHydraulique.Probleme);
 

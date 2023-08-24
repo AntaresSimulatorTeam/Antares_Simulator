@@ -121,7 +121,7 @@ struct PROBLEME_HYDRAULIQUE
     char LesCoutsOntEteInitialises; /* Vaut OUI ou NON */
 
     int NombreDeProblemes;
-    int* NbJoursDUnProbleme;
+    std::vector<int> NbJoursDUnProbleme;
 
     std::vector<CORRESPONDANCE_DES_VARIABLES> CorrespondanceDesVariables;
     std::vector<CORRESPONDANCE_DES_CONTRAINTES> CorrespondanceDesContraintes;

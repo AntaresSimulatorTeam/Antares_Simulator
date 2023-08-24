@@ -31,7 +31,6 @@
 DONNEES_MENSUELLES H2O_J_Instanciation(void)
 {
     int i;
-    int* NbJoursDUnProbleme;
     int NombreDeProblemes;
     int NbPdt;
     int j;
@@ -45,13 +44,9 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
 
     ProblemeHydraulique.NombreDeProblemes = 4;
 
-    ProblemeHydraulique.NbJoursDUnProbleme
-      = (int*)malloc(ProblemeHydraulique.NombreDeProblemes * sizeof(int));
-    if (ProblemeHydraulique.NbJoursDUnProbleme == NULL)
-    {
-        return DonneesMensuelles;
-    }
-    NbJoursDUnProbleme = ProblemeHydraulique.NbJoursDUnProbleme;
+    ProblemeHydraulique.NbJoursDUnProbleme.assign(ProblemeHydraulique.NombreDeProblemes, 0);
+
+    std::vector<int>& NbJoursDUnProbleme = ProblemeHydraulique.NbJoursDUnProbleme;
     NbJoursDUnProbleme[0] = 28;
     NbJoursDUnProbleme[1] = 29;
     NbJoursDUnProbleme[2] = 30;
