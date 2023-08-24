@@ -48,7 +48,7 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
     CORRESPONDANCE_DES_CONTRAINTES* CorrCnt;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE* PlVariable;
 
-    DonneesMensuelles = (DONNEES_MENSUELLES*)malloc(sizeof(DONNEES_MENSUELLES));
+    DonneesMensuelles = new DONNEES_MENSUELLES;
     if (DonneesMensuelles == NULL)
     {
         return (NULL);

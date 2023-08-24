@@ -81,13 +81,13 @@ void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
     free(ProblemeHydraulique->ProblemeLineairePartieVariable);
     free(ProblemeHydraulique->ProblemeSpx);
     free(ProblemeHydraulique->Probleme);
-    free(ProblemeHydraulique);
+    delete ProblemeHydraulique;
 
     free(DonneesMensuelles->TurbineMax);
     free(DonneesMensuelles->TurbineMin);
     free(DonneesMensuelles->TurbineCible);
     free(DonneesMensuelles->Turbine);
-    free(DonneesMensuelles);
+    delete DonneesMensuelles;
 
     return;
 }
