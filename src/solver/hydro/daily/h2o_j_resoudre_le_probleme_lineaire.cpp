@@ -108,12 +108,12 @@ RESOLUTION:
     Probleme->Xmin = ProblemeLineairePartieVariable->Xmin;
     Probleme->Xmax = ProblemeLineairePartieVariable->Xmax;
     Probleme->NombreDeVariables = ProblemeLineairePartieFixe->NombreDeVariables;
-    Probleme->TypeDeVariable = ProblemeLineairePartieFixe->TypeDeVariable;
+    Probleme->TypeDeVariable = ProblemeLineairePartieFixe->TypeDeVariable.data();
 
     Probleme->NombreDeContraintes = ProblemeLineairePartieFixe->NombreDeContraintes;
     Probleme->IndicesDebutDeLigne = ProblemeLineairePartieFixe->IndicesDebutDeLigne.data();
     Probleme->NombreDeTermesDesLignes = ProblemeLineairePartieFixe->NombreDeTermesDesLignes.data();
-    Probleme->IndicesColonnes = ProblemeLineairePartieFixe->IndicesColonnes;
+    Probleme->IndicesColonnes = ProblemeLineairePartieFixe->IndicesColonnes.data();
     Probleme->CoefficientsDeLaMatriceDesContraintes
       = ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes.data();
     Probleme->Sens = ProblemeLineairePartieFixe->Sens.data();

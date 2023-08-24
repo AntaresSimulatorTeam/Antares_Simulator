@@ -40,13 +40,13 @@ void H2O_J_ConstruireLesContraintes(int,
                                     std::string&,
                                     std::vector<int>&,
                                     std::vector<double>&,
-                                    int*,
+                                    std::vector<int>&,
                                     CORRESPONDANCE_DES_CONTRAINTES*);
 void H2O_j_ConstruireLesVariables(int,
                                   int*,
                                   double*,
                                   double*,
-                                  int*,
+                                  std::vector<int>&,
                                   double**,
                                   CORRESPONDANCE_DES_VARIABLES*);
 void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES*, int);

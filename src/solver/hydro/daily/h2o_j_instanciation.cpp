@@ -194,11 +194,7 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 
         PlFixe->NombreDeVariables = NombreDeVariables;
         PlFixe->CoutLineaire.assign(NombreDeVariables, 0.);
-        PlFixe->TypeDeVariable = (int*)malloc(NombreDeVariables * sizeof(int));
-        if (PlFixe->TypeDeVariable == NULL)
-        {
-            return (0);
-        }
+        PlFixe->TypeDeVariable.assign(NombreDeVariables, 0);
 
         NombreDeContraintes = 0;
         NombreDeContraintes += 1;
@@ -216,11 +212,7 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 
         PlFixe->NombreDeTermesAlloues = NombreDeTermesAlloues;
         PlFixe->CoefficientsDeLaMatriceDesContraintes.assign(NombreDeTermesAlloues, 0.);
-        PlFixe->IndicesColonnes = (int*)malloc(NombreDeTermesAlloues * sizeof(int));
-        if (PlFixe->IndicesColonnes == NULL)
-        {
-            return (0);
-        }
+        PlFixe->IndicesColonnes.assign(NombreDeTermesAlloues, 0);
 
         PlVariable = ProblemeLineairePartieVariable[i];
         PlVariable->Xmin = (double*)malloc(NombreDeVariables * sizeof(double));

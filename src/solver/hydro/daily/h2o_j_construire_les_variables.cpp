@@ -43,7 +43,7 @@ void H2O_j_ConstruireLesVariables(int NbPdt,
                                   int* NumeroDeVariableTurbine,
                                   double* Xmin,
                                   double* Xmax,
-                                  int* TypeDeVariable,
+                                  std::vector<int>& TypeDeVariable,
                                   double** AdresseOuPlacerLaValeurDesVariablesOptimisees,
                                   CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables)
 {
