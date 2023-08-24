@@ -38,26 +38,20 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
     int NombreDeVariables;
     int NombreDeContraintes;
     int NombreDeTermesAlloues;
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
 
     DONNEES_MENSUELLES DonneesMensuelles;
 
-    DonneesMensuelles.ProblemeHydraulique = new PROBLEME_HYDRAULIQUE;
-    if (DonneesMensuelles.ProblemeHydraulique == NULL)
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles.ProblemeHydraulique;
+
+    ProblemeHydraulique.NombreDeProblemes = 4;
+
+    ProblemeHydraulique.NbJoursDUnProbleme
+      = (int*)malloc(ProblemeHydraulique.NombreDeProblemes * sizeof(int));
+    if (ProblemeHydraulique.NbJoursDUnProbleme == NULL)
     {
         return DonneesMensuelles;
     }
-    ProblemeHydraulique = DonneesMensuelles.ProblemeHydraulique;
-
-    ProblemeHydraulique->NombreDeProblemes = 4;
-
-    ProblemeHydraulique->NbJoursDUnProbleme
-      = (int*)malloc(ProblemeHydraulique->NombreDeProblemes * sizeof(int));
-    if (ProblemeHydraulique->NbJoursDUnProbleme == NULL)
-    {
-        return DonneesMensuelles;
-    }
-    NbJoursDUnProbleme = ProblemeHydraulique->NbJoursDUnProbleme;
+    NbJoursDUnProbleme = ProblemeHydraulique.NbJoursDUnProbleme;
     NbJoursDUnProbleme[0] = 28;
     NbJoursDUnProbleme[1] = 29;
     NbJoursDUnProbleme[2] = 30;
@@ -84,39 +78,39 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
         return DonneesMensuelles;
     }
 
-    NombreDeProblemes = ProblemeHydraulique->NombreDeProblemes;
+    NombreDeProblemes = ProblemeHydraulique.NombreDeProblemes;
 
-    ProblemeHydraulique->CorrespondanceDesVariables.resize(NombreDeProblemes);
+    ProblemeHydraulique.CorrespondanceDesVariables.resize(NombreDeProblemes);
 
-    ProblemeHydraulique->CorrespondanceDesContraintes.resize(NombreDeProblemes);
+    ProblemeHydraulique.CorrespondanceDesContraintes.resize(NombreDeProblemes);
 
-    ProblemeHydraulique->ProblemeLineairePartieFixe.resize(NombreDeProblemes);
+    ProblemeHydraulique.ProblemeLineairePartieFixe.resize(NombreDeProblemes);
 
-    ProblemeHydraulique->ProblemeLineairePartieVariable.resize(NombreDeProblemes);
+    ProblemeHydraulique.ProblemeLineairePartieVariable.resize(NombreDeProblemes);
 
-    ProblemeHydraulique->ProblemeSpx = (void**)malloc(NombreDeProblemes * sizeof(void*));
-    if (ProblemeHydraulique->ProblemeSpx == NULL)
+    ProblemeHydraulique.ProblemeSpx = (void**)malloc(NombreDeProblemes * sizeof(void*));
+    if (ProblemeHydraulique.ProblemeSpx == NULL)
     {
         return DonneesMensuelles;
     }
     for (i = 0; i < NombreDeProblemes; i++)
     {
-        ProblemeHydraulique->ProblemeSpx[i] = NULL;
+        ProblemeHydraulique.ProblemeSpx[i] = NULL;
     }
 
-    ProblemeHydraulique->Probleme = NULL;
+    ProblemeHydraulique.Probleme = NULL;
 
     std::vector<CORRESPONDANCE_DES_VARIABLES>& CorrespondanceDesVariables
-        = ProblemeHydraulique->CorrespondanceDesVariables;
+        = ProblemeHydraulique.CorrespondanceDesVariables;
 
     std::vector<CORRESPONDANCE_DES_CONTRAINTES>& CorrespondanceDesContraintes
-        = ProblemeHydraulique->CorrespondanceDesContraintes;
+        = ProblemeHydraulique.CorrespondanceDesContraintes;
 
     std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE>& ProblemeLineairePartieFixe
-        = ProblemeHydraulique->ProblemeLineairePartieFixe;
+        = ProblemeHydraulique.ProblemeLineairePartieFixe;
 
     std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE>& ProblemeLineairePartieVariable
-        = ProblemeHydraulique->ProblemeLineairePartieVariable;
+        = ProblemeHydraulique.ProblemeLineairePartieVariable;
 
     for (i = 0; i < NombreDeProblemes; i++)
     {

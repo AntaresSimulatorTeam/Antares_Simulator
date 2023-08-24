@@ -37,7 +37,7 @@
 /*************************************************************************************************/
 /*                    Structure contenant les champs a renseigner par l'appelant */
 
-typedef struct
+struct DONNEES_MENSUELLES
 {
     /* En entree: seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
        avoir appele H2O_J_Instanciation */
@@ -57,7 +57,7 @@ typedef struct
 
     /******************************************************************************************/
     /* Problemes internes (utilise uniquement par l'optimisation) */
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
-} DONNEES_MENSUELLES;
+    PROBLEME_HYDRAULIQUE ProblemeHydraulique;
+};
 
 #endif

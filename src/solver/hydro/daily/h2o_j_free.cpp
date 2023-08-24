@@ -44,23 +44,22 @@ void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
 {
     PROBLEME_SPX* ProbSpx;
 
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
-    int NombreDeProblemes = ProblemeHydraulique->NombreDeProblemes;
+    int NombreDeProblemes = ProblemeHydraulique.NombreDeProblemes;
 
     for (int i = 0; i < NombreDeProblemes; i++)
     {
-        ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique->ProblemeSpx[i];
+        ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[i];
         if (ProbSpx != NULL)
         {
             SPX_LibererProbleme(ProbSpx);
         }
     }
 
-    free(ProblemeHydraulique->NbJoursDUnProbleme);
-    free(ProblemeHydraulique->ProblemeSpx);
-    free(ProblemeHydraulique->Probleme);
-    delete ProblemeHydraulique;
+    free(ProblemeHydraulique.NbJoursDUnProbleme);
+    free(ProblemeHydraulique.ProblemeSpx);
+    free(ProblemeHydraulique.Probleme);
 
     free(DonneesMensuelles->TurbineMax);
     free(DonneesMensuelles->TurbineMin);

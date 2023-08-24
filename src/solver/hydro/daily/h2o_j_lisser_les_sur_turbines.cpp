@@ -47,17 +47,15 @@ void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int Numer
     double Xmoy;
     double MargeMin;
     double SurTurbine;
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
-
-    ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
     TurbineMax = DonneesMensuelles->TurbineMax;
     Turbine = DonneesMensuelles->Turbine;
     TurbineCible = DonneesMensuelles->TurbineCible;
 
-    Flag = (char*) ProblemeHydraulique->ProblemeLineairePartieVariable[NumeroDeProbleme].Xmax.data();
+    Flag = (char*) ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme].Xmax.data();
 
-    NbPdt = ProblemeHydraulique->NbJoursDUnProbleme[NumeroDeProbleme];
+    NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
 
     SurTurbineARepartir = 0.0;
     for (Pdt = 0; Pdt < NbPdt; Pdt++)

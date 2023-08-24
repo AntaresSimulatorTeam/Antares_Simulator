@@ -53,6 +53,6 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES*, int);
 void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES*, int);
 void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES*, int);
 void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES*, int);
-void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES*);
+void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES&);
 
 #endif /* __SOLVER_H2O_J_FONCTIONS__ */

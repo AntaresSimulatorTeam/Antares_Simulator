@@ -52,24 +52,23 @@ void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int
     double* pt;
     char PremierPassage;
 
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
 
     PROBLEME_SIMPLEXE* Probleme;
     PROBLEME_SPX* ProbSpx;
 
     PremierPassage = OUI;
 
-    ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-        = ProblemeHydraulique->ProblemeLineairePartieVariable[NumeroDeProbleme];
+        = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
 
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
-        = ProblemeHydraulique->ProblemeLineairePartieFixe[NumeroDeProbleme];
+        = ProblemeHydraulique.ProblemeLineairePartieFixe[NumeroDeProbleme];
 
-    ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique->ProblemeSpx[NumeroDeProbleme];
+    ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[NumeroDeProbleme];
 
-    Probleme = (PROBLEME_SIMPLEXE*)ProblemeHydraulique->Probleme;
+    Probleme = (PROBLEME_SIMPLEXE*)ProblemeHydraulique.Probleme;
     if (Probleme == NULL)
     {
         Probleme = (PROBLEME_SIMPLEXE*)malloc(sizeof(PROBLEME_SIMPLEXE));
@@ -78,7 +77,7 @@ void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int
             DonneesMensuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
             return;
         }
-        ProblemeHydraulique->Probleme = (void*)Probleme;
+        ProblemeHydraulique.Probleme = (void*)Probleme;
     }
 
 RESOLUTION:
@@ -153,7 +152,7 @@ RESOLUTION:
 
     if (ProbSpx != NULL)
     {
-        ProblemeHydraulique->ProblemeSpx[NumeroDeProbleme] = (void*)ProbSpx;
+        ProblemeHydraulique.ProblemeSpx[NumeroDeProbleme] = (void*)ProbSpx;
     }
 
     ProblemeLineairePartieVariable.ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
