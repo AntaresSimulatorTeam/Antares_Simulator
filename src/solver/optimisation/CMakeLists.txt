@@ -89,7 +89,6 @@ else()
 endif()
 target_link_libraries(libmodel_antares
 		PUBLIC
-		libantares-core
 		utils
 		sirius_solver
 		infeasible_problem_analysis

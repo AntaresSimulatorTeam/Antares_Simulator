@@ -19,7 +19,6 @@ add_library(lib-matrix ${SRC_MATRIX_LIB})
 
 target_link_libraries(lib-matrix
 		PRIVATE
-		libantares-core
 		yuni-static-core
 )
 
@@ -111,9 +110,9 @@ set_property(TEST load-matrix PROPERTY LABELS unit)
 add_executable(test-utils test_utils.cpp)
 target_link_libraries(test-utils
 		PRIVATE
-		libantares-core
 		Boost::unit_test_framework
 		Antares::utils
+		yuni-static-core
 )
 add_test(NAME test-utils COMMAND test-utils)
 

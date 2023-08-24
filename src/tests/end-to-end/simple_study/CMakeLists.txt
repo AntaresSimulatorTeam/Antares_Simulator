@@ -13,7 +13,6 @@ add_executable(tests-simple-study
 target_link_libraries(tests-simple-study
 						PRIVATE
 						test_utils
-						libantares-core
 						libantares-solver-main-economy
 						libantares-solver-main-adequacy
 						libantares-solver-hydro

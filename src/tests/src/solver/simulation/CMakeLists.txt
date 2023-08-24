@@ -20,7 +20,6 @@ target_include_directories(tests-ts-numbers
 target_link_libraries(tests-ts-numbers
 						PRIVATE
 							Boost::unit_test_framework
-							libantares-core
 							libmodel_antares
 							libantares-solver-simulation
 )
@@ -44,9 +43,7 @@ target_link_libraries(test-store-timeseries-number
 		PRIVATE
 		Boost::unit_test_framework
         test_utils_unit
-		libantares-core
 		libantares-solver-simulation
-		result_writer
 		Antares::study
 		)
 
@@ -73,7 +70,6 @@ target_link_libraries(test-time_series
 		PRIVATE
 		Boost::unit_test_framework
         test_utils_unit
-		libantares-core
 		libantares-solver-simulation
 		Antares::study
 		)

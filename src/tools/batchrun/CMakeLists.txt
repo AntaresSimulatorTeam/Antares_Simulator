@@ -36,10 +36,8 @@ INSTALL(EXPORT antares-batchrun
 )
 
 set(BATCHRUN_LIBS
-		libantares-core
-		date
+		libantares-core #local.h
 		yuni-static-core
-		inifile
 		${CMAKE_THREADS_LIBS_INIT}
 		Antares::study
 )

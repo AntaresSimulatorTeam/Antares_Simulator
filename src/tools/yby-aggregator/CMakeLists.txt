@@ -47,7 +47,7 @@ INSTALL(EXPORT antares-ybyaggregator
 )
 
 set(YBY_AGGREGATOR_LIBS
-	libantares-core
+	libantares-core #version.h
 	Antares::date
 	Antares::logs
 	yuni-static-core

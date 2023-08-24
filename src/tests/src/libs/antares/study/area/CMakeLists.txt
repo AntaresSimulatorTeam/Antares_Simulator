@@ -18,7 +18,6 @@ target_include_directories(test-save-link-properties
 target_link_libraries(test-save-link-properties
 						PRIVATE
 							Boost::unit_test_framework
-							libantares-core
 							libmodel_antares
 )
 # Linux
@@ -51,7 +50,6 @@ target_include_directories(test-save-area-optimization-ini
 target_link_libraries(test-save-area-optimization-ini
 						PRIVATE
 							Boost::unit_test_framework
-							libantares-core
 							libmodel_antares
 )
 

@@ -14,7 +14,6 @@ target_link_libraries(tests-binding_constraints
         PRIVATE
         test_utils
         Boost::unit_test_framework
-        libantares-core
         libantares-solver-simulation
         libantares-solver-hydro
         libantares-solver-ts-generator

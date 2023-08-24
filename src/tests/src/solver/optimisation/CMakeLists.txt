@@ -13,7 +13,6 @@ target_link_libraries(${EXECUTABLE_NAME}
                       PRIVATE
                       Boost::unit_test_framework
                       libmodel_antares
-                      libantares-core
 					array
 )
 
