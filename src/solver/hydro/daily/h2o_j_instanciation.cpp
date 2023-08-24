@@ -59,15 +59,7 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
 
     ProblemeHydraulique.ProblemeLineairePartieVariable.resize(NombreDeProblemes);
 
-    ProblemeHydraulique.ProblemeSpx = (void**)malloc(NombreDeProblemes * sizeof(void*));
-    if (ProblemeHydraulique.ProblemeSpx == NULL)
-    {
-        return DonneesMensuelles;
-    }
-    for (int i = 0; i < NombreDeProblemes; i++)
-    {
-        ProblemeHydraulique.ProblemeSpx[i] = NULL;
-    }
+    ProblemeHydraulique.ProblemeSpx.assign(NombreDeProblemes, nullptr);
 
     ProblemeHydraulique.Probleme = NULL;
 

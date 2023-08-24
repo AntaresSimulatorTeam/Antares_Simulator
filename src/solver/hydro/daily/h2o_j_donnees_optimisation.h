@@ -129,7 +129,7 @@ struct PROBLEME_HYDRAULIQUE
     std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE> ProblemeLineairePartieFixe;
     std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE> ProblemeLineairePartieVariable;
 
-    void** ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
+    std::vector<void*> ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
     void* Probleme;     /* Le probleme en cours passe au simplexe */
 
 };
