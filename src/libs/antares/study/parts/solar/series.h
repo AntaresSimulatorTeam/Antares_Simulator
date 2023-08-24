@@ -40,7 +40,7 @@ namespace Data
 class DataSeriesSolar
 {
 public:
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     bool forceReload(bool reload = false) const;
 

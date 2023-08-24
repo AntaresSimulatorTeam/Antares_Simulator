@@ -242,7 +242,8 @@ public:
     ** \param name The name of the new area
     ** \return A pointer to a new area, or NULL if the operation failed
     */
-    Area* areaAdd(const AreaName& name);
+    // TODO no need for the 2nd argument, remove it after the GUI has been removed, keeping the default value
+    Area* areaAdd(const AreaName& name, bool update = false);
 
     /*!
     ** \brief Rename an area
@@ -477,39 +478,6 @@ public:
     ** \brief Get the amound of memory consummed by the study (in bytes)
     */
     Yuni::uint64 memoryUsage() const;
-
-    /*!
-    ** \brief Estimate the memory required by the input to launch a simulation
-    **
-    ** The real amount of memory required to launch this study
-    ** will be less than the returned value, but in the worst case
-    ** it can be equal (or nearly).
-    **
-    ** \param mode The mode of the study
-    ** \return A size in bytes, -1 when an error has occured.
-    */
-    void estimateMemoryUsageForInput(StudyMemoryUsage& u) const;
-
-    /*!
-    ** \brief Estimate the memory required by the output to launch a simulation
-    **
-    ** The real amount of memory required to launch this study
-    ** will be less than the returned value, but in the worst case
-    ** it can be equal (or nearly).
-    **
-    ** \param mode The mode of the study
-    ** \return A size in bytes, -1 when an error has occured.
-    */
-    void estimateMemoryUsageForOutput(StudyMemoryUsage& u) const;
-
-    /*!
-    ** \brief Create a thread to estimate the memory footprint of the input
-    **
-    ** This thread is actually a way to process in the background
-    ** all costly operations and to avoid the freeze from the interface
-    */
-    Yuni::Thread::IThread::Ptr createThreadToEstimateInputMemoryUsage() const;
-    //@}
 
     //! \name Logs
     //@{

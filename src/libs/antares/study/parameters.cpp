@@ -38,8 +38,7 @@
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include "load-options.h"
-#include <limits.h>
-#include <antares/study/memory-usage.h>
+#include <climits>
 #include "../solver/variable/economy/all.h"
 
 #include <antares/exception/AssertionError.hpp>

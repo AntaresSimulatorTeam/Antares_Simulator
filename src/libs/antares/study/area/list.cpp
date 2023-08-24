@@ -34,7 +34,6 @@
 #include <antares/array/array1d.h>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include "../memory-usage.h"
 #include "../../config.h"
 #include "../filter.h"
 #include "constants.h"
@@ -1386,23 +1385,6 @@ uint64 AreaList::memoryUsage() const
     Yuni::uint64 ret = sizeof(AreaList) + sizeof(Area**) * areas.size();
     each([&](const Data::Area& area) { ret += area.memoryUsage(); });
     return ret;
-}
-
-void AreaList::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += (sizeof(void*) * 3) * areas.size();
-    each([&](const Data::Area& area) { area.estimateMemoryUsage(u); });
-}
-
-double AreaList::memoryUsageAveragePerArea() const
-{
-    if (!areas.empty()) // avoid division by 0
-    {
-        Yuni::uint64 ret = 0;
-        each([&](const Data::Area& area) { ret += area.memoryUsage(); });
-        return (double)((double)ret / (double)areas.size());
-    }
-    return 0;
 }
 
 uint AreaList::areaLinkCount() const

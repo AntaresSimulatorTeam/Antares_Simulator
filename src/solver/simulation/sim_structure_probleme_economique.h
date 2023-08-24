@@ -500,10 +500,12 @@ struct PROBLEME_HEBDO
     uint32_t NombreDePasDeTemps = 0;
     std::vector<int32_t> NumeroDeJourDuPasDeTemps;
 
-    uint32_t NombreDePasDeTempsPourUneOptimisation = 0;
+    //TODO use uint32_t and figure why tests fails
+    int32_t NombreDePasDeTempsPourUneOptimisation = 0;
     std::vector<int32_t> NumeroDIntervalleOptimiseDuPasDeTemps;
     uint32_t NombreDeJours = 0;
 
+    //TODO same as NombreDePasDeTemps
     int32_t NombreDePasDeTempsDUneJournee = 0;
 
     mutable std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattues;
@@ -545,7 +547,6 @@ struct PROBLEME_HEBDO
     bool LeProblemeADejaEteInstancie = false;
     bool firstWeekOfSimulation = false;
 
-    // TODO VP: Not working if we're not using a pointer, need more investigation
     std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES> CorrespondanceCntNativesCntOptimJournalieres;

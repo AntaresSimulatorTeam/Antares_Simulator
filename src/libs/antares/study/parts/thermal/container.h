@@ -59,7 +59,7 @@ public:
     */
     void resizeAllTimeseriesNumbers(uint n);
 
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     /*!
     ** \brief Create and initialize the list of all clusters (with the mustrun flag or not)

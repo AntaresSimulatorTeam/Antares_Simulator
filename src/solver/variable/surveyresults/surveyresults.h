@@ -53,11 +53,6 @@ public:
     //! Caption
     typedef Yuni::CString<128, false> CaptionType;
 
-    /*!
-    ** \brief Try to estimate theamount of memory required by the class
-    */
-    static void EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u);
-
 public:
     //! \name Constructor & Destructor
     //@{

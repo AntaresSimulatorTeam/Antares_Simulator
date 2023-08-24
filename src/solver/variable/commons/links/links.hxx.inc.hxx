@@ -296,36 +296,6 @@ inline Yuni::uint64 Links::memoryUsage() const
     }
     return result;
 }
-
-inline void Links::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-{
-    if (!u.area)
-        return;
-
-    // The total number of items
-    auto count = (uint)u.area->links.size();
-
-    for (uint i = 0; i != count; ++i)
-    {
-        u.requiredMemoryForOutput += sizeof(NextType) + sizeof(void*);
-        u.overheadDiskSpaceForSingleAreaOrLink();
-
-        // year-by-year
-        if (!u.gatheringInformationsForInput)
-        {
-            if (u.study.parameters.yearByYear)
-            {
-                for (uint i = 0; i != u.years; ++i)
-                    u.overheadDiskSpaceForSingleAreaOrLink();
-            }
-        }
-
-        // Append the amount of data consummed by the varaibles related to
-        // the links
-        NextType::EstimateMemoryUsage(u);
-    }
-}
-
 } // namespace LINK_NAMESPACE
 } // namespace Variable
 } // namespace Solver

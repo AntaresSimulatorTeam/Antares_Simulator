@@ -273,12 +273,6 @@ inline Yuni::uint64 SetsOfAreas<NextT>::memoryUsage() const
 }
 
 template<class NextT>
-inline void SetsOfAreas<NextT>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-{
-    NextT::EstimateMemoryUsage(u);
-}
-
-template<class NextT>
 template<class I>
 inline void SetsOfAreas<NextT>::provideInformations(I& infos)
 {

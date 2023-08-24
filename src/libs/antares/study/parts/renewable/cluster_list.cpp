@@ -22,21 +22,6 @@ YString RenewableClusterList::typeID() const
     return "renewables";
 }
 
-void RenewableClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += (sizeof(void*) * 4 /*overhead map*/) * cluster.size();
-
-    each([&](const Cluster& cluster) {
-        u.requiredMemoryForInput += sizeof(RenewableCluster);
-        u.requiredMemoryForInput += sizeof(void*);
-        if (cluster.series)
-            cluster.series->estimateMemoryUsage(u, timeSeriesRenewable /* FIXME */);
-
-        // From the solver
-        u.requiredMemoryForInput += 70 * 1024;
-    });
-}
-
 #define SEP IO::Separator
 
 bool RenewableClusterList::saveToFolder(const AnyString& folder) const

@@ -323,25 +323,6 @@ BindingConstraintsRepository::const_iterator BindingConstraintsRepository::end()
     return constraints_.end();
 }
 
-
-void BindingConstraintsRepository::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    // Disabled by the optimization preferences
-    if (!u.study.parameters.include.constraints)
-        return;
-
-        // each constraint...
-    for (const auto &constraint: constraints_) {
-        u.requiredMemoryForInput += sizeof(void *) * 2;
-        uint count = (constraint->operatorType() == BindingConstraint::opBoth) ? 2 : 1;
-        for (uint constraints_counter = 0; constraints_counter != count; ++constraints_counter) {
-            u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * constraint->linkCount();
-            u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * constraint->clusterCount();
-            Matrix<>::EstimateMemoryUsage(u, 1, HOURS_PER_YEAR);
-        }
-    }
-}
-
 void BindingConstraintsRepository::markAsModified() const
 {
     for (const auto & i : constraints_)
