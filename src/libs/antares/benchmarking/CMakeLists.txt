@@ -22,6 +22,7 @@ target_include_directories(benchmarking
         ${CMAKE_SOURCE_DIR}/libs/antares/writer #study
         ${CMAKE_SOURCE_DIR}/libs/antares/exception #enum -> exception
         ${CMAKE_SOURCE_DIR}/libs/antares/jit # something,something -> jit
+        ${CMAKE_SOURCE_DIR}/libs/antares/memory/include #study -> BC -> link -> memory
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
         )

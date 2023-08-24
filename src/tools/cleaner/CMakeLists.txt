@@ -27,6 +27,7 @@ INSTALL(EXPORT antares-study-cleaner
 set(CLEANER_LIBS
 	libantares-core
 	yuni-static-core
+	Antares::sys
 	${CMAKE_THREADS_LIBS_INIT}
 )
 

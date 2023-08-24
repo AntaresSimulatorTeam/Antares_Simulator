@@ -31,4 +31,5 @@ target_link_libraries(libantares-ui-windows-options
 							${wxWidgets_LIBRARIES}
 						PRIVATE
 							libantares-ui-common
+							Antares::sys
 )

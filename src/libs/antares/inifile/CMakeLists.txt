@@ -9,6 +9,7 @@ source_group("misc\\inifile" FILES ${SRC_INI})
 add_library(inifile
         ${SRC_INI}
 )
+add_library(Antares::inifile ALIAS inifile)
 
 target_link_libraries(inifile
         PRIVATE

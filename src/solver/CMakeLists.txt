@@ -96,6 +96,7 @@ target_link_libraries(antares-solver
 			${ANTARES_SOLVER_LIBS}
 			benchmarking
 			result_writer
+			Antares::sys
 		)
 
 target_include_directories(antares-solver
