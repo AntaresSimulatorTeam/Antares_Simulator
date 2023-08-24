@@ -30,14 +30,6 @@
 
 DONNEES_MENSUELLES H2O_J_Instanciation(void)
 {
-    int i;
-    int NombreDeProblemes;
-    int NbPdt;
-    int j;
-    int NombreDeVariables;
-    int NombreDeContraintes;
-    int NombreDeTermesAlloues;
-
     DONNEES_MENSUELLES DonneesMensuelles;
 
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles.ProblemeHydraulique;
@@ -57,7 +49,7 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
     DonneesMensuelles.TurbineCible.assign(NbJoursDUnProbleme[3], 0.);
     DonneesMensuelles.Turbine.assign(NbJoursDUnProbleme[3], 0.);
 
-    NombreDeProblemes = ProblemeHydraulique.NombreDeProblemes;
+    int NombreDeProblemes = ProblemeHydraulique.NombreDeProblemes;
 
     ProblemeHydraulique.CorrespondanceDesVariables.resize(NombreDeProblemes);
 
@@ -72,7 +64,7 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
     {
         return DonneesMensuelles;
     }
-    for (i = 0; i < NombreDeProblemes; i++)
+    for (int i = 0; i < NombreDeProblemes; i++)
     {
         ProblemeHydraulique.ProblemeSpx[i] = NULL;
     }
@@ -91,16 +83,16 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
     std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE>& ProblemeLineairePartieVariable
         = ProblemeHydraulique.ProblemeLineairePartieVariable;
 
-    for (i = 0; i < NombreDeProblemes; i++)
+    for (int i = 0; i < NombreDeProblemes; i++)
     {
-        NbPdt = NbJoursDUnProbleme[i];
+        int NbPdt = NbJoursDUnProbleme[i];
 
         CorrespondanceDesVariables[i].NumeroDeVariableTurbine.assign(NbPdt, 0);
         CorrespondanceDesContraintes[i].NumeroDeContrainteSurXi.assign(NbPdt, 0);
 
         PROBLEME_LINEAIRE_PARTIE_FIXE& PlFixe = ProblemeLineairePartieFixe[i];
 
-        NombreDeVariables = 0;
+        int NombreDeVariables = 0;
         NombreDeVariables += NbPdt;
         NombreDeVariables += 1;
         NombreDeVariables += 1;
@@ -109,7 +101,7 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
         PlFixe.CoutLineaire.assign(NombreDeVariables, 0.);
         PlFixe.TypeDeVariable.assign(NombreDeVariables, 0);
 
-        NombreDeContraintes = 0;
+        int NombreDeContraintes = 0;
         NombreDeContraintes += 1;
         NombreDeContraintes += NbPdt;
 
@@ -118,7 +110,7 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
         PlFixe.IndicesDebutDeLigne.assign(NombreDeContraintes, 0);
         PlFixe.NombreDeTermesDesLignes.assign(NombreDeContraintes, 0);
 
-        NombreDeTermesAlloues = 0;
+        int NombreDeTermesAlloues = 0;
         NombreDeTermesAlloues += NbPdt;
         NombreDeTermesAlloues += 1;
         NombreDeTermesAlloues += (2 * NbPdt);
@@ -143,7 +135,7 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
         PlVariable.CoutsMarginauxDesContraintes.assign(NombreDeContraintes, 0.);
     }
 
-    for (i = 0; i < NombreDeProblemes; i++)
+    for (int i = 0; i < NombreDeProblemes; i++)
     {
         H2O_j_ConstruireLesVariables(
           NbJoursDUnProbleme[i],
@@ -166,7 +158,7 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
           ProblemeLineairePartieFixe[i].IndicesColonnes,
           CorrespondanceDesContraintes[i]);
 
-        for (j = 0; j < ProblemeLineairePartieFixe[i].NombreDeVariables; j++)
+        for (int j = 0; j < ProblemeLineairePartieFixe[i].NombreDeVariables; j++)
         {
             ProblemeLineairePartieFixe[i].CoutLineaire[j] = 0.0;
         }
