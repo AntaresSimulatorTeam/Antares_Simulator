@@ -54,7 +54,6 @@ void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int
 
     PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
-    PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
 
     PROBLEME_SIMPLEXE* Probleme;
     PROBLEME_SPX* ProbSpx;
@@ -65,7 +64,9 @@ void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int
 
     ProblemeLineairePartieVariable
       = ProblemeHydraulique->ProblemeLineairePartieVariable[NumeroDeProbleme];
-    ProblemeLineairePartieFixe = ProblemeHydraulique->ProblemeLineairePartieFixe[NumeroDeProbleme];
+
+    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
+        = ProblemeHydraulique->ProblemeLineairePartieFixe[NumeroDeProbleme];
 
     ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique->ProblemeSpx[NumeroDeProbleme];
 
@@ -96,27 +97,27 @@ RESOLUTION:
 
         SPX_ModifierLeVecteurSecondMembre(ProbSpx,
                                           ProblemeLineairePartieVariable->SecondMembre,
-                                          ProblemeLineairePartieFixe->Sens.data(),
-                                          ProblemeLineairePartieFixe->NombreDeContraintes);
+                                          ProblemeLineairePartieFixe.Sens.data(),
+                                          ProblemeLineairePartieFixe.NombreDeContraintes);
     }
 
     Probleme->NombreMaxDIterations = -1;
     Probleme->DureeMaxDuCalcul = -1.;
 
-    Probleme->CoutLineaire = ProblemeLineairePartieFixe->CoutLineaire.data();
+    Probleme->CoutLineaire = ProblemeLineairePartieFixe.CoutLineaire.data();
     Probleme->X = ProblemeLineairePartieVariable->X;
     Probleme->Xmin = ProblemeLineairePartieVariable->Xmin;
     Probleme->Xmax = ProblemeLineairePartieVariable->Xmax;
-    Probleme->NombreDeVariables = ProblemeLineairePartieFixe->NombreDeVariables;
-    Probleme->TypeDeVariable = ProblemeLineairePartieFixe->TypeDeVariable.data();
+    Probleme->NombreDeVariables = ProblemeLineairePartieFixe.NombreDeVariables;
+    Probleme->TypeDeVariable = ProblemeLineairePartieFixe.TypeDeVariable.data();
 
-    Probleme->NombreDeContraintes = ProblemeLineairePartieFixe->NombreDeContraintes;
-    Probleme->IndicesDebutDeLigne = ProblemeLineairePartieFixe->IndicesDebutDeLigne.data();
-    Probleme->NombreDeTermesDesLignes = ProblemeLineairePartieFixe->NombreDeTermesDesLignes.data();
-    Probleme->IndicesColonnes = ProblemeLineairePartieFixe->IndicesColonnes.data();
+    Probleme->NombreDeContraintes = ProblemeLineairePartieFixe.NombreDeContraintes;
+    Probleme->IndicesDebutDeLigne = ProblemeLineairePartieFixe.IndicesDebutDeLigne.data();
+    Probleme->NombreDeTermesDesLignes = ProblemeLineairePartieFixe.NombreDeTermesDesLignes.data();
+    Probleme->IndicesColonnes = ProblemeLineairePartieFixe.IndicesColonnes.data();
     Probleme->CoefficientsDeLaMatriceDesContraintes
-      = ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes.data();
-    Probleme->Sens = ProblemeLineairePartieFixe->Sens.data();
+      = ProblemeLineairePartieFixe.CoefficientsDeLaMatriceDesContraintes.data();
+    Probleme->Sens = ProblemeLineairePartieFixe.Sens.data();
     Probleme->SecondMembre = ProblemeLineairePartieVariable->SecondMembre;
 
     Probleme->ChoixDeLAlgorithme = SPX_DUAL;
@@ -180,7 +181,7 @@ RESOLUTION:
     {
         DonneesMensuelles->ResultatsValides = OUI;
 
-        for (Var = 0; Var < ProblemeLineairePartieFixe->NombreDeVariables; Var++)
+        for (Var = 0; Var < ProblemeLineairePartieFixe.NombreDeVariables; Var++)
         {
             pt = ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
             if (pt != NULL)

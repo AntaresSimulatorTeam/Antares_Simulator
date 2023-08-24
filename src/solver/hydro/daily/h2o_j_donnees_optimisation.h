@@ -126,7 +126,7 @@ typedef struct
     CORRESPONDANCE_DES_VARIABLES** CorrespondanceDesVariables;
     CORRESPONDANCE_DES_CONTRAINTES** CorrespondanceDesContraintes;
 
-    PROBLEME_LINEAIRE_PARTIE_FIXE** ProblemeLineairePartieFixe;
+    std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE> ProblemeLineairePartieFixe;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE** ProblemeLineairePartieVariable;
 
     void** ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */

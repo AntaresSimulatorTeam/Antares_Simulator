@@ -43,11 +43,9 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 
     CORRESPONDANCE_DES_VARIABLES** CorrespondanceDesVariables;
     CORRESPONDANCE_DES_CONTRAINTES** CorrespondanceDesContraintes;
-    PROBLEME_LINEAIRE_PARTIE_FIXE** ProblemeLineairePartieFixe;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE** ProblemeLineairePartieVariable;
     CORRESPONDANCE_DES_VARIABLES* CorrVar;
     CORRESPONDANCE_DES_CONTRAINTES* CorrCnt;
-    PROBLEME_LINEAIRE_PARTIE_FIXE* PlFixe;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE* PlVariable;
 
     DonneesMensuelles = (DONNEES_MENSUELLES*)malloc(sizeof(DONNEES_MENSUELLES));
@@ -114,9 +112,7 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
         return (0);
     }
 
-    ProblemeHydraulique->ProblemeLineairePartieFixe = new PROBLEME_LINEAIRE_PARTIE_FIXE* [NombreDeProblemes];
-    if (ProblemeHydraulique->ProblemeLineairePartieFixe == NULL)
-        return (0);
+    ProblemeHydraulique->ProblemeLineairePartieFixe.resize(NombreDeProblemes);
 
     ProblemeHydraulique->ProblemeLineairePartieVariable
       = (PROBLEME_LINEAIRE_PARTIE_VARIABLE**)malloc(NombreDeProblemes
@@ -140,7 +136,8 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 
     CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables;
     CorrespondanceDesContraintes = ProblemeHydraulique->CorrespondanceDesContraintes;
-    ProblemeLineairePartieFixe = ProblemeHydraulique->ProblemeLineairePartieFixe;
+    std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE>& ProblemeLineairePartieFixe
+        = ProblemeHydraulique->ProblemeLineairePartieFixe;
     ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable;
 
     for (i = 0; i < NombreDeProblemes; i++)
@@ -157,9 +154,6 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
         {
             return (0);
         }
-        ProblemeLineairePartieFixe[i] = new PROBLEME_LINEAIRE_PARTIE_FIXE;
-        if (ProblemeLineairePartieFixe[i] == NULL)
-            return (0);
 
         ProblemeLineairePartieVariable[i]
           = (PROBLEME_LINEAIRE_PARTIE_VARIABLE*)malloc(sizeof(PROBLEME_LINEAIRE_PARTIE_VARIABLE));
@@ -185,34 +179,34 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
         {
             return (0);
         }
-        PlFixe = ProblemeLineairePartieFixe[i];
+        PROBLEME_LINEAIRE_PARTIE_FIXE& PlFixe = ProblemeLineairePartieFixe[i];
 
         NombreDeVariables = 0;
         NombreDeVariables += NbPdt;
         NombreDeVariables += 1;
         NombreDeVariables += 1;
 
-        PlFixe->NombreDeVariables = NombreDeVariables;
-        PlFixe->CoutLineaire.assign(NombreDeVariables, 0.);
-        PlFixe->TypeDeVariable.assign(NombreDeVariables, 0);
+        PlFixe.NombreDeVariables = NombreDeVariables;
+        PlFixe.CoutLineaire.assign(NombreDeVariables, 0.);
+        PlFixe.TypeDeVariable.assign(NombreDeVariables, 0);
 
         NombreDeContraintes = 0;
         NombreDeContraintes += 1;
         NombreDeContraintes += NbPdt;
 
-        PlFixe->NombreDeContraintes = NombreDeContraintes;
-        PlFixe->Sens.resize(NombreDeContraintes);
-        PlFixe->IndicesDebutDeLigne.assign(NombreDeContraintes, 0);
-        PlFixe->NombreDeTermesDesLignes.assign(NombreDeContraintes, 0);
+        PlFixe.NombreDeContraintes = NombreDeContraintes;
+        PlFixe.Sens.resize(NombreDeContraintes);
+        PlFixe.IndicesDebutDeLigne.assign(NombreDeContraintes, 0);
+        PlFixe.NombreDeTermesDesLignes.assign(NombreDeContraintes, 0);
 
         NombreDeTermesAlloues = 0;
         NombreDeTermesAlloues += NbPdt;
         NombreDeTermesAlloues += 1;
         NombreDeTermesAlloues += (2 * NbPdt);
 
-        PlFixe->NombreDeTermesAlloues = NombreDeTermesAlloues;
-        PlFixe->CoefficientsDeLaMatriceDesContraintes.assign(NombreDeTermesAlloues, 0.);
-        PlFixe->IndicesColonnes.assign(NombreDeTermesAlloues, 0);
+        PlFixe.NombreDeTermesAlloues = NombreDeTermesAlloues;
+        PlFixe.CoefficientsDeLaMatriceDesContraintes.assign(NombreDeTermesAlloues, 0.);
+        PlFixe.IndicesColonnes.assign(NombreDeTermesAlloues, 0);
 
         PlVariable = ProblemeLineairePartieVariable[i];
         PlVariable->Xmin = (double*)malloc(NombreDeVariables * sizeof(double));
@@ -275,7 +269,7 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
           CorrespondanceDesVariables[i]->NumeroDeVariableTurbine,
           ProblemeLineairePartieVariable[i]->Xmin,
           ProblemeLineairePartieVariable[i]->Xmax,
-          ProblemeLineairePartieFixe[i]->TypeDeVariable,
+          ProblemeLineairePartieFixe[i].TypeDeVariable,
           ProblemeLineairePartieVariable[i]->AdresseOuPlacerLaValeurDesVariablesOptimisees,
           CorrespondanceDesVariables[i]);
 
@@ -284,23 +278,23 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
           CorrespondanceDesVariables[i]->NumeroDeVariableTurbine,
           CorrespondanceDesVariables[i]->NumeroDeLaVariableMu,
           CorrespondanceDesVariables[i]->NumeroDeLaVariableXi,
-          ProblemeLineairePartieFixe[i]->IndicesDebutDeLigne,
-          ProblemeLineairePartieFixe[i]->Sens,
-          ProblemeLineairePartieFixe[i]->NombreDeTermesDesLignes,
-          ProblemeLineairePartieFixe[i]->CoefficientsDeLaMatriceDesContraintes,
-          ProblemeLineairePartieFixe[i]->IndicesColonnes,
+          ProblemeLineairePartieFixe[i].IndicesDebutDeLigne,
+          ProblemeLineairePartieFixe[i].Sens,
+          ProblemeLineairePartieFixe[i].NombreDeTermesDesLignes,
+          ProblemeLineairePartieFixe[i].CoefficientsDeLaMatriceDesContraintes,
+          ProblemeLineairePartieFixe[i].IndicesColonnes,
           CorrespondanceDesContraintes[i]);
 
-        for (j = 0; j < ProblemeLineairePartieFixe[i]->NombreDeVariables; j++)
+        for (j = 0; j < ProblemeLineairePartieFixe[i].NombreDeVariables; j++)
         {
-            ProblemeLineairePartieFixe[i]->CoutLineaire[j] = 0.0;
+            ProblemeLineairePartieFixe[i].CoutLineaire[j] = 0.0;
         }
 
         ProblemeLineairePartieFixe[i]
-          ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroDeLaVariableMu]
+          .CoutLineaire[CorrespondanceDesVariables[i]->NumeroDeLaVariableMu]
           = 1.0;
         ProblemeLineairePartieFixe[i]
-          ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroDeLaVariableXi]
+          .CoutLineaire[CorrespondanceDesVariables[i]->NumeroDeLaVariableXi]
           = 1.0;
     }
 

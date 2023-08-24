@@ -56,8 +56,6 @@ void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
         free(ProblemeHydraulique->CorrespondanceDesContraintes[i]->NumeroDeContrainteSurXi);
         free(ProblemeHydraulique->CorrespondanceDesContraintes[i]);
 
-        delete ProblemeHydraulique->ProblemeLineairePartieFixe[i];
-
         free(ProblemeHydraulique->ProblemeLineairePartieVariable[i]->Xmin);
         free(ProblemeHydraulique->ProblemeLineairePartieVariable[i]->Xmax);
         free(ProblemeHydraulique->ProblemeLineairePartieVariable[i]->SecondMembre);
@@ -80,7 +78,6 @@ void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
     free(ProblemeHydraulique->NbJoursDUnProbleme);
     free(ProblemeHydraulique->CorrespondanceDesVariables);
     free(ProblemeHydraulique->CorrespondanceDesContraintes);
-    delete[] ProblemeHydraulique->ProblemeLineairePartieFixe;
     free(ProblemeHydraulique->ProblemeLineairePartieVariable);
     free(ProblemeHydraulique->ProblemeSpx);
     free(ProblemeHydraulique->Probleme);
