@@ -29,7 +29,7 @@
 #include "h2o_j_fonctions.h"
 
 void H2O_J_ConstruireLesContraintes(int NbPdt,
-                                    int* NumeroDeVariableTurbine,
+                                    std::vector<int>& NumeroDeVariableTurbine,
                                     int NumeroDeLaVariableMu,
                                     int NumeroDeLaVariableXi,
                                     std::vector<int>& IndicesDebutDeLigne,

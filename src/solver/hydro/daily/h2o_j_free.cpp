@@ -50,8 +50,6 @@ void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
 
     for (int i = 0; i < NombreDeProblemes; i++)
     {
-        free(ProblemeHydraulique->CorrespondanceDesVariables[i].NumeroDeVariableTurbine);
-
         ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique->ProblemeSpx[i];
         if (ProbSpx != NULL)
         {

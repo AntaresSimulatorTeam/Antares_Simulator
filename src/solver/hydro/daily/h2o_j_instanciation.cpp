@@ -127,7 +127,7 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
     {
         NbPdt = NbJoursDUnProbleme[i];
 
-        CorrespondanceDesVariables[i].NumeroDeVariableTurbine = (int*)malloc(NbPdt * sizeof(int));
+        CorrespondanceDesVariables[i].NumeroDeVariableTurbine.assign(NbPdt, 0);
         CorrespondanceDesContraintes[i].NumeroDeContrainteSurXi.assign(NbPdt, 0);
 
         PROBLEME_LINEAIRE_PARTIE_FIXE& PlFixe = ProblemeLineairePartieFixe[i];

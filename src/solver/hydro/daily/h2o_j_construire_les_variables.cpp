@@ -40,7 +40,7 @@ extern "C"
 #include "h2o_j_fonctions.h"
 
 void H2O_j_ConstruireLesVariables(int NbPdt,
-                                  int* NumeroDeVariableTurbine,
+                                  std::vector<int>& NumeroDeVariableTurbine,
                                   std::vector<double>& Xmin,
                                   std::vector<double>& Xmax,
                                   std::vector<int>& TypeDeVariable,

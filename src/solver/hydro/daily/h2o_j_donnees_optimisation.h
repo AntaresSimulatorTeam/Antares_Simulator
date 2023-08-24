@@ -109,7 +109,7 @@ struct CORRESPONDANCE_DES_CONTRAINTES
 /* Les correspondances des variables */
 struct CORRESPONDANCE_DES_VARIABLES
 {
-    int* NumeroDeVariableTurbine; /* Turbines */
+    std::vector<int> NumeroDeVariableTurbine; /* Turbines */
     int NumeroDeLaVariableMu;     /* Variable de deversement (total sur la periode) */
     int NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible quand le turbine
                                  est inferieur au turbine cible */
