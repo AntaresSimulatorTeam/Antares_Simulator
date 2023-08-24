@@ -103,7 +103,7 @@ RESOLUTION:
     Probleme->NombreMaxDIterations = -1;
     Probleme->DureeMaxDuCalcul = -1.;
 
-    Probleme->CoutLineaire = ProblemeLineairePartieFixe->CoutLineaire;
+    Probleme->CoutLineaire = ProblemeLineairePartieFixe->CoutLineaire.data();
     Probleme->X = ProblemeLineairePartieVariable->X;
     Probleme->Xmin = ProblemeLineairePartieVariable->Xmin;
     Probleme->Xmax = ProblemeLineairePartieVariable->Xmax;

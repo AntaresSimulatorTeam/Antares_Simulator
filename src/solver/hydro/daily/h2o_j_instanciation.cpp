@@ -193,11 +193,7 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
         NombreDeVariables += 1;
 
         PlFixe->NombreDeVariables = NombreDeVariables;
-        PlFixe->CoutLineaire = (double*)malloc(NombreDeVariables * sizeof(double));
-        if (PlFixe->CoutLineaire == NULL)
-        {
-            return (0);
-        }
+        PlFixe->CoutLineaire.assign(NombreDeVariables, 0.);
         PlFixe->TypeDeVariable = (int*)malloc(NombreDeVariables * sizeof(int));
         if (PlFixe->TypeDeVariable == NULL)
         {
