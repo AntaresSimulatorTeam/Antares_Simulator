@@ -15,8 +15,9 @@ add_library(${PROJ} ${SRC_PROJ})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 target_link_libraries(${PROJ}
-        PRIVATE
+        PUBLIC
         yuni-static-core
+        PRIVATE
         Antares::logs
         Antares::inifile
 )
