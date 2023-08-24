@@ -56,9 +56,6 @@ void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
         free(ProblemeHydraulique->CorrespondanceDesContraintes[i]->NumeroDeContrainteSurXi);
         free(ProblemeHydraulique->CorrespondanceDesContraintes[i]);
 
-        free((ProblemeHydraulique->ProblemeLineairePartieVariable[i])
-               .AdresseOuPlacerLaValeurDesVariablesOptimisees);
-
         ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique->ProblemeSpx[i];
         if (ProbSpx != NULL)
         {

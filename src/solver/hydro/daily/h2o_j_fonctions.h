@@ -47,7 +47,7 @@ void H2O_j_ConstruireLesVariables(int,
                                   std::vector<double>&,
                                   std::vector<double>&,
                                   std::vector<int>&,
-                                  double**,
+                                  std::vector<double*>& ,
                                   CORRESPONDANCE_DES_VARIABLES*);
 void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES*, int);
 void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES*, int);

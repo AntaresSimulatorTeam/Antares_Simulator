@@ -203,16 +203,8 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
         PlVariable.SecondMembre.assign(NombreDeContraintes, 0.);
         PlVariable.X.assign(NombreDeVariables, 0.);
 
-        PlVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees
-          = (double**)malloc(NombreDeVariables * sizeof(double*));
-        if (PlVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees == NULL)
-        {
-            return (0);
-        }
-        for (j = 0; j < NombreDeVariables; j++)
-        {
-            PlVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees[j] = NULL;
-        }
+        PlVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees.assign(NombreDeVariables, nullptr);
+
         PlVariable.PositionDeLaVariable.assign(NombreDeVariables, 0);
         PlVariable.ComplementDeLaBase.assign(NombreDeContraintes, 0);
 
