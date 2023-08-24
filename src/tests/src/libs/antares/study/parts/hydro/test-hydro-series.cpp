@@ -68,21 +68,7 @@ struct Fixture
 
     ~Fixture()
     {
-        fs::path folder_path = fs::path(base_folder.c_str()) / series_folder.c_str();
-        if (fs::exists(folder_path))
-        {
-            try
-            {
-                fs::remove_all(folder_path);
-                std::cout << "Folder '" << series_folder << "' at '" << folder_path
-                          << "' deleted.\n";
-            }
-            catch (const fs::filesystem_error& e)
-            {
-                std::cerr << "Exception deleting folder '" << series_folder << "': " << e.what()
-                          << "\n";
-            }
-        }
+        removeFolder(base_folder, series_folder);
     }
 };
 

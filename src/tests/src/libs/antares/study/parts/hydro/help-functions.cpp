@@ -56,3 +56,22 @@ void InstantiateColumn(Matrix<double>::ColumnType& col, double seed, uint type)
             col[days] = seed + 2;
     }
 }
+
+void removeFolder(my_string& path, my_string folder_name)
+{
+    fs::path folder_path = fs::path(path.c_str()) / folder_name.c_str();
+        if (fs::exists(folder_path))
+        {
+            try
+            {
+                fs::remove_all(folder_path);
+                std::cout << "Folder '" << folder_name << "' at '" << folder_path
+                          << "' deleted.\n";
+            }
+            catch (const fs::filesystem_error& e)
+            {
+                std::cerr << "Exception deleting folder '" << folder_name << "': " << e.what()
+                          << "\n";
+            }
+        }
+}

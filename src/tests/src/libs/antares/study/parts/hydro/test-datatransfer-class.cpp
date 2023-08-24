@@ -19,7 +19,7 @@ struct Fixture
         study->areas.rebuildIndexes();
 
         // Create necessary folders and files for these two areas
-        createFolders();
+        createFoldersAndFiles();
 
         auto& gen = datatransfer->maxPower[DataTransfer::genMaxP];
         InstantiateColumn(gen, 300., DAYS_PER_YEAR);
@@ -40,7 +40,7 @@ struct Fixture
         datatransfer->maxPower.saveToCSVFile(buffer, 2);
     }
 
-    void createFolders()
+    void createFoldersAndFiles()
     {
         my_string buffer;
 
@@ -96,21 +96,7 @@ struct Fixture
 
     ~Fixture()
     {
-        fs::path folder_path = fs::path(base_folder.c_str()) / hydro_folder.c_str();
-        if (fs::exists(folder_path))
-        {
-            try
-            {
-                fs::remove_all(folder_path);
-                std::cout << "Folder '" << hydro_folder << "' at '" << folder_path
-                          << "' deleted.\n";
-            }
-            catch (const fs::filesystem_error& e)
-            {
-                std::cerr << "Exception deleting folder '" << hydro_folder << "': " << e.what()
-                          << "\n";
-            }
-        }
+        removeFolder(base_folder, hydro_folder);
     }
 };
 
