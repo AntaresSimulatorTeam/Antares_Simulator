@@ -28,7 +28,7 @@
 #include "h2o_j_donnees_mensuelles.h"
 #include "h2o_j_fonctions.h"
 
-DONNEES_MENSUELLES* H2O_J_Instanciation(void)
+DONNEES_MENSUELLES H2O_J_Instanciation(void)
 {
     int i;
     int* NbJoursDUnProbleme;
@@ -38,21 +38,16 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
     int NombreDeVariables;
     int NombreDeContraintes;
     int NombreDeTermesAlloues;
-    DONNEES_MENSUELLES* DonneesMensuelles;
     PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
 
-    DonneesMensuelles = new DONNEES_MENSUELLES;
-    if (DonneesMensuelles == NULL)
-    {
-        return (NULL);
-    }
+    DONNEES_MENSUELLES DonneesMensuelles;
 
-    DonneesMensuelles->ProblemeHydraulique = new PROBLEME_HYDRAULIQUE;
-    if (DonneesMensuelles->ProblemeHydraulique == NULL)
+    DonneesMensuelles.ProblemeHydraulique = new PROBLEME_HYDRAULIQUE;
+    if (DonneesMensuelles.ProblemeHydraulique == NULL)
     {
-        return (NULL);
+        return DonneesMensuelles;
     }
-    ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+    ProblemeHydraulique = DonneesMensuelles.ProblemeHydraulique;
 
     ProblemeHydraulique->NombreDeProblemes = 4;
 
@@ -60,7 +55,7 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
       = (int*)malloc(ProblemeHydraulique->NombreDeProblemes * sizeof(int));
     if (ProblemeHydraulique->NbJoursDUnProbleme == NULL)
     {
-        return (0);
+        return DonneesMensuelles;
     }
     NbJoursDUnProbleme = ProblemeHydraulique->NbJoursDUnProbleme;
     NbJoursDUnProbleme[0] = 28;
@@ -68,25 +63,25 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
     NbJoursDUnProbleme[2] = 30;
     NbJoursDUnProbleme[3] = 31;
 
-    DonneesMensuelles->TurbineMax = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuelles->TurbineMax == NULL)
+    DonneesMensuelles.TurbineMax = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
+    if (DonneesMensuelles.TurbineMax == NULL)
     {
-        return (NULL);
+        return DonneesMensuelles;
     }
-    DonneesMensuelles->TurbineMin = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuelles->TurbineMin == NULL)
+    DonneesMensuelles.TurbineMin = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
+    if (DonneesMensuelles.TurbineMin == NULL)
     {
-        return (NULL);
+        return DonneesMensuelles;
     }
-    DonneesMensuelles->TurbineCible = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuelles->TurbineCible == NULL)
+    DonneesMensuelles.TurbineCible = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
+    if (DonneesMensuelles.TurbineCible == NULL)
     {
-        return (NULL);
+        return DonneesMensuelles;
     }
-    DonneesMensuelles->Turbine = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuelles->Turbine == NULL)
+    DonneesMensuelles.Turbine = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
+    if (DonneesMensuelles.Turbine == NULL)
     {
-        return (NULL);
+        return DonneesMensuelles;
     }
 
     NombreDeProblemes = ProblemeHydraulique->NombreDeProblemes;
@@ -102,7 +97,7 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
     ProblemeHydraulique->ProblemeSpx = (void**)malloc(NombreDeProblemes * sizeof(void*));
     if (ProblemeHydraulique->ProblemeSpx == NULL)
     {
-        return (0);
+        return DonneesMensuelles;
     }
     for (i = 0; i < NombreDeProblemes; i++)
     {
@@ -211,5 +206,5 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
           = 1.0;
     }
 
-    return (DonneesMensuelles);
+    return DonneesMensuelles;
 }
