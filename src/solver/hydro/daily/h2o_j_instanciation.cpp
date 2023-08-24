@@ -54,8 +54,7 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
         return (NULL);
     }
 
-    DonneesMensuelles->ProblemeHydraulique
-      = (PROBLEME_HYDRAULIQUE*)malloc(sizeof(PROBLEME_HYDRAULIQUE));
+    DonneesMensuelles->ProblemeHydraulique = new PROBLEME_HYDRAULIQUE;
     if (DonneesMensuelles->ProblemeHydraulique == NULL)
     {
         return (NULL);
