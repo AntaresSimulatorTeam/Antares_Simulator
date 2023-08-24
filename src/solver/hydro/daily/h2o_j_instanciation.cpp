@@ -113,12 +113,11 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
     {
         return (0);
     }
-    ProblemeHydraulique->ProblemeLineairePartieFixe = (PROBLEME_LINEAIRE_PARTIE_FIXE**)malloc(
-      NombreDeProblemes * sizeof(PROBLEME_LINEAIRE_PARTIE_FIXE));
+
+    ProblemeHydraulique->ProblemeLineairePartieFixe = new PROBLEME_LINEAIRE_PARTIE_FIXE* [NombreDeProblemes];
     if (ProblemeHydraulique->ProblemeLineairePartieFixe == NULL)
-    {
         return (0);
-    }
+
     ProblemeHydraulique->ProblemeLineairePartieVariable
       = (PROBLEME_LINEAIRE_PARTIE_VARIABLE**)malloc(NombreDeProblemes
                                                     * sizeof(PROBLEME_LINEAIRE_PARTIE_VARIABLE));
@@ -158,12 +157,10 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
         {
             return (0);
         }
-        ProblemeLineairePartieFixe[i]
-          = (PROBLEME_LINEAIRE_PARTIE_FIXE*)malloc(sizeof(PROBLEME_LINEAIRE_PARTIE_FIXE));
+        ProblemeLineairePartieFixe[i] = new PROBLEME_LINEAIRE_PARTIE_FIXE;
         if (ProblemeLineairePartieFixe[i] == NULL)
-        {
             return (0);
-        }
+
         ProblemeLineairePartieVariable[i]
           = (PROBLEME_LINEAIRE_PARTIE_VARIABLE*)malloc(sizeof(PROBLEME_LINEAIRE_PARTIE_VARIABLE));
         if (ProblemeLineairePartieVariable[i] == NULL)
