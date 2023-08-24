@@ -314,14 +314,6 @@ void List<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataL
 }
 
 template<class NextT>
-inline void List<NextT>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-{
-    u.requiredMemoryForOutput += sizeof(ListType);
-    u.requiredDiskSpaceForOutput += 20 * 1024; // 20Ko
-    NextType::EstimateMemoryUsage(u);
-}
-
-template<class NextT>
 void List<NextT>::exportSurveyResults(bool global,
                                       const Yuni::String& output,
                                       unsigned int numSpace,

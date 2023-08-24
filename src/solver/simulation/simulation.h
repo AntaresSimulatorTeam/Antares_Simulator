@@ -28,6 +28,7 @@
 #define __SOLVER_SIMULATION_H__
 
 #include "../config.h"
+#include "sim_structure_donnees.h"
 #include <antares/study/study.h>
 
 struct PROBLEME_HEBDO;
@@ -55,7 +56,8 @@ void SIM_RenseignementProblemeHebdo(const Antares::Data::Study& study,
                                     PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
                                     uint numSpace,
-                                    const int);
+                                    const int,
+                                    const VAL_GEN_PAR_PAYS&);
 
 void SIM_RenseignementProblemeHoraireAdequation(uint);
 

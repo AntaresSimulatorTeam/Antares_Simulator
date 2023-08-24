@@ -57,7 +57,7 @@ public:
     */
     Economy(Data::Study& study);
     //! Destructor
-    ~Economy();
+    ~Economy() = default;
     //@}
 
     Benchmarking::OptimizationInfo getOptimizationInfo() const;
@@ -73,14 +73,15 @@ public:
 protected:
     void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
 
-    bool simulationBegin();
+    bool simulationBegin(const VAL_GEN_PAR_PAYS& valeursGenereesParPays);
 
     bool year(Progression::Task& progression,
               Variable::State& state,
               uint numSpace,
               yearRandomNumbers& randomForYear,
               std::list<uint>& failedWeekList,
-              bool isFirstPerformedYearOfSimulation);
+              bool isFirstPerformedYearOfSimulation,
+              VAL_GEN_PAR_PAYS& valeursGenereesParPays);
 
     void incrementProgression(Progression::Task& progression);
 
@@ -98,7 +99,7 @@ private:
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
-    PROBLEME_HEBDO** pProblemesHebdo;
+    std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     std::vector<std::unique_ptr<Antares::Solver::Optimization::WeeklyOptimization>> weeklyOptProblems_;
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
 }; // class Economy

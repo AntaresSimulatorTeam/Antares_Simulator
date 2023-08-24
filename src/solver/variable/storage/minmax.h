@@ -142,13 +142,6 @@ protected:
         return sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
     }
 
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-    {
-        Antares::Memory::EstimateMemoryUsage(sizeof(MinMaxData::Data), maxHoursInAYear, u, false);
-        u.takeIntoConsiderationANewTimeserieForDiskOutput(true);
-        NextType::EstimateMemoryUsage(u);
-    }
-
     template<template<class> class DecoratorT>
     Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
     {

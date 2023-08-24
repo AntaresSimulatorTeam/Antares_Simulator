@@ -15,9 +15,7 @@ struct TSNumbersPredicate
 };
 } // namespace
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 using namespace Antares;
 
@@ -448,5 +446,5 @@ void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uin
 template class ClusterList<ThermalCluster>;
 template class ClusterList<RenewableCluster>;
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

@@ -29,16 +29,14 @@
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "series.h"
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 bool DataSeriesCommon::forceReload(bool reload) const
 {
@@ -50,25 +48,6 @@ void DataSeriesCommon::markAsModified() const
     timeSeries.markAsModified();
 }
 
-void DataSeriesCommon::estimateMemoryUsage(StudyMemoryUsage& u, enum TimeSeries ts) const
-{
-    u.requiredMemoryForInput += sizeof(DataSeriesCommon);
-    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-    uint nbTimeSeries;
-    switch (ts)
-    {
-    case timeSeriesThermal:
-        nbTimeSeries = u.study.parameters.nbTimeSeriesThermal;
-        break;
-    case timeSeriesRenewable:
-        nbTimeSeries = 1;
-        break;
-    default:
-        nbTimeSeries = 0;
-    }
-    timeSeries.estimateMemoryUsage(
-      u, 0 != (ts & u.study.parameters.timeSeriesToGenerate), nbTimeSeries, HOURS_PER_YEAR);
-}
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

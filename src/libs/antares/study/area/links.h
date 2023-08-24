@@ -115,11 +115,6 @@ public:
     ** \brief Get the size (bytes) in memory occupied by a `AreaLink` structure
     */
     Yuni::uint64 memoryUsage() const;
-    /*!
-    ** \brief Try to estimate the amount of memory required by the area for a simulation
-    */
-    void estimateMemoryUsage(StudyMemoryUsage& u) const;
-    //@}
 
     bool isVisibleOnLayer(const size_t& layerID) const;
 

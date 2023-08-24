@@ -27,9 +27,7 @@
 #include "alea_sys.h"
 #include <yuni/core/math.h>
 
-#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
 #include "../simulation/sim_extern_variables_globales.h"
 #include "alea_fonctions.h"
 #include <algorithm>
@@ -46,8 +44,9 @@ using namespace Antares::Data;
 
 static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
   const Study& study,
-  double** thermalNoisesByArea,
-  uint numSpace)
+  double const* const* thermalNoisesByArea,
+  uint numSpace,
+  VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     auto& runtime = *study.runtime;
 
@@ -60,7 +59,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
         // Variables - the current area
         NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = NumeroChroniquesTireesParPays[numSpace][i];
         auto& area = *(study.areas.byIndex[i]);
-        VALEURS_GENEREES_PAR_PAYS& ptvalgen = ValeursGenereesParPays[numSpace][i];
+        VALEURS_GENEREES_PAR_PAYS& ptvalgen = valeursGenereesParPays[numSpace][i];
 
         // Load
         {
@@ -196,11 +195,14 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
     }
 }
 
-void ALEA_TirageAuSortChroniques(const Antares::Data::Study& study, double** thermalNoisesByArea, uint numSpace)
+void ALEA_TirageAuSortChroniques(const Antares::Data::Study& study,
+                                 double const* const* thermalNoisesByArea,
+                                 uint numSpace,
+                                 VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     // Time-series numbers
     // Retrieve all time-series numbers
     // Initialize in the same time the production costs of all thermal clusters.
     InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(study,
-      thermalNoisesByArea, numSpace);
+      thermalNoisesByArea, numSpace, valeursGenereesParPays);
 }
