@@ -589,6 +589,41 @@ struct HydroPowerSmoothingUsingVariationMaxUp : public Constraint
         }
     }
 };
+struct MinHydroPower : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays, int NumeroDeLIntervalle)
+    {
+        bool presenceHydro
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
+        bool TurbEntreBornes
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
+        if (presenceHydro
+            && (TurbEntreBornes
+                || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
+        {
+            const int NombreDePasDeTempsPourUneOptimisation
+              = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+
+            for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
+            {
+                builder.updateHourWithinWeek(pdt);
+                builder.include(Variable::HydProd(pays), 1.0);
+            }
+
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
+            namer.MinHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+
+            const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
+                                 .MinEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
+            builder.greaterThan(rhs).build();
+        }
+    }
+};
+
     struct MaxHydroPower : public Constraint
     {
     using Constraint::Constraint;
@@ -666,6 +701,7 @@ struct HydroPowerSmoothingUsingVariationMaxUp : public Constraint
         HydroPowerSmoothingUsingVariationMaxUp hydroPowerSmoothingUsingVariationMaxUp(
           problemeHebdo);
         MaxHydroPower maxHydroPower(problemeHebdo);
+        MinHydroPower minHydroPower(problemeHebdo);
 
         for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
              pdtHebdo++, pdt++)
@@ -725,6 +761,7 @@ struct HydroPowerSmoothingUsingVariationMaxUp : public Constraint
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
+            minHydroPower.add(pays, NumeroDeLIntervalle);
             maxHydroPower.add(pays, NumeroDeLIntervalle);
         }
 
