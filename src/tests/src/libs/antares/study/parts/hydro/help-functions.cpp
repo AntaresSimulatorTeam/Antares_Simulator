@@ -57,7 +57,7 @@ void InstantiateColumn(Matrix<double>::ColumnType& col, double seed, uint type)
     }
 }
 
-void removeFolder(my_string& path, my_string folder_name)
+void removeFolder(my_string& path, my_string& folder_name)
 {
     fs::path folder_path = fs::path(path.c_str()) / folder_name.c_str();
         if (fs::exists(folder_path))
