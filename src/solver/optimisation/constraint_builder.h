@@ -280,9 +280,10 @@ public:
     {
     }
 
-    void updateHourWithinWeek(unsigned hour)
+    ConstraintBuilder& updateHourWithinWeek(unsigned hour)
     {
         hourInWeek_ = hour;
+        return *this;
     }
 
 private:
