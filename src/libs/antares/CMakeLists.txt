@@ -514,9 +514,9 @@ target_link_libraries(libantares-core
 		array
 		object
         benchmarking
+		Antares::date
 
 	PRIVATE
-		Antares::date
 		Antares::correlation
 	)
 

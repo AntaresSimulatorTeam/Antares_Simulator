@@ -40,7 +40,7 @@
 #include "fwd.h"
 
 #include "simulation.h"
-
+#include "parameters.h"
 #include "binding_constraint/BindingConstraint.h"
 #include "header.h"
 #include "version.h"
