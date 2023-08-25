@@ -91,10 +91,10 @@ private:
     Nomenclature variableNameManager_ = Nomenclature('x');
     Nomenclature constraintNameManager_ = Nomenclature('c');
 
-    void UpdateCoefficient(unsigned idxVar, MPSolver* solver_, MPObjective* const objective_);
-    void CopyVariables(MPSolver* solver_);
-    void UpdateContraints(unsigned idxRow, MPSolver* solver_);
-    void CopyRows(MPSolver* solver_);
+    void UpdateCoefficient(unsigned idxVar, MPSolver* solver, MPObjective* const objective);
+    void CopyVariables(MPSolver* solver);
+    void UpdateContraints(unsigned idxRow, MPSolver* solver);
+    void CopyRows(MPSolver* solver);
     void TuneSolverSpecificOptions(MPSolver* solver) const;
     void CopyMatrix(const MPSolver* solver);
 };

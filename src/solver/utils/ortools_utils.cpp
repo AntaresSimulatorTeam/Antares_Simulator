@@ -40,6 +40,7 @@ ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
     if (problemeSimplexe_->UseNamedProblems())
     {
         variableNameManager_.SetTarget(problemeSimplexe_->VariableNames());
+        constraintNameManager_.SetTarget(problemeSimplexe_->ConstraintNames());
     }
 }
 
