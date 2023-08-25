@@ -700,8 +700,9 @@ struct MinHydroPower : public Constraint
           problemeHebdo);
         HydroPowerSmoothingUsingVariationMaxUp hydroPowerSmoothingUsingVariationMaxUp(
           problemeHebdo);
-        MaxHydroPower maxHydroPower(problemeHebdo);
+
         MinHydroPower minHydroPower(problemeHebdo);
+        MaxHydroPower maxHydroPower(problemeHebdo);
 
         for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
              pdtHebdo++, pdt++)
