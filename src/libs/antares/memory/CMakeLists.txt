@@ -1,16 +1,16 @@
-set(PROJ memory)
+set(PROJ AntaresMemory)
 set(HEADERS
-        include/antares/${PROJ}/memory.h
-        include/antares/${PROJ}/memory.hxx
-        include/antares/${PROJ}/new_check.hxx
+        include/antares/memory/memory.h
+        include/antares/memory/memory.hxx
+        include/antares/memory/new_check.hxx
 )
 set(SRC_MEMORY
         ${HEADERS}
         memory.cpp)
 source_group("memory" FILES ${SRC_MEMORY})
 
-add_library(${PROJ} ${SRC_MEMORY})
-add_library(Antares::${PROJ} ALIAS ${PROJ})
+add_library(${PROJ} ${SRC_MEMORY}) #Memory conflict with absl memory when building deps https://github.com/AntaresSimulatorTeam/Antares_Simulator/issues/1589
+add_library(Antares::memory ALIAS ${PROJ})
 
 target_link_libraries(${PROJ}
         PUBLIC
