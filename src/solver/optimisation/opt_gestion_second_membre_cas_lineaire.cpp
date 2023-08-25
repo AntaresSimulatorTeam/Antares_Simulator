@@ -624,8 +624,8 @@ struct MinHydroPower : public Constraint
     }
 };
 
-    struct MaxHydroPower : public Constraint
-    {
+struct MaxHydroPower : public Constraint
+{
     using Constraint::Constraint;
     void add(int pays, int NumeroDeLIntervalle)
     {
@@ -657,7 +657,35 @@ struct MinHydroPower : public Constraint
             builder.lessThan(rhs).build();
         }
     }
-    };
+};
+struct MaxPumping : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays, int NumeroDeLIntervalle)
+    {
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
+        {
+            const int NombreDePasDeTempsPourUneOptimisation
+              = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+
+            for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
+            {
+                builder.updateHourWithinWeek(pdt);
+                builder.include(Variable::Pumping(pays), 1.0);
+            }
+
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
+            namer.MaxPumping(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+
+            const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
+                                 .MaxEnergiePompageParIntervalleOptimise[NumeroDeLIntervalle];
+            builder.lessThan(rhs).build();
+        }
+    }
+};
 
     void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
                               int PremierPdtDeLIntervalle,
@@ -703,6 +731,7 @@ struct MinHydroPower : public Constraint
 
         MinHydroPower minHydroPower(problemeHebdo);
         MaxHydroPower maxHydroPower(problemeHebdo);
+        MaxPumping maxPumping(problemeHebdo);
 
         for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
              pdtHebdo++, pdt++)
@@ -769,17 +798,18 @@ struct MinHydroPower : public Constraint
         // TODO after this
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
-            {
-                int cnt = 2; // NumeroDeContrainteMaxPompage[pays];
-                if (cnt >= 0)
-                {
-                    SecondMembre[cnt]
-                      = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                          .MaxEnergiePompageParIntervalleOptimise[NumeroDeLIntervalle];
-                    AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
-                }
-            }
+            // if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
+            // {
+            //     int cnt = 2; // NumeroDeContrainteMaxPompage[pays];
+            //     if (cnt >= 0)
+            //     {
+            //         SecondMembre[cnt]
+            //           = problemeHebdo->CaracteristiquesHydrauliques[pays]
+            //               .MaxEnergiePompageParIntervalleOptimise[NumeroDeLIntervalle];
+            //         AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+            //     }
+            // }
+            maxPumping.add(pays, NumeroDeLIntervalle);
         }
 
         for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
