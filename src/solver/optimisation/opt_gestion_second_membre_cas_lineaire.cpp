@@ -523,6 +523,72 @@ struct HydroPowerSmoothingUsingVariationSum : public Constraint
         }
     }
 };
+struct HydroPowerSmoothingUsingVariationMaxDown : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays, int NumeroDeLIntervalle)
+    {
+        if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
+        {
+            return;
+        }
+
+        const int nombreDePasDeTempsPourUneOptimisation
+          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+        for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+        {
+            const auto& CorrespondanceVarNativesVarOptim
+              = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+            int nombreDeTermes = 0;
+
+            builder.updateHourWithinWeek(pdt)
+              .include(Variable::HydProd(pays), 1.0)
+              .include(Variable::HydProdDown(pays), -1.0)
+              .lessThan(0)
+              .build();
+
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+            namer.HydroPowerSmoothingUsingVariationMaxDown(
+              problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        }
+    }
+};
+struct HydroPowerSmoothingUsingVariationMaxUp : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays, int NumeroDeLIntervalle)
+    {
+        if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
+        {
+            return;
+        }
+
+        const int nombreDePasDeTempsPourUneOptimisation
+          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+        for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+        {
+            const auto& CorrespondanceVarNativesVarOptim
+              = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+            int nombreDeTermes = 0;
+
+            builder.updateHourWithinWeek(pdt)
+              .include(Variable::HydProd(pays), 1.0)
+              .include(Variable::HydProdUp(pays), -1.0)
+              .greaterThan(0)
+              .build();
+
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+            namer.HydroPowerSmoothingUsingVariationMaxUp(
+              problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        }
+    }
+};
     struct MaxHydroPower : public Constraint
     {
     using Constraint::Constraint;
@@ -595,6 +661,10 @@ struct HydroPowerSmoothingUsingVariationSum : public Constraint
         BindingConstraintWeek bindingConstraintWeek(problemeHebdo);
         HydroPower hydroPower(problemeHebdo);
         HydroPowerSmoothingUsingVariationSum hydroPowerSmoothingUsingVariationSum(problemeHebdo);
+        HydroPowerSmoothingUsingVariationMaxDown hydroPowerSmoothingUsingVariationMaxDown(
+          problemeHebdo);
+        HydroPowerSmoothingUsingVariationMaxUp hydroPowerSmoothingUsingVariationMaxUp(
+          problemeHebdo);
         MaxHydroPower maxHydroPower(problemeHebdo);
 
         for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
@@ -645,6 +715,12 @@ struct HydroPowerSmoothingUsingVariationSum : public Constraint
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             hydroPowerSmoothingUsingVariationSum.add(pays, NumeroDeLIntervalle);
+        }
+
+        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        {
+            hydroPowerSmoothingUsingVariationMaxDown.add(pays, NumeroDeLIntervalle);
+            hydroPowerSmoothingUsingVariationMaxUp.add(pays, NumeroDeLIntervalle);
         }
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
