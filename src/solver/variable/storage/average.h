@@ -168,14 +168,6 @@ protected:
         return avgdata.dynamicMemoryUsage() + NextType::memoryUsage();
     }
 
-    static void EstimateMemoryUsage(Antares::Data::StudyMemoryUsage& u)
-    {
-        Antares::Memory::EstimateMemoryUsage(sizeof(double), maxHoursInAYear, u, false);
-        u.requiredMemoryForOutput += u.years * sizeof(double);
-        u.takeIntoConsiderationANewTimeserieForDiskOutput();
-        NextType::EstimateMemoryUsage(u);
-    }
-
     template<template<class, int> class DecoratorT>
     Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
     {

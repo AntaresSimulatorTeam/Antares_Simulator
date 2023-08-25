@@ -15,8 +15,9 @@ add_library(${PROJ} ${SRC_PROJ})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 target_link_libraries(${PROJ}
-        PRIVATE
+        PUBLIC
         yuni-static-core
+        PRIVATE
         Antares::logs
         Antares::inifile
 )
@@ -24,5 +25,6 @@ target_link_libraries(${PROJ}
 target_include_directories(${PROJ}
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
+        PRIVATE
         ${CMAKE_SOURCE_DIR}/libs
 )

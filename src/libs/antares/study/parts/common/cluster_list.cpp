@@ -1,7 +1,7 @@
+#include <boost/algorithm/string/case_conv.hpp>
 #include "cluster_list.h"
 #include "../../../utils.h"
 #include "../../study.h"
-#include "../../area.h"
 
 using namespace Yuni;
 namespace // anonymous
@@ -15,9 +15,7 @@ struct TSNumbersPredicate
 };
 } // namespace
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 using namespace Antares;
 
@@ -237,7 +235,7 @@ Yuni::uint64 ClusterList<ClusterT>::memoryUsage() const
 template<class ClusterT>
 bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName newName)
 {
-    if (not idToFind or newName.empty())
+    if (idToFind.empty() or newName.empty())
         return false;
 
     // Internal:
@@ -247,7 +245,7 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     // Consequently, the parameters `idToFind` and `newName` shall not be `const &`.
 
     // Making sure that the id is lowercase
-    idToFind.toLower();
+    boost::to_lower(idToFind);
 
     // The new ID
     Data::ClusterName newID;
@@ -448,5 +446,5 @@ void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uin
 template class ClusterList<ThermalCluster>;
 template class ClusterList<RenewableCluster>;
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

@@ -35,6 +35,7 @@
 #include <sstream> // std::ostringstream
 #include <cassert>
 #include <climits>
+#include <optional>
 
 #include "study.h"
 #include "runtime.h"
@@ -44,7 +45,7 @@
 #include "area/constants.h"
 
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
-#include <math.h>                 // For use of floor(...) and ceil(...)
+#include <cmath>                 // For use of floor(...) and ceil(...)
 #include <antares/writer/writer_factory.h>
 #include "ui-runtimeinfos.h"
 
@@ -72,18 +73,8 @@ static inline void FreeAndNil(T*& pointer)
 Study::Study(bool forTheSolver) :
  LayerData(0, true),
  simulationComments(*this),
- maxNbYearsInParallel(0),
- maxNbYearsInParallel_save(0),
- nbYearsParallelRaw(0),
- minNbYearsInParallel(0),
- minNbYearsInParallel_save(0),
  areas(*this),
- scenarioRules(nullptr),
- runtime(nullptr),
- // state(nullptr),
- uiinfo(nullptr),
  pQueueService(std::make_shared<Yuni::Job::QueueService>()),
- gotFatalError(false),
  usedByTheSolver(forTheSolver)
 {
     // TS generators
@@ -141,7 +132,7 @@ void Study::clear()
     ClearAndShrink(folderInput);
     ClearAndShrink(folderOutput);
     ClearAndShrink(folderSettings);
-    ClearAndShrink(inputExtension);
+    inputExtension.clear();
 
     gotFatalError = false;
 }
@@ -774,7 +765,7 @@ void Study::saveAboutTheStudy()
     }
 }
 
-Area* Study::areaAdd(const AreaName& name)
+Area* Study::areaAdd(const AreaName& name, bool updateMode)
 {
     if (name.empty())
         return nullptr;
@@ -791,26 +782,35 @@ Area* Study::areaAdd(const AreaName& name)
     // The new scope is mandatory to rebuild the correlation matrices
     // and the scenario builder data
     {
-        CorrelationUpdater updater(*this);
-        ScenarioBuilderUpdater updaterSB(*this);
-
+        // These are only useful for the GUI, remove afterwards
+        // We need the constructors to be called here, and the destructors
+        // to be called at the end of the scope. Using std::optional is merely
+        // a means to that end.
+        std::optional<CorrelationUpdater> updater;
+        std::optional<ScenarioBuilderUpdater> updaterSB;
+        if (updateMode)
+        {
+            updater.emplace(*this);
+            updaterSB.emplace(*this);
+        }
         // Adding an area
         AreaName newName;
-        if (not areaFindNameForANewArea(newName, name) or newName.empty())
+        if (not modifyAreaNameIfAlreadyTaken(newName, name) or newName.empty())
         {
             logs.error() << "Impossible to find a name for a new area";
             return nullptr;
         }
 
         // Adding an area
-        area = AreaListAddFromName(areas, newName, maxNbYearsInParallel);
+        area = addAreaToListOfAreas(areas, newName);
         if (not area)
             return nullptr;
+
         // Rebuild indexes for all areas
         areas.rebuildIndexes();
 
         // Default values for the area
-        area->ensureAllDataAreCreated();
+        area->createMissingData();
         area->resetToDefaultValues();
     }
 
@@ -1011,19 +1011,19 @@ bool Study::areaRename(Area* area, AreaName newName)
 bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 {
     // A name must not be empty
-    if (!cluster or !newName)
+    if (!cluster or !newName.empty())
         return false;
 
     String beautifyname;
     BeautifyName(beautifyname, newName);
     if (!beautifyname)
         return false;
-    newName = beautifyname;
+    newName = beautifyname.c_str();
 
     // Preparing the new area ID
     ClusterName newID;
     TransformNameIntoID(newName, newID);
-    if (!newID)
+    if (newID.empty())
     {
         logs.error() << "invalid id transformation";
         return false;

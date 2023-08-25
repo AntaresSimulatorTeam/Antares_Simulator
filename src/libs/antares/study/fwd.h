@@ -40,7 +40,6 @@ namespace Data
 {
 // Forward declarations
 class Study;
-class StudyMemoryUsage;
 class StudyLoadOptions;
 class Area;
 class AreaLink;
@@ -67,7 +66,7 @@ using AreaName = Yuni::CString<ant_k_area_name_max_length, false>;
 //! Name of a single link
 using AreaLinkName = Yuni::CString<ant_k_area_name_max_length * 2 + 1, false>;
 //! Name of a single thermal
-using ClusterName = Yuni::CString<ant_k_cluster_name_max_length, false>;
+using ClusterName = std::string;
 
 using ConstraintName = Yuni::CString<ant_k_constraint_name_max_length, false>;
 

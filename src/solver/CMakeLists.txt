@@ -73,7 +73,8 @@ add_executable(antares-solver
 
 set_target_properties(antares-solver PROPERTIES OUTPUT_NAME ${exec_name})
 
-set(ANTARES_SOLVER_LIBS
+set(ANTARES_SOLVER_LIBS		
+	date
 	yuni-static-uuid
 	yuni-static-core		
 	${CMAKE_THREADS_LIBS_INIT}

@@ -66,7 +66,7 @@ void TSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& fil
     }
 }
 
-void TSNumberData::set(uint areaindex, uint year, uint value)
+void TSNumberData::setTSnumber(uint areaindex, uint year, uint value)
 {
     assert(areaindex < pTSNumberRules.width);
     if (year < pTSNumberRules.height)

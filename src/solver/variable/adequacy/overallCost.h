@@ -136,13 +136,6 @@ public:
         };
     };
 
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-    {
-        Solver::Variable::IntermediateValues::EstimateMemoryUsage(u);
-        NextType::EstimateMemoryUsage(u);
-        ResultsType::EstimateMemoryUsage(u);
-    }
-
 public:
     ~OverallCost()
     {

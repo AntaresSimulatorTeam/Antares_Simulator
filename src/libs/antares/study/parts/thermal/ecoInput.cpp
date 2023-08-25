@@ -30,7 +30,6 @@
 #include <yuni/io/directory.h>
 #include <yuni/core/math.h>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "ecoInput.h"
 #include <antares/logs/logs.h>
 
@@ -104,17 +103,6 @@ void EconomicInputData::markAsModified() const
 {
     fuelcost.markAsModified();
     co2cost.markAsModified();
-}
-
-void EconomicInputData::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    if (timeSeriesThermal & u.study.parameters.timeSeriesToGenerate)
-    {
-        fuelcost.estimateMemoryUsage(u, true, fuelcost.width, HOURS_PER_YEAR);
-        u.requiredMemoryForInput += sizeof(EconomicInputData);
-        co2cost.estimateMemoryUsage(u, true, co2cost.width, HOURS_PER_YEAR);
-        u.requiredMemoryForInput += sizeof(EconomicInputData);
-    }
 }
 
 void EconomicInputData::reset()

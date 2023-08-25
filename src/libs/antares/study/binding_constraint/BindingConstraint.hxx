@@ -75,7 +75,7 @@ inline BindingConstraint::Type BindingConstraint::type() const
     return pType;
 }
 
-inline void BindingConstraint::mutateTypeWithoutCheck(Type t)
+inline void BindingConstraint::setTimeGranularity(Type t)
 {
     if (t != typeUnknown and t != typeMax)
         pType = t;

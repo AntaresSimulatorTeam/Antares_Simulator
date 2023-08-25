@@ -30,11 +30,7 @@
 #include "../../fwd.h"
 #include "../../xcast.h"
 
-namespace Antares
-{
-namespace Data
-{
-namespace Wind
+namespace Antares::Data::Wind
 {
 /*!
 ** \brief Prepro Wind
@@ -55,7 +51,7 @@ public:
     /*!
     ** \brief Try to estimate the amount of memory required by this class for a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     /*!
     ** \brief Load data from a folder
@@ -89,9 +85,9 @@ public:
 
 }; // Prepro
 
-} // namespace Wind
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::Wind
+
+
 
 #include "prepro.hxx"
 

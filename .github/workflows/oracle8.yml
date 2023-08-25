@@ -53,16 +53,21 @@ jobs:
       run: |
            source /opt/rh/gcc-toolset-9/enable
            cmake -B _build -S src \
-           -DCMAKE_BUILD_TYPE=release \
-           -DBUILD_TESTING=ON \
-           -DBUILD_TOOLS=OFF \
-           -DBUILD_UI=OFF \
-
+             -DCMAKE_BUILD_TYPE=release \
+             -DBUILD_TESTING=ON \
+             -DBUILD_TOOLS=OFF \
+             -DBUILD_UI=OFF \
 
     - name: Build
       run: |
            source /opt/rh/gcc-toolset-9/enable
            cmake --build _build --config Release -j2
+
+    - name: Run unit and end-to-end tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      run: |
+        cd _build
+        ctest -C Release --output-on-failure -L "unit|end-to-end"
 
     - name: Installer .rpm creation
       run: |

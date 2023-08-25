@@ -59,9 +59,9 @@ void thermalTSNumberData::saveToINIFile(const Study& /* study */,
     }
 }
 
-void thermalTSNumberData::set(const Antares::Data::ThermalCluster* cluster,
-                              const uint year,
-                              uint value)
+void thermalTSNumberData::setTSnumber(const Antares::Data::ThermalCluster* cluster,
+                                      const uint year,
+                                      uint value)
 {
     assert(cluster != nullptr);
     if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
@@ -92,7 +92,7 @@ bool thermalTSNumberData::apply(Study& study)
         assert(clusterIndex < pTSNumberRules.width);
         const auto& col = pTSNumberRules[clusterIndex];
 
-        logprefix.clear() << "Thermal: Area '" << area.name << "', cluster: '" << cluster.name()
+        logprefix.clear() << "Thermal: area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
         ret = ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountThermal) && ret;
     }

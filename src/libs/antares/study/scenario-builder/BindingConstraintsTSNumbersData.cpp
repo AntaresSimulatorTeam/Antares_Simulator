@@ -38,17 +38,18 @@ namespace Antares::Data::ScenarioBuilder
 bool BindingConstraintsTSNumberData::apply(Study& study)
 {
     return std::all_of(rules_.begin(), rules_.end(), [&study, this](const std::pair<std::string, MatrixType>& args){
-        const auto& [group_name, ts_numbers] = args;
-        auto group = study.bindingConstraintsGroups[group_name];
+        const auto& [groupName, tsNumbers] = args;
+        auto group = study.bindingConstraintsGroups[groupName];
         if (group == nullptr) {
-            logs.error("Group with name" + group_name + " does not exists");
+            logs.error("Group with name '" + groupName + "' does not exists");
         }
         uint errors = 0;
         CString<512, false> logprefix;
+        logprefix.clear() << "Binding constraints: group '" << groupName <<"': ";
         return ApplyToMatrix(errors,
                              logprefix,
                              *group,
-                             ts_numbers[0],
+                             tsNumbers[0],
                              get_tsGenCount(study));
     });
 }
@@ -80,7 +81,7 @@ void BindingConstraintsTSNumberData::saveToINIFile(const Study&, Yuni::IO::File:
     }
 }
 
-void BindingConstraintsTSNumberData::setData(const std::string& group_name, const uint year, uint value) {
+void BindingConstraintsTSNumberData::setTSnumber(const std::string& group_name, const uint year, uint value) {
     auto& group_ts_numbers = rules_[group_name];
     group_ts_numbers[0][year] = value;
 }

@@ -97,11 +97,6 @@ public:
         filesizeHardLimit = 1536 * 1024 * 1024, // 1.5Go
     };
 
-    /*!
-     ** \brief Estimate
-     */
-    static void EstimateMemoryUsage(Antares::Data::StudyMemoryUsage& u, uint w, uint h);
-
 public:
     //! \name Constructors & Destructor
     //@{
@@ -417,19 +412,6 @@ public:
     void unloadFromMemory() const;
 
     /*!
-    ** \brief Try to estimate the memory footprint used by the matrix
-    */
-    void estimateMemoryUsage(Antares::Data::StudyMemoryUsage& u) const;
-
-    /*!
-    ** \brief Try to estimate the memory footprint used by the matrix (conditional)
-    **
-    ** If the condition is true, the given size will be used instead of the current one.
-    ** This method is used estimate the memory footprint when time-series are enabled/disabled.
-    */
-    void estimateMemoryUsage(Antares::Data::StudyMemoryUsage& u, bool cond, uint w, uint h) const;
-
-    /*!
     ** \brief Mark the matrix as modified
     **
     ** This routine has no effect when the UI is not present
@@ -630,12 +612,6 @@ int MatrixTestForPositiveValues_LimitWidth(const char* msg, const Matrix<>* m, u
 */
 template<class T1, class T2>
 bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T1, T2>& m);
-
-void MatrixEstimateMemoryUsage(size_t sizeofT, Antares::Data::StudyMemoryUsage& u, uint w, uint h);
-
-void MatrixEstimateMemoryUsageFromJIT(size_t sizeofT,
-                                      Antares::Data::StudyMemoryUsage& u,
-                                      JIT::Informations* jit);
 
 } // namespace Antares
 

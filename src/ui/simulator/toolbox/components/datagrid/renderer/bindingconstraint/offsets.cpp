@@ -27,7 +27,6 @@
 
 #include <yuni/yuni.h>
 #include <antares/study.h>
-#include <antares/study/memory-usage.h>
 #include "offsets.h"
 #include <antares/wx-wrapper.h>
 #include <yuni/core/math.h>
@@ -211,7 +210,7 @@ bool LinkOffsets::cellValue(int x, int y, const String& value)
             if (type == Data::BindingConstraint::typeDaily
                 || type == Data::BindingConstraint::typeWeekly)
             {
-                constraint->mutateTypeWithoutCheck(type);
+                constraint->setTimeGranularity(type);
                 OnStudyConstraintModified(constraint);
                 return true;
             }
@@ -506,7 +505,7 @@ bool ClusterOffsets::cellValue(int x, int y, const String& value)
             if (type == Data::BindingConstraint::typeDaily
                 || type == Data::BindingConstraint::typeWeekly)
             {
-                constraint->mutateTypeWithoutCheck(type);
+                constraint->setTimeGranularity(type);
                 OnStudyConstraintModified(constraint);
                 return true;
             }

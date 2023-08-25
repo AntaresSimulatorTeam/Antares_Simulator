@@ -31,12 +31,6 @@
 #include <yuni/core/string.h>
 #include <yuni/core/bit/array.h>
 
-namespace Antares::Data
-{
-class StudyMemoryUsage;
-} // namespace Antares::Data
-
-
 namespace Antares
 {
 /*!
@@ -128,17 +122,6 @@ public:
     */
     template<class T>
     static void Release(T*& pointer);
-
-    /*!
-    ** \brief Estimate the memory usage if our managed pointers are used
-    **
-    ** \param     bytes  A size in bytes
-    ** \param     count  The number of element of size `bytes` to allocate
-    */
-    static void EstimateMemoryUsage(size_t bytes,
-                                    uint count,
-                                    Data::StudyMemoryUsage& u,
-                                    bool duplicateForParallelYears);
 
 public:
     //! \name Constructor & Destructor

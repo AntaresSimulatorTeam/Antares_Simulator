@@ -43,9 +43,8 @@
 #ifdef YUNI_OS_WINDOWS
 #include <WinIoCtl.h>
 #endif
-#include "../study/memory-usage.h"
+#include "antares/memory/memory.h"
 #include <antares/sys/policy.h>
-#include "antares/memory/include/antares/memory/memory.h"
 #include <yuni/core/system/process.h>
 
 using namespace Yuni;
@@ -54,7 +53,8 @@ using namespace Yuni;
 
 namespace Antares
 {
-/*extern*/ Memory memory;
+/*extern*/
+Memory memory;
 
 namespace // anonymous
 {
@@ -115,21 +115,6 @@ bool Memory::initializeTemporaryFolder()
         pCacheFolder.clear();
     }
     return true;
-}
-
-void Memory::EstimateMemoryUsage(size_t bytes,
-                                 uint count,
-                                 Data::StudyMemoryUsage& u,
-                                 bool duplicateForParallelYears)
-{
-    size_t total = bytes * count;
-    if (duplicateForParallelYears)
-        total = total * u.nbYearsParallel;
-
-    if (u.gatheringInformationsForInput)
-        u.requiredMemoryForInput += total;
-    else
-        u.requiredMemoryForOutput += total;
 }
 
 void Memory::displayInfo() const

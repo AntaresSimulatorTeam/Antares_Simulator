@@ -93,7 +93,7 @@ public:
     using DisabledThermalClusterList = std::set<ClusterName>;
 
     //! Extension filename
-    using FileExtension = Yuni::CString<8, false>;
+    using FileExtension = std::string;
 
 public:
     /*!
@@ -230,7 +230,7 @@ public:
     ** \param basename The root base name
     ** \return True if a new name has been found, false otherwise
     */
-    bool areaFindNameForANewArea(AreaName& out, const AreaName& basename);
+    bool modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename);
 
     /*!
     ** \brief Add an area and make all required initialization
@@ -240,7 +240,8 @@ public:
     ** \param name The name of the new area
     ** \return A pointer to a new area, or NULL if the operation failed
     */
-    Area* areaAdd(const AreaName& name);
+    // TODO no need for the 2nd argument, remove it after the GUI has been removed, keeping the default value
+    Area* areaAdd(const AreaName& name, bool update = false);
 
     /*!
     ** \brief Rename an area
@@ -476,39 +477,6 @@ public:
     */
     Yuni::uint64 memoryUsage() const;
 
-    /*!
-    ** \brief Estimate the memory required by the input to launch a simulation
-    **
-    ** The real amount of memory required to launch this study
-    ** will be less than the returned value, but in the worst case
-    ** it can be equal (or nearly).
-    **
-    ** \param mode The mode of the study
-    ** \return A size in bytes, -1 when an error has occured.
-    */
-    void estimateMemoryUsageForInput(StudyMemoryUsage& u) const;
-
-    /*!
-    ** \brief Estimate the memory required by the output to launch a simulation
-    **
-    ** The real amount of memory required to launch this study
-    ** will be less than the returned value, but in the worst case
-    ** it can be equal (or nearly).
-    **
-    ** \param mode The mode of the study
-    ** \return A size in bytes, -1 when an error has occured.
-    */
-    void estimateMemoryUsageForOutput(StudyMemoryUsage& u) const;
-
-    /*!
-    ** \brief Create a thread to estimate the memory footprint of the input
-    **
-    ** This thread is actually a way to process in the background
-    ** all costly operations and to avoid the freeze from the interface
-    */
-    Yuni::Thread::IThread::Ptr createThreadToEstimateInputMemoryUsage() const;
-    //@}
-
     //! \name Logs
     //@{
     /*!
@@ -555,19 +523,19 @@ public:
     // This raw number of cores is possibly reduced by the smallest TS refresh span or the total
     // number of MC years. In GUI, used for RAM estimation only. In solver, it is the max number of
     // years (actually run, not skipped) a set of parallel years can contain.
-    uint maxNbYearsInParallel;
+    uint maxNbYearsInParallel = 1;
 
     // Used in GUI only.
     // ----------------
     // Allows storing the maximum number of years in a set of parallel years.
     // Useful to estimate the RAM when the run window's parallel mode is chosen.
-    uint maxNbYearsInParallel_save;
+    uint maxNbYearsInParallel_save = 0;
 
     // Used in GUI and solver.
     // ----------------------
     // Raw numbers of cores (== nb of MC years run in parallel) based on the number
     // of cores level (see advanced parameters).
-    uint nbYearsParallelRaw;
+    uint nbYearsParallelRaw = 1;
 
     // Used in GUI only.
     // -----------------
@@ -579,13 +547,13 @@ public:
     //	- In the Run window, if either Default or swap support mode is enabled, then parallel
     //	  computation is disabled, and the number of cores is 1
     // Useful to populate the run window's simulation cores field.
-    uint minNbYearsInParallel;
+    uint minNbYearsInParallel = 0;
 
     // Used in GUI only.
     // ----------------
     // Allows storing the minimum number of years in a set of parallel years.
     // Useful to populate the run window's simulation cores field.
-    uint minNbYearsInParallel_save;
+    uint minNbYearsInParallel_save = 0;
 
     //! Parameters
     Parameters parameters;
@@ -641,7 +609,7 @@ public:
     //! \name Scenario Builder
     //@{
     //! Rules for building scenarios (can be null)
-    ScenarioBuilder::Sets* scenarioRules;
+    ScenarioBuilder::Sets* scenarioRules = nullptr;
     //@}
 
     Matrix<double> scenarioHydroLevels;
@@ -651,14 +619,14 @@ public:
     **
     ** These informations are only needed when a study is processed.
     */
-    StudyRuntimeInfos* runtime;
+    StudyRuntimeInfos* runtime = nullptr;
 
     // Antares::Solver::Variable::State* state;
 
     /*!
     ** \brief Specific data related to the User Interface
     */
-    UIRuntimeInfo* uiinfo;
+    UIRuntimeInfo* uiinfo = nullptr;
 
     /*!
     ** \brief The file extension for file within the input ('txt' or 'csv')
@@ -704,7 +672,7 @@ public:
     /*!
     ** \brief
     */
-    bool gotFatalError;
+    bool gotFatalError = false;
 
     /*!
     ** \brief A non-zero value when the study will be used by the solver

@@ -97,7 +97,7 @@ public:
     /*!
     ** \brief Try to estimate the amount of memory required for launching a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
     //@}
 
     /*!
