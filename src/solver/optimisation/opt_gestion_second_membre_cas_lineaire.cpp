@@ -511,7 +511,8 @@ struct HydroPowerSmoothingUsingVariationSum : public Constraint
               .include(Variable::HydProd(pays), -1.0)
               .include(Variable::HydProdDown(pays), -1.0)
               .include(Variable::HydProdUp(pays), 1.0)
-              .equalTo(0);
+              .equalTo(0)
+              .build();
 
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
