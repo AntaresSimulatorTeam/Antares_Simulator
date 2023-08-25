@@ -47,9 +47,6 @@ namespace Antares
 {
 namespace Optimization
 {
-MPSolver* convert_to_MPSolver(
-  const std::string& solverName,
-  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
 
 class Nomenclature
 {
@@ -98,6 +95,8 @@ private:
     void CopyVariables(MPSolver* solver_);
     void UpdateContraints(unsigned idxRow, MPSolver* solver_);
     void CopyRows(MPSolver* solver_);
+    void TuneSolverSpecificOptions(MPSolver* solver) const;
+    void CopyMatrix(const MPSolver* solver);
 };
-}
+} // namespace Optimization
 } // namespace Antares

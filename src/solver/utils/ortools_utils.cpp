@@ -10,50 +10,11 @@ using namespace operations_research;
 
 const char* const XPRESS_PARAMS = "THREADS 1";
 
-static void transferMatrix(const MPSolver* solver,
-                           const int* indexRows,
-                           const int* terms,
-                           const int* indexCols,
-                           const double* coeffs,
-                           int nbRow)
-{
-    auto variables = solver->variables();
-    auto constraints = solver->constraints();
-
-    for (int idxRow = 0; idxRow < nbRow; ++idxRow)
-    {
-        MPConstraint* const ct = constraints[idxRow];
-        int debutLigne = indexRows[idxRow];
-        for (int idxCoef = 0; idxCoef < terms[idxRow]; ++idxCoef)
-        {
-            int pos = debutLigne + idxCoef;
-            ct->SetCoefficient(variables[indexCols[pos]], coeffs[pos]);
-        }
-    }
-}
-
 // MPSolverParameters's copy constructor is private
 static void setGenericParameters(MPSolverParameters& params)
 {
     params.SetIntegerParam(MPSolverParameters::SCALING, 0);
     params.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
-}
-
-static void tuneSolverSpecificOptions(MPSolver* solver)
-{
-    if (!solver)
-        return;
-
-    switch (solver->ProblemType())
-    {
-    case MPSolver::XPRESS_LINEAR_PROGRAMMING:
-    case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
-        solver->SetSolverSpecificParametersAsString(XPRESS_PARAMS);
-        break;
-    // Add solver-specific options here
-    default:
-        break;
-    }
 }
 
 static bool solverSupportsWarmStart(const MPSolver::OptimizationProblemType solverType)
@@ -85,7 +46,7 @@ ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
 MPSolver* ProblemSimplexeNommeConverter::Convert()
 {
     MPSolver* solver = MPSolverFactory(problemeSimplexe_, solverName_);
-    tuneSolverSpecificOptions(solver);
+    TuneSolverSpecificOptions(solver);
 
     // Create the variables and set objective cost.
     CopyVariables(solver);
@@ -93,14 +54,45 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     // Create constraints and set coefs
     CopyRows(solver);
 
-    transferMatrix(solver,
-                   problemeSimplexe_->IndicesDebutDeLigne,
-                   problemeSimplexe_->NombreDeTermesDesLignes,
-                   problemeSimplexe_->IndicesColonnes,
-                   problemeSimplexe_->CoefficientsDeLaMatriceDesContraintes,
-                   problemeSimplexe_->NombreDeContraintes);
+    CopyMatrix(solver);
 
     return solver;
+}
+
+void ProblemSimplexeNommeConverter::TuneSolverSpecificOptions(MPSolver* solver) const
+{
+    if (!solver)
+        return;
+
+    switch (solver->ProblemType())
+    {
+    case MPSolver::XPRESS_LINEAR_PROGRAMMING:
+    case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
+        solver->SetSolverSpecificParametersAsString(XPRESS_PARAMS);
+        break;
+    // Add solver-specific options here
+    default:
+        break;
+    }
+}
+
+void ProblemSimplexeNommeConverter::CopyMatrix(const MPSolver* solver)
+{
+    auto variables = solver->variables();
+    auto constraints = solver->constraints();
+
+    for (int idxRow = 0; idxRow < problemeSimplexe_->NombreDeContraintes; ++idxRow)
+    {
+        MPConstraint* const ct = constraints[idxRow];
+        int debutLigne = problemeSimplexe_->IndicesDebutDeLigne[idxRow];
+        for (int idxCoef = 0; idxCoef < problemeSimplexe_->NombreDeTermesDesLignes[idxRow];
+             ++idxCoef)
+        {
+            int pos = debutLigne + idxCoef;
+            ct->SetCoefficient(variables[problemeSimplexe_->IndicesColonnes[pos]],
+                               problemeSimplexe_->CoefficientsDeLaMatriceDesContraintes[pos]);
+        }
+    }
 }
 
 void ProblemSimplexeNommeConverter::UpdateCoefficient(unsigned idxVar,
@@ -146,6 +138,7 @@ void ProblemSimplexeNommeConverter::UpdateContraints(unsigned idxRow, MPSolver* 
 
     solver->MakeRowConstraint(bMin, bMax, constraintNameManager_.GetName(idxRow));
 }
+
 void ProblemSimplexeNommeConverter::CopyRows(MPSolver* solver)
 {
     for (int idxRow = 0; idxRow < problemeSimplexe_->NombreDeContraintes; ++idxRow)
@@ -154,54 +147,6 @@ void ProblemSimplexeNommeConverter::CopyRows(MPSolver* solver)
     }
 }
 
-MPSolver* convert_to_MPSolver(const std::string& solverName,
-                              const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
-{
-    // // Create the MPSolver
-    MPSolver* solver = MPSolverFactory(problemeSimplexe, solverName);
-
-    // tuneSolverSpecificOptions(solver);
-    // if (problemeSimplexe->UseNamedProblems())
-    // {
-    //     // Create the variables and set objective cost.
-    //     transferVariables(solver,
-    //                       problemeSimplexe->Xmin,
-    //                       problemeSimplexe->Xmax,
-    //                       problemeSimplexe->CoutLineaire,
-    //                       problemeSimplexe->NombreDeVariables,
-    //                       problemeSimplexe->VariableNames());
-
-    //     // Create constraints and set coefs
-    //     transferRows(solver,
-    //                  problemeSimplexe->SecondMembre,
-    //                  problemeSimplexe->Sens,
-    //                  problemeSimplexe->NombreDeContraintes,
-    //                  problemeSimplexe->ConstraintNames());
-    // }
-    // else
-    // {
-    //     // Create the variables and set objective cost.
-    //     transferVariables(solver,
-    //                       problemeSimplexe->Xmin,
-    //                       problemeSimplexe->Xmax,
-    //                       problemeSimplexe->CoutLineaire,
-    //                       problemeSimplexe->NombreDeVariables);
-
-    //     // Create constraints and set coefs
-    //     transferRows(solver,
-    //                  problemeSimplexe->SecondMembre,
-    //                  problemeSimplexe->Sens,
-    //                  problemeSimplexe->NombreDeContraintes);
-    // }
-    // transferMatrix(solver,
-    //                problemeSimplexe->IndicesDebutDeLigne,
-    //                problemeSimplexe->NombreDeTermesDesLignes,
-    //                problemeSimplexe->IndicesColonnes,
-    //                problemeSimplexe->CoefficientsDeLaMatriceDesContraintes,
-    //                problemeSimplexe->NombreDeContraintes);
-
-    return solver;
-}
 } // namespace Optimization
 } // namespace Antares
 
@@ -296,7 +241,7 @@ MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
 {
     if (solver == nullptr)
     {
-        return Antares::Optimization::convert_to_MPSolver(solverName, Probleme);
+        return Antares::Optimization::ProblemSimplexeNommeConverter(solverName, Probleme).Convert();
     }
     else
     {
