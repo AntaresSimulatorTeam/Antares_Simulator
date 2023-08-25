@@ -38,8 +38,8 @@ public:
                             bool UseNamedProblems);
 
 private:
-    std::vector<std::string> NomDesVariables;
-    std::vector<std::string> NomDesContraintes;
+    const std::vector<std::string>& NomDesVariables;
+    const std::vector<std::string>& NomDesContraintes;
     bool useNamedProblems_;
 
 public:
@@ -63,7 +63,8 @@ public:
     {
         if (useNamedProblems_)
         {
-            return VectorOfStringToCharPP(NomDesVariables, pointerVec);
+            return VectorOfStringToCharPP(const_cast<std::vector<std::string>&>(NomDesVariables),
+                                          pointerVec);
         }
 
         return CharPP(NomDesVariables.size(), pointerVec);
@@ -73,7 +74,8 @@ public:
     {
         if (useNamedProblems_)
         {
-            return VectorOfStringToCharPP(NomDesContraintes, pointerVec);
+            return VectorOfStringToCharPP(const_cast<std::vector<std::string>&>(NomDesContraintes),
+                                          pointerVec);
         }
         return CharPP(NomDesContraintes.size(), pointerVec);
     }
