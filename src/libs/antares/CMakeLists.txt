@@ -505,7 +505,6 @@ target_link_libraries(libantares-core
 		yuni-static-uuid
         Boost::boost
 		Antares::memory
-		date
 		logs
         exception
         checks
@@ -514,9 +513,12 @@ target_link_libraries(libantares-core
 		inifile
 		io
 		array
-		correlation
 		object
         benchmarking
+		Antares::date
+
+	PRIVATE
+		Antares::correlation
 	)
 
 import_std_libs(libantares-core)
