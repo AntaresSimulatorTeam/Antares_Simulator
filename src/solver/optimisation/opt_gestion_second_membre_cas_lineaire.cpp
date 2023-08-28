@@ -610,6 +610,7 @@ struct MinHydroPower : public Constraint
                 builder.updateHourWithinWeek(pdt);
                 builder.include(Variable::HydProd(pays), 1.0);
             }
+            builder.greaterThan(rhs).build();
 
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
@@ -619,7 +620,6 @@ struct MinHydroPower : public Constraint
 
             const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
                                  .MinEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
-            builder.greaterThan(rhs).build();
         }
     }
 };
@@ -646,6 +646,7 @@ struct MaxHydroPower : public Constraint
                 builder.include(Variable::HydProd(pays), 1.0);
             }
 
+            builder.lessThan(rhs).build();
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
@@ -654,7 +655,6 @@ struct MaxHydroPower : public Constraint
 
             const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
                                  .MaxEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
-            builder.lessThan(rhs).build();
         }
     }
 };
@@ -673,16 +673,15 @@ struct MaxPumping : public Constraint
                 builder.updateHourWithinWeek(pdt);
                 builder.include(Variable::Pumping(pays), 1.0);
             }
+            const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
+                                 .MaxEnergiePompageParIntervalleOptimise[NumeroDeLIntervalle];
 
+            builder.lessThan(rhs).build();
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
             namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
             namer.MaxPumping(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-
-            const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                                 .MaxEnergiePompageParIntervalleOptimise[NumeroDeLIntervalle];
-            builder.lessThan(rhs).build();
         }
     }
 };
