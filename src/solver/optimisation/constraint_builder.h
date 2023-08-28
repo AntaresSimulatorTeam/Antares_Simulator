@@ -324,6 +324,19 @@ public:
         }
         return *this;
     }
+    ConstraintBuilder& include(Variable::Variant var, int shift = 0, bool wrap = false)
+    {
+        std::vector<double>& Pi = problemeAResoudre.Pi;
+        std::vector<int>& Colonne = problemeAResoudre.Colonne;
+        int varIndex = getVariableIndex(var, shift, wrap);
+        if (varIndex >= 0)
+        {
+            Pi[nombreDeTermes_] *= -1;
+            Colonne[nombreDeTermes_] = varIndex;
+            nombreDeTermes_++;
+        }
+        return *this;
+    }
     ConstraintBuilder& operatorRHS(char op, double rhs)
     {
         if (op == '<' || op == '=' || op == '>')
