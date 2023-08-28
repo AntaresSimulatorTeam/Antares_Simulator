@@ -64,12 +64,6 @@ struct PMaxDispatchableGeneration : public Constraint
                   .NombreMaxDeGroupesEnMarcheDuPalierThermique;
             double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]; // /!\ TODO check
 
-            builder.updateHourWithinWeek(pdt)
-              .include(Variable::DispatchableProduction(cluster), 1.0)
-              .include(Variable::NODU(cluster), -pmaxDUnGroupeDuPalierThermique)
-              .lessThan(rhs)
-              .build();
-
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
 
@@ -79,6 +73,11 @@ struct PMaxDispatchableGeneration : public Constraint
             namer.PMaxDispatchableGeneration(
               problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
               PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
+            builder.updateHourWithinWeek(pdt)
+              .include(Variable::DispatchableProduction(cluster), 1.0)
+              .include(Variable::NODU(cluster), -pmaxDUnGroupeDuPalierThermique)
+              .lessThan(rhs)
+              .build();
         }
         else
         {
@@ -114,12 +113,6 @@ struct PMinDispatchableGeneration : public Constraint
                   .NombreMaxDeGroupesEnMarcheDuPalierThermique;
             double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]; // /!\ TODO check
 
-            builder.updateHourWithinWeek(pdt)
-              .include(Variable::DispatchableProduction(cluster), 1.0)
-              .include(Variable::NODU(cluster), -pminDUnGroupeDuPalierThermique)
-              .greaterThan(rhs)
-              .build();
-
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
@@ -128,6 +121,11 @@ struct PMinDispatchableGeneration : public Constraint
             namer.PMinDispatchableGeneration(
               problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
               PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
+            builder.updateHourWithinWeek(pdt)
+              .include(Variable::DispatchableProduction(cluster), 1.0)
+              .include(Variable::NODU(cluster), -pminDUnGroupeDuPalierThermique)
+              .greaterThan(rhs)
+              .build();
         }
         else
         {
@@ -171,6 +169,13 @@ struct ConsistenceNODU : public Constraint
                   .NombreMaxDeGroupesEnMarcheDuPalierThermique;
             double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]; // /!\ TODO check
 
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+            namer.ConsistenceNODU(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+                                  PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
             builder.updateHourWithinWeek(pdt)
               .include(Variable::NODU(cluster), 1.0)
               .updateHourWithinWeek(Pdtmoins1)
@@ -180,14 +185,6 @@ struct ConsistenceNODU : public Constraint
               .include(Variable::NumberStoppingDispatchableUnits(cluster), 1)
               .equalTo(rhs)
               .build();
-
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-            namer.ConsistenceNODU(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-                                  PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
         }
         else
         {
@@ -225,12 +222,6 @@ struct NbUnitsOutageLessThanNbUnitsStop : public Constraint
                   .NombreMaxDeGroupesEnMarcheDuPalierThermique;
             double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]; // /!\ TODO check
 
-            builder.updateHourWithinWeek(pdt)
-              .include(Variable::NumberBreakingDownDispatchableUnits(cluster), 1.0)
-              .include(Variable::NumberStoppingDispatchableUnits(cluster), -1.0)
-              .lessThan(rhs)
-              .build();
-
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
@@ -239,6 +230,11 @@ struct NbUnitsOutageLessThanNbUnitsStop : public Constraint
             namer.NbUnitsOutageLessThanNbUnitsStop(
               problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
               PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
+            builder.updateHourWithinWeek(pdt)
+              .include(Variable::NumberBreakingDownDispatchableUnits(cluster), 1.0)
+              .include(Variable::NumberStoppingDispatchableUnits(cluster), -1.0)
+              .lessThan(rhs)
+              .build();
         }
         else
         {
@@ -293,10 +289,8 @@ struct NbDispUnitsMinBoundSinceMinUpTime : public Constraint
                 }
                 builder.updateHourWithinWeek(t1)
                   .include(Variable::NumberStartingDispatchableUnits(cluster), -1.0)
-                  .include(Variable::NumberBreakingDownDispatchableUnits(cluster), 1.0)
-                  .greaterThan(rhs);
+                  .include(Variable::NumberBreakingDownDispatchableUnits(cluster), 1.0);
             }
-            builder.build();
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
@@ -305,6 +299,7 @@ struct NbDispUnitsMinBoundSinceMinUpTime : public Constraint
             namer.NbDispUnitsMinBoundSinceMinUpTime(
               problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
               PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
+            builder.greaterThan(rhs).build();
         }
         else
         {
@@ -357,11 +352,9 @@ struct MinDownTime : public Constraint
                       += NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
                          - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]; // /!\ TODO check
                 }
-                builder.updateHourWithinWeek(t1)
-                  .include(Variable::NumberStoppingDispatchableUnits(cluster), 1.0)
-                  .lessThan(rhs);
+                builder.updateHourWithinWeek(t1).include(
+                  Variable::NumberStoppingDispatchableUnits(cluster), 1.0);
             }
-            builder.build();
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
@@ -369,6 +362,7 @@ struct MinDownTime : public Constraint
             namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
             namer.MinDownTime(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
                               PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
+            builder.lessThan(rhs).build();
         }
         else
         {

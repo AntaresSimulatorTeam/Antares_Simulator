@@ -505,6 +505,13 @@ struct HydroPowerSmoothingUsingVariationSum : public Constraint
             int pdt1 = pdt + 1;
             if (pdt1 >= nombreDePasDeTempsPourUneOptimisation)
                 pdt1 = 0;
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+            namer.HydroPowerSmoothingUsingVariationSum(
+              problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+
             builder.updateHourWithinWeek(pdt)
               .include(Variable::HydProd(pays), 1.0)
               .updateHourWithinWeek(pdt1) /* /!\ Re-check*/
@@ -513,13 +520,6 @@ struct HydroPowerSmoothingUsingVariationSum : public Constraint
               .include(Variable::HydProdUp(pays), 1.0)
               .equalTo(0)
               .build();
-
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-            namer.HydroPowerSmoothingUsingVariationSum(
-              problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
         }
     }
 };
@@ -541,18 +541,18 @@ struct HydroPowerSmoothingUsingVariationMaxDown : public Constraint
               = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
             int nombreDeTermes = 0;
 
-            builder.updateHourWithinWeek(pdt)
-              .include(Variable::HydProd(pays), 1.0)
-              .include(Variable::HydProdDown(pays), -1.0)
-              .lessThan(0)
-              .build();
-
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
             namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
             namer.HydroPowerSmoothingUsingVariationMaxDown(
               problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+
+            builder.updateHourWithinWeek(pdt)
+              .include(Variable::HydProd(pays), 1.0)
+              .include(Variable::HydProdDown(pays), -1.0)
+              .lessThan(0)
+              .build();
         }
     }
 };
@@ -574,18 +574,18 @@ struct HydroPowerSmoothingUsingVariationMaxUp : public Constraint
               = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
             int nombreDeTermes = 0;
 
-            builder.updateHourWithinWeek(pdt)
-              .include(Variable::HydProd(pays), 1.0)
-              .include(Variable::HydProdUp(pays), -1.0)
-              .greaterThan(0)
-              .build();
-
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
             namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
             namer.HydroPowerSmoothingUsingVariationMaxUp(
               problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+
+            builder.updateHourWithinWeek(pdt)
+              .include(Variable::HydProd(pays), 1.0)
+              .include(Variable::HydProdUp(pays), -1.0)
+              .greaterThan(0)
+              .build();
         }
     }
 };
@@ -605,6 +605,11 @@ struct MinHydroPower : public Constraint
             const int NombreDePasDeTempsPourUneOptimisation
               = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
+            namer.MinHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
             for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 builder.updateHourWithinWeek(pdt);
@@ -613,12 +618,6 @@ struct MinHydroPower : public Constraint
             const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
                                  .MinEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
             builder.greaterThan(rhs).build();
-
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-            namer.MinHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
         }
     }
 };
@@ -645,14 +644,15 @@ struct MaxHydroPower : public Constraint
                 builder.include(Variable::HydProd(pays), 1.0);
             }
 
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
+            namer.MaxHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+
             const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
                                  .MaxEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
-                  builder.lessThan(rhs).build();
-              ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                    problemeHebdo->NamedProblems);
-              namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-              namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-              namer.MaxHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+            builder.lessThan(rhs).build();
         }
     }
 };
@@ -674,12 +674,12 @@ struct MaxPumping : public Constraint
             const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
                                  .MaxEnergiePompageParIntervalleOptimise[NumeroDeLIntervalle];
 
-            builder.lessThan(rhs).build();
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
             namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
             namer.MaxPumping(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+            builder.lessThan(rhs).build();
         }
     }
 };
@@ -700,6 +700,13 @@ struct AreaHydroLevel : public Constraint
         {
             builder.updateHourWithinWeek(pdt - 1).include(Variable::HydroLevel(pays), -1.0);
         }
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                              problemeHebdo->NamedProblems);
+
+        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+        namer.AreaHydroLevel(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+
         builder.updateHourWithinWeek(pdt)
           .include(Variable::HydProd(pays), 1.0)
           .include(Variable::Pumping(pays),
@@ -707,12 +714,6 @@ struct AreaHydroLevel : public Constraint
           .include(Variable::Overflow(pays), 1.)
           .equalTo(rhs)
           .build();
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
-
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        namer.AreaHydroLevel(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
     }
 };
 
@@ -722,19 +723,19 @@ struct FinalStockEquivalent : public Constraint
     void add(int pays)
     {
         const auto& pdt = problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1;
-        builder.updateHourWithinWeek(pdt)
-          .updateHourWithinWeek(problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1)
-          .include(Variable::FinalStorage(pays), 1.0)
-          .include(Variable::HydroLevel(pays), -1.0)
-          .equalTo(0)
-          .build();
-
         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                               problemeHebdo->NamedProblems);
 
         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
         namer.FinalStockEquivalent(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+
+        builder.updateHourWithinWeek(pdt)
+          .updateHourWithinWeek(problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1)
+          .include(Variable::FinalStorage(pays), 1.0)
+          .include(Variable::HydroLevel(pays), -1.0)
+          .equalTo(0)
+          .build();
     }
 };
 
@@ -751,13 +752,13 @@ struct FinalStockExpression : public Constraint
         {
             builder.include(Variable::LayerStorage(pays, layerindex), 1.0);
         }
-        builder.equalTo(0).build();
         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                               problemeHebdo->NamedProblems);
 
         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
         namer.FinalStockEquivalent(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        builder.equalTo(0).build();
     }
 };
 
