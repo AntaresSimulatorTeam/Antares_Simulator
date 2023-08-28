@@ -70,7 +70,7 @@ void HourlyCSRProblem::setQuadraticCost()
     // PTO can take two different values according to option:
     //  1. from DENS
     //  2. from load
-    for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
+    for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
@@ -102,7 +102,7 @@ void HourlyCSRProblem::setLinearCost()
     // these members of objective functions are considered only if IntercoGereeAvecDesCouts =
     // true (use hurdle cost option is true). otherwise these members are zero.
 
-    for (int Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; Interco++)
+    for (uint32_t Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; Interco++)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
               != Data::AdequacyPatch::physicalAreaInsideAdqPatch

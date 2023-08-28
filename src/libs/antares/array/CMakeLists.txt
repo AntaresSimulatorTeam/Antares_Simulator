@@ -1,6 +1,5 @@
 set(SRC_MATRIX
         antares/array/matrix.h
-        antares/array/array1d.h
         antares/array/matrix.hxx
         matrix.cpp
         )
