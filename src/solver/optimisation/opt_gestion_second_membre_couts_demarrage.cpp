@@ -31,6 +31,7 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
+#include "constraint_builder.h"
 
 #include <antares/study.h>
 
@@ -38,9 +39,58 @@ using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
 
+struct PMaxDispatchableGeneration : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)
+    {
+        if (!Simulation)
+        {
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+              = problemeHebdo->PaliersThermiquesDuPays[pays];
+            double pmaxDUnGroupeDuPalierThermique
+              = PaliersThermiquesDuPays.PmaxDUnGroupeDuPalierThermique[clusterIndex];
+            const int DureeMinimaleDArretDUnGroupeDuPalierThermique
+              = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex];
+            int t1 = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique;
+
+            int NombreDePasDeTempsPourUneOptimisation
+              = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+            if (t1 < 0)
+                t1 = NombreDePasDeTempsPourUneOptimisation + t1;
+
+            const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
+              = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
+                  .NombreMaxDeGroupesEnMarcheDuPalierThermique;
+            double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
+
+            builder.updateHourWithinWeek(pdt)
+              .include(Variable::DispatchableProduction(cluster), 1.0)
+              .include(Variable::NODU(cluster), -pmaxDUnGroupeDuPalierThermique)
+              .lessThan(rhs)
+              .build();
+
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+            namer.PMaxDispatchableGeneration(
+              problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+              PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
+        }
+        else
+        {
+            nbTermesContraintesPourLesCoutsDeDemarrage += 2;
+            problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
+        }
+    }
+    int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
+};
+
 void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo,
                                                                      int PremierPdtDeLIntervalle,
-                                                                     int DernierPdtDeLIntervalle)
+                                                                     int DernierPdtDeLIntervalle,
+                                                                     bool Simulation)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
     std::vector<double>& SecondMembre = ProblemeAResoudre->SecondMembre;
@@ -50,6 +100,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
 
     int NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+
+    PMaxDispatchableGeneration pMaxDispatchableGeneration(problemeHebdo);
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
@@ -71,37 +123,38 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
                  pdtHebdo++, pdtJour++)
             {
                 int cnt = 2; // TODO
-                if (cnt >= 0)
+                // if (cnt >= 0)
+                // {
+                pMaxDispatchableGeneration.add(pays, palier, index, pdtHebdo, Simulation);
+                int t1 = pdtHebdo - DureeMinimaleDArretDUnGroupeDuPalierThermique;
+                if (t1 < 0)
+                    t1 = NombreDePasDeTempsPourUneOptimisation + t1;
+                // SecondMembre[cnt] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
+                for (int k = pdtHebdo - DureeMinimaleDArretDUnGroupeDuPalierThermique + 1;
+                     k <= pdtHebdo;
+                     k++)
                 {
-                    int t1 = pdtHebdo - DureeMinimaleDArretDUnGroupeDuPalierThermique;
+                    t1 = k;
+
                     if (t1 < 0)
                         t1 = NombreDePasDeTempsPourUneOptimisation + t1;
-                    SecondMembre[cnt] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
-                    for (int k = pdtHebdo - DureeMinimaleDArretDUnGroupeDuPalierThermique + 1;
-                         k <= pdtHebdo;
-                         k++)
+
+                    int t1moins1 = t1 - 1;
+
+                    if (t1moins1 < 0)
+                        t1moins1 = NombreDePasDeTempsPourUneOptimisation + t1moins1;
+
+                    if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
+                          - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
+                        > 0)
                     {
-                        t1 = k;
-
-                        if (t1 < 0)
-                            t1 = NombreDePasDeTempsPourUneOptimisation + t1;
-
-                        int t1moins1 = t1 - 1;
-
-                        if (t1moins1 < 0)
-                            t1moins1 = NombreDePasDeTempsPourUneOptimisation + t1moins1;
-
-                        if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-                              - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
-                            > 0)
-                        {
-                            SecondMembre[cnt]
-                              += NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-                                 - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1];
-                        }
+                        SecondMembre[cnt]
+                          += NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
+                             - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1];
                     }
-                    AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
                 }
+                    AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                    // }
             }
         }
     }

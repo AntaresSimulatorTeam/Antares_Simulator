@@ -918,6 +918,6 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
         if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
         {
             OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(
-              problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
+              problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, false);
         }
 }
