@@ -24,8 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_ALEA_H__
-#define __SOLVER_ALEA_H__
+#pragma once
 
 #include "../simulation/sim_structure_donnees.h"
 #include "antares/study/study.h"
@@ -34,7 +33,3 @@ void ALEA_TirageAuSortChroniques(const Antares::Data::Study& study,
                                  double const* const* thermalNoisesByArea,
                                  uint numSpace,
                                  VAL_GEN_PAR_PAYS& valeursGenereesParPays);
-
-void HydroVentilation();
-
-#endif // __SOLVER_ALEA_H__
