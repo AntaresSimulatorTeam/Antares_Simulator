@@ -81,9 +81,6 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             assert(year < data.timeseriesNumbers.height);
             ptchro.Hydraulique
               = (data.count != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
-            // Hydro - mod
-            std::fill(ptvalgen.HydrauliqueModulableQuotidien.begin(),
-                    ptvalgen.HydrauliqueModulableQuotidien.end(),0);
         }
         // Wind
         {
