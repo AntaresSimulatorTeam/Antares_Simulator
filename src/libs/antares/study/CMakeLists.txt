@@ -440,6 +440,7 @@ target_link_libraries(study
         Antares::object
     PRIVATE
         Antares::exception
+        Antares::benchmarking
 )
 
 target_include_directories(study
