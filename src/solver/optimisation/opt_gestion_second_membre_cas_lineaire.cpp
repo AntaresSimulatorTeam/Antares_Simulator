@@ -610,6 +610,8 @@ struct MinHydroPower : public Constraint
                 builder.updateHourWithinWeek(pdt);
                 builder.include(Variable::HydProd(pays), 1.0);
             }
+            const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
+                                 .MinEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
             builder.greaterThan(rhs).build();
 
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
@@ -617,9 +619,6 @@ struct MinHydroPower : public Constraint
             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
             namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
             namer.MinHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-
-            const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                                 .MinEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
         }
     }
 };
@@ -646,15 +645,14 @@ struct MaxHydroPower : public Constraint
                 builder.include(Variable::HydProd(pays), 1.0);
             }
 
-            builder.lessThan(rhs).build();
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-            namer.MaxHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-
             const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
                                  .MaxEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
+                  builder.lessThan(rhs).build();
+              ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                    problemeHebdo->NamedProblems);
+              namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+              namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
+              namer.MaxHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
         }
     }
 };
