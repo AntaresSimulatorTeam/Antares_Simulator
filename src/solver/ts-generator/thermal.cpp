@@ -90,9 +90,8 @@ private:
                                const T& duration);
 
 private:
-    uint nbHoursPerYear;
-
-    const uint daysPerYear;
+    const uint nbHoursPerYear = 8760;
+    const uint daysPerYear = 365;
 
     MersenneTwister& rndgenerator;
 
@@ -137,12 +136,10 @@ private:
 GeneratorTempData::GeneratorTempData(Data::Study& study,
                                      Solver::Progression::Task& progr,
                                      IResultWriter::Ptr writer) :
- study(study),
- nbHoursPerYear(study.runtime->nbHoursPerYear),
- daysPerYear(study.runtime->nbDaysPerYear),
- rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
- pProgression(progr),
- pWriter(writer)
+    study(study),
+    rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
+    pProgression(progr),
+    pWriter(writer)
 {
     auto& parameters = study.parameters;
 

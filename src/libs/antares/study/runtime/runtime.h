@@ -91,12 +91,6 @@ public:
 public:
     //! The number of years to process
     uint nbYears;
-    //! How many hours per year
-    uint nbHoursPerYear; // default: 8760
-    //! Number of days per year
-    uint nbDaysPerYear;
-    //! Number
-    uint nbMonthsPerYear;
 
     //! Alias for General data
     Parameters* parameters;

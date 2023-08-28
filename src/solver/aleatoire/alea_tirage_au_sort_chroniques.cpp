@@ -43,10 +43,10 @@ using namespace Antares;
 using namespace Antares::Data;
 
 static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
-  const Study& study,
-  double const* const* thermalNoisesByArea,
-  uint numSpace,
-  VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+    const Study& study,
+    double const* const* thermalNoisesByArea,
+    uint numSpace,
+    VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     auto& runtime = *study.runtime;
 

@@ -47,6 +47,7 @@
 
 namespace Antares::Solver::Simulation
 {
+
 template<class Impl>
 class yearJob final : public Yuni::Job::IJob
 {
@@ -152,7 +153,7 @@ private:
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
             ALEA_TirageAuSortChroniques(study, thermalNoisesByArea, numSpace,
-                    simulationObj->valeursGenereesParPays);
+                                        simulationObj->valeursGenereesParPays_);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
             simulationObj->prepareClustersInMustRunMode(numSpace);
@@ -161,7 +162,7 @@ private:
             {
                 Benchmarking::Timer timer;
                 simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y,
-                        numSpace, simulationObj->valeursGenereesParPays);
+                                                numSpace, simulationObj->valeursGenereesParPays_);
                 timer.stop();
                 pDurationCollector->addDuration("hydro_ventilation", timer.get_duration());
             }
@@ -183,7 +184,7 @@ private:
                                                  randomForCurrentYear,
                                                  failedWeekList,
                                                  isFirstPerformedYearOfSimulation,
-                                                 simulationObj->valeursGenereesParPays);
+                                                 simulationObj->valeursGenereesParPays_);
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
@@ -226,21 +227,46 @@ private:
     } // End of onExecute() method
 };
 
+static void allocateValeursGenereesParPays(VAL_GEN_PAR_PAYS& val,
+                                           const Data::Study& study)
+{
+    uint nbDaysPerYear = 365;
+    val.resize(study.maxNbYearsInParallel);
+    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
+    {
+        val[numSpace].resize(study.areas.size());
+        for (uint areaIndex = 0; areaIndex < study.areas.size(); ++areaIndex)
+        {
+            auto& area = *study.areas.byIndex[areaIndex];
+            size_t clusterCount = area.thermal.clusterCount();
+
+            val[numSpace][areaIndex].HydrauliqueModulableQuotidien.assign(nbDaysPerYear, 0);
+            val[numSpace][areaIndex].AleaCoutDeProductionParPalier.assign(clusterCount, 0.);
+
+            if (area.hydro.reservoirManagement)
+            {
+                val[numSpace][areaIndex].NiveauxReservoirsDebutJours.assign(nbDaysPerYear, 0.);
+                val[numSpace][areaIndex].NiveauxReservoirsFinJours.assign(nbDaysPerYear, 0.);
+            }
+        }
+    }
+}
+
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
                                       const ::Settings& settings,
                                       Benchmarking::IDurationCollector* duration_collector) :
- ImplementationType(study),
- study(study),
- settings(settings),
- pNbYearsReallyPerformed(0),
- pNbMaxPerformedYearsInParallel(0),
- pYearByYear(study.parameters.yearByYear),
- pHydroManagement(study),
- pFirstSetParallelWithAPerformedYearWasRun(false),
- pDurationCollector(duration_collector),
- pQueueService(study.pQueueService),
- pResultWriter(study.resultWriter)
+    ImplementationType(study),
+    study(study),
+    settings(settings),
+    pNbYearsReallyPerformed(0),
+    pNbMaxPerformedYearsInParallel(0),
+    pYearByYear(study.parameters.yearByYear),
+    pHydroManagement(study),
+    pFirstSetParallelWithAPerformedYearWasRun(false),
+    pDurationCollector(duration_collector),
+    pQueueService(study.pQueueService),
+    pResultWriter(study.resultWriter)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -254,6 +280,8 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
         pYearByYear = false;
 
     pHydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
+
+    allocateValeursGenereesParPays(valeursGenereesParPays_, study);
 }
 
 template<class Impl>
@@ -274,33 +302,6 @@ inline void ISimulation<Impl>::checkWriter() const
 template<class Impl>
 inline ISimulation<Impl>::~ISimulation()
 {
-}
-
-static void allocateValeursGenereesParPays(VAL_GEN_PAR_PAYS& val,
-                                           const Data::Study& study)
-{
-    val.resize(study.maxNbYearsInParallel);
-    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
-    {
-        val[numSpace].resize(study.areas.size());
-        for (uint areaIndex = 0; areaIndex < study.areas.size(); ++areaIndex)
-        {
-            auto& area = *study.areas.byIndex[areaIndex];
-
-            val[numSpace][areaIndex].HydrauliqueModulableQuotidien
-                .assign(study.runtime->nbDaysPerYear,0 );
-            val[numSpace][areaIndex].AleaCoutDeProductionParPalier
-                .assign(area.thermal.clusterCount(), 0.);
-
-            if (area.hydro.reservoirManagement)
-            {
-                val[numSpace][areaIndex].NiveauxReservoirsDebutJours
-                    .assign(study.runtime->nbDaysPerYear, 0.);
-                val[numSpace][areaIndex].NiveauxReservoirsFinJours
-                    .assign(study.runtime->nbDaysPerYear, 0.);
-            }
-        }
-    }
 }
 
 template<class Impl>
@@ -326,8 +327,6 @@ void ISimulation<Impl>::run()
     // The general data
     auto& parameters = *(study.runtime->parameters);
 
-    allocateValeursGenereesParPays(valeursGenereesParPays, study);
-
     // Preprocessors
     // Determine if we have to use the preprocessors at least one time.
     pData.initialize(parameters);
@@ -352,7 +351,7 @@ void ISimulation<Impl>::run()
     }
     else
     {
-        if (not ImplementationType::simulationBegin(valeursGenereesParPays))
+        if (not ImplementationType::simulationBegin(valeursGenereesParPays_))
             return;
         // Allocating the memory
         ImplementationType::variables.simulationBegin();

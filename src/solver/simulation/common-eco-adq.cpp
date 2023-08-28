@@ -190,7 +190,7 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
     if (!flowQuadEnabled)
         return false;
 
-    uint maxHours = study.runtime->nbHoursPerYear;
+    uint maxHours = 8760;
     for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
     {
         auto& lnk = *(study.runtime->areaLink[j]);

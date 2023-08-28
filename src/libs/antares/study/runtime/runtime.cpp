@@ -247,9 +247,6 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
 
 StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  nbYears(0),
- nbHoursPerYear(0),
- nbDaysPerYear(0),
- nbMonthsPerYear(0),
  parameters(nullptr),
  timeseriesNumberYear(nullptr),
  thermalPlantTotalCount(0),
@@ -284,9 +281,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     auto& gd = study.parameters;
 
     nbYears = gd.nbYears;
-    nbHoursPerYear = 8760;
-    nbDaysPerYear = 365;
-    nbMonthsPerYear = 12;
     parameters = &study.parameters;
     mode = gd.mode;
     thermalPlantTotalCount = 0;
