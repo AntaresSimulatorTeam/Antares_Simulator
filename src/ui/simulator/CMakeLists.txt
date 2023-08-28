@@ -146,10 +146,10 @@ set(ANTARES_LIBS
 		libantares-solver-constraints-builder
 		libantares-solver-variable-info
 		libantares-core
-		date
 		yuni-static-core
 		yuni-static-uuid
 		libmodel_antares
+		Antares::date
 	)
 
 	target_link_libraries(${execname}
