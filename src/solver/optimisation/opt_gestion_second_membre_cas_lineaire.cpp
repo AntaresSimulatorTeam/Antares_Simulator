@@ -741,6 +741,29 @@ struct FinalStockEquivalent : public Constraint
     }
 };
 
+struct FinalStockExpression : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays)
+    {
+        const auto& pdt = problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1;
+        builder.updateHourWithinWeek(pdt)
+          .updateHourWithinWeek(problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1)
+          .include(Variable::FinalStorage(pays), -1.0);
+        for (int layerindex = 0; layerindex < 100; layerindex++)
+        {
+            builder.include(Variable::LayerStorage(pays, layerindex), 1.0);
+        }
+        builder.equalTo(0).build();
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                              problemeHebdo->NamedProblems);
+
+        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+        namer.FinalStockEquivalent(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+    }
+};
+
 void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
                           int PremierPdtDeLIntervalle,
                           int DernierPdtDeLIntervalle,
@@ -786,6 +809,7 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
     MaxPumping maxPumping(problemeHebdo);
     AreaHydroLevel areaHydroLevel(problemeHebdo);
     FinalStockEquivalent finalStockEquivalent(problemeHebdo);
+    FinalStockExpression finalStockExpression(problemeHebdo);
 
     for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdt++)
@@ -887,13 +911,7 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
             }
             if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
             {
-                int cnt = 2; // problemeHebdo->NumeroDeContrainteExpressionStockFinal[pays];
-                if (cnt >= 0)
-                {
-                    SecondMembre[cnt] = 0;
-
-                    AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
-                }
+            finalStockExpression.add(pays);
             }
         }
 
