@@ -254,15 +254,14 @@ struct NbDispUnitsMinBoundSinceMinUpTime : public Constraint
     using Constraint::Constraint;
     void add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)
     {
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+          = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
+          = PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[clusterIndex];
         if (!Simulation)
         {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-              = problemeHebdo->PaliersThermiquesDuPays[pays];
             double pminDUnGroupeDuPalierThermique
               = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
-            const int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays
-                  .DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[clusterIndex];
 
             int NombreDePasDeTempsPourUneOptimisation
               = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
@@ -309,7 +308,8 @@ struct NbDispUnitsMinBoundSinceMinUpTime : public Constraint
         }
         else
         {
-            nbTermesContraintesPourLesCoutsDeDemarrage += 4;
+            nbTermesContraintesPourLesCoutsDeDemarrage
+              += 1 + 2 * DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
             problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
         }
     }
