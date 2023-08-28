@@ -122,7 +122,7 @@ void HourlyCSRProblem::calculateCsrParameters()
     double netPositionInit;
     int hour = triggeredHour;
 
-    for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
+    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area] == physicalAreaInsideAdqPatch)
         {
