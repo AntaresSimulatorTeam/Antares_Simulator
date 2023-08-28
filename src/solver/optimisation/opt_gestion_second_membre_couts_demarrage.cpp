@@ -87,6 +87,54 @@ struct PMaxDispatchableGeneration : public Constraint
     int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
 };
 
+struct PMinDispatchableGeneration : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)
+    {
+        if (!Simulation)
+        {
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+              = problemeHebdo->PaliersThermiquesDuPays[pays];
+            double pminDUnGroupeDuPalierThermique
+              = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
+            const int DureeMinimaleDArretDUnGroupeDuPalierThermique
+              = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex];
+            int t1 = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique;
+
+            int NombreDePasDeTempsPourUneOptimisation
+              = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+            if (t1 < 0)
+                t1 = NombreDePasDeTempsPourUneOptimisation + t1;
+
+            const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
+              = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
+                  .NombreMaxDeGroupesEnMarcheDuPalierThermique;
+            double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
+
+            builder.updateHourWithinWeek(pdt)
+              .include(Variable::DispatchableProduction(cluster), 1.0)
+              .include(Variable::NODU(cluster), -pminDUnGroupeDuPalierThermique)
+              .greaterThan(rhs)
+              .build();
+
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+            namer.PMinDispatchableGeneration(
+              problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+              PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
+        }
+        else
+        {
+            nbTermesContraintesPourLesCoutsDeDemarrage += 2;
+            problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
+        }
+    }
+    int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
+};
+
 void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo,
                                                                      int PremierPdtDeLIntervalle,
                                                                      int DernierPdtDeLIntervalle,
@@ -100,8 +148,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
 
     int NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
+    problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage = 0;
     PMaxDispatchableGeneration pMaxDispatchableGeneration(problemeHebdo);
+    PMinDispatchableGeneration pMinDispatchableGeneration(problemeHebdo);
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
@@ -126,6 +175,12 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
                 // if (cnt >= 0)
                 // {
                 pMaxDispatchableGeneration.add(pays, palier, index, pdtHebdo, Simulation);
+                problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
+                  += pMaxDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage;
+                pMinDispatchableGeneration.add(pays, palier, index, pdtHebdo, Simulation);
+                problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
+                  += pMinDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage;
+
                 int t1 = pdtHebdo - DureeMinimaleDArretDUnGroupeDuPalierThermique;
                 if (t1 < 0)
                     t1 = NombreDePasDeTempsPourUneOptimisation + t1;
