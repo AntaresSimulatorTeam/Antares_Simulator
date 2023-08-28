@@ -40,7 +40,7 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo)
 
     for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
     {
-        for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
+        for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
             if (COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
                     CoutDeTransport.IntercoGereeAvecDesCouts)
@@ -55,7 +55,7 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo)
 
     for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
     {
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             ENERGIES_ET_PUISSANCES_HYDRAULIQUES& CaracteristiquesHydrauliques
               = problemeHebdo->CaracteristiquesHydrauliques[pays];
@@ -96,7 +96,7 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo)
 
     for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
     {
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             const PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];
@@ -113,7 +113,7 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo)
 
     for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
     {
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             const PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];

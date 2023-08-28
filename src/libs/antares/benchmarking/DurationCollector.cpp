@@ -12,10 +12,8 @@ void DurationCollector::addDuration(const std::string& name, int64_t duration)
 
 void DurationCollector::toFileContent(FileContent& file_content)
 {
-    for (const auto& element : duration_items_)
+    for (const auto& [name, durations] : duration_items_)
     {
-        const std::string& name = element.first;
-        const auto& durations = element.second;
         const int64_t duration_sum = accumulate(durations.begin(), durations.end(), (int64_t)0);
 
         file_content.addDurationItem(name, (unsigned int)duration_sum, (int)durations.size());

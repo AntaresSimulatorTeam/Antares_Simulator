@@ -40,7 +40,7 @@ void HourlyCSRProblem::constructVariableENS()
 
     // variables: ENS of each area inside adq patch
     logs.debug() << " ENS of each area inside adq patch: ";
-    for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
+    for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
         // Only ENS for areas inside adq patch are considered as variables
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
@@ -67,7 +67,7 @@ void HourlyCSRProblem::constructVariableSpilledEnergy()
 
     // variables: Spilled Energy  of each area inside adq patch
     logs.debug() << " Spilled Energy  of each area inside adq patch: ";
-    for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
+    for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
         // Only Spilled Energy  for areas inside adq patch are considered as variables
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
@@ -95,7 +95,7 @@ void HourlyCSRProblem::constructVariableFlows()
     // and 2.
     logs.debug()
       << " transmissin flows (flow, flow_direct and flow_indirect). For links between 2 and 2:";
-    for (int Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; Interco++)
+    for (uint32_t Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; Interco++)
     {
         // only consider link between 2 and 2
         if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
