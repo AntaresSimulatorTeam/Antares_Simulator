@@ -29,7 +29,6 @@
 #include <antares/logs/logs.h>
 #include <antares/inifile/inifile.h>
 #include "../study.h"
-#include "../memory-usage.h"
 #include <limits>
 
 using namespace Yuni;
@@ -382,18 +381,6 @@ bool XCast::saveToFolder(const AnyString& folder) const
         return IO::File::CreateEmptyFile(buffer) && ret;
     }
     return ini.save(buffer) && ret;
-}
-
-void XCast::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    if (timeSeries & u.study.parameters.timeSeriesToGenerate)
-    {
-        u.requiredMemoryForInput += sizeof(XCast);
-        data.estimateMemoryUsage(u);
-        K.estimateMemoryUsage(u);
-        translation.estimateMemoryUsage(u);
-        conversion.estimateMemoryUsage(u);
-    }
 }
 
 bool XCast::forceReload(bool reload) const

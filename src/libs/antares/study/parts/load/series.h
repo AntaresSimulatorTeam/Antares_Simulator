@@ -40,7 +40,7 @@ namespace Data
 class DataSeriesLoad
 {
 public:
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     bool forceReload(bool reload = false) const;
 

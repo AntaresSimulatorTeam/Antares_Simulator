@@ -96,5 +96,4 @@ target_link_libraries(libmodel_antares
 		utils
 		sirius_solver
 		infeasible_problem_analysis
-		libantares-solver-simulation
-		)
+		libantares-solver-simulation)

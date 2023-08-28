@@ -40,7 +40,6 @@ namespace Data
 {
 // Forward declarations
 class Study;
-class StudyMemoryUsage;
 class StudyLoadOptions;
 class Area;
 class AreaLink;

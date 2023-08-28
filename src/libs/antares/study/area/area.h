@@ -83,7 +83,7 @@ public:
     ** \param name Name of the area
     ** \param id id of the area
     */
-    Area(const AnyString& name, const AnyString& id, uint indx = (uint)-1);
+    Area(const AnyString& name, const AnyString& id);
     /*!
     ** \brief Destructor
     */
@@ -194,7 +194,7 @@ public:
     /*!
     ** \brief Try to estimate the amount of memory required by the area for a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
     //@}
 
     //! \name Thermal clusters min stable power validity checking
@@ -658,7 +658,7 @@ public:
     /*!
     ** \brief Try to estimate the amount of memory required by the class for a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     /*!
     ** \brief Get the average amount of memory currently used by each area

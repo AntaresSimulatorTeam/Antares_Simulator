@@ -27,7 +27,6 @@
 
 #include <yuni/yuni.h>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "container.h"
 #include <antares/logs/logs.h>
 
@@ -52,12 +51,6 @@ bool PartRenewable::forceReload(bool reload) const
 void PartRenewable::markAsModified() const
 {
     list.markAsModified();
-}
-
-void PartRenewable::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += sizeof(PartRenewable);
-    list.estimateMemoryUsage(u);
 }
 
 PartRenewable::~PartRenewable()

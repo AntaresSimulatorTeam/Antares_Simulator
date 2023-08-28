@@ -33,14 +33,6 @@
 
 namespace Antares
 {
-namespace Data
-{
-class StudyMemoryUsage;
-} // namespace Data
-} // namespace Antares
-
-namespace Antares
-{
 /*!
 ** \brief Custom memory allocator for managed pointers
 */
@@ -130,17 +122,6 @@ public:
     */
     template<class T>
     static void Release(T*& pointer);
-
-    /*!
-    ** \brief Estimate the memory usage if our managed pointers are used
-    **
-    ** \param     bytes  A size in bytes
-    ** \param     count  The number of element of size `bytes` to allocate
-    */
-    static void EstimateMemoryUsage(size_t bytes,
-                                    uint count,
-                                    Data::StudyMemoryUsage& u,
-                                    bool duplicateForParallelYears);
 
 public:
     //! \name Constructor & Destructor

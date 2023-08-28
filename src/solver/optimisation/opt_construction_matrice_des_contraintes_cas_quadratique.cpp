@@ -44,7 +44,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* 
     const CORRESPONDANCES_DES_VARIABLES& correspondanceVarNativesVarOptim
       = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
-    for (int pays = 0; pays < problemeHebdo->NombreDePays - 1; pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays - 1; pays++)
     {
         int nombreDeTermes = 0;
 
