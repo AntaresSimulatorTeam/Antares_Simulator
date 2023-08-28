@@ -1,13 +1,15 @@
-#include <numeric>
-#include <antares/benchmarking/info_collectors.h>
-#include <antares/config.h>
-#include <antares/Enum.hpp>
-#include <antares/study/area.h>
+//
+// Created by marechaljas on 22/08/23.
+//
+
+#include "antares/infoCollection/StudyInfoCollector.h"
+#include "antares/benchmarking/DurationCollector.h"
+#include "antares/benchmarking/file_content.h"
+#include "../../../config.h"
 
 using namespace Antares::Data;
+namespace Benchmarking {
 
-namespace Benchmarking
-{
 // Collecting data study
 // ---------------------------
 void StudyInfoCollector::toFileContent(FileContent& file_content)
@@ -82,17 +84,17 @@ void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent
     {
         switch (activeContraints[i]->type())
         {
-        case BindingConstraint::Type::typeHourly:
-            nbEnabledHourlyBC++;
-            break;
-        case BindingConstraint::Type::typeDaily:
-            nbEnabledDailyBC++;
-            break;
-        case BindingConstraint::Type::typeWeekly:
-            nbEnabledWeeklyBC++;
-            break;
-        default:
-            break;
+            case BindingConstraint::Type::typeHourly:
+                nbEnabledHourlyBC++;
+                break;
+            case BindingConstraint::Type::typeDaily:
+                nbEnabledDailyBC++;
+                break;
+            case BindingConstraint::Type::typeWeekly:
+                nbEnabledWeeklyBC++;
+                break;
+            default:
+                break;
         }
     }
 
@@ -105,7 +107,7 @@ void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent
 void StudyInfoCollector::unitCommitmentModeToFileContent(FileContent& file_content)
 {
     const char* unitCommitment
-      = UnitCommitmentModeToCString(study_.parameters.unitCommitment.ucMode);
+            = UnitCommitmentModeToCString(study_.parameters.unitCommitment.ucMode);
     file_content.addItemToSection("study", "unit commitment", unitCommitment);
 }
 
@@ -118,7 +120,7 @@ void StudyInfoCollector::solverVersionToFileContent(FileContent& file_content)
 {
     // Example : 8.3.0 -> 830
     const unsigned int version
-      = 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO + ANTARES_VERSION_BUILD;
+            = 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO + ANTARES_VERSION_BUILD;
 
     file_content.addItemToSection("study", "antares version", version);
 }
@@ -147,27 +149,7 @@ void SimulationInfoCollector::toFileContent(FileContent& file_content)
     file_content.addItemToSection("optimization problem", "variables", opt_info_.nbVariables);
     file_content.addItemToSection("optimization problem", "constraints", opt_info_.nbConstraints);
     file_content.addItemToSection(
-      "optimization problem", "non-zero coefficients", opt_info_.nbNonZeroCoeffs);
+            "optimization problem", "non-zero coefficients", opt_info_.nbNonZeroCoeffs);
 }
 
-// Collecting durations from simulation
-// -------------------------------------
-void DurationCollector::toFileContent(FileContent& file_content)
-{
-    for (const auto& element : duration_items_)
-    {
-        const std::string& name = element.first;
-        const auto& durations = element.second;
-        const int64_t duration_sum = accumulate(durations.begin(), durations.end(), (int64_t)0);
-
-        file_content.addDurationItem(name, (unsigned int)duration_sum, (int)durations.size());
-    }
 }
-
-void DurationCollector::addDuration(const std::string& name, int64_t duration)
-{
-    const std::lock_guard<std::mutex> lock(mutex_);
-    duration_items_[name].push_back(duration);
-}
-
-} // namespace Benchmarking

@@ -331,6 +331,7 @@ set(SRC_XCAST
 source_group("study\\xcast" FILES ${SRC_XCAST})
 
 add_subdirectory(benchmarking)
+add_subdirectory(InfoCollection)
 add_subdirectory(io)
 add_subdirectory(exception)
 

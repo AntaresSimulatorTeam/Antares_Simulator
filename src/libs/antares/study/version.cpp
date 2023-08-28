@@ -44,9 +44,7 @@ enum
 YUNI_STATIC_ASSERT((uint)versionFromCMake == (uint)Antares::Data::versionLatest,
                    DiscrepancyBetweenCMakeVersionAndAntaresVersion);
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 
 static inline Version StudyFormatCheck(const String& headerFile)
@@ -209,5 +207,5 @@ Version StudyTryToFindTheVersion(const AnyString& folder)
 bool StudyVersion::isStudyLatestVersion(std::string studyFolder) const {
     return StudyTryToFindTheVersion(studyFolder) == versionLatest;
 }
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

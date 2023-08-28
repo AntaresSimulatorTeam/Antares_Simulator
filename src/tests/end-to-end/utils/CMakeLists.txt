@@ -9,6 +9,7 @@ target_link_libraries(test_utils
         libantares-solver-simulation
         PUBLIC
         ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+        Antares::infoCollection
         )
 
 target_include_directories(test_utils
