@@ -705,7 +705,8 @@ struct AreaHydroLevel : public Constraint
         }
         builder.updateHourWithinWeek(pdt)
           .include(Variable::HydProd(pays), 1.0)
-          .include(Variable::Pumping(pays))
+          .include(Variable::Pumping(pays),
+                   -problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio)
           .include(Variable::Overflow(pays), 1.)
           .equalTo(rhs)
           .build();
