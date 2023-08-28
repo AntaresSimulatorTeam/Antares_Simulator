@@ -426,6 +426,7 @@ add_library(Antares::study ALIAS study)
 
 target_link_libraries(study
     PUBLIC
+        Boost::boost
         yuni-static-core
         Antares::array #xcast
         Antares::date #parameters
