@@ -44,6 +44,7 @@ target_link_libraries(${execname}
 		PRIVATE
 			${CONFIG_LIBS}
 			array
+			Antares::sys
 		)
 
 import_std_libs(${execname})

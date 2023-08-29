@@ -73,5 +73,6 @@ target_link_libraries(libantares-ui-application
 							${wxWidgets_LIBRARIES}
 							libantares-ui-common
                             libantares-core
+							Antares::sys
 )
 

@@ -2,9 +2,7 @@
 #include "private/immediate_file_writer.h"
 #include "private/zip_writer.h"
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 IResultWriter::Ptr resultWriterFactory(Antares::Data::ResultFormat fmt,
                                        const YString& folderOutput,
@@ -21,5 +19,5 @@ IResultWriter::Ptr resultWriterFactory(Antares::Data::ResultFormat fmt,
         return std::make_shared<ImmediateFileResultWriter>(folderOutput.c_str());
     }
 }
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver
+

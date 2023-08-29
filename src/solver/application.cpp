@@ -2,7 +2,7 @@
 
 #include <antares/sys/policy.h>
 #include <antares/resources/resources.h>
-#include <antares/hostinfo.h>
+#include <antares/logs/hostinfo.h>
 #include <antares/fatal-error.h>
 #include <antares/benchmarking/timer.h>
 
@@ -18,6 +18,7 @@
 
 #include "utils/ortools_utils.h"
 #include "../config.h"
+#include <antares/infoCollection/StudyInfoCollector.h>
 
 #include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>
@@ -39,9 +40,7 @@ void printSolvers()
 }
 } // namespace
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 Application::Application()
 {
@@ -460,5 +459,5 @@ Application::~Application()
         LocalPolicy::Close();
     }
 }
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver
+

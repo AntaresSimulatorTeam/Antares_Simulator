@@ -512,7 +512,6 @@ struct PROBLEME_HEBDO
     bool LeProblemeADejaEteInstancie = false;
     bool firstWeekOfSimulation = false;
 
-    // TODO VP: Not working if we're not using a pointer, need more investigation
     std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
 
     mutable std::vector<RESERVE_JMOINS1> ReserveJMoins1;

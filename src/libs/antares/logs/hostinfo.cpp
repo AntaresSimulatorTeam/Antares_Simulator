@@ -27,10 +27,10 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/system/cpu.h>
-#include "hostinfo.h"
+#include "antares/logs/hostinfo.h"
 #include <antares/logs/logs.h>
 
-#include "sys/hostname.hxx"
+#include "antares/sys/hostname.hxx"
 
 using namespace Yuni;
 using namespace Antares;

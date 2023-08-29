@@ -29,11 +29,11 @@
 
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
-#include <assert.h>
+#include <cassert>
 #include "../jit.h"
 #include "../constants.h"
 #include <set>
-#include "../memory/memory.h"
+#include <antares/memory/memory.h>
 #include "../study/fwd.h"
 
 namespace Antares

@@ -34,6 +34,7 @@
 #include "common-eco-adq.h"
 
 #include "solver.h" // for definition of type yearRandomNumbers
+#include "antares/infoCollection/StudyInfoCollector.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -56,7 +57,7 @@ public:
     */
     Adequacy(Data::Study& study);
     //! Destructor
-    ~Adequacy();
+    ~Adequacy() = default;
     //@}
 
     Benchmarking::OptimizationInfo getOptimizationInfo() const;
@@ -101,7 +102,7 @@ private:
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
-    PROBLEME_HEBDO** pProblemesHebdo;
+    std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     Matrix<> pRES;
 
 }; // class Adequacy

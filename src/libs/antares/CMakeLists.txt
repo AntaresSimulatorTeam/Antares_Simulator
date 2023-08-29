@@ -2,12 +2,7 @@
 OMESSAGE("Antares Core library")
 
 add_subdirectory(writer)
-
-set(SRC_MEMORY
-	memory/memory.h
-	memory/memory.hxx
-	memory/memory.cpp)
-source_group("memory" FILES ${SRC_MEMORY})
+add_subdirectory(memory)
 
 add_subdirectory(object)
 
@@ -336,6 +331,7 @@ set(SRC_XCAST
 source_group("study\\xcast" FILES ${SRC_XCAST})
 
 add_subdirectory(benchmarking)
+add_subdirectory(InfoCollection)
 add_subdirectory(io)
 add_subdirectory(exception)
 
@@ -345,6 +341,8 @@ set(SRC_STDCXX
 	stdcxx/demangle.hpp
 	)
 source_group("stdcxx" FILES ${SRC_STDCXX})
+
+add_subdirectory(sys)
 
 set(SRC
     config.h
@@ -367,19 +365,6 @@ set(SRC
 
 	solver.h
 	solver.cpp
-
-    # new check allocation
-    memory/new_check.hxx
-
-	# appdata
-	sys/appdata.h
-	sys/appdata.cpp
-	sys/policy.h
-	sys/policy.cpp
-	sys/hostname.hxx
-
-	# Host info
-	hostinfo.h hostinfo.cpp
 
 	# files & paths
 	paths/list.h   paths/list.cpp
@@ -484,8 +469,6 @@ add_subdirectory(checks)
 add_library(libantares-core
 	antares.h
 	${SRC}
-	${SRC_MEMORY}
-	${SRC_BENCHMARKING}
 	${SRC_AREAS}
 	${SRC_XCAST}
 	${SRC_STUDY_AREA_UI}
@@ -520,8 +503,8 @@ target_link_libraries(libantares-core
 	PUBLIC
 		yuni-static-core
 		yuni-static-uuid
-		Boost::boost
-		date
+        Boost::boost
+		Antares::memory
 		logs
         exception
         checks
@@ -530,9 +513,12 @@ target_link_libraries(libantares-core
 		inifile
 		io
 		array
-		correlation
 		object
         benchmarking
+		Antares::date
+
+	PRIVATE
+		Antares::correlation
 	)
 
 import_std_libs(libantares-core)

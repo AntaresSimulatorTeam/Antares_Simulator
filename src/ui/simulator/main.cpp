@@ -29,8 +29,6 @@
 #include "application/application.h"
 #include "application/main.h"
 #include <yuni/core/getopt.h>
-#include <yuni/io/io.h>
-#include "../../config.h"
 #include "../common/winmain.hxx"
 #include <antares/resources/resources.h>
 #include <antares/sys/policy.h>
