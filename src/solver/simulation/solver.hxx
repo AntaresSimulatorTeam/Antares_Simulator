@@ -153,7 +153,7 @@ private:
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
             ALEA_TirageAuSortChroniques(study, thermalNoisesByArea, numSpace,
-                                        simulationObj->valeursGenereesParPays_);
+                                        simulationObj->valeursGenereesParPays);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
             simulationObj->prepareClustersInMustRunMode(numSpace);
@@ -162,7 +162,7 @@ private:
             {
                 Benchmarking::Timer timer;
                 simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y,
-                                                numSpace, simulationObj->valeursGenereesParPays_);
+                                                numSpace, simulationObj->valeursGenereesParPays);
                 timer.stop();
                 pDurationCollector->addDuration("hydro_ventilation", timer.get_duration());
             }
@@ -184,7 +184,7 @@ private:
                                                  randomForCurrentYear,
                                                  failedWeekList,
                                                  isFirstPerformedYearOfSimulation,
-                                                 simulationObj->valeursGenereesParPays_);
+                                                 simulationObj->valeursGenereesParPays);
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
@@ -281,7 +281,7 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
 
     pHydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
 
-    allocateValeursGenereesParPays(valeursGenereesParPays_, study);
+    allocateValeursGenereesParPays(valeursGenereesParPays, study);
 }
 
 template<class Impl>
@@ -351,7 +351,7 @@ void ISimulation<Impl>::run()
     }
     else
     {
-        if (not ImplementationType::simulationBegin(valeursGenereesParPays_))
+        if (not ImplementationType::simulationBegin(valeursGenereesParPays))
             return;
         // Allocating the memory
         ImplementationType::variables.simulationBegin();

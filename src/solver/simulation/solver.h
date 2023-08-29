@@ -169,7 +169,7 @@ private:
     // Collecting durations inside the simulation
     Benchmarking::IDurationCollector* pDurationCollector;
 
-    VAL_GEN_PAR_PAYS valeursGenereesParPays_;
+    VAL_GEN_PAR_PAYS valeursGenereesParPays;
 
 public:
     //! The queue service that runs every set of parallel years
