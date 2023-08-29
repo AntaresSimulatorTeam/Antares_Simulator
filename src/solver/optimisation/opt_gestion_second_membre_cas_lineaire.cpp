@@ -115,8 +115,8 @@ struct AreaBalance : public Constraint
                 rhs -= problemeHebdo->ReserveJMoins1[pays].ReserveHoraireJMoins1[pdtHebdo];
             }
             builder.equalTo(rhs);
+            builder.build();
         }
-        builder.build();
     }
 };
 
@@ -854,15 +854,20 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
         hydroPower.add(pays, NumeroDeLIntervalle);
     }
 
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
     {
-        hydroPowerSmoothingUsingVariationSum.add(pays, NumeroDeLIntervalle);
+        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        {
+            hydroPowerSmoothingUsingVariationSum.add(pays, NumeroDeLIntervalle);
+        }
     }
-
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    else if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
     {
-        hydroPowerSmoothingUsingVariationMaxDown.add(pays, NumeroDeLIntervalle);
-        hydroPowerSmoothingUsingVariationMaxUp.add(pays, NumeroDeLIntervalle);
+        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        {
+            hydroPowerSmoothingUsingVariationMaxDown.add(pays, NumeroDeLIntervalle);
+            hydroPowerSmoothingUsingVariationMaxUp.add(pays, NumeroDeLIntervalle);
+        }
     }
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
