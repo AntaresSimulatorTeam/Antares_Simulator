@@ -903,22 +903,22 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
         }
     }
 
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    {
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue
+            && problemeHebdo->CaracteristiquesHydrauliques[pays].DirectLevelAccess)
         {
-            if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue
-                && problemeHebdo->CaracteristiquesHydrauliques[pays].DirectLevelAccess)
-            {
             finalStockEquivalent.add(pays);
-            }
-            if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
-            {
-            finalStockExpression.add(pays);
-            }
         }
-
-        if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
         {
-            OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(
-              problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, false);
+            finalStockExpression.add(pays);
         }
+    }
+
+    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+    {
+        OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(
+          problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, false);
+    }
 }
