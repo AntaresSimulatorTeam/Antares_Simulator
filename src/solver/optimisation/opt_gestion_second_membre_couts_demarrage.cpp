@@ -423,15 +423,44 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
                 pMinDispatchableGeneration.add(pays, palier, index, pdtHebdo, Simulation);
                 problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
                   += pMinDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage;
+                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                        }
+            for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
+                 pdtHebdo < DernierPdtDeLIntervalle;
+                 pdtHebdo++, pdtJour++)
+            {
+                int cnt = 2;
                 consistenceNODU.add(pays, palier, index, pdtHebdo, Simulation);
                 problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
                   += consistenceNODU.nbTermesContraintesPourLesCoutsDeDemarrage;
+                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+            }
+            for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
+                 pdtHebdo < DernierPdtDeLIntervalle;
+                 pdtHebdo++, pdtJour++)
+            {
+                int cnt = 2;
                 nbUnitsOutageLessThanNbUnitsStop.add(pays, palier, index, pdtHebdo, Simulation);
                 problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
                   += nbUnitsOutageLessThanNbUnitsStop.nbTermesContraintesPourLesCoutsDeDemarrage;
+
+                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+            }
+            for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
+                 pdtHebdo < DernierPdtDeLIntervalle;
+                 pdtHebdo++, pdtJour++)
+            {
+                int cnt = 2;
                 nbDispUnitsMinBoundSinceMinUpTime.add(pays, palier, index, pdtHebdo, Simulation);
                 problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
                   += nbDispUnitsMinBoundSinceMinUpTime.nbTermesContraintesPourLesCoutsDeDemarrage;
+                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+            }
+            for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
+                 pdtHebdo < DernierPdtDeLIntervalle;
+                 pdtHebdo++, pdtJour++)
+            {
+                int cnt = 2;
                 minDownTime.add(pays, palier, index, pdtHebdo, Simulation);
                 problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
                   += minDownTime.nbTermesContraintesPourLesCoutsDeDemarrage;
