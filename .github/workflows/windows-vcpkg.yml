@@ -118,7 +118,7 @@ jobs:
     - name: Build
       shell: bash
       run: |
-           cmake --build _build --config release -j2
+           cmake --build _build --config release
 
     - name: Run unfeasibility-related tests
       run: |
