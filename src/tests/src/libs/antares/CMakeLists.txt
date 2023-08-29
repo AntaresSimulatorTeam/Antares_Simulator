@@ -24,10 +24,7 @@ target_link_libraries(lib-matrix
 
 target_include_directories(lib-matrix
 								PRIVATE
-									"${CMAKE_CURRENT_SOURCE_DIR}"
 									"${CMAKE_CURRENT_SOURCE_DIR}/logs"
-									"${CMAKE_SOURCE_DIR}/tests/src/libs"
-
 		)
 
 # Storing lib-matrix under the folder Unit-tests in the IDE
