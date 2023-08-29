@@ -425,41 +425,113 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
                   += pMinDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage;
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
                         }
-            for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
-                 pdtHebdo < DernierPdtDeLIntervalle;
-                 pdtHebdo++, pdtJour++)
-            {
+        }
+    }
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    {
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+          = problemeHebdo->PaliersThermiquesDuPays[pays];
+
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
+        {
+                        const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
+                          = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index]
+                              .NombreMaxDeGroupesEnMarcheDuPalierThermique;
+                        const int DureeMinimaleDArretDUnGroupeDuPalierThermique
+                          = PaliersThermiquesDuPays
+                              .DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
+                        const int palier
+                          = PaliersThermiquesDuPays
+                              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                        for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
+                             pdtHebdo < DernierPdtDeLIntervalle;
+                             pdtHebdo++, pdtJour++)
+                        {
                 int cnt = 2;
                 consistenceNODU.add(pays, palier, index, pdtHebdo, Simulation);
                 problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
                   += consistenceNODU.nbTermesContraintesPourLesCoutsDeDemarrage;
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
-            }
-            for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
-                 pdtHebdo < DernierPdtDeLIntervalle;
-                 pdtHebdo++, pdtJour++)
-            {
+                        }
+        }
+    }
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    {
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+          = problemeHebdo->PaliersThermiquesDuPays[pays];
+
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
+        {
+                        const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
+                          = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index]
+                              .NombreMaxDeGroupesEnMarcheDuPalierThermique;
+                        const int DureeMinimaleDArretDUnGroupeDuPalierThermique
+                          = PaliersThermiquesDuPays
+                              .DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
+                        const int palier
+                          = PaliersThermiquesDuPays
+                              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                        for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
+                             pdtHebdo < DernierPdtDeLIntervalle;
+                             pdtHebdo++, pdtJour++)
+                        {
                 int cnt = 2;
                 nbUnitsOutageLessThanNbUnitsStop.add(pays, palier, index, pdtHebdo, Simulation);
                 problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
                   += nbUnitsOutageLessThanNbUnitsStop.nbTermesContraintesPourLesCoutsDeDemarrage;
 
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
-            }
-            for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
-                 pdtHebdo < DernierPdtDeLIntervalle;
-                 pdtHebdo++, pdtJour++)
-            {
+                        }
+        }
+    }
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    {
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+          = problemeHebdo->PaliersThermiquesDuPays[pays];
+
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
+        {
+                        const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
+                          = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index]
+                              .NombreMaxDeGroupesEnMarcheDuPalierThermique;
+                        const int DureeMinimaleDArretDUnGroupeDuPalierThermique
+                          = PaliersThermiquesDuPays
+                              .DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
+                        const int palier
+                          = PaliersThermiquesDuPays
+                              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                        for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
+                             pdtHebdo < DernierPdtDeLIntervalle;
+                             pdtHebdo++, pdtJour++)
+                        {
                 int cnt = 2;
                 nbDispUnitsMinBoundSinceMinUpTime.add(pays, palier, index, pdtHebdo, Simulation);
                 problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
                   += nbDispUnitsMinBoundSinceMinUpTime.nbTermesContraintesPourLesCoutsDeDemarrage;
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
-            }
-            for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
-                 pdtHebdo < DernierPdtDeLIntervalle;
-                 pdtHebdo++, pdtJour++)
-            {
+                        }
+        }
+    }
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    {
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+          = problemeHebdo->PaliersThermiquesDuPays[pays];
+
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
+        {
+                        const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
+                          = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index]
+                              .NombreMaxDeGroupesEnMarcheDuPalierThermique;
+                        const int DureeMinimaleDArretDUnGroupeDuPalierThermique
+                          = PaliersThermiquesDuPays
+                              .DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
+                        const int palier
+                          = PaliersThermiquesDuPays
+                              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                        for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
+                             pdtHebdo < DernierPdtDeLIntervalle;
+                             pdtHebdo++, pdtJour++)
+                        {
                 int cnt = 2;
                 minDownTime.add(pays, palier, index, pdtHebdo, Simulation);
                 problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
@@ -467,9 +539,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
 
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
                 // }
-            }
+                        }
         }
     }
-
     return;
 }
