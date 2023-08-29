@@ -550,6 +550,7 @@ struct HydroPowerSmoothingUsingVariationMaxDown : public Constraint
 
             builder.updateHourWithinWeek(pdt)
               .include(Variable::HydProd(pays), 1.0)
+              .updateHourWithinWeek(0)
               .include(Variable::HydProdDown(pays), -1.0)
               .lessThan(0)
               .build();
@@ -581,6 +582,7 @@ struct HydroPowerSmoothingUsingVariationMaxUp : public Constraint
 
             builder.updateHourWithinWeek(pdt)
               .include(Variable::HydProd(pays), 1.0)
+              .updateHourWithinWeek(0)
               .include(Variable::HydProdUp(pays), -1.0)
               .greaterThan(0)
               .build();
