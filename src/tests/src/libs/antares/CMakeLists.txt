@@ -18,7 +18,7 @@ set(SRC_MATRIX_LIB
 add_library(lib-matrix ${SRC_MATRIX_LIB})
 
 target_link_libraries(lib-matrix
-		PRIVATE
+		PUBLIC
 		yuni-static-core
 )
 
