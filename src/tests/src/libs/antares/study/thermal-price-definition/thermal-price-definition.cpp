@@ -9,12 +9,10 @@
 #include <fstream>
 
 #include <study.h>
-#include <antares/logs/logs.h>
 #include <antares/exception/LoadingError.hpp>
 
 #include <antares/checks/checkLoadedInputData.h>
 #include "cluster_list.h"
-#include "container.h"
 
 const auto SEP = Yuni::IO::Separator;
 using namespace Antares::Data;

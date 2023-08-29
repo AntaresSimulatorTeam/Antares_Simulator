@@ -153,7 +153,6 @@ source_group("study\\action\\handler\\antares study\\constraint" FILES ${SRC_STU
 
 
 set(SRC_AREAS
-        area.h
         area/constants.h
         area/area.h
         area/area.hxx
