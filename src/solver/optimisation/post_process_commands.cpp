@@ -190,8 +190,8 @@ CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(const AdqPatc
                                                                    AreaList& areas,
                                                                    unsigned int thread_number) :
     basePostProcessCommand(problemeHebdo),
-    adqPatchParams_(adqPatchParams),
     area_list_(areas), 
+    adqPatchParams_(adqPatchParams),
     thread_number_(thread_number)
 {
 }
