@@ -62,7 +62,7 @@ struct PMaxDispatchableGeneration : public Constraint
             const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
               = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
                   .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-            double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]; // /!\ TODO check
+            double rhs = 0; // /!\ TODO check
 
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
@@ -111,7 +111,8 @@ struct PMinDispatchableGeneration : public Constraint
             const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
               = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
                   .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-            double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]; // /!\ TODO check
+            // double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]; // /!\ TODO check
+            double rhs = 0; // /!\ TODO check
 
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
@@ -167,7 +168,7 @@ struct ConsistenceNODU : public Constraint
             const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
               = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
                   .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-            double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]; // /!\ TODO check
+            double rhs = 0; // /!\ TODO check
 
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
@@ -220,7 +221,8 @@ struct NbUnitsOutageLessThanNbUnitsStop : public Constraint
             const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
               = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
                   .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-            double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]; // /!\ TODO check
+            // double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]; // /!\ TODO check
+            double rhs = 0; // /!\ TODO check
 
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);
@@ -283,9 +285,10 @@ struct NbDispUnitsMinBoundSinceMinUpTime : public Constraint
                       - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
                     > 0)
                 {
-                    rhs
-                      += NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-                         - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]; // /!\ TODO check
+                    // rhs
+                    //   += NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
+                    //      - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]; // /!\ TODO
+                    //      check
                 }
                 builder.updateHourWithinWeek(t1)
                   .include(Variable::NumberStartingDispatchableUnits(cluster), -1.0)
@@ -330,7 +333,11 @@ struct MinDownTime : public Constraint
             const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
               = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
                   .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-            double rhs = 0; // /!\ TODO check
+
+            int t1 = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique;
+            if (t1 < 0)
+                t1 = NombreDePasDeTempsPourUneOptimisation + t1;
+            double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]; // /!\ TODO check
 
             builder.updateHourWithinWeek(pdt).include(Variable::NODU(cluster), 1.0);
 
