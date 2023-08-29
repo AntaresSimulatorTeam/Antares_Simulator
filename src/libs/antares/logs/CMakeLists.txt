@@ -4,6 +4,7 @@ set(HEADERS
         antares/${PROJ}/logs.h
         antares/${PROJ}/logs.hxx
         antares/${PROJ}/hostinfo.h
+        antares/${PROJ}/hostname.hxx
 )
 set(SRC_LOGS
         ${HEADERS}
