@@ -732,7 +732,6 @@ struct FinalStockEquivalent : public Constraint
         namer.FinalStockEquivalent(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
 
         builder.updateHourWithinWeek(pdt)
-          .updateHourWithinWeek(problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1)
           .include(Variable::FinalStorage(pays), 1.0)
           .include(Variable::HydroLevel(pays), -1.0)
           .equalTo(0)
@@ -745,10 +744,8 @@ struct FinalStockExpression : public Constraint
     using Constraint::Constraint;
     void add(int pays)
     {
-        const auto& pdt = problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1;
-        builder.updateHourWithinWeek(pdt)
-          .updateHourWithinWeek(problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1)
-          .include(Variable::FinalStorage(pays), -1.0);
+        const auto pdt = problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1;
+        builder.updateHourWithinWeek(pdt).include(Variable::FinalStorage(pays), -1.0);
         for (int layerindex = 0; layerindex < 100; layerindex++)
         {
             builder.include(Variable::LayerStorage(pays, layerindex), 1.0);
@@ -758,7 +755,7 @@ struct FinalStockExpression : public Constraint
 
         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        namer.FinalStockEquivalent(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        namer.FinalStockExpression(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
         builder.equalTo(0).build();
     }
 };
