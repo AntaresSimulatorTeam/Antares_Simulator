@@ -24,29 +24,19 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include "alea_sys.h"
-#include <yuni/core/math.h>
 
-#include "../simulation/sim_structure_probleme_economique.h"
 #include "../simulation/sim_extern_variables_globales.h"
 #include "alea_fonctions.h"
-#include <algorithm>
-#include <iterator>
-#include <limits>
-#include <antares/logs/logs.h>
-#include <antares/date/date.h>
-#include <antares/fatal-error.h>
 #include <cassert>
 
 using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
-    const Study& study,
-    double const* const* thermalNoisesByArea,
-    uint numSpace,
-    VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+void ALEA_TirageAuSortChroniques(const Study& study,
+                                 double const* const* thermalNoisesByArea,
+                                 uint numSpace,
+                                 VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     auto& runtime = *study.runtime;
 
@@ -190,16 +180,4 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
         assert(year < number_of_ts_numbers); //If only 1 ts_number we suppose only one TS. Any "year" will be converted to "0" later
         NumeroChroniquesTireesParGroup[numSpace][group->name()] = group->timeseriesNumbers[0][year];
     }
-}
-
-void ALEA_TirageAuSortChroniques(const Antares::Data::Study& study,
-                                 double const* const* thermalNoisesByArea,
-                                 uint numSpace,
-                                 VAL_GEN_PAR_PAYS& valeursGenereesParPays)
-{
-    // Time-series numbers
-    // Retrieve all time-series numbers
-    // Initialize in the same time the production costs of all thermal clusters.
-    InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(study,
-      thermalNoisesByArea, numSpace, valeursGenereesParPays);
 }
