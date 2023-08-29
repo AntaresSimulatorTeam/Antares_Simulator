@@ -31,6 +31,9 @@ After setting up Xpress, the following command line should display a line if Xpr
 antares-x.y-solver --list-solvers | grep xpress
 ```
 
+## Compatibility
+Antares Simulator 8.x has been shown to work with Xpress 8.13.0. Trying to use other versions may work, but can lead to crashes.
+
 ## Known issues
 ### Performance issues with Xpress 9.x
 The following Xpress versions suffer a performance regression that makes them unsuitable for use with Antares Simulator
@@ -42,6 +45,3 @@ As of Q3 2023, it is best to stick to Xpress 8.13.0 for best performance
 
 ### Community license is very restrictive
 FICO offers a Community License for testing purposes. It should be noted however that it is extremely restrictive. You may experience issues when trying to run Antares Solver with this license, even on small test-cases.
-
-## Compatibility
-Antares Simulator 8.x has been shown to work with Xpress 8.13.0. Trying to use other versions may work, but can lead to crashes.
