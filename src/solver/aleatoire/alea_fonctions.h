@@ -31,5 +31,4 @@
 
 void ApplyRandomTSnumbers(const Antares::Data::Study& study,
                           double const* const* thermalNoisesByArea,
-                          uint numSpace,
-                          VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+                          uint numSpace);

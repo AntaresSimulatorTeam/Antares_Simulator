@@ -47,7 +47,6 @@ typedef struct
 typedef struct
 {
     std::vector<double> HydrauliqueModulableQuotidien; /* indice par jour */
-    std::vector<double> AleaCoutDeProductionParPalier; /* epsilon sur le cout de production */
     std::vector<double> NiveauxReservoirsDebutJours;   //Niveaux (quotidiens) du reservoir de début
                                                        //de jour (en cas de gestion des reservoirs).
     std::vector<double> NiveauxReservoirsFinJours; //Niveaux (quotidiens) du reservoir de fin

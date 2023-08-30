@@ -147,6 +147,8 @@ bool Economy::year(Progression::Task& progression,
           pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear,
           valeursGenereesParPays);
 
+        AddNoiseToThermalCost(study, pProblemesHebdo[numSpace], randomForYear);
+
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;
         reinitOptim = false;

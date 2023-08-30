@@ -35,8 +35,7 @@ using namespace Antares::Data;
 
 void ApplyRandomTSnumbers(const Study& study,
                           double const* const* thermalNoisesByArea,
-                          uint numSpace,
-                          VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+                          uint numSpace)
 {
     auto& runtime = *study.runtime;
 
@@ -49,7 +48,6 @@ void ApplyRandomTSnumbers(const Study& study,
         // Variables - the current area
         NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = NumeroChroniquesTireesParPays[numSpace][areaIndex];
         auto& area = *(study.areas.byIndex[areaIndex]);
-        VALEURS_GENEREES_PAR_PAYS& ptvalgen = valeursGenereesParPays[numSpace][areaIndex];
 
         // Load
         {
@@ -102,7 +100,6 @@ void ApplyRandomTSnumbers(const Study& study,
 
         // Thermal
         {
-            uint indexCluster = 0;
             auto end = area.thermal.list.mapping.end();
             for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
             {
@@ -110,7 +107,6 @@ void ApplyRandomTSnumbers(const Study& study,
 
                 if (!cluster->enabled)
                 {
-                    indexCluster++;
                     continue;
                 }
 
@@ -123,37 +119,6 @@ void ApplyRandomTSnumbers(const Study& study,
                 ptchro.ThermiqueParPalier[clusterIndex] = (data.timeSeries.width != 1)
                                                           ? (long)data.timeseriesNumbers[0][year]
                                                           : 0; // zero-based
-
-                // ptvalgen.AleaCoutDeProductionParPalier[clusterIndex] =
-                //	(rnd - 0.5) * (cluster->spreadCost + 1e-4);
-                // MBO
-                // 15/04/2014 : bornage du cout thermique
-                // 01/12/2014 : prise en compte du spreadCost non nul
-                // Draw a new random number, whatever the cluster is
-                double rnd = thermalNoisesByArea[areaIndex][indexCluster];
-                double& randomClusterProdCost = ptvalgen.AleaCoutDeProductionParPalier[clusterIndex];
-
-                if (cluster->spreadCost == 0) // 5e-4 < |AleaCoutDeProductionParPalier| < 6e-4
-                {
-                    if (rnd < 0.5)
-                        randomClusterProdCost = 1e-4 * (5 + 2 * rnd);
-                    else
-                        randomClusterProdCost = -1e-4 * (5 + 2 * (rnd - 0.5));
-                }
-                else
-                {
-                    randomClusterProdCost = (rnd - 0.5) * (cluster->spreadCost);
-
-                    if (Math::Abs(randomClusterProdCost) < 5.e-4)
-                    {
-                        if (Math::Abs(randomClusterProdCost) >= 0)
-                            randomClusterProdCost += 5.e-4;
-                        else
-                            randomClusterProdCost -= 5.e-4;
-                    }
-                }
-
-                indexCluster++;
             }
         } // thermal
     }     // each area

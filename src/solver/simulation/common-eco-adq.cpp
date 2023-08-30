@@ -301,6 +301,42 @@ void PrepareRandomNumbers(Data::Study& study,
         }
         problem.CoutDeDefaillanceNegative[area.index] = area.thermal.spilledEnergyCost + alea;
 
+
+        //-----------------------------
+        // Thermal noises
+        //-----------------------------
+        auto end = area.thermal.list.mapping.end();
+        for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
+        {
+            auto cluster = it->second;
+            uint clusterIndex = cluster->areaWideIndex;
+            double& rnd = randomForYear.pThermalNoisesByArea[indexArea][clusterIndex];
+            double randomClusterProdCost(0.);
+            if (cluster->spreadCost == 0) // 5e-4 < |randomClusterProdCost| < 6e-4
+            {
+                if (rnd < 0.5)
+                    randomClusterProdCost = 1e-4 * (5 + 2 * rnd);
+                else
+                    randomClusterProdCost = -1e-4 * (5 + 2 * (rnd - 0.5));
+            }
+            else
+            {
+                randomClusterProdCost = (rnd - 0.5) * (cluster->spreadCost);
+
+                if (Math::Abs(randomClusterProdCost) < 5.e-4)
+                {
+                    if (Math::Abs(randomClusterProdCost) >= 0)
+                        randomClusterProdCost += 5.e-4;
+                    else
+                        randomClusterProdCost -= 5.e-4;
+                }
+            }
+            rnd = randomClusterProdCost;
+        }
+
+        //-----------------------------
+        // Hydro noises
+        //-----------------------------
         auto& noise = problem.BruitSurCoutHydraulique[area.index];
         switch (study.parameters.power.fluctuations)
         {
@@ -343,6 +379,28 @@ void PrepareRandomNumbers(Data::Study& study,
         }
         indexArea++;
     });
+}
+
+void AddNoiseToThermalCost(Data::Study& study,
+                           PROBLEME_HEBDO& problem,
+                           yearRandomNumbers& randomForYear)
+{
+    const uint nbPays = study.areas.size();
+    for (unsigned j = 0; j < problem.NombreDePasDeTemps; ++j)
+    {
+        for (uint k = 0; k < nbPays; ++k)
+        {
+            auto& area = *study.areas.byIndex[k];
+            area.thermal.list.each([&](const Data::ThermalCluster& cluster)
+            {
+                auto& Pt = problem.PaliersThermiquesDuPays[k]
+                                  .PuissanceDisponibleEtCout[cluster.index];
+                
+                Pt.CoutHoraireDeProductionDuPalierThermique[j] += 
+                        randomForYear.pThermalNoisesByArea[k][cluster.areaWideIndex];
+            });
+        }
+    }
 }
 
 int retrieveAverageNTC(const Data::Study& study,

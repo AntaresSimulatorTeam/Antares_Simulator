@@ -619,7 +619,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
                 auto& Pt
                   = problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[cluster.index];
-                auto& PtValGen = valeursGenereesParPays[numSpace][k];
 
                 Pt.PuissanceDisponibleDuPalierThermique[j]
                   = cluster.series
@@ -627,8 +626,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
                 Pt.CoutHoraireDeProductionDuPalierThermique[j]
                   = cluster.getMarketBidCost(tsIndex.ThermiqueParPalier[cluster.areaWideIndex],
-                                             indx)
-                    + PtValGen.AleaCoutDeProductionParPalier[cluster.areaWideIndex];
+                                             indx);
 
                 Pt.PuissanceMinDuPalierThermique[j]
                   = (Pt.PuissanceDisponibleDuPalierThermique[j] < cluster.PthetaInf[indx])

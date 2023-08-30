@@ -153,7 +153,7 @@ private:
 
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
-            ApplyRandomTSnumbers(study, thermalNoisesByArea, numSpace, simulation_->valeursGenereesParPays);
+            ApplyRandomTSnumbers(study, thermalNoisesByArea, numSpace);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
             simulation_->prepareClustersInMustRunMode(numSpace);
@@ -240,7 +240,6 @@ static void allocateValeursGenereesParPays(VAL_GEN_PAR_PAYS& val,
             size_t clusterCount = area.thermal.clusterCount();
 
             val[numSpace][areaIndex].HydrauliqueModulableQuotidien.assign(nbDaysPerYear, 0);
-            val[numSpace][areaIndex].AleaCoutDeProductionParPalier.assign(clusterCount, 0.);
 
             if (area.hydro.reservoirManagement)
             {
@@ -713,11 +712,13 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
             auto& area = *(study.areas.byIndex[a]);
             size_t nbClusters = area.thermal.list.mapping.size();
 
-            for (uint c = 0; c != nbClusters; ++c)
+            auto end = area.thermal.list.mapping.end();
+            for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
             {
+                uint clusterIndex = it->second->areaWideIndex;
                 double thermalNoise = runtime.random[Data::seedThermalCosts].next();
                 if (isPerformed)
-                    randomForYears.pYears[indexYear].pThermalNoisesByArea[a][c] = thermalNoise;
+                    randomForYears.pYears[indexYear].pThermalNoisesByArea[a][clusterIndex] = thermalNoise;
             }
         }
 

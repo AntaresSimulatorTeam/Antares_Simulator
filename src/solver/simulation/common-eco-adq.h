@@ -62,6 +62,10 @@ void PrepareRandomNumbers(Data::Study& study,
                           PROBLEME_HEBDO& problem,
                           yearRandomNumbers& randomForYear);
 
+void AddNoiseToThermalCost(Data::Study& study,
+                           PROBLEME_HEBDO& problem,
+                           yearRandomNumbers& randomForYear);
+
 /*!
 ** \brief Prepare data from clusters in mustrun mode (eco+adq)
 */
