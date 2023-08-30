@@ -114,17 +114,17 @@ struct AreaBalance : public Constraint
             {
                 rhs -= problemeHebdo->ReserveJMoins1[pays].ReserveHoraireJMoins1[pdtHebdo];
             }
-
+            /* check !*/
             double* adresseDuResultat
               = &(problemeHebdo->ResultatsHoraires[pays].CoutsMarginauxHoraires[pdtHebdo]);
 
             std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
               = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
 
-            int cnt = 0;
+            int cnt = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
-            AdresseOuPlacerLaValeurDesCoutsMarginaux[0] = adresseDuResultat;
-
+            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = adresseDuResultat;
+            /*check! */
             builder.equalTo(rhs);
             builder.build();
         }
@@ -816,7 +816,7 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
     FinalStockEquivalent finalStockEquivalent(problemeHebdo);
     FinalStockExpression finalStockExpression(problemeHebdo);
 
-    for (int pdt = 0, pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdt++)
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
