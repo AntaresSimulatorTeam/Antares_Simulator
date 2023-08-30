@@ -33,10 +33,10 @@ using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-void ALEA_TirageAuSortChroniques(const Study& study,
-                                 double const* const* thermalNoisesByArea,
-                                 uint numSpace,
-                                 VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+void ApplyRandomTSnumbers(const Study& study,
+                          double const* const* thermalNoisesByArea,
+                          uint numSpace,
+                          VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     auto& runtime = *study.runtime;
 

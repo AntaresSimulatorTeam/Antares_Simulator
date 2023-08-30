@@ -52,7 +52,7 @@ template<class Impl>
 class yearJob final : public Yuni::Job::IJob
 {
 public:
-    yearJob(ISimulation<Impl>* pSimulationObj,
+    yearJob(ISimulation<Impl>* simulation,
             unsigned int pY,
             std::map<uint, bool>& pYearFailed,
             std::map<uint, bool>& pIsFirstPerformedYearOfASet,
@@ -64,7 +64,7 @@ public:
             std::vector<Variable::State>& pState,
             bool pYearByYear,
             Benchmarking::IDurationCollector* durationCollector) :
-     simulationObj(pSimulationObj),
+     simulation_(simulation),
      y(pY),
      yearFailed(pYearFailed),
      isFirstPerformedYearOfASet(pIsFirstPerformedYearOfASet),
@@ -81,7 +81,7 @@ public:
     }
 
 private:
-    ISimulation<Impl>* simulationObj;
+    ISimulation<Impl>* simulation_;
     unsigned int y;
     std::map<uint, bool>& yearFailed;
     std::map<uint, bool>& isFirstPerformedYearOfASet;
@@ -152,17 +152,16 @@ private:
 
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
-            ALEA_TirageAuSortChroniques(study, thermalNoisesByArea, numSpace,
-                                        simulationObj->valeursGenereesParPays);
+            ApplyRandomTSnumbers(study, thermalNoisesByArea, numSpace, simulation_->valeursGenereesParPays);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
-            simulationObj->prepareClustersInMustRunMode(numSpace);
+            simulation_->prepareClustersInMustRunMode(numSpace);
 
             // 4 - Hydraulic ventilation
             {
                 Benchmarking::Timer timer;
-                simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y,
-                                                numSpace, simulationObj->valeursGenereesParPays);
+                simulation_->pHydroManagement(randomReservoirLevel, state[numSpace], y,
+                                              numSpace, simulation_->valeursGenereesParPays);
                 timer.stop();
                 pDurationCollector->addDuration("hydro_ventilation", timer.get_duration());
             }
@@ -171,52 +170,51 @@ private:
             state[numSpace].year = y;
 
             // 5 - Resetting all variables for the output
-            simulationObj->variables.yearBegin(y, numSpace);
+            simulation_->variables.yearBegin(y, numSpace);
 
             // 6 - The Solver itself
             bool isFirstPerformedYearOfSimulation
               = isFirstPerformedYearOfASet[y] && not firstSetParallelWithAPerformedYearWasRun;
             std::list<uint> failedWeekList;
 
-            yearFailed[y] = !simulationObj->year(progression,
-                                                 state[numSpace],
-                                                 numSpace,
-                                                 randomForCurrentYear,
-                                                 failedWeekList,
-                                                 isFirstPerformedYearOfSimulation,
-                                                 simulationObj->valeursGenereesParPays);
+            yearFailed[y] = !simulation_->year(progression,
+                                               state[numSpace],
+                                               numSpace,
+                                               randomForCurrentYear,
+                                               failedWeekList,
+                                               isFirstPerformedYearOfSimulation,
+                                               simulation_->valeursGenereesParPays);
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
 
-            simulationObj->variables.yearEndBuild(state[numSpace], y, numSpace);
+            simulation_->variables.yearEndBuild(state[numSpace], y, numSpace);
 
             // 7 - End of the year, this is the last stade where the variables can retrieve
             // their data for this year.
-            simulationObj->variables.yearEnd(y, numSpace);
+            simulation_->variables.yearEnd(y, numSpace);
 
             // 8 - Spatial clusters
             // Notifying all variables to perform spatial aggregates.
             // This must be done only when all variables have finished to compute their
             // data for the year.
-            simulationObj->variables.yearEndSpatialAggregates(
-              simulationObj->variables, y, numSpace);
+            simulation_->variables.yearEndSpatialAggregates(simulation_->variables, y, numSpace);
 
             // 9 - Write results for the current year
             if (yearByYear)
             {
                 Benchmarking::Timer timerYear;
                 // Before writing, some variable may require minor modifications
-                simulationObj->variables.beforeYearByYearExport(y, numSpace);
+                simulation_->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
-                simulationObj->writeResults(false, y, numSpace); // false for synthesis
+                simulation_->writeResults(false, y, numSpace); // false for synthesis
                 timerYear.stop();
                 pDurationCollector->addDuration("yby_export", timerYear.get_duration());
             }
         }
         else
         {
-            simulationObj->incrementProgression(progression);
+            simulation_->incrementProgression(progression);
 
             logs.info() << "  playlist: ignoring the year " << (y + 1);
 
