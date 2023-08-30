@@ -30,6 +30,7 @@
 #include <wx/sizer.h>
 #include <wx/button.h>
 #include <wx/stattext.h>
+#include <yuni/yuni.h>
 
 namespace Antares
 {

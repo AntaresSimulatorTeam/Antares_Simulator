@@ -28,6 +28,7 @@
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_DBGRID_H__
 
 #include <wx/grid.h>
+#include <yuni/yuni.h>
 
 namespace Antares
 {

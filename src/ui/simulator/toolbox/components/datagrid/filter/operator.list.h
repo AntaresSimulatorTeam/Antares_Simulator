@@ -28,6 +28,7 @@
 #define __ANTARES_TOOLBOX_FILTER_OPERATOR_LIST_H__
 
 #include <wx/string.h>
+#include <yuni/yuni.h>
 #include <vector>
 
 namespace Antares
