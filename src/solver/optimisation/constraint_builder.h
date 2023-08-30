@@ -295,7 +295,7 @@ private:
         {
             pdt %= nbTimeSteps;
             if (pdt < 0)
-                pdt += nbTimeSteps;
+                pdt += problemeHebdo.NombreDePasDeTemps;
         }
         if (pdt < 0 || pdt >= nbTimeSteps)
         {
