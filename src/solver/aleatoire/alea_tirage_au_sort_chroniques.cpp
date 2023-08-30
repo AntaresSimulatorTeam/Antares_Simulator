@@ -92,11 +92,11 @@ void ApplyRandomTSnumbers(const Study& study,
 
                 const auto& data = *cluster->series;
                 assert(year < data.timeseriesNumbers.height);
-                unsigned int index = cluster->areaWideIndex;
+                unsigned int clusterIndex = cluster->areaWideIndex;
 
-                ptchro.RenouvelableParPalier[index] = (data.timeSeries.width != 1)
-                                                        ? (long)data.timeseriesNumbers[0][year]
-                                                        : 0; // zero-based
+                ptchro.RenouvelableParPalier[clusterIndex] = (data.timeSeries.width != 1)
+                                                             ? (long)data.timeseriesNumbers[0][year]
+                                                             : 0; // zero-based
             }
         }
 
@@ -107,8 +107,6 @@ void ApplyRandomTSnumbers(const Study& study,
             for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
             {
                 ThermalClusterList::SharedPtr cluster = it->second;
-                // Draw a new random number, whatever the cluster is
-                double rnd = thermalNoisesByArea[areaIndex][indexCluster];
 
                 if (!cluster->enabled)
                 {
@@ -118,39 +116,40 @@ void ApplyRandomTSnumbers(const Study& study,
 
                 const auto& data = *cluster->series;
                 assert(year < data.timeseriesNumbers.height);
-                unsigned int index = cluster->areaWideIndex;
+                unsigned int clusterIndex = cluster->areaWideIndex;
 
                 // the matrix data.series should be properly initialized at this stage
                 // because the ts-generator has already been launched
-                ptchro.ThermiqueParPalier[index] = (data.timeSeries.width != 1)
-                                                     ? (long)data.timeseriesNumbers[0][year]
-                                                     : 0; // zero-based
+                ptchro.ThermiqueParPalier[clusterIndex] = (data.timeSeries.width != 1)
+                                                          ? (long)data.timeseriesNumbers[0][year]
+                                                          : 0; // zero-based
 
-                // ptvalgen.AleaCoutDeProductionParPalier[index] =
+                // ptvalgen.AleaCoutDeProductionParPalier[clusterIndex] =
                 //	(rnd - 0.5) * (cluster->spreadCost + 1e-4);
                 // MBO
                 // 15/04/2014 : bornage du cout thermique
                 // 01/12/2014 : prise en compte du spreadCost non nul
+                // Draw a new random number, whatever the cluster is
+                double rnd = thermalNoisesByArea[areaIndex][indexCluster];
+                double& randomClusterProdCost = ptvalgen.AleaCoutDeProductionParPalier[clusterIndex];
 
                 if (cluster->spreadCost == 0) // 5e-4 < |AleaCoutDeProductionParPalier| < 6e-4
                 {
                     if (rnd < 0.5)
-                        ptvalgen.AleaCoutDeProductionParPalier[index] = 1e-4 * (5 + 2 * rnd);
+                        randomClusterProdCost = 1e-4 * (5 + 2 * rnd);
                     else
-                        ptvalgen.AleaCoutDeProductionParPalier[index]
-                          = -1e-4 * (5 + 2 * (rnd - 0.5));
+                        randomClusterProdCost = -1e-4 * (5 + 2 * (rnd - 0.5));
                 }
                 else
                 {
-                    ptvalgen.AleaCoutDeProductionParPalier[index]
-                      = (rnd - 0.5) * (cluster->spreadCost);
+                    randomClusterProdCost = (rnd - 0.5) * (cluster->spreadCost);
 
-                    if (Math::Abs(ptvalgen.AleaCoutDeProductionParPalier[index]) < 5.e-4)
+                    if (Math::Abs(randomClusterProdCost) < 5.e-4)
                     {
-                        if (Math::Abs(ptvalgen.AleaCoutDeProductionParPalier[index]) >= 0)
-                            ptvalgen.AleaCoutDeProductionParPalier[index] += 5.e-4;
+                        if (Math::Abs(randomClusterProdCost) >= 0)
+                            randomClusterProdCost += 5.e-4;
                         else
-                            ptvalgen.AleaCoutDeProductionParPalier[index] -= 5.e-4;
+                            randomClusterProdCost -= 5.e-4;
                     }
                 }
 

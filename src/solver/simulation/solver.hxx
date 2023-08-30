@@ -145,6 +145,7 @@ private:
             double const* const* thermalNoisesByArea = randomForCurrentYear.pThermalNoisesByArea;
             double* randomReservoirLevel = nullptr;
 
+            // 1 - Applying random levels for current year
             if (hydroHotStart && firstSetParallelWithAPerformedYearWasRun)
                 randomReservoirLevel = state[numSpace].problemeHebdo->previousYearFinalLevels.data();
             else
@@ -702,8 +703,6 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
         if (isPerformed)
             randomForYears.yearNumberToIndex[y] = indexYear;
 
-        // logs.info() << "Year : " << y << " ------------";
-
         // General
         const unsigned int nbAreas = study.areas.size();
 
@@ -716,13 +715,9 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
 
             for (uint c = 0; c != nbClusters; ++c)
             {
+                double thermalNoise = runtime.random[Data::seedThermalCosts].next();
                 if (isPerformed)
-                    randomForYears.pYears[indexYear].pThermalNoisesByArea[a][c]
-                      = runtime.random[Data::seedThermalCosts].next();
-                else
-                    runtime.random[Data::seedThermalCosts].next();
-                // logs.info() << "      cluster : " << c << ", value : " <<
-                // randomForYears.pYears[indexYear].pThermalNoisesByArea[a][c];
+                    randomForYears.pYears[indexYear].pThermalNoisesByArea[a][c] = thermalNoise;
             }
         }
 
@@ -745,8 +740,9 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
             // Previous month's first day in the year
             int firstDayOfMonth = study.calendar.months[initResLevelOnSimMonth].daysYear.first;
 
-            double randomLevel = pHydroManagement.randomReservoirLevel(
-              min[firstDayOfMonth], avg[firstDayOfMonth], max[firstDayOfMonth]);
+            double randomLevel = pHydroManagement.randomReservoirLevel(min[firstDayOfMonth], 
+                                                                       avg[firstDayOfMonth],
+                                                                       max[firstDayOfMonth]);
 
             // Possibly update the intial level from scenario builder
             if (study.parameters.useCustomScenario)
