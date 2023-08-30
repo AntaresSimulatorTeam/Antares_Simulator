@@ -114,6 +114,17 @@ struct AreaBalance : public Constraint
             {
                 rhs -= problemeHebdo->ReserveJMoins1[pays].ReserveHoraireJMoins1[pdtHebdo];
             }
+
+            double* adresseDuResultat
+              = &(problemeHebdo->ResultatsHoraires[pays].CoutsMarginauxHoraires[pdtHebdo]);
+
+            std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
+              = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
+
+            int cnt = 0;
+
+            AdresseOuPlacerLaValeurDesCoutsMarginaux[0] = adresseDuResultat;
+
             builder.equalTo(rhs);
             builder.build();
         }

@@ -291,15 +291,27 @@ private:
     {
         int pdt = hourInWeek_ + shift;
         const int nbTimeSteps = problemeHebdo.NombreDePasDeTempsPourUneOptimisation;
+        // if (wrap)
+        // {
+        //     pdt %= nbTimeSteps;
+        //     if (pdt < 0)
+        //         pdt += problemeHebdo.NombreDePasDeTemps;
+        // }
+        // if (pdt < 0 || pdt >= nbTimeSteps)
+        // {
+        //     return -1;
+        // }
+
         if (wrap)
         {
-            pdt %= nbTimeSteps;
-            if (pdt < 0)
-                pdt += problemeHebdo.NombreDePasDeTemps;
-        }
-        if (pdt < 0 || pdt >= nbTimeSteps)
-        {
-            return -1;
+            if (shift >= 0)
+            {
+                pdt = (pdt) % nbTimeSteps;
+            }
+            else
+            {
+                pdt = (pdt + problemeHebdo.NombreDePasDeTemps) % nbTimeSteps;
+            }
         }
         const Variable::Visitor visitor(varNative[pdt],
                                         problemeHebdo.NumeroDeVariableStockFinal,
