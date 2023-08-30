@@ -805,8 +805,7 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
     FinalStockEquivalent finalStockEquivalent(problemeHebdo);
     FinalStockExpression finalStockExpression(problemeHebdo);
 
-    for (int pdt = PremierPdtDeLIntervalle, pdtHebdo = PremierPdtDeLIntervalle;
-         pdtHebdo < DernierPdtDeLIntervalle;
+    for (int pdt = 0, pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
          pdtHebdo++, pdt++)
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
