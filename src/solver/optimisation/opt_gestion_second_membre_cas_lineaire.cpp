@@ -807,7 +807,7 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
 
     for (int pdt = PremierPdtDeLIntervalle, pdtHebdo = PremierPdtDeLIntervalle;
          pdtHebdo < DernierPdtDeLIntervalle;
-         pdtHebdo++)
+         pdtHebdo++, pdt++)
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
