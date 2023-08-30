@@ -44,12 +44,12 @@ void ALEA_TirageAuSortChroniques(const Study& study,
 
     // each area
     const unsigned int count = study.areas.size();
-    for (unsigned int i = 0; i != count; ++i)
+    for (unsigned int areaIndex = 0; areaIndex != count; ++areaIndex)
     {
         // Variables - the current area
-        NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = NumeroChroniquesTireesParPays[numSpace][i];
-        auto& area = *(study.areas.byIndex[i]);
-        VALEURS_GENEREES_PAR_PAYS& ptvalgen = valeursGenereesParPays[numSpace][i];
+        NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = NumeroChroniquesTireesParPays[numSpace][areaIndex];
+        auto& area = *(study.areas.byIndex[areaIndex]);
+        VALEURS_GENEREES_PAR_PAYS& ptvalgen = valeursGenereesParPays[numSpace][areaIndex];
 
         // Load
         {
@@ -108,7 +108,7 @@ void ALEA_TirageAuSortChroniques(const Study& study,
             {
                 ThermalClusterList::SharedPtr cluster = it->second;
                 // Draw a new random number, whatever the cluster is
-                double rnd = thermalNoisesByArea[i][indexCluster];
+                double rnd = thermalNoisesByArea[areaIndex][indexCluster];
 
                 if (!cluster->enabled)
                 {
@@ -158,21 +158,27 @@ void ALEA_TirageAuSortChroniques(const Study& study,
             }
         } // thermal
     }     // each area
+
+    // ------------------------------
     // Transmission capacities
+    // ------------------------------
     // each link
-    for (unsigned int i = 0; i < runtime.interconnectionsCount(); ++i)
+    for (unsigned int linkIndex = 0; linkIndex < runtime.interconnectionsCount(); ++linkIndex)
     {
-        AreaLink* link = runtime.areaLink[i];
+        AreaLink* link = runtime.areaLink[linkIndex];
         assert(year < link->timeseriesNumbers.height);
         NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION& ptchro
-          = NumeroChroniquesTireesParInterconnexion[numSpace][i];
+          = NumeroChroniquesTireesParInterconnexion[numSpace][linkIndex];
         const uint directWidth = link->directCapacities.width;
         [[maybe_unused]] const uint indirectWidth = link->indirectCapacities.width;
         assert(directWidth == indirectWidth);
         ptchro.TransmissionCapacities
           = (directWidth != 1) ? link->timeseriesNumbers[0][year] : 0; // zero-based
     }
+    
+    // ------------------------------
     //Binding constraints
+    // ------------------------------
     //Setting 0 for time_series of width 0 is done when using the value.
     //To do this here we would have to check every BC for its width
     for (const auto& group: study.bindingConstraintsGroups) {
