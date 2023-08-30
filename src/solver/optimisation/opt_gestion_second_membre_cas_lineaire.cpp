@@ -805,27 +805,26 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
     FinalStockEquivalent finalStockEquivalent(problemeHebdo);
     FinalStockExpression finalStockExpression(problemeHebdo);
 
-    for (int pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle; pdtHebdo++)
+    for (int pdt = PremierPdtDeLIntervalle, pdtHebdo = PremierPdtDeLIntervalle;
+         pdtHebdo < DernierPdtDeLIntervalle;
+         pdtHebdo++)
     {
-        for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdt++)
+        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-            {
-                areaBalance.add(pdt, pdtHebdo, pays, optimizationNumber);
-                fictitiousLoad.add(pdt, pdtHebdo, pays);
-                shortTermStorageLevels.add(pdt, pdtHebdo, pays);
-            }
+            areaBalance.add(pdt, pdtHebdo, pays, optimizationNumber);
+            fictitiousLoad.add(pdt, pdtHebdo, pays);
+            shortTermStorageLevels.add(pdt, pdtHebdo, pays);
+        }
 
-            for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
-            {
-                flowDissociation.add(pdt, pdtHebdo, interco);
-            }
+        for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
+        {
+            flowDissociation.add(pdt, pdtHebdo, interco);
+        }
 
-            for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
-                 cntCouplante++)
-            {
-                bindingConstraintHour.add(pdt, pdtHebdo, cntCouplante);
-            }
+        for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+             cntCouplante++)
+        {
+            bindingConstraintHour.add(pdt, pdtHebdo, cntCouplante);
         }
     }
 
