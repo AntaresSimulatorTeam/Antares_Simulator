@@ -182,7 +182,7 @@ struct FictitiousLoad : public Constraint
 struct ShortTermStorageLevel : public Constraint
 {
     using Constraint::Constraint;
-    void add(int pdt, int pays)
+    void add(int pdt, int pdtHebdo, int pays)
     {
         // TODO improve this
         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
@@ -805,14 +805,14 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
     FinalStockEquivalent finalStockEquivalent(problemeHebdo);
     FinalStockExpression finalStockExpression(problemeHebdo);
 
-    for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
-         pdtHebdo++, pdt++)
+    for (int pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle; pdtHebdo++)
     {
+        int pdt = weekFirstHour + pdtHebdo;
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             areaBalance.add(pdt, pdtHebdo, pays, optimizationNumber);
             fictitiousLoad.add(pdt, pdtHebdo, pays);
-            shortTermStorageLevels.add(pdt, pays);
+            shortTermStorageLevels.add(pdt, pdtHebdo, pays);
         }
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
