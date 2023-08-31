@@ -298,7 +298,14 @@ struct BindingConstraintHour : public Constraint
             builder.include(Variable::DispatchableProduction(palier), poids, offset, true);
         }
 
+        std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
+          = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
+        int cnt = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+
         double rhs = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[pdtHebdo];
+        AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
+          = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales.data()
+            + pdtHebdo;
         char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
         builder.operatorRHS(op, rhs);
         {
@@ -366,6 +373,13 @@ struct BindingConstraintDay : public Constraint
             }
             // TODO probably wrong from the 2nd week, check
             const int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
+
+            std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
+              = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
+            int cnt = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
+              = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales.data()
+                + jour;
             double rhs = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[jour];
             char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
             builder.operatorRHS(op, rhs);
@@ -428,6 +442,13 @@ struct BindingConstraintWeek : public Constraint
         }
         // RHS
         {
+            std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
+              = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
+            int cnt = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+
+            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
+              = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales.data();
+
             double rhs = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[0];
             char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
             builder.operatorRHS(op, rhs);
