@@ -8,7 +8,7 @@
 #include <yuni/core/string.h>
 
 #include "antares/writer/i_writer.h"
-#include <antares/benchmarking/info_collectors.h>
+#include <antares/benchmarking/DurationCollector.h>
 
 
 namespace Antares::Solver

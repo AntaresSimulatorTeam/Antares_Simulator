@@ -29,8 +29,6 @@
 #include "container.h"
 #include <antares/inifile/inifile.h>
 #include "datatransfer.h"
-#include <antares/array/array1d.h>
-
 
 using namespace Antares;
 using namespace Yuni;

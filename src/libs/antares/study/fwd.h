@@ -539,19 +539,15 @@ mpsExportStatus stringToMPSexportStatus(const AnyString& value);
 } // namespace Data
 } // namespace Antares
 
-namespace Antares
-{
-namespace Data
-{
-namespace ScenarioBuilder
+namespace Antares::Data::ScenarioBuilder
 {
 class Rules;
 class TSNumberRules;
 class Sets;
 
-} // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder
+
+
 
 namespace Benchmarking
 {

@@ -27,15 +27,11 @@
 
 #include "../../antares.h"
 #include <yuni/io/file.h>
-#include <yuni/core/string.h>
 #include "../study.h"
 #include <cassert>
 #include "area.h"
-#include <antares/array/array1d.h>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include "../../config.h"
-#include "../filter.h"
 #include "constants.h"
 #include "antares/study/parts/parts.h"
 #include "antares/study/parts/load/prepro.h"
