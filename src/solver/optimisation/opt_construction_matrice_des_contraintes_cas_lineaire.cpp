@@ -40,63 +40,13 @@
 #include "BindingConstraintHour.h"
 #include "BindingConstraintDay.h"
 #include "BindingConstraintWeek.h"
+#include "HydroPower.h"
 
 #include <antares/study.h>
 
 using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
-
-// struct HydroPower : public Constraint
-// {
-//     using Constraint::Constraint;
-//     void add(int pays, int NumeroDeLIntervalle)
-//     {
-//         bool presenceHydro
-//           = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
-//         bool TurbEntreBornes
-//           = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-//         if (!presenceHydro || TurbEntreBornes)
-//             return;
-
-//         const int NombreDePasDeTempsPourUneOptimisation
-//           = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-//         if (bool presencePompage
-//             = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
-//         {
-//             const double pumpingRatio
-//               = problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
-//             for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
-//             {
-//                 builder.updateHourWithinWeek(pdt);
-//                 builder.include(Variable::HydProd(pays), 1.0)
-//                   .include(Variable::Pumping(pays), -pumpingRatio);
-//             }
-//         }
-//         else
-//         {
-//             for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
-//             {
-//                 builder.updateHourWithinWeek(pdt);
-//                 builder.include(Variable::HydProd(pays), 1.0);
-//             }
-//         }
-//         {
-//             double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
-//                            .CntEnergieH2OParIntervalleOptimise[NumeroDeLIntervalle];
-//             builder.equalTo(rhs);
-//         }
-//         {
-//             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-//                                   problemeHebdo->NamedProblems);
-//             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-//             namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-//             namer.HydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-//         }
-//         builder.build();
-//     }
-// };
 
 // struct HydroPowerSmoothingUsingVariationSum : public Constraint
 // {
@@ -404,7 +354,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     BindingConstraintHour bindingConstraintHour(problemeHebdo);
     BindingConstraintDay bindingConstraintDay(problemeHebdo);
     BindingConstraintWeek bindingConstraintWeek(problemeHebdo);
-    // HydroPower hydroPower(problemeHebdo);
+    HydroPower hydroPower(problemeHebdo);
     // HydroPowerSmoothingUsingVariationSum hydroPowerSmoothingUsingVariationSum(problemeHebdo);
     // HydroPowerSmoothingUsingVariationMaxDown hydroPowerSmoothingUsingVariationMaxDown(
     //   problemeHebdo);
@@ -456,10 +406,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         }
     }
 
-    // for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    // {
-    //     hydroPower.add(pays, NumeroDeLIntervalle);
-    // }
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    {
+        hydroPower.add(pays);
+    }
 
     // if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
     // {
