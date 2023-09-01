@@ -48,54 +48,14 @@
 #include "MaxHydroPower.h"
 #include "MaxPumping.h"
 #include "AreaHydroLevel.h"
+#include "FinalStockEquivalent.h"
+#include "FinalStockExpression.h"
 
 #include <antares/study.h>
 
 using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
-
-// struct FinalStockEquivalent : public Constraint
-// {
-//     using Constraint::Constraint;
-//     void add(int pays)
-//     {
-//         const auto& pdt = problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1;
-//         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-//                               problemeHebdo->NamedProblems);
-
-//         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-//         namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-//         namer.FinalStockEquivalent(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-
-//         builder.updateHourWithinWeek(pdt)
-//           .include(Variable::FinalStorage(pays), 1.0)
-//           .include(Variable::HydroLevel(pays), -1.0)
-//           .equalTo(0)
-//           .build();
-//     }
-// };
-
-// struct FinalStockExpression : public Constraint
-// {
-//     using Constraint::Constraint;
-//     void add(int pays)
-//     {
-//         const auto pdt = problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1;
-//         builder.updateHourWithinWeek(pdt).include(Variable::FinalStorage(pays), -1.0);
-//         for (int layerindex = 0; layerindex < 100; layerindex++)
-//         {
-//             builder.include(Variable::LayerStorage(pays, layerindex), 1.0);
-//         }
-//         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-//                               problemeHebdo->NamedProblems);
-
-//         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-//         namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-//         namer.FinalStockExpression(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-//         builder.equalTo(0).build();
-//     }
-// };
 
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
                                                              Antares::Solver::IResultWriter& writer)
@@ -110,12 +70,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
 
     const std::vector<int>& NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
-
-    // for (int i = 0; i < ProblemeAResoudre->NombreDeContraintes; i++)
-    // {
-    //     AdresseOuPlacerLaValeurDesCoutsMarginaux[i] = nullptr;
-    //     SecondMembre[i] = 0.0;
-    // }
 
     // TODO reset selectively
     ProblemeAResoudre->NombreDeContraintes = 0;
@@ -138,8 +92,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     MaxHydroPower maxHydroPower(problemeHebdo);
     MaxPumping maxPumping(problemeHebdo);
     AreaHydroLevel areaHydroLevel(problemeHebdo);
-    // FinalStockEquivalent finalStockEquivalent(problemeHebdo);
-    // FinalStockExpression finalStockExpression(problemeHebdo);
+    FinalStockEquivalent finalStockEquivalent(problemeHebdo);
+    FinalStockExpression finalStockExpression(problemeHebdo);
 
     for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdt++)
     {
@@ -227,18 +181,18 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         }
     }
 
-    // for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    // {
-    //     if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue
-    //         && problemeHebdo->CaracteristiquesHydrauliques[pays].DirectLevelAccess)
-    //     {
-    //         finalStockEquivalent.add(pays);
-    //     }
-    //     if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
-    //     {
-    //         finalStockExpression.add(pays);
-    //     }
-    // }
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    {
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue
+            && problemeHebdo->CaracteristiquesHydrauliques[pays].DirectLevelAccess)
+        {
+            finalStockEquivalent.add(pays);
+        }
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
+        {
+            finalStockExpression.add(pays);
+        }
+    }
 
     // if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     // {

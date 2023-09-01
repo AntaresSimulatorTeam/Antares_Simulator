@@ -105,6 +105,10 @@ set(RTESOLVER_OPT
 		MaxPumping.cpp
 		AreaHydroLevel.h
 		AreaHydroLevel.cpp
+		FinalStockEquivalent.h
+		FinalStockEquivalent.cpp
+		FinalStockExpression.h
+		FinalStockExpression.cpp
 	)
 
 
