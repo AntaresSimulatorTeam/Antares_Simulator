@@ -350,24 +350,40 @@ public:
         return *this;
     }
 
-    ConstraintBuilder& equalTo(double rhs)
+    ConstraintBuilder& equalTo()
     {
         operator_ = '=';
-        rhs_ = rhs;
         return *this;
     }
-    ConstraintBuilder& lessThan(double rhs)
+    ConstraintBuilder& lessThan()
     {
         operator_ = '<';
-        rhs_ = rhs;
         return *this;
     }
-    ConstraintBuilder& greaterThan(double rhs)
+    ConstraintBuilder& greaterThan()
     {
         operator_ = '>';
-        rhs_ = rhs;
         return *this;
     }
+
+    // ConstraintBuilder& equalTo(double rhs)
+    // {
+    //     operator_ = '=';
+    //     rhs_ = rhs;
+    //     return *this;
+    // }
+    // ConstraintBuilder& lessThan(double rhs)
+    // {
+    //     operator_ = '<';
+    //     rhs_ = rhs;
+    //     return *this;
+    // }
+    // ConstraintBuilder& greaterThan(double rhs)
+    // {
+    //     operator_ = '>';
+    //     rhs_ = rhs;
+    //     return *this;
+    // }
 
     void build();
 

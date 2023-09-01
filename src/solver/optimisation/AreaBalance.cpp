@@ -14,6 +14,15 @@ static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortT
 // Constraint definitions
 void AreaBalance::add(int pdt, int pays)
 {
+    /** can be done without this --- keep it for now**/
+    CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
+      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+      = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+    CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesBilansPays[pays]
+      = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+
+    /******/
     // TODO improve this
     {
         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
@@ -22,6 +31,7 @@ void AreaBalance::add(int pdt, int pays)
         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         namer.AreaBalance(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
     }
+
     builder.updateHourWithinWeek(pdt);
 
     int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
@@ -69,6 +79,6 @@ void AreaBalance::add(int pdt, int pays)
 
     // }
     /*check! */
-    // builder.equalTo(rhs);
+    builder.equalTo();
     builder.build();
 }
