@@ -43,46 +43,6 @@ using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
 
-// struct FlowDissociation : public Constraint
-// {
-//     using Constraint::Constraint;
-//     void add(int pdt, int pdtHebdo, int interco)
-//     {
-//         if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
-//             CoutDeTransport.IntercoGereeAvecDesCouts)
-//         {
-//             // TODO improve this
-
-//             {
-//                 const auto origin
-//                   = problemeHebdo
-//                       ->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
-//                 const auto destination
-//                   = problemeHebdo
-//                       ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-//                 ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-//                                       problemeHebdo->NamedProblems);
-//                 namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-//                 namer.FlowDissociation(
-//                   problemeHebdo->ProblemeAResoudre->NombreDeContraintes, origin, destination);
-//             }
-
-//             builder.updateHourWithinWeek(pdt);
-//             builder.include(Variable::NTCDirect(interco), 1.0)
-//               .include(Variable::IntercoDirectCost(interco), -1.0)
-//               .include(Variable::IntercoIndirectCost(interco), 1.0);
-
-//             if (CoutDeTransport.IntercoGereeAvecLoopFlow)
-//                 builder.equalTo(problemeHebdo->ValeursDeNTC[pdtHebdo]
-//                                   .ValeurDeLoopFlowOrigineVersExtremite[interco]);
-//             else
-//                 builder.equalTo(0.);
-
-//             builder.build();
-//         }
-//     }
-// };
-
 // struct BindingConstraintHour : public Constraint
 // {
 //     using Constraint::Constraint;
@@ -647,7 +607,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     AreaBalance areaBalance(problemeHebdo);
     FictitiousLoad fictitiousLoad(problemeHebdo);
     ShortTermStorageLevel shortTermStorageLevel(problemeHebdo);
-    // FlowDissociation flowDissociation(problemeHebdo);
+    FlowDissociation flowDissociation(problemeHebdo);
     // BindingConstraintHour bindingConstraintHour(problemeHebdo);
     // BindingConstraintDay bindingConstraintDay(problemeHebdo);
     // BindingConstraintWeek bindingConstraintWeek(problemeHebdo);
@@ -673,10 +633,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             shortTermStorageLevel.add(pdt, pays);
         }
 
-        // for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
-        // {
-        //     flowDissociation.add(pdt, pdtHebdo, interco);
-        // }
+        for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
+        {
+            flowDissociation.add(pdt, interco);
+        }
 
         // for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
         //      cntCouplante++)

@@ -81,6 +81,8 @@ set(RTESOLVER_OPT
 		FictitiousLoad.cpp
 		ShortTermStorageLevel.h
 		ShortTermStorageLevel.cpp
+		FlowDissociation.h
+		FlowDissociation.cpp
 	)
 
 
