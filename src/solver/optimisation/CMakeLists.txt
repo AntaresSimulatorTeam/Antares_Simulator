@@ -103,6 +103,8 @@ set(RTESOLVER_OPT
 		MaxHydroPower.cpp
 		MaxPumping.h
 		MaxPumping.cpp
+		AreaHydroLevel.h
+		AreaHydroLevel.cpp
 	)
 
 

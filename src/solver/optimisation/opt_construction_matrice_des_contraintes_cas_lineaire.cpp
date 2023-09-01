@@ -47,44 +47,13 @@
 #include "MinHydroPower.h"
 #include "MaxHydroPower.h"
 #include "MaxPumping.h"
+#include "AreaHydroLevel.h"
+
 #include <antares/study.h>
 
 using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
-
-// struct AreaHydroLevel : public Constraint
-// {
-//     using Constraint::Constraint;
-//     void add(int pays, int pdt, int pdtHebdo)
-//     {
-//         double rhs
-//           = problemeHebdo->CaracteristiquesHydrauliques[pays].ApportNaturelHoraire[pdtHebdo];
-//         if (pdtHebdo == 0)
-//         {
-//             rhs += problemeHebdo->CaracteristiquesHydrauliques[pays].NiveauInitialReservoir;
-//         }
-//         builder.updateHourWithinWeek(pdt).include(Variable::HydroLevel(pays), 1.0);
-//         if (pdt > 0)
-//         {
-//             builder.updateHourWithinWeek(pdt - 1).include(Variable::HydroLevel(pays), -1.0);
-//         }
-//         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-//                               problemeHebdo->NamedProblems);
-
-//         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-//         namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-//         namer.AreaHydroLevel(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-
-//         builder.updateHourWithinWeek(pdt)
-//           .include(Variable::HydProd(pays), 1.0)
-//           .include(Variable::Pumping(pays),
-//                    -problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio)
-//           .include(Variable::Overflow(pays), 1.)
-//           .equalTo(rhs)
-//           .build();
-//     }
-// };
 
 // struct FinalStockEquivalent : public Constraint
 // {
@@ -168,7 +137,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     MinHydroPower minHydroPower(problemeHebdo);
     MaxHydroPower maxHydroPower(problemeHebdo);
     MaxPumping maxPumping(problemeHebdo);
-    // AreaHydroLevel areaHydroLevel(problemeHebdo);
+    AreaHydroLevel areaHydroLevel(problemeHebdo);
     // FinalStockEquivalent finalStockEquivalent(problemeHebdo);
     // FinalStockExpression finalStockExpression(problemeHebdo);
 
@@ -247,17 +216,16 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         maxPumping.add(pays);
     }
 
-    // for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdtHebdo++,
-    // pdt++)
-    // {
-    //     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    //     {
-    //         if (!problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
-    //             continue;
+    for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdt++)
+    {
+        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        {
+            if (!problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
+                continue;
 
-    //         areaHydroLevel.add(pays, pdt, pdtHebdo);
-    //     }
-    // }
+            areaHydroLevel.add(pays, pdt);
+        }
+    }
 
     // for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     // {
