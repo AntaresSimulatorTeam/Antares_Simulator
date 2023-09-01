@@ -15,7 +15,7 @@ void HydroPower::add(int pays)
         = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
     {
         problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays]
-          = ProblemeAResoudre->NombreDeContraintes;
+          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
         const double pumpingRatio = problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
         for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)

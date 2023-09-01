@@ -91,6 +91,12 @@ set(RTESOLVER_OPT
 		BindingConstraintWeek.cpp
 		HydroPower.h
 		HydroPower.cpp
+		HydroPowerSmoothingUsingVariationSum.h
+		HydroPowerSmoothingUsingVariationSum.cpp
+		HydroPowerSmoothingUsingVariationMaxDown.h
+		HydroPowerSmoothingUsingVariationMaxDown.cpp
+		HydroPowerSmoothingUsingVariationMaxUp.h
+		HydroPowerSmoothingUsingVariationMaxUp.cpp
 	)
 
 
