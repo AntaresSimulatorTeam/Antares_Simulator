@@ -38,162 +38,14 @@
 #include "ShortTermStorageLevel.h"
 #include "FlowDissociation.h"
 #include "BindingConstraintHour.h"
+#include "BindingConstraintDay.h"
+#include "BindingConstraintWeek.h"
 
 #include <antares/study.h>
 
 using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
-
-// struct BindingConstraintDay : public Constraint
-// {
-//     using Constraint::Constraint;
-//     void add(int cntCouplante)
-//     {
-//         const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-//           = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-//         if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_JOURNALIERE)
-//             return;
-
-//         const int nbInterco
-//           = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
-//         const int nbClusters
-//           = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
-
-//         const int NombreDePasDeTempsPourUneOptimisation
-//           = problemeHebdo->NombreDePasDeTempsPourUneOptimisation; // TODO
-//         const int NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
-//         for (int pdtDebut = 0; pdtDebut < NombreDePasDeTempsPourUneOptimisation;
-//              pdtDebut += NombreDePasDeTempsDUneJournee)
-//         {
-//             for (int index = 0; index < nbInterco; index++)
-//             {
-//                 int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
-//                 double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
-//                 int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
-
-//                 for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
-//                 {
-//                     builder.updateHourWithinWeek(pdt);
-//                     builder.include(Variable::NTCDirect(interco), poids, offset, true);
-//                 }
-//             }
-
-//             for (int index = 0; index < nbClusters; index++)
-//             {
-//                 int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
-//                 const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-//                   = problemeHebdo->PaliersThermiquesDuPays[pays];
-//                 const int palier
-//                   = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
-//                       [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
-//                 double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
-//                 int offset
-//                   = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
-
-//                 for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
-//                 {
-//                     builder.updateHourWithinWeek(pdt);
-//                     builder.include(Variable::DispatchableProduction(palier), poids, offset,
-//                     true);
-//                 }
-//             }
-//             // TODO probably wrong from the 2nd week, check
-//             const int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
-
-//             std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
-//               = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
-//             int cnt = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-//             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
-//               =
-//               problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales.data()
-//                 + jour;
-//             double rhs =
-//             MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[jour]; char op =
-//             MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante; builder.operatorRHS(op,
-//             rhs);
-//             {
-//                 ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-//                                       problemeHebdo->NamedProblems);
-//                 namer.UpdateTimeStep(jour);
-//                 namer.BindingConstraintDay(
-//                   problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-//                   MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
-//             }
-//             builder.build();
-//         }
-//     }
-// };
-
-// struct BindingConstraintWeek : public Constraint
-// {
-//     using Constraint::Constraint;
-//     void add(int cntCouplante)
-//     {
-//         const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-//           = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-//         if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HEBDOMADAIRE)
-//             return;
-
-//         const int nbInterco
-//           = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
-//         const int nbClusters
-//           = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
-
-//         const int NombreDePasDeTempsPourUneOptimisation
-//           = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-//         for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
-//         {
-//             builder.updateHourWithinWeek(pdt);
-//             for (int index = 0; index < nbInterco; index++)
-//             {
-//                 int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
-//                 double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
-//                 int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
-
-//                 builder.include(Variable::NTCDirect(interco), poids, offset, true);
-//             }
-
-//             for (int index = 0; index < nbClusters; index++)
-//             {
-//                 int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
-//                 const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-//                   = problemeHebdo->PaliersThermiquesDuPays[pays];
-//                 const int palier
-//                   = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
-//                       [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
-//                 double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
-//                 int offset
-//                   = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
-//                 builder.include(Variable::DispatchableProduction(palier), poids, offset, true);
-//             }
-//         }
-//         // RHS
-//         {
-//             std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
-//               = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
-//             int cnt = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-
-//             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
-//               =
-//               problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales.data();
-
-//             double rhs = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[0];
-//             char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
-//             builder.operatorRHS(op, rhs);
-//         }
-//         // Name
-//         {
-//             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-//                                   problemeHebdo->NamedProblems);
-//             namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-//             namer.BindingConstraintWeek(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-//                                         MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
-//         }
-//         builder.build();
-//     }
-// };
 
 // struct HydroPower : public Constraint
 // {
@@ -550,8 +402,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     ShortTermStorageLevel shortTermStorageLevel(problemeHebdo);
     FlowDissociation flowDissociation(problemeHebdo);
     BindingConstraintHour bindingConstraintHour(problemeHebdo);
-    // BindingConstraintDay bindingConstraintDay(problemeHebdo);
-    // BindingConstraintWeek bindingConstraintWeek(problemeHebdo);
+    BindingConstraintDay bindingConstraintDay(problemeHebdo);
+    BindingConstraintWeek bindingConstraintWeek(problemeHebdo);
     // HydroPower hydroPower(problemeHebdo);
     // HydroPowerSmoothingUsingVariationSum hydroPowerSmoothingUsingVariationSum(problemeHebdo);
     // HydroPowerSmoothingUsingVariationMaxDown hydroPowerSmoothingUsingVariationMaxDown(
@@ -586,23 +438,23 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         }
     }
 
-    // for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
-    //      cntCouplante++)
-    // {
-    //     bindingConstraintDay.add(cntCouplante);
-    // }
+    for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+         cntCouplante++)
+    {
+        bindingConstraintDay.add(cntCouplante);
+    }
 
-    // // Weekly binding constraints are only added if the opt period is a week
-    // // ignored otherwise
-    // if (problemeHebdo->NombreDePasDeTempsPourUneOptimisation
-    //     > problemeHebdo->NombreDePasDeTempsDUneJournee)
-    // {
-    //     for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
-    //          cntCouplante++)
-    //     {
-    //         bindingConstraintWeek.add(cntCouplante);
-    //     }
-    // }
+    // Weekly binding constraints are only added if the opt period is a week
+    // ignored otherwise
+    if (problemeHebdo->NombreDePasDeTempsPourUneOptimisation
+        > problemeHebdo->NombreDePasDeTempsDUneJournee)
+    {
+        for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+             cntCouplante++)
+        {
+            bindingConstraintWeek.add(cntCouplante);
+        }
+    }
 
     // for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     // {

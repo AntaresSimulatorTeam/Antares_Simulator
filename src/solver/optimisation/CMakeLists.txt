@@ -85,6 +85,10 @@ set(RTESOLVER_OPT
 		FlowDissociation.cpp
 		BindingConstraintHour.h
 		BindingConstraintHour.cpp
+		BindingConstraintDay.h
+		BindingConstraintDay.cpp
+		BindingConstraintWeek.h
+		BindingConstraintWeek.cpp
 	)
 
 
