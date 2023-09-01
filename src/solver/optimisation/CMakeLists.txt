@@ -97,6 +97,10 @@ set(RTESOLVER_OPT
 		HydroPowerSmoothingUsingVariationMaxDown.cpp
 		HydroPowerSmoothingUsingVariationMaxUp.h
 		HydroPowerSmoothingUsingVariationMaxUp.cpp
+		MinHydroPower.h
+		MinHydroPower.cpp
+		MaxHydroPower.h
+		MaxHydroPower.cpp
 	)
 
 

@@ -44,6 +44,8 @@
 #include "HydroPowerSmoothingUsingVariationSum.h"
 #include "HydroPowerSmoothingUsingVariationMaxDown.h"
 #include "HydroPowerSmoothingUsingVariationMaxUp.h"
+#include "MinHydroPower.h"
+#include "MaxHydroPower.h"
 
 #include <antares/study.h>
 
@@ -51,74 +53,6 @@ using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
 
-// struct MinHydroPower : public Constraint
-// {
-//     using Constraint::Constraint;
-//     void add(int pays, int NumeroDeLIntervalle)
-//     {
-//             bool presenceHydro
-//               = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
-//             bool TurbEntreBornes
-//               = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-//             if (presenceHydro
-//                 && (TurbEntreBornes
-//                     || problemeHebdo->CaracteristiquesHydrauliques[pays]
-//                          .PresenceDePompageModulable))
-//             {
-//             const int NombreDePasDeTempsPourUneOptimisation
-//               = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-//             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-//                                   problemeHebdo->NamedProblems);
-//             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-//             namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-//             namer.MinHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-//             for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
-//             {
-//                 builder.updateHourWithinWeek(pdt);
-//                 builder.include(Variable::HydProd(pays), 1.0);
-//             }
-//             const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
-//                                  .MinEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
-//             builder.greaterThan(rhs).build();
-//             }
-//     }
-// };
-
-// struct MaxHydroPower : public Constraint
-// {
-//     using Constraint::Constraint;
-//     void add(int pays, int NumeroDeLIntervalle)
-//     {
-//         bool presenceHydro
-//           = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
-//         bool TurbEntreBornes
-//           = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-//         if (presenceHydro
-//             && (TurbEntreBornes
-//                 || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
-//         {
-//             const int NombreDePasDeTempsPourUneOptimisation
-//               = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-//             for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
-//             {
-//                 builder.updateHourWithinWeek(pdt);
-//                 builder.include(Variable::HydProd(pays), 1.0);
-//             }
-
-//             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-//                                   problemeHebdo->NamedProblems);
-//             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-//             namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-//             namer.MaxHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-
-//             const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
-//                                  .MaxEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
-//             builder.lessThan(rhs).build();
-//         }
-//     }
-// };
 // struct MaxPumping : public Constraint
 // {
 //     using Constraint::Constraint;
@@ -259,8 +193,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
       problemeHebdo);
     HydroPowerSmoothingUsingVariationMaxUp hydroPowerSmoothingUsingVariationMaxUp(problemeHebdo);
 
-    // MinHydroPower minHydroPower(problemeHebdo);
-    // MaxHydroPower maxHydroPower(problemeHebdo);
+    MinHydroPower minHydroPower(problemeHebdo);
+    MaxHydroPower maxHydroPower(problemeHebdo);
     // MaxPumping maxPumping(problemeHebdo);
     // AreaHydroLevel areaHydroLevel(problemeHebdo);
     // FinalStockEquivalent finalStockEquivalent(problemeHebdo);
@@ -329,11 +263,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         }
     }
 
-    // for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    // {
-    //     minHydroPower.add(pays, NumeroDeLIntervalle);
-    //     maxHydroPower.add(pays, NumeroDeLIntervalle);
-    // }
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    {
+        minHydroPower.add(pays);
+        maxHydroPower.add(pays);
+    }
 
     // // TODO after this
     // for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
