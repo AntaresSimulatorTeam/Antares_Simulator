@@ -7,7 +7,7 @@ void AreaHydroLevel::add(int pays, int pdt)
     CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
       = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
     CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays]
-      = ProblemeAResoudre->NombreDeContraintes;
+      = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
     builder.updateHourWithinWeek(pdt).include(Variable::HydroLevel(pays), 1.0);
     if (pdt > 0)
