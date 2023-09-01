@@ -2,7 +2,7 @@
 
 void FinalStockEquivalent::add(int pays)
 {
-    const aut pdt = problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1;
+    const auto pdt = problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1;
     problemeHebdo->NumeroDeContrainteEquivalenceStockFinal[pays]
       = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
