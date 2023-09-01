@@ -870,9 +870,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     //     }
     // }
 
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
-    {
-        OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
-                                                                                false);
-    }
+    // if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+    // {
+    //     OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
+    //                                                                             false);
+    // }
 }
