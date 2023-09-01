@@ -35,40 +35,13 @@
 #include "constraint_builder.h"
 #include "AreaBalance.h"
 #include "FictitiousLoad.h"
+#include "ShortTermStorageLevel.h"
+
 #include <antares/study.h>
 
 using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
-
-// struct ShortTermStorageLevel : public Constraint
-// {
-//     using Constraint::Constraint;
-//     void add(int pdt, int pdtHebdo, int pays)
-//     {
-//         // TODO improve this
-//         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-//                               problemeHebdo->NamedProblems);
-//         const int hourInTheYear = problemeHebdo->weekInTheYear * 168 + pdt;
-//         namer.UpdateTimeStep(hourInTheYear);
-//         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-
-//         builder.updateHourWithinWeek(pdt);
-//         for (const auto& storage : problemeHebdo->ShortTermStorage[pays])
-//         {
-//             // L[h] - L[h-1] - efficiency * injection[h] + withdrawal[h] = inflows[h]
-//             namer.ShortTermStorageLevel(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-//                                         storage.name);
-//             const auto index = storage.clusterGlobalIndex;
-//             builder.include(Variable::ShortTermStorageLevel(index), 1.0)
-//               .include(Variable::ShortTermStorageLevel(index), -1.0, -1, true)
-//               .include(Variable::ShortTermStorageInjection(index), -1.0 * storage.efficiency)
-//               .include(Variable::ShortTermStorageWithdrawal(index), 1.0)
-//               .equalTo(storage.series->inflows[hourInTheYear])
-//               .build();
-//         }
-//     }
-// };
 
 // struct FlowDissociation : public Constraint
 // {
@@ -673,7 +646,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     AreaBalance areaBalance(problemeHebdo);
     FictitiousLoad fictitiousLoad(problemeHebdo);
-    // ShortTermStorageLevel shortTermStorageLevels(problemeHebdo);
+    ShortTermStorageLevel shortTermStorageLevel(problemeHebdo);
     // FlowDissociation flowDissociation(problemeHebdo);
     // BindingConstraintHour bindingConstraintHour(problemeHebdo);
     // BindingConstraintDay bindingConstraintDay(problemeHebdo);
@@ -697,7 +670,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         {
             areaBalance.add(pdt, pays);
             fictitiousLoad.add(pdt, pays);
-            // shortTermStorageLevels.add(pdt, pdtHebdo, pays);
+            shortTermStorageLevel.add(pdt, pays);
         }
 
         // for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)

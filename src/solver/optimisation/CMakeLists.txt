@@ -79,6 +79,8 @@ set(RTESOLVER_OPT
 		AreaBalance.cpp
 		FictitiousLoad.h
 		FictitiousLoad.cpp
+		ShortTermStorageLevel.h
+		ShortTermStorageLevel.cpp
 	)
 
 
