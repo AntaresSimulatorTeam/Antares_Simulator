@@ -1,6 +1,11 @@
 Antares Changelog
 =================
 
+v8.3.4 (12/2022)
+--------------------
+### Bugfix
+- Crash when many binding constraints in a study (#924) (backport from 8.4.0)
+
 v8.3.3 (12/2022)
 --------------------
 ### Bugfix
