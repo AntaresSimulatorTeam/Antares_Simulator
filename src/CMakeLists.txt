@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 # Version
 set(ANTARES_VERSION_HI	      8)
 set(ANTARES_VERSION_LO	      3)
-set(ANTARES_VERSION_REVISION  3)
-set(ANTARES_VERSION_YEAR      2022)
+set(ANTARES_VERSION_REVISION  4)
+set(ANTARES_VERSION_YEAR      2023)
 
 project(antares
         VERSION ${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION})
