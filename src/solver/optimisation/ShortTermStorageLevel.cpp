@@ -24,7 +24,7 @@ void ShortTermStorageLevel::add(int pdt, int pays)
         namer.ShortTermStorageLevel(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
                                     storage.name);
         const auto index = storage.clusterGlobalIndex;
-        CorrespondanceCntNativesCntOptim.ShortTermStorageLevelConstraint[clusterGlobalIndex]
+        CorrespondanceCntNativesCntOptim.ShortTermStorageLevelConstraint[index]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
         builder.include(Variable::ShortTermStorageLevel(index), 1.0)
