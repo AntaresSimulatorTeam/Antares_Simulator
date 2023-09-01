@@ -103,7 +103,7 @@ jobs:
 
     - name: Build
       run: |
-           cmake --build _build --config release
+           cmake --build _build --config release -j2
 
     - name: Remove OR-Tools install directory to free some disk space
       shell: bash
