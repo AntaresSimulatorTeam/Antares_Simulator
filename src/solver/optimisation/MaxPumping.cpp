@@ -4,7 +4,8 @@ void MaxPumping::add(int pays)
 {
     if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
     {
-        problemeHebdo->NumeroDeContrainteMaxPompage[pays] = ProblemeAResoudre->NombreDeContraintes;
+        problemeHebdo->NumeroDeContrainteMaxPompage[pays]
+          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
         const int NombreDePasDeTempsPourUneOptimisation
           = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
