@@ -36,6 +36,7 @@
 #include "AreaBalance.h"
 #include "FictitiousLoad.h"
 #include "ShortTermStorageLevel.h"
+#include "FlowDissociation.h"
 
 #include <antares/study.h>
 
