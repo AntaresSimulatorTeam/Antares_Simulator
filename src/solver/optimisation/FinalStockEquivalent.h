@@ -1,3 +1,4 @@
+#pragma once
 #include "constraintsbuilder.h"
 
 struct FinalStockEquivalent : public Constraint

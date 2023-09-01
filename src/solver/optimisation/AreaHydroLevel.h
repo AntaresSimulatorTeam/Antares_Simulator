@@ -1,3 +1,4 @@
+#pragma once
 #include "constraintsbuilder.h"
 
 struct AreaHydroLevel : public Constraint
