@@ -84,11 +84,11 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                                                                DernierPdtDeLIntervalle,
                                                                optimizationNumber);
 
-        OPT_BuildConstraints(problemeHebdo,
-                             PremierPdtDeLIntervalle,
-                             DernierPdtDeLIntervalle,
-                             numeroDeLIntervalle,
-                             optimizationNumber);
+        OPT_InitialiserLeSecondMembreDuProblemeLineaire(problemeHebdo,
+                                                        PremierPdtDeLIntervalle,
+                                                        DernierPdtDeLIntervalle,
+                                                        numeroDeLIntervalle,
+                                                        optimizationNumber);
 
         OPT_InitialiserLesCoutsLineaire(
           problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);

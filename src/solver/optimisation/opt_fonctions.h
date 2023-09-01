@@ -44,15 +44,10 @@ void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
                                   Antares::Solver::IResultWriter& writer);
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO*);
-void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(
-  PROBLEME_HEBDO* problemeHebdo,
-  Antares::Solver::IResultWriter& writer);
-void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
-  PROBLEME_HEBDO* problemeHebdo,
-  bool);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_HEBDO*);
-
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO*,
+                                                             Antares::Solver::IResultWriter& writer);
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO*);
 void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO*);
 void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO*);
@@ -63,7 +58,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*,
                                                             const int,
                                                             const int);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO*, int);
-void OPT_BuildConstraints(PROBLEME_HEBDO*, int, int, int, const int);
+void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, int, const int);
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO*, int);
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int);
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO*, int);
@@ -108,8 +103,8 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO*);
 double OPT_CalculerAireMaxPminJour(int, int, int, int, std::vector<int>&, std::vector<int>&);
 
 void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*,
-                                                        const std::vector<double>&,
-                                                        const std::vector<int>&,
+                                                        std::vector<double>&,
+                                                        std::vector<int>&,
                                                         int,
                                                         char);
 void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO*);
@@ -123,18 +118,14 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*
 
 /*------------------------------*/
 
-// void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
-// bool);
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, bool);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                                    bool);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                             const int,
                                                                             const int);
 void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, const int, const int);
-void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
-                                                                     int,
-                                                                     int,
-                                                                     bool);
+void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, int, int);
 void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);

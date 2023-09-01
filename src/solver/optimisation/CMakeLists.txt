@@ -73,6 +73,8 @@ set(RTESOLVER_OPT
 
 		opt_rename_problem.h
 		opt_rename_problem.cpp
+		AreaBalance.h
+		AreaBalance.cpp
 	)
 
 

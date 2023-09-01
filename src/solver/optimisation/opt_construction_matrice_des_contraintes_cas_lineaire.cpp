@@ -33,6 +33,7 @@
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"
 #include "constraint_builder.h"
+#include "AreaBalance.h"
 #include <antares/study.h>
 
 using namespace Antares;
@@ -64,72 +65,6 @@ static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortT
           .include(Variable::ShortTermStorageWithdrawal(index), -1.0);
     }
 }
-
-// Constraint definitions
-struct AreaBalance : public Constraint
-{
-    using Constraint::Constraint;
-
-    void add(int pdt, int pdtHebdo, int pays, int optimizationNumber)
-    {
-        // TODO improve this
-        {
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-            namer.AreaBalance(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-        }
-        builder.updateHourWithinWeek(pdt);
-
-        int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
-        while (interco >= 0)
-        {
-            builder.include(Variable::NTCDirect(interco), 1.0);
-            interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
-        }
-
-        interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
-        while (interco >= 0)
-        {
-            builder.include(Variable::NTCDirect(interco), -1.0);
-            interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
-        }
-
-        exportPaliers(*problemeHebdo, builder, pays);
-        builder.include(Variable::HydProd(pays), -1.0)
-          .include(Variable::Pumping(pays), 1.0)
-          .include(Variable::PositiveUnsuppliedEnergy(pays), -1.0)
-          .include(Variable::NegativeUnsuppliedEnergy(pays), 1.0);
-
-        shortTermStorageBalance(problemeHebdo->ShortTermStorage[pays], builder);
-
-        {
-            const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
-              = problemeHebdo->ConsommationsAbattues[pdtHebdo];
-            double rhs = -ConsommationsAbattues.ConsommationAbattueDuPays[pays];
-            bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
-            bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
-            if (reserveJm1 && opt1)
-            {
-                rhs -= problemeHebdo->ReserveJMoins1[pays].ReserveHoraireJMoins1[pdtHebdo];
-            }
-            /* check !*/
-            double* adresseDuResultat
-              = &(problemeHebdo->ResultatsHoraires[pays].CoutsMarginauxHoraires[pdtHebdo]);
-
-            std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
-              = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
-
-            int cnt = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-
-            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = adresseDuResultat;
-            /*check! */
-            builder.equalTo(rhs);
-            builder.build();
-        }
-    }
-};
 
 struct FictitiousLoad : public Constraint
 {
@@ -791,11 +726,8 @@ struct FinalStockExpression : public Constraint
     }
 };
 
-void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
-                          int PremierPdtDeLIntervalle,
-                          int DernierPdtDeLIntervalle,
-                          int NumeroDeLIntervalle,
-                          const int optimizationNumber)
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
+                                                             Antares::Solver::IResultWriter& writer)
 {
     int weekFirstHour = problemeHebdo->weekInTheYear * 168;
 
@@ -808,11 +740,11 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
 
     const std::vector<int>& NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
 
-    for (int i = 0; i < ProblemeAResoudre->NombreDeContraintes; i++)
-    {
-        AdresseOuPlacerLaValeurDesCoutsMarginaux[i] = nullptr;
-        SecondMembre[i] = 0.0;
-    }
+    // for (int i = 0; i < ProblemeAResoudre->NombreDeContraintes; i++)
+    // {
+    //     AdresseOuPlacerLaValeurDesCoutsMarginaux[i] = nullptr;
+    //     SecondMembre[i] = 0.0;
+    // }
 
     // TODO reset selectively
     ProblemeAResoudre->NombreDeContraintes = 0;
@@ -838,110 +770,109 @@ void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
     FinalStockEquivalent finalStockEquivalent(problemeHebdo);
     FinalStockExpression finalStockExpression(problemeHebdo);
 
-    for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
-         pdtHebdo++, pdt++)
+    for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdt++)
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            areaBalance.add(pdt, pdtHebdo, pays, optimizationNumber);
-            fictitiousLoad.add(pdt, pdtHebdo, pays);
-            shortTermStorageLevels.add(pdt, pdtHebdo, pays);
+            areaBalance.add(pdt, pays);
+            // fictitiousLoad.add(pdt, pdtHebdo, pays);
+            // shortTermStorageLevels.add(pdt, pdtHebdo, pays);
         }
 
-        for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
-        {
-            flowDissociation.add(pdt, pdtHebdo, interco);
-        }
+        // for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
+        // {
+        //     flowDissociation.add(pdt, pdtHebdo, interco);
+        // }
 
-        for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
-             cntCouplante++)
-        {
-            bindingConstraintHour.add(pdt, pdtHebdo, cntCouplante);
-        }
+        // for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+        //      cntCouplante++)
+        // {
+        //     bindingConstraintHour.add(pdt, pdtHebdo, cntCouplante);
+        // }
     }
 
-    for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
-         cntCouplante++)
-    {
-        bindingConstraintDay.add(cntCouplante);
-    }
+    // for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+    //      cntCouplante++)
+    // {
+    //     bindingConstraintDay.add(cntCouplante);
+    // }
 
-    // Weekly binding constraints are only added if the opt period is a week
-    // ignored otherwise
-    if (problemeHebdo->NombreDePasDeTempsPourUneOptimisation
-        > problemeHebdo->NombreDePasDeTempsDUneJournee)
-    {
-        for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
-             cntCouplante++)
-        {
-            bindingConstraintWeek.add(cntCouplante);
-        }
-    }
+    // // Weekly binding constraints are only added if the opt period is a week
+    // // ignored otherwise
+    // if (problemeHebdo->NombreDePasDeTempsPourUneOptimisation
+    //     > problemeHebdo->NombreDePasDeTempsDUneJournee)
+    // {
+    //     for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+    //          cntCouplante++)
+    //     {
+    //         bindingConstraintWeek.add(cntCouplante);
+    //     }
+    // }
 
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        hydroPower.add(pays, NumeroDeLIntervalle);
-    }
+    // for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    // {
+    //     hydroPower.add(pays, NumeroDeLIntervalle);
+    // }
 
-    if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
-    {
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-        {
-            hydroPowerSmoothingUsingVariationSum.add(pays, NumeroDeLIntervalle);
-        }
-    }
-    else if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
-    {
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-        {
-            for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdt++)
-            {
-                hydroPowerSmoothingUsingVariationMaxDown.add(pays, NumeroDeLIntervalle, pdt);
-                hydroPowerSmoothingUsingVariationMaxUp.add(pays, NumeroDeLIntervalle, pdt);
-            }
-        }
-    }
+    // if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
+    // {
+    //     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    //     {
+    //         hydroPowerSmoothingUsingVariationSum.add(pays, NumeroDeLIntervalle);
+    //     }
+    // }
+    // else if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
+    // {
+    //     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    //     {
+    //         for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdt++)
+    //         {
+    //             hydroPowerSmoothingUsingVariationMaxDown.add(pays, NumeroDeLIntervalle, pdt);
+    //             hydroPowerSmoothingUsingVariationMaxUp.add(pays, NumeroDeLIntervalle, pdt);
+    //         }
+    //     }
+    // }
 
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        minHydroPower.add(pays, NumeroDeLIntervalle);
-        maxHydroPower.add(pays, NumeroDeLIntervalle);
-    }
+    // for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    // {
+    //     minHydroPower.add(pays, NumeroDeLIntervalle);
+    //     maxHydroPower.add(pays, NumeroDeLIntervalle);
+    // }
 
-    // TODO after this
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        maxPumping.add(pays, NumeroDeLIntervalle);
-    }
+    // // TODO after this
+    // for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    // {
+    //     maxPumping.add(pays, NumeroDeLIntervalle);
+    // }
 
-    for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
-         pdtHebdo++, pdt++)
-    {
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-        {
-            if (!problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
-                continue;
+    // for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdtHebdo++,
+    // pdt++)
+    // {
+    //     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    //     {
+    //         if (!problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
+    //             continue;
 
-            areaHydroLevel.add(pays, pdt, pdtHebdo);
-        }
-    }
+    //         areaHydroLevel.add(pays, pdt, pdtHebdo);
+    //     }
+    // }
 
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue
-            && problemeHebdo->CaracteristiquesHydrauliques[pays].DirectLevelAccess)
-        {
-            finalStockEquivalent.add(pays);
-        }
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
-        {
-            finalStockExpression.add(pays);
-        }
-    }
+    // for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    // {
+    //     if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue
+    //         && problemeHebdo->CaracteristiquesHydrauliques[pays].DirectLevelAccess)
+    //     {
+    //         finalStockEquivalent.add(pays);
+    //     }
+    //     if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
+    //     {
+    //         finalStockExpression.add(pays);
+    //     }
+    // }
 
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
-        OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(
-          problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, false);
+        OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
+                                                                                false);
     }
 }
