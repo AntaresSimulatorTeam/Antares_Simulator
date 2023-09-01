@@ -29,23 +29,20 @@
 #include "h2o_j_fonctions.h"
 
 void H2O_J_ConstruireLesContraintes(int NbPdt,
-                                    int* NumeroDeVariableTurbine,
+                                    std::vector<int>& NumeroDeVariableTurbine,
                                     int NumeroDeLaVariableMu,
                                     int NumeroDeLaVariableXi,
-                                    int* IndicesDebutDeLigne,
-                                    char* Sens,
-                                    int* NombreDeTermesDesLignes,
-                                    double* CoefficientsDeLaMatriceDesContraintes,
-                                    int* IndicesColonnes,
-                                    CORRESPONDANCE_DES_CONTRAINTES* CorrespondanceDesContraintes)
+                                    std::vector<int>& IndicesDebutDeLigne,
+                                    std::vector<char>& Sens,
+                                    std::vector<int>& NombreDeTermesDesLignes,
+                                    std::vector<double>& CoefficientsDeLaMatriceDesContraintes,
+                                    std::vector<int>& IndicesColonnes,
+                                    CORRESPONDANCE_DES_CONTRAINTES& CorrespondanceDesContraintes)
 {
     int NombreDeContraintes;
     int il;
     int Pdt;
     int NombreDeTermes;
-    int* NumeroDeContrainteSurXi;
-
-    NumeroDeContrainteSurXi = CorrespondanceDesContraintes->NumeroDeContrainteSurXi;
 
     NombreDeContraintes = 0;
     il = 0;
@@ -67,7 +64,7 @@ void H2O_J_ConstruireLesContraintes(int NbPdt,
     Sens[NombreDeContraintes] = '=';
     NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
 
-    CorrespondanceDesContraintes->NumeroDeContrainteDEnergieMensuelle = NombreDeContraintes;
+    CorrespondanceDesContraintes.NumeroDeContrainteDEnergieMensuelle = NombreDeContraintes;
     NombreDeContraintes++;
 
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
@@ -88,7 +85,7 @@ void H2O_J_ConstruireLesContraintes(int NbPdt,
         Sens[NombreDeContraintes] = '>';
         NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
 
-        NumeroDeContrainteSurXi[Pdt] = NombreDeContraintes;
+        CorrespondanceDesContraintes.NumeroDeContrainteSurXi[Pdt] = NombreDeContraintes;
         NombreDeContraintes++;
     }
 

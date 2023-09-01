@@ -24,18 +24,34 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_H2O_M_FONCTIONS__
-#define __SOLVER_H2O_M_FONCTIONS__
 
-DONNEES_ANNUELLES* H2O_M_Instanciation(int);
-void H2O_M_OptimiserUneAnnee(DONNEES_ANNUELLES*, int);
-void H2O_M_Free(DONNEES_ANNUELLES*);
+#ifdef __CPLUSPLUS
+extern "C"
+{
+#endif
 
-void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES*);
-void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES*);
-void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES*);
-void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES*);
-void H2O_M_ResoudreLeProblemeLineaire(DONNEES_ANNUELLES*, int);
-void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES*);
+#include "spx_definition_arguments.h"
+#include "spx_fonctions.h"
 
-#endif /* __SOLVER_H2O_M_FONCTIONS__ */
+#ifdef __CPLUSPLUS
+}
+#endif
+
+#include "h2o_j_donnees_mensuelles.h"
+#include "h2o_j_fonctions.h"
+
+void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
+{
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+
+    for (int i = 0; i < ProblemeHydraulique.NombreDeProblemes; i++)
+    {
+        PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[i];
+        if (ProbSpx)
+            SPX_LibererProbleme(ProbSpx);
+    }
+
+    free(ProblemeHydraulique.Probleme);
+
+    return;
+}
