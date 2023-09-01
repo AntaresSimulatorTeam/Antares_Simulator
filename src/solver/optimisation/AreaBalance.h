@@ -3,5 +3,5 @@ struct AreaBalance : public Constraint
 {
     using Constraint::Constraint;
 
-    void add(int pdt, int pays, int optimizationNumber);
+    void add(int pdt, int pays);
 };

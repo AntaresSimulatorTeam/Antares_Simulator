@@ -1,7 +1,8 @@
 #include "constraint_builder.h"
+#include "AreaBalance.h"
 
 // Constraint definitions
-void AreaBalance::add(int pdt, int pays, int optimizationNumber)
+void AreaBalance::add(int pdt, int pays)
 {
     // TODO improve this
     {
