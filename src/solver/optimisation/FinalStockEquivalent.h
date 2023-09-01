@@ -1,5 +1,5 @@
 #pragma once
-#include "constraintsbuilder.h"
+#include "constraint_builder.h"
 
 struct FinalStockEquivalent : public Constraint
 {

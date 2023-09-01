@@ -1,6 +1,6 @@
 #pragma once
 
-#include "constraintsbuilder.h"
+#include "constraint_builder.h"
 
 struct FinalStockExpression : public Constraint
 {
