@@ -101,6 +101,8 @@ set(RTESOLVER_OPT
 		MinHydroPower.cpp
 		MaxHydroPower.h
 		MaxHydroPower.cpp
+		MaxPumping.h
+		MaxPumping.cpp
 	)
 
 

@@ -46,40 +46,12 @@
 #include "HydroPowerSmoothingUsingVariationMaxUp.h"
 #include "MinHydroPower.h"
 #include "MaxHydroPower.h"
-
+#include "MaxPumping.h"
 #include <antares/study.h>
 
 using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
-
-// struct MaxPumping : public Constraint
-// {
-//     using Constraint::Constraint;
-//     void add(int pays, int NumeroDeLIntervalle)
-//     {
-//         if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
-//         {
-//             const int NombreDePasDeTempsPourUneOptimisation
-//               = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-//             for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
-//             {
-//                 builder.updateHourWithinWeek(pdt);
-//                 builder.include(Variable::Pumping(pays), 1.0);
-//             }
-//             const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
-//                                  .MaxEnergiePompageParIntervalleOptimise[NumeroDeLIntervalle];
-
-//             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-//                                   problemeHebdo->NamedProblems);
-//             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-//             namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-//             namer.MaxPumping(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-//             builder.lessThan(rhs).build();
-//         }
-//     }
-// };
 
 // struct AreaHydroLevel : public Constraint
 // {
@@ -195,7 +167,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     MinHydroPower minHydroPower(problemeHebdo);
     MaxHydroPower maxHydroPower(problemeHebdo);
-    // MaxPumping maxPumping(problemeHebdo);
+    MaxPumping maxPumping(problemeHebdo);
     // AreaHydroLevel areaHydroLevel(problemeHebdo);
     // FinalStockEquivalent finalStockEquivalent(problemeHebdo);
     // FinalStockExpression finalStockExpression(problemeHebdo);
@@ -269,11 +241,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         maxHydroPower.add(pays);
     }
 
-    // // TODO after this
-    // for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    // {
-    //     maxPumping.add(pays, NumeroDeLIntervalle);
-    // }
+    // TODO after this
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    {
+        maxPumping.add(pays);
+    }
 
     // for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdtHebdo++,
     // pdt++)
