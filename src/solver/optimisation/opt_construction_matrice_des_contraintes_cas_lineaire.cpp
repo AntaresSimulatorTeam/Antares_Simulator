@@ -40,32 +40,6 @@ using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
 
-// Helper functions
-void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
-                   ConstraintBuilder& constraintBuilder,
-                   int pays)
-{
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo.PaliersThermiquesDuPays[pays];
-
-    for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
-    {
-        const int palier
-          = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-        constraintBuilder.include(Variable::DispatchableProduction(palier), -1.0);
-    }
-}
-
-static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-                                    ConstraintBuilder& constraintBuilder)
-{
-    for (const auto& storage : shortTermStorageInput)
-    {
-        unsigned index = storage.clusterGlobalIndex;
-        constraintBuilder.include(Variable::ShortTermStorageInjection(index), 1.0)
-          .include(Variable::ShortTermStorageWithdrawal(index), -1.0);
-    }
-}
-
 struct FictitiousLoad : public Constraint
 {
     using Constraint::Constraint;
