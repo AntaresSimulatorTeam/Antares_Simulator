@@ -1,3 +1,4 @@
+#pragma once
 #include "constraint_builder.h"
 
 struct FlowDissociation : public Constraint
