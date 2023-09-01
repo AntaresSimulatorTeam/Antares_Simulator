@@ -33,7 +33,6 @@ target_link_libraries(result_writer
         PUBLIC
         Antares::benchmarking
         PRIVATE
-        Antares::benchmarking
         yuni-static-core
         MINIZIP::minizip
         logs
