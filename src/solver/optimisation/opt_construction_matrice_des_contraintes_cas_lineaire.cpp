@@ -24,259 +24,332 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include "opt_structure_probleme_a_resoudre.h"
-#include "opt_export_structure.h"
-#include "../utils/filename.h"
-#include "opt_fonctions.h"
-#include "constraint_builder.h"
-#include "opt_rename_problem.h"
-#include "sim_structure_probleme_economique.h"
 
+#include "opt_structure_probleme_a_resoudre.h"
+
+#include "../simulation/sim_structure_donnees.h"
+#include "../simulation/sim_extern_variables_globales.h"
+
+#include "opt_fonctions.h"
+#include "opt_rename_problem.h"
+#include "constraint_builder.h"
 #include <antares/study.h>
 
+using namespace Antares;
 using namespace Antares::Data;
+using namespace Yuni;
 
-// TODO DELETE THIS FILE
-
-void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
-                                                             Solver::IResultWriter& writer)
+// Helper functions
+void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
+                   ConstraintBuilder& constraintBuilder,
+                   int pays)
 {
-    int var;
+    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo.PaliersThermiquesDuPays[pays];
 
-    const bool exportStructure = problemeHebdo->ExportStructure;
-    const bool firstWeekOfSimulation = problemeHebdo->firstWeekOfSimulation;
-
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
-
-    int nombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
-    int nombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-    std::vector<double>& Pi = ProblemeAResoudre->Pi;
-    std::vector<int>& Colonne = ProblemeAResoudre->Colonne;
-
-    ProblemeAResoudre->NombreDeContraintes = 0;
-    ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-    ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
-                                    problemeHebdo->NamedProblems);
-    
-    for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+    for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
     {
-      auto& CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-        int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-        constraintNamer.UpdateTimeStep(timeStepInYear);
+        const int palier
+          = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+        constraintBuilder.include(Variable::DispatchableProduction(palier), -1.0);
+    }
+}
 
-        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+                                    ConstraintBuilder& constraintBuilder)
+{
+    for (const auto& storage : shortTermStorageInput)
+    {
+        unsigned index = storage.clusterGlobalIndex;
+        constraintBuilder.include(Variable::ShortTermStorageInjection(index), 1.0)
+          .include(Variable::ShortTermStorageWithdrawal(index), -1.0);
+    }
+}
+
+// Constraint definitions
+struct AreaBalance : public Constraint
+{
+    using Constraint::Constraint;
+
+    void add(int pdt, int pdtHebdo, int pays, int optimizationNumber)
+    {
+        // TODO improve this
         {
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            namer.AreaBalance(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        }
+        builder.updateHourWithinWeek(pdt);
 
-            // Some other constraint
-            int nombreDeTermes = 0;
-
-            // exportPaliers(
-            //   *problemeHebdo, CorrespondanceVarNativesVarOptim, pays, nombreDeTermes, Pi, Colonne);
-            // var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = -problemeHebdo->DefaillanceNegativeUtiliserHydro[pays];
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
-
-            var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillanceNegative[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = 1.0;
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
-
-            constraintNamer.FictiveLoads(ProblemeAResoudre->NombreDeContraintes);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-            // Short term storage
-            // shortTermStorageLevels(problemeHebdo->ShortTermStorage[pays],
-            //                        ProblemeAResoudre,
-            //                        problemeHebdo->CorrespondanceVarNativesVarOptim,
-            //                        Pi,
-            //                        Colonne,
-            //                        nombreDePasDeTempsPourUneOptimisation,
-            //                        pdt,
-            //                        constraintNamer);
+        int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
+        while (interco >= 0)
+        {
+            builder.include(Variable::NTCDirect(interco), 1.0);
+            interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
         }
 
-        for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
+        interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
+        while (interco >= 0)
         {
-            if (problemeHebdo->CoutDeTransport[interco].IntercoGereeAvecDesCouts)
-            {
-                int nombreDeTermes = 0;
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-                var = CorrespondanceVarNativesVarOptim
-                        .NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[interco];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = -1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-                var = CorrespondanceVarNativesVarOptim
-                        .NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[interco];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
+            builder.include(Variable::NTCDirect(interco), -1.0);
+            interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
+        }
 
+        exportPaliers(*problemeHebdo, builder, pays);
+        builder.include(Variable::HydProd(pays), -1.0)
+          .include(Variable::Pumping(pays), 1.0)
+          .include(Variable::PositiveUnsuppliedEnergy(pays), -1.0)
+          .include(Variable::NegativeUnsuppliedEnergy(pays), 1.0);
+
+        shortTermStorageBalance(problemeHebdo->ShortTermStorage[pays], builder);
+
+        {
+            const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
+              = problemeHebdo->ConsommationsAbattues[pdtHebdo];
+            double rhs = -ConsommationsAbattues.ConsommationAbattueDuPays[pays];
+            bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
+            bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
+            if (reserveJm1 && opt1)
+            {
+                rhs -= problemeHebdo->ReserveJMoins1[pays].ReserveHoraireJMoins1[pdtHebdo];
+            }
+            /* check !*/
+            double* adresseDuResultat
+              = &(problemeHebdo->ResultatsHoraires[pays].CoutsMarginauxHoraires[pdtHebdo]);
+
+            std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
+              = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
+
+            int cnt = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+
+            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = adresseDuResultat;
+            /*check! */
+            builder.equalTo(rhs);
+            builder.build();
+        }
+    }
+};
+
+struct FictitiousLoad : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pdt, int pdtHebdo, int pays)
+    {
+        // TODO improve this
+        {
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            namer.FictiveLoads(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        }
+
+        builder.updateHourWithinWeek(pdt);
+        exportPaliers(*problemeHebdo, builder, pays);
+        builder
+          .include(Variable::HydProd(pays), -problemeHebdo->DefaillanceNegativeUtiliserHydro[pays])
+          .include(Variable::NegativeUnsuppliedEnergy(pays), 1.0);
+
+        {
+            double rhs = 0;
+            // Private members ?
+            const ALL_MUST_RUN_GENERATION& AllMustRunGeneration
+              = problemeHebdo->AllMustRunGeneration[pdtHebdo];
+            const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
+              = problemeHebdo->ConsommationsAbattues[pdtHebdo];
+            const std::vector<bool>& DefaillanceNegativeUtiliserConsoAbattue
+              = problemeHebdo->DefaillanceNegativeUtiliserConsoAbattue;
+            const std::vector<bool>& DefaillanceNegativeUtiliserPMinThermique
+              = problemeHebdo->DefaillanceNegativeUtiliserPMinThermique;
+
+            double MaxAllMustRunGeneration = 0.0;
+
+            if (AllMustRunGeneration.AllMustRunGenerationOfArea[pays] > 0.0)
+                MaxAllMustRunGeneration = AllMustRunGeneration.AllMustRunGenerationOfArea[pays];
+
+            double MaxMoinsConsommationBrute = 0.0;
+            if (-(ConsommationsAbattues.ConsommationAbattueDuPays[pays]
+                  + AllMustRunGeneration.AllMustRunGenerationOfArea[pays])
+                > 0.0)
+                MaxMoinsConsommationBrute
+                  = -(ConsommationsAbattues.ConsommationAbattueDuPays[pays]
+                      + AllMustRunGeneration.AllMustRunGenerationOfArea[pays]);
+
+            rhs = DefaillanceNegativeUtiliserConsoAbattue[pays]
+                  * (MaxAllMustRunGeneration + MaxMoinsConsommationBrute);
+
+            if (DefaillanceNegativeUtiliserPMinThermique[pays] == 0)
+            {
+                rhs -= OPT_SommeDesPminThermiques(problemeHebdo, pays, pdtHebdo);
+            }
+            builder.lessThan(rhs);
+        }
+        builder.build();
+    }
+};
+
+struct ShortTermStorageLevel : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pdt, int pdtHebdo, int pays)
+    {
+        // TODO improve this
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                              problemeHebdo->NamedProblems);
+        const int hourInTheYear = problemeHebdo->weekInTheYear * 168 + pdt;
+        namer.UpdateTimeStep(hourInTheYear);
+        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+
+        builder.updateHourWithinWeek(pdt);
+        for (const auto& storage : problemeHebdo->ShortTermStorage[pays])
+        {
+            // L[h] - L[h-1] - efficiency * injection[h] + withdrawal[h] = inflows[h]
+            namer.ShortTermStorageLevel(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+                                        storage.name);
+            const auto index = storage.clusterGlobalIndex;
+            builder.include(Variable::ShortTermStorageLevel(index), 1.0)
+              .include(Variable::ShortTermStorageLevel(index), -1.0, -1, true)
+              .include(Variable::ShortTermStorageInjection(index), -1.0 * storage.efficiency)
+              .include(Variable::ShortTermStorageWithdrawal(index), 1.0)
+              .equalTo(storage.series->inflows[hourInTheYear])
+              .build();
+        }
+    }
+};
+
+struct FlowDissociation : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pdt, int pdtHebdo, int interco)
+    {
+        if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
+            CoutDeTransport.IntercoGereeAvecDesCouts)
+        {
+            // TODO improve this
+
+            {
                 const auto origin
                   = problemeHebdo
                       ->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
                 const auto destination
                   = problemeHebdo
                       ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-                constraintNamer.FlowDissociation(
-                  ProblemeAResoudre->NombreDeContraintes, origin, destination);
-                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-            }
-        }
-
-        for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
-             cntCouplante++)
-        {
-            const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-              = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-
-            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
-                continue;
-
-            int nbInterco
-              = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
-            int nombreDeTermes = 0;
-            for (int index = 0; index < nbInterco; index++)
-            {
-                int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
-                double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
-                int Offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
-                int pdt1;
-
-                if (Offset >= 0)
-                {
-                    pdt1 = (pdt + Offset) % nombreDePasDeTempsPourUneOptimisation;
-                }
-                else
-                {
-                    pdt1 = (pdt + Offset + problemeHebdo->NombreDePasDeTemps)
-                           % nombreDePasDeTempsPourUneOptimisation;
-                }
-
-                var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
-                        .NumeroDeVariableDeLInterconnexion[interco];
-
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = poids;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
+                ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                      problemeHebdo->NamedProblems);
+                namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+                namer.FlowDissociation(
+                  problemeHebdo->ProblemeAResoudre->NombreDeContraintes, origin, destination);
             }
 
-            int nbClusters
-              = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
-            for (int index = 0; index < nbClusters; index++)
-            {
-                int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
-                const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-                  = problemeHebdo->PaliersThermiquesDuPays[pays];
-                const int palier
-                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
-                      [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
-                double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
-                int Offset
-                  = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
-                int pdt1;
-                if (Offset >= 0)
-                {
-                    pdt1 = (pdt + Offset) % nombreDePasDeTempsPourUneOptimisation;
-                }
-                else
-                {
-                    pdt1 = (pdt + Offset + problemeHebdo->NombreDePasDeTemps)
-                           % nombreDePasDeTempsPourUneOptimisation;
-                }
+            builder.updateHourWithinWeek(pdt);
+            builder.include(Variable::NTCDirect(interco), 1.0)
+              .include(Variable::IntercoDirectCost(interco), -1.0)
+              .include(Variable::IntercoIndirectCost(interco), 1.0);
 
-                var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
-                        .NumeroDeVariableDuPalierThermique[palier];
+            if (CoutDeTransport.IntercoGereeAvecLoopFlow)
+                builder.equalTo(problemeHebdo->ValeursDeNTC[pdtHebdo]
+                                  .ValeurDeLoopFlowOrigineVersExtremite[interco]);
+            else
+                builder.equalTo(0.);
 
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = poids;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-            }
-            constraintNamer.BindingConstraintHour(
-              ProblemeAResoudre->NombreDeContraintes,
-              MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre,
-              Pi,
-              Colonne,
-              nombreDeTermes,
-              MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
+            builder.build();
         }
     }
+};
 
-    for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
-         cntCouplante++)
+struct BindingConstraintHour : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pdt, int pdtHebdo, int cntCouplante)
+    {
+        const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+          = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
+        if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
+            return;
+
+        builder.updateHourWithinWeek(pdt);
+        // Links
+        const int nbInterco
+          = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
+        for (int index = 0; index < nbInterco; index++)
+        {
+            const int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
+            const double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
+            const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
+            builder.include(Variable::NTCDirect(interco), poids, offset, true);
+        }
+
+        // Thermal clusters
+        const int nbClusters
+          = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
+        for (int index = 0; index < nbClusters; index++)
+        {
+            const int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+              = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const int palier
+              = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
+                  [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
+            const double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
+            const int offset
+              = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
+            builder.include(Variable::DispatchableProduction(palier), poids, offset, true);
+        }
+
+        std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
+          = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
+        int cnt = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+
+        double rhs = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[pdtHebdo];
+        AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
+          = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales.data()
+            + pdtHebdo;
+        char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
+        builder.operatorRHS(op, rhs);
+        {
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+            namer.BindingConstraintHour(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+                                        MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
+        }
+        builder.build();
+    }
+};
+
+struct BindingConstraintDay : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int cntCouplante)
     {
         const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
           = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
         if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_JOURNALIERE)
-            continue;
+            return;
 
-        int nbInterco
+        const int nbInterco
           = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
-        int nbClusters
+        const int nbClusters
           = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
-        int pdtDebut = 0;
-        while (pdtDebut < nombreDePasDeTempsPourUneOptimisation)
-        {
-            int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
-            int nombreDeTermes = 0;
 
+        const int NombreDePasDeTempsPourUneOptimisation
+          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation; // TODO
+        const int NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
+        for (int pdtDebut = 0; pdtDebut < NombreDePasDeTempsPourUneOptimisation;
+             pdtDebut += NombreDePasDeTempsDUneJournee)
+        {
             for (int index = 0; index < nbInterco; index++)
             {
                 int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
                 double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
-                int Offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
+                int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
 
-                for (int pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
+                for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
                 {
-                    int pdt1;
-                    if (Offset >= 0)
-                    {
-                        pdt1 = (pdt + Offset) % nombreDePasDeTempsPourUneOptimisation;
-                    }
-                    else
-                    {
-                        pdt1 = (pdt + Offset + problemeHebdo->NombreDePasDeTemps)
-                               % nombreDePasDeTempsPourUneOptimisation;
-                    }
-
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
-                            .NumeroDeVariableDeLInterconnexion[interco];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = poids;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
+                    builder.updateHourWithinWeek(pdt);
+                    builder.include(Variable::NTCDirect(interco), poids, offset, true);
                 }
             }
 
@@ -289,95 +362,70 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                   = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
                       [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
                 double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
-                int Offset
+                int offset
                   = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
 
-                for (int pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
+                for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
                 {
-                    int pdt1;
-                    if (Offset >= 0)
-                    {
-                        pdt1 = (pdt + Offset) % nombreDePasDeTempsPourUneOptimisation;
-                    }
-                    else
-                    {
-                        pdt1 = (pdt + Offset + problemeHebdo->NombreDePasDeTemps)
-                               % nombreDePasDeTempsPourUneOptimisation;
-                    }
-
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
-                            .NumeroDeVariableDuPalierThermique[palier];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = poids;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
+                    builder.updateHourWithinWeek(pdt);
+                    builder.include(Variable::DispatchableProduction(palier), poids, offset, true);
                 }
             }
+            // TODO probably wrong from the 2nd week, check
+            const int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
 
-            assert(cntCouplante >= 0);
-
-            constraintNamer.UpdateTimeStep(jour);
-            constraintNamer.BindingConstraintDay(
-              ProblemeAResoudre->NombreDeContraintes,
-              MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre,
-              Pi,
-              Colonne,
-              nombreDeTermes,
-              MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
-            pdtDebut += nombreDePasDeTempsDUneJournee;
+            std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
+              = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
+            int cnt = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
+              = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales.data()
+                + jour;
+            double rhs = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[jour];
+            char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
+            builder.operatorRHS(op, rhs);
+            {
+                ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                      problemeHebdo->NamedProblems);
+                namer.UpdateTimeStep(jour);
+                namer.BindingConstraintDay(
+                  problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+                  MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
+            }
+            builder.build();
         }
     }
+};
 
-    if (nombreDePasDeTempsPourUneOptimisation > nombreDePasDeTempsDUneJournee)
+struct BindingConstraintWeek : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int cntCouplante)
     {
-        int semaine = problemeHebdo->weekInTheYear;
-        for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
-             cntCouplante++)
-        {
-            const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-              = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante
-                != CONTRAINTE_HEBDOMADAIRE)
-                continue;
+        const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+          = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
+        if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HEBDOMADAIRE)
+            return;
 
-            int nbInterco
-              = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
-            int nombreDeTermes = 0;
+        const int nbInterco
+          = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
+        const int nbClusters
+          = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
+
+        const int NombreDePasDeTempsPourUneOptimisation
+          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+
+        for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
+        {
+            builder.updateHourWithinWeek(pdt);
             for (int index = 0; index < nbInterco; index++)
             {
                 int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
                 double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
-                int Offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
-                for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-                {
-                    int pdt1;
-                    if (Offset >= 0)
-                    {
-                        pdt1 = (pdt + Offset) % nombreDePasDeTempsPourUneOptimisation;
-                    }
-                    else
-                    {
-                        pdt1 = (pdt + Offset + problemeHebdo->NombreDePasDeTemps)
-                               % nombreDePasDeTempsPourUneOptimisation;
-                    }
+                int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
 
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
-                            .NumeroDeVariableDeLInterconnexion[interco];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = poids;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
+                builder.include(Variable::NTCDirect(interco), poids, offset, true);
             }
 
-            int nbClusters
-              = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
             for (int index = 0; index < nbClusters; index++)
             {
                 int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
@@ -387,445 +435,513 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                   = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
                       [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
                 double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
-                int Offset
+                int offset
                   = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
-                for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-                {
-                    int pdt1;
-                    if (Offset >= 0)
-                    {
-                        pdt1 = (pdt + Offset) % nombreDePasDeTempsPourUneOptimisation;
-                    }
-                    else
-                    {
-                        pdt1 = (pdt + Offset + problemeHebdo->NombreDePasDeTemps)
-                               % nombreDePasDeTempsPourUneOptimisation;
-                    }
-
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
-                            .NumeroDeVariableDuPalierThermique[palier];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = poids;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
+                builder.include(Variable::DispatchableProduction(palier), poids, offset, true);
             }
-
-            constraintNamer.UpdateTimeStep(semaine);
-            constraintNamer.BindingConstraintWeek(
-              ProblemeAResoudre->NombreDeContraintes,
-              MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre,
-              Pi,
-              Colonne,
-              nombreDeTermes,
-              MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
         }
-    }
+        // RHS
+        {
+            std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
+              = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
+            int cnt = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
+              = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales.data();
+
+            double rhs = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[0];
+            char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
+            builder.operatorRHS(op, rhs);
+        }
+        // Name
+        {
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
+            namer.BindingConstraintWeek(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+                                        MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
+        }
+        builder.build();
+    }
+};
+
+struct HydroPower : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays, int NumeroDeLIntervalle)
     {
-        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         bool presenceHydro
           = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
         bool TurbEntreBornes
           = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-        bool presencePompage
-          = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable;
+        if (!presenceHydro || TurbEntreBornes)
+            return;
 
-        int nombreDeTermes = 0;
-        if (presenceHydro && !TurbEntreBornes)
+        const int NombreDePasDeTempsPourUneOptimisation
+          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+
+        if (bool presencePompage
+            = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
         {
-            if (presencePompage)
+            const double pumpingRatio
+              = problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
+            for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-                {
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                            .NumeroDeVariablesDeLaProdHyd[pays];
-
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = 1.0;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                            .NumeroDeVariablesDePompage[pays];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes]
-                          = problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
-                        Pi[nombreDeTermes] *= -1.0;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
+                builder.updateHourWithinWeek(pdt);
+                builder.include(Variable::HydProd(pays), 1.0)
+                  .include(Variable::Pumping(pays), -pumpingRatio);
             }
-            else
-            {
-                for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-                {
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                            .NumeroDeVariablesDeLaProdHyd[pays];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = 1.0;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
-            }
-
-            constraintNamer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-            constraintNamer.HydroPower(ProblemeAResoudre->NombreDeContraintes);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
         }
+        else
+        {
+            for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
+            {
+                builder.updateHourWithinWeek(pdt);
+                builder.include(Variable::HydProd(pays), 1.0);
+            }
+        }
+        {
+            double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
+                           .CntEnergieH2OParIntervalleOptimise[NumeroDeLIntervalle];
+            builder.equalTo(rhs);
+        }
+        {
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
+            namer.HydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        }
+        builder.build();
+    }
+};
+
+struct HydroPowerSmoothingUsingVariationSum : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays, int NumeroDeLIntervalle)
+    {
+        if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
+        {
+            return;
+        }
+
+        const int nombreDePasDeTempsPourUneOptimisation
+          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+        for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+        {
+            const auto& CorrespondanceVarNativesVarOptim
+              = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+            int nombreDeTermes = 0;
+
+            int pdt1 = pdt + 1;
+            if (pdt1 >= nombreDePasDeTempsPourUneOptimisation)
+                pdt1 = 0;
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+            namer.HydroPowerSmoothingUsingVariationSum(
+              problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+
+            builder.updateHourWithinWeek(pdt)
+              .include(Variable::HydProd(pays), 1.0)
+              .updateHourWithinWeek(pdt1) /* /!\ Re-check*/
+              .include(Variable::HydProd(pays), -1.0)
+              .updateHourWithinWeek(pdt) /* /!\ Re-check*/
+              .include(Variable::HydProdDown(pays), -1.0)
+              .include(Variable::HydProdUp(pays), 1.0)
+              .equalTo(0)
+              .build();
+        }
+    }
+};
+struct HydroPowerSmoothingUsingVariationMaxDown : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays, int NumeroDeLIntervalle, int pdt)
+    {
+        if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
+        {
+            return;
+        }
+
+        const int nombreDePasDeTempsPourUneOptimisation
+          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+
+        const auto& CorrespondanceVarNativesVarOptim
+          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+        int nombreDeTermes = 0;
+
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                              problemeHebdo->NamedProblems);
+        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+        namer.HydroPowerSmoothingUsingVariationMaxDown(
+          problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+
+        builder.updateHourWithinWeek(pdt)
+          .include(Variable::HydProd(pays), 1.0)
+          .updateHourWithinWeek(0)
+          .include(Variable::HydProdDown(pays), -1.0)
+          .lessThan(0)
+          .build();
+    }
+};
+struct HydroPowerSmoothingUsingVariationMaxUp : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays, int NumeroDeLIntervalle, int pdt)
+    {
+            if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
+            {
+            return;
+        }
+
+        const int nombreDePasDeTempsPourUneOptimisation
+          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+
+        const auto& CorrespondanceVarNativesVarOptim
+          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+        int nombreDeTermes = 0;
+
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                              problemeHebdo->NamedProblems);
+        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+        namer.HydroPowerSmoothingUsingVariationMaxUp(
+          problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+
+        builder.updateHourWithinWeek(pdt)
+          .include(Variable::HydProd(pays), 1.0)
+          .updateHourWithinWeek(0)
+          .include(Variable::HydProdUp(pays), -1.0)
+          .greaterThan(0)
+          .build();
+    }
+};
+struct MinHydroPower : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays, int NumeroDeLIntervalle)
+    {
+            bool presenceHydro
+              = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
+            bool TurbEntreBornes
+              = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
+            if (presenceHydro
+                && (TurbEntreBornes
+                    || problemeHebdo->CaracteristiquesHydrauliques[pays]
+                         .PresenceDePompageModulable))
+            {
+            const int NombreDePasDeTempsPourUneOptimisation
+              = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
+            namer.MinHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+            for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
+            {
+                builder.updateHourWithinWeek(pdt);
+                builder.include(Variable::HydProd(pays), 1.0);
+            }
+            const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
+                                 .MinEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
+            builder.greaterThan(rhs).build();
+            }
+    }
+};
+
+struct MaxHydroPower : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays, int NumeroDeLIntervalle)
+    {
+        bool presenceHydro
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
+        bool TurbEntreBornes
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
+        if (presenceHydro
+            && (TurbEntreBornes
+                || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
+        {
+            const int NombreDePasDeTempsPourUneOptimisation
+              = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+
+            for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
+            {
+                builder.updateHourWithinWeek(pdt);
+                builder.include(Variable::HydProd(pays), 1.0);
+            }
+
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
+            namer.MaxHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+
+            const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
+                                 .MaxEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
+            builder.lessThan(rhs).build();
+        }
+    }
+};
+struct MaxPumping : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays, int NumeroDeLIntervalle)
+    {
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
+        {
+            const int NombreDePasDeTempsPourUneOptimisation
+              = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+
+            for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
+            {
+                builder.updateHourWithinWeek(pdt);
+                builder.include(Variable::Pumping(pays), 1.0);
+            }
+            const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
+                                 .MaxEnergiePompageParIntervalleOptimise[NumeroDeLIntervalle];
+
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
+            namer.MaxPumping(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+            builder.lessThan(rhs).build();
+        }
+    }
+};
+
+struct AreaHydroLevel : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays, int pdt, int pdtHebdo)
+    {
+        double rhs
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].ApportNaturelHoraire[pdtHebdo];
+        if (pdtHebdo == 0)
+        {
+            rhs += problemeHebdo->CaracteristiquesHydrauliques[pays].NiveauInitialReservoir;
+        }
+        builder.updateHourWithinWeek(pdt).include(Variable::HydroLevel(pays), 1.0);
+        if (pdt > 0)
+        {
+            builder.updateHourWithinWeek(pdt - 1).include(Variable::HydroLevel(pays), -1.0);
+        }
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                              problemeHebdo->NamedProblems);
+
+        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+        namer.AreaHydroLevel(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+
+        builder.updateHourWithinWeek(pdt)
+          .include(Variable::HydProd(pays), 1.0)
+          .include(Variable::Pumping(pays),
+                   -problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio)
+          .include(Variable::Overflow(pays), 1.)
+          .equalTo(rhs)
+          .build();
+    }
+};
+
+struct FinalStockEquivalent : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays)
+    {
+        const auto& pdt = problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1;
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                              problemeHebdo->NamedProblems);
+
+        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+        namer.FinalStockEquivalent(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+
+        builder.updateHourWithinWeek(pdt)
+          .include(Variable::FinalStorage(pays), 1.0)
+          .include(Variable::HydroLevel(pays), -1.0)
+          .equalTo(0)
+          .build();
+    }
+};
+
+struct FinalStockExpression : public Constraint
+{
+    using Constraint::Constraint;
+    void add(int pays)
+    {
+        const auto pdt = problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1;
+        builder.updateHourWithinWeek(pdt).include(Variable::FinalStorage(pays), -1.0);
+        for (int layerindex = 0; layerindex < 100; layerindex++)
+        {
+            builder.include(Variable::LayerStorage(pays, layerindex), 1.0);
+        }
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                              problemeHebdo->NamedProblems);
+
+        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+        namer.FinalStockExpression(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        builder.equalTo(0).build();
+    }
+};
+
+void OPT_BuildConstraints(PROBLEME_HEBDO* problemeHebdo,
+                          int PremierPdtDeLIntervalle,
+                          int DernierPdtDeLIntervalle,
+                          int NumeroDeLIntervalle,
+                          const int optimizationNumber)
+{
+    int weekFirstHour = problemeHebdo->weekInTheYear * 168;
+
+    auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+
+    std::vector<double>& SecondMembre = ProblemeAResoudre->SecondMembre;
+
+    std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
+      = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
+
+    const std::vector<int>& NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
+
+    for (int i = 0; i < ProblemeAResoudre->NombreDeContraintes; i++)
+    {
+        AdresseOuPlacerLaValeurDesCoutsMarginaux[i] = nullptr;
+        SecondMembre[i] = 0.0;
+    }
+
+    // TODO reset selectively
+    ProblemeAResoudre->NombreDeContraintes = 0;
+    ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
+
+    AreaBalance areaBalance(problemeHebdo);
+    FictitiousLoad fictitiousLoad(problemeHebdo);
+    ShortTermStorageLevel shortTermStorageLevels(problemeHebdo);
+    FlowDissociation flowDissociation(problemeHebdo);
+    BindingConstraintHour bindingConstraintHour(problemeHebdo);
+    BindingConstraintDay bindingConstraintDay(problemeHebdo);
+    BindingConstraintWeek bindingConstraintWeek(problemeHebdo);
+    HydroPower hydroPower(problemeHebdo);
+    HydroPowerSmoothingUsingVariationSum hydroPowerSmoothingUsingVariationSum(problemeHebdo);
+    HydroPowerSmoothingUsingVariationMaxDown hydroPowerSmoothingUsingVariationMaxDown(
+      problemeHebdo);
+    HydroPowerSmoothingUsingVariationMaxUp hydroPowerSmoothingUsingVariationMaxUp(problemeHebdo);
+
+    MinHydroPower minHydroPower(problemeHebdo);
+    MaxHydroPower maxHydroPower(problemeHebdo);
+    MaxPumping maxPumping(problemeHebdo);
+    AreaHydroLevel areaHydroLevel(problemeHebdo);
+    FinalStockEquivalent finalStockEquivalent(problemeHebdo);
+    FinalStockExpression finalStockExpression(problemeHebdo);
+
+    for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
+         pdtHebdo++, pdt++)
+    {
+        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        {
+            areaBalance.add(pdt, pdtHebdo, pays, optimizationNumber);
+            fictitiousLoad.add(pdt, pdtHebdo, pays);
+            shortTermStorageLevels.add(pdt, pdtHebdo, pays);
+        }
+
+        for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
+        {
+            flowDissociation.add(pdt, pdtHebdo, interco);
+        }
+
+        for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+             cntCouplante++)
+        {
+            bindingConstraintHour.add(pdt, pdtHebdo, cntCouplante);
+        }
+    }
+
+    for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+         cntCouplante++)
+    {
+        bindingConstraintDay.add(cntCouplante);
+    }
+
+    // Weekly binding constraints are only added if the opt period is a week
+    // ignored otherwise
+    if (problemeHebdo->NombreDePasDeTempsPourUneOptimisation
+        > problemeHebdo->NombreDePasDeTempsDUneJournee)
+    {
+        for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+             cntCouplante++)
+        {
+            bindingConstraintWeek.add(cntCouplante);
+        }
+    }
+
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    {
+        hydroPower.add(pays, NumeroDeLIntervalle);
     }
 
     if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
     {
-        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
-                continue;
-
-            constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-            {
-                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                constraintNamer.UpdateTimeStep(timeStepInYear);
-                const auto& CorrespondanceVarNativesVarOptim
-                  = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-                int nombreDeTermes = 0;
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-                int pdt1 = pdt + 1;
-                if (pdt1 >= nombreDePasDeTempsPourUneOptimisation)
-                    pdt1 = 0;
-
-                if (int var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
-                                 .NumeroDeVariablesDeLaProdHyd[pays];
-                    var1 >= 0)
-                {
-                    Pi[nombreDeTermes] = -1.0;
-                    Colonne[nombreDeTermes] = var1;
-                    nombreDeTermes++;
-                }
-
-                if (int var2 = CorrespondanceVarNativesVarOptim
-                                 .NumeroDeVariablesVariationHydALaBaisse[pays];
-                    var2 >= 0)
-                {
-                    Pi[nombreDeTermes] = -1.0;
-                    Colonne[nombreDeTermes] = var2;
-                    nombreDeTermes++;
-                }
-
-                if (int var3 = CorrespondanceVarNativesVarOptim
-                                 .NumeroDeVariablesVariationHydALaHausse[pays];
-                    var3 >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var3;
-                    nombreDeTermes++;
-                }
-
-                constraintNamer.HydroPowerSmoothingUsingVariationSum(
-                  ProblemeAResoudre->NombreDeContraintes);
-                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-            }
+            hydroPowerSmoothingUsingVariationSum.add(pays, NumeroDeLIntervalle);
         }
     }
     else if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
     {
-        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
+            for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdt++)
+            {
+                hydroPowerSmoothingUsingVariationMaxDown.add(pays, NumeroDeLIntervalle, pdt);
+                hydroPowerSmoothingUsingVariationMaxUp.add(pays, NumeroDeLIntervalle, pdt);
+            }
+        }
+    }
+
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    {
+        minHydroPower.add(pays, NumeroDeLIntervalle);
+        maxHydroPower.add(pays, NumeroDeLIntervalle);
+    }
+
+    // TODO after this
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    {
+        maxPumping.add(pays, NumeroDeLIntervalle);
+    }
+
+    for (int pdt = 0, pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle;
+         pdtHebdo++, pdt++)
+    {
+        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        {
+            if (!problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
                 continue;
 
-            constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-            {
-                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                constraintNamer.UpdateTimeStep(timeStepInYear);
-                const auto& CorrespondanceVarNativesVarOptim
-                  = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-                int nombreDeTermes = 0;
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-                int var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[0]
-                             .NumeroDeVariablesVariationHydALaBaisse[pays];
-                if (var1 >= 0)
-                {
-                    Pi[nombreDeTermes] = -1.0;
-                    Colonne[nombreDeTermes] = var1;
-                    nombreDeTermes++;
-                }
-
-                constraintNamer.HydroPowerSmoothingUsingVariationMaxDown(
-                  ProblemeAResoudre->NombreDeContraintes);
-                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-
-                nombreDeTermes = 0;
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-                var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[0]
-                         .NumeroDeVariablesVariationHydALaHausse[pays];
-                if (var1 >= 0)
-                {
-                    Pi[nombreDeTermes] = -1.0;
-                    Colonne[nombreDeTermes] = var1;
-                    nombreDeTermes++;
-                }
-
-                constraintNamer.HydroPowerSmoothingUsingVariationMaxUp(
-                  ProblemeAResoudre->NombreDeContraintes);
-                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
-            }
+            areaHydroLevel.add(pays, pdt, pdtHebdo);
         }
     }
 
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const bool presenceHydro
-          = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
-        const bool presencePompage
-          = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable;
-        const bool TurbEntreBornes
-          = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        if (presenceHydro && (TurbEntreBornes || presencePompage))
-        {
-            int nombreDeTermes = 0;
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-            {
-                var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                        .NumeroDeVariablesDeLaProdHyd[pays];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-            }
-
-            constraintNamer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-            constraintNamer.MinHydroPower(ProblemeAResoudre->NombreDeContraintes);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
-        }
-
-        if (presenceHydro
-            && (TurbEntreBornes
-            || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
-        {
-            int nombreDeTermes = 0;
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-            {
-                constraintNamer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-                var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                        .NumeroDeVariablesDeLaProdHyd[pays];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-            }
-
-            constraintNamer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-            constraintNamer.MaxHydroPower(ProblemeAResoudre->NombreDeContraintes);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-        }
-    }
-
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
-        {
-            int nombreDeTermes = 0;
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-            {
-                var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                        .NumeroDeVariablesDePompage[pays];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-            }
-
-            constraintNamer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-            constraintNamer.MaxPumping(ProblemeAResoudre->NombreDeContraintes);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-        }
-    }
-
-    for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-    {
-        const auto& CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-
-        int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-        constraintNamer.UpdateTimeStep(timeStepInYear);
-        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-        {
-            constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-            if (problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
-            {
-                int nombreDeTermes = 0;
-
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeNiveau[pays];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-
-                if (pdt > 0)
-                {
-                    int var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt - 1]
-                                 .NumeroDeVariablesDeNiveau[pays];
-                    if (var1 >= 0)
-                    {
-                        Pi[nombreDeTermes] = -1.0;
-                        Colonne[nombreDeTermes] = var1;
-                        nombreDeTermes++;
-                    }
-                }
-
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDePompage[pays];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes]
-                      = problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
-                    Pi[nombreDeTermes] *= -1;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeDebordement[pays];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-
-                constraintNamer.AreaHydroLevel(ProblemeAResoudre->NombreDeContraintes);
-                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-            }
-        }
-    }
-
-    /* For each area with ad hoc properties, two possible sets of two additional constraints */
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        const auto& week = problemeHebdo->weekInTheYear;
-        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        constraintNamer.UpdateTimeStep(week * 168 + nombreDePasDeTempsPourUneOptimisation - 1);
-
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue
             && problemeHebdo->CaracteristiquesHydrauliques[pays].DirectLevelAccess)
-        /*  equivalence constraint : StockFinal- Niveau[T]= 0*/
         {
-            int nombreDeTermes = 0;
-            var = problemeHebdo->NumeroDeVariableStockFinal[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = 1.0;
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
-            var = problemeHebdo
-                    ->CorrespondanceVarNativesVarOptim[nombreDePasDeTempsPourUneOptimisation - 1]
-                    .NumeroDeVariablesDeNiveau[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = -1.0;
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
-
-            constraintNamer.FinalStockEquivalent(ProblemeAResoudre->NombreDeContraintes);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+            finalStockEquivalent.add(pays);
         }
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
-        /*  expression constraint : - StockFinal +sum (stocklayers) = 0*/
         {
-            int nombreDeTermes = 0;
-            var = problemeHebdo->NumeroDeVariableStockFinal[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = -1.0;
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
-            for (int layerindex = 0; layerindex < 100; layerindex++)
-            {
-                var = problemeHebdo->NumeroDeVariableDeTrancheDeStock[pays][layerindex];
-
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-            }
-
-            constraintNamer.FinalStockExpression(ProblemeAResoudre->NombreDeContraintes);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+            finalStockExpression.add(pays);
         }
     }
 
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
-        OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
-                                                                                false);
+        OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(
+          problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, false);
     }
-
-    // Export structure
-    if (exportStructure && firstWeekOfSimulation)
-    {
-        OPT_ExportInterco(writer, problemeHebdo);
-        OPT_ExportAreaName(writer, problemeHebdo->NomsDesPays);
-    }
-
-    return;
 }
