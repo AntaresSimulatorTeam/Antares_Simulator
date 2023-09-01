@@ -1,13 +1,25 @@
 #include "AreaBalance.h"
 
-static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-                                    ConstraintBuilder& constraintBuilder)
+static void shortTermStorageBalance(
+  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+  ConstraintBuilder& constraintBuilder,
+  const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim)
 {
     for (const auto& storage : shortTermStorageInput)
     {
         unsigned index = storage.clusterGlobalIndex;
-        constraintBuilder.include(Variable::ShortTermStorageInjection(index), 1.0)
-          .include(Variable::ShortTermStorageWithdrawal(index), -1.0);
+        if (const int varInjection
+            = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.InjectionVariable[index];
+            varInjection >= 0)
+        {
+            constraintBuilder.include(Variable::ShortTermStorageInjection(index), 1.0);
+        }
+        if (const int varWithdrawal
+            = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.WithdrawalVariable[index];
+            varWithdrawal >= 0)
+        {
+            constraintBuilder.include(Variable::ShortTermStorageWithdrawal(index), -1.0);
+        }
     }
 }
 
@@ -54,7 +66,8 @@ void AreaBalance::add(int pdt, int pays)
       .include(Variable::PositiveUnsuppliedEnergy(pays), -1.0)
       .include(Variable::NegativeUnsuppliedEnergy(pays), 1.0);
 
-    shortTermStorageBalance(problemeHebdo->ShortTermStorage[pays], builder);
+    shortTermStorageBalance(
+      problemeHebdo->ShortTermStorage[pays], builder, CorrespondanceVarNativesVarOptim);
 
     // {
     //     const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
