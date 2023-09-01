@@ -337,18 +337,29 @@ public:
         return *this;
     }
 
-    ConstraintBuilder& operatorRHS(char op, double rhs)
+    ConstraintBuilder& operatorRHS(char op)
     {
         if (op == '<' || op == '=' || op == '>')
         {
             operator_ = op;
-            rhs_ = rhs;
         }
         else
             throw std::runtime_error("Invalid operator");
 
         return *this;
     }
+    // ConstraintBuilder& operatorRHS(char op, double rhs)
+    // {
+    //     if (op == '<' || op == '=' || op == '>')
+    //     {
+    //         operator_ = op;
+    //         rhs_ = rhs;
+    //     }
+    //     else
+    //         throw std::runtime_error("Invalid operator");
+
+    //     return *this;
+    // }
 
     ConstraintBuilder& equalTo()
     {

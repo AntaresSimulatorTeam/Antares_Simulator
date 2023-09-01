@@ -5,6 +5,15 @@ void FlowDissociation::add(int pdt, int interco)
     if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
         CoutDeTransport.IntercoGereeAvecDesCouts)
     {
+        /** can be done without this --- keep it for now**/
+        CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
+          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+        CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+          = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+        CorrespondanceCntNativesCntOptim.NumeroDeContrainteDeDissociationDeFlux[interco]
+          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        /******/
+
         // TODO improve this
 
         {

@@ -83,6 +83,8 @@ set(RTESOLVER_OPT
 		ShortTermStorageLevel.cpp
 		FlowDissociation.h
 		FlowDissociation.cpp
+		BindingConstraintHour.h
+		BindingConstraintHour.cpp
 	)
 
 
