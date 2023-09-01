@@ -1,20 +1,4 @@
-#include "constraint_builder.h"
 #include "AreaBalance.h"
-
-// Helper functions
-void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
-                   ConstraintBuilder& constraintBuilder,
-                   int pays)
-{
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo.PaliersThermiquesDuPays[pays];
-
-    for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
-    {
-        const int palier
-          = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-        constraintBuilder.include(Variable::DispatchableProduction(palier), -1.0);
-    }
-}
 
 static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
                                     ConstraintBuilder& constraintBuilder)
@@ -85,6 +69,6 @@ void AreaBalance::add(int pdt, int pays)
 
     // }
     /*check! */
-    builder.equalTo(rhs);
+    // builder.equalTo(rhs);
     builder.build();
 }

@@ -31,7 +31,6 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
-#include "constraint_builder.h"
 
 #include <antares/study.h>
 
@@ -39,352 +38,9 @@ using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
 
-struct PMaxDispatchableGeneration : public Constraint
-{
-    using Constraint::Constraint;
-    void add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)
-    {
-        if (!Simulation)
-        {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-              = problemeHebdo->PaliersThermiquesDuPays[pays];
-            double pmaxDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays.PmaxDUnGroupeDuPalierThermique[clusterIndex];
-            const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex];
-            int t1 = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique;
-
-            int NombreDePasDeTempsPourUneOptimisation
-              = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-            if (t1 < 0)
-                t1 = NombreDePasDeTempsPourUneOptimisation + t1;
-
-            const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
-              = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
-                  .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-            double rhs = 0; // /!\ TODO check
-
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-
-            namer.PMaxDispatchableGeneration(
-              problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-              PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
-            builder.updateHourWithinWeek(pdt)
-              .include(Variable::DispatchableProduction(cluster), 1.0)
-              .include(Variable::NODU(cluster), -pmaxDUnGroupeDuPalierThermique)
-              .lessThan(rhs)
-              .build();
-        }
-        else
-        {
-            nbTermesContraintesPourLesCoutsDeDemarrage += 2;
-            problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
-        }
-    }
-    int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
-};
-
-struct PMinDispatchableGeneration : public Constraint
-{
-    using Constraint::Constraint;
-    void add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)
-    {
-        if (!Simulation)
-        {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-              = problemeHebdo->PaliersThermiquesDuPays[pays];
-            double pminDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
-            const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex];
-            int t1 = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique;
-
-            int NombreDePasDeTempsPourUneOptimisation
-              = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-            if (t1 < 0)
-                t1 = NombreDePasDeTempsPourUneOptimisation + t1;
-
-            const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
-              = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
-                  .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-            // double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]; // /!\ TODO check
-            double rhs = 0; // /!\ TODO check
-
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-            namer.PMinDispatchableGeneration(
-              problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-              PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
-            builder.updateHourWithinWeek(pdt)
-              .include(Variable::DispatchableProduction(cluster), 1.0)
-              .include(Variable::NODU(cluster), -pminDUnGroupeDuPalierThermique)
-              .greaterThan(rhs)
-              .build();
-        }
-        else
-        {
-            nbTermesContraintesPourLesCoutsDeDemarrage += 2;
-            problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
-        }
-    }
-    int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
-};
-
-struct ConsistenceNODU : public Constraint
-{
-    using Constraint::Constraint;
-    void add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)
-    {
-        if (!Simulation)
-        {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-              = problemeHebdo->PaliersThermiquesDuPays[pays];
-            double pminDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
-            const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex];
-
-            int NombreDePasDeTempsPourUneOptimisation
-              = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-            int t1 = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique;
-            int Pdtmoins1 = pdt - 1;
-            if (Pdtmoins1 < 0)
-                Pdtmoins1 = NombreDePasDeTempsPourUneOptimisation + Pdtmoins1;
-
-            CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptimTmoins1
-              = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdtmoins1];
-
-            if (t1 < 0)
-                t1 = NombreDePasDeTempsPourUneOptimisation + t1;
-
-            const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
-              = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
-                  .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-            double rhs = 0; // /!\ TODO check
-
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-            namer.ConsistenceNODU(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-                                  PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
-            builder.updateHourWithinWeek(pdt)
-              .include(Variable::NODU(cluster), 1.0)
-              .updateHourWithinWeek(Pdtmoins1)
-              .include(Variable::NODU(cluster), -1)
-              .updateHourWithinWeek(pdt)
-              .include(Variable::NumberStartingDispatchableUnits(cluster), -1)
-              .include(Variable::NumberStoppingDispatchableUnits(cluster), 1)
-              .equalTo(rhs)
-              .build();
-        }
-        else
-        {
-            nbTermesContraintesPourLesCoutsDeDemarrage += 4;
-            problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
-        }
-    }
-    int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
-};
-
-struct NbUnitsOutageLessThanNbUnitsStop : public Constraint
-{
-    using Constraint::Constraint;
-    void add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)
-    {
-        if (!Simulation)
-        {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-              = problemeHebdo->PaliersThermiquesDuPays[pays];
-            double pminDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
-            const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex];
-
-            int NombreDePasDeTempsPourUneOptimisation
-              = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-            int t1 = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique;
-
-            if (t1 < 0)
-                t1 = NombreDePasDeTempsPourUneOptimisation + t1;
-
-            const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
-              = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
-                  .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-            // double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]; // /!\ TODO check
-            double rhs = 0; // /!\ TODO check
-
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-            namer.NbUnitsOutageLessThanNbUnitsStop(
-              problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-              PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
-            builder.updateHourWithinWeek(pdt)
-              .include(Variable::NumberBreakingDownDispatchableUnits(cluster), 1.0)
-              .include(Variable::NumberStoppingDispatchableUnits(cluster), -1.0)
-              .lessThan(rhs)
-              .build();
-        }
-        else
-        {
-            nbTermesContraintesPourLesCoutsDeDemarrage += 4;
-            problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
-        }
-    }
-    int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
-};
-
-struct NbDispUnitsMinBoundSinceMinUpTime : public Constraint
-{
-    using Constraint::Constraint;
-    void add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)
-    {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
-        const int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
-          = PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[clusterIndex];
-        if (!Simulation)
-        {
-            double pminDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
-
-            int NombreDePasDeTempsPourUneOptimisation
-              = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-            const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
-              = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
-                  .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-            double rhs = 0; // /!\ TODO check
-
-            builder.updateHourWithinWeek(pdt).include(Variable::NODU(cluster), 1.0);
-
-            for (int k = pdt - DureeMinimaleDeMarcheDUnGroupeDuPalierThermique + 1; k <= pdt; k++)
-            {
-                int t1 = k;
-                if (t1 < 0)
-                    t1 = NombreDePasDeTempsPourUneOptimisation + t1;
-                int t1moins1 = t1 - 1;
-
-                if (t1moins1 < 0)
-                    t1moins1 = NombreDePasDeTempsPourUneOptimisation + t1moins1;
-
-                if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-                      - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
-                    > 0)
-                {
-                    // rhs
-                    //   += NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-                    //      - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]; // /!\ TODO
-                    //      check
-                }
-                builder.updateHourWithinWeek(t1)
-                  .include(Variable::NumberStartingDispatchableUnits(cluster), -1.0)
-                  .include(Variable::NumberBreakingDownDispatchableUnits(cluster), 1.0);
-            }
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-            namer.NbDispUnitsMinBoundSinceMinUpTime(
-              problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-              PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
-            builder.greaterThan(rhs).build();
-        }
-        else
-        {
-            nbTermesContraintesPourLesCoutsDeDemarrage
-              += 1 + 2 * DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
-            problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
-        }
-    }
-    int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
-};
-struct MinDownTime : public Constraint
-{
-    using Constraint::Constraint;
-    void add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)
-    {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
-        const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-          = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex];
-        if (!Simulation)
-        {
-            double pminDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
-
-            int NombreDePasDeTempsPourUneOptimisation
-              = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-            const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
-              = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
-                  .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-
-            int t1 = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique;
-            if (t1 < 0)
-                t1 = NombreDePasDeTempsPourUneOptimisation + t1;
-            double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]; // /!\ TODO check
-
-            builder.updateHourWithinWeek(pdt).include(Variable::NODU(cluster), 1.0);
-
-            for (int k = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique + 1; k <= pdt; k++)
-            {
-                int t1 = k;
-                if (t1 < 0)
-                    t1 = NombreDePasDeTempsPourUneOptimisation + t1;
-                int t1moins1 = t1 - 1;
-
-                if (t1moins1 < 0)
-                    t1moins1 = NombreDePasDeTempsPourUneOptimisation + t1moins1;
-
-                if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-                      - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
-                    > 0)
-                {
-                    rhs
-                      += NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-                         - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]; // /!\ TODO check
-                }
-                builder.updateHourWithinWeek(t1).include(
-                  Variable::NumberStoppingDispatchableUnits(cluster), 1.0);
-            }
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-            namer.MinDownTime(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-                              PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
-            builder.lessThan(rhs).build();
-        }
-        else
-        {
-            nbTermesContraintesPourLesCoutsDeDemarrage
-              += 1 + DureeMinimaleDArretDUnGroupeDuPalierThermique;
-            problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
-        }
-    }
-    int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
-};
-
 void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo,
                                                                      int PremierPdtDeLIntervalle,
-                                                                     int DernierPdtDeLIntervalle,
-                                                                     bool Simulation)
+                                                                     int DernierPdtDeLIntervalle)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
     std::vector<double>& SecondMembre = ProblemeAResoudre->SecondMembre;
@@ -394,13 +50,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
 
     int NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-    problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage = 0;
-    PMaxDispatchableGeneration pMaxDispatchableGeneration(problemeHebdo);
-    PMinDispatchableGeneration pMinDispatchableGeneration(problemeHebdo);
-    ConsistenceNODU consistenceNODU(problemeHebdo);
-    NbUnitsOutageLessThanNbUnitsStop nbUnitsOutageLessThanNbUnitsStop(problemeHebdo);
-    NbDispUnitsMinBoundSinceMinUpTime nbDispUnitsMinBoundSinceMinUpTime(problemeHebdo);
-    MinDownTime minDownTime(problemeHebdo);
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
@@ -421,133 +70,44 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
                  pdtHebdo < DernierPdtDeLIntervalle;
                  pdtHebdo++, pdtJour++)
             {
-                int cnt = 2; // TODO
-                // if (cnt >= 0)
-                // {
-                pMaxDispatchableGeneration.add(pays, palier, index, pdtHebdo, Simulation);
-                problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
-                  += pMaxDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage;
-                pMinDispatchableGeneration.add(pays, palier, index, pdtHebdo, Simulation);
-                problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
-                  += pMinDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage;
-                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
-                        }
-        }
-    }
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
+                const CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+                  = problemeHebdo->CorrespondanceCntNativesCntOptim[pdtJour];
+                int cnt = CorrespondanceCntNativesCntOptim
+                        .NumeroDeContrainteDesContraintesDeDureeMinDArret[palier];
+                if (cnt >= 0)
+                {
+                    int t1 = pdtHebdo - DureeMinimaleDArretDUnGroupeDuPalierThermique;
+                    if (t1 < 0)
+                        t1 = NombreDePasDeTempsPourUneOptimisation + t1;
+                    SecondMembre[cnt] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
+                    for (int k = pdtHebdo - DureeMinimaleDArretDUnGroupeDuPalierThermique + 1;
+                         k <= pdtHebdo;
+                         k++)
+                    {
+                        t1 = k;
 
-        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
-        {
-                        const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
-                          = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index]
-                              .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-                        const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-                          = PaliersThermiquesDuPays
-                              .DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
-                        const int palier
-                          = PaliersThermiquesDuPays
-                              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-                        for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
-                             pdtHebdo < DernierPdtDeLIntervalle;
-                             pdtHebdo++, pdtJour++)
+                        if (t1 < 0)
+                            t1 = NombreDePasDeTempsPourUneOptimisation + t1;
+
+                        int t1moins1 = t1 - 1;
+
+                        if (t1moins1 < 0)
+                            t1moins1 = NombreDePasDeTempsPourUneOptimisation + t1moins1;
+
+                        if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
+                              - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
+                            > 0)
                         {
-                int cnt = 2;
-                consistenceNODU.add(pays, palier, index, pdtHebdo, Simulation);
-                problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
-                  += consistenceNODU.nbTermesContraintesPourLesCoutsDeDemarrage;
-                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                            SecondMembre[cnt]
+                              += NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
+                                 - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1];
                         }
+                    }
+                    AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                }
+            }
         }
     }
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
-        {
-                        const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
-                          = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index]
-                              .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-                        const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-                          = PaliersThermiquesDuPays
-                              .DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
-                        const int palier
-                          = PaliersThermiquesDuPays
-                              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-                        for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
-                             pdtHebdo < DernierPdtDeLIntervalle;
-                             pdtHebdo++, pdtJour++)
-                        {
-                int cnt = 2;
-                nbUnitsOutageLessThanNbUnitsStop.add(pays, palier, index, pdtHebdo, Simulation);
-                problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
-                  += nbUnitsOutageLessThanNbUnitsStop.nbTermesContraintesPourLesCoutsDeDemarrage;
-
-                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
-                        }
-        }
-    }
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
-
-        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
-        {
-                        const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
-                          = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index]
-                              .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-                        const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-                          = PaliersThermiquesDuPays
-                              .DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
-                        const int palier
-                          = PaliersThermiquesDuPays
-                              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-                        for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
-                             pdtHebdo < DernierPdtDeLIntervalle;
-                             pdtHebdo++, pdtJour++)
-                        {
-                int cnt = 2;
-                nbDispUnitsMinBoundSinceMinUpTime.add(pays, palier, index, pdtHebdo, Simulation);
-                problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
-                  += nbDispUnitsMinBoundSinceMinUpTime.nbTermesContraintesPourLesCoutsDeDemarrage;
-                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
-                        }
-        }
-    }
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
-
-        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
-        {
-                        const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
-                          = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index]
-                              .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-                        const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-                          = PaliersThermiquesDuPays
-                              .DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
-                        const int palier
-                          = PaliersThermiquesDuPays
-                              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-                        for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
-                             pdtHebdo < DernierPdtDeLIntervalle;
-                             pdtHebdo++, pdtJour++)
-                        {
-                int cnt = 2;
-                minDownTime.add(pays, palier, index, pdtHebdo, Simulation);
-                problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
-                  += minDownTime.nbTermesContraintesPourLesCoutsDeDemarrage;
-
-                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
-                // }
-                        }
-        }
-    }
     return;
 }

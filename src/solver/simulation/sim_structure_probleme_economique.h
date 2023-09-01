@@ -78,6 +78,41 @@ struct CORRESPONDANCES_DES_VARIABLES
     } SIM_ShortTermStorage;
 };
 
+struct CORRESPONDANCES_DES_CONTRAINTES
+{
+    // Avoid accidental copies
+    CORRESPONDANCES_DES_CONTRAINTES() = default;
+    CORRESPONDANCES_DES_CONTRAINTES(const CORRESPONDANCES_DES_CONTRAINTES&) = delete;
+    CORRESPONDANCES_DES_CONTRAINTES(CORRESPONDANCES_DES_CONTRAINTES&&) = default;
+
+    std::vector<int> NumeroDeContrainteDesBilansPays;
+    std::vector<int> NumeroDeContraintePourEviterLesChargesFictives;
+
+    std::vector<int> NumeroPremiereContrainteDeReserveParZone;
+    std::vector<int> NumeroDeuxiemeContrainteDeReserveParZone;
+
+    std::vector<int> NumeroDeContrainteDeDissociationDeFlux;
+    std::vector<int> NumeroDeContrainteDesContraintesCouplantes;
+
+    std::vector<int> NumeroDeContrainteDesContraintesDeDureeMinDeMarche;
+    std::vector<int> NumeroDeContrainteDesContraintesDeDureeMinDArret;
+    std::vector<int> NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne;
+
+    std::vector<int> NumeroDeContrainteDesNiveauxPays;
+
+    std::vector<int> ShortTermStorageLevelConstraint;
+};
+
+struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
+{
+    std::vector<int> NumeroDeContrainteDesContraintesCouplantes;
+};
+
+struct CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES
+{
+    std::vector<int> NumeroDeContrainteDesContraintesCouplantes;
+};
+
 struct VALEURS_DE_NTC_ET_RESISTANCES
 {
     std::vector<double> ValeurDeNTCOrigineVersExtremite;
@@ -513,6 +548,9 @@ struct PROBLEME_HEBDO
     bool firstWeekOfSimulation = false;
 
     std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES> CorrespondanceCntNativesCntOptimJournalieres;
+    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES CorrespondanceCntNativesCntOptimHebdomadaires;
 
     mutable std::vector<RESERVE_JMOINS1> ReserveJMoins1;
 
@@ -522,6 +560,15 @@ struct PROBLEME_HEBDO
     std::vector<int> IndexSuivantIntercoExtremite;
 
     bool Expansion = false;
+
+    std::vector<int> NumeroDeContrainteEnergieHydraulique;
+    std::vector<int> NumeroDeContrainteMinEnergieHydraulique;
+    std::vector<int> NumeroDeContrainteMaxEnergieHydraulique;
+    std::vector<int> NumeroDeContrainteMaxPompage;
+    std::vector<int> NumeroDeContrainteDeSoldeDEchange;
+
+    std::vector<int> NumeroDeContrainteEquivalenceStockFinal;
+    std::vector<int> NumeroDeContrainteExpressionStockFinal;
 
     std::vector<int> NumeroDeVariableStockFinal;
     std::vector<std::vector<int>> NumeroDeVariableDeTrancheDeStock;

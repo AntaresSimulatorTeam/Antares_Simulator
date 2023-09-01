@@ -396,3 +396,19 @@ protected:
     PROBLEME_HEBDO* problemeHebdo; // TODO remove
     ConstraintBuilder builder;
 };
+
+// #TODO move this function to a suitable place
+// Helper functions
+inline void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
+                          ConstraintBuilder& constraintBuilder,
+                          int pays)
+{
+    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo.PaliersThermiquesDuPays[pays];
+
+    for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
+    {
+        const int palier
+          = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+        constraintBuilder.include(Variable::DispatchableProduction(palier), -1.0);
+    }
+}
