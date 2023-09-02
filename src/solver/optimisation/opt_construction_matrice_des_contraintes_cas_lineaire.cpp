@@ -33,6 +33,7 @@
 #include "AreaBalance.h"
 #include "FictitiousLoad.h"
 #include "ShortTermStorageLevel.h"
+#include "FlowDissociation.h"
 
 #include <antares/study.h>
 
@@ -190,6 +191,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         AreaBalance areaBalance(problemeHebdo);
         FictitiousLoad fictitiousLoad(problemeHebdo);
         ShortTermStorageLevel shortTermStorageLevel(problemeHebdo);
+        FlowDissociation flowDissociation(problemeHebdo);
+
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             int nombreDeTermes = 0;
@@ -313,46 +316,48 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
         for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
-            if (problemeHebdo->CoutDeTransport[interco].IntercoGereeAvecDesCouts)
-            {
-                int nombreDeTermes = 0;
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-                var = CorrespondanceVarNativesVarOptim
-                        .NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[interco];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = -1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-                var = CorrespondanceVarNativesVarOptim
-                        .NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[interco];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
+            flowDissociation.add(pdt, interco);
+            // if (problemeHebdo->CoutDeTransport[interco].IntercoGereeAvecDesCouts)
+            // {
+            //     int nombreDeTermes = 0;
+            //     var =
+            //     CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco]; if
+            //     (var >= 0)
+            //     {
+            //         Pi[nombreDeTermes] = 1.0;
+            //         Colonne[nombreDeTermes] = var;
+            //         nombreDeTermes++;
+            //     }
+            //     var = CorrespondanceVarNativesVarOptim
+            //             .NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[interco];
+            //     if (var >= 0)
+            //     {
+            //         Pi[nombreDeTermes] = -1.0;
+            //         Colonne[nombreDeTermes] = var;
+            //         nombreDeTermes++;
+            //     }
+            //     var = CorrespondanceVarNativesVarOptim
+            //             .NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[interco];
+            //     if (var >= 0)
+            //     {
+            //         Pi[nombreDeTermes] = 1.0;
+            //         Colonne[nombreDeTermes] = var;
+            //         nombreDeTermes++;
+            //     }
 
-                CorrespondanceCntNativesCntOptim.NumeroDeContrainteDeDissociationDeFlux[interco]
-                  = ProblemeAResoudre->NombreDeContraintes;
-                const auto origin
-                  = problemeHebdo
-                      ->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
-                const auto destination
-                  = problemeHebdo
-                      ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-                constraintNamer.FlowDissociation(
-                  ProblemeAResoudre->NombreDeContraintes, origin, destination);
-                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-            }
+            //     CorrespondanceCntNativesCntOptim.NumeroDeContrainteDeDissociationDeFlux[interco]
+            //       = ProblemeAResoudre->NombreDeContraintes;
+            //     const auto origin
+            //       = problemeHebdo
+            //           ->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
+            //     const auto destination
+            //       = problemeHebdo
+            //           ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
+            //     constraintNamer.FlowDissociation(
+            //       ProblemeAResoudre->NombreDeContraintes, origin, destination);
+            //     OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+            //       ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+            // }
         }
 
         for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
