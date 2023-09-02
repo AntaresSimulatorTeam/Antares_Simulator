@@ -34,128 +34,131 @@
 #include "sim_structure_probleme_economique.h"
 #include "AreaBalance.h"
 #include "FictitiousLoad.h"
+#include "ShortTermStorageLevel.h"
 
 #include <antares/study.h>
 
 using namespace Antares::Data;
 
-void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
-                   const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
-                   int pays,
-                   int& nombreDeTermes,
-                   std::vector<double>& Pi,
-                   std::vector<int>& Colonne)
-{
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo.PaliersThermiquesDuPays[pays];
+// // void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
+// //                    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
+// //                    int pays,
+// //                    int& nombreDeTermes,
+// //                    std::vector<double>& Pi,
+// //                    std::vector<int>& Colonne)
+// // {
+// //     const PALIERS_THERMIQUES& PaliersThermiquesDuPays =
+// //     problemeHebdo.PaliersThermiquesDuPays[pays];
 
-    for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
-    {
-        const int palier
-          = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-        int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDuPalierThermique[palier];
-        if (var >= 0)
-        {
-            Pi[nombreDeTermes] = -1.0;
-            Colonne[nombreDeTermes] = var;
-            nombreDeTermes++;
-        }
-    }
-}
+// //     for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
+// //     {
+// //         const int palier
+// //           = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+// //         int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDuPalierThermique[palier];
+// //         if (var >= 0)
+// //         {
+// //             Pi[nombreDeTermes] = -1.0;
+// //             Colonne[nombreDeTermes] = var;
+// //             nombreDeTermes++;
+// //         }
+// //     }
+// // }
 
-static void shortTermStorageBalance(
-  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-  const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
-  int& nombreDeTermes,
-  std::vector<double>& Pi,
-  std::vector<int>& Colonne)
-{
-    for (const auto& storage : shortTermStorageInput)
-    {
-        const int clusterGlobalIndex = storage.clusterGlobalIndex;
-        if (const int varInjection = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
-                                       .InjectionVariable[clusterGlobalIndex];
-            varInjection >= 0)
-        {
-            Pi[nombreDeTermes] = 1.0;
-            Colonne[nombreDeTermes] = varInjection;
-            nombreDeTermes++;
-        }
+// static void shortTermStorageBalance(
+//   const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+//   const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
+//   int& nombreDeTermes,
+//   std::vector<double>& Pi,
+//   std::vector<int>& Colonne)
+// {
+//     for (const auto& storage : shortTermStorageInput)
+//     {
+//         const int clusterGlobalIndex = storage.clusterGlobalIndex;
+//         if (const int varInjection = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
+//                                        .InjectionVariable[clusterGlobalIndex];
+//             varInjection >= 0)
+//         {
+//             Pi[nombreDeTermes] = 1.0;
+//             Colonne[nombreDeTermes] = varInjection;
+//             nombreDeTermes++;
+//         }
 
-        if (const int varWithdrawal = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
-                                        .WithdrawalVariable[clusterGlobalIndex];
-            varWithdrawal >= 0)
-        {
-            Pi[nombreDeTermes] = -1.0;
-            Colonne[nombreDeTermes] = varWithdrawal;
-            nombreDeTermes++;
-        }
-    }
-}
+//         if (const int varWithdrawal = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
+//                                         .WithdrawalVariable[clusterGlobalIndex];
+//             varWithdrawal >= 0)
+//         {
+//             Pi[nombreDeTermes] = -1.0;
+//             Colonne[nombreDeTermes] = varWithdrawal;
+//             nombreDeTermes++;
+//         }
+//     }
+// }
 
-static void shortTermStorageLevels(
-  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-  CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim,
-  std::vector<CORRESPONDANCES_DES_VARIABLES*> CorrespondanceVarNativesVarOptim,
-  std::vector<double>& Pi,
-  std::vector<int>& Colonne,
-  int nombreDePasDeTempsPourUneOptimisation,
-  int pdt,
-  ConstraintNamer& constraintNamer)
-{
-    const auto& VarOptimCurrent = CorrespondanceVarNativesVarOptim[pdt];
-    // Cycle over the simulation period
-    const int timestepPrevious
-      = (pdt - 1 + nombreDePasDeTempsPourUneOptimisation) % nombreDePasDeTempsPourUneOptimisation;
-    const auto& VarOptimPrevious = CorrespondanceVarNativesVarOptim[timestepPrevious];
-    for (auto& storage : shortTermStorageInput)
-    {
-        int nombreDeTermes = 0;
-        const int clusterGlobalIndex = storage.clusterGlobalIndex;
-        // L[h] - L[h-1] - efficiency * injection[h] + withdrawal[h] = inflows[h]
-        if (const int varLevel
-            = VarOptimCurrent->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
-            varLevel >= 0)
-        {
-            Pi[nombreDeTermes] = 1.0;
-            Colonne[nombreDeTermes] = varLevel;
-            nombreDeTermes++;
-        }
+// static void shortTermStorageLevels(
+//   const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+//   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+//   CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim,
+//   std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim,
+//   std::vector<double>& Pi,
+//   std::vector<int>& Colonne,
+//   int nombreDePasDeTempsPourUneOptimisation,
+//   int pdt,
+//   ConstraintNamer& constraintNamer)
+// {
+//     const auto& VarOptimCurrent = CorrespondanceVarNativesVarOptim[pdt];
+//     // Cycle over the simulation period
+//     const int timestepPrevious
+//       = (pdt - 1 + nombreDePasDeTempsPourUneOptimisation) %
+//       nombreDePasDeTempsPourUneOptimisation;
+//     const auto& VarOptimPrevious = CorrespondanceVarNativesVarOptim[timestepPrevious];
+//     for (auto& storage : shortTermStorageInput)
+//     {
+//         int nombreDeTermes = 0;
+//         const int clusterGlobalIndex = storage.clusterGlobalIndex;
+//         // L[h] - L[h-1] - efficiency * injection[h] + withdrawal[h] = inflows[h]
+//         if (const int varLevel
+//             = VarOptimCurrent.SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
+//             varLevel >= 0)
+//         {
+//             Pi[nombreDeTermes] = 1.0;
+//             Colonne[nombreDeTermes] = varLevel;
+//             nombreDeTermes++;
+//         }
 
-        if (const int varLevel_previous
-            = VarOptimPrevious->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
-            varLevel_previous >= 0)
-        {
-            Pi[nombreDeTermes] = -1.0;
-            Colonne[nombreDeTermes] = varLevel_previous;
-            nombreDeTermes++;
-        }
+//         if (const int varLevel_previous
+//             = VarOptimPrevious.SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
+//             varLevel_previous >= 0)
+//         {
+//             Pi[nombreDeTermes] = -1.0;
+//             Colonne[nombreDeTermes] = varLevel_previous;
+//             nombreDeTermes++;
+//         }
 
-        if (const int varInjection
-            = VarOptimCurrent->SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
-            varInjection >= 0)
-        {
-            Pi[nombreDeTermes] = -1.0 * storage.efficiency;
-            Colonne[nombreDeTermes] = varInjection;
-            nombreDeTermes++;
-        }
+//         if (const int varInjection
+//             = VarOptimCurrent.SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
+//             varInjection >= 0)
+//         {
+//             Pi[nombreDeTermes] = -1.0 * storage.efficiency;
+//             Colonne[nombreDeTermes] = varInjection;
+//             nombreDeTermes++;
+//         }
 
-        if (const int varWithdrawal
-            = VarOptimCurrent->SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
-            varWithdrawal >= 0)
-        {
-            Pi[nombreDeTermes] = 1.0;
-            Colonne[nombreDeTermes] = varWithdrawal;
-            nombreDeTermes++;
-        }
-        CorrespondanceCntNativesCntOptim.ShortTermStorageLevelConstraint[clusterGlobalIndex]
-          = ProblemeAResoudre->NombreDeContraintes;
+//         if (const int varWithdrawal
+//             = VarOptimCurrent.SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
+//             varWithdrawal >= 0)
+//         {
+//             Pi[nombreDeTermes] = 1.0;
+//             Colonne[nombreDeTermes] = varWithdrawal;
+//             nombreDeTermes++;
+//         }
+//         CorrespondanceCntNativesCntOptim.ShortTermStorageLevelConstraint[clusterGlobalIndex]
+//           = ProblemeAResoudre->NombreDeContraintes;
 
-        constraintNamer.ShortTermStorageLevel(ProblemeAResoudre->NombreDeContraintes, storage.name);
-        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-    }
-}
+//         constraintNamer.ShortTermStorageLevel(ProblemeAResoudre->NombreDeContraintes,
+//         storage.name); OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+//           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+//     }
+// }
 
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo)
 {
@@ -191,6 +194,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
         AreaBalance areaBalance(problemeHebdo);
         FictitiousLoad fictitiousLoad(problemeHebdo);
+        ShortTermStorageLevel shortTermStorageLevel(problemeHebdo);
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             int nombreDeTermes = 0;
@@ -300,15 +304,16 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             //   ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
             fictitiousLoad.add(pdt, pays);
             // Short term storage
-            shortTermStorageLevels(problemeHebdo->ShortTermStorage[pays],
-                                   ProblemeAResoudre,
-                                   CorrespondanceCntNativesCntOptim,
-                                   problemeHebdo->CorrespondanceVarNativesVarOptim,
-                                   Pi,
-                                   Colonne,
-                                   nombreDePasDeTempsPourUneOptimisation,
-                                   pdt,
-                                   constraintNamer);
+            // shortTermStorageLevels(problemeHebdo->ShortTermStorage[pays],
+            //                        ProblemeAResoudre,
+            //                        CorrespondanceCntNativesCntOptim,
+            //                        problemeHebdo->CorrespondanceVarNativesVarOptim,
+            //                        Pi,
+            //                        Colonne,
+            //                        nombreDePasDeTempsPourUneOptimisation,
+            //                        pdt,
+            //                        constraintNamer);
+            shortTermStorageLevel.add(pdt, pays);
         }
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
