@@ -7,7 +7,7 @@ void ShortTermStorageLevel::add(int pdt, int pays)
                           problemeHebdo->NamedProblems);
     /** can be done without this --- keep it for now**/
     CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+      = *problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
     CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
       = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
 

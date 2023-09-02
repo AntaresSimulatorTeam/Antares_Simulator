@@ -7,7 +7,7 @@ void FlowDissociation::add(int pdt, int interco)
     {
         /** can be done without this --- keep it for now**/
         CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+          = *problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
         CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
           = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
         CorrespondanceCntNativesCntOptim.NumeroDeContrainteDeDissociationDeFlux[interco]

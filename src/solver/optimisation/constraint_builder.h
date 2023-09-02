@@ -273,7 +273,7 @@ class ConstraintBuilder
 public:
     ConstraintBuilder(
       PROBLEME_HEBDO& problemeHebdo,
-      const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim) :
+      const std::vector<CORRESPONDANCES_DES_VARIABLES*>& CorrespondanceVarNativesVarOptim) :
      problemeHebdo(problemeHebdo),
      problemeAResoudre(*problemeHebdo.ProblemeAResoudre),
      varNative(CorrespondanceVarNativesVarOptim)
@@ -313,7 +313,7 @@ private:
                 pdt = (pdt + delta) % nbTimeSteps;
             }
         }
-        const Variable::Visitor visitor(varNative[pdt],
+        const Variable::Visitor visitor(*varNative[pdt],
                                         problemeHebdo.NumeroDeVariableStockFinal,
                                         problemeHebdo.NumeroDeVariableDeTrancheDeStock);
         return std::visit(visitor, variable);
@@ -402,7 +402,7 @@ public:
 private:
     PROBLEME_HEBDO& problemeHebdo;
     PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre;
-    const std::vector<CORRESPONDANCES_DES_VARIABLES>& varNative;
+    const std::vector<CORRESPONDANCES_DES_VARIABLES*>& varNative;
 
     unsigned int hourInWeek_ = 0;
 
