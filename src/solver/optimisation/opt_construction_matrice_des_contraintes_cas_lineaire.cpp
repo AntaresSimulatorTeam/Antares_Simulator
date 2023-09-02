@@ -33,6 +33,7 @@
 #include "opt_rename_problem.h"
 #include "sim_structure_probleme_economique.h"
 #include "AreaBalance.h"
+#include "FictitiousLoad.h"
 
 #include <antares/study.h>
 
@@ -189,6 +190,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
 
         AreaBalance areaBalance(problemeHebdo);
+        FictitiousLoad fictitiousLoad(problemeHebdo);
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             int nombreDeTermes = 0;
@@ -269,32 +271,34 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             // constraintNamer.AreaBalance(ProblemeAResoudre->NombreDeContraintes);
             // OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
             //   ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-            nombreDeTermes = 0;
+            // nombreDeTermes = 0;
 
-            exportPaliers(
-              *problemeHebdo, *CorrespondanceVarNativesVarOptim, pays, nombreDeTermes, Pi, Colonne);
-            var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = -problemeHebdo->DefaillanceNegativeUtiliserHydro[pays];
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
+            // exportPaliers(
+            //   *problemeHebdo, CorrespondanceVarNativesVarOptim, pays, nombreDeTermes, Pi,
+            //   Colonne);
+            // var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
+            // if (var >= 0)
+            // {
+            //     Pi[nombreDeTermes] = -problemeHebdo->DefaillanceNegativeUtiliserHydro[pays];
+            //     Colonne[nombreDeTermes] = var;
+            //     nombreDeTermes++;
+            // }
 
-            var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = 1.0;
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
+            // var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillanceNegative[pays];
+            // if (var >= 0)
+            // {
+            //     Pi[nombreDeTermes] = 1.0;
+            //     Colonne[nombreDeTermes] = var;
+            //     nombreDeTermes++;
+            // }
 
-            CorrespondanceCntNativesCntOptim.NumeroDeContraintePourEviterLesChargesFictives[pays]
-              = ProblemeAResoudre->NombreDeContraintes;
+            // CorrespondanceCntNativesCntOptim.NumeroDeContraintePourEviterLesChargesFictives[pays]
+            //   = ProblemeAResoudre->NombreDeContraintes;
 
-            constraintNamer.FictiveLoads(ProblemeAResoudre->NombreDeContraintes);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
+            // constraintNamer.FictiveLoads(ProblemeAResoudre->NombreDeContraintes);
+            // OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+            //   ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
+            fictitiousLoad.add(pdt, pays);
             // Short term storage
             shortTermStorageLevels(problemeHebdo->ShortTermStorage[pays],
                                    ProblemeAResoudre,
