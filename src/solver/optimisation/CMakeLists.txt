@@ -71,6 +71,46 @@ set(RTESOLVER_OPT
 		opt_period_string_generator_base.h
 		opt_rename_problem.h
 		opt_rename_problem.cpp
+
+                constraint_builder.cpp
+                constraint_builder.h
+
+		AreaBalance.h
+                AreaBalance.cpp
+                FictitiousLoad.h
+                FictitiousLoad.cpp
+                ShortTermStorageLevel.h
+                ShortTermStorageLevel.cpp
+                FlowDissociation.h
+                FlowDissociation.cpp
+                BindingConstraintHour.h
+                BindingConstraintHour.cpp
+                BindingConstraintDay.h
+                BindingConstraintDay.cpp
+                BindingConstraintWeek.h
+                BindingConstraintWeek.cpp
+                HydroPower.h
+                HydroPower.cpp
+                HydroPowerSmoothingUsingVariationSum.h
+                HydroPowerSmoothingUsingVariationSum.cpp
+                HydroPowerSmoothingUsingVariationMaxDown.h
+                HydroPowerSmoothingUsingVariationMaxDown.cpp
+                HydroPowerSmoothingUsingVariationMaxUp.h
+                HydroPowerSmoothingUsingVariationMaxUp.cpp
+                MinHydroPower.h
+                MinHydroPower.cpp
+                MaxHydroPower.h
+                MaxHydroPower.cpp
+                MaxPumping.h
+                MaxPumping.cpp
+                AreaHydroLevel.h
+                AreaHydroLevel.cpp
+                FinalStockEquivalent.h
+                FinalStockEquivalent.cpp
+                FinalStockExpression.h
+                FinalStockExpression.cpp
+
+
 	)
 
 
