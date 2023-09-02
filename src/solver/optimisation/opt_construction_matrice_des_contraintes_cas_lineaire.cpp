@@ -30,6 +30,7 @@
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"
 #include "sim_structure_probleme_economique.h"
+#include "AreaBalance.h"
 
 #include <antares/study.h>
 
@@ -182,83 +183,87 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
             = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
 
+        AreaBalance areaBalance(problemeHebdo);
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             int nombreDeTermes = 0;
-
-            int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
+            areaBalance.add(pdt, pays);
+            // int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
             constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
 
-            while (interco >= 0)
-            {
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-                interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
-            }
-            interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
-            while (interco >= 0)
-            {
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = -1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-                interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
-            }
+            // while (interco >= 0)
+            // {
+            //     var =
+            //     CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco]; if
+            //     (var >= 0)
+            //     {
+            //         Pi[nombreDeTermes] = 1.0;
+            //         Colonne[nombreDeTermes] = var;
+            //         nombreDeTermes++;
+            //     }
+            //     interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
+            // }
+            // interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
+            // while (interco >= 0)
+            // {
+            //     var =
+            //     CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco]; if
+            //     (var >= 0)
+            //     {
+            //         Pi[nombreDeTermes] = -1.0;
+            //         Colonne[nombreDeTermes] = var;
+            //         nombreDeTermes++;
+            //     }
+            //     interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
+            // }
 
-            exportPaliers(
-              *problemeHebdo, CorrespondanceVarNativesVarOptim, pays, nombreDeTermes, Pi, Colonne);
+            // exportPaliers(
+            //   *problemeHebdo, CorrespondanceVarNativesVarOptim, pays, nombreDeTermes, Pi,
+            //   Colonne);
 
-            var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = -1.0;
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
+            // var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
+            // if (var >= 0)
+            // {
+            //     Pi[nombreDeTermes] = -1.0;
+            //     Colonne[nombreDeTermes] = var;
+            //     nombreDeTermes++;
+            // }
 
-            var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDePompage[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = 1.0;
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
+            // var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDePompage[pays];
+            // if (var >= 0)
+            // {
+            //     Pi[nombreDeTermes] = 1.0;
+            //     Colonne[nombreDeTermes] = var;
+            //     nombreDeTermes++;
+            // }
 
-            var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = -1.0;
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
-            var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillanceNegative[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = 1.0;
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
+            // var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[pays];
+            // if (var >= 0)
+            // {
+            //     Pi[nombreDeTermes] = -1.0;
+            //     Colonne[nombreDeTermes] = var;
+            //     nombreDeTermes++;
+            // }
+            // var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillanceNegative[pays];
+            // if (var >= 0)
+            // {
+            //     Pi[nombreDeTermes] = 1.0;
+            //     Colonne[nombreDeTermes] = var;
+            //     nombreDeTermes++;
+            // }
 
-            shortTermStorageBalance(problemeHebdo->ShortTermStorage[pays],
-                                    CorrespondanceVarNativesVarOptim,
-                                    nombreDeTermes,
-                                    Pi,
-                                    Colonne);
+            // shortTermStorageBalance(problemeHebdo->ShortTermStorage[pays],
+            //                         CorrespondanceVarNativesVarOptim,
+            //                         nombreDeTermes,
+            //                         Pi,
+            //                         Colonne);
 
-            CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesBilansPays[pays]
-              = ProblemeAResoudre->NombreDeContraintes;
+            // CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesBilansPays[pays]
+            //   = ProblemeAResoudre->NombreDeContraintes;
 
-            constraintNamer.AreaBalance(ProblemeAResoudre->NombreDeContraintes);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+            // constraintNamer.AreaBalance(ProblemeAResoudre->NombreDeContraintes);
+            // OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+            //   ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
             nombreDeTermes = 0;
 
             exportPaliers(
