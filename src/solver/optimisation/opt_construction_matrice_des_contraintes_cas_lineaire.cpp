@@ -361,95 +361,101 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             //       ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
             // }
         }
-
         for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
             bindingConstraintHour.add(pdt, cntCouplante);
-            // const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-            //   = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
+            //     const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+            //       = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
 
-            // if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
-            //     continue;
+            //     if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante !=
+            //     CONTRAINTE_HORAIRE)
+            //         continue;
 
-            // int nbInterco
-            //   = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
-            // int nombreDeTermes = 0;
-            // for (int index = 0; index < nbInterco; index++)
-            // {
-            //     int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
-            //     double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
-            //     int Offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
-            //     int pdt1;
-
-            //     if (Offset >= 0)
+            //     int nbInterco
+            //       =
+            //       MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
+            //     int nombreDeTermes = 0;
+            //     for (int index = 0; index < nbInterco; index++)
             //     {
-            //         pdt1 = (pdt + Offset) % nombreDePasDeTempsPourUneOptimisation;
-            //     }
-            //     else
-            //     {
-            //         pdt1 = (pdt + Offset + problemeHebdo->NombreDePasDeTemps)
-            //                % nombreDePasDeTempsPourUneOptimisation;
-            //     }
+            //         int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
+            //         double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
+            //         int Offset =
+            //         MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index]; int pdt1;
 
-            //     var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
-            //             .NumeroDeVariableDeLInterconnexion[interco];
+            //         if (Offset >= 0)
+            //         {
+            //             pdt1 = (pdt + Offset) % nombreDePasDeTempsPourUneOptimisation;
+            //         }
+            //         else
+            //         {
+            //             pdt1 = (pdt + Offset + problemeHebdo->NombreDePasDeTemps)
+            //                    % nombreDePasDeTempsPourUneOptimisation;
+            //         }
+            //         logs.info() << " BindingConstraintHour::add:1:: pdt1 =" << pdt1 << "\n";
 
-            //     if (var >= 0)
-            //     {
-            //         Pi[nombreDeTermes] = poids;
-            //         Colonne[nombreDeTermes] = var;
-            //         nombreDeTermes++;
-            //     }
-            // }
+            //         var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
+            //                 .NumeroDeVariableDeLInterconnexion[interco];
+            //         logs.info() << "varIndex: " << var << "\n";
 
-            // int nbClusters
-            //   = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
-            // for (int index = 0; index < nbClusters; index++)
-            // {
-            //     int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
-            //     const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-            //       = problemeHebdo->PaliersThermiquesDuPays[pays];
-            //     const int palier
-            //       = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
-            //           [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
-            //     double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
-            //     int Offset
-            //       = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
-            //     int pdt1;
-            //     if (Offset >= 0)
-            //     {
-            //         pdt1 = (pdt + Offset) % nombreDePasDeTempsPourUneOptimisation;
-            //     }
-            //     else
-            //     {
-            //         pdt1 = (pdt + Offset + problemeHebdo->NombreDePasDeTemps)
-            //                % nombreDePasDeTempsPourUneOptimisation;
+            //         if (var >= 0)
+            //         {
+            //             Pi[nombreDeTermes] = poids;
+            //             Colonne[nombreDeTermes] = var;
+            //             nombreDeTermes++;
+            //         }
             //     }
 
-            //     var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
-            //             .NumeroDeVariableDuPalierThermique[palier];
-
-            //     if (var >= 0)
+            //     int nbClusters
+            //       =
+            //       MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
+            //     for (int index = 0; index < nbClusters; index++)
             //     {
-            //         Pi[nombreDeTermes] = poids;
-            //         Colonne[nombreDeTermes] = var;
-            //         nombreDeTermes++;
-            //     }
-            // }
-            // CorrespondanceCntNativesCntOptim
-            //   .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
-            //   = ProblemeAResoudre->NombreDeContraintes;
+            //         int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
+            //         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+            //           = problemeHebdo->PaliersThermiquesDuPays[pays];
+            //         const int palier
+            //           = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
+            //               [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
+            //         double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
+            //         int Offset
+            //           = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
+            //         int pdt1;
+            //         if (Offset >= 0)
+            //         {
+            //             pdt1 = (pdt + Offset) % nombreDePasDeTempsPourUneOptimisation;
+            //         }
+            //         else
+            //         {
+            //             pdt1 = (pdt + Offset + problemeHebdo->NombreDePasDeTemps)
+            //                    % nombreDePasDeTempsPourUneOptimisation;
+            //         }
+            //         logs.info() << " BindingConstraintHour::add:2:: pdt1 =" << pdt1 << "\n";
 
-            // constraintNamer.BindingConstraintHour(
-            //   ProblemeAResoudre->NombreDeContraintes,
-            //   MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
-            // OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-            //   ProblemeAResoudre,
-            //   Pi,
-            //   Colonne,
-            //   nombreDeTermes,
-            //   MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
+            //         var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
+            //                 .NumeroDeVariableDuPalierThermique[palier];
+            //         logs.info() << "varIndex: " << var << "\n";
+
+            //         if (var >= 0)
+            //         {
+            //             Pi[nombreDeTermes] = poids;
+            //             Colonne[nombreDeTermes] = var;
+            //             nombreDeTermes++;
+            //         }
+            //     }
+            //     CorrespondanceCntNativesCntOptim
+            //       .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
+            //       = ProblemeAResoudre->NombreDeContraintes;
+
+            //     constraintNamer.BindingConstraintHour(
+            //       ProblemeAResoudre->NombreDeContraintes,
+            //       MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
+            //     OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+            //       ProblemeAResoudre,
+            //       Pi,
+            //       Colonne,
+            //       nombreDeTermes,
+            //       MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
         }
     }
 

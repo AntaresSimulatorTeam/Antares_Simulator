@@ -4,6 +4,11 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
 {
     const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
       = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
+    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+      = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+    CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
+      = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+
     if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
         return;
 
@@ -16,8 +21,19 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
         const int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
         const double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
         const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
-        builder.include(
-          Variable::NTCDirect(interco), poids, offset, true, problemeHebdo->NombreDePasDeTemps);
+        int pdt1;
+        if (offset >= 0)
+        {
+            pdt1 = (pdt + offset) % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+        }
+        else
+        {
+            pdt1 = (pdt + offset + problemeHebdo->NombreDePasDeTemps)
+                   % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+        }
+
+        builder.updateHourWithinWeek(pdt1).include(
+          Variable::NTCDirect(interco), poids, 0, false, problemeHebdo->NombreDePasDeTemps);
     }
 
     // Thermal clusters
@@ -32,11 +48,23 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
                              [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
         const double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
         const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
-        builder.include(Variable::DispatchableProduction(palier),
-                        poids,
-                        offset,
-                        true,
-                        problemeHebdo->NombreDePasDeTemps);
+        int pdt1;
+
+        if (offset >= 0)
+        {
+            pdt1 = (pdt + offset) % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+        }
+        else
+        {
+            pdt1 = (pdt + offset + problemeHebdo->NombreDePasDeTemps)
+                   % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+        }
+
+        builder.updateHourWithinWeek(pdt1).include(Variable::DispatchableProduction(palier),
+                                                   poids,
+                                                   0,
+                                                   false,
+                                                   problemeHebdo->NombreDePasDeTemps);
     }
 
     // std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
@@ -47,6 +75,7 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
     // AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
     //   = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales.data()
     //     + pdtHebdo;
+
     char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
     builder.operatorRHS(op);
     {
