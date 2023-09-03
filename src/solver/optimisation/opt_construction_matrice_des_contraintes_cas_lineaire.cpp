@@ -38,6 +38,9 @@
 #include "BindingConstraintDay.h"
 #include "BindingConstraintWeek.h"
 #include "HydroPower.h"
+#include "HydroPowerSmoothingUsingVariationSum.h"
+#include "HydroPowerSmoothingUsingVariationMaxDown.h"
+#include "HydroPowerSmoothingUsingVariationMaxUp.h"
 
 #include <antares/study.h>
 
@@ -187,6 +190,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     BindingConstraintDay bindingConstraintDay(problemeHebdo);
     BindingConstraintWeek bindingConstraintWeek(problemeHebdo);
     HydroPower hydroPower(problemeHebdo);
+    HydroPowerSmoothingUsingVariationSum hydroPowerSmoothingUsingVariationSum(problemeHebdo);
+    HydroPowerSmoothingUsingVariationMaxDown hydroPowerSmoothingUsingVariationMaxDown(
+      problemeHebdo);
+    HydroPowerSmoothingUsingVariationMaxUp hydroPowerSmoothingUsingVariationMaxUp(problemeHebdo);
+
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
@@ -744,57 +752,58 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
                 continue;
 
-            constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-            {
-                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                constraintNamer.UpdateTimeStep(timeStepInYear);
-                const auto& CorrespondanceVarNativesVarOptim
-                  = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-                int nombreDeTermes = 0;
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-                int pdt1 = pdt + 1;
-                if (pdt1 >= nombreDePasDeTempsPourUneOptimisation)
-                    pdt1 = 0;
+            hydroPowerSmoothingUsingVariationSum.add(pays);
+            // constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            // for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+            // {
+            //     int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+            //     constraintNamer.UpdateTimeStep(timeStepInYear);
+            //     const auto& CorrespondanceVarNativesVarOptim
+            //       = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+            //     int nombreDeTermes = 0;
+            //     var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
+            //     if (var >= 0)
+            //     {
+            //         Pi[nombreDeTermes] = 1.0;
+            //         Colonne[nombreDeTermes] = var;
+            //         nombreDeTermes++;
+            //     }
+            //     int pdt1 = pdt + 1;
+            //     if (pdt1 >= nombreDePasDeTempsPourUneOptimisation)
+            //         pdt1 = 0;
 
-                if (int var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
-                                 .NumeroDeVariablesDeLaProdHyd[pays];
-                    var1 >= 0)
-                {
-                    Pi[nombreDeTermes] = -1.0;
-                    Colonne[nombreDeTermes] = var1;
-                    nombreDeTermes++;
-                }
+            //     if (int var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
+            //                      .NumeroDeVariablesDeLaProdHyd[pays];
+            //         var1 >= 0)
+            //     {
+            //         Pi[nombreDeTermes] = -1.0;
+            //         Colonne[nombreDeTermes] = var1;
+            //         nombreDeTermes++;
+            //     }
 
-                if (int var2 = CorrespondanceVarNativesVarOptim
-                                 .NumeroDeVariablesVariationHydALaBaisse[pays];
-                    var2 >= 0)
-                {
-                    Pi[nombreDeTermes] = -1.0;
-                    Colonne[nombreDeTermes] = var2;
-                    nombreDeTermes++;
-                }
+            //     if (int var2 = CorrespondanceVarNativesVarOptim
+            //                      .NumeroDeVariablesVariationHydALaBaisse[pays];
+            //         var2 >= 0)
+            //     {
+            //         Pi[nombreDeTermes] = -1.0;
+            //         Colonne[nombreDeTermes] = var2;
+            //         nombreDeTermes++;
+            //     }
 
-                if (int var3 = CorrespondanceVarNativesVarOptim
-                                 .NumeroDeVariablesVariationHydALaHausse[pays];
-                    var3 >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var3;
-                    nombreDeTermes++;
-                }
+            //     if (int var3 = CorrespondanceVarNativesVarOptim
+            //                      .NumeroDeVariablesVariationHydALaHausse[pays];
+            //         var3 >= 0)
+            //     {
+            //         Pi[nombreDeTermes] = 1.0;
+            //         Colonne[nombreDeTermes] = var3;
+            //         nombreDeTermes++;
+            //     }
 
-                constraintNamer.HydroPowerSmoothingUsingVariationSum(
-                  ProblemeAResoudre->NombreDeContraintes);
-                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-            }
+            //     constraintNamer.HydroPowerSmoothingUsingVariationSum(
+            //       ProblemeAResoudre->NombreDeContraintes);
+            //     OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+            //       ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+            // }
         }
     }
     else if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
