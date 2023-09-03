@@ -20,6 +20,8 @@ void MaxHydroPower::add(int pays)
             builder.updateHourWithinWeek(pdt);
             builder.include(Variable::HydProd(pays), 1.0);
         }
+        problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays]
+          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                               problemeHebdo->NamedProblems);
@@ -29,4 +31,6 @@ void MaxHydroPower::add(int pays)
 
         builder.lessThan().build();
     }
+    else
+        problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays] = -1;
 }

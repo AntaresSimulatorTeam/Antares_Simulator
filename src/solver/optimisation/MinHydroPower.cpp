@@ -27,6 +27,11 @@ void MinHydroPower::add(int pays)
         }
         // const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
         //                      .MinEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
+
+        problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays]
+          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
         builder.greaterThan().build();
     }
+    else
+        problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays] = -1;
 }
