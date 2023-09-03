@@ -816,52 +816,55 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                constraintNamer.UpdateTimeStep(timeStepInYear);
-                const auto& CorrespondanceVarNativesVarOptim
-                  = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-                int nombreDeTermes = 0;
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-                int var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[0]
-                             .NumeroDeVariablesVariationHydALaBaisse[pays];
-                if (var1 >= 0)
-                {
-                    Pi[nombreDeTermes] = -1.0;
-                    Colonne[nombreDeTermes] = var1;
-                    nombreDeTermes++;
-                }
+                hydroPowerSmoothingUsingVariationMaxDown.add(pays, pdt);
+                hydroPowerSmoothingUsingVariationMaxUp.add(pays, pdt);
 
-                constraintNamer.HydroPowerSmoothingUsingVariationMaxDown(
-                  ProblemeAResoudre->NombreDeContraintes);
-                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
+                // int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                // constraintNamer.UpdateTimeStep(timeStepInYear);
+                // const auto& CorrespondanceVarNativesVarOptim
+                //   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+                // int nombreDeTermes = 0;
+                // var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
+                // if (var >= 0)
+                // {
+                //     Pi[nombreDeTermes] = 1.0;
+                //     Colonne[nombreDeTermes] = var;
+                //     nombreDeTermes++;
+                // }
+                // int var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[0]
+                //              .NumeroDeVariablesVariationHydALaBaisse[pays];
+                // if (var1 >= 0)
+                // {
+                //     Pi[nombreDeTermes] = -1.0;
+                //     Colonne[nombreDeTermes] = var1;
+                //     nombreDeTermes++;
+                // }
 
-                nombreDeTermes = 0;
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-                var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[0]
-                         .NumeroDeVariablesVariationHydALaHausse[pays];
-                if (var1 >= 0)
-                {
-                    Pi[nombreDeTermes] = -1.0;
-                    Colonne[nombreDeTermes] = var1;
-                    nombreDeTermes++;
-                }
+                // constraintNamer.HydroPowerSmoothingUsingVariationMaxDown(
+                //   ProblemeAResoudre->NombreDeContraintes);
+                // OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+                //   ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
 
-                constraintNamer.HydroPowerSmoothingUsingVariationMaxUp(
-                  ProblemeAResoudre->NombreDeContraintes);
-                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
+                // nombreDeTermes = 0;
+                // if (var >= 0)
+                // {
+                //     Pi[nombreDeTermes] = 1.0;
+                //     Colonne[nombreDeTermes] = var;
+                //     nombreDeTermes++;
+                // }
+                // var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[0]
+                //          .NumeroDeVariablesVariationHydALaHausse[pays];
+                // if (var1 >= 0)
+                // {
+                //     Pi[nombreDeTermes] = -1.0;
+                //     Colonne[nombreDeTermes] = var1;
+                //     nombreDeTermes++;
+                // }
+
+                // constraintNamer.HydroPowerSmoothingUsingVariationMaxUp(
+                //   ProblemeAResoudre->NombreDeContraintes);
+                // OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+                //   ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
             }
         }
     }
