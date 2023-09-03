@@ -46,6 +46,9 @@
 #include "MaxPumping.h"
 #include "AreaHydroLevel.h"
 
+#include "FinalStockEquivalent.h"
+#include "FinalStockExpression.h"
+
 #include <antares/study.h>
 
 using namespace Antares::Data;
@@ -205,6 +208,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     MaxPumping maxPumping(problemeHebdo);
 
     AreaHydroLevel areaHydroLevel(problemeHebdo);
+
+    FinalStockEquivalent finalStockEquivalent(problemeHebdo);
+    FinalStockExpression finalStockExpression(problemeHebdo);
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
@@ -1055,65 +1061,66 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         const auto& week = problemeHebdo->weekInTheYear;
         constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         constraintNamer.UpdateTimeStep(week * 168 + nombreDePasDeTempsPourUneOptimisation - 1);
+        finalStockEquivalent.add(pays);
+        // if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue
+        //     && problemeHebdo->CaracteristiquesHydrauliques[pays].DirectLevelAccess)
+        // /*  equivalence constraint : StockFinal- Niveau[T]= 0*/
+        // {
+        //     int nombreDeTermes = 0;
+        //     var = problemeHebdo->NumeroDeVariableStockFinal[pays];
+        //     if (var >= 0)
+        //     {
+        //         Pi[nombreDeTermes] = 1.0;
+        //         Colonne[nombreDeTermes] = var;
+        //         nombreDeTermes++;
+        //     }
+        //     var = problemeHebdo
+        //             ->CorrespondanceVarNativesVarOptim[nombreDePasDeTempsPourUneOptimisation - 1]
+        //             .NumeroDeVariablesDeNiveau[pays];
+        //     if (var >= 0)
+        //     {
+        //         Pi[nombreDeTermes] = -1.0;
+        //         Colonne[nombreDeTermes] = var;
+        //         nombreDeTermes++;
+        //     }
+        //     problemeHebdo->NumeroDeContrainteEquivalenceStockFinal[pays]
+        //       = ProblemeAResoudre->NombreDeContraintes;
 
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue
-            && problemeHebdo->CaracteristiquesHydrauliques[pays].DirectLevelAccess)
-        /*  equivalence constraint : StockFinal- Niveau[T]= 0*/
-        {
-            int nombreDeTermes = 0;
-            var = problemeHebdo->NumeroDeVariableStockFinal[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = 1.0;
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
-            var = problemeHebdo
-                    ->CorrespondanceVarNativesVarOptim[nombreDePasDeTempsPourUneOptimisation - 1]
-                    .NumeroDeVariablesDeNiveau[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = -1.0;
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
-            problemeHebdo->NumeroDeContrainteEquivalenceStockFinal[pays]
-              = ProblemeAResoudre->NombreDeContraintes;
+        //     constraintNamer.FinalStockEquivalent(ProblemeAResoudre->NombreDeContraintes);
+        //     OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+        //       ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+        // }
+        finalStockExpression.add(pays);
+        // if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
+        // /*  expression constraint : - StockFinal +sum (stocklayers) = 0*/
+        // {
+        //     int nombreDeTermes = 0;
+        //     var = problemeHebdo->NumeroDeVariableStockFinal[pays];
+        //     if (var >= 0)
+        //     {
+        //         Pi[nombreDeTermes] = -1.0;
+        //         Colonne[nombreDeTermes] = var;
+        //         nombreDeTermes++;
+        //     }
+        //     for (int layerindex = 0; layerindex < 100; layerindex++)
+        //     {
+        //         var = problemeHebdo->NumeroDeVariableDeTrancheDeStock[pays][layerindex];
 
-            constraintNamer.FinalStockEquivalent(ProblemeAResoudre->NombreDeContraintes);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-        }
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
-        /*  expression constraint : - StockFinal +sum (stocklayers) = 0*/
-        {
-            int nombreDeTermes = 0;
-            var = problemeHebdo->NumeroDeVariableStockFinal[pays];
-            if (var >= 0)
-            {
-                Pi[nombreDeTermes] = -1.0;
-                Colonne[nombreDeTermes] = var;
-                nombreDeTermes++;
-            }
-            for (int layerindex = 0; layerindex < 100; layerindex++)
-            {
-                var = problemeHebdo->NumeroDeVariableDeTrancheDeStock[pays][layerindex];
+        //         if (var >= 0)
+        //         {
+        //             Pi[nombreDeTermes] = 1.0;
+        //             Colonne[nombreDeTermes] = var;
+        //             nombreDeTermes++;
+        //         }
+        //     }
 
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-            }
+        //     problemeHebdo->NumeroDeContrainteExpressionStockFinal[pays]
+        //       = ProblemeAResoudre->NombreDeContraintes;
 
-            problemeHebdo->NumeroDeContrainteExpressionStockFinal[pays]
-              = ProblemeAResoudre->NombreDeContraintes;
-
-            constraintNamer.FinalStockExpression(ProblemeAResoudre->NombreDeContraintes);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-        }
+        //     constraintNamer.FinalStockExpression(ProblemeAResoudre->NombreDeContraintes);
+        //     OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+        //       ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+        // }
     }
 
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
