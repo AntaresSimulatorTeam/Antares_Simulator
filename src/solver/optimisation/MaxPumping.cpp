@@ -15,7 +15,8 @@ void MaxPumping::add(int pays)
             builder.updateHourWithinWeek(pdt);
             builder.include(Variable::Pumping(pays), 1.0);
         }
-
+        problemeHebdo->NumeroDeContrainteMaxPompage[pays]
+          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                               problemeHebdo->NamedProblems);
         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
@@ -23,4 +24,6 @@ void MaxPumping::add(int pays)
         namer.MaxPumping(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
         builder.lessThan().build();
     }
+    else
+        problemeHebdo->NumeroDeContrainteMaxPompage[pays] = -1;
 }

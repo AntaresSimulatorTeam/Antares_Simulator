@@ -43,6 +43,7 @@
 #include "HydroPowerSmoothingUsingVariationMaxUp.h"
 #include "MinHydroPower.h"
 #include "MaxHydroPower.h"
+#include "MaxPumping.h"
 
 #include <antares/study.h>
 
@@ -199,6 +200,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     MinHydroPower minHydroPower(problemeHebdo);
     MaxHydroPower maxHydroPower(problemeHebdo);
+
+    MaxPumping maxPumping(problemeHebdo);
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
@@ -940,32 +943,33 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
-        {
-            int nombreDeTermes = 0;
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-            {
-                var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                        .NumeroDeVariablesDePompage[pays];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
-            }
+        maxPumping.add(pays);
+        // constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        // if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
+        // {
+        //     int nombreDeTermes = 0;
+        //     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+        //     {
+        //         var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
+        //                 .NumeroDeVariablesDePompage[pays];
+        //         if (var >= 0)
+        //         {
+        //             Pi[nombreDeTermes] = 1.0;
+        //             Colonne[nombreDeTermes] = var;
+        //             nombreDeTermes++;
+        //         }
+        //     }
 
-            problemeHebdo->NumeroDeContrainteMaxPompage[pays]
-              = ProblemeAResoudre->NombreDeContraintes;
+        //     problemeHebdo->NumeroDeContrainteMaxPompage[pays]
+        //       = ProblemeAResoudre->NombreDeContraintes;
 
-            constraintNamer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-            constraintNamer.MaxPumping(ProblemeAResoudre->NombreDeContraintes);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-        }
-        else
-            problemeHebdo->NumeroDeContrainteMaxPompage[pays] = -1;
+        //     constraintNamer.UpdateTimeStep(problemeHebdo->weekInTheYear);
+        //     constraintNamer.MaxPumping(ProblemeAResoudre->NombreDeContraintes);
+        //     OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+        //       ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
+        // }
+        // else
+        //     problemeHebdo->NumeroDeContrainteMaxPompage[pays] = -1;
     }
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
