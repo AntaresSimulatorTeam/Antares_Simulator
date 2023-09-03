@@ -37,6 +37,7 @@
 #include "BindingConstraintHour.h"
 #include "BindingConstraintDay.h"
 #include "BindingConstraintWeek.h"
+#include "HydroPower.h"
 
 #include <antares/study.h>
 
@@ -185,6 +186,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     BindingConstraintDay bindingConstraintDay(problemeHebdo);
     BindingConstraintWeek bindingConstraintWeek(problemeHebdo);
+    HydroPower hydroPower(problemeHebdo);
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
@@ -672,66 +674,67 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        bool presenceHydro
-          = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
-        bool TurbEntreBornes
-          = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-        bool presencePompage
-          = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable;
+        hydroPower.add(pays);
+        // constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        // bool presenceHydro
+        //   = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
+        // bool TurbEntreBornes
+        //   = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
+        // bool presencePompage
+        //   = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable;
 
-        int nombreDeTermes = 0;
-        if (presenceHydro && !TurbEntreBornes)
-        {
-            if (presencePompage)
-            {
-                for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-                {
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                            .NumeroDeVariablesDeLaProdHyd[pays];
+        // int nombreDeTermes = 0;
+        // if (presenceHydro && !TurbEntreBornes)
+        // {
+        //     if (presencePompage)
+        //     {
+        //         for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+        //         {
+        //             var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
+        //                     .NumeroDeVariablesDeLaProdHyd[pays];
 
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = 1.0;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                            .NumeroDeVariablesDePompage[pays];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes]
-                          = problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
-                        Pi[nombreDeTermes] *= -1.0;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
-            }
-            else
-            {
-                for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-                {
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                            .NumeroDeVariablesDeLaProdHyd[pays];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = 1.0;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
-            }
+        //             if (var >= 0)
+        //             {
+        //                 Pi[nombreDeTermes] = 1.0;
+        //                 Colonne[nombreDeTermes] = var;
+        //                 nombreDeTermes++;
+        //             }
+        //             var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
+        //                     .NumeroDeVariablesDePompage[pays];
+        //             if (var >= 0)
+        //             {
+        //                 Pi[nombreDeTermes]
+        //                   = problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
+        //                 Pi[nombreDeTermes] *= -1.0;
+        //                 Colonne[nombreDeTermes] = var;
+        //                 nombreDeTermes++;
+        //             }
+        //         }
+        //     }
+        //     else
+        //     {
+        //         for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+        //         {
+        //             var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
+        //                     .NumeroDeVariablesDeLaProdHyd[pays];
+        //             if (var >= 0)
+        //             {
+        //                 Pi[nombreDeTermes] = 1.0;
+        //                 Colonne[nombreDeTermes] = var;
+        //                 nombreDeTermes++;
+        //             }
+        //         }
+        //     }
 
-            problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays]
-              = ProblemeAResoudre->NombreDeContraintes;
-            constraintNamer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-            constraintNamer.HydroPower(ProblemeAResoudre->NombreDeContraintes);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-        }
-        else
-            problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays] = -1;
+        //     problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays]
+        //       = ProblemeAResoudre->NombreDeContraintes;
+        //     constraintNamer.UpdateTimeStep(problemeHebdo->weekInTheYear);
+        //     constraintNamer.HydroPower(ProblemeAResoudre->NombreDeContraintes);
+        //     OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+        //       ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+        // }
+        // else
+        //     problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays] = -1;
     }
 
     if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
