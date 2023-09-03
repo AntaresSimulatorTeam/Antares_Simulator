@@ -44,6 +44,7 @@
 #include "MinHydroPower.h"
 #include "MaxHydroPower.h"
 #include "MaxPumping.h"
+#include "AreaHydroLevel.h"
 
 #include <antares/study.h>
 
@@ -202,6 +203,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     MaxHydroPower maxHydroPower(problemeHebdo);
 
     MaxPumping maxPumping(problemeHebdo);
+
+    AreaHydroLevel areaHydroLevel(problemeHebdo);
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
@@ -982,66 +985,67 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         constraintNamer.UpdateTimeStep(timeStepInYear);
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-            if (problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
-            {
-                int nombreDeTermes = 0;
+            areaHydroLevel.add(pays, pdt);
+            // constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            // if (problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
+            // {
+            //     int nombreDeTermes = 0;
 
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeNiveau[pays];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
+            //     var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeNiveau[pays];
+            //     if (var >= 0)
+            //     {
+            //         Pi[nombreDeTermes] = 1.0;
+            //         Colonne[nombreDeTermes] = var;
+            //         nombreDeTermes++;
+            //     }
 
-                if (pdt > 0)
-                {
-                    int var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt - 1]
-                                 .NumeroDeVariablesDeNiveau[pays];
-                    if (var1 >= 0)
-                    {
-                        Pi[nombreDeTermes] = -1.0;
-                        Colonne[nombreDeTermes] = var1;
-                        nombreDeTermes++;
-                    }
-                }
+            //     if (pdt > 0)
+            //     {
+            //         int var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt - 1]
+            //                      .NumeroDeVariablesDeNiveau[pays];
+            //         if (var1 >= 0)
+            //         {
+            //             Pi[nombreDeTermes] = -1.0;
+            //             Colonne[nombreDeTermes] = var1;
+            //             nombreDeTermes++;
+            //         }
+            //     }
 
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
+            //     var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeLaProdHyd[pays];
+            //     if (var >= 0)
+            //     {
+            //         Pi[nombreDeTermes] = 1.0;
+            //         Colonne[nombreDeTermes] = var;
+            //         nombreDeTermes++;
+            //     }
 
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDePompage[pays];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes]
-                      = problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
-                    Pi[nombreDeTermes] *= -1;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
+            //     var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDePompage[pays];
+            //     if (var >= 0)
+            //     {
+            //         Pi[nombreDeTermes]
+            //           = problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
+            //         Pi[nombreDeTermes] *= -1;
+            //         Colonne[nombreDeTermes] = var;
+            //         nombreDeTermes++;
+            //     }
 
-                var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeDebordement[pays];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = 1.;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-                }
+            //     var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeDebordement[pays];
+            //     if (var >= 0)
+            //     {
+            //         Pi[nombreDeTermes] = 1.;
+            //         Colonne[nombreDeTermes] = var;
+            //         nombreDeTermes++;
+            //     }
 
-                CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays]
-                  = ProblemeAResoudre->NombreDeContraintes;
+            //     CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays]
+            //       = ProblemeAResoudre->NombreDeContraintes;
 
-                constraintNamer.AreaHydroLevel(ProblemeAResoudre->NombreDeContraintes);
-                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-            }
-            else
-                CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays] = -1;
+            //     constraintNamer.AreaHydroLevel(ProblemeAResoudre->NombreDeContraintes);
+            //     OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+            //       ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+            // }
+            // else
+            //     CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays] = -1;
         }
     }
 

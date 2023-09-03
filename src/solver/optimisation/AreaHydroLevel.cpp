@@ -8,24 +8,29 @@ void AreaHydroLevel::add(int pays, int pdt)
       = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
     CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays]
       = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-
-    builder.updateHourWithinWeek(pdt).include(Variable::HydroLevel(pays), 1.0);
-    if (pdt > 0)
+    if (problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
     {
-        builder.updateHourWithinWeek(pdt - 1).include(Variable::HydroLevel(pays), -1.0);
+        builder.updateHourWithinWeek(pdt).include(Variable::HydroLevel(pays), 1.0);
+        if (pdt > 0)
+        {
+            builder.updateHourWithinWeek(pdt - 1).include(Variable::HydroLevel(pays), -1.0);
+        }
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                              problemeHebdo->NamedProblems);
+
+        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+        namer.AreaHydroLevel(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays]
+          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        builder.updateHourWithinWeek(pdt)
+          .include(Variable::HydProd(pays), 1.0)
+          .include(Variable::Pumping(pays),
+                   -problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio)
+          .include(Variable::Overflow(pays), 1.)
+          .equalTo()
+          .build();
     }
-    ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                          problemeHebdo->NamedProblems);
-
-    namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-    namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-    namer.AreaHydroLevel(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-
-    builder.updateHourWithinWeek(pdt)
-      .include(Variable::HydProd(pays), 1.0)
-      .include(Variable::Pumping(pays),
-               -problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio)
-      .include(Variable::Overflow(pays), 1.)
-      .equalTo()
-      .build();
+    else
+        CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays] = -1;
 }
