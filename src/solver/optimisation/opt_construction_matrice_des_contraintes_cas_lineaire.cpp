@@ -1058,9 +1058,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     /* For each area with ad hoc properties, two possible sets of two additional constraints */
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const auto& week = problemeHebdo->weekInTheYear;
-        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        constraintNamer.UpdateTimeStep(week * 168 + nombreDePasDeTempsPourUneOptimisation - 1);
+        // const auto& week = problemeHebdo->weekInTheYear;
+        // constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        // constraintNamer.UpdateTimeStep(week * 168 + nombreDePasDeTempsPourUneOptimisation - 1);
         finalStockEquivalent.add(pays);
         // if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue
         //     && problemeHebdo->CaracteristiquesHydrauliques[pays].DirectLevelAccess)
@@ -1090,37 +1090,37 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         //     OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
         //       ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
         // }
-        finalStockExpression.add(pays);
-        // if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
-        // /*  expression constraint : - StockFinal +sum (stocklayers) = 0*/
-        // {
-        //     int nombreDeTermes = 0;
-        //     var = problemeHebdo->NumeroDeVariableStockFinal[pays];
-        //     if (var >= 0)
-        //     {
-        //         Pi[nombreDeTermes] = -1.0;
-        //         Colonne[nombreDeTermes] = var;
-        //         nombreDeTermes++;
-        //     }
-        //     for (int layerindex = 0; layerindex < 100; layerindex++)
-        //     {
-        //         var = problemeHebdo->NumeroDeVariableDeTrancheDeStock[pays][layerindex];
+        // finalStockExpression.add(pays);
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
+        /*  expression constraint : - StockFinal +sum (stocklayers) = 0*/
+        {
+            int nombreDeTermes = 0;
+            var = problemeHebdo->NumeroDeVariableStockFinal[pays];
+            if (var >= 0)
+            {
+                Pi[nombreDeTermes] = -1.0;
+                Colonne[nombreDeTermes] = var;
+                nombreDeTermes++;
+            }
+            for (int layerindex = 0; layerindex < 100; layerindex++)
+            {
+                var = problemeHebdo->NumeroDeVariableDeTrancheDeStock[pays][layerindex];
 
-        //         if (var >= 0)
-        //         {
-        //             Pi[nombreDeTermes] = 1.0;
-        //             Colonne[nombreDeTermes] = var;
-        //             nombreDeTermes++;
-        //         }
-        //     }
+                if (var >= 0)
+                {
+                    Pi[nombreDeTermes] = 1.0;
+                    Colonne[nombreDeTermes] = var;
+                    nombreDeTermes++;
+                }
+            }
 
-        //     problemeHebdo->NumeroDeContrainteExpressionStockFinal[pays]
-        //       = ProblemeAResoudre->NombreDeContraintes;
+            problemeHebdo->NumeroDeContrainteExpressionStockFinal[pays]
+              = ProblemeAResoudre->NombreDeContraintes;
 
-        //     constraintNamer.FinalStockExpression(ProblemeAResoudre->NombreDeContraintes);
-        //     OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-        //       ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-        // }
+            constraintNamer.FinalStockExpression(ProblemeAResoudre->NombreDeContraintes);
+            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+        }
     }
 
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
