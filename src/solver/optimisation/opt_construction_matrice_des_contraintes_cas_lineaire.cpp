@@ -35,6 +35,7 @@
 #include "ShortTermStorageLevel.h"
 #include "FlowDissociation.h"
 #include "BindingConstraintHour.h"
+#include "BindingConstraintDay.h"
 #include "BindingConstraintWeek.h"
 
 #include <antares/study.h>
@@ -182,6 +183,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo->NamedProblems);
 
+    BindingConstraintDay bindingConstraintDay(problemeHebdo);
     BindingConstraintWeek bindingConstraintWeek(problemeHebdo);
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
@@ -464,106 +466,107 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)
     {
-        const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-          = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-        if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_JOURNALIERE)
-            continue;
+        bindingConstraintDay.add(cntCouplante);
+        // const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+        //   = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
+        // if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_JOURNALIERE)
+        //     continue;
 
-        int nbInterco
-          = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
-        int nbClusters
-          = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
-        int pdtDebut = 0;
-        while (pdtDebut < nombreDePasDeTempsPourUneOptimisation)
-        {
-            int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
-            CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES&
-                CorrespondanceCntNativesCntOptimJournalieres
-                = problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[jour];
-            int nombreDeTermes = 0;
+        // int nbInterco
+        //   = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
+        // int nbClusters
+        //   = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
+        // int pdtDebut = 0;
+        // while (pdtDebut < nombreDePasDeTempsPourUneOptimisation)
+        // {
+        //     int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
+        //     CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES&
+        //         CorrespondanceCntNativesCntOptimJournalieres
+        //         = problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[jour];
+        //     int nombreDeTermes = 0;
 
-            for (int index = 0; index < nbInterco; index++)
-            {
-                int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
-                double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
-                int Offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
+        //     for (int index = 0; index < nbInterco; index++)
+        //     {
+        //         int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
+        //         double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
+        //         int Offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
 
-                for (int pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
-                {
-                    int pdt1;
-                    if (Offset >= 0)
-                    {
-                        pdt1 = (pdt + Offset) % nombreDePasDeTempsPourUneOptimisation;
-                    }
-                    else
-                    {
-                        pdt1 = (pdt + Offset + problemeHebdo->NombreDePasDeTemps)
-                               % nombreDePasDeTempsPourUneOptimisation;
-                    }
+        //         for (int pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
+        //         {
+        //             int pdt1;
+        //             if (Offset >= 0)
+        //             {
+        //                 pdt1 = (pdt + Offset) % nombreDePasDeTempsPourUneOptimisation;
+        //             }
+        //             else
+        //             {
+        //                 pdt1 = (pdt + Offset + problemeHebdo->NombreDePasDeTemps)
+        //                        % nombreDePasDeTempsPourUneOptimisation;
+        //             }
 
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
-                            .NumeroDeVariableDeLInterconnexion[interco];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = poids;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
-            }
+        //             var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
+        //                     .NumeroDeVariableDeLInterconnexion[interco];
+        //             if (var >= 0)
+        //             {
+        //                 Pi[nombreDeTermes] = poids;
+        //                 Colonne[nombreDeTermes] = var;
+        //                 nombreDeTermes++;
+        //             }
+        //         }
+        //     }
 
-            for (int index = 0; index < nbClusters; index++)
-            {
-                int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
-                const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-                  = problemeHebdo->PaliersThermiquesDuPays[pays];
-                const int palier
-                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
-                      [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
-                double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
-                int Offset
-                  = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
+        //     for (int index = 0; index < nbClusters; index++)
+        //     {
+        //         int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
+        //         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+        //           = problemeHebdo->PaliersThermiquesDuPays[pays];
+        //         const int palier
+        //           = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
+        //               [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
+        //         double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
+        //         int Offset
+        //           = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
 
-                for (int pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
-                {
-                    int pdt1;
-                    if (Offset >= 0)
-                    {
-                        pdt1 = (pdt + Offset) % nombreDePasDeTempsPourUneOptimisation;
-                    }
-                    else
-                    {
-                        pdt1 = (pdt + Offset + problemeHebdo->NombreDePasDeTemps)
-                               % nombreDePasDeTempsPourUneOptimisation;
-                    }
+        //         for (int pdt = pdtDebut; pdt < pdtDebut + nombreDePasDeTempsDUneJournee; pdt++)
+        //         {
+        //             int pdt1;
+        //             if (Offset >= 0)
+        //             {
+        //                 pdt1 = (pdt + Offset) % nombreDePasDeTempsPourUneOptimisation;
+        //             }
+        //             else
+        //             {
+        //                 pdt1 = (pdt + Offset + problemeHebdo->NombreDePasDeTemps)
+        //                        % nombreDePasDeTempsPourUneOptimisation;
+        //             }
 
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
-                            .NumeroDeVariableDuPalierThermique[palier];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = poids;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
-            }
+        //             var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
+        //                     .NumeroDeVariableDuPalierThermique[palier];
+        //             if (var >= 0)
+        //             {
+        //                 Pi[nombreDeTermes] = poids;
+        //                 Colonne[nombreDeTermes] = var;
+        //                 nombreDeTermes++;
+        //             }
+        //         }
+        //     }
 
-            CorrespondanceCntNativesCntOptimJournalieres
-              .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
-              = ProblemeAResoudre->NombreDeContraintes;
+        //     CorrespondanceCntNativesCntOptimJournalieres
+        //       .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
+        //       = ProblemeAResoudre->NombreDeContraintes;
 
-            constraintNamer.UpdateTimeStep(jour);
-            constraintNamer.BindingConstraintDay(
-              ProblemeAResoudre->NombreDeContraintes,
-              MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre,
-              Pi,
-              Colonne,
-              nombreDeTermes,
-              MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
-            pdtDebut += nombreDePasDeTempsDUneJournee;
-        }
+        //     constraintNamer.UpdateTimeStep(jour);
+        //     constraintNamer.BindingConstraintDay(
+        //       ProblemeAResoudre->NombreDeContraintes,
+        //       MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
+        //     OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+        //       ProblemeAResoudre,
+        //       Pi,
+        //       Colonne,
+        //       nombreDeTermes,
+        //       MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
+        //     pdtDebut += nombreDePasDeTempsDUneJournee;
+        // }
     }
 
     if (nombreDePasDeTempsPourUneOptimisation > nombreDePasDeTempsDUneJournee)

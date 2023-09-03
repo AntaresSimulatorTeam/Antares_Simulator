@@ -15,9 +15,13 @@ void BindingConstraintDay::add(int cntCouplante)
     const int NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation; // TODO
     const int NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
-    for (int pdtDebut = 0; pdtDebut < NombreDePasDeTempsPourUneOptimisation;
-         pdtDebut += NombreDePasDeTempsDUneJournee)
+    int pdtDebut = 0;
+    while (pdtDebut < NombreDePasDeTempsPourUneOptimisation)
     {
+        int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
+        CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES& CorrespondanceCntNativesCntOptimJournalieres
+          = problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[jour];
+
         for (int index = 0; index < nbInterco; index++)
         {
             int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
@@ -26,12 +30,18 @@ void BindingConstraintDay::add(int cntCouplante)
 
             for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
             {
-                builder.updateHourWithinWeek(pdt);
-                builder.include(Variable::NTCDirect(interco),
-                                poids,
-                                offset,
-                                true,
-                                problemeHebdo->NombreDePasDeTemps);
+                int pdt1;
+                if (offset >= 0)
+                {
+                    pdt1 = (pdt + offset) % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+                }
+                else
+                {
+                    pdt1 = (pdt + offset + problemeHebdo->NombreDePasDeTemps)
+                           % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+                }
+                builder.updateHourWithinWeek(pdt1).include(
+                  Variable::NTCDirect(interco), poids, 0, false, problemeHebdo->NombreDePasDeTemps);
             }
         }
 
@@ -48,16 +58,30 @@ void BindingConstraintDay::add(int cntCouplante)
 
             for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
             {
-                builder.updateHourWithinWeek(pdt);
-                builder.include(Variable::DispatchableProduction(palier),
-                                poids,
-                                offset,
-                                true,
-                                problemeHebdo->NombreDePasDeTemps);
+                int pdt1;
+                if (offset >= 0)
+                {
+                    pdt1 = (pdt + offset) % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+                }
+                else
+                {
+                    pdt1 = (pdt + offset + problemeHebdo->NombreDePasDeTemps)
+                           % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+                }
+
+                builder.updateHourWithinWeek(pdt1).include(Variable::DispatchableProduction(palier),
+                                                           poids,
+                                                           0,
+                                                           false,
+                                                           problemeHebdo->NombreDePasDeTemps);
             }
         }
+
+        CorrespondanceCntNativesCntOptimJournalieres
+          .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
+          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
         // TODO probably wrong from the 2nd week, check
-        const int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
+        // const int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
 
         std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
           = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
@@ -76,5 +100,6 @@ void BindingConstraintDay::add(int cntCouplante)
                                        MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
         }
         builder.build();
+        pdtDebut += problemeHebdo->NombreDePasDeTempsDUneJournee;
     }
 }
