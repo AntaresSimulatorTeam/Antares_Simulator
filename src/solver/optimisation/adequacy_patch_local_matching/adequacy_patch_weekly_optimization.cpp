@@ -42,10 +42,8 @@ AdequacyPatchOptimization::AdequacyPatchOptimization(const Antares::Data::Study&
                                                      PROBLEME_HEBDO* problemeHebdo,
                                                      AdqPatchParams& adqPatchParams,
                                                      uint thread_number,
-                                                     IResultWriter& writer,
-                                                     const VAL_GEN_PAR_PAYS& valeursGenereesParPays) :
-  WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer), study_(study),
-    valeursGenereesParPays_(valeursGenereesParPays)
+                                                     IResultWriter& writer) :
+    WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer), study_(study)
 {
 }
 

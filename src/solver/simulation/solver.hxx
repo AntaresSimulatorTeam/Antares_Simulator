@@ -349,7 +349,7 @@ void ISimulation<Impl>::run()
     }
     else
     {
-        if (not ImplementationType::simulationBegin(valeursGenereesParPays))
+        if (not ImplementationType::simulationBegin())
             return;
         // Allocating the memory
         ImplementationType::variables.simulationBegin();

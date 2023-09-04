@@ -66,7 +66,7 @@ void Economy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
-bool Economy::simulationBegin(const VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+bool Economy::simulationBegin()
 {
     if (!preproOnly)
     {
@@ -92,8 +92,7 @@ bool Economy::simulationBegin(const VAL_GEN_PAR_PAYS& valeursGenereesParPays)
                                                     study.parameters.adqPatchParams,
                                                     &pProblemesHebdo[numSpace],
                                                     numSpace,
-                                                    *study.resultWriter,
-                                                    valeursGenereesParPays);
+                                                    *study.resultWriter);
             postProcessesList_[numSpace] =
                 interfacePostProcessList::create(study.parameters.adqPatchParams,
                                                  &pProblemesHebdo[numSpace],

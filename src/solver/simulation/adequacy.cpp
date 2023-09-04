@@ -64,7 +64,7 @@ void Adequacy::initializeState(Variable::State& state, uint numSpace)
 }
 
 // valGen maybe_unused to match simulationBegin() declaration in economy.cpp
-bool Adequacy::simulationBegin([[maybe_unused]] const VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+bool Adequacy::simulationBegin()
 {
     if (!preproOnly)
     {
