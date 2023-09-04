@@ -388,8 +388,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
     const uint weekFirstDay = study.calendar.hours[PasDeTempsDebut].dayYear;
 
-    int indx = PasDeTempsDebut;
-
     for (int opt = 0; opt < 7; opt++)
     {
         problem.coutOptimalSolution1[opt] = 0.;
@@ -538,9 +536,11 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         }
     }
 
-    for (unsigned j = 0; j < problem.NombreDePasDeTemps; ++j, ++indx)
+    int hourInYear = PasDeTempsDebut;
+
+    for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps; ++hourInWeek, ++hourInYear)
     {
-        VALEURS_DE_NTC_ET_RESISTANCES& ntc = problem.ValeursDeNTC[j];
+        VALEURS_DE_NTC_ET_RESISTANCES& ntc = problem.ValeursDeNTC[hourInWeek];
         {
             uint linkCount = studyruntime.interconnectionsCount();
             for (uint k = 0; k != linkCount; ++k)
@@ -549,18 +549,18 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 const int tsIndex
                   = NumeroChroniquesTireesParInterconnexion[numSpace][k].TransmissionCapacities;
 
-                assert((uint)indx < lnk.directCapacities.height);
+                assert((uint)hourInYear < lnk.directCapacities.height);
                 assert((uint)tsIndex < lnk.directCapacities.width);
                 assert((uint)tsIndex < lnk.indirectCapacities.width);
 
-                ntc.ValeurDeNTCOrigineVersExtremite[k] = lnk.directCapacities[tsIndex][indx];
-                ntc.ValeurDeNTCExtremiteVersOrigine[k] = lnk.indirectCapacities[tsIndex][indx];
-                ntc.ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][indx];
+                ntc.ValeurDeNTCOrigineVersExtremite[k] = lnk.directCapacities[tsIndex][hourInYear];
+                ntc.ValeurDeNTCExtremiteVersOrigine[k] = lnk.indirectCapacities[tsIndex][hourInYear];
+                ntc.ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][hourInYear];
             }
         }
-        preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, study.bindingConstraints, weekFirstDay, j);
+        preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, study.bindingConstraints, weekFirstDay, hourInWeek);
 
-        const uint dayInTheYear = study.calendar.hours[indx].dayYear;
+        const uint dayInTheYear = study.calendar.hours[hourInYear].dayYear;
 
         for (uint k = 0; k < nbPays; ++k)
         {
@@ -570,86 +570,63 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             auto& ror = area.hydro.series->ror;
 
             assert(&scratchpad);
-            assert((uint)indx < scratchpad.ts.load.height);
+            assert((uint)hourInYear < scratchpad.ts.load.height);
             assert((uint)tsIndex.Consommation < scratchpad.ts.load.width);
             if (parameters.renewableGeneration.isAggregated())
             {
-                assert((uint)indx < scratchpad.ts.solar.height);
-                assert((uint)indx < scratchpad.ts.wind.height);
+                assert((uint)hourInYear < scratchpad.ts.solar.height);
+                assert((uint)hourInYear < scratchpad.ts.wind.height);
                 assert((uint)tsIndex.Eolien < scratchpad.ts.wind.width);
                 assert((uint)tsIndex.Solar < scratchpad.ts.solar.width);
             }
 
             uint tsFatalIndex = (uint)tsIndex.Hydraulique < ror.width ? tsIndex.Hydraulique : 0;
-            double& mustRunGen = problem.AllMustRunGeneration[j].AllMustRunGenerationOfArea[k];
+            double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                mustRunGen = scratchpad.ts.wind[tsIndex.Eolien][indx]
-                             + scratchpad.ts.solar[tsIndex.Solar][indx]
-                             + scratchpad.miscGenSum[indx] + ror[tsFatalIndex][indx]
-                             + scratchpad.mustrunSum[indx];
+                mustRunGen = scratchpad.ts.wind[tsIndex.Eolien][hourInYear]
+                             + scratchpad.ts.solar[tsIndex.Solar][hourInYear]
+                             + scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
+                             + scratchpad.mustrunSum[hourInYear];
             }
 
             // Renewable
             if (parameters.renewableGeneration.isClusters())
             {
-                mustRunGen = scratchpad.miscGenSum[indx] + ror[tsFatalIndex][indx]
-                             + scratchpad.mustrunSum[indx];
+                mustRunGen = scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
+                             + scratchpad.mustrunSum[hourInYear];
 
                 area.renewable.list.each([&](const RenewableCluster& cluster) {
                     assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
                     mustRunGen += cluster.valueAtTimeStep(
-                      tsIndex.RenouvelableParPalier[cluster.areaWideIndex], (uint)indx);
+                      tsIndex.RenouvelableParPalier[cluster.areaWideIndex], (uint)hourInYear);
                 });
             }
 
             assert(
-              !Math::NaN(problem.AllMustRunGeneration[j].AllMustRunGenerationOfArea[k])
+              !Math::NaN(problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k])
               && "NaN detected for 'AllMustRunGeneration', probably from miscGenSum/mustrunSum");
 
-            problem.ConsommationsAbattues[j].ConsommationAbattueDuPays[k]
-              = +scratchpad.ts.load[tsIndex.Consommation][indx]
-                - problem.AllMustRunGeneration[j].AllMustRunGenerationOfArea[k];
-
-            area.thermal.list.each([&](const Data::ThermalCluster& cluster) {
-                assert((uint)tsIndex.ThermiqueParPalier[cluster.areaWideIndex]
-                       < cluster.series->timeSeries.width);
-                assert((uint)indx < cluster.series->timeSeries.height);
-                assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
-
-                auto& Pt
-                  = problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[cluster.index];
-
-                Pt.PuissanceDisponibleDuPalierThermique[j]
-                  = cluster.series
-                      ->timeSeries[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][indx];
-
-                Pt.CoutHoraireDeProductionDuPalierThermique[j]
-                  = cluster.getMarketBidCost(tsIndex.ThermiqueParPalier[cluster.areaWideIndex],
-                                             indx);
-
-                Pt.PuissanceMinDuPalierThermique[j]
-                  = (Pt.PuissanceDisponibleDuPalierThermique[j] < cluster.PthetaInf[indx])
-                      ? Pt.PuissanceDisponibleDuPalierThermique[j]
-                      : cluster.PthetaInf[indx];
-            });
+            problem.ConsommationsAbattues[hourInWeek].ConsommationAbattueDuPays[k]
+              = +scratchpad.ts.load[tsIndex.Consommation][hourInYear]
+                - problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
-                problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire[j]
+                problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire[hourInWeek]
                   = scratchpad.optimalMaxPower[dayInTheYear]
                     * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation;
             }
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDePompageModulable)
             {
-                problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxPompageHoraire[j]
+                problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxPompageHoraire[hourInWeek]
                   = scratchpad.pumpingMaxPower[dayInTheYear]
                     * problem.CaracteristiquesHydrauliques[k].WeeklyPumpingModulation;
             }
 
-            problem.ReserveJMoins1[k].ReserveHoraireJMoins1[j]
-              = area.reserves[fhrDayBefore][PasDeTempsDebut + j];
+            problem.ReserveJMoins1[k].ReserveHoraireJMoins1[hourInWeek]
+              = area.reserves[fhrDayBefore][PasDeTempsDebut + hourInWeek];
         }
     }
 
@@ -931,17 +908,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
     for (uint k = 0; k < nbPays; ++k)
     {
-        auto& area = *study.areas.byIndex[k];
-
-        for (uint l = 0; l != area.thermal.list.size(); ++l)
-        {
-            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                .PuissanceDisponibleDuPalierThermiqueRef
-                =
-                problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                .PuissanceDisponibleDuPalierThermique;
-        }
-
         problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraireRef
             = problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire;
     }

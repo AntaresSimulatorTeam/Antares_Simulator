@@ -383,26 +383,55 @@ void PrepareRandomNumbers(Data::Study& study,
     });
 }
 
-void AddNoiseToThermalCost(Data::Study& study,
-                           PROBLEME_HEBDO& problem,
-                           yearRandomNumbers& randomForYear)
+void BuildThermalPartOfWeeklyProblem(Data::Study& study,
+                                     PROBLEME_HEBDO& problem,
+                                     uint numSpace,
+                                     const int PasDeTempsDebut,
+                                     yearRandomNumbers& randomForYear)
 {
+    int hourInYear = PasDeTempsDebut;
     const uint nbPays = study.areas.size();
-    for (unsigned j = 0; j < problem.NombreDePasDeTemps; ++j)
+    for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps; ++hourInWeek, ++hourInYear)
     {
-        for (uint k = 0; k < nbPays; ++k)
+        for (uint areaIdx = 0; areaIdx < nbPays; ++areaIdx)
         {
-            auto& area = *study.areas.byIndex[k];
+            auto& area = *study.areas.byIndex[areaIdx];
+            auto& tsIndex = NumeroChroniquesTireesParPays[numSpace][areaIdx];
             area.thermal.list.each([&](const Data::ThermalCluster& cluster)
             {
-                auto& Pt = problem.PaliersThermiquesDuPays[k]
-                                  .PuissanceDisponibleEtCout[cluster.index];
-                
-                Pt.CoutHoraireDeProductionDuPalierThermique[j] += 
-                        randomForYear.pThermalNoisesByArea[k][cluster.areaWideIndex];
+                    auto& Pt = problem.PaliersThermiquesDuPays[areaIdx]
+                               .PuissanceDisponibleEtCout[cluster.index];
+
+                    Pt.CoutHoraireDeProductionDuPalierThermique[hourInWeek] =
+                        cluster.getMarketBidCost(tsIndex.ThermiqueParPalier[cluster.areaWideIndex], hourInYear)
+                        + randomForYear.pThermalNoisesByArea[areaIdx][cluster.areaWideIndex];
+
+                    Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
+                        = cluster.series
+                        ->timeSeries[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][hourInYear];
+
+                    Pt.PuissanceMinDuPalierThermique[hourInWeek]
+                        = (Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] < cluster.PthetaInf[hourInYear])
+                        ? Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
+                        : cluster.PthetaInf[hourInYear];
             });
         }
     }
+
+    for (uint k = 0; k < nbPays; ++k)
+    {
+        auto& area = *study.areas.byIndex[k];
+
+        for (uint l = 0; l != area.thermal.list.size(); ++l)
+        {
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
+                   .PuissanceDisponibleDuPalierThermiqueRef
+            =
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
+                   .PuissanceDisponibleDuPalierThermique;
+        }
+    }
+
 }
 
 int retrieveAverageNTC(const Data::Study& study,

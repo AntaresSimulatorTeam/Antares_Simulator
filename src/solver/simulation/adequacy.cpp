@@ -101,12 +101,12 @@ bool Adequacy::simplexIsRequired(uint hourInTheYear, uint numSpace,
     {
         uint dayInTheYear = study.calendar.hours[indx].dayYear;
 
-        for (uint k = 0; k != areaCount; ++k)
+        for (uint areaIdx = 0; areaIdx != areaCount; ++areaIdx)
         {
-            auto& valgen = valeursGenereesParPays[numSpace][k];
+            auto& valgen = valeursGenereesParPays[numSpace][areaIdx];
 
             double quantity
-              = pProblemesHebdo[numSpace].ConsommationsAbattues[j].ConsommationAbattueDuPays[k]
+              = pProblemesHebdo[numSpace].ConsommationsAbattues[j].ConsommationAbattueDuPays[areaIdx]
                 - valgen.HydrauliqueModulableQuotidien[dayInTheYear] / 24.;
 
             if (quantity > 0.)
@@ -146,11 +146,11 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace].weekInTheYear = state.weekInTheYear = w;
         pProblemesHebdo[numSpace].HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(study,
-          pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear,
-          valeursGenereesParPays);
+        ::SIM_RenseignementProblemeHebdo(study, pProblemesHebdo[numSpace], state.weekInTheYear, 
+                                         numSpace, hourInTheYear, valeursGenereesParPays);
 
-        AddNoiseToThermalCost(study, pProblemesHebdo[numSpace], randomForYear);
+        BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace],
+                                        numSpace, hourInTheYear, randomForYear);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;

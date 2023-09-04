@@ -143,11 +143,11 @@ bool Economy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace].weekInTheYear = state.weekInTheYear = w;
         pProblemesHebdo[numSpace].HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(state.study,
-          pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear,
-          valeursGenereesParPays);
+        ::SIM_RenseignementProblemeHebdo(study, pProblemesHebdo[numSpace], state.weekInTheYear, 
+                                         numSpace, hourInTheYear, valeursGenereesParPays);
 
-        AddNoiseToThermalCost(study, pProblemesHebdo[numSpace], randomForYear);
+        BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace], 
+                                        numSpace, hourInTheYear, randomForYear);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;

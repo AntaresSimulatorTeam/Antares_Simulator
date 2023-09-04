@@ -62,9 +62,11 @@ void PrepareRandomNumbers(Data::Study& study,
                           PROBLEME_HEBDO& problem,
                           yearRandomNumbers& randomForYear);
 
-void AddNoiseToThermalCost(Data::Study& study,
-                           PROBLEME_HEBDO& problem,
-                           yearRandomNumbers& randomForYear);
+void BuildThermalPartOfWeeklyProblem(Data::Study& study,
+                                     PROBLEME_HEBDO& problem,
+                                     uint numSpace,
+                                     const int PasDeTempsDebut,
+                                     yearRandomNumbers& randomForYear);
 
 /*!
 ** \brief Prepare data from clusters in mustrun mode (eco+adq)
