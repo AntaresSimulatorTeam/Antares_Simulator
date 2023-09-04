@@ -61,18 +61,18 @@ SET(SRC_APPLICATION
 
 
 
-add_library(libantares-ui-application ${SRC_APPLICATION})
+add_library(antares-ui-application ${SRC_APPLICATION})
 
-target_include_directories(libantares-ui-application
+target_include_directories(antares-ui-application
 							PRIVATE
 								"${CMAKE_SOURCE_DIR}/ui/simulator"
 )
 
-target_link_libraries(libantares-ui-application
+target_link_libraries(antares-ui-application
 						PRIVATE
 							${wxWidgets_LIBRARIES}
-							libantares-ui-common
-                            libantares-core
+							antares-ui-common
+                            antares-core
 							Antares::sys
 )
 

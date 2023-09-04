@@ -59,18 +59,18 @@ set(SRC_MANAGEMENT
 
 
 
-add_library(libantares-solver-hydro
+add_library(antares-solver-hydro
 	${SRC_EXT_SOLVER_H2O_DAILY}
 	${SRC_EXT_SOLVER_H2O_MONTHLY}
 	${SRC_EXT_SOLVER_H2O2_DAILY}
 	${SRC_MANAGEMENT} )
 
-target_link_libraries(libantares-solver-hydro
+target_link_libraries(antares-solver-hydro
 	PRIVATE
-	libmodel_antares
-	libantares-solver-variable PUBLIC sirius_solver)
+	model_antares
+	antares-solver-variable PUBLIC sirius_solver)
 
-target_include_directories(libantares-solver-hydro
+target_include_directories(antares-solver-hydro
 		PRIVATE
 		${CMAKE_SOURCE_DIR}/solver)
 

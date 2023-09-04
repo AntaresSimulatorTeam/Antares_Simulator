@@ -29,7 +29,7 @@ INSTALL(EXPORT antares-config
 )
 
 set(CONFIG_LIBS
-		libantares-core
+		antares-core
 		yuni-static-core
 		${CMAKE_THREADS_LIBS_INIT}
 )

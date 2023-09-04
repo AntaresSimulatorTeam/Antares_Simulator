@@ -15,11 +15,11 @@ set(SRC_COMMON_DISPATCHER
 		dispatcher/settings.cpp
 		)
 source_group("dispatcher" FILES ${SRC_COMMON_DISPATCHER})
-add_library(libantares-ui-dispatcher ${SRC_COMMON_DISPATCHER})
-target_link_libraries(libantares-ui-dispatcher
+add_library(antares-ui-dispatcher ${SRC_COMMON_DISPATCHER})
+target_link_libraries(antares-ui-dispatcher
 		PUBLIC
 			${wxWidgets_LIBRARIES}
-			libantares-core
+			antares-core
 		)
 
 # Common
@@ -31,17 +31,17 @@ set(SRC_UI_COMMON
 	lock.cpp
 	fwd.h
 )
-add_library(libantares-ui-common ${SRC_UI_COMMON})
-target_include_directories(libantares-ui-common
+add_library(antares-ui-common ${SRC_UI_COMMON})
+target_include_directories(antares-ui-common
 		PUBLIC
 			${CMAKE_CURRENT_SOURCE_DIR}
 			${CMAKE_SOURCE_DIR}
 		)
 
-target_link_libraries(libantares-ui-common
+target_link_libraries(antares-ui-common
 		PUBLIC
 			${wxWidgets_LIBRARIES}
-			libantares-core
+			antares-core
 		)
 
 
@@ -69,15 +69,15 @@ set(SRC_UI_SPOTLIGHT
 	component/spotlight/search-png.hxx
 )
 
-add_library(libantares-ui-component-spotlight ${SRC_UI_SPOTLIGHT})
+add_library(antares-ui-component-spotlight ${SRC_UI_SPOTLIGHT})
 
 #TODO : see if wxWidget is really PUBLIC 
-target_link_libraries(libantares-ui-component-spotlight
+target_link_libraries(antares-ui-component-spotlight
 		PUBLIC
 			${wxWidgets_LIBRARIES}
 		PRIVATE
-			libantares-core
-			libantares-ui-common
+			antares-core
+			antares-ui-common
 		)
 
 # Component panel
@@ -88,17 +88,17 @@ set(SRC_COMPONENT_PANEL
 	component/panel/group.h
 	component/panel/group.cpp
 )
-add_library(libantares-ui-component-panel  ${SRC_COMPONENT_PANEL})
+add_library(antares-ui-component-panel  ${SRC_COMPONENT_PANEL})
 target_include_directories(
-		libantares-ui-component-panel
+		antares-ui-component-panel
 		PRIVATE
 		${CMAKE_SOURCE_DIR}/libs
 )
-target_link_libraries(libantares-ui-component-panel
+target_link_libraries(antares-ui-component-panel
 		PUBLIC
 			${wxWidgets_LIBRARIES}
 		PRIVATE
-			libantares-core
+			antares-core
 		)
 
 # Component frame
@@ -109,12 +109,12 @@ set(SRC_COMPONENT_FRAME
 	component/frame/registry.cpp
 	component/frame/registry.h
 )
-add_library(libantares-ui-component-frame  ${SRC_COMPONENT_FRAME})
-target_link_libraries(libantares-ui-component-frame
+add_library(antares-ui-component-frame  ${SRC_COMPONENT_FRAME})
+target_link_libraries(antares-ui-component-frame
 		PUBLIC
 			${wxWidgets_LIBRARIES}
 		PRIVATE
-			libantares-core
+			antares-core
 		)
 
 # Scrollbox
@@ -124,11 +124,11 @@ set(SRC_SCROLLBOX
 )
 source_group("component\\scrollbox" FILES ${SRC_SCROLLBOX})
 
-add_library(libantares-ui-component-wxscrollbox ${SRC_SCROLLBOX})
-target_link_libraries(libantares-ui-component-wxscrollbox
+add_library(antares-ui-component-wxscrollbox ${SRC_SCROLLBOX})
+target_link_libraries(antares-ui-component-wxscrollbox
 		PUBLIC
 			${wxWidgets_LIBRARIES}
 		PRIVATE
-			libantares-core
-			libantares-ui-common
+			antares-core
+			antares-ui-common
 		)

@@ -33,8 +33,8 @@ INSTALL(EXPORT antares-vacuum
 )
 
 set(VACUUM_LIBS
-	libantares-core
-	libantares-fswalker
+	antares-core
+	antares-fswalker
 	yuni-static-core
 	${CMAKE_THREADS_LIBS_INIT}
 )

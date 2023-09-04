@@ -25,7 +25,7 @@ INSTALL(EXPORT antares-study-updater
 )
 
 set(UPDATER_LIBS
-		libantares-core
+		antares-core
 		yuni-static-core
 		Antares::sys
 		${CMAKE_THREADS_LIBS_INIT}

@@ -36,7 +36,7 @@ INSTALL(EXPORT antares-batchrun
 )
 
 set(BATCHRUN_LIBS
-		libantares-core
+		antares-core
 		date
 		yuni-static-core
 		inifile

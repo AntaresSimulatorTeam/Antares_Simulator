@@ -21,7 +21,7 @@ target_include_directories(thermal-price-definition
 target_link_libraries(thermal-price-definition
 						PRIVATE
 							Boost::unit_test_framework
-							libantares-core
+							antares-core
 							checks
 )
 # Linux

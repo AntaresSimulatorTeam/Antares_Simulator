@@ -47,7 +47,7 @@ INSTALL(EXPORT antares-ybyaggregator
 )
 
 set(YBY_AGGREGATOR_LIBS
-	libantares-core
+	antares-core
 	Antares::logs
 	yuni-static-core
 	Antares::sys

@@ -466,7 +466,7 @@ add_subdirectory(date)
 
 add_subdirectory(checks)
 
-add_library(libantares-core
+add_library(antares-core
 	antares.h
 	${SRC}
 	${SRC_AREAS}
@@ -494,12 +494,12 @@ add_library(libantares-core
 
 #TODO : needed for include yuni : why yuni must be include first ??? cheat : made it public so everybody will have this include (should be done in yuni)
 #TODO : needed for include
-target_include_directories(libantares-core
+target_include_directories(antares-core
 		PRIVATE
 			${CMAKE_SOURCE_DIR}/libs
 		)
 
-target_link_libraries(libantares-core
+target_link_libraries(antares-core
 	PUBLIC
 		yuni-static-core
 		yuni-static-uuid
@@ -508,7 +508,7 @@ target_link_libraries(libantares-core
 		logs
         exception
         checks
-		libantares-solver-variable-info
+		antares-solver-variable-info
         result_writer
 		inifile
 		io
@@ -521,4 +521,4 @@ target_link_libraries(libantares-core
 		Antares::correlation
 	)
 
-import_std_libs(libantares-core)
+import_std_libs(antares-core)

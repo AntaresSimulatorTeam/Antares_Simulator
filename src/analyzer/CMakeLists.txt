@@ -50,7 +50,7 @@ INSTALL(EXPORT antares-analyzer
 
 target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
 		PRIVATE
-			libantares-core
+			antares-core
 			Antares::date
 			Antares::sys
 			yuni-static-core
