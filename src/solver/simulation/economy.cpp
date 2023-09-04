@@ -147,7 +147,7 @@ bool Economy::year(Progression::Task& progression,
                                          numSpace, hourInTheYear, valeursGenereesParPays);
 
         BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace], 
-                                        numSpace, hourInTheYear, randomForYear);
+                                        numSpace, hourInTheYear, randomForYear.pThermalNoisesByArea);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;

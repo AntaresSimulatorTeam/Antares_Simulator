@@ -387,7 +387,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      uint numSpace,
                                      const int PasDeTempsDebut,
-                                     yearRandomNumbers& randomForYear)
+                                     double** thermalNoises)
 {
     int hourInYear = PasDeTempsDebut;
     const uint nbPays = study.areas.size();
@@ -404,7 +404,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
 
                     Pt.CoutHoraireDeProductionDuPalierThermique[hourInWeek] =
                         cluster.getMarketBidCost(tsIndex.ThermiqueParPalier[cluster.areaWideIndex], hourInYear)
-                        + randomForYear.pThermalNoisesByArea[areaIdx][cluster.areaWideIndex];
+                        + thermalNoises[areaIdx][cluster.areaWideIndex];
 
                     Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
                         = cluster.series

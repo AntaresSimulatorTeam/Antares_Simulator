@@ -66,7 +66,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      uint numSpace,
                                      const int PasDeTempsDebut,
-                                     yearRandomNumbers& randomForYear);
+                                     double** thermalNoises);
 
 /*!
 ** \brief Prepare data from clusters in mustrun mode (eco+adq)
