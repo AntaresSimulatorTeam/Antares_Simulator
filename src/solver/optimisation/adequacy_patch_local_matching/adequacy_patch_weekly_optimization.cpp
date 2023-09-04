@@ -65,11 +65,6 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
             std::fill(problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS.begin(),
                     problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS.end(), 0);
     }
-
-    // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
-    // part that we need
-    ::SIM_RenseignementProblemeHebdo(study_, *problemeHebdo_, weekInTheYear, thread_number_,
-                                     hourInTheYear, valeursGenereesParPays_);
     
     OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
 }
