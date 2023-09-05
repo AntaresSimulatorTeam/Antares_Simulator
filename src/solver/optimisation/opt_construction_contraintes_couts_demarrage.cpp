@@ -35,6 +35,8 @@
 #include "PMaxDispatchableGeneration.h"
 #include "PMinDispatchableGeneration.h"
 #include "ConsistenceNODU.h"
+#include "NbUnitsOutageLessThanNbUnitsStop.h"
+
 using namespace Antares::Data;
 
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
@@ -96,91 +98,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 consistenceNODU.add(pays, palier, index, pdt, Simulation);
                 nbTermesContraintesPourLesCoutsDeDemarrage
                   += consistenceNODU.nbTermesContraintesPourLesCoutsDeDemarrage;
-                // auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                // constraintNamer.UpdateTimeStep(timeStepInYear);
-                // CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-                //   =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-
-                // int Pdtmoins1 = pdt - 1;
-                // if (Pdtmoins1 < 0)
-                //     Pdtmoins1 = nombreDePasDeTempsPourUneOptimisation + Pdtmoins1;
-                // CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptimTmoins1
-                //   = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdtmoins1];
-
-                // int nombreDeTermes = 0;
-                // if (!Simulation)
-                // {
-                //     int var
-                //       = CorrespondanceVarNativesVarOptim
-                //           .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
-                //     if (var >= 0)
-                //     {
-                //         Pi[nombreDeTermes] = 1.0;
-                //         Colonne[nombreDeTermes] = var;
-                //         nombreDeTermes++;
-                //     }
-                // }
-                // else
-                //     nbTermesContraintesPourLesCoutsDeDemarrage++;
-
-                // if (!Simulation)
-                // {
-                //     int var
-                //       = CorrespondanceVarNativesVarOptimTmoins1
-                //           .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
-                //     if (var >= 0)
-                //     {
-                //         Pi[nombreDeTermes] = -1;
-                //         Colonne[nombreDeTermes] = var;
-                //         nombreDeTermes++;
-                //     }
-                // }
-                // else
-                //     nbTermesContraintesPourLesCoutsDeDemarrage++;
-
-                // if (!Simulation)
-                // {
-                //     int var
-                //       = CorrespondanceVarNativesVarOptim
-                //           .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier];
-                //     if (var >= 0)
-                //     {
-                //         Pi[nombreDeTermes] = -1;
-                //         Colonne[nombreDeTermes] = var;
-                //         nombreDeTermes++;
-                //     }
-                // }
-                // else
-                //     nbTermesContraintesPourLesCoutsDeDemarrage++;
-
-                // if (!Simulation)
-                // {
-                //     int var
-                //       = CorrespondanceVarNativesVarOptim
-                //           .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
-                //     if (var >= 0)
-                //     {
-                //         Pi[nombreDeTermes] = 1;
-                //         Colonne[nombreDeTermes] = var;
-                //         nombreDeTermes++;
-                //     }
-                // }
-                // else
-                //     nbTermesContraintesPourLesCoutsDeDemarrage++;
-
-                // if (!Simulation)
-                // {
-                //     if (nombreDeTermes > 0)
-                //     {
-                //         constraintNamer.ConsistenceNODU(
-                //           ProblemeAResoudre->NombreDeContraintes,
-                //           PaliersThermiquesDuPays.NomsDesPaliersThermiques[index]);
-                //         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                //           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-                //     }
-                // }
-                // else
-                //     ProblemeAResoudre->NombreDeContraintes += 1;
             }
         }
     }
@@ -189,6 +106,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
+        NbUnitsOutageLessThanNbUnitsStop nbUnitsOutageLessThanNbUnitsStop(problemeHebdo);
 
         constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
@@ -198,59 +116,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                constraintNamer.UpdateTimeStep(timeStepInYear);
-                CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-                  = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-                CorrespondanceCntNativesCntOptim
-                  .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
-                  = -1;
-
-                int nombreDeTermes = 0;
-                if (!Simulation)
-                {
-                    int var
-                      =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                          .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
-                            [palier];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = 1.0;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
-                else
-                    nbTermesContraintesPourLesCoutsDeDemarrage++;
-
-                if (!Simulation)
-                {
-                    int var
-                      =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                          .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = -1.0;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
-                else
-                    nbTermesContraintesPourLesCoutsDeDemarrage++;
-
-                if (!Simulation)
-                {
-                    if (nombreDeTermes > 0)
-                    {
-                        constraintNamer.NbUnitsOutageLessThanNbUnitsStop(
-                          ProblemeAResoudre->NombreDeContraintes,
-                          PaliersThermiquesDuPays.NomsDesPaliersThermiques[index]);
-                        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-                    }
-                }
-                else
-                    ProblemeAResoudre->NombreDeContraintes += 1;
+                nbUnitsOutageLessThanNbUnitsStop.add(pays, palier, index, pdt, Simulation);
+                nbTermesContraintesPourLesCoutsDeDemarrage
+                  += nbUnitsOutageLessThanNbUnitsStop.nbTermesContraintesPourLesCoutsDeDemarrage;
             }
         }
     }

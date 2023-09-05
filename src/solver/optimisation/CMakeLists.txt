@@ -115,6 +115,8 @@ set(RTESOLVER_OPT
 		PMinDispatchableGeneration.cpp
 		ConsistenceNODU.h
 		ConsistenceNODU.cpp
+		NbUnitsOutageLessThanNbUnitsStop.h
+		NbUnitsOutageLessThanNbUnitsStop.cpp
 
 	)
 
