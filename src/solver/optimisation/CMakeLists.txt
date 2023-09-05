@@ -117,6 +117,8 @@ set(RTESOLVER_OPT
 		ConsistenceNODU.cpp
 		NbUnitsOutageLessThanNbUnitsStop.h
 		NbUnitsOutageLessThanNbUnitsStop.cpp
+		NbDispUnitsMinBoundSinceMinUpTime.h
+		NbDispUnitsMinBoundSinceMinUpTime.cpp
 
 	)
 
