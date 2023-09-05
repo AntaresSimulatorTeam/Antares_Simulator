@@ -32,7 +32,8 @@
 
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"
-
+#include "PMaxDispatchableGeneration.h"
+#include "PMinDispatchableGeneration.h"
 using namespace Antares::Data;
 
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
@@ -56,6 +57,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
+            PMaxDispatchableGeneration pMaxDispatchableGeneration(problemeHebdo);
+            PMinDispatchableGeneration pMinDispatchableGeneration(problemeHebdo);
             double pminDUnGroupeDuPalierThermique
               = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[index];
             double pmaxDUnGroupeDuPalierThermique
@@ -65,100 +68,110 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-                constraintNamer.UpdateTimeStep(timeStepInYear);
-                CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-                  = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+                pMaxDispatchableGeneration.add(pays, palier, index, pdt, Simulation);
+                nbTermesContraintesPourLesCoutsDeDemarrage
+                  += pMaxDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage;
 
-                int nombreDeTermes = 0;
+                pMinDispatchableGeneration.add(pays, palier, index, pdt, Simulation);
+                nbTermesContraintesPourLesCoutsDeDemarrage
+                  += pMinDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage;
 
-                if (!Simulation)
-                {
-                    int var
-                      = CorrespondanceVarNativesVarOptim.NumeroDeVariableDuPalierThermique[palier];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = 1.0;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
-                else
-                    nbTermesContraintesPourLesCoutsDeDemarrage++;
+                // auto timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                // constraintNamer.UpdateTimeStep(timeStepInYear);
+                // CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
+                //   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
-                if (!Simulation)
-                {
-                    int var
-                      = CorrespondanceVarNativesVarOptim
-                          .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = -pmaxDUnGroupeDuPalierThermique;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
-                else
-                    nbTermesContraintesPourLesCoutsDeDemarrage++;
+                // int nombreDeTermes = 0;
 
-                if (!Simulation)
-                {
-                    if (nombreDeTermes > 0)
-                    {
-                        constraintNamer.PMaxDispatchableGeneration(
-                          ProblemeAResoudre->NombreDeContraintes,
-                          PaliersThermiquesDuPays.NomsDesPaliersThermiques[index]);
-                        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-                    }
-                }
-                else
-                    ProblemeAResoudre->NombreDeContraintes += 1;
+                // if (!Simulation)
+                // {
+                //     int var
+                //       =
+                //       CorrespondanceVarNativesVarOptim.NumeroDeVariableDuPalierThermique[palier];
+                //     if (var >= 0)
+                //     {
+                //         Pi[nombreDeTermes] = 1.0;
+                //         Colonne[nombreDeTermes] = var;
+                //         nombreDeTermes++;
+                //     }
+                // }
+                // else
+                //     nbTermesContraintesPourLesCoutsDeDemarrage++;
 
-                nombreDeTermes = 0;
+                // if (!Simulation)
+                // {
+                //     int var
+                //       = CorrespondanceVarNativesVarOptim
+                //           .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
+                //     if (var >= 0)
+                //     {
+                //         Pi[nombreDeTermes] = -pmaxDUnGroupeDuPalierThermique;
+                //         Colonne[nombreDeTermes] = var;
+                //         nombreDeTermes++;
+                //     }
+                // }
+                // else
+                //     nbTermesContraintesPourLesCoutsDeDemarrage++;
 
-                if (!Simulation)
-                {
-                    int var
-                      = CorrespondanceVarNativesVarOptim.NumeroDeVariableDuPalierThermique[palier];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = 1.0;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
-                else
-                    nbTermesContraintesPourLesCoutsDeDemarrage++;
+                // if (!Simulation)
+                // {
+                //     if (nombreDeTermes > 0)
+                //     {
+                //         constraintNamer.PMaxDispatchableGeneration(
+                //           ProblemeAResoudre->NombreDeContraintes,
+                //           PaliersThermiquesDuPays.NomsDesPaliersThermiques[index]);
+                //         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+                //           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
+                //     }
+                // }
+                // else
+                //     ProblemeAResoudre->NombreDeContraintes += 1;
 
-                if (!Simulation)
-                {
-                    int var
-                      = CorrespondanceVarNativesVarOptim
-                          .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = -pminDUnGroupeDuPalierThermique;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
-                else
-                    nbTermesContraintesPourLesCoutsDeDemarrage++;
+                // nombreDeTermes = 0;
 
-                if (!Simulation)
-                {
-                    if (nombreDeTermes > 0)
-                    {
-                        constraintNamer.PMinDispatchableGeneration(
-                          ProblemeAResoudre->NombreDeContraintes,
-                          PaliersThermiquesDuPays.NomsDesPaliersThermiques[index]);
-                        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
-                    }
-                }
-                else
-                    ProblemeAResoudre->NombreDeContraintes += 1;
+                // if (!Simulation)
+                // {
+                //     int var
+                //       =
+                //       CorrespondanceVarNativesVarOptim.NumeroDeVariableDuPalierThermique[palier];
+                //     if (var >= 0)
+                //     {
+                //         Pi[nombreDeTermes] = 1.0;
+                //         Colonne[nombreDeTermes] = var;
+                //         nombreDeTermes++;
+                //     }
+                // }
+                // else
+                //     nbTermesContraintesPourLesCoutsDeDemarrage++;
+
+                // if (!Simulation)
+                // {
+                //     int var
+                //       = CorrespondanceVarNativesVarOptim
+                //           .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
+                //     if (var >= 0)
+                //     {
+                //         Pi[nombreDeTermes] = -pminDUnGroupeDuPalierThermique;
+                //         Colonne[nombreDeTermes] = var;
+                //         nombreDeTermes++;
+                //     }
+                // }
+                // else
+                //     nbTermesContraintesPourLesCoutsDeDemarrage++;
+
+                // if (!Simulation)
+                // {
+                //     if (nombreDeTermes > 0)
+                //     {
+                //         constraintNamer.PMinDispatchableGeneration(
+                //           ProblemeAResoudre->NombreDeContraintes,
+                //           PaliersThermiquesDuPays.NomsDesPaliersThermiques[index]);
+                //         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+                //           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
+                //     }
+                // }
+                // else
+                //     ProblemeAResoudre->NombreDeContraintes += 1;
             }
         }
     }

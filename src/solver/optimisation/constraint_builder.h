@@ -356,6 +356,10 @@ public:
     // }
 
     void build();
+    int NumberOfVariables() const
+    {
+        return nombreDeTermes_;
+    }
 
 private:
     PROBLEME_HEBDO& problemeHebdo;
@@ -367,6 +371,7 @@ private:
     char operator_;
     double rhs_ = 0;
     int nombreDeTermes_ = 0;
+    // ConstraintNamer ConstraintNameManager;
 };
 
 class Constraint
