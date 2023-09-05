@@ -119,6 +119,8 @@ set(RTESOLVER_OPT
 		NbUnitsOutageLessThanNbUnitsStop.cpp
 		NbDispUnitsMinBoundSinceMinUpTime.h
 		NbDispUnitsMinBoundSinceMinUpTime.cpp
+		MinDownTime.h
+		MinDownTime.cpp
 
 	)
 
