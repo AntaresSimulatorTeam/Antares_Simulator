@@ -7,6 +7,8 @@ set(SRC
         named_problem.cpp
         mps_utils.h
         mps_utils.cpp
+        name_translator.h
+        name_translator.cpp
         opt_period_string_generator.h
         opt_period_string_generator.cpp
         )

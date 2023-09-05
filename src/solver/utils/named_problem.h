@@ -12,22 +12,6 @@ namespace Antares
 {
 namespace Optimization
 {
-static inline char** VectorOfStringToCharPP(std::vector<std::string>& in,
-                                            std::vector<char*>& pointerVec)
-{
-    std::transform(in.begin(),
-                   in.end(),
-                   std::back_inserter(pointerVec),
-                   [](std::string& str) { return str.empty() ? nullptr : str.data(); });
-    return pointerVec.data();
-}
-
-static inline char** CharPP(size_t Size, std::vector<char*>& pointerVec)
-{
-    pointerVec = std::vector<char*>(Size, nullptr);
-    return pointerVec.data();
-}
-
 struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
 {
 public:
@@ -57,27 +41,6 @@ public:
     void SetUseNamedProblems(bool useNamedProblems)
     {
         useNamedProblems_ = useNamedProblems;
-    }
-
-    char** VariableNamesAsCharPP(std::vector<char*>& pointerVec)
-    {
-        if (useNamedProblems_)
-        {
-            return VectorOfStringToCharPP(const_cast<std::vector<std::string>&>(NomDesVariables),
-                                          pointerVec);
-        }
-
-        return CharPP(NomDesVariables.size(), pointerVec);
-    }
-
-    char** ConstraintNamesAsCharPP(std::vector<char*>& pointerVec)
-    {
-        if (useNamedProblems_)
-        {
-            return VectorOfStringToCharPP(const_cast<std::vector<std::string>&>(NomDesContraintes),
-                                          pointerVec);
-        }
-        return CharPP(NomDesContraintes.size(), pointerVec);
     }
 
     const std::vector<std::string>& VariableNames() const
