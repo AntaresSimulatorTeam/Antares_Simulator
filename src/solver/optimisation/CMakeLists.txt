@@ -113,6 +113,8 @@ set(RTESOLVER_OPT
 		PMaxDispatchableGeneration.cpp
 		PMinDispatchableGeneration.h
 		PMinDispatchableGeneration.cpp
+		ConsistenceNODU.h
+		ConsistenceNODU.cpp
 
 	)
 
