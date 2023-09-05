@@ -309,11 +309,11 @@ void PrepareRandomNumbers(Data::Study& study,
         for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
         {
             auto cluster = it->second;
+            if (!cluster->enabled)
+                continue;
             uint clusterIndex = cluster->areaWideIndex;
             double& rnd = randomForYear.pThermalNoisesByArea[indexArea][clusterIndex];
             double randomClusterProdCost(0.);
-            if (!cluster->enabled)
-                continue;
             if (cluster->spreadCost == 0) // 5e-4 < |randomClusterProdCost| < 6e-4
             {
                 if (rnd < 0.5)

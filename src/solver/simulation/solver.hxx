@@ -142,7 +142,6 @@ private:
 
             // Getting random tables for this year
             yearRandomNumbers& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
-            double const* const* thermalNoisesByArea = randomForCurrentYear.pThermalNoisesByArea;
             double* randomReservoirLevel = nullptr;
 
             // 1 - Applying random levels for current year
@@ -153,7 +152,7 @@ private:
 
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
-            ApplyRandomTSnumbers(study, thermalNoisesByArea, numSpace);
+            ApplyRandomTSnumbers(study, numSpace);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
             simulation_->prepareClustersInMustRunMode(numSpace);

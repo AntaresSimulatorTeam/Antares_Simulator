@@ -34,7 +34,6 @@ using namespace Antares;
 using namespace Antares::Data;
 
 void ApplyRandomTSnumbers(const Study& study,
-                          double const* const* thermalNoisesByArea,
                           uint numSpace)
 {
     auto& runtime = *study.runtime;

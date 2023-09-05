@@ -30,5 +30,4 @@
 #include "antares/study/study.h"
 
 void ApplyRandomTSnumbers(const Antares::Data::Study& study,
-                          double const* const* thermalNoisesByArea,
                           uint numSpace);
