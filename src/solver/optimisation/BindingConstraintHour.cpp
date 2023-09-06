@@ -67,15 +67,6 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
                                                    problemeHebdo->NombreDePasDeTemps);
     }
 
-    // std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
-    //   = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
-    // int cnt = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-
-    // double rhs = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[pdtHebdo];
-    // AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
-    //   = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales.data()
-    //     + pdtHebdo;
-
     char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
     builder.operatorRHS(op);
     {

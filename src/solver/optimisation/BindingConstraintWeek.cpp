@@ -15,9 +15,6 @@ void BindingConstraintWeek::add(int cntCouplante)
     const int nbClusters
       = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
 
-    const int NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
     for (int index = 0; index < nbInterco; index++)
     {
         int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
