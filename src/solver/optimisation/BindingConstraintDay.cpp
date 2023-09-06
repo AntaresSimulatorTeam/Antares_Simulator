@@ -80,16 +80,10 @@ void BindingConstraintDay::add(int cntCouplante)
         CorrespondanceCntNativesCntOptimJournalieres
           .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-        // TODO probably wrong from the 2nd week, check
-        // const int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
 
         std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
           = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
-        // int cnt = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-        // AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
-        //   = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales.data()
-        //     + jour;
-        // double rhs = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[jour];
+
         char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
         builder.operatorRHS(op);
         {
