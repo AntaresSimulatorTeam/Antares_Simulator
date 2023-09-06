@@ -69,29 +69,6 @@ void AreaBalance::add(int pdt, int pays)
     shortTermStorageBalance(
       problemeHebdo->ShortTermStorage[pays], builder, CorrespondanceVarNativesVarOptim);
 
-    // {
-    //     const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
-    //       = problemeHebdo->ConsommationsAbattues[pdtHebdo];
-    //     double rhs = -ConsommationsAbattues.ConsommationAbattueDuPays[pays];
-    //     bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
-    //     bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
-    //     if (reserveJm1 && opt1)
-    //     {
-    //         rhs -= problemeHebdo->ReserveJMoins1[pays].ReserveHoraireJMoins1[pdtHebdo];
-    //     }
-    //     /* check !*/
-    //     double* adresseDuResultat
-    //       = &(problemeHebdo->ResultatsHoraires[pays].CoutsMarginauxHoraires[pdtHebdo]);
-
-    //     std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
-    //       = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
-
-    //     int cnt = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-
-    //     AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = adresseDuResultat;
-
-    // }
-    /*check! */
     builder.equalTo();
     builder.build();
 }
