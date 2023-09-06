@@ -1,7 +1,7 @@
 #pragma once
 #include "constraint_builder.h"
 
-class MinDownTime : public Constraint
+class MinDownTime : private Constraint
 {
 public:
     using Constraint::Constraint;

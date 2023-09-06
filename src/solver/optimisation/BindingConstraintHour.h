@@ -1,8 +1,9 @@
 #pragma once
 #include "constraint_builder.h"
 
-struct BindingConstraintHour : public Constraint
+class BindingConstraintHour : private Constraint
 {
+    public:
     using Constraint::Constraint;
     void add(int pdt, int cntCouplante);
 };

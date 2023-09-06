@@ -15,7 +15,7 @@ namespace Variable
 {
 struct SingleIndex
 {
-    SingleIndex(unsigned index) : index(index)
+    explicit SingleIndex(unsigned index) : index(index)
     {
     }
     unsigned index;
@@ -377,13 +377,12 @@ private:
 class Constraint
 {
 public:
-    Constraint(PROBLEME_HEBDO* problemeHebdo) :
+    explicit Constraint(PROBLEME_HEBDO* problemeHebdo) :
      problemeHebdo(problemeHebdo),
      builder(*problemeHebdo, problemeHebdo->CorrespondanceVarNativesVarOptim)
     {
     }
 
-protected:
     PROBLEME_HEBDO* problemeHebdo; // TODO remove
     ConstraintBuilder builder;
 };

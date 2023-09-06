@@ -1,7 +1,7 @@
 #pragma once
 #include "constraint_builder.h"
 
-class PMinDispatchableGeneration : public Constraint
+class PMinDispatchableGeneration : private Constraint
 {
 public:
     using Constraint::Constraint;

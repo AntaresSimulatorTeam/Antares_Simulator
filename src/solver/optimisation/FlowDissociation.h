@@ -1,8 +1,9 @@
 #pragma once
 #include "constraint_builder.h"
 
-struct FlowDissociation : public Constraint
+class FlowDissociation : private Constraint
 {
+public:
     using Constraint::Constraint;
     void add(int pdt, int interco);
 };

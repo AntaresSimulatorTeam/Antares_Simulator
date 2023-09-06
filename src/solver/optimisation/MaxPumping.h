@@ -1,8 +1,9 @@
 #pragma once
 #include "constraint_builder.h"
 
-struct MaxPumping : public Constraint
+class MaxPumping : private Constraint
 {
+public:
     using Constraint::Constraint;
     void add(int pays);
 };

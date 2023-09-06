@@ -1,8 +1,9 @@
 
 #pragma once
 #include "constraint_builder.h"
-struct HydroPowerSmoothingUsingVariationSum : public Constraint
+class HydroPowerSmoothingUsingVariationSum : private Constraint
 {
+public:
     using Constraint::Constraint;
     void add(int pays);
 };

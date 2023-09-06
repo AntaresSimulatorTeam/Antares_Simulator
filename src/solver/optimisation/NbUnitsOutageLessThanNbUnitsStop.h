@@ -1,7 +1,7 @@
 #pragma once
 #include "constraint_builder.h"
 
-class NbUnitsOutageLessThanNbUnitsStop : public Constraint
+class NbUnitsOutageLessThanNbUnitsStop : private Constraint
 {
 public:
     using Constraint::Constraint;

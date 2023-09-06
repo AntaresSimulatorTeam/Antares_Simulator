@@ -1,7 +1,7 @@
 #pragma once
 #include "constraint_builder.h"
 
-class PMaxDispatchableGeneration : public Constraint
+class PMaxDispatchableGeneration : private Constraint
 {
 public:
     using Constraint::Constraint;

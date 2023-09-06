@@ -7,12 +7,7 @@ void ConstraintBuilder::build()
     // TODO check operator_
     if (nombreDeTermes_ > 0)
     {
-        // // RHS
-        // {
-        //   const int idx = problemeAResoudre.NombreDeContraintes;
-        //   problemeAResoudre.SecondMembre[idx] = rhs_;
-        // }
-        // Matrix
+                // Matrix
         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
           &problemeAResoudre, Pi, Colonne, nombreDeTermes_, operator_);
     }

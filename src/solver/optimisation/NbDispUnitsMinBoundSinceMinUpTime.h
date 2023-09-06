@@ -1,7 +1,7 @@
 #pragma once
 #include "constraint_builder.h"
 
-class NbDispUnitsMinBoundSinceMinUpTime : public Constraint
+class NbDispUnitsMinBoundSinceMinUpTime : private Constraint
 {
 public:
     using Constraint::Constraint;

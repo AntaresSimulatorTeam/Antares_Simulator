@@ -1,7 +1,7 @@
 #pragma once
 #include "constraint_builder.h"
 
-class ConsistenceNODU : public Constraint
+class ConsistenceNODU : private Constraint
 {
 public:
     using Constraint::Constraint;

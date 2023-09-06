@@ -1,7 +1,9 @@
 #pragma once
 #include "constraint_builder.h"
-struct AreaBalance : public Constraint
+
+class AreaBalance : private Constraint
 {
+public:
     using Constraint::Constraint;
 
     void add(int pdt, int pays);
