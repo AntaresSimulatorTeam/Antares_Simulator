@@ -13,13 +13,11 @@ void PMinDispatchableGeneration::add(int pays,
         double pminDUnGroupeDuPalierThermique
           = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
 
-        int NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
         builder.updateHourWithinWeek(pdt)
           .include(Variable::DispatchableProduction(cluster), 1.0)
           .include(Variable::NODU(cluster), -pminDUnGroupeDuPalierThermique)
           .greaterThan();
-        /*consider Adding rename constraint inside the builder*/
+        /*consider Adding naming constraint inside the builder*/
         if (builder.NumberOfVariables() > 0)
         {
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,

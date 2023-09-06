@@ -25,8 +25,6 @@ void MinHydroPower::add(int pays)
             builder.updateHourWithinWeek(pdt);
             builder.include(Variable::HydProd(pays), 1.0);
         }
-        // const double rhs = problemeHebdo->CaracteristiquesHydrauliques[pays]
-        //                      .MinEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
 
         problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;

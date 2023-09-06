@@ -12,8 +12,6 @@ void PMaxDispatchableGeneration::add(int pays,
           = problemeHebdo->PaliersThermiquesDuPays[pays];
         double pmaxDUnGroupeDuPalierThermique
           = PaliersThermiquesDuPays.PmaxDUnGroupeDuPalierThermique[clusterIndex];
-        const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-          = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex];
 
         builder.updateHourWithinWeek(pdt)
           .include(Variable::DispatchableProduction(cluster), 1.0)

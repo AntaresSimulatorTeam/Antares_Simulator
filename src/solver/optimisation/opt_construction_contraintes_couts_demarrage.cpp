@@ -64,10 +64,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         {
             PMaxDispatchableGeneration pMaxDispatchableGeneration(problemeHebdo);
             PMinDispatchableGeneration pMinDispatchableGeneration(problemeHebdo);
-            double pminDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[index];
-            double pmaxDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays.PmaxDUnGroupeDuPalierThermique[index];
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
@@ -156,8 +152,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         MinDownTime minDownTime(problemeHebdo);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            int DureeMinimaleDArretDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 

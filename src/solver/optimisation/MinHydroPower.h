@@ -1,8 +1,9 @@
 #pragma once
 #include "constraint_builder.h"
 
-struct MinHydroPower : private Constraint
+class MinHydroPower : private Constraint
 {
+public:
     using Constraint::Constraint;
     void add(int pays);
 };

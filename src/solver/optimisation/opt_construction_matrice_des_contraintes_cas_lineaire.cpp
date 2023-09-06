@@ -133,7 +133,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     if (nombreDePasDeTempsPourUneOptimisation > nombreDePasDeTempsDUneJournee)
     {
-        int semaine = problemeHebdo->weekInTheYear;
         CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondanceCntNativesCntOptimHebdomadaires
           = problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires;
         for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;

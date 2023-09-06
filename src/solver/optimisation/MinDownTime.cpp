@@ -12,20 +12,12 @@ void MinDownTime::add(int pays, int cluster, int clusterIndex, int pdt, bool Sim
     CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesContraintesDeDureeMinDArret[cluster] = -1;
     if (!Simulation)
     {
-        double pminDUnGroupeDuPalierThermique
-          = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
-
         int NombreDePasDeTempsPourUneOptimisation
           = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
         const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
           = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
               .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-
-        int t1 = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique;
-        if (t1 < 0)
-            t1 = NombreDePasDeTempsPourUneOptimisation + t1;
-        double rhs = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]; // /!\ TODO check
 
         builder.updateHourWithinWeek(pdt).include(Variable::NODU(cluster), 1.0);
 

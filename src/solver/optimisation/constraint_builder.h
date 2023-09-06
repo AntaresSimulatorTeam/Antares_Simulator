@@ -242,32 +242,6 @@ private:
 };
 } // namespace Variable
 
-// enum class Constraint {
-//   FlowDissociation,
-//   AreaBalance,
-//   FictiveLoads,
-//   HydroPower,
-//   HydroPowerSmoothingUsingVariationSum,
-//   HydroPowerSmoothingUsingVariationMaxDown,
-//   HydroPowerSmoothingUsingVariationMaxUp,
-//   MinHydroPower,
-//   MaxHydroPower,
-//   MaxPumping,
-//   AreaHydroLevel,
-//   FinalStockEquivalent,
-//   FinalStockExpression,
-//   NbUnitsOutageLessThanNbUnitsStop,
-//   NbDispUnitsMinBoundSinceMinUpTime,
-//   MinDownTime,
-//   PMaxDispatchableGeneration,
-//   PMinDispatchableGeneration,
-//   ConsistenceNODU,
-//   ShortTermStorageLevel,
-//   BindingConstraintHour,
-//   BindingConstraintDay,
-//   BindingConstraintWeek
-// };
-
 class ConstraintBuilder
 {
 public:
@@ -307,18 +281,6 @@ public:
 
         return *this;
     }
-    // ConstraintBuilder& operatorRHS(char op, double rhs)
-    // {
-    //     if (op == '<' || op == '=' || op == '>')
-    //     {
-    //         operator_ = op;
-    //         rhs_ = rhs;
-    //     }
-    //     else
-    //         throw std::runtime_error("Invalid operator");
-
-    //     return *this;
-    // }
 
     ConstraintBuilder& equalTo()
     {
@@ -335,25 +297,6 @@ public:
         operator_ = '>';
         return *this;
     }
-
-    // ConstraintBuilder& equalTo(double rhs)
-    // {
-    //     operator_ = '=';
-    //     rhs_ = rhs;
-    //     return *this;
-    // }
-    // ConstraintBuilder& lessThan(double rhs)
-    // {
-    //     operator_ = '<';
-    //     rhs_ = rhs;
-    //     return *this;
-    // }
-    // ConstraintBuilder& greaterThan(double rhs)
-    // {
-    //     operator_ = '>';
-    //     rhs_ = rhs;
-    //     return *this;
-    // }
 
     void build();
     int NumberOfVariables() const

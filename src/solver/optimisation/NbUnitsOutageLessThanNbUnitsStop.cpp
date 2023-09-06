@@ -10,8 +10,6 @@ void NbUnitsOutageLessThanNbUnitsStop::add(int pays,
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-        double pminDUnGroupeDuPalierThermique
-          = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
         const int DureeMinimaleDArretDUnGroupeDuPalierThermique
           = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex];
 
@@ -19,18 +17,6 @@ void NbUnitsOutageLessThanNbUnitsStop::add(int pays,
           = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
         CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesContraintesDeDureeMinDeMarche[cluster]
           = -1;
-
-        int NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-        int t1 = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique;
-
-        if (t1 < 0)
-            t1 = NombreDePasDeTempsPourUneOptimisation + t1;
-
-        const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
-          = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
-              .NombreMaxDeGroupesEnMarcheDuPalierThermique;
 
         builder.updateHourWithinWeek(pdt)
           .include(Variable::NumberBreakingDownDispatchableUnits(cluster), 1.0)
