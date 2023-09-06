@@ -33,11 +33,6 @@ void FlowDissociation::add(int pdt, int interco)
           .include(Variable::IntercoDirectCost(interco), -1.0)
           .include(Variable::IntercoIndirectCost(interco), 1.0);
 
-        // if (CoutDeTransport.IntercoGereeAvecLoopFlow)
-        //     builder.equalTo(
-        //       problemeHebdo->ValeursDeNTC[pdtHebdo].ValeurDeLoopFlowOrigineVersExtremite[interco]);
-        // else
-        //     builder.equalTo(0.);
         builder.equalTo();
 
         builder.build();

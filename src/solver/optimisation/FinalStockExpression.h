@@ -2,7 +2,7 @@
 
 #include "constraint_builder.h"
 
-struct FinalStockExpression : private Constraint
+class FinalStockExpression : private Constraint
 {
 public:
     using Constraint::Constraint;

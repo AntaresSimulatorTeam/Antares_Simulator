@@ -7,13 +7,6 @@ void HydroPowerSmoothingUsingVariationMaxDown::add(int pays, int pdt)
         return;
     }
 
-    const int nombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-    const auto& CorrespondanceVarNativesVarOptim
-      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-    int nombreDeTermes = 0;
-
     ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                           problemeHebdo->NamedProblems);
     namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);

@@ -1,7 +1,7 @@
 #pragma once
 #include "constraint_builder.h"
 
-struct HydroPower : private Constraint
+class HydroPower : private Constraint
 {
 public:
     using Constraint::Constraint;
