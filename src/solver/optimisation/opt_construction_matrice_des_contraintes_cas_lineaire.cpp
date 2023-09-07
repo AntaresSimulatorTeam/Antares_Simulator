@@ -56,8 +56,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 {
     int var;
 
-    const bool exportStructure = problemeHebdo->ExportStructure;
-    const bool firstWeekOfSimulation = problemeHebdo->firstWeekOfSimulation;
 
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
 
@@ -214,7 +212,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     }
 
     // Export structure
-    if (exportStructure && firstWeekOfSimulation)
+    if (problemeHebdo->ExportStructure && problemeHebdo->firstWeekOfSimulation)
     {
         OPT_ExportInterco(writer, problemeHebdo);
         OPT_ExportAreaName(writer, problemeHebdo->NomsDesPays);
