@@ -56,12 +56,13 @@ void CheckFinalReservoirLevelsForYear(const Data::Study& study, uint year)
 void CheckFinalReservoirLevelsConfiguration(const Data::Study& study)
 {
     initializeFinalLevelData(study);
-    
+
     uint nbYears = study.parameters.nbYears;
 
     for (uint year = 0; year != nbYears; ++year)
     {
-        CheckFinalReservoirLevelsForYear(study, year);
+        if (study.parameters.yearsFilter.at(year))
+            CheckFinalReservoirLevelsForYear(study, year);
     }
 }
 
