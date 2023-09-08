@@ -93,7 +93,7 @@ bool Adequacy::simulationBegin()
 
 bool Adequacy::simplexIsRequired(uint hourInTheYear, 
                                  uint numSpace,
-                                 const VAL_GEN_PAR_PAYS& valeursGenereesParPays) const
+                                 const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults) const
 {
     uint areaCount = study.areas.size();
     uint indx = hourInTheYear;
@@ -104,11 +104,11 @@ bool Adequacy::simplexIsRequired(uint hourInTheYear,
 
         for (uint areaIdx = 0; areaIdx != areaCount; ++areaIdx)
         {
-            auto& valgen = valeursGenereesParPays[numSpace][areaIdx];
+            auto& hydroVentilation = hydroVentilationResults[numSpace][areaIdx];
 
             double quantity
               = pProblemesHebdo[numSpace].ConsommationsAbattues[j].ConsommationAbattueDuPays[areaIdx]
-                - valgen.HydrauliqueModulableQuotidien[dayInTheYear] / 24.;
+                - hydroVentilation.HydrauliqueModulableQuotidien[dayInTheYear] / 24.;
 
             if (quantity > 0.)
                 return true; // Call to the solver is required to find an optimal solution
@@ -124,7 +124,7 @@ bool Adequacy::year(Progression::Task& progression,
                     yearRandomNumbers& randomForYear,
                     std::list<uint>& failedWeekList,
                     bool isFirstPerformedYearOfSimulation,
-                    const VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+                    const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -148,7 +148,7 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace].HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(study, pProblemesHebdo[numSpace], state.weekInTheYear, 
-                                         numSpace, hourInTheYear, valeursGenereesParPays);
+                                         numSpace, hourInTheYear, hydroVentilationResults);
 
         BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace],
                                         numSpace, hourInTheYear, randomForYear.pThermalNoisesByArea);
@@ -157,7 +157,7 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;
         reinitOptim = false;
 
-        state.simplexRunNeeded = (w == 0) || simplexIsRequired(hourInTheYear, numSpace, valeursGenereesParPays);
+        state.simplexRunNeeded = (w == 0) || simplexIsRequired(hourInTheYear, numSpace, hydroVentilationResults);
         if (state.simplexRunNeeded) // Call to Solver is mandatory for the first week and optional
                                      // otherwise
         {
@@ -292,14 +292,14 @@ bool Adequacy::year(Progression::Task& progression,
                 {
                     assert(k < state.resSpilled.width);
                     assert(j < state.resSpilled.height);
-                    auto& valgen = valeursGenereesParPays[numSpace][k];
+                    auto& hydroVentilation = hydroVentilationResults[numSpace][k];
                     auto& hourlyResults = pProblemesHebdo[numSpace].ResultatsHoraires[k];
 
                     hourlyResults.TurbinageHoraire[j]
-                      = valgen.HydrauliqueModulableQuotidien[dayInTheYear] / 24.;
+                      = hydroVentilation.HydrauliqueModulableQuotidien[dayInTheYear] / 24.;
 
                     state.resSpilled[k][j]
-                      = +valgen.HydrauliqueModulableQuotidien[dayInTheYear] / 24.
+                      = +hydroVentilation.HydrauliqueModulableQuotidien[dayInTheYear] / 24.
                         - pProblemesHebdo[numSpace]
                             .ConsommationsAbattues[j]
                             .ConsommationAbattueDuPays[k];

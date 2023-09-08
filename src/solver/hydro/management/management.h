@@ -85,6 +85,18 @@ struct TmpDataByArea
 
 }; // struct TmpDataByArea
 
+typedef struct
+{
+    std::vector<double> HydrauliqueModulableQuotidien; /* indice par jour */
+    std::vector<double> NiveauxReservoirsDebutJours;   //Niveaux (quotidiens) du reservoir de début
+    //de jour (en cas de gestion des reservoirs).
+    std::vector<double> NiveauxReservoirsFinJours; //Niveaux (quotidiens) du reservoir de fin
+    //de jour (en cas de gestion des reservoirs).
+} VENTILATION_HYDRO_RESULTS_BY_AREA;
+
+// vector of [numSpace][area]
+using ALL_HYDRO_VENTILATION_RESULTS = std::vector<std::vector<VENTILATION_HYDRO_RESULTS_BY_AREA>>;
+
 
 class HydroManagement final
 {
@@ -103,8 +115,9 @@ public:
     void makeVentilation(double* randomReservoirLevel,
                         Solver::Variable::State& state,
                         uint y,
-                        uint numSpace,
-                        VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+                        uint numSpace);
+
+    ALL_HYDRO_VENTILATION_RESULTS& ventilationResults() { return ventilationResults_; }
 
 private:
     //! Prepare inflows scaling for each area
@@ -136,14 +149,12 @@ private:
 
     void prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                         uint y,
-                                        uint numSpace,
-                                        VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+                                        uint numSpace);
 
     void prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                         Data::Area& area,
                                         uint y,
-                                        uint numSpace,
-                                        VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+                                        uint numSpace);
     //@}
 
     //! \name Utilities
@@ -162,6 +173,8 @@ private:
     MersenneTwister random_;
     unsigned int maxNbYearsInParallel_ = 0;
     Solver::IResultWriter::Ptr resultWriter_;
+
+    ALL_HYDRO_VENTILATION_RESULTS ventilationResults_;
 }; // class HydroManagement
 } // namespace Antares
 

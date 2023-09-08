@@ -80,7 +80,7 @@ protected:
               yearRandomNumbers& randomForYear,
               std::list<uint>& failedWeekList,
               bool isFirstPerformedYearOfSimulation,
-              const VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+              const ALL_HYDRO_VENTILATION_RESULTS&);
 
     void incrementProgression(Progression::Task& progression);
 
@@ -96,7 +96,7 @@ protected:
 private:
     bool simplexIsRequired(uint hourInTheYear,
                            uint numSpace,
-                           const VAL_GEN_PAR_PAYS& valeursGenereesParPays) const;
+                           const ALL_HYDRO_VENTILATION_RESULTS&) const;
 
     uint pNbWeeks;
     uint pStartTime;

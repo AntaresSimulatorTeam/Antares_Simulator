@@ -81,7 +81,7 @@ protected:
               yearRandomNumbers& randomForYear,
               std::list<uint>& failedWeekList,
               bool isFirstPerformedYearOfSimulation,
-              VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+              ALL_HYDRO_VENTILATION_RESULTS&);
 
     void incrementProgression(Progression::Task& progression);
 

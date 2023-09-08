@@ -92,7 +92,29 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
     tmpDataByArea_ = new TmpDataByArea* [maxNbYearsInParallel_];
     for (uint numSpace = 0; numSpace < maxNbYearsInParallel_; numSpace++)
         tmpDataByArea_[numSpace] = new TmpDataByArea[areas_.size()];
+
     random_.reset(parameters_.seed[Data::seedHydroManagement]);
+
+    // Ventilation results memory allocation
+    uint nbDaysPerYear = 365;
+    ventilationResults_.resize(maxNbYearsInParallel_);
+    for (uint numSpace = 0; numSpace < maxNbYearsInParallel_; numSpace++)
+    {
+        ventilationResults_[numSpace].resize(areas_.size());
+        for (uint areaIndex = 0; areaIndex < areas_.size(); ++areaIndex)
+        {
+            auto& area = *areas_.byIndex[areaIndex];
+            size_t clusterCount = area.thermal.clusterCount();
+
+            ventilationResults_[numSpace][areaIndex].HydrauliqueModulableQuotidien.assign(nbDaysPerYear, 0);
+
+            if (area.hydro.reservoirManagement)
+            {
+                ventilationResults_[numSpace][areaIndex].NiveauxReservoirsDebutJours.assign(nbDaysPerYear, 0.);
+                ventilationResults_[numSpace][areaIndex].NiveauxReservoirsFinJours.assign(nbDaysPerYear, 0.);
+            }
+        }
+    }
 }
 
 HydroManagement::~HydroManagement()
@@ -496,8 +518,7 @@ double HydroManagement::randomReservoirLevel(double min, double avg, double max)
 void HydroManagement::makeVentilation(double* randomReservoirLevel,
                                       Solver::Variable::State& state,
                                       uint y,
-                                      uint numSpace,
-                                      VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+                                      uint numSpace)
 {
     memset(tmpDataByArea_[numSpace], 0, sizeof(TmpDataByArea) * areas_.size());
 
@@ -516,7 +537,7 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
     prepareEffectiveDemand(numSpace);
 
     prepareMonthlyOptimalGenerations(randomReservoirLevel, y, numSpace);
-    prepareDailyOptimalGenerations(state, y, numSpace, valeursGenereesParPays);
+    prepareDailyOptimalGenerations(state, y, numSpace);
 }
 
 } // namespace Antares

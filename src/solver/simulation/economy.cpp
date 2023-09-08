@@ -119,7 +119,7 @@ bool Economy::year(Progression::Task& progression,
                    yearRandomNumbers& randomForYear,
                    std::list<uint>& failedWeekList,
                    bool isFirstPerformedYearOfSimulation,
-                   VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+                   ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -143,7 +143,7 @@ bool Economy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace].HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(study, pProblemesHebdo[numSpace], state.weekInTheYear, 
-                                         numSpace, hourInTheYear, valeursGenereesParPays);
+                                         numSpace, hourInTheYear, hydroVentilationResults);
 
         BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace], 
                                         numSpace, hourInTheYear, randomForYear.pThermalNoisesByArea);

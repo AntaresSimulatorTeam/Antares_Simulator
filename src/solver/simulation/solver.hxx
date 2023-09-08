@@ -163,8 +163,7 @@ private:
                 simulation_->hydroManagement.makeVentilation(randomReservoirLevel, 
                                                              state[numSpace], 
                                                              y,
-                                                             numSpace, 
-                                                             simulation_->valeursGenereesParPays);
+                                                             numSpace);
                 timer.stop();
                 pDurationCollector->addDuration("hydro_ventilation", timer.get_duration());
             }
@@ -186,7 +185,7 @@ private:
                                                randomForCurrentYear,
                                                failedWeekList,
                                                isFirstPerformedYearOfSimulation,
-                                               simulation_->valeursGenereesParPays);
+                                               simulation_->hydroManagement.ventilationResults());
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
@@ -228,30 +227,6 @@ private:
     } // End of onExecute() method
 };
 
-static void allocateValeursGenereesParPays(VAL_GEN_PAR_PAYS& val,
-                                           const Data::Study& study)
-{
-    uint nbDaysPerYear = 365;
-    val.resize(study.maxNbYearsInParallel);
-    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
-    {
-        val[numSpace].resize(study.areas.size());
-        for (uint areaIndex = 0; areaIndex < study.areas.size(); ++areaIndex)
-        {
-            auto& area = *study.areas.byIndex[areaIndex];
-            size_t clusterCount = area.thermal.clusterCount();
-
-            val[numSpace][areaIndex].HydrauliqueModulableQuotidien.assign(nbDaysPerYear, 0);
-
-            if (area.hydro.reservoirManagement)
-            {
-                val[numSpace][areaIndex].NiveauxReservoirsDebutJours.assign(nbDaysPerYear, 0.);
-                val[numSpace][areaIndex].NiveauxReservoirsFinJours.assign(nbDaysPerYear, 0.);
-            }
-        }
-    }
-}
-
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
     const ::Settings& settings,
@@ -284,8 +259,6 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
         pYearByYear = false;
 
     pHydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
-
-    allocateValeursGenereesParPays(valeursGenereesParPays, study);
 }
 
 template<class Impl>
