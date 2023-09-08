@@ -42,39 +42,71 @@ class State;
 }
 } // namespace Solver
 
+enum
+{
+    //! The maximum number of days in a year
+    dayYearCount = 366
+};
+
+//! Temporary data
+struct TmpDataByArea
+{
+    //! Monthly local effective demand
+    double MLE[12];
+    //! Monthly optimal generation
+    double MOG[12];
+    //! Monthly optimal level
+    double MOL[12];
+    //! Monthly target generations
+    double MTG[12];
+    //! inflows
+    double inflows[12];
+    //! monthly minimal generation
+    std::array<double, 12> mingens;
+
+    //! Net demand, for each day of the year, for each area
+    double DLN[dayYearCount];
+    //! Daily local effective load
+    double DLE[dayYearCount];
+    //! Daily optimized Generation
+    double DOG[dayYearCount];
+    //! daily minimal generation
+    std::array<double, dayYearCount> dailyMinGen;
+
+    // Data for minGen<->inflows preChecks
+    //! monthly total mingen
+    std::array<double, 12> totalMonthMingen;
+    //! monthly total inflows
+    std::array<double, 12> totalMonthInflows;
+    //! yearly total mingen
+    double totalYearMingen;
+    //! yearly total inflows
+    double totalYearInflows;
+
+}; // struct TmpDataByArea
+
+
 class HydroManagement final
 {
 public:
-    //! \name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Default constructor
-    */
-    explicit HydroManagement(Data::Study& study);
-    //! Destructor
-    ~HydroManagement();
-    //@}
+    HydroManagement(const Data::AreaList& areas,
+                    const Data::Parameters& params,
+                    const Date::Calendar& calendar,
+                    unsigned int maxNbYearsInParallel,
+                    Solver::IResultWriter::Ptr resultWriter);
 
-    //! Get an initial reservoir level
+    ~HydroManagement();
+
     double randomReservoirLevel(double min, double avg, double max);
 
     //! Perform the hydro ventilation
-    void operator()(double* randomReservoirLevel,
-                    Solver::Variable::State& state,
-                    uint y,
-                    uint numSpace,
-                    VAL_GEN_PAR_PAYS& valeursGenereesParPays);
-
-public:
-    //! Random number generator
-    MersenneTwister random;
-
-    // forward declaration
-    struct PerArea;
+    void makeVentilation(double* randomReservoirLevel,
+                        Solver::Variable::State& state,
+                        uint y,
+                        uint numSpace,
+                        VAL_GEN_PAR_PAYS& valeursGenereesParPays);
 
 private:
-    //! \name Steps
-    //@{
     //! Prepare inflows scaling for each area
     void prepareInflowsScaling(uint numSpace);
     //! Prepare minimum generation scaling for each area
@@ -100,7 +132,7 @@ private:
     //! Monthly target generations
     // note: inflows may have two different types, if in swap mode or not
     // \return The total inflow for the whole year
-    double prepareMonthlyTargetGenerations(Data::Area& area, PerArea& data);
+    double prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data);
 
     void prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                         uint y,
@@ -122,60 +154,15 @@ private:
     double GammaVariable(double a);
     //@}
 
-    enum
-    {
-        //! The maximum number of days in a year
-        dayYearCount = 366
-    };
-
-public:
-    //! Reference to the study
-    Data::Study& study;
-    //! General data
-    Data::Parameters& parameters;
-
-    //! Temporary data
-    struct PerArea
-    {
-        //! Monthly local effective demand
-        double MLE[12];
-        //! Monthly optimal generation
-        double MOG[12];
-        //! Monthly optimal level
-        double MOL[12];
-        //! Monthly target generations
-        double MTG[12];
-        //! inflows
-        double inflows[12];
-        //! monthly minimal generation
-        std::array<double, 12> mingens;
-
-        //! Net demand, for each day of the year, for each area
-        double DLN[dayYearCount];
-        //! Daily local effective load
-        double DLE[dayYearCount];
-        //! Daily optimized Generation
-        double DOG[dayYearCount];
-        //! daily minimal generation
-        std::array<double, dayYearCount> dailyMinGen;
-
-        // Data for minGen<->inflows preChecks
-        //! monthly total mingen
-        std::array<double, 12> totalMonthMingen;
-        //! monthly total inflows
-        std::array<double, 12> totalMonthInflows;
-        //! yearly total mingen
-        double totalYearMingen;
-        //! yearly total inflows
-        double totalYearInflows;
-
-    }; // struct PerArea
-
-    //! Temporary data per area
-    PerArea** pAreas;
-
+private:
+    TmpDataByArea** tmpDataByArea_;
+    const Data::AreaList& areas_;
+    const Date::Calendar& calendar_;
+    const Data::Parameters& parameters_;
+    MersenneTwister random_;
+    unsigned int maxNbYearsInParallel_ = 0;
+    Solver::IResultWriter::Ptr resultWriter_;
 }; // class HydroManagement
-
 } // namespace Antares
 
 #endif // __ANTARES_SOLVER_HYDRO_MANAGEMENT_MANAGEMENT_H__

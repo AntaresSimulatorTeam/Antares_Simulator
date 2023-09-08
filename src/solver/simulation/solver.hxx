@@ -160,8 +160,11 @@ private:
             // 4 - Hydraulic ventilation
             {
                 Benchmarking::Timer timer;
-                simulation_->pHydroManagement(randomReservoirLevel, state[numSpace], y,
-                                              numSpace, simulation_->valeursGenereesParPays);
+                simulation_->hydroManagement.makeVentilation(randomReservoirLevel, 
+                                                             state[numSpace], 
+                                                             y,
+                                                             numSpace, 
+                                                             simulation_->valeursGenereesParPays);
                 timer.stop();
                 pDurationCollector->addDuration("hydro_ventilation", timer.get_duration());
             }
@@ -251,15 +254,19 @@ static void allocateValeursGenereesParPays(VAL_GEN_PAR_PAYS& val,
 
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
-                                      const ::Settings& settings,
-                                      Benchmarking::IDurationCollector* duration_collector) :
+    const ::Settings& settings,
+    Benchmarking::IDurationCollector* duration_collector) :
     ImplementationType(study),
     study(study),
     settings(settings),
     pNbYearsReallyPerformed(0),
     pNbMaxPerformedYearsInParallel(0),
     pYearByYear(study.parameters.yearByYear),
-    pHydroManagement(study),
+    hydroManagement(study.areas, 
+                    study.parameters, 
+                    study.calendar, 
+                    study.maxNbYearsInParallel,
+                    study.resultWriter),
     pFirstSetParallelWithAPerformedYearWasRun(false),
     pDurationCollector(duration_collector),
     pQueueService(study.pQueueService),
@@ -740,7 +747,7 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
             // Previous month's first day in the year
             int firstDayOfMonth = study.calendar.months[initResLevelOnSimMonth].daysYear.first;
 
-            double randomLevel = pHydroManagement.randomReservoirLevel(min[firstDayOfMonth], 
+            double randomLevel = hydroManagement.randomReservoirLevel(min[firstDayOfMonth],
                                                                        avg[firstDayOfMonth],
                                                                        max[firstDayOfMonth]);
 
