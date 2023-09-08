@@ -94,8 +94,9 @@ protected:
     void initializeState(Variable::State& state, uint numSpace);
 
 private:
-    bool simplexIsRequired(uint hourInTheYear, uint numSpace,
-            const VAL_GEN_PAR_PAYS& valeursGenereesParPays) const;
+    bool simplexIsRequired(uint hourInTheYear,
+                           uint numSpace,
+                           const VAL_GEN_PAR_PAYS& valeursGenereesParPays) const;
 
     uint pNbWeeks;
     uint pStartTime;

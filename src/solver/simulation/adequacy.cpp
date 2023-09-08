@@ -91,8 +91,9 @@ bool Adequacy::simulationBegin()
     return true;
 }
 
-bool Adequacy::simplexIsRequired(uint hourInTheYear, uint numSpace,
-        const VAL_GEN_PAR_PAYS& valeursGenereesParPays) const
+bool Adequacy::simplexIsRequired(uint hourInTheYear, 
+                                 uint numSpace,
+                                 const VAL_GEN_PAR_PAYS& valeursGenereesParPays) const
 {
     uint areaCount = study.areas.size();
     uint indx = hourInTheYear;
@@ -156,8 +157,8 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;
         reinitOptim = false;
 
-        state.simplexHasBeenRan = (w == 0) || simplexIsRequired(hourInTheYear, numSpace, valeursGenereesParPays);
-        if (state.simplexHasBeenRan) // Call to Solver is mandatory for the first week and optional
+        state.simplexRunNeeded = (w == 0) || simplexIsRequired(hourInTheYear, numSpace, valeursGenereesParPays);
+        if (state.simplexRunNeeded) // Call to Solver is mandatory for the first week and optional
                                      // otherwise
         {
             uint nbAreas = study.areas.size();
