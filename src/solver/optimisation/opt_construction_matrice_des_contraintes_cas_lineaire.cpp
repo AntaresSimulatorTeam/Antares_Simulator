@@ -71,6 +71,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo->NamedProblems);
 
+    AreaBalance areaBalance(problemeHebdo);
+    FictitiousLoad fictitiousLoad(problemeHebdo);
+    ShortTermStorageLevel shortTermStorageLevel(problemeHebdo);
+    FlowDissociation flowDissociation(problemeHebdo);
+    BindingConstraintHour bindingConstraintHour(problemeHebdo);
     BindingConstraintDay bindingConstraintDay(problemeHebdo);
     BindingConstraintWeek bindingConstraintWeek(problemeHebdo);
     HydroPower hydroPower(problemeHebdo);
@@ -96,12 +101,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
         CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
             = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-
-        AreaBalance areaBalance(problemeHebdo);
-        FictitiousLoad fictitiousLoad(problemeHebdo);
-        ShortTermStorageLevel shortTermStorageLevel(problemeHebdo);
-        FlowDissociation flowDissociation(problemeHebdo);
-        BindingConstraintHour bindingConstraintHour(problemeHebdo);
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
