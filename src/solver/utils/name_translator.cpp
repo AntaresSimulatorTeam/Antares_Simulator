@@ -1,5 +1,6 @@
 #include "name_translator.h"
 #include <algorithm>
+#include <iterator>
 
 char** RealName::translate(const std::vector<std::string>& src,
                      std::vector<char*>& pointerVec)
