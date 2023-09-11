@@ -1,15 +1,21 @@
 #include "FlowDissociation.h"
 
-void FlowDissociation::add(int pdt,
-                           int interco,
-                           std::vector<int>& NumeroDeContrainteDeDissociationDeFlux)
+void FlowDissociation::add(int pdt, int interco)
 {
     if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
         CoutDeTransport.IntercoGereeAvecDesCouts)
     {
-        // TODO improve this
-        NumeroDeContrainteDeDissociationDeFlux[interco]
+        /** can be done without this --- keep it for now**/
+        CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
+          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+        CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+          = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+        CorrespondanceCntNativesCntOptim.NumeroDeContrainteDeDissociationDeFlux[interco]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        /******/
+
+        // TODO improve this
+
         {
             const auto origin
               = problemeHebdo->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];

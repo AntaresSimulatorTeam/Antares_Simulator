@@ -5,6 +5,5 @@ class FlowDissociation : private Constraint
 {
 public:
     using Constraint::Constraint;
-    void add(int pdt, int interco,
-                           std::vector<int>& NumeroDeContrainteDeDissociationDeFlux);
+    void add(int pdt, int interco);
 };

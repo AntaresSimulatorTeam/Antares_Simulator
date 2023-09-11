@@ -1,8 +1,13 @@
 #include "AreaHydroLevel.h"
 
-void AreaHydroLevel::add(int pays, int pdt, std::vector<int>& NumeroDeContrainteDesNiveauxPays)
+void AreaHydroLevel::add(int pays, int pdt)
 {
-    NumeroDeContrainteDesNiveauxPays[pays] = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+    const auto& CorrespondanceVarNativesVarOptim
+      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+      = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+    CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays]
+      = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
     if (problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
     {
         builder.updateHourWithinWeek(pdt).include(Variable::HydroLevel(pays), 1.0);
@@ -16,7 +21,7 @@ void AreaHydroLevel::add(int pays, int pdt, std::vector<int>& NumeroDeContrainte
         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
         namer.AreaHydroLevel(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-        NumeroDeContrainteDesNiveauxPays[pays]
+        CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
         builder.updateHourWithinWeek(pdt)
           .include(Variable::HydProd(pays), 1.0)
@@ -27,5 +32,5 @@ void AreaHydroLevel::add(int pays, int pdt, std::vector<int>& NumeroDeContrainte
           .build();
     }
     else
-        NumeroDeContrainteDesNiveauxPays[pays] = -1;
+        CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays] = -1;
 }

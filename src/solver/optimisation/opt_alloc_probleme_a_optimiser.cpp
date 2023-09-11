@@ -158,3 +158,20 @@ void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 
     optimisationAllocateProblem(problemeHebdo, mxPaliers);
 }
+
+void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+{
+    int NbTermes = ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes;
+    NbTermes += ProblemeAResoudre->IncrementDAllocationMatriceDesContraintes;
+
+    logs.info();
+    logs.info() << " Expected Number of Non-zero terms in Problem Matrix : increased to : "
+                << NbTermes;
+    logs.info();
+
+    ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.resize(NbTermes);
+
+    ProblemeAResoudre->IndicesColonnes.resize(NbTermes);
+
+    ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
+}

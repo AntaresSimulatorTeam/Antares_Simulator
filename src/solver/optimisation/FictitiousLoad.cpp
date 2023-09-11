@@ -1,12 +1,14 @@
 
 #include "FictitiousLoad.h"
 
-void FictitiousLoad::add(int pdt,
-                         int pays,
-                         std::vector<int>& NumeroDeContraintePourEviterLesChargesFictives)
+void FictitiousLoad::add(int pdt, int pays)
 {
     /** can be done without this --- keep it for now**/
-    NumeroDeContraintePourEviterLesChargesFictives[pays]
+    CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
+      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+      = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+    CorrespondanceCntNativesCntOptim.NumeroDeContraintePourEviterLesChargesFictives[pays]
       = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
     /******/

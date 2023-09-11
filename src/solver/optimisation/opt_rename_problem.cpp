@@ -215,15 +215,6 @@ void ConstraintNamer::FlowDissociation(unsigned int constraint,
     SetLinkElementName(constraint, "FlowDissociation");
 }
 
-void ConstraintNamer::CsrFlowDissociation(unsigned int constraint,
-                                          const std::string& origin,
-                                          const std::string& destination)
-{
-    origin_ = origin;
-    destination_ = destination;
-    SetLinkElementName(constraint, "CsrFlowDissociation");
-}
-
 void ConstraintNamer::AreaBalance(unsigned int constraint)
 {
     SetAreaElementNameHour(constraint, "AreaBalance");

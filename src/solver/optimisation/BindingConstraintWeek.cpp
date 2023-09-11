@@ -1,21 +1,25 @@
 #include "BindingConstraintWeek.h"
 
-void BindingConstraintWeek::add(int cntCouplante, BindingConstraintWeekData& data)
+void BindingConstraintWeek::add(int cntCouplante)
 {
+    const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+      = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
     int semaine = problemeHebdo->weekInTheYear;
-    auto& NumeroDeContrainteDesContraintesCouplantes
-      = data.NumeroDeContrainteDesContraintesCouplantes;
-    if (data.TypeDeContrainteCouplante != CONTRAINTE_HEBDOMADAIRE)
+    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondanceCntNativesCntOptimHebdomadaires
+      = problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires;
+    if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HEBDOMADAIRE)
         return;
 
-    const int nbInterco = data.NombreDInterconnexionsDansLaContrainteCouplante;
-    const int nbClusters = data.NombreDePaliersDispatchDansLaContrainteCouplante;
+    const int nbInterco
+      = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
+    const int nbClusters
+      = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
 
     for (int index = 0; index < nbInterco; index++)
     {
-        int interco = data.NumeroDeLInterconnexion[index];
-        double poids = data.PoidsDeLInterconnexion[index];
-        int offset = data.OffsetTemporelSurLInterco[index];
+        int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
+        double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
+        int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
         for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
             builder.updateHourWithinWeek(pdt);
@@ -36,16 +40,16 @@ void BindingConstraintWeek::add(int cntCouplante, BindingConstraintWeekData& dat
 
         for (int index = 0; index < nbClusters; index++)
         {
-        int pays = data.PaysDuPalierDispatch[index];
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
-        const int palier
-          = PaliersThermiquesDuPays
-              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[data.NumeroDuPalierDispatch[index]];
-        double poids = data.PoidsDuPalierDispatch[index];
-        int offset = data.OffsetTemporelSurLePalierDispatch[index];
-        for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdt++)
-        {
+            int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+              = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const int palier
+              = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
+                  [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
+            double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
+            int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
+            for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdt++)
+            {
             int pdt1;
 
             builder.updateHourWithinWeek(pdt); // useless?
@@ -64,21 +68,22 @@ void BindingConstraintWeek::add(int cntCouplante, BindingConstraintWeekData& dat
                                                        offset,
                                                        false,
                                                        problemeHebdo->NombreDePasDeTemps);
-        }
+            }
         }
 
-        char op = data.SensDeLaContrainteCouplante;
-        builder.operatorRHS(op);
+    char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
+    builder.operatorRHS(op);
 
-        NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-        // Name
-        {
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
-        namer.UpdateTimeStep(semaine);
-        namer.BindingConstraintWeek(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-                                    data.NomDeLaContrainteCouplante);
-        }
+    CorrespondanceCntNativesCntOptimHebdomadaires
+      .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
+      = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+    // Name
+    {
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+                                  problemeHebdo->NamedProblems);
+            namer.UpdateTimeStep(semaine);
+            namer.BindingConstraintWeek(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+                                        MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
+    }
     builder.build();
 }

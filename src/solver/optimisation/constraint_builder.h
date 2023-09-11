@@ -246,10 +246,10 @@ class ConstraintBuilder
 {
 public:
     ConstraintBuilder(
-      const PROBLEME_HEBDO* problemeHebdo,
+      PROBLEME_HEBDO& problemeHebdo,
       const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim) :
      problemeHebdo(problemeHebdo),
-     problemeAResoudre(problemeHebdo->ProblemeAResoudre),
+     problemeAResoudre(*problemeHebdo.ProblemeAResoudre),
      varNative(CorrespondanceVarNativesVarOptim)
     {
     }
@@ -305,11 +305,8 @@ public:
     }
 
 private:
-    void OPT_ChargerLaContrainteDansLaMatriceDesContraintes();
-
-    void OPT_AugmenterLaTailleDeLaMatriceDesContraintes();
-    const PROBLEME_HEBDO* problemeHebdo;
-    PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre;
+    PROBLEME_HEBDO& problemeHebdo;
+    PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre;
     const std::vector<CORRESPONDANCES_DES_VARIABLES>& varNative;
 
     unsigned int hourInWeek_ = 0;
@@ -323,13 +320,13 @@ private:
 class Constraint
 {
 public:
-    explicit Constraint(const PROBLEME_HEBDO* problemeHebdo) :
+    explicit Constraint(PROBLEME_HEBDO* problemeHebdo) :
      problemeHebdo(problemeHebdo),
      builder(*problemeHebdo, problemeHebdo->CorrespondanceVarNativesVarOptim)
     {
     }
 
-    const PROBLEME_HEBDO* problemeHebdo; // TODO remove
+    PROBLEME_HEBDO* problemeHebdo; // TODO remove
     ConstraintBuilder builder;
 };
 
@@ -348,19 +345,3 @@ inline void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
         constraintBuilder.include(Variable::DispatchableProduction(palier), -1.0);
     }
 }
-
-struct BindingConstraintData
-{
-    const char TypeDeContrainteCouplante;
-    const int NombreDInterconnexionsDansLaContrainteCouplante;
-    const std::vector<int>& NumeroDeLInterconnexion;
-    const std::vector<double>& PoidsDeLInterconnexion;
-    const std::vector<int>& OffsetTemporelSurLInterco;
-    const int NombreDePaliersDispatchDansLaContrainteCouplante;
-    const std::vector<int>& PaysDuPalierDispatch;
-    const std::vector<int>& NumeroDuPalierDispatch;
-    const std::vector<double>& PoidsDuPalierDispatch;
-    const std::vector<int>& OffsetTemporelSurLePalierDispatch;
-    const char SensDeLaContrainteCouplante;
-    const char* NomDeLaContrainteCouplante;
-};
