@@ -86,6 +86,7 @@ public:
 void CsrQuadraticProblem::setConstraintsOnFlows(std::vector<double>& Pi, std::vector<int>& Colonne)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
+    //!\ TODO not associated problemHebdo && probleamAressoudre
     CsrFlowDissociation csrFlowDissociation(problemeHebdo_);
     csrFlowDissociation.add(hour, hourlyCsrProblem_.numberOfConstraintCsrFlowDissociation);
 }
