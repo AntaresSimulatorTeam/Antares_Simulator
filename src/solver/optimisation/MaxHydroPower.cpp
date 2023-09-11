@@ -1,15 +1,12 @@
 #include "MaxHydroPower.h"
 
-void MaxHydroPower::add(int pays)
+void MaxHydroPower::add(int pays, MaxHydroPowerData& data)
 {
-    bool presenceHydro
-      = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
-    bool TurbEntreBornes = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-    if (presenceHydro
-        && (TurbEntreBornes
-            || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
+    bool presenceHydro = data.presenceHydro;
+    bool TurbEntreBornes = data.TurbEntreBornes;
+    if (presenceHydro && (TurbEntreBornes || data.PresenceDePompageModulable))
     {
-        problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays]
+        data.NumeroDeContrainteMaxEnergieHydraulique[pays]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
         const int NombreDePasDeTempsPourUneOptimisation
@@ -20,7 +17,7 @@ void MaxHydroPower::add(int pays)
             builder.updateHourWithinWeek(pdt);
             builder.include(Variable::HydProd(pays), 1.0);
         }
-        problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays]
+        data.NumeroDeContrainteMaxEnergieHydraulique[pays]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
@@ -32,5 +29,5 @@ void MaxHydroPower::add(int pays)
         builder.lessThan().build();
     }
     else
-        problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays] = -1;
+        data.NumeroDeContrainteMaxEnergieHydraulique[pays] = -1;
 }

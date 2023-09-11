@@ -1,10 +1,10 @@
 #include "FinalStockExpression.h"
 
-void FinalStockExpression::add(int pays)
+void FinalStockExpression::add(int pays, FinalStockExpressionData& data)
 {
-    const auto pdt = problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1;
+    const auto pdt = data.pdt;
 
-    if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
+    if (data.AccurateWaterValue)
     /*  expression constraint : - StockFinal +sum (stocklayers) = 0*/
     {
         builder.updateHourWithinWeek(pdt).include(Variable::FinalStorage(pays), -1.0);
@@ -12,7 +12,7 @@ void FinalStockExpression::add(int pays)
         {
             builder.include(Variable::LayerStorage(pays, layerindex), 1.0);
         }
-        problemeHebdo->NumeroDeContrainteExpressionStockFinal[pays]
+        data.NumeroDeContrainteExpressionStockFinal[pays]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,

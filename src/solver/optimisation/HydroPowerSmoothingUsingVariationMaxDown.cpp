@@ -2,10 +2,10 @@
 
 void HydroPowerSmoothingUsingVariationMaxDown::add(int pays, int pdt)
 {
-    if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
-    {
-        return;
-    }
+    // if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
+    // {
+    //     return;
+    // }
 
     ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                           problemeHebdo->NamedProblems);

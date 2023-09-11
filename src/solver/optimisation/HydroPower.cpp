@@ -1,26 +1,20 @@
 #include "HydroPower.h"
-struct HydroPowerData
-{
-};
 
-void HydroPower::add(int pays)
+void HydroPower::add(int pays, HydroPowerData& data)
 {
-    bool presenceHydro
-      = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
-    bool TurbEntreBornes = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
+    bool presenceHydro = data.presenceHydro;
+    bool TurbEntreBornes = data.TurbEntreBornes;
 
     const int NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
     if (presenceHydro && !TurbEntreBornes)
     {
-        if (bool presencePompage
-            = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
+        if (data.presencePompage)
         {
-            problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays]
+            data.NumeroDeContrainteEnergieHydraulique[pays]
               = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
-            const double pumpingRatio
-              = problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
+            const double pumpingRatio = data.pumpingRatio;
             for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 builder.updateHourWithinWeek(pdt);
@@ -36,7 +30,7 @@ void HydroPower::add(int pays)
                 builder.include(Variable::HydProd(pays), 1.0);
             }
         }
-        problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays]
+        data.NumeroDeContrainteEnergieHydraulique[pays]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
         builder.equalTo();
@@ -50,5 +44,5 @@ void HydroPower::add(int pays)
         builder.build();
     }
     else
-        problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays] = -1;
+        data.NumeroDeContrainteEnergieHydraulique[pays] = -1;
 }

@@ -1,20 +1,15 @@
 #include "HydroPowerSmoothingUsingVariationSum.h"
 
-void HydroPowerSmoothingUsingVariationSum::add(int pays)
+void HydroPowerSmoothingUsingVariationSum::add(int pays,
+                                               const int nombreDePasDeTempsPourUneOptimisation)
 {
-    if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
-    {
-        return;
-    }
+    // if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
+    // {
+    //     return;
+    // }
 
-    const int nombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
-        const auto& CorrespondanceVarNativesVarOptim
-          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-        int nombreDeTermes = 0;
-
         int pdt1 = pdt + 1;
         if (pdt1 >= nombreDePasDeTempsPourUneOptimisation)
             pdt1 = 0;

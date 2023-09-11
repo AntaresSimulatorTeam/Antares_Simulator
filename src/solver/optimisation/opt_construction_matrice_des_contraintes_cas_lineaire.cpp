@@ -121,6 +121,37 @@ static BindingConstraintWeekData GetBindingConstraintWeekDataFromProblemHebdo(
               .NumeroDeContrainteDesContraintesCouplantes};
 }
 
+static HydroPowerData GetHydroPowerDataFromProblemHebdo(PROBLEME_HEBDO* problemeHebdo,
+                                                        uint32_t pays)
+{
+    return {problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable,
+            problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes,
+            problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable,
+            problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
+            problemeHebdo->NumeroDeContrainteEnergieHydraulique,
+            problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio};
+}
+
+static MinHydroPowerData GetMinHydroPowerDataFromProblemHebdo(PROBLEME_HEBDO* problemeHebdo,
+                                                              uint32_t pays)
+{
+    return {problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable,
+            problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes,
+            problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable,
+            problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
+            problemeHebdo->NumeroDeContrainteMinEnergieHydraulique};
+}
+
+static MaxHydroPowerData GetMaxHydroPowerDataFromProblemHebdo(PROBLEME_HEBDO* problemeHebdo,
+                                                              uint32_t pays)
+{
+    return {problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable,
+            problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes,
+            problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable,
+            problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
+            problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique};
+}
+
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo, Solver::IResultWriter& writer)
 {
     int var;
@@ -228,7 +259,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        hydroPower.add(pays);
+        hydroPower.add(pays, GetHydroPowerDataFromProblemHebdo(problemeHebdo, pays));
     }
 
     if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
@@ -238,7 +269,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
                 continue;
 
-            hydroPowerSmoothingUsingVariationSum.add(pays);
+            hydroPowerSmoothingUsingVariationSum.add(
+              pays, problemeHebdo->NombreDePasDeTempsPourUneOptimisation);
         }
     }
     else if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
@@ -259,14 +291,17 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        minHydroPower.add(pays);
+        minHydroPower.add(pays, GetMinHydroPowerDataFromProblemHebdo(problemeHebdo, pays));
 
-        maxHydroPower.add(pays);
+        maxHydroPower.add(pays, GetMaxHydroPowerDataFromProblemHebdo(problemeHebdo, pays));
     }
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        maxPumping.add(pays);
+        MaxPumpingData data
+          = {problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable,
+             problemeHebdo->NumeroDeContrainteMaxPompage};
+        maxPumping.add(pays, data);
     }
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
@@ -287,9 +322,18 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     /* For each area with ad hoc properties, two possible sets of two additional constraints */
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        finalStockEquivalent.add(pays);
+        FinalStockEquivalentData finalStockEquivalentData
+          = {problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1,
+             problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue,
+             problemeHebdo->CaracteristiquesHydrauliques[pays].DirectLevelAccess,
+             problemeHebdo->NumeroDeContrainteEquivalenceStockFinal};
+        finalStockEquivalent.add(pays, finalStockEquivalentData);
+        FinalStockExpressionData finalStockExpressionData
+          = {problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1,
+             problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue,
+             problemeHebdo->NumeroDeContrainteExpressionStockFinal};
 
-        finalStockExpression.add(pays);
+        finalStockExpression.add(pays, finalStockExpressionData);
     }
 
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)

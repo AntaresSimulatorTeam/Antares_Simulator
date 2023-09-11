@@ -5,5 +5,5 @@ class HydroPowerSmoothingUsingVariationSum : private Constraint
 {
 public:
     using Constraint::Constraint;
-    void add(int pays);
+    void add(int pays , const int nombreDePasDeTempsPourUneOptimisation);
 };

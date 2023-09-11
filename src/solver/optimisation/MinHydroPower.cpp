@@ -1,19 +1,16 @@
 #include "MinHydroPower.h"
 
-void MinHydroPower::add(int pays)
+void MinHydroPower::add(int pays, MinHydroPowerData& data)
 {
-    bool presenceHydro
-      = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
-    bool TurbEntreBornes = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-    if (presenceHydro
-        && (TurbEntreBornes
-            || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
+    bool presenceHydro = data.presenceHydro;
+    bool TurbEntreBornes = data.TurbEntreBornes;
+    if (presenceHydro && (TurbEntreBornes || data.PresenceDePompageModulable))
     {
-        problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays]
+        data.NumeroDeContrainteMinEnergieHydraulique[pays]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
         const int NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+          = data.NombreDePasDeTempsPourUneOptimisation;
 
         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                               problemeHebdo->NamedProblems);
@@ -26,10 +23,10 @@ void MinHydroPower::add(int pays)
             builder.include(Variable::HydProd(pays), 1.0);
         }
 
-        problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays]
+        data.NumeroDeContrainteMinEnergieHydraulique[pays]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
         builder.greaterThan().build();
     }
     else
-        problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays] = -1;
+        data.NumeroDeContrainteMinEnergieHydraulique[pays] = -1;
 }

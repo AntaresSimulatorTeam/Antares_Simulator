@@ -1,10 +1,10 @@
 #include "MaxPumping.h"
 
-void MaxPumping::add(int pays)
+void MaxPumping::add(int pays, MaxPumpingData& data)
 {
-    if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
+    if (data.PresenceDePompageModulable)
     {
-        problemeHebdo->NumeroDeContrainteMaxPompage[pays]
+        data.NumeroDeContrainteMaxPompage[pays]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
         const int NombreDePasDeTempsPourUneOptimisation
@@ -15,7 +15,7 @@ void MaxPumping::add(int pays)
             builder.updateHourWithinWeek(pdt);
             builder.include(Variable::Pumping(pays), 1.0);
         }
-        problemeHebdo->NumeroDeContrainteMaxPompage[pays]
+        data.NumeroDeContrainteMaxPompage[pays]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                               problemeHebdo->NamedProblems);
@@ -25,5 +25,5 @@ void MaxPumping::add(int pays)
         builder.lessThan().build();
     }
     else
-        problemeHebdo->NumeroDeContrainteMaxPompage[pays] = -1;
+        data.NumeroDeContrainteMaxPompage[pays] = -1;
 }
