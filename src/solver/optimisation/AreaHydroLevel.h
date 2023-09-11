@@ -5,5 +5,5 @@ class AreaHydroLevel : private Constraint
 {
     public:
     using Constraint::Constraint;
-    void add(int pays, int pdt);
+    void add(int pays, int pdt, std::vector<int>& NumeroDeContrainteDesNiveauxPays);
 };

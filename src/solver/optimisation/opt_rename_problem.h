@@ -110,6 +110,10 @@ public:
     void FlowDissociation(unsigned int constraint,
                           const std::string& origin,
                           const std::string& destination);
+
+    void CsrFlowDissociation(unsigned int constraint,
+                             const std::string& origin,
+                             const std::string& destination);
     void AreaBalance(unsigned int constraint);
     void FictiveLoads(unsigned int constraint);
     void HydroPower(unsigned int constraint);

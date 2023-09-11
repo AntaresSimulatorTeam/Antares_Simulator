@@ -30,32 +30,3 @@
 #include "../simulation/sim_structure_donnees.h"
 
 #include "opt_fonctions.h"
-
-void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-  std::vector<double>& Pi,
-  std::vector<int>& Colonne,
-  int NombreDeTermesDeLaContrainte,
-  char SensContrainte)
-{
-    int& nombreDeTermes = ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes;
-    int& nombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
-
-    ProblemeAResoudre->IndicesDebutDeLigne[nombreDeContraintes] = nombreDeTermes;
-    for (int i = 0; i < NombreDeTermesDeLaContrainte; i++)
-    {
-        ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[nombreDeTermes] = Pi[i];
-        ProblemeAResoudre->IndicesColonnes[nombreDeTermes] = Colonne[i];
-        nombreDeTermes++;
-        if (nombreDeTermes == ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes)
-        {
-            OPT_AugmenterLaTailleDeLaMatriceDesContraintes(ProblemeAResoudre);
-        }
-    }
-    ProblemeAResoudre->NombreDeTermesDesLignes[nombreDeContraintes] = NombreDeTermesDeLaContrainte;
-
-    ProblemeAResoudre->Sens[nombreDeContraintes] = SensContrainte;
-    nombreDeContraintes++;
-
-    return;
-}

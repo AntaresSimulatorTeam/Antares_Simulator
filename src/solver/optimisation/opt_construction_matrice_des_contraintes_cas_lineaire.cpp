@@ -51,6 +51,75 @@
 #include <antares/study.h>
 
 using namespace Antares::Data;
+static BindingConstraintData GetBindingConstraintDataFromProblemHebdo(PROBLEME_HEBDO* problemeHebdo,
+                                                                      int cntCouplante)
+{
+    const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+      = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
+
+    return {MatriceDesContraintesCouplantes.TypeDeContrainteCouplante,
+            MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante,
+            MatriceDesContraintesCouplantes.NumeroDeLInterconnexion,
+            MatriceDesContraintesCouplantes.PoidsDeLInterconnexion,
+            MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco,
+            MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante,
+            MatriceDesContraintesCouplantes.PaysDuPalierDispatch,
+            MatriceDesContraintesCouplantes.NumeroDuPalierDispatch,
+            MatriceDesContraintesCouplantes.PoidsDuPalierDispatch,
+            MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch,
+            MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante,
+            MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante};
+}
+
+static BindingConstraintHourData GetBindingConstraintHourDataFromProblemHebdo(
+  PROBLEME_HEBDO* problemeHebdo,
+  int cntCouplante,
+  int pdt)
+{
+    const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+      = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
+
+    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+      = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+    BindingConstraintData data
+      = GetBindingConstraintDataFromProblemHebdo(problemeHebdo, cntCouplante);
+    return {data, CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesContraintesCouplantes};
+}
+
+static BindingConstraintDayData GetBindingConstraintDayDataFromProblemHebdo(
+  PROBLEME_HEBDO* problemeHebdo,
+  int cntCouplante)
+{
+    const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+      = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
+
+    BindingConstraintData data
+      = GetBindingConstraintDataFromProblemHebdo(problemeHebdo, cntCouplante);
+    // TODO transfrom std::vector<CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES> into
+    // std::vector<std::vector<int>&>&
+    // std::vector<std::vector<int>> correspondanceCntNativesCntOptimJournalieres;
+    // std::transform(problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres.begin(),
+    //                problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres.end(),
+    //                std::back_inserter(correspondanceCntNativesCntOptimJournalieres),
+    //                [](CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES& corr) -> std::vector<int>&
+    //                { return corr.NumeroDeContrainteDesContraintesCouplantes; });
+
+    return {data, problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres};
+}
+static BindingConstraintWeekData GetBindingConstraintWeekDataFromProblemHebdo(
+  PROBLEME_HEBDO* problemeHebdo,
+  int cntCouplante)
+{
+    const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+      = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
+
+    BindingConstraintData data
+      = GetBindingConstraintDataFromProblemHebdo(problemeHebdo, cntCouplante);
+
+    return {data,
+            problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires
+              .NumeroDeContrainteDesContraintesCouplantes};
+}
 
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo, Solver::IResultWriter& writer)
 {
@@ -104,38 +173,56 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            areaBalance.add(pdt, pays);
+            areaBalance.add(
+              pdt,
+              pays,
+              CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesBilansPays,
+              CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.InjectionVariable,
+              CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.WithdrawalVariable);
 
-            fictitiousLoad.add(pdt, pays);
+            fictitiousLoad.add(
+              pdt,
+              pays,
+              CorrespondanceCntNativesCntOptim.NumeroDeContraintePourEviterLesChargesFictives);
 
-            shortTermStorageLevel.add(pdt, pays);
+            shortTermStorageLevel.add(
+              pdt, pays, CorrespondanceCntNativesCntOptim.ShortTermStorageLevelConstraint);
         }
 
         for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
-            flowDissociation.add(pdt, interco);
+            CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+              = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+            flowDissociation.add(
+              pdt,
+              interco,
+              CorrespondanceCntNativesCntOptim.NumeroDeContrainteDeDissociationDeFlux);
         }
         for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            bindingConstraintHour.add(pdt, cntCouplante);
+            bindingConstraintHour.add(
+              pdt,
+              cntCouplante,
+              GetBindingConstraintHourDataFromProblemHebdo(problemeHebdo, cntCouplante, pdt));
         }
     }
 
     for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)
     {
-        bindingConstraintDay.add(cntCouplante);
+        bindingConstraintDay.add(
+          cntCouplante, GetBindingConstraintDayDataFromProblemHebdo(problemeHebdo, cntCouplante));
     }
 
     if (nombreDePasDeTempsPourUneOptimisation > nombreDePasDeTempsDUneJournee)
     {
-        CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondanceCntNativesCntOptimHebdomadaires
-          = problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires;
         for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            bindingConstraintWeek.add(cntCouplante);
+            bindingConstraintWeek.add(
+              cntCouplante,
+              GetBindingConstraintWeekDataFromProblemHebdo(problemeHebdo, cntCouplante));
         }
     }
 
@@ -184,15 +271,16 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
-        const auto& CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
         CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-            = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+          = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
 
         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
         constraintNamer.UpdateTimeStep(timeStepInYear);
+
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            areaHydroLevel.add(pays, pdt);
+            areaHydroLevel.add(
+              pays, pdt, CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays);
         }
     }
 

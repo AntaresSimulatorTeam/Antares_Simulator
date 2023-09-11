@@ -1,18 +1,12 @@
 #include "ShortTermStorageLevel.h"
 
-void ShortTermStorageLevel::add(int pdt, int pays)
+void ShortTermStorageLevel::add(int pdt,
+                                int pays,
+                                std::vector<int>& ShortTermStorageLevelConstraint)
 {
     // TODO improve this
     ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                           problemeHebdo->NamedProblems);
-    /** can be done without this --- keep it for now**/
-    CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-      = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-
-    /******/
-
     const int hourInTheYear = problemeHebdo->weekInTheYear * 168 + pdt;
     namer.UpdateTimeStep(hourInTheYear);
     namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
@@ -24,7 +18,7 @@ void ShortTermStorageLevel::add(int pdt, int pays)
         namer.ShortTermStorageLevel(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
                                     storage.name);
         const auto index = storage.clusterGlobalIndex;
-        CorrespondanceCntNativesCntOptim.ShortTermStorageLevelConstraint[index]
+        ShortTermStorageLevelConstraint[index]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
         builder.include(Variable::ShortTermStorageLevel(index), 1.0)

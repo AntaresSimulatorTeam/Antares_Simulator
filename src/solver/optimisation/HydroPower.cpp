@@ -1,4 +1,7 @@
 #include "HydroPower.h"
+struct HydroPowerData
+{
+};
 
 void HydroPower::add(int pays)
 {

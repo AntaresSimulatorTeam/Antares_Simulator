@@ -1,22 +1,18 @@
 #include "AreaBalance.h"
 
-static void shortTermStorageBalance(
-  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-  ConstraintBuilder& constraintBuilder,
-  const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim)
+static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+                                    ConstraintBuilder& constraintBuilder,
+                                    std::vector<int>& InjectionVariable,
+                                    std::vector<int>& WithdrawalVariable)
 {
     for (const auto& storage : shortTermStorageInput)
     {
         unsigned index = storage.clusterGlobalIndex;
-        if (const int varInjection
-            = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.InjectionVariable[index];
-            varInjection >= 0)
+        if (const int varInjection = InjectionVariable[index]; varInjection >= 0)
         {
             constraintBuilder.include(Variable::ShortTermStorageInjection(index), 1.0);
         }
-        if (const int varWithdrawal
-            = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.WithdrawalVariable[index];
-            varWithdrawal >= 0)
+        if (const int varWithdrawal = WithdrawalVariable[index]; varWithdrawal >= 0)
         {
             constraintBuilder.include(Variable::ShortTermStorageWithdrawal(index), -1.0);
         }
@@ -24,15 +20,14 @@ static void shortTermStorageBalance(
 }
 
 // Constraint definitions
-void AreaBalance::add(int pdt, int pays)
+void AreaBalance::add(int pdt,
+                      int pays,
+                      std::vector<int>& NumeroDeContrainteDesBilansPays,
+                      std::vector<int>& InjectionVariable,
+                      std::vector<int>& WithdrawalVariable)
 {
     /** can be done without this --- keep it for now**/
-    CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-      = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-    CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesBilansPays[pays]
-      = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+    NumeroDeContrainteDesBilansPays[pays] = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
     /******/
     // TODO improve this
@@ -67,7 +62,7 @@ void AreaBalance::add(int pdt, int pays)
       .include(Variable::NegativeUnsuppliedEnergy(pays), 1.0);
 
     shortTermStorageBalance(
-      problemeHebdo->ShortTermStorage[pays], builder, CorrespondanceVarNativesVarOptim);
+      problemeHebdo->ShortTermStorage[pays], builder, InjectionVariable, WithdrawalVariable);
 
     builder.equalTo();
     builder.build();
