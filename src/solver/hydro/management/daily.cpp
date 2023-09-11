@@ -264,7 +264,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     {
         debugData = std::make_shared<DebugData>(resultWriter_,
                                                 data,
-                                                ventilationResults_[numSpace][z],
+                                                ventilationResults,
                                                 srcinflows,
                                                 maxP,
                                                 maxE,
