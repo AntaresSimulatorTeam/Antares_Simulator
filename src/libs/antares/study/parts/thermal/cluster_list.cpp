@@ -518,17 +518,32 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
             ret = result and ret;
         }
         
-        {
-            assert(c.parentArea and "cluster: invalid parent area");
-            buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
-
-            bool result = c.ecoInput.loadFromFolder(study, buffer);
-            c.ComputeCostTimeSeries();
-
-            ret = result && ret;
-        }
         ++options.progressTicks;
         options.pushProgressLogs();
+    }
+    return ret;
+}
+
+
+bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder)
+{
+    if (empty())
+        return true;
+
+    Clob buffer;
+    bool ret = true;
+
+    for (auto it = begin(); it != end(); ++it)
+    {
+        auto& c = *(it->second);
+
+        assert(c.parentArea and "cluster: invalid parent area");
+        buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
+
+        bool result = c.ecoInput.loadFromFolder(study, buffer);
+        c.ComputeCostTimeSeries();
+
+        ret = result && ret;
     }
     return ret;
 }

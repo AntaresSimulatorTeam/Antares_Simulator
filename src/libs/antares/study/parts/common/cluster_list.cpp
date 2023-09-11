@@ -370,39 +370,19 @@ int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const
     return ret;
 }
 
-template<>
-int ClusterList<ThermalCluster>::loadDataSeriesFromFolder(Study& s,
-                                                          const StudyLoadOptions& options,
-                                                          const AnyString& folder)
+template<class ClusterT>
+int ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
+                                                    const StudyLoadOptions& options,
+                                                    const AnyString& folder)
 {
     if (empty())
         return 1;
 
     int ret = 1;
 
-    each([&ret, &options, &s, &folder](ThermalCluster& c) {
+    each([&](ClusterT& c) {
         if (c.series)
             ret = c.loadDataSeriesFromFolder(s, folder) and ret;
-
-        ++options.progressTicks;
-        options.pushProgressLogs();
-    });
-    return ret;
-}
-
-template<>
-int ClusterList<RenewableCluster>::loadDataSeriesFromFolder(Study& s,
-                                                            const StudyLoadOptions& options,
-                                                            const AnyString& folder)
-{
-    if (empty())
-        return 1;
-
-    int ret = 1;
-
-    each([&](Cluster& cluster) {
-        if (cluster.series)
-            ret = cluster.loadDataSeriesFromFolder(s, folder) and ret;
 
         ++options.progressTicks;
         options.pushProgressLogs();

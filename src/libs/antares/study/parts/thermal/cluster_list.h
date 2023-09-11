@@ -84,6 +84,8 @@ public:
      */
     bool loadPreproFromFolder(Study& s, const StudyLoadOptions& options, const AnyString& folder);
 
+    bool loadEconomicCosts(Study& s, const AnyString& folder);
+
     bool savePreproToFolder(const AnyString& folder) const;
 
     bool saveToFolder(const AnyString& folder) const override;
