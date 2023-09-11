@@ -49,6 +49,7 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 #include <algorithm>
 #include "filename.h"
 #include "../optimisation/opt_constants.h"
+#include "name_translator.h"
 
 using namespace Yuni;
 
@@ -57,7 +58,7 @@ using namespace Yuni;
 class ProblemConverter
 {
 public:
-    void copyProbSimplexeToProbMps(PROBLEME_MPS* dest, PROBLEME_SIMPLEXE_NOMME* src)
+    void copyProbSimplexeToProbMps(PROBLEME_MPS* dest, PROBLEME_SIMPLEXE_NOMME* src, NameTranslator& nameTranslator)
     {
         // Variables
         dest->NbVar = src->NombreDeVariables;
@@ -85,8 +86,8 @@ public:
         dest->SensDeLaContrainte = src->Sens;
 
         // Names
-        dest->LabelDeLaVariable = src->VariableNamesAsCharPP(mVariableNames);
-        dest->LabelDeLaContrainte = src->ConstraintNamesAsCharPP(mConstraintNames);
+        dest->LabelDeLaVariable = nameTranslator.translate(src->VariableNames(), mVariableNames);
+        dest->LabelDeLaContrainte = nameTranslator.translate(src->ConstraintNames(), mConstraintNames);
     }
 
 private:
@@ -105,9 +106,10 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
 
     auto mps = std::make_shared<PROBLEME_MPS>();
     {
+        auto translator = NameTranslator::create(Prob->UseNamedProblems());
         ProblemConverter
           converter; // This object must not be destroyed until SRSwritempsprob has been run
-        converter.copyProbSimplexeToProbMps(mps.get(), Prob);
+        converter.copyProbSimplexeToProbMps(mps.get(), Prob, *translator);
         SRSwritempsprob(mps.get(), tmpPath.c_str());
     }
 
