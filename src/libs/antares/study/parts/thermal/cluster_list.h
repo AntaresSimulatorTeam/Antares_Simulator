@@ -87,6 +87,7 @@ public:
     bool loadEconomicCosts(Study& s, const AnyString& folder);
 
     bool savePreproToFolder(const AnyString& folder) const;
+    bool saveEconomicCosts(const AnyString& folder) const;
 
     bool saveToFolder(const AnyString& folder) const override;
 }; // class ThermalClusterList
