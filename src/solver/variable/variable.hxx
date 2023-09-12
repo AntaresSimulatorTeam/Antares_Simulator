@@ -348,9 +348,9 @@ inline void IVariable<ChildT, NextT, VCardT>::beforeYearByYearExport(uint year, 
 }
 
 template<class ChildT, class NextT, class VCardT>
-inline uint64 IVariable<ChildT, NextT, VCardT>::memoryUsage() const
+inline uint64_t IVariable<ChildT, NextT, VCardT>::memoryUsage() const
 {
-    uint64 r = VariableAccessorType::Value(pResults);
+    uint64_t r = VariableAccessorType::Value(pResults);
     if ((int)VCardT::columnCount != (int)Category::dynamicColumns)
     {
         // Intermediate values

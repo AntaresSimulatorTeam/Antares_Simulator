@@ -65,7 +65,7 @@ void Container::markAsModified() const
         prepro->markAsModified();
 }
 
-uint64 Container::memoryUsage() const
+uint64_t Container::memoryUsage() const
 {
     return sizeof(Container) + ((!series) ? 0 : DataSeriesWindMemoryUsage(series))
            + ((!prepro) ? 0 : prepro->memoryUsage());

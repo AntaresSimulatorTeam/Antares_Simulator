@@ -111,7 +111,7 @@ void EconomicInputData::reset()
     co2cost.reset(1, HOURS_PER_YEAR, true);
 }
 
-uint64 EconomicInputData::memoryUsage() const
+uint64_t EconomicInputData::memoryUsage() const
 {
     return sizeof(EconomicInputData);
 }

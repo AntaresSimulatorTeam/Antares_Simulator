@@ -13,7 +13,7 @@ namespace Antares
 {
 namespace Statistics
 {
-void HasWrittenToDisk(uint64 /* size */)
+void HasWrittenToDisk(uint64_t /* size */)
 {
 }
 } // namespace Statistics

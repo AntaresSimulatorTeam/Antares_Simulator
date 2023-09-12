@@ -225,7 +225,7 @@ public:
     {
     }
 
-    static uint64 memoryUsage()
+    static uint64_t memoryUsage()
     {
         return 0;
     }

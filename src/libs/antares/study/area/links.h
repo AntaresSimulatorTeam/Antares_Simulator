@@ -114,7 +114,7 @@ public:
     /*!
     ** \brief Get the size (bytes) in memory occupied by a `AreaLink` structure
     */
-    uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     bool isVisibleOnLayer(const size_t& layerID) const;
 

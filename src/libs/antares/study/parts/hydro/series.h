@@ -93,7 +93,7 @@ public:
     /*!
     ** \brief Get the size (bytes) in memory occupied by a `DataSeriesHydro` structure
     */
-    uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
     /*!
     ** \brief Try to estimate the amount of memory required for launching a simulation
     */

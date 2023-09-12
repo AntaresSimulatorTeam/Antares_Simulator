@@ -47,7 +47,7 @@ public:
     //! Parent
     String::Vector parents;
     //! All associated sizes
-    std::vector<uint64> filessize;
+    std::vector<uint64_t> filessize;
     //! Modification
     std::vector<int64_t> modified;
     //! Reference

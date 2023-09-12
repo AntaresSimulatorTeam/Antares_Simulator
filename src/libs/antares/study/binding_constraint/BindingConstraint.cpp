@@ -436,7 +436,7 @@ void BindingConstraint::buildFormula(String& s) const
     }
 }
 
-uint64 BindingConstraint::memoryUsage() const
+uint64_t BindingConstraint::memoryUsage() const
 {
     return sizeof(BindingConstraint)
            // comments

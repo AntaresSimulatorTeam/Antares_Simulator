@@ -92,7 +92,7 @@ int DataSeriesLoadSaveToFolder(DataSeriesLoad* d, const AreaName& areaID, const 
 /*!
 ** \brief Get the size (bytes) in memory occupied by a `DataSeriesLoad` structure
 */
-uint64 DataSeriesLoadMemoryUsage(DataSeriesLoad* w);
+uint64_t DataSeriesLoadMemoryUsage(DataSeriesLoad* w);
 
 } // namespace Data
 } // namespace Antares

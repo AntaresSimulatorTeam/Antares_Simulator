@@ -88,7 +88,7 @@ bool SimulationComments::loadFromFolder(const StudyLoadOptions& options)
     return true;
 }
 
-uint64 SimulationComments::memoryUsage() const
+uint64_t SimulationComments::memoryUsage() const
 {
     return name.capacity() + comments.capacity();
 }

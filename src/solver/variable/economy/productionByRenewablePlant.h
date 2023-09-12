@@ -304,9 +304,9 @@ public:
         return pValuesForTheCurrentYear[numSpace][column].hour;
     }
 
-    inline uint64 memoryUsage() const
+    inline uint64_t memoryUsage() const
     {
-        uint64 r = (sizeof(IntermediateValues) * pSize + IntermediateValues::MemoryUsage())
+        uint64_t r = (sizeof(IntermediateValues) * pSize + IntermediateValues::MemoryUsage())
                          * pNbYearsParallel;
         r += sizeof(double) * pSize * maxHoursInAYear * pNbYearsParallel;
         r += AncestorType::memoryUsage();

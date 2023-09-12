@@ -224,9 +224,9 @@ typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(
 }
 
 template<class ClusterT>
-uint64 ClusterList<ClusterT>::memoryUsage() const
+uint64_t ClusterList<ClusterT>::memoryUsage() const
 {
-    uint64 ret = sizeof(ClusterList) + (2 * sizeof(void*)) * this->size();
+    uint64_t ret = sizeof(ClusterList) + (2 * sizeof(void*)) * this->size();
 
     each([&](const ClusterT& cluster) { ret += cluster.memoryUsage(); });
     return ret;

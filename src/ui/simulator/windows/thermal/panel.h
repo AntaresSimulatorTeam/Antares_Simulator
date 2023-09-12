@@ -87,7 +87,7 @@ private:
     Data::Area* pAreaForThermalCommonData;
     Toolbox::InputSelector::Area* pAreaSelector;
     //! An internal increment, an ugly hack to avoid unnecessary refreshes
-    uint64 pStudyRevisionIncrement;
+    uint64_t pStudyRevisionIncrement;
     /*!
     ** \brief The splitter window
     **

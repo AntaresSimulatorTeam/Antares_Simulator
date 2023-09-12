@@ -34,7 +34,7 @@
 using namespace Yuni;
 
 template<class StringT>
-static inline StringT& BytesToStringW(StringT& out, uint64 size)
+static inline StringT& BytesToStringW(StringT& out, uint64_t size)
 {
     if (0 == size)
         return out << L"0 byte";
@@ -54,7 +54,7 @@ static inline StringT& BytesToStringW(StringT& out, uint64 size)
     return out << Math::Round(s, 1) << L" GiB";
 }
 
-static inline uint64 DiskFreeSpace(const AnyString& folder)
+static inline uint64_t DiskFreeSpace(const AnyString& folder)
 {
     if (folder.empty())
         return (uint64_t)-1; // error

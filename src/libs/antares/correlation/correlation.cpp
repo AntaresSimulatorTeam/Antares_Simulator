@@ -582,9 +582,9 @@ void Correlation::retrieveMontlyMatrixArray(const Matrix<>* array[12]) const
     }
 }
 
-uint64 Correlation::memoryUsage() const
+uint64_t Correlation::memoryUsage() const
 {
-    uint64 r = sizeof(Correlation);
+    uint64_t r = sizeof(Correlation);
     if (annual)
         r += annual->memoryUsage();
     if (monthly)

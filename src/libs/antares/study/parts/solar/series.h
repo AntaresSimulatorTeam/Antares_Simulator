@@ -89,7 +89,7 @@ int DataSeriesSolarSaveToFolder(DataSeriesSolar* d, const AreaName& areaID, cons
 /*!
 ** \brief Get the size (bytes) in memory occupied by a `DataSeriesSolar` structure
 */
-uint64 DataSeriesSolarMemoryUsage(DataSeriesSolar* w);
+uint64_t DataSeriesSolarMemoryUsage(DataSeriesSolar* w);
 
 } // namespace Data
 } // namespace Antares

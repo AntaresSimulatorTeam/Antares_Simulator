@@ -155,7 +155,7 @@ protected:
         return IO::flowSkip;
     }
 
-    virtual Flow onFile(const String& filename, const String&, const String&, uint64 size)
+    virtual Flow onFile(const String& filename, const String&, const String&, uint64_t size)
     {
         if (pathListOptNotFound == exclude.find(filename.c_str() + offset))
             list.add(filename.c_str() + offset, (size_t)size);

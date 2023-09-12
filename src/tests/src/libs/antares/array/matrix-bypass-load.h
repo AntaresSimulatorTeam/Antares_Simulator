@@ -26,7 +26,7 @@ namespace Antares
 {
 namespace Statistics
 {
-void HasReadFromDisk(uint64 /* size */)
+void HasReadFromDisk(uint64_t /* size */)
 {
 }
 } // namespace Statistics

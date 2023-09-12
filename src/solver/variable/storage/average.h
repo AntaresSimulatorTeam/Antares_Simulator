@@ -163,7 +163,7 @@ protected:
         NextType::template buildDigest<VCardT>(report, digestLevel, dataLevel);
     }
 
-    uint64 memoryUsage() const
+    uint64_t memoryUsage() const
     {
         return avgdata.dynamicMemoryUsage() + NextType::memoryUsage();
     }

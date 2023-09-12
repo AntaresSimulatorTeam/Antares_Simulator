@@ -67,7 +67,7 @@ static void NotifyDuration(int64_t duration)
     }
 }
 
-static void NotifyBytesDeleted(uint64 bytes)
+static void NotifyBytesDeleted(uint64_t bytes)
 {
     String message;
 
@@ -111,7 +111,7 @@ static void NotifyBytesDeleted(uint64 bytes)
     logs.info() << message;
 }
 
-static void NotifyFilesDeleted(uint64 count)
+static void NotifyFilesDeleted(uint64_t count)
 {
     switch (count)
     {
@@ -126,7 +126,7 @@ static void NotifyFilesDeleted(uint64 count)
     }
 }
 
-static void NotifyFoldersDeleted(uint64 count)
+static void NotifyFoldersDeleted(uint64_t count)
 {
     switch (count)
     {
@@ -143,7 +143,7 @@ static void NotifyFoldersDeleted(uint64 count)
 
 static void NotifyStatistics(const String& logprefix,
                              const FSWalker::Statistics& stats,
-                             uint64 duration)
+                             uint64_t duration)
 {
     String message;
 
@@ -359,8 +359,8 @@ int main(int argc, char** argv)
     logs.info();
     NotifyDuration(DateTime::Now() - starttime);
     NotifyBytesDeleted(IOBytesDeleted);
-    NotifyFilesDeleted((uint64)IOFilesDeleted);
-    NotifyFoldersDeleted((uint64)IOFoldersDeleted);
+    NotifyFilesDeleted((uint64_t)IOFilesDeleted);
+    NotifyFoldersDeleted((uint64_t)IOFoldersDeleted);
 
     logs.info();
     logs.info() << "exiting gracefully";

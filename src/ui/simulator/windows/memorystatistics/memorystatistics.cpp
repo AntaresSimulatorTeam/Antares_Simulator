@@ -114,7 +114,7 @@ private:
     MemoryStatistics& pForm;
 };
 
-static inline uint64 NormalizeAmountOfMemory(uint64 v)
+static inline uint64_t NormalizeAmountOfMemory(uint64_t v)
 {
     v *= 10u;
     v /= 1024u * 1024u;
@@ -297,7 +297,7 @@ void MemoryStatistics::refreshInformation()
 
     // Memory available on the system
     {
-        const uint64 memFree = System::Memory::Available() / (1024 * 1024);
+        const uint64_t memFree = System::Memory::Available() / (1024 * 1024);
         s.clear();
         s << memFree << wxT(" Mo");
         pData->stTxtTotal->SetLabel(s);
@@ -316,8 +316,8 @@ void MemoryStatistics::refreshInformation()
             driveletter += study->folder[0];
             s << wxStringFromUTF8(driveletter) << wxT(": ");
 
-            uint64 diskFree = DiskFreeSpace(study->folder);
-            if (diskFree == (uint64)-1)
+            uint64_t diskFree = DiskFreeSpace(study->folder);
+            if (diskFree == (uint64_t)-1)
                 s << wxT("N/A");
             else
                 s << (diskFree / (1024 * 1024)) << wxT(" Mo");
@@ -325,7 +325,7 @@ void MemoryStatistics::refreshInformation()
         }
         else
         {
-            uint64 diskFree = DiskFreeSpace("C:\\");
+            uint64_t diskFree = DiskFreeSpace("C:\\");
             s.clear();
             s << wxT("C: ") << (diskFree / (1024 * 1024)) << wxT(" Mo");
             pData->stTxtDiskFree->SetLabel(s);

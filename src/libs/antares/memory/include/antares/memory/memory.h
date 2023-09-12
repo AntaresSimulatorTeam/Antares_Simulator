@@ -148,14 +148,14 @@ public:
     /*!
     ** \brief Get the amount of memory currently used
     */
-    uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Get the process ID of the application
     **
     ** This value is cached and detected at the creation of the instance.
     */
-    uint64 processID() const;
+    uint64_t processID() const;
 
     //@}
 
@@ -172,7 +172,7 @@ private:
     bool pAllowedToChangeCacheFolder;
 
     //! The process ID used
-    uint64 pProcessID;
+    uint64_t pProcessID;
 
     //! Avoid multiple initializations
     bool pAlreadyInitialized = false;

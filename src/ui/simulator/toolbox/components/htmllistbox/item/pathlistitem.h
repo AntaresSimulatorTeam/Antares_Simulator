@@ -54,7 +54,7 @@ public:
                             wxString name,
                             const wxString& searchString,
                             bool isFolder,
-                            uint64 size);
+                            uint64_t size);
 
 public:
     //! \name Constructor & Destructor
@@ -82,7 +82,7 @@ public:
 protected:
     //! Additional text
     const wxString pText;
-    uint64 pSize;
+    uint64_t pSize;
     bool pIsFolder;
 
 }; // class PathListItem

@@ -166,7 +166,7 @@ public:
 
     void beforeYearByYearExport(uint year, uint numSpace);
 
-    uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     template<class I>
     static void provideInformations(I& infos);

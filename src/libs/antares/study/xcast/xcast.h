@@ -165,7 +165,7 @@ public:
     /*!
     ** \brief Get the amount of memory currently used by the XCast data
     */
-    uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Estimate the amount of memory required by this class for a simulation

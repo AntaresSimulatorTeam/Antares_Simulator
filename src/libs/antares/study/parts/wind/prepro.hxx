@@ -30,7 +30,7 @@
 namespace Antares::Data::Wind
 {
 
-inline uint64 Prepro::memoryUsage() const
+inline uint64_t Prepro::memoryUsage() const
 {
     return xcast.memoryUsage();
 }

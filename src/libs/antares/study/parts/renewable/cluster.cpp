@@ -269,9 +269,9 @@ double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepInde
     return 0.;
 }
 
-uint64 RenewableCluster::memoryUsage() const
+uint64_t RenewableCluster::memoryUsage() const
 {
-    uint64 amount = sizeof(RenewableCluster);
+    uint64_t amount = sizeof(RenewableCluster);
     if (series)
         amount += DataSeriesMemoryUsage(series);
     return amount;

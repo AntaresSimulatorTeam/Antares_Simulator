@@ -341,7 +341,7 @@ bool AreaUI::saveToFile(const AnyString& filename, bool force) const
     return true;
 }
 
-uint64 AreaUI::memoryUsage() const
+uint64_t AreaUI::memoryUsage() const
 {
     return sizeof(AreaUI);
 }

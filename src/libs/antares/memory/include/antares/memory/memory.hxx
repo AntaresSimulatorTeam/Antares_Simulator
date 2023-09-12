@@ -29,7 +29,7 @@
 
 namespace Antares
 {
-inline uint64 Memory::processID() const
+inline uint64_t Memory::processID() const
 {
     return pProcessID;
 }

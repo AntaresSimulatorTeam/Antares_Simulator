@@ -89,7 +89,7 @@ int DataSeriesWindSaveToFolder(DataSeriesWind* d, const AreaName& areaID, const 
 /*!
 ** \brief Get the size (bytes) in memory occupied by a `DataSeriesWind` structure
 */
-uint64 DataSeriesWindMemoryUsage(DataSeriesWind* w);
+uint64_t DataSeriesWindMemoryUsage(DataSeriesWind* w);
 
 } // namespace Data
 } // namespace Antares

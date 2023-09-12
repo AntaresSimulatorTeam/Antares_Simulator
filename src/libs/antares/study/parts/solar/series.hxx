@@ -31,7 +31,7 @@ namespace Antares
 {
 namespace Data
 {
-inline uint64 DataSeriesSolarMemoryUsage(DataSeriesSolar* l)
+inline uint64_t DataSeriesSolarMemoryUsage(DataSeriesSolar* l)
 {
     return (l) ? l->timeSeries.memoryUsage() : 0;
 }

@@ -64,7 +64,7 @@ protected:
     virtual Flow onFile(const String& /*filename*/,
                         const String& parent,
                         const String& name,
-                        uint64)
+                        uint64_t)
     {
         pExtension.clear();
         IO::ExtractExtension(pExtension, name);

@@ -192,7 +192,7 @@ void Study::reduceMemoryUsage()
     ClearAndShrink(bufferLoadingTS);
 }
 
-uint64 Study::memoryUsage() const
+uint64_t Study::memoryUsage() const
 {
     return folder.capacity()
            // Folders paths

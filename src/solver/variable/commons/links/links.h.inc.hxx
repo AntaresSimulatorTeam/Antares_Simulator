@@ -176,7 +176,7 @@ public:
 
     void beforeYearByYearExport(uint year, uint numSpace);
 
-    uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
 

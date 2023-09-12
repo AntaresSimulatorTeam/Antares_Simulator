@@ -229,9 +229,9 @@ protected:
             {
                 CString<32, false> text;
                 text << area->thermal.list.size();
-                const uint8 R_COLOR = 210;
-                const uint8 G_COLOR = 217;
-                const uint8 B_COLOR = 216;
+                const uint8_t R_COLOR = 210;
+                const uint8_t G_COLOR = 217;
+                const uint8_t B_COLOR = 216;
                 item->addRightTag(text, R_COLOR, G_COLOR, B_COLOR);
                 if (area->thermal.hasForcedTimeseriesGeneration())
                     item->addRightTag(wxT("G"), R_COLOR, G_COLOR, B_COLOR);

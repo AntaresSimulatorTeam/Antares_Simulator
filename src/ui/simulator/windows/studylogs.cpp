@@ -102,7 +102,7 @@ public:
 inline void FindAllLogFiles(MapFileList& filelist, wxRegEx& regex, const AnyString& folder)
 {
     filelist.clear();
-    uint64 totalSize = 0u;
+    uint64_t totalSize = 0u;
 
     if (not folder.empty())
     {
@@ -383,7 +383,7 @@ protected:
             logs.error() << "File not found: " << pFilename;
             return;
         }
-        const uint64 filesize = IO::File::Size(pFilename);
+        const uint64_t filesize = IO::File::Size(pFilename);
 
         bool shouldReopenLogFile = false;
         // Closing the current log file, to be able to open it

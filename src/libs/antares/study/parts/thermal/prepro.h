@@ -103,7 +103,7 @@ public:
     /*!
     ** \brief Get the amount of memory used by the class
     */
-    uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Normalize NPO max and check for consistency

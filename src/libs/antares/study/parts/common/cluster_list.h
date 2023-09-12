@@ -216,7 +216,7 @@ public:
     ** \brief Get the size (bytes) occupied in memory by a `ClusterList` structure
     ** \return A size (in bytes)
     */
-    uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
 public:
     //! All clusters by their index

@@ -722,9 +722,9 @@ void AreaLinkRemove(AreaLink* link)
     delete link;
 }
 
-uint64 AreaLink::memoryUsage() const
+uint64_t AreaLink::memoryUsage() const
 {
-    uint64 to_return = sizeof(AreaLink);
+    uint64_t to_return = sizeof(AreaLink);
     to_return += parameters.valuesMemoryUsage();
     to_return += directCapacities.valuesMemoryUsage();
     to_return += indirectCapacities.valuesMemoryUsage();

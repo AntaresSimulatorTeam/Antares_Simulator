@@ -475,7 +475,7 @@ public:
     /*!
     ** \brief Get the amound of memory consummed by the study (in bytes)
     */
-    uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     //! \name Logs
     //@{

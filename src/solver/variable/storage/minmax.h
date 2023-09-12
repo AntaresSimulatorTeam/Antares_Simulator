@@ -137,7 +137,7 @@ protected:
 
     void merge(uint year, const IntermediateValues& rhs);
 
-    uint64 memoryUsage() const
+    uint64_t memoryUsage() const
     {
         return sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
     }

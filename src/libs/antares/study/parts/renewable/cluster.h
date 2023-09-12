@@ -152,7 +152,7 @@ public:
     /*!
     ** \brief Get the memory consummed by the renewable cluster (in bytes)
     */
-    uint64 memoryUsage() const override;
+    uint64_t memoryUsage() const override;
     //@}
 
     bool setTimeSeriesModeFromString(const YString& value);

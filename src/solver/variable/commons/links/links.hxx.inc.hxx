@@ -286,9 +286,9 @@ void Links::RetrieveVariableList(PredicateT& predicate)
     NextType::RetrieveVariableList(predicate);
 }
 
-inline uint64 Links::memoryUsage() const
+inline uint64_t Links::memoryUsage() const
 {
-    uint64 result = 0;
+    uint64_t result = 0;
     for (uint i = 0; i != pLinkCount; ++i)
     {
         result += sizeof(NextType) + sizeof(void*);
