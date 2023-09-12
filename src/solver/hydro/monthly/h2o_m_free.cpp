@@ -49,16 +49,6 @@ void H2O_M_Free(DONNEES_ANNUELLES* DonneesAnnuelles)
 
     ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
 
-    free(ProblemeHydraulique->CorrespondanceDesVariables->NumeroDeVariableVolume);
-    free(ProblemeHydraulique->CorrespondanceDesVariables->NumeroDeVariableTurbine);
-    free(ProblemeHydraulique->CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMax);
-    free(ProblemeHydraulique->CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMin);
-    free((ProblemeHydraulique->CorrespondanceDesVariables)
-           ->NumeroDeVariableDEcartPositifAuTurbineCible);
-    free((ProblemeHydraulique->CorrespondanceDesVariables)
-           ->NumeroDeVariableDEcartNegatifAuTurbineCible);
-    free(ProblemeHydraulique->CorrespondanceDesVariables);
-
     free(ProblemeHydraulique->ProblemeLineairePartieFixe);
 
     free(ProblemeHydraulique->ProblemeLineairePartieVariable);

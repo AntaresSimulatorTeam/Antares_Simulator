@@ -35,7 +35,7 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuel
     const PROBLEME_HYDRAULIQUE* ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable
         = ProblemeHydraulique->ProblemeLineairePartieVariable;
-    const CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables
+    const CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
         = ProblemeHydraulique->CorrespondanceDesVariables;
     PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe
         = ProblemeHydraulique->ProblemeLineairePartieFixe;
@@ -53,20 +53,20 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuel
     auto& X = ProblemeLineairePartieVariable->X;
     auto& CoutLineaire = ProblemeLineairePartieFixe->CoutLineaire;
 
-    Var = CorrespondanceDesVariables->NumeroDeVariableVolume[0];
+    Var = CorrespondanceDesVariables.NumeroDeVariableVolume[0];
     X[Var] = DonneesAnnuelles->Volume[0];
     Xmin[Var] = DonneesAnnuelles->Volume[0];
     Xmax[Var] = DonneesAnnuelles->Volume[0];
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        Var = CorrespondanceDesVariables->NumeroDeVariableVolume[Pdt];
+        Var = CorrespondanceDesVariables.NumeroDeVariableVolume[Pdt];
         CoutLineaire[Var] = 0.0;
     }
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        Var = CorrespondanceDesVariables->NumeroDeVariableTurbine[Pdt];
+        Var = CorrespondanceDesVariables.NumeroDeVariableTurbine[Pdt];
         Xmax[Var] = TurbineMax[Pdt];
         Xmin[Var] = TurbineMin[Pdt];
         CoutLineaire[Var] = 0.0;
@@ -74,31 +74,31 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuel
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        Var = CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMax[Pdt];
+        Var = CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax[Pdt];
         CoutLineaire[Var] = CoutDepassementVolume;
     }
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        Var = CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMin[Pdt];
+        Var = CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin[Pdt];
         CoutLineaire[Var] = CoutDepassementVolume;
     }
 
-    Var = CorrespondanceDesVariables->NumeroDeLaVariableViolMaxVolumeMin;
+    Var = CorrespondanceDesVariables.NumeroDeLaVariableViolMaxVolumeMin;
     CoutLineaire[Var] = DonneesAnnuelles->CoutViolMaxDuVolumeMin;
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        Var = CorrespondanceDesVariables->NumeroDeVariableDEcartPositifAuTurbineCible[Pdt];
+        Var = CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible[Pdt];
         CoutLineaire[Var] = 1.0;
     }
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        Var = CorrespondanceDesVariables->NumeroDeVariableDEcartNegatifAuTurbineCible[Pdt];
+        Var = CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible[Pdt];
         CoutLineaire[Var] = 1.0;
     }
 
-    Var = CorrespondanceDesVariables->NumeroDeLaVariableXi;
+    Var = CorrespondanceDesVariables.NumeroDeLaVariableXi;
     CoutLineaire[Var] = 1.0;
 }

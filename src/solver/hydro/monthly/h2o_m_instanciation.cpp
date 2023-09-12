@@ -39,7 +39,6 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
     DONNEES_ANNUELLES* DonneesAnnuelles;
     PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
 
-    CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
     PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
 
@@ -74,13 +73,6 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
 
     ProblemeHydraulique->NombreDeReservoirs = NombreDeReservoirs;
 
-    ProblemeHydraulique->CorrespondanceDesVariables
-      = (CORRESPONDANCE_DES_VARIABLES*)malloc(sizeof(CORRESPONDANCE_DES_VARIABLES));
-    if (ProblemeHydraulique->CorrespondanceDesVariables == NULL)
-    {
-        return (0);
-    }
-
     ProblemeHydraulique->ProblemeLineairePartieFixe
       = (PROBLEME_LINEAIRE_PARTIE_FIXE*)malloc(sizeof(PROBLEME_LINEAIRE_PARTIE_FIXE));
     if (ProblemeHydraulique->ProblemeLineairePartieFixe == NULL)
@@ -108,51 +100,16 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
 
     ProblemeHydraulique->Probleme = NULL;
 
-    CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables;
+    CORRESPONDANCE_DES_VARIABLES CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables;
     ProblemeLineairePartieFixe = ProblemeHydraulique->ProblemeLineairePartieFixe;
     ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable;
 
-    CorrespondanceDesVariables->NumeroDeVariableVolume
-      = (int*)malloc((unsigned int)NbPdt * sizeof(int));
-    if (CorrespondanceDesVariables->NumeroDeVariableVolume == NULL)
-    {
-        return (0);
-    }
-
-    CorrespondanceDesVariables->NumeroDeVariableTurbine
-      = (int*)malloc((unsigned int)NbPdt * sizeof(int));
-    if (CorrespondanceDesVariables->NumeroDeVariableTurbine == NULL)
-    {
-        return (0);
-    }
-
-    CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMin
-      = (int*)malloc((unsigned int)NbPdt * sizeof(int));
-    if (CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMin == NULL)
-    {
-        return (0);
-    }
-
-    CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMax
-      = (int*)malloc((unsigned int)NbPdt * sizeof(int));
-    if (CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMax == NULL)
-    {
-        return (0);
-    }
-
-    CorrespondanceDesVariables->NumeroDeVariableDEcartPositifAuTurbineCible
-      = (int*)malloc((unsigned int)NbPdt * sizeof(int));
-    if (CorrespondanceDesVariables->NumeroDeVariableDEcartPositifAuTurbineCible == NULL)
-    {
-        return (0);
-    }
-
-    CorrespondanceDesVariables->NumeroDeVariableDEcartNegatifAuTurbineCible
-      = (int*)malloc((unsigned int)NbPdt * sizeof(int));
-    if (CorrespondanceDesVariables->NumeroDeVariableDEcartNegatifAuTurbineCible == NULL)
-    {
-        return (0);
-    }
+    CorrespondanceDesVariables.NumeroDeVariableVolume.assign(NbPdt, 0);
+    CorrespondanceDesVariables.NumeroDeVariableTurbine.assign(NbPdt, 0);
+    CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin.assign(NbPdt, 0);
+    CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax.assign(NbPdt, 0);
+    CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible.assign(NbPdt, 0);
+    CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible.assign(NbPdt, 0);
 
     NombreDeVariables = 0;
     NombreDeVariables += NbPdt;

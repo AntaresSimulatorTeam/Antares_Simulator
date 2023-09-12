@@ -94,13 +94,13 @@ typedef struct
 /* Les correspondances des variables */
 typedef struct
 {
-    int* NumeroDeVariableVolume;                      /* Volumes */
-    int* NumeroDeVariableTurbine;                     /* Turbines */
-    int* NumeroDeVariableDepassementVolumeMax;        /* Depassement du volume max */
-    int* NumeroDeVariableDepassementVolumeMin;        /* Depassement du volume min */
+    std::vector<int> NumeroDeVariableVolume;                      /* Volumes */
+    std::vector<int> NumeroDeVariableTurbine;                     /* Turbines */
+    std::vector<int> NumeroDeVariableDepassementVolumeMax;        /* Depassement du volume max */
+    std::vector<int> NumeroDeVariableDepassementVolumeMin;        /* Depassement du volume min */
     int NumeroDeLaVariableViolMaxVolumeMin;           // Depassement max du volume min
-    int* NumeroDeVariableDEcartPositifAuTurbineCible; /* Ecart positif au volume cible */
-    int* NumeroDeVariableDEcartNegatifAuTurbineCible; /* Ecart negatif au volume cible */
+    std::vector<int> NumeroDeVariableDEcartPositifAuTurbineCible; /* Ecart positif au volume cible */
+    std::vector<int> NumeroDeVariableDEcartNegatifAuTurbineCible; /* Ecart negatif au volume cible */
     int NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible */
 } CORRESPONDANCE_DES_VARIABLES;
 
@@ -110,7 +110,7 @@ typedef struct
     int NombreDeReservoirs;
     char LesCoutsOntEteInitialises; /* Vaut OUI ou NON */
 
-    CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
+    CORRESPONDANCE_DES_VARIABLES CorrespondanceDesVariables;
 
     PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
