@@ -28,7 +28,7 @@ For each thermal cluster, in existing file **input/thermal/clusters/&lt;area&gt;
 * `efficiency` [float] between 0-100 (default = 100). Unit is "percentage".
 * `variableomcost` [float] excluded from the section if default value 0 is selected (default behavior). Unit is Euro / MWh
 
-For each thermal cluster, new files added **input/thermal/prepro/&lt;area&gt;/&lt;cluster&gt;/CO2Cost.txt** and **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/fuelCost.txt**. **fuelCost.txt** and **CO2Cost.txt** must either have one column, or the same number of columns as existing file **series.txt** (availability). The number of rows for these new matrices is 8760.
+For each thermal cluster, new files added **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/CO2Cost.txt** and **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/fuelCost.txt**. **fuelCost.txt** and **CO2Cost.txt** must either have one column, or the same number of columns as existing file **series.txt** (availability). The number of rows for these new matrices is 8760.
 
 ### Output
 #### Scenarized RHS for binding constraints
