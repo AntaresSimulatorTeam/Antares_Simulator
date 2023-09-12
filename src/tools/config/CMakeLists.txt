@@ -44,7 +44,7 @@ target_link_libraries(${execname}
 			${CONFIG_LIBS}
 			Antares::array
 			Antares::sys
-		libantares-core #ressource.h
+		antares-core #ressource.h
 		)
 
 import_std_libs(${execname})

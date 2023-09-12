@@ -42,7 +42,7 @@ set(VACUUM_LIBS
 target_link_libraries(${execname}
 		PRIVATE
 			${VACUUM_LIBS}
-		libantares-core #version.h
+		antares-core #version.h
 		)
 
 import_std_libs(${execname})

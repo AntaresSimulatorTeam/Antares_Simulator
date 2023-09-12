@@ -67,8 +67,8 @@ add_library(antares-solver-hydro
 
 target_link_libraries(antares-solver-hydro
 		PRIVATE
-		libmodel_antares
-		libantares-solver-variable
+		model_antares
+		antares-solver-variable
 		Antares::study
 		Antares::mersenne
 		PUBLIC sirius_solver)

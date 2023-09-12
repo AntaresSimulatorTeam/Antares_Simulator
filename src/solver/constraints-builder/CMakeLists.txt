@@ -21,7 +21,7 @@ add_library(antares-solver-constraints-builder
 		${SRC_CBUILDER} )
 
 
-target_link_libraries(antares-solver-constraints-builder PRIVATE libantares-core
+target_link_libraries(antares-solver-constraints-builder PRIVATE antares-core
 	PUBLIC
 		Antares::study
 )
