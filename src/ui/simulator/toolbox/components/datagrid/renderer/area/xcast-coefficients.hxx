@@ -26,7 +26,7 @@
 */
 
 #include <antares/study/xcast/xcast.h>
-#include <antares/date.h>
+#include <antares/date/date.h>
 
 namespace Antares
 {

@@ -60,7 +60,7 @@ void ARendererArea::onAreaChanged(Data::Area* area)
 {
     // FIXME
     if (area && !study)
-        study = Data::Study::Current::Get();
+        study = GetCurrentStudy();
 
     pArea = !study ? nullptr : area;
     internalAreaChanged(area);

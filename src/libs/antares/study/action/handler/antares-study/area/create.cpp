@@ -220,7 +220,7 @@ bool Create::performWL(Context& ctx)
     if (not ctx.area)
     {
         // create the area
-        ctx.area = ctx.study->areaAdd(pFuturAreaName);
+        ctx.area = ctx.study->areaAdd(pFuturAreaName, true);
         logs.debug() << "[study-action] The area " << pFuturAreaName << " has been created";
     }
     else

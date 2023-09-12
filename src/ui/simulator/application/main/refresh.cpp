@@ -28,7 +28,7 @@
 #include "main.h"
 #include "../study.h"
 #include "../menus.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include <wx/menuitem.h>
 #include "../../toolbox/components/refresh.h"
 #include "../../../common/lock.h"
@@ -76,14 +76,14 @@ static inline bool OutputTimestampToString(S& out, sint64 timestamp)
 
 void ApplWnd::refreshMenuInput()
 {
-    if (not Data::Study::Current::Valid() or IsGUIAboutToQuit())
+    if (not CurrentStudyIsValid() or IsGUIAboutToQuit())
     {
         pMenuInputCreation->SetItemLabel(wxT("No study"));
         pMenuInputLastSaved->SetItemLabel(wxT("Last save: never"));
         return;
     }
 
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     String nowstr;
     if (not TimestampToString(nowstr, study.header.dateCreated))
@@ -330,7 +330,7 @@ void ApplWnd::refreshMenuOutput()
 
 void ApplWnd::refreshMenuOptions(Data::Study::Ptr study)
 {
-    if (not Data::Study::Current::Valid() or IsGUIAboutToQuit())
+    if (not CurrentStudyIsValid() or IsGUIAboutToQuit())
         return;
 
     // Disabling the Configure menu's scenario builder item after loading a study

@@ -1,9 +1,9 @@
 #include "ortools_utils.h"
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hpp>
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 #include <filesystem>
 
 using namespace operations_research;
@@ -391,7 +391,7 @@ MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* 
     catch (...)
     {
         Antares::logs.error() << "Solver creation failed";
-        AntaresSolverEmergencyShutdown();
+        throw;
     }
 
     return solver;

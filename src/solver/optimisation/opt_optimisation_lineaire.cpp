@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../simulation/simulation.h"
-
+#include "sim_structure_probleme_economique.h"
 #include "opt_fonctions.h"
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include "../utils/filename.h"
 
 using namespace Antares;
@@ -50,7 +49,7 @@ double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
 
 void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
   double optimalSolutionCost,
-  std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
+  const OptPeriodStringGenerator& optPeriodStringGenerator,
   int optimizationNumber,
   Solver::IResultWriter& writer)
 {
@@ -107,7 +106,7 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                                  problemeHebdo,
                                  numeroDeLIntervalle,
                                  optimizationNumber,
-                                 optPeriodStringGenerator,
+                                 *optPeriodStringGenerator,
                                  writer))
             return false;
 
@@ -117,7 +116,7 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
             double optimalSolutionCost
               = OPT_ObjectiveFunctionResult(problemeHebdo, numeroDeLIntervalle, optimizationNumber);
             OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
-              optimalSolutionCost, optPeriodStringGenerator, optimizationNumber, writer);
+              optimalSolutionCost, *optPeriodStringGenerator, optimizationNumber, writer);
         }
     }
     return true;

@@ -60,7 +60,7 @@ AdequacyPatchAreas::AdequacyPatchAreas(wxFrame* parent) :
     assert(parent);
 
     // The current study
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     // Title of the Form
     SetLabel(wxT("Adequacy Patch Areas"));

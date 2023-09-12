@@ -34,7 +34,7 @@
 #include "../categories.h"
 #include "data.h"
 #include <antares/study/variable-print-info.h>
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 
 namespace Antares
 {
@@ -52,11 +52,6 @@ public:
     typedef Yuni::CString<10, false> PrecisionType;
     //! Caption
     typedef Yuni::CString<128, false> CaptionType;
-
-    /*!
-    ** \brief Try to estimate theamount of memory required by the class
-    */
-    static void EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u);
 
 public:
     //! \name Constructor & Destructor

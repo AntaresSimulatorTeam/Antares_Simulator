@@ -62,7 +62,7 @@ public:
     ** \param year  A year
     ** \param value The new TS number
     */
-    void set(uint index, uint year, uint value);
+    void setTSnumber(uint index, uint year, uint value);
     //@}
 
     uint width() const;

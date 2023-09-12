@@ -44,7 +44,7 @@ struct OptimizationOptions
 }
 
 /* Le probleme a resoudre */
-typedef struct
+struct PROBLEME_ANTARES_A_RESOUDRE
 {
     /* La matrice des contraintes */
     int NombreDeVariables;
@@ -115,10 +115,9 @@ typedef struct
     std::vector<std::string> NomDesVariables;
     std::vector<std::string> NomDesContraintes;
 
-public:
     std::vector<int> StatutDesVariables;
     std::vector<int> StatutDesContraintes;
 
-} PROBLEME_ANTARES_A_RESOUDRE;
+};
 
 #endif /* __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__ */

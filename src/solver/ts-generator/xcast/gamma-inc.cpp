@@ -29,8 +29,7 @@
 #include <antares/study.h>
 #include "xcast.h"
 #include <yuni/core/math.h>
-#include <antares/logs.h>
-#include <antares/emergency.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 

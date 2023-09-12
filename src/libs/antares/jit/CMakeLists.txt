@@ -1,7 +1,7 @@
 set(SRC_JIT
         # JIT (Just in Time)
-        jit.h
-        jit.hxx
+        antares/jit/jit.h
+        antares/jit/jit.hxx
         jit.cpp
         )
 source_group("misc\\jit" FILES ${SRC_JIT})
@@ -10,13 +10,14 @@ add_library(jit
         ${SRC_JIT}
         )
 
+target_include_directories(jit
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
 target_link_libraries(jit
         PRIVATE
-        logs
         yuni-static-core
-        )
-
-target_include_directories(jit
-        PRIVATE
-        ${CMAKE_SOURCE_DIR}/libs
+        PUBLIC
+        logs #templated function use logs
         )

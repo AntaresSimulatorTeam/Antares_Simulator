@@ -243,7 +243,7 @@ bool InspectorGrid::onPropertyChanging_C(wxPGProperty*,
                                          const wxVariant& value)
 {
     // Reference to the current study
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     if (name == "common.study.name")
     {

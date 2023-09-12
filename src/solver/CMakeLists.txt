@@ -8,7 +8,6 @@ endif(MSVC)
 
 
 add_subdirectory(infeasible-problem-analysis)
-add_subdirectory(writer)
 add_subdirectory(variable)
 add_subdirectory(hydro)
 add_subdirectory(simulation)
@@ -47,8 +46,6 @@ OMESSAGE("  :: application solver")
 set(exec_name "antares-${ANTARES_PRG_VERSION}-solver")
 
 add_executable(antares-solver
-	memory/mem.h
-
 	misc/options.h
 	misc/options.cpp
 	misc/process-priority.cpp
@@ -77,7 +74,7 @@ add_executable(antares-solver
 set_target_properties(antares-solver PROPERTIES OUTPUT_NAME ${exec_name})
 
 set(ANTARES_SOLVER_LIBS		
-	libantares-core-calendar
+	date
 	yuni-static-uuid
 	yuni-static-core		
 	${CMAKE_THREADS_LIBS_INIT}
@@ -97,6 +94,10 @@ set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
 target_link_libraries(antares-solver
 		PRIVATE
 			${ANTARES_SOLVER_LIBS}
+			Antares::benchmarking
+			result_writer
+			Antares::sys
+			Antares::infoCollection
 		)
 
 target_include_directories(antares-solver

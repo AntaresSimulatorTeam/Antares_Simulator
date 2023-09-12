@@ -31,7 +31,6 @@
 #include "memorystatistics.h"
 
 #include <antares/study.h>
-#include <antares/study/memory-usage.h>
 #include "../../application/study.h"
 #include "../../toolbox/create.h"
 #include "../../toolbox/resources.h"
@@ -61,10 +60,6 @@ public:
     MemoryStatisticsData() :
      stTxtTotal(nullptr),
      stTxtDiskFree(nullptr),
-     stTxtSimu(nullptr),
-     stTxtSimuDisk(nullptr),
-     stTxtSimuPar(nullptr),
-     stTxtSimuParDisk(nullptr),
      stTxtDataDisplay(nullptr),
      stTxtMemoryCache(nullptr),
      timer(nullptr)
@@ -76,31 +71,18 @@ public:
 public:
     wxStaticText* stTxtTotal;
     wxStaticText* stTxtDiskFree;
-    wxStaticText* stTxtSimu;
-    wxStaticText* stTxtSimuDisk;
-    wxStaticText* stTxtSimuPar;
-    wxStaticText* stTxtSimuParDisk;
     wxStaticText* stTxtDataDisplay;
     wxStaticText* stTxtMemoryCache;
     wxTimer* timer;
-    Yuni::Thread::IThread::Ptr thread;
 
 }; // class MemoryStatisticsData
 
 MemoryStatisticsData::~MemoryStatisticsData()
 {
-    if (!(!thread))
-        thread->gracefulStop();
-
     if (timer)
     {
         timer->Stop();
         delete timer;
-    }
-    if (!(!thread))
-    {
-        thread->stop(10000);
-        thread = nullptr;
     }
 }
 
@@ -108,9 +90,8 @@ MemoryStatisticsData::~MemoryStatisticsData()
 } // namespace Private
 } // namespace Antares
 
-namespace Antares
-{
-namespace Window
+
+namespace Antares::Window
 {
 namespace // anonymous
 {
@@ -151,16 +132,10 @@ MemoryStatistics::MemoryStatistics(wxWindow* parent) :
     pData = new Antares::Private::Window::MemoryStatisticsData();
 
     // Informations about the study
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     wxColour defaultBgColor = GetBackgroundColour();
     SetBackgroundColour(wxColour(255, 255, 255));
-
-    if (!(!study))
-    {
-        pData->thread = study->createThreadToEstimateInputMemoryUsage();
-        pData->thread->start();
-    }
 
     auto* sizer = new wxBoxSizer(wxVERTICAL);
     sizer->AddSpacer(10);
@@ -236,48 +211,6 @@ MemoryStatistics::MemoryStatistics(wxWindow* parent) :
     pData->stTxtDiskFree = new wxStaticText(
       this, wxID_ANY, wxT("   Updating..."), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
     gridSizer->Add(pData->stTxtDiskFree, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-    // Space
-    {
-        gridSizer->AddSpacer(10);
-        gridSizer->AddSpacer(10);
-        gridSizer->AddSpacer(10);
-
-        auto* st = new wxStaticText(
-          this, wxID_ANY, wxT("Simulation  "), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-        wxFont f = st->GetFont();
-        f.SetWeight(wxFONTWEIGHT_BOLD);
-        st->SetFont(f);
-        gridSizer->Add(st, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-        gridSizer->AddSpacer(5);
-        gridSizer->AddSpacer(5);
-    }
-
-    // Required for a simulation (default mode)
-    auto* stTxtSimuTtl = new wxStaticText(
-      this, wxID_ANY, wxT("Default : "), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-    gridSizer->Add(stTxtSimuTtl, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-    pData->stTxtSimu = new wxStaticText(
-      this, wxID_ANY, wxT("   Updating..."), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-    gridSizer->Add(pData->stTxtSimu, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-    pData->stTxtSimuDisk = new wxStaticText(
-      this, wxID_ANY, wxT("    Updating..."), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-    gridSizer->Add(pData->stTxtSimuDisk, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-    // Parallel mode
-    auto* stTxtSimuParTtl = new wxStaticText(
-      this, wxID_ANY, wxT("Parallel : "), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-    gridSizer->Add(stTxtSimuParTtl, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-    pData->stTxtSimuPar = new wxStaticText(
-      this, wxID_ANY, wxT("   Updating..."), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-    gridSizer->Add(pData->stTxtSimuPar, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-    pData->stTxtSimuParDisk = new wxStaticText(
-      this, wxID_ANY, wxT("    Updating..."), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-    gridSizer->Add(pData->stTxtSimuParDisk, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
     // Machine number of cores
     {
@@ -371,7 +304,7 @@ void MemoryStatistics::refreshInformation()
     }
 
     // The study
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     // Disk free
     {
@@ -404,92 +337,6 @@ void MemoryStatistics::refreshInformation()
 #endif
     }
 
-    if (!(!study))
-    {
-        const bool updating = (not pData->timer or pData->thread->started());
-
-        if (not updating)
-        {
-            // Memory required for a simulation
-            {
-                // For default mode, parallel mode is disabled.
-                study->maxNbYearsInParallel = 1;
-
-                Data::StudyMemoryUsage m(*study);
-                m.estimate();
-                s.clear();
-
-                if (!pDisplayLogsOnce)
-                {
-                    logs.info() << "Memory usage: estimate: input: "
-                                << (m.requiredMemoryForInput / (1024 * 1024))
-                                << "Mo, output: " << (m.requiredMemoryForOutput / (1024 * 1024))
-                                << "Mo,   disk: " << (m.requiredDiskSpace / (1024 * 1024)) << "Mo";
-                }
-
-                s << wxT("~ ") << NormalizeAmountOfMemory(m.requiredMemory) << wxT(" Mo");
-                pData->stTxtSimu->SetLabel(s);
-                s.clear();
-                if (m.requiredDiskSpace)
-                    s << wxT("~ ") << (m.requiredDiskSpace / (1024 * 1024)) << wxT(" Mo");
-                else
-                    s << wxT("0 Mo");
-                pData->stTxtSimuDisk->SetLabel(s);
-            }
-
-            {
-                // Parallel mode
-                study->maxNbYearsInParallel = study->maxNbYearsInParallel_save;
-
-                Data::StudyMemoryUsage m(*study);
-                m.estimate();
-                s.clear();
-
-                if (!pDisplayLogsOnce)
-                {
-                    logs.info() << "Memory usage: estimate: input: "
-                                << (m.requiredMemoryForInput / (1024 * 1024))
-                                << "Mo, output: " << (m.requiredMemoryForOutput / (1024 * 1024))
-                                << "Mo,   disk: " << (m.requiredDiskSpace / (1024 * 1024)) << "Mo";
-                }
-
-                s << wxT("~ ") << NormalizeAmountOfMemory(m.requiredMemory) << wxT(" Mo");
-                pData->stTxtSimuPar->SetLabel(s);
-                s.clear();
-                if (m.requiredDiskSpace)
-                    s << wxT("~ ") << (m.requiredDiskSpace / (1024 * 1024)) << wxT(" Mo");
-                else
-                    s << wxT("0 Mo");
-                pData->stTxtSimuParDisk->SetLabel(s);
-            }
-
-            pDisplayLogsOnce = true;
-        }
-        else
-        {
-            pData->stTxtSimu->SetLabel(wxT("updating"));
-            pData->stTxtSimuDisk->SetLabel(wxT("updating"));
-            pData->stTxtSimuPar->SetLabel(wxT("updating"));
-            pData->stTxtSimuParDisk->SetLabel(wxT("updating"));
-        }
-
-        // Memory consummed by the study
-        s.clear();
-        if (updating)
-            s << wxT("  ~ ");
-        s << (1 + study->memoryUsage() / (1024 * 1024)) << wxT(" Mo");
-        pData->stTxtDataDisplay->SetLabel(s);
-    }
-    else
-    {
-        pData->stTxtDataDisplay->SetLabel(wxT("N/A"));
-
-        pData->stTxtSimu->SetLabel(wxT("N/A"));
-        pData->stTxtSimuDisk->SetLabel(wxT("N/A"));
-        pData->stTxtSimuPar->SetLabel(wxT("N/A"));
-        pData->stTxtSimuParDisk->SetLabel(wxT("N/A"));
-    }
-
     GetSizer()->Layout();
     if (pData->timer)
         pData->timer->Start(3000);
@@ -497,11 +344,9 @@ void MemoryStatistics::refreshInformation()
 
 void MemoryStatistics::onClose(void*)
 {
-    if (!(!pData->thread))
-        pData->thread->gracefulStop();
     // ASync close
     Dispatcher::GUI::Close(this);
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window
+

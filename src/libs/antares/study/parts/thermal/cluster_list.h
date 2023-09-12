@@ -60,8 +60,6 @@ public:
 
     bool remove(const ClusterName& id) override;
 
-    void estimateMemoryUsage(StudyMemoryUsage&) const override;
-
     Map mapping;
 
     /*!

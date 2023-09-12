@@ -59,9 +59,9 @@ void thermalTSNumberData::saveToINIFile(const Study& /* study */,
     }
 }
 
-void thermalTSNumberData::set(const Antares::Data::ThermalCluster* cluster,
-                              const uint year,
-                              uint value)
+void thermalTSNumberData::setTSnumber(const Antares::Data::ThermalCluster* cluster,
+                                      const uint year,
+                                      uint value)
 {
     assert(cluster != nullptr);
     if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)

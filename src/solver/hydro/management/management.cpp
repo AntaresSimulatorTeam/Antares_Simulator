@@ -28,7 +28,7 @@
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 #include <antares/study/area/scratchpad.h>
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 #include "management.h"
 #include "../../simulation/sim_extern_variables_globales.h"
 #include <yuni/core/math.h>
@@ -496,7 +496,8 @@ double HydroManagement::randomReservoirLevel(double min, double avg, double max)
 void HydroManagement::operator()(double* randomReservoirLevel,
                                  Solver::Variable::State& state,
                                  uint y,
-                                 uint numSpace)
+                                 uint numSpace,
+                                 VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     memset(pAreas[numSpace], 0, sizeof(PerArea) * study.areas.size());
 
@@ -504,7 +505,7 @@ void HydroManagement::operator()(double* randomReservoirLevel,
     minGenerationScaling(numSpace);
     if (!checkMinGeneration(numSpace))
     {
-        AntaresSolverEmergencyShutdown();
+        throw FatalError("hydro management: invalid minimum generation");
     }
 
     if (parameters.adequacy())
@@ -515,7 +516,7 @@ void HydroManagement::operator()(double* randomReservoirLevel,
     prepareEffectiveDemand(numSpace);
 
     prepareMonthlyOptimalGenerations(randomReservoirLevel, y, numSpace);
-    prepareDailyOptimalGenerations(state, y, numSpace);
+    prepareDailyOptimalGenerations(state, y, numSpace, valeursGenereesParPays);
 }
 
 } // namespace Antares

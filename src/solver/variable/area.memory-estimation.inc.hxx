@@ -49,32 +49,6 @@ uint64 Areas<NEXTTYPE>::memoryUsage() const
     return result;
 }
 
-template<>
-void Areas<NEXTTYPE>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-{
-    auto end = u.study.areas.end();
-    for (auto area = u.study.areas.begin(); area != end; ++area)
-    {
-        u.area = area->second;
-
-        u.requiredMemoryForOutput += sizeof(NextType) + sizeof(void*) /*overhead vector*/;
-        u.overheadDiskSpaceForSingleAreaOrLink();
-
-        // year-by-year
-        if (!u.gatheringInformationsForInput)
-        {
-            if (u.study.parameters.yearByYear)
-            {
-                for (unsigned int i = 0; i != u.years; ++i)
-                    u.overheadDiskSpaceForSingleAreaOrLink();
-            }
-        }
-        // next
-        NextType::EstimateMemoryUsage(u);
-    }
-    u.area = nullptr;
-}
-
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares

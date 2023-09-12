@@ -52,7 +52,7 @@ void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options, const P
 
     int nbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
-    const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
     if (!ProblemeAResoudre)
         return;
 

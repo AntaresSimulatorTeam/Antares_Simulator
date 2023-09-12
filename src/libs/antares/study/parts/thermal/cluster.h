@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
-#include "../../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include "defines.h"
 #include "prepro.h"
 #include "ecoInput.h"
@@ -238,7 +238,7 @@ public:
     ** This value is computed from the field 'group' in 'group()
     ** \see group()
     */
-    enum ThermalDispatchableGroup groupID;
+    ThermalDispatchableGroup groupID;
 
     //! Mustrun
     bool mustrun;

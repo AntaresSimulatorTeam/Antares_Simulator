@@ -36,12 +36,10 @@
 #include "../constants.h"
 #include "parameters.h"
 #include <antares/inifile/inifile.h>
-#include "../logs.h"
+#include <antares/logs/logs.h>
 #include "load-options.h"
-#include <limits.h>
-#include <antares/study/memory-usage.h>
+#include <climits>
 #include "../solver/variable/economy/all.h"
-#include "../solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hxx>
@@ -1077,7 +1075,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     if (options.usedByTheSolver)
         prepareForSimulation(options);
 
-    if (options.mpsToExport)
+    if (options.mpsToExport || options.namedProblems)
     {
         this->include.exportMPS = mpsExportStatus::EXPORT_BOTH_OPTIMS;
     }

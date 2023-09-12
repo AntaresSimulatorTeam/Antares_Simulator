@@ -26,7 +26,7 @@
 */
 
 #include "main.h"
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include "../study.h"
 #include "../../toolbox/execute/execute.h"
 #include "../../windows/message.h"
@@ -64,7 +64,7 @@ void ApplWnd::evtLaunchAnalyzer(wxCommandEvent& evt)
     String filename;
     wxStringToString(wfilename, filename);
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!study) // A valid study would be better
     {
         logs.fatal() << "Internal error: Please provide a valid study";

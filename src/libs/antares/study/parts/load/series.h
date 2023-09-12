@@ -27,7 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_LOAD_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_LOAD_TIMESERIES_H__
 
-#include "../../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include "../../fwd.h"
 
 namespace Antares
@@ -40,7 +40,7 @@ namespace Data
 class DataSeriesLoad
 {
 public:
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     bool forceReload(bool reload = false) const;
 

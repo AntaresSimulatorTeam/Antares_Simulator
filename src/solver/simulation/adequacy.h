@@ -34,6 +34,7 @@
 #include "common-eco-adq.h"
 
 #include "solver.h" // for definition of type yearRandomNumbers
+#include "antares/infoCollection/StudyInfoCollector.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -56,7 +57,7 @@ public:
     */
     Adequacy(Data::Study& study);
     //! Destructor
-    ~Adequacy();
+    ~Adequacy() = default;
     //@}
 
     Benchmarking::OptimizationInfo getOptimizationInfo() const;
@@ -72,14 +73,15 @@ public:
 protected:
     void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
 
-    bool simulationBegin();
+    bool simulationBegin(const VAL_GEN_PAR_PAYS& valeursGenereesParPays);
 
     bool year(Progression::Task& progression,
               Variable::State& state,
               uint numSpace,
               yearRandomNumbers& randomForYear,
               std::list<uint>& failedWeekList,
-              bool isFirstPerformedYearOfSimulation);
+              bool isFirstPerformedYearOfSimulation,
+              const VAL_GEN_PAR_PAYS& valeursGenereesParPays);
 
     void incrementProgression(Progression::Task& progression);
 
@@ -93,13 +95,14 @@ protected:
     void initializeState(Variable::State& state, uint numSpace);
 
 private:
-    bool simplexIsRequired(uint hourInTheYear, uint numSpace) const;
+    bool simplexIsRequired(uint hourInTheYear, uint numSpace,
+            const VAL_GEN_PAR_PAYS& valeursGenereesParPays) const;
 
     uint pNbWeeks;
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
-    PROBLEME_HEBDO** pProblemesHebdo;
+    std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     Matrix<> pRES;
 
 }; // class Adequacy

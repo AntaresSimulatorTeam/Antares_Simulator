@@ -81,7 +81,7 @@ void BindingConstraintsTSNumberData::saveToINIFile(const Study&, Yuni::IO::File:
     }
 }
 
-void BindingConstraintsTSNumberData::setData(const std::string& group_name, const uint year, uint value) {
+void BindingConstraintsTSNumberData::setTSnumber(const std::string& group_name, const uint year, uint value) {
     auto& group_ts_numbers = rules_[group_name];
     group_ts_numbers[0][year] = value;
 }

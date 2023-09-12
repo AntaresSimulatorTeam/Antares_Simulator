@@ -31,7 +31,7 @@
 #include <antares/study/fwd.h>
 #include <antares/study/parameters.h>
 #include <antares/study/parts/thermal/cluster.h>
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 #include "xcast/xcast.h"
 
 namespace Antares

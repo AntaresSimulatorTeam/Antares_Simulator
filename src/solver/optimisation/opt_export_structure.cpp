@@ -38,7 +38,7 @@ void OPT_ExportInterco(Antares::Solver::IResultWriter& writer,
                        PROBLEME_HEBDO* problemeHebdo)
 {
     Yuni::Clob Flot;
-    for (int i(0); i < problemeHebdo->NombreDInterconnexions; ++i)
+    for (uint32_t i(0); i < problemeHebdo->NombreDInterconnexions; ++i)
     {
         Flot.appendFormat("%d %d %d\n",
                           i,

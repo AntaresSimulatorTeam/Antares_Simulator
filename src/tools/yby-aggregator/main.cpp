@@ -26,7 +26,7 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <yuni/core/getopt.h>
 #include "../../ui/common/winmain.hxx"
 #include <antares/utils.h>
@@ -38,9 +38,8 @@
 #include <yuni/core/system/suspend.h>
 #include <yuni/io/file.h>
 #include <antares/memory/memory.h>
-#include <antares/hostinfo.h>
+#include <antares/logs/hostinfo.h>
 #include <antares/locale.h>
-#include <antares/emergency.h>
 #include "../../config.h"
 
 #include "output.h"
@@ -124,6 +123,22 @@ static void ConvertVarNameToID(String& id, const String& name)
     }
 
     id.trimRight('-');
+}
+
+static void AbortProgram(int code)
+{
+    // Importing logs
+    if (!logs.logfile())
+    {
+        logs.fatal() << "Aborting now. (warning: no file log available)";
+        logs.warning() << "No log file available";
+    }
+    else
+    {
+        logs.error() << "Aborting now. See logs for more details";
+    }
+
+    exit(code);
 }
 
 static void PrepareTheWork(const String::Vector& outputs,
@@ -319,7 +334,7 @@ static void ReadCommandLineOptions(int argc, char** argv)
         if (options(argc, argv) == GetOpt::ReturnCode::error)
         {
             LocalPolicy::Close();
-            AntaresSolverEmergencyShutdown(options.errors() ? 1 : 0);
+            AbortProgram(options.errors() ? 1 : 0);
         }
 
         if (optVersion)
@@ -332,19 +347,19 @@ static void ReadCommandLineOptions(int argc, char** argv)
         {
             logs.error() << "Please provide at least one study output";
             LocalPolicy::Close();
-            AntaresSolverEmergencyShutdown(1);
+            AbortProgram(1);
         }
         if (optAreas.empty() && optLinks.empty())
         {
             logs.error() << "Please provide at least one area or one link for the aggregation";
             LocalPolicy::Close();
-            AntaresSolverEmergencyShutdown(1);
+            AbortProgram(1);
         }
         if (optColumns.empty())
         {
             logs.error() << "Please provide at least one column to find out";
             LocalPolicy::Close();
-            AntaresSolverEmergencyShutdown(1);
+            AbortProgram(1);
         }
 
         // PID

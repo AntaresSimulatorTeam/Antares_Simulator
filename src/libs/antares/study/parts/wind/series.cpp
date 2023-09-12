@@ -29,7 +29,6 @@
 #include <yuni/io/file.h>
 #include "series.h"
 #include "../../study.h"
-#include "../../memory-usage.h"
 
 using namespace Yuni;
 
@@ -81,16 +80,6 @@ bool DataSeriesWind::forceReload(bool reload) const
 void DataSeriesWind::markAsModified() const
 {
     timeSeries.markAsModified();
-}
-
-void DataSeriesWind::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += sizeof(DataSeriesWind);
-    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-    timeSeries.estimateMemoryUsage(u,
-                               0 != (timeSeriesWind & u.study.parameters.timeSeriesToGenerate),
-                                    u.study.parameters.nbTimeSeriesWind,
-                                    HOURS_PER_YEAR);
 }
 
 } // namespace Data
