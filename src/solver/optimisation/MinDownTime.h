@@ -4,6 +4,7 @@ struct MinDownTimeData : public StartUpCostsData
 {
     std::vector<int>& NumeroDeContrainteDesContraintesDeDureeMinDArret;
 };
+
 class MinDownTime : private Constraint
 {
 public:
