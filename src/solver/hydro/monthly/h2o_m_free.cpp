@@ -61,9 +61,6 @@ void H2O_M_Free(DONNEES_ANNUELLES* DonneesAnnuelles)
 
     free(ProblemeHydraulique->ProblemeLineairePartieFixe);
 
-    free(ProblemeHydraulique->ProblemeLineairePartieVariable->Xmin);
-    free(ProblemeHydraulique->ProblemeLineairePartieVariable->Xmax);
-    free(ProblemeHydraulique->ProblemeLineairePartieVariable->SecondMembre);
     free((ProblemeHydraulique->ProblemeLineairePartieVariable)
            ->AdresseOuPlacerLaValeurDesVariablesOptimisees);
     free(ProblemeHydraulique->ProblemeLineairePartieVariable->X);

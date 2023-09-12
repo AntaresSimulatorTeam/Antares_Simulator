@@ -30,29 +30,18 @@
 
 void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES* DonneesAnnuelles)
 {
-    int Pdt;
-    int Cnt;
-    int NbPdt;
-    double* SecondMembre;
-    double ChgmtSens;
+    PROBLEME_HYDRAULIQUE* ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable
+        = ProblemeHydraulique->ProblemeLineairePartieVariable;
 
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
-
-    ChgmtSens = -1;
-
-    NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
+    double ChgmtSens = -1;
+    int NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
+    int Cnt = 0;
 
     auto& TurbineCible = DonneesAnnuelles->TurbineCible;
+    auto& SecondMembre = ProblemeLineairePartieVariable->SecondMembre;
 
-    ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
-
-    ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable;
-    SecondMembre = ProblemeLineairePartieVariable->SecondMembre;
-
-    Cnt = 0;
-
-    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
     {
         SecondMembre[Cnt] = DonneesAnnuelles->Apport[Pdt - 1];
         Cnt++;
@@ -61,7 +50,7 @@ void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES* DonneesAnnuelles)
     SecondMembre[Cnt] = DonneesAnnuelles->Volume[0] - DonneesAnnuelles->Apport[NbPdt - 1];
     Cnt++;
 
-    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
     {
         SecondMembre[Cnt] = DonneesAnnuelles->VolumeMax[Pdt];
         Cnt++;
@@ -70,13 +59,13 @@ void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES* DonneesAnnuelles)
         Cnt++;
     }
 
-    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
     {
         SecondMembre[Cnt] = 0.;
         Cnt++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         SecondMembre[Cnt] = TurbineCible[Pdt];
         Cnt++;
