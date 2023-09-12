@@ -470,7 +470,7 @@ bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
     Clob buffer;
     bool ret = true;
 
-    each([&](const Data::ThermalCluster& c) {
+    each([&](const ThermalCluster& c) {
         if (c.prepro)
         {
             assert(c.parentArea and "cluster: invalid parent area");
@@ -489,15 +489,12 @@ bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
     Clob buffer;
     bool ret = true;
 
-    each([&](const Data::ThermalCluster& c) {
+    each([&](const ThermalCluster& c) {
         assert(c.parentArea and "cluster: invalid parent area");
         buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
         ret = c.ecoInput.saveToFolder(buffer) && ret;
     });
     return ret;
-
-
-
 }
 
 bool ThermalClusterList::loadPreproFromFolder(Study& study,
@@ -513,20 +510,19 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
     Clob buffer;
     bool ret = true;
 
-    for (auto it = begin(); it != end(); ++it)
+    for (auto& [name, c] : cluster)
     {
-        auto& c = *(it->second);
-        if (c.prepro)
+        if (c->prepro)
         {
-            assert(c.parentArea and "cluster: invalid parent area");
-            buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
+            assert(c->parentArea and "cluster: invalid parent area");
+            buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
 
-            bool result = c.prepro->loadFromFolder(study, buffer);
+            bool result = c->prepro->loadFromFolder(study, buffer);
 
-            if (result && study.usedByTheSolver && c.doWeGenerateTS(globalThermalTSgeneration))
+            if (result && study.usedByTheSolver && c->doWeGenerateTS(globalThermalTSgeneration))
             {
                 // checking NPO max
-                result = c.prepro->normalizeAndCheckNPO();
+                result = c->prepro->normalizeAndCheckNPO();
             }
 
             ret = result and ret;
@@ -547,15 +543,13 @@ bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder
     Clob buffer;
     bool ret = true;
 
-    for (auto it = begin(); it != end(); ++it)
+    for (auto& [name, c] : cluster)
     {
-        auto& c = *(it->second);
+        assert(c->parentArea and "cluster: invalid parent area");
+        buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
 
-        assert(c.parentArea and "cluster: invalid parent area");
-        buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
-
-        bool result = c.ecoInput.loadFromFolder(study, buffer);
-        c.ComputeCostTimeSeries();
+        bool result = c->ecoInput.loadFromFolder(study, buffer);
+        c->ComputeCostTimeSeries();
 
         ret = result && ret;
     }
