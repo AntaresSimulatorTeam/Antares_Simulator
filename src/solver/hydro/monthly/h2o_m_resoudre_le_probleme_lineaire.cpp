@@ -102,7 +102,7 @@ RESOLUTION:
     Probleme->NombreMaxDIterations = -1;
     Probleme->DureeMaxDuCalcul = -1.;
 
-    Probleme->CoutLineaire = ProblemeLineairePartieFixe->CoutLineaireBruite;
+    Probleme->CoutLineaire = ProblemeLineairePartieFixe->CoutLineaireBruite.data();
     Probleme->X = ProblemeLineairePartieVariable->X;
     Probleme->Xmin = ProblemeLineairePartieVariable->Xmin;
     Probleme->Xmax = ProblemeLineairePartieVariable->Xmax;
@@ -114,7 +114,7 @@ RESOLUTION:
     Probleme->NombreDeTermesDesLignes = ProblemeLineairePartieFixe->NombreDeTermesDesLignes;
     Probleme->IndicesColonnes = ProblemeLineairePartieFixe->IndicesColonnes;
     Probleme->CoefficientsDeLaMatriceDesContraintes
-      = ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes;
+      = ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes.data();
     Probleme->Sens = ProblemeLineairePartieFixe->Sens;
     Probleme->SecondMembre = ProblemeLineairePartieVariable->SecondMembre;
 

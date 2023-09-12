@@ -30,49 +30,44 @@
 
 void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuelles)
 {
-    int Pdt;
-    int NbPdt;
     int Var;
     double* Xmin;
     double* Xmax;
     double* X;
-    double* CoutLineaire;
-    double CoutDepassementVolume;
 
-    const PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
-    const PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
-    const PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
-    const CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
+    const PROBLEME_HYDRAULIQUE* ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    const PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable
+        = ProblemeHydraulique->ProblemeLineairePartieVariable;
+    const CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables
+        = ProblemeHydraulique->CorrespondanceDesVariables;
+    PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe
+        = ProblemeHydraulique->ProblemeLineairePartieFixe;
 
     DonneesAnnuelles->Volume[0] = DonneesAnnuelles->VolumeInitial;
 
-    NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
-    CoutDepassementVolume = DonneesAnnuelles->CoutDepassementVolume;
+    int NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
+    double CoutDepassementVolume = DonneesAnnuelles->CoutDepassementVolume;
     auto& TurbineMax = DonneesAnnuelles->TurbineMax;
     const auto& TurbineMin = DonneesAnnuelles->TurbineMin;
 
-    ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
-    ProblemeLineairePartieFixe = ProblemeHydraulique->ProblemeLineairePartieFixe;
-    ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable;
-    CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables;
 
     Xmin = ProblemeLineairePartieVariable->Xmin;
     Xmax = ProblemeLineairePartieVariable->Xmax;
     X = ProblemeLineairePartieVariable->X;
-    CoutLineaire = ProblemeLineairePartieFixe->CoutLineaire;
+    auto& CoutLineaire = ProblemeLineairePartieFixe->CoutLineaire;
 
     Var = CorrespondanceDesVariables->NumeroDeVariableVolume[0];
     X[Var] = DonneesAnnuelles->Volume[0];
     Xmin[Var] = DonneesAnnuelles->Volume[0];
     Xmax[Var] = DonneesAnnuelles->Volume[0];
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         Var = CorrespondanceDesVariables->NumeroDeVariableVolume[Pdt];
         CoutLineaire[Var] = 0.0;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         Var = CorrespondanceDesVariables->NumeroDeVariableTurbine[Pdt];
         Xmax[Var] = TurbineMax[Pdt];
@@ -80,13 +75,13 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuel
         CoutLineaire[Var] = 0.0;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         Var = CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMax[Pdt];
         CoutLineaire[Var] = CoutDepassementVolume;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         Var = CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMin[Pdt];
         CoutLineaire[Var] = CoutDepassementVolume;
@@ -95,13 +90,13 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuel
     Var = CorrespondanceDesVariables->NumeroDeLaVariableViolMaxVolumeMin;
     CoutLineaire[Var] = DonneesAnnuelles->CoutViolMaxDuVolumeMin;
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         Var = CorrespondanceDesVariables->NumeroDeVariableDEcartPositifAuTurbineCible[Pdt];
         CoutLineaire[Var] = 1.0;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         Var = CorrespondanceDesVariables->NumeroDeVariableDEcartNegatifAuTurbineCible[Pdt];
         CoutLineaire[Var] = 1.0;

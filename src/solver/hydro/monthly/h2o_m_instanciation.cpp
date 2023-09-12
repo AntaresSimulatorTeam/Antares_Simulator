@@ -165,18 +165,10 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
     NombreDeVariables += 1;
 
     ProblemeLineairePartieFixe->NombreDeVariables = NombreDeVariables;
-    ProblemeLineairePartieFixe->CoutLineaire
-      = (double*)malloc((unsigned int)NombreDeVariables * sizeof(double));
-    if (ProblemeLineairePartieFixe->CoutLineaire == NULL)
-    {
-        return (0);
-    }
-    ProblemeLineairePartieFixe->CoutLineaireBruite
-      = (double*)malloc((unsigned int)NombreDeVariables * sizeof(double));
-    if (ProblemeLineairePartieFixe->CoutLineaireBruite == NULL)
-    {
-        return (0);
-    }
+
+    ProblemeLineairePartieFixe->CoutLineaire.assign(NombreDeVariables, 0.);
+    ProblemeLineairePartieFixe->CoutLineaireBruite.assign(NombreDeVariables, 0.);
+
     ProblemeLineairePartieFixe->TypeDeVariable
       = (int*)malloc((unsigned int)NombreDeVariables * sizeof(int));
     if (ProblemeLineairePartieFixe->TypeDeVariable == NULL)
@@ -225,11 +217,8 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
     ProblemeLineairePartieFixe->NombreDeTermesAlloues = NombreDeTermesAlloues;
 
     ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes
-      = (double*)malloc((unsigned int)NombreDeTermesAlloues * sizeof(double));
-    if (ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes == NULL)
-    {
-        return (0);
-    }
+        .assign(NombreDeTermesAlloues, 0.);
+
     ProblemeLineairePartieFixe->IndicesColonnes
       = (int*)malloc((unsigned int)NombreDeTermesAlloues * sizeof(int));
     if (ProblemeLineairePartieFixe->IndicesColonnes == NULL)
