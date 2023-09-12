@@ -169,12 +169,7 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
     ProblemeLineairePartieFixe->CoutLineaire.assign(NombreDeVariables, 0.);
     ProblemeLineairePartieFixe->CoutLineaireBruite.assign(NombreDeVariables, 0.);
 
-    ProblemeLineairePartieFixe->TypeDeVariable
-      = (int*)malloc((unsigned int)NombreDeVariables * sizeof(int));
-    if (ProblemeLineairePartieFixe->TypeDeVariable == NULL)
-    {
-        return (0);
-    }
+    ProblemeLineairePartieFixe->TypeDeVariable.assign(NombreDeVariables, 0);
 
     NombreDeContraintes = 0;
     NombreDeContraintes += NbPdt;

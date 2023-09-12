@@ -107,7 +107,7 @@ RESOLUTION:
     Probleme->Xmin = ProblemeLineairePartieVariable->Xmin;
     Probleme->Xmax = ProblemeLineairePartieVariable->Xmax;
     Probleme->NombreDeVariables = ProblemeLineairePartieFixe->NombreDeVariables;
-    Probleme->TypeDeVariable = ProblemeLineairePartieFixe->TypeDeVariable;
+    Probleme->TypeDeVariable = ProblemeLineairePartieFixe->TypeDeVariable.data();
 
     Probleme->NombreDeContraintes = ProblemeLineairePartieFixe->NombreDeContraintes;
     Probleme->IndicesDebutDeLigne = ProblemeLineairePartieFixe->IndicesDebutDeLigne;
