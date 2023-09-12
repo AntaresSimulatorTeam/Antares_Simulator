@@ -46,7 +46,6 @@ target_include_directories(tests-matrix-save
 									"${src_libs_antares}/array"
 									"${src_libs_antares}/io"
 									"${src_libs_antares}/jit"
-									"${src_libs_antares}/logs"
 									"${src_libs_antares}/memory/include"
 									"${CMAKE_CURRENT_SOURCE_DIR}/logs"
 									"${CMAKE_CURRENT_SOURCE_DIR}/jit"
