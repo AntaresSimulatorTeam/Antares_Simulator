@@ -242,15 +242,32 @@ private:
 };
 } // namespace Variable
 
+struct ConstraintBuilderData
+{
+    std::vector<double>& Pi;
+    std::vector<int>& Colonne;
+    int& nombreDeContraintes;
+    int& nombreDeTermesDansLaMatriceDeContrainte;
+    std::vector<int>& IndicesDebutDeLigne;
+    std::vector<double>& CoefficientsDeLaMatriceDesContraintes;
+    std::vector<int>& IndicesColonnes;
+    int& NombreDeTermesAllouesDansLaMatriceDesContraintes; // TODO Check if ref is needed
+    std::vector<int>& NombreDeTermesDesLignes;
+    std::string& Sens;
+    int& IncrementDAllocationMatriceDesContraintes;
+    const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim;
+    const int NombreDePasDeTempsPourUneOptimisation;
+    const std::vector<int>& NumeroDeVariableStockFinal;
+    const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
+    std::vector<std::string>& NomDesContraintes;
+    const bool NamedProblems;
+    const std::vector<const char*> NomsDesPays;
+    const uint32_t weekInTheYear;
+};
 class ConstraintBuilder
 {
 public:
-    ConstraintBuilder(
-      const PROBLEME_HEBDO* problemeHebdo,
-      const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim) :
-     problemeHebdo(problemeHebdo),
-     problemeAResoudre(problemeHebdo->ProblemeAResoudre),
-     varNative(CorrespondanceVarNativesVarOptim)
+    ConstraintBuilder(ConstraintBuilderData& data) : data(data)
     {
     }
 
@@ -304,18 +321,18 @@ public:
         return nombreDeTermes_;
     }
 
+public:
+    ConstraintBuilderData& data;
+
 private:
     void OPT_ChargerLaContrainteDansLaMatriceDesContraintes();
 
     void OPT_AugmenterLaTailleDeLaMatriceDesContraintes();
-    const PROBLEME_HEBDO* problemeHebdo;
-    PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre;
-    const std::vector<CORRESPONDANCES_DES_VARIABLES>& varNative;
 
     unsigned int hourInWeek_ = 0;
 
     char operator_;
-    double rhs_ = 0;
+    // double rhs_ = 0;
     int nombreDeTermes_ = 0;
     // ConstraintNamer ConstraintNameManager;
 };
@@ -323,24 +340,17 @@ private:
 class Constraint
 {
 public:
-    explicit Constraint(const PROBLEME_HEBDO* problemeHebdo) :
-     problemeHebdo(problemeHebdo),
-     builder(*problemeHebdo, problemeHebdo->CorrespondanceVarNativesVarOptim)
+    explicit Constraint(ConstraintBuilder& builder) : builder(builder)
     {
     }
-
-    const PROBLEME_HEBDO* problemeHebdo; // TODO remove
-    ConstraintBuilder builder;
+    ConstraintBuilder& builder;
 };
 
 // #TODO move this function to a suitable place
 // Helper functions
-inline void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
-                          ConstraintBuilder& constraintBuilder,
-                          int pays)
+inline void exportPaliers(const PALIERS_THERMIQUES& PaliersThermiquesDuPays,
+                          ConstraintBuilder& constraintBuilder)
 {
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo.PaliersThermiquesDuPays[pays];
-
     for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
     {
         const int palier
@@ -364,3 +374,37 @@ struct BindingConstraintData
     const char SensDeLaContrainteCouplante;
     const char* NomDeLaContrainteCouplante;
 };
+
+inline ConstraintBuilder GetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
+  const PROBLEME_HEBDO* problemeHebdo,
+  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+{
+    ConstraintBuilderData data{ProblemeAResoudre->Pi,
+                               ProblemeAResoudre->Colonne,
+                               ProblemeAResoudre->NombreDeContraintes,
+                               ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes,
+                               ProblemeAResoudre->IndicesDebutDeLigne,
+                               ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes,
+                               ProblemeAResoudre->IndicesColonnes,
+                               ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes,
+                               ProblemeAResoudre->NombreDeTermesDesLignes,
+                               ProblemeAResoudre->Sens,
+                               ProblemeAResoudre->IncrementDAllocationMatriceDesContraintes,
+                               problemeHebdo->CorrespondanceVarNativesVarOptim,
+                               problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
+                               problemeHebdo->NumeroDeVariableStockFinal,
+                               problemeHebdo->NumeroDeVariableDeTrancheDeStock,
+                               ProblemeAResoudre->NomDesContraintes,
+                               problemeHebdo->NamedProblems,
+                               problemeHebdo->NomsDesPays,
+                               problemeHebdo->weekInTheYear};
+
+    return ConstraintBuilder(data);
+}
+
+inline ConstraintBuilder GetConstraintBuilderFromProblemHebdo(PROBLEME_HEBDO* problemeHebdo)
+{
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
+    return GetConstraintBuilderFromProblemHebdoAndProblemAResoudre(problemeHebdo,
+                                                                   ProblemeAResoudre);
+}

@@ -20,49 +20,44 @@ static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortT
 }
 
 // Constraint definitions
-void AreaBalance::add(int pdt,
-                      int pays,
-                      std::vector<int>& NumeroDeContrainteDesBilansPays,
-                      std::vector<int>& InjectionVariable,
-                      std::vector<int>& WithdrawalVariable)
+void AreaBalance::add(int pdt, int pays, AreaBalanceData& data)
 {
     /** can be done without this --- keep it for now**/
-    NumeroDeContrainteDesBilansPays[pays] = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+    data.NumeroDeContrainteDesBilansPays[pays] = builder.data.nombreDeContraintes;
 
     /******/
     // TODO improve this
     {
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.AreaBalance(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.NamedProblems);
+        namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
+        namer.UpdateArea(builder.data.NomsDesPays[pays]);
+        namer.AreaBalance(builder.data.nombreDeContraintes);
     }
 
     builder.updateHourWithinWeek(pdt);
 
-    int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
+    int interco = data.IndexDebutIntercoOrigine[pays];
     while (interco >= 0)
     {
         builder.include(Variable::NTCDirect(interco), 1.0);
-        interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
+        interco = data.IndexSuivantIntercoOrigine[interco];
     }
 
-    interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
+    interco = data.IndexDebutIntercoExtremite[pays];
     while (interco >= 0)
     {
         builder.include(Variable::NTCDirect(interco), -1.0);
-        interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
+        interco = data.IndexSuivantIntercoExtremite[interco];
     }
 
-    exportPaliers(*problemeHebdo, builder, pays);
+    exportPaliers(data.PaliersThermiquesDuPays, builder);
     builder.include(Variable::HydProd(pays), -1.0)
       .include(Variable::Pumping(pays), 1.0)
       .include(Variable::PositiveUnsuppliedEnergy(pays), -1.0)
       .include(Variable::NegativeUnsuppliedEnergy(pays), 1.0);
 
     shortTermStorageBalance(
-      problemeHebdo->ShortTermStorage[pays], builder, InjectionVariable, WithdrawalVariable);
+      data.ShortTermStorage[pays], builder, data.InjectionVariable, data.WithdrawalVariable);
 
     builder.equalTo();
     builder.build();

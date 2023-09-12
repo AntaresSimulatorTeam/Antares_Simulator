@@ -46,7 +46,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
   bool Simulation)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
-
+    ConstraintBuilder builder(GetConstraintBuilderFromProblemHebdo(problemeHebdo));
     int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
@@ -62,8 +62,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            PMaxDispatchableGeneration pMaxDispatchableGeneration(problemeHebdo);
-            PMinDispatchableGeneration pMinDispatchableGeneration(problemeHebdo);
+            PMaxDispatchableGeneration pMaxDispatchableGeneration(builder);
+            PMinDispatchableGeneration pMinDispatchableGeneration(builder);
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
@@ -92,7 +92,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                ConsistenceNODU consistenceNODU(problemeHebdo);
+                ConsistenceNODU consistenceNODU(builder);
                 consistenceNODU.add(pays, palier, index, pdt, Simulation);
                 nbTermesContraintesPourLesCoutsDeDemarrage
                   += consistenceNODU.nbTermesContraintesPourLesCoutsDeDemarrage;
@@ -104,7 +104,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-        NbUnitsOutageLessThanNbUnitsStop nbUnitsOutageLessThanNbUnitsStop(problemeHebdo);
+        NbUnitsOutageLessThanNbUnitsStop nbUnitsOutageLessThanNbUnitsStop(builder);
 
         constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
@@ -125,7 +125,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-        NbDispUnitsMinBoundSinceMinUpTime nbDispUnitsMinBoundSinceMinUpTime(problemeHebdo);
+        NbDispUnitsMinBoundSinceMinUpTime nbDispUnitsMinBoundSinceMinUpTime(builder);
         constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
@@ -149,7 +149,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-        MinDownTime minDownTime(problemeHebdo);
+        MinDownTime minDownTime(builder);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             const int palier

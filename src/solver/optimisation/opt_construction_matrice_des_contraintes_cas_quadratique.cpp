@@ -32,30 +32,39 @@
 #include "../simulation/sim_extern_variables_globales.h"
 #include "opt_fonctions.h"
 #include "constraint_builder.h"
+
+struct ExchangeBalanceData
+{
+    const std::vector<int>& IndexDebutIntercoOrigine;
+    const std::vector<int>& IndexSuivantIntercoOrigine;
+    const std::vector<int>& IndexDebutIntercoExtremite;
+    const std::vector<int>& IndexSuivantIntercoExtremite;
+    std::vector<int>& NumeroDeContrainteDeSoldeDEchange;
+};
+
 class ExchangeBalance : private Constraint
 {
 public:
     using Constraint::Constraint;
-    void add(uint32_t pays)
+    void add(uint32_t pays, ExchangeBalanceData& data)
     {
         builder.updateHourWithinWeek(0);
 
-        int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
+        int interco = data.IndexDebutIntercoOrigine[pays];
         while (interco >= 0)
         {
             builder.include(Variable::IntercoDirectCost(interco), 1.0);
-            interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
+            interco = data.IndexSuivantIntercoOrigine[interco];
         }
-        interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
+        interco = data.IndexDebutIntercoExtremite[pays];
         while (interco >= 0)
         {
             builder.include(Variable::IntercoDirectCost(interco), -1.0);
 
-            interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
+            interco = data.IndexSuivantIntercoExtremite[interco];
         }
 
-        problemeHebdo->NumeroDeContrainteDeSoldeDEchange[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        data.NumeroDeContrainteDeSoldeDEchange[pays] = builder.data.nombreDeContraintes;
         builder.build();
     }
 };
@@ -63,7 +72,6 @@ public:
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
-
     std::vector<double> Pi(ProblemeAResoudre->NombreDeVariables, 0.);
     std::vector<int> Colonne(ProblemeAResoudre->NombreDeVariables, 0);
 
@@ -71,10 +79,18 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* 
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
     const CORRESPONDANCES_DES_VARIABLES& correspondanceVarNativesVarOptim
       = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
-    ExchangeBalance exchangeBalance(problemeHebdo);
 
+    ConstraintBuilder builder(GetConstraintBuilderFromProblemHebdo(problemeHebdo));
+
+    ExchangeBalance exchangeBalance(builder);
+
+    ExchangeBalanceData data = {problemeHebdo->IndexDebutIntercoOrigine,
+                                problemeHebdo->IndexSuivantIntercoOrigine,
+                                problemeHebdo->IndexDebutIntercoExtremite,
+                                problemeHebdo->IndexSuivantIntercoExtremite,
+                                problemeHebdo->NumeroDeContrainteDeSoldeDEchange};
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays - 1; pays++)
     {
-        exchangeBalance.add(pays);
+        exchangeBalance.add(pays, data);
     }
 }

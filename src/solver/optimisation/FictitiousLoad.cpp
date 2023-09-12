@@ -1,29 +1,25 @@
 
 #include "FictitiousLoad.h"
 
-void FictitiousLoad::add(int pdt,
-                         int pays,
-                         std::vector<int>& NumeroDeContraintePourEviterLesChargesFictives)
+void FictitiousLoad::add(int pdt, int pays, FictitiousLoadData& data)
 {
     /** can be done without this --- keep it for now**/
-    NumeroDeContraintePourEviterLesChargesFictives[pays]
-      = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+    data.NumeroDeContraintePourEviterLesChargesFictives[pays] = builder.data.nombreDeContraintes;
 
     /******/
 
     // TODO improve this
     {
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
+        ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.NamedProblems);
 
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.FictiveLoads(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
+        namer.UpdateArea(builder.data.NomsDesPays[pays]);
+        namer.FictiveLoads(builder.data.nombreDeContraintes);
     }
 
     builder.updateHourWithinWeek(pdt);
-    exportPaliers(*problemeHebdo, builder, pays);
-    auto coeff = problemeHebdo->DefaillanceNegativeUtiliserHydro[pays] ? -1 : 0;
+    exportPaliers(data.PaliersThermiquesDuPays, builder);
+    auto coeff = data.DefaillanceNegativeUtiliserHydro[pays] ? -1 : 0;
     builder.include(Variable::HydProd(pays), coeff)
       .include(Variable::NegativeUnsuppliedEnergy(pays), 1.0);
 

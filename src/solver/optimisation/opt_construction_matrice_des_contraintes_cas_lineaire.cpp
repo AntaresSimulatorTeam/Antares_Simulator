@@ -170,29 +170,29 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo->NamedProblems);
+    ConstraintBuilder builder(GetConstraintBuilderFromProblemHebdo(problemeHebdo));
 
-    AreaBalance areaBalance(problemeHebdo);
-    FictitiousLoad fictitiousLoad(problemeHebdo);
-    ShortTermStorageLevel shortTermStorageLevel(problemeHebdo);
-    FlowDissociation flowDissociation(problemeHebdo);
-    BindingConstraintHour bindingConstraintHour(problemeHebdo);
-    BindingConstraintDay bindingConstraintDay(problemeHebdo);
-    BindingConstraintWeek bindingConstraintWeek(problemeHebdo);
-    HydroPower hydroPower(problemeHebdo);
-    HydroPowerSmoothingUsingVariationSum hydroPowerSmoothingUsingVariationSum(problemeHebdo);
-    HydroPowerSmoothingUsingVariationMaxDown hydroPowerSmoothingUsingVariationMaxDown(
-      problemeHebdo);
-    HydroPowerSmoothingUsingVariationMaxUp hydroPowerSmoothingUsingVariationMaxUp(problemeHebdo);
+    AreaBalance areaBalance(builder);
+    FictitiousLoad fictitiousLoad(builder);
+    ShortTermStorageLevel shortTermStorageLevel(builder);
+    FlowDissociation flowDissociation(builder);
+    BindingConstraintHour bindingConstraintHour(builder);
+    BindingConstraintDay bindingConstraintDay(builder);
+    BindingConstraintWeek bindingConstraintWeek(builder);
+    HydroPower hydroPower(builder);
+    HydroPowerSmoothingUsingVariationSum hydroPowerSmoothingUsingVariationSum(builder);
+    HydroPowerSmoothingUsingVariationMaxDown hydroPowerSmoothingUsingVariationMaxDown(builder);
+    HydroPowerSmoothingUsingVariationMaxUp hydroPowerSmoothingUsingVariationMaxUp(builder);
 
-    MinHydroPower minHydroPower(problemeHebdo);
-    MaxHydroPower maxHydroPower(problemeHebdo);
+    MinHydroPower minHydroPower(builder);
+    MaxHydroPower maxHydroPower(builder);
 
-    MaxPumping maxPumping(problemeHebdo);
+    MaxPumping maxPumping(builder);
 
-    AreaHydroLevel areaHydroLevel(problemeHebdo);
+    AreaHydroLevel areaHydroLevel(builder);
 
-    FinalStockEquivalent finalStockEquivalent(problemeHebdo);
-    FinalStockExpression finalStockExpression(problemeHebdo);
+    FinalStockEquivalent finalStockEquivalent(builder);
+    FinalStockExpression finalStockExpression(builder);
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
@@ -204,20 +204,31 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            areaBalance.add(
-              pdt,
-              pays,
+            AreaBalanceData areaBalanceData{
               CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesBilansPays,
               CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.InjectionVariable,
-              CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.WithdrawalVariable);
+              CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.WithdrawalVariable,
+              problemeHebdo->IndexDebutIntercoOrigine,
+              problemeHebdo->IndexSuivantIntercoOrigine,
+              problemeHebdo->IndexDebutIntercoExtremite,
+              problemeHebdo->IndexSuivantIntercoExtremite,
+              problemeHebdo->PaliersThermiquesDuPays[pays],
+              problemeHebdo->ShortTermStorage};
 
-            fictitiousLoad.add(
-              pdt,
-              pays,
-              CorrespondanceCntNativesCntOptim.NumeroDeContraintePourEviterLesChargesFictives);
+            areaBalance.add(pdt, pays, areaBalanceData);
 
-            shortTermStorageLevel.add(
-              pdt, pays, CorrespondanceCntNativesCntOptim.ShortTermStorageLevelConstraint);
+            FictitiousLoadData fictitiousLoadData
+              = {CorrespondanceCntNativesCntOptim.NumeroDeContraintePourEviterLesChargesFictives,
+                 problemeHebdo->PaliersThermiquesDuPays[pays],
+                 problemeHebdo->DefaillanceNegativeUtiliserHydro};
+
+            fictitiousLoad.add(pdt, pays, fictitiousLoadData);
+
+            ShortTermStorageLevelData shortTermStorageLevelData = {
+              CorrespondanceCntNativesCntOptim.ShortTermStorageLevelConstraint,
+              problemeHebdo->ShortTermStorage,
+            };
+            shortTermStorageLevel.add(pdt, pays, shortTermStorageLevelData);
         }
 
         for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
@@ -232,18 +243,17 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            bindingConstraintHour.add(
-              pdt,
-              cntCouplante,
-              GetBindingConstraintHourDataFromProblemHebdo(problemeHebdo, cntCouplante, pdt));
+            auto data
+              = GetBindingConstraintHourDataFromProblemHebdo(problemeHebdo, cntCouplante, pdt);
+            bindingConstraintHour.add(pdt, cntCouplante, data);
         }
     }
 
     for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)
     {
-        bindingConstraintDay.add(
-          cntCouplante, GetBindingConstraintDayDataFromProblemHebdo(problemeHebdo, cntCouplante));
+        auto data = GetBindingConstraintDayDataFromProblemHebdo(problemeHebdo, cntCouplante);
+        bindingConstraintDay.add(cntCouplante, data);
     }
 
     if (nombreDePasDeTempsPourUneOptimisation > nombreDePasDeTempsDUneJournee)
@@ -251,15 +261,15 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            bindingConstraintWeek.add(
-              cntCouplante,
-              GetBindingConstraintWeekDataFromProblemHebdo(problemeHebdo, cntCouplante));
+            auto data = GetBindingConstraintWeekDataFromProblemHebdo(problemeHebdo, cntCouplante);
+            bindingConstraintWeek.add(cntCouplante, data);
         }
     }
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        hydroPower.add(pays, GetHydroPowerDataFromProblemHebdo(problemeHebdo, pays));
+        auto data = GetHydroPowerDataFromProblemHebdo(problemeHebdo, pays);
+        hydroPower.add(pays, data);
     }
 
     if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
@@ -291,9 +301,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        minHydroPower.add(pays, GetMinHydroPowerDataFromProblemHebdo(problemeHebdo, pays));
+        auto minHydroPowerData = GetMinHydroPowerDataFromProblemHebdo(problemeHebdo, pays);
+        minHydroPower.add(pays, minHydroPowerData);
 
-        maxHydroPower.add(pays, GetMaxHydroPowerDataFromProblemHebdo(problemeHebdo, pays));
+        auto maxHydroPowerData = GetMaxHydroPowerDataFromProblemHebdo(problemeHebdo, pays);
+        maxHydroPower.add(pays, maxHydroPowerData);
     }
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)

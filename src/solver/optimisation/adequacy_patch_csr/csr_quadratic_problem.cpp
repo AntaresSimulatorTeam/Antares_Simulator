@@ -35,60 +35,77 @@
 #include "sim_structure_probleme_economique.h"
 #include "../constraint_builder.h"
 #include "../opt_rename_problem.h"
+#include "adequacy_patch_runtime_data.h"
+
 using namespace Antares::Data;
 
 namespace Antares::Solver::Optimization
 {
+struct CsrFlowDissociationData
+{
+    std::map<int, int>& numberOfConstraintCsrFlowDissociation;
+    const int NombreDInterconnexions;
 
+    const std::vector<adqPatchParamsMode>& originAreaMode;
+    const std::vector<adqPatchParamsMode>& extremityAreaMode;
+
+    const std::vector<int>& PaysOrigineDeLInterconnexion;
+    const std::vector<int>& PaysExtremiteDeLInterconnexion;
+};
 class CsrFlowDissociation : private Constraint
 {
 public:
     using Constraint::Constraint;
-    void add(int hour, std::map<int, int>& numberOfConstraintCsrFlowDissociation)
+    void add(int hour, CsrFlowDissociationData& data)
     {
         builder.updateHourWithinWeek(hour);
-        const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-          = problemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
+        ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.NamedProblems);
         namer.UpdateTimeStep(hour);
         // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes
         // of type 2.
-        for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
+        for (uint32_t interco = 0; interco < data.NombreDInterconnexions; interco++)
         {
-            if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[interco]
+            if (data.originAreaMode[interco]
                   == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
-                && problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[interco]
+                && data.extremityAreaMode[interco]
                      == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
                 builder.include(Variable::NTCDirect(interco), 1.0)
                   .include(Variable::IntercoDirectCost(interco), -1.0)
                   .include(Variable::IntercoIndirectCost(interco), 1.0);
 
-                numberOfConstraintCsrFlowDissociation[interco]
-                  = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+                data.numberOfConstraintCsrFlowDissociation[interco]
+                  = builder.data.nombreDeContraintes;
 
                 const auto& origin
-                  = problemeHebdo
-                      ->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
+                  = builder.data.NomsDesPays[data.PaysOrigineDeLInterconnexion[interco]];
                 const auto& destination
-                  = problemeHebdo
-                      ->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-                namer.CsrFlowDissociation(
-                  problemeHebdo->ProblemeAResoudre->NombreDeContraintes, origin, destination);
+                  = builder.data.NomsDesPays[data.PaysExtremiteDeLInterconnexion[interco]];
+                namer.CsrFlowDissociation(builder.data.nombreDeContraintes, origin, destination);
 
                 builder.build();
             }
         }
     }
 };
+
 void CsrQuadraticProblem::setConstraintsOnFlows(std::vector<double>& Pi, std::vector<int>& Colonne)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
     //!\ TODO not associated problemHebdo && probleamAressoudre
-    CsrFlowDissociation csrFlowDissociation(problemeHebdo_);
-    csrFlowDissociation.add(hour, hourlyCsrProblem_.numberOfConstraintCsrFlowDissociation);
+    auto builder = GetConstraintBuilderFromProblemHebdoAndProblemAResoudre(problemeHebdo_,
+                                                                           &problemeAResoudre_);
+    CsrFlowDissociation csrFlowDissociation(builder);
+    CsrFlowDissociationData csrFlowDissociationData
+      = {hourlyCsrProblem_.numberOfConstraintCsrFlowDissociation,
+         problemeHebdo_->NombreDInterconnexions,
+         problemeHebdo_->adequacyPatchRuntimeData->originAreaMode,
+         problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode,
+         problemeHebdo_->PaysOrigineDeLInterconnexion,
+         problemeHebdo_->PaysExtremiteDeLInterconnexion};
+
+    csrFlowDissociation.add(hour, csrFlowDissociationData);
 }
 
 void CsrQuadraticProblem::setNodeBalanceConstraints(std::vector<double>& Pi, std::vector<int>& Colonne)

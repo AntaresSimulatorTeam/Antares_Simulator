@@ -31,10 +31,11 @@
 #include <vector>
 #include <set>
 
+using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
+
 class AdequacyPatchRuntimeData
 {
 private:
-    using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
     std::vector<std::set<int>> csrTriggeredHoursPerArea_;
 
 public:
