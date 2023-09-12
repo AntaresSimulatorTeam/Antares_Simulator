@@ -12,15 +12,13 @@ void FinalStockExpression::add(int pays, FinalStockExpressionData& data)
         {
             builder.include(Variable::LayerStorage(pays, layerindex), 1.0);
         }
-        data.NumeroDeContrainteExpressionStockFinal[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        data.NumeroDeContrainteExpressionStockFinal[pays] = builder.data.nombreDeContraintes;
 
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
+        ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.NamedProblems);
 
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        namer.FinalStockExpression(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        namer.UpdateArea(builder.data.NomsDesPays[pays]);
+        namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
+        namer.FinalStockExpression(builder.data.nombreDeContraintes);
         builder.equalTo().build();
     }
 }

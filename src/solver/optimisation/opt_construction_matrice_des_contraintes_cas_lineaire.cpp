@@ -56,7 +56,6 @@ static BindingConstraintData GetBindingConstraintDataFromProblemHebdo(PROBLEME_H
 {
     const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
       = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-
     return {MatriceDesContraintesCouplantes.TypeDeContrainteCouplante,
             MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante,
             MatriceDesContraintesCouplantes.NumeroDeLInterconnexion,
@@ -68,7 +67,8 @@ static BindingConstraintData GetBindingConstraintDataFromProblemHebdo(PROBLEME_H
             MatriceDesContraintesCouplantes.PoidsDuPalierDispatch,
             MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch,
             MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante,
-            MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante};
+            MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante,
+            problemeHebdo->PaliersThermiquesDuPays};
 }
 
 static BindingConstraintHourData GetBindingConstraintHourDataFromProblemHebdo(
@@ -104,7 +104,10 @@ static BindingConstraintDayData GetBindingConstraintDayDataFromProblemHebdo(
     //                [](CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES& corr) -> std::vector<int>&
     //                { return corr.NumeroDeContrainteDesContraintesCouplantes; });
 
-    return {data, problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres};
+    return {data,
+            problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres,
+            problemeHebdo->NombreDePasDeTempsDUneJournee,
+            problemeHebdo->NumeroDeJourDuPasDeTemps};
 }
 static BindingConstraintWeekData GetBindingConstraintWeekDataFromProblemHebdo(
   PROBLEME_HEBDO* problemeHebdo,
@@ -329,8 +332,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            areaHydroLevel.add(
-              pays, pdt, CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays);
+            AreaHydroLevelData data
+              = {CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays,
+                 problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire,
+                 problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio};
+            areaHydroLevel.add(pays, pdt, data);
         }
     }
 

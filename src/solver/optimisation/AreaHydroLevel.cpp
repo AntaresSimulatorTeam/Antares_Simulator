@@ -1,31 +1,28 @@
 #include "AreaHydroLevel.h"
 
-void AreaHydroLevel::add(int pays, int pdt, std::vector<int>& NumeroDeContrainteDesNiveauxPays)
+void AreaHydroLevel::add(int pays, int pdt, AreaHydroLevelData& data)
 {
-    NumeroDeContrainteDesNiveauxPays[pays] = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-    if (problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
+    data.NumeroDeContrainteDesNiveauxPays[pays] = builder.data.nombreDeContraintes;
+    if (data.SuiviNiveauHoraire)
     {
         builder.updateHourWithinWeek(pdt).include(Variable::HydroLevel(pays), 1.0);
         if (pdt > 0)
         {
             builder.updateHourWithinWeek(pdt - 1).include(Variable::HydroLevel(pays), -1.0);
         }
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
+        ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.NamedProblems);
 
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        namer.AreaHydroLevel(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-        NumeroDeContrainteDesNiveauxPays[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        namer.UpdateArea(builder.data.NomsDesPays[pays]);
+        namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
+        namer.AreaHydroLevel(builder.data.nombreDeContraintes);
+        data.NumeroDeContrainteDesNiveauxPays[pays] = builder.data.nombreDeContraintes;
         builder.updateHourWithinWeek(pdt)
           .include(Variable::HydProd(pays), 1.0)
-          .include(Variable::Pumping(pays),
-                   -problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio)
+          .include(Variable::Pumping(pays), -data.PumpingRatio)
           .include(Variable::Overflow(pays), 1.)
           .equalTo()
           .build();
     }
     else
-        NumeroDeContrainteDesNiveauxPays[pays] = -1;
+        data.NumeroDeContrainteDesNiveauxPays[pays] = -1;
 }

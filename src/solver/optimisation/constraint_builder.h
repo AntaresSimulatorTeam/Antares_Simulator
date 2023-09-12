@@ -256,13 +256,14 @@ struct ConstraintBuilderData
     std::string& Sens;
     int& IncrementDAllocationMatriceDesContraintes;
     const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim;
-    const int NombreDePasDeTempsPourUneOptimisation;
+    const int32_t NombreDePasDeTempsPourUneOptimisation;
     const std::vector<int>& NumeroDeVariableStockFinal;
     const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
     std::vector<std::string>& NomDesContraintes;
     const bool NamedProblems;
     const std::vector<const char*> NomsDesPays;
     const uint32_t weekInTheYear;
+    const uint32_t NombreDePasDeTemps;
 };
 class ConstraintBuilder
 {
@@ -373,6 +374,7 @@ struct BindingConstraintData
     const std::vector<int>& OffsetTemporelSurLePalierDispatch;
     const char SensDeLaContrainteCouplante;
     const char* NomDeLaContrainteCouplante;
+    const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
 };
 
 inline ConstraintBuilder GetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
@@ -397,7 +399,8 @@ inline ConstraintBuilder GetConstraintBuilderFromProblemHebdoAndProblemAResoudre
                                ProblemeAResoudre->NomDesContraintes,
                                problemeHebdo->NamedProblems,
                                problemeHebdo->NomsDesPays,
-                               problemeHebdo->weekInTheYear};
+                               problemeHebdo->weekInTheYear,
+                               problemeHebdo->NombreDePasDeTemps};
 
     return ConstraintBuilder(data);
 }

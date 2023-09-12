@@ -9,12 +9,12 @@ void BindingConstraintDay::add(int cntCouplante, BindingConstraintDayData& data)
     const int nbClusters = data.NombreDePaliersDispatchDansLaContrainteCouplante;
 
     const int NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation; // TODO
-    const int NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
+      = builder.data.NombreDePasDeTempsPourUneOptimisation; // TODO
+    const int NombreDePasDeTempsDUneJournee = data.NombreDePasDeTempsDUneJournee;
     int pdtDebut = 0;
     while (pdtDebut < NombreDePasDeTempsPourUneOptimisation)
     {
-        int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
+        int jour = data.NumeroDeJourDuPasDeTemps[pdtDebut];
         auto& CorrespondanceCntNativesCntOptimJournalieres
           = data.CorrespondanceCntNativesCntOptimJournalieres[jour];
 
@@ -29,23 +29,22 @@ void BindingConstraintDay::add(int cntCouplante, BindingConstraintDayData& data)
                 int pdt1;
                 if (offset >= 0)
                 {
-                    pdt1 = (pdt + offset) % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+                    pdt1 = (pdt + offset) % builder.data.NombreDePasDeTempsPourUneOptimisation;
                 }
                 else
                 {
-                    pdt1 = (pdt + offset + problemeHebdo->NombreDePasDeTemps)
-                           % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+                    pdt1 = (pdt + offset + builder.data.NombreDePasDeTemps)
+                           % builder.data.NombreDePasDeTempsPourUneOptimisation;
                 }
                 builder.updateHourWithinWeek(pdt1).include(
-                  Variable::NTCDirect(interco), poids, 0, false, problemeHebdo->NombreDePasDeTemps);
+                  Variable::NTCDirect(interco), poids, 0, false, builder.data.NombreDePasDeTemps);
             }
         }
 
         for (int index = 0; index < nbClusters; index++)
         {
             int pays = data.PaysDuPalierDispatch[index];
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-              = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays = data.PaliersThermiquesDuPays[pays];
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
                   [data.NumeroDuPalierDispatch[index]];
@@ -57,39 +56,35 @@ void BindingConstraintDay::add(int cntCouplante, BindingConstraintDayData& data)
                 int pdt1;
                 if (offset >= 0)
                 {
-                    pdt1 = (pdt + offset) % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+                    pdt1 = (pdt + offset) % builder.data.NombreDePasDeTempsPourUneOptimisation;
                 }
                 else
                 {
-                    pdt1 = (pdt + offset + problemeHebdo->NombreDePasDeTemps)
-                           % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+                    pdt1 = (pdt + offset + builder.data.NombreDePasDeTemps)
+                           % builder.data.NombreDePasDeTempsPourUneOptimisation;
                 }
 
                 builder.updateHourWithinWeek(pdt1).include(Variable::DispatchableProduction(palier),
                                                            poids,
                                                            0,
                                                            false,
-                                                           problemeHebdo->NombreDePasDeTemps);
+                                                           builder.data.NombreDePasDeTemps);
             }
         }
 
         CorrespondanceCntNativesCntOptimJournalieres
           .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-
-        std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
-          = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
+          = builder.data.nombreDeContraintes;
 
         char op = data.SensDeLaContrainteCouplante;
         builder.operatorRHS(op);
         {
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
+            ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.NamedProblems);
             namer.UpdateTimeStep(jour);
-            namer.BindingConstraintDay(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+            namer.BindingConstraintDay(builder.data.nombreDeContraintes,
                                        data.NomDeLaContrainteCouplante);
         }
         builder.build();
-        pdtDebut += problemeHebdo->NombreDePasDeTempsDUneJournee;
+        pdtDebut += data.NombreDePasDeTempsDUneJournee;
     }
 }

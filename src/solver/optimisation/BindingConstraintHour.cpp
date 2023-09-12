@@ -3,7 +3,7 @@
 void BindingConstraintHour::add(int pdt, int cntCouplante, BindingConstraintHourData& data)
 {
     data.NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
-      = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+      = builder.data.nombreDeContraintes;
 
     if (data.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
         return;
@@ -19,16 +19,16 @@ void BindingConstraintHour::add(int pdt, int cntCouplante, BindingConstraintHour
         int pdt1;
         if (offset >= 0)
         {
-            pdt1 = (pdt + offset) % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+            pdt1 = (pdt + offset) % builder.data.NombreDePasDeTempsPourUneOptimisation;
         }
         else
         {
-            pdt1 = (pdt + offset + problemeHebdo->NombreDePasDeTemps)
-                   % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+            pdt1 = (pdt + offset + builder.data.NombreDePasDeTemps)
+                   % builder.data.NombreDePasDeTempsPourUneOptimisation;
         }
 
         builder.updateHourWithinWeek(pdt1).include(
-          Variable::NTCDirect(interco), poids, 0, false, problemeHebdo->NombreDePasDeTemps);
+          Variable::NTCDirect(interco), poids, 0, false, builder.data.NombreDePasDeTemps);
     }
 
     // Thermal clusters
@@ -36,8 +36,7 @@ void BindingConstraintHour::add(int pdt, int cntCouplante, BindingConstraintHour
     for (int index = 0; index < nbClusters; index++)
     {
         const int pays = data.PaysDuPalierDispatch[index];
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays = data.PaliersThermiquesDuPays[pays];
         const int palier
           = PaliersThermiquesDuPays
               .NumeroDuPalierDansLEnsembleDesPaliersThermiques[data.NumeroDuPalierDispatch[index]];
@@ -47,28 +46,27 @@ void BindingConstraintHour::add(int pdt, int cntCouplante, BindingConstraintHour
 
         if (offset >= 0)
         {
-            pdt1 = (pdt + offset) % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+            pdt1 = (pdt + offset) % builder.data.NombreDePasDeTempsPourUneOptimisation;
         }
         else
         {
-            pdt1 = (pdt + offset + problemeHebdo->NombreDePasDeTemps)
-                   % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+            pdt1 = (pdt + offset + builder.data.NombreDePasDeTemps)
+                   % builder.data.NombreDePasDeTempsPourUneOptimisation;
         }
 
         builder.updateHourWithinWeek(pdt1).include(Variable::DispatchableProduction(palier),
                                                    poids,
                                                    0,
                                                    false,
-                                                   problemeHebdo->NombreDePasDeTemps);
+                                                   builder.data.NombreDePasDeTemps);
     }
 
     char op = data.SensDeLaContrainteCouplante;
     builder.operatorRHS(op);
     {
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        namer.BindingConstraintHour(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+        ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.NamedProblems);
+        namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
+        namer.BindingConstraintHour(builder.data.nombreDeContraintes,
                                     data.NomDeLaContrainteCouplante);
     }
     builder.build();
