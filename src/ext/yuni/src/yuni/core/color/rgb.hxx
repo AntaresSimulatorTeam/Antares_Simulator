@@ -805,7 +805,7 @@ inline Yuni::Color::RGB<typename Yuni::Color::template RGB<U>::template Calculat
         return r;                                                                                 \
     }
 
-YUNI_COLOR_RGB_OPERATOR_TYPE_RGB(Yuni::sint8)
+YUNI_COLOR_RGB_OPERATOR_TYPE_RGB(int8_t)
 YUNI_COLOR_RGB_OPERATOR_TYPE_RGB(int16_t)
 YUNI_COLOR_RGB_OPERATOR_TYPE_RGB(int32_t)
 YUNI_COLOR_RGB_OPERATOR_TYPE_RGB(int64_t)
