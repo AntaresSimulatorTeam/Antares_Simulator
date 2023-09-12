@@ -48,7 +48,7 @@ bool PathListItem::HtmlContent(wxString& out,
                                wxString name,
                                const wxString& searchString,
                                bool isFolder,
-                               Yuni::uint64 size)
+                               uint64 size)
 {
     wxColour c(220, 220, 250);
     if (isFolder)

@@ -49,7 +49,7 @@ public:
     //! All associated sizes
     std::vector<uint64> filessize;
     //! Modification
-    std::vector<sint64> modified;
+    std::vector<int64_t> modified;
     //! Reference
     EventsRegistry& events;
 

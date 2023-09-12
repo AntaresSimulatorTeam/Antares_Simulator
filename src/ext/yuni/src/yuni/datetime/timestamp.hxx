@@ -19,7 +19,7 @@ namespace Private
 namespace DateTime
 {
 // forward declaration
-char* FormatTimestampToString(const AnyString& format, sint64 timestamp);
+char* FormatTimestampToString(const AnyString& format, int64_t timestamp);
 
 } // namespace DateTime
 } // namespace Private

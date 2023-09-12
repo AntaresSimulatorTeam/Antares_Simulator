@@ -16,16 +16,7 @@
 ** \brief Standard types used by the Yuni Library
 */
 
-#ifdef YUNI_HAS_STDINT_H
 #include <stdint.h>
-#else
-#ifdef YUNI_OS_MSVC
-#include "windows/msinttypes/stdint.h"
-#include "windows/msinttypes/inttypes.h"
-#else
-#error "stdint.h is missing for this platform"
-#endif
-#endif
 
 #ifdef YUNI_OS_MSVC
 #define YUNI_MSVC_SECURE_VSPRINTF
@@ -43,25 +34,18 @@
 
 namespace Yuni
 {
-/* \todo Fix support for int128 on Visual Studio 10 */
-#if defined(YUNI_HAS_INT128_T) && !defined(__DISABLED_SUPPORT_FOR_INT128)
-/* 128-bit unsigned int */
-typedef unsigned __int128 uint128;
-typedef __int128 sint128;
-#endif
-
 /*! 64-bit unsigned int, guaranteed to be 8 bytes in size */
-typedef uint64_t uint64;
+typedef uint64_t uint64_t;
 /*! 64-bit unsigned int, guaranteed to be 8 bytes in size */
-typedef int64_t sint64;
+typedef int64_t int64_t;
 /*! 32-bit unsigned int, guaranteed to be 4 bytes in size */
-typedef uint32_t uint32;
+typedef uint32_t uint32_t;
 /*! 32-bit unsigned int, guaranteed to be 4 bytes in size */
-typedef int32_t sint32;
+typedef int32_t int32_t;
 /*! 16-bit unsigned int, guaranteed to be 2 bytes in size */
 typedef uint16_t uint16;
 /*! 16-bit unsigned int, guaranteed to be 2 bytes in size */
-typedef int16_t sint16;
+typedef int16_t int16_t;
 /*! 8-bit unsigned int, guaranteed to be 1 byte in size */
 typedef unsigned char uint8;
 /*! 8-bit unsigned int, guaranteed to be 1 byte in size */
@@ -74,11 +58,11 @@ typedef unsigned char uchar;
 ** \brief Constant int64 value to indicate that the size must be autodetected by the location
 ** of the terminating null character
 */
-static const uint64 AutoDetectNullChar = static_cast<uint64>(-1);
+static const uint64_t AutoDetectNullChar = static_cast<uint64_t>(-1);
 
 #ifndef YUNI_HAS_SSIZE_T
 /*! ssize_t */
-typedef Yuni::sint64 ssize_t;
+typedef int64_t ssize_t;
 #endif
 
 /*! Decimal floating-point (32 bits) */
@@ -96,30 +80,7 @@ typedef double float64;
 
 /* C types */
 
-/* \todo Fix support for int128 on Visual Studio 10 */
-#if defined(YUNI_HAS_INT128_T) && !defined(__DISABLED_SUPPORT_FOR_INT128)
-/*! 128-bit unsigned int */
-typedef unsigned __int128 yuint128;
-typedef __int128 yint128;
-#endif
-
-/*! 64-bit unsigned int, guaranteed to be 8 bytes in size */
-typedef uint64_t yuint64;
-/*! 64-bit unsigned int, guaranteed to be 8 bytes in size */
-typedef int64_t yint64;
-/*! 32-bit unsigned int, guaranteed to be 4 bytes in size */
-typedef uint32_t yuint32;
-/*! 32-bit unsigned int, guaranteed to be 4 bytes in size */
-typedef int32_t yint32;
-/*! 16-bit unsigned int, guaranteed to be 2 bytes in size */
-typedef uint16_t yuint16;
-/*! 16-bit unsigned int, guaranteed to be 2 bytes in size */
-typedef int16_t yint16;
-/*! 8-bit unsigned int, guaranteed to be 1 byte in size */
-typedef unsigned char yuint8;
-/*! 8-bit unsigned int, guaranteed to be 1 byte in size */
-typedef char yint8;
-
+// TODO REMOVE THIS GARBAGE
 /*! Decimal floating-point (32 bits) */
 typedef float yfloat32;
 /*! Decimal floating-point (32 bits) */

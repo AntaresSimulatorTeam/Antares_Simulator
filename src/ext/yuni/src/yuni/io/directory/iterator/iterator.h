@@ -75,7 +75,7 @@ namespace Directory
 **		--pCounter;
 **	}
 **
-**	virtual Flow onFile(const String&, const String&, const String& name, uint64 size)
+**	virtual Flow onFile(const String&, const String&, const String& name, uint64_t size)
 **	{
 **		printSpaces();
 **		std::cout << "  -  " << name << " (" << size << " bytes)" << std::endl;
@@ -102,7 +102,7 @@ namespace Directory
 **	uint pCounter;
 **	uint pFolderCount;
 **	uint pFileCount;
-**	uint64 pTotalSize;
+**	uint64_t pTotalSize;
 ** };
 **
 **
@@ -153,7 +153,7 @@ public:
     typedef typename Ancestor::ThreadingPolicy ThreadingPolicy;
 
     //! Event: file / folder found
-    typedef Bind<Flow(AnyString filename, AnyString parent, AnyString name, uint64 size)>
+    typedef Bind<Flow(AnyString filename, AnyString parent, AnyString name, uint64_t size)>
       OnNodeEvent;
 
 public:
@@ -316,7 +316,7 @@ protected:
     virtual Flow onFile(const String& filename,
                         const String& parent,
                         const String& name,
-                        uint64 size) override;
+                        uint64_t size) override;
 
     /*!
     ** \brief Event: It was impossible to open a folder
@@ -372,12 +372,12 @@ private:
 ** Example for iterating through all files and folders:
 ** \code
 ** auto walker = IO::Directory::CreateWalker("/tmp/some-folder",
-**	[](AnyString filename, AnyString parent, AnyString name, uint64 size) -> Flow
+**	[](AnyString filename, AnyString parent, AnyString name, uint64_t size) -> Flow
 **	{
 **		std::cout << " . found file " << filename << " (" << size << " bytes)\n";
 **		return IO::flowContinue;
 **	},
-**	[](AnyString pathname, AnyString parent, AnyString name, uint64) -> Flow
+**	[](AnyString pathname, AnyString parent, AnyString name, uint64_t) -> Flow
 **	{
 **		std::cout << " . found folder " << pathname;
 **		return IO::flowContinue;
@@ -393,7 +393,7 @@ private:
 ** Job::QueueService queueservice;
 
 ** auto walker = IO::Directory::CreateWalker("/tmp/some-folder",
-**	[](const String& filename, const String& parent, const String& name, uint64 size) -> Flow
+**	[](const String& filename, const String& parent, const String& name, uint64_t size) -> Flow
 **	{
 **		if (size > 0)
 **		{
@@ -417,7 +417,7 @@ private:
 **		}
 **		return IO::flowContinue;
 **	},
-**	[](const String& filename, const String& parent, const String& name, uint64) -> Flow
+**	[](const String& filename, const String& parent, const String& name, uint64_t) -> Flow
 **	{
 **		std::cout << " . found folder " << pathname;
 **		return IO::flowContinue;

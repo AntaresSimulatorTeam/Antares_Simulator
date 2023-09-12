@@ -286,9 +286,9 @@ void Links::RetrieveVariableList(PredicateT& predicate)
     NextType::RetrieveVariableList(predicate);
 }
 
-inline Yuni::uint64 Links::memoryUsage() const
+inline uint64 Links::memoryUsage() const
 {
-    Yuni::uint64 result = 0;
+    uint64 result = 0;
     for (uint i = 0; i != pLinkCount; ++i)
     {
         result += sizeof(NextType) + sizeof(void*);

@@ -163,7 +163,7 @@ protected:
         NextType::template buildDigest<VCardT>(report, digestLevel, dataLevel);
     }
 
-    Yuni::uint64 memoryUsage() const
+    uint64 memoryUsage() const
     {
         return avgdata.dynamicMemoryUsage() + NextType::memoryUsage();
     }

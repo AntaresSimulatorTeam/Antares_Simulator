@@ -289,7 +289,7 @@ public:
     /*!
     ** \brief Get the memory used by this variable and all other in the static list
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64 memoryUsage() const;
 
     /*!
     ** \brief "Print" informations about the variable tree

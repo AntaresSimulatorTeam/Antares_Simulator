@@ -51,7 +51,7 @@ Panel::Panel(Component::Notebook* parent) :
  pNotebookCluster(nullptr),
  pAreaForCommonData(nullptr),
  pAreaSelector(nullptr),
- pStudyRevisionIncrement((Yuni::uint64)-1)
+ pStudyRevisionIncrement((uint64)-1)
 {
     // A sizer for our panel
     wxSizer* mainsizer = new wxBoxSizer(wxVERTICAL);
@@ -142,7 +142,7 @@ void Panel::onPageChanged(Component::Notebook::Page& page)
 {
     if (&page == pageRenewableClusterList)
     {
-        Yuni::uint64 revID = StudyInMemoryRevisionID();
+        uint64 revID = StudyInMemoryRevisionID();
         if (revID != pStudyRevisionIncrement)
         {
             Data::Area* area = pAreaForCommonData;

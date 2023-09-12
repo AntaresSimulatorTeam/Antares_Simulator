@@ -216,7 +216,7 @@ public:
     ** \brief Get the size (bytes) occupied in memory by a `ClusterList` structure
     ** \return A size (in bytes)
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64 memoryUsage() const;
 
 public:
     //! All clusters by their index

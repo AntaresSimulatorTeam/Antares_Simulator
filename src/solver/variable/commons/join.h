@@ -345,7 +345,7 @@ public:
         RightType::template simulationEndSpatialAggregates(allVars);
     }
 
-    Yuni::uint64 memoryUsage() const
+    uint64 memoryUsage() const
     {
         return LeftType::memoryUsage() + RightType::memoryUsage() + BindConstType::memoryUsage();
     }

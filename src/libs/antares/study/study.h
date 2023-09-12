@@ -475,7 +475,7 @@ public:
     /*!
     ** \brief Get the amound of memory consummed by the study (in bytes)
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64 memoryUsage() const;
 
     //! \name Logs
     //@{
@@ -515,7 +515,7 @@ public:
     //! The current Simulation
     SimulationComments simulationComments;
 
-    Yuni::sint64 pStartTime;
+    int64_t pStartTime;
     // Used in GUI and solver
     // ----------------------
     // Maximum number of years in a set of parallel years.
@@ -718,7 +718,7 @@ YString StudyCreateOutputPath(StudyMode mode,
                               ResultFormat fmt,
                               const YString& folder,
                               const YString& label,
-                              Yuni::sint64 startTime);
+                              int64_t startTime);
 } // namespace Antares::Data
 
 

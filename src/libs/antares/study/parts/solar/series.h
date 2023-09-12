@@ -52,12 +52,12 @@ public:
     **
     ** Merely a matrix of TimeSeriesCount * 8760 values
     */
-    Matrix<double, Yuni::sint32> timeSeries;
+    Matrix<double, int32_t> timeSeries;
 
     /*!
     ** \brief Monte-Carlo
     */
-    Matrix<Yuni::uint32> timeseriesNumbers;
+    Matrix<uint32_t> timeseriesNumbers;
 
 }; /* class DataSeriesSolar */
 
@@ -89,7 +89,7 @@ int DataSeriesSolarSaveToFolder(DataSeriesSolar* d, const AreaName& areaID, cons
 /*!
 ** \brief Get the size (bytes) in memory occupied by a `DataSeriesSolar` structure
 */
-Yuni::uint64 DataSeriesSolarMemoryUsage(DataSeriesSolar* w);
+uint64 DataSeriesSolarMemoryUsage(DataSeriesSolar* w);
 
 } // namespace Data
 } // namespace Antares

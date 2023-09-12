@@ -241,7 +241,7 @@ inline void List<NextT>::retrieveResultsForLink(
 }
 
 template<class NextT>
-inline Yuni::uint64 List<NextT>::memoryUsage() const
+inline uint64 List<NextT>::memoryUsage() const
 {
     return sizeof(ListType) + NextType::memoryUsage();
 }

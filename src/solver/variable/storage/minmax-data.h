@@ -46,7 +46,7 @@ public:
     struct Data
     {
         double value;
-        Yuni::uint32 indice;
+        uint32_t indice;
     };
 
 public:

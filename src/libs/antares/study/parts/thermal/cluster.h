@@ -197,7 +197,7 @@ public:
     /*!
     ** \brief Get the memory consummed by the thermal cluster (in bytes)
     */
-    Yuni::uint64 memoryUsage() const override;
+    uint64 memoryUsage() const override;
     //@}
 
     //! \name validity of Min Stable Power

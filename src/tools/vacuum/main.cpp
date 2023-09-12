@@ -52,7 +52,7 @@ static inline double Round2ndPlace(double v)
     return v / 100.;
 }
 
-static void NotifyDuration(sint64 duration)
+static void NotifyDuration(int64_t duration)
 {
     switch (duration)
     {
@@ -191,7 +191,7 @@ namespace // anonymous
 class DirectoryCleanerJob : public Job::IJob
 {
 public:
-    DirectoryCleanerJob(const String& directory, sint64 dateLimit) :
+    DirectoryCleanerJob(const String& directory, int64_t dateLimit) :
      directory(directory), dateLimit(dateLimit)
     {
     }
@@ -203,7 +203,7 @@ public:
     //! The directory to clean
     String directory;
     //! The lower date limit
-    sint64 dateLimit;
+    int64_t dateLimit;
 
 protected:
     virtual void onExecute()

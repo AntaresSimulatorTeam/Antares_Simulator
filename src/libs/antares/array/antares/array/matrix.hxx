@@ -508,14 +508,14 @@ inline bool Matrix<T, ReadWriteT>::empty() const
 }
 
 template<class T, class ReadWriteT>
-inline Yuni::uint64 Matrix<T, ReadWriteT>::memoryUsage() const
+inline uint64 Matrix<T, ReadWriteT>::memoryUsage() const
 {
     return sizeof(Matrix<T, ReadWriteT>) + (sizeof(T) * (width * height))
            + ((jit) ? jit->memoryUsage() : 0);
 }
 
 template<class T, class ReadWriteT>
-inline Yuni::uint64 Matrix<T, ReadWriteT>::valuesMemoryUsage() const
+inline uint64 Matrix<T, ReadWriteT>::valuesMemoryUsage() const
 {
     return (sizeof(T) * (width * height));
 }

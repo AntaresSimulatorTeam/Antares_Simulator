@@ -69,7 +69,7 @@ public:
     /*!
     ** \brief Get the amount of memory currently used by the class
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64 memoryUsage() const;
 
 public:
     //! Data for the pre-processor

@@ -57,7 +57,7 @@ static inline StringT& BytesToStringW(StringT& out, uint64 size)
 static inline uint64 DiskFreeSpace(const AnyString& folder)
 {
     if (folder.empty())
-        return (yuint64)-1; // error
+        return (uint64_t)-1; // error
 
 #ifdef YUNI_OS_WINDOWS
     unsigned __int64 i64FreeBytesToCaller;
@@ -67,7 +67,7 @@ static inline uint64 DiskFreeSpace(const AnyString& folder)
     {
         Yuni::WString wstr(folder);
         if (wstr.empty())
-            return (yuint64)-1; // error
+            return (uint64_t)-1; // error
 
         if (GetDiskFreeSpaceExW(wstr.c_str(),
                                 (PULARGE_INTEGER)&i64FreeBytesToCaller,
@@ -85,7 +85,7 @@ static inline uint64 DiskFreeSpace(const AnyString& folder)
         // retrying with the standard path
         Yuni::WString wstr(folder);
         if (wstr.empty())
-            return (yuint64)-1; // error
+            return (uint64_t)-1; // error
 
         if (GetDiskFreeSpaceExW(wstr.c_str(),
                                 (PULARGE_INTEGER)&i64FreeBytesToCaller,
@@ -105,5 +105,5 @@ static inline uint64 DiskFreeSpace(const AnyString& folder)
 #endif
 
     (void)folder;
-    return (yuint64)-1; // obviously an error
+    return (uint64_t)-1; // obviously an error
 }

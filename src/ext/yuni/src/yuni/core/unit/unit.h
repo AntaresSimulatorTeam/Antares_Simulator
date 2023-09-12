@@ -156,17 +156,17 @@ public:
     Abstract();
 
     //! Constructor from a raw value
-    Abstract(sint16 u);
+    Abstract(int16_t u);
     //! Constructor from a raw value
-    Abstract(sint32 u);
+    Abstract(int32_t u);
     //! Constructor from a raw value
-    Abstract(sint64 u);
+    Abstract(int64_t u);
     //! Constructor from a raw value
     Abstract(uint16 u);
     //! Constructor from a raw value
-    Abstract(uint32 u);
+    Abstract(uint32_t u);
     //! Constructor from a raw value
-    Abstract(uint64 u);
+    Abstract(uint64_t u);
     //! Constructor from a raw value
     Abstract(float u);
     //! Constructor from a raw value
@@ -237,12 +237,12 @@ public:
     //! \name Opertor `=`
     //@{
     // Builtin types
-    AbstractType& operator=(sint16 u);
-    AbstractType& operator=(sint32 u);
-    AbstractType& operator=(sint64 u);
+    AbstractType& operator=(int16_t u);
+    AbstractType& operator=(int32_t u);
+    AbstractType& operator=(int64_t u);
     AbstractType& operator=(uint16 u);
-    AbstractType& operator=(uint32 u);
-    AbstractType& operator=(uint64 u);
+    AbstractType& operator=(uint32_t u);
+    AbstractType& operator=(uint64_t u);
     AbstractType& operator=(float u);
     AbstractType& operator=(double u);
     AbstractType& operator=(long double u);
@@ -257,12 +257,12 @@ public:
     //! \name Operators `+=`
     //@{
     // Builtin types
-    AbstractType& operator+=(sint16 u);
-    AbstractType& operator+=(sint32 u);
-    AbstractType& operator+=(sint64 u);
+    AbstractType& operator+=(int16_t u);
+    AbstractType& operator+=(int32_t u);
+    AbstractType& operator+=(int64_t u);
     AbstractType& operator+=(uint16 u);
-    AbstractType& operator+=(uint32 u);
-    AbstractType& operator+=(uint64 u);
+    AbstractType& operator+=(uint32_t u);
+    AbstractType& operator+=(uint64_t u);
     AbstractType& operator+=(float u);
     AbstractType& operator+=(double u);
     AbstractType& operator+=(long double u);
@@ -277,12 +277,12 @@ public:
     //! \name Operators `-=`
     //@{
     // Builtin types
-    AbstractType& operator-=(sint16 u);
-    AbstractType& operator-=(sint32 u);
-    AbstractType& operator-=(sint64 u);
+    AbstractType& operator-=(int16_t u);
+    AbstractType& operator-=(int32_t u);
+    AbstractType& operator-=(int64_t u);
     AbstractType& operator-=(uint16 u);
-    AbstractType& operator-=(uint32 u);
-    AbstractType& operator-=(uint64 u);
+    AbstractType& operator-=(uint32_t u);
+    AbstractType& operator-=(uint64_t u);
     AbstractType& operator-=(float u);
     AbstractType& operator-=(double u);
     AbstractType& operator-=(long double u);
@@ -297,12 +297,12 @@ public:
     //! \name Operators `*=`
     //@{
     // Builtin types
-    AbstractType& operator*=(sint16 u);
-    AbstractType& operator*=(sint32 u);
-    AbstractType& operator*=(sint64 u);
+    AbstractType& operator*=(int16_t u);
+    AbstractType& operator*=(int32_t u);
+    AbstractType& operator*=(int64_t u);
     AbstractType& operator*=(uint16 u);
-    AbstractType& operator*=(uint32 u);
-    AbstractType& operator*=(uint64 u);
+    AbstractType& operator*=(uint32_t u);
+    AbstractType& operator*=(uint64_t u);
     AbstractType& operator*=(float u);
     AbstractType& operator*=(double u);
     AbstractType& operator*=(long double u);
@@ -317,12 +317,12 @@ public:
     //! \name Operators `/=`
     //@{
     // Builtin types
-    AbstractType& operator/=(sint16 u);
-    AbstractType& operator/=(sint32 u);
-    AbstractType& operator/=(sint64 u);
+    AbstractType& operator/=(int16_t u);
+    AbstractType& operator/=(int32_t u);
+    AbstractType& operator/=(int64_t u);
     AbstractType& operator/=(uint16 u);
-    AbstractType& operator/=(uint32 u);
-    AbstractType& operator/=(uint64 u);
+    AbstractType& operator/=(uint32_t u);
+    AbstractType& operator/=(uint64_t u);
     AbstractType& operator/=(float u);
     AbstractType& operator/=(double u);
     AbstractType& operator/=(long double u);

@@ -176,7 +176,7 @@ public:
 
     void beforeYearByYearExport(uint year, uint numSpace);
 
-    Yuni::uint64 memoryUsage() const;
+    uint64 memoryUsage() const;
 
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
 

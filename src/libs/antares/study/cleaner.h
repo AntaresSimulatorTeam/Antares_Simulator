@@ -67,7 +67,7 @@ public:
     /*!
     ** \brief Get the total size occupied by the intruders
     */
-    Yuni::uint64 totalSize() const;
+    uint64 totalSize() const;
 
     /*!
     ** \brief Set an additional list of excluded files or directories.

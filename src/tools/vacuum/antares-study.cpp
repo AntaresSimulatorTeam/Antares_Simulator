@@ -50,7 +50,7 @@ public:
     }
 
 public:
-    sint64 dateLimit;
+    int64_t dateLimit;
     FSWalker::DispatchJobEvent queue;
 
     Mutex mutex;
@@ -71,7 +71,7 @@ public:
 
 public:
     String folder;
-    sint64 dateLimit;
+    int64_t dateLimit;
     UserData* userdata;
 
 protected:
@@ -343,7 +343,7 @@ const char* AntaresStudy::caption() const
     return "antares study";
 }
 
-AntaresStudy::AntaresStudy(yint64 dateLimit) :
+AntaresStudy::AntaresStudy(int64_t dateLimit) :
  bytesDeleted(), filesDeleted(), foldersDeleted(), pDateLimit(dateLimit)
 {
 }

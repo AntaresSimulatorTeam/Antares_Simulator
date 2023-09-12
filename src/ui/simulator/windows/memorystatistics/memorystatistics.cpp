@@ -114,7 +114,7 @@ private:
     MemoryStatistics& pForm;
 };
 
-static inline Yuni::uint64 NormalizeAmountOfMemory(Yuni::uint64 v)
+static inline uint64 NormalizeAmountOfMemory(uint64 v)
 {
     v *= 10u;
     v /= 1024u * 1024u;

@@ -340,9 +340,9 @@ public:
         return pValuesForTheCurrentYear[numSpace][column].hour;
     }
 
-    inline Yuni::uint64 memoryUsage() const
+    inline uint64 memoryUsage() const
     {
-        Yuni::uint64 r = (sizeof(IntermediateValues) * pSize + IntermediateValues::MemoryUsage())
+        uint64 r = (sizeof(IntermediateValues) * pSize + IntermediateValues::MemoryUsage())
                          * pNbYearsParallel;
         r += sizeof(double) * pSize * maxHoursInAYear * pNbYearsParallel;
         r += AncestorType::memoryUsage();

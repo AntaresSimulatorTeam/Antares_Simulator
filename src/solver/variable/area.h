@@ -169,7 +169,7 @@ public:
 
     void beforeYearByYearExport(uint year, uint numSpace);
 
-    Yuni::uint64 memoryUsage() const;
+    uint64 memoryUsage() const;
 
     template<class I>
     static void provideInformations(I& infos);

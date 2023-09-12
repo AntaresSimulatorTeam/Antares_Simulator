@@ -20,9 +20,9 @@ namespace DateTime
 Timestamp Now()
 {
 #ifdef YUNI_OS_MSVC
-    return (sint64)::_time64(nullptr);
+    return (int64_t)::_time64(nullptr);
 #else
-    return (sint64)::time(nullptr);
+    return (int64_t)::time(nullptr);
 #endif
 }
 
@@ -44,7 +44,7 @@ namespace DateTime
 {
 namespace // anonymous
 {
-static inline uint FormatString(char* buffer, uint size, const char* format, sint64 timestamp)
+static inline uint FormatString(char* buffer, uint size, const char* format, int64_t timestamp)
 {
     assert(format != nullptr and '\0' != *format and "invalid format");
 
@@ -90,16 +90,16 @@ static inline uint FormatString(char* buffer, uint size, const char* format, sin
 
 } // anonymous namespace
 
-char* FormatTimestampToString(const AnyString& format, sint64 timestamp)
+char* FormatTimestampToString(const AnyString& format, int64_t timestamp)
 {
     assert(not format.empty() and "this routine must not be called if the format is empty");
 
     if (timestamp <= 0)
     {
 #ifdef YUNI_OS_MSVC
-        timestamp = (sint64)::_time64(NULL);
+        timestamp = (int64_t)::_time64(NULL);
 #else
-        timestamp = (sint64)::time(NULL);
+        timestamp = (int64_t)::time(NULL);
 #endif
     }
 

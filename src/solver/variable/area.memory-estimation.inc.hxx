@@ -40,7 +40,7 @@ namespace Variable
 template<>
 uint64 Areas<NEXTTYPE>::memoryUsage() const
 {
-    Yuni::uint64 result = 0;
+    uint64 result = 0;
     for (unsigned int i = 0; i != pAreaCount; ++i)
     {
         result += sizeof(NextType) + sizeof(void*); // overhead vector

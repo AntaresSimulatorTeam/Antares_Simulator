@@ -66,7 +66,7 @@ public:
     /*!
     ** \brief Get the memory consummed by the renewable cluster (in bytes)
     */
-    virtual Yuni::uint64 memoryUsage() const = 0;
+    virtual uint64 memoryUsage() const = 0;
     //@}
 
     /*!

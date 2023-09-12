@@ -165,7 +165,7 @@ public:
     /*!
     ** \brief Get the amount of memory currently used by the XCast data
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64 memoryUsage() const;
 
     /*!
     ** \brief Estimate the amount of memory required by this class for a simulation
@@ -187,7 +187,7 @@ public:
     /*!
     ** \brief Time-series average
     */
-    Matrix<Yuni::sint32> translation;
+    Matrix<int32_t> translation;
 
     //! How to use the timeseries average
     TSTranslationUse useTranslation;

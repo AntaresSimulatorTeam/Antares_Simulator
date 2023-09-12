@@ -78,14 +78,14 @@ public:
         {
         }
         template<class StringT>
-        Tag(const StringT& t, Yuni::uint8 r, Yuni::uint8 g, Yuni::uint8 b) :
+        Tag(const StringT& t, uint8 r, uint8 g, uint8 b) :
          text(wxStringFromUTF8(t)), color(r, g, b)
         {
         }
-        Tag(const wxChar* t, Yuni::uint8 r, Yuni::uint8 g, Yuni::uint8 b) : text(t), color(r, g, b)
+        Tag(const wxChar* t, uint8 r, uint8 g, uint8 b) : text(t), color(r, g, b)
         {
         }
-        Tag(const wxString& t, Yuni::uint8 r, Yuni::uint8 g, Yuni::uint8 b) :
+        Tag(const wxString& t, uint8 r, uint8 g, uint8 b) :
          text(t), color(r, g, b)
         {
         }
@@ -171,13 +171,13 @@ public:
     void addTag(const StringT& text);
     //! Add a new tag
     template<class StringT>
-    void addTag(const StringT& text, Yuni::uint8 r, Yuni::uint8 g, Yuni::uint8 b);
+    void addTag(const StringT& text, uint8 r, uint8 g, uint8 b);
     //! Add a new tag on the right
     template<class StringT>
     void addRightTag(const StringT& text);
     //! Add a new tag on the right
     template<class StringT>
-    void addRightTag(const StringT& text, Yuni::uint8 r, Yuni::uint8 g, Yuni::uint8 b);
+    void addRightTag(const StringT& text, uint8 r, uint8 g, uint8 b);
     //! Clear all tags
     void clearTags();
     //@}

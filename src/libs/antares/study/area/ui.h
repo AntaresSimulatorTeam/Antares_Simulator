@@ -71,7 +71,7 @@ public:
     /*!
     ** \brief Amount of memory consummed by the instance
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64 memoryUsage() const;
 
     /*!
     ** \brief Get if the structure has been modified

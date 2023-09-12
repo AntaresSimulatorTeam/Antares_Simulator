@@ -153,9 +153,9 @@ struct VariableAccessor
         }
     }
 
-    static Yuni::uint64 Value(const Type& container)
+    static uint64 Value(const Type& container)
     {
-        Yuni::uint64 result = 0;
+        uint64 result = 0;
         for (uint i = 0; i != ColumnCountT; ++i)
             result += container[i].memoryUsage();
         return result;
@@ -352,9 +352,9 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         }
     }
 
-    static Yuni::uint64 Value(const Type& container)
+    static uint64 Value(const Type& container)
     {
-        Yuni::uint64 result = 0;
+        uint64 result = 0;
         const typename Type::const_iterator end = container.end();
         for (typename Type::const_iterator i = container.begin(); i != end; ++i)
             result += sizeof(ResultsT) + (*i).memoryUsage();
@@ -562,7 +562,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
         container.merge(year, intermediateValues);
     }
 
-    static Yuni::uint64 Value(const Type& container)
+    static uint64 Value(const Type& container)
     {
         return container.memoryUsage();
     }
@@ -681,7 +681,7 @@ struct VariableAccessor<ResultsT, Category::noColumn>
         // Do nothing
     }
 
-    static Yuni::uint64 Value(const Type&)
+    static uint64 Value(const Type&)
     {
         return 0;
     }

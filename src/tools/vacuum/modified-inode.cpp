@@ -56,7 +56,7 @@ public:
     void pushToLogs();
 
 public:
-    sint64 dateLimit;
+    int64_t dateLimit;
 
     Mutex mutex;
     uint64 bytesDeleted;
@@ -146,7 +146,7 @@ void UserData::syncBeforeRelease()
 
 static void OnFileEvent(const String& filename,
                         const String& parent,
-                        sint64 modified,
+                        int64_t modified,
                         uint64 size,
                         void* user)
 {
@@ -242,7 +242,7 @@ void ModifiedINode::userdataDestroy(void* userdata)
     }
 }
 
-ModifiedINode::ModifiedINode(yint64 dateLimit) :
+ModifiedINode::ModifiedINode(int64_t dateLimit) :
  bytesDeleted(), filesDeleted(), foldersDeleted(), pDateLimit(dateLimit), pQueue()
 {
 }

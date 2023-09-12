@@ -1354,7 +1354,7 @@ void AreaListEnsureDataThermalPrepro(AreaList* l)
 
 uint64 AreaList::memoryUsage() const
 {
-    Yuni::uint64 ret = sizeof(AreaList) + sizeof(Area**) * areas.size();
+    uint64 ret = sizeof(AreaList) + sizeof(Area**) * areas.size();
     each([&](const Data::Area& area) { ret += area.memoryUsage(); });
     return ret;
 }

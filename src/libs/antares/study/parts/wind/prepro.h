@@ -66,7 +66,7 @@ public:
     /*!
     ** \brief Get the amount of memory currently used
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64 memoryUsage() const;
 
     /*!
     ** \brief Make sure that all data are loaded in memory

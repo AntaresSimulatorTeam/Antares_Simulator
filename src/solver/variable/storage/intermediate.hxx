@@ -57,7 +57,7 @@ inline const IntermediateValues::Type& IntermediateValues::operator[](
     return hour[index];
 }
 
-inline Yuni::uint64 IntermediateValues::MemoryUsage()
+inline uint64 IntermediateValues::MemoryUsage()
 {
     return +sizeof(Type) * maxHoursInAYear;
 }

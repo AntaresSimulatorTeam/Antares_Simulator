@@ -162,7 +162,7 @@ public:
     /*!
     ** \brief Get the amount of memory used by the general data
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64 memoryUsage() const;
 
     /*!
     ** \brief Reset MC year weight to 1 for all years

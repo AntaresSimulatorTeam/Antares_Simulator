@@ -36,7 +36,7 @@ inline bool JIT::IsReady(JIT::Informations* j)
     return (!j or j->alreadyLoaded);
 }
 
-inline Yuni::uint64 JIT::Informations::memoryUsage() const
+inline uint64 JIT::Informations::memoryUsage() const
 {
     return sizeof(JIT::Informations) + sourceFilename.capacity();
 }

@@ -66,7 +66,7 @@ void Container::markAsModified() const
         prepro->markAsModified();
 }
 
-Yuni::uint64 Container::memoryUsage() const
+uint64 Container::memoryUsage() const
 {
     return sizeof(Container) + ((!series) ? 0 : DataSeriesSolarMemoryUsage(series))
            + ((!prepro) ? 0 : prepro->memoryUsage());

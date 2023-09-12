@@ -82,7 +82,7 @@ enum
 struct DebugData
 {
     using PerArea = HydroManagement::PerArea;
-    using InflowsType = Matrix<double, Yuni::sint32>::ColumnType;
+    using InflowsType = Matrix<double, int32_t>::ColumnType;
     using MaxPowerType = Matrix<double, double>::ColumnType;
     using ReservoirLevelType = Matrix<double>::ColumnType;
 

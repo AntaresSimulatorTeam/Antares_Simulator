@@ -13,7 +13,7 @@ namespace Antares
 {
 namespace Statistics
 {
-void HasWrittenToDisk(Yuni::uint64 /* size */)
+void HasWrittenToDisk(uint64 /* size */)
 {
 }
 } // namespace Statistics

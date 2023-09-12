@@ -76,7 +76,7 @@ protected:
         // Does nothing
     }
 
-    static Yuni::uint64 memoryUsage()
+    static uint64 memoryUsage()
     {
         return 0;
     }

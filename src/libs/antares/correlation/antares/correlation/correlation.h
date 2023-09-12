@@ -140,7 +140,7 @@ public:
     /*!
     ** \brief Get the amount of memory used the correlation matrices
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64 memoryUsage() const;
 
     /*!
     ** \brief Invalidate all matrices

@@ -122,7 +122,7 @@ void StudyCleaningInfos::performCleanup()
     }
 }
 
-Yuni::uint64 StudyCleaningInfos::totalSize() const
+uint64 StudyCleaningInfos::totalSize() const
 {
     return intruders.totalSizeInBytes();
 }

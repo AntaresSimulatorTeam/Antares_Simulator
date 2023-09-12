@@ -72,7 +72,7 @@ uint64 ReadFromDiskSinceStartup()
 uint64 WrittenToDiskSinceStartup()
 {
     Yuni::MutexLocker locker(gMutex);
-    return (uint64)((sint64)gWrittenToDiskSinceStartup);
+    return (uint64)((int64_t)gWrittenToDiskSinceStartup);
 }
 
 uint64 ReadFromNetwork()
@@ -117,28 +117,28 @@ void DumpToLogs()
                 << " ko, written: " << (gWrittenToNetwork / 1024) << " ko";
 }
 
-void HasReadFromDisk(Yuni::uint64 size)
+void HasReadFromDisk(uint64 size)
 {
     Yuni::MutexLocker locker(gMutex);
     gReadFromDisk += size;
     gReadFromDiskSinceStartup += size;
 }
 
-void HasWrittenToDisk(Yuni::uint64 size)
+void HasWrittenToDisk(uint64 size)
 {
     Yuni::MutexLocker locker(gMutex);
     gWrittenToDisk += size;
     gWrittenToDiskSinceStartup += size;
 }
 
-void HasReadFromNetwork(Yuni::uint64 size)
+void HasReadFromNetwork(uint64 size)
 {
     Yuni::MutexLocker locker(gMutex);
     gReadFromNetwork += size;
     gReadFromNetworkSinceStartup += size;
 }
 
-void HasWrittenToNetwork(Yuni::uint64 size)
+void HasWrittenToNetwork(uint64 size)
 {
     Yuni::MutexLocker locker(gMutex);
     gWrittenToNetwork += size;

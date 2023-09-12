@@ -31,7 +31,7 @@ namespace Antares
 {
 namespace Data
 {
-inline Yuni::uint64 DataSeriesLoadMemoryUsage(DataSeriesLoad* l)
+inline uint64 DataSeriesLoadMemoryUsage(DataSeriesLoad* l)
 {
     return (l) ? l->timeSeries.memoryUsage() : 0;
 }

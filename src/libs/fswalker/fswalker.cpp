@@ -95,7 +95,7 @@ protected:
 
     bool triggerFileEvent(const String& filename,
                           const String& parent,
-                          sint64 modified,
+                          int64_t modified,
                           uint64 size);
 
     void waitForAllJobs() const;
@@ -254,7 +254,7 @@ void WalkerThread::run()
 
 bool WalkerThread::triggerFileEvent(const String& filename,
                                     const String& parent,
-                                    sint64 modified,
+                                    int64_t modified,
                                     uint64 size)
 {
     assert(pFileJob != NULL);

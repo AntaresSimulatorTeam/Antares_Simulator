@@ -77,10 +77,10 @@ void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
     sect->add("caption", caption);
 
     // Date
-    sect->add("created", (sint64)dateCreated);
+    sect->add("created", (int64_t)dateCreated);
     // Last save
     dateLastSave = ::time(nullptr);
-    sect->add("lastSave", (sint64)dateLastSave);
+    sect->add("lastSave", (int64_t)dateLastSave);
 
     // The author
     sect->add("author", author);

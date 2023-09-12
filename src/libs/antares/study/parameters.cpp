@@ -1162,7 +1162,7 @@ void Parameters::fixBadValues()
         nbTimeSeriesSolar = 1;
 }
 
-Yuni::uint64 Parameters::memoryUsage() const
+uint64 Parameters::memoryUsage() const
 {
     return sizeof(Parameters) + yearsWeight.size() * sizeof(double)
            + yearsFilter.size(); // vector of bools, 1 bit per coefficient

@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
 
     initializeStudy(*study);
     TimeSeriesNumbers::Generate(*study);
-    Matrix<Yuni::uint32> series(2, 2);
+    Matrix<uint32_t> series(2, 2);
     series[0][0] = 0;
     series[0][1] = 1;
     series[1][0] = 42;
@@ -106,7 +106,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
 
     fs::path test1_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "test1.txt";
     BOOST_CHECK_EQUAL(fs::exists(test1_path), true);
-    Matrix<Yuni::uint32> out;
+    Matrix<uint32_t> out;
     out.loadFromCSVFile(test1_path.string());
     BOOST_CHECK_EQUAL(series[0][0]+1, out[0][0]);
     BOOST_CHECK_EQUAL(series[0][1]+1, out[0][1]);

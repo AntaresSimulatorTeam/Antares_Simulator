@@ -137,7 +137,7 @@ protected:
 
     void merge(uint year, const IntermediateValues& rhs);
 
-    Yuni::uint64 memoryUsage() const
+    uint64 memoryUsage() const
     {
         return sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
     }

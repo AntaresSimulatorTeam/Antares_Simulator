@@ -33,7 +33,7 @@ namespace Antares
 {
 namespace Data
 {
-inline Yuni::uint64 XCast::memoryUsage() const
+inline uint64 XCast::memoryUsage() const
 {
     return sizeof(XCast) + data.memoryUsage() + K.memoryUsage() + translation.memoryUsage()
            + conversion.memoryUsage();

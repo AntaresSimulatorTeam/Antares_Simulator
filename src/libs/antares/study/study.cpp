@@ -625,7 +625,7 @@ YString StudyCreateOutputPath(StudyMode mode,
                               ResultFormat fmt,
                               const YString& outputRoot,
                               const YString& label,
-                              Yuni::sint64 startTime)
+                              int64_t startTime)
 {
     auto suffix = getOutputSuffix(fmt);
 

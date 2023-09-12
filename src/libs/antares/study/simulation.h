@@ -68,7 +68,7 @@ public:
     void saveUsingWriter(Solver::IResultWriter::Ptr writer, const AnyString& folder) const;
 
     //! Get (in bytes) the amount of memory used by the class
-    Yuni::uint64 memoryUsage() const;
+    uint64 memoryUsage() const;
 
 public:
     //! Comments
