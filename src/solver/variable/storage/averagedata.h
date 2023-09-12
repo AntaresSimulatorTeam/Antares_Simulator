@@ -27,7 +27,7 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_AVERAGE_DATA_H__
 #define __SOLVER_VARIABLE_STORAGE_AVERAGE_DATA_H__
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 namespace Antares
 {

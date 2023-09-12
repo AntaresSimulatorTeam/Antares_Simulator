@@ -27,7 +27,7 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_RESULTS_H__
 #define __SOLVER_VARIABLE_STORAGE_RESULTS_H__
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "intermediate.h"
 #include "../categories.h"
 #include "fwd.h"

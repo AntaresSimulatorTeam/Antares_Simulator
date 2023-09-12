@@ -30,7 +30,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include "../constants.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "../categories.h"
 #include "../surveyresults.h"
 

@@ -33,16 +33,16 @@ INSTALL(EXPORT antares-vacuum
 )
 
 set(VACUUM_LIBS
-	antares-core
 	antares-fswalker
 	yuni-static-core
 	${CMAKE_THREADS_LIBS_INIT}
+	Antares::study
 )
 
 target_link_libraries(${execname}
 		PRIVATE
 			${VACUUM_LIBS}
-			array
+		libantares-core #version.h
 		)
 
 import_std_libs(${execname})

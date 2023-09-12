@@ -30,7 +30,7 @@
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 #include "nodes/connection.h"
 #include "component.h"
-#include <antares/utils.h>
+#include <antares/utils/utils.h>
 #include "../../../application/main/main.h"
 #include "../../../application/study.h"
 #include "../../../windows/inspector.h"

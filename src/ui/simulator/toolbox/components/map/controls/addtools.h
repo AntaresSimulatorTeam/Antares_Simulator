@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_MAP_CONTROLS_ADD_TOOLS_H__
 #define __ANTARES_TOOLBOX_MAP_CONTROLS_ADD_TOOLS_H__
 
-#include <antares/wx-wrapper.h>
 #include "../tools/tool.h"
 #include "../manager.h"
 

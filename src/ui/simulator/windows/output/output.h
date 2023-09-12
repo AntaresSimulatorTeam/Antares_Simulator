@@ -27,7 +27,6 @@
 #ifndef __ANTARES_WINDOWS_OUTPUT_OUTPUT_H__
 #define __ANTARES_WINDOWS_OUTPUT_OUTPUT_H__
 
-#include <antares/wx-wrapper.h>
 #include <ui/common/component/panel.h>
 #include "../../application/study.h"
 #include "../../toolbox/components/button.h"

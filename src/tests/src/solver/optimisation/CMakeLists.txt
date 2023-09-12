@@ -13,8 +13,7 @@ target_link_libraries(${EXECUTABLE_NAME}
                       PRIVATE
                       Boost::unit_test_framework
                       model_antares
-                      antares-core
-					array
+ 					  array
 )
 
 # Storing tests-ts-numbers under the folder Unit-tests in the IDE

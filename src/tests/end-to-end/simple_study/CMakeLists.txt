@@ -13,7 +13,6 @@ add_executable(tests-simple-study
 target_link_libraries(tests-simple-study
 						PRIVATE
 						test_utils
-						antares-core
 						antares-solver-main-economy
 						antares-solver-main-adequacy
 						antares-solver-hydro

@@ -11,7 +11,7 @@
 #include <fstream>
 #include "antares/study/constraint.h"
 #include "antares/study/area/area.h"
-#include "antares/study.h"
+#include <antares/study/study.h>
 #include <filesystem>
 #include "utils.h"
 

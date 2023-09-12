@@ -31,7 +31,7 @@
 #include <memory>
 #include <yuni/core/string.h>
 #include <antares/study/xcast/xcast.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 namespace Antares
 {

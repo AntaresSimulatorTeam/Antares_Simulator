@@ -11,4 +11,7 @@ target_include_directories(antares-solver-aleatoire
 		PRIVATE
 		${CMAKE_SOURCE_DIR}/solver)
 
-target_link_libraries(antares-solver-aleatoire PRIVATE antares-core)
+target_link_libraries(antares-solver-aleatoire
+	PUBLIC
+		Antares::study
+)

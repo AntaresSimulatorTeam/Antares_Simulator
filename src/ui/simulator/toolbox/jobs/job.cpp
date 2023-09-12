@@ -26,7 +26,6 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/wx-wrapper.h>
 #include <yuni/thread/thread.h>
 #include <yuni/core/math.h>
 

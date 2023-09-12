@@ -89,8 +89,9 @@ else()
 endif()
 target_link_libraries(model_antares
 		PUBLIC
-		antares-core
 		utils
 		sirius_solver
 		infeasible_problem_analysis
-		antares-solver-simulation)
+		antares-solver-simulation
+		Antares::benchmarking
+)

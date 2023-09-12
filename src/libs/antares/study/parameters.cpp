@@ -1075,7 +1075,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     if (options.usedByTheSolver)
         prepareForSimulation(options);
 
-    if (options.mpsToExport)
+    if (options.mpsToExport || options.namedProblems)
     {
         this->include.exportMPS = mpsExportStatus::EXPORT_BOTH_OPTIMS;
     }

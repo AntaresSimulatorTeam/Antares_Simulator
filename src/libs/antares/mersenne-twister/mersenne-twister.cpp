@@ -30,7 +30,7 @@
 ** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "mersenne-twister.h"
+#include "antares/mersenne-twister/mersenne-twister.h"
 #include <cassert>
 
 #define MATRIX_A 0x9908b0dfUL   // constant vector a

@@ -43,7 +43,7 @@
 #include "drag-drop.hxx"
 
 // Antares study
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 // Antares memory allocation check
 #include <antares/memory/new_check.hxx>

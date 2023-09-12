@@ -18,7 +18,6 @@ target_include_directories(test-sc-builder-file-read-line
 target_link_libraries(test-sc-builder-file-read-line
 						PRIVATE
 							Boost::unit_test_framework
-							antares-core
 							model_antares
 )
 # Linux
@@ -53,7 +52,6 @@ target_include_directories(test-sc-builder-file-save
 target_link_libraries(test-sc-builder-file-save
   PRIVATE
 						Boost::unit_test_framework
-						antares-core
 						model_antares
 )
 

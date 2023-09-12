@@ -21,8 +21,10 @@ target_include_directories(thermal-price-definition
 target_link_libraries(thermal-price-definition
 						PRIVATE
 							Boost::unit_test_framework
-							antares-core
 							checks
+							Antares::study
+							Antares::exception
+							Antares::checks
 )
 # Linux
 if(UNIX AND NOT APPLE)

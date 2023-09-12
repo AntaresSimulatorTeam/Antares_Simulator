@@ -27,7 +27,7 @@
 
 #include "main.h"
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 #include "../menus.h"
 #include "../study.h"

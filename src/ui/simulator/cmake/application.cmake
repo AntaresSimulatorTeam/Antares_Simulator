@@ -74,5 +74,6 @@ target_link_libraries(antares-ui-application
 							antares-ui-common
                             antares-core
 							Antares::sys
+							Antares::study
 )
 

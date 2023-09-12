@@ -16,6 +16,7 @@ target_link_libraries(${PROJ}
         yuni-static-core
         PUBLIC
         Antares::benchmarking
+        Antares::study
 )
 
 target_include_directories(${PROJ}

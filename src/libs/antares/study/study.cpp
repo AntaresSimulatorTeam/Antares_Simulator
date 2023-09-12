@@ -51,9 +51,8 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 //! Clear then shrink a string
 template<class StringT>
@@ -1549,5 +1548,5 @@ void Study::prepareWriter(Benchmarking::IDurationCollector* duration_collector)
       parameters.resultFormat, folderOutput, pQueueService, duration_collector);
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

@@ -31,11 +31,9 @@
 #include <yuni/core/string.h>
 #include <yuni/core/bind.h>
 #include "version.h"
-#include "../paths/list.h"
+#include <antares/paths/list.h>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 class StudyCleaningInfos final
 {
@@ -102,7 +100,7 @@ public:
 
 }; // class StudyCleaningInfos
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+
 
 #endif /* __ANTARES_LIBS_STUDY_CLEANER_H__ */

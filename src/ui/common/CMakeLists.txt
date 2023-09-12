@@ -20,6 +20,7 @@ target_link_libraries(antares-ui-dispatcher
 		PUBLIC
 			${wxWidgets_LIBRARIES}
 			antares-core
+		    Antares::study
 		)
 
 # Common
@@ -42,6 +43,7 @@ target_link_libraries(antares-ui-common
 		PUBLIC
 			${wxWidgets_LIBRARIES}
 			antares-core
+			Antares::study
 		)
 
 
@@ -115,6 +117,7 @@ target_link_libraries(antares-ui-component-frame
 			${wxWidgets_LIBRARIES}
 		PRIVATE
 			antares-core
+		    Antares::study
 		)
 
 # Scrollbox

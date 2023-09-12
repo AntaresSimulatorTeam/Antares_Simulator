@@ -29,7 +29,7 @@
 #include <antares/logs/logs.h>
 #include <yuni/core/getopt.h>
 #include "../../ui/common/winmain.hxx"
-#include <antares/utils.h>
+#include <antares/utils/utils.h>
 #include <antares/version.h>
 #include <antares/sys/policy.h>
 #include <yuni/core/system/cpu.h>

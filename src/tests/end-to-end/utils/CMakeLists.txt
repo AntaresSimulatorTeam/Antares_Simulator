@@ -5,7 +5,6 @@ add_library(test_utils
 
 target_link_libraries(test_utils
         PRIVATE
-        antares-core
         antares-solver-simulation
         PUBLIC
         ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}

@@ -38,7 +38,8 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |--optimization-range | Force the simplex optimization range ('day' or 'week') |
 |--no-constraints | Ignore all binding constraints|
 |--no-ts-import | Do not import timeseries into the input folder. <br/> (This option may be useful for running old studies without upgrade)|
-|--mps-export | Export weekly or daily optimal UC+dispatch linear |
+|-m, --mps-export | Export anonymous mps weekly or daily optimal UC+dispatch linear |
+|-s, --named-mps-problems | Export named mps weekly or daily optimal UC+dispatch linear |
 
 - Misc.
 

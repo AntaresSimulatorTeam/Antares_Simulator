@@ -42,6 +42,10 @@ set(SRC_UI_WINDOWS_STUDYPARTS
 add_Library(antares-ui-windows-studyparts  ${SRC_UI_WINDOWS_STUDYPARTS})
 
 
-target_link_libraries(antares-ui-windows-studyparts PUBLIC ${wxWidgets_LIBRARIES})
+target_link_libraries(antares-ui-windows-studyparts
+		PUBLIC
+		${wxWidgets_LIBRARIES}
+		Antares::study
+)
 target_link_libraries(antares-ui-windows-studyparts PRIVATE antares-ui-common)
 

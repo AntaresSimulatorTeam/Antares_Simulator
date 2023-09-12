@@ -30,7 +30,7 @@
 #include <yuni/thread/thread.h>
 #include "memorystatistics.h"
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "../../application/study.h"
 #include "../../toolbox/create.h"
 #include "../../toolbox/resources.h"

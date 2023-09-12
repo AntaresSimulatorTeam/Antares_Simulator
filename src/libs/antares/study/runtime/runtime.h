@@ -30,7 +30,7 @@
 #include <string>
 #include <vector>
 #include "../study.h"
-#include "../../mersenne-twister/mersenne-twister.h"
+#include <antares/mersenne-twister/mersenne-twister.h>
 
 namespace Antares::Data
 {

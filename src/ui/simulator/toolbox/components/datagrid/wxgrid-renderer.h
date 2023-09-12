@@ -29,7 +29,6 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
-#include <antares/wx-wrapper.h>
 #include <wx/grid.h>
 #include "renderer.h"
 
