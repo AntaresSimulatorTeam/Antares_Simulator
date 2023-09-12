@@ -10,16 +10,6 @@ add_library(checks
 add_library(Antares::checks ALIAS checks)
 
 target_include_directories(checks
-        PRIVATE
-#        ${CMAKE_SOURCE_DIR}/libs/
-#        ${CMAKE_SOURCE_DIR}/libs/antares/study
-#        ${CMAKE_SOURCE_DIR}/libs/antares/inifile #adq-patch-params
-#        ${CMAKE_SOURCE_DIR}/libs/antares/array #area
-#        ${CMAKE_SOURCE_DIR}/libs/antares/io #area -> matrix -> io
-#        ${CMAKE_SOURCE_DIR}/libs/antares/date #area -> parameter -> date
-#        ${CMAKE_SOURCE_DIR}/libs/antares/writer #area -> antares/parts/thermal/cluster -> writer
-#        ${CMAKE_SOURCE_DIR}/libs/antares/jit #area -> matrix -> jit
-#        ${CMAKE_SOURCE_DIR}/libs/antares/memory/include #area -> matrix -> memory
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
 )

@@ -425,6 +425,7 @@ add_library(Antares::study ALIAS study)
 
 target_link_libraries(study
     PUBLIC
+        Boost::boost
         yuni-static-core
         Boost::boost
         Antares::array #xcast
@@ -439,9 +440,11 @@ target_link_libraries(study
         Antares::object
     PRIVATE
         Antares::exception
+        Antares::benchmarking
 )
 
 target_include_directories(study
-    PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/../..
+     PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/../.. #Dirty trick to allow inclusion via <antares/study/X>
+        # Make more than just study visible but it's the lesser evil for now
 )
