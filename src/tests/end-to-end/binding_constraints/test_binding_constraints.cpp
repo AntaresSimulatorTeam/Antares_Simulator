@@ -315,31 +315,4 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_out_of_bound_use_random_fallback
     BOOST_TEST(output.flow(link).hour(0) == 0., tt::tolerance(0.001));
 }
 
-BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_out_of_bound_use_random_fallback_to_Oth_column)
-{
-    int nbYears = 10;
-
-    setNumberMCyears(study, nbYears);
-
-    BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
-    BC->operatorType(BindingConstraint::opEquality);
-
-    unsigned int numberOfTS = 1;
-    BCrhsConfig bcRHSconfig(BC, numberOfTS);
-    bcRHSconfig.fillTimeSeriesWith(0, 0.);
-
-    BCgroupScenarioBuilder bcGroupScenarioBuilder(study, nbYears);
-    for (int y = 0; y < 10; y++) 
-        bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), y, 0);
-
-    bcGroupScenarioBuilder.yearGetsTSnumber(BC->group(), 8, 42); // Here year 9
-
-    simulation->create();
-    giveWeigthOnlyToYear(8);
-    simulation->run();
-
-    unsigned int hour = 0;
-    BOOST_TEST(getLinkFlowAthour(simulation->get(), link, hour) == 0., tt::tolerance(0.001));
-}
-
 BOOST_AUTO_TEST_SUITE_END()
