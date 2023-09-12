@@ -39,8 +39,6 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
     DONNEES_ANNUELLES* DonneesAnnuelles;
     PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
 
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
-
     DonneesAnnuelles = (DONNEES_ANNUELLES*)malloc(sizeof(DONNEES_ANNUELLES));
     if (DonneesAnnuelles == NULL)
     {
@@ -72,13 +70,6 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
 
     ProblemeHydraulique->NombreDeReservoirs = NombreDeReservoirs;
 
-    ProblemeHydraulique->ProblemeLineairePartieVariable
-      = (PROBLEME_LINEAIRE_PARTIE_VARIABLE*)malloc(sizeof(PROBLEME_LINEAIRE_PARTIE_VARIABLE));
-    if (ProblemeHydraulique->ProblemeLineairePartieVariable == NULL)
-    {
-        return (0);
-    }
-
     ProblemeHydraulique->ProblemeSpx
       = (void**)malloc((unsigned int)NombreDeReservoirs * sizeof(void*));
     if (ProblemeHydraulique->ProblemeSpx == NULL)
@@ -92,9 +83,12 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
 
     ProblemeHydraulique->Probleme = NULL;
 
-    CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables;
-    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe = ProblemeHydraulique->ProblemeLineairePartieFixe;
-    ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable;
+    CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
+        = ProblemeHydraulique->CorrespondanceDesVariables;
+    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
+        = ProblemeHydraulique->ProblemeLineairePartieFixe;
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
+        = ProblemeHydraulique->ProblemeLineairePartieVariable;
 
     CorrespondanceDesVariables.NumeroDeVariableVolume.assign(NbPdt, 0);
     CorrespondanceDesVariables.NumeroDeVariableTurbine.assign(NbPdt, 0);
@@ -151,21 +145,21 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
 
     ProblemeLineairePartieFixe.IndicesColonnes.assign(NombreDeTermesAlloues, 0);
 
-    ProblemeLineairePartieVariable->Xmin.assign(NombreDeVariables, 0.);
-    ProblemeLineairePartieVariable->Xmax.assign(NombreDeVariables, 0.);
-    ProblemeLineairePartieVariable->SecondMembre.assign(NombreDeContraintes, 0.);
+    ProblemeLineairePartieVariable.Xmin.assign(NombreDeVariables, 0.);
+    ProblemeLineairePartieVariable.Xmax.assign(NombreDeVariables, 0.);
+    ProblemeLineairePartieVariable.SecondMembre.assign(NombreDeContraintes, 0.);
 
-    ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees
+    ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees
         .assign(NombreDeVariables, nullptr);
 
-    ProblemeLineairePartieVariable->X.assign(NombreDeVariables, 0.);
+    ProblemeLineairePartieVariable.X.assign(NombreDeVariables, 0.);
 
 
-    ProblemeLineairePartieVariable->PositionDeLaVariable.assign(NombreDeVariables, 0);
-    ProblemeLineairePartieVariable->ComplementDeLaBase.assign(NombreDeContraintes, 0);
+    ProblemeLineairePartieVariable.PositionDeLaVariable.assign(NombreDeVariables, 0);
+    ProblemeLineairePartieVariable.ComplementDeLaBase.assign(NombreDeContraintes, 0);
 
-    ProblemeLineairePartieVariable->CoutsReduits.assign(NombreDeVariables, 0.);
-    ProblemeLineairePartieVariable->CoutsMarginauxDesContraintes.assign(NombreDeContraintes, 0.);
+    ProblemeLineairePartieVariable.CoutsReduits.assign(NombreDeVariables, 0.);
+    ProblemeLineairePartieVariable.CoutsMarginauxDesContraintes.assign(NombreDeContraintes, 0.);
 
     H2O_M_ConstruireLesVariables(DonneesAnnuelles);
 

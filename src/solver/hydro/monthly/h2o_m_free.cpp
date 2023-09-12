@@ -49,8 +49,6 @@ void H2O_M_Free(DONNEES_ANNUELLES* DonneesAnnuelles)
 
     ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
 
-    free(ProblemeHydraulique->ProblemeLineairePartieVariable);
-
     for (i = 0; i < ProblemeHydraulique->NombreDeReservoirs; i++)
     {
         ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique->ProblemeSpx[i];

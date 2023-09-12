@@ -31,7 +31,7 @@
 void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES* DonneesAnnuelles)
 {
     PROBLEME_HYDRAULIQUE* ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
         = ProblemeHydraulique->ProblemeLineairePartieVariable;
 
     double ChgmtSens = -1;
@@ -39,7 +39,7 @@ void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES* DonneesAnnuelles)
     int Cnt = 0;
 
     auto& TurbineCible = DonneesAnnuelles->TurbineCible;
-    auto& SecondMembre = ProblemeLineairePartieVariable->SecondMembre;
+    auto& SecondMembre = ProblemeLineairePartieVariable.SecondMembre;
 
     for (int Pdt = 1; Pdt < NbPdt; Pdt++)
     {
