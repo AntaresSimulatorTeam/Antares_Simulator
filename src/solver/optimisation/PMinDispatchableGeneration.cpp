@@ -4,12 +4,12 @@ void PMinDispatchableGeneration::add(int pays,
                                      int cluster,
                                      int clusterIndex,
                                      int pdt,
-                                     bool Simulation)
+                                     bool Simulation,
+                                     StartUpCostsData& data)
 {
     if (!Simulation)
     {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays = data.PaliersThermiquesDuPays[pays];
         double pminDUnGroupeDuPalierThermique
           = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
 
@@ -20,13 +20,12 @@ void PMinDispatchableGeneration::add(int pays,
         /*consider Adding naming constraint inside the builder*/
         if (builder.NumberOfVariables() > 0)
         {
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.NamedProblems);
+            namer.UpdateArea(builder.data.NomsDesPays[pays]);
 
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+            namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
             namer.PMinDispatchableGeneration(
-              problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+              builder.data.nombreDeContraintes,
               PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
         }
           builder.build();
@@ -34,6 +33,6 @@ void PMinDispatchableGeneration::add(int pays,
     else
     {
         nbTermesContraintesPourLesCoutsDeDemarrage += 2;
-        problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
+        builder.data.nombreDeContraintes++;
     }
 }

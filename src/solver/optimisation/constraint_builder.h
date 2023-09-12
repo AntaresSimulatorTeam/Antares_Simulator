@@ -377,6 +377,11 @@ struct BindingConstraintData
     const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
 };
 
+struct StartUpCostsData
+{
+    const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
+};
+
 inline ConstraintBuilder GetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
   const PROBLEME_HEBDO* problemeHebdo,
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)

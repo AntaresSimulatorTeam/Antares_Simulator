@@ -54,6 +54,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     std::vector<int>& Colonne = ProblemeAResoudre->Colonne;
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo->NamedProblems);
+
+    StartUpCostsData startUpCostsData = {problemeHebdo->PaliersThermiquesDuPays};
+
     int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
@@ -69,11 +72,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                pMaxDispatchableGeneration.add(pays, palier, index, pdt, Simulation);
+                pMaxDispatchableGeneration.add(
+                  pays, palier, index, pdt, Simulation, startUpCostsData);
                 nbTermesContraintesPourLesCoutsDeDemarrage
                   += pMaxDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage;
 
-                pMinDispatchableGeneration.add(pays, palier, index, pdt, Simulation);
+                pMinDispatchableGeneration.add(
+                  pays, palier, index, pdt, Simulation, startUpCostsData);
                 nbTermesContraintesPourLesCoutsDeDemarrage
                   += pMinDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage;
             }
@@ -93,7 +98,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 ConsistenceNODU consistenceNODU(builder);
-                consistenceNODU.add(pays, palier, index, pdt, Simulation);
+                consistenceNODU.add(pays, palier, index, pdt, Simulation, startUpCostsData);
                 nbTermesContraintesPourLesCoutsDeDemarrage
                   += consistenceNODU.nbTermesContraintesPourLesCoutsDeDemarrage;
             }
@@ -114,7 +119,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                nbUnitsOutageLessThanNbUnitsStop.add(pays, palier, index, pdt, Simulation);
+                CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+                  = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+                NbUnitsOutageLessThanNbUnitsStopData nbUnitsOutageLessThanNbUnitsStopData
+                  = {startUpCostsData,
+                     CorrespondanceCntNativesCntOptim
+                       .NumeroDeContrainteDesContraintesDeDureeMinDeMarche};
+                nbUnitsOutageLessThanNbUnitsStop.add(
+                  pays, palier, index, pdt, Simulation, nbUnitsOutageLessThanNbUnitsStopData);
                 nbTermesContraintesPourLesCoutsDeDemarrage
                   += nbUnitsOutageLessThanNbUnitsStop.nbTermesContraintesPourLesCoutsDeDemarrage;
             }
@@ -138,7 +150,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                nbDispUnitsMinBoundSinceMinUpTime.add(pays, palier, index, pdt, Simulation);
+                CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+                  = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+                NbDispUnitsMinBoundSinceMinUpTimeData nbDispUnitsMinBoundSinceMinUpTimeData
+                  = {startUpCostsData,
+                     CorrespondanceCntNativesCntOptim
+                       .NumeroDeContrainteDesContraintesDeDureeMinDeMarche};
+                nbDispUnitsMinBoundSinceMinUpTime.add(
+                  pays, palier, index, pdt, Simulation, nbDispUnitsMinBoundSinceMinUpTimeData);
                 nbTermesContraintesPourLesCoutsDeDemarrage
                   += nbDispUnitsMinBoundSinceMinUpTime.nbTermesContraintesPourLesCoutsDeDemarrage;
             }
@@ -157,7 +176,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                minDownTime.add(pays, palier, index, pdt, Simulation);
+                CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+                  = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+                MinDownTimeData minDownTimeData
+                  = {startUpCostsData,
+                     CorrespondanceCntNativesCntOptim
+                       .NumeroDeContrainteDesContraintesDeDureeMinDArret};
+
+                minDownTime.add(pays, palier, index, pdt, Simulation, minDownTimeData);
                 nbTermesContraintesPourLesCoutsDeDemarrage
                   += minDownTime.nbTermesContraintesPourLesCoutsDeDemarrage;
             }

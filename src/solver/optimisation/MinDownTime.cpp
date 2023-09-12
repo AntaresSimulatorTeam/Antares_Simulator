@@ -1,19 +1,21 @@
 #include "MinDownTime.h"
 
-void MinDownTime::add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)
+void MinDownTime::add(int pays,
+                      int cluster,
+                      int clusterIndex,
+                      int pdt,
+                      bool Simulation,
+                      MinDownTimeData& data)
 {
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-      = problemeHebdo->PaliersThermiquesDuPays[pays];
+    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = data.PaliersThermiquesDuPays[pays];
     const int DureeMinimaleDArretDUnGroupeDuPalierThermique
       = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex];
 
-    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-      = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-    CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesContraintesDeDureeMinDArret[cluster] = -1;
+    data.NumeroDeContrainteDesContraintesDeDureeMinDArret[cluster] = -1;
     if (!Simulation)
     {
         int NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+          = builder.data.NombreDePasDeTempsPourUneOptimisation;
 
         const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
           = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
@@ -33,15 +35,13 @@ void MinDownTime::add(int pays, int cluster, int clusterIndex, int pdt, bool Sim
         builder.lessThan();
         if (builder.NumberOfVariables() > 1)
         {
-            CorrespondanceCntNativesCntOptim
-              .NumeroDeContrainteDesContraintesDeDureeMinDArret[cluster]
-              = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            data.NumeroDeContrainteDesContraintesDeDureeMinDArret[cluster]
+              = builder.data.nombreDeContraintes;
+            ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.NamedProblems);
+            namer.UpdateArea(builder.data.NomsDesPays[pays]);
 
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-            namer.MinDownTime(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+            namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
+            namer.MinDownTime(builder.data.nombreDeContraintes,
                               PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
 
             builder.build();
@@ -51,6 +51,6 @@ void MinDownTime::add(int pays, int cluster, int clusterIndex, int pdt, bool Sim
     {
         nbTermesContraintesPourLesCoutsDeDemarrage
           += 1 + DureeMinimaleDArretDUnGroupeDuPalierThermique;
-        problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
+        builder.data.nombreDeContraintes++;
     }
 }

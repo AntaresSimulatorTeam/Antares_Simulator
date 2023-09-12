@@ -4,21 +4,18 @@ void NbDispUnitsMinBoundSinceMinUpTime::add(int pays,
                                             int cluster,
                                             int clusterIndex,
                                             int pdt,
-                                            bool Simulation)
+                                            bool Simulation,
+                                            NbDispUnitsMinBoundSinceMinUpTimeData& data)
 {
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-      = problemeHebdo->PaliersThermiquesDuPays[pays];
+    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = data.PaliersThermiquesDuPays[pays];
     const int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
       = PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[clusterIndex];
 
-    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-      = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-    CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesContraintesDeDureeMinDeMarche[cluster]
-      = -1;
+    data.NumeroDeContrainteDesContraintesDeDureeMinDeMarche[cluster] = -1;
     if (!Simulation)
     {
         int NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+          = builder.data.NombreDePasDeTempsPourUneOptimisation;
 
         const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
           = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
@@ -40,17 +37,15 @@ void NbDispUnitsMinBoundSinceMinUpTime::add(int pays,
         builder.greaterThan();
         if (builder.NumberOfVariables() > 1)
         {
-            CorrespondanceCntNativesCntOptim
-              .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[cluster]
-              = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+            data.NumeroDeContrainteDesContraintesDeDureeMinDeMarche[cluster]
+              = builder.data.nombreDeContraintes;
 
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.NamedProblems);
+            namer.UpdateArea(builder.data.NomsDesPays[pays]);
 
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+            namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
             namer.NbDispUnitsMinBoundSinceMinUpTime(
-              problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+              builder.data.nombreDeContraintes,
               PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
             builder.build();
         }
@@ -59,6 +54,6 @@ void NbDispUnitsMinBoundSinceMinUpTime::add(int pays,
     {
         nbTermesContraintesPourLesCoutsDeDemarrage
           += 1 + 2 * DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
-        problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
+        builder.data.nombreDeContraintes++;
     }
 }

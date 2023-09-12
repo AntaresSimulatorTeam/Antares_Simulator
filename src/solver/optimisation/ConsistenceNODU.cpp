@@ -1,21 +1,22 @@
 #include "ConsistenceNODU.h"
 
-void ConsistenceNODU::add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)
+void ConsistenceNODU::add(int pays,
+                          int cluster,
+                          int clusterIndex,
+                          int pdt,
+                          bool Simulation,
+                          StartUpCostsData& data)
 {
     if (!Simulation)
     {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays = data.PaliersThermiquesDuPays[pays];
 
         int NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+          = builder.data.NombreDePasDeTempsPourUneOptimisation;
 
         int Pdtmoins1 = pdt - 1;
         if (Pdtmoins1 < 0)
             Pdtmoins1 = NombreDePasDeTempsPourUneOptimisation + Pdtmoins1;
-
-        CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptimTmoins1
-          = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdtmoins1];
 
         builder.updateHourWithinWeek(pdt)
           .include(Variable::NODU(cluster), 1.0)
@@ -28,12 +29,11 @@ void ConsistenceNODU::add(int pays, int cluster, int clusterIndex, int pdt, bool
 
         if (builder.NumberOfVariables() > 0)
         {
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.NamedProblems);
+            namer.UpdateArea(builder.data.NomsDesPays[pays]);
 
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-            namer.ConsistenceNODU(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+            namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
+            namer.ConsistenceNODU(builder.data.nombreDeContraintes,
                                   PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
 
             builder.build();
@@ -42,6 +42,6 @@ void ConsistenceNODU::add(int pays, int cluster, int clusterIndex, int pdt, bool
     else
     {
         nbTermesContraintesPourLesCoutsDeDemarrage += 4;
-        problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
+        builder.data.nombreDeContraintes++;
     }
 }

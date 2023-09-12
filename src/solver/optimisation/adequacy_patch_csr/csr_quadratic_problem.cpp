@@ -309,7 +309,7 @@ void CsrQuadraticProblem::buildConstraintMatrix()
 
     std::vector<double> Pi(problemeAResoudre_.NombreDeVariables);
     std::vector<int> Colonne(problemeAResoudre_.NombreDeVariables);
-
+    // TODO reset problemeAResoudre_.Pi and problemeAResoudre_.Colonne?
     problemeAResoudre_.NombreDeContraintes = 0;
     problemeAResoudre_.NombreDeTermesDansLaMatriceDesContraintes = 0;
 
