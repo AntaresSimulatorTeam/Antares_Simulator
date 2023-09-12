@@ -72,7 +72,7 @@ typedef struct
        resultats contenus dans X */
     double** AdresseOuPlacerLaValeurDesVariablesOptimisees;
     /* Resultat */
-    double* X;
+    std::vector<double> X;
     /* En Entree ou en Sortie */
     int ExistenceDUneSolution; /* En sortie, vaut :
                                   OUI_SPX s'il y a une solution,
@@ -86,8 +86,8 @@ typedef struct
 
     int* PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
     int* ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    double* CoutsReduits;      /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
-    double* CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer les couts
+    std::vector<double> CoutsReduits;      /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
+    std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer les couts
                                              marginaux */
 } PROBLEME_LINEAIRE_PARTIE_VARIABLE;
 

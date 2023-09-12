@@ -213,12 +213,7 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
         return (0);
     }
 
-    ProblemeLineairePartieVariable->X
-      = (double*)malloc((unsigned int)NombreDeVariables * sizeof(double));
-    if (ProblemeLineairePartieVariable->X == NULL)
-    {
-        return (0);
-    }
+    ProblemeLineairePartieVariable->X.assign(NombreDeVariables, 0.);
 
     for (j = 0; j < NombreDeVariables; j++)
     {
@@ -239,19 +234,8 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
         return (0);
     }
 
-    ProblemeLineairePartieVariable->CoutsReduits
-      = (double*)malloc((unsigned int)NombreDeVariables * sizeof(double));
-    if (ProblemeLineairePartieVariable->CoutsReduits == NULL)
-    {
-        return (0);
-    }
-
-    ProblemeLineairePartieVariable->CoutsMarginauxDesContraintes
-      = (double*)malloc((unsigned int)NombreDeContraintes * sizeof(double));
-    if (ProblemeLineairePartieVariable->CoutsMarginauxDesContraintes == NULL)
-    {
-        return (0);
-    }
+    ProblemeLineairePartieVariable->CoutsReduits.assign(NombreDeVariables, 0.);
+    ProblemeLineairePartieVariable->CoutsMarginauxDesContraintes.assign(NombreDeContraintes, 0.);
 
     H2O_M_ConstruireLesVariables(DonneesAnnuelles);
 
