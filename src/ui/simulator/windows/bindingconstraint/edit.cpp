@@ -32,7 +32,7 @@
 #include <wx/sizer.h>
 #include <wx/frame.h>
 #include <wx/stattext.h>
-#include <antares/utils.h>
+#include <antares/utils/utils.h>
 #include <wx/button.h>
 #include <wx/textctrl.h>
 #include <wx/choice.h>

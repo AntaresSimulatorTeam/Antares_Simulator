@@ -74,5 +74,6 @@ target_link_libraries(libantares-ui-application
 							libantares-ui-common
                             libantares-core
 							Antares::sys
+							Antares::study
 )
 

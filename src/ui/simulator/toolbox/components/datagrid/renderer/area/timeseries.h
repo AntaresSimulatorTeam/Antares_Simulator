@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_TIMESERIES_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_TIMESERIES_H__
 
-#include <antares/wx-wrapper.h>
 #include "../area.h"
 #include "../matrix.h"
 #include "../../../../input/thermal-cluster.h"

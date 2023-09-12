@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_WEEKDAY_H__
 #define __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_WEEKDAY_H__
 
-#include <antares/wx-wrapper.h>
 #include "../filter.h"
 #include <antares/date/date.h>
 #include <antares/study/study.h>

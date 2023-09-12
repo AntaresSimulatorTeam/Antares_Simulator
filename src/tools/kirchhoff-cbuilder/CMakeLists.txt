@@ -22,7 +22,6 @@ INSTALL(EXPORT antares-kirchhoff-constraints-builder
 )
 
 set(KIRCHHOFF_CBUILDER_LIBS
-	libantares-core
 	yuni-static-core
 	${CMAKE_THREADS_LIBS_INIT}
 )

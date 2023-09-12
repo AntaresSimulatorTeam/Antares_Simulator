@@ -27,10 +27,9 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_NODAL_OPTIMIZATION_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_NODAL_OPTIMIZATION_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../gridhelper.h"
 #include "../../renderer.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <yuni/core/event.h>
 
 namespace Antares

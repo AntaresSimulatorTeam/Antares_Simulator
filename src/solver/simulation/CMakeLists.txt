@@ -57,6 +57,9 @@ target_include_directories(libantares-solver-simulation PUBLIC
 		${CMAKE_SOURCE_DIR}/solver/simulation)
 
 target_link_libraries(libantares-solver-simulation PRIVATE
-		libantares-core
 		Antares::infoCollection
+		PUBLIC
+		yuni-static-core
+		Antares::study
+		Antares::result_writer
 )

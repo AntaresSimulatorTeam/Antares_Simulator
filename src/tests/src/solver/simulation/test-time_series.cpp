@@ -6,7 +6,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
-#include "antares/study.h"
+#include <antares/study/study.h>
 #include <filesystem>
 #include <fstream>
 #include "utils.h"

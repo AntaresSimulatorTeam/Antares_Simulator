@@ -4,11 +4,9 @@
 
 #include "cluster.h"
 #include "../../study.h"
-#include "../../../utils.h"
+#include <antares/utils/utils.h>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 Cluster::Cluster(Area* parent) :
  unitCount(0),
@@ -122,5 +120,5 @@ bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
     return (s1->getFullName() < s2->getFullName());
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

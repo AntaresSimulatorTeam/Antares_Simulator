@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <numeric>
 
 //#include <map>

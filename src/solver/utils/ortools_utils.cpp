@@ -3,7 +3,6 @@
 #include <antares/logs/logs.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hpp>
-#include <antares/fatal-error.h>
 #include <filesystem>
 
 using namespace operations_research;

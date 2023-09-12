@@ -26,7 +26,7 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "max-mrg.h"
 #include <antares/study/area/scratchpad.h>
 

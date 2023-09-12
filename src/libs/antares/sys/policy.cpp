@@ -31,7 +31,7 @@
 #include "antares/sys/appdata.h"
 #include <antares/logs/logs.h>
 #include <antares/inifile/inifile.h>
-#include "antares/sys/hostname.hxx"
+#include <antares/logs/hostname.hxx>
 #include "../config.h"
 #include <antares/fatal-error.h>
 #include <yuni/core/system/environment.h>

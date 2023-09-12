@@ -3,7 +3,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <string>
-#include <antares/utils.h>
+#include <antares/utils/utils.h>
 
 
 namespace {

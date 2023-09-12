@@ -43,8 +43,8 @@ add_library(libantares-solver-ts-generator
 
 target_link_libraries(libantares-solver-ts-generator
 		PRIVATE
-		libantares-core
 		result_writer
 		array
 		benchmarking
+		Antares::study
 )
