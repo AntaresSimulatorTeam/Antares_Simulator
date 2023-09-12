@@ -186,12 +186,8 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
     NombreDeContraintes += NbPdt;
 
     ProblemeLineairePartieFixe->NombreDeContraintes = NombreDeContraintes;
-    ProblemeLineairePartieFixe->Sens
-      = (char*)malloc((unsigned int)NombreDeContraintes * sizeof(char));
-    if (ProblemeLineairePartieFixe->Sens == NULL)
-    {
-        return (0);
-    }
+    ProblemeLineairePartieFixe->Sens.assign(NombreDeContraintes, 0);
+
     ProblemeLineairePartieFixe->IndicesDebutDeLigne
       = (int*)malloc((unsigned int)NombreDeContraintes * sizeof(int));
     if (ProblemeLineairePartieFixe->IndicesDebutDeLigne == NULL)

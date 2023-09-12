@@ -37,7 +37,6 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES* DonneesAnnuelles)
     int* IndicesColonnes;
     int* IndicesDebutDeLigne;
     int* NombreDeTermesDesLignes;
-    char* Sens;
     double ChgmtSens;
     int* NumeroDeVariableVolume;
     int* NumeroDeVariableTurbine;
@@ -63,7 +62,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES* DonneesAnnuelles)
       = ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes;
     IndicesColonnes = ProblemeLineairePartieFixe->IndicesColonnes;
     IndicesDebutDeLigne = ProblemeLineairePartieFixe->IndicesDebutDeLigne;
-    Sens = ProblemeLineairePartieFixe->Sens;
+    auto& Sens = ProblemeLineairePartieFixe->Sens;
     NombreDeTermesDesLignes = ProblemeLineairePartieFixe->NombreDeTermesDesLignes;
 
     NumeroDeVariableVolume = CorrespondanceDesVariables->NumeroDeVariableVolume;
