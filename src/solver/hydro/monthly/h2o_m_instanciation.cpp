@@ -207,18 +207,10 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
     ProblemeLineairePartieVariable->SecondMembre.assign(NombreDeContraintes, 0.);
 
     ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees
-      = (double**)malloc((unsigned int)NombreDeVariables * sizeof(double*));
-    if (ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees == NULL)
-    {
-        return (0);
-    }
+        .assign(NombreDeVariables, nullptr);
 
     ProblemeLineairePartieVariable->X.assign(NombreDeVariables, 0.);
 
-    for (j = 0; j < NombreDeVariables; j++)
-    {
-        ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[j] = NULL;
-    }
 
     ProblemeLineairePartieVariable->PositionDeLaVariable.assign(NombreDeVariables, 0);
     ProblemeLineairePartieVariable->ComplementDeLaBase.assign(NombreDeContraintes, 0);

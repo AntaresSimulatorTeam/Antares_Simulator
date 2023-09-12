@@ -61,8 +61,6 @@ void H2O_M_Free(DONNEES_ANNUELLES* DonneesAnnuelles)
 
     free(ProblemeHydraulique->ProblemeLineairePartieFixe);
 
-    free((ProblemeHydraulique->ProblemeLineairePartieVariable)
-           ->AdresseOuPlacerLaValeurDesVariablesOptimisees);
     free(ProblemeHydraulique->ProblemeLineairePartieVariable);
 
     for (i = 0; i < ProblemeHydraulique->NombreDeReservoirs; i++)
