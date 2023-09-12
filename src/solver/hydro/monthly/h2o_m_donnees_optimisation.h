@@ -112,7 +112,7 @@ typedef struct
 
     CORRESPONDANCE_DES_VARIABLES CorrespondanceDesVariables;
 
-    PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
+    PROBLEME_LINEAIRE_PARTIE_FIXE ProblemeLineairePartieFixe;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
 
     void** ProblemeSpx; /* Il y en a 1 par reservoir */

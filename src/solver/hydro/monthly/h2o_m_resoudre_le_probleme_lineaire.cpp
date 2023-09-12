@@ -52,19 +52,18 @@ void H2O_M_ResoudreLeProblemeLineaire(DONNEES_ANNUELLES* DonneesAnnuelles, int N
     double* pt;
     char PremierPassage;
 
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE* ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
-    PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
+    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
+        = ProblemeHydraulique->ProblemeLineairePartieFixe;
 
     PROBLEME_SIMPLEXE* Probleme;
     PROBLEME_SPX* ProbSpx;
 
     PremierPassage = OUI;
 
-    ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
 
     ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable;
-    ProblemeLineairePartieFixe = ProblemeHydraulique->ProblemeLineairePartieFixe;
 
     ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique->ProblemeSpx[NumeroDeReservoir];
 
@@ -95,27 +94,27 @@ RESOLUTION:
 
         SPX_ModifierLeVecteurSecondMembre(ProbSpx,
                                           ProblemeLineairePartieVariable->SecondMembre.data(),
-                                          ProblemeLineairePartieFixe->Sens.data(),
-                                          ProblemeLineairePartieFixe->NombreDeContraintes);
+                                          ProblemeLineairePartieFixe.Sens.data(),
+                                          ProblemeLineairePartieFixe.NombreDeContraintes);
     }
 
     Probleme->NombreMaxDIterations = -1;
     Probleme->DureeMaxDuCalcul = -1.;
 
-    Probleme->CoutLineaire = ProblemeLineairePartieFixe->CoutLineaireBruite.data();
+    Probleme->CoutLineaire = ProblemeLineairePartieFixe.CoutLineaireBruite.data();
     Probleme->X = ProblemeLineairePartieVariable->X.data();
     Probleme->Xmin = ProblemeLineairePartieVariable->Xmin.data();
     Probleme->Xmax = ProblemeLineairePartieVariable->Xmax.data();
-    Probleme->NombreDeVariables = ProblemeLineairePartieFixe->NombreDeVariables;
-    Probleme->TypeDeVariable = ProblemeLineairePartieFixe->TypeDeVariable.data();
+    Probleme->NombreDeVariables = ProblemeLineairePartieFixe.NombreDeVariables;
+    Probleme->TypeDeVariable = ProblemeLineairePartieFixe.TypeDeVariable.data();
 
-    Probleme->NombreDeContraintes = ProblemeLineairePartieFixe->NombreDeContraintes;
-    Probleme->IndicesDebutDeLigne = ProblemeLineairePartieFixe->IndicesDebutDeLigne.data();
-    Probleme->NombreDeTermesDesLignes = ProblemeLineairePartieFixe->NombreDeTermesDesLignes.data();
-    Probleme->IndicesColonnes = ProblemeLineairePartieFixe->IndicesColonnes.data();
+    Probleme->NombreDeContraintes = ProblemeLineairePartieFixe.NombreDeContraintes;
+    Probleme->IndicesDebutDeLigne = ProblemeLineairePartieFixe.IndicesDebutDeLigne.data();
+    Probleme->NombreDeTermesDesLignes = ProblemeLineairePartieFixe.NombreDeTermesDesLignes.data();
+    Probleme->IndicesColonnes = ProblemeLineairePartieFixe.IndicesColonnes.data();
     Probleme->CoefficientsDeLaMatriceDesContraintes
-      = ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes.data();
-    Probleme->Sens = ProblemeLineairePartieFixe->Sens.data();
+      = ProblemeLineairePartieFixe.CoefficientsDeLaMatriceDesContraintes.data();
+    Probleme->Sens = ProblemeLineairePartieFixe.Sens.data();
     Probleme->SecondMembre = ProblemeLineairePartieVariable->SecondMembre.data();
 
     Probleme->ChoixDeLAlgorithme = SPX_DUAL;
@@ -181,19 +180,19 @@ RESOLUTION:
         for (Var = 0; Var < Probleme->NombreDeVariables; Var++)
         {
             ProblemeHydraulique->CoutDeLaSolution
-              += ProblemeLineairePartieFixe->CoutLineaire[Var] * Probleme->X[Var];
+              += ProblemeLineairePartieFixe.CoutLineaire[Var] * Probleme->X[Var];
         }
 
         ProblemeHydraulique->CoutDeLaSolutionBruite = 0.0;
         for (Var = 0; Var < Probleme->NombreDeVariables; Var++)
         {
             ProblemeHydraulique->CoutDeLaSolutionBruite
-              += ProblemeLineairePartieFixe->CoutLineaireBruite[Var] * Probleme->X[Var];
+              += ProblemeLineairePartieFixe.CoutLineaireBruite[Var] * Probleme->X[Var];
         }
 
         DonneesAnnuelles->ResultatsValides = OUI;
 
-        for (Var = 0; Var < ProblemeLineairePartieFixe->NombreDeVariables; Var++)
+        for (Var = 0; Var < ProblemeLineairePartieFixe.NombreDeVariables; Var++)
         {
             pt = ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
             if (pt != NULL)

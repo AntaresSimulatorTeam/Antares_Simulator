@@ -32,12 +32,12 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuel
 {
     int Var;
 
-    const PROBLEME_HYDRAULIQUE* ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE* ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable
         = ProblemeHydraulique->ProblemeLineairePartieVariable;
     const CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
         = ProblemeHydraulique->CorrespondanceDesVariables;
-    PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe
+    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
         = ProblemeHydraulique->ProblemeLineairePartieFixe;
 
     DonneesAnnuelles->Volume[0] = DonneesAnnuelles->VolumeInitial;
@@ -51,7 +51,7 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuel
     auto& Xmin = ProblemeLineairePartieVariable->Xmin;
     auto& Xmax = ProblemeLineairePartieVariable->Xmax;
     auto& X = ProblemeLineairePartieVariable->X;
-    auto& CoutLineaire = ProblemeLineairePartieFixe->CoutLineaire;
+    auto& CoutLineaire = ProblemeLineairePartieFixe.CoutLineaire;
 
     Var = CorrespondanceDesVariables.NumeroDeVariableVolume[0];
     X[Var] = DonneesAnnuelles->Volume[0];

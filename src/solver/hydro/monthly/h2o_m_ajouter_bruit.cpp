@@ -12,12 +12,12 @@ constexpr unsigned int seed = 0x79686d64; // "hydm" in hexa
 void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES* DonneesAnnuelles)
 {
     PROBLEME_HYDRAULIQUE* ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
-    PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe
+    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
         = ProblemeHydraulique->ProblemeLineairePartieFixe;
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
         = ProblemeHydraulique->CorrespondanceDesVariables;
-    auto& CoutLineaireBruite = ProblemeLineairePartieFixe->CoutLineaireBruite;
-    const auto& CoutLineaire = ProblemeLineairePartieFixe->CoutLineaire;
+    auto& CoutLineaireBruite = ProblemeLineairePartieFixe.CoutLineaireBruite;
+    const auto& CoutLineaire = ProblemeLineairePartieFixe.CoutLineaire;
 
     Antares::MersenneTwister noiseGenerator;
     noiseGenerator.reset(Constants::seed); // Arbitrary seed, hard-coded since we don't really want
