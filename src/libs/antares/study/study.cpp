@@ -1542,7 +1542,7 @@ void Study::computePThetaInfForThermalClusters() const
     }
 }
 
-void Study::prepareWriter(Benchmarking::IDurationCollector* duration_collector)
+void Study::prepareWriter(Benchmarking::IDurationCollector& duration_collector)
 {
     resultWriter = Solver::resultWriterFactory(
       parameters.resultFormat, folderOutput, pQueueService, duration_collector);
