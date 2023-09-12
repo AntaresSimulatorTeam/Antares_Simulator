@@ -235,10 +235,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         {
             CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
               = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-            flowDissociation.add(
-              pdt,
-              interco,
-              CorrespondanceCntNativesCntOptim.NumeroDeContrainteDeDissociationDeFlux);
+            FlowDissociationData flowDissociationData
+              = {CorrespondanceCntNativesCntOptim.NumeroDeContrainteDeDissociationDeFlux,
+                 problemeHebdo->CoutDeTransport,
+                 problemeHebdo->PaysOrigineDeLInterconnexion,
+                 problemeHebdo->PaysExtremiteDeLInterconnexion};
+
+            flowDissociation.add(pdt, interco, flowDissociationData);
         }
         for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)

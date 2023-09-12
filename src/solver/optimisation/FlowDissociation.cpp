@@ -1,25 +1,20 @@
 #include "FlowDissociation.h"
 
-void FlowDissociation::add(int pdt,
-                           int interco,
-                           std::vector<int>& NumeroDeContrainteDeDissociationDeFlux)
+void FlowDissociation::add(int pdt, int interco, FlowDissociationData& data)
 {
-    if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
+    if (const COUTS_DE_TRANSPORT& CoutDeTransport = data.CoutDeTransport[interco];
         CoutDeTransport.IntercoGereeAvecDesCouts)
     {
         // TODO improve this
-        NumeroDeContrainteDeDissociationDeFlux[interco]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        data.NumeroDeContrainteDeDissociationDeFlux[interco] = builder.data.nombreDeContraintes;
         {
             const auto origin
-              = problemeHebdo->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
+              = builder.data.NomsDesPays[data.PaysOrigineDeLInterconnexion[interco]];
             const auto destination
-              = problemeHebdo->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-            namer.FlowDissociation(
-              problemeHebdo->ProblemeAResoudre->NombreDeContraintes, origin, destination);
+              = builder.data.NomsDesPays[data.PaysExtremiteDeLInterconnexion[interco]];
+            ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.NamedProblems);
+            namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
+            namer.FlowDissociation(builder.data.nombreDeContraintes, origin, destination);
         }
 
         builder.updateHourWithinWeek(pdt);
