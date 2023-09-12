@@ -33,7 +33,6 @@ void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES* DonneesAnnuelles)
     int Pdt;
     int Cnt;
     int NbPdt;
-    double* TurbineCible;
     double* SecondMembre;
     double ChgmtSens;
 
@@ -44,7 +43,7 @@ void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES* DonneesAnnuelles)
 
     NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
 
-    TurbineCible = DonneesAnnuelles->TurbineCible;
+    auto& TurbineCible = DonneesAnnuelles->TurbineCible;
 
     ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
 

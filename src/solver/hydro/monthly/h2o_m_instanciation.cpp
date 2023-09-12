@@ -59,22 +59,9 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
         return (NULL);
     }
 
-    DonneesAnnuelles->TurbineMax = (double*)malloc((unsigned int)NbPdt * sizeof(double));
-    if (DonneesAnnuelles->TurbineMax == NULL)
-    {
-        return (NULL);
-    }
-    DonneesAnnuelles->TurbineMin = (double*)malloc((unsigned int)NbPdt * sizeof(double));
-    if (DonneesAnnuelles->TurbineMin == NULL)
-    {
-        return (NULL);
-    }    
-
-    DonneesAnnuelles->TurbineCible = (double*)malloc((unsigned int)NbPdt * sizeof(double));
-    if (DonneesAnnuelles->TurbineCible == NULL)
-    {
-        return (NULL);
-    }
+    DonneesAnnuelles->TurbineMax.assign(NbPdt, 0.);
+    DonneesAnnuelles->TurbineMin.assign(NbPdt, 0.);
+    DonneesAnnuelles->TurbineCible.assign(NbPdt, 0.);
 
     DonneesAnnuelles->Apport = (double*)malloc((unsigned int)NbPdt * sizeof(double));
     if (DonneesAnnuelles->Apport == NULL)

@@ -35,5 +35,6 @@
 #include <string.h>
 #include <memory.h>
 #include <time.h>
+#include <vector>
 
 #endif /* __SOLVER_H2O_M_SYS__ */

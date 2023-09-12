@@ -36,8 +36,6 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuel
     double* Xmin;
     double* Xmax;
     double* X;
-    double* TurbineMax;
-    const double* TurbineMin;
     double* CoutLineaire;
     double CoutDepassementVolume;
 
@@ -50,8 +48,8 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuel
 
     NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
     CoutDepassementVolume = DonneesAnnuelles->CoutDepassementVolume;
-    TurbineMax = DonneesAnnuelles->TurbineMax;
-    TurbineMin = DonneesAnnuelles->TurbineMin;
+    auto& TurbineMax = DonneesAnnuelles->TurbineMax;
+    const auto& TurbineMin = DonneesAnnuelles->TurbineMin;
 
     ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
     ProblemeLineairePartieFixe = ProblemeHydraulique->ProblemeLineairePartieFixe;
