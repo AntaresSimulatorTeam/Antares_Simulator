@@ -84,8 +84,8 @@ typedef struct
                                   pas de solution
                                                  */
 
-    int* PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    int* ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    std::vector<int> PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    std::vector<int> ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
     std::vector<double> CoutsReduits;      /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
     std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer les couts
                                              marginaux */
