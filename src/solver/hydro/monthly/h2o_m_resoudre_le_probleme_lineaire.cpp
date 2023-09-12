@@ -110,9 +110,9 @@ RESOLUTION:
     Probleme->TypeDeVariable = ProblemeLineairePartieFixe->TypeDeVariable.data();
 
     Probleme->NombreDeContraintes = ProblemeLineairePartieFixe->NombreDeContraintes;
-    Probleme->IndicesDebutDeLigne = ProblemeLineairePartieFixe->IndicesDebutDeLigne;
-    Probleme->NombreDeTermesDesLignes = ProblemeLineairePartieFixe->NombreDeTermesDesLignes;
-    Probleme->IndicesColonnes = ProblemeLineairePartieFixe->IndicesColonnes;
+    Probleme->IndicesDebutDeLigne = ProblemeLineairePartieFixe->IndicesDebutDeLigne.data();
+    Probleme->NombreDeTermesDesLignes = ProblemeLineairePartieFixe->NombreDeTermesDesLignes.data();
+    Probleme->IndicesColonnes = ProblemeLineairePartieFixe->IndicesColonnes.data();
     Probleme->CoefficientsDeLaMatriceDesContraintes
       = ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes.data();
     Probleme->Sens = ProblemeLineairePartieFixe->Sens.data();

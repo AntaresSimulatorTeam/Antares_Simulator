@@ -59,9 +59,6 @@ void H2O_M_Free(DONNEES_ANNUELLES* DonneesAnnuelles)
            ->NumeroDeVariableDEcartNegatifAuTurbineCible);
     free(ProblemeHydraulique->CorrespondanceDesVariables);
 
-    free(ProblemeHydraulique->ProblemeLineairePartieFixe->IndicesDebutDeLigne);
-    free(ProblemeHydraulique->ProblemeLineairePartieFixe->NombreDeTermesDesLignes);
-    free(ProblemeHydraulique->ProblemeLineairePartieFixe->IndicesColonnes);
     free(ProblemeHydraulique->ProblemeLineairePartieFixe);
 
     free(ProblemeHydraulique->ProblemeLineairePartieVariable->Xmin);
