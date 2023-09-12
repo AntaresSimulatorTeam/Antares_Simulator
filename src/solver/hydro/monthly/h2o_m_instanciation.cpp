@@ -62,35 +62,13 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
     DonneesAnnuelles->TurbineMax.assign(NbPdt, 0.);
     DonneesAnnuelles->TurbineMin.assign(NbPdt, 0.);
     DonneesAnnuelles->TurbineCible.assign(NbPdt, 0.);
+    DonneesAnnuelles->Turbine.assign(NbPdt, 0.);
 
-    DonneesAnnuelles->Apport = (double*)malloc((unsigned int)NbPdt * sizeof(double));
-    if (DonneesAnnuelles->Apport == NULL)
-    {
-        return (NULL);
-    }
+    DonneesAnnuelles->Apport.assign(NbPdt, 0.);
 
-    DonneesAnnuelles->VolumeMin = (double*)malloc((unsigned int)NbPdt * sizeof(double));
-    if (DonneesAnnuelles->VolumeMin == NULL)
-    {
-        return (NULL);
-    }
-    DonneesAnnuelles->VolumeMax = (double*)malloc((unsigned int)NbPdt * sizeof(double));
-    if (DonneesAnnuelles->VolumeMax == NULL)
-    {
-        return (NULL);
-    }
-
-    DonneesAnnuelles->Turbine = (double*)malloc((unsigned int)NbPdt * sizeof(double));
-    if (DonneesAnnuelles->Turbine == NULL)
-    {
-        return (NULL);
-    }
-
-    DonneesAnnuelles->Volume = (double*)malloc((unsigned int)NbPdt * sizeof(double));
-    if (DonneesAnnuelles->Volume == NULL)
-    {
-        return (NULL);
-    }
+    DonneesAnnuelles->Volume.assign(NbPdt, 0.);
+    DonneesAnnuelles->VolumeMin.assign(NbPdt, 0.);
+    DonneesAnnuelles->VolumeMax.assign(NbPdt, 0.);
 
     ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
 

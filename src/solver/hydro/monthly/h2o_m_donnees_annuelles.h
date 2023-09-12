@@ -48,10 +48,10 @@ typedef struct
     std::vector<double> TurbineMax;            /* A renseigner par l'appelant : 1 valeur par mois */
     std::vector<double> TurbineMin;
     std::vector<double> TurbineCible;          /* A renseigner par l'appelant : 1 valeur par mois */
-    double* Apport;                /* A renseigner par l'appelant : 1 valeur par mois */
+    std::vector<double> Apport;                /* A renseigner par l'appelant : 1 valeur par mois */
     /* Pour decrire la bande de volumes permise */
-    double* VolumeMin; /* A renseigner par l'appelant : 1 valeur par mois */
-    double* VolumeMax; /* A renseigner par l'appelant : 1 valeur par mois */
+    std::vector<double> VolumeMin; /* A renseigner par l'appelant : 1 valeur par mois */
+    std::vector<double> VolumeMax; /* A renseigner par l'appelant : 1 valeur par mois */
 
     /* Les resultats */
     char
@@ -60,8 +60,8 @@ typedef struct
                            NON s'il y a eu un probleme dans la resolution
                                                                                                                      EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne
                                                                                                       */
-    double* Turbine;    /* Resultat a recuperer par l'appelant */
-    double* Volume;     /* Resultat a recuperer par l'appelant */
+    std::vector<double> Turbine;    /* Resultat a recuperer par l'appelant */
+    std::vector<double> Volume;     /* Resultat a recuperer par l'appelant */
 
     /******************************************************************************************/
     /* Problemes internes (utilise uniquement par l'optimisation) */
