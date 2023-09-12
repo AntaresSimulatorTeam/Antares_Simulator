@@ -402,7 +402,7 @@ Calendar::Calendar()
     settings_.weekday1rstJanuary = monday;
 }
 
-void Calendar::reset(settings settings)
+void Calendar::reset(Settings settings)
 {
     settings_ = settings;
     reset();

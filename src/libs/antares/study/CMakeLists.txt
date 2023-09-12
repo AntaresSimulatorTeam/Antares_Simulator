@@ -153,7 +153,6 @@ source_group("study\\action\\handler\\antares study\\constraint" FILES ${SRC_STU
 
 
 set(SRC_AREAS
-        area.h
         area/constants.h
         area/area.h
         area/area.hxx
@@ -428,6 +427,7 @@ target_link_libraries(study
     PUBLIC
         Boost::boost
         yuni-static-core
+        Boost::boost
         Antares::array #xcast
         Antares::date #parameters
         Antares::inifile #parameters
@@ -444,6 +444,7 @@ target_link_libraries(study
 )
 
 target_include_directories(study
-    PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/../..
+     PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/../.. #Dirty trick to allow inclusion via <antares/study/X>
+        # Make more than just study visible but it's the lesser evil for now
 )

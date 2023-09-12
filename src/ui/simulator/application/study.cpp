@@ -25,10 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include "study.h"
-#include <yuni/io/file.h>
-#include <yuni/io/directory.h>
 #include <yuni/core/system/environment.h>
-#include <antares/study/area.h>
+#include <antares/study/area/area.h>
 #include <antares/inifile/inifile.h>
 #include <antares/io/statistics.h>
 
@@ -44,7 +42,6 @@
 #include "../windows/saveas.h"
 #include "main.h"
 #include "menus.h"
-#include <map>
 #include "../windows/inspector/inspector.h"
 #include <ui/common/lock.h>
 
@@ -52,7 +49,6 @@
 #include "wait.h"
 #include <wx/busyinfo.h>
 #include <ui/common/wx-wrapper.h>
-#include "../toolbox/dispatcher/study.h"
 
 #include "../windows/startupwizard.h"
 #include <yuni/core/system/cpu.h>

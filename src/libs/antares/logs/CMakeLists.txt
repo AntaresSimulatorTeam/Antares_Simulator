@@ -4,6 +4,7 @@ set(HEADERS
         antares/${PROJ}/logs.h
         antares/${PROJ}/logs.hxx
         antares/${PROJ}/hostinfo.h
+        antares/${PROJ}/hostname.hxx
 )
 set(SRC_LOGS
         ${HEADERS}
@@ -16,10 +17,14 @@ source_group("misc\\logs" FILES ${SRC_LOGS})
 add_library(${PROJ} ${SRC_LOGS})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
+if(WIN32)
+        find_library(WSOCK32_LIBRARY wsock32)
+        find_library(WS2_32_LIBRARY ws2_32)
+        target_link_libraries(${PROJ} PUBLIC wsock32 ws2_32)
+endif()
 target_link_libraries(${PROJ}
-        PRIVATE
+        PUBLIC
         yuni-static-core
-        Antares::sys
         )
 
 target_include_directories(${PROJ}

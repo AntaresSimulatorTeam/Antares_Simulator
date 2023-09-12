@@ -24,6 +24,7 @@ target_link_libraries(thermal-price-definition
 							checks
 							Antares::study
 							Antares::exception
+							Antares::checks
 )
 # Linux
 if(UNIX AND NOT APPLE)

@@ -12,8 +12,8 @@
 #include "timeseries-numbers.h"
 #include "BindingConstraintsTimeSeriesNumbersWriter.h"
 #include "utils.h"
-#include "antares/writer/writer_factory.h"
-#include "antares/writer/result_format.h"
+#include <antares/writer/writer_factory.h>
+#include <antares/writer/result_format.h>
 
 using namespace Antares::Solver;
 using namespace Antares::Data;

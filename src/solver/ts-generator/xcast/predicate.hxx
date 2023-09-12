@@ -28,7 +28,7 @@
 #define __SOLVER_TS_GENERATOR_XCAST_PREDICATE_HXX__
 
 #include <yuni/yuni.h>
-#include <antares/study/area.h>
+#include <antares/study/area/area.h>
 #include <yuni/core/math.h>
 #include "antares/study/parts/load/prepro.h"
 

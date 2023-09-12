@@ -292,7 +292,7 @@ public:
     } mapping;
 
     //! The calendar settings
-    struct settings
+    struct Settings
     {
         //! Day of the week for the 1rst January
         DayOfTheWeek weekday1rstJanuary;
@@ -355,7 +355,7 @@ public:
     ** Reset the calendar from an instance of the class \p Parameters,
     ** \param parameters Simulation settings
     */
-    void reset(settings settings);
+    void reset(Settings settings);
 
     /*!
     ** \brief Export the whole calendar into a CSV file
@@ -365,7 +365,7 @@ public:
     bool saveToCSVFile(const AnyString& filename) const;
 
 private:
-    settings settings_;
+    Settings settings_;
 
 }; // class Calendar
 } // namespace Date
