@@ -288,6 +288,110 @@ public:
 
 } // anonymous namespace
 
+#define YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(TYPE, CONVERT)                           \
+    template<>                                                                          \
+    class Into<TYPE> final                                                              \
+    {                                                                                   \
+    public:                                                                             \
+        typedef TYPE IntoType;                                                          \
+        enum                                                                            \
+        {                                                                               \
+            valid = 1                                                                   \
+        };                                                                              \
+        enum                                                                            \
+        {                                                                               \
+            bufferSize = 256u                                                           \
+        };                                                                              \
+                                                                                        \
+        template<class StringT>                                                         \
+        static bool Perform(const StringT& s, IntoType& out)                            \
+        {                                                                               \
+            if (s.empty())                                                              \
+            {                                                                           \
+                out = IntoType();                                                       \
+                return true;                                                            \
+            }                                                                           \
+            char* pend;                                                                 \
+            int base;                                                                   \
+            if (not StringT::zeroTerminated)                                            \
+            {                                                                           \
+                char buffer[bufferSize];                                                \
+                if (s.size() < bufferSize)                                              \
+                {                                                                       \
+                    YUNI_MEMCPY(buffer, bufferSize, s.data(), s.size());                \
+                    buffer[s.size()] = '\0';                                            \
+                }                                                                       \
+                else                                                                    \
+                {                                                                       \
+                    YUNI_MEMCPY(buffer, bufferSize, s.data(), bufferSize - 1);          \
+                    buffer[bufferSize - 1] = '\0';                                      \
+                }                                                                       \
+                const char* p = AutoDetectBaseNumber::Value(buffer, s.size(), base);    \
+                out = static_cast<IntoType>(::CONVERT(p, &pend, base));                 \
+                return (NULL != pend and '\0' == *pend);                                \
+            }                                                                           \
+            else                                                                        \
+            {                                                                           \
+                const char* p = AutoDetectBaseNumber::Value(s.c_str(), s.size(), base); \
+                out = static_cast<IntoType>(::CONVERT(p, &pend, base));                 \
+                return NULL != pend and (pend - p == s.size());                         \
+            }                                                                           \
+        }                                                                               \
+                                                                                        \
+        template<class StringT>                                                         \
+        static IntoType Perform(const StringT& s)                                       \
+        {                                                                               \
+            if (s.empty())                                                              \
+                return IntoType();                                                      \
+            char* pend;                                                                 \
+            int base;                                                                   \
+            if (!StringT::zeroTerminated)                                               \
+            {                                                                           \
+                char buffer[bufferSize];                                                \
+                if (s.size() < bufferSize)                                              \
+                {                                                                       \
+                    YUNI_MEMCPY(buffer, bufferSize, s.data(), s.size());                \
+                    buffer[s.size()] = '\0';                                            \
+                }                                                                       \
+                else                                                                    \
+                {                                                                       \
+                    YUNI_MEMCPY(buffer, bufferSize, s.data(), bufferSize - 1);          \
+                    buffer[bufferSize - 1] = '\0';                                      \
+                }                                                                       \
+                const char* p = AutoDetectBaseNumber::Value(buffer, s.size(), base);    \
+                return static_cast<IntoType>(::CONVERT(p, &pend, base));                \
+            }                                                                           \
+            else                                                                        \
+            {                                                                           \
+                const char* p = AutoDetectBaseNumber::Value(s.c_str(), s.size(), base); \
+                return static_cast<IntoType>(::CONVERT(p, &pend, base));                \
+            }                                                                           \
+        }                                                                               \
+    }
+
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(int16_t, strtol);
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(int32_t, strtol);
+#ifdef YUNI_OS_MSVC
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(int64_t, _strtoi64);
+#else
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(int64_t, strtoll);
+#endif
+
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(uint16_t, strtoul);
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(uint32_t, strtoul);
+#ifdef YUNI_OS_MSVC
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(uint64_t, _strtoui64);
+#else
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(uint64_t, strtoull);
+#endif
+
+#ifdef YUNI_HAS_LONG
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(long, strtol);
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(unsigned long, strtoul);
+#endif
+
+#undef YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC
+
 /*!
 ** \brief float
 */
