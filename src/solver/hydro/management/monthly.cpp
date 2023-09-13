@@ -224,7 +224,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                 }
             }
 
-            H2O_M_Free(&problem);
+            H2O_M_Free(problem);
         }
 
         else

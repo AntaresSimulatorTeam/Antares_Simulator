@@ -29,7 +29,7 @@
 
 DONNEES_ANNUELLES H2O_M_Instanciation(int);
 void H2O_M_OptimiserUneAnnee(DONNEES_ANNUELLES&, int);
-void H2O_M_Free(DONNEES_ANNUELLES*);
+void H2O_M_Free(DONNEES_ANNUELLES&);
 
 void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES&);
 void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES&);

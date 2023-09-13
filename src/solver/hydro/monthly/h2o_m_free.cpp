@@ -40,12 +40,12 @@ extern "C"
 #include "h2o_m_donnees_annuelles.h"
 #include "h2o_m_fonctions.h"
 
-void H2O_M_Free(DONNEES_ANNUELLES* DonneesAnnuelles)
+void H2O_M_Free(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
     int i;
     PROBLEME_SPX* ProbSpx;
 
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
 
     for (i = 0; i < ProblemeHydraulique.NombreDeReservoirs; i++)
     {
@@ -58,8 +58,6 @@ void H2O_M_Free(DONNEES_ANNUELLES* DonneesAnnuelles)
 
     free(ProblemeHydraulique.ProblemeSpx);
     free(ProblemeHydraulique.Probleme);
-
-    free(DonneesAnnuelles);
 
     return;
 }

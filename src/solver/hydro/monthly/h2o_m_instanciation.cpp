@@ -36,7 +36,7 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     int NombreDeVariables;
     int NombreDeContraintes;
     int NombreDeTermesAlloues;
-    DONNEES_ANNUELLES DonneesAnnuelles;
+    DONNEES_ANNUELLES DonneesAnnuelles{};
 
     DonneesAnnuelles.NombreDePasDeTemps = 12;
 
