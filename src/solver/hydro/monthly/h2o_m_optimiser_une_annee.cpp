@@ -30,11 +30,9 @@
 
 void H2O_M_OptimiserUneAnnee(DONNEES_ANNUELLES* DonneesAnnuelles, int NumeroDeReservoir)
 {
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
 
-    ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
-
-    if (NumeroDeReservoir < 0 || NumeroDeReservoir > ProblemeHydraulique->NombreDeReservoirs)
+    if (NumeroDeReservoir < 0 || NumeroDeReservoir > ProblemeHydraulique.NombreDeReservoirs)
     {
         DonneesAnnuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
         return;

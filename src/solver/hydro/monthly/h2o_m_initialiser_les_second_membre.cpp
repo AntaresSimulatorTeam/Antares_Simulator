@@ -30,9 +30,9 @@
 
 void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES* DonneesAnnuelles)
 {
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-        = ProblemeHydraulique->ProblemeLineairePartieVariable;
+        = ProblemeHydraulique.ProblemeLineairePartieVariable;
 
     double ChgmtSens = -1;
     int NbPdt = DonneesAnnuelles->NombreDePasDeTemps;

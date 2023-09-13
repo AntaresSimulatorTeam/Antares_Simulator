@@ -52,11 +52,11 @@ void H2O_M_ResoudreLeProblemeLineaire(DONNEES_ANNUELLES* DonneesAnnuelles, int N
     double* pt;
     char PremierPassage;
 
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-        = ProblemeHydraulique->ProblemeLineairePartieVariable;
+        = ProblemeHydraulique.ProblemeLineairePartieVariable;
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
-        = ProblemeHydraulique->ProblemeLineairePartieFixe;
+        = ProblemeHydraulique.ProblemeLineairePartieFixe;
 
     PROBLEME_SIMPLEXE* Probleme;
     PROBLEME_SPX* ProbSpx;
@@ -65,9 +65,9 @@ void H2O_M_ResoudreLeProblemeLineaire(DONNEES_ANNUELLES* DonneesAnnuelles, int N
 
 
 
-    ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique->ProblemeSpx[NumeroDeReservoir];
+    ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[NumeroDeReservoir];
 
-    Probleme = (PROBLEME_SIMPLEXE*)ProblemeHydraulique->Probleme;
+    Probleme = (PROBLEME_SIMPLEXE*)ProblemeHydraulique.Probleme;
     if (Probleme == NULL)
     {
         Probleme = (PROBLEME_SIMPLEXE*)malloc(sizeof(PROBLEME_SIMPLEXE));
@@ -76,7 +76,7 @@ void H2O_M_ResoudreLeProblemeLineaire(DONNEES_ANNUELLES* DonneesAnnuelles, int N
             DonneesAnnuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
             return;
         }
-        ProblemeHydraulique->Probleme = (void*)Probleme;
+        ProblemeHydraulique.Probleme = (void*)Probleme;
     }
 
 RESOLUTION:
@@ -151,7 +151,7 @@ RESOLUTION:
 
     if (ProbSpx != NULL)
     {
-        ProblemeHydraulique->ProblemeSpx[NumeroDeReservoir] = (void*)ProbSpx;
+        ProblemeHydraulique.ProblemeSpx[NumeroDeReservoir] = (void*)ProbSpx;
     }
 
     ProblemeLineairePartieVariable.ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
@@ -176,17 +176,17 @@ RESOLUTION:
 
     if (ProblemeLineairePartieVariable.ExistenceDUneSolution == OUI_SPX)
     {
-        ProblemeHydraulique->CoutDeLaSolution = 0.0;
+        ProblemeHydraulique.CoutDeLaSolution = 0.0;
         for (Var = 0; Var < Probleme->NombreDeVariables; Var++)
         {
-            ProblemeHydraulique->CoutDeLaSolution
+            ProblemeHydraulique.CoutDeLaSolution
               += ProblemeLineairePartieFixe.CoutLineaire[Var] * Probleme->X[Var];
         }
 
-        ProblemeHydraulique->CoutDeLaSolutionBruite = 0.0;
+        ProblemeHydraulique.CoutDeLaSolutionBruite = 0.0;
         for (Var = 0; Var < Probleme->NombreDeVariables; Var++)
         {
-            ProblemeHydraulique->CoutDeLaSolutionBruite
+            ProblemeHydraulique.CoutDeLaSolutionBruite
               += ProblemeLineairePartieFixe.CoutLineaireBruite[Var] * Probleme->X[Var];
         }
 

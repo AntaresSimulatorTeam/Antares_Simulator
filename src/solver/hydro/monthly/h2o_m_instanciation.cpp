@@ -37,14 +37,11 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
     int NombreDeContraintes;
     int NombreDeTermesAlloues;
     DONNEES_ANNUELLES* DonneesAnnuelles;
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
 
     DonneesAnnuelles = new DONNEES_ANNUELLES;
     DonneesAnnuelles->NombreDePasDeTemps = 12;
 
     NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
-
-    DonneesAnnuelles->ProblemeHydraulique = new PROBLEME_HYDRAULIQUE;
 
     DonneesAnnuelles->TurbineMax.assign(NbPdt, 0.);
     DonneesAnnuelles->TurbineMin.assign(NbPdt, 0.);
@@ -57,29 +54,29 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
     DonneesAnnuelles->VolumeMin.assign(NbPdt, 0.);
     DonneesAnnuelles->VolumeMax.assign(NbPdt, 0.);
 
-    ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
 
-    ProblemeHydraulique->NombreDeReservoirs = NombreDeReservoirs;
+    ProblemeHydraulique.NombreDeReservoirs = NombreDeReservoirs;
 
-    ProblemeHydraulique->ProblemeSpx
+    ProblemeHydraulique.ProblemeSpx
       = (void**)malloc((unsigned int)NombreDeReservoirs * sizeof(void*));
-    if (ProblemeHydraulique->ProblemeSpx == NULL)
+    if (ProblemeHydraulique.ProblemeSpx == NULL)
     {
         return (0);
     }
     for (i = 0; i < NombreDeReservoirs; i++)
     {
-        ProblemeHydraulique->ProblemeSpx[i] = NULL;
+        ProblemeHydraulique.ProblemeSpx[i] = NULL;
     }
 
-    ProblemeHydraulique->Probleme = NULL;
+    ProblemeHydraulique.Probleme = NULL;
 
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
-        = ProblemeHydraulique->CorrespondanceDesVariables;
+        = ProblemeHydraulique.CorrespondanceDesVariables;
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
-        = ProblemeHydraulique->ProblemeLineairePartieFixe;
+        = ProblemeHydraulique.ProblemeLineairePartieFixe;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-        = ProblemeHydraulique->ProblemeLineairePartieVariable;
+        = ProblemeHydraulique.ProblemeLineairePartieVariable;
 
     CorrespondanceDesVariables.NumeroDeVariableVolume.assign(NbPdt, 0);
     CorrespondanceDesVariables.NumeroDeVariableTurbine.assign(NbPdt, 0);

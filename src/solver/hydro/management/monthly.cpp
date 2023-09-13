@@ -205,8 +205,8 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                         data.MOL[realmonth] = problem.Volume[month];
                     }
                     data.MOL[initReservoirLvlMonth] = lvi;
-                    solutionCost = problem.ProblemeHydraulique->CoutDeLaSolution;
-                    solutionCostNoised = problem.ProblemeHydraulique->CoutDeLaSolutionBruite;
+                    solutionCost = problem.ProblemeHydraulique.CoutDeLaSolution;
+                    solutionCostNoised = problem.ProblemeHydraulique.CoutDeLaSolutionBruite;
 
                     break;
                 }

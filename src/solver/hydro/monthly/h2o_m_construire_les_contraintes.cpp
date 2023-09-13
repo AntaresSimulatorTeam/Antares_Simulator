@@ -37,17 +37,16 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES* DonneesAnnuelles)
     double ChgmtSens;
     int NumeroDeLaVariableXi;
 
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
 
     ChgmtSens = -1.0;
 
     NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
 
-    ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
-        = ProblemeHydraulique->CorrespondanceDesVariables;
+        = ProblemeHydraulique.CorrespondanceDesVariables;
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
-        = ProblemeHydraulique->ProblemeLineairePartieFixe;
+        = ProblemeHydraulique.ProblemeLineairePartieFixe;
 
     auto& CoefficientsDeLaMatriceDesContraintes
       = ProblemeLineairePartieFixe.CoefficientsDeLaMatriceDesContraintes;

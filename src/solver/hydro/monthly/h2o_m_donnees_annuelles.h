@@ -65,7 +65,7 @@ typedef struct
 
     /******************************************************************************************/
     /* Problemes internes (utilise uniquement par l'optimisation) */
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE ProblemeHydraulique;
     int NombreDePasDeTemps; /* 12 */
 } DONNEES_ANNUELLES;
 
