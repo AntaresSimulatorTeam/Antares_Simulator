@@ -49,8 +49,8 @@ extern "C"
 void H2O_M_ResoudreLeProblemeLineaire(DONNEES_ANNUELLES& DonneesAnnuelles, int NumeroDeReservoir)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieiiable
-        = ProblemeHydraulique.ProblemeLineairePartieiiable;
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
+        = ProblemeHydraulique.ProblemeLineairePartieVariable;
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
         = ProblemeHydraulique.ProblemeLineairePartieFixe;
 
@@ -84,7 +84,7 @@ RESOLUTION:
         Probleme->BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
 
         SPX_ModifierLeVecteurSecondMembre(ProbSpx,
-                                          ProblemeLineairePartieiiable.SecondMembre.data(),
+                                          ProblemeLineairePartieVariable.SecondMembre.data(),
                                           ProblemeLineairePartieFixe.Sens.data(),
                                           ProblemeLineairePartieFixe.NombreDeContraintes);
     }
@@ -93,11 +93,11 @@ RESOLUTION:
     Probleme->DureeMaxDuCalcul = -1.;
 
     Probleme->CoutLineaire = ProblemeLineairePartieFixe.CoutLineaireBruite.data();
-    Probleme->X = ProblemeLineairePartieiiable.X.data();
-    Probleme->Xmin = ProblemeLineairePartieiiable.Xmin.data();
-    Probleme->Xmax = ProblemeLineairePartieiiable.Xmax.data();
-    Probleme->NombreDeiiables = ProblemeLineairePartieFixe.NombreDeiiables;
-    Probleme->TypeDeiiable = ProblemeLineairePartieFixe.TypeDeiiable.data();
+    Probleme->X = ProblemeLineairePartieVariable.X.data();
+    Probleme->Xmin = ProblemeLineairePartieVariable.Xmin.data();
+    Probleme->Xmax = ProblemeLineairePartieVariable.Xmax.data();
+    Probleme->NombreDeVariables = ProblemeLineairePartieFixe.NombreDeVariables;
+    Probleme->TypeDeVariable = ProblemeLineairePartieFixe.TypeDeVariable.data();
 
     Probleme->NombreDeContraintes = ProblemeLineairePartieFixe.NombreDeContraintes;
     Probleme->IndicesDebutDeLigne = ProblemeLineairePartieFixe.IndicesDebutDeLigne.data();
@@ -106,7 +106,7 @@ RESOLUTION:
     Probleme->CoefficientsDeLaMatriceDesContraintes
       = ProblemeLineairePartieFixe.CoefficientsDeLaMatriceDesContraintes.data();
     Probleme->Sens = ProblemeLineairePartieFixe.Sens.data();
-    Probleme->SecondMembre = ProblemeLineairePartieiiable.SecondMembre.data();
+    Probleme->SecondMembre = ProblemeLineairePartieVariable.SecondMembre.data();
 
     Probleme->ChoixDeLAlgorithme = SPX_DUAL;
 
@@ -114,9 +114,9 @@ RESOLUTION:
     Probleme->FaireDuScaling = OUI_SPX;
     Probleme->StrategieAntiDegenerescence = AGRESSIF;
 
-    Probleme->PositionDeLaiiable = ProblemeLineairePartieiiable.PositionDeLaiiable.data();
-    Probleme->NbiDeBaseComplementaires = 0;
-    Probleme->ComplementDeLaBase = ProblemeLineairePartieiiable.ComplementDeLaBase.data();
+    Probleme->PositionDeLaVariable = ProblemeLineairePartieVariable.PositionDeLaVariable.data();
+    Probleme->NbVarDeBaseComplementaires = 0;
+    Probleme->ComplementDeLaBase = ProblemeLineairePartieVariable.ComplementDeLaBase.data();
 
     Probleme->LibererMemoireALaFin = NON_SPX;
 
@@ -124,8 +124,8 @@ RESOLUTION:
     Probleme->CoutMax = 0.0;
 
     Probleme->CoutsMarginauxDesContraintes
-      = ProblemeLineairePartieiiable.CoutsMarginauxDesContraintes.data();
-    Probleme->CoutsReduits = ProblemeLineairePartieiiable.CoutsReduits.data();
+      = ProblemeLineairePartieVariable.CoutsMarginauxDesContraintes.data();
+    Probleme->CoutsReduits = ProblemeLineairePartieVariable.CoutsReduits.data();
 
 #ifndef NDEBUG
     if (PremierPassage == OUI)
@@ -145,12 +145,12 @@ RESOLUTION:
         ProblemeHydraulique.ProblemeSpx[NumeroDeReservoir] = (void*)ProbSpx;
     }
 
-    ProblemeLineairePartieiiable.ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
+    ProblemeLineairePartieVariable.ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
 
-    if (ProblemeLineairePartieiiable.ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI
+    if (ProblemeLineairePartieVariable.ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI
         && ProbSpx != NULL)
     {
-        if (ProblemeLineairePartieiiable.ExistenceDUneSolution != SPX_ERREUR_INTERNE)
+        if (ProblemeLineairePartieVariable.ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
             SPX_LibererProbleme(ProbSpx);
 
@@ -165,17 +165,17 @@ RESOLUTION:
         }
     }
 
-    if (ProblemeLineairePartieiiable.ExistenceDUneSolution == OUI_SPX)
+    if (ProblemeLineairePartieVariable.ExistenceDUneSolution == OUI_SPX)
     {
         ProblemeHydraulique.CoutDeLaSolution = 0.0;
-        for (int i = 0; i < Probleme->NombreDeiiables; i++)
+        for (int i = 0; i < Probleme->NombreDeVariables; i++)
         {
             ProblemeHydraulique.CoutDeLaSolution
               += ProblemeLineairePartieFixe.CoutLineaire[i] * Probleme->X[i];
         }
 
         ProblemeHydraulique.CoutDeLaSolutionBruite = 0.0;
-        for (i = 0; i < Probleme->NombreDeiiables; i++)
+        for (int i = 0; i < Probleme->NombreDeVariables; i++)
         {
             ProblemeHydraulique.CoutDeLaSolutionBruite
               += ProblemeLineairePartieFixe.CoutLineaireBruite[i] * Probleme->X[i];
@@ -183,11 +183,11 @@ RESOLUTION:
 
         DonneesAnnuelles.ResultatsValides = OUI;
 
-        for (i = 0; i < ProblemeLineairePartieFixe.NombreDeiiables; i++)
+        for (int i = 0; i < ProblemeLineairePartieFixe.NombreDeVariables; i++)
         {
-            double* pt = ProblemeLineairePartieiiable.AdresseOuPlacerLaValeurDesiiablesOptimisees[i];
+            double* pt = ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt)
-                *pt = ProblemeLineairePartieiiable.X[i];
+                *pt = ProblemeLineairePartieVariable.X[i];
         }
     }
     else
