@@ -59,23 +59,23 @@ add_subdirectory(utils)
 add_subdirectory(paths)
 add_subdirectory(mersenne-twister)
 
-add_library(libantares-core
+add_library(antares-core
 	antares.h
 	${SRC}
 )
 
 #TODO : needed for include yuni : why yuni must be include first ??? cheat : made it public so everybody will have this include (should be done in yuni)
 #TODO : needed for include
-target_include_directories(libantares-core
+target_include_directories(antares-core
 		PRIVATE
 			${CMAKE_SOURCE_DIR}/libs
 		)
 
-target_link_libraries(libantares-core
+target_link_libraries(antares-core
 	PUBLIC
 		yuni-static-core
 		Antares::logs
         Antares::exception
 	)
 
-import_std_libs(libantares-core)
+import_std_libs(antares-core)

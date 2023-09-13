@@ -28,7 +28,7 @@ set(CLEANER_LIBS
 	yuni-static-core
 	Antares::study
 	Antares::sys
-	libantares-core #version.h
+	antares-core #version.h
 	${CMAKE_THREADS_LIBS_INIT}
 )
 

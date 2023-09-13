@@ -45,7 +45,7 @@ source_group("Nodes" FILES ${SRC_TOOLBOX_COM_MAP_NODES})
 
 
 
-add_library(libantares-ui-component-map
+add_library(antares-ui-component-map
 	# Map
 	${SRC_TOOLBOX_COM_MAP_TOOLS}
 	${SRC_TOOLBOX_COM_MAP_NODES}
@@ -53,5 +53,5 @@ add_library(libantares-ui-component-map
 	)
 
 
-target_link_libraries(libantares-ui-component-map PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(libantares-ui-component-map PRIVATE libantares-core libantares-ui-common libantares-ui-components)
+target_link_libraries(antares-ui-component-map PUBLIC ${wxWidgets_LIBRARIES})
+target_link_libraries(antares-ui-component-map PRIVATE antares-core antares-ui-common antares-ui-components)

@@ -52,7 +52,7 @@ target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
 		PRIVATE
 			yuni-static-core
 			${CMAKE_THREADS_LIBS_INIT}
-		libantares-core #local.h
+		antares-core #local.h
 		PUBLIC
 			Antares::study #atsp -> xcast
 			Antares::sys

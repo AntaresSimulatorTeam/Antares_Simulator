@@ -86,14 +86,15 @@ set(ANTARES_SOLVER_LIBS
 )
 
 set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
-	libantares-solver-main-economy
-	libantares-solver-main-adequacy
-	libantares-solver-hydro
-	libantares-solver-aleatoire
-	libantares-solver-variable
-	libantares-solver-simulation
-	libantares-solver-ts-generator
-	libmodel_antares)
+	antares-solver-main-economy
+	antares-solver-main-adequacy
+	antares-solver-hydro
+	antares-solver-aleatoire
+	antares-solver-variable
+	antares-solver-simulation
+	antares-solver-ts-generator
+	model_antares
+	antares-core)
 
 target_link_libraries(antares-solver
 		PRIVATE

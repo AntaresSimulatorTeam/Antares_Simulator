@@ -26,5 +26,5 @@ target_link_libraries(utils
         sirius_solver
         Antares::study
         Antares::result_writer #ortools_utils.h
-        libantares-core #enum.h
+        antares-core #enum.h
         )

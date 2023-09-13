@@ -37,11 +37,11 @@ source_group("ts-generator\\XCast" FILES ${SRC_XCAST})
 #
 # --- Library VARIABLES ---
 #
-add_library(libantares-solver-ts-generator
+add_library(antares-solver-ts-generator
 				${SRC_GENERATORS}
 				${SRC_XCAST})
 
-target_link_libraries(libantares-solver-ts-generator
+target_link_libraries(antares-solver-ts-generator
 		PRIVATE
 		result_writer
 		array
