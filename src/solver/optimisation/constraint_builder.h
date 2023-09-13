@@ -273,14 +273,23 @@ public:
                                bool wrap = false,
                                int delta = 0);
 
-    ConstraintBuilder& operatorRHS(char op)
+    class ConstraintBuilderInvalidOperator : public std::runtime_error
+    {
+    public:
+        ConstraintBuilderInvalidOperator(const std::string& error_message) :
+         std::runtime_error(error_message)
+        {
+        }
+    };
+
+    ConstraintBuilder& SetOperator(char op)
     {
         if (op == '<' || op == '=' || op == '>')
         {
             operator_ = op;
         }
         else
-            throw std::runtime_error("Invalid operator");
+            throw ConstraintBuilderInvalidOperator(std::string("Invalid operator: ") + op);
 
         return *this;
     }

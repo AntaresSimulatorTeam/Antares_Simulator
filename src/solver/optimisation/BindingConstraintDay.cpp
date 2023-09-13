@@ -67,7 +67,7 @@ void BindingConstraintDay::add(int cntCouplante)
           = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
 
         char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
-        builder.operatorRHS(op);
+        builder.SetOperator(op);
         {
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                                   problemeHebdo->NamedProblems);

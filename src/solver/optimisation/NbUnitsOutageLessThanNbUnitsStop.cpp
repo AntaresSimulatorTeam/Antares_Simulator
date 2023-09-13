@@ -10,8 +10,6 @@ void NbUnitsOutageLessThanNbUnitsStop::add(int pays,
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
-        const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-          = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex];
 
         CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
           = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];

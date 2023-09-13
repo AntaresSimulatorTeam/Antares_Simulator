@@ -48,7 +48,7 @@ void BindingConstraintWeek::add(int cntCouplante)
         }
 
     char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
-    builder.operatorRHS(op);
+    builder.SetOperator(op);
 
     CorrespondanceCntNativesCntOptimHebdomadaires
       .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]

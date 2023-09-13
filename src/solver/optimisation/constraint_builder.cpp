@@ -26,7 +26,7 @@ int ConstraintBuilder::getVariableIndex(const Variable::Variables& variable,
     {
         if (shift >= 0)
         {
-            pdt = (pdt) % nbTimeSteps;
+            pdt = pdt % nbTimeSteps;
         }
         else
         {
