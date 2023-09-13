@@ -2,6 +2,8 @@
 
 #include "constraint.h"
 #include <sstream>
+#include <iomanip>
+#include <algorithm>
 
 namespace Antares
 {
@@ -39,20 +41,45 @@ double Constraint::getSlackValue() const
 {
     return mSlackValue;
 }
-std::vector<std::string> split(const std::string& s, char delimiter)
-{
-   std::vector<std::string> tokens;
-   std::string token;
-   std::istringstream tokenStream(s);
-   while (std::getline(tokenStream, token, delimiter))
-   {
-      tokens.push_back(token);
-   }
-   return tokens;
-}
 
-std::string StringBetweenAngleBrackets(const std::string& str){
-  return split(split(str, '<')[1], '>')[0];
+class StringIsNotWellFormated : public std::runtime_error
+{
+public:
+    StringIsNotWellFormated(const std::string& error_message) : std::runtime_error(error_message)
+    {
+    }
+};
+
+std::string StringBetweenAngleBrackets(const std::string& str)
+{
+    const auto& str_begin_iterator = str.begin();
+    const auto& str_end_iterator = str.end();
+    auto left = std::find(str.begin(), str.end(), '<');
+    if (left == str_end_iterator)
+    {
+        std::ostringstream stream;
+        stream << std::string("Error the string: ") << std::quoted(str)
+               << " does not contains the left angle bracket " << std::quoted("<");
+        throw StringIsNotWellFormated(stream.str());
+    }
+
+    auto right = std::find(str_begin_iterator, str_end_iterator, '>');
+    if (right == str_end_iterator)
+    {
+        std::ostringstream stream;
+        stream << std::string("Error the string: ") << std::quoted(str)
+               << " does not contains the right angle bracket " << std::quoted(">");
+        throw StringIsNotWellFormated(stream.str());
+    }
+
+    if (std::distance(left, right) <= 1)
+    {
+        std::ostringstream stream;
+        stream << std::string("Error the string: ") << std::quoted(str) << " must be of format  "
+               << std::quoted("*<str>*");
+        throw StringIsNotWellFormated(stream.str());
+    }
+    return std::string(left + 1, right);
 }
 
 std::string Constraint::getAreaName() const
