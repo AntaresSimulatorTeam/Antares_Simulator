@@ -22,7 +22,7 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
         const double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
         const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
 
-        builder.updateHourWithinWeek(pdt1).include(
+        builder.updateHourWithinWeek(pdt).include(
           Variable::NTCDirect(interco), poids, offset, true, problemeHebdo->NombreDePasDeTemps);
     }
 
