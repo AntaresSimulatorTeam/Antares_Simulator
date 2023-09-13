@@ -21,19 +21,9 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
         const int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
         const double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
         const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
-        int pdt1;
-        if (offset >= 0)
-        {
-            pdt1 = (pdt + offset) % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-        }
-        else
-        {
-            pdt1 = (pdt + offset + problemeHebdo->NombreDePasDeTemps)
-                   % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-        }
 
         builder.updateHourWithinWeek(pdt1).include(
-          Variable::NTCDirect(interco), poids, 0, false, problemeHebdo->NombreDePasDeTemps);
+          Variable::NTCDirect(interco), poids, offset, true, problemeHebdo->NombreDePasDeTemps);
     }
 
     // Thermal clusters
@@ -48,23 +38,12 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
                              [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
         const double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
         const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
-        int pdt1;
 
-        if (offset >= 0)
-        {
-            pdt1 = (pdt + offset) % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-        }
-        else
-        {
-            pdt1 = (pdt + offset + problemeHebdo->NombreDePasDeTemps)
-                   % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-        }
-
-        builder.updateHourWithinWeek(pdt1).include(Variable::DispatchableProduction(palier),
-                                                   poids,
-                                                   0,
-                                                   false,
-                                                   problemeHebdo->NombreDePasDeTemps);
+        builder.updateHourWithinWeek(pdt).include(Variable::DispatchableProduction(palier),
+                                                  poids,
+                                                  offset,
+                                                  true,
+                                                  problemeHebdo->NombreDePasDeTemps);
     }
 
     char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;

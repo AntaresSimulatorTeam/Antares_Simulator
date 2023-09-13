@@ -22,19 +22,8 @@ void BindingConstraintWeek::add(int cntCouplante)
         int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
         for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
-            builder.updateHourWithinWeek(pdt);
-            int pdt1;
-            if (offset >= 0)
-            {
-                pdt1 = (pdt + offset) % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-            }
-            else
-            {
-                pdt1 = (pdt + offset + problemeHebdo->NombreDePasDeTemps)
-                       % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-            }
-            builder.updateHourWithinWeek(pdt1).include(
-              Variable::NTCDirect(interco), poids, 0, false, problemeHebdo->NombreDePasDeTemps);
+            builder.updateHourWithinWeek(pdt).include(
+              Variable::NTCDirect(interco), poids, offset, true, problemeHebdo->NombreDePasDeTemps);
         }
     }
 
@@ -50,24 +39,11 @@ void BindingConstraintWeek::add(int cntCouplante)
             int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
             for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-            int pdt1;
-
-            builder.updateHourWithinWeek(pdt); // useless?
-            if (offset >= 0)
-            {
-                pdt1 = (pdt + offset) % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-            }
-            else
-            {
-                pdt1 = (pdt + offset + problemeHebdo->NombreDePasDeTemps)
-                       % problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-            }
-
-            builder.updateHourWithinWeek(pdt1).include(Variable::DispatchableProduction(palier),
-                                                       poids,
-                                                       offset,
-                                                       false,
-                                                       problemeHebdo->NombreDePasDeTemps);
+            builder.updateHourWithinWeek(pdt).include(Variable::DispatchableProduction(palier),
+                                                      poids,
+                                                      offset,
+                                                      true,
+                                                      problemeHebdo->NombreDePasDeTemps);
             }
         }
 
