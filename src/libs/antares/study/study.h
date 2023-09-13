@@ -493,7 +493,7 @@ public:
     */
     void computePThetaInfForThermalClusters() const;
 
-    void prepareWriter(Benchmarking::IDurationCollector* duration_collector);
+    void prepareWriter(Benchmarking::IDurationCollector& duration_collector);
 
     //! Header (general information about the study)
     StudyHeader header;
