@@ -30,17 +30,11 @@
 
 DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
 {
-    int i;
-    int NbPdt;
-    int j;
-    int NombreDeVariables;
-    int NombreDeContraintes;
-    int NombreDeTermesAlloues;
     DONNEES_ANNUELLES DonneesAnnuelles{};
 
     DonneesAnnuelles.NombreDePasDeTemps = 12;
 
-    NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
+    int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
 
     DonneesAnnuelles.TurbineMax.assign(NbPdt, 0.);
     DonneesAnnuelles.TurbineMin.assign(NbPdt, 0.);
@@ -75,7 +69,7 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible.assign(NbPdt, 0);
     CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible.assign(NbPdt, 0);
 
-    NombreDeVariables = 0;
+    int NombreDeVariables = 0;
     NombreDeVariables += NbPdt;
     NombreDeVariables += NbPdt;
     NombreDeVariables += NbPdt;
@@ -92,7 +86,7 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
 
     ProblemeLineairePartieFixe.TypeDeVariable.assign(NombreDeVariables, 0);
 
-    NombreDeContraintes = 0;
+    int NombreDeContraintes = 0;
     NombreDeContraintes += NbPdt;
     NombreDeContraintes += 1;
     NombreDeContraintes += NbPdt;
@@ -107,7 +101,7 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     ProblemeLineairePartieFixe.IndicesDebutDeLigne.assign(NombreDeContraintes, 0);
     ProblemeLineairePartieFixe.NombreDeTermesDesLignes.assign(NombreDeContraintes, 0);
 
-    NombreDeTermesAlloues = 0;
+    int NombreDeTermesAlloues = 0;
     NombreDeTermesAlloues += 3 * NbPdt;
     NombreDeTermesAlloues += 2;
     NombreDeTermesAlloues += 2 * NbPdt;

@@ -41,11 +41,8 @@ void H2O_M_OptimiserUneAnnee(DONNEES_ANNUELLES& DonneesAnnuelles, int NumeroDeRe
     DonneesAnnuelles.ResultatsValides = NON;
 
     H2O_M_InitialiserBornesEtCoutsDesVariables(DonneesAnnuelles);
-
     H2O_M_AjouterBruitAuCout(DonneesAnnuelles);
-
     H2O_M_InitialiserLeSecondMembre(DonneesAnnuelles);
-
     H2O_M_ResoudreLeProblemeLineaire(DonneesAnnuelles, NumeroDeReservoir);
 
     return;
