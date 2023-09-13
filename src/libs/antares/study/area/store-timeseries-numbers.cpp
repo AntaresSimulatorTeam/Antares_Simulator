@@ -26,7 +26,7 @@
 */
 
 #include <antares/writer/i_writer.h>
-#include "../study.h"
+#include <antares/study/study.h>
 #include <antares/logs/logs.h>
 
 #include "store-timeseries-numbers.h"
@@ -34,9 +34,8 @@
 using namespace Yuni;
 
 #define SEP IO::Separator
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 namespace // anonymous
 {
@@ -123,5 +122,5 @@ void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter::Ptr 
             value->storeTimeseriesNumbers(writer);
     }
 }
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

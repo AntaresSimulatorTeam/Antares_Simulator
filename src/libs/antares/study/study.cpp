@@ -51,9 +51,8 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 //! Clear then shrink a string
 template<class StringT>
@@ -1543,11 +1542,11 @@ void Study::computePThetaInfForThermalClusters() const
     }
 }
 
-void Study::prepareWriter(Benchmarking::IDurationCollector* duration_collector)
+void Study::prepareWriter(Benchmarking::IDurationCollector& duration_collector)
 {
     resultWriter = Solver::resultWriterFactory(
       parameters.resultFormat, folderOutput, pQueueService, duration_collector);
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

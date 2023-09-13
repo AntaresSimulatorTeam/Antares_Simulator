@@ -183,6 +183,6 @@ double getWeeklyModulation(const double& level /* format : in % of reservoir cap
 
 } // namespace Antares::Data
 
-#include "../../area.h"
+#include <antares/study/area/area.h>
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__ */

@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_COMPONENT_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_COMPONENT_H__
 
-#include <antares/wx-wrapper.h>
 #include <ui/common/component/panel.h>
 #include <antares/date/date.h>
 

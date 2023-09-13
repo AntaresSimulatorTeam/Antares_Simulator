@@ -27,7 +27,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <antares/logs/logs.h>
 #include "xcast.h"
 #include "constants.h"

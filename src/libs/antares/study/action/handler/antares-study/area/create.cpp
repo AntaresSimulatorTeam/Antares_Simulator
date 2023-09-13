@@ -26,7 +26,7 @@
 */
 
 #include "create.h"
-#include "../../../../../utils.h"
+#include <antares/utils/utils.h>
 #include "nodal-optimization.h"
 #include "reserves.h"
 #include "misc-gen.h"
@@ -44,13 +44,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Action
-{
-namespace AntaresStudy
-{
-namespace Area
+namespace Antares::Action::AntaresStudy::Area
 {
 Create::Create(const AnyString& areaname) : pOriginalAreaName(areaname)
 {
@@ -325,7 +319,7 @@ IAction* Create::StandardActionsToCopyThermalCluster(const Data::AreaName& area,
     return cluster;
 }
 
-} // namespace Area
-} // namespace AntaresStudy
-} // namespace Action
-} // namespace Antares
+} // namespace Antares::Action::AntaresStudy::Area
+
+
+

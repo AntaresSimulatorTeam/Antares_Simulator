@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include <yuni/yuni.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
 

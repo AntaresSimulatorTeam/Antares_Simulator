@@ -35,9 +35,7 @@ using namespace Yuni;
 
 #define STUDY_CLEANER_LOG "[study cleaner] "
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 StudyCleaningInfos::StudyCleaningInfos()
 {
@@ -49,9 +47,7 @@ StudyCleaningInfos::StudyCleaningInfos(const AnyString& path) : folder(path)
     version = versionUnknown;
 }
 
-StudyCleaningInfos::~StudyCleaningInfos()
-{
-}
+StudyCleaningInfos::~StudyCleaningInfos() = default;
 
 bool StudyCleaningInfos::analyze()
 {
@@ -135,5 +131,5 @@ void StudyCleaningInfos::setCustomExcludeList(const Yuni::String& c)
 {
     customExclude = c;
 }
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

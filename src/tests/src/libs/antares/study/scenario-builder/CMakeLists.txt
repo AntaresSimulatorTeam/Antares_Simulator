@@ -18,8 +18,7 @@ target_include_directories(test-sc-builder-file-read-line
 target_link_libraries(test-sc-builder-file-read-line
 						PRIVATE
 							Boost::unit_test_framework
-							libantares-core
-							libmodel_antares
+							model_antares
 )
 # Linux
 if(UNIX AND NOT APPLE)
@@ -53,8 +52,7 @@ target_include_directories(test-sc-builder-file-save
 target_link_libraries(test-sc-builder-file-save
   PRIVATE
 						Boost::unit_test_framework
-						libantares-core
-						libmodel_antares
+						model_antares
 )
 
 # Storing test-sc-builder-file-savee under the folder Unit-tests in the IDE

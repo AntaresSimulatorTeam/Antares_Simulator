@@ -28,6 +28,7 @@
 #include "operator.list.h"
 #include "operator/all.h"
 #include "filter.h"
+#include "wx-wrapper.h"
 #include <antares/date/date.h>
 
 namespace Antares

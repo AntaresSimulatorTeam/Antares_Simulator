@@ -2,7 +2,6 @@ set(PROJ sys)
 set(HEADERS
         include/antares/${PROJ}/appdata.h
         include/antares/${PROJ}/policy.h
-        include/antares/${PROJ}/hostname.hxx
 )
 set(SRC_PROJ
         ${HEADERS}

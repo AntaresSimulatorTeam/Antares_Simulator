@@ -26,7 +26,8 @@
 */
 
 #include "pathlistitem.h"
-#include <wx/colour.h>
+#include "wx-wrapper.h"
+#include <wx/wx.h>
 
 using namespace Yuni;
 

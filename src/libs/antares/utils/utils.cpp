@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "utils.h"
+#include "antares/utils/utils.h"
 
 using namespace Yuni;
 

@@ -9,11 +9,11 @@ SET(SRC_TOOLBOX_COM_BUTTON
 		)
 
 
-add_library(libantares-ui-component-button
+add_library(antares-ui-component-button
 	# Button
 	${SRC_TOOLBOX_COM_BUTTON}
 	)
 
 
-target_link_libraries(libantares-ui-component-button PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(libantares-ui-component-button PRIVATE libantares-core libantares-ui-common)
+target_link_libraries(antares-ui-component-button PUBLIC ${wxWidgets_LIBRARIES})
+target_link_libraries(antares-ui-component-button PRIVATE antares-core antares-ui-common)

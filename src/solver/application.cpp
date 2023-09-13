@@ -324,7 +324,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     study.prepareOutput();
 
     // Initialize the result writer
-    study.prepareWriter(&pDurationCollector);
+    study.prepareWriter(pDurationCollector);
     Antares::Solver::initializeSignalHandlers(study.resultWriter);
 
     // Save about-the-study files (comments, notes, etc.)

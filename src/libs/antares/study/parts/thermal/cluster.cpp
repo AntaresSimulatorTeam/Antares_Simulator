@@ -37,7 +37,7 @@
 #include "cluster.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include "../../../utils.h"
+#include <antares/utils/utils.h>
 
 using namespace Yuni;
 using namespace Antares;

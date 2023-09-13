@@ -34,7 +34,7 @@
 #include "../constants.h"
 #include <cstdlib>
 #include <cassert>
-#include "antares/writer/antares/writer/result_format.h" //Conflit between ${CMake_Source_dir}/libs and result_writer findong "antares"
+#include <antares/writer/result_format.h>
 #include <antares/date/date.h>
 #include <antares/inifile/inifile.h>
 #include "fwd.h"

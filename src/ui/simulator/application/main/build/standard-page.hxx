@@ -27,7 +27,6 @@
 #ifndef ANTARES_APPLICATION_MAIN_BUILD_STANDARD_PAGE_HXX__
 #define ANTARES_APPLICATION_MAIN_BUILD_STANDARD_PAGE_HXX__
 
-#include <antares/wx-wrapper.h>
 #include "../../../toolbox/components/notebook/notebook.h"
 #include "../../../toolbox/create.h"
 #include <ui/common/component/panel.h>

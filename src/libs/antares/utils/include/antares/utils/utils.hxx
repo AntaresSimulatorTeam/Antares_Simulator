@@ -27,7 +27,7 @@
 #ifndef __ANTARES_LIBS_UTILS_HXX__
 #define __ANTARES_LIBS_UTILS_HXX__
 
-#include <ctype.h>
+#include <cctype>
 #include <yuni/core/string.h>
 
 namespace Antares

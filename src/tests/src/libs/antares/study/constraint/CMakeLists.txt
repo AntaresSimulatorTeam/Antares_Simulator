@@ -4,9 +4,9 @@ add_executable(test_constraint
 
 target_link_libraries(test_constraint
         PRIVATE
-        libantares-core
         test_utils_unit
         Boost::unit_test_framework
+        Antares::study
         )
 		
 # Storing test_constraint under the folder Unit-tests in the IDE
@@ -28,9 +28,9 @@ add_executable(test_groups
 
 target_link_libraries(test_groups
         PRIVATE
-        libantares-core
         test_utils_unit
         Boost::unit_test_framework
+        Antares::study
         )
 
 # Storing test_constraint under the folder Unit-tests in the IDE

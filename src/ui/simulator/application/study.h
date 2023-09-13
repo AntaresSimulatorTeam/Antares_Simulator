@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include "../toolbox/wx-wrapper.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <antares/study/output.h>
 #include <yuni/core/event.h>
 #include <list>

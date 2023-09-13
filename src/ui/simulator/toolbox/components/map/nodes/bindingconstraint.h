@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_MAP_BINDING_CONSTRAINT_H__
 #define __ANTARES_TOOLBOX_MAP_BINDING_CONSTRAINT_H__
 
-#include <antares/wx-wrapper.h>
 #include "item.h"
 
 namespace Antares

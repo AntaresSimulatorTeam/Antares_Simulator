@@ -22,12 +22,11 @@ INSTALL(EXPORT antares-kirchhoff-constraints-builder
 )
 
 set(KIRCHHOFF_CBUILDER_LIBS
-	libantares-core
 	yuni-static-core
 	${CMAKE_THREADS_LIBS_INIT}
 )
 
-target_link_libraries(${execname} PRIVATE libantares-solver-constraints-builder Antares::sys)
+target_link_libraries(${execname} PRIVATE antares-solver-constraints-builder Antares::sys)
 target_link_libraries(${execname} PRIVATE ${KIRCHHOFF_CBUILDER_LIBS} )
 
 import_std_libs(${execname})
