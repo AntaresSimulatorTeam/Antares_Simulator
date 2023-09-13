@@ -43,9 +43,9 @@ int ConstraintBuilder::getVariableIndex(const Variable::Variant& variable,
             pdt = (pdt + delta) % nbTimeSteps;
         }
     }
-    const Variable::Visitor visitor(varNative[pdt],
-                                    problemeHebdo.NumeroDeVariableStockFinal,
-                                    problemeHebdo.NumeroDeVariableDeTrancheDeStock);
+    const Variable::ConstraintVisitor visitor(varNative[pdt],
+                                              problemeHebdo.NumeroDeVariableStockFinal,
+                                              problemeHebdo.NumeroDeVariableDeTrancheDeStock);
     return std::visit(visitor, variable);
 }
 

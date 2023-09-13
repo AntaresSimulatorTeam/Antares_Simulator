@@ -135,12 +135,12 @@ using Variant = std::variant<DispatchableProduction,
                              PositiveUnsuppliedEnergy,
                              NegativeUnsuppliedEnergy>;
 
-class Visitor
+class ConstraintVisitor
 {
 public:
-    Visitor(const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar,
-            const std::vector<int>& NumeroDeVariableStockFinal,
-            const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock) :
+    ConstraintVisitor(const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar,
+                      const std::vector<int>& NumeroDeVariableStockFinal,
+                      const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock) :
      nativeOptimVar(nativeOptimVar),
      NumeroDeVariableStockFinal(NumeroDeVariableStockFinal),
      NumeroDeVariableDeTrancheDeStock(NumeroDeVariableDeTrancheDeStock)
