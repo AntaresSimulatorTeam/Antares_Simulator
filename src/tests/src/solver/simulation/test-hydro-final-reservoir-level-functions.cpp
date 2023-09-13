@@ -55,8 +55,7 @@ struct Fixture
         // -------------------------------------------------------
         uint areasCount = study->areas.size();
 
-        std::vector<bool> yearFilter(2, true);
-        study->parameters.yearsFilter = yearFilter;
+        study->parameters.yearsFilter.assign(2, true);
 
         study->scenarioInitialHydroLevels.resize(nbYears, areasCount);
         study->scenarioFinalHydroLevels.resize(nbYears, areasCount);
