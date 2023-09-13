@@ -14,7 +14,7 @@ void ConstraintBuilder::build()
     nombreDeTermes_ = 0;
 }
 
-int ConstraintBuilder::getVariableIndex(const Variable::Variant& variable,
+int ConstraintBuilder::getVariableIndex(const Variable::Variables& variable,
                                         int shift,
                                         bool wrap,
                                         int delta) const
@@ -39,7 +39,7 @@ int ConstraintBuilder::getVariableIndex(const Variable::Variant& variable,
     return std::visit(visitor, variable);
 }
 
-ConstraintBuilder& ConstraintBuilder::include(Variable::Variant var,
+ConstraintBuilder& ConstraintBuilder::include(Variable::Variables var,
                                               double coeff,
                                               int shift,
                                               bool wrap,

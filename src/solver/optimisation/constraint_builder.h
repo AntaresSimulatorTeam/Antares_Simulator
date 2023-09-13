@@ -113,27 +113,27 @@ struct LayerStorage
     unsigned area, layer;
 };
 
-using Variant = std::variant<DispatchableProduction,
-                             NODU,
-                             NumberStoppingDispatchableUnits,
-                             NumberStartingDispatchableUnits,
-                             NumberBreakingDownDispatchableUnits,
-                             NTCDirect,
-                             IntercoDirectCost,
-                             IntercoIndirectCost,
-                             ShortTermStorageInjection,
-                             ShortTermStorageWithdrawal,
-                             ShortTermStorageLevel,
-                             HydProd,
-                             HydProdDown,
-                             HydProdUp,
-                             Pumping,
-                             HydroLevel,
-                             Overflow,
-                             FinalStorage,
-                             LayerStorage,
-                             PositiveUnsuppliedEnergy,
-                             NegativeUnsuppliedEnergy>;
+using Variables = std::variant<DispatchableProduction,
+                               NODU,
+                               NumberStoppingDispatchableUnits,
+                               NumberStartingDispatchableUnits,
+                               NumberBreakingDownDispatchableUnits,
+                               NTCDirect,
+                               IntercoDirectCost,
+                               IntercoIndirectCost,
+                               ShortTermStorageInjection,
+                               ShortTermStorageWithdrawal,
+                               ShortTermStorageLevel,
+                               HydProd,
+                               HydProdDown,
+                               HydProdUp,
+                               Pumping,
+                               HydroLevel,
+                               Overflow,
+                               FinalStorage,
+                               LayerStorage,
+                               PositiveUnsuppliedEnergy,
+                               NegativeUnsuppliedEnergy>;
 
 class ConstraintVisitor
 {
@@ -261,10 +261,13 @@ public:
     }
 
 private:
-    int getVariableIndex(const Variable::Variant& variable, int shift, bool wrap, int delta) const;
+    int getVariableIndex(const Variable::Variables& variable,
+                         int shift,
+                         bool wrap,
+                         int delta) const;
 
 public:
-    ConstraintBuilder& include(Variable::Variant var,
+    ConstraintBuilder& include(Variable::Variables var,
                                double coeff,
                                int shift = 0,
                                bool wrap = false,
