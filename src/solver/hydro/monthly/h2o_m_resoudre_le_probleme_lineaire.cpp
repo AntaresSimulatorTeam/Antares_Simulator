@@ -54,16 +54,15 @@ void H2O_M_ResoudreLeProblemeLineaire(DONNEES_ANNUELLES& DonneesAnnuelles, int N
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
         = ProblemeHydraulique.ProblemeLineairePartieFixe;
 
-
     char PremierPassage = OUI;
 
     PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[NumeroDeReservoir];
     PROBLEME_SIMPLEXE* Probleme = (PROBLEME_SIMPLEXE*)ProblemeHydraulique.Probleme;
 
-    if (Probleme == NULL)
+    if (!Probleme)
     {
-        Probleme = (PROBLEME_SIMPLEXE*)malloc(sizeof(PROBLEME_SIMPLEXE));
-        if (Probleme == NULL)
+        Probleme = new PROBLEME_SIMPLEXE;
+        if (!Probleme)
         {
             DonneesAnnuelles.ResultatsValides = EMERGENCY_SHUT_DOWN;
             return;
