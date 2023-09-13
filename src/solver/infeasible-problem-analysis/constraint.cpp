@@ -52,10 +52,12 @@ public:
 
 std::string StringBetweenAngleBrackets(const std::string& str)
 {
-    const auto& str_begin_iterator = str.begin();
-    const auto& str_end_iterator = str.end();
-    auto left = std::find(str.begin(), str.end(), '<');
-    if (left == str_end_iterator)
+    const auto& begin = str.begin();
+    const auto& end = str.end();
+
+    auto left = std::find(begin, end, '<');
+
+    if (left == end)
     {
         std::ostringstream stream;
         stream << std::string("Error the string: ") << std::quoted(str)
@@ -63,8 +65,8 @@ std::string StringBetweenAngleBrackets(const std::string& str)
         throw StringIsNotWellFormated(stream.str());
     }
 
-    auto right = std::find(str_begin_iterator, str_end_iterator, '>');
-    if (right == str_end_iterator)
+    auto right = std::find(begin, end, '>');
+    if (right == end)
     {
         std::ostringstream stream;
         stream << std::string("Error the string: ") << std::quoted(str)
