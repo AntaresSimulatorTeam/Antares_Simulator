@@ -157,7 +157,9 @@ void FinalLevelInflowsModifier::logInfoFinLvlNotApplicable(uint year)
         && (!hydro_.reservoirManagement || hydro_.useWaterValue
             || !isValidLevel(initialReservoirLevel_)))
         logs.info() << "Final reservoir level not applicable! Year:" << year + 1
-                    << ", Area:" << areaName_;
+                    << ", Area:" << areaName_
+                    << ". Check: Reservoir management = Yes, Use water values = No and proper initial "
+                       "reservoir level is provided ";
 }
 
 bool FinalLevelInflowsModifier::makeChecks(uint year)
@@ -182,7 +184,7 @@ bool FinalLevelInflowsModifier::isApplicable(uint year)
 {
     // If isApplicable_.size() == 0, then instance was not properly initialized
     // and is not applicable.
-    return isApplicable_.size() && isApplicable_.at(year);
+    return !isApplicable_.empty() && isApplicable_.at(year);
 }
 
 } // namespace Antares::Data
