@@ -57,14 +57,9 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
 
     ProblemeHydraulique.NombreDeReservoirs = NombreDeReservoirs;
 
-    ProblemeHydraulique.ProblemeSpx
-      = (void**)malloc((unsigned int)NombreDeReservoirs * sizeof(void*));
-    for (i = 0; i < NombreDeReservoirs; i++)
-    {
-        ProblemeHydraulique.ProblemeSpx[i] = NULL;
-    }
+    ProblemeHydraulique.ProblemeSpx.assign(NombreDeReservoirs, nullptr);
 
-    ProblemeHydraulique.Probleme = NULL;
+    ProblemeHydraulique.Probleme = nullptr;
 
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
         = ProblemeHydraulique.CorrespondanceDesVariables;
