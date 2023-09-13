@@ -39,21 +39,12 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
     DONNEES_ANNUELLES* DonneesAnnuelles;
     PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
 
-    DonneesAnnuelles = (DONNEES_ANNUELLES*)malloc(sizeof(DONNEES_ANNUELLES));
-    if (DonneesAnnuelles == NULL)
-    {
-        return (NULL);
-    }
+    DonneesAnnuelles = new DONNEES_ANNUELLES;
     DonneesAnnuelles->NombreDePasDeTemps = 12;
 
     NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
 
-    DonneesAnnuelles->ProblemeHydraulique
-      = (PROBLEME_HYDRAULIQUE*)malloc(sizeof(PROBLEME_HYDRAULIQUE));
-    if (DonneesAnnuelles->ProblemeHydraulique == NULL)
-    {
-        return (NULL);
-    }
+    DonneesAnnuelles->ProblemeHydraulique = new PROBLEME_HYDRAULIQUE;
 
     DonneesAnnuelles->TurbineMax.assign(NbPdt, 0.);
     DonneesAnnuelles->TurbineMin.assign(NbPdt, 0.);
