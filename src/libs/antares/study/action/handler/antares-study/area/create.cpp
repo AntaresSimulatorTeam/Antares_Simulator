@@ -291,6 +291,9 @@ void Create::createActionsForAStandardAreaCopy(Context& ctx, bool copyPosition)
     *tsNode += prepro;
     *tsNode += new Action::AntaresStudy::Area::AllocationHydro(pOriginalAreaName);
 
+    //Hydro Power Credits
+    *tsNode += new DataTimeseries(Data::timeSeriesHydroPowerCredits, pOriginalAreaName);
+
     // Thermal
     auto* area = ctx.extStudy->areas.findFromName(pOriginalAreaName);
     if (area)
