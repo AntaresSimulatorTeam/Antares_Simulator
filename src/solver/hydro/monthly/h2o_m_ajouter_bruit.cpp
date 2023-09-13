@@ -9,9 +9,9 @@ constexpr double noiseAmplitude = 1e-3;
 constexpr unsigned int seed = 0x79686d64; // "hydm" in hexa
 } // namespace Constants
 
-void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES* DonneesAnnuelles)
+void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
         = ProblemeHydraulique.ProblemeLineairePartieFixe;
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
@@ -32,7 +32,7 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES* DonneesAnnuelles)
 
     for (const auto variable : monthlyVariables)
     {
-        for (int Pdt = 0; Pdt < DonneesAnnuelles->NombreDePasDeTemps; Pdt++)
+        for (int Pdt = 0; Pdt < DonneesAnnuelles.NombreDePasDeTemps; Pdt++)
         {
             int Var = variable[Pdt];
             CoutLineaireBruite[Var]

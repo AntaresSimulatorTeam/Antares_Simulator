@@ -168,7 +168,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
 
         if (area.hydro.reservoirManagement)
         {
-            auto& problem = *H2O_M_Instanciation(1);
+            auto problem = H2O_M_Instanciation(1);
 
             double totalInflowsYear = prepareMonthlyTargetGenerations(area, data);
             assert(totalInflowsYear >= 0.);
@@ -192,7 +192,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                 problem.VolumeMax[month] = maxLvl[firstDay];
             }
 
-            H2O_M_OptimiserUneAnnee(&problem, 0);
+            H2O_M_OptimiserUneAnnee(problem, 0);
             switch (problem.ResultatsValides) {
                 case OUI: {
                     if (Logs::Verbosity::Debug::enabled)

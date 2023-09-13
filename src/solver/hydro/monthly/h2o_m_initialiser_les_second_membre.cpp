@@ -28,34 +28,34 @@
 #include "h2o_m_donnees_annuelles.h"
 #include "h2o_m_fonctions.h"
 
-void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES* DonneesAnnuelles)
+void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
         = ProblemeHydraulique.ProblemeLineairePartieVariable;
 
     double ChgmtSens = -1;
-    int NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
+    int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
     int Cnt = 0;
 
-    auto& TurbineCible = DonneesAnnuelles->TurbineCible;
+    auto& TurbineCible = DonneesAnnuelles.TurbineCible;
     auto& SecondMembre = ProblemeLineairePartieVariable.SecondMembre;
 
     for (int Pdt = 1; Pdt < NbPdt; Pdt++)
     {
-        SecondMembre[Cnt] = DonneesAnnuelles->Apport[Pdt - 1];
+        SecondMembre[Cnt] = DonneesAnnuelles.Apport[Pdt - 1];
         Cnt++;
     }
 
-    SecondMembre[Cnt] = DonneesAnnuelles->Volume[0] - DonneesAnnuelles->Apport[NbPdt - 1];
+    SecondMembre[Cnt] = DonneesAnnuelles.Volume[0] - DonneesAnnuelles.Apport[NbPdt - 1];
     Cnt++;
 
     for (int Pdt = 1; Pdt < NbPdt; Pdt++)
     {
-        SecondMembre[Cnt] = DonneesAnnuelles->VolumeMax[Pdt];
+        SecondMembre[Cnt] = DonneesAnnuelles.VolumeMax[Pdt];
         Cnt++;
 
-        SecondMembre[Cnt] = DonneesAnnuelles->VolumeMin[Pdt] * ChgmtSens;
+        SecondMembre[Cnt] = DonneesAnnuelles.VolumeMin[Pdt] * ChgmtSens;
         Cnt++;
     }
 

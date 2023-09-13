@@ -28,11 +28,11 @@
 #include "h2o_m_donnees_annuelles.h"
 #include "h2o_m_fonctions.h"
 
-void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuelles)
+void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
     int Var;
 
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
         = ProblemeHydraulique.ProblemeLineairePartieVariable;
     const CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
@@ -40,12 +40,12 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuel
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
         = ProblemeHydraulique.ProblemeLineairePartieFixe;
 
-    DonneesAnnuelles->Volume[0] = DonneesAnnuelles->VolumeInitial;
+    DonneesAnnuelles.Volume[0] = DonneesAnnuelles.VolumeInitial;
 
-    int NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
-    double CoutDepassementVolume = DonneesAnnuelles->CoutDepassementVolume;
-    auto& TurbineMax = DonneesAnnuelles->TurbineMax;
-    const auto& TurbineMin = DonneesAnnuelles->TurbineMin;
+    int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
+    double CoutDepassementVolume = DonneesAnnuelles.CoutDepassementVolume;
+    auto& TurbineMax = DonneesAnnuelles.TurbineMax;
+    const auto& TurbineMin = DonneesAnnuelles.TurbineMin;
 
 
     auto& Xmin = ProblemeLineairePartieVariable.Xmin;
@@ -54,9 +54,9 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuel
     auto& CoutLineaire = ProblemeLineairePartieFixe.CoutLineaire;
 
     Var = CorrespondanceDesVariables.NumeroDeVariableVolume[0];
-    X[Var] = DonneesAnnuelles->Volume[0];
-    Xmin[Var] = DonneesAnnuelles->Volume[0];
-    Xmax[Var] = DonneesAnnuelles->Volume[0];
+    X[Var] = DonneesAnnuelles.Volume[0];
+    Xmin[Var] = DonneesAnnuelles.Volume[0];
+    Xmax[Var] = DonneesAnnuelles.Volume[0];
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
@@ -85,7 +85,7 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuel
     }
 
     Var = CorrespondanceDesVariables.NumeroDeLaVariableViolMaxVolumeMin;
-    CoutLineaire[Var] = DonneesAnnuelles->CoutViolMaxDuVolumeMin;
+    CoutLineaire[Var] = DonneesAnnuelles.CoutViolMaxDuVolumeMin;
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {

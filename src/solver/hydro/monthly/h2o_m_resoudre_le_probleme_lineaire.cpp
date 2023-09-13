@@ -46,13 +46,13 @@ extern "C"
 #define SNPRINTF snprintf
 #endif
 
-void H2O_M_ResoudreLeProblemeLineaire(DONNEES_ANNUELLES* DonneesAnnuelles, int NumeroDeReservoir)
+void H2O_M_ResoudreLeProblemeLineaire(DONNEES_ANNUELLES& DonneesAnnuelles, int NumeroDeReservoir)
 {
     int Var;
     double* pt;
     char PremierPassage;
 
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
         = ProblemeHydraulique.ProblemeLineairePartieVariable;
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
@@ -73,7 +73,7 @@ void H2O_M_ResoudreLeProblemeLineaire(DONNEES_ANNUELLES* DonneesAnnuelles, int N
         Probleme = (PROBLEME_SIMPLEXE*)malloc(sizeof(PROBLEME_SIMPLEXE));
         if (Probleme == NULL)
         {
-            DonneesAnnuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
+            DonneesAnnuelles.ResultatsValides = EMERGENCY_SHUT_DOWN;
             return;
         }
         ProblemeHydraulique.Probleme = (void*)Probleme;
@@ -169,7 +169,7 @@ RESOLUTION:
         }
         else
         {
-            DonneesAnnuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
+            DonneesAnnuelles.ResultatsValides = EMERGENCY_SHUT_DOWN;
             return;
         }
     }
@@ -190,7 +190,7 @@ RESOLUTION:
               += ProblemeLineairePartieFixe.CoutLineaireBruite[Var] * Probleme->X[Var];
         }
 
-        DonneesAnnuelles->ResultatsValides = OUI;
+        DonneesAnnuelles.ResultatsValides = OUI;
 
         for (Var = 0; Var < ProblemeLineairePartieFixe.NombreDeVariables; Var++)
         {
@@ -201,7 +201,7 @@ RESOLUTION:
     }
     else
     {
-        DonneesAnnuelles->ResultatsValides = NON;
+        DonneesAnnuelles.ResultatsValides = NON;
         return;
     }
 

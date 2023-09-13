@@ -28,7 +28,7 @@
 #include "h2o_m_donnees_annuelles.h"
 #include "h2o_m_fonctions.h"
 
-DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
+DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
 {
     int i;
     int NbPdt;
@@ -36,34 +36,29 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
     int NombreDeVariables;
     int NombreDeContraintes;
     int NombreDeTermesAlloues;
-    DONNEES_ANNUELLES* DonneesAnnuelles;
+    DONNEES_ANNUELLES DonneesAnnuelles;
 
-    DonneesAnnuelles = new DONNEES_ANNUELLES;
-    DonneesAnnuelles->NombreDePasDeTemps = 12;
+    DonneesAnnuelles.NombreDePasDeTemps = 12;
 
-    NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
+    NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
 
-    DonneesAnnuelles->TurbineMax.assign(NbPdt, 0.);
-    DonneesAnnuelles->TurbineMin.assign(NbPdt, 0.);
-    DonneesAnnuelles->TurbineCible.assign(NbPdt, 0.);
-    DonneesAnnuelles->Turbine.assign(NbPdt, 0.);
+    DonneesAnnuelles.TurbineMax.assign(NbPdt, 0.);
+    DonneesAnnuelles.TurbineMin.assign(NbPdt, 0.);
+    DonneesAnnuelles.TurbineCible.assign(NbPdt, 0.);
+    DonneesAnnuelles.Turbine.assign(NbPdt, 0.);
 
-    DonneesAnnuelles->Apport.assign(NbPdt, 0.);
+    DonneesAnnuelles.Apport.assign(NbPdt, 0.);
 
-    DonneesAnnuelles->Volume.assign(NbPdt, 0.);
-    DonneesAnnuelles->VolumeMin.assign(NbPdt, 0.);
-    DonneesAnnuelles->VolumeMax.assign(NbPdt, 0.);
+    DonneesAnnuelles.Volume.assign(NbPdt, 0.);
+    DonneesAnnuelles.VolumeMin.assign(NbPdt, 0.);
+    DonneesAnnuelles.VolumeMax.assign(NbPdt, 0.);
 
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
 
     ProblemeHydraulique.NombreDeReservoirs = NombreDeReservoirs;
 
     ProblemeHydraulique.ProblemeSpx
       = (void**)malloc((unsigned int)NombreDeReservoirs * sizeof(void*));
-    if (ProblemeHydraulique.ProblemeSpx == NULL)
-    {
-        return (0);
-    }
     for (i = 0; i < NombreDeReservoirs; i++)
     {
         ProblemeHydraulique.ProblemeSpx[i] = NULL;
@@ -153,5 +148,5 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
 
     H2O_M_ConstruireLesContraintes(DonneesAnnuelles);
 
-    return (DonneesAnnuelles);
+    return DonneesAnnuelles;
 }

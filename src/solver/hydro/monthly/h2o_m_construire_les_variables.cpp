@@ -39,12 +39,12 @@ extern "C"
 #include "h2o_m_donnees_annuelles.h"
 #include "h2o_m_fonctions.h"
 
-void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES* DonneesAnnuelles)
+void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
     int Var;
     int Pdt;
     int NbPdt;
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
         = ProblemeHydraulique.ProblemeLineairePartieVariable;
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
@@ -52,7 +52,7 @@ void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES* DonneesAnnuelles)
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
         = ProblemeHydraulique.CorrespondanceDesVariables;
 
-    NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
+    NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
 
 
     Var = 0;
@@ -63,7 +63,7 @@ void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES* DonneesAnnuelles)
     ProblemeLineairePartieVariable.Xmax[Var] = 1.0;
     ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
     ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
-      = &(DonneesAnnuelles->Volume[Pdt]);
+      = &(DonneesAnnuelles.Volume[Pdt]);
     Var++;
 
     for (Pdt = 1; Pdt < NbPdt; Pdt++)
@@ -73,7 +73,7 @@ void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES* DonneesAnnuelles)
         ProblemeLineairePartieVariable.Xmax[Var] = 1.0;
         ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
         ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
-          = &(DonneesAnnuelles->Volume[Pdt]);
+          = &(DonneesAnnuelles.Volume[Pdt]);
         Var++;
     }
 
@@ -84,7 +84,7 @@ void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES* DonneesAnnuelles)
         ProblemeLineairePartieVariable.Xmax[Var] = 0.0;
         ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
         ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
-          = &(DonneesAnnuelles->Turbine[Pdt]);
+          = &(DonneesAnnuelles.Turbine[Pdt]);
         Var++;
     }
 
