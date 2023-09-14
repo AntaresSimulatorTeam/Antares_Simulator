@@ -152,7 +152,7 @@ private:
 
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
-            ApplyRandomTSnumbers(study, numSpace);
+            ApplyRandomTSnumbers(study, y, numSpace);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
             simulation_->prepareClustersInMustRunMode(numSpace);
@@ -980,7 +980,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             {
                 yearPerformed = true;
                 numSpace = set_it->performedYearToSpace[y];
-                study.runtime->timeseriesNumberYear[numSpace] = y;
             }
 
             // If the year has not to be rerun, we skip the computation of the year.

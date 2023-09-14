@@ -30,4 +30,5 @@
 #include "antares/study/study.h"
 
 void ApplyRandomTSnumbers(const Antares::Data::Study& study,
+                          unsigned int year,
                           uint numSpace);
