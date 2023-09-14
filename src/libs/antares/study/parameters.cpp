@@ -33,8 +33,8 @@
 #include <list>    // std::list
 #include <sstream> // std::stringstream
 
-#include "../constants.h"
 #include "parameters.h"
+#include <antares/constants.h>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include "load-options.h"
@@ -951,8 +951,6 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // Reset inner data
     reset();
     // A temporary buffer, used for the values in lowercase
-    String value;
-    String sectionName;
     using Callback = bool (*)(
       Parameters&,   // [out] Parameter object to load the data into
       const String&, // [in] Key, comes left to the '=' sign in the .ini file
@@ -975,7 +973,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // Foreach section on the ini file...
     for (auto* section = ini.firstSection; section; section = section->next)
     {
-        sectionName = section->name;
+        String sectionName = section->name;
         sectionName.toLower();
         try
         {
@@ -996,7 +994,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
             if (!firstKeyLetterIsValid(p->key))
                 continue;
             // We convert the key and the value into the lower case format
-            value = p->value;
+            String value = p->value;
             value.toLower();
 
             // Deal with the current property
@@ -1506,8 +1504,8 @@ void Parameters::saveToINI(IniFile& ini) const
         }
 
         // Calendar
-        section->add("horizon  ", horizon);
-        section->add("nbYears  ", nbYears);
+        section->add("horizon", horizon);
+        section->add("nbYears", nbYears);
         section->add("simulation.start", simulationDays.first + 1); // starts from 1
         section->add("simulation.end", simulationDays.end);         // starts from 1
         section->add("january.1st", Date::DayOfTheWeekToString(dayOfThe1stJanuary));
@@ -1527,11 +1525,11 @@ void Parameters::saveToINI(IniFile& ini) const
 
         // Time series
         ParametersSaveTimeSeries(section, "generate", timeSeriesToGenerate);
-        section->add("nbTimeSeriesLoad    ", nbTimeSeriesLoad);
-        section->add("nbTimeSeriesHydro   ", nbTimeSeriesHydro);
-        section->add("nbTimeSeriesWind    ", nbTimeSeriesWind);
-        section->add("nbTimeSeriesThermal ", nbTimeSeriesThermal);
-        section->add("nbTimeSeriesSolar   ", nbTimeSeriesSolar);
+        section->add("nbTimeSeriesLoad", nbTimeSeriesLoad);
+        section->add("nbTimeSeriesHydro", nbTimeSeriesHydro);
+        section->add("nbTimeSeriesWind", nbTimeSeriesWind);
+        section->add("nbTimeSeriesThermal", nbTimeSeriesThermal);
+        section->add("nbTimeSeriesSolar", nbTimeSeriesSolar);
 
         // Refresh
         ParametersSaveTimeSeries(section, "refreshTimeSeries", timeSeriesToRefresh);
