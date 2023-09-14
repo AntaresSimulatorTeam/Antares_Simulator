@@ -52,6 +52,7 @@ void H2O_M_Free(DONNEES_ANNUELLES& DonneesAnnuelles)
     }
 
     /* delete ProblemeHydraulique.Probleme; */
+    delete &DonneesAnnuelles;
 
     return;
 }

@@ -391,7 +391,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
             uint endDay = firstDay + daysPerMonth;
 
-            DONNEES_MENSUELLES problem = H2O_J_Instanciation();
+            DONNEES_MENSUELLES& problem = *H2O_J_Instanciation();
             H2O_J_AjouterBruitAuCout(problem);
             problem.NombreDeJoursDuMois = (int)daysPerMonth;
             problem.TurbineDuMois = data.MOG[realmonth];
@@ -540,6 +540,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             }
 
             H2O2_J_Free(&problem);
+            delete[] &problem;
         }
 
         uint firstDaySimu = study.parameters.simulationDays.first;

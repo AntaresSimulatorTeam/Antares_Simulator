@@ -28,11 +28,11 @@
 #include "h2o_j_donnees_mensuelles.h"
 #include "h2o_j_fonctions.h"
 
-DONNEES_MENSUELLES H2O_J_Instanciation(void)
+DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 {
-    DONNEES_MENSUELLES DonneesMensuelles;
+    DONNEES_MENSUELLES* DonneesMensuelles = new DONNEES_MENSUELLES[1];
 
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles.ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
     ProblemeHydraulique.NombreDeProblemes = 4;
 
@@ -44,10 +44,10 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
     NbJoursDUnProbleme[2] = 30;
     NbJoursDUnProbleme[3] = 31;
 
-    DonneesMensuelles.TurbineMax.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuelles.TurbineMin.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuelles.TurbineCible.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuelles.Turbine.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles->TurbineMax.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles->TurbineMin.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles->TurbineCible.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles->Turbine.assign(NbJoursDUnProbleme[3], 0.);
 
     int NombreDeProblemes = ProblemeHydraulique.NombreDeProblemes;
 

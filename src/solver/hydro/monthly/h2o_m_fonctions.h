@@ -27,7 +27,7 @@
 #ifndef __SOLVER_H2O_M_FONCTIONS__
 #define __SOLVER_H2O_M_FONCTIONS__
 
-DONNEES_ANNUELLES H2O_M_Instanciation(int);
+DONNEES_ANNUELLES* H2O_M_Instanciation(int);
 void H2O_M_OptimiserUneAnnee(DONNEES_ANNUELLES&, int);
 void H2O_M_Free(DONNEES_ANNUELLES&);
 

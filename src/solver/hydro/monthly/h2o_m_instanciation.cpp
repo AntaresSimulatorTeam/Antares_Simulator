@@ -28,26 +28,26 @@
 #include "h2o_m_donnees_annuelles.h"
 #include "h2o_m_fonctions.h"
 
-DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
+DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
 {
-    DONNEES_ANNUELLES DonneesAnnuelles{};
+    DONNEES_ANNUELLES* DonneesAnnuelles = new DONNEES_ANNUELLES;
 
-    DonneesAnnuelles.NombreDePasDeTemps = 12;
+    DonneesAnnuelles->NombreDePasDeTemps = 12;
 
-    int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
+    int NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
 
-    DonneesAnnuelles.TurbineMax.assign(NbPdt, 0.);
-    DonneesAnnuelles.TurbineMin.assign(NbPdt, 0.);
-    DonneesAnnuelles.TurbineCible.assign(NbPdt, 0.);
-    DonneesAnnuelles.Turbine.assign(NbPdt, 0.);
+    DonneesAnnuelles->TurbineMax.assign(NbPdt, 0.);
+    DonneesAnnuelles->TurbineMin.assign(NbPdt, 0.);
+    DonneesAnnuelles->TurbineCible.assign(NbPdt, 0.);
+    DonneesAnnuelles->Turbine.assign(NbPdt, 0.);
 
-    DonneesAnnuelles.Apport.assign(NbPdt, 0.);
+    DonneesAnnuelles->Apport.assign(NbPdt, 0.);
 
-    DonneesAnnuelles.Volume.assign(NbPdt, 0.);
-    DonneesAnnuelles.VolumeMin.assign(NbPdt, 0.);
-    DonneesAnnuelles.VolumeMax.assign(NbPdt, 0.);
+    DonneesAnnuelles->Volume.assign(NbPdt, 0.);
+    DonneesAnnuelles->VolumeMin.assign(NbPdt, 0.);
+    DonneesAnnuelles->VolumeMax.assign(NbPdt, 0.);
 
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
 
     ProblemeHydraulique.NombreDeReservoirs = NombreDeReservoirs;
 
@@ -133,9 +133,9 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     ProblemeLineairePartieVariable.CoutsReduits.assign(NombreDeVariables, 0.);
     ProblemeLineairePartieVariable.CoutsMarginauxDesContraintes.assign(NombreDeContraintes, 0.);
 
-    H2O_M_ConstruireLesVariables(DonneesAnnuelles);
+    H2O_M_ConstruireLesVariables(*DonneesAnnuelles);
 
-    H2O_M_ConstruireLesContraintes(DonneesAnnuelles);
+    H2O_M_ConstruireLesContraintes(*DonneesAnnuelles);
 
     return DonneesAnnuelles;
 }

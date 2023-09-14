@@ -168,7 +168,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
 
         if (area.hydro.reservoirManagement)
         {
-            auto problem = H2O_M_Instanciation(1);
+            auto& problem = *H2O_M_Instanciation(1);
 
             double totalInflowsYear = prepareMonthlyTargetGenerations(area, data);
             assert(totalInflowsYear >= 0.);
