@@ -254,6 +254,8 @@ set(SRC_STUDY_PART_HYDRO
         parts/hydro/allocation.h
         parts/hydro/allocation.hxx
         parts/hydro/allocation.cpp
+        parts/hydro/finallevelinflowsmodifyer.h
+        parts/hydro/finallevelinflowsmodifyer.cpp
 )
 source_group("study\\part\\hydro" FILES ${SRC_STUDY_PART_HYDRO})
 

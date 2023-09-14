@@ -107,8 +107,9 @@ target_include_directories(test-hydro_final
 target_link_libraries(test-hydro_final
 	PRIVATE
 	Boost::unit_test_framework
-	libantares-core
-	libantares-solver-simulation
+	Antares::study
+	antares-solver-simulation
+	Antares::array
 )
 
 # Linux

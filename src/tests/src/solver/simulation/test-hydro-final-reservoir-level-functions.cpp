@@ -7,7 +7,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "hydro-final-reservoir-level-functions.h"
-#include <study.h>
+#include <antares/study/study.h>
 
 using namespace Antares::Solver;
 using namespace Antares::Data;
