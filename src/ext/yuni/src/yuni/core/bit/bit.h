@@ -48,7 +48,7 @@ namespace Bit
 */
 template<class T>
 uint Count(T data);
-yuint32 Count(yuint32 data);
+uint32_t Count(uint32_t data);
 
 /*!
 ** \brief Get if the bit at a given index

@@ -28,7 +28,6 @@
 #define __ANTARES_TOOLBOX_COMPONENTS_WIP_PANEL_WIP_PANEL_H__
 
 #include <yuni/yuni.h>
-#include <antares/wx-wrapper.h>
 #include <wx/bitmap.h>
 #include <ui/common/component/panel.h>
 

@@ -27,18 +27,10 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_HXX__
 #define __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_HXX__
 
-namespace Antares
+namespace Antares::Data::Load
 {
-namespace Data
-{
-namespace Load
-{
-inline void Prepro::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    xcast.estimateMemoryUsage(u);
-}
 
-inline Yuni::uint64 Prepro::memoryUsage() const
+inline uint64_t Prepro::memoryUsage() const
 {
     return xcast.memoryUsage();
 }
@@ -58,8 +50,8 @@ inline void Prepro::resetToDefault()
     xcast.resetToDefaultValues();
 }
 
-} // namespace Load
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::Load
+
+
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_H__

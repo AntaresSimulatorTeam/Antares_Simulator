@@ -43,8 +43,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
     int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
     int nombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-    VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables, problemeHebdo->NamedProblems);
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables);
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];

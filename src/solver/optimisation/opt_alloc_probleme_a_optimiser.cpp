@@ -34,7 +34,7 @@
 #include "opt_fonctions.h"
 #include <stdio.h>
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 using namespace Antares;
 
@@ -174,9 +174,4 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*
     ProblemeAResoudre->IndicesColonnes.resize(NbTermes);
 
     ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
-}
-
-void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
-{
-    problemeHebdo->ProblemeAResoudre.reset();
 }

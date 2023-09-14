@@ -68,7 +68,7 @@ public:
     enum
     {
         //! The maximum valid code point
-        codePointMax = static_cast<uint32>(0x0010ffffu),
+        codePointMax = static_cast<uint32_t>(0x0010ffffu),
         //! Ascii maximum value
         asciiLimit = 0x80,
     };
@@ -89,7 +89,7 @@ public:
     */
     uint size() const;
 
-    uint32 value() const;
+    uint32_t value() const;
 
     template<class StreamT>
     void write(StreamT& out) const;
@@ -133,7 +133,7 @@ public:
 
 private:
     //! The UTF-8 character
-    uint32 pValue;
+    uint32_t pValue;
     // A friend !
     template<uint, bool>
     friend class Yuni::CString;

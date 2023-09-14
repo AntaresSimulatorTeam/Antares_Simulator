@@ -53,20 +53,20 @@ enum
 #ifdef YUNI_OS_WINDOWS
 #define SYSTEM_MEMORY_IS_IMPLEMENTED
 
-uint64 Total()
+uint64_t Total()
 {
     // see http://msdn.microsoft.com/en-us/library/aa366589(VS.85).aspx
     MEMORYSTATUSEX statex;
     statex.dwLength = (DWORD)sizeof(statex);
-    return (GlobalMemoryStatusEx(&statex)) ? (uint64)statex.ullTotalPhys : (uint64)defaultTotal;
+    return (GlobalMemoryStatusEx(&statex)) ? (uint64_t)statex.ullTotalPhys : (uint64_t)defaultTotal;
 }
 
-uint64 Available()
+uint64_t Available()
 {
     // see http://msdn.microsoft.com/en-us/library/aa366589(VS.85).aspx
     MEMORYSTATUSEX statex;
     statex.dwLength = (DWORD)sizeof(statex);
-    return (GlobalMemoryStatusEx(&statex)) ? (uint64)statex.ullAvailPhys : (uint64)defaultAvailable;
+    return (GlobalMemoryStatusEx(&statex)) ? (uint64_t)statex.ullAvailPhys : (uint64_t)defaultAvailable;
 }
 
 bool Usage::update()
@@ -77,8 +77,8 @@ bool Usage::update()
 
     if (GlobalMemoryStatusEx(&statex))
     {
-        total = (uint64)statex.ullTotalPhys;
-        available = (uint64)statex.ullAvailPhys;
+        total = (uint64_t)statex.ullTotalPhys;
+        available = (uint64_t)statex.ullAvailPhys;
         return true;
     }
     available = defaultAvailable;
@@ -115,7 +115,7 @@ static inline int fgetline(FILE* fp, char* s, int maxlen)
     return (!i) ? EOF : i;
 }
 
-static inline uint64 readvalue(char* line)
+static inline uint64_t readvalue(char* line)
 {
     // Here is a sample for /proc/meminfo :
     //
@@ -162,9 +162,9 @@ static inline uint64 readvalue(char* line)
     *line = '\0';
 
 #ifdef YUNI_OS_32
-    return (uint64)atol(first) * 1024u;
+    return (uint64_t)atol(first) * 1024u;
 #else
-    return (uint64)atoll(first) * 1024u;
+    return (uint64_t)atoll(first) * 1024u;
 #endif
 }
 
@@ -226,30 +226,30 @@ bool Usage::update()
         // Checking the amount of the total physical memory, which can not be equal to 0
         if (!total)
         {
-            total = (uint64)defaultTotal;
+            total = (uint64_t)defaultTotal;
             return false;
         }
         return true;
     }
 
     // Error, using default values
-    total = (uint64)defaultTotal;
-    available = (uint64)defaultAvailable;
+    total = (uint64_t)defaultTotal;
+    available = (uint64_t)defaultAvailable;
     return false;
 }
 
-uint64 Available()
+uint64_t Available()
 {
     return Usage().available;
 }
 
-uint64 Total()
+uint64_t Total()
 {
 #ifdef YUNI_OS_LINUX
     {
         // Directly using sysinfo (2), which should be faster than parsing /proc/meminfo
         struct sysinfo s;
-        return (!sysinfo(&s)) ? (s.mem_unit * s.totalram) : (uint64)defaultTotal;
+        return (!sysinfo(&s)) ? (s.mem_unit * s.totalram) : (uint64_t)defaultTotal;
     }
 #else
     {
@@ -263,15 +263,15 @@ uint64 Total()
 #ifdef YUNI_OS_MAC
 #define SYSTEM_MEMORY_IS_IMPLEMENTED
 
-uint64 Total()
+uint64_t Total()
 {
     int mib[2] = {CTL_HW, HW_MEMSIZE};
-    uint64 memory;
-    size_t len = sizeof(uint64);
-    return (!sysctl(mib, 2, &memory, &len, NULL, 0)) ? memory : (uint64)defaultTotal;
+    uint64_t memory;
+    size_t len = sizeof(uint64_t);
+    return (!sysctl(mib, 2, &memory, &len, NULL, 0)) ? memory : (uint64_t)defaultTotal;
 }
 
-uint64 Available()
+uint64_t Available()
 {
     // Good readings :)
     // http://www.booktou.com/node/148/0321278542/ch06lev1sec3.html
@@ -286,7 +286,7 @@ uint64 Available()
     vm_size_t page_size;
     host_page_size(host, &page_size);
 
-    return (uint64)(vm_stat.free_count) * (uint64)page_size;
+    return (uint64_t)(vm_stat.free_count) * (uint64_t)page_size;
 }
 
 bool Usage::update()
@@ -296,14 +296,14 @@ bool Usage::update()
 
     // Total
     int mib[2] = {CTL_HW, HW_MEMSIZE};
-    size_t len = sizeof(uint64);
+    size_t len = sizeof(uint64_t);
     size_t sttotal;
     if (sysctl(mib, 2, &sttotal, &len, NULL, 0))
     {
-        total = (uint64)defaultTotal;
+        total = (uint64_t)defaultTotal;
         return false;
     }
-    total = (uint64)sttotal;
+    total = (uint64_t)sttotal;
     return true;
 }
 
@@ -312,12 +312,12 @@ bool Usage::update()
 #ifndef SYSTEM_MEMORY_IS_IMPLEMENTED
 #warning Yuni::System::Memory: The implementation is missing for this operating system
 
-uint64 Total()
+uint64_t Total()
 {
     return defaultTotal;
 }
 
-uint64 Available()
+uint64_t Available()
 {
     return defaultAvailable;
 }

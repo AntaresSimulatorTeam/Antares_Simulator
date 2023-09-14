@@ -33,8 +33,8 @@
 #include "../../constants.h"
 #include "../area/links.h"
 #include "../parts/thermal/cluster.h"
-#include "../../array/matrix.h"
-#include "../../inifile/inifile.h"
+#include <antares/array/matrix.h>
+#include <antares/inifile/inifile.h>
 #include "EnvForLoading.h"
 #include "antares/study/filter.h"
 #include "BindingConstraintStructures.h"
@@ -340,7 +340,7 @@ public:
     /*!
     ** \brief Get the memory usage
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
     //@}
 
     /*!

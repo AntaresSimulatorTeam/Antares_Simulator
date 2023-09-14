@@ -27,11 +27,9 @@
 
 #include <antares/resources/resources.h>
 #include <antares/sys/policy.h>
-#include <antares/version.h>
 #include <antares/locale.h>
-#include <antares/utils.h>
-#include <antares/study.h>
-#include <antares/logs.h>
+#include <antares/study/study.h>
+#include <antares/logs/logs.h>
 #include <string>
 
 #include "../../solver/constraints-builder/cbuilder.h"

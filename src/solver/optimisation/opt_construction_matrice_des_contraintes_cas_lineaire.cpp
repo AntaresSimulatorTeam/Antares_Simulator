@@ -29,8 +29,9 @@
 #include "../utils/filename.h"
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"
+#include "sim_structure_probleme_economique.h"
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 using namespace Antares::Data;
 
@@ -170,8 +171,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-    ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
-                                    problemeHebdo->NamedProblems);
+    ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes);
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
@@ -181,7 +181,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
             = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
 
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             int nombreDeTermes = 0;
 
@@ -296,7 +296,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                                    constraintNamer);
         }
 
-        for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
+        for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
             if (problemeHebdo->CoutDeTransport[interco].IntercoGereeAvecDesCouts)
             {
@@ -340,7 +340,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             }
         }
 
-        for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+        for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
             const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
@@ -430,7 +430,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         }
     }
 
-    for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+    for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)
     {
         const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
@@ -517,7 +517,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 }
             }
 
-            assert(cntCouplante >= 0);
             CorrespondanceCntNativesCntOptimJournalieres
               .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
@@ -541,7 +540,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         int semaine = problemeHebdo->weekInTheYear;
         CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondanceCntNativesCntOptimHebdomadaires
             = problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires;
-        for (int cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+        for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
             const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
@@ -636,7 +635,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         }
     }
 
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         bool presenceHydro
@@ -702,7 +701,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
     {
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
                 continue;
@@ -762,7 +761,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     }
     else if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
     {
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
                 continue;
@@ -820,7 +819,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         }
     }
 
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const bool presenceHydro
           = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
@@ -883,7 +882,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays] = -1;
     }
 
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
@@ -921,7 +920,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
         constraintNamer.UpdateTimeStep(timeStepInYear);
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
             if (problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
@@ -987,7 +986,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     }
 
     /* For each area with ad hoc properties, two possible sets of two additional constraints */
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const auto& week = problemeHebdo->weekInTheYear;
         constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);

@@ -27,7 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_PREPRO_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_PREPRO_H__
 
-#include "../../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include "../../fwd.h"
 
 namespace Antares
@@ -84,7 +84,7 @@ public:
     PreproHydro();
     //@}
 
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     /*!
     ** \brief Reset all data to their default values
@@ -133,7 +133,7 @@ int PreproHydroLoadFromFolder(Study& s,
 ** \brief Get the size (bytes) occupied in memory by a `PreproHydro` structure
 ** \ingroup hydroprepro
 */
-Yuni::uint64 PreproHydroMemoryUsage(PreproHydro* h);
+uint64_t PreproHydroMemoryUsage(PreproHydro* h);
 
 } // namespace Data
 } // namespace Antares

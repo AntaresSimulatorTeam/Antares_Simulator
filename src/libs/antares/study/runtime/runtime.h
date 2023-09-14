@@ -30,7 +30,7 @@
 #include <string>
 #include <vector>
 #include "../study.h"
-#include "../../mersenne-twister/mersenne-twister.h"
+#include <antares/mersenne-twister/mersenne-twister.h>
 
 namespace Antares::Data
 {
@@ -159,12 +159,6 @@ private:
     void disableAllFilters(Study& study);
     void checkThermalTSGeneration(Study& study);
 }; // struct StudyRuntimeInfos
-
-/*!
-** \brief Get the size (bytes) occupied in memory by a StudyRuntimeInfos structure
-** \ingroup runtimedata
-*/
-void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& study);
 
 } // namespace Antares::Data
 

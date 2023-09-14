@@ -59,7 +59,7 @@ template<bool PreciseT>
 class EveryTimerElapsed final : public Thread::Timer
 {
 public:
-    EveryTimerElapsed(uint ms, const Bind<bool(uint64)>& callback) :
+    EveryTimerElapsed(uint ms, const Bind<bool(uint64_t)>& callback) :
      Thread::Timer(ms), pCallback(callback)
     {
         pLastTimestamp = DateTime::NowMilliSeconds();
@@ -80,7 +80,7 @@ protected:
             auto now = DateTime::NowMilliSeconds();
 
             // callback
-            bool shouldContinue = pCallback((uint64)(now - pLastTimestamp));
+            bool shouldContinue = pCallback((uint64_t)(now - pLastTimestamp));
 
             // fetch again the current to avoid taking into consideration
             // the time spent in the callback
@@ -92,7 +92,7 @@ protected:
         {
             // current timestamp in ms
             auto now = DateTime::NowMilliSeconds();
-            uint64 elapsed = (uint64)(now - pLastTimestamp);
+            uint64_t elapsed = (uint64_t)(now - pLastTimestamp);
             pLastTimestamp = now;
 
             return pCallback(elapsed);
@@ -100,11 +100,11 @@ protected:
     }
 
 private:
-    sint64 pLastTimestamp;
-    Bind<bool(uint64)> pCallback;
+    int64_t pLastTimestamp;
+    Bind<bool(uint64_t)> pCallback;
 };
 
-Thread::Timer::Ptr every(uint ms, bool precise, const Bind<bool(uint64)>& callback, bool autostart)
+Thread::Timer::Ptr every(uint ms, bool precise, const Bind<bool(uint64_t)>& callback, bool autostart)
 {
     Thread::Timer* timer;
 

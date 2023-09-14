@@ -40,7 +40,6 @@ namespace Data
 {
 // Forward declarations
 class Study;
-class StudyMemoryUsage;
 class StudyLoadOptions;
 class Area;
 class AreaLink;
@@ -67,7 +66,7 @@ using AreaName = Yuni::CString<ant_k_area_name_max_length, false>;
 //! Name of a single link
 using AreaLinkName = Yuni::CString<ant_k_area_name_max_length * 2 + 1, false>;
 //! Name of a single thermal
-using ClusterName = Yuni::CString<ant_k_cluster_name_max_length, false>;
+using ClusterName = std::string;
 
 using ConstraintName = Yuni::CString<ant_k_constraint_name_max_length, false>;
 
@@ -520,15 +519,6 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
 */
 RenewableGenerationModelling StringToRenewableGenerationModelling(const AnyString& text);
 
-// Format of results
-enum ResultFormat
-{
-    // Store outputs as files inside directories
-    legacyFilesDirectories = 0,
-    // Store outputs inside a single zip archive
-    zipArchive
-};
-
 // ------------------------
 // MPS export status
 // ------------------------
@@ -547,19 +537,15 @@ mpsExportStatus stringToMPSexportStatus(const AnyString& value);
 } // namespace Data
 } // namespace Antares
 
-namespace Antares
-{
-namespace Data
-{
-namespace ScenarioBuilder
+namespace Antares::Data::ScenarioBuilder
 {
 class Rules;
 class TSNumberRules;
 class Sets;
 
-} // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder
+
+
 
 namespace Benchmarking
 {

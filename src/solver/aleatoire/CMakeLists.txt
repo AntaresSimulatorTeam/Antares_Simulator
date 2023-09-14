@@ -5,5 +5,13 @@ set(SRC_ALEATOIRE
 source_group("aleatoire" FILES ${SRC_ALEATOIRE})
 
 
-add_library(libantares-solver-aleatoire ${SRC_ALEATOIRE})
-target_link_libraries(libantares-solver-aleatoire PRIVATE libantares-core)
+add_library(antares-solver-aleatoire ${SRC_ALEATOIRE})
+
+target_include_directories(antares-solver-aleatoire
+		PRIVATE
+		${CMAKE_SOURCE_DIR}/solver)
+
+target_link_libraries(antares-solver-aleatoire
+	PUBLIC
+		Antares::study
+)

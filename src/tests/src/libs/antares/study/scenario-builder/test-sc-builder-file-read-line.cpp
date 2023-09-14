@@ -1,8 +1,9 @@
 #define BOOST_TEST_MODULE test read scenario-builder.dat 
+#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include <study.h>
 #include <rules.h>
@@ -134,6 +135,7 @@ struct Fixture
         auto bc = study->bindingConstraints.add("BC_1");
         bc->group("groupTest");
         auto group = study->bindingConstraintsGroups.add("groupTest");
+		group->add(bc);
         study->bindingConstraintsGroups.resizeAllTimeseriesNumbers(study->parameters.nbYears);
         bc->RHSTimeSeries().resize(7, 1);
 

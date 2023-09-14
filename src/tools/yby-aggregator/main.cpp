@@ -26,10 +26,10 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <yuni/core/getopt.h>
 #include "../../ui/common/winmain.hxx"
-#include <antares/utils.h>
+#include <antares/utils/utils.h>
 #include <antares/version.h>
 #include <antares/sys/policy.h>
 #include <yuni/core/system/cpu.h>
@@ -38,7 +38,7 @@
 #include <yuni/core/system/suspend.h>
 #include <yuni/io/file.h>
 #include <antares/memory/memory.h>
-#include <antares/hostinfo.h>
+#include <antares/logs/hostinfo.h>
 #include <antares/locale.h>
 #include "../../config.h"
 

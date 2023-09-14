@@ -122,30 +122,30 @@ public:
 };
 
 template<>
-class Flag<sint16>
+class Flag<int16_t>
 {
 public:
-    static void Enable(sint16& out)
+    static void Enable(int16_t& out)
     {
         out = 1;
     }
 };
 
 template<>
-class Flag<sint32>
+class Flag<int32_t>
 {
 public:
-    static void Enable(sint32& out)
+    static void Enable(int32_t& out)
     {
         out = 1;
     }
 };
 
 template<>
-class Flag<sint64>
+class Flag<int64_t>
 {
 public:
-    static void Enable(sint64& out)
+    static void Enable(int64_t& out)
     {
         out = 1;
     }
@@ -162,20 +162,20 @@ public:
 };
 
 template<>
-class Flag<uint32>
+class Flag<uint32_t>
 {
 public:
-    static void Enable(uint32& out)
+    static void Enable(uint32_t& out)
     {
         out = 1u;
     }
 };
 
 template<>
-class Flag<uint64>
+class Flag<uint64_t>
 {
 public:
-    static void Enable(uint64& out)
+    static void Enable(uint64_t& out)
     {
         out = 1u;
     }

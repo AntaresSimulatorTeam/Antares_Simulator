@@ -25,13 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "policy.h"
+#include "antares/sys/policy.h"
 #include <map>
 #include <yuni/io/file.h>
-#include "appdata.h"
-#include "../logs.h"
-#include "../inifile/inifile.h"
-#include "hostname.hxx"
+#include "antares/sys/appdata.h"
+#include <antares/logs/logs.h>
+#include <antares/inifile/inifile.h>
+#include <antares/logs/hostname.hxx>
 #include "../config.h"
 #include <antares/fatal-error.h>
 #include <yuni/core/system/environment.h>

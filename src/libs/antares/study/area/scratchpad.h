@@ -31,7 +31,7 @@
 #include <yuni/core/string.h>
 #include <yuni/core/noncopyable.h>
 #include "../fwd.h"
-#include "../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include <vector>
 #include <set>
 
@@ -46,7 +46,7 @@ class AreaScratchpad final
 {
 public:
     //! Matrix used for time-series
-    using TSMatrix = Matrix<double, Yuni::sint32>;
+    using TSMatrix = Matrix<double, int32_t>;
 
     //! \name Constructor
     //@{

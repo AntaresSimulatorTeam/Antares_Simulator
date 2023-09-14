@@ -95,7 +95,7 @@ struct TypeFromSize<1> final
     {
         size = 32
     };
-    typedef sint32 Type;
+    typedef int32_t Type;
 };
 
 // Int16
@@ -104,12 +104,12 @@ struct TypeFromSize<16> final
 {
     // On OS X, there are only routines for int32_t and int64_t
     // With MinGW, it simply does not exist
-    // It seems that the best solution is to use int32 everywhere
+    // It seems that the best solution is to use int32_t everywhere
     enum
     {
         size = 32
     };
-    typedef sint32 Type;
+    typedef int32_t Type;
 };
 
 // Int32
@@ -120,7 +120,7 @@ struct TypeFromSize<32> final
     {
         size = 32
     };
-    typedef sint32 Type;
+    typedef int32_t Type;
 };
 
 // Int64
@@ -131,7 +131,7 @@ struct TypeFromSize<64> final
     {
         size = 64
     };
-    typedef sint64 Type;
+    typedef int64_t Type;
 };
 
 // Thread-safe operations
@@ -224,7 +224,7 @@ struct Operator<32, TP> final
     }
 
     template<class T>
-    static void Set(T& t, sint32 newvalue)
+    static void Set(T& t, int32_t newvalue)
     {
 #ifdef YUNI_OS_WINDOWS
         ::InterlockedExchange((LONG*)&t.pValue, newvalue);
@@ -341,7 +341,7 @@ struct Operator<64, TP> final
     }
 
     template<class T>
-    static void Set(T& t, sint64 newvalue)
+    static void Set(T& t, int64_t newvalue)
     {
 #ifdef YUNI_OS_WINDOWS
 #ifdef YUNI_OS_MINGW32

@@ -106,11 +106,6 @@ public:
 
 public:
     /*!
-    ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
-    */
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u);
-
-    /*!
     ** \brief Retrieve the list of all individual variables
     **
     ** The predicate must implement the method `add(name, unit, comment)`.
@@ -174,7 +169,7 @@ public:
 
     void beforeYearByYearExport(uint year, uint numSpace);
 
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     template<class I>
     static void provideInformations(I& infos);

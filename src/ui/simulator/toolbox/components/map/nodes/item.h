@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_MAP_ITEM_H__
 #define __ANTARES_TOOLBOX_MAP_ITEM_H__
 
-#include <antares/wx-wrapper.h>
 #include <vector>
 #include <set>
 #include <map>

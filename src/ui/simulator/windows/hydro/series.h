@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOWS_HYDRO_PREPRO_H__
 #define __ANTARES_APPLICATION_WINDOWS_HYDRO_PREPRO_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../toolbox/input/area.h"
 #include "../../toolbox/components/notebook/notebook.h"
 #include <ui/common/component/panel.h>

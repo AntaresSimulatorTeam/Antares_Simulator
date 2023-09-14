@@ -35,7 +35,7 @@
 // #include <stdio.h>
 #include <yuni/yuni.h>
 
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 
 #define SEP Yuni::IO::Separator
 

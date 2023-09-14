@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include <yuni/yuni.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
 
@@ -33,7 +33,6 @@
 #include "sim_structure_donnees.h"
 #include "sim_structure_probleme_economique.h"
 #include "sim_alloc_probleme_hebdo.h"
-#include "sim_structure_probleme_adequation.h"
 #include "sim_extern_variables_globales.h"
 
 using namespace Antares;

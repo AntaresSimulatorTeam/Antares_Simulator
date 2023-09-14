@@ -27,10 +27,10 @@
 
 #include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
-#include <version.h>
+#include <antares/study/version.h>
 
-#include "checkLoadedInputData.h"
-#include "area.h"
+#include <antares/checks/checkLoadedInputData.h>
+#include <antares/study/area/area.h>
 
 namespace Antares::Check
 {

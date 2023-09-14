@@ -211,7 +211,7 @@ source_group("Notebook" FILES ${SRC_TOOLBOX_COM_NOTEBOOK})
 
 
 
-add_library(libantares-ui-components
+add_library(antares-ui-components
 	# WIP Panel (Work In progress)
 	${SRC_TOOLBOX_COM_WIPPANEL}
 	# Datagrid
@@ -227,16 +227,16 @@ add_library(libantares-ui-components
 	${SRC_TOOLBOX_COM_NOTEBOOK}
 	)
 
-target_include_directories(libantares-ui-components
+target_include_directories(antares-ui-components
 							PRIVATE
 								"${CMAKE_SOURCE_DIR}/ui/simulator"
 )
 
-target_link_libraries(libantares-ui-components
+target_link_libraries(antares-ui-components
 						PUBLIC
 							${wxWidgets_LIBRARIES}
 						PRIVATE
-							libantares-core
-							libantares-ui-common
+							antares-core
+							antares-ui-common
 )
 

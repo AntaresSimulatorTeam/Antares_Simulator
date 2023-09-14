@@ -27,11 +27,10 @@
 #ifndef __ANTARES_TOOLBOX_FILTER_FILTER_H__
 #define __ANTARES_TOOLBOX_FILTER_FILTER_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/panel.h>
 #include "operator.h"
 #include "operator.list.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 
 namespace Antares
 {

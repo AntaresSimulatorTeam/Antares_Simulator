@@ -40,11 +40,9 @@ inline bool CheckValidity<Data::AreaLink>(uint value,
 }
 
 template<>
-inline bool CheckValidity<BindingConstraintGroup>(uint, const BindingConstraintGroup&, uint)
+inline bool CheckValidity<BindingConstraintGroup>(uint value, const BindingConstraintGroup& group, uint)
 {
-    //TS-Generator never used
-    //Should check for time-series width, but we are missing information at this point
-    return true;
+    return value < group.numberOfTimeseries();
 }
 
 template<class StringT, class D>
@@ -60,7 +58,7 @@ bool ApplyToMatrix(uint& errors,
     const uint nbYears = data.timeseriesNumbers.height;
     // The matrix m has only one column
     assert(data.timeseriesNumbers.width == 1);
-    typename Matrix<uint32>::ColumnType& target = data.timeseriesNumbers[0];
+    typename Matrix<uint32_t>::ColumnType& target = data.timeseriesNumbers[0];
 
     for (uint y = 0; y != nbYears; ++y)
     {

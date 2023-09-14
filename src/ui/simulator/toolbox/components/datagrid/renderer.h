@@ -27,9 +27,8 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_H__
 
-#include <antares/wx-wrapper.h>
 #include <yuni/core/event.h>
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include <wx/colour.h>
 #include "default.h"
 #include <antares/study/study.h>
@@ -45,6 +44,7 @@ namespace Component
 {
 namespace Datagrid
 {
+    class VGridHelper;
 namespace Renderer
 {
 /*!

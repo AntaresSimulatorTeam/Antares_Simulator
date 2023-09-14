@@ -134,7 +134,7 @@ void SimulationHandler::create()
 
     simulation_ = std::make_shared<ISimulation<Economy>>(study_,
                                                          settings_,
-                                                         &nullDurationCollector_);
+                                                         nullDurationCollector_);
     SIM_AllocationTableaux(study_);
 }
 
@@ -203,7 +203,8 @@ Area* StudyBuilder::addAreaToStudy(const std::string& areaName)
 std::shared_ptr<BindingConstraint> addBindingConstraints(Study& study, std::string name, std::string group) {
     auto bc = study.bindingConstraints.add(name);
     bc->group(group);
-    study.bindingConstraintsGroups.add(group);
+    auto g = study.bindingConstraintsGroups.add(group);
+    g->add(bc);
     return bc;
 }
 

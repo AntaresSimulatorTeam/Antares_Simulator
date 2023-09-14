@@ -51,7 +51,7 @@
 #include "../../application/main/main.h"
 #include "../../application/menus.h"
 #include "../message.h"
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/inifile/inifile.h>
 #include "../../application/study.h"
 #include <antares/config.h>
@@ -244,7 +244,7 @@ protected:
         bool errorFound = false;
         bool gotAtLeastOneReady = false;
         Matrix<>::BufferType buffer;
-        Matrix<sint32> m;
+        Matrix<int32_t> m;
         uint size[2] = {(uint)-1, (uint)-1};
 
         for (uint i = 0; i != pRecordCount; ++i)

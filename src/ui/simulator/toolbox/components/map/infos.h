@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_MAP_PANEL_INFOS_H__
 #define __ANTARES_TOOLBOX_MAP_PANEL_INFOS_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
 #include "nodes/item.h"

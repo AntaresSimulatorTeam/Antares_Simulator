@@ -33,9 +33,7 @@
 
 #include <antares/Enum.hpp>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 const char* getIcon(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
 {
@@ -126,6 +124,5 @@ const std::initializer_list<std::string>& getNames<UnfeasibleProblemBehavior>()
 }
 } // namespace Enum
 
-} // namespace Data
+} // namespace Antares::Data
 
-} // namespace Antares

@@ -47,9 +47,11 @@ INSTALL(EXPORT antares-ybyaggregator
 )
 
 set(YBY_AGGREGATOR_LIBS
-	libantares-core
-	libantares-core-calendar
+	antares-core #version.h
+	Antares::date
+	Antares::logs
 	yuni-static-core
+	Antares::sys
 	${wxWidgets_LIBRARIES} ${CMAKE_THREADS_LIBS_INIT})
 
 # The new ant library
@@ -61,6 +63,9 @@ target_include_directories(${execname}
 target_link_libraries(${execname}
 		PRIVATE
 			${YBY_AGGREGATOR_LIBS}
+		PUBLIC
+			Antares::memory
+			Antares::utils
 		)
 
 import_std_libs(${execname})

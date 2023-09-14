@@ -49,7 +49,7 @@ namespace Yuni
 {
 namespace Windows
 {
-inline yint64 FILETIMEToTimestamp(const FILETIME& filetime)
+inline int64_t FILETIMEToTimestamp(const FILETIME& filetime)
 {
     LARGE_INTEGER date, adjust;
     date.HighPart = filetime.dwHighDateTime;

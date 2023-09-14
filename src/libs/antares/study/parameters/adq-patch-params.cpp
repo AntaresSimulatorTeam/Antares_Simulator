@@ -1,7 +1,7 @@
 #include "adq-patch-params.h"
-#include "antares/logs.h"
+#include <antares/logs/logs.h>
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 #include <antares/exception/LoadingError.hpp>
 
@@ -18,7 +18,7 @@ void LocalMatching::reset()
     setToZeroOutsideOutsideLinks = true;
 }
 
-bool LocalMatching::updateFromKeyValue(const String& key, const String& value)
+bool LocalMatching::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
 {
     if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
         return value.to<bool>(setToZeroOutsideInsideLinks);
@@ -57,7 +57,7 @@ void CurtailmentSharing::resetThresholds()
 
 static bool StringToPriceTakingOrder(const AnyString& PTO_as_string, AdequacyPatch::AdqPatchPTO& PTO_as_enum)
 {
-    CString<24, false> s = PTO_as_string;
+    Yuni::CString<24, false> s = PTO_as_string;
     s.trim();
     s.toLower();
     if (s == "dens")
@@ -76,7 +76,7 @@ static bool StringToPriceTakingOrder(const AnyString& PTO_as_string, AdequacyPat
     return false;
 }
 
-bool CurtailmentSharing::updateFromKeyValue(const String& key, const String& value)
+bool CurtailmentSharing::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
 {
     // Price taking order
     if (key == "price-taking-order")
@@ -152,7 +152,7 @@ void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
 }
 
 
-bool AdqPatchParams::updateFromKeyValue(const String& key, const String& value)
+bool AdqPatchParams::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
 {
     if (key == "include-adq-patch")
         return value.to<bool>(enabled);

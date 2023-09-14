@@ -35,6 +35,7 @@
 #include <sstream> // std::ostringstream
 #include <cassert>
 #include <climits>
+#include <optional>
 
 #include "study.h"
 #include "runtime.h"
@@ -44,15 +45,14 @@
 #include "area/constants.h"
 
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
-#include <math.h>                 // For use of floor(...) and ceil(...)
-#include <writer_factory.h>
+#include <cmath>                 // For use of floor(...) and ceil(...)
+#include <antares/writer/writer_factory.h>
 #include "ui-runtimeinfos.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 //! Clear then shrink a string
 template<class StringT>
@@ -131,7 +131,7 @@ void Study::clear()
     ClearAndShrink(folderInput);
     ClearAndShrink(folderOutput);
     ClearAndShrink(folderSettings);
-    ClearAndShrink(inputExtension);
+    inputExtension.clear();
 
     gotFatalError = false;
 }
@@ -192,7 +192,7 @@ void Study::reduceMemoryUsage()
     ClearAndShrink(bufferLoadingTS);
 }
 
-uint64 Study::memoryUsage() const
+uint64_t Study::memoryUsage() const
 {
     return folder.capacity()
            // Folders paths
@@ -625,7 +625,7 @@ YString StudyCreateOutputPath(StudyMode mode,
                               ResultFormat fmt,
                               const YString& outputRoot,
                               const YString& label,
-                              Yuni::sint64 startTime)
+                              int64_t startTime)
 {
     auto suffix = getOutputSuffix(fmt);
 
@@ -764,7 +764,7 @@ void Study::saveAboutTheStudy()
     }
 }
 
-Area* Study::areaAdd(const AreaName& name)
+Area* Study::areaAdd(const AreaName& name, bool updateMode)
 {
     if (name.empty())
         return nullptr;
@@ -781,9 +781,17 @@ Area* Study::areaAdd(const AreaName& name)
     // The new scope is mandatory to rebuild the correlation matrices
     // and the scenario builder data
     {
-        CorrelationUpdater updater(*this);
-        ScenarioBuilderUpdater updaterSB(*this);
-
+        // These are only useful for the GUI, remove afterwards
+        // We need the constructors to be called here, and the destructors
+        // to be called at the end of the scope. Using std::optional is merely
+        // a means to that end.
+        std::optional<CorrelationUpdater> updater;
+        std::optional<ScenarioBuilderUpdater> updaterSB;
+        if (updateMode)
+        {
+            updater.emplace(*this);
+            updaterSB.emplace(*this);
+        }
         // Adding an area
         AreaName newName;
         if (not modifyAreaNameIfAlreadyTaken(newName, name) or newName.empty())
@@ -1002,19 +1010,19 @@ bool Study::areaRename(Area* area, AreaName newName)
 bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 {
     // A name must not be empty
-    if (!cluster or !newName)
+    if (!cluster or !newName.empty())
         return false;
 
     String beautifyname;
     BeautifyName(beautifyname, newName);
     if (!beautifyname)
         return false;
-    newName = beautifyname;
+    newName = beautifyname.c_str();
 
     // Preparing the new area ID
     ClusterName newID;
     TransformNameIntoID(newName, newID);
-    if (!newID)
+    if (newID.empty())
     {
         logs.error() << "invalid id transformation";
         return false;
@@ -1534,11 +1542,11 @@ void Study::computePThetaInfForThermalClusters() const
     }
 }
 
-void Study::prepareWriter(Benchmarking::IDurationCollector* duration_collector)
+void Study::prepareWriter(Benchmarking::IDurationCollector& duration_collector)
 {
     resultWriter = Solver::resultWriterFactory(
       parameters.resultFormat, folderOutput, pQueueService, duration_collector);
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

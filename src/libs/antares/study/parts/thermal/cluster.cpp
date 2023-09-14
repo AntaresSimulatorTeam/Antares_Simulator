@@ -32,12 +32,12 @@
 #include <yuni/io/file.h>
 #include <yuni/core/math.h>
 #include <cassert>
+#include <boost/algorithm/string/case_conv.hpp>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "cluster.h"
 #include <antares/inifile/inifile.h>
-#include "../../../logs.h"
-#include "../../../utils.h"
+#include <antares/logs/logs.h>
+#include <antares/utils/utils.h>
 
 using namespace Yuni;
 using namespace Antares;
@@ -250,7 +250,7 @@ static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(Data::Cluste
          {"other 3", ThermalCluster::thermalDispatchGrpOther3},
          {"other 4", ThermalCluster::thermalDispatchGrpOther4}};
 
-    newgrp.toLower();
+    boost::to_lower(newgrp);
     if (auto res = mapping.find(newgrp);res != mapping.end())
     {
         return res->second;
@@ -261,7 +261,7 @@ static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(Data::Cluste
 
 void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
 {
-    if (not newgrp)
+    if (newgrp.empty())
     {
         groupID = thermalDispatchGrpOther1;
         pGroup.clear();
@@ -642,9 +642,9 @@ const char* Data::ThermalCluster::GroupName(enum ThermalDispatchableGroup grp)
     return "";
 }
 
-uint64 ThermalCluster::memoryUsage() const
+uint64_t ThermalCluster::memoryUsage() const
 {
-    uint64 amount = sizeof(ThermalCluster) + modulation.memoryUsage();
+    uint64_t amount = sizeof(ThermalCluster) + modulation.memoryUsage();
     if (prepro)
         amount += prepro->memoryUsage();
     if (series)

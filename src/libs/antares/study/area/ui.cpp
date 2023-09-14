@@ -26,7 +26,7 @@
 */
 
 #include "ui.h"
-#include "../../logs.h"
+#include <antares/logs/logs.h>
 #include <yuni/core/math.h>
 #include <antares/inifile/inifile.h>
 #include <sstream>
@@ -341,7 +341,7 @@ bool AreaUI::saveToFile(const AnyString& filename, bool force) const
     return true;
 }
 
-Yuni::uint64 AreaUI::memoryUsage() const
+uint64_t AreaUI::memoryUsage() const
 {
     return sizeof(AreaUI);
 }

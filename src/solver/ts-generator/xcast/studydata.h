@@ -29,15 +29,9 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/xcast/xcast.h>
-#include <antares/correlation/correlation.h>
+#include <antares/correlation/antares/correlation/correlation.h> //TODO collision
 
-namespace Antares
-{
-namespace Solver
-{
-namespace TSGenerator
-{
-namespace XCast
+namespace Antares::Solver::TSGenerator::XCast
 {
 class StudyData final
 {
@@ -106,10 +100,10 @@ private:
 
 }; // class StudyData
 
-} // namespace XCast
-} // namespace TSGenerator
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::TSGenerator::XCast
+
+
+
 
 #include "studydata.hxx"
 
