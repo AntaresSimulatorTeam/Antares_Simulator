@@ -59,6 +59,7 @@ public:
 
 private:
     bool isActive();
+    void logInfoFinLvlNotApplicable(uint year);
     void ComputeDelta(unsigned int year);
     bool makeChecks(unsigned int year);
     void storeDeltaLevels(unsigned int year);
