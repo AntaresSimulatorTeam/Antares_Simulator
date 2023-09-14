@@ -47,8 +47,56 @@ namespace Antares
 {
 namespace Optimization
 {
-MPSolver* convert_to_MPSolver(
-  const std::string& solverName,
-  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
-}
+
+class Nomenclature
+{
+public:
+    Nomenclature() = delete;
+
+    explicit Nomenclature(char prefix) : prefix_(prefix)
+    {
+    }
+
+    void SetTarget(const std::vector<std::string>& target)
+    {
+        target_ = &target;
+    }
+
+    std::string GetName(unsigned index) const
+    {
+        if (target_ == nullptr || target_->at(index).empty())
+        {
+            return prefix_ + std::to_string(index);
+        }
+        return target_->at(index);
+    }
+
+private:
+    const std::vector<std::string>* target_ = nullptr;
+    char prefix_;
+};
+
+class ProblemSimplexeNommeConverter
+{
+public:
+    explicit ProblemSimplexeNommeConverter(
+      const std::string& solverName,
+      const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
+
+    MPSolver* Convert();
+
+private:
+    const std::string& solverName_;
+    const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe_;
+    Nomenclature variableNameManager_ = Nomenclature('x');
+    Nomenclature constraintNameManager_ = Nomenclature('c');
+
+    void UpdateCoefficient(unsigned idxVar, MPSolver* solver, MPObjective* const objective);
+    void CopyVariables(MPSolver* solver);
+    void UpdateContraints(unsigned idxRow, MPSolver* solver);
+    void CopyRows(MPSolver* solver);
+    void TuneSolverSpecificOptions(MPSolver* solver) const;
+    void CopyMatrix(const MPSolver* solver);
+};
+} // namespace Optimization
 } // namespace Antares
