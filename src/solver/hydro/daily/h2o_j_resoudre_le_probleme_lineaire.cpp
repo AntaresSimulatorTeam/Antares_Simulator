@@ -61,7 +61,7 @@ void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int
     PROBLEME_SIMPLEXE* Probleme = (PROBLEME_SIMPLEXE*)ProblemeHydraulique.Probleme;
     if (!Probleme)
     {
-        Probleme = new PROBLEME_SIMPLEXE;
+        Probleme = (PROBLEME_SIMPLEXE*)malloc(sizeof(PROBLEME_SIMPLEXE));
         if (!Probleme)
         {
             DonneesMensuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;

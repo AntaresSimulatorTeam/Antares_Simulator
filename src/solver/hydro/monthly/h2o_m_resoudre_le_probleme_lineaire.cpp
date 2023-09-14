@@ -61,7 +61,7 @@ void H2O_M_ResoudreLeProblemeLineaire(DONNEES_ANNUELLES& DonneesAnnuelles, int N
 
     if (!Probleme)
     {
-        Probleme = new PROBLEME_SIMPLEXE;
+        Probleme = (PROBLEME_SIMPLEXE*)malloc(sizeof(PROBLEME_SIMPLEXE));
         if (!Probleme)
         {
             DonneesAnnuelles.ResultatsValides = EMERGENCY_SHUT_DOWN;
@@ -95,7 +95,6 @@ RESOLUTION:
     Probleme->CoutLineaire = ProblemeLineairePartieFixe.CoutLineaireBruite.data();
     Probleme->X = ProblemeLineairePartieVariable.X.data();
     Probleme->Xmin = ProblemeLineairePartieVariable.Xmin.data();
-    Probleme->Xmax = ProblemeLineairePartieVariable.Xmax.data();
     Probleme->NombreDeVariables = ProblemeLineairePartieFixe.NombreDeVariables;
     Probleme->TypeDeVariable = ProblemeLineairePartieFixe.TypeDeVariable.data();
 
