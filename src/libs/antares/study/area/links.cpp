@@ -30,8 +30,7 @@
 #include "../study.h"
 #include "links.h"
 #include "area.h"
-#include "../../logs.h"
-#include "../memory-usage.h"
+#include <antares/logs/logs.h>
 #include "../filter.h"
 #include "constants.h"
 #include "../fwd.h"
@@ -43,7 +42,7 @@ namespace // anonymous
 {
 struct TSNumbersPredicate
 {
-    uint32 operator()(uint32 value) const
+    uint32_t operator()(uint32_t value) const
     {
         return value + 1;
     }
@@ -301,9 +300,7 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 
 namespace // anonymous
 {
-bool AreaLinksInternalLoadFromProperty(AreaLink& link,
-                                              const String& key,
-                                              const String& value)
+bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
 {
     if (key == "hurdles-cost")
         return value.to<bool>(link.useHurdlesCost);
@@ -417,16 +414,14 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link,
     return false;
 }
 
-} // anonymous namespace
-
-void logLinkDataCheckError(Study& study, const AreaLink& link, const String& msg, int hour)
+void logLinkDataCheckError(bool& gotFatalError, const AreaLink& link, const String& msg, int hour)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Invalid values ("
                  << msg << ") for hour " << hour;
-    study.gotFatalError = true;
+    gotFatalError = true;
 }
 
-void logLinkDataCheckErrorDirectIndirect(Study& study,
+void logLinkDataCheckErrorDirectIndirect(bool& gotFatalError,
                                          const AreaLink& link,
                                          uint direct,
                                          uint indirect)
@@ -434,8 +429,9 @@ void logLinkDataCheckErrorDirectIndirect(Study& study,
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
                  << " direct TS "
                  << " and " << indirect << " indirect TS, expected the same number";
-    study.gotFatalError = true;
+    gotFatalError = true;
 }
+} // anonymous namespace
 
 bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyString& folder)
 {
@@ -490,7 +486,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             const uint nbIndirectTS = link.indirectCapacities.width;
             if (nbDirectTS != nbIndirectTS)
             {
-                logLinkDataCheckErrorDirectIndirect(study, link, nbDirectTS, nbIndirectTS);
+                logLinkDataCheckErrorDirectIndirect(
+                  study.gotFatalError, link, nbDirectTS, nbIndirectTS);
                 return false;
             }
 
@@ -510,12 +507,13 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                 {
                     if (directCapacities[h] < 0.)
                     {
-                        logLinkDataCheckError(study, link, "direct capacity < 0", h);
+                        logLinkDataCheckError(study.gotFatalError, link, "direct capacity < 0", h);
                         return false;
                     }
                     if (directCapacities[h] < loopFlow[h])
                     {
-                        logLinkDataCheckError(study, link, "direct capacity < loop flow", h);
+                        logLinkDataCheckError(
+                          study.gotFatalError, link, "direct capacity < loop flow", h);
                         return false;
                     }
                 }
@@ -525,12 +523,14 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                 {
                     if (indirectCapacities[h] < 0.)
                     {
-                        logLinkDataCheckError(study, link, "indirect capacitity < 0", h);
+                        logLinkDataCheckError(
+                          study.gotFatalError, link, "indirect capacitity < 0", h);
                         return false;
                     }
                     if (indirectCapacities[h] + loopFlow[h] < 0)
                     {
-                        logLinkDataCheckError(study, link, "indirect capacity + loop flow < 0", h);
+                        logLinkDataCheckError(
+                          study.gotFatalError, link, "indirect capacity + loop flow < 0", h);
                         return false;
                     }
                 }
@@ -540,8 +540,10 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             {
                 if (directHurdlesCost[h] + indirectHurdlesCost[h] < 0)
                 {
-                    logLinkDataCheckError(
-                      study, link, "hurdle costs direct + hurdle cost indirect < 0", h);
+                    logLinkDataCheckError(study.gotFatalError,
+                                          link,
+                                          "hurdle costs direct + hurdle cost indirect < 0",
+                                          h);
                     return false;
                 }
             }
@@ -551,7 +553,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             {
                 if (PShiftPlus[h] < PShiftMinus[h])
                 {
-                    logLinkDataCheckError(study, link, "phase shift plus < phase shift minus", h);
+                    logLinkDataCheckError(
+                      study.gotFatalError, link, "phase shift plus < phase shift minus", h);
                     return false;
                 }
             }
@@ -719,18 +722,9 @@ void AreaLinkRemove(AreaLink* link)
     delete link;
 }
 
-void AreaLink::estimateMemoryUsage(StudyMemoryUsage& u) const
+uint64_t AreaLink::memoryUsage() const
 {
-    u.requiredMemoryForInput += sizeof(AreaLink);
-    Matrix<>::EstimateMemoryUsage(u, fhlMax, HOURS_PER_YEAR);
-
-    // From the solver
-    u.requiredMemoryForInput += 1 * 1024 * 1024;
-}
-
-Yuni::uint64 AreaLink::memoryUsage() const
-{
-    Yuni::uint64 to_return = sizeof(AreaLink);
+    uint64_t to_return = sizeof(AreaLink);
     to_return += parameters.valuesMemoryUsage();
     to_return += directCapacities.valuesMemoryUsage();
     to_return += indirectCapacities.valuesMemoryUsage();

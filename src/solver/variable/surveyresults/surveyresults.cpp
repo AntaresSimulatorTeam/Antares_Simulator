@@ -28,9 +28,8 @@
 #include <algorithm>
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include <antares/study/memory-usage.h>
 #include "surveyresults.h"
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <yuni/io/file.h>
 #include <antares/io/file.h>
 
@@ -504,11 +503,6 @@ SurveyResults::SurveyResults(const Data::Study& s,
     logs.debug() << "  (for " << maxVariables << " columns)";
 
     data.initialize(maxVariables);
-    // logs.debug() << "  :: survey results: allocating "
-    //	<< (uint64)((data.matrix.memoryUsage() + sizeof(values))
-    //		+ sizeof(double) * maxHoursInAYear * 3
-    //		+ sizeof(PrecisionType) * maxVariables) / 1024
-    //	<< " Ko";
 
     // values
     typedef double* ValueType;
@@ -745,33 +739,6 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
 
     // mc-ind & mc-all
     pResultWriter->addEntryFromBuffer(data.filename.c_str(), data.fileBuffer);
-}
-
-void SurveyResults::EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u)
-{
-    if (u.study.parameters.synthesis
-        || (u.study.parameters.yearByYear))
-    {
-        // TODO : We may have more thermal cluster for an area than the max total of vars
-        //   So we should take into consideration the maximum total of thermal clusters for
-        //   a single area
-        Yuni::uint64 temporaryMemoryAmount = 0;
-        // Base
-        temporaryMemoryAmount += sizeof(SurveyResults);
-        // values
-        temporaryMemoryAmount += sizeof(double) * 8760 * maxVars;
-        temporaryMemoryAmount += sizeof(CaptionType) * 3 * maxVars;
-        temporaryMemoryAmount += sizeof(PrecisionType) * maxVars;
-        // data.fileBuffer
-        temporaryMemoryAmount += 4 * 1024 * 1024; // 4 Mib
-        // temporary buffers for numeric conversion
-        temporaryMemoryAmount += 256;
-
-        // Il y a un thread par année MC et chaque thread construit dynamiquement un objet de type
-        // SurveyResults pour ses outputs (voir container.hxx : void
-        // List<NextT>::exportSurveyResults(...))
-        u.requiredMemoryForOutput += temporaryMemoryAmount * u.nbYearsParallel;
-    }
 }
 
 void SurveyResults::exportGridInfos()

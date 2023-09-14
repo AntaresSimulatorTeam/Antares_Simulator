@@ -27,7 +27,7 @@
 #include <fstream>
 #include "study.h"
 #include "version.h"
-#include "../benchmarking.h"
+#include <antares/benchmarking/DurationCollector.h>
 #include "scenario-builder/sets.h"
 #include "ui-runtimeinfos.h"
 
@@ -143,11 +143,11 @@ void Study::parameterFiller(const StudyLoadOptions& options)
 
     // calendar update
     if (usedByTheSolver)
-        calendar.reset(parameters, /*force leapyear:*/ false);
+        calendar.reset({parameters.dayOfThe1stJanuary, parameters.firstWeekday, parameters.firstMonthInYear, false});
     else
-        calendar.reset(parameters);
+        calendar.reset({parameters.dayOfThe1stJanuary, parameters.firstWeekday, parameters.firstMonthInYear, parameters.leapYear});
 
-    calendarOutput.reset(parameters);
+    calendarOutput.reset({parameters.dayOfThe1stJanuary, parameters.firstWeekday, parameters.firstMonthInYear, parameters.leapYear});
 
     // In case hydro hot start is enabled, check all conditions are met.
     // (has to be called after areas load and calendar building)

@@ -27,10 +27,10 @@
 #ifndef __ANTARES_TOOLBOX_MAP_SETTINGS_H__
 #define __ANTARES_TOOLBOX_MAP_SETTINGS_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/colour.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
+#include <list>
 
 namespace Antares
 {

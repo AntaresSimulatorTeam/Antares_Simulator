@@ -43,7 +43,7 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
     {
         if (problemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
         {
-            for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+            for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
             {
                 problemeHebdo->CoutDeDefaillanceEnReserve[pays] = 1.e+6;
             }

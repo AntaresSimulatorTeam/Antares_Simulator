@@ -119,37 +119,38 @@ OMESSAGE("  :: application ${execname}")
 add_executable(${execname} WIN32 ${SRCS})
 
 set(ANTARES_LIBS
-		libantares-ui-application
-		libantares-ui-windows-inspector
-		libantares-ui-windows-options
-		libantares-ui-windows-calendar
-		libantares-ui-windows-output
-		libantares-ui-windows-studyparts
-		libantares-ui-windows-startupwizard
-		libantares-ui-jobs
-		libantares-ui-resources
-		libantares-ui-inputs
-		libantares-ui-copy-paste
-		libantares-ui-messages
-		libantares-ui-wxcore
-		libantares-ui-components
-		libantares-ui-component-map
-		libantares-ui-component-button
-		libantares-ui-component-htmllistbox
-		libantares-ui-component-wxscrollbox
-		libantares-ui-component-panel
-		libantares-ui-component-frame
-		libantares-ui-component-spotlight
-		libantares-ui-toolbox-spotlight
-		libantares-ui-dispatcher
-		libantares-ui-common
-		libantares-solver-constraints-builder
-		libantares-solver-variable-info
-		libantares-core
-		libantares-core-calendar
+		antares-ui-application
+		antares-ui-windows-inspector
+		antares-ui-windows-options
+		antares-ui-windows-calendar
+		antares-ui-windows-output
+		antares-ui-windows-studyparts
+		antares-ui-windows-startupwizard
+		antares-ui-jobs
+		antares-ui-resources
+		antares-ui-inputs
+		antares-ui-copy-paste
+		antares-ui-messages
+		antares-ui-wxcore
+		antares-ui-components
+		antares-ui-component-map
+		antares-ui-component-button
+		antares-ui-component-htmllistbox
+		antares-ui-component-wxscrollbox
+		antares-ui-component-panel
+		antares-ui-component-frame
+		antares-ui-component-spotlight
+		antares-ui-toolbox-spotlight
+		antares-ui-dispatcher
+		antares-ui-common
+		antares-solver-constraints-builder
+		antares-solver-variable-info
+		antares-core
+		Antares::date
+		Antares::study
 		yuni-static-core
 		yuni-static-uuid
-		libmodel_antares
+		model_antares
 	)
 
 	target_link_libraries(${execname}

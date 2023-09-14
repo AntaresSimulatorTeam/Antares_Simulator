@@ -32,7 +32,7 @@
 #include <yuni/io/directory.h>
 #include "management.h"
 #include <antares/fatal-error.h>
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 #include "../daily/h2o_j_donnees_mensuelles.h"
 #include "../daily/h2o_j_fonctions.h"
 #include "../daily2/h2o2_j_donnees_mensuelles.h"
@@ -82,7 +82,7 @@ enum
 struct DebugData
 {
     using PerArea = HydroManagement::PerArea;
-    using InflowsType = Matrix<double, Yuni::sint32>::ColumnType;
+    using InflowsType = Matrix<double, int32_t>::ColumnType;
     using MaxPowerType = Matrix<double, double>::ColumnType;
     using ReservoirLevelType = Matrix<double>::ColumnType;
 
@@ -226,7 +226,8 @@ struct DebugData
 inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                                             Data::Area& area,
                                                             uint y,
-                                                            uint numSpace)
+                                                            uint numSpace,
+                                                            VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     uint z = area.index;
     assert(z < study.areas.size());
@@ -257,7 +258,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     auto const& maxP = maxPower[Data::PartHydro::genMaxP];
     auto const& maxE = maxPower[Data::PartHydro::genMaxE];
 
-    auto& valgen = ValeursGenereesParPays[numSpace][z];
+    auto& valgen = valeursGenereesParPays[numSpace][z];
 
     std::shared_ptr<DebugData> debugData(nullptr);
 
@@ -390,8 +391,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
             uint endDay = firstDay + daysPerMonth;
 
-            DONNEES_MENSUELLES& problem = *H2O_J_Instanciation();
-            H2O_J_AjouterBruitAuCout(&problem);
+            DONNEES_MENSUELLES problem = H2O_J_Instanciation();
+            H2O_J_AjouterBruitAuCout(problem);
             problem.NombreDeJoursDuMois = (int)daysPerMonth;
             problem.TurbineDuMois = data.MOG[realmonth];
 
@@ -554,10 +555,13 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
 void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                                      uint y,
-                                                     uint numSpace)
+                                                     uint numSpace,
+                                                     VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     study.areas.each(
-      [&](Data::Area& area) { prepareDailyOptimalGenerations(state, area, y, numSpace); });
+      [&](Data::Area& area) {
+          prepareDailyOptimalGenerations(state, area, y, numSpace, valeursGenereesParPays);
+          });
 }
 
 } // namespace Antares

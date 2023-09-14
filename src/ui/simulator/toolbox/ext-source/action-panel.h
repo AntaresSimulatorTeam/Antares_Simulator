@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_EXT_SOURCE_ACTION_PANEL_H__
 #define __ANTARES_TOOLBOX_EXT_SOURCE_ACTION_PANEL_H__
 
-#include <antares/wx-wrapper.h>
 #include <antares/study/action/action.h>
 #include <wx/menu.h>
 #include <wx/menuitem.h>

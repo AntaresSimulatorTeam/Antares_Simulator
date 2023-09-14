@@ -1,23 +1,21 @@
+#include <boost/algorithm/string/case_conv.hpp>
 #include "cluster_list.h"
-#include "../../../utils.h"
+#include <antares/utils/utils.h>
 #include "../../study.h"
-#include "../../area.h"
 
 using namespace Yuni;
 namespace // anonymous
 {
 struct TSNumbersPredicate
 {
-    uint32 operator()(uint32 value) const
+    uint32_t operator()(uint32_t value) const
     {
         return value + 1;
     }
 };
 } // namespace
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 using namespace Antares;
 
@@ -226,9 +224,9 @@ typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(
 }
 
 template<class ClusterT>
-Yuni::uint64 ClusterList<ClusterT>::memoryUsage() const
+uint64_t ClusterList<ClusterT>::memoryUsage() const
 {
-    uint64 ret = sizeof(ClusterList) + (2 * sizeof(void*)) * this->size();
+    uint64_t ret = sizeof(ClusterList) + (2 * sizeof(void*)) * this->size();
 
     each([&](const ClusterT& cluster) { ret += cluster.memoryUsage(); });
     return ret;
@@ -237,7 +235,7 @@ Yuni::uint64 ClusterList<ClusterT>::memoryUsage() const
 template<class ClusterT>
 bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName newName)
 {
-    if (not idToFind or newName.empty())
+    if (idToFind.empty() or newName.empty())
         return false;
 
     // Internal:
@@ -247,7 +245,7 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     // Consequently, the parameters `idToFind` and `newName` shall not be `const &`.
 
     // Making sure that the id is lowercase
-    idToFind.toLower();
+    boost::to_lower(idToFind);
 
     // The new ID
     Data::ClusterName newID;
@@ -370,39 +368,19 @@ int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const
     return ret;
 }
 
-template<>
-int ClusterList<ThermalCluster>::loadDataSeriesFromFolder(Study& s,
-                                                          const StudyLoadOptions& options,
-                                                          const AnyString& folder)
+template<class ClusterT>
+int ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
+                                                    const StudyLoadOptions& options,
+                                                    const AnyString& folder)
 {
     if (empty())
         return 1;
 
     int ret = 1;
 
-    each([&ret, &options, &s, &folder](ThermalCluster& c) {
+    each([&](ClusterT& c) {
         if (c.series)
             ret = c.loadDataSeriesFromFolder(s, folder) and ret;
-
-        ++options.progressTicks;
-        options.pushProgressLogs();
-    });
-    return ret;
-}
-
-template<>
-int ClusterList<RenewableCluster>::loadDataSeriesFromFolder(Study& s,
-                                                            const StudyLoadOptions& options,
-                                                            const AnyString& folder)
-{
-    if (empty())
-        return 1;
-
-    int ret = 1;
-
-    each([&](Cluster& cluster) {
-        if (cluster.series)
-            ret = cluster.loadDataSeriesFromFolder(s, folder) and ret;
 
         ++options.progressTicks;
         options.pushProgressLogs();
@@ -448,5 +426,5 @@ void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uin
 template class ClusterList<ThermalCluster>;
 template class ClusterList<RenewableCluster>;
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

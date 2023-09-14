@@ -25,11 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/study/finder.h>
 #include <yuni/core/getopt.h>
 #include "../../ui/common/winmain.hxx"
-#include <antares/utils.h>
+#include <antares/utils/utils.h>
 #include <antares/version.h>
 #include <antares/locale.h>
 

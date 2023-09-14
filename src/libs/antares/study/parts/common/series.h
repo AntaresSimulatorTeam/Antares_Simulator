@@ -27,7 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 
-#include "../../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include "../../fwd.h"
 
 namespace Antares
@@ -40,8 +40,6 @@ namespace Data
 class DataSeriesCommon
 {
 public:
-    void estimateMemoryUsage(StudyMemoryUsage&, enum TimeSeries) const;
-
     bool forceReload(bool reload = false) const;
 
     void markAsModified() const;
@@ -57,7 +55,7 @@ public:
     /*!
     ** \brief Monte-Carlo
     */
-    Matrix<Yuni::uint32> timeseriesNumbers;
+    Matrix<uint32_t> timeseriesNumbers;
 }; // class DataSeriesCommon
 } // namespace Data
 } // namespace Antares

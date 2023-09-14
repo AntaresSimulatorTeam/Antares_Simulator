@@ -30,12 +30,12 @@
 #include <yuni/core/math.h>
 #include <cassert>
 #include <cmath>
+#include <boost/algorithm/string/case_conv.hpp>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "cluster.h"
 #include <antares/inifile/inifile.h>
-#include "../../../logs.h"
-#include "../../../utils.h"
+#include <antares/logs/logs.h>
+#include <antares/utils/utils.h>
 
 using namespace Yuni;
 using namespace Antares;
@@ -99,14 +99,14 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
 
 void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
 {
-    if (not newgrp)
+    if (newgrp.empty())
     {
         groupID = renewableOther1;
         pGroup.clear();
         return;
     }
     pGroup = newgrp;
-    newgrp.toLower();
+    boost::to_lower(newgrp);
 
     if (newgrp == "solar thermal")
     {
@@ -269,9 +269,9 @@ double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepInde
     return 0.;
 }
 
-uint64 RenewableCluster::memoryUsage() const
+uint64_t RenewableCluster::memoryUsage() const
 {
-    uint64 amount = sizeof(RenewableCluster);
+    uint64_t amount = sizeof(RenewableCluster);
     if (series)
         amount += DataSeriesMemoryUsage(series);
     return amount;

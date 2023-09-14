@@ -26,15 +26,11 @@
 */
 
 #include <yuni/yuni.h>
-#include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
 #include "../simulation/sim_extern_variables_globales.h"
 #include "../aleatoire/alea_fonctions.h"
-#include <antares/benchmarking.h>
+#include <antares/benchmarking/DurationCollector.h>
 #include <antares/fatal-error.h>
-#include <antares/logs.h>
-#include <antares/study.h>
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 #include "../misc/cholesky.h"
 #include "../misc/matrix-dp-make.h"
 

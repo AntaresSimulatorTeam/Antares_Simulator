@@ -20,9 +20,8 @@ target_include_directories(tests-ts-numbers
 target_link_libraries(tests-ts-numbers
 						PRIVATE
 							Boost::unit_test_framework
-							libantares-core
-							libmodel_antares
-							libantares-solver-simulation
+							model_antares
+							antares-solver-simulation
 )
 
 # Storing tests-ts-numbers under the folder Unit-tests in the IDE
@@ -44,8 +43,9 @@ target_link_libraries(test-store-timeseries-number
 		PRIVATE
 		Boost::unit_test_framework
         test_utils_unit
-		libantares-core
-		libantares-solver-simulation
+		antares-solver-simulation
+		Antares::study
+		Antares::result_writer
 		)
 
 # Linux
@@ -71,8 +71,8 @@ target_link_libraries(test-time_series
 		PRIVATE
 		Boost::unit_test_framework
         test_utils_unit
-		libantares-core
-		libantares-solver-simulation
+		antares-solver-simulation
+		Antares::study
 		)
 
 # Linux
@@ -107,8 +107,9 @@ target_include_directories(test-hydro_final
 target_link_libraries(test-hydro_final
 	PRIVATE
 	Boost::unit_test_framework
-	libantares-core
-	libantares-solver-simulation
+	Antares::study
+	antares-solver-simulation
+	Antares::array
 )
 
 # Linux

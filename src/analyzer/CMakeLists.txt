@@ -50,10 +50,12 @@ INSTALL(EXPORT antares-analyzer
 
 target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
 		PRIVATE
-			libantares-core
-			libantares-core-calendar
 			yuni-static-core
 			${CMAKE_THREADS_LIBS_INIT}
+		antares-core #local.h
+		PUBLIC
+			Antares::study #atsp -> xcast
+			Antares::sys
 		)
 
 import_std_libs(antares-${ANTARES_PRG_VERSION}-analyzer)

@@ -36,7 +36,7 @@ bool hydroTSNumberData::apply(Study& study)
         assert(areaIndex < pTSNumberRules.width);
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
-        logprefix.clear() << "Hydro: Area '" << area.name << "': ";
+        logprefix.clear() << "Hydro: area '" << area.name << "': ";
         ret = ApplyToMatrix(errors, logprefix, *area.hydro.series, col, tsGenCountHydro) && ret;
     }
     return ret;

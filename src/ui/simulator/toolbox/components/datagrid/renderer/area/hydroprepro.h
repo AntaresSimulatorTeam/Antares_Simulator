@@ -27,10 +27,9 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_HYDROPREPRO_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_HYDROPREPRO_H__
 
-#include <antares/wx-wrapper.h>
 #include "../area.h"
 #include "../matrix.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include <antares/study/parts/wind/prepro.h>
 
 namespace Antares

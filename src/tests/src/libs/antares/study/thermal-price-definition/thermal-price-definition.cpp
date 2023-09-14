@@ -1,19 +1,18 @@
 #define BOOST_TEST_MODULE "test thermal price definition"
+#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <yuni/io/file.h>
 #include <filesystem>
 #include <fstream>
 
 #include <study.h>
-#include <antares/logs.h>
 #include <antares/exception/LoadingError.hpp>
 
-#include "checkLoadedInputData.h"
+#include <antares/checks/checkLoadedInputData.h>
 #include "cluster_list.h"
-#include "container.h"
 
 const auto SEP = Yuni::IO::Separator;
 using namespace Antares::Data;

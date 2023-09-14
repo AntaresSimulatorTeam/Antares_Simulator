@@ -241,7 +241,7 @@ inline void List<NextT>::retrieveResultsForLink(
 }
 
 template<class NextT>
-inline Yuni::uint64 List<NextT>::memoryUsage() const
+inline uint64_t List<NextT>::memoryUsage() const
 {
     return sizeof(ListType) + NextType::memoryUsage();
 }
@@ -311,14 +311,6 @@ void List<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataL
 
     // Building the digest
     NextType::buildDigest(results, digestLevel, dataLevel);
-}
-
-template<class NextT>
-inline void List<NextT>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-{
-    u.requiredMemoryForOutput += sizeof(ListType);
-    u.requiredDiskSpaceForOutput += 20 * 1024; // 20Ko
-    NextType::EstimateMemoryUsage(u);
 }
 
 template<class NextT>

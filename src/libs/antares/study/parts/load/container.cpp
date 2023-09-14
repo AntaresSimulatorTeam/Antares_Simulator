@@ -32,11 +32,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
-{
-namespace Load
+namespace Antares::Data::Load
 {
 Container::Container() : prepro(nullptr), series(nullptr)
 {
@@ -68,7 +64,7 @@ void Container::markAsModified() const
         prepro->markAsModified();
 }
 
-Yuni::uint64 Container::memoryUsage() const
+uint64_t Container::memoryUsage() const
 {
     return sizeof(Container) + ((!series) ? 0 : DataSeriesLoadMemoryUsage(series))
            + ((!prepro) ? 0 : prepro->memoryUsage());
@@ -82,6 +78,6 @@ void Container::resetToDefault()
         prepro->resetToDefault();
 }
 
-} // namespace Load
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::Load
+
+

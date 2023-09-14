@@ -28,7 +28,7 @@
 #include <algorithm>
 #include "rules.h"
 #include "../study.h"
-#include "../../logs.h"
+#include <antares/logs/logs.h>
 #include "scBuilderUtils.h"
 #include "TSnumberData.h"
 
@@ -158,7 +158,7 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
         if (!updaterMode and isTheActiveRule)
         {
             std::string clusterId
-              = (area->id).to<std::string>() + "." + clustername.to<std::string>();
+              = (area->id).to<std::string>() + "." + clustername;
             disabledClustersOnRuleActive[clusterId].push_back(year + 1);
             return false;
         }
@@ -195,7 +195,7 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
         if (!updaterMode and isTheActiveRule)
         {
             std::string clusterId
-              = (area->id).to<std::string>() + "." + clustername.to<std::string>();
+              = (area->id).to<std::string>() + "." + clustername;
             disabledClustersOnRuleActive[clusterId].push_back(year + 1);
             return false;
         }

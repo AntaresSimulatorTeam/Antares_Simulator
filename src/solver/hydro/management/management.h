@@ -30,6 +30,7 @@
 #include <yuni/yuni.h>
 #include <antares/study/fwd.h>
 #include <antares/mersenne-twister/mersenne-twister.h>
+#include "../../simulation/sim_structure_donnees.h"
 
 namespace Antares
 {
@@ -61,7 +62,8 @@ public:
     void operator()(double* randomReservoirLevel,
                     Solver::Variable::State& state,
                     uint y,
-                    uint numSpace);
+                    uint numSpace,
+                    VAL_GEN_PAR_PAYS& valeursGenereesParPays);
 
 public:
     //! Random number generator
@@ -102,11 +104,16 @@ private:
     // \return The total inflow for the whole year
     double prepareMonthlyTargetGenerations(Data::Area& area, PerArea& data);
 
-    void prepareDailyOptimalGenerations(Solver::Variable::State& state, uint y, uint numSpace);
+    void prepareDailyOptimalGenerations(Solver::Variable::State& state,
+                                        uint y,
+                                        uint numSpace,
+                                        VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+
     void prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                         Data::Area& area,
                                         uint y,
-                                        uint numSpace);
+                                        uint numSpace,
+                                        VAL_GEN_PAR_PAYS& valeursGenereesParPays);
     //@}
 
     //! \name Utilities

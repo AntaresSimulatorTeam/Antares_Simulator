@@ -166,16 +166,9 @@ protected:
           report, results, dataLevel, fileLevel, precision);
     }
 
-    Yuni::uint64 memoryUsage() const
+    uint64_t memoryUsage() const
     {
         return sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
-    }
-
-    static void EstimateMemoryUsage(Antares::Data::StudyMemoryUsage& u)
-    {
-        Memory::EstimateMemoryUsage(sizeof(double), maxHoursInAYear, u, false);
-        u.takeIntoConsiderationANewTimeserieForDiskOutput();
-        NextType::EstimateMemoryUsage(u);
     }
 
     template<template<class, int> class DecoratorT>

@@ -169,7 +169,7 @@ private:
     union StorageType
     {
         uchar cstring[16];
-        uint64 n64[2];
+        uint64_t n64[2];
     };
 
 private:

@@ -32,7 +32,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "simulation.h"
-#include "../logs.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
@@ -88,7 +88,7 @@ bool SimulationComments::loadFromFolder(const StudyLoadOptions& options)
     return true;
 }
 
-Yuni::uint64 SimulationComments::memoryUsage() const
+uint64_t SimulationComments::memoryUsage() const
 {
     return name.capacity() + comments.capacity();
 }

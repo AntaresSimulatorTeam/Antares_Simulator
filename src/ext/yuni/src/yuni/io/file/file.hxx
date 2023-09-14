@@ -20,9 +20,9 @@ namespace IO
 {
 namespace File
 {
-inline uint64 Size(const AnyString& filename)
+inline uint64_t Size(const AnyString& filename)
 {
-    uint64 size;
+    uint64_t size;
     return (Size(filename, size)) ? size : 0;
 }
 

@@ -1,8 +1,10 @@
 #define BOOST_TEST_MODULE test save scenario - builder.dat
-#include <boost/test/included/unit_test.hpp>
+#define BOOST_TEST_DYN_LINK
+#include <boost/test/unit_test.hpp>
 
 #include <string>
 #include <filesystem>
+#include <fstream>
 
 #include <study.h>
 #include <rules.h>

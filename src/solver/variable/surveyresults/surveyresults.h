@@ -30,17 +30,13 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include "../constants.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "../categories.h"
 #include "data.h"
 #include <antares/study/variable-print-info.h>
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 /*!
 ** \brief Class utility for building CSV results files
@@ -52,11 +48,6 @@ public:
     typedef Yuni::CString<10, false> PrecisionType;
     //! Caption
     typedef Yuni::CString<128, false> CaptionType;
-
-    /*!
-    ** \brief Try to estimate theamount of memory required by the class
-    */
-    static void EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u);
 
 public:
     //! \name Constructor & Destructor
@@ -162,8 +153,8 @@ private:
 
 }; // class SurveyResults
 
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable
+
+
 
 #endif // __SOLVER_VARIABLE_SURVEY_RESULTS_SURVEY_RESULTS_H__

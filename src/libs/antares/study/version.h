@@ -29,9 +29,7 @@
 
 #include <yuni/yuni.h>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Version of a study
@@ -110,7 +108,7 @@ class StudyVersion {
 public:
     [[nodiscard]] bool isStudyLatestVersion(std::string studyFolder) const;
 };
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+
 
 #endif // __ANTARES_LIBS_STUDY_VERSION_H__

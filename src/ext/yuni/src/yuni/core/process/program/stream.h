@@ -46,7 +46,7 @@ public:
     }
 
     //! The execution has finished
-    virtual void onStop(bool /*killed*/, int /*exitstatus*/, sint64 /*duration*/)
+    virtual void onStop(bool /*killed*/, int /*exitstatus*/, int64_t /*duration*/)
     {
     }
 };

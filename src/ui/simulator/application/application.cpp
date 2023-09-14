@@ -33,10 +33,10 @@
 #include <wx/image.h>
 #include <wx/app.h>
 #include "../toolbox/resources.h"
-#include <antares/hostinfo.h>
+#include <antares/logs/hostinfo.h>
 #include <yuni/io/file.h>
 #include <antares/jit.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/memory/memory.h>
 #include <wx/config.h>
 #include "../windows/message.h"

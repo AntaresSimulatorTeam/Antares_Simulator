@@ -29,11 +29,10 @@
 #include <yuni/core/math.h>
 #include <antares/study/study.h>
 #include <antares/study/area/scratchpad.h>
-#include <antares/study/memory-usage.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 
 #include "common-eco-adq.h"
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <cassert>
 #include <map>
 #include "simulation.h"
@@ -348,7 +347,7 @@ void PrepareRandomNumbers(Data::Study& study,
 
 int retrieveAverageNTC(const Data::Study& study,
                        const Matrix<>& capacities,
-                       const Matrix<Yuni::uint32>& tsNumbers,
+                       const Matrix<uint32_t>& tsNumbers,
                        std::vector<double>& avg)
 {
     const auto& parameters = study.parameters;
@@ -359,21 +358,21 @@ int retrieveAverageNTC(const Data::Study& study,
     const auto width = capacities.width;
     avg.assign(HOURS_PER_YEAR, 0);
 
-    std::map<Yuni::uint32, double> weightOfTS;
+    std::map<uint32_t, double> weightOfTS;
 
     for (uint y = 0; y < study.parameters.nbYears; y++)
     {
         if (!yearsFilter[y])
             continue;
 
-        Yuni::uint32 tsIndex = (width == 1) ? 0 : tsNumbers[0][y];
+        uint32_t tsIndex = (width == 1) ? 0 : tsNumbers[0][y];
         weightOfTS[tsIndex] += yearsWeight[y];
     }
 
     // No need for the year number, only the TS index is required
     for (const auto& it : weightOfTS)
     {
-        const Yuni::uint32 tsIndex = it.first;
+        const uint32_t tsIndex = it.first;
         const double weight = it.second;
 
         for (uint h = 0; h < HOURS_PER_YEAR; h++)

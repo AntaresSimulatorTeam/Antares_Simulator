@@ -31,8 +31,8 @@
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
 #include "../fwd.h"
-#include "../../array/matrix.h"
-#include <i_writer.h>
+#include <antares/array/matrix.h>
+#include <antares/writer/i_writer.h>
 #include <set>
 
 //! The minimal allowed value for hurdle costs when not null
@@ -114,12 +114,7 @@ public:
     /*!
     ** \brief Get the size (bytes) in memory occupied by a `AreaLink` structure
     */
-    Yuni::uint64 memoryUsage() const;
-    /*!
-    ** \brief Try to estimate the amount of memory required by the area for a simulation
-    */
-    void estimateMemoryUsage(StudyMemoryUsage& u) const;
-    //@}
+    uint64_t memoryUsage() const;
 
     bool isVisibleOnLayer(const size_t& layerID) const;
 
@@ -153,7 +148,7 @@ public:
     Matrix<> indirectCapacities;
 
     //! Monte-Carlo
-    Matrix<Yuni::uint32> timeseriesNumbers;
+    Matrix<uint32_t> timeseriesNumbers;
 
     //! Flag for using loop flow
     bool useLoopFlow;

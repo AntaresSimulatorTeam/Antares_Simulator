@@ -28,8 +28,6 @@
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_FINAL_LEVEL_INFLOWS_MODIFYER_H__
 
 #include <vector>
-#include <yuni/yuni.h>
-#include <antares/study/parameters.h>
 #include <antares/array/matrix.h>
 
 namespace Antares::Data
@@ -47,11 +45,11 @@ public:
                               const AreaName& areaName);
     void initialize(const Matrix<double>& scenarioInitialHydroLevels,
                     const Matrix<double>& scenarioFinalHydroLevels,
-                    const uint lastSimulationDay,
-                    const uint nbYears);
+                    const unsigned int lastSimulationDay,
+                    const unsigned int nbYears);
 
-    bool CheckInfeasibility(uint year);
-    bool isApplicable(uint year);
+    bool CheckInfeasibility(unsigned int year);
+    bool isApplicable(unsigned int year);
 
     // vectors containing data necessary for final reservoir level calculation
     // for one area and all MC years
@@ -61,16 +59,15 @@ public:
 
 private:
     bool isActive();
-    void logInfoFinLvlNotApplicable(uint year);
-    void ComputeDelta(uint year);
-    bool makeChecks(uint year);
-    void storeDeltaLevels(uint year);
-    double calculateTotalInflows(uint year) const;
-    bool preCheckStartAndEndSim(uint year) const;
-    bool preCheckYearlyInflow(double totalYearInflows, uint year) const;
-    bool preCheckRuleCurves(uint year) const;
+    void ComputeDelta(unsigned int year);
+    bool makeChecks(unsigned int year);
+    void storeDeltaLevels(unsigned int year);
+    double calculateTotalInflows(unsigned int year) const;
+    bool preCheckStartAndEndSim(unsigned int year) const;
+    bool preCheckYearlyInflow(double totalYearInflows, unsigned int year) const;
+    bool preCheckRuleCurves(unsigned int year) const;
 
-    uint lastSimulationDay_ = 0;
+    unsigned int lastSimulationDay_ = 0;
 
     // Data from area (remaining unchanged throughout simulation)
     const PartHydro& hydro_;
