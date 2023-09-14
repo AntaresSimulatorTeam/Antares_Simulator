@@ -124,7 +124,7 @@ Data::Output::List ListOfOutputsForTheCurrentStudy;
 
 bool gStudyHasBeenModified = true;
 
-volatile uint64 gInMemoryRevisionIncrement = 0;
+volatile uint64_t gInMemoryRevisionIncrement = 0;
 
 inline static void ResetLastOpenedFilepath()
 {
@@ -415,8 +415,8 @@ protected:
     bool onCopyFile(IO::Directory::CopyState state,
                     const String&,
                     const String&,
-                    uint64 count,
-                    uint64 total)
+                    uint64_t count,
+                    uint64_t total)
     {
         if (0 == (--pCount))
         {
@@ -560,7 +560,7 @@ bool CanPerformMemoryFlush()
     return !gMemoryFlushRefCount;
 }
 
-uint64 StudyInMemoryRevisionID()
+uint64_t StudyInMemoryRevisionID()
 {
     return gInMemoryRevisionIncrement;
 }

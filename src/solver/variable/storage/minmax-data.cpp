@@ -47,7 +47,7 @@ struct ArrayInitializer
         {
             MinMaxData::Data& data = array[i];
             data.value = DBL_MAX;             // +inf
-            data.indice = (Yuni::uint32)(-1); // invalid indice
+            data.indice = (uint32_t)(-1); // invalid indice
         }
     }
 
@@ -57,7 +57,7 @@ struct ArrayInitializer
         {
             MinMaxData::Data& data = array[i];
             data.value = DBL_MAX;             // +inf
-            data.indice = (Yuni::uint32)(-1); // invalid indice
+            data.indice = (uint32_t)(-1); // invalid indice
         }
     }
 
@@ -75,7 +75,7 @@ struct ArrayInitializer<Size, false>
             // hold in a double
             MinMaxData::Data& data = array[i];
             data.value = -DBL_MAX;            // -inf
-            data.indice = (Yuni::uint32)(-1); // invalid indice
+            data.indice = (uint32_t)(-1); // invalid indice
         }
     }
 
@@ -88,7 +88,7 @@ struct ArrayInitializer<Size, false>
             // hold in a double
             MinMaxData::Data& data = array[i];
             data.value = -DBL_MAX;            // -inf
-            data.indice = (Yuni::uint32)(-1); // invalid indice
+            data.indice = (uint32_t)(-1); // invalid indice
         }
     }
 

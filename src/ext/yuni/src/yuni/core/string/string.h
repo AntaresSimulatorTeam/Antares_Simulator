@@ -362,14 +362,14 @@ public:
 
     //! Constructor with a default boolean
     CString(bool value);
-    //! Constructor with a int32
-    CString(yint32 value);
+    //! Constructor with a int32_t
+    CString(int32_t value);
     //! Constructor with a int64
-    CString(yint64 value);
-    //! Constructor with a uint32
-    CString(yuint32 value);
-    //! Constructor with a uint64
-    CString(yuint64 value);
+    CString(int64_t value);
+    //! Constructor with a uint32_t
+    CString(uint32_t value);
+    //! Constructor with a uint64_t
+    CString(uint64_t value);
     //! Constructor with a float
     CString(float value);
     //! Constructor with a double

@@ -54,7 +54,7 @@ BOOST_FIXTURE_TEST_CASE(economy_legacyfiles_emptylabel, Fixture)
     StudyMode mode = stdmEconomy;
     ResultFormat fmt = legacyFilesDirectories;
     const YString label = "";
-    const Yuni::sint64 startTime = 1;
+    const int64_t startTime = 1;
     const YString expectedOutput = (outputRoot / "19700101-0000eco").string();
     const YString actualOutput
       = StudyCreateOutputPath(mode, fmt, outputRoot.string(), label, startTime);
@@ -66,7 +66,7 @@ BOOST_FIXTURE_TEST_CASE(economy_legacyfiles_label_now, Fixture)
     StudyMode mode = stdmEconomy;
     ResultFormat fmt = legacyFilesDirectories;
     const YString label = "test";
-    const Yuni::sint64 startTime = 1672391667;
+    const int64_t startTime = 1672391667;
     const YString expectedOutput = (outputRoot / "20221230-0914eco-test").string();
     const YString actualOutput
       = StudyCreateOutputPath(mode, fmt, outputRoot.string(), label, startTime);
@@ -78,7 +78,7 @@ BOOST_FIXTURE_TEST_CASE(adequacy_legacyfiles_label_now, Fixture)
     StudyMode mode = stdmAdequacy;
     ResultFormat fmt = legacyFilesDirectories;
     const YString label = "test";
-    const Yuni::sint64 startTime = 1672391667;
+    const int64_t startTime = 1672391667;
     const YString expectedOutput = (outputRoot / "20221230-0914adq-test").string();
     const YString actualOutput
       = StudyCreateOutputPath(mode, fmt, outputRoot.string(), label, startTime);
@@ -96,7 +96,7 @@ BOOST_FIXTURE_TEST_CASE(adequacy_zip_label_now, Fixture)
     StudyMode mode = stdmAdequacy;
     ResultFormat fmt = zipArchive;
     const YString label = "test";
-    const Yuni::sint64 startTime = 1672391667;
+    const int64_t startTime = 1672391667;
     const YString expectedOutput = (outputRoot / "20221230-0914adq-test").string();
     const YString actualOutput
       = StudyCreateOutputPath(mode, fmt, outputRoot.string(), label, startTime);

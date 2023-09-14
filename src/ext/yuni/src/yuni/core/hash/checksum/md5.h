@@ -66,7 +66,7 @@ public:
     ** \param size Size of the given buffer.
     ** \return The hash value
     */
-    static String FromRawData(const void* rawdata, uint64 size = AutoDetectNullChar);
+    static String FromRawData(const void* rawdata, uint64_t size = AutoDetectNullChar);
 
 public:
     //! \name Constructor & Destructor
@@ -82,7 +82,7 @@ public:
     //@}
 
     virtual const String& fromRawData(const void* rawdata,
-                                      uint64 size = AutoDetectNullChar) override;
+                                      uint64_t size = AutoDetectNullChar) override;
     virtual const String& fromFile(const String& filename) override;
 
 }; // class Hash::Checksum::MD5

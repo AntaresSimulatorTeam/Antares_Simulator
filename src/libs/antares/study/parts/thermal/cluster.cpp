@@ -642,9 +642,9 @@ const char* Data::ThermalCluster::GroupName(enum ThermalDispatchableGroup grp)
     return "";
 }
 
-uint64 ThermalCluster::memoryUsage() const
+uint64_t ThermalCluster::memoryUsage() const
 {
-    uint64 amount = sizeof(ThermalCluster) + modulation.memoryUsage();
+    uint64_t amount = sizeof(ThermalCluster) + modulation.memoryUsage();
     if (prepro)
         amount += prepro->memoryUsage();
     if (series)

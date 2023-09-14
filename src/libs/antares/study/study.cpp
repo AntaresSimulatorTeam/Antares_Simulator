@@ -192,7 +192,7 @@ void Study::reduceMemoryUsage()
     ClearAndShrink(bufferLoadingTS);
 }
 
-uint64 Study::memoryUsage() const
+uint64_t Study::memoryUsage() const
 {
     return folder.capacity()
            // Folders paths
@@ -625,7 +625,7 @@ YString StudyCreateOutputPath(StudyMode mode,
                               ResultFormat fmt,
                               const YString& outputRoot,
                               const YString& label,
-                              Yuni::sint64 startTime)
+                              int64_t startTime)
 {
     auto suffix = getOutputSuffix(fmt);
 

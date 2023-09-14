@@ -226,9 +226,9 @@ private:
     double pLowerBound;
     bool pUseUpperBound;
     bool pUseLowerBound;
-    yuint64 pRoundingCount;
-    yuint64 pRounding80percentCount;
-    yuint64 pRoundingCountTotal;
+    uint64_t pRoundingCount;
+    uint64_t pRounding80percentCount;
+    uint64_t pRoundingCountTotal;
     Yuni::ShortString16 tsName;
 
     uint pEnabledAreaCount;
@@ -286,8 +286,8 @@ private:
         durjour = 24
     };
 
-    yuint64 pLimitMemory;
-    yuint64 pCacheMemoryUsed;
+    uint64_t pLimitMemory;
+    uint64_t pCacheMemoryUsed;
     uint pCacheLastValidIndex;
     Matrix<>* pCacheMatrix;
 

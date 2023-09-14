@@ -57,7 +57,7 @@ public:
 
     void merge(unsigned int year, const IntermediateValues& rhs);
 
-    Yuni::uint64 dynamicMemoryUsage() const
+    uint64_t dynamicMemoryUsage() const
     {
         return sizeof(double) * maxHoursInAYear + sizeof(double) * nbYearsCapacity;
     }

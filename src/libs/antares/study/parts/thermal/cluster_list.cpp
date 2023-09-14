@@ -6,7 +6,7 @@ namespace // anonymous
 {
 struct TSNumbersPredicate
 {
-    Yuni::uint32 operator()(Yuni::uint32 value) const
+    uint32_t operator()(uint32_t value) const
     {
         return value + 1;
     }

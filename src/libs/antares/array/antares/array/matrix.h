@@ -430,10 +430,10 @@ public:
     bool empty() const;
 
     //! Get the amount of memory used by the matrix
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     //! Get the amount of memory used by the matrix
-    Yuni::uint64 valuesMemoryUsage() const;
+    uint64_t valuesMemoryUsage() const;
     //@}
 
     /*!

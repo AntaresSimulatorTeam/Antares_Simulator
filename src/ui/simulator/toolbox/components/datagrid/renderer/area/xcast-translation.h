@@ -39,11 +39,11 @@ namespace Datagrid
 namespace Renderer
 {
 template<enum Data::TimeSeries T>
-class XCastTranslation final : public Renderer::Matrix<yint32>, public Renderer::ARendererArea
+class XCastTranslation final : public Renderer::Matrix<int32_t>, public Renderer::ARendererArea
 {
 public:
     //! Ancestor
-    using MatrixAncestorType = Renderer::Matrix<Yuni::sint32>;
+    using MatrixAncestorType = Renderer::Matrix<int32_t>;
 
 public:
     //! \name Constructor & Destructor

@@ -188,7 +188,7 @@ public:
     /*!
     ** \brief Get the amount of memory currently used by the area
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Try to estimate the amount of memory required by the area for a simulation
@@ -667,7 +667,7 @@ public:
     /*!
     ** \brief Get the amount of memory currently used by the class
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Update the name id set

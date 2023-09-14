@@ -30,7 +30,7 @@
 
 using namespace Yuni;
 
-static inline sint64 MilliSecTimer()
+static inline int64_t MilliSecTimer()
 {
     Yuni::timeval tv;
     YUNI_SYSTEM_GETTIMEOFDAY(&tv, nullptr);

@@ -142,7 +142,7 @@ public:
     /*!
     ** \brief Get the memory usage
     */
-    [[nodiscard]] yuint64 memoryUsage() const;
+    [[nodiscard]] uint64_t memoryUsage() const;
 
     /*!
     ** \brief Invalidate all matrices of all binding constraints

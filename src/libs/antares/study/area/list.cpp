@@ -1352,9 +1352,9 @@ void AreaListEnsureDataThermalPrepro(AreaList* l)
     l->each([&](Data::Area& area) { area.thermal.list.ensureDataPrepro(); });
 }
 
-uint64 AreaList::memoryUsage() const
+uint64_t AreaList::memoryUsage() const
 {
-    Yuni::uint64 ret = sizeof(AreaList) + sizeof(Area**) * areas.size();
+    uint64_t ret = sizeof(AreaList) + sizeof(Area**) * areas.size();
     each([&](const Data::Area& area) { ret += area.memoryUsage(); });
     return ret;
 }

@@ -32,7 +32,7 @@ YUNI_DECL bool ReadAsBool(const AnyString& name);
 ** \param name Name of the variable
 ** \param defvalue The default value to take if the value of the variable is empty
 */
-YUNI_DECL yint64 ReadAsInt64(const AnyString& name, yint64 defvalue = 0);
+YUNI_DECL int64_t ReadAsInt64(const AnyString& name, int64_t defvalue = 0);
 
 /*!
 ** \brief Get a value from the current environment

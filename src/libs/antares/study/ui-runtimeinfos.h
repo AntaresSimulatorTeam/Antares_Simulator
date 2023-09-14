@@ -133,7 +133,7 @@ public:
 
     uint visibleLinksCount(uint layerID);
 
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
 public:
     //! Areas ordered by their name + links ordered by their name

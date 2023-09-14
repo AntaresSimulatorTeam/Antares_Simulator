@@ -59,7 +59,7 @@ public:
         return !Yuni::Math::Zero(area.wind.prepro->xcast.capacity);
     }
 
-    Matrix<double, Yuni::sint32>& matrix(Data::Area& area) const
+    Matrix<double, int32_t>& matrix(Data::Area& area) const
     {
         assert(area.wind.series != NULL);
         return area.wind.series->timeSeries;
@@ -102,7 +102,7 @@ public:
         return !Yuni::Math::Zero(area.load.prepro->xcast.capacity);
     }
 
-    Matrix<double, Yuni::sint32>& matrix(Data::Area& area) const
+    Matrix<double, int32_t>& matrix(Data::Area& area) const
     {
         assert(area.load.series != NULL);
         return area.load.series->timeSeries;
@@ -145,7 +145,7 @@ public:
         return !Yuni::Math::Zero(area.solar.prepro->xcast.capacity);
     }
 
-    Matrix<double, Yuni::sint32>& matrix(Data::Area& area) const
+    Matrix<double, int32_t>& matrix(Data::Area& area) const
     {
         assert(area.solar.series != NULL);
         return area.solar.series->timeSeries;
