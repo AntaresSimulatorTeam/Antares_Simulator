@@ -307,6 +307,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
                                                    ProblemeAResoudre->NomDesContraintes,
+                                                   ProblemeAResoudre->VariablesEntieres,
                                                    ProblemeAResoudre->StatutDesVariables,
                                                    ProblemeAResoudre->StatutDesContraintes,
                                                    problemeHebdo->NamedProblems);

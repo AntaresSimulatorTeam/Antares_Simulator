@@ -30,26 +30,9 @@ using namespace Antares::Check;
 
 namespace
 {
-void checkStudyVersion(const AnyString& optStudyFolder)
-{
-    using namespace Antares::Data;
-    auto version = StudyTryToFindTheVersion(optStudyFolder);
-    if (version == versionUnknown)
-    {
-        throw Error::InvalidStudy(optStudyFolder);
-    }
-    else
-    {
-        if ((uint)version > (uint)versionLatest)
-        {
-            throw Error::InvalidVersion(VersionToCStr(version),
-                                        VersionToCStr((Version)versionLatest));
-        }
-    }
-}
-
 // CHECK nécessaire d'un choix simultané entre " unit-commitment = MILP " et " ortools-used "
 // avec " ortools-solver != Sirius "
+// TODO déplacer dans libs/antares/checks/checkLoadedInputData.cpp
 void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
                        bool ortoolsUsed,
                        const std::string& solverName)
@@ -61,7 +44,8 @@ void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
         {
             throw Error::IncompatibleMILPWithoutOrtools();
         }
-        else if (solverName == "sirius")
+
+        if (solverName == "sirius")
         {
             throw Error::IncompatibleMILPOrtoolsSolver();
         }

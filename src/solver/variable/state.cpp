@@ -292,7 +292,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
         switch (unitCommitmentMode)
         {
-            case Antares::Data::UnitCommitmentMode::ucHeuristic:
+            case Antares::Data::UnitCommitmentMode::ucHeuristicFast:
                 {
                     //	ON_min[h] = static_cast<uint>(Math::Ceil(thermalClusterProduction /
                     // currentCluster->nominalCapacityWithSpinning)); // code 5.0.3b<7
@@ -315,6 +315,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
                     break;
                 }
             case Antares::Data::UnitCommitmentMode::ucMILP:
+            case Antares::Data::UnitCommitmentMode::ucHeuristicAccurate:
                 {
                     ON_min[h] = Math::Max(
                             static_cast<uint>(Math::Ceil(thermalClusterProduction / currentCluster->nominalCapacityWithSpinning)),
