@@ -261,7 +261,7 @@ struct ConstraintBuilderData
     const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
     std::vector<std::string>& NomDesContraintes;
     const bool NamedProblems;
-    const std::vector<const char*> NomsDesPays;
+    const std::vector<const char*>& NomsDesPays;
     const uint32_t weekInTheYear;
     const uint32_t NombreDePasDeTemps;
 };
@@ -381,38 +381,3 @@ struct StartUpCostsData
 {
     const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
 };
-
-inline ConstraintBuilder GetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
-  const PROBLEME_HEBDO* problemeHebdo,
-  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
-{
-    ConstraintBuilderData data{ProblemeAResoudre->Pi,
-                               ProblemeAResoudre->Colonne,
-                               ProblemeAResoudre->NombreDeContraintes,
-                               ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes,
-                               ProblemeAResoudre->IndicesDebutDeLigne,
-                               ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes,
-                               ProblemeAResoudre->IndicesColonnes,
-                               ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes,
-                               ProblemeAResoudre->NombreDeTermesDesLignes,
-                               ProblemeAResoudre->Sens,
-                               ProblemeAResoudre->IncrementDAllocationMatriceDesContraintes,
-                               problemeHebdo->CorrespondanceVarNativesVarOptim,
-                               problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
-                               problemeHebdo->NumeroDeVariableStockFinal,
-                               problemeHebdo->NumeroDeVariableDeTrancheDeStock,
-                               ProblemeAResoudre->NomDesContraintes,
-                               problemeHebdo->NamedProblems,
-                               problemeHebdo->NomsDesPays,
-                               problemeHebdo->weekInTheYear,
-                               problemeHebdo->NombreDePasDeTemps};
-
-    return ConstraintBuilder(data);
-}
-
-inline ConstraintBuilder GetConstraintBuilderFromProblemHebdo(PROBLEME_HEBDO* problemeHebdo)
-{
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
-    return GetConstraintBuilderFromProblemHebdoAndProblemAResoudre(problemeHebdo,
-                                                                   ProblemeAResoudre);
-}

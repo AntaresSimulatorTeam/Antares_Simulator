@@ -73,6 +73,8 @@ set(RTESOLVER_OPT
 
 		constraint_builder.cpp
 		constraint_builder.h
+		constraint_builder_utils.h
+		constraint_builder_utils.cpp
 
 		AreaBalance.h
 		AreaBalance.cpp

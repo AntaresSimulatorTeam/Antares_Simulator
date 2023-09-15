@@ -32,6 +32,7 @@
 #include "../simulation/sim_extern_variables_globales.h"
 #include "opt_fonctions.h"
 #include "constraint_builder.h"
+#include "constraint_builder_utils.h"
 
 struct ExchangeBalanceData
 {

@@ -38,6 +38,7 @@
 #include "NbUnitsOutageLessThanNbUnitsStop.h"
 #include "NbDispUnitsMinBoundSinceMinUpTime.h"
 #include "MinDownTime.h"
+#include "constraint_builder_utils.h"
 
 using namespace Antares::Data;
 

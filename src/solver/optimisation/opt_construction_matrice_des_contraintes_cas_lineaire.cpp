@@ -47,6 +47,7 @@
 #include "AreaHydroLevel.h"
 #include "FinalStockEquivalent.h"
 #include "FinalStockExpression.h"
+#include "constraint_builder_utils.h"
 
 #include <antares/study.h>
 

@@ -34,6 +34,7 @@
 #include "hourly_csr_problem.h"
 #include "sim_structure_probleme_economique.h"
 #include "../constraint_builder.h"
+#include "../constraint_builder_utils.h"
 #include "../opt_rename_problem.h"
 #include "adequacy_patch_runtime_data.h"
 
