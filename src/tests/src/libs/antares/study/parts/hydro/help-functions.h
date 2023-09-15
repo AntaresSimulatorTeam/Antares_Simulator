@@ -5,7 +5,7 @@
 #include <fstream>
 #include <matrix.h>
 
-#define SEP IO::Separator
+#define SEP Yuni::IO::Separator
 
 using namespace Antares::Data;
 using my_string = Yuni::CString<256, false>;

@@ -20,7 +20,10 @@ target_include_directories(test-hydro-data-transfer
 target_link_libraries(test-hydro-data-transfer
 	PRIVATE
 	Boost::unit_test_framework
-	libantares-core
+	antares-core
+	model_antares
+	antares-solver-hydro
+	yuni-static-core
 )
 
 # Linux
@@ -54,7 +57,10 @@ target_include_directories(test-hydro-series
 target_link_libraries(test-hydro-series
 	PRIVATE
 	Boost::unit_test_framework
-	libantares-core
+	antares-core
+	model_antares
+	antares-solver-hydro
+	yuni-static-core
 )
 
 # Linux
