@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -657,9 +657,6 @@ bool ATSP::Probab_density_funct(double L,
         if (S < 0.)
             return false;
 
-        // Since 3.5: No translation
-        // E = E - L;
-
         if (E == 0 || S == 0)
             return false;
         // pour une loi de weibull de paramètre a>=1, le calage n'est possible que si
@@ -673,8 +670,6 @@ bool ATSP::Probab_density_funct(double L,
         double cible = S / E;
         cible *= cible;
 
-        // Since 3.5, C = 0
-        // C = L;
         C = 0;
 
         D = 0; // D n'est pas utilise par le generateur stochastique
@@ -704,21 +699,14 @@ bool ATSP::Probab_density_funct(double L,
         if (S <= 0.)
             return false;
 
-        // Since 3.5, no translation
-        // E = E - L;
-
         if (E == 0.)
             return false;
 
-        // Since 3.5, C = 0
-        // C  = L;
         C = 0;
 
         D = 0; // D n'est pas utilise par le generateur stochastique
         A = (E / S);
         A *= A;
-        // Since 3.5, B' = 1/B, it was B = A / E
-        // Now :
         B = E / A;
 
         return !(A < 1. || A > 50.);

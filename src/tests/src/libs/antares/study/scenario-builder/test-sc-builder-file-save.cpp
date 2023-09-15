@@ -1,11 +1,10 @@
 #define BOOST_TEST_MODULE test save scenario - builder.dat
-
-#define WIN32_LEAN_AND_MEAN
-
-#include <boost/test/included/unit_test.hpp>
+#define BOOST_TEST_DYN_LINK
+#include <boost/test/unit_test.hpp>
 
 #include <string>
 #include <filesystem>
+#include <fstream>
 
 #include <study.h>
 #include <rules.h>
@@ -108,21 +107,21 @@ struct commonFixture
 
         // Load : set the nb of ready made TS
         uint nbReadyMadeTS = 13;
-        area_1->load.series->series.resize(nbReadyMadeTS, 1);
-        area_2->load.series->series.resize(nbReadyMadeTS, 1);
-        area_3->load.series->series.resize(nbReadyMadeTS, 1);
+        area_1->load.series->timeSeries.resize(nbReadyMadeTS, 1);
+        area_2->load.series->timeSeries.resize(nbReadyMadeTS, 1);
+        area_3->load.series->timeSeries.resize(nbReadyMadeTS, 1);
 
         // Wind : set the nb of ready made TS
         nbReadyMadeTS = 17;
-        area_1->wind.series->series.resize(nbReadyMadeTS, 1);
-        area_2->wind.series->series.resize(nbReadyMadeTS, 1);
-        area_3->wind.series->series.resize(nbReadyMadeTS, 1);
+        area_1->wind.series->timeSeries.resize(nbReadyMadeTS, 1);
+        area_2->wind.series->timeSeries.resize(nbReadyMadeTS, 1);
+        area_3->wind.series->timeSeries.resize(nbReadyMadeTS, 1);
 
         // Solar : set the nb of ready made TS
         nbReadyMadeTS = 9;
-        area_1->solar.series->series.resize(nbReadyMadeTS, 1);
-        area_2->solar.series->series.resize(nbReadyMadeTS, 1);
-        area_3->solar.series->series.resize(nbReadyMadeTS, 1);
+        area_1->solar.series->timeSeries.resize(nbReadyMadeTS, 1);
+        area_2->solar.series->timeSeries.resize(nbReadyMadeTS, 1);
+        area_3->solar.series->timeSeries.resize(nbReadyMadeTS, 1);
 
         // Hydro : set the nb of ready made TS
         nbReadyMadeTS = 12;
@@ -146,9 +145,9 @@ struct commonFixture
         thCluster_31 = addClusterToArea<ThermalCluster>(area_3, "th-cluster-31");
 
         // Thermal clusters : set the nb of ready made TS
-        thCluster_11->series->series.resize(14, 1);
-        thCluster_12->series->series.resize(14, 1);
-        thCluster_31->series->series.resize(14, 1);
+        thCluster_11->series->timeSeries.resize(14, 1);
+        thCluster_12->series->timeSeries.resize(14, 1);
+        thCluster_31->series->timeSeries.resize(14, 1);
 
         // Thermal clusters : update areas local numbering for clusters
         area_1->thermal.prepareAreaWideIndexes();
@@ -161,9 +160,9 @@ struct commonFixture
         rnCluster_32 = addClusterToArea<RenewableCluster>(area_3, "rn-cluster-32");
 
         // Renewable clusters : set the nb of ready made TS
-        rnCluster_21->series->series.resize(9, 1);
-        rnCluster_31->series->series.resize(9, 1);
-        rnCluster_32->series->series.resize(9, 1);
+        rnCluster_21->series->timeSeries.resize(9, 1);
+        rnCluster_31->series->timeSeries.resize(9, 1);
+        rnCluster_32->series->timeSeries.resize(9, 1);
 
         // Renewable clusters : update areas local numbering for clusters
         area_1->renewable.prepareAreaWideIndexes();
@@ -174,6 +173,15 @@ struct commonFixture
         area_1->resizeAllTimeseriesNumbers(study->parameters.nbYears);
         area_2->resizeAllTimeseriesNumbers(study->parameters.nbYears);
         area_3->resizeAllTimeseriesNumbers(study->parameters.nbYears);
+
+        study->bindingConstraints.add("BC_1")->group("group1");
+        study->bindingConstraints.add("BC_2")->group("group2");
+        study->bindingConstraints.add("BC_2")->group("group3");
+
+        study->bindingConstraintsGroups.add("group1");
+        study->bindingConstraintsGroups.add("group2");
+        study->bindingConstraintsGroups.add("group3");
+
 
         // Scenario builder initialization
         study->scenarioRules = new ScenarioBuilder::Sets();
@@ -235,15 +243,15 @@ saveFixture::~saveFixture()
 // Tests section
 // ==================
 
-BOOST_FIXTURE_TEST_SUITE(s, saveFixture)
+BOOST_AUTO_TEST_SUITE(s)
 
 // ====================
 // Tests on Load
 // ====================
-BOOST_AUTO_TEST_CASE(
-  LOAD__on_area2_and_year_11_chosen_ts_number_is_6__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  LOAD__on_area2_and_year_11_chosen_ts_number_is_6__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
-    my_rule->load.set(area_2->index, 11, 6);
+    my_rule->load.setTSnumber(area_2->index, 11, 6);
 
     saveScenarioBuilder();
 
@@ -255,15 +263,15 @@ BOOST_AUTO_TEST_CASE(
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
 }
 
-BOOST_AUTO_TEST_CASE(
-  LOAD__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  LOAD__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
-    my_rule->load.set(area_3->index, 7, 2);
-    my_rule->load.set(area_2->index, 11, 6);
-    my_rule->load.set(area_1->index, 5, 12);
-    my_rule->load.set(area_3->index, 8, 3);
-    my_rule->load.set(area_2->index, 10, 4);
-    my_rule->load.set(area_1->index, 18, 1);
+    my_rule->load.setTSnumber(area_3->index, 7, 2);
+    my_rule->load.setTSnumber(area_2->index, 11, 6);
+    my_rule->load.setTSnumber(area_1->index, 5, 12);
+    my_rule->load.setTSnumber(area_3->index, 8, 3);
+    my_rule->load.setTSnumber(area_2->index, 10, 4);
+    my_rule->load.setTSnumber(area_1->index, 18, 1);
 
     saveScenarioBuilder();
 
@@ -283,10 +291,10 @@ BOOST_AUTO_TEST_CASE(
 // ====================
 // Tests on Wind
 // ====================
-BOOST_AUTO_TEST_CASE(
-  WIND__on_area3_and_year_19_chosen_ts_number_is_17__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  WIND__on_area3_and_year_19_chosen_ts_number_is_17__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
-    my_rule->wind.set(area_3->index, 19, 17);
+    my_rule->wind.setTSnumber(area_3->index, 19, 17);
 
     saveScenarioBuilder();
 
@@ -301,12 +309,12 @@ BOOST_AUTO_TEST_CASE(
 // ====================
 // Tests on Solar
 // ====================
-BOOST_AUTO_TEST_CASE(
-  SOLAR__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  SOLAR__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
-    my_rule->solar.set(area_1->index, 9, 9);
-    my_rule->solar.set(area_3->index, 18, 7);
-    my_rule->solar.set(area_1->index, 5, 8);
+    my_rule->solar.setTSnumber(area_1->index, 9, 9);
+    my_rule->solar.setTSnumber(area_3->index, 18, 7);
+    my_rule->solar.setTSnumber(area_1->index, 5, 8);
 
     saveScenarioBuilder();
 
@@ -323,12 +331,12 @@ BOOST_AUTO_TEST_CASE(
 // =================
 // Tests on Hydro
 // =================
-BOOST_AUTO_TEST_CASE(
-  HYDRO__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  HYDRO__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
-    my_rule->hydro.set(area_2->index, 17, 12);
-    my_rule->hydro.set(area_3->index, 18, 7);
-    my_rule->hydro.set(area_1->index, 5, 8);
+    my_rule->hydro.setTSnumber(area_2->index, 17, 12);
+    my_rule->hydro.setTSnumber(area_3->index, 18, 7);
+    my_rule->hydro.setTSnumber(area_1->index, 5, 8);
 
     saveScenarioBuilder();
 
@@ -345,12 +353,12 @@ BOOST_AUTO_TEST_CASE(
 // ===========================
 // Tests on Thermal clusters
 // ===========================
-BOOST_AUTO_TEST_CASE(
-  THERMAL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  THERMAL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
-    my_rule->thermal[area_3->index].set(thCluster_31.get(), 5, 13);
-    my_rule->thermal[area_1->index].set(thCluster_11.get(), 19, 8);
-    my_rule->thermal[area_1->index].set(thCluster_12.get(), 2, 4);
+    my_rule->thermal[area_3->index].setTSnumber(thCluster_31.get(), 5, 13);
+    my_rule->thermal[area_1->index].setTSnumber(thCluster_11.get(), 19, 8);
+    my_rule->thermal[area_1->index].setTSnumber(thCluster_12.get(), 2, 4);
 
     saveScenarioBuilder();
 
@@ -368,12 +376,12 @@ BOOST_AUTO_TEST_CASE(
 // =============================
 // Tests on Renewable clusters
 // =============================
-BOOST_AUTO_TEST_CASE(
-  RENEWABLE_CLUSTERS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  RENEWABLE_CLUSTERS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
-    my_rule->renewable[area_3->index].set(rnCluster_32.get(), 5, 13);
-    my_rule->renewable[area_2->index].set(rnCluster_21.get(), 19, 8);
-    my_rule->renewable[area_3->index].set(rnCluster_31.get(), 2, 4);
+    my_rule->renewable[area_3->index].setTSnumber(rnCluster_32.get(), 5, 13);
+    my_rule->renewable[area_2->index].setTSnumber(rnCluster_21.get(), 19, 8);
+    my_rule->renewable[area_3->index].setTSnumber(rnCluster_31.get(), 2, 4);
 
     saveScenarioBuilder();
 
@@ -391,12 +399,12 @@ BOOST_AUTO_TEST_CASE(
 // ========================
 // Tests on Hydro levels
 // ========================
-BOOST_AUTO_TEST_CASE(
-  HYDRO_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  HYDRO_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
-    my_rule->hydroLevels.set(area_1->index, 9, 9);
-    my_rule->hydroLevels.set(area_3->index, 18, 7);
-    my_rule->hydroLevels.set(area_1->index, 5, 8);
+    my_rule->hydroLevels.setTSnumber(area_1->index, 9, 9);
+    my_rule->hydroLevels.setTSnumber(area_3->index, 18, 7);
+    my_rule->hydroLevels.setTSnumber(area_1->index, 5, 8);
 
     saveScenarioBuilder();
 
@@ -413,8 +421,8 @@ BOOST_AUTO_TEST_CASE(
 // ======================
 // Tests on Links NTC
 // ======================
-BOOST_AUTO_TEST_CASE(
-  LINKS_NTC__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  LINKS_NTC__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
     my_rule->linksNTC[area_1->index].setDataForLink(link_12, 5, 13);
     my_rule->linksNTC[area_1->index].setDataForLink(link_13, 19, 8);
@@ -433,24 +441,44 @@ BOOST_AUTO_TEST_CASE(
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
 }
 
+BOOST_FIXTURE_TEST_CASE(
+    BC__TS_number_for_many_years__generated_and_ref_sc_buider_files_are_identical, saveFixture) {
+    my_rule->binding_constraints.setTSnumber("group1", 5, 20);
+    my_rule->binding_constraints.setTSnumber("group2", 19, 1);
+    my_rule->binding_constraints.setTSnumber("group3", 5, 43);
+    my_rule->binding_constraints.setTSnumber("group3", 10, 6);
+
+    saveScenarioBuilder();
+    // Build reference scenario builder file
+    referenceFile.append("[my rule name]");
+    referenceFile.append("bc,group1,5=20");
+    referenceFile.append("bc,group2,19=1");
+    referenceFile.append("bc,group3,5=43");
+    referenceFile.append("bc,group3,10=6");
+
+    referenceFile.write();
+    BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
 // ================================
 // Tests on All assets together
 // ================================
-BOOST_AUTO_TEST_CASE(
-  ALL_TOGETHER__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+BOOST_FIXTURE_TEST_CASE(
+  ALL_TOGETHER__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
-    my_rule->load.set(area_2->index, 11, 6);
-    my_rule->load.set(area_3->index, 7, 2);
-    my_rule->solar.set(area_1->index, 9, 9);
-    my_rule->solar.set(area_3->index, 15, 8);
-    my_rule->hydro.set(area_3->index, 18, 7);
-    my_rule->wind.set(area_3->index, 19, 17);
-    my_rule->thermal[area_3->index].set(thCluster_31.get(), 5, 13);
-    my_rule->thermal[area_1->index].set(thCluster_11.get(), 19, 8);
-    my_rule->renewable[area_3->index].set(rnCluster_32.get(), 5, 13);
+    my_rule->load.setTSnumber(area_2->index, 11, 6);
+    my_rule->load.setTSnumber(area_3->index, 7, 2);
+    my_rule->solar.setTSnumber(area_1->index, 9, 9);
+    my_rule->solar.setTSnumber(area_3->index, 15, 8);
+    my_rule->hydro.setTSnumber(area_3->index, 18, 7);
+    my_rule->wind.setTSnumber(area_3->index, 19, 17);
+    my_rule->thermal[area_3->index].setTSnumber(thCluster_31.get(), 5, 13);
+    my_rule->thermal[area_1->index].setTSnumber(thCluster_11.get(), 19, 8);
+    my_rule->renewable[area_3->index].setTSnumber(rnCluster_32.get(), 5, 13);
     my_rule->linksNTC[area_1->index].setDataForLink(link_13, 19, 8);
     my_rule->linksNTC[area_2->index].setDataForLink(link_23, 2, 4);
-    my_rule->hydroLevels.set(area_1->index, 5, 8);
+    my_rule->hydroLevels.setTSnumber(area_1->index, 5, 8);
+    my_rule->binding_constraints.setTSnumber("group3", 10, 6);
 
     saveScenarioBuilder();
 
@@ -468,6 +496,7 @@ BOOST_AUTO_TEST_CASE(
     referenceFile.append("t,area 3,5,th-cluster-31 = 13");
     referenceFile.append("r,area 3,5,rn-cluster-32 = 13");
     referenceFile.append("hl,area 1,5 = 8");
+    referenceFile.append("bc,group3,10=6");
     referenceFile.write();
 
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));

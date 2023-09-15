@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -31,11 +31,9 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
-{
-namespace Load
+
+
+namespace Antares::Data::Load
 {
 Prepro::Prepro() : xcast(timeSeriesLoad)
 {
@@ -45,14 +43,9 @@ Prepro::~Prepro()
 {
 }
 
-bool Prepro::loadFromFolder(Study& study, const AnyString& folder)
+bool Prepro::loadFromFolder(const AnyString& folder)
 {
-    if (study.header.version <= 320)
-    {
-        xcast.resetToDefaultValues();
-        return true;
-    }
-    return xcast.loadFromFolder(study, folder);
+    return xcast.loadFromFolder(folder);
 }
 
 bool Prepro::saveToFolder(const AnyString& folder) const
@@ -60,6 +53,6 @@ bool Prepro::saveToFolder(const AnyString& folder) const
     return xcast.saveToFolder(folder);
 }
 
-} // namespace Load
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::Load
+
+

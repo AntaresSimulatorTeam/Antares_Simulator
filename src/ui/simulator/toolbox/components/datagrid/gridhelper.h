@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,17 +27,17 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_DATAGRID__GRID_HELPER_H__
 #define __ANTARES_TOOLBOX_COMPONENTS_DATAGRID__GRID_HELPER_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/panel.h>
 #include <wx/grid.h>
-#include "renderer.h"
 #include <vector>
 #include <yuni/core/math.h>
+#include "renderer.h"
 
 namespace Antares
 {
 namespace Component
 {
+
 namespace Datagrid
 {
 /*!

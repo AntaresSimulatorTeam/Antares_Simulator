@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,7 +27,6 @@
 #ifndef ANTARES_APPLICATION_MAIN_BUILD_STANDARD_PAGE_HXX__
 #define ANTARES_APPLICATION_MAIN_BUILD_STANDARD_PAGE_HXX__
 
-#include <antares/wx-wrapper.h>
 #include "../../../toolbox/components/notebook/notebook.h"
 #include "../../../toolbox/create.h"
 #include <ui/common/component/panel.h>

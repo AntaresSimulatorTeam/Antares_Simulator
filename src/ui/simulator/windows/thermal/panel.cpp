@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -48,12 +48,14 @@ namespace Thermal
 Panel::Panel(Component::Notebook* parent) :
  Component::Panel(parent),
  pageThermalTimeSeries(nullptr),
+ pageThermalTimeSeriesFuelCost(nullptr),
+ pageThermalTimeSeriesCO2Cost(nullptr),
  pageThermalPrepro(nullptr),
  pageThermalCommon(nullptr),
  pNotebookThermalCluster(nullptr),
  pAreaForThermalCommonData(nullptr),
  pAreaSelector(nullptr),
- pStudyRevisionIncrement((Yuni::uint64)-1)
+ pStudyRevisionIncrement((uint64_t)-1)
 {
     // A sizer for our panel
     wxSizer* mainsizer = new wxBoxSizer(wxVERTICAL);
@@ -116,11 +118,21 @@ Panel::Panel(Component::Notebook* parent) :
             subbook, new Component::Datagrid::Renderer::ThermalClusterPrepro(subbook, tag)),
           wxT("TS generator"));
 
-        // Time Series
+        pageThermalTimeSeriesFuelCost = subbook->add(
+          new Component::Datagrid::Component(
+            subbook, new Component::Datagrid::Renderer::TimeSeriesThermalClusterFuelCost(subbook, tag)),
+          wxT("Fuel Cost [\u20AC/GJ]"));
+
+        pageThermalTimeSeriesCO2Cost = subbook->add(
+          new Component::Datagrid::Component(
+            subbook, new Component::Datagrid::Renderer::TimeSeriesThermalClusterCO2Cost(subbook, tag)),
+          wxT("CO2 Cost [\u20AC/ton]"));
+
+        // Availability (ex Time Series)
         pageThermalTimeSeries = subbook->add(
           new Component::Datagrid::Component(
             subbook, new Component::Datagrid::Renderer::TimeSeriesThermalCluster(subbook, tag)),
-          wxT("Time-Series"));
+          wxT("Availability [MW]"));
 
         // Split the view
         pSplitter->SetMinimumPaneSize(70);
@@ -150,7 +162,7 @@ void Panel::onPageChanged(Component::Notebook::Page& page)
 {
     if (&page == pageThermalClusterList)
     {
-        Yuni::uint64 revID = StudyInMemoryRevisionID();
+        uint64_t revID = StudyInMemoryRevisionID();
         if (revID != pStudyRevisionIncrement)
         {
             Data::Area* area = pAreaForThermalCommonData;

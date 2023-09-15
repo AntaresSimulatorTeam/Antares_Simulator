@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include "atsp.h"
-#include <antares/inifile.h>
+#include <antares/inifile/inifile.h>
 #include "../../config.h"
 
 using namespace Yuni;
@@ -297,7 +297,7 @@ bool ATSP::loadFromINIFile(const String& filename)
 
 bool ATSP::checkStudyVersion() const
 {
-    auto v = Data::StudyTryToFindTheVersion(pStudyFolder, false);
+    auto v = Data::StudyTryToFindTheVersion(pStudyFolder);
     switch (v)
     {
     case Data::versionUnknown:

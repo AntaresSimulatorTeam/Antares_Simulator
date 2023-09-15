@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -113,7 +113,7 @@ SaveAs::SaveAs(wxFrame* parent) :
           wxDefaultPosition,
           wxDefaultSize,
           wxCLOSE_BOX | wxCAPTION | wxFRAME_FLOAT_ON_PARENT | wxCLIP_CHILDREN),
- pStudy(Data::Study::Current::Get()),
+ pStudy(GetCurrentStudy()),
  pGridSizer(nullptr),
  pParentProperties(nullptr),
  pStudyName(nullptr),

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -29,12 +29,6 @@
 
 #include "opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
-#include "../simulation/sim_extern_variables_globales.h"
-
 #include "opt_fonctions.h"
 
 /*
@@ -51,7 +45,7 @@ extern "C"
 #include "pi_fonctions.h"
 }
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 using namespace Antares;
 
@@ -70,24 +64,24 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     int ChoixToleranceParDefautSurLaComplementarite = OUI_PI;
 
     Probleme.NombreMaxDIterations = -1;
-    Probleme.CoutQuadratique = ProblemeAResoudre->CoutQuadratique;
-    Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire;
-    Probleme.X = ProblemeAResoudre->X;
-    Probleme.Xmin = ProblemeAResoudre->Xmin;
-    Probleme.Xmax = ProblemeAResoudre->Xmax;
+    Probleme.CoutQuadratique = ProblemeAResoudre->CoutQuadratique.data();
+    Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire.data();
+    Probleme.X = ProblemeAResoudre->X.data();
+    Probleme.Xmin = ProblemeAResoudre->Xmin.data();
+    Probleme.Xmax = ProblemeAResoudre->Xmax.data();
     Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-    Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
+    Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable.data();
 
-    Probleme.VariableBinaire = (char*)ProblemeAResoudre->CoutsReduits;
+    Probleme.VariableBinaire = (char*)ProblemeAResoudre->CoutsReduits.data();
 
     Probleme.NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
-    Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne;
-    Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes;
-    Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes;
+    Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne.data();
+    Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes.data();
+    Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes.data();
     Probleme.CoefficientsDeLaMatriceDesContraintes
-      = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes;
-    Probleme.Sens = ProblemeAResoudre->Sens;
-    Probleme.SecondMembre = ProblemeAResoudre->SecondMembre;
+      = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.data();
+    Probleme.Sens = ProblemeAResoudre->Sens.data();
+    Probleme.SecondMembre = ProblemeAResoudre->SecondMembre.data();
 
     Probleme.AffichageDesTraces = NON_PI;
 
@@ -102,10 +96,10 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
       = ChoixToleranceParDefautSurLaComplementarite;
     Probleme.ToleranceDeComplementarite = ToleranceSurLaComplementarite;
 
-    Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes;
+    Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes.data();
 
-    Probleme.CoutsMarginauxDesContraintesDeBorneInf = ProblemeAResoudre->CoutsReduits;
-    Probleme.CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre->CoutsReduits;
+    Probleme.CoutsMarginauxDesContraintesDeBorneInf = ProblemeAResoudre->CoutsReduits.data();
+    Probleme.CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre->CoutsReduits.data();
 
     PI_Quamin(&Probleme);
 
@@ -114,7 +108,7 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     {
         for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         {
-            double *pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
+            double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt)
                 *pt = ProblemeAResoudre->X[i];
         }
@@ -127,7 +121,7 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
 
         for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         {
-            double *pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
+            double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt)
                 *pt = std::numeric_limits<double>::quiet_NaN();
         }

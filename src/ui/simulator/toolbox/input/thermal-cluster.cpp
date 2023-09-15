@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -38,6 +38,7 @@
 #include <wx/wupdlock.h>
 #include <wx/sizer.h>
 #include "thermal-cluster.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 
@@ -219,12 +220,12 @@ void ThermalCluster::renameAggregate(Antares::Data::ThermalCluster* cluster,
 {
     using namespace Data;
     WIP::Locker wip;
-    if (cluster && pArea && Study::Current::Valid())
+    if (cluster && pArea && CurrentStudyIsValid())
     {
         ClusterName newPlantName;
         wxStringToString(newName, newPlantName);
 
-        Study::Current::Get()->clusterRename(cluster, newPlantName);
+        GetCurrentStudy()->clusterRename(cluster, newPlantName);
         MarkTheStudyAsModified();
     }
     if (broadcast)
@@ -256,7 +257,7 @@ void ThermalCluster::evtPopupDeleteAll(wxCommandEvent&)
 void ThermalCluster::internalDeletePlant(void*)
 {
     // Nothing is/was selected. Aborting.
-    if (!pArea || !pLastSelectedThermalCluster || not Data::Study::Current::Valid())
+    if (!pArea || !pLastSelectedThermalCluster || not CurrentStudyIsValid())
         return;
 
     // The thermal cluster to delete
@@ -293,7 +294,7 @@ void ThermalCluster::internalDeletePlant(void*)
         OnStudyBeginUpdate();
 
         // Because we may need to update this afterwards
-        auto study = Data::Study::Current::Get();
+        auto study = GetCurrentStudy();
         study->scenarioRulesLoadIfNotAvailable();
 
         // Update the list
@@ -321,7 +322,7 @@ void ThermalCluster::internalDeletePlant(void*)
             study->uiinfo->reload();
 
             // delete associated constraints
-            Antares::Data::BindConstList::iterator BC = study->bindingConstraints.begin();
+            auto BC = study->bindingConstraints.begin();
             int BCListSize = study->bindingConstraints.size();
 
             if (BCListSize)
@@ -332,7 +333,7 @@ void ThermalCluster::internalDeletePlant(void*)
                 for (int i = 0; i < BCListSize; i++)
                 {
                     if (Window::Inspector::isConstraintSelected((*BC)->name()))
-                        study->bindingConstraints.remove(*BC);
+                        study->bindingConstraints.remove(BC->get());
                     else
                         ++BC;
                 }
@@ -364,7 +365,7 @@ void ThermalCluster::internalDeleteAll(void*)
 
     Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     // If the pointer has been, it is guaranteed to be valid
     Window::Message message(
@@ -382,7 +383,7 @@ void ThermalCluster::internalDeleteAll(void*)
         OnStudyBeginUpdate();
 
         // We have to rebuild the scenario builder data, if required
-        ScenarioBuilderUpdater updaterSB(*Data::Study::Current::Get());
+        ScenarioBuilderUpdater updaterSB(*GetCurrentStudy());
 
         // invalidating the parent area
         pArea->forceReload();
@@ -421,7 +422,7 @@ void ThermalCluster::internalDeleteAll(void*)
 void ThermalCluster::internalAddPlant(void*)
 {
     WIP::Locker wip;
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     if (!(!study) && pArea)
     {
@@ -430,7 +431,7 @@ void ThermalCluster::internalAddPlant(void*)
         uint indx = 1;
 
         // Trying to find an uniq name
-        Antares::Data::ClusterName sFl;
+        YString sFl;
         sFl.clear() << "new cluster";
         while (pArea->thermal.list.find(sFl))
         {
@@ -483,7 +484,7 @@ void ThermalCluster::internalClonePlant(void*)
     const Antares::Data::ThermalCluster& selectedPlant
       = *pLastSelectedThermalCluster->thermalAggregate();
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study) && pArea)
     {
         onThermalClusterChanged(nullptr);
@@ -491,23 +492,23 @@ void ThermalCluster::internalClonePlant(void*)
         uint indx = 2;
 
         // Trying to find an uniq name
-        Antares::Data::ClusterName copy = selectedPlant.name();
+        YString copy = selectedPlant.name();
 
-        Data::ClusterName::Size sepPos = copy.find_last_of(' ');
+        YString::Size sepPos = copy.find_last_of(' ');
         if (sepPos != YString::npos)
         {
-            Data::ClusterName suffixChain(copy, sepPos + 1);
+            YString suffixChain(copy, sepPos + 1);
             int suffixNumber = suffixChain.to<int>();
             if (suffixNumber > 0)
             {
-                Data::ClusterName suffixLess(copy, 0, sepPos);
+                YString suffixLess(copy, 0, sepPos);
                 copy = suffixLess;
             }
         }
 
         copy += ' ';
 
-        Antares::Data::ClusterName sFl;
+        YString sFl;
         sFl << copy << indx; // lowercase
         while (pArea->thermal.list.find(sFl))
         {
@@ -585,15 +586,15 @@ void ThermalCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr i
 
         // Selecting Binding constraints containing the cluster
 
-        Data::BindingConstraint::Set constraintlist;
+        Data::BindingConstraintsRepository::Set constraintlist;
 
-        auto study = Data::Study::Current::Get();
+        auto study = GetCurrentStudy();
 
-        const Data::BindConstList::iterator cEnd = study->bindingConstraints.end();
-        for (Data::BindConstList::iterator i = study->bindingConstraints.begin(); i != cEnd; ++i)
+        const auto cEnd = study->bindingConstraints.end();
+        for (auto i = study->bindingConstraints.begin(); i != cEnd; ++i)
         {
             // alias to the current constraint
-            Data::BindingConstraint* constraint = *i;
+            auto constraint = *i;
 
             if (constraint->contains(cluster))
                 constraintlist.insert(constraint);

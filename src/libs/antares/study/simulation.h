@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -28,7 +28,7 @@
 #define __ANTARES_LIBS_STUDY_SIMULATION_H__
 
 #include <yuni/yuni.h>
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 #include "fwd.h"
 
 namespace Antares
@@ -68,7 +68,7 @@ public:
     void saveUsingWriter(Solver::IResultWriter::Ptr writer, const AnyString& folder) const;
 
     //! Get (in bytes) the amount of memory used by the class
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
 public:
     //! Comments

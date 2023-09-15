@@ -26,7 +26,7 @@ inline Int<Size, TP>::Int() :
 }
 
 template<int Size, template<class> class TP>
-inline Int<Size, TP>::Int(sint16 v) :
+inline Int<Size, TP>::Int(int16_t v) :
 #if YUNI_ATOMIC_MUST_USE_MUTEX != 1
  pValue(static_cast<ScalarType>(v))
 #else
@@ -36,7 +36,7 @@ inline Int<Size, TP>::Int(sint16 v) :
 }
 
 template<int Size, template<class> class TP>
-inline Int<Size, TP>::Int(sint32 v) :
+inline Int<Size, TP>::Int(int32_t v) :
 #if YUNI_ATOMIC_MUST_USE_MUTEX != 1
  pValue(static_cast<ScalarType>(v))
 #else
@@ -46,7 +46,7 @@ inline Int<Size, TP>::Int(sint32 v) :
 }
 
 template<int Size, template<class> class TP>
-inline Int<Size, TP>::Int(sint64 v) :
+inline Int<Size, TP>::Int(int64_t v) :
 #if YUNI_ATOMIC_MUST_USE_MUTEX != 1
  pValue(static_cast<ScalarType>(v))
 #else

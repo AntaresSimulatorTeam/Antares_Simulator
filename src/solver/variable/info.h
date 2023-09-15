@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -153,9 +153,9 @@ struct VariableAccessor
         }
     }
 
-    static Yuni::uint64 Value(const Type& container)
+    static uint64_t Value(const Type& container)
     {
-        Yuni::uint64 result = 0;
+        uint64_t result = 0;
         for (uint i = 0; i != ColumnCountT; ++i)
             result += container[i].memoryUsage();
         return result;
@@ -172,6 +172,7 @@ struct VariableAccessor
             if (*results.isPrinted)
             {
                 results.variableCaption = VCardT::Multiple::Caption(i);
+                results.variableUnit = VCardT::Multiple::Unit(i);
                 container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
             }
             // Shift to the next internal variable's non applicable status and print status
@@ -192,6 +193,7 @@ struct VariableAccessor
             if (*results.isPrinted)
             {
                 results.variableCaption = VCardType::Multiple::Caption(i);
+                results.variableUnit = VCardType::Multiple::Unit(i);
                 container[i].template buildSurveyReport<ResultsT, VCardType>(
                   results, container[i], dataLevel, fileLevel, precision);
             }
@@ -350,9 +352,9 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         }
     }
 
-    static Yuni::uint64 Value(const Type& container)
+    static uint64_t Value(const Type& container)
     {
-        Yuni::uint64 result = 0;
+        uint64_t result = 0;
         const typename Type::const_iterator end = container.end();
         for (typename Type::const_iterator i = container.begin(); i != end; ++i)
             result += sizeof(ResultsT) + (*i).memoryUsage();
@@ -371,6 +373,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
             for (uint i = 0; i != container.size(); ++i)
             {
                 results.variableCaption = thermal.clusters[i]->name();
+
                 container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
             }
         }
@@ -381,11 +384,20 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         assert(results.data.area && "Area is NULL");
         const bool thermal_details = fileLevel & Category::de;
         const bool renewable_details = fileLevel & Category::de_res;
-        if (thermal_details && renewable_details)
+        const bool st_storage_details = fileLevel & Category::de_sts;
+
+        std::array<bool, 3> kind_of_details = { thermal_details, renewable_details , st_storage_details };
+
+        // The current result file must be a detail file and of one kind only.
+        // So the vector above must contain one true. No less, no more.
+        auto how_many_kinds_of_details = std::count(kind_of_details.begin(), kind_of_details.end(), true);
+
+        if (how_many_kinds_of_details != 1)
         {
             logs.error() << "Inconsistent fileLevel detected";
             return false;
         }
+
         if (thermal_details)
         {
             auto& thermal = results.data.area->thermal;
@@ -396,6 +408,12 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             auto& renewable = results.data.area->renewable;
             results.variableCaption = renewable.clusters[idx]->name();
+            return true;
+        }
+        if (st_storage_details)
+        {
+            auto& st_storage_part = results.data.area->shortTermStorage;
+            results.variableCaption = st_storage_part.storagesByIndex[idx]->properties.name;
             return true;
         }
         return true;
@@ -416,6 +434,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                 res = setClusterCaption(results, fileLevel, i);
                 if (!res)
                     return;
+                results.variableUnit = VCardType::Unit();
+
                 container[i].template buildSurveyReport<ResultsT, VCardType>(
                   results, container[i], dataLevel, fileLevel, precision);
             }
@@ -542,7 +562,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
         container.merge(year, intermediateValues);
     }
 
-    static Yuni::uint64 Value(const Type& container)
+    static uint64_t Value(const Type& container)
     {
         return container.memoryUsage();
     }
@@ -556,6 +576,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
         if (*results.isPrinted)
         {
             results.variableCaption = VCardT::Caption();
+            results.variableUnit = VCardT::Unit();
             container.template buildDigest<VCardT>(results, digestLevel, dataLevel);
         }
     }
@@ -573,6 +594,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
             if (updateCaption)
             {
                 results.variableCaption = VCardType::Caption();
+                results.variableUnit = VCardType::Unit();
             }
             container.template buildSurveyReport<ResultsT, VCardType>(
               results, container, dataLevel, fileLevel, precision);
@@ -588,6 +610,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
         if (*results.isPrinted)
         {
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             container.template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
@@ -658,7 +681,7 @@ struct VariableAccessor<ResultsT, Category::noColumn>
         // Do nothing
     }
 
-    static Yuni::uint64 Value(const Type&)
+    static uint64_t Value(const Type&)
     {
         return 0;
     }

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -51,9 +51,9 @@ public:
     using Name = Yuni::CString<128, false>;
 
     //! Map of study output info, ordered by their timestamp
-    using MapByTimestamp = std::map<Yuni::sint64, Ptr>;
+    using MapByTimestamp = std::map<int64_t, Ptr>;
     //! Map of study output info, ordered by their timestamp (desc)
-    using MapByTimestampDesc = std::map<Yuni::sint64, Ptr, std::greater<Yuni::sint64>>;
+    using MapByTimestampDesc = std::map<int64_t, Ptr, std::greater<int64_t>>;
 
 public:
     /*!
@@ -89,7 +89,7 @@ public:
     //! Version of the solver used for the simulation
     uint version;
     //! Date/time when the simulation has been launched
-    yint64 timestamp;
+    int64_t timestamp;
     //! Mode (economy/adequacy/other)
     Data::StudyMode mode;
     //! Tag for storing a wx menu id

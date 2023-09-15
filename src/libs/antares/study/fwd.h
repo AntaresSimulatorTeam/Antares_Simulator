@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -40,7 +40,6 @@ namespace Data
 {
 // Forward declarations
 class Study;
-class StudyMemoryUsage;
 class StudyLoadOptions;
 class Area;
 class AreaLink;
@@ -54,7 +53,7 @@ class AreaScratchpad;
 class Parameters;
 
 class BindingConstraint;
-class BindConstList;
+class BindingConstraintsRepository;
 
 class StudyRuntimeInfos;
 
@@ -67,7 +66,7 @@ using AreaName = Yuni::CString<ant_k_area_name_max_length, false>;
 //! Name of a single link
 using AreaLinkName = Yuni::CString<ant_k_area_name_max_length * 2 + 1, false>;
 //! Name of a single thermal
-using ClusterName = Yuni::CString<ant_k_cluster_name_max_length, false>;
+using ClusterName = std::string;
 
 using ConstraintName = Yuni::CString<ant_k_constraint_name_max_length, false>;
 
@@ -103,8 +102,6 @@ enum StudyError
 enum StudyMode
 {
     stdmUnknown = -1,
-    //! Adequation
-    stdmAdequacyDraft = 0,
     //! Economic
     stdmEconomy,
     //! Adequacy (subset of the economy mode)
@@ -204,23 +201,11 @@ enum StyleType
 std::string styleToString(const StyleType& style);
 
 /*!
-** \brief Link Type mode
-*/
-enum LinkType
-{
-    //! Link Type defined locally
-    ltLocal = 0,
-    //! Link Type AC
-    ltAC,
-
-}; // enum LinkType
-
-/*!
 ** \brief Types of timeSeries
 **
 ** These values are mainly used for mask bits
 */
-enum TimeSeries
+enum TimeSeries : unsigned int
 {
     //! TimeSeries : Load
     timeSeriesLoad = 1,
@@ -535,15 +520,6 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
 */
 RenewableGenerationModelling StringToRenewableGenerationModelling(const AnyString& text);
 
-// Format of results
-enum ResultFormat
-{
-    // Store outputs as files inside directories
-    legacyFilesDirectories = 0,
-    // Store outputs inside a single zip archive
-    zipArchive
-};
-
 // ------------------------
 // MPS export status
 // ------------------------
@@ -562,64 +538,15 @@ mpsExportStatus stringToMPSexportStatus(const AnyString& value);
 } // namespace Data
 } // namespace Antares
 
-namespace Antares
-{
-namespace Data
-{
-namespace ScenarioBuilder
+namespace Antares::Data::ScenarioBuilder
 {
 class Rules;
 class TSNumberRules;
 class Sets;
 
-} // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder
 
-namespace Antares::Data::AdequacyPatch
-{
-/*!
-** \brief Types of Adequacy patch mode
-*/
-enum AdequacyPatchMode
-{
-    //! Virtual area in adq patch
-    virtualArea = 0,
-    //! Physical Area outside the adq-patch
-    physicalAreaOutsideAdqPatch = 1,
-    //! Physical Area inside the adq-patch
-    physicalAreaInsideAdqPatch = 2
-}; // enum AdequacyPatchMode
 
-/*!
-** \brief Setting Link Capacity (NTC) for Adequacy patch first step
-*/
-enum class NtcSetToZeroStatus_AdqPatchStep1
-{
-    //! Leave NTC local values
-    leaveLocalValues = 0,
-    //! Set NTC to zero
-    setToZero,
-    //! set only origine->extremity NTC to zero
-    setOriginExtremityToZero,
-    //! set only extremity->origine NTC to zero
-    setExtremityOriginToZero
-
-}; // enum NTC
-
-/*!
-** \brief Types of Price Taking Order (PTO) for Adequacy Patch
-*/
-enum class AdqPatchPTO
-{
-    //! PTO is DENS
-    isDens = 0,
-    //! PTO is Load
-    isLoad
-
-}; // enum AdqPatchPTO
-
-} // namespace Antares::Data::AdequacyPatch
 
 namespace Benchmarking
 {

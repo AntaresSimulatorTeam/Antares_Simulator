@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -31,7 +31,7 @@
 #include <yuni/core/slist.h>
 #include <yuni/core/system/cpu.h>
 #include "action.h"
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include "settings.h"
 #include <wx/frame.h>
 

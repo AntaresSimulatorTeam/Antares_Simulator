@@ -86,7 +86,7 @@ bool Program::ThreadMonitor::spawnProcess()
     SECURITY_ATTRIBUTES saAttr;
 
     // Set the bInheritHandle flag so pipe handles are inherited.
-    saAttr.nLength = (uint32)sizeof(SECURITY_ATTRIBUTES);
+    saAttr.nLength = (uint32_t)sizeof(SECURITY_ATTRIBUTES);
     saAttr.bInheritHandle = TRUE;
     saAttr.lpSecurityDescriptor = nullptr;
 
@@ -115,7 +115,7 @@ bool Program::ThreadMonitor::spawnProcess()
     // handles in the program are inherited by the child.
     STARTUPINFOEX startInfo;
     ::ZeroMemory(&startInfo, sizeof(STARTUPINFOEX));
-    startInfo.StartupInfo.cb = (uint32)sizeof(STARTUPINFOEX);
+    startInfo.StartupInfo.cb = (uint32_t)sizeof(STARTUPINFOEX);
     startInfo.lpAttributeList = attrList;
     startInfo.StartupInfo.dwFlags |= STARTF_USESTDHANDLES;
     startInfo.StartupInfo.hStdOutput = channels.infd[1];
@@ -124,7 +124,7 @@ bool Program::ThreadMonitor::spawnProcess()
 #else
     STARTUPINFO startInfo;
     ::ZeroMemory(&startInfo, sizeof(STARTUPINFO));
-    startInfo.cb = (uint32)sizeof(STARTUPINFO);
+    startInfo.cb = (uint32_t)sizeof(STARTUPINFO);
     startInfo.dwFlags |= STARTF_USESTDHANDLES;
     startInfo.hStdOutput = channels.infd[1];
     startInfo.hStdInput = channels.outfd[0];
@@ -338,7 +338,7 @@ void Program::ThreadMonitor::onKill()
     {
         // killing the sub-process, until it is really dead
         ::TerminateProcess(processHandle, (uint)-127);
-        uint32 waitStatus = ::WaitForSingleObject(processHandle, INFINITE);
+        uint32_t waitStatus = ::WaitForSingleObject(processHandle, INFINITE);
         // getting the current time as soon as possible
         pEndTime = currentTime();
         switch (waitStatus)

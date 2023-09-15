@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -31,8 +31,8 @@
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
 #include "../fwd.h"
-#include "../../array/matrix.h"
-#include <i_writer.h>
+#include <antares/array/matrix.h>
+#include <antares/writer/i_writer.h>
 #include <set>
 
 //! The minimal allowed value for hurdle costs when not null
@@ -72,7 +72,7 @@ public:
     ~AreaLink();
     //@}
 
-    bool loadTimeSeries(Study& study, const AnyString& folder);
+    bool loadTimeSeries(const Study& study, const AnyString& folder);
 
     void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
 
@@ -114,12 +114,7 @@ public:
     /*!
     ** \brief Get the size (bytes) in memory occupied by a `AreaLink` structure
     */
-    Yuni::uint64 memoryUsage() const;
-    /*!
-    ** \brief Try to estimate the amount of memory required by the area for a simulation
-    */
-    void estimateMemoryUsage(StudyMemoryUsage& u) const;
-    //@}
+    uint64_t memoryUsage() const;
 
     bool isVisibleOnLayer(const size_t& layerID) const;
 
@@ -129,9 +124,7 @@ public:
     void overrideTransmissionCapacityAccordingToGlobalParameter(GlobalTransmissionCapacities tc);
 
 private:
-    bool linkLoadTimeSeries_for_version_under_320(const AnyString& folder, Study& study);
-    bool linkLoadTimeSeries_for_version_from_320_to_630(const AnyString& folder);
-    bool linkLoadTimeSeries_for_version_from_630_to_810(const AnyString& folder);
+    bool linkLoadTimeSeries_for_version_below_810(const AnyString& folder);
     bool linkLoadTimeSeries_for_version_820_and_later(const AnyString& folder);
     NamePair getNamePair() const;
 
@@ -155,7 +148,7 @@ public:
     Matrix<> indirectCapacities;
 
     //! Monte-Carlo
-    Matrix<Yuni::uint32> timeseriesNumbers;
+    Matrix<uint32_t> timeseriesNumbers;
 
     //! Flag for using loop flow
     bool useLoopFlow;

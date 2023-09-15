@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -29,7 +29,6 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
-#include <antares/wx-wrapper.h>
 #include <wx/grid.h>
 #include "renderer.h"
 

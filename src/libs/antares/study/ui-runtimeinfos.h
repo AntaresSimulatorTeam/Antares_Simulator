@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -30,8 +30,8 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include "fwd.h"
-#include "area.h"
-#include "constraint/constraint.h"
+#include "area/area.h"
+#include "binding_constraint/BindingConstraint.h"
 
 namespace Antares
 {
@@ -40,7 +40,7 @@ namespace Data
 class UIRuntimeInfo final
 {
 public:
-    using VectorByType = std::map<enum BindingConstraint::Type, BindingConstraint::Vector>;
+    using VectorByType = std::map<enum BindingConstraint::Type, BindingConstraintsRepository::Vector>;
     using ByOperatorAndType = std::map<enum BindingConstraint::Operator, VectorByType>;
 
 public:
@@ -115,12 +115,12 @@ public:
     BindingConstraint* constraint(uint i)
     {
         assert(i < pConstraint.size());
-        return pConstraint[i];
+        return pConstraint[i].get();
     }
     const BindingConstraint* constraint(uint i) const
     {
         assert(i < pConstraint.size());
-        return pConstraint[i];
+        return pConstraint[i].get();
     }
     uint constraintCount() const
     {
@@ -133,13 +133,13 @@ public:
 
     uint visibleLinksCount(uint layerID);
 
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
 public:
     //! Areas ordered by their name + links ordered by their name
     Area::LinkMap orderedAreasAndLinks;
     //! Binding constraints ordered by their name
-    BindingConstraint::Set orderedConstraint;
+    BindingConstraintsRepository::Set orderedConstraint;
     //! All binding constraints according their operator (<, > and = only)
     ByOperatorAndType byOperator;
     //! Vector of pointers to links, in lexicographic order
@@ -147,7 +147,7 @@ public:
 
 private:
     Study& pStudy;
-    BindingConstraint::Vector pConstraint;
+    BindingConstraintsRepository::Vector pConstraint;
     uint pClusterCount;
     ThermalCluster::Vector pClusters;
     //! Number of links

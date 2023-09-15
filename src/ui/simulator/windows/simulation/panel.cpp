@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -26,7 +26,7 @@
 */
 
 #include "panel.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include <ui/common/component/scrollbox/scrollbox.h>
 #include "../../toolbox/components/notebook/notebook.h"
 #include "../../toolbox/components/captionpanel.h"
@@ -121,7 +121,7 @@ Panel::~Panel()
 
 void Panel::onRenewableGenerationModellingChanged(bool)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!study)
         return;
 
@@ -144,7 +144,7 @@ void Panel::onRenewableGenerationModellingChanged(bool)
 
 void Panel::onDelayedStudyLoaded()
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         auto data = std::make_shared<Window::Inspector::InspectorData>(study);
@@ -157,7 +157,7 @@ void Panel::onDelayedStudyLoaded()
 
 void Panel::onUpdatePlaylist()
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         auto data = std::make_shared<Window::Inspector::InspectorData>(study);

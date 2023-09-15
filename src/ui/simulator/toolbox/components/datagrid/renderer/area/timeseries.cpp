@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -331,6 +331,66 @@ void TimeSeriesThermalCluster::onStudyClosed()
 {
     internalThermalClusterChanged(nullptr);
     AncestorType::onStudyClosed();
+}
+
+// ----------------------
+//   Fuel Cost
+// ----------------------
+
+TimeSeriesThermalClusterFuelCost::TimeSeriesThermalClusterFuelCost(
+  wxWindow* control,
+  Toolbox::InputSelector::ThermalCluster* notifier) :
+ TimeSeriesCluster(control)
+{
+    if (notifier)
+        notifier->onThermalClusterChanged.connect(
+          this, &TimeSeriesThermalClusterFuelCost::internalThermalClusterChanged);
+}
+
+TimeSeriesThermalClusterFuelCost::~TimeSeriesThermalClusterFuelCost()
+{
+}
+
+void TimeSeriesThermalClusterFuelCost::onStudyClosed()
+{
+    internalThermalClusterChanged(nullptr);
+    AncestorType::onStudyClosed();
+}
+
+void TimeSeriesThermalClusterFuelCost::internalThermalClusterChanged(
+  Antares::Data::ThermalCluster* cluster)
+{
+    matrix((CurrentStudyIsValid() && cluster) ? &(cluster->ecoInput.fuelcost) : NULL);
+}
+
+// ----------------------
+//   CO2 Cost
+// ----------------------
+
+TimeSeriesThermalClusterCO2Cost::TimeSeriesThermalClusterCO2Cost(
+  wxWindow* control,
+  Toolbox::InputSelector::ThermalCluster* notifier) :
+ TimeSeriesCluster(control)
+{
+    if (notifier)
+        notifier->onThermalClusterChanged.connect(
+          this, &TimeSeriesThermalClusterCO2Cost::internalThermalClusterChanged);
+}
+
+TimeSeriesThermalClusterCO2Cost::~TimeSeriesThermalClusterCO2Cost()
+{
+}
+
+void TimeSeriesThermalClusterCO2Cost::onStudyClosed()
+{
+    internalThermalClusterChanged(nullptr);
+    AncestorType::onStudyClosed();
+}
+
+void TimeSeriesThermalClusterCO2Cost::internalThermalClusterChanged(
+  Antares::Data::ThermalCluster* cluster)
+{
+    matrix((CurrentStudyIsValid() && cluster) ? &(cluster->ecoInput.co2cost) : NULL);
 }
 
 // ----------------------

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,28 +25,20 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "opt_structure_probleme_a_resoudre.h"
-
 #include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
 
 void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
-    char Simulation;
-
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
+    if (!problemeHebdo->OptimisationAvecCoutsDeDemarrage)
         return;
 
-    Simulation = OUI_ANTARES;
-
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
-                                                                            Simulation);
+    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo, true);
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
-                                                                                  Simulation);
+                                                                                  true);
 
     return;
 }

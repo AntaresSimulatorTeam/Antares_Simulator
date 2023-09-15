@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -73,7 +73,7 @@ bool StudyCalendarBtnEditor::OnEvent(wxPropertyGrid* grid,
 {
     if (event.GetEventType() == wxEVT_COMMAND_BUTTON_CLICKED)
     {
-        auto study = Data::Study::Current::Get();
+        auto study = GetCurrentStudy();
         if (!study)
             return false;
 

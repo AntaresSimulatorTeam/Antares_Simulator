@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "../../libs/antares/study/area/constants.h"
 #include "grid.h"
 
@@ -140,8 +140,8 @@ public:
         uint columnImpedance = (uint)Antares::Data::fhlImpedances;
 
         std::vector<double> impedances;
-        Data::AreaLink* previousLine;
-        double currentLineSign;
+        Data::AreaLink* previousLine = linkList[0]->ptr;
+        double currentLineSign = 1;
         for (auto line = linkList.begin(); line != linkList.end(); line++)
         {
             if ((*line)->nImpedanceChanges > 0
@@ -175,8 +175,8 @@ public:
             sign.push_back(currentLineSign);
             previousLine = (*line)->ptr;
         }
-        State st(impedances, time, pInfinite);
-        states.push_back(st);
+        State state(impedances, time, pInfinite);
+        states.push_back(state);
     }
 
     State& getState(std::vector<double>& impedances)
@@ -270,8 +270,7 @@ public:
     void buildAreaToLinkInfosMap()
     {
         areaToLinks.clear();
-        auto& study = *Data::Study::Current::Get();
-        for (auto& area : study.areas)
+        for (auto& area : pStudy->areas)
         {
             auto a = area.second;
             std::for_each(pLink.begin(), pLink.end(), [&a, this](linkInfo* edgeP) {
@@ -354,6 +353,13 @@ public:
 
     bool update();
 
+    bool updateLinks();
+
+    bool checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour);
+
+    void updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const;
+    bool checkLinkPhaseShift(linkInfo* linkInfo, size_t hour) const;
+
     void setCalendarStart(int start)
     {
         calendarStart = start;
@@ -377,7 +383,7 @@ private:
     /*!
     ** \brief add one constraint to the study
     */
-    Antares::Data::BindingConstraint* addConstraint(const Data::ConstraintName& name,
+    std::shared_ptr<Antares::Data::BindingConstraint> addConstraint(const Data::ConstraintName& name,
                                                     const Yuni::String& op,
                                                     const Yuni::String& type,
                                                     const WeightMap& weights,

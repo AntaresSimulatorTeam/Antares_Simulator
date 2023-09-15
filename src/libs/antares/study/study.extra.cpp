@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -37,11 +37,6 @@ namespace Data
 {
 // The path to the Icon file to use when writing a study
 String StudyIconFile;
-
-void Study::releaseAllLocks()
-{
-    // Do nothing for now
-}
 
 void Study::scenarioRulesCreate()
 {
@@ -84,7 +79,7 @@ void Study::scenarioRulesLoadIfNotAvailable()
     }
 }
 
-bool Study::areaFindNameForANewArea(AreaName& out, const AreaName& basename)
+bool Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename)
 {
     out = basename;
     AreaName id = out;

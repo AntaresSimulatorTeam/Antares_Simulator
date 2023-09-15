@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -40,18 +40,18 @@ namespace Economy
 struct VCardProfitByPlant
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "Profit by plant";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "Profit - Euro";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Profit for thermal units";
     }
@@ -132,32 +132,6 @@ public:
         };
     };
 
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-    {
-        if (u.area)
-        {
-            for (unsigned int i = 0; i != u.area->thermal.list.size(); ++i)
-            {
-                Solver::Variable::IntermediateValues::EstimateMemoryUsage(u);
-                ResultsType::EstimateMemoryUsage(u);
-                u.requiredMemoryForOutput += sizeof(Solver::Variable::IntermediateValues);
-                u.requiredMemoryForOutput += sizeof(typename VCardType::ResultsType);
-                u.requiredMemoryForOutput += sizeof(void*) * 2;
-
-                // year-by-year
-                if (!u.gatheringInformationsForInput)
-                {
-                    if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
-                    {
-                        for (unsigned int i = 0; i != u.years; ++i)
-                            u.takeIntoConsiderationANewTimeserieForDiskOutput(false);
-                    }
-                }
-            }
-        }
-        NextType::EstimateMemoryUsage(u);
-    }
-
 public:
     ProfitByPlant() : pValuesForTheCurrentYear(nullptr), pNbClustersOfArea(0)
     {
@@ -211,6 +185,11 @@ public:
 
         // Next
         NextType::initializeFromArea(study, area);
+    }
+
+    size_t getMaxNumberColumns() const
+    {
+        return pNbClustersOfArea * ResultsType::count;
     }
 
     void initializeFromLink(Data::Study* study, Data::AreaLink* link)
@@ -285,28 +264,29 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
         // Useful local variables
-        double* areaMarginalCosts = state.hourlyResults->CoutsMarginauxHoraires;
-        auto* cluster = state.thermalCluster;
-        double hourlyClusterProduction = state.thermalClusterProduction;
+        auto area = state.area;
+        auto& thermal = state.thermal;
+        std::vector<double> areaMarginalCosts = state.hourlyResults->CoutsMarginauxHoraires;
         uint hourInTheWeek = state.hourInTheWeek;
         uint hourInTheYear = state.hourInTheYear;
 
-        // Thermal cluster profit
-        pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
-          = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
-            * (-areaMarginalCosts[hourInTheWeek]
-               - cluster->marginalCost
-                   * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
+        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
+             ++clusterIndex)
+        {
+            auto* cluster = state.area->thermal.clusters[clusterIndex];
+            double hourlyClusterProduction
+              = thermal[area->index].thermalClustersProductions[clusterIndex];
+            uint tsIndex = state.timeseriesIndex->ThermiqueParPalier[cluster->areaWideIndex];
+            // Thermal cluster profit
+            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
+              = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
+                * (-areaMarginalCosts[hourInTheWeek]
+                   - cluster->getMarginalCost(tsIndex, hourInTheYear));
+        }
 
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
+        // Next variable
+        NextType::hourForEachArea(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
@@ -334,6 +314,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = thermal.clusters[i]->name(); // VCardType::Caption();
+                results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }
@@ -343,7 +324,7 @@ public:
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    unsigned int pNbClustersOfArea;
+    size_t pNbClustersOfArea;
     unsigned int pNbYearsParallel;
 
 }; // class

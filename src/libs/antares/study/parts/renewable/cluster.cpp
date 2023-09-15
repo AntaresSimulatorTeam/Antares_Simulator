@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -30,12 +30,12 @@
 #include <yuni/core/math.h>
 #include <cassert>
 #include <cmath>
+#include <boost/algorithm/string/case_conv.hpp>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "cluster.h"
-#include "../../../inifile.h"
-#include "../../../logs.h"
-#include "../../../utils.h"
+#include <antares/inifile/inifile.h>
+#include <antares/logs/logs.h>
+#include <antares/utils/utils.h>
 
 using namespace Yuni;
 using namespace Antares;
@@ -87,8 +87,8 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
         series = new DataSeriesCommon();
 
     // timseries
-    series->series = cluster.series->series;
-    cluster.series->series.unloadFromMemory();
+    series->timeSeries = cluster.series->timeSeries;
+    cluster.series->timeSeries.unloadFromMemory();
     series->timeseriesNumbers.clear();
 
     // The parent must be invalidated to make sure that the clusters are really
@@ -99,14 +99,14 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
 
 void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
 {
-    if (not newgrp)
+    if (newgrp.empty())
     {
         groupID = renewableOther1;
         pGroup.clear();
         return;
     }
     pGroup = newgrp;
-    newgrp.toLower();
+    boost::to_lower(newgrp);
 
     if (newgrp == "solar thermal")
     {
@@ -256,9 +256,9 @@ double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepInde
     if (!enabled)
         return 0.;
 
-    assert(timeStepIndex < series->series.height);
-    assert(timeSeriesIndex < series->series.width);
-    const double tsValue = series->series[timeSeriesIndex][timeStepIndex];
+    assert(timeStepIndex < series->timeSeries.height);
+    assert(timeSeriesIndex < series->timeSeries.width);
+    const double tsValue = series->timeSeries[timeSeriesIndex][timeStepIndex];
     switch (tsMode)
     {
     case powerGeneration:
@@ -269,9 +269,9 @@ double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepInde
     return 0.;
 }
 
-uint64 RenewableCluster::memoryUsage() const
+uint64_t RenewableCluster::memoryUsage() const
 {
-    uint64 amount = sizeof(RenewableCluster);
+    uint64_t amount = sizeof(RenewableCluster);
     if (series)
         amount += DataSeriesMemoryUsage(series);
     return amount;

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include "../toolbox/wx-wrapper.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <antares/study/output.h>
 #include <yuni/core/event.h>
 #include <list>
@@ -73,6 +73,22 @@ SaveResult SaveStudy();
 ** \brief Save the current study into a folder
 */
 SaveResult SaveStudyAs(const Yuni::String& path, bool copyoutput, bool copyuserdata, bool copylogs);
+
+/*!
+** \brief Defines the study to be managed by the application.
+*/
+void SetCurrentStudy(std::shared_ptr<Data::Study> study);
+
+/*!
+** \brief Get the study currently managed by the application.
+*/
+std::shared_ptr<Data::Study> GetCurrentStudy();
+
+/*!
+** \brief True if a study is defined as the current application study.
+*/
+bool CurrentStudyIsValid();
+
 
 /*!
 ** \brief Export the current study map into a folder
@@ -152,7 +168,7 @@ bool StudyHasBeenModified();
 ** if he study has been modified between two points in time
 ** if this value is different.
 */
-Yuni::uint64 StudyInMemoryRevisionID();
+uint64_t StudyInMemoryRevisionID();
 
 /*!
 ** \brief Refresh the list of all available outputs

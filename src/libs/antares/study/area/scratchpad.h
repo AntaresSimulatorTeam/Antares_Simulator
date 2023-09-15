@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -31,7 +31,7 @@
 #include <yuni/core/string.h>
 #include <yuni/core/noncopyable.h>
 #include "../fwd.h"
-#include "../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include <vector>
 #include <set>
 
@@ -42,13 +42,12 @@ namespace Data
 /*!
 ** \brief Scratchpad for temporary data performed by the solver
 */
-class AreaScratchpad final : private Yuni::NonCopyable<AreaScratchpad>
+class AreaScratchpad final
 {
 public:
     //! Matrix used for time-series
-    using TSMatrix = Matrix<double, Yuni::sint32>;
+    using TSMatrix = Matrix<double, int32_t>;
 
-public:
     //! \name Constructor
     //@{
     /*!
@@ -56,12 +55,9 @@ public:
     */
     AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area);
     //! Destructor
-    ~AreaScratchpad()
-    {
-    }
+    ~AreaScratchpad();
     //@}
 
-public:
     //! Sum of all fatal hors hydro
     double miscGenSum[HOURS_PER_YEAR];
 
@@ -86,10 +82,6 @@ public:
     //	else pumpHasMod = false
     bool pumpHasMod;
 
-    //! Spinning reserve
-    // This variable is initialized once at the begining of the simulation
-    double spinningReserve[HOURS_PER_YEAR];
-
     //! Sum of all 'must-run' clusters
     // This variable is initialized every MC-year
     double mustrunSum[HOURS_PER_YEAR];
@@ -111,19 +103,6 @@ public:
     ** running the hydro remix.
     */
     double dispatchableGenerationMargin[168];
-
-    /*!
-    ** \brief Temporary variables used to compute the min/max of ConsommationsAbattues
-    ** for the area
-    **
-    ** This value is only valid wthin OPT_InitialiserLesCoutsLineaire().
-    **
-    ** \see opt_gestion_des_couts_cas_linerais.cpp (Cout progressif
-    ** pour placer la defaillance a la pointe)
-    */
-    double consoMin;
-    double consoMax;
-
 }; // class AreaScratchpad
 
 } // namespace Data

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,6 +27,7 @@
 
 #include "month.h"
 #include <antares/study/study.h>
+#include "application/study.h"
 
 namespace Antares
 {
@@ -37,7 +38,7 @@ namespace Filter
 bool Month::rowIsValid(int row) const
 {
     // TODO Do not use global study
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return false;
     auto& study = *studyptr;

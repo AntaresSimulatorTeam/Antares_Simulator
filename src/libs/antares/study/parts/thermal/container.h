@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -59,7 +59,7 @@ public:
     */
     void resizeAllTimeseriesNumbers(uint n);
 
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     /*!
     ** \brief Create and initialize the list of all clusters (with the mustrun flag or not)
@@ -114,6 +114,10 @@ public:
         overriding the global (study) parameter.
     */
     bool hasForcedNoTimeseriesGeneration() const;
+
+    // Check & correct availability timeseries for thermal availability
+    // Only applies if time-series are ready-made
+    void checkAndCorrectAvailability();
 
 public:
     //! The unsupplied energy cost (Euros/MWh)

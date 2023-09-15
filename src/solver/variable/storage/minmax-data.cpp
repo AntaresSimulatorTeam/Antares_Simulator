@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -26,22 +26,13 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/study/memory-usage.h>
 #include "intermediate.h"
 #include "minmax-data.h"
-#include <float.h>
+#include <cfloat>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace R
-{
-namespace AllYears
+namespace Antares::Solver::Variable::R::AllYears
 {
 namespace // anonymous
 {
@@ -56,7 +47,7 @@ struct ArrayInitializer
         {
             MinMaxData::Data& data = array[i];
             data.value = DBL_MAX;             // +inf
-            data.indice = (Yuni::uint32)(-1); // invalid indice
+            data.indice = (uint32_t)(-1); // invalid indice
         }
     }
 
@@ -66,7 +57,7 @@ struct ArrayInitializer
         {
             MinMaxData::Data& data = array[i];
             data.value = DBL_MAX;             // +inf
-            data.indice = (Yuni::uint32)(-1); // invalid indice
+            data.indice = (uint32_t)(-1); // invalid indice
         }
     }
 
@@ -84,7 +75,7 @@ struct ArrayInitializer<Size, false>
             // hold in a double
             MinMaxData::Data& data = array[i];
             data.value = -DBL_MAX;            // -inf
-            data.indice = (Yuni::uint32)(-1); // invalid indice
+            data.indice = (uint32_t)(-1); // invalid indice
         }
     }
 
@@ -97,7 +88,7 @@ struct ArrayInitializer<Size, false>
             // hold in a double
             MinMaxData::Data& data = array[i];
             data.value = -DBL_MAX;            // -inf
-            data.indice = (Yuni::uint32)(-1); // invalid indice
+            data.indice = (uint32_t)(-1); // invalid indice
         }
     }
 
@@ -224,8 +215,8 @@ void MinMaxData::mergeSup(uint year, const IntermediateValues& rhs)
     MergeArray<false, 1>::Do(year, &annual, &rhs.year);
 }
 
-} // namespace AllYears
-} // namespace R
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::R::AllYears
+
+
+
+

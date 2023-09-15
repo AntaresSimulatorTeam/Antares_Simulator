@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,39 +27,35 @@
 
 #include "opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
 
 void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-  double* Pi,
-  int* Colonne,
+  std::vector<double>& Pi,
+  std::vector<int>& Colonne,
   int NombreDeTermesDeLaContrainte,
-  char SensContrainte,
-  const std::string& NomDeLaContrainte)
+  char SensContrainte)
 {
-    int& NombreDeTermes = ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes;
-    int& NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
+    int& nombreDeTermes = ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes;
+    int& nombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
 
-    ProblemeAResoudre->IndicesDebutDeLigne[NombreDeContraintes] = NombreDeTermes;
+    ProblemeAResoudre->IndicesDebutDeLigne[nombreDeContraintes] = nombreDeTermes;
     for (int i = 0; i < NombreDeTermesDeLaContrainte; i++)
     {
-        ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[NombreDeTermes] = Pi[i];
-        ProblemeAResoudre->IndicesColonnes[NombreDeTermes] = Colonne[i];
-        NombreDeTermes++;
-        if (NombreDeTermes == ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes)
+        ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[nombreDeTermes] = Pi[i];
+        ProblemeAResoudre->IndicesColonnes[nombreDeTermes] = Colonne[i];
+        nombreDeTermes++;
+        if (nombreDeTermes == ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes)
         {
             OPT_AugmenterLaTailleDeLaMatriceDesContraintes(ProblemeAResoudre);
         }
     }
-    ProblemeAResoudre->NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermesDeLaContrainte;
-    ProblemeAResoudre->NomDesContraintes[NombreDeContraintes] = NomDeLaContrainte;
+    ProblemeAResoudre->NombreDeTermesDesLignes[nombreDeContraintes] = NombreDeTermesDeLaContrainte;
 
-    ProblemeAResoudre->Sens[NombreDeContraintes] = SensContrainte;
-    NombreDeContraintes++;
+    ProblemeAResoudre->Sens[nombreDeContraintes] = SensContrainte;
+    nombreDeContraintes++;
 
     return;
 }

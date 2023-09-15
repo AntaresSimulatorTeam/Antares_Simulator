@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -142,7 +142,7 @@ void MainPanel::onDraw(wxPaintEvent&)
     int posY = 10;
 
     // the current opened study
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         // Property: Name of the study
@@ -249,7 +249,7 @@ void MainPanel::refreshFromStudy()
         return;
     }
 
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
     {
         pStudyCaption.clear();
         pAuthor.clear();
@@ -257,7 +257,7 @@ void MainPanel::refreshFromStudy()
     }
     else
     {
-        auto& study = *Data::Study::Current::Get();
+        auto& study = *GetCurrentStudy();
 
         // Caption
         if (study.header.caption.empty())

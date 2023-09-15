@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -59,19 +59,19 @@ public:
     {
         using namespace Yuni;
         pS.clear() << pTempFile << "load.tmp";
-        pStudy.preproLoadCorrelation.loadFromFile(pStudy, pS, false, Data::versionLatest);
+        pStudy.preproLoadCorrelation.loadFromFile(pStudy, pS, false);
         IO::File::Delete(pS);
 
         pS.clear() << pTempFile << "solar.tmp";
-        pStudy.preproSolarCorrelation.loadFromFile(pStudy, pS, false, Data::versionLatest);
+        pStudy.preproSolarCorrelation.loadFromFile(pStudy, pS, false);
         IO::File::Delete(pS);
 
         pS.clear() << pTempFile << "wind.tmp";
-        pStudy.preproWindCorrelation.loadFromFile(pStudy, pS, false, Data::versionLatest);
+        pStudy.preproWindCorrelation.loadFromFile(pStudy, pS, false);
         IO::File::Delete(pS);
 
         pS.clear() << pTempFile << "hydro.tmp";
-        pStudy.preproHydroCorrelation.loadFromFile(pStudy, pS, false, Data::versionLatest);
+        pStudy.preproHydroCorrelation.loadFromFile(pStudy, pS, false);
         IO::File::Delete(pS);
     }
 

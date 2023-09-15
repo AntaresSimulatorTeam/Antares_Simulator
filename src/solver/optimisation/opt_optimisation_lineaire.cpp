@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,17 +25,18 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../simulation/simulation.h"
-
+#include "sim_structure_probleme_economique.h"
 #include "opt_fonctions.h"
 
-#include <antares/logs.h>
-#include <antares/emergency.h>
+#include <antares/logs/logs.h>
 #include "../utils/filename.h"
 
 using namespace Antares;
 using namespace Yuni;
+using Antares::Solver::Optimization::OptimizationOptions;
 
+namespace
+{
 double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
                                    const int NumeroDeLIntervalle,
                                    const int optimizationNumber)
@@ -46,19 +47,101 @@ double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
         return Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
 }
 
-bool OPT_OptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, uint numSpace)
+void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
+  double optimalSolutionCost,
+  const OptPeriodStringGenerator& optPeriodStringGenerator,
+  int optimizationNumber,
+  Solver::IResultWriter& writer)
 {
-    int PdtHebdo;
-    int PremierPdtDeLIntervalle;
+    Yuni::Clob buffer;
+    auto filename = createCriterionFilename(optPeriodStringGenerator, optimizationNumber);
+
+    logs.info() << "Solver Criterion File: `" << filename << "'";
+
+    buffer.appendFormat("* Optimal criterion value :   %11.10e\n", optimalSolutionCost);
+    writer.addEntryFromBuffer(filename, buffer);
+}
+
+bool runWeeklyOptimization(const OptimizationOptions& options,
+                                  PROBLEME_HEBDO* problemeHebdo,
+                                  const AdqPatchParams& adqPatchParams,
+                                  Solver::IResultWriter& writer,
+                                  int optimizationNumber)
+{
+    const int NombreDePasDeTempsPourUneOptimisation
+      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+
     int DernierPdtDeLIntervalle;
-    int NumeroDeLIntervalle;
-    int NombreDePasDeTempsPourUneOptimisation;
-    int optimizationNumber = PREMIERE_OPTIMISATION;
+    for (uint pdtHebdo = 0, numeroDeLIntervalle = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps;
+         pdtHebdo = DernierPdtDeLIntervalle, numeroDeLIntervalle++)
+    {
+        int PremierPdtDeLIntervalle = pdtHebdo;
+        DernierPdtDeLIntervalle = pdtHebdo + NombreDePasDeTempsPourUneOptimisation;
 
-    problemeHebdo->NombreDePasDeTemps = problemeHebdo->NombreDePasDeTempsRef;
-    problemeHebdo->NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJourneeRef;
+        OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(problemeHebdo,
+                                                               adqPatchParams,
+                                                               PremierPdtDeLIntervalle,
+                                                               DernierPdtDeLIntervalle,
+                                                               optimizationNumber);
 
-    if (problemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES)
+        OPT_InitialiserLeSecondMembreDuProblemeLineaire(problemeHebdo,
+                                                        PremierPdtDeLIntervalle,
+                                                        DernierPdtDeLIntervalle,
+                                                        numeroDeLIntervalle,
+                                                        optimizationNumber);
+
+        OPT_InitialiserLesCoutsLineaire(
+          problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
+
+        // An optimization period represents a sequence as <year>-<week> or <year>-<week>-<day>,
+        // depending whether the optimization is daily or weekly.
+        // These sequences are used when building the names of MPS or criterion files.
+        auto optPeriodStringGenerator
+          = createOptPeriodAsString(problemeHebdo->OptimisationAuPasHebdomadaire,
+                                    numeroDeLIntervalle,
+                                    problemeHebdo->weekInTheYear,
+                                    problemeHebdo->year);
+
+        if (!OPT_AppelDuSimplexe(options,
+                                 problemeHebdo,
+                                 numeroDeLIntervalle,
+                                 optimizationNumber,
+                                 *optPeriodStringGenerator,
+                                 writer))
+            return false;
+
+        if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT
+            || problemeHebdo->Expansion)
+        {
+            double optimalSolutionCost
+              = OPT_ObjectiveFunctionResult(problemeHebdo, numeroDeLIntervalle, optimizationNumber);
+            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
+              optimalSolutionCost, *optPeriodStringGenerator, optimizationNumber, writer);
+        }
+    }
+    return true;
+}
+
+void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
+{
+    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+    {
+        OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(problemeHebdo);
+    }
+    else
+    {
+        OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(problemeHebdo);
+    }
+}
+} // namespace
+
+
+bool OPT_OptimisationLineaire(const OptimizationOptions& options,
+                              PROBLEME_HEBDO* problemeHebdo,
+                              const AdqPatchParams& adqPatchParams,
+                              Solver::IResultWriter& writer)
+{
+    if (!problemeHebdo->OptimisationAuPasHebdomadaire)
     {
         problemeHebdo->NombreDePasDeTempsPourUneOptimisation
           = problemeHebdo->NombreDePasDeTempsDUneJournee;
@@ -68,80 +151,25 @@ bool OPT_OptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, uint numSpace)
         problemeHebdo->NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTemps;
     }
 
-    NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
     OPT_NumeroDeJourDuPasDeTemps(problemeHebdo);
 
     OPT_NumeroDIntervalleOptimiseDuPasDeTemps(problemeHebdo);
 
-    OPT_RestaurerLesDonnees(problemeHebdo, optimizationNumber);
+    OPT_RestaurerLesDonnees(problemeHebdo);
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(problemeHebdo);
 
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(problemeHebdo);
+    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(problemeHebdo, writer);
 
-OptimisationHebdo:
+    bool ret = runWeeklyOptimization(
+      options, problemeHebdo, adqPatchParams, writer, PREMIERE_OPTIMISATION);
 
-    for (PdtHebdo = 0, NumeroDeLIntervalle = 0; PdtHebdo < problemeHebdo->NombreDePasDeTemps;
-         PdtHebdo = DernierPdtDeLIntervalle, NumeroDeLIntervalle++)
+    if (ret && !problemeHebdo->Expansion)
     {
-        PremierPdtDeLIntervalle = PdtHebdo;
-        DernierPdtDeLIntervalle = PdtHebdo + NombreDePasDeTempsPourUneOptimisation;
-
-        OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(
-          problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, optimizationNumber);
-
-        OPT_InitialiserLeSecondMembreDuProblemeLineaire(problemeHebdo,
-                                                        PremierPdtDeLIntervalle,
-                                                        DernierPdtDeLIntervalle,
-                                                        NumeroDeLIntervalle,
-                                                        optimizationNumber);
-
-        OPT_InitialiserLesCoutsLineaire(
-          problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, numSpace);
-
-        // An optimization period represents a sequence as <year>-<week> or <year>-<week>-<day>,
-        // depending whether the optimization is daily or weekly.
-        // These sequences are used when building the names of MPS or criterion files.
-        auto optPeriodStringGenerator
-          = createOptPeriodAsString(problemeHebdo->OptimisationAuPasHebdomadaire,
-                                    NumeroDeLIntervalle,
-                                    problemeHebdo->weekInTheYear,
-                                    problemeHebdo->year);
-
-        if (!OPT_AppelDuSimplexe(
-              problemeHebdo, NumeroDeLIntervalle, optimizationNumber, optPeriodStringGenerator))
-            return false;
-
-        if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT
-            || problemeHebdo->Expansion == OUI_ANTARES)
-        {
-            double optimalSolutionCost
-              = OPT_ObjectiveFunctionResult(problemeHebdo, NumeroDeLIntervalle, optimizationNumber);
-            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
-              optimalSolutionCost, optPeriodStringGenerator, optimizationNumber);
-        }
+        // We need to adjust some stuff before running the 2nd optimisation
+        runThermalHeuristic(problemeHebdo);
+        return runWeeklyOptimization(
+          options, problemeHebdo, adqPatchParams, writer, DEUXIEME_OPTIMISATION);
     }
-
-    if (optimizationNumber == PREMIERE_OPTIMISATION)
-    {
-        if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
-        {
-            OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(problemeHebdo);
-        }
-        else if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES)
-        {
-            OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(problemeHebdo);
-        }
-        else
-            printf("BUG: l'indicateur problemeHebdo->OptimisationAvecCoutsDeDemarrage doit etre "
-                   "initialise a OUI_ANTARES ou NON_ANTARES\n");
-
-        optimizationNumber = DEUXIEME_OPTIMISATION;
-
-        if (problemeHebdo->Expansion == NON_ANTARES)
-            goto OptimisationHebdo;
-    }
-
-    return true;
+    return ret;
 }

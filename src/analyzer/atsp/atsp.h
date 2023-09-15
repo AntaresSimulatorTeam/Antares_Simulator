@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -31,7 +31,7 @@
 #include <memory>
 #include <yuni/core/string.h>
 #include <antares/study/xcast/xcast.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 namespace Antares
 {
@@ -226,9 +226,9 @@ private:
     double pLowerBound;
     bool pUseUpperBound;
     bool pUseLowerBound;
-    yuint64 pRoundingCount;
-    yuint64 pRounding80percentCount;
-    yuint64 pRoundingCountTotal;
+    uint64_t pRoundingCount;
+    uint64_t pRounding80percentCount;
+    uint64_t pRoundingCountTotal;
     Yuni::ShortString16 tsName;
 
     uint pEnabledAreaCount;
@@ -286,8 +286,8 @@ private:
         durjour = 24
     };
 
-    yuint64 pLimitMemory;
-    yuint64 pCacheMemoryUsed;
+    uint64_t pLimitMemory;
+    uint64_t pCacheMemoryUsed;
     uint pCacheLastValidIndex;
     Matrix<>* pCacheMatrix;
 

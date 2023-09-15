@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,12 +27,11 @@
 #ifndef __ANTARES_WINDOWS_XCAST_XCAST_H__
 #define __ANTARES_WINDOWS_XCAST_XCAST_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../toolbox/components/notebook/notebook.h"
 #include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/input/area.h"
 #include <yuni/core/event.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <wx/stattext.h>
 #include <wx/sizer.h>
 #include <wx/checkbox.h>

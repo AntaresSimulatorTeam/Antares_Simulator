@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -30,14 +30,12 @@
 
 void H2O2_J_OptimiserUnMois(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
 {
-    int NumeroDeProbleme;
-    int i;
     PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
 
     ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
 
-    NumeroDeProbleme = -1;
-    for (i = 0; i < ProblemeHydrauliqueEtendu->NombreDeProblemes; i++)
+    int NumeroDeProbleme = -1;
+    for (int i = 0; i < ProblemeHydrauliqueEtendu->NombreDeProblemes; i++)
     {
         if (DonneesMensuelles->NombreDeJoursDuMois
             == ProblemeHydrauliqueEtendu->NbJoursDUnProbleme[i])

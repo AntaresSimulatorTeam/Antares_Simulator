@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -46,9 +46,7 @@ enum Feature
 ** \brief Find the location of the solver
 ** \return A non-empty string if the solver has been found, empty otherwise
 */
-bool FindLocation(Yuni::String& location,
-                  Data::Version version = Data::versionUnknown,
-                  Feature features = standard);
+bool FindLocation(Yuni::String& location);
 
 /*!
 ** \brief Find the location of the analyzer

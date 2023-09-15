@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -40,18 +40,18 @@ namespace Economy
 struct VCardHurdleCosts
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "HURDLE COST";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "Euro";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Hurdle costs, over all MC years";
     }
@@ -227,12 +227,12 @@ public:
         // Flow assessed over all MC years (linear)
         if (state.link->useHurdlesCost)
         {
-            const double flowLinear = state.ntc->ValeurDuFlux[state.link->index];
+            const double flowLinear = state.ntc.ValeurDuFlux[state.link->index];
 
             if (state.link->useLoopFlow)
             {
                 const double loopFlow = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]
-                                          ->ValeurDeLoopFlowOrigineVersExtremite[state.link->index];
+                                          .ValeurDeLoopFlowOrigineVersExtremite[state.link->index];
                 if (flowLinear - loopFlow > 0.)
                 {
                     const double hurdleCostDirect
@@ -313,6 +313,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

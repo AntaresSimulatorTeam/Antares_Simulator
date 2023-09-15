@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -89,7 +89,7 @@ void CommonProperties::onThermalClusterChanged(Data::ThermalCluster* cluster)
 {
     if (cluster)
     {
-        auto data = std::make_shared<Window::Inspector::InspectorData>(Data::Study::Current::Get());
+        auto data = std::make_shared<Window::Inspector::InspectorData>(GetCurrentStudy());
         data->ThClusters.insert(cluster);
         pUpdateInfoAboutPlant(data);
     }

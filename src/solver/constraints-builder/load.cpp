@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,11 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include "cbuilder.h"
-#include <antares/inifile.h>
+#include <antares/inifile/inifile.h>
 #include "../../config.h"
 #include "../../libs/antares/study/area/constants.h"
 #include <yuni/io/file.h>
-//#include <wx/wx.h> // bourrin -> à modifier
+//#include <wx/wx.h> // bourrin -> ï¿½ modifier
 //#include "../../ui/simulator/application/study.h"
 
 using namespace Yuni;

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -41,7 +41,7 @@
 #include <wx/richtext/richtextstyledlg.h>
 #include <wx/richtext/richtextprint.h>
 #include <wx/statline.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "../application/study.h"
 
 using namespace Yuni;
@@ -181,7 +181,7 @@ void Notes::onUserNotesStyleChanged(wxRichTextEvent&)
 
 void Notes::notifyChanges()
 {
-    if (Data::Study::Current::Valid() and not pLocked)
+    if (CurrentStudyIsValid() and not pLocked)
     {
         saveToStudy();
         MarkTheStudyAsModified();
@@ -362,7 +362,7 @@ void Notes::onIndentDecrease(void*)
 
 void Notes::saveToStudy()
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!pRichEdit || !study)
         return;
 
@@ -399,9 +399,9 @@ void Notes::loadFromStudy()
     if (!pRichEdit)
         return;
 
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return;
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     if (not pTempFile)
     {

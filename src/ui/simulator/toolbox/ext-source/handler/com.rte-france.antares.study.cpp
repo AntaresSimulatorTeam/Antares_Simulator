@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -71,7 +71,7 @@ static bool AppendCommand(BuildContext& ctx, const AnyString& command, const Any
     if (command == "import-thermal-cluster")
     {
         Data::AreaName from;
-        Data::ClusterName to;
+        YString to;
         String s = value;
         if (s.size() < 3)
             return false;
@@ -122,7 +122,7 @@ bool checkConstraintSupportingElementsIntegrity(const Antares::Action::Context::
 {
     for (auto i = ctx->constraint.begin(); i != ctx->constraint.end(); ++i)
     {
-        Data::BindingConstraint* bc = context->extStudy->bindingConstraints.findByName(*i);
+        auto bc = context->extStudy->bindingConstraints.findByName(*i);
         if (!bc)
             continue;
 
@@ -315,8 +315,8 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
     {
         auto* clusterNode = new Antares::Action::Text<>("Thermal clusters");
 
-        const BuildContext::LinkSet::const_iterator end = ctx.cluster.end();
-        for (BuildContext::LinkSet::const_iterator i = ctx.cluster.begin(); i != end; ++i)
+        auto end = ctx.cluster.end();
+        for (auto i = ctx.cluster.begin(); i != end; ++i)
         {
             if (i->second.empty())
                 continue;
@@ -327,8 +327,8 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
             else
                 create = new Antares::Action::AntaresStudy::Area::Create(i->first, wantedName);
 
-            std::map<Data::ClusterName, bool>::const_iterator send = i->second.end();
-            for (std::map<Data::ClusterName, bool>::const_iterator j = i->second.begin(); j != send;
+            std::map<YString, bool>::const_iterator send = i->second.end();
+            for (std::map<YString, bool>::const_iterator j = i->second.begin(); j != send;
                  ++j)
             {
                 *create += Antares::Action::AntaresStudy::Area::Create::

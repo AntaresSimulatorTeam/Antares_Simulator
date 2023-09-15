@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,8 +27,7 @@
 #ifndef __ANTARES_APPLICATION_WINDOWS_EXPORTMAP_H__
 #define __ANTARES_APPLICATION_WINDOWS_EXPORTMAP_H__
 
-#include <antares/wx-wrapper.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <yuni/core/string.h>
 #include "../application/study.h"
 #include "../toolbox/components/map/settings.h"

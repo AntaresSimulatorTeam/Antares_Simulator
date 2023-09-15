@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,8 +27,9 @@
 #ifndef __ANTARES_TOOLBOX_FILTER_OPERATOR_LIST_H__
 #define __ANTARES_TOOLBOX_FILTER_OPERATOR_LIST_H__
 
+#include <wx/string.h>
+#include <yuni/yuni.h>
 #include <vector>
-#include <antares/wx-wrapper.h>
 
 namespace Antares
 {

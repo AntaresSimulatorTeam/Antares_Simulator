@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
-#include "../../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include "defines.h"
 #include "../common/cluster.h"
 #include "../../fwd.h"
@@ -152,7 +152,7 @@ public:
     /*!
     ** \brief Get the memory consummed by the renewable cluster (in bytes)
     */
-    Yuni::uint64 memoryUsage() const override;
+    uint64_t memoryUsage() const override;
     //@}
 
     bool setTimeSeriesModeFromString(const YString& value);

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -29,12 +29,10 @@
 #include "application/application.h"
 #include "application/main.h"
 #include <yuni/core/getopt.h>
-#include <yuni/io/io.h>
-#include "../../config.h"
 #include "../common/winmain.hxx"
 #include <antares/resources/resources.h>
 #include <antares/sys/policy.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/locale.h>
 
 #ifdef YUNI_OS_MSVC

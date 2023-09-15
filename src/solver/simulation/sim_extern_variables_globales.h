@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -28,26 +28,15 @@
 #define __SOLVER_SIMULATION_EXTERN_H__
 
 #include "sim_structure_donnees.h"
-#include "sim_structure_probleme_adequation.h"
 #include "sim_structure_probleme_economique.h"
 
-/* Structures Donnees lues a partir de fichiers */
-extern DONNEES_PAR_PAYS** DonneesParPays;
-
 /* Valeurs generees de maniere aleatoire */
-extern VALEURS_GENEREES_PAR_PAYS*** ValeursGenereesParPays;
-extern NUMERO_CHRONIQUES_TIREES_PAR_PAYS*** NumeroChroniquesTireesParPays;
-extern NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION** NumeroChroniquesTireesParInterconnexion;
-
-/* Optimisation */
-/*-Economique-*/
-// extern PROBLEME_HEBDO                        problemeHebdo;
-/*-Adequation-*/
-extern PROBLEME_HORAIRE_ADEQUATION ProblemeHoraireAdequation;
-extern VALEURS_ANNUELLES** ValeursAnnuellesAdequation;
+extern std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_PAYS>> NumeroChroniquesTireesParPays;
+extern std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION>> NumeroChroniquesTireesParInterconnexion;
+extern std::vector<std::map<std::string, unsigned>> NumeroChroniquesTireesParGroup;
 
 /* Resultats */
 /*-Economique-*/
-extern RESULTATS_PAR_INTERCONNEXION** ResultatsParInterconnexion;
+extern std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
 
 #endif /* __SOLVER_SIMULATION_EXTERN_H__ */

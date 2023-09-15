@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -32,18 +32,13 @@
 
 namespace Antares::Solver::Simulation
 {
-
-const unsigned int nbHoursInAWeek = 168;
-
+using Constants::nbHoursInAWeek;
 
 void computingHydroLevels(const Data::AreaList& areas,
                           PROBLEME_HEBDO& problem,
                           bool remixWasRun,
                           bool computeAnyway)
 {
-    // gp : we do not care : will be removed very soon
-    // assert(study.parameters.mode != Data::stdmAdequacyDraft);
-
     areas.each([&](const Data::Area& area) {
         if (!area.hydro.reservoirManagement)
             return;
@@ -58,24 +53,28 @@ void computingHydroLevels(const Data::AreaList& areas,
 
         double reservoirCapacity = area.hydro.reservoirCapacity;
 
-        double* inflows = problem.CaracteristiquesHydrauliques[index]->ApportNaturelHoraire;
+        std::vector<double>& inflows
+            = problem.CaracteristiquesHydrauliques[index].ApportNaturelHoraire;
 
-        RESULTATS_HORAIRES* weeklyResults = problem.ResultatsHoraires[index];
+        RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
 
-        double* turb = weeklyResults->TurbinageHoraire;
+        std::vector<double>& turb = weeklyResults.TurbinageHoraire;
 
-        double* pump = weeklyResults->PompageHoraire;
+        std::vector<double>& pump = weeklyResults.PompageHoraire;
         double pumpingRatio = area.hydro.pumpingEfficiency;
 
-        double nivInit = problem.CaracteristiquesHydrauliques[index]->NiveauInitialReservoir;
-        double* niv = weeklyResults->niveauxHoraires;
+        double nivInit = problem.CaracteristiquesHydrauliques[index].NiveauInitialReservoir;
+        std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
-        double* ovf = weeklyResults->debordementsHoraires;
+        std::vector<double>& ovf = weeklyResults.debordementsHoraires;
 
-        auto& computeLvlObj = problem.computeLvl_object;
-
-        computeLvlObj.setParameters(
-          nivInit, inflows, ovf, turb, pumpingRatio, pump, reservoirCapacity);
+        computeTimeStepLevel computeLvlObj(nivInit,
+                                           inflows,
+                                           ovf,
+                                           turb,
+                                           pumpingRatio,
+                                           pump,
+                                           reservoirCapacity);
 
         for (uint h = 0; h < nbHoursInAWeek - 1; h++)
         {
@@ -105,9 +104,9 @@ void interpolateWaterValue(const Data::AreaList& areas,
     areas.each([&](const Data::Area& area) {
         uint index = area.index;
 
-        RESULTATS_HORAIRES* weeklyResults = problem.ResultatsHoraires[index];
+        RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
 
-        double* waterVal = weeklyResults->valeurH2oHoraire;
+        std::vector<double>& waterVal = weeklyResults.valeurH2oHoraire;
 
         for (uint h = 0; h < nbHoursInAWeek; h++)
             waterVal[h] = 0.;
@@ -120,7 +119,7 @@ void interpolateWaterValue(const Data::AreaList& areas,
 
         double reservoirCapacity = area.hydro.reservoirCapacity;
 
-        double* niv = weeklyResults->niveauxHoraires;
+        std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
         Antares::Data::getWaterValue(
                 problem.previousSimulationFinalLevel[index] * 100 / reservoirCapacity,
@@ -129,9 +128,9 @@ void interpolateWaterValue(const Data::AreaList& areas,
                 waterVal[0]);
         for (uint h = 1; h < nbHoursInAWeek; h++)
         {
-            Antares::Data::getWaterValue(niv[h - 1], 
+            Antares::Data::getWaterValue(niv[h - 1],
                                          area.hydro.waterValues,
-                                         daysOfWeek[h / 24], 
+                                         daysOfWeek[h / 24],
                                          waterVal[h]);
         }
     });
@@ -148,9 +147,9 @@ void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas,
 
         double reservoirCapacity = area.hydro.reservoirCapacity;
 
-        RESULTATS_HORAIRES* weeklyResults = problem.ResultatsHoraires[index];
+        RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
 
-        double* niv = weeklyResults->niveauxHoraires;
+        std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
         problem.previousSimulationFinalLevel[index]
           = niv[nbHoursInAWeek - 1] * reservoirCapacity / 100;

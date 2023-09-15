@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -26,7 +26,9 @@
 */
 
 #include "create.h"
-#include "../../../../../utils.h"
+#include <memory>
+#include <antares/study/study.h>
+#include "antares/study/fwd.h"
 #include "data.h"
 #include "comments.h"
 #include "weights.h"
@@ -88,7 +90,7 @@ bool Create::prepareWL(Context& ctx)
 
     // Computing the futur ID of the area
     Antares::Data::ConstraintName id;
-    const Antares::Data::BindingConstraint* constraintFound = nullptr;
+    std::shared_ptr<Antares::Data::BindingConstraint> constraintFound;
 
     // the suffix
     const String& suffix = ctx.property["constraint.name.suffix"];

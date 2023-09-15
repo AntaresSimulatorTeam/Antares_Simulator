@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,10 +27,10 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_WEEKDAY_H__
 #define __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_WEEKDAY_H__
 
-#include <antares/wx-wrapper.h>
 #include "../filter.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include <antares/study/study.h>
+#include "application/study.h"
 
 namespace Antares
 {
@@ -86,7 +86,7 @@ public:
     virtual bool rowIsValid(int row) const
     {
         // TODO Do not use global study
-        auto studyptr = Data::Study::Current::Get();
+        auto studyptr = GetCurrentStudy();
         if (!studyptr)
             return false;
         auto& study = *studyptr;

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -338,7 +338,7 @@ void SpotlightProviderGlobalSelection::appendLinkName(Spotlight::IItem::Vector& 
 
 size_t SpotlightProviderGlobalSelection::getSelectedLayerID(const Yuni::String& layerName)
 {
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
     if (!study.areas.empty())
     {
         auto layerListEnd = study.layers.end();
@@ -357,7 +357,7 @@ void SpotlightProviderGlobalSelection::search(Spotlight::IItem::Vector& out,
                                               const Spotlight::SearchToken::Vector& tokens,
                                               const Yuni::String& text)
 {
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     /**
     ** Filtering sets of areas

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -30,5 +30,5 @@
 namespace Antares::Constants
 {
 const std::array<unsigned int, 12> daysPerMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
+const unsigned int nbHoursInAWeek = 168;
 } // namespace Antares::Constants

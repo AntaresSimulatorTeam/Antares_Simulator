@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -26,11 +26,11 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/study/finder.h>
 #include <yuni/core/getopt.h>
 #include "../../ui/common/winmain.hxx"
-#include <antares/utils.h>
+#include <antares/utils/utils.h>
 #include <antares/study/cleaner.h>
 #include <antares/version.h>
 #include <antares/sys/policy.h>
@@ -49,8 +49,7 @@ class MyStudyFinder final : public Data::StudyFinder
 public:
     void onStudyFound(const String& folder, Data::Version version) override
     {
-        if (version == Data::version1xx or version == Data::versionUnknown
-            or version == Data::versionFutur)
+        if (version == Data::versionUnknown || version == Data::versionFutur)
         {
             logs.info() << folder << " : version of study is too old, too new or unknown";
             return;
@@ -62,7 +61,7 @@ public:
             return;
         }
 
-        if ((int)Data::versionLatest == (int)version and (not removeUselessTimeseries))
+        if ((int)Data::versionLatest == (int)version && (!removeUselessTimeseries))
         {
             logs.info() << folder << " : is up-to-date";
         }
@@ -72,7 +71,7 @@ public:
                           << " to " << Data::VersionToCStr((Data::Version)Data::versionLatest)
                           << ")";
 
-            auto* study = new Data::Study();
+            auto study = std::make_unique<Data::Study>();
 
             // It is important to enabled those feature to have the entire set of data
             // loaded and written
@@ -96,11 +95,14 @@ public:
                 logs.info() << "Saving...";
                 study->saveToFolder(folder);
             }
+            else
+            {
+                logs.error() << "Could not load the study correctly";
+                return;
+            }
 
             // restoring logs
             logs.verbosityLevel = Logs::Verbosity::Debug::level;
-
-            delete study;
         }
 
         if (cleanup)

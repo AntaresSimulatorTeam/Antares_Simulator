@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -26,7 +26,7 @@
 */
 
 #include <antares/antares.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/solver.h>
 #include <antares/resources/resources.h>
 #include <yuni/core/nullable.h>
@@ -184,8 +184,7 @@ int main(int argc, char* argv[])
     String solver;
     if (optSolver.empty())
     {
-        Solver::Feature feature = Solver::standard;
-        Solver::FindLocation(solver, (Data::Version)Data::versionLatest, feature);
+        Solver::FindLocation(solver);
         if (solver.empty())
         {
             logs.fatal() << "The solver has not been found";

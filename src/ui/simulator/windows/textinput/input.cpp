@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,28 +25,21 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/wx-wrapper.h>
 #include <antares/study/constraint.h>
 #include "../../application/study.h"
 #include "../../application/main/main.h"
 #include "../../toolbox/components/wizardheader.h"
 #include "../../toolbox/create.h"
-#include <antares/utils.h>
 
 #include <wx/dialog.h>
 #include <wx/sizer.h>
-#include <wx/button.h>
-#include <wx/checkbox.h>
 #include <wx/textctrl.h>
-#include <wx/choice.h>
 #include <wx/window.h>
 #include <wx/stattext.h>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 namespace // anonymous
 {
@@ -191,5 +184,5 @@ bool AskForInput(wxString& out, const wxString& title, const wxString& caption)
     return false;
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window
+

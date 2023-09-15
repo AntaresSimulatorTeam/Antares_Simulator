@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,8 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "opt_structure_probleme_a_resoudre.h"
-
 #include "../simulation/simulation.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
@@ -34,29 +32,23 @@
 
 void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO* problemeHebdo)
 {
-    int Pays;
-    int Interco;
-    int Index;
-    int NoeudOrigine;
-    int NoeudExtremite;
-
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        problemeHebdo->IndexDebutIntercoOrigine[Pays] = -1;
-        problemeHebdo->IndexDebutIntercoExtremite[Pays] = -1;
+        problemeHebdo->IndexDebutIntercoOrigine[pays] = -1;
+        problemeHebdo->IndexDebutIntercoExtremite[pays] = -1;
     }
 
-    for (Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
+    for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        NoeudOrigine = problemeHebdo->PaysOrigineDeLInterconnexion[Interco];
-        Index = problemeHebdo->IndexDebutIntercoOrigine[NoeudOrigine];
-        problemeHebdo->IndexDebutIntercoOrigine[NoeudOrigine] = Interco;
-        problemeHebdo->IndexSuivantIntercoOrigine[Interco] = Index;
+        int noeudOrigine = problemeHebdo->PaysOrigineDeLInterconnexion[interco];
+        int index = problemeHebdo->IndexDebutIntercoOrigine[noeudOrigine];
+        problemeHebdo->IndexDebutIntercoOrigine[noeudOrigine] = interco;
+        problemeHebdo->IndexSuivantIntercoOrigine[interco] = index;
 
-        NoeudExtremite = problemeHebdo->PaysExtremiteDeLInterconnexion[Interco];
-        Index = problemeHebdo->IndexDebutIntercoExtremite[NoeudExtremite];
-        problemeHebdo->IndexDebutIntercoExtremite[NoeudExtremite] = Interco;
-        problemeHebdo->IndexSuivantIntercoExtremite[Interco] = Index;
+        int noeudExtremite = problemeHebdo->PaysExtremiteDeLInterconnexion[interco];
+        index = problemeHebdo->IndexDebutIntercoExtremite[noeudExtremite];
+        problemeHebdo->IndexDebutIntercoExtremite[noeudExtremite] = interco;
+        problemeHebdo->IndexSuivantIntercoExtremite[interco] = index;
     }
 
     return;

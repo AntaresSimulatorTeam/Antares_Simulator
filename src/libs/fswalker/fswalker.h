@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -51,8 +51,8 @@ using OnDirectoryEvent = Flow (*)(const YString& path, bool empty, void* user);
 //! A file has been found
 using OnFileEvent = void (*)(const YString& filename,
                              const YString& parent,
-                             yint64 modified,
-                             yuint64 size,
+                             int64_t modified,
+                             uint64_t size,
                              void* user);
 //! Event for dispatching a new job
 using DispatchJobEvent = Yuni::Bind<void(IJob::Ptr job)>;

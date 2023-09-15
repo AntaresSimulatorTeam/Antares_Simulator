@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,9 +27,8 @@
 
 #include <yuni/yuni.h>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "container.h"
-#include "../../../logs.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;
@@ -54,12 +53,6 @@ void PartRenewable::markAsModified() const
     list.markAsModified();
 }
 
-void PartRenewable::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += sizeof(PartRenewable);
-    list.estimateMemoryUsage(u);
-}
-
 PartRenewable::~PartRenewable()
 {
 }
@@ -74,7 +67,7 @@ void PartRenewable::prepareAreaWideIndexes()
         return;
     }
 
-    clusters = std::vector<RenewableCluster*>(list.size());
+    clusters.assign(list.size(), nullptr);
 
     auto end = list.end();
     uint idx = 0;

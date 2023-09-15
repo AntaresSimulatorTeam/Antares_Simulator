@@ -27,9 +27,6 @@ set(SRC_PRIVATE_NET_MESSAGE_TRANSPORT_REST
 )
 source_group("Private\\Net\\Messaging\\Transport\\REST" FILES ${SRC_PRIVATE_NET_MESSAGE_TRANSPORT_REST})
 
-if (YUNI_HAS_STDINT_H)
-	set_source_files_properties(private/net/messaging/transport/rest/mongoose.c PROPERTIES COMPILE_FLAGS -DHAVE_STDINT)
-endif()
 if (YUNI_HAS_GCC_NOWARNING)
 	set_source_files_properties(private/net/messaging/transport/rest/mongoose.c PROPERTIES COMPILE_FLAGS -w)
 endif()

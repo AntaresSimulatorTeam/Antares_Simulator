@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,7 +27,6 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_SOLAR_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_SOLAR_CONTAINER_H__
 
-#include "prepro.h"
 #include "series.h"
 
 namespace Antares
@@ -36,6 +35,7 @@ namespace Data
 {
 namespace Solar
 {
+class Prepro;
 class Container
 {
 public:
@@ -67,7 +67,7 @@ public:
     /*!
     ** \brief Get the amount of memory currently used by the class
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
 public:
     //! Data for the pre-processor

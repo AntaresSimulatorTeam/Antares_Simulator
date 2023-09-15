@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -24,11 +24,11 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_SOLVER_TIME_SERIES_GENERATOR_HXX__
-#define __ANTARES_SOLVER_TIME_SERIES_GENERATOR_HXX__
+#ifndef __ANTARES_SOLVER_timeSeries_GENERATOR_HXX__
+#define __ANTARES_SOLVER_timeSeries_GENERATOR_HXX__
 
 #include "../aleatoire/alea_fonctions.h"
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 namespace Antares
 {
@@ -162,4 +162,4 @@ inline void DestroyAll(Data::Study& study)
 } // namespace Solver
 } // namespace Antares
 
-#endif // __ANTARES_SOLVER_TIME_SERIES_GENERATOR_HXX__
+#endif // __ANTARES_SOLVER_timeSeries_GENERATOR_HXX__

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -29,46 +29,25 @@
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "series.h"
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 bool DataSeriesCommon::forceReload(bool reload) const
 {
-    return series.forceReload(reload);
+    return timeSeries.forceReload(reload);
 }
 
 void DataSeriesCommon::markAsModified() const
 {
-    series.markAsModified();
+    timeSeries.markAsModified();
 }
 
-void DataSeriesCommon::estimateMemoryUsage(StudyMemoryUsage& u, enum TimeSeries ts) const
-{
-    u.requiredMemoryForInput += sizeof(DataSeriesCommon);
-    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-    uint nbTimeSeries;
-    switch (ts)
-    {
-    case timeSeriesThermal:
-        nbTimeSeries = u.study.parameters.nbTimeSeriesThermal;
-        break;
-    case timeSeriesRenewable:
-        nbTimeSeries = 1;
-        break;
-    default:
-        nbTimeSeries = 0;
-    }
-    series.estimateMemoryUsage(
-      u, 0 != (ts & u.study.parameters.timeSeriesToGenerate), nbTimeSeries, HOURS_PER_YEAR);
-}
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

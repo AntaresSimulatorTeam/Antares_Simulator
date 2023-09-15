@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -28,8 +28,8 @@
 #include "../application.h"
 #include "../simulation/solver.h"
 #include "../simulation/economy.h"
-#include <antares/benchmarking.h>
-#include <antares/logs.h>
+#include <antares/benchmarking/DurationCollector.h>
+#include <antares/logs/logs.h>
 
 namespace Antares
 {
@@ -39,7 +39,7 @@ void Application::runSimulationInEconomicMode()
 {
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Economy> SimulationType;
-    SimulationType simulation(*pStudy, pSettings, &pDurationCollector);
+    SimulationType simulation(*pStudy, pSettings, pDurationCollector);
     simulation.checkWriter();
     simulation.run();
 

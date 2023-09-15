@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,11 +27,11 @@
 
 #include <yuni/yuni.h>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "container.h"
-#include "../../../logs.h"
+#include <antares/logs/logs.h>
 
 #include <algorithm>
+#include <functional>
 
 using namespace Yuni;
 using namespace Antares;
@@ -60,12 +60,6 @@ void PartThermal::markAsModified() const
     mustrunList.markAsModified();
 }
 
-void PartThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += sizeof(PartThermal);
-    list.estimateMemoryUsage(u);
-}
-
 PartThermal::~PartThermal()
 {
 }
@@ -80,7 +74,7 @@ void PartThermal::prepareAreaWideIndexes()
         return;
     }
 
-    clusters = std::vector<ThermalCluster*>(list.size());
+    clusters.assign(list.size(), nullptr);
 
     auto end = list.end();
     uint idx = 0;
@@ -192,6 +186,12 @@ bool PartThermal::hasForcedNoTimeseriesGeneration() const
     return std::any_of(list.begin(), list.end(), [](const NamedCluster& namedCluster) {
         return namedCluster.second->tsGenBehavior == Behavior::forceNoGen;
     });
+}
+
+void PartThermal::checkAndCorrectAvailability()
+{
+    std::for_each(
+      clusters.begin(), clusters.end(), std::mem_fn(&ThermalCluster::checkAndCorrectAvailability));
 }
 
 } // namespace Data

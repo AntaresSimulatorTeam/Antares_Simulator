@@ -14,9 +14,9 @@ set(SRC_UI_JOBS
 		toolbox/execute/execute.h
 		toolbox/execute/execute.cpp
 )
-add_Library(libantares-ui-jobs ${SRC_UI_JOBS})
+add_Library(antares-ui-jobs ${SRC_UI_JOBS})
 
 
-target_link_libraries(libantares-ui-jobs  PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(libantares-ui-jobs PRIVATE libantares-ui-common)
+target_link_libraries(antares-ui-jobs  PUBLIC ${wxWidgets_LIBRARIES})
+target_link_libraries(antares-ui-jobs PRIVATE antares-ui-common)
 

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -30,7 +30,7 @@
 #include <yuni/yuni.h>
 #include <antares/study/fwd.h>
 #include <antares/mersenne-twister/mersenne-twister.h>
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 #include "studydata.h"
 #include <yuni/core/noncopyable.h>
 

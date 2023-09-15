@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -37,7 +37,7 @@
 #include "fwd.h"
 #include "config.h"
 #include <ui/common/component/frame/local-frame.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <antares/study/output.h>
 
 namespace Antares
@@ -541,8 +541,6 @@ private:
     // void evtOnHelpVisitRTEWebsite(wxCommandEvent& evt);
     //! Event: About this application
     void evtOnHelpAbout(wxCommandEvent& evt);
-    //! Event: PDF General Reference guide
-    void evtOnHelpPDFGeneralReferenceGuide(wxCommandEvent& evt);
     //! Event: PDF System Map Editor Reference guide
     void evtOnHelpPDFSystemMapEditorReferenceGuide(wxCommandEvent& evt);
     //! Event: PDF Examples library
@@ -680,6 +678,8 @@ private:
 
     Component::Notebook::Page* pageThermalClusterList;
     Component::Notebook::Page* pageThermalTimeSeries;
+    Component::Notebook::Page* pageThermalTimeSeriesFuelCost;
+    Component::Notebook::Page* pageThermalTimeSeriesCO2Cost;
     Component::Notebook::Page* pageThermalPrepro;
     Component::Notebook::Page* pageThermalCommon;
 

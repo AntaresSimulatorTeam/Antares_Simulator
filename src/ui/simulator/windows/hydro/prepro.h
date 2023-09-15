@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_HYDROOW_HYDRO_PREPRO_H__
 #define __ANTARES_APPLICATION_HYDROOW_HYDRO_PREPRO_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/input/area.h"
 #include <ui/common/component/panel.h>

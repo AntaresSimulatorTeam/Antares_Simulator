@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,98 +27,85 @@
 
 #include "opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
-#include <math.h>
+#include "opt_rename_problem.h"
 
 #include "spx_constantes_externes.h"
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(
   PROBLEME_HEBDO* problemeHebdo,
-  char Simulation)
+  bool Simulation)
 {
-    int Pays;
-    int Pdt;
-    int Palier;
-    int NombreDeVariables;
-    int Index;
-    int NombreDePasDeTempsPourUneOptimisation;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    PALIERS_THERMIQUES* PaliersThermiquesDuPays;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
 
-    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-
-    NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-    NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-
-    const bool intVariables = problemeHebdo->OptimisationAvecVariablesEntieres == OUI_ANTARES ? true : false;
-
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    int nombreDePasDeTempsPourUneOptimisation
+      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int& nombreDeVariables = ProblemeAResoudre->NombreDeVariables;
+    VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables);
+    const bool intVariables = problemeHebdo->OptimisationAvecVariablesEntieres;
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
+        variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-        for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            Palier
-              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
+            const int palier
+              = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+            const auto& clusterName = PaliersThermiquesDuPays.NomsDesPaliersThermiques[index];
 
-            for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
+            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                if (Simulation == OUI_ANTARES)
+                variableNamer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+                if (Simulation)
                 {
-                    NombreDeVariables += 4;
+                    nombreDeVariables += 4;
                     continue;
                 }
-                CorrespondanceVarNativesVarOptim
-                  = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
+                CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
+                  =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
                 CorrespondanceVarNativesVarOptim
-                  ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier]
-                  = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier]
+                  = nombreDeVariables;
+                ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
 
-                ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = intVariables;
-                NombreDeVariables++;
+                ProblemeAResoudre->VariablesEntieres[nombreDeVariables] = intVariables;
+                variableNamer.NODU(nombreDeVariables, clusterName);
+                nombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
-                  ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[Palier]
-                  = NombreDeVariables;
+                  .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier]
+                  = nombreDeVariables;
 
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
-                ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = intVariables;
-                NombreDeVariables++;
-
-                CorrespondanceVarNativesVarOptim
-                  ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[Palier]
-                  = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                  = VARIABLE_BORNEE_INFERIEUREMENT;
-                ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = intVariables;
-                NombreDeVariables++;
+                ProblemeAResoudre->VariablesEntieres[nombreDeVariables] = intVariables;
+                variableNamer.NumberStartingDispatchableUnits(nombreDeVariables, clusterName);
+                nombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
-                  ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[Palier]
-                  = NombreDeVariables;
-#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier]
+                  = nombreDeVariables;
+                ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
-#else
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                ProblemeAResoudre->VariablesEntieres[nombreDeVariables] = intVariables;
+                variableNamer.NumberStoppingDispatchableUnits(nombreDeVariables, clusterName);
+                nombreDeVariables++;
+
+                CorrespondanceVarNativesVarOptim
+                  .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier]
+                  = nombreDeVariables;
+                ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-#endif
-                ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = intVariables;
-                NombreDeVariables++;
+
+                ProblemeAResoudre->VariablesEntieres[nombreDeVariables] = intVariables;
+                variableNamer.NumberBreakingDownDispatchableUnits(nombreDeVariables, clusterName);
+                nombreDeVariables++;
             }
         }
     }
-
-    ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
-
-    return;
 }

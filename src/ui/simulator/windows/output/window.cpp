@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -67,7 +67,7 @@ Window::Window(wxFrame* parent, const OutputViewer::Component* viewer) :
     if (viewer)
         newviewer->copyFrom(*viewer);
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
         SetTitle(wxString(wxT("Output: ")) << wxStringFromUTF8(study->header.caption));
 

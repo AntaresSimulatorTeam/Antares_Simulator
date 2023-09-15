@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -76,14 +76,9 @@ protected:
         // Does nothing
     }
 
-    static Yuni::uint64 memoryUsage()
+    static uint64_t memoryUsage()
     {
         return 0;
-    }
-
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage&)
-    {
-        // Does nothing
     }
 
     template<template<class, int> class DecoratorT>

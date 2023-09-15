@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -41,18 +41,18 @@ namespace Economy
 struct VCardTimeSeriesValuesHydro
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "H. ROR";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "MWh";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Hydro generation, thoughout all MC years";
     }
@@ -200,7 +200,7 @@ public:
         // The current time-series
         auto& ror = pArea->hydro.series->ror;
         const unsigned int nbchro
-          = NumeroChroniquesTireesParPays[numSpace][pArea->index]->Hydraulique;
+          = NumeroChroniquesTireesParPays[numSpace][pArea->index].Hydraulique;
         pFatalValues[numSpace] = &(ror.entry[(nbchro < ror.width ? nbchro : 0)]);
 
         // Next variable
@@ -269,6 +269,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

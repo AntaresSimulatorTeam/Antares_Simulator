@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -41,18 +41,18 @@ namespace Economy
 struct VCardDispatchableGenMargin
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "DTG MRG";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "MWh";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Dispatchable Generation Margin";
     }
@@ -244,16 +244,6 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
-        // pValuesForTheCurrentYear.hour[state.hourInTheYear] -=
-        // production for the current thermal dispatchable cluster
-        //	(state.thermalClusterProduction);
-
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
-    }
-
     template<class VCardToFindT>
     inline const double* retrieveHourlyResultsForCurrentYear(unsigned int numSpace) const
     {
@@ -284,6 +274,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

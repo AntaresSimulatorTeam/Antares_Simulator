@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -34,6 +34,7 @@
 #include <yuni/core/bind.h>
 #include <memory>
 #include "action.h"
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
 namespace Antares
 {
@@ -85,7 +86,7 @@ public:
     //! The original cluster name
     Data::ThermalCluster* originalPlant;
     //! The current constraint
-    Data::BindingConstraint* constraint;
+    std::shared_ptr<Data::BindingConstraint> constraint;
 
     //! Views
     Views view;
@@ -112,7 +113,7 @@ public:
     //! List of links to select after the paste
     Data::AreaLink::Vector autoselectLinks;
     //! List of binding constraints to select after the paste
-    Data::BindingConstraint::Vector autoselectConstraints;
+    Data::BindingConstraintsRepository::Vector autoselectConstraints;
     //@}
 
 }; // class Context

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,25 +25,14 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/antares.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/resources/resources.h>
-#include <map>
 #include <iostream>
-#include <yuni/core/string.h>
-#include <yuni/core/string/wstring.h>
 #include <yuni/core/getopt.h>
 #include "../../ui/common/winmain.hxx"
 #include <antares/version.h>
-#include <antares/sys/appdata.h>
-#include <yuni/core/system/environment.h>
-#include <yuni/core/system/process.h>
 #include <yuni/core/system/username.h>
-#include <yuni/core/system/cpu.h>
-#include <yuni/core/system/memory.h>
-#include <antares/sys/hostname.hxx>
 #include <antares/locale.h>
-#include "../../../config.h"
 #include <antares/sys/policy.h>
 
 using namespace Yuni;

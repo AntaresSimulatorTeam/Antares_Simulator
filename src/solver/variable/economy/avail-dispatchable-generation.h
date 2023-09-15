@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -40,18 +40,18 @@ namespace Economy
 struct VCardAvailableDispatchGen
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "AVL DTG";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "MWh";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Available dispatchable generation";
     }
@@ -194,15 +194,15 @@ public:
 
     void addThermalClusterList(Data::ThermalClusterList& list, unsigned int numSpace)
     {
-        typedef Matrix<double, Yuni::sint32> MatrixType;
+        typedef Matrix<double, int32_t> MatrixType;
 
         const Data::ThermalClusterList::const_iterator end = list.end();
         for (Data::ThermalClusterList::const_iterator i = list.begin(); i != end; ++i)
         {
             Data::ThermalCluster& cluster = *(i->second);
             unsigned int chro = NumeroChroniquesTireesParPays[numSpace][pArea->index]
-                                  ->ThermiqueParPalier[cluster.areaWideIndex];
-            const MatrixType& matrix = cluster.series->series;
+                                  .ThermiqueParPalier[cluster.areaWideIndex];
+            const MatrixType& matrix = cluster.series->timeSeries;
             assert(chro < matrix.width);
             const MatrixType::ColumnType& column = matrix.entry[chro];
 
@@ -283,6 +283,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

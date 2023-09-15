@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -59,7 +59,7 @@ bool Comments::performWL(Context& ctx)
         Antares::Data::ConstraintName id;
         TransformNameIntoID(pOriginalConstraintName, id);
 
-        Data::BindingConstraint* source = ctx.extStudy->bindingConstraints.find(id);
+        auto source = ctx.extStudy->bindingConstraints.find(id);
 
         if (source && source != ctx.constraint)
         {

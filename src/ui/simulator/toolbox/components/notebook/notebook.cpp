@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -31,7 +31,7 @@
 #include <wx/sizer.h>
 #include <wx/font.h>
 #include "../../components/map/settings.h"
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include "../../../application/wait.h"
 #include <ui/common/lock.h>
 #include <wx/wupdlock.h>

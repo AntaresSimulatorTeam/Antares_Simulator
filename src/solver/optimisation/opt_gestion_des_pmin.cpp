@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -24,46 +24,34 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-
-#include <math.h>
-#include "opt_structure_probleme_a_resoudre.h"
-
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
-#include <yuni/io/file.h>
 #include "opt_fonctions.h"
 
 #define ZERO 1.e-2
 
 void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO* problemeHebdo)
 {
-    int Pays;
-    int Palier;
-    int Pdt;
-    PALIERS_THERMIQUES* PaliersThermiquesDuPays;
-    PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout;
-    double* PuissanceMinDuPalierThermique;
-    double* PuissanceMinDuPalierThermique_SV;
-    int NombreDePasDeTempsProblemeHebdo;
+    int NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTemps;
 
-    NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTempsRef;
-
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
-        PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
-        for (Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+          = problemeHebdo->PaliersThermiquesDuPays[pays];
+        std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER>& PuissanceDisponibleEtCout
+          = PaliersThermiquesDuPays.PuissanceDisponibleEtCout;
+        for (int palier = 0; palier < PaliersThermiquesDuPays.NombreDePaliersThermiques; palier++)
         {
-            PuissanceMinDuPalierThermique
-              = PuissanceDisponibleEtCout[Palier]->PuissanceMinDuPalierThermique;
-            PuissanceMinDuPalierThermique_SV
-              = PuissanceDisponibleEtCout[Palier]->PuissanceMinDuPalierThermique_SV;
+            const std::vector<double>& PuissanceMinDuPalierThermique
+              = PuissanceDisponibleEtCout[palier].PuissanceMinDuPalierThermique;
+            std::vector<double>& PuissanceMinDuPalierThermiqueRef
+              = PuissanceDisponibleEtCout[palier].PuissanceMinDuPalierThermiqueRef;
 
-            for (Pdt = 0; Pdt < NombreDePasDeTempsProblemeHebdo; Pdt++)
+            for (int pdt = 0; pdt < NombreDePasDeTempsProblemeHebdo; pdt++)
             {
-                PuissanceMinDuPalierThermique_SV[Pdt] = PuissanceMinDuPalierThermique[Pdt];
+                PuissanceMinDuPalierThermiqueRef[pdt] = PuissanceMinDuPalierThermique[pdt];
             }
         }
     }

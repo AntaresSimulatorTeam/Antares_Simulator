@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -28,32 +28,30 @@
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
 
-#include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
+using Antares::Solver::Optimization::OptimizationOptions;
 
-bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, uint numSpace)
+bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
+                                      PROBLEME_HEBDO* problemeHebdo,
+                                      const AdqPatchParams& adqPatchParams,
+                                      Solver::IResultWriter& writer)
 {
-    if (problemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
+    if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         if (problemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
         {
-            for (int Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+            for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
             {
-                problemeHebdo->CoutDeDefaillanceEnReserve[Pays] = 1.e+6;
+                problemeHebdo->CoutDeDefaillanceEnReserve[pays] = 1.e+6;
             }
 
-            problemeHebdo->NombreDePasDeTempsRef = problemeHebdo->NombreDePasDeTemps;
-            problemeHebdo->NombreDePasDeTempsDUneJourneeRef
-              = problemeHebdo->NombreDePasDeTempsDUneJournee;
             problemeHebdo->NombreDeJours = (int)(problemeHebdo->NombreDePasDeTemps
                                                  / problemeHebdo->NombreDePasDeTempsDUneJournee);
 
-            if (problemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES)
+            if (!problemeHebdo->OptimisationAuPasHebdomadaire)
             {
                 problemeHebdo->NombreDePasDeTempsPourUneOptimisation
                   = problemeHebdo->NombreDePasDeTempsDUneJournee;
@@ -69,12 +67,10 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, uint numSpa
             OPT_ChainagesDesIntercoPartantDUnNoeud(problemeHebdo);
         }
 
-        problemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
+        problemeHebdo->LeProblemeADejaEteInstancie = true;
     }
 
     OPT_VerifierPresenceReserveJmoins1(problemeHebdo);
-
-    OPT_SauvegarderLesPmaxThermiques(problemeHebdo);
 
     OPT_InitialiserLesPminHebdo(problemeHebdo);
 
@@ -82,10 +78,10 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, uint numSpa
 
     OPT_MaxDesPmaxHydrauliques(problemeHebdo);
 
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES)
+    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
         OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(problemeHebdo);
     }
 
-    return OPT_OptimisationLineaire(problemeHebdo, numSpace);
+    return OPT_OptimisationLineaire(options, problemeHebdo, adqPatchParams, writer);
 }

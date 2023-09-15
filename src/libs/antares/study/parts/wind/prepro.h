@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -30,11 +30,7 @@
 #include "../../fwd.h"
 #include "../../xcast.h"
 
-namespace Antares
-{
-namespace Data
-{
-namespace Wind
+namespace Antares::Data::Wind
 {
 /*!
 ** \brief Prepro Wind
@@ -55,12 +51,12 @@ public:
     /*!
     ** \brief Try to estimate the amount of memory required by this class for a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     /*!
     ** \brief Load data from a folder
     */
-    bool loadFromFolder(Study& study, const AnyString& folder);
+    bool loadFromFolder(const AnyString& folder);
 
     /*!
     ** \brief Save data to a folder
@@ -70,7 +66,7 @@ public:
     /*!
     ** \brief Get the amount of memory currently used
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Make sure that all data are loaded in memory
@@ -84,18 +80,14 @@ public:
     */
     void resetToDefault();
 
-public:
     //! XCast
     Data::XCast xcast;
 
-private:
-    bool internalLoadFormatBefore33(Study& study, const AnyString& folder);
-
 }; // Prepro
 
-} // namespace Wind
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::Wind
+
+
 
 #include "prepro.hxx"
 

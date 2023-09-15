@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -30,7 +30,7 @@
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/study/study.h>
 #include <cassert>
 #include <string.h>
@@ -42,7 +42,6 @@
 
 #include "../../config.h"
 
-#include <antares/emergency.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/Enum.hpp>
@@ -89,9 +88,6 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
     // --adequacy
     parser->addFlag(
       options.forceAdequacy, ' ', "adequacy", "Force the simulation in adequacy mode");
-    // --draft
-    parser->addFlag(
-      options.forceAdequacyDraft, ' ', "draft", "Force the simulation in adequacy-draft mode");
     // --parallel
     parser->addFlag(
       options.enableParallel, ' ', "parallel", "Enable the parallel computation of MC years");
@@ -168,9 +164,15 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
 
     // --mps-export
     parser->addFlag(options.mpsToExport,
-                    ' ',
+                    'm',
                     "mps-export",
-                    "Export in the mps format the optimization problems.");
+                    "Export in the mps (anonymous) format the optimization problems (both optim).");
+
+    // --named-problems
+    parser->addFlag(options.namedProblems,
+                    's',
+                    "named-mps-problems",
+                    "Export named constraints and variables in mps (both optim).");
 
     parser->addParagraph("\nMisc.");
     // --progress

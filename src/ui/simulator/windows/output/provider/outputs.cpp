@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -33,7 +33,6 @@
 #include "../content.h"
 #include "../../../toolbox/resources.h"
 #include <antares/study/study.h>
-#include <antares/study/memory-usage.h>
 
 #include <memory>
 
@@ -179,9 +178,6 @@ void Outputs::search(Spotlight::IItem::Vector& out,
                 break;
             case Data::stdmAdequacy:
                 item->addTag("ADQ", 220, 192, 245);
-                break;
-            case Data::stdmAdequacyDraft:
-                item->addTag("Draft", 230, 230, 245);
                 break;
             case Data::stdmUnknown:
             case Data::stdmExpansion:

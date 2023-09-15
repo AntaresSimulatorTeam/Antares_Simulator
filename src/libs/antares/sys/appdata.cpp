@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "appdata.h"
+#include "antares/sys/appdata.h"
 #ifdef YUNI_OS_WINDOWS
 #include <yuni/core/system/windows.hdr.h>
 #include <Shlobj.h>

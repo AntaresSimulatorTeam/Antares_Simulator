@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -94,7 +94,7 @@ void MainFormData::onToolbarFullscreen(void*)
 
 void MainFormData::onToolbarInspector(void*)
 {
-    if (Data::Study::Current::Valid())
+    if (CurrentStudyIsValid())
         Antares::Window::Inspector::Show();
 }
 
@@ -106,13 +106,13 @@ void MainFormData::onToolbarOptimizationPreferences(void*)
 
 void ApplWnd::evtOnInspector(wxCommandEvent&)
 {
-    if (Data::Study::Current::Valid())
+    if (CurrentStudyIsValid())
         Antares::Window::Inspector::Show();
 }
 
 void ApplWnd::evtOnSetStudyInfos(wxCommandEvent& evt)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!study)
         return;
 

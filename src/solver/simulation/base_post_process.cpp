@@ -19,7 +19,7 @@ interfacePostProcessList::interfacePostProcessList(PROBLEME_HEBDO* problemesHebd
 
 
 std::unique_ptr<interfacePostProcessList> interfacePostProcessList::create(
-    bool adqPatchEnabled,
+    AdqPatchParams& adqPatchParams,
     PROBLEME_HEBDO* problemeHebdo,
     uint thread_number,
     AreaList& areas,
@@ -27,12 +27,21 @@ std::unique_ptr<interfacePostProcessList> interfacePostProcessList::create(
     SimplexOptimization splxOptimization,
     Calendar& calendar)
 {
-    if (adqPatchEnabled)
-        return std::make_unique<AdqPatchPostProcessList>(
-            problemeHebdo, thread_number, areas, sheddingPolicy, splxOptimization, calendar);
+    if (adqPatchParams.enabled)
+        return std::make_unique<AdqPatchPostProcessList>(adqPatchParams,
+                                                         problemeHebdo, 
+                                                         thread_number,
+                                                         areas,
+                                                         sheddingPolicy,
+                                                         splxOptimization,
+                                                         calendar);
     else
-        return std::make_unique<OptPostProcessList>(
-            problemeHebdo, thread_number, areas, sheddingPolicy, splxOptimization, calendar);
+        return std::make_unique<OptPostProcessList>(problemeHebdo, 
+                                                    thread_number,
+                                                    areas, 
+                                                    sheddingPolicy,
+                                                    splxOptimization,
+                                                    calendar);
 }
 
 void interfacePostProcessList::runAll(const optRuntimeData& opt_runtime_data)

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOWS_STARTUP_WIZARD_H__
 #define __ANTARES_APPLICATION_WINDOWS_STARTUP_WIZARD_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/dialog.h>
 #include <map>
 #include "../toolbox/components/button.h"

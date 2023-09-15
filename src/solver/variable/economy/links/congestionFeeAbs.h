@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -40,18 +40,18 @@ namespace Economy
 struct VCardCongestionFeeAbs
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "CONG. FEE (ABS.)";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "Euro";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Congestion fee collected throughout all MC years (Absolute value)";
     }
@@ -231,14 +231,14 @@ public:
     {
 #define UPSTREAM_PRICE                                              \
     state.problemeHebdo->ResultatsHoraires[state.link->from->index] \
-      ->CoutsMarginauxHoraires[state.hourInTheWeek]
+      .CoutsMarginauxHoraires[state.hourInTheWeek]
 #define DOWNSTREAM_PRICE                                            \
     state.problemeHebdo->ResultatsHoraires[state.link->with->index] \
-      ->CoutsMarginauxHoraires[state.hourInTheWeek]
+      .CoutsMarginauxHoraires[state.hourInTheWeek]
 
         // Congestion Fee
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] = Yuni::Math::Abs(
-          state.ntc->ValeurDuFlux[state.link->index] * (UPSTREAM_PRICE - DOWNSTREAM_PRICE));
+          state.ntc.ValeurDuFlux[state.link->index] * (UPSTREAM_PRICE - DOWNSTREAM_PRICE));
         // Next item in the list
         NextType::hourForEachLink(state, numSpace);
 
@@ -271,6 +271,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

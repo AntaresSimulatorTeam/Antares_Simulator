@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -39,18 +39,18 @@ namespace Variable
 struct VCardJoin
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "";
     }
@@ -131,16 +131,6 @@ public:
     };
 
 public:
-    /*!
-    ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
-    */
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-    {
-        LeftType::EstimateMemoryUsage(u);
-        RightType::EstimateMemoryUsage(u);
-        BindConstType::EstimateMemoryUsage(u);
-    }
-
     /*!
     ** \brief Retrieve the list of all individual variables
     **
@@ -268,12 +258,6 @@ public:
         RightType::hourForEachArea(state);
     }
 
-    void hourForEachThermalCluster(State& state)
-    {
-        LeftType::hourForEachThermalCluster(state);
-        RightType::hourForEachThermalCluster(state);
-    }
-
     void hourForEachLink(State& state)
     {
         LeftType::hourForEachLink(state);
@@ -361,7 +345,7 @@ public:
         RightType::template simulationEndSpatialAggregates(allVars);
     }
 
-    Yuni::uint64 memoryUsage() const
+    uint64_t memoryUsage() const
     {
         return LeftType::memoryUsage() + RightType::memoryUsage() + BindConstType::memoryUsage();
     }

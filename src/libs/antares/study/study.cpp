@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -35,26 +35,24 @@
 #include <sstream> // std::ostringstream
 #include <cassert>
 #include <climits>
+#include <optional>
 
 #include "study.h"
 #include "runtime.h"
-#include "../logs.h"
-#include "../array/correlation.h"
 #include "scenario-builder/sets.h"
 #include "correlation-updater.hxx"
 #include "scenario-builder/updater.hxx"
 #include "area/constants.h"
-#include "filter.h"
 
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
-#include <math.h>                 // For use of floor(...) and ceil(...)
-#include <writer_factory.h>
+#include <cmath>                 // For use of floor(...) and ceil(...)
+#include <antares/writer/writer_factory.h>
+#include "ui-runtimeinfos.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 //! Clear then shrink a string
 template<class StringT>
@@ -74,18 +72,8 @@ static inline void FreeAndNil(T*& pointer)
 Study::Study(bool forTheSolver) :
  LayerData(0, true),
  simulationComments(*this),
- maxNbYearsInParallel(0),
- maxNbYearsInParallel_save(0),
- nbYearsParallelRaw(0),
- minNbYearsInParallel(0),
- minNbYearsInParallel_save(0),
  areas(*this),
- scenarioRules(nullptr),
- runtime(nullptr),
- // state(nullptr),
- uiinfo(nullptr),
  pQueueService(std::make_shared<Yuni::Job::QueueService>()),
- gotFatalError(false),
  usedByTheSolver(forTheSolver)
 {
     // TS generators
@@ -133,6 +121,7 @@ void Study::clear()
     preproHydroCorrelation.clear();
 
     bindingConstraints.clear();
+    bindingConstraintsGroups.clear();
     areas.clear();
 
     // no folder
@@ -142,7 +131,7 @@ void Study::clear()
     ClearAndShrink(folderInput);
     ClearAndShrink(folderOutput);
     ClearAndShrink(folderSettings);
-    ClearAndShrink(inputExtension);
+    inputExtension.clear();
 
     gotFatalError = false;
 }
@@ -203,7 +192,7 @@ void Study::reduceMemoryUsage()
     ClearAndShrink(bufferLoadingTS);
 }
 
-uint64 Study::memoryUsage() const
+uint64_t Study::memoryUsage() const
 {
     return folder.capacity()
            // Folders paths
@@ -598,7 +587,7 @@ void Study::performTransformationsBeforeLaunchingSimulation()
         }
 
         // Informations about time-series for the load
-        auto& matrix = area.load.series->series;
+        auto& matrix = area.load.series->timeSeries;
         auto& dsmvalues = area.reserves[fhrDSM];
 
         // Adding DSM values
@@ -636,7 +625,7 @@ YString StudyCreateOutputPath(StudyMode mode,
                               ResultFormat fmt,
                               const YString& outputRoot,
                               const YString& label,
-                              Yuni::sint64 startTime)
+                              int64_t startTime)
 {
     auto suffix = getOutputSuffix(fmt);
 
@@ -654,9 +643,6 @@ YString StudyCreateOutputPath(StudyMode mode,
         break;
     case stdmAdequacy:
         folderOutput += "adq";
-        break;
-    case stdmAdequacyDraft:
-        folderOutput += "dft";
         break;
     case stdmUnknown:
     case stdmExpansion:
@@ -778,10 +764,15 @@ void Study::saveAboutTheStudy()
     }
 }
 
-Area* Study::areaAdd(const AreaName& name)
+Area* Study::areaAdd(const AreaName& name, bool updateMode)
 {
     if (name.empty())
         return nullptr;
+    if (CheckForbiddenCharacterInAreaName(name))
+    {
+        logs.error() << "character '*' is forbidden in area name: `" << name << "`";
+        return nullptr;
+    }
 
     // Result
     Area* area = nullptr;
@@ -790,26 +781,35 @@ Area* Study::areaAdd(const AreaName& name)
     // The new scope is mandatory to rebuild the correlation matrices
     // and the scenario builder data
     {
-        CorrelationUpdater updater(*this);
-        ScenarioBuilderUpdater updaterSB(*this);
-
+        // These are only useful for the GUI, remove afterwards
+        // We need the constructors to be called here, and the destructors
+        // to be called at the end of the scope. Using std::optional is merely
+        // a means to that end.
+        std::optional<CorrelationUpdater> updater;
+        std::optional<ScenarioBuilderUpdater> updaterSB;
+        if (updateMode)
+        {
+            updater.emplace(*this);
+            updaterSB.emplace(*this);
+        }
         // Adding an area
         AreaName newName;
-        if (not areaFindNameForANewArea(newName, name) or newName.empty())
+        if (not modifyAreaNameIfAlreadyTaken(newName, name) or newName.empty())
         {
             logs.error() << "Impossible to find a name for a new area";
             return nullptr;
         }
 
         // Adding an area
-        area = AreaListAddFromName(areas, newName, maxNbYearsInParallel);
+        area = addAreaToListOfAreas(areas, newName);
         if (not area)
             return nullptr;
+
         // Rebuild indexes for all areas
         areas.rebuildIndexes();
 
         // Default values for the area
-        area->ensureAllDataAreCreated();
+        area->createMissingData();
         area->resetToDefaultValues();
     }
 
@@ -1010,19 +1010,19 @@ bool Study::areaRename(Area* area, AreaName newName)
 bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 {
     // A name must not be empty
-    if (!cluster or !newName)
+    if (!cluster or !newName.empty())
         return false;
 
     String beautifyname;
     BeautifyName(beautifyname, newName);
     if (!beautifyname)
         return false;
-    newName = beautifyname;
+    newName = beautifyname.c_str();
 
     // Preparing the new area ID
     ClusterName newID;
     TransformNameIntoID(newName, newID);
-    if (!newID)
+    if (newID.empty())
     {
         logs.error() << "invalid id transformation";
         return false;
@@ -1139,10 +1139,10 @@ void Study::destroyAllThermalTSGeneratorData()
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
 {
-    foreach (auto* constraint, bindingConstraints)
+    for(const auto& constraint: bindingConstraints)
     {
-        if (not JIT::IsReady(constraint->matrix().jit))
-            constraint->matrix().forceReload(true);
+        if (not JIT::IsReady(constraint->RHSTimeSeries().jit))
+            constraint->forceReload(true);
     }
 }
 
@@ -1192,16 +1192,7 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
         ticksPerOutput += (int)runtime->interconnectionsCount();
         // Output - digest
         ticksPerOutput += 1;
-
-        if (parameters.mode != stdmAdequacyDraft)
-        {
-            ticksPerYear =
-              // nb weeks
-              ((int)((double)(parameters.simulationDays.end - parameters.simulationDays.first)
-                     / 7));
-        }
-        else
-            ticksPerYear = 1;
+        ticksPerYear = 1;
     }
 
     int n;
@@ -1259,15 +1250,15 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
 
     // Import
     n = 0;
-    if (0 != (timeSeriesLoad & parameters.timeSeriesToImport))
+    if (0 != (timeSeriesLoad & parameters.exportTimeSeriesInInput))
         n += (int)areas.size();
-    if (0 != (timeSeriesSolar & parameters.timeSeriesToImport))
+    if (0 != (timeSeriesSolar & parameters.exportTimeSeriesInInput))
         n += (int)areas.size();
-    if (0 != (timeSeriesWind & parameters.timeSeriesToImport))
+    if (0 != (timeSeriesWind & parameters.exportTimeSeriesInInput))
         n += (int)areas.size();
-    if (0 != (timeSeriesHydro & parameters.timeSeriesToImport))
+    if (0 != (timeSeriesHydro & parameters.exportTimeSeriesInInput))
         n += (int)areas.size();
-    if (0 != (timeSeriesThermal & parameters.timeSeriesToImport))
+    if (0 != (timeSeriesThermal & parameters.exportTimeSeriesInInput))
         n += (int)areas.size();
     if (n)
         progression.add(Solver::Progression::sectImportTS, n);
@@ -1284,14 +1275,12 @@ bool Study::forceReload(bool reload) const
     // Invalidate all areas
     ret = areas.forceReload(reload) and ret;
     // Binding constraints
-    ret = bindingConstraints.forceReload(reload) and ret;
+    bindingConstraints.forceReload(reload);
 
     ret = preproLoadCorrelation.forceReload(reload) and ret;
     ret = preproSolarCorrelation.forceReload(reload) and ret;
     ret = preproWindCorrelation.forceReload(reload) and ret;
     ret = preproHydroCorrelation.forceReload(reload) and ret;
-
-    ret = bindingConstraints.forceReload(reload) and ret;
 
     ret = setsOfAreas.forceReload(reload) and ret;
     ret = setsOfLinks.forceReload(reload) and ret;
@@ -1325,6 +1314,7 @@ void Study::resizeAllTimeseriesNumbers(uint n)
 {
     logs.debug() << "  resizing timeseries numbers";
     areas.resizeAllTimeseriesNumbers(n);
+    bindingConstraintsGroups.resizeAllTimeseriesNumbers(n);
 }
 
 bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
@@ -1378,7 +1368,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         String filename;
         filename << studyfolder << SEP << "output" << SEP;
 
-        if (parameters.adequacyDraft() or linkname.empty())
+        if (linkname.empty())
         {
             if (areaname.empty())
                 filename.clear();
@@ -1390,11 +1380,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
                 filename << (parameters.economy() ? "economy" : "adequacy") << SEP;
                 filename << "mc-all" << SEP << "areas";
                 filename << SEP << areaname << SEP;
-
-                if (parameters.adequacyDraft())
-                    filename << "without-network-hourly.txt";
-                else
-                    filename << "values-hourly.txt";
+                filename << "values-hourly.txt";
             }
         }
         else
@@ -1556,40 +1542,11 @@ void Study::computePThetaInfForThermalClusters() const
     }
 }
 
-void Study::prepareWriter(Benchmarking::IDurationCollector* duration_collector)
+void Study::prepareWriter(Benchmarking::IDurationCollector& duration_collector)
 {
     resultWriter = Solver::resultWriterFactory(
       parameters.resultFormat, folderOutput, pQueueService, duration_collector);
 }
 
-bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
-                                                std::map<int, YString>& areaClusterNames)
-{
-    YString areaname = "";
-    bool resultat = true;
-    auto endarea = areas.end();
-    int count = 0;
+} // namespace Antares::Data
 
-    for (auto areait = areas.begin(); areait != endarea; areait++)
-    {
-        areaname = areait->second->name;
-        logs.debug() << "areaname : " << areaname;
-
-        std::vector<YString> clusternames;
-
-        if (not areait->second->thermalClustersMinStablePowerValidity(clusternames))
-        {
-            for (auto it = clusternames.begin(); it != clusternames.end(); it++)
-            {
-                logs.debug() << "areaname : " << areaname << " ; clustername : " << (*it);
-                YString res = "Area : " + areaname + " cluster name : " + (*it).c_str();
-                areaClusterNames.insert(std::pair<int, YString>(count++, res));
-            }
-            resultat = false;
-        }
-    }
-    return resultat;
-}
-
-} // namespace Data
-} // namespace Antares

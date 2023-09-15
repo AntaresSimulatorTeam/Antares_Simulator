@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -135,24 +135,7 @@ protected:
                            int fileLevel,
                            int precision) const
     {
-        switch (fileLevel)
-        {
-        case Category::id:
-            break;
-        case Category::mc:
-        {
-            switch (precision)
-            {
-            case Category::hourly:
-                InternalExportValuesMC<S, maxHoursInAYear, VCardT, Category::hourly>(
-                  report, results, stdDeviationHourly);
-                break;
-            default:
-                break;
-            }
-            break;
-        }
-        default:
+        if (!(fileLevel & Category::id))
         {
             switch (precision)
             {
@@ -178,22 +161,14 @@ protected:
                 break;
             }
         }
-        }
         // Next
         NextType::template buildSurveyReport<S, VCardT>(
           report, results, dataLevel, fileLevel, precision);
     }
 
-    Yuni::uint64 memoryUsage() const
+    uint64_t memoryUsage() const
     {
         return sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
-    }
-
-    static void EstimateMemoryUsage(Antares::Data::StudyMemoryUsage& u)
-    {
-        Memory::EstimateMemoryUsage(sizeof(double), maxHoursInAYear, u, false);
-        u.takeIntoConsiderationANewTimeserieForDiskOutput();
-        NextType::EstimateMemoryUsage(u);
     }
 
     template<template<class, int> class DecoratorT>
@@ -219,7 +194,7 @@ private:
 
         // Caption
         report.captions[0][report.data.columnIndex] = report.variableCaption;
-        report.captions[1][report.data.columnIndex] = VCardT::Unit();
+        report.captions[1][report.data.columnIndex] = report.variableUnit;
         report.captions[2][report.data.columnIndex] = "std";
 
         // Precision
@@ -284,7 +259,7 @@ private:
 
         // Caption
         report.captions[0][report.data.columnIndex] = report.variableCaption;
-        report.captions[1][report.data.columnIndex] = VCardT::Unit();
+        report.captions[1][report.data.columnIndex] = report.variableUnit;
         report.captions[2][report.data.columnIndex] = "std";
 
         // Precision

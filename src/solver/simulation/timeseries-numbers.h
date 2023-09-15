@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -28,8 +28,9 @@
 #define __SOLVER_SIMULATION_GENERATE_TIMESERIES_H__
 
 #include <yuni/yuni.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <vector>
+#include "ITimeSeriesNumbersWriter.h"
 
 namespace Antares::Solver::TimeSeriesNumbers
 {
@@ -38,10 +39,11 @@ namespace Antares::Solver::TimeSeriesNumbers
 */
 bool Generate(Data::Study& study);
 
-void StoreTimeseriesIntoOuput(Data::Study& study);
+void StoreTimeSeriesNumbersIntoOuput(Data::Study &study);
 
 // Exported for unit-tests
 bool checkAllElementsIdenticalOrOne(const std::vector<uint>& w);
+
 } // namespace Antares::Solver::TimeSeriesNumbers
 
 #endif // __SOLVER_SIMULATION_GENERATE_TIMESERIES_H__

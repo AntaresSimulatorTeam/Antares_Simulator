@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -155,11 +155,14 @@ void updatingAnnualFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& 
 */
 int retrieveAverageNTC(const Data::Study& study,
                        const Matrix<>& capacities,
-                       const Matrix<Yuni::uint32>& tsNumbers,
+                       const Matrix<uint32_t>& tsNumbers,
                        std::vector<double>& avg);
 
 void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
                                     Antares::Solver::Variable::State& state);
+
+OptimizationOptions createOptimizationOptions(const Data::Study& study);
+
 } // namespace Simulation
 } // namespace Solver
 } // namespace Antares

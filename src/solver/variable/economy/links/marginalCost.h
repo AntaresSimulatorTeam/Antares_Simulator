@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -40,18 +40,18 @@ namespace Economy
 struct VCardMarginalCost
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "MARG. COST";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "Euro/MW";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Decrease of the overall operating cost expected by a 1MW capacity reinforcement";
     }
@@ -230,16 +230,16 @@ public:
     {
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = Yuni::Math::Abs(
           state.problemeHebdo->VariablesDualesDesContraintesDeNTC[state.hourInTheWeek]
-            ->VariableDualeParInterconnexion[state.link->index]);
+            .VariableDualeParInterconnexion[state.link->index]);
 
         // This value should be reset to zero if  (flow_lowerbound) < flow < (flow_upperbound) (with
         // signed values)
         double flow
-          = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]->ValeurDuFlux[state.link->index];
+          = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek].ValeurDuFlux[state.link->index];
         double flow_lowerbound = -state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]
-                                    ->ValeurDeNTCExtremiteVersOrigine[state.link->index];
+                                    .ValeurDeNTCExtremiteVersOrigine[state.link->index];
         double flow_upperbound = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]
-                                   ->ValeurDeNTCOrigineVersExtremite[state.link->index];
+                                   .ValeurDeNTCOrigineVersExtremite[state.link->index];
 
         if (flow - 0.001 > flow_lowerbound && flow + 0.001 < flow_upperbound)
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 0.;
@@ -273,6 +273,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

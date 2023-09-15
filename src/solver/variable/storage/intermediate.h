@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -30,7 +30,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include "../constants.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "../categories.h"
 #include "../surveyresults.h"
 
@@ -53,12 +53,10 @@ public:
     typedef double Type;
 
 public:
-    //! Try to estimate the amount of memory that will be required for a simulation
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u);
     //! Get the dynamic amount of memory consummed by a simulation
     // \note This method assumes that you've already have gathered the size
     //   of this class
-    static Yuni::uint64 MemoryUsage();
+    static uint64_t MemoryUsage();
 
     //! \name Constructor & Destructor
     //@{

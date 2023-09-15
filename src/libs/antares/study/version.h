@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -29,9 +29,7 @@
 
 #include <yuni/yuni.h>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Version of a study
@@ -43,61 +41,6 @@ enum Version
 {
     //! Unknown version of a study
     versionUnknown = 0,
-    //! The old 1.x Study version
-    version1xx = 100,
-    //! Study version: 2.0
-    version200 = 200,
-    //! Study Version 2.1
-    version210 = 210,
-
-    //! Study version: 3.0
-    version300 = 300,
-    //! Study version 3.1
-    version310 = 310,
-    //! Study version 3.2
-    version320 = 320,
-    //! Study version 3.3
-    version330 = 330,
-    //! Study version 3.4
-    version340 = 340,
-    //! Study version 3.5
-    version350 = 350,
-    //! Study version 3.6
-    version360 = 360,
-    //! Study version 3.7
-    version370 = 370,
-    //! Study version 3.8
-    version380 = 380,
-    //! Study version 3.9
-    version390 = 390,
-    //! Study version 4.0
-    version400 = 400,
-    //! Study version 4.1
-    version410 = 410,
-    //! Study version 4.2
-    version420 = 420,
-    //! Study version 4.3
-    version430 = 430,
-    //! Study version 4.4
-    version440 = 440,
-    //! Study version 4.5
-    version450 = 450,
-    //! Study version 5.0
-    version500 = 500,
-    //! Study version 5.1
-    version510 = 510,
-    //! Study version 6.0
-    version600 = 600,
-    //! Study version 6.1
-    version610 = 610,
-    //! Study version 6.2
-    version620 = 620,
-    //! Study version 6.3
-    version630 = 630,
-    //! Study version 6.4
-    version640 = 640,
-    //! Study version 6.5
-    version650 = 650,
     //! Study version 7.0
     version700 = 700,
     //! Study version 7.1
@@ -116,7 +59,9 @@ enum Version
     version840 = 840,
     //! Study version 8.5
     version850 = 850,
-    // see versionLatest below
+    //! Study version 8.6
+    version860 = 860,
+    version870 = 870,
 
     // Constants
     //! A more recent version that we can't handle
@@ -124,11 +69,7 @@ enum Version
 
 };
 
-enum
-{
-    //! The latest version
-    versionLatest = version850,
-};
+constexpr Version versionLatest = version870;
 
 /*!
 ** \brief Try to determine the version of a study
@@ -138,7 +79,7 @@ enum
 ** \param checkFor1x True to check for an old 1.x study
 ** \return The version of the study. `VersionUnknown` of not found
 */
-Version StudyTryToFindTheVersion(const AnyString& folder, bool checkFor1x = true);
+Version StudyTryToFindTheVersion(const AnyString& folder);
 
 /*!
 ** \brief Get the human readable version of the version of a study
@@ -163,7 +104,11 @@ const wchar_t* VersionToWStr(const Version v);
 */
 Version VersionIntToVersion(uint version);
 
-} // namespace Data
-} // namespace Antares
+class StudyVersion {
+public:
+    [[nodiscard]] bool isStudyLatestVersion(std::string studyFolder) const;
+};
+} // namespace Antares::Data
+
 
 #endif // __ANTARES_LIBS_STUDY_VERSION_H__

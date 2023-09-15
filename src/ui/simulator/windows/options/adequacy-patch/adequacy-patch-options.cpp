@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -36,7 +36,7 @@
 #include "../../../application/menus.h"
 #include "../../../windows/message.h"
 #include <ui/common/component/panel.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Data::AdequacyPatch;
@@ -122,7 +122,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
     SetLabel(wxT("Adequacy Patch Options"));
     SetTitle(wxT("Adequacy Patch Options"));
 
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     // Background color
     wxColour defaultBgColor = GetBackgroundColour();
@@ -154,7 +154,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &AdequacyPatchOptions::onPopupMenuSpecify,
-                     PopupInfo(study.parameters.adqPatch.enabled, wxT("true")));
+                     PopupInfo(study.parameters.adqPatchParams.enabled, wxT("true")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -171,7 +171,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &AdequacyPatchOptions::onPopupMenuNTC,
-                     PopupInfo(study.parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks,
+                     PopupInfo(study.parameters.adqPatchParams.localMatching.setToZeroOutsideInsideLinks,
                                wxT("NTC")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -187,7 +187,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &AdequacyPatchOptions::onPopupMenuNTC,
-                     PopupInfo(study.parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks,
+                     PopupInfo(study.parameters.adqPatchParams.localMatching.setToZeroOutsideOutsideLinks,
                                wxT("NTC")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -215,7 +215,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         onPopup.bind(
           this,
           &AdequacyPatchOptions::onPopupMenuSpecify,
-          PopupInfo(study.parameters.adqPatch.curtailmentSharing.includeHurdleCost, wxT("true")));
+          PopupInfo(study.parameters.adqPatchParams.curtailmentSharing.includeHurdleCost, wxT("true")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -231,7 +231,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         onPopup.bind(
           this,
           &AdequacyPatchOptions::onPopupMenuSpecify,
-          PopupInfo(study.parameters.adqPatch.curtailmentSharing.checkCsrCostFunction, wxT("true")));
+          PopupInfo(study.parameters.adqPatchParams.curtailmentSharing.checkCsrCostFunction, wxT("true")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -316,7 +316,7 @@ void AdequacyPatchOptions::onClose(const void*)
 
 void AdequacyPatchOptions::onResetToDefault(void*)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!(!studyptr))
     {
         Window::Message message(this,
@@ -329,7 +329,7 @@ void AdequacyPatchOptions::onResetToDefault(void*)
         if (message.showModal() == Window::Message::btnContinue)
         {
             auto& study = *studyptr;
-            study.parameters.resetAdqPatchParameters();
+            study.parameters.adqPatchParams.reset();
             refresh();
             MarkTheStudyAsModified();
             return;
@@ -344,7 +344,7 @@ void AdequacyPatchOptions::onInternalMotion(wxMouseEvent&)
 
 void AdequacyPatchOptions::refresh()
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
     // The current study
@@ -353,45 +353,45 @@ void AdequacyPatchOptions::refresh()
     // Adequacy patch
     std::string buttonType = "specify";
     // Include adequacy patch
-    updateButton(pBtnAdequacyPatch, study.parameters.adqPatch.enabled, buttonType);
+    updateButton(pBtnAdequacyPatch, study.parameters.adqPatchParams.enabled, buttonType);
     // Include hurdle cost for CSR
     updateButton(pBtnAdequacyPatchIncludeHurdleCostCsr,
-                 study.parameters.adqPatch.curtailmentSharing.includeHurdleCost,
+                 study.parameters.adqPatchParams.curtailmentSharing.includeHurdleCost,
                  buttonType);
     // Check CSR cost function value prior and after CSR optimization
     updateButton(pBtnAdequacyPatchCheckCsrCostFunctionValue,
-                 study.parameters.adqPatch.curtailmentSharing.checkCsrCostFunction,
+                 study.parameters.adqPatchParams.curtailmentSharing.checkCsrCostFunction,
                  buttonType);
     // NTC from physical areas outside adequacy patch (area type 1) to physical areas inside
     // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.
     buttonType = "ntc";
     updateButton(pBtnNTCfromOutToInAdqPatch,
-                 study.parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks,
+                 study.parameters.adqPatchParams.localMatching.setToZeroOutsideInsideLinks,
                  buttonType);
     // NTC between physical areas outside adequacy patch (area type 1). Used in the first step of
     // adequacy patch local matching rule.
     updateButton(pBtnNTCfromOutToOutAdqPatch,
-                 study.parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks,
+                 study.parameters.adqPatchParams.localMatching.setToZeroOutsideOutsideLinks,
                  buttonType);
     // Price taking order (PTO) for adequacy patch
     buttonType = "pto";
     bool isPTOload
-      = (study.parameters.adqPatch.curtailmentSharing.priceTakingOrder == AdqPatchPTO::isLoad) ? true : false;
+      = (study.parameters.adqPatchParams.curtailmentSharing.priceTakingOrder == AdqPatchPTO::isLoad) ? true : false;
     updateButton(pBtnAdequacyPatchPTO, isPTOload, buttonType);
 
     // Threshold values
     {
         if (pThresholdCSRStart)
             pThresholdCSRStart->SetValue(
-              wxString() << study.parameters.adqPatch.curtailmentSharing.thresholdRun);
+              wxString() << study.parameters.adqPatchParams.curtailmentSharing.thresholdRun);
         if (pThresholdLMRviolations)
             pThresholdLMRviolations->SetValue(
               wxString()
-              << study.parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations);
+              << study.parameters.adqPatchParams.curtailmentSharing.thresholdDisplayViolations);
         if (pThresholdCSRVarBoundsRelaxation)
             pThresholdCSRVarBoundsRelaxation->SetValue(
               wxString()
-              << study.parameters.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
+              << study.parameters.adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
     }
 }
 
@@ -517,11 +517,11 @@ void AdequacyPatchOptions::onSelectModeIgnore(wxCommandEvent&)
 
 void AdequacyPatchOptions::onSelectPtoIsDens(wxCommandEvent&)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if ((!(!study))
-        && (study->parameters.adqPatch.curtailmentSharing.priceTakingOrder != AdqPatchPTO::isDens))
+        && (study->parameters.adqPatchParams.curtailmentSharing.priceTakingOrder != AdqPatchPTO::isDens))
     {
-        study->parameters.adqPatch.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isDens;
+        study->parameters.adqPatchParams.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isDens;
         refresh();
         MarkTheStudyAsModified();
     }
@@ -529,11 +529,11 @@ void AdequacyPatchOptions::onSelectPtoIsDens(wxCommandEvent&)
 
 void AdequacyPatchOptions::onSelectPtoIsLoad(wxCommandEvent&)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if ((!(!study))
-        && (study->parameters.adqPatch.curtailmentSharing.priceTakingOrder != AdqPatchPTO::isLoad))
+        && (study->parameters.adqPatchParams.curtailmentSharing.priceTakingOrder != AdqPatchPTO::isLoad))
     {
-        study->parameters.adqPatch.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isLoad;
+        study->parameters.adqPatchParams.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isLoad;
         refresh();
         MarkTheStudyAsModified();
     }
@@ -556,9 +556,9 @@ wxTextCtrl* AdequacyPatchOptions::insertEdit(wxWindow* parent,
 
 void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
 {
-    if (!Data::Study::Current::Valid())
+    if (!CurrentStudyIsValid())
         return;
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     int id = evt.GetId();
 
@@ -576,9 +576,9 @@ void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
         }
         else
         {
-            if (newthreshold != study.parameters.adqPatch.curtailmentSharing.thresholdRun)
+            if (newthreshold != study.parameters.adqPatchParams.curtailmentSharing.thresholdRun)
             {
-                study.parameters.adqPatch.curtailmentSharing.thresholdRun = newthreshold;
+                study.parameters.adqPatchParams.curtailmentSharing.thresholdRun = newthreshold;
                 MarkTheStudyAsModified();
             }
         }
@@ -600,9 +600,9 @@ void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
         else
         {
             if (newthreshold
-                != study.parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations)
+                != study.parameters.adqPatchParams.curtailmentSharing.thresholdDisplayViolations)
             {
-                study.parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations = newthreshold;
+                study.parameters.adqPatchParams.curtailmentSharing.thresholdDisplayViolations = newthreshold;
                 MarkTheStudyAsModified();
             }
         }
@@ -624,9 +624,9 @@ void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
         else
         {
             if (newthreshold
-                != study.parameters.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation)
+                != study.parameters.adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation)
             {
-                study.parameters.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation
+                study.parameters.adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation
                   = newthreshold;
                 MarkTheStudyAsModified();
             }

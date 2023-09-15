@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -31,9 +31,9 @@ namespace Antares
 {
 namespace Data
 {
-inline Yuni::uint64 DataSeriesLoadMemoryUsage(DataSeriesLoad* l)
+inline uint64_t DataSeriesLoadMemoryUsage(DataSeriesLoad* l)
 {
-    return (l) ? l->series.memoryUsage() : 0;
+    return (l) ? l->timeSeries.memoryUsage() : 0;
 }
 
 } // namespace Data

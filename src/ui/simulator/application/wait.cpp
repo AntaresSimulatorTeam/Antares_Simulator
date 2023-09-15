@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -30,7 +30,7 @@
 #include <cassert>
 #include "main/main.h"
 #include <yuni/core/atomic/int.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 namespace Antares
 {

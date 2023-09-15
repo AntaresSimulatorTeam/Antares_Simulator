@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -115,14 +115,16 @@ void UIRuntimeInfo::reloadBindingConstraints()
     byOperator.clear();
 
     {
-        const BindConstList::iterator end = pStudy.bindingConstraints.end();
-        BindConstList::iterator i = pStudy.bindingConstraints.begin();
-        for (; i != end; ++i)
-            orderedConstraint.insert(*i);
+        const auto end = pStudy.bindingConstraints.end();
+        auto i = pStudy.bindingConstraints.begin();
+        for (; i != end; ++i) {
+            auto bc = *i;
+            orderedConstraint.insert(bc);
+        }
     }
     {
-        const BindingConstraint::Set::const_iterator end = orderedConstraint.end();
-        BindingConstraint::Set::const_iterator i = orderedConstraint.begin();
+        const auto end = orderedConstraint.end();
+        auto i = orderedConstraint.begin();
         for (; i != end; ++i)
         {
             pConstraint.push_back(*i);
@@ -144,7 +146,7 @@ void UIRuntimeInfo::reloadBindingConstraints()
     }
 }
 
-uint64 UIRuntimeInfo::memoryUsage() const
+uint64_t UIRuntimeInfo::memoryUsage() const
 {
     return sizeof(UIRuntimeInfo) + sizeof(AreaLink*) * pLink.size();
 }

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,12 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "timer.h"
+#include <antares/benchmarking/timer.h>
 #include <yuni/core/system/gettimeofday.h>
 
 using namespace Yuni;
 
-static inline sint64 MilliSecTimer()
+static inline int64_t MilliSecTimer()
 {
     Yuni::timeval tv;
     YUNI_SYSTEM_GETTIMEOFDAY(&tv, nullptr);

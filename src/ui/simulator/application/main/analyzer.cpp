@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -26,13 +26,14 @@
 */
 
 #include "main.h"
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include "../study.h"
 #include "../../toolbox/execute/execute.h"
 #include "../../windows/message.h"
 #include "../../toolbox/jobs.h"
 #include <wx/wupdlock.h>
 #include "internal-ids.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 
@@ -63,7 +64,7 @@ void ApplWnd::evtLaunchAnalyzer(wxCommandEvent& evt)
     String filename;
     wxStringToString(wfilename, filename);
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!study) // A valid study would be better
     {
         logs.fatal() << "Internal error: Please provide a valid study";

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,152 +25,120 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "opt_structure_probleme_a_resoudre.h"
-
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
 
-#include "spx_constantes_externes.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
-
 void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
   PROBLEME_HEBDO* problemeHebdo)
 {
-    int NombreDePasDeTempsPourUneOptimisation;
-    int NbIntervallesOptimises;
-    int NombreDeJoursParIntervalle;
-    int Jour;
-    int i;
-    int j;
-    int Pays;
-    double CntTurbParIntervalle;
-    double MaxPompageParIntervalle;
-    double CntMinEParIntervalle;
-    double CntMaxEParIntervalle;
-    double* CntEnergieH2OParIntervalleOptimise;
-    double* CntEnergieH2OParIntervalleOptimiseRef;
-    double* CntEnergieH2OParJour;
-    double InflowSum;
+    int NombreDePasDeTempsPourUneOptimisation
+      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int NbIntervallesOptimises
+      = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
+    int NombreDeJoursParIntervalle
+      = NombreDePasDeTempsPourUneOptimisation / problemeHebdo->NombreDePasDeTempsDUneJournee;
 
-    NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-    NbIntervallesOptimises
-      = (int)(problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
-
-    NombreDeJoursParIntervalle
-      = (int)(NombreDePasDeTempsPourUneOptimisation / problemeHebdo->NombreDePasDeTempsDUneJournee);
-
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        char presenceHydro
-          = problemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
-        char TurbEntreBornes
-          = problemeHebdo->CaracteristiquesHydrauliques[Pays]->TurbinageEntreBornes;
-        if (presenceHydro == OUI_ANTARES && TurbEntreBornes == NON_ANTARES)
+        if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable
+            || problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes)
+            continue;
+
+        std::vector<double>& CntEnergieH2OParJour
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].CntEnergieH2OParJour;
+        std::vector<double>& CntEnergieH2OParIntervalleOptimise
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].CntEnergieH2OParIntervalleOptimise;
+
+        for (int intervalle = 0; intervalle < NbIntervallesOptimises; intervalle++)
         {
-            CntEnergieH2OParIntervalleOptimise = problemeHebdo->CaracteristiquesHydrauliques[Pays]
-                                                   ->CntEnergieH2OParIntervalleOptimise;
-            CntEnergieH2OParIntervalleOptimiseRef
-              = problemeHebdo->CaracteristiquesHydrauliques[Pays]
-                  ->CntEnergieH2OParIntervalleOptimiseRef;
-            CntEnergieH2OParJour
-              = problemeHebdo->CaracteristiquesHydrauliques[Pays]->CntEnergieH2OParJour;
-
-            Jour = 0;
-            for (i = 0; i < NbIntervallesOptimises; i++)
+            double CntTurbParIntervalle = 0.0;
+            for (int jour = 0; jour < NombreDeJoursParIntervalle; jour++)
             {
-                CntTurbParIntervalle = 0.0;
-                MaxPompageParIntervalle = 0.;
-                for (j = 0; j < NombreDeJoursParIntervalle; j++, Jour++)
+                int index = intervalle * NombreDeJoursParIntervalle + jour;
+                CntTurbParIntervalle += CntEnergieH2OParIntervalleOptimise[index];
+
+                CntEnergieH2OParJour[index] = CntEnergieH2OParIntervalleOptimise[index];
+            }
+
+            CntEnergieH2OParIntervalleOptimise[intervalle] = CntTurbParIntervalle;
+        }
+    }
+
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    {
+        bool presenceHydro
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
+        bool TurbEntreBornes
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
+
+        if (presenceHydro
+            && (TurbEntreBornes
+                || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
+        {
+            std::vector<double>& CntEnergieH2OParJour
+              = problemeHebdo->CaracteristiquesHydrauliques[pays].CntEnergieH2OParJour;
+            std::vector<double>& MinEnergieHydrauParIntervalleOptimise
+              = problemeHebdo->CaracteristiquesHydrauliques[pays]
+                  .MinEnergieHydrauParIntervalleOptimise;
+            std::vector<double>& MaxEnergieHydrauParIntervalleOptimise
+              = problemeHebdo->CaracteristiquesHydrauliques[pays]
+                  .MaxEnergieHydrauParIntervalleOptimise;
+
+            for (int intervalle = 0; intervalle < NbIntervallesOptimises; intervalle++)
+            {
+                double CntMinEParIntervalle = 0.;
+                double CntMaxEParIntervalle = 0.;
+                for (int jour = 0; jour < NombreDeJoursParIntervalle; jour++)
                 {
-                    CntTurbParIntervalle += CntEnergieH2OParIntervalleOptimise[Jour];
+                    int index = intervalle * NombreDeJoursParIntervalle + jour;
+                    CntMinEParIntervalle += MinEnergieHydrauParIntervalleOptimise[index];
+                    CntMaxEParIntervalle += MaxEnergieHydrauParIntervalleOptimise[index];
 
-                    CntEnergieH2OParJour[Jour] = CntEnergieH2OParIntervalleOptimise[Jour];
+                    CntEnergieH2OParJour[index] = MaxEnergieHydrauParIntervalleOptimise[index];
                 }
-
-                CntEnergieH2OParIntervalleOptimise[i] = CntTurbParIntervalle;
-                CntEnergieH2OParIntervalleOptimiseRef[i] = CntTurbParIntervalle;
+                MinEnergieHydrauParIntervalleOptimise[intervalle] = CntMinEParIntervalle;
+                MaxEnergieHydrauParIntervalleOptimise[intervalle] = CntMaxEParIntervalle;
             }
         }
     }
 
-    double* MinEnergieHydrauParIntervalleOptimise;
-    double* MaxEnergieHydrauParIntervalleOptimise;
-
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        char presenceHydro
-          = problemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
-        char TurbEntreBornes
-          = problemeHebdo->CaracteristiquesHydrauliques[Pays]->TurbinageEntreBornes;
-        if (presenceHydro == OUI_ANTARES
-            && (TurbEntreBornes == OUI_ANTARES
-                || problemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable
-                     == OUI_ANTARES))
+        std::vector<double>& MaxEnergiePompageParIntervalleOptimise
+          = problemeHebdo->CaracteristiquesHydrauliques[pays]
+              .MaxEnergiePompageParIntervalleOptimise;
+
+        for (int intervalle = 0; intervalle < NbIntervallesOptimises; intervalle++)
         {
-            MinEnergieHydrauParIntervalleOptimise
-              = problemeHebdo->CaracteristiquesHydrauliques[Pays]
-                  ->MinEnergieHydrauParIntervalleOptimise;
-            MaxEnergieHydrauParIntervalleOptimise
-              = problemeHebdo->CaracteristiquesHydrauliques[Pays]
-                  ->MaxEnergieHydrauParIntervalleOptimise;
-            CntEnergieH2OParJour
-              = problemeHebdo->CaracteristiquesHydrauliques[Pays]->CntEnergieH2OParJour;
-            Jour = 0;
-            for (i = 0; i < NbIntervallesOptimises; i++)
+            double MaxPompageParIntervalle = 0.;
+            for (int jour = 0; jour < NombreDeJoursParIntervalle; jour++)
             {
-                CntMinEParIntervalle = 0.;
-                CntMaxEParIntervalle = 0.;
-                for (j = 0; j < NombreDeJoursParIntervalle; j++, Jour++)
-                {
-                    CntMinEParIntervalle += MinEnergieHydrauParIntervalleOptimise[Jour];
-                    CntMaxEParIntervalle += MaxEnergieHydrauParIntervalleOptimise[Jour];
-
-                    CntEnergieH2OParJour[Jour] = problemeHebdo->CaracteristiquesHydrauliques[Pays]
-                                                   ->MaxEnergieHydrauParIntervalleOptimise[Jour];
-                }
-                MinEnergieHydrauParIntervalleOptimise[i] = CntMinEParIntervalle;
-                MaxEnergieHydrauParIntervalleOptimise[i] = CntMaxEParIntervalle;
+                int index = intervalle * NombreDeJoursParIntervalle + jour;
+                MaxPompageParIntervalle += MaxEnergiePompageParIntervalleOptimise[index];
             }
+
+            MaxEnergiePompageParIntervalleOptimise[intervalle] = MaxPompageParIntervalle;
         }
     }
 
-    double* MaxEnergiePompageParIntervalleOptimise;
-
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        MaxEnergiePompageParIntervalleOptimise = problemeHebdo->CaracteristiquesHydrauliques[Pays]
-                                                   ->MaxEnergiePompageParIntervalleOptimise;
+        std::vector<double>& InflowForTimeInterval
+          = problemeHebdo->CaracteristiquesHydrauliques[pays].InflowForTimeInterval;
 
-        Jour = 0;
-        for (i = 0; i < NbIntervallesOptimises; i++)
+        for (int intervalle = 0; intervalle < NbIntervallesOptimises; intervalle++)
         {
-            CntTurbParIntervalle = 0.0;
-            MaxPompageParIntervalle = 0.;
-            for (j = 0; j < NombreDeJoursParIntervalle; j++, Jour++)
-                MaxPompageParIntervalle += MaxEnergiePompageParIntervalleOptimise[Jour];
+            double InflowSum = 0.;
+            for (int jour = 0; jour < NombreDeJoursParIntervalle; jour++)
+            {
+                int index = intervalle * NombreDeJoursParIntervalle + jour;
+                InflowSum += InflowForTimeInterval[index];
+            }
 
-            MaxEnergiePompageParIntervalleOptimise[i] = MaxPompageParIntervalle;
-        }
-    }
-
-    double* InflowForTimeInterval;
-
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
-    {
-        InflowForTimeInterval
-          = problemeHebdo->CaracteristiquesHydrauliques[Pays]->InflowForTimeInterval;
-        Jour = 0;
-        for (i = 0; i < NbIntervallesOptimises; i++)
-        {
-            InflowSum = 0.;
-            for (j = 0; j < NombreDeJoursParIntervalle; j++, Jour++)
-                InflowSum += InflowForTimeInterval[Jour];
-
-            InflowForTimeInterval[i] = InflowSum;
+            InflowForTimeInterval[intervalle] = InflowSum;
         }
     }
 

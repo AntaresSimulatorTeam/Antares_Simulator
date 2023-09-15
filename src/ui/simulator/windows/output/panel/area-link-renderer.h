@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,7 +27,6 @@
 #ifndef __ANTARES_WINDOWS_OUTPUT_PANEL_AREA_LINK_RENDERER_H__
 #define __ANTARES_WINDOWS_OUTPUT_PANEL_AREA_LINK_RENDERER_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../../toolbox/components/datagrid/renderer.h"
 #include <yuni/core/string.h>
 #include <antares/array/matrix.h>

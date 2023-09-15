@@ -4,19 +4,10 @@ on:
   release:
     types: [created]
 
-env:
-  GITHUB_TOKEN: ${{ github.token }}
-
 jobs:
-  doc_generation:
-    uses: ./.github/workflows/build-userguide.yml
-    with:
-      artifact_name: pdf-doc
-
   windows:
 
     runs-on: ${{ matrix.os }}
-    needs: doc_generation
     strategy:
       matrix:
         os: [windows-latest]
@@ -29,15 +20,10 @@ jobs:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.1/ortools_cxx_windows-latest_static_sirius.zip"
+      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_windows-latest_static_sirius.zip"
 
     steps:
     - uses: actions/checkout@v3
-
-    - name: Get release
-      id: get_release
-      uses: bruceadams/get-release@v1.3.2
-
 
     - name: Pre-requisites
       shell: cmd
@@ -76,12 +62,6 @@ jobs:
           rm -rf buildtrees packages downloads
       shell: bash
 
-    - name: Download userguide
-      uses: actions/download-artifact@v3
-      with:
-        name: pdf-doc
-        path: docs/ref_guides
-
     - name: Read antares-deps version
       id: antares-deps-version
       uses: notiz-dev/github-action-json-property@release
@@ -118,6 +98,7 @@ jobs:
            -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON  \
+           -DBUILD_TOOLS=ON \
            -DBUILD_not_system=OFF
 
     - name: Build
@@ -202,7 +183,6 @@ jobs:
       shell: bash
       run: |
            rm -rf src/tests/resources/Antares_Simulator_Tests
-           rm -rf src/tests/resources/NonRegTests
            cd _build
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)

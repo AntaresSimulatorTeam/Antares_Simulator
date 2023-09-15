@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -31,11 +31,9 @@
 #include <yuni/core/string.h>
 #include <yuni/core/bind.h>
 #include "version.h"
-#include "../paths/list.h"
+#include <antares/paths/list.h>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 class StudyCleaningInfos final
 {
@@ -69,7 +67,7 @@ public:
     /*!
     ** \brief Get the total size occupied by the intruders
     */
-    Yuni::uint64 totalSize() const;
+    uint64_t totalSize() const;
 
     /*!
     ** \brief Set an additional list of excluded files or directories.
@@ -102,7 +100,7 @@ public:
 
 }; // class StudyCleaningInfos
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+
 
 #endif /* __ANTARES_LIBS_STUDY_CLEANER_H__ */

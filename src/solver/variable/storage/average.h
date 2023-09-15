@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -103,15 +103,8 @@ protected:
     {
         if (!(fileLevel & Category::id))
         {
-            if (0 != (fileLevel & Category::mc))
+            switch (precision)
             {
-                // Do nothing
-                // InternalExportValuesMC<1, VCardT, Precision>(report, avgdata.year);
-            }
-            else
-            {
-                switch (precision)
-                {
                 case Category::hourly:
                     InternalExportValues<maxHoursInAYear, VCardT, Category::hourly>(
                       report, Memory::RawPointer(avgdata.hourly));
@@ -131,7 +124,6 @@ protected:
                 case Category::annual:
                     InternalExportValues<1, VCardT, Category::annual>(report, avgdata.year);
                     break;
-                }
             }
         }
         // Next
@@ -152,7 +144,7 @@ protected:
             assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
             report.captions[0][report.data.columnIndex] = report.variableCaption;
-            report.captions[1][report.data.columnIndex] = VCardT::Unit();
+            report.captions[1][report.data.columnIndex] = report.variableUnit;
             report.captions[2][report.data.columnIndex]
               = (report.variableCaption == "LOLP") ? "values" : "EXP";
 
@@ -171,17 +163,9 @@ protected:
         NextType::template buildDigest<VCardT>(report, digestLevel, dataLevel);
     }
 
-    Yuni::uint64 memoryUsage() const
+    uint64_t memoryUsage() const
     {
         return avgdata.dynamicMemoryUsage() + NextType::memoryUsage();
-    }
-
-    static void EstimateMemoryUsage(Antares::Data::StudyMemoryUsage& u)
-    {
-        Antares::Memory::EstimateMemoryUsage(sizeof(double), maxHoursInAYear, u, false);
-        u.requiredMemoryForOutput += u.years * sizeof(double);
-        u.takeIntoConsiderationANewTimeserieForDiskOutput();
-        NextType::EstimateMemoryUsage(u);
     }
 
     template<template<class, int> class DecoratorT>
@@ -204,7 +188,7 @@ private:
 
         // Caption
         report.captions[0][report.data.columnIndex] = report.variableCaption;
-        report.captions[1][report.data.columnIndex] = VCardT::Unit();
+        report.captions[1][report.data.columnIndex] = report.variableUnit;
         report.captions[2][report.data.columnIndex]
           = (report.variableCaption == "LOLP") ? "values" : "EXP";
         // Precision
@@ -233,30 +217,6 @@ private:
         // Next column index
         ++report.data.columnIndex;
     }
-
-    /*
-    template<uint Size, class VCardT, int PrecisionT>
-    void InternalExportValuesMC(SurveyResults& report, const double* array) const
-    {
-            if (!(PrecisionT & Category::annual))
-                    return;
-            assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
-
-            // Caption
-            report.captions[0][report.data.columnIndex] = report.variableCaption;
-            report.captions[1][report.data.columnIndex] = VCardT::Unit();
-            report.captions[2][report.data.columnIndex] = "EXP";
-            // Precision
-            report.precision[report.data.columnIndex] =
-    Solver::Variable::PrecisionToPrintfFormat<VCardT::decimal>::Value();
-
-            (void)::memcpy(report.matrix.values[report.data.columnIndex], array, report.data.nbYears
-    * sizeof(double));
-
-            // Next column index
-            ++report.data.columnIndex;
-    }
-    */
 
 }; // class Average
 

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -31,20 +31,14 @@
 #include <yuni/core/string.h>
 #include <yuni/core/static/types.h>
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 #include "endoflist.h"
 #include "categories.h"
 #include "surveyresults.h"
 #include "info.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Container
+namespace Antares::Solver::Variable::Container
 {
 /*!
 ** \brief Static list for all output variables
@@ -65,12 +59,6 @@ public:
         //! How many items have we got
         count = NextT::count,
     };
-
-public:
-    /*!
-    ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
-    */
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u);
 
 public:
     //! \name Constructor & Destructor
@@ -171,8 +159,6 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace);
 
-    void hourForEachThermalCluster(State& state);
-
     void hourForEachLink(State& state);
 
     void hourEnd(State& state, unsigned int hourInTheYear);
@@ -243,7 +229,7 @@ public:
     //! \name Memory management
     //@{
     //! Get the amount of memory currently used by the class
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
     //@}
 
 private:
@@ -252,10 +238,10 @@ private:
 
 }; // class List
 
-} // namespace Container
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Container
+
+
+
 
 #include "surveyresults/reportbuilder.hxx"
 #include "container.hxx"

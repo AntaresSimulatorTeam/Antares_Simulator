@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -43,6 +43,7 @@
 #include <wx/statline.h>
 #include "action-panel.h"
 #include "window.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 
@@ -449,7 +450,7 @@ void PerformerDialog::closeWindow()
             }
 
             // Reload runtime data
-            auto currentStudy = Data::Study::Current::Get();
+            auto currentStudy = GetCurrentStudy();
             if (currentStudy != study)
                 currentStudy->uiinfo->reloadAll();
         }

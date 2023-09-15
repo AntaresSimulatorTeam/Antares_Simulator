@@ -1,8 +1,120 @@
 Antares Changelog
 =================
 
-v8.5.0 (02/2022)
+8.7.0 (08/2023)
 --------------------
+## New Features
+* Binding constraint RHS scenarization (#1219)
+* Implement --mps-export command-line option (#1404)
+* Name constraints & variables in MPS files using --named-mps-problems command-lin e option (#1294)
+* Thermal price definition (contributed by RTE-i, #1272)
+
+## Improvements
+* Write full command-line instead of solver location in logs (#1518)
+
+## Packages
+* Give Oracle Linux 8 assets a proper name instead of "unknown" (#1438)
+* Don't build tools (study-updater, etc.) by default (#1442)
+
+## Bugfixes
+* Fix error when writing files over 80Mb into a zip (#1488)
+* Fix memory leaks (#1468)
+* Fix segfault, add !skipped to enabled constraints (#1441)
+* Backport [v8.4.3](#v843-082023) changes
+
+## GUI
+* Thermal price definition (RTEi's -> CR20) - UI (#1485)
+
+## Docs
+* Fix possible values for ST storage (#1455)
+
+## Tests
+* Add named MPS tests  (#1408)
+* Enforce better unit test isolation (#1486)
+* Add tests for Windows CI when job is scheduled (#1483)
+* Tests for CR20: thermal price definition (#1364), improvements (#1422)
+
+## For developers
+* Remove platform-specific headers (#1523)
+* Remove one `goto` instruction in OPT (#1522)
+* Remove study singleton in application signal handlers (#1513)
+* Remove barely-used `ThermalCluster::productionCost` temporary (#1517)
+* Bindings constraints scenario :  handling last remarks (#1466)
+* Replace remaining vector of pointers by plain vector (#1505)
+* Split ts numbers data classes in different files (#1398)
+* Remove more usage of study singleton (#1509)
+* Group of constraints (#1388)
+* Remove unused headers in optimization module (#1495)
+* Refactor ProblemeHebdo allocation (#1489)
+* Remove use of study singleton in optimization module (#1492)
+* Remove Study::Get from SIM, pass as function argument instead (#1494)
+* Objects in CMakeFiles (#1465)
+* Variables with a Ref or Ref_SV suffix (#1475, #1481, #1497, #1498, #1500, #1501, #1502)
+* Use std::vector instead of MemAlloc/MemFree, clean up (#1471)
+* Use ~class() = default (#1473)
+* Memory allocation for ProblemeAResoudre, use std::vector (#1432)
+* Improve clarity for constraints that should be used (#1452)
+* Automatically include yuni include directory in dependents (#1525)
+* Clarify logs & code in case of "failed year" (#1450)
+* Remove two static functions (#1440)
+* Avoid copies using std::move (#1445)
+* Memory allocation, use std::vector (#1402)
+* Fix critical code smells (#1412)
+* Named MPS: factorize variable & constraint namers (#1409)
+* Array, logs jit and correlation in makefile (#1410)
+
+--------------------
+# v8.6.2 (08/2023)
+## Bugfixes
+* Backport [v8.4.3](#v843-082023) changes
+
+8.6.1 (06/2023)
+--------------------
+## Bugfixes
+* Fix major bug related to short-term storage & MRG. PRICE (#1377)
+
+8.6.0 (06/2023)
+--------------------
+## New features
+* Short-term storage (#1163).
+* Add pollutant emissions (#1184, #1222)
+* Minimal generation for hydraulic (#1273, RTE/RTE-i/Redstork)
+* Make LMR optional for adequacy patch (#1247)
+
+## Improvements
+* Use ISO8601 for date format in the logs (#1303)
+* Publish installers for Oracle Linux 8 (#1341)
+* Remove doc from UI/package, publish it as a separate PDF (#1233)
+* Tune XPRESS resolution (#1158), this should improve performance for OR-Tools+XPRESS
+* Performance metrics (produce a JSON file) (#1306)
+
+## Bugfixes
+* Fix a bug in adequacy study mode (#1314)
+* Fix memory errors detected by valgrind (#1302)
+* Fix empty ROR & STORAGE in output using the TS-Generator (#1293)
+
+## Code quality
+* Simplify if/else (#1309)
+* Max number of columns in an output file (#1159)
+* Fix a few compilation warnings (int -> uint) (#1301)
+* Remove parameters.hxx, fix Parameters::memoryUsage (#1299)
+* Remove OUI_ANTARES NON_ANTARES (#1188)
+* Use CMakeLists.txt instead of *.cmake (#1198)
+* Clean up src/solver/optimisation (#1161)
+* Adequacy patch : refactor parameters management (#1154)
+* Add a few const qualifiers (#1178)
+* INI files load encapsulation (#1057)
+* Remove group{Min,Max}Count, annuityInvestment in thermal clusters (#1350)
+
+## For developers
+* Bumped OR-Tools 9.2 -> 9.5. CMake 3.18+ is required for build if building OR-Tools, and XPRESS 9.0 for execution (previously 8.13).
+
+--------------------
+# v8.5.1 (08/2023)
+
+* Backport [v8.4.3](#v843-082023) changes
+
+# v8.5.0 (02/2022)
 
 ## New features
 * Curtailment Sharing Rule for Adequacy Patch #1062, including a scaling coefficient in hurdle costs #1155. This feature was contributed by RTE-i with support from RTE, ELIA and APG.
@@ -18,6 +130,15 @@ v8.5.0 (02/2022)
 ## Examples & documentation
 * Update docs to include CSR #1156
 * Fix examples studies (invalid v8.3.0 -> v8.5.0) #1136
+
+# v8.4.3 (08/2023)
+
+## Features
+* Increase file size limit from 80Mo to 80Go when reading file.
+
+## Bugfix
+* Fix "unhandled error" with big studies in zip mode. MPS files were too big and hit file size hard limit
+
 
 v8.4.2 (01/2022)
 --------------------

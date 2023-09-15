@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,7 +27,7 @@
 
 #include "antares-study.h"
 #include <antares/study/study.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/io/directory/info.h>
 #include "io.h"
@@ -50,13 +50,13 @@ public:
     }
 
 public:
-    sint64 dateLimit;
+    int64_t dateLimit;
     FSWalker::DispatchJobEvent queue;
 
     Mutex mutex;
-    uint64 bytesDeleted;
-    uint64 filesDeleted;
-    uint64 foldersDeleted;
+    uint64_t bytesDeleted;
+    uint64_t filesDeleted;
+    uint64_t foldersDeleted;
 };
 
 class AntaresStudyAnalyzerJob : public FSWalker::IJob
@@ -71,7 +71,7 @@ public:
 
 public:
     String folder;
-    sint64 dateLimit;
+    int64_t dateLimit;
     UserData* userdata;
 
 protected:
@@ -208,8 +208,8 @@ protected:
             logs.info() << "  :: starting removal of " << folder;
 
         String::Vector foldersToDelete;
-        uint64 bytesDeleted = 0;
-        uint64 filesDeleted = 0;
+        uint64_t bytesDeleted = 0;
+        uint64_t filesDeleted = 0;
 
         IO::Directory::Info info(folder);
         auto end = info.recursive_end();
@@ -343,7 +343,7 @@ const char* AntaresStudy::caption() const
     return "antares study";
 }
 
-AntaresStudy::AntaresStudy(yint64 dateLimit) :
+AntaresStudy::AntaresStudy(int64_t dateLimit) :
  bytesDeleted(), filesDeleted(), foldersDeleted(), pDateLimit(dateLimit)
 {
 }

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -81,9 +81,9 @@ public:
                         const Spotlight::SearchToken::Vector& tokens,
                         const Yuni::String& text) override
     {
-        if (not Data::Study::Current::Valid())
+        if (not CurrentStudyIsValid())
             return;
-        auto& study = *Data::Study::Current::Get();
+        auto& study = *GetCurrentStudy();
         if (study.areas.empty())
             return;
 
@@ -124,9 +124,9 @@ public:
                         const Spotlight::SearchToken::Vector& tokens,
                         std::vector<Antares::Data::Area*>& in)
     {
-        if (not Data::Study::Current::Valid())
+        if (not CurrentStudyIsValid())
             return;
-        auto& study = *Data::Study::Current::Get();
+        auto& study = *GetCurrentStudy();
         if (study.areas.empty())
             return;
 
@@ -173,7 +173,7 @@ public:
 
     virtual bool onSelect(Spotlight::IItem::Ptr& item) override
     {
-        if (!Data::Study::Current::Valid() || GUIIsLock())
+        if (!CurrentStudyIsValid() || GUIIsLock())
             return false;
         GUILocker locker;
         auto itemarea = std::dynamic_pointer_cast<Toolbox::Spotlight::ItemArea>(item);
@@ -203,7 +203,7 @@ public:
 
     virtual bool onSelect(const Spotlight::IItem::Vector&) override
     {
-        if (!Data::Study::Current::Valid() || GUIIsLock())
+        if (!CurrentStudyIsValid() || GUIIsLock())
             return false;
         GUILocker locker;
         return true;
@@ -229,9 +229,9 @@ protected:
             {
                 CString<32, false> text;
                 text << area->thermal.list.size();
-                const Yuni::uint8 R_COLOR = 210;
-                const Yuni::uint8 G_COLOR = 217;
-                const Yuni::uint8 B_COLOR = 216;
+                const uint8_t R_COLOR = 210;
+                const uint8_t G_COLOR = 217;
+                const uint8_t B_COLOR = 216;
                 item->addRightTag(text, R_COLOR, G_COLOR, B_COLOR);
                 if (area->thermal.hasForcedTimeseriesGeneration())
                     item->addRightTag(wxT("G"), R_COLOR, G_COLOR, B_COLOR);
@@ -264,7 +264,7 @@ protected:
 
     void refresh()
     {
-        if (Data::Study::Current::Valid())
+        if (CurrentStudyIsValid())
         {
             GUILocker locker;
             redoResearch();

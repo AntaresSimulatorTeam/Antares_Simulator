@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -35,17 +35,15 @@
 #include <wx/richtext/richtextxml.h>
 #include <wx/richtext/richtexthtml.h>
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include "toolbox/resources.h"
 #include "toolbox/locales.h"
 #include "internal-data.h"
 #include "windows/version.h"
-#include "config.h"
 #include "drag-drop.hxx"
 
 // Antares study
-#include <antares/study.h>
-#include <antares/sys/appdata.h>
+#include <antares/study/study.h>
 
 // Antares memory allocation check
 #include <antares/memory/new_check.hxx>
@@ -592,6 +590,9 @@ void ApplWnd::createNBThermal()
     pNotebook->add(panel, wxT("thermal"), wxT("Thermal"));
 
     pageThermalTimeSeries = panel->pageThermalTimeSeries;
+    pageThermalTimeSeriesFuelCost = panel->pageThermalTimeSeriesFuelCost;
+    pageThermalTimeSeriesCO2Cost = panel->pageThermalTimeSeriesCO2Cost;
+
     pageThermalPrepro = panel->pageThermalPrepro;
     pageThermalCommon = panel->pageThermalCommon;
     pageThermalClusterList = panel->pageThermalClusterList;

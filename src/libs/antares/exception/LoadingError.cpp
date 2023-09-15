@@ -1,4 +1,4 @@
-#include "LoadingError.hpp"
+#include "antares/exception/LoadingError.hpp"
 
 namespace Antares
 {
@@ -37,8 +37,7 @@ InvalidOptimizationRange::InvalidOptimizationRange() :
 }
 
 InvalidSimulationMode::InvalidSimulationMode() :
- LoadingError(
-   "Only one simulation mode is allowed: --expansion, --economy, --adequacy or --adequacy-draft")
+ LoadingError("Only one simulation mode is allowed: --expansion, --economy, --adequacy")
 {
 }
 
@@ -148,7 +147,22 @@ IncompatibleHurdleCostCSR::IncompatibleHurdleCostCSR() :
 {
 }
 
+AdqPatchDisabledLMR::AdqPatchDisabledLMR() :
+ LoadingError("Incompatible options LMR disabled and priceTakingOrder equal Dens")
+{
+}
+
 IncompatibleOutputOptions::IncompatibleOutputOptions(const std::string& text) : LoadingError(text)
+{
+}
+
+IncompatibleCO2CostColumns::IncompatibleCO2CostColumns() :
+ LoadingError("Number of columns for CO2 Cost can be one or same as number of TS in Availability")
+{
+}
+
+IncompatibleFuelCostColumns::IncompatibleFuelCostColumns() :
+ LoadingError("Number of columns for Fuel Cost can be one or same as number of TS in Availability")
 {
 }
 

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,7 +27,6 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_H__
 #define __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_H__
 
-#include "../../fwd.h"
 #include "../../xcast.h"
 
 namespace Antares
@@ -55,12 +54,12 @@ public:
     /*!
     ** \brief Try to estimate the amount of memory required by this class for a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     /*!
     ** \brief Solar data from a folder
     */
-    bool loadFromFolder(Study& study, const AnyString& folder);
+    bool loadFromFolder(const AnyString& folder);
 
     /*!
     ** \brief Save data to a folder
@@ -70,7 +69,7 @@ public:
     /*!
     ** \brief Get the amount of memory currently used
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Make sure that all data are loaded in memory

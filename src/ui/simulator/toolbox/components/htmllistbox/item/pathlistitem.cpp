@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -26,7 +26,8 @@
 */
 
 #include "pathlistitem.h"
-#include <wx/colour.h>
+#include "wx-wrapper.h"
+#include <wx/wx.h>
 
 using namespace Yuni;
 
@@ -47,7 +48,7 @@ bool PathListItem::HtmlContent(wxString& out,
                                wxString name,
                                const wxString& searchString,
                                bool isFolder,
-                               Yuni::uint64 size)
+                               uint64_t size)
 {
     wxColour c(220, 220, 250);
     if (isFolder)

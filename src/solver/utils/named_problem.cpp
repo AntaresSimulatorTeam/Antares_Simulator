@@ -5,18 +5,20 @@ namespace Antares
 {
 namespace Optimization
 {
+
 PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                                                  const std::vector<std::string>& NomDesContraintes,
                                                  const std::vector<bool>& VariablesEntieres,
                                                  std::vector<int>& StatutDesVariables,
                                                  std::vector<int>& StatutDesContraintes,
-                                                 int NumeroOptimisation) :
+                                                 bool UseNamedProblems) :
+
  NomDesVariables(NomDesVariables),
  NomDesContraintes(NomDesContraintes),
  VariablesEntieres(VariablesEntieres),
  StatutDesVariables(StatutDesVariables),
  StatutDesContraintes(StatutDesContraintes),
- NumeroOptimisation(NumeroOptimisation)
+ useNamedProblems_(UseNamedProblems)
 {
 }
 

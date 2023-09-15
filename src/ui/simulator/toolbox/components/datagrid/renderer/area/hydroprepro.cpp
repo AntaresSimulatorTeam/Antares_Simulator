@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -145,7 +145,7 @@ void HydroPrepro::internalAreaChanged(Antares::Data::Area* area)
 {
     // FIXME for some reasons, the variable study here is not properly initialized
     if (area && !study)
-        study = Data::Study::Current::Get();
+        study = GetCurrentStudy();
 
     auto* pPreproHydro = (area) ? area->hydro.prepro : nullptr;
     Renderer::ARendererArea::internalAreaChanged(area);

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -28,7 +28,7 @@
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_H__
 
 #include "cluster.h"
-#include "../../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include "defines.h"
 #include "../../fwd.h"
 #include <memory>
@@ -74,7 +74,7 @@ public:
 
     void markAsModified() const;
 
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     /*!
     ** \brief Reset all values to their default ones
@@ -103,7 +103,7 @@ public:
     /*!
     ** \brief Get the amount of memory used by the class
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Normalize NPO max and check for consistency

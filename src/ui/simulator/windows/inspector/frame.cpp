@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,7 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/wx-wrapper.h>
 #include "frame.h"
 #include "../../application/main.h"
 #include <wx/wupdlock.h>
@@ -527,11 +526,15 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGThClusterCO2 = P_FLOAT("CO2 (Tons/MWh)", "cluster.co2");
 
     pPGThClusterCosts = Category(pg, wxT("Operating costs"), wxT("cluster.costs"));
+    pPGThClusterCostGeneration = P_ENUM("Cost generation", "cluster.costgeneration", costgeneration);  
     pPGThClusterMarginalCost = P_FLOAT("Marginal (\u20AC/MWh)", "cluster.opcost_marginal");
     pPGThClusterFixedCost = P_FLOAT("Fixed (\u20AC/hour)", "cluster.opcost_fixed");
     pPGThClusterStartupCost = P_FLOAT("Startup (\u20AC/startup)", "cluster.opcost_startup");
     pPGThClusterOperatingCost = P_FLOAT("Market bid (\u20AC/MWh)", "cluster.opcost_marketbid");
     pPGThClusterRandomSpread = P_FLOAT("Spread (\u20AC/MWh)", "cluster.opcost_spread");
+    pPGThClusterVariableOMcost = P_FLOAT("Variable Operation\u0026Maintenance cost (\u20AC/MWh)", "cluster.variableomcost");
+    pPGThClusterEfficiency = P_FLOAT("Fuel Efficiency (%)", "cluster.efficiency");
+    pPGThClusterEfficiency->SetAttribute(wxPG_ATTR_MAX, 100.00);
 
     pPGThClusterReliabilityModel
       = Category(pg, wxT("Timeseries generation"), wxT("cluster.reliabilitymodel"));
@@ -699,7 +702,7 @@ void Frame::apply(const InspectorData::Ptr& data)
 
     wxSizer* sizer = GetSizer();
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     wxPGProperty* p;
     bool hide;
     bool multiple;
@@ -939,6 +942,8 @@ void Frame::apply(const InspectorData::Ptr& data)
         Accumulator<PClusterSpinning>::Apply(pPGThClusterSpinning, data->ThClusters);
         // CO2
         Accumulator<PClusterCO2>::Apply(pPGThClusterCO2, data->ThClusters);
+        // Efficiency
+        Accumulator<PClusterEfficiency>::Apply(pPGThClusterEfficiency, data->ThClusters);
         // Volatility
         Accumulator<PClusterVolatilityPlanned>::Apply(pPGThClusterVolatilityPlanned,
                                                       data->ThClusters);
@@ -948,11 +953,13 @@ void Frame::apply(const InspectorData::Ptr& data)
         Accumulator<PClusterLawPlanned>::Apply(pPGThClusterLawPlanned, data->ThClusters);
         Accumulator<PClusterLawForced>::Apply(pPGThClusterLawForced, data->ThClusters);
         // Costs
+        Accumulator<PClusterCostGeneration>::Apply(pPGThClusterCostGeneration, data->ThClusters);
         Accumulator<PClusterMarginalCost>::Apply(pPGThClusterMarginalCost, data->ThClusters);
         Accumulator<PClusterReference>::Apply(pPGThClusterOperatingCost, data->ThClusters);
         Accumulator<PClusterFixedCost>::Apply(pPGThClusterFixedCost, data->ThClusters);
         Accumulator<PClusterStartupCost>::Apply(pPGThClusterStartupCost, data->ThClusters);
         Accumulator<PClusterRandomSpread>::Apply(pPGThClusterRandomSpread, data->ThClusters);
+        Accumulator<PClusterVariableOMcost>::Apply(pPGThClusterVariableOMcost, data->ThClusters);
         // Override global TS generation setting, per cluster
         Accumulator<PClusterDoGenerateTS>::Apply(pPGThClusterDoGenerateTS, data->ThClusters);
 
@@ -965,6 +972,11 @@ void Frame::apply(const InspectorData::Ptr& data)
         // check Min. Stable Power with thermal modulation
         AccumulatorCheck<PClusterSpinningColor>::ApplyTextColor(pPGThClusterSpinning,
                                                                 data->ThClusters);
+        AccumulatorCheck<PClusterMarginalCostEnable>::ApplyGreyColor(pPGThClusterMarginalCost,
+                                                                     pPGThClusterOperatingCost,
+                                                                     pPGThClusterEfficiency,
+                                                                     pPGThClusterVariableOMcost,
+                                                                     data->ThClusters);
     }
 
     pPGThClusterParams->Hide(hide);
@@ -1053,7 +1065,7 @@ void Frame::apply(const InspectorData::Ptr& data)
 
 void Frame::onLoadUserNotes()
 {
-    if (pNotes and Data::Study::Current::Valid())
+    if (pNotes and CurrentStudyIsValid())
         pNotes->loadFromStudy();
 }
 

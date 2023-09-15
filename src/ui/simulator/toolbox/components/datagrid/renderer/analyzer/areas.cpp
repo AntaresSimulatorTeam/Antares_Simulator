@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -28,7 +28,7 @@
 #include "areas.h"
 #include "../../../../../application/study.h"
 #include "../../component.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 using namespace Yuni;
 

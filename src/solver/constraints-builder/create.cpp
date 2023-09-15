@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -163,8 +163,8 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
                                   0); // vocabulary is not so obvious here (less or greater)
                 ret = constraint != nullptr;
                 state->secondMember.resizeWithoutDataLost(
-                  constraint->matrix().width, constraint->matrix().height, 0);
-                constraint->matrix() = state->secondMember;
+                        constraint->RHSTimeSeries().width, constraint->RHSTimeSeries().height, 0);
+                constraint->RHSTimeSeries() = state->secondMember;
 
                 // iterate the counter
                 ++nSubCount;
@@ -179,9 +179,8 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
                                   0); // vocabulary is not so obvious here (less or greater)
                 ret = constraint != nullptr;
                 state->secondMember.resizeWithoutDataLost(
-                  constraint->matrix().width, constraint->matrix().height, 0);
-                constraint->matrix() = state->secondMember;
-                // constraint->matrix() = state->secondMember;
+                        constraint->RHSTimeSeries().width, constraint->RHSTimeSeries().height, 0);
+                constraint->RHSTimeSeries() = state->secondMember;
             }
         }
         ++nCount;
@@ -190,14 +189,14 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
     return ret;
 }
 
-Antares::Data::BindingConstraint* CBuilder::addConstraint(const Data::ConstraintName& name,
+std::shared_ptr<Antares::Data::BindingConstraint> CBuilder::addConstraint(const Data::ConstraintName& name,
                                                           const String& op,
                                                           const String& type,
                                                           const WeightMap& weights,
                                                           const double& secondMember)
 {
     // Create a new contraint
-    auto* constraint = pStudy->bindingConstraints.add(name);
+    auto constraint = pStudy->bindingConstraints.add(name);
     const Data::BindingConstraint::Operator o = Data::BindingConstraint::StringToOperator(op);
     assert(o != Data::BindingConstraint::opUnknown);
     const Data::BindingConstraint::Type t = Data::BindingConstraint::StringToType(type);
@@ -206,7 +205,7 @@ Antares::Data::BindingConstraint* CBuilder::addConstraint(const Data::Constraint
     // Reseting
     constraint->clearAndReset(name, t, o);
     constraint->removeAllWeights();
-    constraint->enabled(1);
+    constraint->enabled(true);
 
     // weights
     for (auto j = weights.begin(); j != weights.end(); j++)
@@ -218,9 +217,8 @@ Antares::Data::BindingConstraint* CBuilder::addConstraint(const Data::Constraint
     // second members
     if (!Math::Zero(secondMember))
     {
-        // Matrix<double, double> sm(1,8760);
-        // sm.fill(secondMember);
-        constraint->matrix(secondMember);
+        constraint->RHSTimeSeries().fill(secondMember);
+        constraint->RHSTimeSeries().markAsModified();
     }
 
     // mark all values as modified

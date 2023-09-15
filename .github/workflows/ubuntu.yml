@@ -12,18 +12,16 @@ on:
       - issue-*
       - release/*
       - doc/*
+  schedule:
+    - cron: '21 2 * * *'
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
+  RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || github.event_name == 'release' }}
 
 jobs:
-
-  doc_generation:
-    uses: ./.github/workflows/build-userguide.yml
-    with:
-      artifact_name: pdf-doc
 
   build:
     name: Build
@@ -34,7 +32,6 @@ jobs:
         os: ${{ matrix.os }}
 
     runs-on: ${{ matrix.os }}
-    needs: doc_generation
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
@@ -65,7 +62,7 @@ jobs:
 
     - name: Config OR-Tools URL
       run: |
-          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.1/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
@@ -88,7 +85,7 @@ jobs:
     - name: Init submodule
       run: |
           git submodule update --init src/antares-deps
-          git submodule update --init src/tests/resources/Antares_Simulator_Tests
+          git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
 
     - name: Configure push
       run: |
@@ -99,11 +96,30 @@ jobs:
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
+           -DBUILD_TOOLS=ON \
            -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
 
     - name: Build
       run: |
              cmake --build _build --config release -j2
+
+
+    # simtest
+    - name: Read simtest version
+      id: simtest-version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'simtest.json'
+        prop_path: 'version'
+
+    - name: Run named mps tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-named-mps
+        os: ${{ matrix.test-platform }}
+        variant: "named-mps"
 
     - name: Run unfeasibility-related tests
       if: ${{ env.IS_PUSH == 'true' }}
@@ -118,6 +134,7 @@ jobs:
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end"
 
     - name: Run kirchhoff constraints tests
+      if: ${{ false }}
       shell: bash
       run: |
            tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
@@ -131,20 +148,20 @@ jobs:
         name: test-log
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
-    # simtest
-    - name: Read simtest version
-      id: simtest-version
-      uses: notiz-dev/github-action-json-property@release
-      with:
-        path: 'simtest.json'
-        prop_path: 'version'
-
     - name: Run tests about infinity on BCs RHS
       if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v830
+        os: ${{ matrix.test-platform }}
+
+    - name: Run tests introduced in v860
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-v860
         os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
@@ -164,7 +181,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run tests for adequacy patch (CSR)
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -172,7 +189,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run medium-tests
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -180,7 +197,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-1
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -188,7 +205,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-2
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -196,7 +213,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-3
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}

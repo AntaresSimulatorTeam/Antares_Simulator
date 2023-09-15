@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -44,7 +44,7 @@ void ApplyCustomScenario(Data::Study& study)
     if (study.scenarioRules)
     {
         Data::ScenarioBuilder::Rules::Ptr rules = study.scenarioRules->find(id);
-        if (!(!rules))
+        if (rules)
         {
             rules->apply();
         }

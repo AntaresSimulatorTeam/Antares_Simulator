@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -31,7 +31,7 @@
 #include <wx/sizer.h>
 #include <wx/font.h>
 #include "../../components/map/settings.h"
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include "../../../application/wait.h"
 #include <ui/common/lock.h>
 #include <wx/wupdlock.h>
@@ -210,7 +210,7 @@ void MapNotebook::MapTabs::drawOrientationTop(wxDC& dc)
     if (pNotebook.pDisplayTitle && pNotebook.pTabsVisible)
     {
         if (pNotebook.pAlwaysDisplayTab || pNotebook.pPages.size() > 2
-            || (pNotebook.pPages.size() == 2 && Data::Study::Current::Get()->showAllLayer))
+            || (pNotebook.pPages.size() == 2 && GetCurrentStudy()->showAllLayer))
         {
             switch (pNotebook.pAlignment)
             {
@@ -664,7 +664,7 @@ void MapNotebook::TabTextCtrl::OnTextEnter(wxCommandEvent& evt)
     }
     if (pPage != pNotebook->pPages[0])
     {
-        auto study = Data::Study::Current::Get();
+        auto study = GetCurrentStudy();
 
         auto layerItEnd = study->layers.end();
         for (auto layerIt = study->layers.begin(); layerIt != layerItEnd; layerIt++)

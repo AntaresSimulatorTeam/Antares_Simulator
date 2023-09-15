@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -66,8 +66,6 @@ protected:
         const Version versionFound = StudyTryToFindTheVersion(filename);
         switch (versionFound)
         {
-        case version1xx: // skipped
-            return IO::flowSkip;
         case versionFutur:
             return IO::flowSkip;
         case versionUnknown:

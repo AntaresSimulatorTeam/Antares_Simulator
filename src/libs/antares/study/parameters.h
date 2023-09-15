@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -32,12 +32,14 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include "../constants.h"
-#include <stdlib.h>
-#include <assert.h>
-#include "../date.h"
-#include "../inifile.h"
+#include <cstdlib>
+#include <cassert>
+#include <antares/writer/result_format.h>
+#include <antares/date/date.h>
+#include <antares/inifile/inifile.h>
 #include "fwd.h"
 #include "variable-print-info.h"
+#include "parameters/adq-patch-params.h"
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 
@@ -73,8 +75,6 @@ public:
     bool economy() const;
     //! Get if the simulation is in adequacy mode
     bool adequacy() const;
-    //! Get if the simulation is in adequacy-draft mode
-    bool adequacyDraft() const;
     //@}
 
     /*!
@@ -162,7 +162,7 @@ public:
     /*!
     ** \brief Get the amount of memory used by the general data
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Reset MC year weight to 1 for all years
@@ -328,7 +328,7 @@ public:
     ** All generated timeseries will be re-written into the input
     ** \see TimeSeries
     */
-    uint timeSeriesToImport;
+    uint exportTimeSeriesInInput;
     //@}
 
     //! \name Correlated draws
@@ -372,8 +372,6 @@ public:
 
     //! Improve units startup
     bool improveUnitsStartup;
-    //! Block size used by the adequacy algorithm
-    uint adequacyBlockSize;
 
     //! Accuracy on correlation
     uint timeSeriesAccuracyOnCorrelation;
@@ -486,58 +484,12 @@ public:
 
     //! Transmission capacities
     GlobalTransmissionCapacities transmissionCapacities;
-    //! Asset type
-    LinkType linkType;
     //! Simplex optimization range (day/week)
     SimplexOptimization simplexOptimizationRange;
     //@}
 
-    struct AdequacyPatch
-    {
-        struct LocalMatching
-        {
-            //! Transmission capacities from physical areas outside adequacy patch (area type 1) to
-            //! physical areas inside adequacy patch (area type 2). NTC is set to null (if true)
-            //! only in the first step of adequacy patch local matching rule.
-            bool setToZeroOutsideInsideLinks = true;
-            //! Transmission capacities between physical areas outside adequacy patch (area type 1).
-            //! NTC is set to null (if true) only in the first step of adequacy patch local matching
-            //! rule.
-            bool setToZeroOutsideOutsideLinks = true;
-            /*!
-             ** \brief Reset to default values related to local matching
-             */
-            void reset();
-        };
-        bool enabled;
-        LocalMatching localMatching;
 
-        struct CurtailmentSharing
-        {
-            //! PTO (Price Taking Order) for adequacy patch. User can choose between DENS and Load.
-            Data::AdequacyPatch::AdqPatchPTO priceTakingOrder;
-            //! Threshold to initiate curtailment sharing rule
-            double thresholdRun;
-            //! Threshold to display Local Matching Rule violations
-            double thresholdDisplayViolations;
-            //! CSR Variables relaxation threshold
-            int thresholdVarBoundsRelaxation;
-            //! Include hurdle cost in CSR cost function
-            bool includeHurdleCost;
-            //! Check CSR cost function prior & after CSR optimization
-            bool checkCsrCostFunction;
-            /*!
-             ** \brief Reset to default values related to curtailment sharing
-             */
-            void reset();
-        };
-        CurtailmentSharing curtailmentSharing;
-
-        void addExcludedVariables(std::vector<std::string>&) const;
-
-    };
-
-    AdequacyPatch adqPatch;
+    AdequacyPatch::AdqPatchParams adqPatchParams;
 
     //! \name Scenariio Builder - Rules
     //@{
@@ -570,6 +522,9 @@ public:
     // Format of results. Currently, only single files or zip archive are supported
     ResultFormat resultFormat = legacyFilesDirectories;
 
+    // Naming constraints and variables in problems
+    bool namedProblems;
+
 private:
     //! Load data from an INI file
     bool loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options);
@@ -596,7 +551,5 @@ const char* StudyModeToCString(StudyMode mode);
 bool StringToStudyMode(StudyMode& mode, Yuni::CString<20, false> text);
 
 } // namespace Antares::Data
-
-#include "parameters.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_PARAMETERS_H__

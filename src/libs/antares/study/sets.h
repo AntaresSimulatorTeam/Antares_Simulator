@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -33,8 +33,8 @@
 #include <memory>
 #include <set>
 #include <cassert>
-#include "../inifile.h"
-#include "../logs.h"
+#include <antares/inifile/inifile.h>
+#include <antares/logs/logs.h>
 
 namespace Antares
 {

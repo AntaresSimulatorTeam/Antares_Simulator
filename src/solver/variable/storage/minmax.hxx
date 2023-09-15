@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -81,7 +81,7 @@ void MinMaxBase<OpInferior, NextT>::InternalExportIndices(SurveyResults& report,
 
     // Caption
     report.captions[0][report.data.columnIndex] = report.variableCaption;
-    report.captions[1][report.data.columnIndex] = VCardT::Unit();
+    report.captions[1][report.data.columnIndex] = report.variableUnit;
     report.captions[2][report.data.columnIndex] = (OpInferior ? "min" : "max");
 
     // Precision
@@ -114,7 +114,7 @@ inline void MinMaxBase<OpInferior, NextT>::InternalExportValues(SurveyResults& r
 
     // Caption
     report.captions[0][report.data.columnIndex] = report.variableCaption;
-    report.captions[1][report.data.columnIndex] = VCardT::Unit();
+    report.captions[1][report.data.columnIndex] = report.variableUnit;
     report.captions[2][report.data.columnIndex] = (OpInferior ? "min" : "max");
     // Precision
     Solver::Variable::AssignPrecisionToPrintfFormat(report.precision[report.data.columnIndex],

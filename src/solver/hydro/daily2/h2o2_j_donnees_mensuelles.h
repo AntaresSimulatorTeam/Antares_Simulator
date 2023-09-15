@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -34,54 +34,46 @@
 
 #include "h2o2_j_donnees_optimisation.h"
 
-#ifdef __cplusplus
-extern "C"
+/*************************************************************************************************/
+/*                    Structure contenant les champs a renseigner par l'appelant */
+/*************************************************************************************************/
+
+typedef struct
 {
-#endif
+    /* En entree: seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
+       avoir appele H2O2_J_Instanciation */
+    int NombreDeJoursDuMois; /* A renseigner par l'appelant */
+    double TurbineDuMois; /* A renseigner par l'appelant (somme des turbines cibles du mois) */
+    double* TurbineMax;   /* A renseigner par l'appelant : 1 valeur par jour */
+    double* TurbineMin;   /*Minimum Hourly Hydro-Storage Generation*/
+    double* TurbineCible; /* A renseigner par l'appelant : 1 valeur par jour */
+    double reservoirCapacity;
+    double NiveauInitialDuMois;
+    double* niveauBas;
+    double* apports;
 
-    /*************************************************************************************************/
-    /*                    Structure contenant les champs a renseigner par l'appelant */
-    /*************************************************************************************************/
+    /* Les resultats */
+    char ResultatsValides; /* Vaut:
+                                                         OUI si la solution est exploitable pour
+                              le reservoir NON s'il y a eu un probleme dans la resolution
+                                                         EMERGENCY_SHUT_DOWN si la resolution du
+                              probleme a donne lieu a une erreur interne
+                                                   */
+    double* Turbine;       /* Resultat a recuperer par l'appelant */
+    double* niveauxFinJours;
+    double* overflows;
+    double* deviations;
+    double* violations;
+    double deviationMax;
+    double violationMax;
+    double waste;
 
-    typedef struct
-    {
-        /* En entree: seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
-           avoir appele H2O2_J_Instanciation */
-        int NombreDeJoursDuMois; /* A renseigner par l'appelant */
-        double TurbineDuMois; /* A renseigner par l'appelant (somme des turbinés cibles du mois) */
-        double* TurbineMax;   /* A renseigner par l'appelant : 1 valeur par jour */
-        double* TurbineCible; /* A renseigner par l'appelant : 1 valeur par jour */
-        double reservoirCapacity;
-        double NiveauInitialDuMois;
-        double* niveauBas;
-        double* apports;
+    double CoutSolution;
 
-        /* Les resultats */
-        char ResultatsValides; /* Vaut:
-                                                             OUI si la solution est exploitable pour
-                                  le reservoir NON s'il y a eu un probleme dans la resolution
-                                                             EMERGENCY_SHUT_DOWN si la resolution du
-                                  probleme a donne lieu a une erreur interne
-                                                       */
-        double* Turbine;       /* Resultat a recuperer par l'appelant */
-        double* niveauxFinJours;
-        double* overflows;
-        double* deviations;
-        double* violations;
-        double deviationMax;
-        double violationMax;
-        double waste;
+    /******************************************************************************************/
 
-        double CoutSolution;
-
-        /******************************************************************************************/
-
-        /* Problemes internes (utilise uniquement par l'optimisation) */
-        PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
-    } DONNEES_MENSUELLES_ETENDUES;
-
-#ifdef __cplusplus
-}
-#endif
+    /* Problemes internes (utilise uniquement par l'optimisation) */
+    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
+} DONNEES_MENSUELLES_ETENDUES;
 
 #endif

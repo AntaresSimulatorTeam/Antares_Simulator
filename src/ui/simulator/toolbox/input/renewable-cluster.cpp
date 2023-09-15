@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -38,6 +38,7 @@
 #include <wx/wupdlock.h>
 #include <wx/sizer.h>
 #include "renewable-cluster.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 
@@ -239,7 +240,7 @@ void RenewableCluster::evtPopupDeleteAll(wxCommandEvent&)
 void RenewableCluster::internalDeletePlant(void*)
 {
     // Nothing is/was selected. Aborting.
-    if (!pArea || !pLastSelectedRenewableCluster || not Data::Study::Current::Valid())
+    if (!pArea || !pLastSelectedRenewableCluster || not CurrentStudyIsValid())
         return;
 
     // The renewable cluster to delete
@@ -267,7 +268,7 @@ void RenewableCluster::internalDeletePlant(void*)
         OnStudyBeginUpdate();
 
         // Because we may need to update this afterwards
-        auto study = Data::Study::Current::Get();
+        auto study = GetCurrentStudy();
         study->scenarioRulesLoadIfNotAvailable();
 
         // Update the list
@@ -317,7 +318,7 @@ void RenewableCluster::internalDeleteAll(void*)
 
     Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     // If the pointer has been, it is guaranteed to be valid
     Window::Message message(
@@ -335,7 +336,7 @@ void RenewableCluster::internalDeleteAll(void*)
         OnStudyBeginUpdate();
 
         // We have to rebuild the scenario builder data, if required
-        ScenarioBuilderUpdater updaterSB(*Data::Study::Current::Get());
+        ScenarioBuilderUpdater updaterSB(*GetCurrentStudy());
 
         // invalidating the parent area
         pArea->forceReload();
@@ -362,7 +363,7 @@ void RenewableCluster::internalDeleteAll(void*)
 void RenewableCluster::internalAddPlant(void*)
 {
     WIP::Locker wip;
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     if (!(!study) && pArea)
     {
@@ -371,7 +372,7 @@ void RenewableCluster::internalAddPlant(void*)
         uint indx = 1;
 
         // Trying to find an uniq name
-        Antares::Data::ClusterName sFl;
+        YString sFl;
         sFl.clear() << "new cluster";
         while (pArea->renewable.list.find(sFl))
         {
@@ -423,7 +424,7 @@ void RenewableCluster::internalClonePlant(void*)
     const Antares::Data::RenewableCluster& selectedPlant
       = *pLastSelectedRenewableCluster->renewableAggregate();
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study) && pArea)
     {
         onClusterChanged(nullptr);
@@ -431,23 +432,23 @@ void RenewableCluster::internalClonePlant(void*)
         uint indx = 2;
 
         // Trying to find an uniq name
-        Antares::Data::ClusterName copy = selectedPlant.name();
+        YString copy = selectedPlant.name();
 
-        Data::ClusterName::Size sepPos = copy.find_last_of(' ');
+        YString::Size sepPos = copy.find_last_of(' ');
         if (sepPos != YString::npos)
         {
-            Data::ClusterName suffixChain(copy, sepPos + 1);
+            YString suffixChain(copy, sepPos + 1);
             int suffixNumber = suffixChain.to<int>();
             if (suffixNumber > 0)
             {
-                Data::ClusterName suffixLess(copy, 0, sepPos);
+                YString suffixLess(copy, 0, sepPos);
                 copy = suffixLess;
             }
         }
 
         copy += ' ';
 
-        Antares::Data::ClusterName sFl;
+        YString sFl;
         sFl << copy << indx; // lowercase
         while (pArea->renewable.list.find(sFl))
         {

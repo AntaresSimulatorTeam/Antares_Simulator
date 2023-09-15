@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -38,18 +38,18 @@ namespace Variable
 struct VCardAllAreas
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "Areas";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "";
     }
@@ -106,11 +106,6 @@ public:
 
 public:
     /*!
-    ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
-    */
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u);
-
-    /*!
     ** \brief Retrieve the list of all individual variables
     **
     ** The predicate must implement the method `add(name, unit, comment)`.
@@ -152,7 +147,6 @@ public:
 
     void hourForEachArea(State& state, uint numSpace);
     void hourForEachLink(State& state, uint numSpace);
-    void hourForEachThermalCluster(State& state, uint numSpace);
 
     void hourEnd(State& state, uint hourInTheYear);
 
@@ -175,7 +169,7 @@ public:
 
     void beforeYearByYearExport(uint year, uint numSpace);
 
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     template<class I>
     static void provideInformations(I& infos);

@@ -2,23 +2,31 @@
 
 #include <antares/sys/policy.h>
 #include <antares/resources/resources.h>
-#include <antares/hostinfo.h>
-#include <antares/exception/LoadingError.hpp>
-#include <antares/emergency.h>
+#include <antares/logs/hostinfo.h>
+#include <antares/fatal-error.h>
 #include <antares/benchmarking/timer.h>
-#include <antares/version.h>
-#include "../config.h"
-
-#include "misc/system-memory.h"
-#include "utils/ortools_utils.h"
 
 #include <antares/exception/InitializationError.hpp>
+#include <antares/exception/LoadingError.hpp>
+#include <antares/checks/checkLoadedInputData.h>
+#include <antares/version.h>
+
+#include "signal-handling/public.h"
+
+#include "misc/system-memory.h"
+#include "misc/write-command-line.h"
+
+#include "utils/ortools_utils.h"
+#include "../config.h"
+#include <antares/infoCollection/StudyInfoCollector.h>
 
 #include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/core/process/rename.h>
 
 #include <algorithm>
+
+using namespace Antares::Check;
 
 namespace
 {
@@ -60,7 +68,7 @@ void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
     }
 }
 
-static void printSolvers()
+void printSolvers()
 {
     std::cout << "Available solvers :" << std::endl;
     for (const auto& solver : getAvailableOrtoolsSolverName())
@@ -68,147 +76,9 @@ static void printSolvers()
         std::cout << solver << std::endl;
     }
 }
-
-// CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing
-// = MILP ».
-void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
-                                   Antares::Data::HydroPricingMode hpMode)
-{
-    using namespace Antares::Data;
-    if (optRange == SimplexOptimization::sorDay && hpMode == HydroPricingMode::hpMILP)
-    {
-        throw Error::IncompatibleOptRangeHydroPricing();
-    }
-}
-
-// CHECK incompatible de choix simultané des options « simplex range= daily » et «
-// unit-commitment = Accurate » ou « unit-commitment = MILP ».
-void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,
-                                         Antares::Data::UnitCommitmentMode ucMode)
-{
-    using namespace Antares::Data;
-    if (optRange == SimplexOptimization::sorDay
-        && (ucMode == UnitCommitmentMode::ucHeuristicAccurate
-            || ucMode == UnitCommitmentMode::ucMILP))
-    {
-        throw Error::IncompatibleOptRangeUCMode();
-    }
-}
-
-// Daily simplex optimisation and any area's use heurictic target turned to "No" are not
-// compatible.
-void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange,
-                                     const Antares::Data::AreaList& areas)
-{
-    if (optRange == Antares::Data::SimplexOptimization::sorDay)
-    {
-        for (uint i = 0; i < areas.size(); ++i)
-        {
-            const auto& area = *(areas.byIndex[i]);
-            if (!area.hydro.useHeuristicTarget)
-            {
-                throw Error::IncompatibleDailyOptHeuristicForArea(area.name);
-            }
-        }
-    }
-}
-
-// Adequacy Patch can only be used with Economy Study/Simulation Mode.
-void checkAdqPatchStudyModeEconomyOnly(const bool adqPatchOn,
-                                       const Antares::Data::StudyMode studyMode)
-{
-    if ((studyMode != Antares::Data::StudyMode::stdmEconomy) && adqPatchOn)
-    {
-        throw Error::IncompatibleStudyModeForAdqPatch();
-    }
-}
-// When Adequacy Patch is on at least one area must be inside Adequacy patch mode.
-void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Data::AreaList& areas)
-{
-    using namespace Antares::Data;
-    if (adqPatchOn)
-    {
-        const bool containsAdqArea
-          = std::any_of(areas.cbegin(), areas.cend(), [](const std::pair<AreaName, Area*>& area) {
-                return area.second->adequacyPatchMode == AdequacyPatch::physicalAreaInsideAdqPatch;
-            });
-        if (!containsAdqArea)
-            throw Error::NoAreaInsideAdqPatchMode();
-    }
-}
-
-void checkAdqPatchIncludeHurdleCost(const bool adqPatchOn,
-                                    const bool includeHurdleCost,
-                                    const bool includeHurdleCostCsr)
-{
-    // No need to check if adq-patch is disabled
-    if (!adqPatchOn)
-        return;
-
-    if (includeHurdleCostCsr && !includeHurdleCost)
-        throw Error::IncompatibleHurdleCostCSR();
-}
-
-void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas)
-{
-    if (tsGenThermal)
-    {
-        std::map<int, YString> areaClusterNames;
-        if (!(areasThermalClustersMinStablePowerValidity(areas, areaClusterNames)))
-        {
-            throw Error::InvalidParametersForThermalClusters(areaClusterNames);
-        }
-    }
-
-    // CHECK PuissanceDisponible
-    /* Caracteristiques des paliers thermiques */
-    if (!tsGenThermal) // no time series generation asked (off mode)
-    {
-        for (uint i = 0; i < areas.size(); ++i)
-        {
-            // Alias de la zone courant
-            auto& area = *(areas.byIndex[i]);
-
-            for (uint l = 0; l != area.thermal.clusterCount(); ++l) //
-            {
-                const auto& cluster = *(area.thermal.clusters[l]);
-                auto PmaxDUnGroupeDuPalierThermique = cluster.nominalCapacityWithSpinning;
-                auto PminDUnGroupeDuPalierThermique
-                  = (cluster.nominalCapacityWithSpinning < cluster.minStablePower)
-                      ? cluster.nominalCapacityWithSpinning
-                      : cluster.minStablePower;
-
-                bool condition = false;
-                bool report = false;
-
-                for (uint y = 0; y != cluster.series->series.height; ++y)
-                {
-                    for (uint x = 0; x != cluster.series->series.width; ++x)
-                    {
-                        auto rightpart = PminDUnGroupeDuPalierThermique
-                                         * ceil(cluster.series->series.entry[x][y]
-                                                / PmaxDUnGroupeDuPalierThermique);
-                        condition = rightpart > cluster.series->series.entry[x][y];
-                        if (condition)
-                        {
-                            cluster.series->series.entry[x][y] = rightpart;
-                            report = true;
-                        }
-                    }
-                }
-
-                if (report)
-                    logs.warning() << "Area : " << area.name << " cluster name : " << cluster.name()
-                                   << " available power lifted to match Pmin and Pnom requirements";
-            }
-        }
-    }
-}
 } // namespace
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 Application::Application()
 {
@@ -286,11 +156,12 @@ void Application::prepare(int argc, char* argv[])
     logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR;
 #endif
     WriteHostInfoIntoLogs();
-    logs.info();
 
-    // Initialize the main structures for the simulation
-    // Logs
-    Resources::WriteRootFolderToLogs();
+    // Write command-line options into logs
+    // Incidentally, it also seems to contain the full path to the executable
+    logs.info();
+    WriteCommandLineIntoLogs(argc, argv);
+
     logs.info() << "  :: log filename: " << logs.logfile();
     // Temporary use a callback to count the number of errors and warnings
     logs.callback.connect(this, &Application::onLogMessage);
@@ -299,7 +170,6 @@ void Application::prepare(int argc, char* argv[])
     pStudy = std::make_shared<Antares::Data::Study>(true /* for the solver */);
 
     // Setting global variables for backward compatibility
-    Data::Study::Current::Set(pStudy);
     pParameters = &(pStudy->parameters);
 
     // Loading the study
@@ -318,17 +188,18 @@ void Application::prepare(int argc, char* argv[])
 
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
-    checkAdqPatchStudyModeEconomyOnly(pParameters->adqPatch.enabled, pParameters->mode);
-
-    checkAdqPatchContainsAdqPatchArea(pParameters->adqPatch.enabled, pStudy->areas);
-    checkAdqPatchIncludeHurdleCost(pParameters->adqPatch.enabled,
-                                   pParameters->include.hurdleCosts,
-                                   pParameters->adqPatch.curtailmentSharing.includeHurdleCost);
+    if (pParameters->adqPatchParams.enabled)
+        pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,
+                                                        pStudy->areas,
+                                                        pParameters->include.hurdleCosts);
 
     bool tsGenThermal
       = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
 
     checkMinStablePower(tsGenThermal, pStudy->areas);
+
+    checkFuelCostColumnNumber(pStudy->areas);
+    checkCO2CostColumnNumber(pStudy->areas);
 
     // Start the progress meter
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
@@ -393,36 +264,21 @@ void Application::execute()
     memoryReport.start();
 
     pStudy->computePThetaInfForThermalClusters();
-    try
+
+    // Run the simulation
+    switch (pStudy->runtime->mode)
     {
-        // Run the simulation
-        switch (pStudy->runtime->mode)
-        {
-        case Data::stdmEconomy:
-            runSimulationInEconomicMode();
-            break;
-        case Data::stdmAdequacy:
-            runSimulationInAdequacyMode();
-            break;
-        case Data::stdmAdequacyDraft:
-            runSimulationInAdequacyDraftMode();
-            break;
-        default:
-            break;
-        }
+    case Data::stdmEconomy:
+        runSimulationInEconomicMode();
+        break;
+    case Data::stdmAdequacy:
+        runSimulationInAdequacyMode();
+        break;
+    default:
+        break;
     }
     // TODO : make an interface class for ISimulation, check writer & queue before
     // runSimulationIn<XXX>Mode()
-    catch (Solver::Initialization::Error::NoResultWriter e)
-    {
-        logs.error() << "No result writer";
-        AntaresSolverEmergencyShutdown(); // no return
-    }
-    catch (Solver::Initialization::Error::NoQueueService e)
-    {
-        logs.error() << "No queue service";
-        AntaresSolverEmergencyShutdown(); // no return
-    }
 
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();
@@ -440,9 +296,7 @@ void Application::resetLogFilename() const
     // Making sure that the folder
     if (!Yuni::IO::Directory::Create(logfile))
     {
-        logs.fatal() << "Impossible to create the log folder. Aborting now.";
-        logs.info() << "  Target: " << logfile;
-        AntaresSolverEmergencyShutdown(); // no return
+        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.c_str() + ". Aborting now.");
     }
 
     // Date/time
@@ -455,8 +309,7 @@ void Application::resetLogFilename() const
 
     if (!logs.logfileIsOpened())
     {
-        logs.error() << "Impossible to create " << logfile;
-        AntaresSolverEmergencyShutdown(); // will never return
+        throw FatalError(std::string("Impossible to create the log file at ") + logfile.c_str());
     }
 }
 
@@ -512,7 +365,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     study.prepareOutput();
 
     // Initialize the result writer
-    study.prepareWriter(&pDurationCollector);
+    study.prepareWriter(pDurationCollector);
+    Antares::Solver::initializeSignalHandlers(study.resultWriter);
 
     // Save about-the-study files (comments, notes, etc.)
     study.saveAboutTheStudy();
@@ -539,7 +393,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             // The loading of the study produces warnings and/or errors
             // As the option '--force' is not given, we can not continue
             LogDisplayErrorInfos(pErrorCount, pWarningCount, "The simulation must stop.");
-            AntaresSolverEmergencyShutdown();
+            throw FatalError("The simulation must stop.");
         }
         else
         {
@@ -587,8 +441,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
 
-    // Allocate all arrays
-    SIM_AllocationTableaux();
+    //alloc global vectors
+    SIM_AllocationTableaux(study);
 
     // Random-numbers generators
     initializeRandomNumberGenerators();
@@ -635,11 +489,9 @@ Application::~Application()
         logs.info() << LOG_UI_SOLVER_DONE;
 
         // Copy the log file
-        if (!pStudy->parameters.noOutput)
+        if (!pStudy->parameters.noOutput) {
             pStudy->importLogsToOutputFolder();
-
-        // simulation
-        SIM_DesallocationTableaux();
+        }
 
         // release all reference to the current study held by this class
         pStudy->clear();
@@ -648,5 +500,5 @@ Application::~Application()
         LocalPolicy::Close();
     }
 }
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver
+

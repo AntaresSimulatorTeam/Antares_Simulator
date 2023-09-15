@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -53,7 +53,7 @@ public:
     virtual void reload()
     {
         pArray.clear();
-        auto study = Data::Study::Current::Get();
+        auto study = GetCurrentStudy();
         if (!(!study))
         {
             pArray.reserve(study->areas.size());
@@ -104,7 +104,7 @@ public:
     {
         pArray.clear();
 
-        auto study = Data::Study::Current::Get();
+        auto study = GetCurrentStudy();
         if (!(!study))
         {
             pArray.reserve(study->areas.size());
@@ -165,7 +165,7 @@ public:
     {
         pArray.clear();
 
-        auto study = Data::Study::Current::Get();
+        auto study = GetCurrentStudy();
         if (!(!study))
         {
             {

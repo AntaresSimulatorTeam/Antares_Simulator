@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -57,12 +57,7 @@ inline const IntermediateValues::Type& IntermediateValues::operator[](
     return hour[index];
 }
 
-inline void IntermediateValues::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-{
-    Antares::Memory::EstimateMemoryUsage(sizeof(double), maxHoursInAYear, u, true);
-}
-
-inline Yuni::uint64 IntermediateValues::MemoryUsage()
+inline uint64_t IntermediateValues::MemoryUsage()
 {
     return +sizeof(Type) * maxHoursInAYear;
 }
@@ -74,15 +69,8 @@ inline void IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
 {
     if (!(fileLevel & Category::id))
     {
-        if (fileLevel & Category::mc)
+        switch (precision)
         {
-            // Do nothing
-            // internalExportAnnualValuesMC<1, VCardT>(report, avgdata.year);
-        }
-        else
-        {
-            switch (precision)
-            {
             case Category::hourly:
                 internalExportAnnualValues<maxHoursInAYear, VCardT>(report, hour, false);
                 break;
@@ -98,7 +86,6 @@ inline void IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
             case Category::annual:
                 internalExportAnnualValues<1, VCardT>(report, &year, true);
                 break;
-            }
         }
     }
 }
@@ -113,7 +100,7 @@ void IntermediateValues::internalExportAnnualValues(SurveyResults& report,
 
     // Caption
     report.captions[0][report.data.columnIndex] = report.variableCaption;
-    report.captions[1][report.data.columnIndex] = VCardT::Unit();
+    report.captions[1][report.data.columnIndex] = report.variableUnit;
     report.captions[2][report.data.columnIndex] = nullptr;
     // Precision
     report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<VCardT::decimal>::Value();

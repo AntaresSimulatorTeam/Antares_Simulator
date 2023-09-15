@@ -25,8 +25,10 @@ INSTALL(EXPORT antares-study-updater
 )
 
 set(UPDATER_LIBS
-		libantares-core
 		yuni-static-core
+		Antares::study
+		Antares::sys
+		antares-core #version.h
 		${CMAKE_THREADS_LIBS_INIT}
 		)
 

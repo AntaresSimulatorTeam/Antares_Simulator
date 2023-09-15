@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -35,6 +35,7 @@
 #include "../../../../solver/constraints-builder/cbuilder.h"
 #include <ui/common/lock.h>
 #include "../wait.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 #define SEP IO::Separator
 
@@ -149,7 +150,7 @@ void ApplWnd::evtLaunchConstraintsBuilder(wxCommandEvent& evt)
     String filename;
     wxStringToString(wfilename, filename);
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     if (!study) // A valid study would be better
     {

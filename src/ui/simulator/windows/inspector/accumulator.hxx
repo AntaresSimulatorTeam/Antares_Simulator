@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -114,6 +114,49 @@ public:
                                                            PredicateT::TextColor(*i));
         }
     }
+
+    template<class ListT>
+    static void ApplyGreyColor(wxPGProperty* property_MargCost,
+                               wxPGProperty* property_OperCost,
+                               wxPGProperty* property_FuelEff,
+                               wxPGProperty* property_VarOMcost,
+                               const ListT& list)
+    {
+        assert(list.size() != 0);
+        assert(property_MargCost != NULL);
+        assert(property_OperCost != NULL);
+        assert(property_FuelEff != NULL);
+        assert(property_VarOMcost != NULL);
+        if (list.size() == 1)
+        {
+            auto study = *list.begin();
+            property_MargCost->GetGrid()->EnableProperty(property_MargCost->GetBaseName(),
+                                                         PredicateT::Enable(study));
+            property_OperCost->GetGrid()->EnableProperty(property_OperCost->GetBaseName(),
+                                                         PredicateT::Enable(study));
+            property_FuelEff->GetGrid()->EnableProperty(property_FuelEff->GetBaseName(),
+                                                        !PredicateT::Enable(study));
+            property_VarOMcost->GetGrid()->EnableProperty(property_VarOMcost->GetBaseName(),
+                                                          !PredicateT::Enable(study));
+        }
+        else
+        {
+            auto i = list.cbegin();
+            const auto end = list.cend();
+            ++i;
+            for (; i != end; ++i)
+            {
+                property_MargCost->GetGrid()->EnableProperty(property_MargCost->GetBaseName(),
+                                                             PredicateT::Enable(*i));
+                property_OperCost->GetGrid()->EnableProperty(property_OperCost->GetBaseName(),
+                                                             PredicateT::Enable(*i));
+                property_FuelEff->GetGrid()->EnableProperty(property_FuelEff->GetBaseName(),
+                                                            !PredicateT::Enable(*i));
+                property_VarOMcost->GetGrid()->EnableProperty(property_VarOMcost->GetBaseName(),
+                                                              !PredicateT::Enable(*i));
+            }
+        }
+    }
 };
 
 struct PAreaColor
@@ -153,16 +196,12 @@ struct PStudyMode
     }
     static wxString ConvertToString(const Type v)
     {
-        // NOTE stdmAdequacyDraft: should never happen since it could not be
-        //  selected
         switch (v)
         {
         case Data::stdmEconomy:
             return wxT("Economy");
         case Data::stdmAdequacy:
             return wxT("Adequacy");
-        case Data::stdmAdequacyDraft:
-            return wxT("Draft");
         case Data::stdmExpansion:
             return wxT("Expansion");
         case Data::stdmUnknown:
@@ -375,7 +414,7 @@ struct PStudyHorizon
     using Type = String;
     static Type Value(const Data::Study::Ptr& study)
     {
-        return !(!study) ? study->parameters.horizon : nullptr;
+        return !(!study) ? study->parameters.horizon : Type();
     }
     static wxString ConvertToString(const Type v)
     {
@@ -768,7 +807,7 @@ struct PClusterCO2
     using Type = double;
     static Type Value(const Data::ThermalCluster* cluster)
     {
-        return cluster->co2;
+        return cluster->emissions.factors[Antares::Data::Pollutant::CO2];
     }
     static wxString ConvertToString(const Type v)
     {
@@ -808,6 +847,19 @@ struct PClusterSpinning
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->spinning;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return DoubleToWxString(v);
+    }
+};
+
+struct PClusterEfficiency
+{
+    using Type = double;
+    static Type Value(const Data::ThermalCluster* cluster)
+    {
+        return cluster->fuelEfficiency;
     }
     static wxString ConvertToString(const Type v)
     {
@@ -860,6 +912,19 @@ struct PClusterRandomSpread
     }
 };
 
+struct PClusterCostGeneration
+{
+    using Type = uint;
+    static Type Value(const Data::ThermalCluster* cluster)
+    {
+        return (uint)cluster->costgeneration;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return (v < costgenerationCount) ? costgeneration[v] : nullptr;
+    }
+};
+
 struct PClusterMarginalCost
 {
     using Type = double;
@@ -870,6 +935,17 @@ struct PClusterMarginalCost
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
+    }
+};
+
+struct PClusterMarginalCostEnable
+{
+    static bool Enable(Data::ThermalCluster* cluster)
+    {
+        if (cluster->costgeneration == Data::useCostTimeseries)
+            return false;
+
+        return true;
     }
 };
 
@@ -892,6 +968,19 @@ struct PClusterFixedCost
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->fixedCost;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return DoubleToWxString(v);
+    }
+};
+
+struct PClusterVariableOMcost
+{
+    using Type = double;
+    static Type Value(const Data::ThermalCluster* cluster)
+    {
+        return cluster->variableomcost;
     }
     static wxString ConvertToString(const Type v)
     {
@@ -1015,7 +1104,7 @@ struct PRnClusterTSMode
 struct PConstraintName
 {
     using Type = wxString;
-    static Type Value(const Data::BindingConstraint* constraint)
+    static Type Value(const std::shared_ptr<Data::BindingConstraint> constraint)
     {
         return wxStringFromUTF8(constraint->name());
     }
@@ -1028,7 +1117,7 @@ struct PConstraintName
 struct PConstraintComments
 {
     using Type = wxString;
-    static Type Value(const Data::BindingConstraint* constraint)
+    static Type Value(const std::shared_ptr<Data::BindingConstraint> constraint)
     {
         return wxStringFromUTF8(constraint->comments());
     }
@@ -1041,7 +1130,7 @@ struct PConstraintComments
 struct PConstraintEnabled
 {
     using Type = bool;
-    static Type Value(const Data::BindingConstraint* constraint)
+    static Type Value(const std::shared_ptr<Data::BindingConstraint> constraint)
     {
         return constraint->enabled();
     }
@@ -1054,7 +1143,7 @@ struct PConstraintEnabled
 struct PConstraintType
 {
     using Type = Data::BindingConstraint::Type;
-    static Type Value(const Data::BindingConstraint* constraint)
+    static Type Value(const std::shared_ptr<Data::BindingConstraint> constraint)
     {
         return constraint->type();
     }

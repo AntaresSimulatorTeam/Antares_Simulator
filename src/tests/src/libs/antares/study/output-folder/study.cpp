@@ -1,8 +1,9 @@
 #define BOOST_TEST_MODULE output folder
+#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <string>
 #include <fstream>
 #include <filesystem>
@@ -46,38 +47,38 @@ struct Fixture
     fs::path outputRoot;
 };
 
-BOOST_FIXTURE_TEST_SUITE(s, Fixture)
+BOOST_AUTO_TEST_SUITE(s)
 
-BOOST_AUTO_TEST_CASE(economy_legacyfiles_emptylabel)
+BOOST_FIXTURE_TEST_CASE(economy_legacyfiles_emptylabel, Fixture)
 {
     StudyMode mode = stdmEconomy;
     ResultFormat fmt = legacyFilesDirectories;
     const YString label = "";
-    const Yuni::sint64 startTime = 1;
+    const int64_t startTime = 1;
     const YString expectedOutput = (outputRoot / "19700101-0000eco").string();
     const YString actualOutput
       = StudyCreateOutputPath(mode, fmt, outputRoot.string(), label, startTime);
     BOOST_CHECK_EQUAL(actualOutput, expectedOutput);
 }
 
-BOOST_AUTO_TEST_CASE(economy_legacyfiles_label_now)
+BOOST_FIXTURE_TEST_CASE(economy_legacyfiles_label_now, Fixture)
 {
     StudyMode mode = stdmEconomy;
     ResultFormat fmt = legacyFilesDirectories;
     const YString label = "test";
-    const Yuni::sint64 startTime = 1672391667;
+    const int64_t startTime = 1672391667;
     const YString expectedOutput = (outputRoot / "20221230-0914eco-test").string();
     const YString actualOutput
       = StudyCreateOutputPath(mode, fmt, outputRoot.string(), label, startTime);
     BOOST_CHECK_EQUAL(actualOutput, expectedOutput);
 }
 
-BOOST_AUTO_TEST_CASE(adequacy_legacyfiles_label_now)
+BOOST_FIXTURE_TEST_CASE(adequacy_legacyfiles_label_now, Fixture)
 {
     StudyMode mode = stdmAdequacy;
     ResultFormat fmt = legacyFilesDirectories;
     const YString label = "test";
-    const Yuni::sint64 startTime = 1672391667;
+    const int64_t startTime = 1672391667;
     const YString expectedOutput = (outputRoot / "20221230-0914adq-test").string();
     const YString actualOutput
       = StudyCreateOutputPath(mode, fmt, outputRoot.string(), label, startTime);
@@ -90,12 +91,12 @@ BOOST_AUTO_TEST_CASE(adequacy_legacyfiles_label_now)
     BOOST_CHECK_EQUAL(actualOutput_suffix, expectedOutput_suffix);
 }
 
-BOOST_AUTO_TEST_CASE(adequacy_zip_label_now)
+BOOST_FIXTURE_TEST_CASE(adequacy_zip_label_now, Fixture)
 {
     StudyMode mode = stdmAdequacy;
     ResultFormat fmt = zipArchive;
     const YString label = "test";
-    const Yuni::sint64 startTime = 1672391667;
+    const int64_t startTime = 1672391667;
     const YString expectedOutput = (outputRoot / "20221230-0914adq-test").string();
     const YString actualOutput
       = StudyCreateOutputPath(mode, fmt, outputRoot.string(), label, startTime);

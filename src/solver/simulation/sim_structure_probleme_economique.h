@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -30,249 +30,281 @@
 
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
 #include "../utils/optimization_statistics.h"
-#include <memory>
 #include "../../libs/antares/study/fwd.h"
 #include "../../libs/antares/study/study.h"
-#include "sim_constants.h"
+#include <vector>
+#include <optional>
 #include <memory>
-#include <yuni/core/math.h>
 
 class AdequacyPatchRuntimeData;
 
-typedef struct
+struct CORRESPONDANCES_DES_VARIABLES
 {
-    int* NumeroDeVariableDeLInterconnexion;
-    int* NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;
-    int* NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
+    // Avoid accidental copies
+    CORRESPONDANCES_DES_VARIABLES() = default;
+    CORRESPONDANCES_DES_VARIABLES(const CORRESPONDANCES_DES_VARIABLES&) = delete;
+    CORRESPONDANCES_DES_VARIABLES(CORRESPONDANCES_DES_VARIABLES&&) = default;
 
-    int* NumeroDeVariableDuPalierThermique;
+    std::vector<int> NumeroDeVariableDeLInterconnexion;
+    std::vector<int> NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;
+    std::vector<int> NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
 
-    int* NumeroDeVariablesDeLaProdHyd;
+    std::vector<int> NumeroDeVariableDuPalierThermique;
 
-    int* NumeroDeVariablesDePompage;
-    int* NumeroDeVariablesDeNiveau;
-    int* NumeroDeVariablesDeDebordement;
+    std::vector<int> NumeroDeVariablesDeLaProdHyd;
 
-    int* NumeroDeVariableDefaillancePositive;
+    std::vector<int> NumeroDeVariablesDePompage;
+    std::vector<int> NumeroDeVariablesDeNiveau;
+    std::vector<int> NumeroDeVariablesDeDebordement;
 
-    int* NumeroDeVariableDefaillanceNegative;
+    std::vector<int> NumeroDeVariableDefaillancePositive;
 
-    int* NumeroDeVariablesVariationHydALaBaisse;
+    std::vector<int> NumeroDeVariableDefaillanceNegative;
 
-    int* NumeroDeVariablesVariationHydALaHausse;
+    std::vector<int> NumeroDeVariablesVariationHydALaBaisse;
 
-    int* NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique;
-    int* NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
-    int* NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
-    int* NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
+    std::vector<int> NumeroDeVariablesVariationHydALaHausse;
 
-} CORRESPONDANCES_DES_VARIABLES;
+    std::vector<int> NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique;
+    std::vector<int> NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
+    std::vector<int> NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
+    std::vector<int> NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
 
-typedef struct
+    struct
+    {
+        std::vector<int> InjectionVariable;
+        std::vector<int> WithdrawalVariable;
+        std::vector<int> LevelVariable;
+    } SIM_ShortTermStorage;
+};
+
+struct CORRESPONDANCES_DES_CONTRAINTES
 {
-    int* NumeroDeContrainteDesBilansPays;
-    int* NumeroDeContraintePourEviterLesChargesFictives;
+    // Avoid accidental copies
+    CORRESPONDANCES_DES_CONTRAINTES() = default;
+    CORRESPONDANCES_DES_CONTRAINTES(const CORRESPONDANCES_DES_CONTRAINTES&) = delete;
+    CORRESPONDANCES_DES_CONTRAINTES(CORRESPONDANCES_DES_CONTRAINTES&&) = default;
 
-    int* NumeroPremiereContrainteDeReserveParZone;
-    int* NumeroDeuxiemeContrainteDeReserveParZone;
+    std::vector<int> NumeroDeContrainteDesBilansPays;
+    std::vector<int> NumeroDeContraintePourEviterLesChargesFictives;
 
-    int* NumeroDeContrainteDeDissociationDeFlux;
-    int* NumeroDeContrainteDesContraintesCouplantes;
+    std::vector<int> NumeroPremiereContrainteDeReserveParZone;
+    std::vector<int> NumeroDeuxiemeContrainteDeReserveParZone;
 
-    int* NumeroDeContrainteDesContraintesDeDureeMinDeMarche;
-    int* NumeroDeContrainteDesContraintesDeDureeMinDArret;
-    int* NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne;
+    std::vector<int> NumeroDeContrainteDeDissociationDeFlux;
+    std::vector<int> NumeroDeContrainteDesContraintesCouplantes;
 
-    int* NumeroDeContrainteDesNiveauxPays;
+    std::vector<int> NumeroDeContrainteDesContraintesDeDureeMinDeMarche;
+    std::vector<int> NumeroDeContrainteDesContraintesDeDureeMinDArret;
+    std::vector<int> NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne;
 
-} CORRESPONDANCES_DES_CONTRAINTES;
+    std::vector<int> NumeroDeContrainteDesNiveauxPays;
 
-typedef struct
+    std::vector<int> ShortTermStorageLevelConstraint;
+};
+
+struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
 {
-    int* NumeroDeContrainteDesContraintesCouplantes;
+    std::vector<int> NumeroDeContrainteDesContraintesCouplantes;
+};
 
-} CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES;
-
-typedef struct
+struct CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES
 {
-    int* NumeroDeContrainteDesContraintesCouplantes;
+    std::vector<int> NumeroDeContrainteDesContraintesCouplantes;
+};
 
-} CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES;
-
-typedef struct
+struct VALEURS_DE_NTC_ET_RESISTANCES
 {
-    double* ValeurDeNTCOrigineVersExtremite;
-    double* ValeurDeNTCExtremiteVersOrigine;
-    double* ValeurDeLoopFlowOrigineVersExtremite;
-    double* ValeurDuFlux;
+    std::vector<double> ValeurDeNTCOrigineVersExtremite;
+    std::vector<double> ValeurDeNTCExtremiteVersOrigine;
+    std::vector<double> ValeurDeLoopFlowOrigineVersExtremite;
+    std::vector<double> ValeurDuFlux;
 
-    double* ValeurDuFluxUp;
-    double* ValeurDuFluxDown;
+    std::vector<double> ResistanceApparente;
+};
 
-    double* ResistanceApparente;
-} VALEURS_DE_NTC_ET_RESISTANCES;
-
-typedef struct
+struct TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE
 {
     double* TransferBoundMarketEdge;
     double* TransferLevelMarketEdge;
-} TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE;
+};
 
-typedef struct
+struct TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE
 {
     double* TransferBoundFlexUpEdge;
     double* TransferLevelFlexUpEdge;
-} TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE;
+};
 
-typedef struct
+struct TRANSFER_BOUND_AND_LEVEL_FLEX_DOWN_EDGE
 {
     double* TransferBoundFlexDownEdge;
     double* TransferLevelFlexDownEdge;
-} TRANSFER_BOUND_AND_LEVEL_FLEX_DOWN_EDGE;
+};
 
-typedef struct
+struct CONTRAINTES_COUPLANTES
 {
     char TypeDeContrainteCouplante;
-
     char SensDeLaContrainteCouplante;
 
-    double* SecondMembreDeLaContrainteCouplante;
-
-    double* SecondMembreDeLaContrainteCouplanteRef;
+    std::vector<double> SecondMembreDeLaContrainteCouplante;
 
     int NombreDElementsDansLaContrainteCouplante;
     int NombreDInterconnexionsDansLaContrainteCouplante;
-    double* PoidsDeLInterconnexion;
-    int* NumeroDeLInterconnexion;
-    int* OffsetTemporelSurLInterco;
+
+    std::vector<double> PoidsDeLInterconnexion;
+    std::vector<int> NumeroDeLInterconnexion;
+    std::vector<int> OffsetTemporelSurLInterco;
+
     int NombreDePaliersDispatchDansLaContrainteCouplante;
-    double* PoidsDuPalierDispatch;
-    int* PaysDuPalierDispatch;
-    int* NumeroDuPalierDispatch;
-    int* OffsetTemporelSurLePalierDispatch;
+
+    std::vector<double> PoidsDuPalierDispatch;
+    std::vector<int> PaysDuPalierDispatch;
+    std::vector<int> NumeroDuPalierDispatch;
+    std::vector<int> OffsetTemporelSurLePalierDispatch;
+
     const char* NomDeLaContrainteCouplante;
-} CONTRAINTES_COUPLANTES;
+};
 
-typedef struct
+namespace ShortTermStorage
 {
-    double* variablesDuales;
-} RESULTATS_CONTRAINTES_COUPLANTES;
+struct PROPERTIES
+{
+    double reservoirCapacity;
+    double injectionNominalCapacity;
+    double withdrawalNominalCapacity;
+    double efficiency;
+    std::optional<double> initialLevel;
 
-typedef struct
+    std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
+
+    int clusterGlobalIndex;
+    std::string name;
+};
+
+using AREA_INPUT = std::vector<::ShortTermStorage::PROPERTIES>; // index is local
+
+struct RESULTS
+{
+    // Index is the number of the STS in the area
+    std::vector<double> level;      // MWh
+    std::vector<double> injection;  // MWh
+    std::vector<double> withdrawal; // MWh
+};
+} // namespace ShortTermStorage
+
+struct RESULTATS_CONTRAINTES_COUPLANTES
+{
+    std::vector<double> variablesDuales;
+};
+
+struct DEMAND_MARKET_POOL
 {
     double* TotalDemandOfMarketPool;
-} DEMAND_MARKET_POOL;
+};
 
-typedef struct
+struct DEMAND_FLEX_UP_POOL
 {
     double* FosteredDemandOfFlexUpPool;
-} DEMAND_FLEX_UP_POOL;
+};
 
-typedef struct
+struct DEMAND_FLEX_DOWN_POOL
 {
     double* FosteredDemandOfFlexDownPool;
-} DEMAND_FLEX_DOWN_POOL;
+};
 
-typedef struct
+struct BOUND_FLEX_UP_NODE
 {
     double* BoundFlexUpNode;
-} BOUND_FLEX_UP_NODE;
+};
 
-typedef struct
+struct BOUND_FLEX_DOWN_NODE
 {
     double* BoundFlexDownNode;
-} BOUND_FLEX_DOWN_NODE;
+};
 
-typedef struct
+struct LEVEL_FLEX_UP_NODE
 {
     double* LevelFlexUpNode;
-} LEVEL_FLEX_UP_NODE;
+};
 
-typedef struct
+struct LEVEL_FLEX_DOWN_NODE
 {
     double* LevelFlexDownNode;
-} LEVEL_FLEX_DOWN_NODE;
+};
 
-typedef struct
+struct CONSOMMATIONS_ABATTUES
 {
-    double* ConsommationAbattueDuPays;
-} CONSOMMATIONS_ABATTUES;
+    std::vector<double> ConsommationAbattueDuPays;
+};
 
-typedef struct
+struct ALL_MUST_RUN_GENERATION
 {
-    double* AllMustRunGenerationOfArea;
-} ALL_MUST_RUN_GENERATION;
+    std::vector<double> AllMustRunGenerationOfArea;
+};
 
-typedef struct
+struct SOLDE_MOYEN_DES_ECHANGES
 {
-    double* SoldeMoyenDuPays;
+    std::vector<double> SoldeMoyenDuPays;
+};
 
-} SOLDE_MOYEN_DES_ECHANGES;
-
-typedef struct
+struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 {
-    double* PuissanceDisponibleDuPalierThermique;
+    std::vector<double> PuissanceDisponibleDuPalierThermique;
+    std::vector<double> PuissanceDisponibleDuPalierThermiqueRef;
 
-    double* PuissanceDisponibleDuPalierThermiqueRef;
-    double* PuissanceDisponibleDuPalierThermiqueRef_SV;
+    std::vector<double> PuissanceMinDuPalierThermique;
+    std::vector<double> PuissanceMinDuPalierThermiqueRef;
 
-    double* PuissanceMinDuPalierThermique;
-    double* PuissanceMinDuPalierThermique_SV;
+    std::vector<double> CoutHoraireDeProductionDuPalierThermique;
 
-    double* CoutHoraireDeProductionDuPalierThermique;
+    std::vector<double> CoutHoraireDuPalierThermiqueUp;
+    std::vector<double> CoutHoraireDuPalierThermiqueDown;
 
-    double* CoutHoraireDeProductionDuPalierThermiqueRef;
+    std::vector<int> NombreMaxDeGroupesEnMarcheDuPalierThermique;
+    std::vector<int> NombreMinDeGroupesEnMarcheDuPalierThermique;
 
-    double* CoutHoraireDuPalierThermiqueUp;
-    double* CoutHoraireDuPalierThermiqueDown;
+};
 
-    int* NombreMaxDeGroupesEnMarcheDuPalierThermique;
-    int* NombreMinDeGroupesEnMarcheDuPalierThermique;
-
-} PDISP_ET_COUTS_HORAIRES_PAR_PALIER;
-
-typedef struct
+struct PALIERS_THERMIQUES
 {
     int NombreDePaliersThermiques;
 
-    int* minUpDownTime;
+    std::vector<int> minUpDownTime;
 
-    double* TailleUnitaireDUnGroupeDuPalierThermique;
-    double* PminDuPalierThermiquePendantUneHeure;
-    double* PminDuPalierThermiquePendantUnJour;
-    int* NumeroDuPalierDansLEnsembleDesPaliersThermiques;
-    PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout;
+    std::vector<double> TailleUnitaireDUnGroupeDuPalierThermique;
+    std::vector<double> PminDuPalierThermiquePendantUneHeure;
+    std::vector<double> PminDuPalierThermiquePendantUnJour;
+    std::vector<int> NumeroDuPalierDansLEnsembleDesPaliersThermiques;
+    mutable std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER> PuissanceDisponibleEtCout;
 
-    double* CoutDeDemarrageDUnGroupeDuPalierThermique;
-    double* CoutDArretDUnGroupeDuPalierThermique;
-    double* CoutFixeDeMarcheDUnGroupeDuPalierThermique;
-    double* PminDUnGroupeDuPalierThermique;
-    double* PmaxDUnGroupeDuPalierThermique;
-    int* DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
-    int* DureeMinimaleDArretDUnGroupeDuPalierThermique;
-} PALIERS_THERMIQUES;
+    std::vector<double> CoutDeDemarrageDUnGroupeDuPalierThermique;
+    std::vector<double> CoutDArretDUnGroupeDuPalierThermique;
+    std::vector<double> CoutFixeDeMarcheDUnGroupeDuPalierThermique;
+    std::vector<double> pminDUnGroupeDuPalierThermique;
+    std::vector<double> PmaxDUnGroupeDuPalierThermique;
+    std::vector<int> DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
+    std::vector<int> DureeMinimaleDArretDUnGroupeDuPalierThermique;
+    std::vector<std::string> NomsDesPaliersThermiques;
+};
 
-typedef struct
+struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
 {
-    double* MaxEnergieHydrauParIntervalleOptimise;
+    std::vector<double> MinEnergieHydrauParIntervalleOptimise;
+    std::vector<double> MaxEnergieHydrauParIntervalleOptimise;
 
-    double* MinEnergieHydrauParIntervalleOptimise;
+    std::vector<double> CntEnergieH2OParIntervalleOptimise;
+    std::vector<double> CntEnergieH2OParJour;
 
-    double* CntEnergieH2OParIntervalleOptimise;
-    double* CntEnergieH2OParJour;
-    double* ContrainteDePmaxHydrauliqueHoraire;
+    std::vector<double> ContrainteDePmaxHydrauliqueHoraire;
+    std::vector<double> ContrainteDePmaxHydrauliqueHoraireRef;
+
+    std::vector<double> MaxEnergiePompageParIntervalleOptimise;
+    std::vector<double> ContrainteDePmaxPompageHoraire;
 
     double MaxDesPmaxHydrauliques;
 
-    double* CntEnergieH2OParIntervalleOptimiseRef;
-    double* ContrainteDePmaxHydrauliqueHoraireRef;
-    double MaxDesPmaxHydrauliquesRef;
-
-    double* MaxEnergiePompageParIntervalleOptimise;
-    double* ContrainteDePmaxPompageHoraire;
-
-    char PresenceDePompageModulable;
-    char PresenceDHydrauliqueModulable;
+    bool PresenceDePompageModulable;
+    bool PresenceDHydrauliqueModulable;
 
     double PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations;
     double PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax;
@@ -281,28 +313,29 @@ typedef struct
     double WeeklyWaterValueStateUp;
     double WeeklyWaterValueStateDown;
 
-    char TurbinageEntreBornes;
-    char SansHeuristique;
-    char SuiviNiveauHoraire;
+    bool TurbinageEntreBornes;
+    bool SansHeuristique;
+    bool SuiviNiveauHoraire;
 
-    double* NiveauHoraireSup;
-    double* NiveauHoraireInf;
+    std::vector<double> NiveauHoraireSup;
+    std::vector<double> NiveauHoraireInf;
 
-    double* ApportNaturelHoraire;
+    std::vector<double> ApportNaturelHoraire;
+    std::vector<double> MingenHoraire; /*Minimum Hourly Hydro-Storage Generation*/
     double NiveauInitialReservoir;
     double TailleReservoir;
     double PumpingRatio;
 
     double WeeklyGeneratingModulation;
     double WeeklyPumpingModulation;
-    char DirectLevelAccess; /*  determines the type of constraints bearing on the final stok level*/
-    char AccurateWaterValue;     /*  determines the type of modelling used for water budget*/
+    bool DirectLevelAccess; /*  determines the type of constraints bearing on the final stok level*/
+    bool AccurateWaterValue;     /*  determines the type of modelling used for water budget*/
     double LevelForTimeInterval; /*  value computed by the simulator in water-value based modes*/
-    double* WaterLayerValues; /*  reference costs for the last time step (caution : dimension set to
+    std::vector<double> WaterLayerValues; /*  reference costs for the last time step (caution : dimension set to
                                  100, should be made dynamic)*/
-    double* InflowForTimeInterval; /*  Energy input to the reservoir, used to in the bounding
+    std::vector<double> InflowForTimeInterval; /*  Energy input to the reservoir, used to in the bounding
                                       constraint on final level*/
-} ENERGIES_ET_PUISSANCES_HYDRAULIQUES;
+};
 
 class computeTimeStepLevel
 {
@@ -311,43 +344,32 @@ private:
     double level;
 
     double capacity;
-    double* inflows;
-    double* ovf;
-    double* turb;
+    std::vector<double>& inflows;
+    std::vector<double>& ovf;
+    std::vector<double>& turb;
     double pumpRatio;
-    double* pump;
+    std::vector<double>& pump;
     double excessDown;
 
 public:
-    computeTimeStepLevel() :
-     step(0),
-     level(0.),
-     capacity(0.),
-     inflows(nullptr),
-     ovf(nullptr),
-     turb(nullptr),
-     pumpRatio(0.),
-     pump(nullptr),
-     excessDown(0.)
+    computeTimeStepLevel(
+            const double& startLvl,
+            std::vector<double>& infl,
+            std::vector<double>& overfl,
+            std::vector<double>& H,
+            double pumpEff,
+            std::vector<double>& Pump,
+            double rc) :
+        step(0),
+        level(startLvl),
+        capacity(rc),
+        inflows(infl),
+        ovf(overfl),
+        turb(H),
+        pumpRatio(pumpEff),
+        pump(Pump),
+        excessDown(0.)
     {
-    }
-
-    void setParameters(const double& startLvl,
-                       double* Infl,
-                       double* overfl,
-                       double* H,
-                       double pumpEff,
-                       double* Pump,
-                       double rc)
-    {
-        step = 0;
-        level = startLvl;
-        inflows = Infl;
-        ovf = overfl;
-        turb = H;
-        pumpRatio = pumpEff;
-        pump = Pump;
-        capacity = rc;
     }
 
     void run()
@@ -383,219 +405,200 @@ public:
     }
 };
 
-typedef struct
+struct RESERVE_JMOINS1
 {
-    double* ReserveHoraireJMoins1 = nullptr;
-    double* ReserveHoraireJMoins1Ref = nullptr;
-} RESERVE_JMOINS1;
+    std::vector<double> ReserveHoraireJMoins1;
+};
 
-typedef struct
+struct PRODUCTION_THERMIQUE_OPTIMALE
 {
-    double* ProductionThermiqueDuPalier;
+    std::vector<double> ProductionThermiqueDuPalier;
 
-    double* ProductionThermiqueDuPalierUp;
-    double* ProductionThermiqueDuPalierDown;
+    std::vector<double> ProductionThermiqueDuPalierUp;
+    std::vector<double> ProductionThermiqueDuPalierDown;
 
-    double* NombreDeGroupesEnMarcheDuPalier;
-    double* NombreDeGroupesQuiDemarrentDuPalier;
+    std::vector<double> NombreDeGroupesEnMarcheDuPalier;
+    std::vector<double> NombreDeGroupesQuiDemarrentDuPalier;
 
-    double* NombreDeGroupesQuiSArretentDuPalier;
+    std::vector<double> NombreDeGroupesQuiSArretentDuPalier;
 
-    double* NombreDeGroupesQuiTombentEnPanneDuPalier;
+    std::vector<double> NombreDeGroupesQuiTombentEnPanneDuPalier;
 
-} PRODUCTION_THERMIQUE_OPTIMALE;
+};
 
-typedef struct
+struct RESULTATS_HORAIRES
 {
-    double* ValeursHorairesDeDefaillancePositive;
-    double* ValeursHorairesDENS;                  // adq patch domestic unsupplied energy
-    int* ValeursHorairesLmrViolations;            // adq patch lmr violations
-    double* ValeursHorairesSpilledEnergyAfterCSR; // adq patch spillage after CSR
-    double* ValeursHorairesDtgMrgCsr;             // adq patch DTG MRG after CSR
-    double* ValeursHorairesDeDefaillancePositiveUp;
-    double* ValeursHorairesDeDefaillancePositiveDown;
-    double* ValeursHorairesDeDefaillancePositiveAny;
+    std::vector<double> ValeursHorairesDeDefaillancePositive;
+    std::vector<double> ValeursHorairesDENS;                  // adq patch domestic unsupplied energy
+    mutable std::vector<int> ValeursHorairesLmrViolations;    // adq patch lmr violations
+    std::vector<double> ValeursHorairesSpilledEnergyAfterCSR; // adq patch spillage after CSR
+    std::vector<double> ValeursHorairesDtgMrgCsr;             // adq patch DTG MRG after CSR
+    std::vector<double> ValeursHorairesDeDefaillancePositiveUp;
+    std::vector<double> ValeursHorairesDeDefaillancePositiveDown;
+    std::vector<double> ValeursHorairesDeDefaillancePositiveAny;
 
-    double* ValeursHorairesDeDefaillanceNegative;
-    double* ValeursHorairesDeDefaillanceNegativeUp;
-    double* ValeursHorairesDeDefaillanceNegativeDown;
-    double* ValeursHorairesDeDefaillanceNegativeAny;
+    std::vector<double> ValeursHorairesDeDefaillanceNegative;
+    std::vector<double> ValeursHorairesDeDefaillanceNegativeUp;
+    std::vector<double> ValeursHorairesDeDefaillanceNegativeDown;
+    std::vector<double> ValeursHorairesDeDefaillanceNegativeAny;
 
-    double* ValeursHorairesDeDefaillanceEnReserve;
-    double* PompageHoraire;
-    double* TurbinageHoraire;
-    double* TurbinageHoraireUp;
-    double* TurbinageHoraireDown;
+    std::vector<double> ValeursHorairesDeDefaillanceEnReserve;
+    std::vector<double> PompageHoraire;
+    std::vector<double> TurbinageHoraire;
+    std::vector<double> TurbinageHoraireUp;
+    std::vector<double> TurbinageHoraireDown;
 
-    double* niveauxHoraires;
-    double* valeurH2oHoraire;
+    std::vector<double> niveauxHoraires;
+    std::vector<double> valeurH2oHoraire;
 
-    double* debordementsHoraires;
+    std::vector<double> debordementsHoraires;
 
-    double* CoutsMarginauxHoraires;
-    PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique;
-} RESULTATS_HORAIRES;
+    std::vector<double> CoutsMarginauxHoraires;
+    std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
 
-typedef struct
+    std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
+};
+
+struct COUTS_DE_TRANSPORT
 {
-    char IntercoGereeAvecDesCouts;
-    char IntercoGereeAvecLoopFlow;
-    double* CoutDeTransportOrigineVersExtremite;
-    double* CoutDeTransportExtremiteVersOrigine;
+    bool IntercoGereeAvecDesCouts;
+    bool IntercoGereeAvecLoopFlow;
+    std::vector<double> CoutDeTransportOrigineVersExtremite;
+    std::vector<double> CoutDeTransportExtremiteVersOrigine;
 
-    double* CoutDeTransportOrigineVersExtremiteRef;
-    double* CoutDeTransportExtremiteVersOrigineRef;
+    std::vector<double> CoutDeTransportOrigineVersExtremiteRef;
+    std::vector<double> CoutDeTransportExtremiteVersOrigineRef;
 
-} COUTS_DE_TRANSPORT;
+};
 
-typedef struct
+struct VARIABLES_DUALES_INTERCONNEXIONS
 {
-    double* VariableDualeParInterconnexion = nullptr;
-} VARIABLES_DUALES_INTERCONNEXIONS;
-
-typedef struct
-{
-    double* CoutsMarginauxHorairesDeLaReserveParZone = nullptr;
-} COUTS_MARGINAUX_ZONES_DE_RESERVE;
-
-struct AdequacyPatchParameters
-{
-    bool AdequacyFirstStep;
-    bool SetNTCOutsideToInsideToZero;
-    bool SetNTCOutsideToOutsideToZero;
-    bool IncludeHurdleCostCsr;
-    bool CheckCsrCostFunctionValue;
-    Antares::Data::AdequacyPatch::AdqPatchPTO PriceTakingOrder;
-    double ThresholdRunCurtailmentSharingRule;
-    double ThresholdDisplayLocalMatchingRuleViolations;
-    double ThresholdCSRVarBoundsRelaxation;
+    std::vector<double> VariableDualeParInterconnexion;
 };
 
 struct PROBLEME_HEBDO
 {
-    uint weekInTheYear = 0;
-    uint year = 0;
+    uint32_t weekInTheYear = 0;
+    uint32_t year = 0;
 
     /* Business problem */
-    char OptimisationAuPasHebdomadaire = NON_ANTARES;
+    bool OptimisationAuPasHebdomadaire = false;
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
-    char WaterValueAccurate = NON_ANTARES;
-    char OptimisationAvecCoutsDeDemarrage = NON_ANTARES;
-    char OptimisationAvecVariablesEntieres = NON_ANTARES;
-    int NombreDePays = 0;
-    const char** NomsDesPays = nullptr;
-    int NombreDePaliersThermiques = 0;
+    bool WaterValueAccurate = false;
+    bool OptimisationAvecCoutsDeDemarrage = false;
+    bool OptimisationAvecVariablesEntieres = false;
+    uint32_t NombreDePays = 0;
+    std::vector<const char*> NomsDesPays;
+    uint32_t NombreDePaliersThermiques = 0;
 
-    int NombreDInterconnexions = 0;
-    int* PaysOrigineDeLInterconnexion = nullptr;
-    int* PaysExtremiteDeLInterconnexion = nullptr;
-    COUTS_DE_TRANSPORT** CoutDeTransport = nullptr;
+    uint32_t NombreDInterconnexions = 0;
+    std::vector<int> PaysOrigineDeLInterconnexion;
+    std::vector<int> PaysExtremiteDeLInterconnexion;
+    mutable std::vector<COUTS_DE_TRANSPORT> CoutDeTransport;
 
-    VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTC = nullptr;
-    VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTCRef = nullptr;
+    mutable std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTC;
 
-    int NombreDePasDeTemps = 0;
-    int NombreDePasDeTempsRef = 0;
-    int* NumeroDeJourDuPasDeTemps = nullptr;
+    uint32_t NombreDePasDeTemps = 0;
+    std::vector<int32_t> NumeroDeJourDuPasDeTemps;
 
-    int NombreDePasDeTempsPourUneOptimisation = 0;
-    int* NumeroDIntervalleOptimiseDuPasDeTemps = nullptr;
-    int NombreDeJours = 0;
+    //TODO use uint32_t and figure why tests fails
+    int32_t NombreDePasDeTempsPourUneOptimisation = 0;
+    std::vector<int32_t> NumeroDIntervalleOptimiseDuPasDeTemps;
+    uint32_t NombreDeJours = 0;
 
-    int NombreDePasDeTempsDUneJournee = 0;
-    int NombreDePasDeTempsDUneJourneeRef = 0;
+    //TODO same as NombreDePasDeTemps
+    int32_t NombreDePasDeTempsDUneJournee = 0;
 
-    CONSOMMATIONS_ABATTUES** ConsommationsAbattues = nullptr;
+    mutable std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattues;
 
-    CONSOMMATIONS_ABATTUES** ConsommationsAbattuesRef = nullptr;
+    std::vector<double> CoutDeDefaillancePositive;
+    std::vector<double> CoutDeDefaillanceNegative;
+    std::vector<double> CoutDeDefaillanceEnReserve;
 
-    double* CoutDeDefaillancePositive = nullptr;
-    double* CoutDeDefaillanceNegative = nullptr;
-    double* CoutDeDefaillanceEnReserve = nullptr;
+    std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
+    mutable std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
-    PALIERS_THERMIQUES** PaliersThermiquesDuPays = nullptr;
-    ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques = nullptr;
+    uint32_t NumberOfShortTermStorages = 0;
+    // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;
+    std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
+
     /* Optimization problem */
-    int NbTermesContraintesPourLesCoutsDeDemarrage = 0;
-    char* DefaillanceNegativeUtiliserPMinThermique = nullptr;
-    char* DefaillanceNegativeUtiliserHydro = nullptr;
-    char* DefaillanceNegativeUtiliserConsoAbattue = nullptr;
+    uint32_t NbTermesContraintesPourLesCoutsDeDemarrage = 0;
+    std::vector<bool> DefaillanceNegativeUtiliserPMinThermique;
+    std::vector<bool> DefaillanceNegativeUtiliserHydro;
+    std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue;
 
     char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
+    std::vector<std::vector<double>> BruitSurCoutHydraulique;
 
-    double** BruitSurCoutHydraulique = nullptr;
+    uint32_t NombreDeContraintesCouplantes = 0;
+    mutable std::vector<CONTRAINTES_COUPLANTES> MatriceDesContraintesCouplantes;
+    std::vector<RESULTATS_CONTRAINTES_COUPLANTES> ResultatsContraintesCouplantes;
 
-    int NombreDeContraintesCouplantes = 0;
-    CONTRAINTES_COUPLANTES** MatriceDesContraintesCouplantes = nullptr;
-    RESULTATS_CONTRAINTES_COUPLANTES* ResultatsContraintesCouplantes = nullptr;
-
-    SOLDE_MOYEN_DES_ECHANGES** SoldeMoyenHoraire = nullptr; // Used for quadratic opt
+    std::vector<SOLDE_MOYEN_DES_ECHANGES> SoldeMoyenHoraire; // Used for quadratic opt
     /* Implementation details : I/O, error management, etc. */
     bool ReinitOptimisation = false;
 
     Data::mpsExportStatus ExportMPS = Data::mpsExportStatus::NO_EXPORT;
     bool exportMPSOnError = false;
     bool ExportStructure = false;
+    bool NamedProblems = false;
 
-    unsigned int HeureDansLAnnee = 0;
-    char LeProblemeADejaEteInstancie = 0;
+    uint32_t HeureDansLAnnee = 0;
+    bool LeProblemeADejaEteInstancie = false;
     bool firstWeekOfSimulation = false;
 
-    CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim = nullptr;
-    CORRESPONDANCES_DES_CONTRAINTES** CorrespondanceCntNativesCntOptim = nullptr;
-    CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES** CorrespondanceCntNativesCntOptimJournalieres = nullptr;
-    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES** CorrespondanceCntNativesCntOptimHebdomadaires = nullptr;
+    std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES> CorrespondanceCntNativesCntOptimJournalieres;
+    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES CorrespondanceCntNativesCntOptimHebdomadaires;
 
-    RESERVE_JMOINS1** ReserveJMoins1 = nullptr;
+    mutable std::vector<RESERVE_JMOINS1> ReserveJMoins1;
 
-    int* IndexDebutIntercoOrigine = nullptr;
-    int* IndexSuivantIntercoOrigine = nullptr;
-    int* IndexDebutIntercoExtremite = nullptr;
-    int* IndexSuivantIntercoExtremite = nullptr;
+    std::vector<int> IndexDebutIntercoOrigine;
+    std::vector<int> IndexSuivantIntercoOrigine;
+    std::vector<int> IndexDebutIntercoExtremite;
+    std::vector<int> IndexSuivantIntercoExtremite;
 
-    char Expansion = NON_ANTARES;
+    bool Expansion = false;
 
-    int* NumeroDeContrainteEnergieHydraulique = nullptr;
-    int* NumeroDeContrainteMinEnergieHydraulique = nullptr;
-    int* NumeroDeContrainteMaxEnergieHydraulique = nullptr;
-    int* NumeroDeContrainteMaxPompage = nullptr;
+    std::vector<int> NumeroDeContrainteEnergieHydraulique;
+    std::vector<int> NumeroDeContrainteMinEnergieHydraulique;
+    std::vector<int> NumeroDeContrainteMaxEnergieHydraulique;
+    std::vector<int> NumeroDeContrainteMaxPompage;
+    std::vector<int> NumeroDeContrainteDeSoldeDEchange;
 
-    int* NumeroDeContrainteDeSoldeDEchange = nullptr;
+    std::vector<int> NumeroDeContrainteEquivalenceStockFinal;
+    std::vector<int> NumeroDeContrainteExpressionStockFinal;
 
-    int* NumeroDeContrainteEquivalenceStockFinal = nullptr;
-    int* NumeroDeContrainteExpressionStockFinal = nullptr;
+    std::vector<int> NumeroDeVariableStockFinal;
+    std::vector<std::vector<int>> NumeroDeVariableDeTrancheDeStock;
 
-    int* NumeroDeVariableStockFinal = nullptr;
-    int** NumeroDeVariableDeTrancheDeStock = nullptr;
+    bool YaDeLaReserveJmoins1 = false;
 
-    char YaDeLaReserveJmoins1 = NON_ANTARES;
-
-    double* previousYearFinalLevels = nullptr;
-    ALL_MUST_RUN_GENERATION** AllMustRunGeneration = nullptr;
+    std::vector<double> previousYearFinalLevels;
+    std::vector<ALL_MUST_RUN_GENERATION> AllMustRunGeneration;
 
     OptimizationStatistics optimizationStatistics[2];
 
     /* Adequacy Patch */
-    std::shared_ptr<AdequacyPatchParameters> adqPatchParams;
     std::shared_ptr<AdequacyPatchRuntimeData> adequacyPatchRuntimeData;
 
     /* Hydro management */
-    double* CoefficientEcretementPMaxHydraulique = nullptr;
+    std::vector<double> CoefficientEcretementPMaxHydraulique;
     bool hydroHotStart = false;
-    double* previousSimulationFinalLevel = nullptr;
-    computeTimeStepLevel computeLvl_object;
+    std::vector<double> previousSimulationFinalLevel;
 
     /* Results */
-    RESULTATS_HORAIRES** ResultatsHoraires = nullptr;
-    VARIABLES_DUALES_INTERCONNEXIONS** VariablesDualesDesContraintesDeNTC = nullptr;
+    std::vector<RESULTATS_HORAIRES> ResultatsHoraires;
+    std::vector<VARIABLES_DUALES_INTERCONNEXIONS> VariablesDualesDesContraintesDeNTC;
 
-    double* coutOptimalSolution1 = nullptr;
-    double* coutOptimalSolution2 = nullptr;
+    std::vector<double> coutOptimalSolution1;
+    std::vector<double> coutOptimalSolution2;
 
-    double* tempsResolution1 = nullptr;
-    double* tempsResolution2 = nullptr;
+    std::vector<double> tempsResolution1;
+    std::vector<double> tempsResolution2;
 
-    COUTS_MARGINAUX_ZONES_DE_RESERVE** CoutsMarginauxDesContraintesDeReserveParZone = nullptr;
     /* Unused for now, will be used in future revisions */
 #if 0
     char SecondeOptimisationRelaxee;
@@ -675,10 +678,10 @@ struct PROBLEME_HEBDO
 
 public:
     /* Unknown status */
-    int* NbGrpCourbeGuide = nullptr; // ?
-    int* NbGrpOpt = nullptr;         // ?
+    std::vector<int> NbGrpCourbeGuide; // ?
+    std::vector<int> NbGrpOpt;         // ?
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = nullptr;
+    std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE> ProblemeAResoudre;
 
     double maxPminThermiqueByDay[366];
 };

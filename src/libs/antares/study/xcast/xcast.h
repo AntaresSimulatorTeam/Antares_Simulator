@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -28,14 +28,11 @@
 #define __ANTARES_LIBS_STUDY_XCAST_XCAST_H__
 
 #include <yuni/yuni.h>
-#include "../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include <vector>
-#include "../fwd.h"
 #include <yuni/core/noncopyable.h>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 class XCast final : private Yuni::NonCopyable<XCast>
 {
@@ -146,7 +143,7 @@ public:
     /*!
     ** \brief Load data from a folder
     */
-    bool loadFromFolder(Study& study, const AnyString& folder);
+    bool loadFromFolder(const AnyString& folder);
 
     /*!
     ** \brief Save data to a folder
@@ -168,12 +165,12 @@ public:
     /*!
     ** \brief Get the amount of memory currently used by the XCast data
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Estimate the amount of memory required by this class for a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
     //@}
 
 public:
@@ -190,7 +187,7 @@ public:
     /*!
     ** \brief Time-series average
     */
-    Matrix<Yuni::sint32> translation;
+    Matrix<int32_t> translation;
 
     //! How to use the timeseries average
     TSTranslationUse useTranslation;
@@ -218,8 +215,8 @@ protected:
 
 }; // class XCast
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+
 
 #include "xcast.hxx"
 

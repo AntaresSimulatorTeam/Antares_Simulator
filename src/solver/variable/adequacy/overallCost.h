@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -40,18 +40,18 @@ namespace Adequacy
 struct VCardOverallCost
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "OV. COST";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "Euro";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Overall Cost throughout all MC years";
     }
@@ -135,13 +135,6 @@ public:
                  : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
-
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-    {
-        Solver::Variable::IntermediateValues::EstimateMemoryUsage(u);
-        NextType::EstimateMemoryUsage(u);
-        ResultsType::EstimateMemoryUsage(u);
-    }
 
 public:
     ~OverallCost()
@@ -251,34 +244,34 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
+        auto area = state.area;
+        auto& thermal = state.thermal;
         // Total UnsupliedEnergy emissions
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] +=
           // Current Hydro Storage generation
           (state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek]
-           * state.area->thermal.unsuppliedEnergyCost)
+           * area->thermal.unsuppliedEnergyCost)
           + ((state.hourlyResults->ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek]
-              + state.resSpilled.entry[state.area->index][state.hourInTheWeek])
-             * state.area->thermal.spilledEnergyCost);
+              + state.resSpilled.entry[area->index][state.hourInTheWeek])
+             * area->thermal.spilledEnergyCost);
 
         // Hydro costs : water value and pumping
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
           += state.problemeHebdo->CaracteristiquesHydrauliques[state.area->index]
-               ->WeeklyWaterValueStateRegular
+               .WeeklyWaterValueStateRegular
              * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
-                - state.area->hydro.pumpingEfficiency
+                - area->hydro.pumpingEfficiency
                     * state.hourlyResults->PompageHoraire[state.hourInTheWeek]);
+
+        // Thermal costs
+        for (uint clusterIndex = 0; clusterIndex != area->thermal.clusterCount(); ++clusterIndex)
+        {
+            pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
+              += thermal[area->index].thermalClustersOperatingCost[clusterIndex];
+        }
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
-        // Total OverallCost
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-          += state.thermalClusterOperatingCost;
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
@@ -300,6 +293,8 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
+
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

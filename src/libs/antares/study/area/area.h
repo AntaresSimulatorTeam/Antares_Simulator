@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -31,13 +31,15 @@
 #include <yuni/core/string.h>
 #include <yuni/core/noncopyable.h>
 #include <stdlib.h>
-#include <i_writer.h>
-#include "../../array/matrix.h"
+#include <antares/study/parameters/adq-patch-params.h>
+#include <antares/array/matrix.h>
 #include "../parts/parts.h"
 #include <vector>
 #include <set>
 #include "links.h"
 #include "ui.h"
+#include "constants.h"
+#include "antares/study/filter.h"
 
 namespace Antares
 {
@@ -73,14 +75,14 @@ public:
     **
     ** \param name The name of the area
     */
-    explicit Area(const AnyString& name, uint nbParallelYears);
+    explicit Area(const AnyString& name);
     /*!
     ** \brief Constructor
     **
     ** \param name Name of the area
     ** \param id id of the area
     */
-    Area(const AnyString& name, const AnyString& id, uint nbParallelYears, uint indx = (uint)-1);
+    Area(const AnyString& name, const AnyString& id);
     /*!
     ** \brief Destructor
     */
@@ -128,7 +130,7 @@ public:
     */
     void detachLinkFromID(const AreaName& id);
 
-    void detachLink(const AreaLink* lnk);
+    static void detachLink(const AreaLink* lnk);
 
     /*!
     ** \brief Remove a link from its raw pointer
@@ -140,7 +142,7 @@ public:
     /*!
     ** \brief Ensure all data are created
     */
-    void ensureAllDataAreCreated();
+    void createMissingData();
 
     /*!
     ** \brief Reset all values to their default one
@@ -153,9 +155,6 @@ public:
     ** \param n A number of years
     */
     void resizeAllTimeseriesNumbers(uint n);
-
-    template<int TimeSeriesT>
-    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
 
     /*!
     ** \brief Check if a link with another area is already established
@@ -189,12 +188,12 @@ public:
     /*!
     ** \brief Get the amount of memory currently used by the area
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Try to estimate the amount of memory required by the area for a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
     //@}
 
     //! \name Thermal clusters min stable power validity checking
@@ -223,9 +222,7 @@ public:
     //! Name of the area in lowercase format
     AreaName id;
     //! Index of the area  - only valid when already added to an area list
-    uint index;
-    //! Enabled
-    bool enabled;
+    uint index = (uint)(-1);
     //! Use adequacy patch for this area
     AdequacyPatch::AdequacyPatchMode adequacyPatchMode = AdequacyPatch::physicalAreaOutsideAdqPatch;
     /*@}*/
@@ -279,6 +276,8 @@ public:
     PartRenewable renewable;
     //@}
 
+    ShortTermStorage::STStorageInput shortTermStorage;
+
     //! \name Interconnections
     //@{
     //! All connections with this area
@@ -288,40 +287,37 @@ public:
     //! \name Nodal Optimization
     //@{
     //! Nodal optimization (see AreaNodalOptimization)
-    uint nodalOptimization;
+    uint nodalOptimization = anoAll;
     //@}
 
     //! \name Spread
     //@{
     //! Spread for the unsupplied energy cost
-    double spreadUnsuppliedEnergyCost;
+    double spreadUnsuppliedEnergyCost = 0.;
     //! Spread for the spilled energy cost
-    double spreadSpilledEnergyCost;
+    double spreadSpilledEnergyCost = 0.;
     //@}
 
     //! \name Output filtering
     //@{
     //! Print results for the area in the simulation synthesis
-    uint filterSynthesis;
+    uint filterSynthesis = filterAll;
     //! Print results for the area in the year-by-year mode
-    uint filterYearByYear;
+    uint filterYearByYear = filterAll;
     //@}
 
     //! \name UI
     //@{
     //! Information for the UI
-    AreaUI* ui;
+    AreaUI* ui = nullptr;
     //@}
-
-    // Number of years actually run in parallel
-    uint nbYearsInParallel;
-
+    
     //! \name Dynamic
     //@{
     /*!
     ** \brief Scratchpad used temporary calculations (solver only)
     */
-    mutable AreaScratchpad** scratchpad;
+    mutable std::vector<AreaScratchpad> scratchpad;
     //@}
 
     //! \name Data
@@ -332,20 +328,15 @@ public:
     ** A non-zero value if the missing data must be loaded from HDD for the next
     ** save (only valid if JIT enabled).
     */
-    mutable bool invalidateJIT;
+    mutable bool invalidateJIT = false;
     //@}
 
 private:
     void internalInitialize();
+    void createMissingTimeSeries();
+    void createMissingPrepros();
 
-    // Store time-series numbers
-    void storeTimeseriesNumbersForLoad(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForSolar(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForWind(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForHydro(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForThermal(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForRenewable(Solver::IResultWriter::Ptr writer) const;
-    void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter::Ptr writer) const;
+
 }; // class Area
 
 bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);
@@ -551,8 +542,6 @@ public:
     //! Get if the container is empty
     bool empty() const;
 
-    template<int TimeSeriesT>
-    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
 
     /*!
     ** \brief Invalidate all areas
@@ -649,7 +638,7 @@ public:
     /*!
     ** \brief Fix all invalid orientations
     */
-    void fixOrientationForAllInterconnections(BindConstList& bindingconstraints);
+    void fixOrientationForAllInterconnections(BindingConstraintsRepository& bindingconstraints);
 
     //! Remove all load timeseries
     void removeLoadTimeseries();
@@ -668,7 +657,7 @@ public:
     /*!
     ** \brief Try to estimate the amount of memory required by the class for a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     /*!
     ** \brief Get the average amount of memory currently used by each area
@@ -678,7 +667,7 @@ public:
     /*!
     ** \brief Get the amount of memory currently used by the class
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Update the name id set
@@ -781,7 +770,7 @@ Area* AreaListFindPtr(AreaList* l, const Area* ptr);
 ** \param name The name of the area
 ** \return A valid pointer to the area if successful, NULL otherwise
 */
-Area* AreaListAddFromName(AreaList& list, const AnyString& name, uint nbParallelYears);
+Area* addAreaToListOfAreas(AreaList& list, const AnyString& name);
 
 /*!
 ** \brief Add an area in the list from a given name
@@ -793,8 +782,7 @@ Area* AreaListAddFromName(AreaList& list, const AnyString& name, uint nbParallel
 */
 Area* AreaListAddFromNames(AreaList& list,
                            const AnyString& name,
-                           const AnyString& lname,
-                           uint nbParallelYears);
+                           const AnyString& lname);
 
 /*!
 ** \brief Try to establish a link between two areas
@@ -862,11 +850,18 @@ void AreaListEnsureDataRenewableTimeSeries(AreaList* l);
 */
 void AreaListEnsureDataThermalPrepro(AreaList* l);
 
+/*!
+** \brief to check that Area name does not contains character *
+*/
+inline bool CheckForbiddenCharacterInAreaName(const AnyString& name)
+{
+    return name.contains('*');
+}
+
 } // namespace Data
 } // namespace Antares
 
 #include "../load-options.h"
 #include "area.hxx"
-#include "list.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_AREAS_H__

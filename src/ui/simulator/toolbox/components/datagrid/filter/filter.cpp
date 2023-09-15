@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/wx-wrapper.h>
 #include "operator.h"
 #include "filter.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include <wx/choice.h>
 #include <wx/sizer.h>
 #include "input.h"

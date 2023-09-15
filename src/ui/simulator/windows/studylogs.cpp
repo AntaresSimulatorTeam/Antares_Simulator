@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -102,7 +102,7 @@ public:
 inline void FindAllLogFiles(MapFileList& filelist, wxRegEx& regex, const AnyString& folder)
 {
     filelist.clear();
-    uint64 totalSize = 0u;
+    uint64_t totalSize = 0u;
 
     if (not folder.empty())
     {
@@ -300,7 +300,7 @@ bool FileListProvider::onSelect(const Spotlight::IItem::Vector&)
 
 void FileListProvider::refreshFileList(bool showAll)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     wxRegEx regex(wxT("([a-zA-Z_]+)-([0-9]{8})-([0-9]{6})\\.log"));
     String folder;
     pAllSimuLogs.clear();
@@ -383,7 +383,7 @@ protected:
             logs.error() << "File not found: " << pFilename;
             return;
         }
-        const uint64 filesize = IO::File::Size(pFilename);
+        const uint64_t filesize = IO::File::Size(pFilename);
 
         bool shouldReopenLogFile = false;
         // Closing the current log file, to be able to open it
@@ -518,10 +518,10 @@ protected:
         //
         if (line.size() < 38 /*arbitrary*/ or line.at(0) != '[')
             return false;
-        if (line.at(25) != ']' or line.at(26) != '[')
+        if (line.at(20) != ']' or line.at(21) != '[')
             return false;
 
-        const BufferType::Size applR = line.find(']', 27);
+        const BufferType::Size applR = line.find(']', 22);
         if (BufferType::npos == applR)
             return false;
         const BufferType::Size verbosityR = line.find(']', applR + 1);
@@ -547,11 +547,11 @@ protected:
         if (message.empty() or message.startsWith(LOG_UI))
             return false;
 
-        date.adapt(bcstr + 1, 24);
+        date.adapt(bcstr + 1, 19);
 
         // Application
         if (applR > 27)
-            application.adapt(bcstr + 27, applR - 27);
+            application.adapt(bcstr + 22, applR - 22);
         else
             application.clear();
 

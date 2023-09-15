@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -28,17 +28,14 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <cassert>
-#include "date.h"
-#include <time.h>
-#include "../study/parameters.h"
+#include <antares/date/date.h>
 #include <yuni/io/file.h>
-#include "../logs.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Date
+
+namespace Antares::Date
 {
 static const uint StandardDaysPerMonths[12] = {
   31, // january
@@ -90,12 +87,10 @@ static const char* const monthShortLowerNames[]
 static const char* const monthShortUpperNames[]
   = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
 
-CalendarHour::Vector StudyHourlyCalendar; // deprecated
-CalendarDay::Vector StudyDailyCalendar;   // deprecated
-
-uint FirstDayPerMonth[12 + 1]; // deprecated
-
-uint FirstDayPerWeek[54 + 1]; // deprecated
+uint DayInterval::numberOfWeeks() const
+{
+    return (end - first) / 7;
+}
 
 const char* DayOfTheWeekToString(DayOfTheWeek d)
 {
@@ -400,34 +395,16 @@ bool Calendar::saveToCSVFile(const AnyString& filename) const
 
 Calendar::Calendar()
 {
-    settings.weekday1rstJanuary = monday;
-    settings.firstMonth = january;
-    settings.leapYear = false;
-    settings.weekFirstDay = monday;
-    settings.weekday1rstJanuary = monday;
+    settings_.weekday1rstJanuary = monday;
+    settings_.firstMonth = january;
+    settings_.leapYear = false;
+    settings_.weekFirstDay = monday;
+    settings_.weekday1rstJanuary = monday;
 }
 
-void Calendar::reset(const Data::Parameters& parameters)
+void Calendar::reset(Settings settings)
 {
-    reset(parameters, parameters.leapYear);
-}
-
-void Calendar::reset(const Data::Parameters& parameters, bool leapyear)
-{
-    // retrieve the new settings
-    settings.weekday1rstJanuary = parameters.dayOfThe1stJanuary;
-    settings.firstMonth = parameters.firstMonthInYear;
-    settings.weekFirstDay = parameters.firstWeekday;
-
-    // We do not retrieve directly the `leapyear` parameters
-    // A simulation should be made in ignoring this parameter (aka false)
-    // but the outputs should rely on it (for printing).
-    // It goes the same for the GUI : since it is _merely_ printing,
-    // it should be taken into consideration.
-    // Consequently, we will let the calling code specifying this value
-    settings.leapYear = leapyear;
-
-    // re-initialize the calendar with the new settings
+    settings_ = settings;
     reset();
 }
 
@@ -440,9 +417,9 @@ void Calendar::reset()
 {
 #ifndef NDEBUG
     logs.debug() << "  reset calendar"
-                 << ", month : " << MonthToString(settings.firstMonth)
-                 << ", january 1rst : " << DayOfTheWeekToString(settings.weekday1rstJanuary)
-                 << ", first weekday : " << DayOfTheWeekToString(settings.weekFirstDay);
+                 << ", month : " << MonthToString(settings_.firstMonth)
+                 << ", january 1rst : " << DayOfTheWeekToString(settings_.weekday1rstJanuary)
+                 << ", first weekday : " << DayOfTheWeekToString(settings_.weekFirstDay);
 #endif
 
     (void)::memset(hours, '\0', sizeof(hours));
@@ -453,7 +430,7 @@ void Calendar::reset()
     // Reset months relationship
     for (uint m = 0; m != 12 + 1; ++m)
     {
-        uint realmonth = (m + (uint)settings.firstMonth) % 12;
+        uint realmonth = (m + (uint)settings_.firstMonth) % 12;
         if (m < 12)
             mapping.months[realmonth] = m;
         months[m].days = StandardDaysPerMonths[realmonth];
@@ -466,15 +443,15 @@ void Calendar::reset()
     }
 
     // leap year
-    if (settings.leapYear)
+    if (settings_.leapYear)
         months[mapping.months[february]].days += 1;
 
     // looking for the weekday of the first month
-    auto weekday = settings.weekday1rstJanuary;
-    if (settings.firstMonth != january)
+    auto weekday = settings_.weekday1rstJanuary;
+    if (settings_.firstMonth != january)
     {
         // looking for the weekday of the first month of the simulation
-        for (uint m = 11; m >= (uint)settings.firstMonth; --m)
+        for (uint m = 11; m >= (uint)settings_.firstMonth; --m)
         {
             uint nbdays = (int)months[mapping.months[m]].days;
             for (uint d = 0; d != nbdays; ++d)
@@ -540,7 +517,7 @@ void Calendar::reset()
 
                 // day of the week rotation
                 weekday = NextDayOfTheWeek(weekday);
-                if (weekday == settings.weekFirstDay)
+                if (weekday == settings_.weekFirstDay)
                 {
                     weeks[currentWeek].hours.end = hourYear;
                     weeks[currentWeek].daysYear.end = dayYear;
@@ -686,5 +663,5 @@ void Calendar::reset()
     }
 }
 
-} // namespace Date
-} // namespace Antares
+} // namespace Antares::Date
+

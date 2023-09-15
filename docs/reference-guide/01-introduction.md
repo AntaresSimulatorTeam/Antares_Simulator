@@ -1,6 +1,6 @@
 # Introduction
 
-This document describes all the main features of the **Antares\_Simulator** package, version 8.3.
+This document describes all the main features of the **Antares\_Simulator** package, version 8.6.
 
 It gives useful general information regarding the way data are handled and processed,
 as well as how the Graphic User Interface (GUI) works. To keep this documentation
@@ -80,7 +80,7 @@ the random factors that may affect the balance between load and generation. Econ
 as much a critical role as they do in the other kinds of studies since the stakes are mainly to know if and
 when supply security is likely to be jeopardized (detailed costs incurred in more ordinary conditions are of
 comparatively lower importance). In these studies, the default Antares option to use is the "Adequacy"
-simulation mode, or the "Draft" simulation mode (which is extremely fast but which produces crude results).
+simulation mode.
 
 ### Transmission project profitability
 Transmission project profitability studies the savings brought by a specific reinforcement of the grid,
@@ -94,6 +94,6 @@ In these studies, the default Antares option to use is the "Economy" simulation 
 
 
 
-[^1]: For simplicity's sake, the _**Antares\_Simulator**_ 8.3 application will as of now be simply denoted "Antares".
+[^1]: For simplicity's sake, the _**Antares\_Simulator**_ 8.6 application will as of now be simply denoted "Antares".
 
 [^2]: A detailed expression of the basic mathematical problem solved in the red box of the following figure can be found in the document "Optimization problems formulation".

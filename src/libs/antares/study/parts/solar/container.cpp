@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -28,6 +28,7 @@
 #include <yuni/yuni.h>
 #include "../../study.h"
 #include "container.h"
+#include "antares/study/parts/parts.h"
 
 using namespace Yuni;
 
@@ -65,7 +66,7 @@ void Container::markAsModified() const
         prepro->markAsModified();
 }
 
-Yuni::uint64 Container::memoryUsage() const
+uint64_t Container::memoryUsage() const
 {
     return sizeof(Container) + ((!series) ? 0 : DataSeriesSolarMemoryUsage(series))
            + ((!prepro) ? 0 : prepro->memoryUsage());
@@ -74,7 +75,7 @@ Yuni::uint64 Container::memoryUsage() const
 void Container::resetToDefault()
 {
     if (series)
-        series->series.reset(1, HOURS_PER_YEAR);
+        series->timeSeries.reset(1, HOURS_PER_YEAR);
     if (prepro)
         prepro->resetToDefault();
 }

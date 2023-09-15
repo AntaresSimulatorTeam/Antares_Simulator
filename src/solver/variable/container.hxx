@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -186,12 +186,6 @@ inline void List<NextT>::hourForEachArea(State& state, unsigned int numSpace)
 }
 
 template<class NextT>
-inline void List<NextT>::hourForEachThermalCluster(State& state)
-{
-    NextType::hourForEachThermalCluster(state);
-}
-
-template<class NextT>
 inline void List<NextT>::hourForEachLink(State& state)
 {
     NextType::hourForEachLink(state);
@@ -247,7 +241,7 @@ inline void List<NextT>::retrieveResultsForLink(
 }
 
 template<class NextT>
-inline Yuni::uint64 List<NextT>::memoryUsage() const
+inline uint64_t List<NextT>::memoryUsage() const
 {
     return sizeof(ListType) + NextType::memoryUsage();
 }
@@ -258,10 +252,6 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
                                     int fileLevel,
                                     int precision) const
 {
-    // We must not do something if mc and !annual
-    if (fileLevel & Category::mc && !(precision & Category::annual))
-        return;
-
     // Reset
     results.data.columnIndex = 0;
 
@@ -289,10 +279,6 @@ void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
                                           int precision,
                                           unsigned int numSpace) const
 {
-    // We must not do something if mc and !annual
-    if (fileLevel & Category::mc && !(precision & Category::annual))
-        return;
-
     // Reset
     results.data.columnIndex = 0;
 
@@ -328,14 +314,6 @@ void List<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataL
 }
 
 template<class NextT>
-inline void List<NextT>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-{
-    u.requiredMemoryForOutput += sizeof(ListType);
-    u.requiredDiskSpaceForOutput += 20 * 1024; // 20Ko
-    NextType::EstimateMemoryUsage(u);
-}
-
-template<class NextT>
 void List<NextT>::exportSurveyResults(bool global,
                                       const Yuni::String& output,
                                       unsigned int numSpace,
@@ -352,13 +330,7 @@ void List<NextT>::exportSurveyResults(bool global,
     else
         logs.info() << "Exporting the annual results";
 
-    // Structure for the survey results
-    // Getting the any report's max number of columns
-    uint nbColumnsNeededForExportation = pStudy->parameters.variablesPrintInfo.getMaxColumnsCount();
-    logs.debug() << "  (for " << nbColumnsNeededForExportation << " columns)";
-
-    auto survey
-      = std::make_shared<SurveyResults>(nbColumnsNeededForExportation, *pStudy, output, writer);
+    auto survey = std::make_shared<SurveyResults>(*pStudy, output, writer);
 
     // Year by year ?
     survey->yearByYearResults = !global;

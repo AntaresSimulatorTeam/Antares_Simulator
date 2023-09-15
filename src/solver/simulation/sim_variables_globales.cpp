@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,15 +27,10 @@
 
 #include "sim_structure_donnees.h"
 #include "sim_structure_probleme_economique.h"
-#include "sim_structure_probleme_adequation.h"
 
-DONNEES_PAR_PAYS** DonneesParPays;
+std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_PAYS>> NumeroChroniquesTireesParPays;
+std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION>> NumeroChroniquesTireesParInterconnexion;
 
-VALEURS_GENEREES_PAR_PAYS*** ValeursGenereesParPays;
-NUMERO_CHRONIQUES_TIREES_PAR_PAYS*** NumeroChroniquesTireesParPays;
-NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION** NumeroChroniquesTireesParInterconnexion;
+std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
 
-PROBLEME_HORAIRE_ADEQUATION ProblemeHoraireAdequation;
-VALEURS_ANNUELLES** ValeursAnnuellesAdequation;
-
-RESULTATS_PAR_INTERCONNEXION** ResultatsParInterconnexion;
+std::vector<std::map<std::string, unsigned>> NumeroChroniquesTireesParGroup; //Vector size = num_parallel_year

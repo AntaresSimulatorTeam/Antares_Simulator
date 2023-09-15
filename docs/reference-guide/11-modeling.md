@@ -41,7 +41,7 @@ In terms of power studies, the different fields of application Antares has been 
 
 - **Generation adequacy problems :** assessment of the need for new generating plants so as to keep the security of supply above a given critical threshold
 
-What is most important in these studies is to survey a great number of scenarios that represent well enough the random factors that may affect the balance between load and generation. Economic parameters do not play as much a critical role as they do in the other kinds of studies, since the stakes are mainly to know if and when supply security is likely to be jeopardized (detailed costs incurred in more ordinary conditions are of comparatively lower importance). In these studies, the default Antares option to use is the ";Adequacy"; simulation mode, or the ";Draft"; simulation mode (which is extremely fast but which produces crude results).
+What is most important in these studies is to survey a great number of scenarios that represent well enough the random factors that may affect the balance between load and generation. Economic parameters do not play as much a critical role as they do in the other kinds of studies, since the stakes are mainly to know if and when supply security is likely to be jeopardized (detailed costs incurred in more ordinary conditions are of comparatively lower importance). In these studies, the default Antares option to use is the ";Adequacy"; simulation mode.
 
 - **Transmission project profitability :** assessment of the savings brought by a specific reinforcement of the grid, in terms of decrease of the overall system generation cost (using an assumption of fair and perfect market) and/or improvement of the security of supply (reduction of the loss-of-load expectation).
 

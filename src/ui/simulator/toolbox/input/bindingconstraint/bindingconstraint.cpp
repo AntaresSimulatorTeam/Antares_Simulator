@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,7 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/wx-wrapper.h>
 #include "bindingconstraint.h"
 #include <wx/sizer.h>
 #include <wx/stattext.h>
@@ -93,15 +92,15 @@ public:
                         const Spotlight::SearchToken::Vector& tokens,
                         const Yuni::String& text)
     {
-        if (not Data::Study::Current::Valid())
+        if (not CurrentStudyIsValid())
             return;
 
         String tmp;
-        auto& study = *Data::Study::Current::Get();
+        auto& study = *GetCurrentStudy();
 
         const Spotlight::SearchToken::Vector::const_iterator tend = tokens.end();
-        Data::BindConstList::iterator end = study.bindingConstraints.end();
-        Data::BindConstList::iterator i = study.bindingConstraints.begin();
+        Data::BindingConstraintsRepository::iterator end = study.bindingConstraints.end();
+        Data::BindingConstraintsRepository::iterator i = study.bindingConstraints.begin();
 
         std::vector<Data::BindingConstraint*> layerFilteredItems;
         if (!text.empty())
@@ -130,11 +129,8 @@ public:
             }
         }
 
-        Data::BindConstList::iterator j;
-        Data::BindConstList::iterator endJ;
-
-        j = layerFilteredItems.begin();
-        endJ = layerFilteredItems.end();
+        auto j = layerFilteredItems.begin();
+        auto endJ = layerFilteredItems.end();
 
         for (; j != endJ; ++j)
         {
@@ -160,7 +156,7 @@ public:
 
             auto item = std::make_shared<Toolbox::Spotlight::ItemConstraint>(&constraint);
             if (constraint.enabled()
-                && (constraint.linkCount() > 0 || constraint.enabledClusterCount() > 0))
+                && (constraint.linkCount() > 0 || constraint.clusterCount() > 0))
             {
                 if (pBmpOn)
                     item->image(*pBmpOn);
@@ -176,7 +172,7 @@ public:
 
     virtual bool onSelect(Spotlight::IItem::Ptr& item)
     {
-        if (not Data::Study::Current::Valid())
+        if (not CurrentStudyIsValid())
             return false;
 
         GUILocker locker;
@@ -192,7 +188,7 @@ public:
 
     virtual bool onDoubleClickSelect(Spotlight::IItem::Ptr& item)
     {
-        if (not Data::Study::Current::Valid())
+        if (not CurrentStudyIsValid())
             return false;
 
         GUILocker locker;

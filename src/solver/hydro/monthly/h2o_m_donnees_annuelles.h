@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -34,47 +34,39 @@
 
 #include "h2o_m_donnees_optimisation.h"
 
-#ifdef __cplusplus
-extern "C"
+/*************************************************************************************************/
+/*                    Structure contenant les champs a renseigner par l'appelant */
+
+typedef struct
 {
-#endif
+    /* En entree: seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
+       avoir appele " H2O_M_Instanciation " */
+    /* Commence a 0 pour le 1er janvier et se termine a 11 pour le 1er decembre */
+    double CoutDepassementVolume;  /* A renseigner par l'appelant : 1 valeur */
+    double CoutViolMaxDuVolumeMin; // A renseigner par l'appelant : 1 valeur
+    double VolumeInitial;          /* A renseigner par l'appelant : 1 valeur */
+    double* TurbineMax;            /* A renseigner par l'appelant : 1 valeur par mois */
+    double* TurbineMin;
+    double* TurbineCible;          /* A renseigner par l'appelant : 1 valeur par mois */
+    double* Apport;                /* A renseigner par l'appelant : 1 valeur par mois */
+    /* Pour decrire la bande de volumes permise */
+    double* VolumeMin; /* A renseigner par l'appelant : 1 valeur par mois */
+    double* VolumeMax; /* A renseigner par l'appelant : 1 valeur par mois */
 
-    /*************************************************************************************************/
-    /*                    Structure contenant les champs a renseigner par l'appelant */
+    /* Les resultats */
+    char
+      ResultatsValides; /* Vaut:
+                           OUI si la solution est exploitable pour le reservoir
+                           NON s'il y a eu un probleme dans la resolution
+                                                                                                                     EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne
+                                                                                                      */
+    double* Turbine;    /* Resultat a recuperer par l'appelant */
+    double* Volume;     /* Resultat a recuperer par l'appelant */
 
-    typedef struct
-    {
-        /* En entree: seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
-           avoir appele " H2O_M_Instanciation " */
-        /* Commence a 0 pour le 1er janvier et se termine a 11 pour le 1er decembre */
-        double CoutDepassementVolume;  /* A renseigner par l'appelant : 1 valeur */
-        double CoutViolMaxDuVolumeMin; // A renseigner par l'appelant : 1 valeur
-        double VolumeInitial;          /* A renseigner par l'appelant : 1 valeur */
-        double* TurbineMax;            /* A renseigner par l'appelant : 1 valeur par mois */
-        double* TurbineCible;          /* A renseigner par l'appelant : 1 valeur par mois */
-        double* Apport;                /* A renseigner par l'appelant : 1 valeur par mois */
-        /* Pour decrire la bande de volumes permise */
-        double* VolumeMin; /* A renseigner par l'appelant : 1 valeur par mois */
-        double* VolumeMax; /* A renseigner par l'appelant : 1 valeur par mois */
-
-        /* Les resultats */
-        char
-          ResultatsValides; /* Vaut:
-                               OUI si la solution est exploitable pour le reservoir
-                               NON s'il y a eu un probleme dans la resolution
-                                                                                                                         EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne
-                                                                                                          */
-        double* Turbine;    /* Resultat a recuperer par l'appelant */
-        double* Volume;     /* Resultat a recuperer par l'appelant */
-
-        /******************************************************************************************/
-        /* Problemes internes (utilise uniquement par l'optimisation) */
-        PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
-        int NombreDePasDeTemps; /* 12 */
-    } DONNEES_ANNUELLES;
-
-#ifdef __cplusplus
-}
-#endif
+    /******************************************************************************************/
+    /* Problemes internes (utilise uniquement par l'optimisation) */
+    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+    int NombreDePasDeTemps; /* 12 */
+} DONNEES_ANNUELLES;
 
 #endif

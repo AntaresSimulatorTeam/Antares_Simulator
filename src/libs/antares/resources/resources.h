@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -34,11 +34,6 @@ namespace Antares
 {
 namespace Resources
 {
-/*!
-** \brief Write the root folder into the log file
-*/
-void WriteRootFolderToLogs();
-
 /*!
 ** \brief Get the full path of a resource file
 **

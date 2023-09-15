@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -31,6 +31,7 @@
 #include "../../../../application/study.h"
 #include "../../../../windows/inspector.h"
 #include <yuni/core/math.h>
+#include "antares/study/ui-runtimeinfos.h"
 
 #define NODE_DRAW_COLOR_VARIATION_LIGHT 30
 #define NODE_DRAW_COLOR_VARIATION_DARK 15
@@ -75,7 +76,7 @@ void Node::createANewAreaIfNotAlreadyAttached()
         // Creating a new Area
         Data::AreaName sFl;
         wxStringToString(pCaption, sFl);
-        pAttachedArea = study->areaAdd(sFl);
+        pAttachedArea = study->areaAdd(sFl, true);
         pCaption = wxStringFromUTF8(pAttachedArea->name);
         study->uiinfo->reload();
         MarkTheStudyAsModified();

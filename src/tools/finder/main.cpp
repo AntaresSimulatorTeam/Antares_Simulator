@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,11 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/study/finder.h>
 #include <yuni/core/getopt.h>
 #include "../../ui/common/winmain.hxx"
-#include <antares/utils.h>
+#include <antares/utils/utils.h>
 #include <antares/version.h>
 #include <antares/locale.h>
 

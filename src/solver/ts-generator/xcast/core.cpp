@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -26,8 +26,8 @@
 */
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
-#include <antares/study.h>
-#include <antares/logs.h>
+#include <antares/study/study.h>
+#include <antares/logs/logs.h>
 #include "xcast.h"
 #include "constants.h"
 #include "../../misc/cholesky.h"
@@ -225,7 +225,7 @@ bool XCast::generateValuesForTheCurrentDay()
           Triangle_courant, CORR, Carre_reference, pCorrMonth->entry, processCount, pQCHOLTotal);
         if (shrink == -1.f)
         {
-            // sortie impossible  car on a vérifié que C est d.p
+            // sortie impossible  car on a vï¿½rifiï¿½ que C est d.p
             logs.error() << "TS " << pTSName << " generator: invalid correlation matrix";
             return false;
         }
@@ -243,7 +243,7 @@ bool XCast::generateValuesForTheCurrentDay()
                     x = PETIT / T[s];
                 if (x < STEP)
                 {
-                    // plafonne le terme lineaire de retour à la moyenne a PETIT *(ecart à la
+                    // plafonne le terme lineaire de retour ï¿½ la moyenne a PETIT *(ecart ï¿½ la
                     // moyenne)
                     STEP = x;
                 }
@@ -253,7 +253,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 {
                     x = STDE[s] / x;
                     x *= x;
-                    // plafonne l'amplitude de la diffusion à 2*sqrt(PETIT)*STDE (pour brown=1)
+                    // plafonne l'amplitude de la diffusion ï¿½ 2*sqrt(PETIT)*STDE (pour brown=1)
                     x *= 4.f * PETIT;
                     if (x < STEP)
                         STEP = x;
@@ -419,7 +419,7 @@ bool XCast::generateValuesForTheCurrentDay()
                     {
                         if (shrink == -1.f)
                         {
-                            // sortie impossible  car on a vérifié que C est d.p
+                            // sortie impossible  car on a vï¿½rifiï¿½ que C est d.p
                             logs.error()
                               << "TS " << pTSName << " generator: invalid correlation matrix";
                             return false;
@@ -527,7 +527,7 @@ bool XCast::generateValuesForTheCurrentDay()
     // Reexpression des dernieres positions des processus en relatif par rapport
     // a l'intervalle mini, esperance,maxi cette reexpression permet d'assurer
     // la continuite avec l'appel suivant s'il correspond au debut d'un nouveau
-    // mois de caractéristiques différentes.
+    // mois de caractï¿½ristiques diffï¿½rentes.
     //
     // si espe <= posi <  maxi  on retient posi =  (posi - espe) / (maxi - espe)
     // si mini <  posi <= espe  on retient posi = -(posi - espe) / (mini - espe)

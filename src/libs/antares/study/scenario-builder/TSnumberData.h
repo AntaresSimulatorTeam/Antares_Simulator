@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -29,11 +29,7 @@
 
 #include "scBuilderDataInterface.h"
 
-namespace Antares
-{
-namespace Data
-{
-namespace ScenarioBuilder
+namespace Antares::Data::ScenarioBuilder
 {
 /*!
 ** \brief Rules for TS numbers, for all years and a single timeseries
@@ -42,7 +38,7 @@ class TSNumberData : public dataInterface
 {
 public:
     //! Matrix
-    using MatrixType = Matrix<Yuni::uint32>;
+    using MatrixType = Matrix<uint32_t>;
 
 public:
     // We use default constructor and destructor
@@ -66,7 +62,7 @@ public:
     ** \param year  A year
     ** \param value The new TS number
     */
-    void set(uint index, uint year, uint value);
+    void setTSnumber(uint index, uint year, uint value);
     //@}
 
     uint width() const;
@@ -108,214 +104,6 @@ inline double TSNumberData::get_value(uint x, uint y) const
     return pTSNumberRules.entry[y][x];
 }
 
-// =============== TSNumberData derived classes ===============
-
-// =====================
-// Load ...
-// =====================
-class loadTSNumberData : public TSNumberData
-{
-public:
-    bool apply(Study& study) override;
-    CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const override;
-};
-
-inline CString<512, false> loadTSNumberData::get_prefix() const
-{
-    return "l,";
-}
-
-// =====================
-// Wind ...
-// =====================
-class windTSNumberData : public TSNumberData
-{
-public:
-    bool apply(Study& study) override;
-    CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const override;
-};
-
-inline CString<512, false> windTSNumberData::get_prefix() const
-{
-    return "w,";
-}
-
-// =====================
-// Solar ...
-// =====================
-class solarTSNumberData : public TSNumberData
-{
-public:
-    bool apply(Study& study) override;
-    CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const override;
-};
-
-inline CString<512, false> solarTSNumberData::get_prefix() const
-{
-    return "s,";
-}
-
-// =====================
-// Hydro ...
-// =====================
-
-class hydroTSNumberData : public TSNumberData
-{
-public:
-    bool apply(Study& study) override;
-    CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const override;
-};
-
-inline CString<512, false> hydroTSNumberData::get_prefix() const
-{
-    return "h,";
-}
-
-// =====================
-// Thermal ...
-// =====================
-
-class thermalTSNumberData : public TSNumberData
-{
-public:
-    thermalTSNumberData() = default;
-
-    bool reset(const Study& study) override;
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
-
-    void attachArea(const Area* area)
-    {
-        pArea = area;
-    }
-
-    void set(const Antares::Data::ThermalCluster* cluster, const uint year, uint value);
-    uint get(const Antares::Data::ThermalCluster* cluster, const uint year) const;
-    bool apply(Study& study) override;
-    CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const override;
-
-private:
-    //! The attached area, if any
-    const Area* pArea = nullptr;
-};
-
-inline uint thermalTSNumberData::get(const Antares::Data::ThermalCluster* cluster,
-                                     const uint year) const
-{
-    assert(cluster != nullptr);
-    if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
-    {
-        const uint index = cluster->areaWideIndex;
-        return pTSNumberRules[index][year];
-    }
-    return 0;
-}
-
-inline CString<512, false> thermalTSNumberData::get_prefix() const
-{
-    return "t,";
-}
-
-// =====================
-// Renewable ...
-// =====================
-
-class renewableTSNumberData : public TSNumberData
-{
-public:
-    renewableTSNumberData() = default;
-
-    virtual ~renewableTSNumberData()
-    {
-    }
-
-    bool reset(const Study& study) override;
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
-
-    void attachArea(const Area* area)
-    {
-        pArea = area;
-    }
-
-    void set(const Antares::Data::RenewableCluster* cluster, const uint year, uint value);
-    uint get(const Antares::Data::RenewableCluster* cluster, const uint year) const;
-    bool apply(Study& study) override;
-    CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const override;
-
-private:
-    //! The attached area, if any
-    const Area* pArea = nullptr;
-};
-
-inline uint renewableTSNumberData::get(const Antares::Data::RenewableCluster* cluster,
-                                       const uint year) const
-{
-    assert(cluster != nullptr);
-    if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
-    {
-        const uint index = cluster->areaWideIndex;
-        return pTSNumberRules[index][year];
-    }
-    return 0;
-}
-
-inline CString<512, false> renewableTSNumberData::get_prefix() const
-{
-    return "r,";
-}
-
-// =================================
-// Transmission capacities ...
-// =================================
-
-class ntcTSNumberData : public TSNumberData
-{
-public:
-    ntcTSNumberData() = default;
-    virtual ~ntcTSNumberData() = default;
-
-    bool reset(const Study& study) override;
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
-
-    void attachArea(const Area* area)
-    {
-        pArea = area;
-    }
-
-    void setDataForLink(const Antares::Data::AreaLink* link, const uint year, uint value);
-    uint get(const Antares::Data::AreaLink* link, const uint year) const;
-    bool apply(Study& study) override;
-    CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const override;
-
-private:
-    //! The attached area, if any
-    const Area* pArea = nullptr;
-};
-
-inline uint ntcTSNumberData::get(const Antares::Data::AreaLink* link, const uint year) const
-{
-    assert(link != nullptr);
-    if (year < pTSNumberRules.height && link->indexForArea < pTSNumberRules.width)
-    {
-        const uint index = link->indexForArea;
-        return pTSNumberRules[index][year];
-    }
-    return 0;
-}
-
-inline CString<512, false> ntcTSNumberData::get_prefix() const
-{
-    return "ntc,";
-}
-
-} // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder
 
 #endif // __LIBS_STUDY_SCENARIO_BUILDER_DATA_TS_NUMBER_H__

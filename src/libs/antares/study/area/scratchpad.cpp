@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -37,7 +37,7 @@ namespace Antares
 namespace Data
 {
 AreaScratchpad::TimeseriesData::TimeseriesData(Area& area) :
- load(area.load.series->series), solar(area.solar.series->series), wind(area.wind.series->series)
+        load(area.load.series->timeSeries), solar(area.solar.series->timeSeries), wind(area.wind.series->timeSeries)
 {
 }
 
@@ -85,67 +85,60 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
     // ===============
     // hydroHasMod
     // ===============
-    if (mode != stdmAdequacyDraft)
+
+    // ------------------------------
+    // Hydro generation permission
+    // ------------------------------
+    // Useful whether we use a heuristic target or not
+    bool hydroGenerationPermission = false;
+
+    // ... Getting hydro max power
+    auto const& maxPower = area.hydro.maxPower;
+
+    // ... Hydro max generating power and energy
+    auto const& maxGenP = maxPower[Data::PartHydro::genMaxP];
+    auto const& maxGenE = maxPower[Data::PartHydro::genMaxE];
+
+    double value = 0.;
+    for (uint d = 0; d < DAYS_PER_YEAR; ++d)
+        value += maxGenP[d] * maxGenE[d];
+
+    // If generating energy is nil over the whole year, hydroGenerationPermission is false, true
+    // otherwise.
+    hydroGenerationPermission = (value > 0.);
+
+    // ---------------------
+    // Hydro has inflows
+    // ---------------------
+    bool hydroHasInflows = false;
+    if (!area.hydro.prepro) // not in prepro mode
     {
-        // ------------------------------
-        // Hydro generation permission
-        // ------------------------------
-        // Useful whether we use a heuristic target or not
-        bool hydroGenerationPermission = false;
-
-        // ... Getting hydro max power
-        auto const& maxPower = area.hydro.maxPower;
-
-        // ... Hydro max generating power and energy
-        auto const& maxGenP = maxPower[Data::PartHydro::genMaxP];
-        auto const& maxGenE = maxPower[Data::PartHydro::genMaxE];
-
-        double value = 0.;
-        for (uint d = 0; d < DAYS_PER_YEAR; ++d)
-            value += maxGenP[d] * maxGenE[d];
-
-        // If generating energy is nil over the whole year, hydroGenerationPermission is false, true
-        // otherwise.
-        hydroGenerationPermission = (value > 0.);
-
-        // ---------------------
-        // Hydro has inflows
-        // ---------------------
-        bool hydroHasInflows = false;
-        if (!area.hydro.prepro) // not in prepro mode
-        {
-            assert(area.hydro.series);
-            hydroHasInflows = MatrixTestForAtLeastOnePositiveValue(area.hydro.series->storage);
-        }
-        else
-        {
-            auto& m = area.hydro.prepro->data;
-            double value = 0.;
-            auto& colPowerOverWater = m[PreproHydro::powerOverWater];
-            auto& colMaxEnergy = m[PreproHydro::maximumEnergy];
-
-            for (uint m = 0; m < rinfos.nbMonthsPerYear; ++m)
-                value += colMaxEnergy[m] * (1. - colPowerOverWater[m]);
-
-            hydroHasInflows = (value > 0.);
-        }
-
-        // --------------------------
-        // hydroHasMod definition
-        // --------------------------
-        hydroHasMod = hydroHasInflows || hydroGenerationPermission;
+        assert(area.hydro.series);
+        hydroHasInflows = MatrixTestForAtLeastOnePositiveValue(area.hydro.series->storage);
     }
     else
     {
-        // No modulation in adequacy
-        hydroHasMod = false;
+        auto& m = area.hydro.prepro->data;
+        double valueCol = 0.;
+        auto& colPowerOverWater = m[PreproHydro::powerOverWater];
+        auto& colMaxEnergy = m[PreproHydro::maximumEnergy];
+
+        for (uint m = 0; m < rinfos.nbMonthsPerYear; ++m)
+            valueCol += colMaxEnergy[m] * (1. - colPowerOverWater[m]);
+
+        hydroHasInflows = (valueCol > 0.);
     }
+
+    // --------------------------
+    // hydroHasMod definition
+    // --------------------------
+    hydroHasMod = hydroHasInflows || hydroGenerationPermission;
+
 
     // ===============
     // Pumping
     // ===============
     // ... Hydro max power
-    auto const& maxPower = area.hydro.maxPower;
 
     // ... Hydro max pumping power and energy
     auto const& maxPumpingP = maxPower[Data::PartHydro::pumpMaxP];
@@ -155,21 +148,16 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
     for (uint d = 0; d != DAYS_PER_YEAR; ++d)
         pumpingMaxPower[d] = maxPumpingP[d];
 
+    double valuePumping = 0.;
     // ... Computing 'pumpHasMod' parameter
-    if (mode != stdmAdequacyDraft)
-    {
-        double value = 0.;
-        for (uint d = 0; d < DAYS_PER_YEAR; ++d)
-            value += maxPumpingP[d] * maxPumpingE[d];
+    for (uint d = 0; d < DAYS_PER_YEAR; ++d)
+        valuePumping += maxPumpingP[d] * maxPumpingE[d];
 
-        // If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
-        pumpHasMod = (value > 0.);
-    }
-
-    // Spinning reserves
-    memcpy(
-      spinningReserve, area.reserves[fhrPrimaryReserve], sizeof(double) * rinfos.nbHoursPerYear);
+    // If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
+    pumpHasMod = (valuePumping > 0.);
 }
+
+AreaScratchpad::~AreaScratchpad() = default;
 
 } // namespace Data
 } // namespace Antares

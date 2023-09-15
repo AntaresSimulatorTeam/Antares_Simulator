@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -41,7 +41,7 @@ public:
     //! Set of area' names
     using AreaSet = std::set<Data::AreaName>;
     using LinkSet = std::map<Data::AreaName, std::map<Data::AreaName, bool>>;
-    using ThermalClusterSet = std::map<Data::AreaName, std::map<Data::ClusterName, bool>>;
+    using ThermalClusterSet = std::map<Data::AreaName, std::map<YString, bool>>;
     using ConstraintSet = std::set<Yuni::String>;
 
 public:

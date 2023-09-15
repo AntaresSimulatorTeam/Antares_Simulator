@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -33,6 +33,7 @@
 
 // Solar
 #include "solar/series.h"
+#include "solar/prepro.h"
 #include "solar/container.h"
 
 // Hydro
@@ -55,5 +56,8 @@
 #include "renewable/defines.h"
 #include "renewable/cluster.h"
 #include "renewable/container.h"
+
+// Short-term storage
+#include "short-term-storage/container.h"
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_H__

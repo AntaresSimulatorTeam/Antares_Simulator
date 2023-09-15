@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -40,18 +40,18 @@ namespace Economy
 struct VCardRenewableGeneration
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "Renewable Gen.";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "MWh";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Value of all the renewable generation throughout all MC years";
     }
@@ -98,7 +98,7 @@ struct VCardRenewableGeneration
 
     struct Multiple
     {
-        static const char* Caption(const unsigned int indx)
+        static std::string Caption(const unsigned int indx)
         {
             switch (indx)
             {
@@ -123,6 +123,11 @@ struct VCardRenewableGeneration
             default:
                 return "<unknown>";
             }
+        }
+
+        static std::string Unit([[maybe_unused]] const unsigned int indx)
+        {
+            return VCardRenewableGeneration::Unit();
         }
     };
 }; // class VCard
@@ -262,17 +267,20 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
+        for (uint clusterIndex = 0; clusterIndex != state.area->renewable.clusterCount();
+             ++clusterIndex)
+        {
+            const auto* renewableCluster = state.area->renewable.clusters[clusterIndex];
+            uint serieIndex = state.timeseriesIndex->RenouvelableParPalier[clusterIndex];
+            double renewableClusterProduction
+              = renewableCluster->valueAtTimeStep(serieIndex, state.hourInTheYear);
+
+            pValuesForTheCurrentYear[numSpace][renewableCluster->groupID][state.hourInTheYear]
+              += renewableClusterProduction;
+        }
+
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourForEachRenewableCluster(State& state, unsigned int numSpace)
-    {
-        // Adding the dispatchable generation for the class_name fuel
-        pValuesForTheCurrentYear[numSpace][state.renewableCluster->groupID][state.hourInTheYear]
-          += state.renewableClusterProduction;
-        // Next item in the list
-        NextType::hourForEachRenewableCluster(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
@@ -296,6 +304,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = VCardType::Multiple::Caption(i);
+                results.variableUnit = VCardType::Multiple::Unit(i);
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }

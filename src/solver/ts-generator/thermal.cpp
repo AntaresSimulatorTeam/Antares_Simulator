@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -31,15 +31,13 @@
 #include <yuni/core/math.h>
 #include <yuni/core/string.h>
 
-#include <antares/study.h>
-#include <antares/logs.h>
-#include <antares/emergency.h>
-#include <i_writer.h>
+#include <antares/study/study.h>
+#include <antares/logs/logs.h>
+#include <antares/writer/i_writer.h>
 
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
 #include "../simulation/sim_extern_variables_globales.h"
 #include "../aleatoire/alea_fonctions.h"
 
@@ -76,8 +74,6 @@ public:
     uint currentYear;
 
     uint nbThermalTimeseries;
-
-    bool economyMode;
 
     bool derated;
 
@@ -154,8 +150,6 @@ GeneratorTempData::GeneratorTempData(Data::Study& study,
 
     nbThermalTimeseries = parameters.nbTimeSeriesThermal;
 
-    economyMode = (parameters.mode != Data::stdmAdequacyDraft);
-
     derated = parameters.derated;
 }
 
@@ -176,7 +170,7 @@ void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
         };
 
         std::string buffer;
-        cluster.series->series.saveToBuffer(buffer, precision);
+        cluster.series->timeSeries.saveToBuffer(buffer, precision);
 
         pWriter->addEntryFromBuffer(pTempFilename.c_str(), buffer);
     }
@@ -277,14 +271,14 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
     if (0 == cluster.unitCount or 0 == cluster.nominalCapacity)
     {
-        cluster.series->series.reset(1, nbHoursPerYear);
+        cluster.series->timeSeries.reset(1, nbHoursPerYear);
 
         if (archive)
             writeResultsToDisk(area, cluster);
         return;
     }
 
-    cluster.series->series.resize(nbThermalTimeseries, nbHoursPerYear);
+    cluster.series->timeSeries.resize(nbThermalTimeseries, nbHoursPerYear);
 
     const auto& preproData = *(cluster.prepro);
 
@@ -387,7 +381,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
         uint hour = 0;
 
         if (tsIndex > 1)
-            dstSeries = &cluster.series->series[tsIndex - 2];
+            dstSeries = &cluster.series->timeSeries[tsIndex - 2];
 
         for (uint dayInTheYear = 0; dayInTheYear < daysPerYear; ++dayInTheYear)
         {
@@ -627,13 +621,12 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
     }
 
     if (derated)
-        cluster.series->series.averageTimeseries();
+        cluster.series->timeSeries.averageTimeseries();
 
     if (archive)
         writeResultsToDisk(area, cluster);
 
-    if (economyMode)
-        cluster.calculationOfSpinning();
+    cluster.calculationOfSpinning();
 }
 } // namespace
 

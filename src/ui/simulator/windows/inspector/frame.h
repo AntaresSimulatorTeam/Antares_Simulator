@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -29,8 +29,7 @@
 
 #include <wx/propgrid/propgrid.h>
 
-#include <antares/wx-wrapper.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "../notes.h"
 #include "data.h"
 #include <ui/common/component/panel.h>
@@ -224,13 +223,16 @@ private:
     wxPGProperty* pPGThClusterLawForced;
     wxPGProperty* pPGThClusterLawPlanned;
     wxPGProperty* pPGThClusterSpinning;
+    wxPGProperty* pPGThClusterEfficiency;
 
+    wxPGProperty* pPGThClusterCostGeneration;
     wxPGProperty* pPGThClusterMarginalCost;
     wxPGProperty* pPGThClusterFixedCost;
     wxPGProperty* pPGThClusterStartupCost;
     wxPGProperty* pPGThClusterOperatingCost;
     wxPGProperty* pPGThClusterRandomSpread;
-
+    wxPGProperty* pPGThClusterVariableOMcost;
+    
     wxPGProperty* pPGThClusterMinStablePower;
     wxPGProperty* pPGThClusterMinUpTime;
     wxPGProperty* pPGThClusterMinDownTime;

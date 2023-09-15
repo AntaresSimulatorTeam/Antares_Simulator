@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_MC_PLAYLIST_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_MC_PLAYLIST_H__
 
-#include <antares/wx-wrapper.h>
 #include "../renderer.h"
 #include "../../../../application/study.h"
 #include <memory>
@@ -106,7 +105,7 @@ public:
     //! The total number of lines
     uint lines;
     //! Size
-    Yuni::uint64 size;
+    uint64_t size;
     //! All entries
     LogEntry::Vector entries;
     //! The longest line

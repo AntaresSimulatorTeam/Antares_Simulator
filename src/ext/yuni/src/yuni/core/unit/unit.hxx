@@ -25,17 +25,17 @@ inline Abstract<Q, Child, T, P, N>::Abstract() : pValue()
 }
 
 template<class Q, class Child, typename T, typename P, typename N>
-inline Abstract<Q, Child, T, P, N>::Abstract(sint16 u) : pValue((T)u)
+inline Abstract<Q, Child, T, P, N>::Abstract(int16_t u) : pValue((T)u)
 {
 }
 
 template<class Q, class Child, typename T, typename P, typename N>
-inline Abstract<Q, Child, T, P, N>::Abstract(sint32 u) : pValue((T)u)
+inline Abstract<Q, Child, T, P, N>::Abstract(int32_t u) : pValue((T)u)
 {
 }
 
 template<class Q, class Child, typename T, typename P, typename N>
-inline Abstract<Q, Child, T, P, N>::Abstract(sint64 u) : pValue((T)u)
+inline Abstract<Q, Child, T, P, N>::Abstract(int64_t u) : pValue((T)u)
 {
 }
 
@@ -45,12 +45,12 @@ inline Abstract<Q, Child, T, P, N>::Abstract(uint16 u) : pValue((T)u)
 }
 
 template<class Q, class Child, typename T, typename P, typename N>
-inline Abstract<Q, Child, T, P, N>::Abstract(uint32 u) : pValue((T)u)
+inline Abstract<Q, Child, T, P, N>::Abstract(uint32_t u) : pValue((T)u)
 {
 }
 
 template<class Q, class Child, typename T, typename P, typename N>
-inline Abstract<Q, Child, T, P, N>::Abstract(uint64 u) : pValue((T)u)
+inline Abstract<Q, Child, T, P, N>::Abstract(uint64_t u) : pValue((T)u)
 {
 }
 
@@ -371,12 +371,12 @@ inline bool Abstract<Q, Child, T, P, N>::operator>(const Abstract<Q1, C1, T1, P1
     }
 
 #define YUNI_UNIT_OPERATOR_FOR_ALLSTD_TYPES(OP) \
-    YUNI_UNIT_OPERATOR_ASSIGN(OP, sint16)       \
-    YUNI_UNIT_OPERATOR_ASSIGN(OP, sint32)       \
-    YUNI_UNIT_OPERATOR_ASSIGN(OP, sint64)       \
+    YUNI_UNIT_OPERATOR_ASSIGN(OP, int16_t)       \
+    YUNI_UNIT_OPERATOR_ASSIGN(OP, int32_t)       \
+    YUNI_UNIT_OPERATOR_ASSIGN(OP, int64_t)       \
     YUNI_UNIT_OPERATOR_ASSIGN(OP, uint16)       \
-    YUNI_UNIT_OPERATOR_ASSIGN(OP, uint32)       \
-    YUNI_UNIT_OPERATOR_ASSIGN(OP, uint64)       \
+    YUNI_UNIT_OPERATOR_ASSIGN(OP, uint32_t)       \
+    YUNI_UNIT_OPERATOR_ASSIGN(OP, uint64_t)       \
     YUNI_UNIT_OPERATOR_ASSIGN(OP, float)        \
     YUNI_UNIT_OPERATOR_ASSIGN(OP, double)       \
     YUNI_UNIT_OPERATOR_ASSIGN(OP, long double)  \

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -40,18 +40,18 @@ namespace Economy
 struct VCardNbOfDispatchedUnitsByPlant
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "NODU by plant";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "NODU";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Number of Dispatchable Units by plant";
     }
@@ -137,32 +137,6 @@ public:
         };
     };
 
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-    {
-        if (u.area)
-        {
-            for (unsigned int i = 0; i != u.area->thermal.list.size(); ++i)
-            {
-                Solver::Variable::IntermediateValues::EstimateMemoryUsage(u);
-                ResultsType::EstimateMemoryUsage(u);
-                u.requiredMemoryForOutput += sizeof(Solver::Variable::IntermediateValues);
-                u.requiredMemoryForOutput += sizeof(typename VCardType::ResultsType);
-                u.requiredMemoryForOutput += sizeof(void*) * 2;
-
-                // year-by-year
-                if (!u.gatheringInformationsForInput)
-                {
-                    if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
-                    {
-                        for (unsigned int i = 0; i != u.years; ++i)
-                            u.takeIntoConsiderationANewTimeserieForDiskOutput(false);
-                    }
-                }
-            }
-        }
-        NextType::EstimateMemoryUsage(u);
-    }
-
 public:
     NbOfDispatchedUnitsByPlant() : pValuesForTheCurrentYear(NULL), pSize(0)
     {
@@ -215,6 +189,11 @@ public:
 
         // Next
         NextType::initializeFromArea(study, area);
+    }
+
+    size_t getMaxNumberColumns() const
+    {
+        return pSize * ResultsType::count;
     }
 
     void initializeFromLink(Data::Study* study, Data::AreaLink* link)
@@ -318,19 +297,19 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
+        auto area = state.area;
+        auto& thermal = state.thermal;
+        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
+             ++clusterIndex)
+        {
+            const auto* thermalCluster = area->thermal.clusters[clusterIndex];
+            pValuesForTheCurrentYear[numSpace][thermalCluster->areaWideIndex]
+              .hour[state.hourInTheYear]
+              = thermal[area->index].numberOfUnitsONbyCluster[clusterIndex];
+        }
+
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
-        // Production for this hour
-        pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex]
-          .hour[state.hourInTheYear]
-          = state.thermalClusterNumberON;
-
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
@@ -358,6 +337,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = thermal.clusters[i]->name(); // VCardType::Caption();
+                results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }
@@ -367,7 +347,7 @@ public:
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    unsigned int pSize;
+    size_t pSize;
     unsigned int pNbYearsParallel;
 
 }; // class NbOfDispatchedUnitsByPlant

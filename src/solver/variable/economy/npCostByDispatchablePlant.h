@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -40,18 +40,18 @@ namespace Economy
 struct VCardNonProportionalCostByDispatchablePlant
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "NP Cost by plant";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "NP Cost - Euro";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Non proportional costs by all the clusters";
     }
@@ -139,32 +139,6 @@ public:
         };
     };
 
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-    {
-        if (u.area)
-        {
-            for (unsigned int i = 0; i != u.area->thermal.list.size(); ++i)
-            {
-                Solver::Variable::IntermediateValues::EstimateMemoryUsage(u);
-                ResultsType::EstimateMemoryUsage(u);
-                u.requiredMemoryForOutput += sizeof(Solver::Variable::IntermediateValues);
-                u.requiredMemoryForOutput += sizeof(typename VCardType::ResultsType);
-                u.requiredMemoryForOutput += sizeof(void*) * 2;
-
-                // year-by-year
-                if (!u.gatheringInformationsForInput)
-                {
-                    if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
-                    {
-                        for (unsigned int i = 0; i != u.years; ++i)
-                            u.takeIntoConsiderationANewTimeserieForDiskOutput(false);
-                    }
-                }
-            }
-        }
-        NextType::EstimateMemoryUsage(u);
-    }
-
 public:
     NonProportionalCostByDispatchablePlant() : pValuesForTheCurrentYear(NULL), pSize(0)
     {
@@ -218,6 +192,11 @@ public:
 
         // Next
         NextType::initializeFromArea(study, area);
+    }
+
+    size_t getMaxNumberColumns() const
+    {
+        return pSize * ResultsType::count;
     }
 
     void initializeFromLink(Data::Study* study, Data::AreaLink* link)
@@ -311,18 +290,6 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
-        // Total Non Proportional cost for this hour
-        // NP = startup cost + fixed cost
-        // pValuesForTheCurrentYear[state.thermalCluster->areaWideIndex].hour[state.hourInTheYear]
-        // += production for the current thermal dispatchable cluster
-        //	(state.thermalClusterNonProportionalCost);
-
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
-    }
-
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
       unsigned int,
       unsigned int numSpace) const
@@ -348,6 +315,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = thermal.clusters[i]->name(); // VCardType::Caption();
+                results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }
@@ -357,7 +325,7 @@ public:
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    unsigned int pSize;
+    size_t pSize;
     unsigned int pNbYearsParallel;
 
 }; // class NonProportionalCostByDispatchablePlant

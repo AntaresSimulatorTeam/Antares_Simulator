@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -24,14 +24,13 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_AREAS_HXX__
-#define __ANTARES_LIBS_STUDY_AREAS_HXX__
+#pragma once
 
-#include "../../utils.h"
+#include <antares/utils/utils.h>
+#include "antares/study/parts/parts.h"
+#include "antares/study/parts/load/prepro.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 struct CompareAreaName final
 {
@@ -40,44 +39,6 @@ struct CompareAreaName final
         return s1->name < s2->name;
     }
 };
-
-template<int TimeSeriesT>
-inline void Area::storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const
-{
-    switch (TimeSeriesT)
-    {
-    // Load
-    case timeSeriesLoad:
-        storeTimeseriesNumbersForLoad(writer);
-        break;
-        // Solar
-    case timeSeriesSolar:
-        storeTimeseriesNumbersForSolar(writer);
-        break;
-        // Hydro
-    case timeSeriesHydro:
-        storeTimeseriesNumbersForHydro(writer);
-        break;
-        // Wind
-    case timeSeriesWind:
-        storeTimeseriesNumbersForWind(writer);
-        break;
-        // Thermal
-    case timeSeriesThermal:
-        storeTimeseriesNumbersForThermal(writer);
-        break;
-        // Renewable
-    case timeSeriesRenewable:
-        storeTimeseriesNumbersForRenewable(writer);
-        break;
-        // Transmission capacities (NTC)
-    case timeSeriesTransmissionCapacities:
-        storeTimeseriesNumbersForTransmissionCapacities(writer);
-        break;
-    case timeSeriesCount:
-        break;
-    }
-}
 
 inline Area* AreaList::operator[](uint i)
 {
@@ -206,7 +167,4 @@ inline AreaList::const_reverse_iterator AreaList::rend() const
     return areas.rend();
 }
 
-} // namespace Data
 } // namespace Antares
-
-#endif //  __ANTARES_LIBS_STUDY_AREAS_HXX__

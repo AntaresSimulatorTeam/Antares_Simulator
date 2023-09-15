@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -26,13 +26,14 @@
 */
 
 #include "parameter.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include "../../../../validator.h"
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/choice.h>
 #include "../operator.h"
-#include <antares/logs.h>
+#include "wx-wrapper.h"
+#include <antares/logs/logs.h>
 
 namespace Antares
 {

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -81,7 +81,7 @@ Localdatahydro::~Localdatahydro()
 
 void Localdatahydro::onAreaChanged(Data::Area* area)
 {
-    pLastArea = Data::Study::Current::Valid() ? area : nullptr;
+    pLastArea = CurrentStudyIsValid() ? area : nullptr;
 }
 
 void Localdatahydro::onStudyClosed()

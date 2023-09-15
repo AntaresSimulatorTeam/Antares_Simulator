@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -28,7 +28,7 @@
 #define __SOLVER_END_OF_LIST_END_OF_LIST_H__
 
 #include <yuni/yuni.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "state.h"
 #include "surveyresults.h"
 
@@ -65,12 +65,6 @@ public:
     };
 
 public:
-    /*!
-    ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
-    */
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage&)
-    {
-    }
 
     /*!
     ** \brief Retrieve the list of all individual variables
@@ -93,9 +87,8 @@ public:
     }
     //@}
 
-    static void initializeFromStudy(Data::Study& study)
+    static void initializeFromStudy([[maybe_unused]] Data::Study& study)
     {
-        study.parameters.variablesPrintInfo.resetInfoIterator();
     }
 
     static void initializeFromArea(Data::Study*, Data::Area*)
@@ -112,9 +105,12 @@ public:
     {
     }
 
-    void getPrintStatusFromStudy(Data::Study& study)
+    void getPrintStatusFromStudy([[maybe_unused]] Data::Study& study)
     {
-        study.parameters.variablesPrintInfo.resetInfoIterator();
+    }
+
+    void supplyMaxNumberOfColumns([[maybe_unused]] Data::Study& study)
+    {
     }
 
     static void simulationBegin()
@@ -209,16 +205,6 @@ public:
         UNUSED_VARIABLE(numSpace);
     }
 
-    static void hourForEachThermalCluster(State&, uint numSpace)
-    {
-        UNUSED_VARIABLE(numSpace);
-    }
-
-    static void hourForEachRenewableCluster(State&, uint numSpace)
-    {
-        UNUSED_VARIABLE(numSpace);
-    }
-
     static void hourEnd(State&, unsigned int)
     {
     }
@@ -239,7 +225,7 @@ public:
     {
     }
 
-    static Yuni::uint64 memoryUsage()
+    static uint64_t memoryUsage()
     {
         return 0;
     }

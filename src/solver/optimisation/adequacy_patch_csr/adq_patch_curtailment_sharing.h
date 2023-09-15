@@ -27,23 +27,17 @@
 
 #pragma once
 
-#include "../simulation/sim_structure_probleme_economique.h"
+#include "sim_structure_probleme_economique.h"
 
 namespace Antares::Data::AdequacyPatch
 {
-//! A default threshold value for initiate curtailment sharing rule
-const double defaultThresholdToRunCurtailmentSharing = 0.0;
-//! A default threshold value for display local matching rule violations
-const double defaultThresholdDisplayLocalMatchingRuleViolations = 0.0;
-//! CSR variables relaxation threshold
-const int defaultValueThresholdVarBoundsRelaxation = 3;
-
 
 /*!
  * Calculates curtailment sharing rule parameters netPositionInit, densNew and totalNodeBalance per
  * given area and hour.
  */
 std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* problemeHebdo,
+                                                            bool setNTCOutsideToInsideToZero,
                                                             int Area,
                                                             int hour);
 
@@ -52,15 +46,16 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
  */
 double LmrViolationAreaHour(const PROBLEME_HEBDO* problemeHebdo,
                             double totalNodeBalance,
+                            const double threshold,
                             int Area,
                             int hour);
 
 /*!
  * Calculate densNew values for all hours and areas inside adequacy patch and places them into
- * problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] to be displayed in output.
+ * problemeHebdo->ResultatsHoraires[Area].ValeursHorairesDENS[hour] to be displayed in output.
  * copy-pastes spilled Energy values into spilled Energy values after CSR
  * calculates total LMR violations and LMR violations per area per hour inside
- * problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour]
+ * problemeHebdo->ResultatsHoraires[Area].ValeursHorairesLmrViolations[hour]
  */
 double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* problemeHebdo,
                                             AreaList& areas,

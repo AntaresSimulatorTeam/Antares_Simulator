@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,7 +27,7 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_RESULTS_H__
 #define __SOLVER_VARIABLE_STORAGE_RESULTS_H__
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "intermediate.h"
 #include "../categories.h"
 #include "fwd.h"
@@ -95,14 +95,9 @@ public:
         DecoratorType::template buildDigest<VCardT>(results, digestLevel, dataLevel);
     }
 
-    Yuni::uint64 memoryUsage() const
+    uint64_t memoryUsage() const
     {
         return DecoratorType::memoryUsage();
-    }
-
-    static void EstimateMemoryUsage(Antares::Data::StudyMemoryUsage& u)
-    {
-        DecoratorType::EstimateMemoryUsage(u);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
@@ -123,6 +118,5 @@ public:
 #include "minmax.h"
 #include "average.h"
 #include "stdDeviation.h"
-#include "and.h"
 
 #endif // __SOLVER_VARIABLE_STORAGE_RESULTS_H__

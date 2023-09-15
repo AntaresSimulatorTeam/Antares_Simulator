@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -26,8 +26,7 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/study.h>
-#include <antares/study/memory-usage.h>
+#include <antares/study/study.h>
 #include "max-mrg.h"
 #include <antares/study/area/scratchpad.h>
 
@@ -82,7 +81,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
     // current problem
     auto& problem = *state.problemeHebdo;
     // Weekly results from solver for the current area
-    auto& weeklyResults = *(problem.ResultatsHoraires[index]);
+    auto& weeklyResults = problem.ResultatsHoraires[index];
     // Unsupplied enery for the current area
     auto& D = weeklyResults.ValeursHorairesDeDefaillancePositive;
     // Spillage
@@ -91,12 +90,12 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
     double OI[168];
 
     // H.STOR
-    double* H = weeklyResults.TurbinageHoraire;
+    std::vector<double>& H = weeklyResults.TurbinageHoraire;
 
     // energie turbinee de la semaine
     {
         // DTG MRG
-        const double* M = area.scratchpad[numSpace]->dispatchableGenerationMargin;
+        const double* M = area.scratchpad[numSpace].dispatchableGenerationMargin;
 
         double WH = 0.;
         {
@@ -136,8 +135,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
     // ref to the study calendar
     auto& calendar = state.study.calendar;
     // Pmax
-    auto& P = area.hydro.maxPower[Data::PartHydro::genMaxP];
-    // auto& P = problem.CaracteristiquesHydrauliques[index]->ContrainteDePmaxHydrauliqueHoraire;
+    const auto& P = area.hydro.maxPower[Data::PartHydro::genMaxP];
 
     do
     {

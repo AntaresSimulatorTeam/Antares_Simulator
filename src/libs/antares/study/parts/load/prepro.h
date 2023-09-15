@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -24,8 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_H__
-#define __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_H__
+#pragma once
 
 #include "../../fwd.h"
 #include "../../xcast.h"
@@ -55,12 +54,12 @@ public:
     /*!
     ** \brief Try to estimate the amount of memory required by this class for a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     /*!
     ** \brief Load data from a folder
     */
-    bool loadFromFolder(Study& study, const AnyString& folder);
+    bool loadFromFolder(const AnyString& folder);
 
     /*!
     ** \brief Save data to a folder
@@ -70,7 +69,7 @@ public:
     /*!
     ** \brief Get the amount of memory currently used
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Make sure that all data are loaded in memory
@@ -93,7 +92,6 @@ public:
 
 private:
     bool internalLoadFromFolder(Study& study, const char* folder, uint length);
-    bool internalLoadFormatBefore33(Study& study, const YString& folder);
 
 }; // Prepro
 
@@ -102,5 +100,3 @@ private:
 } // namespace Antares
 
 #include "prepro.hxx"
-
-#endif // __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_H__

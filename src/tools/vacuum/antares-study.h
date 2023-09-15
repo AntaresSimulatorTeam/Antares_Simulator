@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -33,7 +33,7 @@
 class AntaresStudy : public FSWalker::IExtension
 {
 public:
-    AntaresStudy(yint64 dateLimit);
+    AntaresStudy(int64_t dateLimit);
     virtual ~AntaresStudy()
     {
     }
@@ -52,13 +52,13 @@ public:
     virtual void userdataDestroy(void* userdata);
 
 public:
-    yuint64 bytesDeleted;
-    yuint64 filesDeleted;
-    yuint64 foldersDeleted;
+    uint64_t bytesDeleted;
+    uint64_t filesDeleted;
+    uint64_t foldersDeleted;
 
 private:
     Yuni::Mutex pMutex;
-    yint64 pDateLimit;
+    int64_t pDateLimit;
 
 }; // class AntaresStudy
 

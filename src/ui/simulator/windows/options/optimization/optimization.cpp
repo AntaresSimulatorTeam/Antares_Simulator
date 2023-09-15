@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -35,7 +35,7 @@
 #include "../../../application/study.h"
 #include "../../../windows/message.h"
 #include <ui/common/component/panel.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
@@ -65,22 +65,6 @@ static void ResetButton(Component::Button* button, Data::GlobalTransmissionCapac
     assert(button != NULL);
     button->image(transmissionCapacityIcon(value));
     button->caption(GlobalTransmissionCapacitiesToString_Display(value));
-}
-
-static void ResetButton(Component::Button* button, Data::LinkType value)
-{
-    assert(button != NULL);
-    switch (value)
-    {
-    case Data::ltLocal:
-        button->image("images/16x16/light_green.png");
-        button->caption(wxT("local values"));
-        break;
-    case Data::ltAC:
-        button->image("images/16x16/light_orange.png");
-        button->caption(wxT("set to AC"));
-        break;
-    }
 }
 
 const char* mpsExportIcon(const Data::mpsExportStatus& mps_export_status)
@@ -129,7 +113,7 @@ Optimization::Optimization(wxWindow* parent) :
     SetLabel(wxT("Optimization preferences"));
     SetTitle(wxT("Optimization preferences"));
 
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     // Background color
     wxColour defaultBgColor = GetBackgroundColour();
@@ -193,18 +177,6 @@ Optimization::Optimization(wxWindow* parent) :
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnTransmissionCapacities = button;
-    }
-    // Asset type
-    {
-        label = Component::CreateLabel(this, wxT("Link type"));
-        button = new Component::Button(this, wxT("local values"), "images/16x16/light_green.png");
-        button->SetBackgroundColour(bgColor);
-        button->menu(true);
-        onPopup.bind(this, &Optimization::onPopupMenuLinkType);
-        button->onPopupMenu(onPopup);
-        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnLinkType = button;
     }
     // Thermal clusters Min Stable Power
     {
@@ -405,7 +377,7 @@ void Optimization::onClose(void*)
 
 void Optimization::onResetToDefault(void*)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!(!studyptr))
     {
         Window::Message message(this,
@@ -422,7 +394,6 @@ void Optimization::onResetToDefault(void*)
             study.parameters.include.hurdleCosts = true;
             study.parameters.transmissionCapacities
               = Data::GlobalTransmissionCapacities::localValuesForAllLinks;
-            study.parameters.linkType = Data::ltLocal;
             study.parameters.include.thermal.minStablePower = true;
             study.parameters.include.thermal.minUPTime = true;
             study.parameters.include.reserve.dayAhead = true;
@@ -448,7 +419,7 @@ void Optimization::onInternalMotion(wxMouseEvent&)
 
 void Optimization::refresh()
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
     // The current study
@@ -460,8 +431,6 @@ void Optimization::refresh()
     ResetButton(pBtnHurdleCosts, study.parameters.include.hurdleCosts);
     // Transmission capacities
     ResetButton(pBtnTransmissionCapacities, study.parameters.transmissionCapacities);
-    // Link type
-    ResetButton(pBtnLinkType, study.parameters.linkType);
     // Min Stable power
     ResetButton(pBtnThermalClusterMinStablePower, study.parameters.include.thermal.minStablePower);
     // Min U/D time
@@ -477,7 +446,7 @@ void Optimization::refresh()
     // Export mps
     pBtnExportMPS->image(mpsExportIcon(study.parameters.include.exportMPS));
     pBtnExportMPS->caption(Data::mpsExportStatusToString(study.parameters.include.exportMPS));
-    
+
     // Unfeasible problem behavior
     pBtnUnfeasibleProblemBehavior->image(
       Data::getIcon(study.parameters.include.unfeasibleProblemBehavior));
@@ -657,7 +626,7 @@ void Optimization::onSelectModeIgnore(wxCommandEvent&)
 
 void Optimization::onSelectSimplexDay(wxCommandEvent&)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         if (study->parameters.simplexOptimizationRange != Data::sorDay)
@@ -671,7 +640,7 @@ void Optimization::onSelectSimplexDay(wxCommandEvent&)
 
 void Optimization::onSelectSimplexWeek(wxCommandEvent&)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         if (study->parameters.simplexOptimizationRange != Data::sorWeek)
@@ -685,7 +654,7 @@ void Optimization::onSelectSimplexWeek(wxCommandEvent&)
 
 void Optimization::setTransmissionCapacity(Data::GlobalTransmissionCapacities newCapacity)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (study && study->parameters.transmissionCapacities != newCapacity)
     {
         study->parameters.transmissionCapacities = newCapacity;
@@ -700,64 +669,12 @@ void Optimization::onSelectTransmissionCapacity(wxCommandEvent&)
     setTransmissionCapacity(capacity);
 }
 
-void Optimization::onPopupMenuLinkType(Component::Button&, wxMenu& menu, void*)
-{
-    wxMenuItem* it;
-
-    it = Menu::CreateItem(&menu,
-                          wxID_ANY,
-                          wxString() << wxT("local values"),
-                          "images/16x16/light_green.png",
-                          wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectLinkTypeLocal),
-                 nullptr,
-                 this);
-
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("set to AC"), "images/16x16/light_orange.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectLinkTypeAC),
-                 nullptr,
-                 this);
-}
-
-void Optimization::onSelectLinkTypeLocal(wxCommandEvent&)
-{
-    auto study = Data::Study::Current::Get();
-    if (!(!study))
-    {
-        if (study->parameters.linkType != Data::ltLocal)
-        {
-            study->parameters.linkType = Data::ltLocal;
-            refresh();
-            MarkTheStudyAsModified();
-        }
-    }
-}
-
-void Optimization::onSelectLinkTypeAC(wxCommandEvent&)
-{
-    auto study = Data::Study::Current::Get();
-    if (!(!study))
-    {
-        if (study->parameters.linkType != Data::ltAC)
-        {
-            study->parameters.linkType = Data::ltAC;
-            refresh();
-            MarkTheStudyAsModified();
-        }
-    }
-}
-
 // -----------------------------------
 // On select methods for MPS export
 // -----------------------------------
 void Optimization::onSelectExportMPS(const Data::mpsExportStatus& mps_export_status)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         if (study->parameters.include.exportMPS != mps_export_status)
@@ -775,7 +692,7 @@ void Optimization::onSelectExportMPS(const Data::mpsExportStatus& mps_export_sta
 void Optimization::onSelectUnfeasibleBehavior(
   const Data::UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         if (study->parameters.include.unfeasibleProblemBehavior != unfeasibleProblemBehavior)

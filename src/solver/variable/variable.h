@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -92,11 +92,6 @@ public:
 
 public:
     /*!
-    ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
-    */
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u);
-
-    /*!
     ** \brief Initialize the results of the variable
     **
     ** \param results The results
@@ -112,6 +107,10 @@ public:
     */
     template<class PredicateT>
     static void RetrieveVariableList(PredicateT& predicate);
+
+    void getPrintStatusFromStudy(Data::Study& study);
+    void supplyMaxNumberOfColumns(Data::Study& study);
+
 
 public:
     //! \name Constructor
@@ -132,6 +131,8 @@ public:
     ** \param study The attached study
     */
     void initializeFromStudy(Data::Study& study);
+
+    size_t getMaxNumberColumns() const;
 
     /*!
     ** \brief Initialize the variable with a specific area
@@ -162,8 +163,6 @@ public:
     //@}
 
     void broadcastNonApplicability(bool applyNonApplicable);
-
-    void getPrintStatusFromStudy(Data::Study& study);
 
     //! \name Simulation
     //@{
@@ -246,13 +245,8 @@ public:
     void hourBegin(uint hourInTheYear);
     //! Event: For a given hour in the year, walking through all areas
     void hourForEachArea(State& state);
-    //! Event: For a given hour in the year, walking through all thermal clusters
-    // for a given area
-    void hourForEachThermalCluster(State& state);
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace);
-
-    void hourForEachRenewableCluster(State& state, unsigned int numSpace);
+    void hourForEachArea(State& state, unsigned int numSpace);
 
     //! Event: For a given hour in the year, walking through all links
     // for a given area
@@ -295,7 +289,7 @@ public:
     /*!
     ** \brief Get the memory used by this variable and all other in the static list
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief "Print" informations about the variable tree

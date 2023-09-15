@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -137,9 +137,9 @@ using JobVector = std::vector<JobPtr>;
 //! Output panel
 class Panel;
 
-using ThermalNameSet = std::set<Data::ClusterName>;
+using ThermalNameSet = std::set<YString>;
 //! List of thermal clusters, for all areas
-using ThermalNameSetPerArea = std::map<Data::AreaName, std::set<Data::ClusterName>>;
+using ThermalNameSetPerArea = std::map<Data::AreaName, std::set<YString>>;
 
 } // namespace OutputViewerData
 } // namespace Private

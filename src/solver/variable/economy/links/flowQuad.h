@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -40,18 +40,18 @@ namespace Economy
 struct VCardFlowQuad
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "FLOW QUAD.";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "MWh";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Flow (quad.)";
     }
@@ -173,7 +173,7 @@ public:
         // Flow assessed over all MC years (linear)
         (void)::memcpy(
           pValuesForTheCurrentYear.hour,
-          ResultatsParInterconnexion[pLinkGlobalIndex]->TransitMoyenRecalculQuadratique,
+          transitMoyenInterconnexionsRecalculQuadratique[pLinkGlobalIndex].data(),
           sizeof(double) * pNbHours);
 
         // Compute all statistics for the current year (daily,weekly,monthly)
@@ -265,6 +265,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear.template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

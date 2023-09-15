@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -29,7 +29,6 @@
 #include <yuni/io/file.h>
 #include "series.h"
 #include "../../study.h"
-#include "../../memory-usage.h"
 
 using namespace Yuni;
 
@@ -50,10 +49,10 @@ int DataSeriesWindLoadFromFolder(Study& s,
 
     int ret = 1;
     buffer.clear() << folder << SEP << "wind_" << areaID << '.' << s.inputExtension;
-    ret = d->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+    ret = d->timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
 
     if (s.usedByTheSolver && s.parameters.derated)
-        d->series.averageTimeseries();
+        d->timeSeries.averageTimeseries();
 
     d->timeseriesNumbers.clear();
 
@@ -68,29 +67,19 @@ int DataSeriesWindSaveToFolder(DataSeriesWind* d, const AreaName& areaID, const 
     Clob buffer;
     int ret = 1;
     buffer.clear() << folder << SEP << "wind_" << areaID << ".txt";
-    ret = d->series.saveToCSVFile(buffer, 0) && ret;
+    ret = d->timeSeries.saveToCSVFile(buffer, 0) && ret;
 
     return ret;
 }
 
 bool DataSeriesWind::forceReload(bool reload) const
 {
-    return series.forceReload(reload);
+    return timeSeries.forceReload(reload);
 }
 
 void DataSeriesWind::markAsModified() const
 {
-    series.markAsModified();
-}
-
-void DataSeriesWind::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += sizeof(DataSeriesWind);
-    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-    series.estimateMemoryUsage(u,
-                               0 != (timeSeriesWind & u.study.parameters.timeSeriesToGenerate),
-                               u.study.parameters.nbTimeSeriesWind,
-                               HOURS_PER_YEAR);
+    timeSeries.markAsModified();
 }
 
 } // namespace Data

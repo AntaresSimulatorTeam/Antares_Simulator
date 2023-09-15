@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -202,12 +202,6 @@ inline void SetsOfAreas<NextT>::hourForEachLink(State& state)
 }
 
 template<class NextT>
-inline void SetsOfAreas<NextT>::hourForEachThermalCluster(State& state)
-{
-    (void)state;
-}
-
-template<class NextT>
 inline void SetsOfAreas<NextT>::hourEnd(State& state, uint hourInTheYear)
 {
     (void)state;
@@ -270,18 +264,12 @@ void SetsOfAreas<NextT>::buildDigest(SurveyResults& results, int digestLevel, in
 }
 
 template<class NextT>
-inline Yuni::uint64 SetsOfAreas<NextT>::memoryUsage() const
+inline uint64_t SetsOfAreas<NextT>::memoryUsage() const
 {
-    Yuni::uint64 result = sizeof(NextType) * pSetsOfAreas.size();
+    uint64_t result = sizeof(NextType) * pSetsOfAreas.size();
     for (auto i = pBegin; i != pEnd; ++i)
         result += (*i)->memoryUsage();
     return result;
-}
-
-template<class NextT>
-inline void SetsOfAreas<NextT>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-{
-    NextT::EstimateMemoryUsage(u);
 }
 
 template<class NextT>

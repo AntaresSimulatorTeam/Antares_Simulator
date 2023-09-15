@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -71,25 +71,20 @@ inline void State::yearEndResetThermal()
 inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace)
 {
     area = study.areas[areaIndex];
-    scratchpad = area->scratchpad[numSpace];
+    scratchpad = &area->scratchpad[numSpace];
     thermalCluster = nullptr;
-    timeseriesIndex = NumeroChroniquesTireesParPays[numSpace][areaIndex];
+    timeseriesIndex = &NumeroChroniquesTireesParPays[numSpace][areaIndex];
 
     switch (studyMode)
     {
     case Data::stdmEconomy:
     {
-        hourlyResults = problemeHebdo->ResultatsHoraires[areaIndex];
+        hourlyResults = &problemeHebdo->ResultatsHoraires[areaIndex];
         break;
     }
     case Data::stdmAdequacy:
     {
-        hourlyResults = problemeHebdo->ResultatsHoraires[areaIndex];
-        break;
-    }
-    case Data::stdmAdequacyDraft:
-    {
-        hourlyAdequacyResults = ProblemeHoraireAdequation.ResultatsParPays[areaIndex];
+        hourlyResults = &problemeHebdo->ResultatsHoraires[areaIndex];
         break;
     }
     case Data::stdmUnknown:

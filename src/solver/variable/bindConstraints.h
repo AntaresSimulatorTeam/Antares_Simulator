@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -37,18 +37,18 @@ namespace Variable
 struct VCardAllBindingConstraints
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "Binding constraints";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "";
     }
@@ -102,10 +102,6 @@ public:
     };
 
 public:
-    /*!
-    ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
-    */
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u);
 
     /*!
     ** \brief Retrieve the list of all individual variables
@@ -155,7 +151,7 @@ public:
                                  int precision,
                                  uint numSpace) const;
 
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     template<class I>
     static void provideInformations(I& infos);

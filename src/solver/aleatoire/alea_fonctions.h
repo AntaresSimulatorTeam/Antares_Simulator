@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,7 +27,13 @@
 #ifndef __SOLVER_ALEA_H__
 #define __SOLVER_ALEA_H__
 
-void ALEA_TirageAuSortChroniques(double** thermalNoisesByArea, uint numSpace);
+#include "../simulation/sim_structure_donnees.h"
+#include "antares/study/study.h"
+
+void ALEA_TirageAuSortChroniques(const Antares::Data::Study& study,
+                                 double const* const* thermalNoisesByArea,
+                                 uint numSpace,
+                                 VAL_GEN_PAR_PAYS& valeursGenereesParPays);
 
 void HydroVentilation();
 

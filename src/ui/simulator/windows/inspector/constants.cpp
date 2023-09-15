@@ -219,6 +219,9 @@ const wxChar* const renewableTSMode[]
 const unsigned int thermalLawCount = 2;
 const wxChar* const thermalLaws[] = {wxT("uniform"), wxT("geometric"), nullptr};
 
+const unsigned int costgenerationCount = 2;
+const wxChar* const costgeneration[] = {wxT("Set manually"), wxT("Use cost timeseries"), nullptr};
+
 const unsigned int localGenTSCount = 3;
 
 const wxChar* const localGenTS[]
@@ -266,7 +269,6 @@ const wxChar* const calendarWeeks[] = {wxT("MON  -  SUN"),
 
 const wxChar* const studyMode[] = {wxT("Economy"),
                                    wxT("Adequacy"),
-                                   wxT("Draft"),
 #if STUDY_MODE_EXPANSION
                                    wxT("Expansion"),
 #endif

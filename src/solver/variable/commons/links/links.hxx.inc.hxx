@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -42,10 +42,9 @@ inline Links::Links()
     // Do nothing
 }
 
-inline void Links::initializeFromStudy(Data::Study& study)
+inline void Links::initializeFromStudy([[maybe_unused]] Data::Study& study)
 {
-    // Do nothing but resetting the pointer on print info collection
-    study.parameters.variablesPrintInfo.resetInfoIterator();
+    // Do nothing
 }
 
 inline void Links::initializeFromAreaLink(Data::Study*, Data::AreaLink*)
@@ -68,6 +67,12 @@ inline void Links::getPrintStatusFromStudy(Data::Study& study)
 {
     for (uint i = 0; i != pLinkCount; ++i)
         pLinks[i].getPrintStatusFromStudy(study);
+}
+
+inline void Links::supplyMaxNumberOfColumns(Data::Study& study)
+{
+    for (uint i = 0; i != pLinkCount; ++i)
+        pLinks[i].supplyMaxNumberOfColumns(study);
 }
 
 inline void Links::yearBegin(uint year, unsigned int numSpace)
@@ -152,18 +157,6 @@ inline void Links::hourForEachArea(State& state, unsigned int numSpace)
 inline void Links::hourForEachLink(State& state, unsigned int numSpace)
 {
     pLinks[state.link->indexForArea].hourForEachLink(state, numSpace);
-}
-
-inline void Links::hourForEachThermalCluster(State& state, unsigned int numSpace)
-{
-    for (uint i = 0; i != pLinkCount; ++i)
-        pLinks[i].hourForEachThermalCluster(state, numSpace);
-}
-
-inline void Links::hourForEachRenewableCluster(State& state, unsigned int numSpace)
-{
-    for (uint i = 0; i != pLinkCount; ++i)
-        pLinks[i].hourForEachRenewableCluster(state, numSpace);
 }
 
 inline void Links::hourEnd(State& state, uint hourInTheYear)
@@ -293,9 +286,9 @@ void Links::RetrieveVariableList(PredicateT& predicate)
     NextType::RetrieveVariableList(predicate);
 }
 
-inline Yuni::uint64 Links::memoryUsage() const
+inline uint64_t Links::memoryUsage() const
 {
-    Yuni::uint64 result = 0;
+    uint64_t result = 0;
     for (uint i = 0; i != pLinkCount; ++i)
     {
         result += sizeof(NextType) + sizeof(void*);
@@ -303,36 +296,6 @@ inline Yuni::uint64 Links::memoryUsage() const
     }
     return result;
 }
-
-inline void Links::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-{
-    if (!u.area)
-        return;
-
-    // The total number of items
-    auto count = (uint)u.area->links.size();
-
-    for (uint i = 0; i != count; ++i)
-    {
-        u.requiredMemoryForOutput += sizeof(NextType) + sizeof(void*);
-        u.overheadDiskSpaceForSingleAreaOrLink();
-
-        // year-by-year
-        if (!u.gatheringInformationsForInput)
-        {
-            if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
-            {
-                for (uint i = 0; i != u.years; ++i)
-                    u.overheadDiskSpaceForSingleAreaOrLink();
-            }
-        }
-
-        // Append the amount of data consummed by the varaibles related to
-        // the links
-        NextType::EstimateMemoryUsage(u);
-    }
-}
-
 } // namespace LINK_NAMESPACE
 } // namespace Variable
 } // namespace Solver

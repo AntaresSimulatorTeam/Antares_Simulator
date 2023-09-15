@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -29,7 +29,7 @@
 #include "prepro.h"
 #include <yuni/io/directory.h>
 #include "../../study.h"
-#include "../../../logs.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;
@@ -50,72 +50,9 @@ Prepro::~Prepro()
 {
 }
 
-bool Prepro::loadFromFolder(Study& study, const AnyString& folder)
+bool Prepro::loadFromFolder(const AnyString& folder)
 {
-    return (study.header.version <= 320) ? internalLoadFormatBefore33(study, folder)
-                                         : xcast.loadFromFolder(study, folder);
-}
-
-bool Prepro::internalLoadFormatBefore33(Study& study, const AnyString& folder)
-{
-    // Reset xcast
-    xcast.resetToDefaultValues();
-
-    // Temporary data
-    String filename;
-    Matrix<>::BufferType tmpdata;
-    Matrix<float> m;
-    bool ret = true;
-
-    enum
-    {
-        mtrxOption = Matrix<>::optFixedSize | Matrix<>::optImmediate,
-    };
-
-    // Old version before 3.3
-    // K
-    filename.clear() << folder << SEP << "dailyprofile." << study.inputExtension;
-    ret = xcast.K.loadFromCSVFile(filename, 12, 24, mtrxOption, &tmpdata) && ret;
-
-    // alpha
-    filename.clear() << folder << SEP << "coeff_a." << study.inputExtension;
-    ret = m.loadFromCSVFile(filename, 1, 12, mtrxOption, &tmpdata) && ret;
-    xcast.data.pasteToColumn(XCast::dataCoeffAlpha, m[0]);
-
-    // beta
-    filename.clear() << folder << SEP << "coeff_b." << study.inputExtension;
-    ret = m.loadFromCSVFile(filename, 1, 12, mtrxOption, &tmpdata) && ret;
-    xcast.data.pasteToColumn(XCast::dataCoeffBeta, m[0]);
-
-    // Delta
-    filename.clear() << folder << SEP << "coeff_c." << study.inputExtension;
-    ret = m.loadFromCSVFile(filename, 1, 12, mtrxOption, &tmpdata) && ret;
-    xcast.data.pasteToColumn(XCast::dataCoeffDelta, m[0]);
-
-    // Theta
-    filename.clear() << folder << SEP << "coeff_tt." << study.inputExtension;
-    ret = m.loadFromCSVFile(filename, 1, 12, mtrxOption, &tmpdata) && ret;
-    xcast.data.pasteToColumn(XCast::dataCoeffTheta, m[0]);
-
-    // Installed capacity
-    IniFile ini;
-    filename.clear() << folder << SEP << "settings.ini";
-    if (ini.open(filename))
-    {
-        IniFile::Section* s;
-        if (NULL != (s = ini.find("settings")))
-        {
-            xcast.capacity = s->read<double>("installedcapacity", 0.);
-            if (xcast.capacity < 0.)
-            {
-                logs.error() << "Wind: Prepro: The installed capacity must be positive or null";
-                xcast.capacity = 0.;
-                ret = 0;
-            }
-        }
-    }
-
-    return ret;
+    return xcast.loadFromFolder(folder);
 }
 
 bool Prepro::saveToFolder(const AnyString& folder) const

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -36,11 +36,7 @@
 
 #include <antares/Enum.hpp>
 
-namespace Antares
-{
-namespace Data
-{
-namespace Enum
+namespace Antares::Data::Enum
 {
 template<typename E, typename>
 E fromString(const std::string& name)
@@ -81,10 +77,10 @@ std::list<E> enumList()
     return result;
 }
 
-} // namespace Enum
+} // namespace Antares::Data::Enum
 
-} // namespace Data
 
-} // namespace Antares
+
+
 
 #endif // ANTARES_DATA_ENUM_HXX

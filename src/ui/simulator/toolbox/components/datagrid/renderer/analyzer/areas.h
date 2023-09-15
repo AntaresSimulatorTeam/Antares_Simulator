@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,9 +27,8 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_CORRELATION_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_CORRELATION_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../renderer.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <map>
 #include <yuni/core/bind.h>
 #include <yuni/core/event.h>

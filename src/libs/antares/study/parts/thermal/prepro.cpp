@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -30,10 +30,8 @@
 #include <yuni/io/directory.h>
 #include <yuni/core/math.h>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "prepro.h"
-#include "../../../logs.h"
-#include "../../../array/array1d.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
@@ -66,37 +64,6 @@ bool PreproThermal::saveToFolder(const AnyString& folder)
     return false;
 }
 
-static bool LoadPreproThermal350(Study& study, Matrix<>& data, const AnyString& folder)
-{
-    // very old code for loading thermal ts-generator data for Antares <3.5
-    // resize the matrix
-    data.resize(PreproThermal::thermalPreproMax, DAYS_PER_YEAR, true);
-
-    String buffer;
-    double* tmp = new double[DAYS_PER_YEAR];
-    bool ret = true;
-
-    buffer.clear() << folder << SEP << "fo-duration." << study.inputExtension;
-    ret = Array1DLoadFromFile(buffer.c_str(), tmp, DAYS_PER_YEAR) and ret;
-    data.pasteToColumn(PreproThermal::foDuration, tmp);
-
-    buffer.clear() << folder << SEP << "po-duration." << study.inputExtension;
-    ret = Array1DLoadFromFile(buffer.c_str(), tmp, DAYS_PER_YEAR) and ret;
-    data.pasteToColumn(PreproThermal::poDuration, tmp);
-
-    buffer.clear() << folder << SEP << "fo-rate." << study.inputExtension;
-    ret = Array1DLoadFromFile(buffer.c_str(), tmp, DAYS_PER_YEAR) and ret;
-    data.pasteToColumn(PreproThermal::foRate, tmp);
-
-    buffer.clear() << folder << SEP << "po-rate." << study.inputExtension;
-    ret = Array1DLoadFromFile(buffer.c_str(), tmp, DAYS_PER_YEAR) and ret;
-    data.pasteToColumn(PreproThermal::poRate, tmp);
-
-    // release
-    delete[] tmp;
-    return ret;
-}
-
 bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 {
     bool ret = true;
@@ -108,65 +75,12 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 
     auto parentArea = cluster->parentArea;
 
-    if (study.header.version < 350)
-    {
-        ret = LoadPreproThermal350(study, data, folder) and ret;
-    }
-    else
-    {
-        buffer.clear() << folder << SEP << "data.txt";
+    buffer.clear() << folder << SEP << "data.txt";
 
-        if (study.header.version < 440)
-        {
-            // temporary matrix
-            Matrix<> tmp;
-            // reset
-            data.reset(thermalPreproMax, DAYS_PER_YEAR, true);
-
-            enum
-            {
-                flags = Matrix<>::optFixedSize | Matrix<>::optImmediate,
-            };
-
-            if (tmp.loadFromCSVFile(buffer, 4, DAYS_PER_YEAR, flags, &study.dataBuffer))
-            {
-                for (uint x = 0; x != 4; ++x)
-                    data.pasteToColumn(x, tmp.column(x));
-
-                // Reset NPO max to cluster size
-                auto& npomax = data[npoMax];
-                for (uint y = 0; y != data.height; ++y)
-                    npomax[y] = cluster->unitCount;
-            }
-            else
-                ret = false;
-            // the structure must be marked as modified
-            data.markAsModified();
-        }
-        else
-        {
-            // standard loading
-            ret = data.loadFromCSVFile(buffer,
-                                       thermalPreproMax,
-                                       DAYS_PER_YEAR,
-                                       Matrix<>::optFixedSize,
-                                       &study.dataBuffer)
-                  and ret;
-        }
-    }
-
-    if (study.header.version < 390)
-    {
-        data.forceReload(true);
-        auto& colFoDuration = data[foDuration];
-        auto& colPoDuration = data[poDuration];
-        for (uint i = 0; i != DAYS_PER_YEAR; ++i)
-        {
-            colFoDuration[i] = Math::Round(colFoDuration[i]);
-            colPoDuration[i] = Math::Round(colPoDuration[i]);
-        }
-        data.markAsModified();
-    }
+    // standard loading
+    ret = data.loadFromCSVFile(
+            buffer, thermalPreproMax, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+          and ret;
 
     bool thermalTSglobalGeneration = study.parameters.isTSGeneratedByPrepro(timeSeriesThermal);
     if (study.usedByTheSolver && cluster->doWeGenerateTS(thermalTSglobalGeneration))
@@ -249,21 +163,12 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 
 bool PreproThermal::forceReload(bool reload) const
 {
-    return data.forceReload(reload);
+    return data.forceReload(reload); 
 }
 
 void PreproThermal::markAsModified() const
 {
     data.markAsModified();
-}
-
-void PreproThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    if (timeSeriesThermal & u.study.parameters.timeSeriesToGenerate)
-    {
-        data.estimateMemoryUsage(u, true, thermalPreproMax, DAYS_PER_YEAR);
-        u.requiredMemoryForInput += sizeof(PreproThermal);
-    }
 }
 
 void PreproThermal::reset()

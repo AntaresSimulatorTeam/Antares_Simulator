@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -26,10 +26,8 @@
 */
 
 #include <math.h>
-#include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
@@ -41,35 +39,33 @@ extern "C"
 
 bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* problemeHebdo)
 {
-    int PdtHebdo;
-
-    if (problemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
+    if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(problemeHebdo);
 
         OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(problemeHebdo);
 
-        problemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
+        problemeHebdo->LeProblemeADejaEteInstancie = true;
     }
 
     bool result = true;
     if (problemeHebdo->NombreDInterconnexions > 0)
     {
-        for (PdtHebdo = 0; PdtHebdo < problemeHebdo->NombreDePasDeTemps; PdtHebdo++)
+        for (uint pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
         {
 #ifdef dbgInfos
             printf("*********** Optimisation quadratique du pas de temps %ld ***********\n",
-                   PdtHebdo);
+                   pdtHebdo);
 #endif
 
-            OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(problemeHebdo, PdtHebdo);
+            OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(problemeHebdo, pdtHebdo);
 
-            OPT_InitialiserLeSecondMembreDuProblemeQuadratique(problemeHebdo, PdtHebdo);
+            OPT_InitialiserLeSecondMembreDuProblemeQuadratique(problemeHebdo, pdtHebdo);
 
-            OPT_InitialiserLesCoutsQuadratiques(problemeHebdo, PdtHebdo);
+            OPT_InitialiserLesCoutsQuadratiques(problemeHebdo, pdtHebdo);
 
             result
-              = OPT_AppelDuSolveurQuadratique(problemeHebdo->ProblemeAResoudre, PdtHebdo) && result;
+              = OPT_AppelDuSolveurQuadratique(problemeHebdo->ProblemeAResoudre.get(), pdtHebdo) && result;
         }
     }
 

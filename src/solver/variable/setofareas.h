@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -28,7 +28,7 @@
 #define __SOLVER_VARIABLE_SET_OF_AREAS_H__
 
 #include "state.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 namespace Antares
 {
@@ -39,18 +39,18 @@ namespace Variable
 struct VCardAllSetsOfAreas
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "Sets of Areas";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "";
     }
@@ -107,11 +107,6 @@ public:
 
 public:
     /*!
-    ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
-    */
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage&);
-
-    /*!
     ** \brief Retrieve the list of all individual variables
     **
     ** The predicate must implement the method `add(name, unit, comment)`.
@@ -150,7 +145,6 @@ public:
     void hourBegin(unsigned int hourInTheYear);
     void hourForEachArea(State& state);
     void hourForEachLink(State& state);
-    void hourForEachThermalCluster(State& state);
     void hourEnd(State& state, unsigned int hourInTheYear);
 
     void weekBegin(State&);
@@ -172,7 +166,7 @@ public:
 
     void beforeYearByYearExport(uint year, uint numSpace);
 
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     template<class I>
     static void provideInformations(I& infos);

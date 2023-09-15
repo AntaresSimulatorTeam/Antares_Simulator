@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -67,7 +67,7 @@ public:
     /*!
     ** \brief Get the amount of memory currently used by the class
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
 public:
     //! Data for the pre-processor

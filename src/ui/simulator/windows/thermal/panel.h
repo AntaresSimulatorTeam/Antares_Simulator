@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -58,6 +58,9 @@ public:
 public:
     //! The page related to the cluster's timeseries
     Component::Notebook::Page* pageThermalTimeSeries;
+    Component::Notebook::Page* pageThermalTimeSeriesFuelCost;
+    Component::Notebook::Page* pageThermalTimeSeriesCO2Cost;
+
     //! The page related to the cluster's ts-generator data
     Component::Notebook::Page* pageThermalPrepro;
     //! The page related to the cluster's properties
@@ -84,7 +87,7 @@ private:
     Data::Area* pAreaForThermalCommonData;
     Toolbox::InputSelector::Area* pAreaSelector;
     //! An internal increment, an ugly hack to avoid unnecessary refreshes
-    Yuni::uint64 pStudyRevisionIncrement;
+    uint64_t pStudyRevisionIncrement;
     /*!
     ** \brief The splitter window
     **

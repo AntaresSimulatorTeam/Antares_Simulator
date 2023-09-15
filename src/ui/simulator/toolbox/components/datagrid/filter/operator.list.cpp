@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -28,7 +28,8 @@
 #include "operator.list.h"
 #include "operator/all.h"
 #include "filter.h"
-#include <antares/date.h>
+#include "wx-wrapper.h"
+#include <antares/date/date.h>
 
 namespace Antares
 {

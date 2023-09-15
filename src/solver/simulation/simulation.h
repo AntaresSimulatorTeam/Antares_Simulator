@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -28,16 +28,19 @@
 #define __SOLVER_SIMULATION_H__
 
 #include "../config.h"
+#include "sim_structure_donnees.h"
 #include <antares/study/study.h>
 
-class PROBLEME_HEBDO;
+struct PROBLEME_HEBDO;
 
-void SIM_AllocationTableaux(void);
+void SIM_AllocationTableaux(const Antares::Data::Study& study);
 
 /*!
 ** \brief Alloue toutes les donnees d'un probleme hebdo
 */
-void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps);
+void SIM_AllocationProblemeHebdo(const Antares::Data::Study& study,
+                                 PROBLEME_HEBDO& problem,
+                                 uint NombreDePasDeTemps);
 
 /*!
 ** \brief Alloue et initialise un probleme hebdo
@@ -49,14 +52,14 @@ void SIM_InitialisationProblemeHebdo(Antares::Data::Study& study,
 
 void SIM_PreallocationTableaux(void);
 
-void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
+void SIM_RenseignementProblemeHebdo(const Antares::Data::Study& study,
+                                    PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
                                     uint numSpace,
-                                    const int);
+                                    const int,
+                                    const VAL_GEN_PAR_PAYS&);
 
 void SIM_RenseignementProblemeHoraireAdequation(uint);
-
-void SIM_RenseignementValeursPourTouteLAnnee(const Antares::Data::Study& study, uint numSpace);
 
 void SIM_CalculFlotHoraireAdequation(void);
 
@@ -64,16 +67,8 @@ void SIM_InitialisationProblemeHoraireAdequation(void);
 
 void SIM_AllocationProblemeHoraireAdequation(void);
 
-void SIM_AlgorithmeDeFlot(void);
-
 void SIM_InitialisationChainagePourAdequation(void);
 
 void SIM_DesallocationProblemeHoraireAdequation(void);
-
-void SIM_DesallocationTableaux(void);
-
-void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem);
-
-void SIM_InitialisationResultats(void);
 
 #endif /* __SOLVER_SIMULATION_H__ */

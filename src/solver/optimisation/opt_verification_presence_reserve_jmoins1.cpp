@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -33,30 +33,23 @@
 
 #include "opt_fonctions.h"
 
-#include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
 
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO* problemeHebdo)
 {
-    int Pays;
-    int Pdt;
-    double* ReserveHoraireJMoins1Ref;
-    RESERVE_JMOINS1** ReserveJMoins1;
+    problemeHebdo->YaDeLaReserveJmoins1 = false;
 
-    problemeHebdo->YaDeLaReserveJmoins1 = NON_ANTARES;
-    if (RESERVE_J_MOINS_1 == NON_ANTARES)
-        return;
+    std::vector<RESERVE_JMOINS1>& ReserveJMoins1 = problemeHebdo->ReserveJMoins1;
 
-    ReserveJMoins1 = problemeHebdo->ReserveJMoins1;
-
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        ReserveHoraireJMoins1Ref = ReserveJMoins1[Pays]->ReserveHoraireJMoins1Ref;
-        for (Pdt = 0; Pdt < problemeHebdo->NombreDePasDeTempsRef; Pdt++)
+        const std::vector<double>& ReserveHoraireJMoins1
+            = ReserveJMoins1[pays].ReserveHoraireJMoins1;
+        for (uint pdt = 0; pdt < problemeHebdo->NombreDePasDeTemps; pdt++)
         {
-            if (fabs(ReserveHoraireJMoins1Ref[Pdt]) > ZERO_RESERVE_J_MOINS1)
+            if (fabs(ReserveHoraireJMoins1[pdt]) > ZERO_RESERVE_J_MOINS1)
             {
-                problemeHebdo->YaDeLaReserveJmoins1 = OUI_ANTARES;
+                problemeHebdo->YaDeLaReserveJmoins1 = true;
                 return;
             }
         }

@@ -18,8 +18,7 @@ target_include_directories(test-sc-builder-file-read-line
 target_link_libraries(test-sc-builder-file-read-line
 						PRIVATE
 							Boost::unit_test_framework
-							libantares-core
-							libmodel_antares
+							model_antares
 )
 # Linux
 if(UNIX AND NOT APPLE)
@@ -28,11 +27,11 @@ endif()
 
 
 # Storing test-sc-builder-file-read-line under the folder Unit-tests in the IDE
+add_test(NAME sc-builder-file-read-line COMMAND test-sc-builder-file-read-line)
+set_property(TEST sc-builder-file-read-line PROPERTY LABELS unit)
 set_target_properties(test-sc-builder-file-read-line PROPERTIES FOLDER Unit-tests/sc-builder)
 
-add_test(NAME sc-builder-file-read-line COMMAND test-sc-builder-file-read-line)
 
-set_property(TEST sc-builder-file-read-line PROPERTY LABELS unit)
 
 # ====================================
 # Tests on saving scenario-builder
@@ -53,8 +52,7 @@ target_include_directories(test-sc-builder-file-save
 target_link_libraries(test-sc-builder-file-save
   PRIVATE
 						Boost::unit_test_framework
-						libantares-core
-						libmodel_antares
+						model_antares
 )
 
 # Storing test-sc-builder-file-savee under the folder Unit-tests in the IDE

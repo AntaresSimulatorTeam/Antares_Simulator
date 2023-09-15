@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,7 +27,7 @@
 
 #include "sets.h"
 #include "../study.h"
-#include "../../logs.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
@@ -72,7 +72,7 @@ bool Sets::loadFromStudy(Study& study)
     filename << study.folder << SEP << "settings" << SEP << "scenariobuilder.dat";
     bool r = true;
     // If the source code below is changed, please change it in loadFromINIFile too
-    if (study.header.version >= 360 && IO::Exists(filename))
+    if (IO::Exists(filename))
         r = internalLoadFromINIFile(filename);
     else
         pMap.clear();

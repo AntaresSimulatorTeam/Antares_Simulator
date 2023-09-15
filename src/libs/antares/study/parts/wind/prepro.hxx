@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,20 +27,10 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_HXX__
 #define __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_HXX__
 
-#include "../../study.h"
+namespace Antares::Data::Wind
+{
 
-namespace Antares
-{
-namespace Data
-{
-namespace Wind
-{
-inline void Prepro::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    xcast.estimateMemoryUsage(u);
-}
-
-inline Yuni::uint64 Prepro::memoryUsage() const
+inline uint64_t Prepro::memoryUsage() const
 {
     return xcast.memoryUsage();
 }
@@ -60,8 +50,8 @@ inline void Prepro::resetToDefault()
     xcast.resetToDefaultValues();
 }
 
-} // namespace Wind
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::Wind
+
+
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_H__

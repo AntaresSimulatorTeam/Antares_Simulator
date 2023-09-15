@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,7 +27,7 @@
 #ifndef __SOLVER_SIMULATION_APPLY_SCENARIO_H__
 #define __SOLVER_SIMULATION_APPLY_SCENARIO_H__
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 namespace Antares::Solver
 {

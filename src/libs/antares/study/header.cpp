@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -26,19 +26,16 @@
 */
 
 #include "header.h"
-#include <stdlib.h>
-#include <time.h>
-#include <assert.h>
-#include "../inifile/inifile.h"
-#include "../logs.h"
-#include "../sys/mem-wrapper.h"
+#include <cstdlib>
+#include <ctime>
+#include <cassert>
+#include <antares/logs/logs.h>
 #include "version.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 // TODO this method should be removed - use Yuni::String instead
 static inline int ConvertCStrToTimeT(const char* s, time_t* var)
@@ -80,10 +77,10 @@ void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
     sect->add("caption", caption);
 
     // Date
-    sect->add("created", (sint64)dateCreated);
+    sect->add("created", (int64_t)dateCreated);
     // Last save
     dateLastSave = ::time(nullptr);
-    sect->add("lastSave", (sint64)dateLastSave);
+    sect->add("lastSave", (int64_t)dateLastSave);
 
     // The author
     sect->add("author", author);
@@ -165,7 +162,7 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
             logs.error() << "The main section has not been found. The study seems invalid.";
     }
 
-    if (version >= 200 || version == 2)
+    if (version >= 700)
     {
         if (version > static_cast<uint>(Data::versionLatest))
         {
@@ -209,5 +206,5 @@ uint StudyHeader::ReadVersionFromFile(const AnyString& filename)
     return (uint)versionUnknown;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

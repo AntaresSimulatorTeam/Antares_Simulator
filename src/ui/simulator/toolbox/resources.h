@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_RESOURCES_H__
 #define __ANTARES_TOOLBOX_RESOURCES_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/bitmap.h>
 #include <wx/statbmp.h>
 #include <wx/bmpbuttn.h>

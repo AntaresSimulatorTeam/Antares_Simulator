@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -28,7 +28,7 @@
 #include "variable-print-info.h"
 #include <algorithm>
 #include <assert.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "../solver/variable/categories.h"
 
 using namespace Antares::Solver::Variable;
@@ -40,31 +40,34 @@ namespace Data
 // ============================================================
 // One variable print information
 // ============================================================
-VariablePrintInfo::VariablePrintInfo(AnyString vname, uint maxNbCols, uint dataLvl, uint fileLvl) :
- varname(""),
- to_be_printed(true),
- maxNumberColumns(maxNbCols),
- dataLevel(dataLvl),
- fileLevel(fileLvl)
+VariablePrintInfo::VariablePrintInfo(uint dataLvl, uint fileLvl) :
+    to_be_printed_(true),
+    dataLevel_(dataLvl),
+    fileLevel_(fileLvl)
 {
-    varname = vname;
 }
 
-std::string VariablePrintInfo::name()
-{
-    return varname.to<std::string>();
-}
 void VariablePrintInfo::enablePrint(bool b)
 {
-    to_be_printed = b;
+    to_be_printed_ = b;
 }
-bool VariablePrintInfo::isPrinted()
+bool VariablePrintInfo::isPrinted() const
 {
-    return to_be_printed;
+    return to_be_printed_;
+}
+
+void VariablePrintInfo::reverse()
+{
+    to_be_printed_ = !to_be_printed_;
 }
 uint VariablePrintInfo::getMaxColumnsCount()
 {
-    return maxNumberColumns;
+    return maxNumberColumns_;
+}
+
+void VariablePrintInfo::setMaxColumns(uint maxColumnsNumber)
+{
+    maxNumberColumns_ = std::max(maxColumnsNumber, maxNumberColumns_);
 }
 
 // ============================================================
@@ -76,50 +79,42 @@ variablePrintInfoCollector::variablePrintInfoCollector(AllVariablesPrintInfo* al
 }
 
 void variablePrintInfoCollector::add(const AnyString& name,
-                                     uint nbGlobalResults,
                                      uint dataLevel,
                                      uint fileLevel)
 {
-    allvarsinfo->add(new VariablePrintInfo(name, nbGlobalResults, dataLevel, fileLevel));
+    allvarsinfo->add(name.to<std::string>(), VariablePrintInfo(dataLevel, fileLevel));
 }
 
 // ============================================================
 // All variables print information
 // ============================================================
-AllVariablesPrintInfo::AllVariablesPrintInfo() :
- maxColumnsCount(0), numberSelectedAreaVariables(0), numberSelectedLinkVariables(0)
+
+static std::string to_uppercase(std::string& str)
 {
-    // Re-initializing the iterator
-    it_info = allVarsPrintInfo.begin();
+    std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+    return str;
 }
 
-AllVariablesPrintInfo::~AllVariablesPrintInfo()
+void AllVariablesPrintInfo::add(std::string name, VariablePrintInfo v)
 {
-    clear();
-}
-
-void AllVariablesPrintInfo::add(VariablePrintInfo* v)
-{
-    allVarsPrintInfo.push_back(v);
+    std::string upperCaseName = to_uppercase(name);
+    if (not exists(upperCaseName))
+    {
+        index_to_name.try_emplace((unsigned int)allVarsPrintInfo.size(), upperCaseName);
+        allVarsPrintInfo.try_emplace(upperCaseName, v);
+    }
 }
 
 void AllVariablesPrintInfo::clear()
 {
-    // Destroying objects in lists
-    // ---------------------------
-    // Deleting variable' print info objects pointed in the list
-    for (auto it = allVarsPrintInfo.begin(); it != allVarsPrintInfo.end(); ++it)
-        delete *it;
-
-    // After destroying objects in list, clearing lists
-    // ------------------------------------------------
-    // Clearing variables' print info list
     allVarsPrintInfo.clear();
+    index_to_name.clear();
 }
 
-VariablePrintInfo* AllVariablesPrintInfo::operator[](uint i) const
+VariablePrintInfo& AllVariablesPrintInfo::operator[](uint i)
 {
-    return allVarsPrintInfo[i];
+    std::string name = index_to_name[i];
+    return allVarsPrintInfo.at(name);
 }
 
 size_t AllVariablesPrintInfo::size() const
@@ -127,111 +122,99 @@ size_t AllVariablesPrintInfo::size() const
     return allVarsPrintInfo.size();
 }
 
-bool AllVariablesPrintInfo::isEmpty() const
+bool AllVariablesPrintInfo::exists(std::string name)
 {
-    return size() == 0;
+    return allVarsPrintInfo.find(to_uppercase(name)) != allVarsPrintInfo.end();
 }
 
-// Resetting iterator at the beginning of the list of all variables' print info
-void AllVariablesPrintInfo::resetInfoIterator() const
+void AllVariablesPrintInfo::setPrintStatus(std::string varname, bool printStatus)
 {
-    it_info = allVarsPrintInfo.begin();
+    allVarsPrintInfo.at(to_uppercase(varname)).enablePrint(printStatus);
 }
 
-bool AllVariablesPrintInfo::setPrintStatus(std::string varname, bool printStatus)
+void AllVariablesPrintInfo::setPrintStatus(unsigned int index, bool printStatus)
 {
-    /*
-        From the position of the iterator on the print info collection, shifting right until
-        reaching the print info associated to 'varname' argument. Then setting the good print
-        info object with 'printStatus' argument. If searched variable print info not found,
-       returning 'false' meaing we have an error.
-    */
-    std::transform(varname.begin(), varname.end(), varname.begin(), ::toupper);
-
-    for (it_info = allVarsPrintInfo.begin(); it_info != allVarsPrintInfo.end(); it_info++)
-    {
-        std::string current_var_name = (*it_info)->name();
-        std::transform(
-          current_var_name.begin(), current_var_name.end(), current_var_name.begin(), ::toupper);
-        if (varname == current_var_name)
-        {
-            (*it_info)->enablePrint(printStatus);
-            return true;
-        }
-    }
-    return false;
+    std::string name = index_to_name[index];
+    setPrintStatus(name, printStatus);
 }
 
-void AllVariablesPrintInfo::prepareForSimulation(bool userSelection,
+void AllVariablesPrintInfo::setMaxColumns(std::string varname, uint maxColumnsNumber)
+{
+    allVarsPrintInfo.at(to_uppercase(varname)).setMaxColumns(maxColumnsNumber);
+}
+
+[[deprecated("Only needed by the GUI, to be removed")]]
+std::string AllVariablesPrintInfo::name_of(unsigned int index) const
+{
+    return index_to_name.at(index);
+}
+
+void AllVariablesPrintInfo::prepareForSimulation(bool isThematicTrimmingEnabled,
                                                  const std::vector<std::string>& excluded_vars)
 {
-    assert(!isEmpty() && "The variable print info list must not be empty at this point");
-
     // Initializing output variables status
-    if (!userSelection)
+    if (!isThematicTrimmingEnabled)
         setAllPrintStatusesTo(true);
 
     for (const auto& varname : excluded_vars)
     {
-        const bool res = setPrintStatus(varname, false);
-        if (not res)
-            logs.info() << "Variable " << varname << " not found. Could not remove it";
+        setPrintStatus(varname, false); // varname is supposed to in uppercase already
     }
-
-    // Computing the max number columns a report of any kind can contain.
-    computeMaxColumnsCountInReports();
 
     // Counting zonal and link output selected variables
     countSelectedAreaVars();
     countSelectedLinkVars();
 }
 
-bool AllVariablesPrintInfo::searchIncrementally_getPrintStatus(std::string var_name) const
-{
-    // Finds out if an output variable is selected for print or not.
-    // The search for the variable in the print info list is incremental :
-    // it resumes where it was left at the previous call.
-    // This function is meant to be called over the whole list of variables,
-    // not to find the print status of one isolated variable.
-    // We want to avoid to search from the start of the print info list at each call.
-
-    resetInfoIterator();
-    for (; it_info != allVarsPrintInfo.end(); it_info++)
-    {
-        if ((*it_info)->name() == var_name)
-        {
-            return (*it_info)->isPrinted();
-        }
-    }
-
-    // This is the case where we have an adequacy-draft variable :
-    // in the case of other study modes, we never get here.
-    resetInfoIterator();
-    return true;
-}
-
 bool AllVariablesPrintInfo::isPrinted(std::string var_name) const
 {
-    // Finds out if an output variable selected for print or not.
-    // The search for a variable starts from the beginning of the variable print info list.
-
-    for (; it_info != allVarsPrintInfo.end(); it_info++)
-    {
-        if ((*it_info)->name() == var_name)
-        {
-            return (*it_info)->isPrinted();
-        }
-    }
-
-    // This point is not supposed to be reached (except in draft mode),
-    // because the searched variables should be found.
-    return true;
+    return allVarsPrintInfo.at(to_uppercase(var_name)).isPrinted();
 }
 
 void AllVariablesPrintInfo::setAllPrintStatusesTo(bool b)
 {
-    for (uint i = 0; i < size(); ++i)
-        allVarsPrintInfo[i]->enablePrint(b);
+    for (auto& [name, variable] : allVarsPrintInfo)
+    {
+        variable.enablePrint(b);
+    }
+
+}
+
+void AllVariablesPrintInfo::reverseAll()
+{
+    for (auto& [name, variable] : allVarsPrintInfo)
+    {
+        variable.reverse();
+    }
+
+}
+
+unsigned int AllVariablesPrintInfo::numberOfEnabledVariables()
+{
+    return std::count_if(allVarsPrintInfo.begin(), 
+                         allVarsPrintInfo.end(), 
+                         [](auto& p) {return p.second.isPrinted(); });
+}
+
+std::vector<std::string> AllVariablesPrintInfo::namesOfVariablesWithPrintStatus(bool printStatus)
+{
+    std::vector<std::string> vector_to_return;
+    for (auto& [name, variable] : allVarsPrintInfo)
+    {
+        if (variable.isPrinted() == printStatus)
+            vector_to_return.push_back(name);
+    }
+    return vector_to_return;
+}
+
+std::vector<std::string> AllVariablesPrintInfo::namesOfEnabledVariables()
+{
+    return namesOfVariablesWithPrintStatus(true);
+}
+
+std::vector<std::string> AllVariablesPrintInfo::namesOfDisabledVariables()
+{
+    return namesOfVariablesWithPrintStatus(false);
 }
 
 void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
@@ -240,56 +223,58 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
         Among all reports a study can create, which is the one that contains the largest
         number of columns and especially what is this number ?
         If there are some unselected variables, the previous number is reduced.
-        This number is a rough over-estimation, not the exact maximum number a report can
-        contain.
+        Note that synthesis reports always contain more columns than year by year reports.
+        So the computed max number of columns is actually the max number of columns in a synthesis report.
     */
 
-    uint CFileLevel = 1;
-    uint CDataLevel = 1;
-
     // Looping over all kinds of data levels (area report, link reports, districts reports, thermal
-    // reports,...) and file levels (values reports, years ids reports, details reports, ...) the
-    // code can produce. For one particular kind of report, looping over (selected) output variables
+    // reports,...) and for a given data level, looping over file levels 
+    // (values reports, years ids reports, details reports, ...) the
+    // code can produce. 
+    // For one particular kind of report, looping over (selected) output variables
     // it contains, and incrementing a counter with as many columns as the current variable can take
     // up at most in a report.
-    while (CDataLevel <= Category::maxDataLevel && CFileLevel <= Category::maxFileLevel)
+
+    for (uint CDataLevel = 1; CDataLevel <= Category::maxDataLevel; CDataLevel *= 2)
     {
-        uint currentColumnsCount = 0;
-
-        for (auto it = allVarsPrintInfo.begin(); it != allVarsPrintInfo.end(); it++)
+        for (uint CFileLevel = 1; CFileLevel <= Category::maxFileLevel; CFileLevel *= 2)
         {
-            if ((*it)->isPrinted() && (*it)->getFileLevel() & CFileLevel
-                && (*it)->getDataLevel() & CDataLevel)
-                currentColumnsCount += (*it)->getMaxColumnsCount();
+            uint currentColumnsCount = 0;
+            for (auto& [name, variable] : allVarsPrintInfo)
+            {
+                if (variable.isPrinted() &&
+                    variable.isPrintedOnFileLevel(CFileLevel) &&
+                    variable.isPrintedOnDataLevel(CDataLevel))
+                {
+                    // For the current output variable, we retrieve the max number
+                    // of columns it takes in a sysnthesis report. 
+                    currentColumnsCount += variable.getMaxColumnsCount();
+                }
+            }
+
+            totalMaxColumnsCount_ = std::max(totalMaxColumnsCount_, currentColumnsCount);
         }
-
-        if (currentColumnsCount > maxColumnsCount)
-            maxColumnsCount = currentColumnsCount;
-
-        CFileLevel = (CFileLevel * 2 > (int)Category::maxFileLevel) ? 1 : CFileLevel * 2;
-        CDataLevel = (CFileLevel * 2 > (int)Category::maxFileLevel) ? CDataLevel * 2 : CDataLevel;
     }
 }
 
 void AllVariablesPrintInfo::countSelectedAreaVars()
 {
-    resetInfoIterator();
-    for (; it_info != allVarsPrintInfo.end(); it_info++)
-    {
-        if ((*it_info)->isPrinted() && (*it_info)->getDataLevel() == Category::area)
-            numberSelectedAreaVariables++;
-    }
+    numberSelectedAreaVariables =
+        std::count_if(allVarsPrintInfo.begin(),
+                      allVarsPrintInfo.end(),
+                      [](auto& p) {return p.second.isPrinted() &&
+                                          p.second.isPrintedOnDataLevel(Category::area); });
 }
 
 void AllVariablesPrintInfo::countSelectedLinkVars()
 {
-    resetInfoIterator();
-    for (; it_info != allVarsPrintInfo.end(); it_info++)
-    {
-        if ((*it_info)->isPrinted() && (*it_info)->getDataLevel() == Category::link)
-            numberSelectedLinkVariables++;
-    }
+    numberSelectedLinkVariables =
+        std::count_if(allVarsPrintInfo.begin(),
+                      allVarsPrintInfo.end(),
+                      [](auto& p) {return p.second.isPrinted() &&
+                                          p.second.isPrintedOnDataLevel(Category::link);  });
 }
+
 
 } // namespace Data
 } // namespace Antares

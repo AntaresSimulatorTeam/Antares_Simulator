@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -71,7 +71,7 @@ public:
     /*!
     ** \brief Amount of memory consummed by the instance
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Get if the structure has been modified
@@ -112,7 +112,5 @@ private:
 
 } // namespace Data
 } // namespace Antares
-
-#include "ui.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_UI_H__

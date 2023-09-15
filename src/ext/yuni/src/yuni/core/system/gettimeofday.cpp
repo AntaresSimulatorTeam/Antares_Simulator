@@ -23,8 +23,8 @@ int gettimeofday(struct timeval* tv, struct timezone* tz)
     {
         struct _timeb timebuffer;
         _ftime64_s(&timebuffer);
-        tv->tv_sec = (sint64)(timebuffer.time);
-        tv->tv_usec = (sint64)(timebuffer.millitm * 1000);
+        tv->tv_sec = (int64_t)(timebuffer.time);
+        tv->tv_usec = (int64_t)(timebuffer.millitm * 1000);
     }
 
     if (NULL != tz)

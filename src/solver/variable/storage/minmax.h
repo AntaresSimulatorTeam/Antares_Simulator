@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -84,11 +84,7 @@ protected:
                            int fileLevel,
                            int precision) const
     {
-        switch (fileLevel)
-        {
-        case Category::mc:
-            break;
-        case Category::id:
+        if (fileLevel & Category::id)
         {
             switch (precision)
             {
@@ -109,9 +105,8 @@ protected:
                 InternalExportIndices<1, VCardT>(report, &minmax.annual, fileLevel);
                 break;
             }
-            break;
         }
-        default:
+        else
         {
             switch (precision)
             {
@@ -133,7 +128,6 @@ protected:
                 break;
             }
         }
-        }
         // Next
         NextType::template buildSurveyReport<S, VCardT>(
           report, results, dataLevel, fileLevel, precision);
@@ -143,16 +137,9 @@ protected:
 
     void merge(uint year, const IntermediateValues& rhs);
 
-    Yuni::uint64 memoryUsage() const
+    uint64_t memoryUsage() const
     {
         return sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
-    }
-
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-    {
-        Antares::Memory::EstimateMemoryUsage(sizeof(MinMaxData::Data), maxHoursInAYear, u, false);
-        u.takeIntoConsiderationANewTimeserieForDiskOutput(true);
-        NextType::EstimateMemoryUsage(u);
     }
 
     template<template<class> class DecoratorT>

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -44,12 +44,12 @@ namespace LINK_NAMESPACE
 struct VCardAllLinks
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "Links";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "";
     }
@@ -110,11 +110,6 @@ public:
 
 public:
     /*!
-    ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
-    */
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage&);
-
-    /*!
     ** \brief Retrieve the list of all individual variables
     **
     ** The predicate must implement the method `add(name, unit, comment)`.
@@ -140,6 +135,7 @@ public:
 
     void broadcastNonApplicability(bool applyNonApplicable);
     void getPrintStatusFromStudy(Data::Study& study);
+    void supplyMaxNumberOfColumns(Data::Study& study);
 
     void simulationBegin();
     void simulationEnd();
@@ -164,8 +160,6 @@ public:
     void hourBegin(uint hourInTheYear);
     void hourForEachArea(State& state, uint numSpace);
     void hourForEachLink(State& state, uint numSpace);
-    void hourForEachThermalCluster(State& state, uint numSpace);
-    void hourForEachRenewableCluster(State& state, uint numSpace);
 
     void hourEnd(State& state, uint hourInTheYear);
 
@@ -182,7 +176,7 @@ public:
 
     void beforeYearByYearExport(uint year, uint numSpace);
 
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
 

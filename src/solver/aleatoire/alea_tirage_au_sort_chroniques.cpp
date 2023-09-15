@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,15 +27,15 @@
 #include "alea_sys.h"
 #include <yuni/core/math.h>
 
-#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
 #include "../simulation/sim_extern_variables_globales.h"
 #include "alea_fonctions.h"
+#include <algorithm>
+#include <iterator>
 #include <limits>
-#include <antares/logs.h>
-#include <antares/date.h>
-#include <antares/emergency.h>
+#include <antares/logs/logs.h>
+#include <antares/date/date.h>
+#include <antares/fatal-error.h>
 #include <cassert>
 
 using namespace Yuni;
@@ -43,39 +43,37 @@ using namespace Antares;
 using namespace Antares::Data;
 
 static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
-  double** thermalNoisesByArea,
+  const Study& study,
+  double const* const* thermalNoisesByArea,
   uint numSpace,
-  bool EconomicModeT)
+  VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
-    auto& study = *Data::Study::Current::Get();
     auto& runtime = *study.runtime;
 
     uint year = runtime.timeseriesNumberYear[numSpace];
-
-    const size_t nbDaysPerYearDouble = runtime.nbDaysPerYear * sizeof(double);
 
     // each area
     const unsigned int count = study.areas.size();
     for (unsigned int i = 0; i != count; ++i)
     {
         // Variables - the current area
-        NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = *NumeroChroniquesTireesParPays[numSpace][i];
+        NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = NumeroChroniquesTireesParPays[numSpace][i];
         auto& area = *(study.areas.byIndex[i]);
-        VALEURS_GENEREES_PAR_PAYS& ptvalgen = *(ValeursGenereesParPays[numSpace][i]);
+        VALEURS_GENEREES_PAR_PAYS& ptvalgen = valeursGenereesParPays[numSpace][i];
 
         // Load
         {
             const Data::DataSeriesLoad& data = *area.load.series;
             assert(year < data.timeseriesNumbers.height);
             ptchro.Consommation
-              = (data.series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+              = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
         // Solar
         {
             const Data::DataSeriesSolar& data = *area.solar.series;
             assert(year < data.timeseriesNumbers.height);
             ptchro.Solar
-              = (data.series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+              = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
         // Hydro
         {
@@ -84,14 +82,15 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             ptchro.Hydraulique
               = (data.count != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
             // Hydro - mod
-            memset(ptvalgen.HydrauliqueModulableQuotidien, 0, nbDaysPerYearDouble);
+            std::fill(ptvalgen.HydrauliqueModulableQuotidien.begin(),
+                    ptvalgen.HydrauliqueModulableQuotidien.end(),0);
         }
         // Wind
         {
             const Data::DataSeriesWind& data = *area.wind.series;
             assert(year < data.timeseriesNumbers.height);
             ptchro.Eolien
-              = (data.series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+              = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
         // Renewable
         {
@@ -108,7 +107,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
                 assert(year < data.timeseriesNumbers.height);
                 unsigned int index = cluster->areaWideIndex;
 
-                ptchro.RenouvelableParPalier[index] = (data.series.width != 1)
+                ptchro.RenouvelableParPalier[index] = (data.timeSeries.width != 1)
                                                         ? (long)data.timeseriesNumbers[0][year]
                                                         : 0; // zero-based
             }
@@ -136,38 +135,35 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
 
                 // the matrix data.series should be properly initialized at this stage
                 // because the ts-generator has already been launched
-                ptchro.ThermiqueParPalier[index] = (data.series.width != 1)
+                ptchro.ThermiqueParPalier[index] = (data.timeSeries.width != 1)
                                                      ? (long)data.timeseriesNumbers[0][year]
                                                      : 0; // zero-based
 
-                if (EconomicModeT)
+                // ptvalgen.AleaCoutDeProductionParPalier[index] =
+                //	(rnd - 0.5) * (cluster->spreadCost + 1e-4);
+                // MBO
+                // 15/04/2014 : bornage du cout thermique
+                // 01/12/2014 : prise en compte du spreadCost non nul
+
+                if (cluster->spreadCost == 0) // 5e-4 < |AleaCoutDeProductionParPalier| < 6e-4
                 {
-                    // ptvalgen.AleaCoutDeProductionParPalier[index] =
-                    //	(rnd - 0.5) * (cluster->spreadCost + 1e-4);
-                    // MBO
-                    // 15/04/2014 : bornage du coût thermique
-                    // 01/12/2014 : prise en compte du spreadCost non nul
-
-                    if (cluster->spreadCost == 0) // 5e-4 < |AleaCoutDeProductionParPalier| < 6e-4
-                    {
-                        if (rnd < 0.5)
-                            ptvalgen.AleaCoutDeProductionParPalier[index] = 1e-4 * (5 + 2 * rnd);
-                        else
-                            ptvalgen.AleaCoutDeProductionParPalier[index]
-                              = -1e-4 * (5 + 2 * (rnd - 0.5));
-                    }
+                    if (rnd < 0.5)
+                        ptvalgen.AleaCoutDeProductionParPalier[index] = 1e-4 * (5 + 2 * rnd);
                     else
-                    {
                         ptvalgen.AleaCoutDeProductionParPalier[index]
-                          = (rnd - 0.5) * (cluster->spreadCost);
+                          = -1e-4 * (5 + 2 * (rnd - 0.5));
+                }
+                else
+                {
+                    ptvalgen.AleaCoutDeProductionParPalier[index]
+                      = (rnd - 0.5) * (cluster->spreadCost);
 
-                        if (Math::Abs(ptvalgen.AleaCoutDeProductionParPalier[index]) < 5.e-4)
-                        {
-                            if (Math::Abs(ptvalgen.AleaCoutDeProductionParPalier[index]) >= 0)
-                                ptvalgen.AleaCoutDeProductionParPalier[index] += 5.e-4;
-                            else
-                                ptvalgen.AleaCoutDeProductionParPalier[index] -= 5.e-4;
-                        }
+                    if (Math::Abs(ptvalgen.AleaCoutDeProductionParPalier[index]) < 5.e-4)
+                    {
+                        if (Math::Abs(ptvalgen.AleaCoutDeProductionParPalier[index]) >= 0)
+                            ptvalgen.AleaCoutDeProductionParPalier[index] += 5.e-4;
+                        else
+                            ptvalgen.AleaCoutDeProductionParPalier[index] -= 5.e-4;
                     }
                 }
 
@@ -184,19 +180,29 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
         NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION& ptchro
           = NumeroChroniquesTireesParInterconnexion[numSpace][i];
         const uint directWidth = link->directCapacities.width;
-        const uint indirectWidth = link->indirectCapacities.width;
+        [[maybe_unused]] const uint indirectWidth = link->indirectCapacities.width;
         assert(directWidth == indirectWidth);
         ptchro.TransmissionCapacities
           = (directWidth != 1) ? link->timeseriesNumbers[0][year] : 0; // zero-based
     }
+    //Binding constraints
+    //Setting 0 for time_series of width 0 is done when using the value.
+    //To do this here we would have to check every BC for its width
+    for (const auto& group: study.bindingConstraintsGroups) {
+        [[maybe_unused]] auto number_of_ts_numbers = group->timeseriesNumbers.height;
+        assert(year < number_of_ts_numbers); //If only 1 ts_number we suppose only one TS. Any "year" will be converted to "0" later
+        NumeroChroniquesTireesParGroup[numSpace][group->name()] = group->timeseriesNumbers[0][year];
+    }
 }
 
-void ALEA_TirageAuSortChroniques(double** thermalNoisesByArea, uint numSpace)
+void ALEA_TirageAuSortChroniques(const Antares::Data::Study& study,
+                                 double const* const* thermalNoisesByArea,
+                                 uint numSpace,
+                                 VAL_GEN_PAR_PAYS& valeursGenereesParPays)
 {
     // Time-series numbers
-    bool ecoMode = Data::Study::Current::Get()->runtime->mode != stdmAdequacyDraft;
     // Retrieve all time-series numbers
     // Initialize in the same time the production costs of all thermal clusters.
-    InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
-      thermalNoisesByArea, numSpace, ecoMode);
+    InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(study,
+      thermalNoisesByArea, numSpace, valeursGenereesParPays);
 }

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -33,6 +33,7 @@
 #include "../../../../application/main/main.h"
 #include "../../../../application/study.h"
 #include "../../../../windows/inspector.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 
@@ -63,7 +64,7 @@ void Remover::draw(DrawingContext& dc,
 
 bool Remover::onMouseUp(const int, const int)
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return false;
 
     auto& mainFrm = *Forms::ApplWnd::Instance();
@@ -106,17 +107,17 @@ bool Remover::onMouseUp(const int, const int)
     message.add(Window::Message::btnCancel, true);
     if (message.showModal() == Window::Message::btnYes)
     {
-        ScenarioBuilderUpdater updaterSB(*Data::Study::Current::Get());
+        ScenarioBuilderUpdater updaterSB(*GetCurrentStudy());
         // Remove all selected items
         bool r = (0 != pManager.removeAllSelected());
 
         // post-check about the study - paranoid
-        if (not Data::Study::Current::Valid())
+        if (not CurrentStudyIsValid())
             return false;
 
         // Force the refresh of runtime data
         logs.debug() << "  Asking to reload UI runtime data";
-        auto* info = Data::Study::Current::Get()->uiinfo;
+        auto* info = GetCurrentStudy()->uiinfo;
         if (info)
         {
             info->reload();

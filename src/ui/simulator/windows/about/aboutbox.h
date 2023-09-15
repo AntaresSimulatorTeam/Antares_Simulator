@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,7 +27,7 @@
 #ifndef __ANTARES_APPLICATION_ABOUTBOX_ABOUTBOX_H__
 #define __ANTARES_APPLICATION_ABOUTBOX_ABOUTBOX_H__
 
-#include <antares/wx-wrapper.h>
+#include <wx-wrapper.h>
 #include <wx/dialog.h>
 
 namespace Antares

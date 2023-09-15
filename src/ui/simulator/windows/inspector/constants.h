@@ -1,6 +1,6 @@
 #pragma once
 
-#include <antares/wx-wrapper.h>
+#include <wx/wx.h>
 
 namespace Antares
 {
@@ -18,6 +18,10 @@ extern const wxChar* const arrayClusterGroup[];
 // Thermal laws
 extern const unsigned int thermalLawCount;
 extern const wxChar* const thermalLaws[];
+
+// Thermal cost generation
+extern const unsigned int costgenerationCount;
+extern const wxChar* const costgeneration[];
 
 // Thermal TS generation
 extern const unsigned int localGenTSCount;
