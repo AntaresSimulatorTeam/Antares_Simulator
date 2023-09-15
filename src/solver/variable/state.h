@@ -186,8 +186,8 @@ public:
 
     //! Thermal production for the current thermal cluster for the whole year
     double thermalClusterProductionForYear[Variable::maxHoursInAYear];
-    //! Number of unit dispatched for all clusters for the whole year for ucHeuristicFast (fast
-    //! heuristic), ucHeuristicAccurate (accurate heuristic) or ucMILP (MILP resolution)
+    //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
+    //! ucMILP (accurate)
     uint thermalClusterDispatchedUnitsCountForYear[Variable::maxHoursInAYear];
 
     //! Thermal operating cost for the current thermal cluster for the whole year
@@ -210,7 +210,7 @@ public:
     NUMERO_CHRONIQUES_TIREES_PAR_PAYS* timeseriesIndex;
     //! Study mode: economy / adequacy
     Data::StudyMode studyMode;
-    //! Study unit commitment mode: ucHeuristicFast / ucHeuristicAccurate / ucMILP
+    //! Study unit commitment mode: fast(ucHeuristic) / accurate(ucMILP)
     Data::UnitCommitmentMode unitCommitmentMode;
     //! Reference to the original study
     Data::Study& study;
