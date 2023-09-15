@@ -30,6 +30,7 @@ private:
 public:
     std::vector<int>& StatutDesVariables;
     std::vector<int>& StatutDesContraintes;
+    const std::vector<bool>& VariablesEntieres;
 
     bool isMIP() const;
     bool basisExists() const;
