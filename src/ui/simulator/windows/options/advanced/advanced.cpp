@@ -838,9 +838,9 @@ void AdvancedParameters::onUnitCommitmentMode(Component::Button&, wxMenu& menu, 
 
 void AdvancedParameters::onSelectUCHeuristicFast(wxCommandEvent& /* evt */)
 {
-    auto& study = *GetCurrentStudy();
     if (not CurrentStudyIsValid())
         return;
+    auto& study = *GetCurrentStudy();
 
     if (study.parameters.unitCommitment.ucMode != Data::ucHeuristicFast)
     {
@@ -852,9 +852,9 @@ void AdvancedParameters::onSelectUCHeuristicFast(wxCommandEvent& /* evt */)
 
 void AdvancedParameters::onSelectUCHeuristicAccurate(wxCommandEvent& /* evt */)
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return;
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     if (study.parameters.unitCommitment.ucMode != Data::ucHeuristicAccurate)
     {
