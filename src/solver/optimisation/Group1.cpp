@@ -32,7 +32,7 @@ void Group1::BuildGroup1()
 
         for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
         {
-            AreaBalanceData areaBalanceData(
+            AreaBalanceData areaBalanceData{
               problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays,
               problemeHebdo_->CorrespondanceVarNativesVarOptim[pdt]
                 .SIM_ShortTermStorage.InjectionVariable,
@@ -43,7 +43,7 @@ void Group1::BuildGroup1()
               problemeHebdo_->IndexDebutIntercoExtremite,
               problemeHebdo_->IndexSuivantIntercoExtremite,
               problemeHebdo_->PaliersThermiquesDuPays[pays],
-              problemeHebdo_->ShortTermStorage);
+              problemeHebdo_->ShortTermStorage};
             auto shared_ptr_areaBalance = std::make_shared<AreaBalanceData>(areaBalanceData);
             areaBalance.add(pdt, pays, shared_ptr_areaBalance);
 
