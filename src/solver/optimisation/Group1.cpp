@@ -99,6 +99,7 @@ void Group1::BuildGroup1()
                  MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante,
                  MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante,
                  problemeHebdo_->PaliersThermiquesDuPays};
+
             BindingConstraintHourData bindingConstraintHourData
               = {bindingConstraintData,
                  problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]

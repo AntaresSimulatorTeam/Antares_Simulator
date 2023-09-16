@@ -242,61 +242,9 @@ private:
 };
 } // namespace NewVariable
 
-class ConstraintBuilderData
+class NewConstraintBuilderData
 {
 public:
-    // ConstraintBuilderData() = delete;
-    // ConstraintBuilderData(const ConstraintBuilderData& other) = delete;
-    // ConstraintBuilderData(ConstraintBuilderData&&) = delete;
-
-    // explicit ConstraintBuilderData(ConstraintBuilderData& data) :
-    //  Pi(data.Pi),
-    //  Colonne(data.Colonne),
-    //  nombreDeContraintes(data.nombreDeContraintes),
-    //  nombreDeTermesDansLaMatriceDeContrainte(data.nombreDeTermesDansLaMatriceDeContrainte),
-    //  IndicesDebutDeLigne(data.IndicesDebutDeLigne),
-    //  CoefficientsDeLaMatriceDesContraintes(data.CoefficientsDeLaMatriceDesContraintes),
-    //  IndicesColonnes(data.IndicesColonnes),
-    //  NombreDeTermesAllouesDansLaMatriceDesContraintes(
-    //    data.NombreDeTermesAllouesDansLaMatriceDesContraintes),
-    //  NombreDeTermesDesLignes(data.NombreDeTermesDesLignes),
-    //  Sens(data.Sens),
-    //  IncrementDAllocationMatriceDesContraintes(data.IncrementDAllocationMatriceDesContraintes),
-    //  CorrespondanceVarNativesVarOptim(data.CorrespondanceVarNativesVarOptim),
-    //  NombreDePasDeTempsPourUneOptimisation(data.NombreDePasDeTempsPourUneOptimisation),
-    //  NumeroDeVariableStockFinal(data.NumeroDeVariableStockFinal),
-    //  NumeroDeVariableDeTrancheDeStock(data.NumeroDeVariableDeTrancheDeStock),
-    //  NomDesContraintes(data.NomDesContraintes),
-    //  NamedProblems(data.NamedProblems),
-    //  NomsDesPays(data.NomsDesPays),
-    //  weekInTheYear(data.weekInTheYear),
-    //  NombreDePasDeTemps(data.NombreDePasDeTemps)
-
-    // {
-    // }
-
-    // explicit ConstraintBuilderData(
-    //   std::vector<double>& Pi,
-    //   std::vector<int>& Colonne,
-    //   int& nombreDeContraintes,
-    //   int& nombreDeTermesDansLaMatriceDeContrainte,
-    //   std::vector<int>& IndicesDebutDeLigne,
-    //   std::vector<double>& CoefficientsDeLaMatriceDesContraintes,
-    //   std::vector<int>& IndicesColonnes,
-    //   int& NombreDeTermesAllouesDansLaMatriceDesContraintes,
-    //   std::vector<int>& NombreDeTermesDesLignes,
-    //   std::string& Sens,
-    //   int& IncrementDAllocationMatriceDesContraintes,
-    //   const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim,
-    //   const int32_t& NombreDePasDeTempsPourUneOptimisation,
-    //   const std::vector<int>& NumeroDeVariableStockFinal,
-    //   const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock,
-    //   std::vector<std::string>& NomDesContraintes,
-    //   const bool& NamedProblems,
-    //   const std::vector<const char*>& NomsDesPays,
-    //   const uint32_t& weekInTheYear,
-    //   const uint32_t& NombreDePasDeTemps);
-
     std::vector<double>& Pi;
     std::vector<int>& Colonne;
     int& nombreDeContraintes;
@@ -327,11 +275,11 @@ public:
      data(std::move(other->data))
     {
     }
-    explicit NewConstraintBuilder(std::shared_ptr<ConstraintBuilderData> data) :
+    explicit NewConstraintBuilder(std::shared_ptr<NewConstraintBuilderData> data) :
      data(std::move(data))
     {
     }
-    // explicit NewConstraintBuilder(std::shared_ptr<ConstraintBuilderData>& data) : data(data)
+    // explicit NewConstraintBuilder(std::shared_ptr<NewConstraintBuilderData>& data) : data(data)
     // {
     // }
 
@@ -389,7 +337,7 @@ public:
     }
 
 public:
-    std::shared_ptr<ConstraintBuilderData> data;
+    std::shared_ptr<NewConstraintBuilderData> data;
 
 private:
     void OPT_ChargerLaContrainteDansLaMatriceDesContraintes();
