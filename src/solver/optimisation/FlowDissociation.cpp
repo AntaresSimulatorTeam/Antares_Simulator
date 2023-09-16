@@ -1,40 +1,30 @@
 #include "FlowDissociation.h"
+#include "opt_rename_problem.h"
 
-void FlowDissociation::add(int pdt, int interco)
+void FlowDissociation::add(int pdt, int interco, std::shared_ptr<FlowDissociationData> data)
 {
-    if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
+    if (const COUTS_DE_TRANSPORT& CoutDeTransport = data->CoutDeTransport[interco];
         CoutDeTransport.IntercoGereeAvecDesCouts)
     {
-        /** can be done without this --- keep it for now**/
-        CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-        CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-          = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-        CorrespondanceCntNativesCntOptim.NumeroDeContrainteDeDissociationDeFlux[interco]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-        /******/
-
         // TODO improve this
-
+        data->NumeroDeContrainteDeDissociationDeFlux[interco] = builder->data->nombreDeContraintes;
         {
             const auto origin
-              = problemeHebdo->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
+              = builder->data->NomsDesPays[data->PaysOrigineDeLInterconnexion[interco]];
             const auto destination
-              = problemeHebdo->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-            namer.FlowDissociation(
-              problemeHebdo->ProblemeAResoudre->NombreDeContraintes, origin, destination);
+              = builder->data->NomsDesPays[data->PaysExtremiteDeLInterconnexion[interco]];
+            ConstraintNamer namer(builder->data->NomDesContraintes, builder->data->NamedProblems);
+            namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
+            namer.FlowDissociation(builder->data->nombreDeContraintes, origin, destination);
         }
 
-        builder.updateHourWithinWeek(pdt);
-        builder.include(Variable::NTCDirect(interco), 1.0)
-          .include(Variable::IntercoDirectCost(interco), -1.0)
-          .include(Variable::IntercoIndirectCost(interco), 1.0);
+        builder->updateHourWithinWeek(pdt);
+        builder->include(NewVariable::NTCDirect(interco), 1.0)
+          .include(NewVariable::IntercoDirectCost(interco), -1.0)
+          .include(NewVariable::IntercoIndirectCost(interco), 1.0);
 
-        builder.equalTo();
+        builder->equalTo();
 
-        builder.build();
+        builder->build();
     }
 }

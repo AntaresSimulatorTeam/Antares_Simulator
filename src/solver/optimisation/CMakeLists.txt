@@ -73,6 +73,10 @@ set(RTESOLVER_OPT
 
 		constraint_builder.cpp
 		constraint_builder.h
+		new_constraint_builder.cpp
+		new_constraint_builder.h
+		new_constraint_builder_utils.cpp
+		new_constraint_builder_utils.h
 
 		AreaBalance.h
 		AreaBalance.cpp
@@ -121,6 +125,9 @@ set(RTESOLVER_OPT
 		NbDispUnitsMinBoundSinceMinUpTime.cpp
 		MinDownTime.h
 		MinDownTime.cpp
+
+		Group1.h
+		Group1.cpp
 
 	)
 

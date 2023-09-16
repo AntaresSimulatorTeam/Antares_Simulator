@@ -1,34 +1,29 @@
 
 #include "FictitiousLoad.h"
+#include "opt_rename_problem.h"
 
-void FictitiousLoad::add(int pdt, int pays)
+void FictitiousLoad::add(int pdt, int pays, std::shared_ptr<FictitiousLoadData> data)
 {
     /** can be done without this --- keep it for now**/
-    CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-      = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-    CorrespondanceCntNativesCntOptim.NumeroDeContraintePourEviterLesChargesFictives[pays]
-      = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+    data->NumeroDeContraintePourEviterLesChargesFictives[pays] = builder->data->nombreDeContraintes;
 
     /******/
 
     // TODO improve this
     {
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
+        ConstraintNamer namer(builder->data->NomDesContraintes, builder->data->NamedProblems);
 
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.FictiveLoads(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
+        namer.UpdateArea(builder->data->NomsDesPays[pays]);
+        namer.FictiveLoads(builder->data->nombreDeContraintes);
     }
 
-    builder.updateHourWithinWeek(pdt);
-    exportPaliers(*problemeHebdo, builder, pays);
-    auto coeff = problemeHebdo->DefaillanceNegativeUtiliserHydro[pays] ? -1 : 0;
-    builder.include(Variable::HydProd(pays), coeff)
-      .include(Variable::NegativeUnsuppliedEnergy(pays), 1.0);
+       builder->updateHourWithinWeek(pdt);
+       new_exportPaliers(data->PaliersThermiquesDuPays, builder);
+       auto coeff = data->DefaillanceNegativeUtiliserHydro[pays] ? -1 : 0;
+       builder->include(NewVariable::HydProd(pays), coeff)
+         .include(NewVariable::NegativeUnsuppliedEnergy(pays), 1.0);
 
-    builder.lessThan();
-    builder.build();
+       builder->lessThan();
+       builder->build();
 }

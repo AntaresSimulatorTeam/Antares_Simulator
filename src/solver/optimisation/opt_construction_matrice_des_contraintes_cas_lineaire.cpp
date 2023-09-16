@@ -47,6 +47,8 @@
 #include "AreaHydroLevel.h"
 #include "FinalStockEquivalent.h"
 #include "FinalStockExpression.h"
+#include "new_constraint_builder_utils.h"
+#include "Group1.h"
 
 #include <antares/study.h>
 
@@ -71,11 +73,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo->NamedProblems);
 
-    AreaBalance areaBalance(problemeHebdo);
-    FictitiousLoad fictitiousLoad(problemeHebdo);
-    ShortTermStorageLevel shortTermStorageLevel(problemeHebdo);
-    FlowDissociation flowDissociation(problemeHebdo);
-    BindingConstraintHour bindingConstraintHour(problemeHebdo);
     BindingConstraintDay bindingConstraintDay(problemeHebdo);
     BindingConstraintWeek bindingConstraintWeek(problemeHebdo);
     HydroPower hydroPower(problemeHebdo);
@@ -94,33 +91,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     FinalStockEquivalent finalStockEquivalent(problemeHebdo);
     FinalStockExpression finalStockExpression(problemeHebdo);
 
-    for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-    {
-        int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
-        constraintNamer.UpdateTimeStep(timeStepInYear);
-        CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-        CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-            = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-
-        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-        {
-            areaBalance.add(pdt, pays);
-
-            fictitiousLoad.add(pdt, pays);
-
-            shortTermStorageLevel.add(pdt, pays);
-        }
-
-        for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
-        {
-            flowDissociation.add(pdt, interco);
-        }
-        for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
-             cntCouplante++)
-        {
-            bindingConstraintHour.add(pdt, cntCouplante);
-        }
-    }
+    Group1 group1(problemeHebdo);
+    group1.BuildGroup1();
 
     for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)

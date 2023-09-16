@@ -1,10 +1,16 @@
 
 #pragma once
-#include "constraint_builder.h"
+#include "new_constraint_builder.h"
 
-class FictitiousLoad : private Constraint
+struct FictitiousLoadData
+{
+    std::vector<int>& NumeroDeContraintePourEviterLesChargesFictives;
+    const PALIERS_THERMIQUES& PaliersThermiquesDuPays;
+    const std::vector<bool>& DefaillanceNegativeUtiliserHydro;
+};
+class FictitiousLoad : private NewConstraint
 {
 public:
-    using Constraint::Constraint;
-    void add(int pdt, int pays);
+    using NewConstraint::NewConstraint;
+    void add(int pdt, int pays, std::shared_ptr<FictitiousLoadData> data);
 };

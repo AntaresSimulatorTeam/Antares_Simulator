@@ -1,9 +1,15 @@
 #pragma once
-#include "constraint_builder.h"
+#include "new_constraint_builder.h"
 
-class ShortTermStorageLevel : private Constraint
+struct ShortTermStorageLevelData
+{
+    std::vector<int>& ShortTermStorageLevelConstraint;
+    const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
+};
+
+class ShortTermStorageLevel : private NewConstraint
 {
 public:
-    using Constraint::Constraint;
-    void add(int pdt, int pays);
+    using NewConstraint::NewConstraint;
+    void add(int pdt, int pays, std::shared_ptr<ShortTermStorageLevelData> data);
 };

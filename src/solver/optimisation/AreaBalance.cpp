@@ -1,74 +1,75 @@
 #include "AreaBalance.h"
+#include "opt_rename_problem.h"
 
-static void shortTermStorageBalance(
-  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-  ConstraintBuilder& constraintBuilder,
-  const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim)
+static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+                                    std::shared_ptr<NewConstraintBuilder> constraintBuilder,
+                                    std::vector<int>& InjectionVariable,
+                                    std::vector<int>& WithdrawalVariable)
 {
     for (const auto& storage : shortTermStorageInput)
     {
         unsigned index = storage.clusterGlobalIndex;
-        if (const int varInjection
-            = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.InjectionVariable[index];
-            varInjection >= 0)
+        if (const int varInjection = InjectionVariable[index]; varInjection >= 0)
         {
-            constraintBuilder.include(Variable::ShortTermStorageInjection(index), 1.0);
+            constraintBuilder->include(NewVariable::ShortTermStorageInjection(index), 1.0);
         }
-        if (const int varWithdrawal
-            = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.WithdrawalVariable[index];
-            varWithdrawal >= 0)
+        if (const int varWithdrawal = WithdrawalVariable[index]; varWithdrawal >= 0)
         {
-            constraintBuilder.include(Variable::ShortTermStorageWithdrawal(index), -1.0);
+            constraintBuilder->include(NewVariable::ShortTermStorageWithdrawal(index), -1.0);
         }
     }
 }
 
 // Constraint definitions
-void AreaBalance::add(int pdt, int pays)
+void AreaBalance::odd(int pays, std::shared_ptr<AreaBalanceData> data)
+{
+    int a = 13;
+    int b = a * 36;
+    logs.info() << "int odd builder->data->nombreDeContraintes"
+                << builder->data->nombreDeContraintes << "\n";
+    logs.info() << "int odd data->NumeroDeContrainteDesBilansPays[pays]"
+                << data->NumeroDeContrainteDesBilansPays[pays] << "\n";
+    data->NumeroDeContrainteDesBilansPays[pays] = builder->data->nombreDeContraintes;
+    logs.info() << "int odd 2" << a << "\n";
+}
+void AreaBalance::add(int pdt, int pays, std::shared_ptr<AreaBalanceData> data)
 {
     /** can be done without this --- keep it for now**/
-    CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-      = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-    CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesBilansPays[pays]
-      = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+    data->NumeroDeContrainteDesBilansPays[pays] = builder->data->nombreDeContraintes;
 
     /******/
     // TODO improve this
-    {
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.AreaBalance(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-    }
 
-    builder.updateHourWithinWeek(pdt);
+    ConstraintNamer namer(builder->data->NomDesContraintes, builder->data->NamedProblems);
+    namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
+    namer.UpdateArea(builder->data->NomsDesPays[pays]);
+    namer.AreaBalance(builder->data->nombreDeContraintes);
 
-    int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
+    builder->updateHourWithinWeek(pdt);
+
+    int interco = data->IndexDebutIntercoOrigine[pays];
     while (interco >= 0)
     {
-        builder.include(Variable::NTCDirect(interco), 1.0);
-        interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
+        builder->include(NewVariable::NTCDirect(interco), 1.0);
+        interco = data->IndexSuivantIntercoOrigine[interco];
     }
 
-    interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
+    interco = data->IndexDebutIntercoExtremite[pays];
     while (interco >= 0)
     {
-        builder.include(Variable::NTCDirect(interco), -1.0);
-        interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
+        builder->include(NewVariable::NTCDirect(interco), -1.0);
+        interco = data->IndexSuivantIntercoExtremite[interco];
     }
 
-    exportPaliers(*problemeHebdo, builder, pays);
-    builder.include(Variable::HydProd(pays), -1.0)
-      .include(Variable::Pumping(pays), 1.0)
-      .include(Variable::PositiveUnsuppliedEnergy(pays), -1.0)
-      .include(Variable::NegativeUnsuppliedEnergy(pays), 1.0);
+    new_exportPaliers(data->PaliersThermiquesDuPays, builder);
+    builder->include(NewVariable::HydProd(pays), -1.0)
+      .include(NewVariable::Pumping(pays), 1.0)
+      .include(NewVariable::PositiveUnsuppliedEnergy(pays), -1.0)
+      .include(NewVariable::NegativeUnsuppliedEnergy(pays), 1.0);
 
     shortTermStorageBalance(
-      problemeHebdo->ShortTermStorage[pays], builder, CorrespondanceVarNativesVarOptim);
+      data->ShortTermStorage[pays], builder, data->InjectionVariable, data->WithdrawalVariable);
 
-    builder.equalTo();
-    builder.build();
+    builder->equalTo();
+    builder->build();
 }

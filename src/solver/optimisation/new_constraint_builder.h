@@ -1,0 +1,452 @@
+#pragma once
+
+#include <antares/logs/logs.h>
+#include "opt_structure_probleme_a_resoudre.h"
+#include "opt_rename_problem.h"
+#include "opt_fonctions.h"
+#include <memory>
+// TODO remove relative include
+#include "../simulation/sim_structure_probleme_economique.h"
+
+#include <variant>
+#include <utility>
+
+namespace NewVariable
+{
+struct SingleIndex
+{
+    explicit SingleIndex(unsigned index) : index(index)
+    {
+    }
+    unsigned index;
+};
+
+struct DispatchableProduction : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+struct NODU : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+struct NumberStoppingDispatchableUnits : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+struct NumberStartingDispatchableUnits : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+struct NumberBreakingDownDispatchableUnits : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+
+struct NTCDirect : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+struct IntercoDirectCost : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+struct IntercoIndirectCost : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+
+struct ShortTermStorageInjection : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+struct ShortTermStorageWithdrawal : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+struct ShortTermStorageLevel : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+
+struct HydProd : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+struct HydProdDown : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+struct HydProdUp : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+struct Pumping : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+struct HydroLevel : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+struct Overflow : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+struct FinalStorage : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+struct PositiveUnsuppliedEnergy : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+struct NegativeUnsuppliedEnergy : public SingleIndex
+{
+    using SingleIndex::SingleIndex;
+};
+
+struct LayerStorage
+{
+    LayerStorage(unsigned area, unsigned layer) : area(area), layer(layer)
+    {
+    }
+    unsigned area, layer;
+};
+
+using Variant = std::variant<DispatchableProduction,
+                             NODU,
+                             NumberStoppingDispatchableUnits,
+                             NumberStartingDispatchableUnits,
+                             NumberBreakingDownDispatchableUnits,
+                             NTCDirect,
+                             IntercoDirectCost,
+                             IntercoIndirectCost,
+                             ShortTermStorageInjection,
+                             ShortTermStorageWithdrawal,
+                             ShortTermStorageLevel,
+                             HydProd,
+                             HydProdDown,
+                             HydProdUp,
+                             Pumping,
+                             HydroLevel,
+                             Overflow,
+                             FinalStorage,
+                             LayerStorage,
+                             PositiveUnsuppliedEnergy,
+                             NegativeUnsuppliedEnergy>;
+
+class NewVisitor
+{
+public:
+    NewVisitor(const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar,
+               const std::vector<int>& NumeroDeVariableStockFinal,
+               const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock) :
+     nativeOptimVar(nativeOptimVar),
+     NumeroDeVariableStockFinal(NumeroDeVariableStockFinal),
+     NumeroDeVariableDeTrancheDeStock(NumeroDeVariableDeTrancheDeStock)
+    {
+    }
+
+    int operator()(const DispatchableProduction& v) const
+    {
+        return nativeOptimVar.NumeroDeVariableDuPalierThermique[v.index];
+    }
+    int operator()(const NODU& v) const
+    {
+        return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[v.index];
+    }
+    int operator()(const NumberStoppingDispatchableUnits& v) const
+    {
+        return nativeOptimVar
+          .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[v.index];
+    }
+    int operator()(const NumberStartingDispatchableUnits& v) const
+    {
+        return nativeOptimVar
+          .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[v.index];
+    }
+    int operator()(const NumberBreakingDownDispatchableUnits& v) const
+    {
+        return nativeOptimVar
+          .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[v.index];
+    }
+    int operator()(const NTCDirect& v) const
+    {
+        return nativeOptimVar.NumeroDeVariableDeLInterconnexion[v.index];
+    }
+    int operator()(const IntercoDirectCost& v) const
+    {
+        return nativeOptimVar.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[v.index];
+    }
+    int operator()(const IntercoIndirectCost& v) const
+    {
+        return nativeOptimVar.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[v.index];
+    }
+    int operator()(const ShortTermStorageInjection& v) const
+    {
+        return nativeOptimVar.SIM_ShortTermStorage.InjectionVariable[v.index];
+    }
+    int operator()(const ShortTermStorageWithdrawal& v) const
+    {
+        return nativeOptimVar.SIM_ShortTermStorage.WithdrawalVariable[v.index];
+    }
+    int operator()(const ShortTermStorageLevel& v) const
+    {
+        return nativeOptimVar.SIM_ShortTermStorage.LevelVariable[v.index];
+    }
+    int operator()(const HydProd& v) const
+    {
+        return nativeOptimVar.NumeroDeVariablesDeLaProdHyd[v.index];
+    }
+    int operator()(const HydProdDown& v) const
+    {
+        return nativeOptimVar.NumeroDeVariablesVariationHydALaBaisse[v.index];
+    }
+    int operator()(const HydProdUp& v) const
+    {
+        return nativeOptimVar.NumeroDeVariablesVariationHydALaHausse[v.index];
+    }
+    int operator()(const Pumping& v) const
+    {
+        return nativeOptimVar.NumeroDeVariablesDePompage[v.index];
+    }
+    int operator()(const HydroLevel& v) const
+    {
+        return nativeOptimVar.NumeroDeVariablesDeNiveau[v.index];
+    }
+    int operator()(const Overflow& v) const
+    {
+        return nativeOptimVar.NumeroDeVariablesDeDebordement[v.index];
+    }
+    int operator()(const FinalStorage& v) const
+    {
+        return NumeroDeVariableStockFinal[v.index];
+    }
+    int operator()(const LayerStorage& v) const
+    {
+        return NumeroDeVariableDeTrancheDeStock[v.area][v.layer];
+    }
+    int operator()(const PositiveUnsuppliedEnergy& v) const
+    {
+        return nativeOptimVar.NumeroDeVariableDefaillancePositive[v.index];
+    }
+    int operator()(const NegativeUnsuppliedEnergy& v) const
+    {
+        return nativeOptimVar.NumeroDeVariableDefaillanceNegative[v.index];
+    }
+
+private:
+    const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar;
+    const std::vector<int>& NumeroDeVariableStockFinal;
+    const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
+};
+} // namespace NewVariable
+
+class ConstraintBuilderData
+{
+public:
+    // ConstraintBuilderData() = delete;
+    // ConstraintBuilderData(const ConstraintBuilderData& other) = delete;
+    // ConstraintBuilderData(ConstraintBuilderData&&) = delete;
+
+    // explicit ConstraintBuilderData(ConstraintBuilderData& data) :
+    //  Pi(data.Pi),
+    //  Colonne(data.Colonne),
+    //  nombreDeContraintes(data.nombreDeContraintes),
+    //  nombreDeTermesDansLaMatriceDeContrainte(data.nombreDeTermesDansLaMatriceDeContrainte),
+    //  IndicesDebutDeLigne(data.IndicesDebutDeLigne),
+    //  CoefficientsDeLaMatriceDesContraintes(data.CoefficientsDeLaMatriceDesContraintes),
+    //  IndicesColonnes(data.IndicesColonnes),
+    //  NombreDeTermesAllouesDansLaMatriceDesContraintes(
+    //    data.NombreDeTermesAllouesDansLaMatriceDesContraintes),
+    //  NombreDeTermesDesLignes(data.NombreDeTermesDesLignes),
+    //  Sens(data.Sens),
+    //  IncrementDAllocationMatriceDesContraintes(data.IncrementDAllocationMatriceDesContraintes),
+    //  CorrespondanceVarNativesVarOptim(data.CorrespondanceVarNativesVarOptim),
+    //  NombreDePasDeTempsPourUneOptimisation(data.NombreDePasDeTempsPourUneOptimisation),
+    //  NumeroDeVariableStockFinal(data.NumeroDeVariableStockFinal),
+    //  NumeroDeVariableDeTrancheDeStock(data.NumeroDeVariableDeTrancheDeStock),
+    //  NomDesContraintes(data.NomDesContraintes),
+    //  NamedProblems(data.NamedProblems),
+    //  NomsDesPays(data.NomsDesPays),
+    //  weekInTheYear(data.weekInTheYear),
+    //  NombreDePasDeTemps(data.NombreDePasDeTemps)
+
+    // {
+    // }
+
+    // explicit ConstraintBuilderData(
+    //   std::vector<double>& Pi,
+    //   std::vector<int>& Colonne,
+    //   int& nombreDeContraintes,
+    //   int& nombreDeTermesDansLaMatriceDeContrainte,
+    //   std::vector<int>& IndicesDebutDeLigne,
+    //   std::vector<double>& CoefficientsDeLaMatriceDesContraintes,
+    //   std::vector<int>& IndicesColonnes,
+    //   int& NombreDeTermesAllouesDansLaMatriceDesContraintes,
+    //   std::vector<int>& NombreDeTermesDesLignes,
+    //   std::string& Sens,
+    //   int& IncrementDAllocationMatriceDesContraintes,
+    //   const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim,
+    //   const int32_t& NombreDePasDeTempsPourUneOptimisation,
+    //   const std::vector<int>& NumeroDeVariableStockFinal,
+    //   const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock,
+    //   std::vector<std::string>& NomDesContraintes,
+    //   const bool& NamedProblems,
+    //   const std::vector<const char*>& NomsDesPays,
+    //   const uint32_t& weekInTheYear,
+    //   const uint32_t& NombreDePasDeTemps);
+
+    std::vector<double>& Pi;
+    std::vector<int>& Colonne;
+    int& nombreDeContraintes;
+    int& nombreDeTermesDansLaMatriceDeContrainte;
+    std::vector<int>& IndicesDebutDeLigne;
+    std::vector<double>& CoefficientsDeLaMatriceDesContraintes;
+    std::vector<int>& IndicesColonnes;
+    int& NombreDeTermesAllouesDansLaMatriceDesContraintes; // TODO Check if ref is needed
+    std::vector<int>& NombreDeTermesDesLignes;
+    std::string& Sens;
+    int& IncrementDAllocationMatriceDesContraintes;
+    const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim;
+    const int32_t& NombreDePasDeTempsPourUneOptimisation;
+    const std::vector<int>& NumeroDeVariableStockFinal;
+    const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
+    std::vector<std::string>& NomDesContraintes;
+    const bool& NamedProblems;
+    const std::vector<const char*>& NomsDesPays;
+    const uint32_t& weekInTheYear;
+    const uint32_t& NombreDePasDeTemps;
+};
+class NewConstraintBuilder
+{
+public:
+    NewConstraintBuilder() = delete;
+    // NewConstraintBuilder(const NewConstraintBuilder& other) = delete;
+    NewConstraintBuilder(std::shared_ptr<NewConstraintBuilder>&& other) :
+     data(std::move(other->data))
+    {
+    }
+    explicit NewConstraintBuilder(std::shared_ptr<ConstraintBuilderData> data) :
+     data(std::move(data))
+    {
+    }
+    // explicit NewConstraintBuilder(std::shared_ptr<ConstraintBuilderData>& data) : data(data)
+    // {
+    // }
+
+    NewConstraintBuilder& updateHourWithinWeek(unsigned hour)
+    {
+        hourInWeek_ = hour;
+        return *this;
+    }
+
+private:
+    int getVariableIndex(const NewVariable::Variant& variable,
+                         int shift,
+                         bool wrap,
+                         int delta) const;
+
+public:
+    NewConstraintBuilder& include(NewVariable::Variant var,
+                                  double coeff,
+                                  int shift = 0,
+                                  bool wrap = false,
+                                  int delta = 0);
+
+    NewConstraintBuilder& operatorRHS(char op)
+    {
+        if (op == '<' || op == '=' || op == '>')
+        {
+            operator_ = op;
+        }
+        else
+            throw std::runtime_error("Invalid operator");
+
+        return *this;
+    }
+
+    NewConstraintBuilder& equalTo()
+    {
+        operator_ = '=';
+        return *this;
+    }
+    NewConstraintBuilder& lessThan()
+    {
+        operator_ = '<';
+        return *this;
+    }
+    NewConstraintBuilder& greaterThan()
+    {
+        operator_ = '>';
+        return *this;
+    }
+
+    void build();
+    int NumberOfVariables() const
+    {
+        return nombreDeTermes_;
+    }
+
+public:
+    std::shared_ptr<ConstraintBuilderData> data;
+
+private:
+    void OPT_ChargerLaContrainteDansLaMatriceDesContraintes();
+
+    void OPT_AugmenterLaTailleDeLaMatriceDesContraintes();
+
+    unsigned int hourInWeek_ = 0;
+
+    char operator_;
+    // double rhs_ = 0;
+    int nombreDeTermes_ = 0;
+    // ConstraintNamer ConstraintNameManager;
+};
+
+class NewConstraint
+{
+public:
+    NewConstraint() = delete;
+    // explicit NewConstraint(const NewConstraint& other) = delete;
+    explicit NewConstraint(std::shared_ptr<NewConstraintBuilder> builder) : builder(builder)
+    {
+    }
+    std::shared_ptr<NewConstraintBuilder> builder;
+};
+
+// #TODO move this function to a suitable place
+// Helper functions
+inline void new_exportPaliers(const PALIERS_THERMIQUES& PaliersThermiquesDuPays,
+                              std::shared_ptr<NewConstraintBuilder> constraintBuilder)
+{
+    for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
+    {
+        const int palier
+          = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+        constraintBuilder->include(NewVariable::DispatchableProduction(palier), -1.0);
+    }
+}
+
+class BindingConstraintData
+{
+public:
+    const char& TypeDeContrainteCouplante;
+    const int& NombreDInterconnexionsDansLaContrainteCouplante;
+    const std::vector<int>& NumeroDeLInterconnexion;
+    const std::vector<double>& PoidsDeLInterconnexion;
+    const std::vector<int>& OffsetTemporelSurLInterco;
+    const int& NombreDePaliersDispatchDansLaContrainteCouplante;
+    const std::vector<int>& PaysDuPalierDispatch;
+    const std::vector<int>& NumeroDuPalierDispatch;
+    const std::vector<double>& PoidsDuPalierDispatch;
+    const std::vector<int>& OffsetTemporelSurLePalierDispatch;
+    const char& SensDeLaContrainteCouplante;
+    const char* const& NomDeLaContrainteCouplante;
+    const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
+};
+
+struct StartUpCostsData
+{
+    const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
+};
