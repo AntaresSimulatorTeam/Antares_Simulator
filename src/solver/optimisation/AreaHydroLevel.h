@@ -4,8 +4,8 @@
 struct AreaHydroLevelData
 {
     std::vector<int>& NumeroDeContrainteDesNiveauxPays;
-    const bool SuiviNiveauHoraire;
-    const double PumpingRatio;
+    const bool& SuiviNiveauHoraire;
+    const double& PumpingRatio;
 };
 
 class AreaHydroLevel : private Constraint

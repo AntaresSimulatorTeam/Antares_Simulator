@@ -4,7 +4,7 @@ ConstraintBuilder GetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
   const PROBLEME_HEBDO* problemeHebdo,
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
-    ConstraintBuilderData data{ProblemeAResoudre->Pi,
+    ConstraintBuilderData data(ProblemeAResoudre->Pi,
                                ProblemeAResoudre->Colonne,
                                ProblemeAResoudre->NombreDeContraintes,
                                ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes,
@@ -23,7 +23,7 @@ ConstraintBuilder GetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
                                problemeHebdo->NamedProblems,
                                problemeHebdo->NomsDesPays,
                                problemeHebdo->weekInTheYear,
-                               problemeHebdo->NombreDePasDeTemps};
+                               problemeHebdo->NombreDePasDeTemps);
 
     return ConstraintBuilder(data);
 }

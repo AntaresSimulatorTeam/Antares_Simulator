@@ -15,8 +15,6 @@ void BindingConstraintDay::add(int cntCouplante, BindingConstraintDayData& data)
     while (pdtDebut < NombreDePasDeTempsPourUneOptimisation)
     {
         int jour = data.NumeroDeJourDuPasDeTemps[pdtDebut];
-        auto& CorrespondanceCntNativesCntOptimJournalieres
-          = data.CorrespondanceCntNativesCntOptimJournalieres[jour];
 
         for (int index = 0; index < nbInterco; index++)
         {
@@ -72,7 +70,7 @@ void BindingConstraintDay::add(int cntCouplante, BindingConstraintDayData& data)
             }
         }
 
-        CorrespondanceCntNativesCntOptimJournalieres
+        data.CorrespondanceCntNativesCntOptimJournalieres[jour]
           .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
           = builder.data.nombreDeContraintes;
 

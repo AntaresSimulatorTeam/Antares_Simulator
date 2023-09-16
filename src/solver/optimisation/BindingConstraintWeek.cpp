@@ -3,8 +3,6 @@
 void BindingConstraintWeek::add(int cntCouplante, BindingConstraintWeekData& data)
 {
     int semaine = builder.data.weekInTheYear;
-    auto& NumeroDeContrainteDesContraintesCouplantes
-      = data.NumeroDeContrainteDesContraintesCouplantes;
     if (data.TypeDeContrainteCouplante != CONTRAINTE_HEBDOMADAIRE)
         return;
 
@@ -69,7 +67,8 @@ void BindingConstraintWeek::add(int cntCouplante, BindingConstraintWeekData& dat
         char op = data.SensDeLaContrainteCouplante;
         builder.operatorRHS(op);
 
-        NumeroDeContrainteDesContraintesCouplantes[cntCouplante] = builder.data.nombreDeContraintes;
+        data.NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
+          = builder.data.nombreDeContraintes;
         // Name
         {
         ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.NamedProblems);

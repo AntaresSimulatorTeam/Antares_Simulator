@@ -47,12 +47,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
   bool Simulation)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
-    ConstraintBuilder builder(GetConstraintBuilderFromProblemHebdo(problemeHebdo));
+
+    ConstraintBuilder builder = GetConstraintBuilderFromProblemHebdo(problemeHebdo);
     int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-    std::vector<double>& Pi = ProblemeAResoudre->Pi;
-    std::vector<int>& Colonne = ProblemeAResoudre->Colonne;
+    // std::vector<double>& Pi = ProblemeAResoudre->Pi;
+    // std::vector<int>& Colonne = ProblemeAResoudre->Colonne;
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo->NamedProblems);
 
@@ -120,11 +121,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-                  = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+                // CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+                //   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 NbUnitsOutageLessThanNbUnitsStopData nbUnitsOutageLessThanNbUnitsStopData
-                  = {startUpCostsData,
-                     CorrespondanceCntNativesCntOptim
+                  = {startUpCostsData.PaliersThermiquesDuPays,
+                     problemeHebdo->CorrespondanceCntNativesCntOptim[pdt]
                        .NumeroDeContrainteDesContraintesDeDureeMinDeMarche};
                 nbUnitsOutageLessThanNbUnitsStop.add(
                   pays, palier, index, pdt, Simulation, nbUnitsOutageLessThanNbUnitsStopData);
@@ -151,11 +152,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-                  = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+                // CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+                //   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 NbDispUnitsMinBoundSinceMinUpTimeData nbDispUnitsMinBoundSinceMinUpTimeData
-                  = {startUpCostsData,
-                     CorrespondanceCntNativesCntOptim
+                  = {startUpCostsData.PaliersThermiquesDuPays,
+                     problemeHebdo->CorrespondanceCntNativesCntOptim[pdt]
                        .NumeroDeContrainteDesContraintesDeDureeMinDeMarche};
                 nbDispUnitsMinBoundSinceMinUpTime.add(
                   pays, palier, index, pdt, Simulation, nbDispUnitsMinBoundSinceMinUpTimeData);
@@ -177,11 +178,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-                  = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+                // CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+                //   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 MinDownTimeData minDownTimeData
-                  = {startUpCostsData,
-                     CorrespondanceCntNativesCntOptim
+                  = {startUpCostsData.PaliersThermiquesDuPays,
+                     problemeHebdo->CorrespondanceCntNativesCntOptim[pdt]
                        .NumeroDeContrainteDesContraintesDeDureeMinDArret};
 
                 minDownTime.add(pays, palier, index, pdt, Simulation, minDownTimeData);

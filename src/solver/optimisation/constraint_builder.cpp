@@ -1,9 +1,57 @@
 #include "constraint_builder.h"
 
+// for debug
+int Variable::Visitor::operator()(const NTCDirect& v) const
+{
+    return nativeOptimVar.NumeroDeVariableDeLInterconnexion[v.index];
+}
+
+ConstraintBuilderData::ConstraintBuilderData(
+  std::vector<double>& Pi,
+  std::vector<int>& Colonne,
+  int& nombreDeContraintes,
+  int& nombreDeTermesDansLaMatriceDeContrainte,
+  std::vector<int>& IndicesDebutDeLigne,
+  std::vector<double>& CoefficientsDeLaMatriceDesContraintes,
+  std::vector<int>& IndicesColonnes,
+  int& NombreDeTermesAllouesDansLaMatriceDesContraintes,
+  std::vector<int>& NombreDeTermesDesLignes,
+  std::string& Sens,
+  int& IncrementDAllocationMatriceDesContraintes,
+  const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim,
+  const int32_t& NombreDePasDeTempsPourUneOptimisation,
+  const std::vector<int>& NumeroDeVariableStockFinal,
+  const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock,
+  std::vector<std::string>& NomDesContraintes,
+  const bool& NamedProblems,
+  const std::vector<const char*>& NomsDesPays,
+  const uint32_t& weekInTheYear,
+  const uint32_t& NombreDePasDeTemps) :
+ Pi(Pi),
+ Colonne(Colonne),
+ nombreDeContraintes(nombreDeContraintes),
+ nombreDeTermesDansLaMatriceDeContrainte(nombreDeTermesDansLaMatriceDeContrainte),
+ IndicesDebutDeLigne(IndicesDebutDeLigne),
+ CoefficientsDeLaMatriceDesContraintes(CoefficientsDeLaMatriceDesContraintes),
+ IndicesColonnes(IndicesColonnes),
+ NombreDeTermesAllouesDansLaMatriceDesContraintes(NombreDeTermesAllouesDansLaMatriceDesContraintes),
+ NombreDeTermesDesLignes(NombreDeTermesDesLignes),
+ Sens(Sens),
+ IncrementDAllocationMatriceDesContraintes(IncrementDAllocationMatriceDesContraintes),
+ CorrespondanceVarNativesVarOptim(CorrespondanceVarNativesVarOptim),
+ NombreDePasDeTempsPourUneOptimisation(NombreDePasDeTempsPourUneOptimisation),
+ NumeroDeVariableStockFinal(NumeroDeVariableStockFinal),
+ NumeroDeVariableDeTrancheDeStock(NumeroDeVariableDeTrancheDeStock),
+ NomDesContraintes(NomDesContraintes),
+ NamedProblems(NamedProblems),
+ NomsDesPays(NomsDesPays),
+ weekInTheYear(weekInTheYear),
+ NombreDePasDeTemps(NombreDePasDeTemps)
+{
+}
+
 void ConstraintBuilder::build()
 {
-    std::vector<double>& Pi = data.Pi;
-    std::vector<int>& Colonne = data.Colonne;
     // TODO check operator_
     if (nombreDeTermes_ > 0)
     {
@@ -18,8 +66,8 @@ int ConstraintBuilder::getVariableIndex(const Variable::Variant& variable,
                                         bool wrap,
                                         int delta) const
 {
-    int pdt = hourInWeek_ + shift;
-    const int nbTimeSteps = data.NombreDePasDeTempsPourUneOptimisation;
+    auto pdt = hourInWeek_ + shift;
+    const auto nbTimeSteps = data.NombreDePasDeTempsPourUneOptimisation;
     // if (wrap)
     // {
     //     pdt %= nbTimeSteps;
@@ -42,6 +90,7 @@ int ConstraintBuilder::getVariableIndex(const Variable::Variant& variable,
             pdt = (pdt + delta) % nbTimeSteps;
         }
     }
+    // auto& a = data.CorrespondanceVarNativesVarOptim[pdt];
     const Variable::Visitor visitor(data.CorrespondanceVarNativesVarOptim[pdt],
                                     data.NumeroDeVariableStockFinal,
                                     data.NumeroDeVariableDeTrancheDeStock);
@@ -54,13 +103,11 @@ ConstraintBuilder& ConstraintBuilder::include(Variable::Variant var,
                                               bool wrap,
                                               int delta)
 {
-    std::vector<double>& Pi = data.Pi;
-    std::vector<int>& Colonne = data.Colonne;
     int varIndex = getVariableIndex(var, shift, wrap, delta);
     if (varIndex >= 0)
     {
-        Pi[nombreDeTermes_] = coeff;
-        Colonne[nombreDeTermes_] = varIndex;
+        data.Pi[nombreDeTermes_] = coeff;
+        data.Colonne[nombreDeTermes_] = varIndex;
         nombreDeTermes_++;
     }
     return *this;
@@ -68,27 +115,29 @@ ConstraintBuilder& ConstraintBuilder::include(Variable::Variant var,
 
 void ConstraintBuilder::OPT_ChargerLaContrainteDansLaMatriceDesContraintes()
 {
-    int& nombreDeContraintes = data.nombreDeContraintes;
-    int& nombreDeTermesDansLaMatriceDeContrainte = data.nombreDeTermesDansLaMatriceDeContrainte;
-    std::vector<double>& Pi = data.Pi;
-    std::vector<int>& Colonne = data.Colonne;
+    // int& nombreDeContraintes = data.nombreDeContraintes;
+    // int& nombreDeTermesDansLaMatriceDeContrainte = data.nombreDeTermesDansLaMatriceDeContrainte;
+    // std::vector<double>& Pi = data.Pi;
+    // std::vector<int>& Colonne = data.Colonne;
 
-    data.IndicesDebutDeLigne[nombreDeContraintes] = nombreDeTermesDansLaMatriceDeContrainte;
+    data.IndicesDebutDeLigne[data.nombreDeContraintes]
+      = data.nombreDeTermesDansLaMatriceDeContrainte;
     for (int i = 0; i < nombreDeTermes_; i++)
     {
-        data.CoefficientsDeLaMatriceDesContraintes[nombreDeTermesDansLaMatriceDeContrainte] = Pi[i];
-        data.IndicesColonnes[nombreDeTermesDansLaMatriceDeContrainte] = Colonne[i];
-        nombreDeTermesDansLaMatriceDeContrainte++;
-        if (nombreDeTermesDansLaMatriceDeContrainte
+        data.CoefficientsDeLaMatriceDesContraintes[data.nombreDeTermesDansLaMatriceDeContrainte]
+          = data.Pi[i];
+        data.IndicesColonnes[data.nombreDeTermesDansLaMatriceDeContrainte] = data.Colonne[i];
+        data.nombreDeTermesDansLaMatriceDeContrainte++;
+        if (data.nombreDeTermesDansLaMatriceDeContrainte
             == data.NombreDeTermesAllouesDansLaMatriceDesContraintes)
         {
             OPT_AugmenterLaTailleDeLaMatriceDesContraintes();
         }
     }
-    data.NombreDeTermesDesLignes[nombreDeContraintes] = nombreDeTermes_;
+    data.NombreDeTermesDesLignes[data.nombreDeContraintes] = nombreDeTermes_;
 
-    data.Sens[nombreDeContraintes] = operator_;
-    nombreDeContraintes++;
+    data.Sens[data.nombreDeContraintes] = operator_;
+    data.nombreDeContraintes++;
 
     return;
 }

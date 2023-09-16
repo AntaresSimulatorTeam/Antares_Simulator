@@ -4,8 +4,8 @@
 
 struct FinalStockExpressionData
 {
-    const int pdt;
-    const bool AccurateWaterValue;
+    const int& pdt;
+    const bool& AccurateWaterValue;
     std::vector<int>& NumeroDeContrainteExpressionStockFinal;
 };
 class FinalStockExpression : private Constraint

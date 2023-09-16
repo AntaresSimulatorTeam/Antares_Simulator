@@ -2,12 +2,12 @@
 #include "constraint_builder.h"
 struct HydroPowerData
 {
-    const bool presenceHydro;
-    const int TurbEntreBornes;
-    const bool presencePompage;
-    const int NombreDePasDeTempsPourUneOptimisation;
+    const bool& presenceHydro;
+    const int& TurbEntreBornes;
+    const bool& presencePompage;
+    const int& NombreDePasDeTempsPourUneOptimisation;
     std::vector<int>& NumeroDeContrainteEnergieHydraulique;
-    const double pumpingRatio;
+    const double& pumpingRatio;
 };
 
 class HydroPower : private Constraint

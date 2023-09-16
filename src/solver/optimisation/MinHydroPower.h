@@ -3,10 +3,10 @@
 
 struct MinHydroPowerData
 {
-    const bool presenceHydro;
-    const bool TurbEntreBornes;
-    const bool PresenceDePompageModulable;
-    const int NombreDePasDeTempsPourUneOptimisation;
+    const bool& presenceHydro;
+    const bool& TurbEntreBornes;
+    const bool& PresenceDePompageModulable;
+    const int& NombreDePasDeTempsPourUneOptimisation;
     std::vector<int>& NumeroDeContrainteMinEnergieHydraulique;
 };
 

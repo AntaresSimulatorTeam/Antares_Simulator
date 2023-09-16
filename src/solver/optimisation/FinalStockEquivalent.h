@@ -3,9 +3,9 @@
 
 struct FinalStockEquivalentData
 {
-    const int pdt;
-    const bool AccurateWaterValue;
-    const bool DirectLevelAccess;
+    const int& pdt;
+    const bool& AccurateWaterValue;
+    const bool& DirectLevelAccess;
     std::vector<int>& NumeroDeContrainteEquivalenceStockFinal;
 };
 

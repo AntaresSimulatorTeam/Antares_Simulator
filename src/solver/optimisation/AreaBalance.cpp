@@ -22,43 +22,45 @@ static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortT
 // Constraint definitions
 void AreaBalance::add(int pdt, int pays, AreaBalanceData& data)
 {
-    /** can be done without this --- keep it for now**/
-    data.NumeroDeContrainteDesBilansPays[pays] = builder.data.nombreDeContraintes;
+    // /** can be done without this --- keep it for now**/
+    // data.NumeroDeContrainteDesBilansPays[pays] = builder.data.nombreDeContraintes;
 
-    /******/
-    // TODO improve this
-    {
-        ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.NamedProblems);
-        namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
-        namer.UpdateArea(builder.data.NomsDesPays[pays]);
-        namer.AreaBalance(builder.data.nombreDeContraintes);
-    }
+    // /******/
+    // // TODO improve this
 
-    builder.updateHourWithinWeek(pdt);
+    // ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.NamedProblems);
+    // namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
+    // namer.UpdateArea(builder.data.NomsDesPays[pays]);
+    // namer.AreaBalance(builder.data.nombreDeContraintes);
 
-    int interco = data.IndexDebutIntercoOrigine[pays];
-    while (interco >= 0)
-    {
-        builder.include(Variable::NTCDirect(interco), 1.0);
-        interco = data.IndexSuivantIntercoOrigine[interco];
-    }
+    // builder.updateHourWithinWeek(pdt);
 
-    interco = data.IndexDebutIntercoExtremite[pays];
-    while (interco >= 0)
-    {
-        builder.include(Variable::NTCDirect(interco), -1.0);
-        interco = data.IndexSuivantIntercoExtremite[interco];
-    }
+    // int interco = data.IndexDebutIntercoOrigine[pays];
+    // while (interco >= 0)
+    // {
+    //     builder.include(Variable::NTCDirect(interco), 1.0);
+    //     interco = data.IndexSuivantIntercoOrigine[interco];
+    //     }
 
-    exportPaliers(data.PaliersThermiquesDuPays, builder);
-    builder.include(Variable::HydProd(pays), -1.0)
-      .include(Variable::Pumping(pays), 1.0)
-      .include(Variable::PositiveUnsuppliedEnergy(pays), -1.0)
-      .include(Variable::NegativeUnsuppliedEnergy(pays), 1.0);
+    // interco = data.IndexDebutIntercoExtremite[pays];
+    // while (interco >= 0)
+    // {
+    //     builder.include(Variable::NTCDirect(interco), -1.0);
+    //     interco = data.IndexSuivantIntercoExtremite[interco];
+    // }
 
-    shortTermStorageBalance(
-      data.ShortTermStorage[pays], builder, data.InjectionVariable, data.WithdrawalVariable);
+    // exportPaliers(data.PaliersThermiquesDuPays, builder);
+    // builder.include(Variable::HydProd(pays), -1.0)
+    //   .include(Variable::Pumping(pays), 1.0)
+    //   .include(Variable::PositiveUnsuppliedEnergy(pays), -1.0)
+    //   .include(Variable::NegativeUnsuppliedEnergy(pays), 1.0);
 
-    builder.equalTo();
-    builder.build();
+    // shortTermStorageBalance(
+    //   data.ShortTermStorage[pays], builder, data.InjectionVariable, data.WithdrawalVariable);
+
+    // builder.equalTo();
+    // builder.build();
+    logs.info() << "" << data.NumeroDeContrainteDesBilansPays[pays] << "\n";
+    int a = 13;
+    int b = a / 33;
 }

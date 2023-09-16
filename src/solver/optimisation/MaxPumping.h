@@ -2,7 +2,7 @@
 #include "constraint_builder.h"
 struct MaxPumpingData
 {
-    const bool PresenceDePompageModulable;
+    const bool& PresenceDePompageModulable;
     std::vector<int>& NumeroDeContrainteMaxPompage;
 };
 
