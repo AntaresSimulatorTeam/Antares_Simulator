@@ -234,6 +234,17 @@ ConstraintBuilder& ConstraintBuilder::FinalStorage(unsigned int index,
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::LayerStorage(unsigned area,
+                                                   unsigned layer,
+                                                   double coeff,
+                                                   int shift,
+                                                   bool wrap,
+                                                   int delta)
+{
+    AddVariable(GetVariableManager(shift, wrap, delta).LayerStorage(area, layer), coeff);
+    return *this;
+}
+
 int ConstraintBuilder::getVariableIndex(const Variable::Variables& variable,
                                         int shift,
                                         bool wrap,

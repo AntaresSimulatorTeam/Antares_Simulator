@@ -30,14 +30,6 @@ struct NegativeUnsuppliedEnergy : public SingleIndex
     using SingleIndex::SingleIndex;
 };
 
-struct LayerStorage
-{
-    LayerStorage(unsigned area, unsigned layer) : area(area), layer(layer)
-    {
-    }
-    unsigned area, layer;
-};
-
 class VariableManager
 {
 public:
@@ -141,13 +133,18 @@ public:
         return NumeroDeVariableStockFinal[index];
     }
 
+    int LayerStorage(unsigned area, unsigned layer) const
+    {
+        return NumeroDeVariableDeTrancheDeStock[area][layer];
+    }
+
 private:
     const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar;
     const std::vector<int>& NumeroDeVariableStockFinal;
     const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
 };
 
-using Variables = std::variant<LayerStorage, PositiveUnsuppliedEnergy, NegativeUnsuppliedEnergy>;
+using Variables = std::variant<PositiveUnsuppliedEnergy, NegativeUnsuppliedEnergy>;
 class ConstraintVisitor
 {
 public:
@@ -160,10 +157,6 @@ public:
     {
     }
 
-    int operator()(const LayerStorage& v) const
-    {
-        return NumeroDeVariableDeTrancheDeStock[v.area][v.layer];
-    }
     int operator()(const PositiveUnsuppliedEnergy& v) const
     {
         return nativeOptimVar.NumeroDeVariableDefaillancePositive[v.index];
@@ -315,6 +308,12 @@ public:
                                 int delta = 0);
 
     ConstraintBuilder& FinalStorage(unsigned int index,
+                                    double coeff,
+                                    int shift = 0,
+                                    bool wrap = false,
+                                    int delta = 0);
+    ConstraintBuilder& LayerStorage(unsigned area,
+                                    unsigned layer,
                                     double coeff,
                                     int shift = 0,
                                     bool wrap = false,
