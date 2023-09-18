@@ -37,7 +37,7 @@ class LinearProblemMatrixBuilder
 public:
     explicit LinearProblemMatrixBuilder(PROBLEME_HEBDO* problemeHebdo,
                                         Solver::IResultWriter& writer) :
-     problemeHebdo_(problemeHebdo_), writer_(writer_), group1_(problemeHebdo)
+     problemeHebdo_(problemeHebdo), writer_(writer), group1_(problemeHebdo)
     {
         constraintgroups_.push_back(&group1_);
     }
