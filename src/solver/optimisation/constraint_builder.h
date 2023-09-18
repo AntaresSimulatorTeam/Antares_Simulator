@@ -21,11 +21,6 @@ struct SingleIndex
     unsigned index;
 };
 
-struct ShortTermStorageLevel : public SingleIndex
-{
-    using SingleIndex::SingleIndex;
-};
-
 struct HydProd : public SingleIndex
 {
     using SingleIndex::SingleIndex;
@@ -70,18 +65,6 @@ struct LayerStorage
     }
     unsigned area, layer;
 };
-
-using Variables = std::variant<ShortTermStorageLevel,
-                               HydProd,
-                               HydProdDown,
-                               HydProdUp,
-                               Pumping,
-                               HydroLevel,
-                               Overflow,
-                               FinalStorage,
-                               LayerStorage,
-                               PositiveUnsuppliedEnergy,
-                               NegativeUnsuppliedEnergy>;
 
 class VariableManager
 {
@@ -146,11 +129,27 @@ public:
         return nativeOptimVar.SIM_ShortTermStorage.WithdrawalVariable[index];
     }
 
+    int ShortTermStorageLevel(unsigned int index) const
+    {
+        return nativeOptimVar.SIM_ShortTermStorage.LevelVariable[index];
+    }
+
 private:
     const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar;
     const std::vector<int>& NumeroDeVariableStockFinal;
     const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
 };
+
+using Variables = std::variant<HydProd,
+                               HydProdDown,
+                               HydProdUp,
+                               Pumping,
+                               HydroLevel,
+                               Overflow,
+                               FinalStorage,
+                               LayerStorage,
+                               PositiveUnsuppliedEnergy,
+                               NegativeUnsuppliedEnergy>;
 class ConstraintVisitor
 {
 public:
@@ -163,10 +162,6 @@ public:
     {
     }
 
-    int operator()(const ShortTermStorageLevel& v) const
-    {
-        return nativeOptimVar.SIM_ShortTermStorage.LevelVariable[v.index];
-    }
     int operator()(const HydProd& v) const
     {
         return nativeOptimVar.NumeroDeVariablesDeLaProdHyd[v.index];
@@ -302,6 +297,12 @@ public:
                                          int delta = 0);
 
     ConstraintBuilder& ShortTermStorageWithdrawal(unsigned int index,
+                                                  double coeff,
+                                                  int shift = 0,
+                                                  bool wrap = false,
+                                                  int delta = 0);
+
+    ConstraintBuilder& ShortTermStorageLevel(unsigned int index,
                                                   double coeff,
                                                   int shift = 0,
                                                   bool wrap = false,

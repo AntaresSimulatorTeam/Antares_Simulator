@@ -27,12 +27,9 @@ void ShortTermStorageLevel::add(int pdt, int pays)
         CorrespondanceCntNativesCntOptim.ShortTermStorageLevelConstraint[index]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
-        builder.include(Variable::ShortTermStorageLevel(index), 1.0)
-          .include(Variable::ShortTermStorageLevel(index),
-                   -1.0,
-                   -1,
-                   true,
-                   problemeHebdo->NombreDePasDeTempsPourUneOptimisation)
+        builder.ShortTermStorageLevel(index, 1.0)
+          .ShortTermStorageLevel(
+            index, -1.0, -1, true, problemeHebdo->NombreDePasDeTempsPourUneOptimisation)
           .ShortTermStorageInjection(index, -1.0 * storage.efficiency)
           .ShortTermStorageWithdrawal(index, 1.0)
           .equalTo()
