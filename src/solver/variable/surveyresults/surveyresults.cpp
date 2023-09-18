@@ -503,11 +503,6 @@ SurveyResults::SurveyResults(const Data::Study& s,
     logs.debug() << "  (for " << maxVariables << " columns)";
 
     data.initialize(maxVariables);
-    // logs.debug() << "  :: survey results: allocating "
-    //	<< (uint64)((data.matrix.memoryUsage() + sizeof(values))
-    //		+ sizeof(double) * maxHoursInAYear * 3
-    //		+ sizeof(PrecisionType) * maxVariables) / 1024
-    //	<< " Ko";
 
     // values
     typedef double* ValueType;

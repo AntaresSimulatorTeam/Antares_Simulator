@@ -171,8 +171,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-    ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
-                                    problemeHebdo->NamedProblems);
+    ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes);
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {

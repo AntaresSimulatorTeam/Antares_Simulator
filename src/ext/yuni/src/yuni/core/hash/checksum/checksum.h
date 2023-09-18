@@ -63,7 +63,7 @@ public:
     *length
     ** \return The hash value
     */
-    virtual const String& fromRawData(const void* rawdata, uint64 size = AutoDetectNullChar) = 0;
+    virtual const String& fromRawData(const void* rawdata, uint64_t size = AutoDetectNullChar) = 0;
 
     /*!
     ** \brief Compute the hash of a given file

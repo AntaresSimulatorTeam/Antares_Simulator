@@ -95,7 +95,7 @@ public:
         DecoratorType::template buildDigest<VCardT>(results, digestLevel, dataLevel);
     }
 
-    Yuni::uint64 memoryUsage() const
+    uint64_t memoryUsage() const
     {
         return DecoratorType::memoryUsage();
     }

@@ -168,7 +168,7 @@ bool StudyHasBeenModified();
 ** if he study has been modified between two points in time
 ** if this value is different.
 */
-Yuni::uint64 StudyInMemoryRevisionID();
+uint64_t StudyInMemoryRevisionID();
 
 /*!
 ** \brief Refresh the list of all available outputs

@@ -151,7 +151,7 @@ public:
                                  int precision,
                                  uint numSpace) const;
 
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     template<class I>
     static void provideInformations(I& infos);

@@ -42,10 +42,10 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class ATimeSeries : public Renderer::Matrix<double, Yuni::sint32>, public Renderer::ARendererArea
+class ATimeSeries : public Renderer::Matrix<double, int32_t>, public Renderer::ARendererArea
 {
 public:
-    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
+    using AncestorType = Renderer::Matrix<double, int32_t>;
 
 public:
     ATimeSeries(wxWindow* control, Toolbox::InputSelector::Area* notifier);
@@ -117,7 +117,7 @@ protected:
 class TimeSeriesLoad final : public ATimeSeries
 {
 public:
-    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
+    using AncestorType = Renderer::Matrix<double, int32_t>;
 
 public:
     TimeSeriesLoad(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -155,7 +155,7 @@ protected:
 class TimeSeriesSolar final : public ATimeSeries
 {
 public:
-    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
+    using AncestorType = Renderer::Matrix<double, int32_t>;
 
 public:
     TimeSeriesSolar(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -193,7 +193,7 @@ protected:
 class TimeSeriesWind final : public ATimeSeries
 {
 public:
-    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
+    using AncestorType = Renderer::Matrix<double, int32_t>;
 
 public:
     TimeSeriesWind(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -231,7 +231,7 @@ protected:
 class TimeSeriesHydroFatal final : public ATimeSeries
 {
 public:
-    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
+    using AncestorType = Renderer::Matrix<double, int32_t>;
 
 public:
     TimeSeriesHydroFatal(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -264,7 +264,7 @@ protected:
 class TimeSeriesHydroMod final : public ATimeSeries
 {
 public:
-    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
+    using AncestorType = Renderer::Matrix<double, int32_t>;
 
 public:
     TimeSeriesHydroMod(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -303,7 +303,7 @@ protected:
 class TimeSeriesHydroMinGen final : public ATimeSeries
 {
 public:
-    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
+    using AncestorType = Renderer::Matrix<double, int32_t>;
 
     TimeSeriesHydroMinGen(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
      ATimeSeries(control, notifier)

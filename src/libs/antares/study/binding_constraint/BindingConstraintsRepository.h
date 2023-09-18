@@ -51,12 +51,6 @@ public:
     template<class PredicateT>
     void each(const PredicateT& predicate) const;
 
-    /*!
-    ** \brief Iterate through all enabled constraints (const)
-    */
-    template<class PredicateT>
-    void eachActive(const PredicateT& predicate) const;
-
     iterator begin();
     [[nodiscard]] const_iterator begin() const;
 
@@ -142,7 +136,7 @@ public:
     /*!
     ** \brief Get the memory usage
     */
-    [[nodiscard]] yuint64 memoryUsage() const;
+    [[nodiscard]] uint64_t memoryUsage() const;
 
     /*!
     ** \brief Invalidate all matrices of all binding constraints

@@ -104,9 +104,9 @@ private:
         periodM = 397,
     };
     //! State vector
-    mutable Yuni::uint32 mt[periodN];
+    mutable uint32_t mt[periodN];
     //
-    mutable Yuni::sint32 mti;
+    mutable int32_t mti;
 
 }; // class MersenneTwister
 

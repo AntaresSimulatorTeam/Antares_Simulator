@@ -229,7 +229,7 @@ public:
     //! \name Memory management
     //@{
     //! Get the amount of memory currently used by the class
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
     //@}
 
 private:

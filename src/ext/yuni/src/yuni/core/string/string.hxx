@@ -120,25 +120,25 @@ inline CString<ChunkSizeT, ExpandableT>::CString(bool value)
 }
 
 template<uint ChunkSizeT, bool ExpandableT>
-inline CString<ChunkSizeT, ExpandableT>::CString(yint64 value)
+inline CString<ChunkSizeT, ExpandableT>::CString(int64_t value)
 {
     assign(value);
 }
 
 template<uint ChunkSizeT, bool ExpandableT>
-inline CString<ChunkSizeT, ExpandableT>::CString(yint32 value)
+inline CString<ChunkSizeT, ExpandableT>::CString(int32_t value)
 {
     assign(value);
 }
 
 template<uint ChunkSizeT, bool ExpandableT>
-inline CString<ChunkSizeT, ExpandableT>::CString(yuint64 value)
+inline CString<ChunkSizeT, ExpandableT>::CString(uint64_t value)
 {
     assign(value);
 }
 
 template<uint ChunkSizeT, bool ExpandableT>
-inline CString<ChunkSizeT, ExpandableT>::CString(yuint32 value)
+inline CString<ChunkSizeT, ExpandableT>::CString(uint32_t value)
 {
     assign(value);
 }

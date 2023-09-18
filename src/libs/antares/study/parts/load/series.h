@@ -55,12 +55,12 @@ public:
     **
     ** Merely a matrix of TimeSeriesCount * 8760 values
     */
-    Matrix<double, Yuni::sint32> timeSeries;
+    Matrix<double, int32_t> timeSeries;
 
     /*!
     ** \brief Monte-Carlo
     */
-    Matrix<Yuni::uint32> timeseriesNumbers;
+    Matrix<uint32_t> timeseriesNumbers;
 
 }; /* class DataSeriesLoad */
 
@@ -92,7 +92,7 @@ int DataSeriesLoadSaveToFolder(DataSeriesLoad* d, const AreaName& areaID, const 
 /*!
 ** \brief Get the size (bytes) in memory occupied by a `DataSeriesLoad` structure
 */
-Yuni::uint64 DataSeriesLoadMemoryUsage(DataSeriesLoad* w);
+uint64_t DataSeriesLoadMemoryUsage(DataSeriesLoad* w);
 
 } // namespace Data
 } // namespace Antares

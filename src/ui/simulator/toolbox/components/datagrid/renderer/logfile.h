@@ -105,7 +105,7 @@ public:
     //! The total number of lines
     uint lines;
     //! Size
-    Yuni::uint64 size;
+    uint64_t size;
     //! All entries
     LogEntry::Vector entries;
     //! The longest line

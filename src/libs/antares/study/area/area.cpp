@@ -157,9 +157,9 @@ const AreaLink* Area::findExistingLinkWith(const Area& with) const
     return nullptr;
 }
 
-Yuni::uint64 Area::memoryUsage() const
+uint64_t Area::memoryUsage() const
 {
-    Yuni::uint64 ret = 0;
+    uint64_t ret = 0;
 
     // Misc gen. (previously called Fatal hors hydro)
     ret += miscGen.valuesMemoryUsage();

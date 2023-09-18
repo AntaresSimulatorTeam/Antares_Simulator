@@ -47,7 +47,7 @@ class AreaScratchpad final
 {
 public:
     //! Matrix used for time-series
-    using TSMatrix = Matrix<double, Yuni::sint32>;
+    using TSMatrix = Matrix<double, int32_t>;
 
     //! \name Constructor
     //@{

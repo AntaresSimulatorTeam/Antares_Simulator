@@ -134,7 +134,7 @@ public:
         void markAsModified();
 
         //! Get the amount of memory currently used
-        yuint64 memoryUsage() const;
+        uint64_t memoryUsage() const;
 
     public:
         //! Filename/folder to consider if some data should be loaded
@@ -167,7 +167,7 @@ public:
         unsigned estimatedSize[2];
 
         //! Timestamp of the last modification
-        Yuni::sint64 lastModification;
+        int64_t lastModification;
 
     }; // class Informations
 

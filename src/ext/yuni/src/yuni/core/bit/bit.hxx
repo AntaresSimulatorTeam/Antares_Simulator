@@ -15,10 +15,10 @@ namespace Yuni
 {
 namespace Bit
 {
-inline yuint32 Count(yuint32 i)
+inline uint32_t Count(uint32_t i)
 {
 #ifdef YUNI_HAS_GCC_BUILTIN_POPCOUNT
-    return static_cast<yuint32>(__builtin_popcount(i));
+    return static_cast<uint32_t>(__builtin_popcount(i));
 #else
     // variable-precision SWAR algorithm
     i = i - ((i >> 1) & 0x55555555);
