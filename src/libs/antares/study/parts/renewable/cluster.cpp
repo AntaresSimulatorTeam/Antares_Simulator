@@ -97,6 +97,19 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
         parentArea->forceReload();
 }
 
+const std::map < RenewableCluster::RenewableGroup, const char* > groupToName =
+{
+    {RenewableCluster::thermalSolar, "solar thermal"},
+    {RenewableCluster::PVSolar, "solar pv"},
+    {RenewableCluster::rooftopSolar, "solar rooftop"},
+    {RenewableCluster::windOnShore, "wind onshore"},
+    {RenewableCluster::windOffShore,"wind offshore"},
+    {RenewableCluster::renewableOther1, "other res 1"},
+    {RenewableCluster::renewableOther2, "other res 2"},
+    {RenewableCluster::renewableOther3, "other res 3"},
+    {RenewableCluster::renewableOther4, "other res 4"}
+};
+
 void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
 {
     if (newgrp.empty())
@@ -108,51 +121,15 @@ void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
     pGroup = newgrp;
     boost::to_lower(newgrp);
 
-    if (newgrp == "solar thermal")
+    for (const auto& [group, name] : groupToName)
     {
-        groupID = thermalSolar;
-        return;
+        if (newgrp == name)
+        {
+            groupID = group;
+            return;
+        }        
     }
-    if (newgrp == "solar pv")
-    {
-        groupID = PVSolar;
-        return;
-    }
-    if (newgrp == "solar rooftop")
-    {
-        groupID = rooftopSolar;
-        return;
-    }
-    if (newgrp == "wind onshore")
-    {
-        groupID = windOnShore;
-        return;
-    }
-    if (newgrp == "wind offshore")
-    {
-        groupID = windOffShore;
-        return;
-    }
-    if (newgrp == "other renewable 1")
-    {
-        groupID = renewableOther1;
-        return;
-    }
-    if (newgrp == "other renewable 2")
-    {
-        groupID = renewableOther2;
-        return;
-    }
-    if (newgrp == "other renewable 3")
-    {
-        groupID = renewableOther3;
-        return;
-    }
-    if (newgrp == "other renewable 4")
-    {
-        groupID = renewableOther4;
-        return;
-    }
+
     // assigning a default value
     groupID = renewableOther1;
 }
@@ -194,34 +171,6 @@ bool Data::RenewableCluster::integrityCheck()
         ret = false;
     }
     return ret;
-}
-
-const char* Data::RenewableCluster::GroupName(enum RenewableGroup grp)
-{
-    switch (grp)
-    {
-    case windOffShore:
-        return "Wind offshore";
-    case windOnShore:
-        return "Wind onshore";
-    case thermalSolar:
-        return "Solar thermal";
-    case PVSolar:
-        return "Solar PV";
-    case rooftopSolar:
-        return "Solar rooftop";
-    case renewableOther1:
-        return "Other RES 1";
-    case renewableOther2:
-        return "Other RES 2";
-    case renewableOther3:
-        return "Other RES 3";
-    case renewableOther4:
-        return "Other RES 4";
-    case groupMax:
-        return "";
-    }
-    return "";
 }
 
 bool Data::RenewableCluster::setTimeSeriesModeFromString(const YString& value)
