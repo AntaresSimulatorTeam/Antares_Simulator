@@ -24,12 +24,12 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include "opt_structure_probleme_a_resoudre.h"
+
+#include "LinearProblemMatrixBuilder.h"
 #include "opt_export_structure.h"
 #include "../utils/filename.h"
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"
-#include "sim_structure_probleme_economique.h"
 #include "AreaBalance.h"
 #include "FictitiousLoad.h"
 #include "ShortTermStorageLevel.h"
@@ -50,20 +50,16 @@
 #include "new_constraint_builder_utils.h"
 #include "Group1.h"
 
-#include <antares/study.h>
-
 using namespace Antares::Data;
-
-void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo, Solver::IResultWriter& writer)
+void LinearProblemMatrixBuilder::Run()
 {
     int var;
 
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre.get();
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
-
-    int nombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
+    int nombreDePasDeTempsDUneJournee = problemeHebdo_->NombreDePasDeTempsDUneJournee;
     int nombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+      = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
 
     std::vector<double>& Pi = ProblemeAResoudre->Pi;
     std::vector<int>& Colonne = ProblemeAResoudre->Colonne;
@@ -71,30 +67,30 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
-                                    problemeHebdo->NamedProblems);
+                                    problemeHebdo_->NamedProblems);
 
-    BindingConstraintDay bindingConstraintDay(problemeHebdo);
-    BindingConstraintWeek bindingConstraintWeek(problemeHebdo);
-    HydroPower hydroPower(problemeHebdo);
-    HydroPowerSmoothingUsingVariationSum hydroPowerSmoothingUsingVariationSum(problemeHebdo);
+    BindingConstraintDay bindingConstraintDay(problemeHebdo_);
+    BindingConstraintWeek bindingConstraintWeek(problemeHebdo_);
+    HydroPower hydroPower(problemeHebdo_);
+    HydroPowerSmoothingUsingVariationSum hydroPowerSmoothingUsingVariationSum(problemeHebdo_);
     HydroPowerSmoothingUsingVariationMaxDown hydroPowerSmoothingUsingVariationMaxDown(
-      problemeHebdo);
-    HydroPowerSmoothingUsingVariationMaxUp hydroPowerSmoothingUsingVariationMaxUp(problemeHebdo);
+      problemeHebdo_);
+    HydroPowerSmoothingUsingVariationMaxUp hydroPowerSmoothingUsingVariationMaxUp(problemeHebdo_);
 
-    MinHydroPower minHydroPower(problemeHebdo);
-    MaxHydroPower maxHydroPower(problemeHebdo);
+    MinHydroPower minHydroPower(problemeHebdo_);
+    MaxHydroPower maxHydroPower(problemeHebdo_);
 
-    MaxPumping maxPumping(problemeHebdo);
+    MaxPumping maxPumping(problemeHebdo_);
 
-    AreaHydroLevel areaHydroLevel(problemeHebdo);
+    AreaHydroLevel areaHydroLevel(problemeHebdo_);
 
-    FinalStockEquivalent finalStockEquivalent(problemeHebdo);
-    FinalStockExpression finalStockExpression(problemeHebdo);
+    FinalStockEquivalent finalStockEquivalent(problemeHebdo_);
+    FinalStockExpression finalStockExpression(problemeHebdo_);
 
-    Group1 group1(problemeHebdo);
+    Group1 group1(problemeHebdo_);
     group1.Build();
 
-    for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+    for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
          cntCouplante++)
     {
         bindingConstraintDay.add(cntCouplante);
@@ -103,37 +99,38 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     if (nombreDePasDeTempsPourUneOptimisation > nombreDePasDeTempsDUneJournee)
     {
         CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondanceCntNativesCntOptimHebdomadaires
-          = problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires;
-        for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+          = problemeHebdo_->CorrespondanceCntNativesCntOptimHebdomadaires;
+        for (uint32_t cntCouplante = 0;
+             cntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
             bindingConstraintWeek.add(cntCouplante);
         }
     }
 
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
         hydroPower.add(pays);
     }
 
-    if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
+    if (problemeHebdo_->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
     {
-        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
         {
-            if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
+            if (!problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
                 continue;
 
             hydroPowerSmoothingUsingVariationSum.add(pays);
         }
     }
-    else if (problemeHebdo->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
+    else if (problemeHebdo_->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
     {
-        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
         {
-            if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
+            if (!problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
                 continue;
 
-            constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            constraintNamer.UpdateArea(problemeHebdo_->NomsDesPays[pays]);
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 hydroPowerSmoothingUsingVariationMaxDown.add(pays, pdt);
@@ -142,51 +139,52 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         }
     }
 
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
         minHydroPower.add(pays);
 
         maxHydroPower.add(pays);
     }
 
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
         maxPumping.add(pays);
     }
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
-        const auto& CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+        const auto& CorrespondanceVarNativesVarOptim
+          = problemeHebdo_->CorrespondanceVarNativesVarOptim[pdt];
         CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-            = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+          = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt];
 
-        int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+        int timeStepInYear = problemeHebdo_->weekInTheYear * 168 + pdt;
         constraintNamer.UpdateTimeStep(timeStepInYear);
-        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
         {
             areaHydroLevel.add(pays, pdt);
         }
     }
 
     /* For each area with ad hoc properties, two possible sets of two additional constraints */
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
         finalStockEquivalent.add(pays);
 
         finalStockExpression.add(pays);
     }
 
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+    if (problemeHebdo_->OptimisationAvecCoutsDeDemarrage)
     {
-        OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
+        OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo_,
                                                                                 false);
     }
 
     // Export structure
-    if (problemeHebdo->ExportStructure && problemeHebdo->firstWeekOfSimulation)
+    if (problemeHebdo_->ExportStructure && problemeHebdo_->firstWeekOfSimulation)
     {
-        OPT_ExportInterco(writer, problemeHebdo);
-        OPT_ExportAreaName(writer, problemeHebdo->NomsDesPays);
+        OPT_ExportInterco(writer_, problemeHebdo_);
+        OPT_ExportAreaName(writer_, problemeHebdo_->NomsDesPays);
     }
 
     return;

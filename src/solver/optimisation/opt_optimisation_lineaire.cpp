@@ -30,7 +30,7 @@
 
 #include <antares/logs/logs.h>
 #include "../utils/filename.h"
-
+#include "LinearProblemMatrixBuilder.h"
 using namespace Antares;
 using namespace Yuni;
 using Antares::Solver::Optimization::OptimizationOptions;
@@ -159,7 +159,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(problemeHebdo);
 
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(problemeHebdo, writer);
+    LinearProblemMatrixBuilder(problemeHebdo, writer).Run();
 
     bool ret = runWeeklyOptimization(
       options, problemeHebdo, adqPatchParams, writer, PREMIERE_OPTIMISATION);

@@ -20,7 +20,6 @@ set(RTESOLVER_OPT
 		opt_construction_variables_optimisees_quadratique.cpp
 		opt_decompte_variables_et_contraintes.cpp
 		opt_construction_matrice_des_contraintes_cas_quadratique.cpp
-		opt_construction_matrice_des_contraintes_cas_lineaire.cpp
 		opt_construction_matrice_des_contraintes_outils.cpp
 		opt_gestion_des_bornes_cas_lineaire.cpp
 		opt_verification_presence_reserve_jmoins1.cpp
@@ -126,6 +125,8 @@ set(RTESOLVER_OPT
 		MinDownTime.h
 		MinDownTime.cpp
 
+		LinearProblemMatrixBuilder.h
+		LinearProblemMatrixBuilder.cpp
 		ConstraintGroup.h
 		Group1.h
 		Group1.cpp
