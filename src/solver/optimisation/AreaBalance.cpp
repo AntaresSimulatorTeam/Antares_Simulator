@@ -62,7 +62,7 @@ void AreaBalance::add(int pdt, int pays)
 
     exportPaliers(*problemeHebdo, builder, pays);
     builder.HydProd(pays, -1.0)
-      .include(Variable::Pumping(pays), 1.0)
+      .Pumping(pays, 1.0)
       .include(Variable::PositiveUnsuppliedEnergy(pays), -1.0)
       .include(Variable::NegativeUnsuppliedEnergy(pays), 1.0);
 
