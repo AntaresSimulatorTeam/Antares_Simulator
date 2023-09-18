@@ -35,7 +35,6 @@
 #include "ShortTermStorageLevel.h"
 #include "FlowDissociation.h"
 #include "BindingConstraintHour.h"
-#include "BindingConstraintDay.h"
 #include "BindingConstraintWeek.h"
 #include "HydroPower.h"
 #include "HydroPowerSmoothingUsingVariationSum.h"
@@ -69,7 +68,6 @@ void LinearProblemMatrixBuilder::Run()
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo_->NamedProblems);
 
-    BindingConstraintDay bindingConstraintDay(problemeHebdo_);
     BindingConstraintWeek bindingConstraintWeek(problemeHebdo_);
     HydroPower hydroPower(problemeHebdo_);
     HydroPowerSmoothingUsingVariationSum hydroPowerSmoothingUsingVariationSum(problemeHebdo_);
@@ -90,12 +88,6 @@ void LinearProblemMatrixBuilder::Run()
     for (auto& group : constraintgroups_)
     {
         group->Build();
-    }
-
-    for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
-         cntCouplante++)
-    {
-        bindingConstraintDay.add(cntCouplante);
     }
 
     if (nombreDePasDeTempsPourUneOptimisation > nombreDePasDeTempsDUneJournee)

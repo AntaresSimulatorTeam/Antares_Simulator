@@ -130,6 +130,8 @@ set(RTESOLVER_OPT
 		ConstraintGroup.h
 		Group1.h
 		Group1.cpp
+		BindingConstraintDayGroup.h
+		BindingConstraintDayGroup.cpp
 
 	)
 

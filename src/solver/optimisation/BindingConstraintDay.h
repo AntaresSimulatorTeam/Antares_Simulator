@@ -1,9 +1,19 @@
 #pragma once
-#include "constraint_builder.h"
+#include "new_constraint_builder.h"
 
-class BindingConstraintDay : private Constraint
+struct BindingConstraintDayData : public BindingConstraintData
+{
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES>&
+      CorrespondanceCntNativesCntOptimJournalieres;
+
+    const int32_t& NombreDePasDeTempsDUneJournee;
+
+    std::vector<int32_t>& NumeroDeJourDuPasDeTemps;
+};
+
+class BindingConstraintDay : private NewConstraint
 {
 public:
-    using Constraint::Constraint;
-    void add(int cntCouplante);
+    using NewConstraint::NewConstraint;
+    void add(int cntCouplante, std::shared_ptr<BindingConstraintDayData> data);
 };

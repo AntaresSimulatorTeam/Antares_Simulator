@@ -28,6 +28,7 @@
 #include "sim_structure_probleme_economique.h"
 #include "ConstraintGroup.h"
 #include "Group1.h"
+#include "BindingConstraintDayGroup.h"
 
 #include <antares/study.h>
 
@@ -37,15 +38,19 @@ class LinearProblemMatrixBuilder
 public:
     explicit LinearProblemMatrixBuilder(PROBLEME_HEBDO* problemeHebdo,
                                         Solver::IResultWriter& writer) :
-     problemeHebdo_(problemeHebdo), writer_(writer), group1_(problemeHebdo)
+     problemeHebdo_(problemeHebdo),
+     writer_(writer),
+     group1_(problemeHebdo),
+     bindingConstraintDayGroup_(problemeHebdo)
     {
-        constraintgroups_.push_back(&group1_);
+        constraintgroups_ = {&group1_, &bindingConstraintDayGroup_};
     }
 
     void Run();
 
 private:
     Group1 group1_;
+    BindingConstraintDayGroup bindingConstraintDayGroup_;
     std::vector<ConstraintGroup*> constraintgroups_;
     PROBLEME_HEBDO* problemeHebdo_;
     Solver::IResultWriter& writer_;
