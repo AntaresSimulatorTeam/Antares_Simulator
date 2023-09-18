@@ -34,12 +34,9 @@ using namespace Antares;
 using namespace Antares::Data;
 
 void ApplyRandomTSnumbers(const Study& study,
+                          unsigned int year,
                           uint numSpace)
 {
-    auto& runtime = *study.runtime;
-
-    uint year = runtime.timeseriesNumberYear[numSpace];
-
     // each area
     const unsigned int count = study.areas.size();
     for (unsigned int areaIndex = 0; areaIndex != count; ++areaIndex)
@@ -126,9 +123,9 @@ void ApplyRandomTSnumbers(const Study& study,
     // Transmission capacities
     // ------------------------------
     // each link
-    for (unsigned int linkIndex = 0; linkIndex < runtime.interconnectionsCount(); ++linkIndex)
+    for (unsigned int linkIndex = 0; linkIndex < study.runtime->interconnectionsCount(); ++linkIndex)
     {
-        AreaLink* link = runtime.areaLink[linkIndex];
+        AreaLink* link = study.runtime->areaLink[linkIndex];
         assert(year < link->timeseriesNumbers.height);
         NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION& ptchro
           = NumeroChroniquesTireesParInterconnexion[numSpace][linkIndex];

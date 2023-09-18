@@ -152,7 +152,7 @@ private:
 
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
-            ApplyRandomTSnumbers(study, numSpace);
+            ApplyRandomTSnumbers(study, y, numSpace);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
             simulation_->prepareClustersInMustRunMode(numSpace);
@@ -160,8 +160,10 @@ private:
             // 4 - Hydraulic ventilation
             {
                 Benchmarking::Timer timer;
-                simulation_->pHydroManagement(randomReservoirLevel, state[numSpace], y,
-                                              numSpace, simulation_->valeursGenereesParPays);
+                simulation_->hydroManagement.makeVentilation(randomReservoirLevel, 
+                                                             state[numSpace], 
+                                                             y,
+                                                             numSpace);
                 timer.stop();
                 pDurationCollector->addDuration("hydro_ventilation", timer.get_duration());
             }
@@ -183,7 +185,7 @@ private:
                                                randomForCurrentYear,
                                                failedWeekList,
                                                isFirstPerformedYearOfSimulation,
-                                               simulation_->valeursGenereesParPays);
+                                               simulation_->hydroManagement.ventilationResults());
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
@@ -225,41 +227,21 @@ private:
     } // End of onExecute() method
 };
 
-static void allocateValeursGenereesParPays(VAL_GEN_PAR_PAYS& val,
-                                           const Data::Study& study)
-{
-    uint nbDaysPerYear = 365;
-    val.resize(study.maxNbYearsInParallel);
-    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
-    {
-        val[numSpace].resize(study.areas.size());
-        for (uint areaIndex = 0; areaIndex < study.areas.size(); ++areaIndex)
-        {
-            auto& area = *study.areas.byIndex[areaIndex];
-            size_t clusterCount = area.thermal.clusterCount();
-
-            val[numSpace][areaIndex].HydrauliqueModulableQuotidien.assign(nbDaysPerYear, 0);
-
-            if (area.hydro.reservoirManagement)
-            {
-                val[numSpace][areaIndex].NiveauxReservoirsDebutJours.assign(nbDaysPerYear, 0.);
-                val[numSpace][areaIndex].NiveauxReservoirsFinJours.assign(nbDaysPerYear, 0.);
-            }
-        }
-    }
-}
-
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
-                                      const ::Settings& settings,
-                                      Benchmarking::IDurationCollector* duration_collector) :
+    const ::Settings& settings,
+    Benchmarking::IDurationCollector* duration_collector) :
     ImplementationType(study),
     study(study),
     settings(settings),
     pNbYearsReallyPerformed(0),
     pNbMaxPerformedYearsInParallel(0),
     pYearByYear(study.parameters.yearByYear),
-    pHydroManagement(study),
+    hydroManagement(study.areas, 
+                    study.parameters, 
+                    study.calendar, 
+                    study.maxNbYearsInParallel,
+                    study.resultWriter),
     pFirstSetParallelWithAPerformedYearWasRun(false),
     pDurationCollector(duration_collector),
     pQueueService(study.pQueueService),
@@ -277,8 +259,6 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
         pYearByYear = false;
 
     pHydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
-
-    allocateValeursGenereesParPays(valeursGenereesParPays, study);
 }
 
 template<class Impl>
@@ -740,7 +720,7 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
             // Previous month's first day in the year
             int firstDayOfMonth = study.calendar.months[initResLevelOnSimMonth].daysYear.first;
 
-            double randomLevel = pHydroManagement.randomReservoirLevel(min[firstDayOfMonth], 
+            double randomLevel = hydroManagement.randomReservoirLevel(min[firstDayOfMonth],
                                                                        avg[firstDayOfMonth],
                                                                        max[firstDayOfMonth]);
 
@@ -1000,7 +980,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             {
                 yearPerformed = true;
                 numSpace = set_it->performedYearToSpace[y];
-                study.runtime->timeseriesNumberYear[numSpace] = y;
             }
 
             // If the year has not to be rerun, we skip the computation of the year.

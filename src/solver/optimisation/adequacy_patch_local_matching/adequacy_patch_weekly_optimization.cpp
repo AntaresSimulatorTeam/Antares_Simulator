@@ -29,7 +29,6 @@
 #include "../opt_fonctions.h"
 #include "../simulation/simulation.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
-#include "antares/study/area/scratchpad.h"
 #include "antares/study/fwd.h"
 
 using namespace Antares::Data::AdequacyPatch;

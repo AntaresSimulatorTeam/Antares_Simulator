@@ -221,7 +221,7 @@ public:
     /*!
     ** \brief Flag to know if the simplex has been used for the current week
     */
-    bool simplexHasBeenRan;
+    bool simplexRunNeeded;
 
     // Annual costs to be printed in output into separate files
     // -----------------------------------------------------------------

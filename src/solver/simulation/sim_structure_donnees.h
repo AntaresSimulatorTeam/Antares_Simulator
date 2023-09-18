@@ -46,15 +46,6 @@ typedef struct
 
 typedef struct
 {
-    std::vector<double> HydrauliqueModulableQuotidien; /* indice par jour */
-    std::vector<double> NiveauxReservoirsDebutJours;   //Niveaux (quotidiens) du reservoir de début
-                                                       //de jour (en cas de gestion des reservoirs).
-    std::vector<double> NiveauxReservoirsFinJours; //Niveaux (quotidiens) du reservoir de fin
-                                                   //de jour (en cas de gestion des reservoirs).
-} VALEURS_GENEREES_PAR_PAYS;
-
-typedef struct
-{
     double* Horaire;
 } PRODUCTION_THERMIQUE;
 
@@ -62,9 +53,6 @@ typedef struct
 {
     double* ParLigne;
 } MATRICE_2D;
-
-// vector of [numSpace][area]
-using VAL_GEN_PAR_PAYS = std::vector<std::vector<VALEURS_GENEREES_PAR_PAYS>>;
 
 /* Old define */
 #define DEFINITION_STRUCTURES_DONNEES

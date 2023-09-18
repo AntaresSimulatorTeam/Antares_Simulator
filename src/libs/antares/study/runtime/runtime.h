@@ -109,14 +109,6 @@ public:
     //! Random numbers generators
     MersenneTwister random[seedMax];
 
-    /*!
-    ** \brief The index to use when retrieving the time-series numbers
-    **
-    ** To allow the drop of the years with no solution, we can not fully rely
-    ** on the current year. So we have to maintain a rotating index (0..nbYears)
-    */
-    uint* timeseriesNumberYear;
-
     //! Total
     uint thermalPlantTotalCount;
     uint thermalPlantTotalCountMustRun;
