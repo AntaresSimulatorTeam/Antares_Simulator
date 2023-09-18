@@ -52,7 +52,7 @@ void H2O_M_Free(DONNEES_ANNUELLES& DonneesAnnuelles)
             SPX_LibererProbleme(ProbSpx);
     }
 
-    PROBLEME_SIMPLEXE* pb = (PROBLEME_SIMPLEXE*)ProblemeHydraulique.Probleme;
+    PROBLEME_SIMPLEXE* pb = static_cast<PROBLEME_SIMPLEXE*>(ProblemeHydraulique.Probleme);
     delete pb;
 
     return;
