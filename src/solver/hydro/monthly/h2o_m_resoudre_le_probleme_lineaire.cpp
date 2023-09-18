@@ -61,7 +61,7 @@ void H2O_M_ResoudreLeProblemeLineaire(DONNEES_ANNUELLES& DonneesAnnuelles, int N
 
     if (!Probleme)
     {
-        Probleme = (PROBLEME_SIMPLEXE*)malloc(sizeof(PROBLEME_SIMPLEXE));
+        Probleme = new PROBLEME_SIMPLEXE;
         if (!Probleme)
         {
             DonneesAnnuelles.ResultatsValides = EMERGENCY_SHUT_DOWN;
