@@ -12,7 +12,7 @@ static void shortTermStorageBalance(
             = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.InjectionVariable[index];
             varInjection >= 0)
         {
-            constraintBuilder.include(Variable::ShortTermStorageInjection(index), 1.0);
+            constraintBuilder.ShortTermStorageInjection(index, 1.0);
         }
         if (const int varWithdrawal
             = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.WithdrawalVariable[index];

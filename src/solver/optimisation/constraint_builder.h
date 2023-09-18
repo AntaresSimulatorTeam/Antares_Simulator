@@ -21,10 +21,6 @@ struct SingleIndex
     unsigned index;
 };
 
-struct ShortTermStorageInjection : public SingleIndex
-{
-    using SingleIndex::SingleIndex;
-};
 struct ShortTermStorageWithdrawal : public SingleIndex
 {
     using SingleIndex::SingleIndex;
@@ -79,8 +75,7 @@ struct LayerStorage
     unsigned area, layer;
 };
 
-using Variables = std::variant<ShortTermStorageInjection,
-                               ShortTermStorageWithdrawal,
+using Variables = std::variant<ShortTermStorageWithdrawal,
                                ShortTermStorageLevel,
                                HydProd,
                                HydProdDown,
@@ -145,6 +140,12 @@ public:
     {
         return nativeOptimVar.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[index];
     }
+
+    int ShortTermStorageInjection(unsigned int index) const
+    {
+        return nativeOptimVar.SIM_ShortTermStorage.InjectionVariable[index];
+    }
+
 private:
     const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar;
     const std::vector<int>& NumeroDeVariableStockFinal;
@@ -162,10 +163,6 @@ public:
     {
     }
 
-    int operator()(const ShortTermStorageInjection& v) const
-    {
-        return nativeOptimVar.SIM_ShortTermStorage.InjectionVariable[v.index];
-    }
     int operator()(const ShortTermStorageWithdrawal& v) const
     {
         return nativeOptimVar.SIM_ShortTermStorage.WithdrawalVariable[v.index];
@@ -297,6 +294,12 @@ public:
                                          int delta = 0);
 
     ConstraintBuilder& IntercoIndirectCost(unsigned int index,
+                                         double coeff,
+                                         int shift = 0,
+                                         bool wrap = false,
+                                         int delta = 0);
+
+    ConstraintBuilder& ShortTermStorageInjection(unsigned int index,
                                          double coeff,
                                          int shift = 0,
                                          bool wrap = false,
