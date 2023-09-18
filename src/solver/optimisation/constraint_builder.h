@@ -175,19 +175,7 @@ public:
         return *this;
     }
 
-private:
-    int getVariableIndex(const Variable::Variables& variable,
-                         int shift,
-                         bool wrap,
-                         int delta) const;
-
 public:
-    ConstraintBuilder& include(Variable::Variables var,
-                               double coeff,
-                               int shift = 0,
-                               bool wrap = false,
-                               int delta = 0);
-
     ConstraintBuilder& DispatchableProduction(unsigned int index,
                                               double coeff,
                                               int shift = 0,
