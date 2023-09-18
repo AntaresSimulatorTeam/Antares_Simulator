@@ -17,7 +17,7 @@ void HydroPowerSmoothingUsingVariationMaxDown::add(int pays, int pdt)
     builder.updateHourWithinWeek(pdt)
       .HydProd(pays, 1.0)
       .updateHourWithinWeek(0)
-      .include(Variable::HydProdDown(pays), -1.0)
+      .HydProdDown(pays, -1.0)
       .lessThan()
       .build();
 }

@@ -21,10 +21,6 @@ struct SingleIndex
     unsigned index;
 };
 
-struct HydProdDown : public SingleIndex
-{
-    using SingleIndex::SingleIndex;
-};
 struct HydProdUp : public SingleIndex
 {
     using SingleIndex::SingleIndex;
@@ -135,14 +131,18 @@ public:
         return nativeOptimVar.NumeroDeVariablesDeLaProdHyd[index];
     }
 
+    int HydProdDown(unsigned int index) const
+    {
+        return nativeOptimVar.NumeroDeVariablesVariationHydALaBaisse[index];
+    }
+
 private:
     const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar;
     const std::vector<int>& NumeroDeVariableStockFinal;
     const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
 };
 
-using Variables = std::variant<HydProdDown,
-                               HydProdUp,
+using Variables = std::variant<HydProdUp,
                                Pumping,
                                HydroLevel,
                                Overflow,
@@ -162,10 +162,6 @@ public:
     {
     }
 
-    int operator()(const HydProdDown& v) const
-    {
-        return nativeOptimVar.NumeroDeVariablesVariationHydALaBaisse[v.index];
-    }
     int operator()(const HydProdUp& v) const
     {
         return nativeOptimVar.NumeroDeVariablesVariationHydALaHausse[v.index];
@@ -309,6 +305,12 @@ public:
                                int shift = 0,
                                bool wrap = false,
                                int delta = 0);
+
+    ConstraintBuilder& HydProdDown(unsigned int index,
+                                   double coeff,
+                                   int shift = 0,
+                                   bool wrap = false,
+                                   int delta = 0);
 
     class ConstraintBuilderInvalidOperator : public std::runtime_error
     {
