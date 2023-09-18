@@ -10,7 +10,7 @@ public:
     }
 
     /*TODO Rename this*/
-    void BuildGroup1();
+    void Build();
 
 private:
     PROBLEME_HEBDO* problemeHebdo_;

@@ -7,7 +7,7 @@
 #include "new_constraint_builder_utils.h"
 
 /*TODO Rename this*/
-void Group1::BuildGroup1()
+void Group1::Build()
 {
     auto ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre.get();
 

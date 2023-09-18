@@ -92,7 +92,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     FinalStockExpression finalStockExpression(problemeHebdo);
 
     Group1 group1(problemeHebdo);
-    group1.BuildGroup1();
+    group1.Build();
 
     for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)
