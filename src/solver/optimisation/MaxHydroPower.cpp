@@ -18,7 +18,7 @@ void MaxHydroPower::add(int pays)
         for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
             builder.updateHourWithinWeek(pdt);
-            builder.include(Variable::HydProd(pays), 1.0);
+            builder.HydProd(pays, 1.0);
         }
         problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;

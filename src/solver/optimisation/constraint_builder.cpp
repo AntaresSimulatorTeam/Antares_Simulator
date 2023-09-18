@@ -164,6 +164,16 @@ ConstraintBuilder& ConstraintBuilder::ShortTermStorageLevel(unsigned int index,
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::HydProd(unsigned int index,
+                                              double coeff,
+                                              int shift,
+                                              bool wrap,
+                                              int delta)
+{
+    AddVariable(GetVariableManager(shift, wrap, delta).HydProd(index), coeff);
+    return *this;
+}
+
 int ConstraintBuilder::getVariableIndex(const Variable::Variables& variable,
                                         int shift,
                                         bool wrap,

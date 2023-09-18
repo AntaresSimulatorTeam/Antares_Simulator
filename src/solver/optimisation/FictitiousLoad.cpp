@@ -26,7 +26,7 @@ void FictitiousLoad::add(int pdt, int pays)
     builder.updateHourWithinWeek(pdt);
     exportPaliers(*problemeHebdo, builder, pays);
     auto coeff = problemeHebdo->DefaillanceNegativeUtiliserHydro[pays] ? -1 : 0;
-    builder.include(Variable::HydProd(pays), coeff)
+    builder.HydProd(pays, coeff)
       .include(Variable::NegativeUnsuppliedEnergy(pays), 1.0);
 
     builder.lessThan();

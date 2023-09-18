@@ -26,9 +26,9 @@ void HydroPowerSmoothingUsingVariationSum::add(int pays)
           problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
 
         builder.updateHourWithinWeek(pdt)
-          .include(Variable::HydProd(pays), 1.0)
+          .HydProd(pays, 1.0)
           .updateHourWithinWeek(pdt1) /* /!\ Re-check*/
-          .include(Variable::HydProd(pays), -1.0)
+          .HydProd(pays, -1.0)
           .updateHourWithinWeek(pdt) /* /!\ Re-check*/
           .include(Variable::HydProdDown(pays), -1.0)
           .include(Variable::HydProdUp(pays), 1.0)

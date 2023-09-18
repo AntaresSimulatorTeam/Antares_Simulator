@@ -24,7 +24,7 @@ void AreaHydroLevel::add(int pays, int pdt)
         CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
         builder.updateHourWithinWeek(pdt)
-          .include(Variable::HydProd(pays), 1.0)
+          .HydProd(pays, 1.0)
           .include(Variable::Pumping(pays),
                    -problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio)
           .include(Variable::Overflow(pays), 1.)
