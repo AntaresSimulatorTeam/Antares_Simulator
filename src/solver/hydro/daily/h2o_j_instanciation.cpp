@@ -77,7 +77,7 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 
     for (int i = 0; i < NombreDeProblemes; i++)
     {
-        int NbPdt = NbJoursDUnProbleme[i];
+        const int NbPdt = NbJoursDUnProbleme[i];
 
         CorrespondanceDesVariables[i].NumeroDeVariableTurbine.assign(NbPdt, 0);
         CorrespondanceDesContraintes[i].NumeroDeContrainteSurXi.assign(NbPdt, 0);

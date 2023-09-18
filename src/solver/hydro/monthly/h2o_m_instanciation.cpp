@@ -33,7 +33,7 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     DONNEES_ANNUELLES DonneesAnnuelles{};
 
     DonneesAnnuelles.NombreDePasDeTemps = 12;
-    int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
+    const int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
 
     DonneesAnnuelles.TurbineMax.assign(NbPdt, 0.);
     DonneesAnnuelles.TurbineMin.assign(NbPdt, 0.);

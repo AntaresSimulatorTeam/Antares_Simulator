@@ -40,7 +40,7 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES& DonneesAnnuel
 
     DonneesAnnuelles.Volume[0] = DonneesAnnuelles.VolumeInitial;
 
-    int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
+    const int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
     double CoutDepassementVolume = DonneesAnnuelles.CoutDepassementVolume;
     auto& TurbineMax = DonneesAnnuelles.TurbineMax;
     const auto& TurbineMin = DonneesAnnuelles.TurbineMin;

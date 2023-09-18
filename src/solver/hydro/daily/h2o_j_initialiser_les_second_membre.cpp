@@ -43,7 +43,7 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int 
 
     SecondMembre[NumeroDeContrainteDEnergieMensuelle] = DonneesMensuelles->TurbineDuMois;
 
-    int NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
+    const int NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         int Cnt = CorrespondanceDesContraintes.NumeroDeContrainteSurXi[Pdt];

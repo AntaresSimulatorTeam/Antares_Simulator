@@ -49,7 +49,7 @@ void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
         = ProblemeHydraulique.CorrespondanceDesVariables;
 
-    int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
+    const int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
     int Var = 0;
 
     CorrespondanceDesVariables.NumeroDeVariableVolume[0] = Var;

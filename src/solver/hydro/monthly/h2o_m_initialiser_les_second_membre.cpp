@@ -35,7 +35,7 @@ void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES& DonneesAnnuelles)
         = ProblemeHydraulique.ProblemeLineairePartieVariable;
 
     double ChgmtSens = -1;
-    int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
+    const int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
     int Cnt = 0;
 
     auto& TurbineCible = DonneesAnnuelles.TurbineCible;

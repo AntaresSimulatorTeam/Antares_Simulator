@@ -40,7 +40,7 @@ void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int Numer
 
     char* Flag = (char*) ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme].Xmax.data();
 
-    int NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
+    const int NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
 
     double SurTurbineARepartir = 0.0;
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)

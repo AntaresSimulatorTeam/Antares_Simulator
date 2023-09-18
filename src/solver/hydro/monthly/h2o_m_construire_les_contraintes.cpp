@@ -56,7 +56,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
     int NumeroDeLaVariableXi = CorrespondanceDesVariables.NumeroDeLaVariableXi;
 
     double ChgmtSens = -1.0;
-    int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
+    const int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
     int NombreDeContraintes = 0;
     int il = 0;
 
