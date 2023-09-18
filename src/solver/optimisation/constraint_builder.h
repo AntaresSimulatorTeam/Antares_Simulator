@@ -21,10 +21,6 @@ struct SingleIndex
     unsigned index;
 };
 
-struct FinalStorage : public SingleIndex
-{
-    using SingleIndex::SingleIndex;
-};
 struct PositiveUnsuppliedEnergy : public SingleIndex
 {
     using SingleIndex::SingleIndex;
@@ -140,14 +136,18 @@ public:
         return nativeOptimVar.NumeroDeVariablesDeDebordement[index];
     }
 
+    int FinalStorage(unsigned int index) const
+    {
+        return NumeroDeVariableStockFinal[index];
+    }
+
 private:
     const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar;
     const std::vector<int>& NumeroDeVariableStockFinal;
     const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
 };
 
-using Variables
-  = std::variant<FinalStorage, LayerStorage, PositiveUnsuppliedEnergy, NegativeUnsuppliedEnergy>;
+using Variables = std::variant<LayerStorage, PositiveUnsuppliedEnergy, NegativeUnsuppliedEnergy>;
 class ConstraintVisitor
 {
 public:
@@ -160,10 +160,6 @@ public:
     {
     }
 
-    int operator()(const FinalStorage& v) const
-    {
-        return NumeroDeVariableStockFinal[v.index];
-    }
     int operator()(const LayerStorage& v) const
     {
         return NumeroDeVariableDeTrancheDeStock[v.area][v.layer];
@@ -317,6 +313,12 @@ public:
                                 int shift = 0,
                                 bool wrap = false,
                                 int delta = 0);
+
+    ConstraintBuilder& FinalStorage(unsigned int index,
+                                    double coeff,
+                                    int shift = 0,
+                                    bool wrap = false,
+                                    int delta = 0);
 
     class ConstraintBuilderInvalidOperator : public std::runtime_error
     {

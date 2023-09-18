@@ -224,6 +224,16 @@ ConstraintBuilder& ConstraintBuilder::Overflow(unsigned int index,
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::FinalStorage(unsigned int index,
+                                                   double coeff,
+                                                   int shift,
+                                                   bool wrap,
+                                                   int delta)
+{
+    AddVariable(GetVariableManager(shift, wrap, delta).FinalStorage(index), coeff);
+    return *this;
+}
+
 int ConstraintBuilder::getVariableIndex(const Variable::Variables& variable,
                                         int shift,
                                         bool wrap,

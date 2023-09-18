@@ -17,7 +17,7 @@ void FinalStockEquivalent::add(int pays)
         namer.FinalStockEquivalent(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
 
         builder.updateHourWithinWeek(pdt)
-          .include(Variable::FinalStorage(pays), 1.0)
+          .FinalStorage(pays, 1.0)
           .updateHourWithinWeek(problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1)
           .HydroLevel(pays, -1.0)
           .equalTo()
