@@ -13,7 +13,7 @@ void MaxPumping::add(int pays)
         for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
             builder.updateHourWithinWeek(pdt);
-            builder.include(Variable::Pumping(pays), 1.0);
+            builder.Pumping(pays, 1.0);
         }
         problemeHebdo->NumeroDeContrainteMaxPompage[pays]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
