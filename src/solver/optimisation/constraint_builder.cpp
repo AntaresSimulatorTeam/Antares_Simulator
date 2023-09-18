@@ -104,6 +104,16 @@ ConstraintBuilder& ConstraintBuilder::NumberBreakingDownDispatchableUnits(unsign
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::NTCDirect(unsigned int index,
+                                                double coeff,
+                                                int shift,
+                                                bool wrap,
+                                                int delta)
+{
+    AddVariable(GetVariableManager(shift, wrap, delta).NTCDirect(index), coeff);
+    return *this;
+}
+
 int ConstraintBuilder::getVariableIndex(const Variable::Variables& variable,
                                         int shift,
                                         bool wrap,

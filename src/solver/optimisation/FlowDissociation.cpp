@@ -29,7 +29,7 @@ void FlowDissociation::add(int pdt, int interco)
         }
 
         builder.updateHourWithinWeek(pdt);
-        builder.include(Variable::NTCDirect(interco), 1.0)
+        builder.NTCDirect(interco, 1.0)
           .include(Variable::IntercoDirectCost(interco), -1.0)
           .include(Variable::IntercoIndirectCost(interco), 1.0);
 

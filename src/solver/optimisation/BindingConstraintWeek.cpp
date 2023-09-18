@@ -22,8 +22,8 @@ void BindingConstraintWeek::add(int cntCouplante)
         int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
         for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
-            builder.updateHourWithinWeek(pdt).include(
-              Variable::NTCDirect(interco), poids, offset, true, problemeHebdo->NombreDePasDeTemps);
+            builder.updateHourWithinWeek(pdt).NTCDirect(
+              interco, poids, offset, true, problemeHebdo->NombreDePasDeTemps);
         }
     }
 

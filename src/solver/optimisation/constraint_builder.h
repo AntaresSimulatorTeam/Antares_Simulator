@@ -21,10 +21,6 @@ struct SingleIndex
     unsigned index;
 };
 
-struct NTCDirect : public SingleIndex
-{
-    using SingleIndex::SingleIndex;
-};
 struct IntercoDirectCost : public SingleIndex
 {
     using SingleIndex::SingleIndex;
@@ -92,7 +88,7 @@ struct LayerStorage
     unsigned area, layer;
 };
 
-using Variables = std::variant<NTCDirect,
+using Variables = std::variant<
                                IntercoDirectCost,
                                IntercoIndirectCost,
                                ShortTermStorageInjection,
@@ -147,6 +143,11 @@ public:
           .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[index];
     }
 
+    int NTCDirect(unsigned int index) const
+    {
+        return nativeOptimVar.NumeroDeVariableDeLInterconnexion[index];
+    }
+
 private:
     const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar;
     const std::vector<int>& NumeroDeVariableStockFinal;
@@ -164,10 +165,6 @@ public:
     {
     }
 
-    int operator()(const NTCDirect& v) const
-    {
-        return nativeOptimVar.NumeroDeVariableDeLInterconnexion[v.index];
-    }
     int operator()(const IntercoDirectCost& v) const
     {
         return nativeOptimVar.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[v.index];
@@ -297,6 +294,12 @@ public:
                                                            int shift = 0,
                                                            bool wrap = false,
                                                            int delta = 0);
+
+    ConstraintBuilder& NTCDirect(unsigned int index,
+                                 double coeff,
+                                 int shift = 0,
+                                 bool wrap = false,
+                                 int delta = 0);
 
     class ConstraintBuilderInvalidOperator : public std::runtime_error
     {

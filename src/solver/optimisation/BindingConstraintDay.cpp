@@ -30,11 +30,8 @@ void BindingConstraintDay::add(int cntCouplante)
 
             for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
             {
-                builder.updateHourWithinWeek(pdt).include(Variable::NTCDirect(interco),
-                                                          poids,
-                                                          offset,
-                                                          true,
-                                                          problemeHebdo->NombreDePasDeTemps);
+                builder.updateHourWithinWeek(pdt).NTCDirect(
+                  interco, poids, offset, true, problemeHebdo->NombreDePasDeTemps);
             }
         }
 
