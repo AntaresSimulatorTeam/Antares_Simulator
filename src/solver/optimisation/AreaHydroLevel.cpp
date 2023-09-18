@@ -10,10 +10,10 @@ void AreaHydroLevel::add(int pays, int pdt)
       = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
     if (problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
     {
-        builder.updateHourWithinWeek(pdt).include(Variable::HydroLevel(pays), 1.0);
+        builder.updateHourWithinWeek(pdt).HydroLevel(pays, 1.0);
         if (pdt > 0)
         {
-            builder.updateHourWithinWeek(pdt - 1).include(Variable::HydroLevel(pays), -1.0);
+            builder.updateHourWithinWeek(pdt - 1).HydroLevel(pays, -1.0);
         }
         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
                               problemeHebdo->NamedProblems);

@@ -204,6 +204,16 @@ ConstraintBuilder& ConstraintBuilder::Pumping(unsigned int index,
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::HydroLevel(unsigned int index,
+                                                 double coeff,
+                                                 int shift,
+                                                 bool wrap,
+                                                 int delta)
+{
+    AddVariable(GetVariableManager(shift, wrap, delta).HydroLevel(index), coeff);
+    return *this;
+}
+
 int ConstraintBuilder::getVariableIndex(const Variable::Variables& variable,
                                         int shift,
                                         bool wrap,

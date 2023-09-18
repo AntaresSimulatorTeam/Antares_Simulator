@@ -16,11 +16,11 @@ void FinalStockEquivalent::add(int pays)
         namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
         namer.FinalStockEquivalent(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
 
-    builder.updateHourWithinWeek(pdt)
-      .include(Variable::FinalStorage(pays), 1.0)
-      .updateHourWithinWeek(problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1)
-      .include(Variable::HydroLevel(pays), -1.0)
-      .equalTo()
-      .build();
+        builder.updateHourWithinWeek(pdt)
+          .include(Variable::FinalStorage(pays), 1.0)
+          .updateHourWithinWeek(problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1)
+          .HydroLevel(pays, -1.0)
+          .equalTo()
+          .build();
     }
 }
