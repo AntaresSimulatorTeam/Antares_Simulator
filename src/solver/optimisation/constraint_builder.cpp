@@ -82,6 +82,17 @@ ConstraintBuilder& ConstraintBuilder::NumberStoppingDispatchableUnits(unsigned i
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::NumberStartingDispatchableUnits(unsigned int index,
+                                                                      double coeff,
+                                                                      int shift,
+                                                                      bool wrap,
+                                                                      int delta)
+{
+    AddVariable(GetVariableManager(shift, wrap, delta).NumberStartingDispatchableUnits(index),
+                coeff);
+    return *this;
+}
+
 int ConstraintBuilder::getVariableIndex(const Variable::Variables& variable,
                                         int shift,
                                         bool wrap,

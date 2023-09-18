@@ -21,10 +21,6 @@ struct SingleIndex
     unsigned index;
 };
 
-struct NumberStartingDispatchableUnits : public SingleIndex
-{
-    using SingleIndex::SingleIndex;
-};
 struct NumberBreakingDownDispatchableUnits : public SingleIndex
 {
     using SingleIndex::SingleIndex;
@@ -101,8 +97,7 @@ struct LayerStorage
     unsigned area, layer;
 };
 
-using Variables = std::variant<NumberStartingDispatchableUnits,
-                               NumberBreakingDownDispatchableUnits,
+using Variables = std::variant<NumberBreakingDownDispatchableUnits,
                                NTCDirect,
                                IntercoDirectCost,
                                IntercoIndirectCost,
@@ -141,9 +136,15 @@ public:
     {
         return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[index];
     }
+
     int NumberStoppingDispatchableUnits(unsigned int index) const
     {
         return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[index];
+    }
+
+    int NumberStartingDispatchableUnits(unsigned int index) const
+    {
+        return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[index];
     }
 
 private:
@@ -163,11 +164,6 @@ public:
     {
     }
 
-    int operator()(const NumberStartingDispatchableUnits& v) const
-    {
-        return nativeOptimVar
-          .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[v.index];
-    }
     int operator()(const NumberBreakingDownDispatchableUnits& v) const
     {
         return nativeOptimVar
@@ -290,6 +286,12 @@ public:
                             int delta = 0);
 
     ConstraintBuilder& NumberStoppingDispatchableUnits(unsigned int index,
+                                                       double coeff,
+                                                       int shift = 0,
+                                                       bool wrap = false,
+                                                       int delta = 0);
+
+    ConstraintBuilder& NumberStartingDispatchableUnits(unsigned int index,
                                                        double coeff,
                                                        int shift = 0,
                                                        bool wrap = false,

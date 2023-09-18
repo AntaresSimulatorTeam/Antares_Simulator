@@ -22,7 +22,7 @@ void ConsistenceNODU::add(int pays, int cluster, int clusterIndex, int pdt, bool
           .updateHourWithinWeek(Pdtmoins1)
           .NODU(cluster, -1)
           .updateHourWithinWeek(pdt)
-          .include(Variable::NumberStartingDispatchableUnits(cluster), -1)
+          .NumberStartingDispatchableUnits(cluster, -1)
           .NumberStoppingDispatchableUnits(cluster, 1)
           .equalTo();
 
