@@ -49,14 +49,14 @@ void AreaBalance::add(int pdt, int pays)
     int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
     while (interco >= 0)
     {
-        builder.include(Variable::NTCDirect(interco), 1.0);
+        builder.NTCDirect(interco, 1.0);
         interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
     }
 
     interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
     while (interco >= 0)
     {
-        builder.include(Variable::NTCDirect(interco), -1.0);
+        builder.NTCDirect(interco, -1.0);
         interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
     }
 
