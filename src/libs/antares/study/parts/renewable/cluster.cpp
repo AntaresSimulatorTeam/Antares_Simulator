@@ -133,22 +133,22 @@ void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
         groupID = windOffShore;
         return;
     }
-    if (newgrp == "other renewable 1")
+    if (newgrp == "other res 1")
     {
         groupID = renewableOther1;
         return;
     }
-    if (newgrp == "other renewable 2")
+    if (newgrp == "other res 2")
     {
         groupID = renewableOther2;
         return;
     }
-    if (newgrp == "other renewable 3")
+    if (newgrp == "other res 3")
     {
         groupID = renewableOther3;
         return;
     }
-    if (newgrp == "other renewable 4")
+    if (newgrp == "other res 4")
     {
         groupID = renewableOther4;
         return;
