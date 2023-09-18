@@ -21,11 +21,6 @@ struct SingleIndex
     unsigned index;
 };
 
-struct NumberBreakingDownDispatchableUnits : public SingleIndex
-{
-    using SingleIndex::SingleIndex;
-};
-
 struct NTCDirect : public SingleIndex
 {
     using SingleIndex::SingleIndex;
@@ -97,8 +92,7 @@ struct LayerStorage
     unsigned area, layer;
 };
 
-using Variables = std::variant<NumberBreakingDownDispatchableUnits,
-                               NTCDirect,
+using Variables = std::variant<NTCDirect,
                                IntercoDirectCost,
                                IntercoIndirectCost,
                                ShortTermStorageInjection,
@@ -147,6 +141,12 @@ public:
         return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[index];
     }
 
+    int NumberBreakingDownDispatchableUnits(unsigned int index) const
+    {
+        return nativeOptimVar
+          .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[index];
+    }
+
 private:
     const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar;
     const std::vector<int>& NumeroDeVariableStockFinal;
@@ -164,11 +164,6 @@ public:
     {
     }
 
-    int operator()(const NumberBreakingDownDispatchableUnits& v) const
-    {
-        return nativeOptimVar
-          .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[v.index];
-    }
     int operator()(const NTCDirect& v) const
     {
         return nativeOptimVar.NumeroDeVariableDeLInterconnexion[v.index];
@@ -296,6 +291,12 @@ public:
                                                        int shift = 0,
                                                        bool wrap = false,
                                                        int delta = 0);
+
+    ConstraintBuilder& NumberBreakingDownDispatchableUnits(unsigned int index,
+                                                           double coeff,
+                                                           int shift = 0,
+                                                           bool wrap = false,
+                                                           int delta = 0);
 
     class ConstraintBuilderInvalidOperator : public std::runtime_error
     {

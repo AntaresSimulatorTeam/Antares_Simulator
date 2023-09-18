@@ -34,7 +34,7 @@ void NbDispUnitsMinBoundSinceMinUpTime::add(int pays,
 
             builder.updateHourWithinWeek(t1)
               .NumberStartingDispatchableUnits(cluster, -1.0)
-              .include(Variable::NumberBreakingDownDispatchableUnits(cluster), 1.0);
+              .NumberBreakingDownDispatchableUnits(cluster, 1.0);
         }
 
         builder.greaterThan();
