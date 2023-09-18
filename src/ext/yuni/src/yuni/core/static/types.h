@@ -181,15 +181,6 @@ struct IsFundamental<bool>
     };
 };
 template<>
-struct IsFundamental<signed char>
-{
-    enum
-    {
-        Yes = 1,
-        No = 0
-    };
-};
-template<>
 struct IsFundamental<wchar_t>
 {
     enum
@@ -228,7 +219,7 @@ struct IsFundamental<long double>
 // Signed int
 #ifndef YUNI_TYPES_INT8_CHAR_ARE_IDENTICAL
 template<>
-struct IsFundamental<sint8>
+struct IsFundamental<int8_t>
 {
     enum
     {
@@ -267,7 +258,7 @@ struct IsFundamental<int64_t>
 // Unsigned int
 #ifndef YUNI_TYPES_INT8_CHAR_ARE_IDENTICAL
 template<>
-struct IsFundamental<uint8>
+struct IsFundamental<uint8_t>
 {
     enum
     {
@@ -276,7 +267,7 @@ struct IsFundamental<uint8>
     };
 };
 template<>
-struct IsFundamental<uint16>
+struct IsFundamental<uint16_t>
 {
     enum
     {

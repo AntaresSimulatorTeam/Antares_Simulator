@@ -152,10 +152,10 @@ public:
 };
 
 template<>
-class Flag<uint16>
+class Flag<uint16_t>
 {
 public:
-    static void Enable(uint16& out)
+    static void Enable(uint16_t& out)
     {
         out = 1u;
     }
