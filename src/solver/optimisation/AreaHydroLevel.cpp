@@ -26,7 +26,7 @@ void AreaHydroLevel::add(int pays, int pdt)
         builder.updateHourWithinWeek(pdt)
           .HydProd(pays, 1.0)
           .Pumping(pays, -problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio)
-          .include(Variable::Overflow(pays), 1.)
+          .Overflow(pays, 1.)
           .equalTo()
           .build();
     }
