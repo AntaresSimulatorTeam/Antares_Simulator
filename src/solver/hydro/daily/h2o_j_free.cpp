@@ -51,7 +51,8 @@ void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
             SPX_LibererProbleme(ProbSpx);
     }
 
-    free(ProblemeHydraulique.Probleme);
+    PROBLEME_SIMPLEXE* pb = (PROBLEME_SIMPLEXE*)ProblemeHydraulique.Probleme;
+    delete pb;
 
     return;
 }
