@@ -21,8 +21,7 @@ void HydroPower::add(int pays)
             for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 builder.updateHourWithinWeek(pdt);
-                builder.HydProd(pays, 1.0)
-                  .include(Variable::Pumping(pays), -pumpingRatio);
+                builder.HydProd(pays, 1.0).Pumping(pays, -pumpingRatio);
             }
         }
         else
