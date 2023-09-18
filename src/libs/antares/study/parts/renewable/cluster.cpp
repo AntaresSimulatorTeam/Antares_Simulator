@@ -173,15 +173,6 @@ bool Data::RenewableCluster::integrityCheck()
     return ret;
 }
 
-const char* Data::RenewableCluster::GroupName(enum RenewableGroup grp)
-{
-    auto it = groupToName.find(grp);
-    if (it != groupToName.end())
-        return it->second;
-
-    return "";
-}
-
 bool Data::RenewableCluster::setTimeSeriesModeFromString(const YString& value)
 {
     if (value == "power-generation")
