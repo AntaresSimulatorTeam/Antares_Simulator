@@ -126,8 +126,7 @@ set(RTESOLVER_OPT
 		MinDownTime.h
 		MinDownTime.cpp
 
-		#ConstraintGroup.h
-		#ConstraintGroup.cpp
+		ConstraintGroup.h
 		Group1.h
 		Group1.cpp
 

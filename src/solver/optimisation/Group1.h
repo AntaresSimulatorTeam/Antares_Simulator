@@ -1,17 +1,10 @@
+#include "ConstraintGroup.h"
 
-#include "sim_structure_probleme_economique.h"
-#include "opt_structure_probleme_a_resoudre.h"
-
-class Group1
+class Group1 : public ConstraintGroup
 {
 public:
-    explicit Group1(PROBLEME_HEBDO* problemeHebdo) : problemeHebdo_(problemeHebdo)
-    {
-    }
+    using ConstraintGroup::ConstraintGroup;
 
     /*TODO Rename this*/
-    void Build();
-
-private:
-    PROBLEME_HEBDO* problemeHebdo_;
+    void Build() override;
 };
