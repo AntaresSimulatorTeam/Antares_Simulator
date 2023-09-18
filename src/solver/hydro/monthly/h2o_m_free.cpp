@@ -42,17 +42,14 @@ extern "C"
 
 void H2O_M_Free(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
-    PROBLEME_SPX* ProbSpx;
 
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
 
     for (int i = 0; i < ProblemeHydraulique.NombreDeReservoirs; i++)
     {
-        ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[i];
-        if (ProbSpx != NULL)
-        {
+        PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[i];
+        if (ProbSpx)
             SPX_LibererProbleme(ProbSpx);
-        }
     }
 
     free(ProblemeHydraulique.Probleme);
