@@ -113,9 +113,7 @@ struct LayerStorage
     unsigned area, layer;
 };
 
-using Variables = std::variant<DispatchableProduction,
-                               NODU,
-                               NumberStoppingDispatchableUnits,
+using Variables = std::variant<NumberStoppingDispatchableUnits,
                                NumberStartingDispatchableUnits,
                                NumberBreakingDownDispatchableUnits,
                                NTCDirect,
@@ -152,6 +150,11 @@ public:
         return nativeOptimVar.NumeroDeVariableDuPalierThermique[index];
     }
 
+    int NODU(unsigned int index) const
+    {
+        return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[v.index];
+    }
+
 private:
     const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar;
     const std::vector<int>& NumeroDeVariableStockFinal;
@@ -169,15 +172,7 @@ public:
     {
     }
 
-    int operator()(const DispatchableProduction& v) const
-    {
-        return nativeOptimVar.NumeroDeVariableDuPalierThermique[v.index];
-    }
-    int operator()(const NODU& v) const
-    {
-        return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[v.index];
-    }
-    int operator()(const NumberStoppingDispatchableUnits& v) const
+        int operator()(const NumberStoppingDispatchableUnits& v) const
     {
         return nativeOptimVar
           .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[v.index];
@@ -301,6 +296,12 @@ public:
                                               bool wrap = false,
                                               int delta = 0)
     ;
+
+    ConstraintBuilder& NODU(unsigned int index,
+                            double coeff,
+                            int shift = 0,
+                            bool wrap = false,
+                            int delta = 0);
 
     class ConstraintBuilderInvalidOperator : public std::runtime_error
     {

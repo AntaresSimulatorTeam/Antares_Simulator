@@ -15,7 +15,7 @@ void PMaxDispatchableGeneration::add(int pays,
 
         builder.updateHourWithinWeek(pdt)
           .DispatchableProduction(cluster, 1.0)
-          .include(Variable::NODU(cluster), -pmaxDUnGroupeDuPalierThermique)
+          .NODU(cluster, -pmaxDUnGroupeDuPalierThermique)
           .lessThan();
         if (builder.NumberOfVariables() > 0)
         {

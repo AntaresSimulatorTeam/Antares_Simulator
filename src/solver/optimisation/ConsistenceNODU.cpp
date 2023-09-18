@@ -18,9 +18,9 @@ void ConsistenceNODU::add(int pays, int cluster, int clusterIndex, int pdt, bool
           = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdtmoins1];
 
         builder.updateHourWithinWeek(pdt)
-          .include(Variable::NODU(cluster), 1.0)
+          .NODU(cluster, 1.0)
           .updateHourWithinWeek(Pdtmoins1)
-          .include(Variable::NODU(cluster), -1)
+          .NODU(cluster, -1)
           .updateHourWithinWeek(pdt)
           .include(Variable::NumberStartingDispatchableUnits(cluster), -1)
           .include(Variable::NumberStoppingDispatchableUnits(cluster), 1)

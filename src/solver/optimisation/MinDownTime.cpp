@@ -19,7 +19,7 @@ void MinDownTime::add(int pays, int cluster, int clusterIndex, int pdt, bool Sim
           = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
               .NombreMaxDeGroupesEnMarcheDuPalierThermique;
 
-        builder.updateHourWithinWeek(pdt).include(Variable::NODU(cluster), 1.0);
+        builder.updateHourWithinWeek(pdt).NODU(cluster, 1.0);
 
         for (int k = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique + 1; k <= pdt; k++)
         {

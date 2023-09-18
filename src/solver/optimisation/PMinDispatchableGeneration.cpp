@@ -15,7 +15,7 @@ void PMinDispatchableGeneration::add(int pays,
 
         builder.updateHourWithinWeek(pdt)
           .DispatchableProduction(cluster, 1.0)
-          .include(Variable::NODU(cluster), -pminDUnGroupeDuPalierThermique)
+          .NODU(cluster, -pminDUnGroupeDuPalierThermique)
           .greaterThan();
         /*consider Adding naming constraint inside the builder*/
         if (builder.NumberOfVariables() > 0)
