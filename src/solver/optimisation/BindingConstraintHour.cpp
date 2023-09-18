@@ -39,11 +39,8 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
         const double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
         const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
 
-        builder.updateHourWithinWeek(pdt).include(Variable::DispatchableProduction(palier),
-                                                  poids,
-                                                  offset,
-                                                  true,
-                                                  problemeHebdo->NombreDePasDeTemps);
+        builder.updateHourWithinWeek(pdt).DispatchableProduction(
+          palier, poids, offset, true, problemeHebdo->NombreDePasDeTemps);
     }
 
     char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;

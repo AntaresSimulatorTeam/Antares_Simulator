@@ -14,7 +14,7 @@ void PMinDispatchableGeneration::add(int pays,
           = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
 
         builder.updateHourWithinWeek(pdt)
-          .include(Variable::DispatchableProduction(cluster), 1.0)
+          .DispatchableProduction(cluster, 1.0)
           .include(Variable::NODU(cluster), -pminDUnGroupeDuPalierThermique)
           .greaterThan();
         /*consider Adding naming constraint inside the builder*/

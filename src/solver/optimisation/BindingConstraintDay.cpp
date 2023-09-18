@@ -51,11 +51,8 @@ void BindingConstraintDay::add(int cntCouplante)
 
             for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
             {
-                builder.updateHourWithinWeek(pdt).include(Variable::DispatchableProduction(palier),
-                                                          poids,
-                                                          offset,
-                                                          true,
-                                                          problemeHebdo->NombreDePasDeTemps);
+                builder.updateHourWithinWeek(pdt).DispatchableProduction(
+          palier, poids, offset, true, problemeHebdo->NombreDePasDeTemps);
             }
         }
 

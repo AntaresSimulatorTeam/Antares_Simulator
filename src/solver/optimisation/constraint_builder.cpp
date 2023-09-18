@@ -13,7 +13,24 @@ void ConstraintBuilder::build()
     }
     nombreDeTermes_ = 0;
 }
+int ConstraintBuilder::GetShiftedTimeStep(int shift, bool wrap, int delta) const
+{
+    int pdt = hourInWeek_ + shift;
+    const int nbTimeSteps = problemeHebdo.NombreDePasDeTempsPourUneOptimisation;
 
+    if (wrap)
+    {
+        if (shift >= 0)
+        {
+            pdt = pdt % nbTimeSteps;
+        }
+        else
+        {
+            pdt = (pdt + delta) % nbTimeSteps;
+        }
+    }
+    return pdt;
+}
 int ConstraintBuilder::getVariableIndex(const Variable::Variables& variable,
                                         int shift,
                                         bool wrap,

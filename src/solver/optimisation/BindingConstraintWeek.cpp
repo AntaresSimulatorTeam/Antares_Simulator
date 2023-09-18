@@ -39,11 +39,8 @@ void BindingConstraintWeek::add(int cntCouplante)
             int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
             for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-            builder.updateHourWithinWeek(pdt).include(Variable::DispatchableProduction(palier),
-                                                      poids,
-                                                      offset,
-                                                      true,
-                                                      problemeHebdo->NombreDePasDeTemps);
+            builder.updateHourWithinWeek(pdt).DispatchableProduction(
+              palier, poids, offset, true, problemeHebdo->NombreDePasDeTemps);
             }
         }
 

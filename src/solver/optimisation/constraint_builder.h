@@ -135,6 +135,28 @@ using Variables = std::variant<DispatchableProduction,
                                PositiveUnsuppliedEnergy,
                                NegativeUnsuppliedEnergy>;
 
+class VariableManager
+{
+public:
+    VariableManager(const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar,
+                    const std::vector<int>& NumeroDeVariableStockFinal,
+                    const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock) :
+     nativeOptimVar(nativeOptimVar),
+     NumeroDeVariableStockFinal(NumeroDeVariableStockFinal),
+     NumeroDeVariableDeTrancheDeStock(NumeroDeVariableDeTrancheDeStock)
+    {
+    }
+
+    int DispatchableProduction(unsigned int index) const
+    {
+        return nativeOptimVar.NumeroDeVariableDuPalierThermique[index];
+    }
+
+private:
+    const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar;
+    const std::vector<int>& NumeroDeVariableStockFinal;
+    const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
+};
 class ConstraintVisitor
 {
 public:
@@ -273,6 +295,29 @@ public:
                                bool wrap = false,
                                int delta = 0);
 
+    ConstraintBuilder& DispatchableProduction(unsigned int index,
+                                              double coeff,
+                                              int shift = 0,
+                                              bool wrap = false,
+                                              int delta = 0)
+    {
+        auto pdt = GetShiftedTimeStep(shift, wrap, delta);
+        std::vector<double>& Pi = problemeAResoudre.Pi;
+        std::vector<int>& Colonne = problemeAResoudre.Colonne;
+        auto variableManager
+          = Variable::VariableManager(varNative[pdt],
+                                      problemeHebdo.NumeroDeVariableStockFinal,
+                                      problemeHebdo.NumeroDeVariableDeTrancheDeStock);
+        int varIndex = variableManager.DispatchableProduction(index);
+        if (varIndex >= 0)
+        {
+            Pi[nombreDeTermes_] = coeff;
+            Colonne[nombreDeTermes_] = varIndex;
+            nombreDeTermes_++;
+        }
+        return *this;
+    }
+
     class ConstraintBuilderInvalidOperator : public std::runtime_error
     {
     public:
@@ -327,6 +372,8 @@ private:
     double rhs_ = 0;
     int nombreDeTermes_ = 0;
     // ConstraintNamer ConstraintNameManager;
+
+    int GetShiftedTimeStep(int shift, bool wrap, int delta) const;
 };
 
 class Constraint
@@ -354,6 +401,6 @@ inline void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
     {
         const int palier
           = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-        constraintBuilder.include(Variable::DispatchableProduction(palier), -1.0);
+        constraintBuilder.DispatchableProduction(palier, -1.0);
     }
 }

@@ -14,7 +14,7 @@ void PMaxDispatchableGeneration::add(int pays,
           = PaliersThermiquesDuPays.PmaxDUnGroupeDuPalierThermique[clusterIndex];
 
         builder.updateHourWithinWeek(pdt)
-          .include(Variable::DispatchableProduction(cluster), 1.0)
+          .DispatchableProduction(cluster, 1.0)
           .include(Variable::NODU(cluster), -pmaxDUnGroupeDuPalierThermique)
           .lessThan();
         if (builder.NumberOfVariables() > 0)
