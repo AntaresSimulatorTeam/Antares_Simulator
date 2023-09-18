@@ -61,7 +61,7 @@ void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int
 
     if (!Probleme)
     {
-        Probleme = new PROBLEME_SIMPLEXE;
+        Probleme = new(std::nothrow) PROBLEME_SIMPLEXE;
         if (!Probleme)
         {
             DonneesMensuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
