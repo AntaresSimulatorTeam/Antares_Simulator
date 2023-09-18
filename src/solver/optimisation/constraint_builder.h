@@ -21,14 +21,6 @@ struct SingleIndex
     unsigned index;
 };
 
-struct DispatchableProduction : public SingleIndex
-{
-    using SingleIndex::SingleIndex;
-};
-struct NODU : public SingleIndex
-{
-    using SingleIndex::SingleIndex;
-};
 struct NumberStoppingDispatchableUnits : public SingleIndex
 {
     using SingleIndex::SingleIndex;
