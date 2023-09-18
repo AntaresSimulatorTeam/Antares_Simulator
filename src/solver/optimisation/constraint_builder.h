@@ -138,23 +138,6 @@ private:
     const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
 };
 
-class ConstraintVisitor
-{
-public:
-    ConstraintVisitor(const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar,
-                      const std::vector<int>& NumeroDeVariableStockFinal,
-                      const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock) :
-     nativeOptimVar(nativeOptimVar),
-     NumeroDeVariableStockFinal(NumeroDeVariableStockFinal),
-     NumeroDeVariableDeTrancheDeStock(NumeroDeVariableDeTrancheDeStock)
-    {
-    }
-
-private:
-    const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar;
-    const std::vector<int>& NumeroDeVariableStockFinal;
-    const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
-};
 } // namespace Variable
 
 class ConstraintBuilder
