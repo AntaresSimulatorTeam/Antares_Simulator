@@ -21,10 +21,6 @@ struct SingleIndex
     unsigned index;
 };
 
-struct NumberStoppingDispatchableUnits : public SingleIndex
-{
-    using SingleIndex::SingleIndex;
-};
 struct NumberStartingDispatchableUnits : public SingleIndex
 {
     using SingleIndex::SingleIndex;
@@ -105,8 +101,7 @@ struct LayerStorage
     unsigned area, layer;
 };
 
-using Variables = std::variant<NumberStoppingDispatchableUnits,
-                               NumberStartingDispatchableUnits,
+using Variables = std::variant<NumberStartingDispatchableUnits,
                                NumberBreakingDownDispatchableUnits,
                                NTCDirect,
                                IntercoDirectCost,
@@ -144,7 +139,11 @@ public:
 
     int NODU(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[v.index];
+        return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[index];
+    }
+    int NumberStoppingDispatchableUnits(unsigned int index) const
+    {
+        return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[index];
     }
 
 private:
@@ -164,11 +163,6 @@ public:
     {
     }
 
-        int operator()(const NumberStoppingDispatchableUnits& v) const
-    {
-        return nativeOptimVar
-          .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[v.index];
-    }
     int operator()(const NumberStartingDispatchableUnits& v) const
     {
         return nativeOptimVar
@@ -294,6 +288,12 @@ public:
                             int shift = 0,
                             bool wrap = false,
                             int delta = 0);
+
+    ConstraintBuilder& NumberStoppingDispatchableUnits(unsigned int index,
+                                                       double coeff,
+                                                       int shift = 0,
+                                                       bool wrap = false,
+                                                       int delta = 0);
 
     class ConstraintBuilderInvalidOperator : public std::runtime_error
     {

@@ -18,7 +18,7 @@ void NbUnitsOutageLessThanNbUnitsStop::add(int pays,
 
         builder.updateHourWithinWeek(pdt)
           .include(Variable::NumberBreakingDownDispatchableUnits(cluster), 1.0)
-          .include(Variable::NumberStoppingDispatchableUnits(cluster), -1.0)
+          .NumberStoppingDispatchableUnits(cluster, -1.0)
           .lessThan();
 
         if (builder.NumberOfVariables() > 0)

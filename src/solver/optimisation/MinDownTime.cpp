@@ -27,8 +27,7 @@ void MinDownTime::add(int pays, int cluster, int clusterIndex, int pdt, bool Sim
             if (t1 < 0)
                 t1 = NombreDePasDeTempsPourUneOptimisation + t1;
 
-            builder.updateHourWithinWeek(t1).include(
-              Variable::NumberStoppingDispatchableUnits(cluster), 1.0);
+            builder.updateHourWithinWeek(t1).NumberStoppingDispatchableUnits(cluster, 1.0);
         }
         builder.lessThan();
         if (builder.NumberOfVariables() > 1)
