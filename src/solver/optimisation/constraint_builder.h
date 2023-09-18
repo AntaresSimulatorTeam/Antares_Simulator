@@ -300,23 +300,7 @@ public:
                                               int shift = 0,
                                               bool wrap = false,
                                               int delta = 0)
-    {
-        auto pdt = GetShiftedTimeStep(shift, wrap, delta);
-        std::vector<double>& Pi = problemeAResoudre.Pi;
-        std::vector<int>& Colonne = problemeAResoudre.Colonne;
-        auto variableManager
-          = Variable::VariableManager(varNative[pdt],
-                                      problemeHebdo.NumeroDeVariableStockFinal,
-                                      problemeHebdo.NumeroDeVariableDeTrancheDeStock);
-        int varIndex = variableManager.DispatchableProduction(index);
-        if (varIndex >= 0)
-        {
-            Pi[nombreDeTermes_] = coeff;
-            Colonne[nombreDeTermes_] = varIndex;
-            nombreDeTermes_++;
-        }
-        return *this;
-    }
+    ;
 
     class ConstraintBuilderInvalidOperator : public std::runtime_error
     {
@@ -374,6 +358,8 @@ private:
     // ConstraintNamer ConstraintNameManager;
 
     int GetShiftedTimeStep(int shift, bool wrap, int delta) const;
+    void AddVariable(int index, double coeff);
+    Variable::VariableManager GetVariableManager( int shift = 0, bool wrap = false, int delta = 0);
 };
 
 class Constraint

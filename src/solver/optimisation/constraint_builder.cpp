@@ -13,6 +13,7 @@ void ConstraintBuilder::build()
     }
     nombreDeTermes_ = 0;
 }
+
 int ConstraintBuilder::GetShiftedTimeStep(int shift, bool wrap, int delta) const
 {
     int pdt = hourInWeek_ + shift;
@@ -31,6 +32,35 @@ int ConstraintBuilder::GetShiftedTimeStep(int shift, bool wrap, int delta) const
     }
     return pdt;
 }
+void ConstraintBuilder::AddVariable(int varIndex, double coeff)
+{
+    std::vector<double>& Pi = problemeAResoudre.Pi;
+    std::vector<int>& Colonne = problemeAResoudre.Colonne;
+    if (varIndex >= 0)
+    {
+        Pi[nombreDeTermes_] = coeff;
+        Colonne[nombreDeTermes_] = varIndex;
+        nombreDeTermes_++;
+    }
+}
+Variable::VariableManager ConstraintBuilder::GetVariableManager(int shift, bool wrap, int delta)
+{
+    auto pdt = GetShiftedTimeStep(shift, wrap, delta);
+    return Variable::VariableManager(varNative[pdt],
+                                     problemeHebdo.NumeroDeVariableStockFinal,
+                                     problemeHebdo.NumeroDeVariableDeTrancheDeStock);
+}
+
+ConstraintBuilder& ConstraintBuilder::DispatchableProduction(unsigned int index,
+                                                             double coeff,
+                                                             int shift,
+                                                             bool wrap,
+                                                             int delta)
+{
+    AddVariable(GetVariableManager(shift, wrap, delta).DispatchableProduction(index), coeff);
+    return *this;
+}
+
 int ConstraintBuilder::getVariableIndex(const Variable::Variables& variable,
                                         int shift,
                                         bool wrap,
