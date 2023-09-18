@@ -48,16 +48,6 @@ extern "C"
 
 void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
 {
-    int Var;
-    double* pt;
-    char PremierPassage;
-
-
-    PROBLEME_SIMPLEXE* Probleme;
-    PROBLEME_SPX* ProbSpx;
-
-    PremierPassage = OUI;
-
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
@@ -66,13 +56,13 @@ void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
         = ProblemeHydraulique.ProblemeLineairePartieFixe[NumeroDeProbleme];
 
-    ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[NumeroDeProbleme];
+    PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[NumeroDeProbleme];
+    PROBLEME_SIMPLEXE* Probleme = (PROBLEME_SIMPLEXE*)ProblemeHydraulique.Probleme;
 
-    Probleme = (PROBLEME_SIMPLEXE*)ProblemeHydraulique.Probleme;
-    if (Probleme == NULL)
+    if (!Probleme)
     {
         Probleme = (PROBLEME_SIMPLEXE*)malloc(sizeof(PROBLEME_SIMPLEXE));
-        if (Probleme == NULL)
+        if (!Probleme)
         {
             DonneesMensuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
             return;
@@ -80,9 +70,11 @@ void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int
         ProblemeHydraulique.Probleme = (void*)Probleme;
     }
 
+    char PremierPassage = OUI;
+
 RESOLUTION:
 
-    if (ProbSpx == NULL)
+    if (!ProbSpx)
     {
         Probleme->Contexte = SIMPLEXE_SEUL;
         Probleme->BaseDeDepartFournie = NON_SPX;
@@ -150,10 +142,8 @@ RESOLUTION:
 
     ProbSpx = SPX_Simplexe(Probleme, ProbSpx);
 
-    if (ProbSpx != NULL)
-    {
+    if (ProbSpx)
         ProblemeHydraulique.ProblemeSpx[NumeroDeProbleme] = (void*)ProbSpx;
-    }
 
     ProblemeLineairePartieVariable.ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
 
@@ -179,13 +169,11 @@ RESOLUTION:
     {
         DonneesMensuelles->ResultatsValides = OUI;
 
-        for (Var = 0; Var < ProblemeLineairePartieFixe.NombreDeVariables; Var++)
+        for (int Var = 0; Var < ProblemeLineairePartieFixe.NombreDeVariables; Var++)
         {
-            pt = ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
-            if (pt != NULL)
-            {
+            double* pt = ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+            if (pt)
                 *pt = ProblemeLineairePartieVariable.X[Var];
-            }
         }
     }
     else
