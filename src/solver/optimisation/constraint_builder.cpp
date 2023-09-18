@@ -234,6 +234,26 @@ ConstraintBuilder& ConstraintBuilder::FinalStorage(unsigned int index,
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::PositiveUnsuppliedEnergy(unsigned int index,
+                                                               double coeff,
+                                                               int shift,
+                                                               bool wrap,
+                                                               int delta)
+{
+    AddVariable(GetVariableManager(shift, wrap, delta).PositiveUnsuppliedEnergy(index), coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::NegativeUnsuppliedEnergy(unsigned int index,
+                                                               double coeff,
+                                                               int shift,
+                                                               bool wrap,
+                                                               int delta)
+{
+    AddVariable(GetVariableManager(shift, wrap, delta).NegativeUnsuppliedEnergy(index), coeff);
+    return *this;
+}
+
 ConstraintBuilder& ConstraintBuilder::LayerStorage(unsigned area,
                                                    unsigned layer,
                                                    double coeff,

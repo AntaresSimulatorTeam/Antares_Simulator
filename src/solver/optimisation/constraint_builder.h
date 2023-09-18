@@ -13,22 +13,6 @@
 
 namespace Variable
 {
-struct SingleIndex
-{
-    explicit SingleIndex(unsigned index) : index(index)
-    {
-    }
-    unsigned index;
-};
-
-struct PositiveUnsuppliedEnergy : public SingleIndex
-{
-    using SingleIndex::SingleIndex;
-};
-struct NegativeUnsuppliedEnergy : public SingleIndex
-{
-    using SingleIndex::SingleIndex;
-};
 
 class VariableManager
 {
@@ -138,13 +122,22 @@ public:
         return NumeroDeVariableDeTrancheDeStock[area][layer];
     }
 
+    int PositiveUnsuppliedEnergy(unsigned int index) const
+    {
+        return nativeOptimVar.NumeroDeVariableDefaillancePositive[index];
+    }
+
+    int NegativeUnsuppliedEnergy(unsigned int index) const
+    {
+        return nativeOptimVar.NumeroDeVariableDefaillanceNegative[index];
+    }
+
 private:
     const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar;
     const std::vector<int>& NumeroDeVariableStockFinal;
     const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
 };
 
-using Variables = std::variant<PositiveUnsuppliedEnergy, NegativeUnsuppliedEnergy>;
 class ConstraintVisitor
 {
 public:
@@ -155,15 +148,6 @@ public:
      NumeroDeVariableStockFinal(NumeroDeVariableStockFinal),
      NumeroDeVariableDeTrancheDeStock(NumeroDeVariableDeTrancheDeStock)
     {
-    }
-
-    int operator()(const PositiveUnsuppliedEnergy& v) const
-    {
-        return nativeOptimVar.NumeroDeVariableDefaillancePositive[v.index];
-    }
-    int operator()(const NegativeUnsuppliedEnergy& v) const
-    {
-        return nativeOptimVar.NumeroDeVariableDefaillanceNegative[v.index];
     }
 
 private:
@@ -312,6 +296,18 @@ public:
                                     int shift = 0,
                                     bool wrap = false,
                                     int delta = 0);
+
+    ConstraintBuilder& PositiveUnsuppliedEnergy(unsigned int index,
+                                                double coeff,
+                                                int shift = 0,
+                                                bool wrap = false,
+                                                int delta = 0);
+
+    ConstraintBuilder& NegativeUnsuppliedEnergy(unsigned int index,
+                                                double coeff,
+                                                int shift = 0,
+                                                bool wrap = false,
+                                                int delta = 0);
     ConstraintBuilder& LayerStorage(unsigned area,
                                     unsigned layer,
                                     double coeff,
