@@ -144,6 +144,16 @@ ConstraintBuilder& ConstraintBuilder::ShortTermStorageInjection(unsigned int ind
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::ShortTermStorageWithdrawal(unsigned int index,
+                                                                 double coeff,
+                                                                 int shift,
+                                                                 bool wrap,
+                                                                 int delta)
+{
+    AddVariable(GetVariableManager(shift, wrap, delta).ShortTermStorageWithdrawal(index), coeff);
+    return *this;
+}
+
 int ConstraintBuilder::getVariableIndex(const Variable::Variables& variable,
                                         int shift,
                                         bool wrap,

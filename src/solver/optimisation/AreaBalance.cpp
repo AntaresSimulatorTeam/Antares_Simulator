@@ -18,7 +18,7 @@ static void shortTermStorageBalance(
             = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.WithdrawalVariable[index];
             varWithdrawal >= 0)
         {
-            constraintBuilder.include(Variable::ShortTermStorageWithdrawal(index), -1.0);
+            constraintBuilder.ShortTermStorageWithdrawal(index, -1.0);
         }
     }
 }

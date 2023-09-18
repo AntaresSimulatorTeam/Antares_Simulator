@@ -33,8 +33,8 @@ void ShortTermStorageLevel::add(int pdt, int pays)
                    -1,
                    true,
                    problemeHebdo->NombreDePasDeTempsPourUneOptimisation)
-          .include(Variable::ShortTermStorageInjection(index), -1.0 * storage.efficiency)
-          .include(Variable::ShortTermStorageWithdrawal(index), 1.0)
+          .ShortTermStorageInjection(index, -1.0 * storage.efficiency)
+          .ShortTermStorageWithdrawal(index, 1.0)
           .equalTo()
           .build();
     }

@@ -21,10 +21,6 @@ struct SingleIndex
     unsigned index;
 };
 
-struct ShortTermStorageWithdrawal : public SingleIndex
-{
-    using SingleIndex::SingleIndex;
-};
 struct ShortTermStorageLevel : public SingleIndex
 {
     using SingleIndex::SingleIndex;
@@ -75,8 +71,7 @@ struct LayerStorage
     unsigned area, layer;
 };
 
-using Variables = std::variant<ShortTermStorageWithdrawal,
-                               ShortTermStorageLevel,
+using Variables = std::variant<ShortTermStorageLevel,
                                HydProd,
                                HydProdDown,
                                HydProdUp,
@@ -146,6 +141,11 @@ public:
         return nativeOptimVar.SIM_ShortTermStorage.InjectionVariable[index];
     }
 
+    int ShortTermStorageWithdrawal(unsigned int index) const
+    {
+        return nativeOptimVar.SIM_ShortTermStorage.WithdrawalVariable[index];
+    }
+
 private:
     const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar;
     const std::vector<int>& NumeroDeVariableStockFinal;
@@ -163,10 +163,6 @@ public:
     {
     }
 
-    int operator()(const ShortTermStorageWithdrawal& v) const
-    {
-        return nativeOptimVar.SIM_ShortTermStorage.WithdrawalVariable[v.index];
-    }
     int operator()(const ShortTermStorageLevel& v) const
     {
         return nativeOptimVar.SIM_ShortTermStorage.LevelVariable[v.index];
@@ -304,6 +300,12 @@ public:
                                          int shift = 0,
                                          bool wrap = false,
                                          int delta = 0);
+
+    ConstraintBuilder& ShortTermStorageWithdrawal(unsigned int index,
+                                                  double coeff,
+                                                  int shift = 0,
+                                                  bool wrap = false,
+                                                  int delta = 0);
 
     class ConstraintBuilderInvalidOperator : public std::runtime_error
     {
