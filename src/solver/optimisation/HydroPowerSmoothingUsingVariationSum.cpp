@@ -31,7 +31,7 @@ void HydroPowerSmoothingUsingVariationSum::add(int pays)
           .HydProd(pays, -1.0)
           .updateHourWithinWeek(pdt) /* /!\ Re-check*/
           .HydProdDown(pays, -1.0)
-          .include(Variable::HydProdUp(pays), 1.0)
+          .HydProdUp(pays, 1.0)
           .equalTo()
           .build();
     }
