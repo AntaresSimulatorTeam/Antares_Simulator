@@ -21,15 +21,6 @@ struct SingleIndex
     unsigned index;
 };
 
-struct IntercoDirectCost : public SingleIndex
-{
-    using SingleIndex::SingleIndex;
-};
-struct IntercoIndirectCost : public SingleIndex
-{
-    using SingleIndex::SingleIndex;
-};
-
 struct ShortTermStorageInjection : public SingleIndex
 {
     using SingleIndex::SingleIndex;
@@ -88,10 +79,7 @@ struct LayerStorage
     unsigned area, layer;
 };
 
-using Variables = std::variant<
-                               IntercoDirectCost,
-                               IntercoIndirectCost,
-                               ShortTermStorageInjection,
+using Variables = std::variant<ShortTermStorageInjection,
                                ShortTermStorageWithdrawal,
                                ShortTermStorageLevel,
                                HydProd,
@@ -148,6 +136,15 @@ public:
         return nativeOptimVar.NumeroDeVariableDeLInterconnexion[index];
     }
 
+    int IntercoDirectCost(unsigned int index) const
+    {
+        return nativeOptimVar.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[index];
+    }
+
+    int IntercoIndirectCost(unsigned int index) const
+    {
+        return nativeOptimVar.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[index];
+    }
 private:
     const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar;
     const std::vector<int>& NumeroDeVariableStockFinal;
@@ -165,14 +162,6 @@ public:
     {
     }
 
-    int operator()(const IntercoDirectCost& v) const
-    {
-        return nativeOptimVar.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[v.index];
-    }
-    int operator()(const IntercoIndirectCost& v) const
-    {
-        return nativeOptimVar.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[v.index];
-    }
     int operator()(const ShortTermStorageInjection& v) const
     {
         return nativeOptimVar.SIM_ShortTermStorage.InjectionVariable[v.index];
@@ -300,6 +289,18 @@ public:
                                  int shift = 0,
                                  bool wrap = false,
                                  int delta = 0);
+
+    ConstraintBuilder& IntercoDirectCost(unsigned int index,
+                                         double coeff,
+                                         int shift = 0,
+                                         bool wrap = false,
+                                         int delta = 0);
+
+    ConstraintBuilder& IntercoIndirectCost(unsigned int index,
+                                         double coeff,
+                                         int shift = 0,
+                                         bool wrap = false,
+                                         int delta = 0);
 
     class ConstraintBuilderInvalidOperator : public std::runtime_error
     {
