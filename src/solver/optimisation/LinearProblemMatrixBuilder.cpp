@@ -87,8 +87,10 @@ void LinearProblemMatrixBuilder::Run()
     FinalStockEquivalent finalStockEquivalent(problemeHebdo_);
     FinalStockExpression finalStockExpression(problemeHebdo_);
 
-    Group1 group1(problemeHebdo_);
-    group1.Build();
+    for (auto& group : constraintgroups_)
+    {
+        group->Build();
+    }
 
     for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
          cntCouplante++)

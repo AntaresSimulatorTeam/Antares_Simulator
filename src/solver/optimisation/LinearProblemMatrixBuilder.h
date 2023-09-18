@@ -26,6 +26,8 @@
 */
 #include "opt_structure_probleme_a_resoudre.h"
 #include "sim_structure_probleme_economique.h"
+#include "ConstraintGroup.h"
+#include "Group1.h"
 
 #include <antares/study.h>
 
@@ -35,13 +37,16 @@ class LinearProblemMatrixBuilder
 public:
     explicit LinearProblemMatrixBuilder(PROBLEME_HEBDO* problemeHebdo,
                                         Solver::IResultWriter& writer) :
-     problemeHebdo_(problemeHebdo_), writer_(writer_)
+     problemeHebdo_(problemeHebdo_), writer_(writer_), group1_(problemeHebdo)
     {
+        constraintgroups_.push_back(&group1_);
     }
 
     void Run();
 
 private:
+    Group1 group1_;
+    std::vector<ConstraintGroup*> constraintgroups_;
     PROBLEME_HEBDO* problemeHebdo_;
     Solver::IResultWriter& writer_;
 };

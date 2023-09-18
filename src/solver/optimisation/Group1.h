@@ -1,3 +1,4 @@
+#pragma once
 #include "ConstraintGroup.h"
 
 class Group1 : public ConstraintGroup
