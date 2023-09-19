@@ -156,6 +156,7 @@ typedef                           // Prices
                        <HydroCost      // Hydro costs
                         <ShortTermStorageByGroup<STstorageInjectionByCluster<
                           STstorageWithdrawalByCluster<STstorageLevelsByCluster<
+                          STstorageCashFlowByCluster<
                             UnsupliedEnergy           // Unsuplied Energy
                             <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                              <LMRViolations           // LMR Violations
@@ -175,7 +176,7 @@ typedef                           // Prices
                                         <ProfitByPlant
                                          // Links
                                          <Variable::Economy::Links // All links
-                                          >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                          >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
