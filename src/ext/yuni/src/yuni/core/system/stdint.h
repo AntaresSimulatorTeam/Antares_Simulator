@@ -34,23 +34,6 @@
 
 namespace Yuni
 {
-/*! 64-bit unsigned int, guaranteed to be 8 bytes in size */
-typedef uint64_t uint64_t;
-/*! 64-bit unsigned int, guaranteed to be 8 bytes in size */
-typedef int64_t int64_t;
-/*! 32-bit unsigned int, guaranteed to be 4 bytes in size */
-typedef uint32_t uint32_t;
-/*! 32-bit unsigned int, guaranteed to be 4 bytes in size */
-typedef int32_t int32_t;
-/*! 16-bit unsigned int, guaranteed to be 2 bytes in size */
-typedef uint16_t uint16;
-/*! 16-bit unsigned int, guaranteed to be 2 bytes in size */
-typedef int16_t int16_t;
-/*! 8-bit unsigned int, guaranteed to be 1 byte in size */
-typedef unsigned char uint8;
-/*! 8-bit unsigned int, guaranteed to be 1 byte in size */
-typedef char sint8;
-
 /*! unsigned char */
 typedef unsigned char uchar;
 
@@ -64,12 +47,6 @@ static const uint64_t AutoDetectNullChar = static_cast<uint64_t>(-1);
 /*! ssize_t */
 typedef int64_t ssize_t;
 #endif
-
-/*! Decimal floating-point (32 bits) */
-typedef float float32;
-/*! Decimal floating-point (32 bits) */
-typedef double float64;
-
 } /* namespace Yuni */
 
 #else /* Actually we have a C Compiler */
@@ -77,14 +54,6 @@ typedef double float64;
 #include "stddef.h"
 
 #endif /* C++ Compiler */
-
-/* C types */
-
-// TODO REMOVE THIS GARBAGE
-/*! Decimal floating-point (32 bits) */
-typedef float yfloat32;
-/*! Decimal floating-point (32 bits) */
-typedef double yfloat64;
 
 /* Both C / C++ compiler */
 
