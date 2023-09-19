@@ -245,7 +245,7 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
 }
 
-StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
+StudyRuntimeInfos::StudyRuntimeInfos() :
     nbYears(0),
     parameters(nullptr),
     thermalPlantTotalCount(0),
