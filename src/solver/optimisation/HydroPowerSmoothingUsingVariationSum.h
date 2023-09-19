@@ -1,9 +1,10 @@
 
 #pragma once
-#include "constraint_builder.h"
-class HydroPowerSmoothingUsingVariationSum : private Constraint
+#include "new_constraint_builder.h"
+
+class HydroPowerSmoothingUsingVariationSum : private NewConstraint
 {
 public:
-    using Constraint::Constraint;
-    void add(int pays);
+    using NewConstraint::NewConstraint;
+    void add(int pays, const int nombreDePasDeTempsPourUneOptimisation);
 };

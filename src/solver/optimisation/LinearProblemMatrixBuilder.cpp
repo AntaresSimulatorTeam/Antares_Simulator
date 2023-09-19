@@ -30,16 +30,6 @@
 #include "../utils/filename.h"
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"
-#include "AreaBalance.h"
-#include "FictitiousLoad.h"
-#include "ShortTermStorageLevel.h"
-#include "FlowDissociation.h"
-#include "BindingConstraintHour.h"
-#include "BindingConstraintWeek.h"
-#include "HydroPower.h"
-#include "HydroPowerSmoothingUsingVariationSum.h"
-#include "HydroPowerSmoothingUsingVariationMaxDown.h"
-#include "HydroPowerSmoothingUsingVariationMaxUp.h"
 #include "MinHydroPower.h"
 #include "MaxHydroPower.h"
 #include "MaxPumping.h"
@@ -68,11 +58,6 @@ void LinearProblemMatrixBuilder::Run()
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo_->NamedProblems);
 
-    HydroPowerSmoothingUsingVariationSum hydroPowerSmoothingUsingVariationSum(problemeHebdo_);
-    HydroPowerSmoothingUsingVariationMaxDown hydroPowerSmoothingUsingVariationMaxDown(
-      problemeHebdo_);
-    HydroPowerSmoothingUsingVariationMaxUp hydroPowerSmoothingUsingVariationMaxUp(problemeHebdo_);
-
     MinHydroPower minHydroPower(problemeHebdo_);
     MaxHydroPower maxHydroPower(problemeHebdo_);
 
@@ -86,32 +71,6 @@ void LinearProblemMatrixBuilder::Run()
     for (auto& group : constraintgroups_)
     {
         group->Build();
-    }
-
-    if (problemeHebdo_->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
-    {
-        for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
-        {
-            if (!problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
-                continue;
-
-            hydroPowerSmoothingUsingVariationSum.add(pays);
-        }
-    }
-    else if (problemeHebdo_->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
-    {
-        for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
-        {
-            if (!problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
-                continue;
-
-            constraintNamer.UpdateArea(problemeHebdo_->NomsDesPays[pays]);
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-            {
-                hydroPowerSmoothingUsingVariationMaxDown.add(pays, pdt);
-                hydroPowerSmoothingUsingVariationMaxUp.add(pays, pdt);
-            }
-        }
     }
 
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)

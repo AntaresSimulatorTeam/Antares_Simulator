@@ -31,6 +31,7 @@
 #include "BindingConstraintDayGroup.h"
 #include "BindingConstraintWeekGroup.h"
 #include "HydroPowerGroup.h"
+#include "HydraulicSmoothingGroup.h"
 
 #include <antares/study.h>
 
@@ -45,10 +46,14 @@ public:
      group1_(problemeHebdo),
      bindingConstraintDayGroup_(problemeHebdo),
      bindingConstraintWeekGroup_(problemeHebdo),
-     hydroPowerGroup_(problemeHebdo)
+     hydroPowerGroup_(problemeHebdo),
+     hydraulicSmoothingGroup_(problemeHebdo)
     {
-        constraintgroups_ = {
-          &group1_, &bindingConstraintDayGroup_, &bindingConstraintWeekGroup_, &hydroPowerGroup_};
+        constraintgroups_ = {&group1_,
+                             &bindingConstraintDayGroup_,
+                             &bindingConstraintWeekGroup_,
+                             &hydroPowerGroup_,
+                             &hydraulicSmoothingGroup_};
     }
 
     void Run();
@@ -60,5 +65,6 @@ private:
     BindingConstraintDayGroup bindingConstraintDayGroup_;
     BindingConstraintWeekGroup bindingConstraintWeekGroup_;
     HydroPowerGroup hydroPowerGroup_;
+    HydraulicSmoothingGroup hydraulicSmoothingGroup_;
     std::vector<ConstraintGroup*> constraintgroups_;
 };
