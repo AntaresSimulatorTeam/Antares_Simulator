@@ -35,18 +35,18 @@ struct VCardSTstorageCashFlowByCluster
     //! Caption
     static std::string Caption()
     {
-        return "STS inj by plant";
+        return "STS Cashflow";
     }
     //! Unit
     static std::string Unit()
     {
-        return "P-injection - MW";
+        return "CashFlow - Euro";
     }
 
     //! The short description of the variable
     static std::string Description()
     {
-        return "Energy injected by ST storage clusters";
+        return "Cash Flow for short term storage";
     }
 
     //! The expecte results
@@ -101,8 +101,7 @@ public:
     //! VCard
     typedef VCardSTstorageCashFlowByCluster VCardType;
     //! Ancestor
-    typedef Variable::IVariable<STstorageCashFlowByCluster<NextT>, NextT, VCardType>
-      AncestorType;
+    typedef Variable::IVariable<STstorageCashFlowByCluster<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -129,8 +128,7 @@ public:
     };
 
 public:
-    STstorageCashFlowByCluster() :
-     pValuesForTheCurrentYear(nullptr)
+    STstorageCashFlowByCluster() : pValuesForTheCurrentYear(nullptr)
     {
     }
 
@@ -237,7 +235,10 @@ public:
         {
             // ST storage injection for the current cluster and this hour
             pValuesForTheCurrentYear[numSpace][clusterIndex].hour[state.hourInTheYear]
-              = state.hourlyResults->ShortTermStorage[state.hourInTheWeek].injection[clusterIndex];
+            = state.hourlyResults->ShortTermStorage[state.hourInTheWeek].injection[clusterIndex]
+            - state.hourlyResults->ShortTermStorage[state.hourInTheWeek].withdrawal[clusterIndex]
+            * -(state.hourlyResults->CoutsMarginauxHoraires[state.hourInTheWeek]);
+            // Note: The marginal price provided by the solver is negative (naming convention).
         }
 
         // Next variable
