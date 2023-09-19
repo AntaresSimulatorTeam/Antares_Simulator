@@ -124,8 +124,8 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
         auto& colPowerOverWater = m[PreproHydro::powerOverWater];
         auto& colMaxEnergy = m[PreproHydro::maximumEnergy];
 
-        for (uint m = 0; m < nbMonthsPerYear; ++m)
-            valueCol += colMaxEnergy[m] * (1. - colPowerOverWater[m]);
+        for (uint month = 0; month < nbMonthsPerYear; ++month)
+            valueCol += colMaxEnergy[month] * (1. - colPowerOverWater[month]);
 
         hydroHasInflows = (valueCol > 0.);
     }
