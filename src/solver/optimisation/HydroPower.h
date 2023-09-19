@@ -1,9 +1,18 @@
 #pragma once
-#include "constraint_builder.h"
+#include "new_constraint_builder.h"
+struct HydroPowerData
+{
+    const bool& presenceHydro;
+    const int& TurbEntreBornes;
+    const bool& presencePompage;
+    const int& NombreDePasDeTempsPourUneOptimisation;
+    std::vector<int>& NumeroDeContrainteEnergieHydraulique;
+    const double& pumpingRatio;
+};
 
-class HydroPower : private Constraint
+class HydroPower : private NewConstraint
 {
 public:
-    using Constraint::Constraint;
-    void add(int pays);
+    using NewConstraint::NewConstraint;
+    void add(int pays, std::shared_ptr<HydroPowerData> data);
 };

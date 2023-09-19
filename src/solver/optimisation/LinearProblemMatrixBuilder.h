@@ -30,6 +30,7 @@
 #include "Group1.h"
 #include "BindingConstraintDayGroup.h"
 #include "BindingConstraintWeekGroup.h"
+#include "HydroPowerGroup.h"
 
 #include <antares/study.h>
 
@@ -43,9 +44,11 @@ public:
      writer_(writer),
      group1_(problemeHebdo),
      bindingConstraintDayGroup_(problemeHebdo),
-     bindingConstraintWeekGroup_(problemeHebdo)
+     bindingConstraintWeekGroup_(problemeHebdo),
+     hydroPowerGroup_(problemeHebdo)
     {
-        constraintgroups_ = {&group1_, &bindingConstraintDayGroup_, &bindingConstraintWeekGroup_};
+        constraintgroups_ = {
+          &group1_, &bindingConstraintDayGroup_, &bindingConstraintWeekGroup_, &hydroPowerGroup_};
     }
 
     void Run();
@@ -54,6 +57,7 @@ private:
     Group1 group1_;
     BindingConstraintDayGroup bindingConstraintDayGroup_;
     BindingConstraintWeekGroup bindingConstraintWeekGroup_;
+    HydroPowerGroup hydroPowerGroup_;
     std::vector<ConstraintGroup*> constraintgroups_;
     PROBLEME_HEBDO* problemeHebdo_;
     Solver::IResultWriter& writer_;

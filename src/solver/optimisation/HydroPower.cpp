@@ -1,51 +1,42 @@
 #include "HydroPower.h"
 
-void HydroPower::add(int pays)
+void HydroPower::add(int pays, std::shared_ptr<HydroPowerData> data)
 {
-    bool presenceHydro
-      = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
-    bool TurbEntreBornes = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-
     const int NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-    if (presenceHydro && !TurbEntreBornes)
+      = builder->data->NombreDePasDeTempsPourUneOptimisation;
+    if (data->presenceHydro && !data->TurbEntreBornes)
     {
-        if (bool presencePompage
-            = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
+        if (data->presencePompage)
         {
-            problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays]
-              = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+            data->NumeroDeContrainteEnergieHydraulique[pays] = builder->data->nombreDeContraintes;
 
-            const double pumpingRatio
-              = problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
+            const double pumpingRatio = data->pumpingRatio;
             for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                builder.updateHourWithinWeek(pdt);
-                builder.include(Variable::HydProd(pays), 1.0)
-                  .include(Variable::Pumping(pays), -pumpingRatio);
+                builder->updateHourWithinWeek(pdt);
+                builder->include(NewVariable::HydProd(pays), 1.0)
+                  .include(NewVariable::Pumping(pays), -pumpingRatio);
             }
         }
         else
         {
             for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                builder.updateHourWithinWeek(pdt);
-                builder.include(Variable::HydProd(pays), 1.0);
+                builder->updateHourWithinWeek(pdt);
+                builder->include(NewVariable::HydProd(pays), 1.0);
             }
         }
-        problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        data->NumeroDeContrainteEnergieHydraulique[pays] = builder->data->nombreDeContraintes;
 
-        builder.equalTo();
+        builder->equalTo();
         {
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-            namer.HydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+            ConstraintNamer namer(builder->data->NomDesContraintes, builder->data->NamedProblems);
+            namer.UpdateArea(builder->data->NomsDesPays[pays]);
+            namer.UpdateTimeStep(builder->data->weekInTheYear);
+            namer.HydroPower(builder->data->nombreDeContraintes);
         }
-        builder.build();
+        builder->build();
     }
     else
-        problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays] = -1;
+        data->NumeroDeContrainteEnergieHydraulique[pays] = -1;
 }

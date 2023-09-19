@@ -134,6 +134,8 @@ set(RTESOLVER_OPT
 		BindingConstraintDayGroup.cpp
 		BindingConstraintWeekGroup.h
 		BindingConstraintWeekGroup.cpp
+		HydroPowerGroup.h
+		HydroPowerGroup.cpp
 
 	)
 

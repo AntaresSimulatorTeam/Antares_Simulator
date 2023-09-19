@@ -68,7 +68,6 @@ void LinearProblemMatrixBuilder::Run()
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo_->NamedProblems);
 
-    HydroPower hydroPower(problemeHebdo_);
     HydroPowerSmoothingUsingVariationSum hydroPowerSmoothingUsingVariationSum(problemeHebdo_);
     HydroPowerSmoothingUsingVariationMaxDown hydroPowerSmoothingUsingVariationMaxDown(
       problemeHebdo_);
@@ -87,11 +86,6 @@ void LinearProblemMatrixBuilder::Run()
     for (auto& group : constraintgroups_)
     {
         group->Build();
-    }
-
-    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
-    {
-        hydroPower.add(pays);
     }
 
     if (problemeHebdo_->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
