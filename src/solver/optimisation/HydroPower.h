@@ -3,7 +3,7 @@
 struct HydroPowerData
 {
     const bool& presenceHydro;
-    const int& TurbEntreBornes;
+    const bool& TurbEntreBornes;
     const bool& presencePompage;
     const int& NombreDePasDeTempsPourUneOptimisation;
     std::vector<int>& NumeroDeContrainteEnergieHydraulique;

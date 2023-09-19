@@ -54,11 +54,11 @@ public:
     void Run();
 
 private:
+    PROBLEME_HEBDO* problemeHebdo_;
+    Solver::IResultWriter& writer_;
     Group1 group1_;
     BindingConstraintDayGroup bindingConstraintDayGroup_;
     BindingConstraintWeekGroup bindingConstraintWeekGroup_;
     HydroPowerGroup hydroPowerGroup_;
     std::vector<ConstraintGroup*> constraintgroups_;
-    PROBLEME_HEBDO* problemeHebdo_;
-    Solver::IResultWriter& writer_;
 };
