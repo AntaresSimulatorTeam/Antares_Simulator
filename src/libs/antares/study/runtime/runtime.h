@@ -76,7 +76,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    StudyRuntimeInfos(uint nbYearsParallel);
+    StudyRuntimeInfos();
     /*!
     ** \brief Destructor
     */

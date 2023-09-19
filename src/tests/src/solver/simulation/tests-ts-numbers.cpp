@@ -18,7 +18,7 @@ void initializeStudy(Study::Ptr study)
 {
 	study->parameters.derated = false;
 
-	study->runtime = new StudyRuntimeInfos(1);
+	study->runtime = new StudyRuntimeInfos();
 	study->runtime->rangeLimits.year[rangeBegin] = 0;
 	study->runtime->rangeLimits.year[rangeEnd] = 0;
 	study->runtime->rangeLimits.year[rangeCount] = 1;
