@@ -24,29 +24,39 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_TOOLBOX_EXT_SOURCE_APPLY_H__
-#define __ANTARES_TOOLBOX_EXT_SOURCE_APPLY_H__
 
-#include <yuni/yuni.h>
-#include <antares/study/study.h>
-#include <action/action.h>
 #include <action/context.h>
+
+using namespace Yuni;
 
 namespace Antares
 {
-namespace ExtSource
+namespace Action
 {
-namespace Handler
+Context::Context(Data::Study::Ptr targetStudy, const size_t layer) :
+ study(targetStudy),
+ extStudy(nullptr),
+ layerID(layer),
+ area(nullptr),
+ cluster(nullptr),
+ link(nullptr),
+ originalPlant(nullptr),
+ constraint(nullptr)
 {
-/*!
-** \brief Apply all actions
-*/
-void Apply(Antares::Action::Context::Ptr context,
-           Antares::Action::IAction::Ptr actions,
-           bool windowRequired = false);
+}
 
-} // namespace Handler
-} // namespace ExtSource
+void Context::reset()
+{
+    area = nullptr;
+    cluster = nullptr;
+    link = nullptr;
+    constraint = nullptr;
+
+    view.clear();
+    property.clear();
+    areaNameMapping.clear();
+    areaLowerNameMapping.clear();
+}
+
+} // namespace Action
 } // namespace Antares
-
-#endif // __ANTARES_TOOLBOX_EXT_SOURCE_APPLY_H__

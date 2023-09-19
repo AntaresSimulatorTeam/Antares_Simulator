@@ -323,8 +323,3 @@ target_include_directories(study
         ${CMAKE_CURRENT_SOURCE_DIR}/../.. #Dirty trick to allow inclusion via <antares/study/X>
         # Make more than just study visible but it's the lesser evil for now
 )
-
-# TODO when removing the UI, also remove this directory & target
-if(BUILD_UI)
-    add_subdirectory(action)
-endif()

@@ -24,55 +24,54 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_APPLICATION_EXT_SOURCE_WINDOW_H__
-#define __ANTARES_APPLICATION_EXT_SOURCE_WINDOW_H__
+#ifndef __ANTARES_LIBS_STUDY_ACTION_FWD_H__
+#define __ANTARES_LIBS_STUDY_ACTION_FWD_H__
 
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
 #include <antares/study/study.h>
-#include <yuni/thread/thread.h>
-#include <wx/stattext.h>
-#include <wx/timer.h>
-#include <wx/dialog.h>
-#include <action/action.h>
+#include <action/behavior.h>
+#include <action/state.h>
 
 namespace Antares
 {
-namespace Window
+namespace Action
 {
-class ApplyActionsDialog : public wxDialog
+enum LevelOfDetails
+{
+    //! For standard purposes
+    lodStandard = 0,
+    //! For advanced purposes
+    lodAdvanced,
+};
+
+class IAction;
+
+//! Property map
+using PropertyMap = std::map<Yuni::String, Yuni::String>;
+
+class ActionInformations
 {
 public:
-    //! \name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Default Constructor
-    */
-    ApplyActionsDialog(wxWindow* parent,
-                       const Antares::Action::Context::Ptr& context,
-                       const Antares::Action::IAction::Ptr& root);
-
-    //! Destructor
-    virtual ~ApplyActionsDialog()
+    ActionInformations() : behavior(bhOverwrite), state(stUnknown)
     {
     }
-    //@}
 
-private:
-    //! Event: The user asked to cancel the operation
-    void onCancel(void*);
-    //! Event: Performing the operation
-    void onPerform(void*);
+public:
+    //! Behavior of the action
+    Behavior behavior;
+    //! State of the action
+    State state;
+    //! Caption
+    Yuni::String caption;
+    //! Message
+    Yuni::String message;
+    //! Properties
+    PropertyMap property;
 
-private:
-    //! The target study
-    Antares::Action::Context::Ptr pContext;
-    //! The tree of the actions to perform
-    Antares::Action::IAction::Ptr pActions;
+}; // class ActionInformations
 
-    wxStaticText* pLblInfos;
-
-}; // class ApplyActionsDialog
-
-} // namespace Window
+} // namespace Action
 } // namespace Antares
 
-#endif // __ANTARES_APPLICATION_EXT_SOURCE_WINDOW_H__
+#endif // __ANTARES_LIBS_STUDY_ACTION_FWD_H__

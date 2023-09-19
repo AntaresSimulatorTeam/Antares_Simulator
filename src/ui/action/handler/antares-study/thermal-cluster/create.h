@@ -24,55 +24,62 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_APPLICATION_EXT_SOURCE_WINDOW_H__
-#define __ANTARES_APPLICATION_EXT_SOURCE_WINDOW_H__
+#ifndef __ANTARES_LIBS_STUDY_ACTION_THERMAL_PLANT_CREATE_H__
+#define __ANTARES_LIBS_STUDY_ACTION_THERMAL_PLANT_CREATE_H__
 
-#include <antares/study/study.h>
-#include <yuni/thread/thread.h>
-#include <wx/stattext.h>
-#include <wx/timer.h>
-#include <wx/dialog.h>
+#include <yuni/yuni.h>
 #include <action/action.h>
 
 namespace Antares
 {
-namespace Window
+namespace Action
 {
-class ApplyActionsDialog : public wxDialog
+namespace AntaresStudy
 {
+namespace ThermalCluster
+{
+class Create : public IAction
+{
+public:
+    //! The most suitable smart ptr for the class
+    using Ptr = IAction::Ptr;
+    //! The threading policy
+    using ThreadingPolicy = IAction::ThreadingPolicy;
+
 public:
     //! \name Constructor & Destructor
     //@{
     /*!
-    ** \brief Default Constructor
+    ** \brief Default constructor
     */
-    ApplyActionsDialog(wxWindow* parent,
-                       const Antares::Action::Context::Ptr& context,
-                       const Antares::Action::IAction::Ptr& root);
-
+    Create(const AnyString& areaname, const AnyString& clustername);
     //! Destructor
-    virtual ~ApplyActionsDialog()
-    {
-    }
+    virtual ~Create();
     //@}
 
-private:
-    //! Event: The user asked to cancel the operation
-    void onCancel(void*);
-    //! Event: Performing the operation
-    void onPerform(void*);
+    virtual bool allowUpdate() const;
+
+protected:
+    virtual bool prepareWL(Context& ctx);
+    virtual bool performWL(Context& ctx);
 
 private:
-    //! The target study
-    Antares::Action::Context::Ptr pContext;
-    //! The tree of the actions to perform
-    Antares::Action::IAction::Ptr pActions;
+    //! The original area name
+    YString pOriginalAreaName;
+    //! The original cluster name
+    YString pOriginalPlantName;
+    //!
+    YString pTargetPlantName;
+    //! The futur cluster name
+    YString pFuturPlantName;
 
-    wxStaticText* pLblInfos;
+}; // class IAction
 
-}; // class ApplyActionsDialog
-
-} // namespace Window
+} // namespace ThermalCluster
+} // namespace AntaresStudy
+} // namespace Action
 } // namespace Antares
 
-#endif // __ANTARES_APPLICATION_EXT_SOURCE_WINDOW_H__
+#include "create.hxx"
+
+#endif // __ANTARES_LIBS_STUDY_ACTION_THERMAL_PLANT_CREATE_H__

@@ -24,55 +24,58 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_APPLICATION_EXT_SOURCE_WINDOW_H__
-#define __ANTARES_APPLICATION_EXT_SOURCE_WINDOW_H__
+#ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_CORRELATION_POST_H__
+#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_CORRELATION_POST_H__
 
-#include <antares/study/study.h>
-#include <yuni/thread/thread.h>
-#include <wx/stattext.h>
-#include <wx/timer.h>
-#include <wx/dialog.h>
+#include <yuni/yuni.h>
 #include <action/action.h>
 
 namespace Antares
 {
-namespace Window
+namespace Action
 {
-class ApplyActionsDialog : public wxDialog
+namespace AntaresStudy
 {
+namespace Area
+{
+class CorrelationPost : public IAction
+{
+public:
+    //! The most suitable smart ptr for the class
+    using Ptr = IAction::Ptr;
+    //! The threading policy
+    using ThreadingPolicy = IAction::ThreadingPolicy;
+
 public:
     //! \name Constructor & Destructor
     //@{
     /*!
-    ** \brief Default Constructor
+    ** \brief Default constructor
     */
-    ApplyActionsDialog(wxWindow* parent,
-                       const Antares::Action::Context::Ptr& context,
-                       const Antares::Action::IAction::Ptr& root);
-
+    explicit CorrelationPost(IAction* parent, Data::TimeSeries ts, const AnyString& areaname);
     //! Destructor
-    virtual ~ApplyActionsDialog()
-    {
-    }
+    virtual ~CorrelationPost();
     //@}
 
-private:
-    //! Event: The user asked to cancel the operation
-    void onCancel(void*);
-    //! Event: Performing the operation
-    void onPerform(void*);
+    virtual bool visible() const;
+
+protected:
+    virtual bool prepareWL(Context& ctx);
+    virtual bool performWL(Context& ctx);
 
 private:
-    //! The target study
-    Antares::Action::Context::Ptr pContext;
-    //! The tree of the actions to perform
-    Antares::Action::IAction::Ptr pActions;
+    //! The attached action
+    IAction::Ptr pAction;
+    Data::TimeSeries pType;
+    Data::AreaName pOriginalAreaName;
 
-    wxStaticText* pLblInfos;
+}; // class IAction
 
-}; // class ApplyActionsDialog
-
-} // namespace Window
+} // namespace Area
+} // namespace AntaresStudy
+} // namespace Action
 } // namespace Antares
 
-#endif // __ANTARES_APPLICATION_EXT_SOURCE_WINDOW_H__
+#include "correlation-post.hxx"
+
+#endif // __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_CORRELATION_POST_H__
