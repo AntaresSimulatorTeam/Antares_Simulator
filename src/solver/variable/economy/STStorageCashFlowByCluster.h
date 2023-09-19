@@ -234,9 +234,10 @@ public:
              ++clusterIndex)
         {
             // ST storage injection for the current cluster and this hour
+            // CashFlow[h] = (withdrawal - injection) * MRG. PRICE
             pValuesForTheCurrentYear[numSpace][clusterIndex].hour[state.hourInTheYear]
-            = state.hourlyResults->ShortTermStorage[state.hourInTheWeek].injection[clusterIndex]
-            - state.hourlyResults->ShortTermStorage[state.hourInTheWeek].withdrawal[clusterIndex]
+            = (state.hourlyResults->ShortTermStorage[state.hourInTheWeek].withdrawal[clusterIndex]
+            - state.hourlyResults->ShortTermStorage[state.hourInTheWeek].injection[clusterIndex])
             * state.hourlyResults->CoutsMarginauxHoraires[state.hourInTheWeek];
             // Note: The marginal price provided by the solver is negative (naming convention).
         }
