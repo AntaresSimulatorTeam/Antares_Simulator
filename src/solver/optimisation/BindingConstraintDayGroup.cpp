@@ -30,10 +30,7 @@ std::shared_ptr<BindingConstraintDayData>
 
 void BindingConstraintDayGroup::Build()
 {
-    std::shared_ptr<NewConstraintBuilder> builder(
-      NewGetConstraintBuilderFromProblemHebdo(problemeHebdo_));
-
-    BindingConstraintDay bindingConstraintDay(builder);
+    BindingConstraintDay bindingConstraintDay(builder_);
     for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
          cntCouplante++)
     {

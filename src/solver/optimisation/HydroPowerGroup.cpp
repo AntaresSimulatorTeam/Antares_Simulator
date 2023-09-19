@@ -1,5 +1,4 @@
 #include "HydroPowerGroup.h"
-#include "new_constraint_builder_utils.h"
 
 std::shared_ptr<HydroPowerData> HydroPowerGroup::GetHydroPowerDataFromProblemHebdo(uint32_t pays)
 {
@@ -15,9 +14,7 @@ std::shared_ptr<HydroPowerData> HydroPowerGroup::GetHydroPowerDataFromProblemHeb
 
 void HydroPowerGroup::Build()
 {
-    std::shared_ptr<NewConstraintBuilder> builder(
-      NewGetConstraintBuilderFromProblemHebdo(problemeHebdo_));
-    HydroPower hydroPower(builder);
+    HydroPower hydroPower(builder_);
 
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {

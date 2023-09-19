@@ -9,16 +9,11 @@
 /*TODO Rename this*/
 void Group1::Build()
 {
-    auto ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre.get();
-
-    std::shared_ptr<NewConstraintBuilder> builder(
-      NewGetConstraintBuilderFromProblemHebdo(problemeHebdo_));
-    AreaBalance areaBalance(builder);
-
-    FictitiousLoad fictitiousLoad(builder);
-    ShortTermStorageLevel shortTermStorageLevel(builder);
-    FlowDissociation flowDissociation(builder);
-    BindingConstraintHour bindingConstraintHour(builder);
+    AreaBalance areaBalance(builder_);
+    FictitiousLoad fictitiousLoad(builder_);
+    ShortTermStorageLevel shortTermStorageLevel(builder_);
+    FlowDissociation flowDissociation(builder_);
+    BindingConstraintHour bindingConstraintHour(builder_);
 
     int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
