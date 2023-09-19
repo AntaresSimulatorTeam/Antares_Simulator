@@ -389,7 +389,7 @@ void HydroManagement::prepareNetDemand(uint numSpace)
 
         auto& data = tmpDataByArea_[numSpace][z];
 
-        for (uint hour = 0; hour != 8760; ++hour)
+        for (uint hour = 0; hour != HOURS_PER_YEAR; ++hour)
         {
             auto dayYear = calendar_.hours[hour].dayYear;
 

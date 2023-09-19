@@ -90,8 +90,8 @@ private:
                                const T& duration);
 
 private:
-    const uint nbHoursPerYear = 8760;
-    const uint daysPerYear = 365;
+    const uint nbHoursPerYear = HOURS_PER_YEAR;
+    const uint daysPerYear = DAYS_PER_YEAR;
 
     MersenneTwister& rndgenerator;
 

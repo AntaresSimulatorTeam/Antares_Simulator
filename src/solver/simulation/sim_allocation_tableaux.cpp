@@ -39,7 +39,7 @@ static void AllocateResultsForEconomicMode(const Data::Study& study)
     transitMoyenInterconnexionsRecalculQuadratique.resize(study.runtime->interconnectionsCount());
 
     for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
-        transitMoyenInterconnexionsRecalculQuadratique[i].assign(8760, 0.);
+        transitMoyenInterconnexionsRecalculQuadratique[i].assign(HOURS_PER_YEAR, 0.);
 }
 
 void SIM_AllocationTableaux(const Data::Study& study)

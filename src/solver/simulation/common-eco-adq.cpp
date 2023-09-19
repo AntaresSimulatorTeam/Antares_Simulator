@@ -190,13 +190,12 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
     if (!flowQuadEnabled)
         return false;
 
-    uint maxHours = 8760;
     for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
     {
         auto& lnk = *(study.runtime->areaLink[j]);
         auto& impedances = lnk.parameters[Data::fhlImpedances];
 
-        for (uint hour = 0; hour < maxHours; ++hour)
+        for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
             if (Math::Abs(impedances[hour]) >= 1e-100)
             {
