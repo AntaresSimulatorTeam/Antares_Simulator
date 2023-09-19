@@ -148,6 +148,7 @@ set(ANTARES_LIBS
 		antares-core
 		Antares::date
 		Antares::study
+        Antares::action
 		yuni-static-core
 		yuni-static-uuid
 		model_antares
