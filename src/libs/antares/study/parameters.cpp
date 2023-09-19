@@ -840,10 +840,11 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
     }
     return false;
 }
+
 static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
                                                 const String& key,
                                                 const String& value,
-                                                const String&)
+                                                const String& original)
 {
     if (key == "selected_vars_reset")
     {
@@ -855,7 +856,10 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
     {
         // Check if the read output variable exists
         if (not d.variablesPrintInfo.exists(value.to<std::string>()))
+        {
+            logs.warning() << "Output variable `" << original << "` does not exist";
             return false;
+        }
 
         bool is_var_printed = (key == "select_var +");
         d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), is_var_printed);
