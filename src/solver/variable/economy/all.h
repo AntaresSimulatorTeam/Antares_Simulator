@@ -87,6 +87,7 @@
 #include "STStorageInjectionByCluster.h"
 #include "STStorageWithdrawalByCluster.h"
 #include "STStorageLevelsByCluster.h"
+#include "STStorageCashFlowByCluster.h"
 
 // Output variables associated to links
 #include "links/flowLinear.h"
