@@ -58,9 +58,6 @@ void LinearProblemMatrixBuilder::Run()
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo_->NamedProblems);
 
-    MinHydroPower minHydroPower(problemeHebdo_);
-    MaxHydroPower maxHydroPower(problemeHebdo_);
-
     MaxPumping maxPumping(problemeHebdo_);
 
     AreaHydroLevel areaHydroLevel(problemeHebdo_);
@@ -71,13 +68,6 @@ void LinearProblemMatrixBuilder::Run()
     for (auto& group : constraintgroups_)
     {
         group->Build();
-    }
-
-    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
-    {
-        minHydroPower.add(pays);
-
-        maxHydroPower.add(pays);
     }
 
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)

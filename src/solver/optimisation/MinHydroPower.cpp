@@ -1,35 +1,27 @@
 #include "MinHydroPower.h"
 
-void MinHydroPower::add(int pays)
+void MinHydroPower::add(int pays, std::shared_ptr<MinHydroPowerData> data)
 {
-    bool presenceHydro
-      = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
-    bool TurbEntreBornes = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-    if (presenceHydro
-        && (TurbEntreBornes
-            || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
+    if (data->presenceHydro && (data->TurbEntreBornes || data->PresenceDePompageModulable))
     {
-        problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        data->NumeroDeContrainteMinEnergieHydraulique[pays] = builder->data->nombreDeContraintes;
 
         const int NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+          = data->NombreDePasDeTempsPourUneOptimisation;
 
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-        namer.MinHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        ConstraintNamer namer(builder->data->NomDesContraintes, builder->data->NamedProblems);
+        namer.UpdateArea(builder->data->NomsDesPays[pays]);
+        namer.UpdateTimeStep(builder->data->weekInTheYear);
+        namer.MinHydroPower(builder->data->nombreDeContraintes);
         for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
-            builder.updateHourWithinWeek(pdt);
-            builder.include(Variable::HydProd(pays), 1.0);
+            builder->updateHourWithinWeek(pdt);
+            builder->include(NewVariable::HydProd(pays), 1.0);
         }
 
-        problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-        builder.greaterThan().build();
+        data->NumeroDeContrainteMinEnergieHydraulique[pays] = builder->data->nombreDeContraintes;
+        builder->greaterThan().build();
     }
     else
-        problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays] = -1;
+        data->NumeroDeContrainteMinEnergieHydraulique[pays] = -1;
 }

@@ -32,6 +32,7 @@
 #include "BindingConstraintWeekGroup.h"
 #include "HydroPowerGroup.h"
 #include "HydraulicSmoothingGroup.h"
+#include "MinMaxHydroPowerGroup.h"
 
 #include <antares/study.h>
 
@@ -47,13 +48,15 @@ public:
      bindingConstraintDayGroup_(problemeHebdo),
      bindingConstraintWeekGroup_(problemeHebdo),
      hydroPowerGroup_(problemeHebdo),
-     hydraulicSmoothingGroup_(problemeHebdo)
+     hydraulicSmoothingGroup_(problemeHebdo),
+     minMaxHydroPowerGroup_(problemeHebdo)
     {
         constraintgroups_ = {&group1_,
                              &bindingConstraintDayGroup_,
                              &bindingConstraintWeekGroup_,
                              &hydroPowerGroup_,
-                             &hydraulicSmoothingGroup_};
+                             &hydraulicSmoothingGroup_,
+                             &minMaxHydroPowerGroup_};
     }
 
     void Run();
@@ -66,5 +69,6 @@ private:
     BindingConstraintWeekGroup bindingConstraintWeekGroup_;
     HydroPowerGroup hydroPowerGroup_;
     HydraulicSmoothingGroup hydraulicSmoothingGroup_;
+    MinMaxHydroPowerGroup minMaxHydroPowerGroup_;
     std::vector<ConstraintGroup*> constraintgroups_;
 };
