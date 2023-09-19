@@ -29,9 +29,7 @@ std::shared_ptr<BindingConstraintWeekData>
 
 void BindingConstraintWeekGroup::Build()
 {
-    std::shared_ptr<NewConstraintBuilder> builder(
-      NewGetConstraintBuilderFromProblemHebdo(problemeHebdo_));
-    BindingConstraintWeek bindingConstraintWeek(builder);
+    BindingConstraintWeek bindingConstraintWeek(builder_);
 
     if (problemeHebdo_->NombreDePasDeTempsPourUneOptimisation
         > problemeHebdo_->NombreDePasDeTempsDUneJournee)

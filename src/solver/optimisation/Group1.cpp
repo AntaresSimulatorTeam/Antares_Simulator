@@ -1,113 +1,111 @@
 #include "Group1.h"
-#include "AreaBalance.h"
-#include "FictitiousLoad.h"
-#include "ShortTermStorageLevel.h"
-#include "FlowDissociation.h"
-#include "BindingConstraintHour.h"
-#include "new_constraint_builder_utils.h"
+std::shared_ptr<AreaBalanceData> Group1::GetAreaBalanceData(int pdt, uint32_t pays)
+{
+    AreaBalanceData areaBalanceData{
+      problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays,
+      problemeHebdo_->CorrespondanceVarNativesVarOptim[pdt].SIM_ShortTermStorage.InjectionVariable,
+      problemeHebdo_->CorrespondanceVarNativesVarOptim[pdt].SIM_ShortTermStorage.WithdrawalVariable,
+      problemeHebdo_->IndexDebutIntercoOrigine,
+      problemeHebdo_->IndexSuivantIntercoOrigine,
+      problemeHebdo_->IndexDebutIntercoExtremite,
+      problemeHebdo_->IndexSuivantIntercoExtremite,
+      problemeHebdo_->PaliersThermiquesDuPays[pays],
+      problemeHebdo_->ShortTermStorage};
+    return std::make_shared<AreaBalanceData>(areaBalanceData);
+}
+
+std::shared_ptr<FictitiousLoadData> Group1::GetFictitiousLoadData(int pdt, uint32_t pays)
+{
+    FictitiousLoadData fictitiousLoadData = {problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
+                                               .NumeroDeContraintePourEviterLesChargesFictives,
+                                             problemeHebdo_->PaliersThermiquesDuPays[pays],
+                                             problemeHebdo_->DefaillanceNegativeUtiliserHydro};
+
+    return std::make_shared<FictitiousLoadData>(fictitiousLoadData);
+}
+
+std::shared_ptr<ShortTermStorageLevelData> Group1::GetShortTermStorageLevelData(int pdt)
+{
+    ShortTermStorageLevelData shortTermStorageLevelData = {
+      problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt].ShortTermStorageLevelConstraint,
+      problemeHebdo_->ShortTermStorage,
+    };
+
+    return std::make_shared<ShortTermStorageLevelData>(shortTermStorageLevelData);
+}
+
+std::shared_ptr<FlowDissociationData> Group1::GetFlowDissociationData(int pdt)
+{
+    FlowDissociationData flowDissociationData = {
+      problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDeDissociationDeFlux,
+      problemeHebdo_->CoutDeTransport,
+      problemeHebdo_->PaysOrigineDeLInterconnexion,
+      problemeHebdo_->PaysExtremiteDeLInterconnexion};
+
+    return std::make_shared<FlowDissociationData>(flowDissociationData);
+}
+
+std::shared_ptr<BindingConstraintHourData> Group1::GetBindingConstraintHourData(int pdt,
+                                                                                int cntCouplante)
+{
+    const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+      = problemeHebdo_->MatriceDesContraintesCouplantes[cntCouplante];
+    BindingConstraintData bindingConstraintData
+      = {MatriceDesContraintesCouplantes.TypeDeContrainteCouplante,
+         MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante,
+         MatriceDesContraintesCouplantes.NumeroDeLInterconnexion,
+         MatriceDesContraintesCouplantes.PoidsDeLInterconnexion,
+         MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco,
+         MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante,
+         MatriceDesContraintesCouplantes.PaysDuPalierDispatch,
+         MatriceDesContraintesCouplantes.NumeroDuPalierDispatch,
+         MatriceDesContraintesCouplantes.PoidsDuPalierDispatch,
+         MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch,
+         MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante,
+         MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante,
+         problemeHebdo_->PaliersThermiquesDuPays};
+
+    BindingConstraintHourData bindingConstraintHourData
+      = {bindingConstraintData,
+         problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
+           .NumeroDeContrainteDesContraintesCouplantes};
+    return std::make_shared<BindingConstraintHourData>(bindingConstraintHourData);
+}
 
 /*TODO Rename this*/
 void Group1::Build()
 {
-    auto ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre.get();
-
-    std::shared_ptr<NewConstraintBuilder> builder(
-      NewGetConstraintBuilderFromProblemHebdo(problemeHebdo_));
-    AreaBalance areaBalance(builder);
-
-    FictitiousLoad fictitiousLoad(builder);
-    ShortTermStorageLevel shortTermStorageLevel(builder);
-    FlowDissociation flowDissociation(builder);
-    BindingConstraintHour bindingConstraintHour(builder);
+    AreaBalance areaBalance(builder_);
+    FictitiousLoad fictitiousLoad(builder_);
+    ShortTermStorageLevel shortTermStorageLevel(builder_);
+    FlowDissociation flowDissociation(builder_);
+    BindingConstraintHour bindingConstraintHour(builder_);
 
     int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
-        CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-          = problemeHebdo_->CorrespondanceVarNativesVarOptim[pdt];
-        CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-          = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt];
-
         for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
         {
-            AreaBalanceData areaBalanceData{
-              problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays,
-              problemeHebdo_->CorrespondanceVarNativesVarOptim[pdt]
-                .SIM_ShortTermStorage.InjectionVariable,
-              problemeHebdo_->CorrespondanceVarNativesVarOptim[pdt]
-                .SIM_ShortTermStorage.WithdrawalVariable,
-              problemeHebdo_->IndexDebutIntercoOrigine,
-              problemeHebdo_->IndexSuivantIntercoOrigine,
-              problemeHebdo_->IndexDebutIntercoExtremite,
-              problemeHebdo_->IndexSuivantIntercoExtremite,
-              problemeHebdo_->PaliersThermiquesDuPays[pays],
-              problemeHebdo_->ShortTermStorage};
-            auto shared_ptr_areaBalance = std::make_shared<AreaBalanceData>(areaBalanceData);
-            areaBalance.add(pdt, pays, shared_ptr_areaBalance);
+            areaBalance.add(pdt, pays, GetAreaBalanceData(pdt, pays));
 
-            FictitiousLoadData fictitiousLoadData
-              = {problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
-                   .NumeroDeContraintePourEviterLesChargesFictives,
-                 problemeHebdo_->PaliersThermiquesDuPays[pays],
-                 problemeHebdo_->DefaillanceNegativeUtiliserHydro};
+            fictitiousLoad.add(pdt, pays, GetFictitiousLoadData(pdt, pays));
 
-            auto shared_ptr_fictitiousLoad_data
-              = std::make_shared<FictitiousLoadData>(fictitiousLoadData);
-            fictitiousLoad.add(pdt, pays, shared_ptr_fictitiousLoad_data);
-
-            ShortTermStorageLevelData shortTermStorageLevelData = {
-              problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt].ShortTermStorageLevelConstraint,
-              problemeHebdo_->ShortTermStorage,
-            };
-            auto shared_ptr_shortTermStorageLevelData
-              = std::make_shared<ShortTermStorageLevelData>(shortTermStorageLevelData);
-
-            shortTermStorageLevel.add(pdt, pays, shared_ptr_shortTermStorageLevelData);
+            shortTermStorageLevel.add(pdt, pays, GetShortTermStorageLevelData(pdt));
         }
 
         for (uint32_t interco = 0; interco < problemeHebdo_->NombreDInterconnexions; interco++)
         {
-            FlowDissociationData flowDissociationData
-              = {problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
-                   .NumeroDeContrainteDeDissociationDeFlux,
-                 problemeHebdo_->CoutDeTransport,
-                 problemeHebdo_->PaysOrigineDeLInterconnexion,
-                 problemeHebdo_->PaysExtremiteDeLInterconnexion};
-            auto shared_ptr_flowDissociationData
-              = std::make_shared<FlowDissociationData>(flowDissociationData);
-            flowDissociation.add(pdt, interco, shared_ptr_flowDissociationData);
+            flowDissociation.add(pdt, interco, GetFlowDissociationData(pdt));
         }
+
         for (uint32_t cntCouplante = 0;
              cntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-              = problemeHebdo_->MatriceDesContraintesCouplantes[cntCouplante];
-            BindingConstraintData bindingConstraintData
-              = {MatriceDesContraintesCouplantes.TypeDeContrainteCouplante,
-                 MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante,
-                 MatriceDesContraintesCouplantes.NumeroDeLInterconnexion,
-                 MatriceDesContraintesCouplantes.PoidsDeLInterconnexion,
-                 MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco,
-                 MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante,
-                 MatriceDesContraintesCouplantes.PaysDuPalierDispatch,
-                 MatriceDesContraintesCouplantes.NumeroDuPalierDispatch,
-                 MatriceDesContraintesCouplantes.PoidsDuPalierDispatch,
-                 MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch,
-                 MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante,
-                 MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante,
-                 problemeHebdo_->PaliersThermiquesDuPays};
-
-            BindingConstraintHourData bindingConstraintHourData
-              = {bindingConstraintData,
-                 problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
-                   .NumeroDeContrainteDesContraintesCouplantes};
-
-            auto bindingConstraintHourData_shared
-              = std::make_shared<BindingConstraintHourData>(bindingConstraintHourData);
-            bindingConstraintHour.add(pdt, cntCouplante, bindingConstraintHourData_shared);
+            bindingConstraintHour.add(
+              pdt, cntCouplante, GetBindingConstraintHourData(pdt, cntCouplante));
         }
     }
 }
