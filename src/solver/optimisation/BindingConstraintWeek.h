@@ -1,9 +1,14 @@
 #pragma once
-#include "constraint_builder.h"
+#include "new_constraint_builder.h"
 
-class BindingConstraintWeek : private Constraint
+struct BindingConstraintWeekData : public BindingConstraintData
+{
+    std::vector<int>& NumeroDeContrainteDesContraintesCouplantes;
+};
+
+class BindingConstraintWeek : private NewConstraint
 {
 public:
-    using Constraint::Constraint;
-    void add(int cntCouplante);
+    using NewConstraint::NewConstraint;
+    void add(int cntCouplante, std::shared_ptr<BindingConstraintWeekData> data);
 };

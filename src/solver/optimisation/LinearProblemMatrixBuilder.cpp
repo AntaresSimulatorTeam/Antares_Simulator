@@ -68,7 +68,6 @@ void LinearProblemMatrixBuilder::Run()
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo_->NamedProblems);
 
-    BindingConstraintWeek bindingConstraintWeek(problemeHebdo_);
     HydroPower hydroPower(problemeHebdo_);
     HydroPowerSmoothingUsingVariationSum hydroPowerSmoothingUsingVariationSum(problemeHebdo_);
     HydroPowerSmoothingUsingVariationMaxDown hydroPowerSmoothingUsingVariationMaxDown(
@@ -88,18 +87,6 @@ void LinearProblemMatrixBuilder::Run()
     for (auto& group : constraintgroups_)
     {
         group->Build();
-    }
-
-    if (nombreDePasDeTempsPourUneOptimisation > nombreDePasDeTempsDUneJournee)
-    {
-        CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondanceCntNativesCntOptimHebdomadaires
-          = problemeHebdo_->CorrespondanceCntNativesCntOptimHebdomadaires;
-        for (uint32_t cntCouplante = 0;
-             cntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
-             cntCouplante++)
-        {
-            bindingConstraintWeek.add(cntCouplante);
-        }
     }
 
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)

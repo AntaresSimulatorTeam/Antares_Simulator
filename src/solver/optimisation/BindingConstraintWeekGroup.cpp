@@ -1,13 +1,13 @@
-#include "BindingConstraintDayGroup.h"
+#include "BindingConstraintWeekGroup.h"
 #include "new_constraint_builder_utils.h"
 
-std::shared_ptr<BindingConstraintDayData>
-  BindingConstraintDayGroup::GetBindingConstraintDayDataFromProblemHebdo(int cntCouplante)
+std::shared_ptr<BindingConstraintWeekData>
+  BindingConstraintWeekGroup::GetBindingConstraintWeekDataFromProblemHebdo(int cntCouplante)
 {
     const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
       = problemeHebdo_->MatriceDesContraintesCouplantes[cntCouplante];
 
-    BindingConstraintDayData data
+    BindingConstraintWeekData data
       = {MatriceDesContraintesCouplantes.TypeDeContrainteCouplante,
          MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante,
          MatriceDesContraintesCouplantes.NumeroDeLInterconnexion,
@@ -21,23 +21,29 @@ std::shared_ptr<BindingConstraintDayData>
          MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante,
          MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante,
          problemeHebdo_->PaliersThermiquesDuPays,
-         problemeHebdo_->CorrespondanceCntNativesCntOptimJournalieres,
-         problemeHebdo_->NombreDePasDeTempsDUneJournee,
-         problemeHebdo_->NumeroDeJourDuPasDeTemps};
+         problemeHebdo_->CorrespondanceCntNativesCntOptimHebdomadaires
+           .NumeroDeContrainteDesContraintesCouplantes};
 
-    return std::make_shared<BindingConstraintDayData>(data);
+    return std::make_shared<BindingConstraintWeekData>(data);
 }
 
-void BindingConstraintDayGroup::Build()
+void BindingConstraintWeekGroup::Build()
 {
     std::shared_ptr<NewConstraintBuilder> builder(
       NewGetConstraintBuilderFromProblemHebdo(problemeHebdo_));
+    BindingConstraintWeek bindingConstraintWeek(builder);
 
-    BindingConstraintDay bindingConstraintDay(builder);
-    for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
-         cntCouplante++)
+    if (problemeHebdo_->NombreDePasDeTempsPourUneOptimisation
+        > problemeHebdo_->NombreDePasDeTempsDUneJournee)
     {
-                bindingConstraintDay.add(cntCouplante,
-                                 GetBindingConstraintDayDataFromProblemHebdo(cntCouplante));
+        CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondanceCntNativesCntOptimHebdomadaires
+          = problemeHebdo_->CorrespondanceCntNativesCntOptimHebdomadaires;
+        for (uint32_t cntCouplante = 0;
+             cntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
+             cntCouplante++)
+        {
+            bindingConstraintWeek.add(cntCouplante,
+                                      GetBindingConstraintWeekDataFromProblemHebdo(cntCouplante));
+        }
     }
 }
