@@ -29,7 +29,7 @@
 #include "recentfiles.h"
 #include <wx/config.h>
 #include <wx/dir.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 using namespace Yuni;
 

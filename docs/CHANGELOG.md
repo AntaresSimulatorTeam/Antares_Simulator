@@ -1,21 +1,29 @@
 Antares Changelog
 =================
 
-8.7.0-rc2 (08/2023)
+8.7.0 (08/2023)
 --------------------
+## New Features
+* Binding constraint RHS scenarization (#1219)
+* Implement --mps-export command-line option (#1404)
+* Name constraints & variables in MPS files using --named-mps-problems command-lin e option (#1294)
+* Thermal price definition (contributed by RTE-i, #1272)
+
 ## Improvements
 * Write full command-line instead of solver location in logs (#1518)
 
+## Packages
+* Give Oracle Linux 8 assets a proper name instead of "unknown" (#1438)
+* Don't build tools (study-updater, etc.) by default (#1442)
+
 ## Bugfixes
-* Fix invalid study after update to v8.7.0 - Add default group to existing BCs (#1462)
-* Fix incomplete check on constraint group (#1461)
-* Handle case when a binding constraint group in scenariobuilder.dat does not match any group of the study (#1480)
-* Fix error when fetching Antares_test submodule (#1456)
 * Fix error when writing files over 80Mb into a zip (#1488)
 * Fix memory leaks (#1468)
+* Fix segfault, add !skipped to enabled constraints (#1441)
+* Backport [v8.4.3](#v843-082023) changes
 
 ## GUI
-* Thermal price definition (RTEi's -> CR20) - UI remarks from Paul (#1485)
+* Thermal price definition (RTEi's -> CR20) - UI (#1485)
 
 ## Docs
 * Fix possible values for ST storage (#1455)
@@ -24,7 +32,7 @@ Antares Changelog
 * Add named MPS tests  (#1408)
 * Enforce better unit test isolation (#1486)
 * Add tests for Windows CI when job is scheduled (#1483)
-* Improve unit tests for CR20 (#1422)
+* Tests for CR20: thermal price definition (#1364), improvements (#1422)
 
 ## For developers
 * Remove platform-specific headers (#1523)
@@ -47,25 +55,6 @@ Antares Changelog
 * Memory allocation for ProblemeAResoudre, use std::vector (#1432)
 * Improve clarity for constraints that should be used (#1452)
 * Automatically include yuni include directory in dependents (#1525)
-
-8.7.0-rc1 (07/2023)
---------------------
-## Features
-* Implement --mps-export command-line option (#1404)
-* Backport [v8.4.3](#v843-082023) changes
-
-## Bugfixes
-* Fix segfault, add !skipped to enabled constraints (#1441)
-* Use local index for thermal cluster instead of global one (#1448)
-* Only add "active" thermal clusters in binding constraints (#1447)
-* Add cluster name for 6 constraints associated to unit-commitment = accurate (#1426)
-* Fix size for assign / resize - too much memory was allocated (#1443)
-
-## Packages
-* Give Oracle Linux 8 assets a proper name instead of "unknown" (#1438)
-* Don't build tools (study-updater, etc.) by default (#1442)
-
-## For developers
 * Clarify logs & code in case of "failed year" (#1450)
 * Remove two static functions (#1440)
 * Avoid copies using std::move (#1445)
@@ -74,38 +63,15 @@ Antares Changelog
 * Named MPS: factorize variable & constraint namers (#1409)
 * Array, logs jit and correlation in makefile (#1410)
 
-## Tests
-* Tests for CR20: thermal price definition (#1364)
-
-8.7.0-beta3 (07/2023)
---------------------
-## Bugfixes
-* Fix MPS differences related to int/unsigned surprises (#1417)
-
-8.7.0-beta2 (07/2023)
---------------------
-## Bugfixes
-* Fix order for binding constraints of type "both" (#1413)
-
-8.7.0-beta1 (07/2023)
---------------------
-## New features
-* Binding constraint RHS scenarization (#1219)
-* Name constraints & variables in MPS files (#1294)
-* Thermal price definition (contributed by RTE-i, #1272)
-
-TODO: bugfix, code cleaning, etc.
-
 --------------------
 # v8.6.2 (08/2023)
-
+## Bugfixes
 * Backport [v8.4.3](#v843-082023) changes
 
 8.6.1 (06/2023)
 --------------------
 ## Bugfixes
 * Fix major bug related to short-term storage & MRG. PRICE (#1377)
-
 
 8.6.0 (06/2023)
 --------------------

@@ -27,10 +27,10 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_H__
 #define __SOLVER_SIMULATION_SOLVER_H__
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <antares/logs/logs.h>
 #include <antares/study/fwd.h> // PowerFluctuations
-#include <antares/benchmarking/info_collectors.h>
+#include <antares/benchmarking/DurationCollector.h>
 
 #include <yuni/core/string.h>
 #include <yuni/job/queue/service.h>
@@ -65,7 +65,7 @@ public:
     */
     ISimulation(Data::Study& study,
                 const ::Settings& settings,
-                Benchmarking::IDurationCollector* duration_collector);
+                Benchmarking::IDurationCollector& duration_collector);
     //! Destructor
     ~ISimulation();
     //@}
@@ -167,7 +167,7 @@ private:
     annualCostsStatistics pAnnualCostsStatistics;
 
     // Collecting durations inside the simulation
-    Benchmarking::IDurationCollector* pDurationCollector;
+    Benchmarking::IDurationCollector& pDurationCollector;
 
 public:
     //! The queue service that runs every set of parallel years

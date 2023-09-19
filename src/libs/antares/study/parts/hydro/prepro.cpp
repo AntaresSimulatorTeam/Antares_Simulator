@@ -90,7 +90,7 @@ PreproHydro::PreproHydro()
 {
 }
 
-uint64 PreproHydroMemoryUsage(PreproHydro* h)
+uint64_t PreproHydroMemoryUsage(PreproHydro* h)
 {
     return (h) ? sizeof(double) : 0;
 }

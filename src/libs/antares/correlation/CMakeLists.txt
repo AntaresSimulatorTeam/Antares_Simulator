@@ -15,7 +15,7 @@ target_link_libraries(correlation
         yuni-static-core
         Antares::inifile
         Antares::array
-
+        Antares::study #correlation.h -> area.h
         )
 
 target_include_directories(correlation

@@ -5,7 +5,7 @@
 #pragma once
 
 #include <memory>
-#include "../../utils.h"
+#include <antares/utils/utils.h>
 
 namespace Antares::Data {
 
@@ -30,15 +30,4 @@ inline void BindingConstraintsRepository::each(const PredicateT &predicate) cons
     for (uint i = 0; i != count; ++i)
         predicate(*(constraints_[i].get()));
 }
-
-template<class PredicateT>
-inline void BindingConstraintsRepository::eachActive(const PredicateT &predicate) const {
-    uint count = (uint) constraints_.size();
-    for (uint i = 0; i != count; ++i) {
-        auto &constraint = *(constraints_[i].get());
-        if (constraint.isActive())
-            predicate(constraint);
-    }
-}
-
 }

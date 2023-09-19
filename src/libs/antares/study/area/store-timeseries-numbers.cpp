@@ -26,7 +26,7 @@
 */
 
 #include <antares/writer/i_writer.h>
-#include "../study.h"
+#include <antares/study/study.h>
 #include <antares/logs/logs.h>
 
 #include "store-timeseries-numbers.h"
@@ -34,15 +34,14 @@
 using namespace Yuni;
 
 #define SEP IO::Separator
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 namespace // anonymous
 {
 struct TSNumbersPredicate
 {
-    uint32 operator()(uint32 value) const
+    uint32_t operator()(uint32_t value) const
     {
         return value + 1;
     }
@@ -50,7 +49,7 @@ struct TSNumbersPredicate
 } // anonymous namespace
 
 static void genericStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer,
-                                          const Matrix<Yuni::uint32>& timeseriesNumbers,
+                                          const Matrix<uint32_t>& timeseriesNumbers,
                                           const String& id,
                                           const String& directory)
 {
@@ -117,5 +116,5 @@ void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter::Ptr 
             value->storeTimeseriesNumbers(writer);
     }
 }
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

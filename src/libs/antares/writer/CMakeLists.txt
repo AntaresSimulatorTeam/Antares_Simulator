@@ -22,18 +22,21 @@ add_library(result_writer
         antares/writer/result_format.h
 )
 
+add_library(Antares::result_writer ALIAS result_writer)
+
 target_include_directories(result_writer
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 target_link_libraries(result_writer
+        PUBLIC
+        Antares::benchmarking
         PRIVATE
         yuni-static-core
         MINIZIP::minizip
         logs
         inifile
-        benchmarking
         io
     )
 

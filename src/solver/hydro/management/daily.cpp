@@ -81,7 +81,7 @@ enum
 
 struct DebugData
 {
-    using InflowsType = Matrix<double, Yuni::sint32>::ColumnType;
+    using InflowsType = Matrix<double, int32_t>::ColumnType;
     using MaxPowerType = Matrix<double, double>::ColumnType;
     using ReservoirLevelType = Matrix<double>::ColumnType;
 
@@ -389,8 +389,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             uint firstDay = calendar_.months[simulationMonth].daysYear.first;
             uint endDay = firstDay + daysPerMonth;
 
-            DONNEES_MENSUELLES& problem = *H2O_J_Instanciation();
-            H2O_J_AjouterBruitAuCout(&problem);
+            DONNEES_MENSUELLES problem = H2O_J_Instanciation();
+            H2O_J_AjouterBruitAuCout(problem);
             problem.NombreDeJoursDuMois = (int)daysPerMonth;
             problem.TurbineDuMois = data.MOG[realmonth];
 

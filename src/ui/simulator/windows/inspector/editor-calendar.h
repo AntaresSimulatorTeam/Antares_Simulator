@@ -27,7 +27,6 @@
 #ifndef __ANTARES_WINDOWS_INSPECTOR_EDITOR_STUDY_CALENDAR_H__
 #define __ANTARES_WINDOWS_INSPECTOR_EDITOR_STUDY_CALENDAR_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/menu.h>
 #include <wx/propgrid/propgrid.h>
 #include <wx/propgrid/advprops.h>

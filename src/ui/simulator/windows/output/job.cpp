@@ -27,7 +27,7 @@
 
 #include "job.h"
 #include <antares/logs/logs.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <yuni/io/directory/info.h>
 
 using namespace Yuni;

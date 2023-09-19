@@ -340,7 +340,7 @@ public:
     /*!
     ** \brief Get the memory usage
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
     //@}
 
     /*!

@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(COMMON_GCC_FLAGS "-Wall -W -Wextra -Wfatal-errors")
 if (NOT WIN32)
+# These flags are incompatible with non-x86 architectures (e.g ARM)
+# TODO remove
 	set(COMMON_GCC_FLAGS "${COMMON_GCC_FLAGS} -pipe -msse -msse2 -Wunused-but-set-variable -Wunused-but-set-parameter")
 	set(COMMON_GCC_FLAGS "${COMMON_GCC_FLAGS} -Werror=return-type")
 endif()

@@ -31,7 +31,7 @@
 #include <yuni/core/math.h>
 #include <yuni/core/string.h>
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <antares/logs/logs.h>
 #include <antares/writer/i_writer.h>
 

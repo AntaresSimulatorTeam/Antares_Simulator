@@ -47,7 +47,8 @@ INSTALL(EXPORT antares-ybyaggregator
 )
 
 set(YBY_AGGREGATOR_LIBS
-	libantares-core
+	antares-core #version.h
+	Antares::date
 	Antares::logs
 	yuni-static-core
 	Antares::sys
@@ -62,6 +63,9 @@ target_include_directories(${execname}
 target_link_libraries(${execname}
 		PRIVATE
 			${YBY_AGGREGATOR_LIBS}
+		PUBLIC
+			Antares::memory
+			Antares::utils
 		)
 
 import_std_libs(${execname})

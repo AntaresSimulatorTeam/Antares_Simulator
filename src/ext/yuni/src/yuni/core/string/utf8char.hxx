@@ -27,7 +27,7 @@ inline Char::Char(uint c) : pValue(c)
 {
 }
 
-inline uint32 Char::value() const
+inline uint32_t Char::value() const
 {
     return pValue;
 }
@@ -45,7 +45,7 @@ inline Char& Char::operator=(const Char& rhs)
 
 inline Char& Char::operator=(uint value)
 {
-    pValue = static_cast<uint32>(value);
+    pValue = static_cast<uint32_t>(value);
     return *this;
 }
 

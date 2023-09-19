@@ -282,14 +282,14 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "Generating calendar informations";
     if (study.usedByTheSolver)
     {
-        study.calendar.reset(gd, false);
+        study.calendar.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, false});
     }
     else
     {
-        study.calendar.reset(gd);
+        study.calendar.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
     }
     logs.debug() << "  :: generating calendar dedicated to the output";
-    study.calendarOutput.reset(gd);
+    study.calendarOutput.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
     initializeRangeLimits(study, rangeLimits);
 
     // Removing disabled thermal clusters from solver computations

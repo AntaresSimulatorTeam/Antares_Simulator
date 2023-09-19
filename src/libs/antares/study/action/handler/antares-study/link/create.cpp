@@ -26,7 +26,7 @@
 */
 
 #include "create.h"
-#include "../../../../../utils.h"
+#include <antares/study/study.h>
 #include "ntc.h"
 #include "hurdles-cost.h"
 #include "impedances.h"

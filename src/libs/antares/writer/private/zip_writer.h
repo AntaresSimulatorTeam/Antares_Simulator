@@ -8,7 +8,7 @@
 #include <yuni/core/string.h>
 
 #include "antares/writer/i_writer.h"
-#include <antares/benchmarking/info_collectors.h>
+#include <antares/benchmarking/DurationCollector.h>
 
 
 namespace Antares::Solver
@@ -27,7 +27,7 @@ public:
     ZipWriteJob(ZipWriter& writer,
                 std::string  entryPath,
                 ContentT& content,
-                Benchmarking::IDurationCollector* duration_collector);
+                Benchmarking::IDurationCollector& duration_collector);
     virtual void onExecute() override;
 
 private:
@@ -42,7 +42,7 @@ private:
     // Content of the new file
     ContentT pContent;
     // Benchmarking. How long do we wait ? How long does the zip write take ?
-    Benchmarking::IDurationCollector* pDurationCollector;
+    Benchmarking::IDurationCollector& pDurationCollector;
 };
 
 class ZipWriter : public IResultWriter
@@ -50,7 +50,7 @@ class ZipWriter : public IResultWriter
 public:
     ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
               const char* archivePath,
-              Benchmarking::IDurationCollector* duration_collector);
+              Benchmarking::IDurationCollector& duration_collector);
     virtual ~ZipWriter();
     void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
     void addEntryFromBuffer(const std::string& entryPath, std::string& entryContent) override;
@@ -73,7 +73,7 @@ private:
     // Absolute path to the archive
     const std::string pArchivePath;
     // Benchmarking. Passed to jobs
-    Benchmarking::IDurationCollector* pDurationCollector = nullptr;
+    Benchmarking::IDurationCollector& pDurationCollector;
 
 private:
     template<class ContentType>

@@ -13,15 +13,14 @@ add_executable(tests-simple-study
 target_link_libraries(tests-simple-study
 						PRIVATE
 						test_utils
-						libantares-core
-						libantares-solver-main-economy
-						libantares-solver-main-adequacy
-						libantares-solver-hydro
-						libantares-solver-aleatoire
-						libantares-solver-variable
-						libantares-solver-simulation
-						libantares-solver-ts-generator
-						libmodel_antares
+						antares-solver-main-economy
+						antares-solver-main-adequacy
+						antares-solver-hydro
+						antares-solver-aleatoire
+						antares-solver-variable
+						antares-solver-simulation
+						antares-solver-ts-generator
+						model_antares
 						${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
 			)
 			

@@ -35,6 +35,7 @@
 #include "base_post_process.h"
 
 #include "solver.h" // for definition of type yearRandomNumbers
+#include "antares/infoCollection/StudyInfoCollector.h"
 
 namespace Antares::Solver::Simulation
 {

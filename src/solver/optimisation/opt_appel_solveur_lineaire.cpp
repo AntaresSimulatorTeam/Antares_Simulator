@@ -308,7 +308,8 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
                                                    ProblemeAResoudre->NomDesContraintes,
                                                    ProblemeAResoudre->StatutDesVariables,
-                                                   ProblemeAResoudre->StatutDesContraintes);
+                                                   ProblemeAResoudre->StatutDesContraintes,
+                                                   problemeHebdo->NamedProblems);
 
     bool PremierPassage = true;
 
@@ -373,6 +374,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
             logs.info() << " Solver: Safe resolution failed";
         }
 
+        Probleme.SetUseNamedProblems(true);
         Optimization::InfeasibleProblemAnalysis analysis(options.solverName, &Probleme);
         logs.notice() << " Solver: Starting infeasibility analysis...";
         try

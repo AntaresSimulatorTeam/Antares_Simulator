@@ -27,10 +27,10 @@
 #ifndef __ANTARES_TOOLBOX_CREATE_H__
 #define __ANTARES_TOOLBOX_CREATE_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/sizer.h>
 #include <wx/button.h>
 #include <wx/stattext.h>
+#include <yuni/yuni.h>
 
 namespace Antares
 {

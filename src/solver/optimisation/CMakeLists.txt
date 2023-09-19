@@ -78,19 +78,20 @@ set(SRC_MODEL
 	${RTESOLVER_OPT}
 )
 
-add_library(libmodel_antares ${SRC_MODEL})
+add_library(model_antares ${SRC_MODEL})
 if(NOT MSVC)
-	target_compile_options(libmodel_antares
+	target_compile_options(model_antares
 			PUBLIC
 			"-Wno-unused-variable")
 else()
 	#set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 	#set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 endif()
-target_link_libraries(libmodel_antares
+target_link_libraries(model_antares
 		PUBLIC
-		libantares-core
 		utils
 		sirius_solver
 		infeasible_problem_analysis
-		libantares-solver-simulation)
+		antares-solver-simulation
+		Antares::benchmarking
+)

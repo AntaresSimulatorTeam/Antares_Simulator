@@ -18,6 +18,7 @@
 
 #include "utils/ortools_utils.h"
 #include "../config.h"
+#include <antares/infoCollection/StudyInfoCollector.h>
 
 #include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>
@@ -39,9 +40,7 @@ void printSolvers()
 }
 } // namespace
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 Application::Application()
 {
@@ -325,7 +324,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     study.prepareOutput();
 
     // Initialize the result writer
-    study.prepareWriter(&pDurationCollector);
+    study.prepareWriter(pDurationCollector);
     Antares::Solver::initializeSignalHandlers(study.resultWriter);
 
     // Save about-the-study files (comments, notes, etc.)
@@ -460,5 +459,5 @@ Application::~Application()
         LocalPolicy::Close();
     }
 }
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver
+

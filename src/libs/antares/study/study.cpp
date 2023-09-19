@@ -51,9 +51,8 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 //! Clear then shrink a string
 template<class StringT>
@@ -193,7 +192,7 @@ void Study::reduceMemoryUsage()
     ClearAndShrink(bufferLoadingTS);
 }
 
-uint64 Study::memoryUsage() const
+uint64_t Study::memoryUsage() const
 {
     return folder.capacity()
            // Folders paths
@@ -626,7 +625,7 @@ YString StudyCreateOutputPath(StudyMode mode,
                               ResultFormat fmt,
                               const YString& outputRoot,
                               const YString& label,
-                              Yuni::sint64 startTime)
+                              int64_t startTime)
 {
     auto suffix = getOutputSuffix(fmt);
 
@@ -1543,11 +1542,11 @@ void Study::computePThetaInfForThermalClusters() const
     }
 }
 
-void Study::prepareWriter(Benchmarking::IDurationCollector* duration_collector)
+void Study::prepareWriter(Benchmarking::IDurationCollector& duration_collector)
 {
     resultWriter = Solver::resultWriterFactory(
       parameters.resultFormat, folderOutput, pQueueService, duration_collector);
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

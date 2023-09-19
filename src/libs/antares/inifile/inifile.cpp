@@ -39,7 +39,7 @@ static inline IniFile::Section* AnalyzeIniLine(const String& pFilename,
                                                IniFile* d,
                                                IniFile::Section* section,
                                                char* line,
-                                               uint64& read)
+                                               uint64_t& read)
 {
     enum Type
     {
@@ -134,14 +134,14 @@ IniFile::Property::~Property()
 }
 
 template<class StreamT>
-inline void IniFile::Property::saveToStream(StreamT& file, uint64& written) const
+inline void IniFile::Property::saveToStream(StreamT& file, uint64_t& written) const
 {
     written += key.size() + value.size() + 4;
     file << key << " = " << value << '\n';
 }
 
 template<class StreamT>
-void IniFile::Section::saveToStream(StreamT& file, uint64& written) const
+void IniFile::Section::saveToStream(StreamT& file, uint64_t& written) const
 {
     if (!firstProperty)
         return;
@@ -258,7 +258,7 @@ bool IniFile::open(const AnyString& filename, bool warnings)
         auto* line = new char[lineHardLimit];
 
         IniFile::Section* lastSection = nullptr;
-        uint64 read = 0;
+        uint64_t read = 0;
 
         // analyzing each line
         while (file.readline(line, lineHardLimit))
@@ -280,7 +280,7 @@ bool IniFile::open(const AnyString& filename, bool warnings)
 
 void IniFile::saveToString(std::string& str) const
 {
-    uint64 written = 0;
+    uint64_t written = 0;
     std::ostringstream ostream;
     // save all sections
     for (auto* section = firstSection; section; section = section->next)
@@ -299,7 +299,7 @@ bool IniFile::save(const AnyString& filename) const
     if (f.openRW(filename))
     {
         pFilename = filename;
-        uint64 written = 0;
+        uint64_t written = 0;
 
         // save all sections
         for (auto* section = firstSection; section; section = section->next)

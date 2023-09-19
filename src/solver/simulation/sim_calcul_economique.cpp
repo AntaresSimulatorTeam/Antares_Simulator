@@ -27,7 +27,7 @@
 
 #include <sstream>
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <antares/study/area/constants.h>
 #include <antares/study/area/scratchpad.h>
 

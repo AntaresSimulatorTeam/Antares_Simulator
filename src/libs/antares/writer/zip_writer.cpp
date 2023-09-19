@@ -2,7 +2,9 @@
 #include <yuni/io/file.h> // Yuni::IO::File::LoadFromFile
 
 #include "private/zip_writer.h"
+#include "antares/logs/logs.h"
 #include <antares/benchmarking/timer.h>
+#include <antares/benchmarking/DurationCollector.h>
 
 extern "C"
 {
@@ -22,7 +24,7 @@ template<class ContentT>
 ZipWriteJob<ContentT>::ZipWriteJob(ZipWriter& writer,
                                    std::string entryPath,
                                    ContentT& content,
-                                   Benchmarking::IDurationCollector* duration_collector) :
+                                   Benchmarking::IDurationCollector& duration_collector) :
  pZipHandle(writer.pZipHandle),
  pZipMutex(writer.pZipMutex),
  pState(writer.pState),
@@ -55,8 +57,7 @@ void ZipWriteJob<ContentT>::onExecute()
     Benchmarking::Timer timer_wait;
     std::lock_guard<std::mutex> guard(pZipMutex); // Wait
     timer_wait.stop();
-    if (pDurationCollector)
-        pDurationCollector->addDuration("zip_wait", timer_wait.get_duration());
+    pDurationCollector.addDuration("zip_wait", timer_wait.get_duration());
 
     Benchmarking::Timer timer_write;
 
@@ -71,14 +72,13 @@ void ZipWriteJob<ContentT>::onExecute()
     }
 
     timer_write.stop();
-    if (pDurationCollector)
-        pDurationCollector->addDuration("zip_write", timer_write.get_duration());
+    pDurationCollector.addDuration("zip_write", timer_write.get_duration());
 }
 
 // Class ZipWriter
 ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
                      const char* archivePath,
-                     Benchmarking::IDurationCollector* duration_collector) :
+                     Benchmarking::IDurationCollector& duration_collector) :
  pQueueService(qs),
  pState(ZipState::can_receive_data),
  pArchivePath(std::string(archivePath) + ".zip"),

@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOWS_SCENARIO_BUILDER_PANEL_H__
 #define __ANTARES_APPLICATION_WINDOWS_SCENARIO_BUILDER_PANEL_H__
 
-#include <antares/wx-wrapper.h>
 #include <ui/common/component/panel.h>
 #include <antares/study/fwd.h>
 #include <antares/study/scenario-builder/rules.h>

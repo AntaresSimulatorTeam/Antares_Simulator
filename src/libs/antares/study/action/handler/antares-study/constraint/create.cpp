@@ -27,7 +27,7 @@
 
 #include "create.h"
 #include <memory>
-#include "../../../../../utils.h"
+#include <antares/study/study.h>
 #include "antares/study/fwd.h"
 #include "data.h"
 #include "comments.h"

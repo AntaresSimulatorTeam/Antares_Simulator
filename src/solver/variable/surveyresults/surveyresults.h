@@ -30,17 +30,13 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include "../constants.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "../categories.h"
 #include "data.h"
 #include <antares/study/variable-print-info.h>
 #include <antares/writer/i_writer.h>
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 /*!
 ** \brief Class utility for building CSV results files
@@ -157,8 +153,8 @@ private:
 
 }; // class SurveyResults
 
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable
+
+
 
 #endif // __SOLVER_VARIABLE_SURVEY_RESULTS_SURVEY_RESULTS_H__

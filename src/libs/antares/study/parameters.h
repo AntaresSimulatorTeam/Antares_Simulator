@@ -34,7 +34,7 @@
 #include "../constants.h"
 #include <cstdlib>
 #include <cassert>
-#include "antares/writer/antares/writer/result_format.h" //Conflit between ${CMake_Source_dir}/libs and result_writer findong "antares"
+#include <antares/writer/result_format.h>
 #include <antares/date/date.h>
 #include <antares/inifile/inifile.h>
 #include "fwd.h"
@@ -162,7 +162,7 @@ public:
     /*!
     ** \brief Get the amount of memory used by the general data
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Reset MC year weight to 1 for all years
