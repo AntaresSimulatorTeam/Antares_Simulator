@@ -24,29 +24,21 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_TOOLBOX_EXT_SOURCE_APPLY_H__
-#define __ANTARES_TOOLBOX_EXT_SOURCE_APPLY_H__
 
 #include <yuni/yuni.h>
-#include <antares/study/study.h>
-#include <action/action.h>
-#include <action/context.h>
+#include <action/behavior.h>
+#include <cassert>
 
 namespace Antares
 {
-namespace ExtSource
+namespace Action
 {
-namespace Handler
+const char* BehaviorToString(Behavior behavior)
 {
-/*!
-** \brief Apply all actions
-*/
-void Apply(Antares::Action::Context::Ptr context,
-           Antares::Action::IAction::Ptr actions,
-           bool windowRequired = false);
+    static const char* const str[] = {"skip", "merge", "overwrite"};
+    assert((uint)behavior < (uint)bhMax);
+    return str[(uint)behavior];
+}
 
-} // namespace Handler
-} // namespace ExtSource
+} // namespace Action
 } // namespace Antares
-
-#endif // __ANTARES_TOOLBOX_EXT_SOURCE_APPLY_H__

@@ -24,29 +24,28 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_TOOLBOX_EXT_SOURCE_APPLY_H__
-#define __ANTARES_TOOLBOX_EXT_SOURCE_APPLY_H__
 
 #include <yuni/yuni.h>
-#include <antares/study/study.h>
-#include <action/action.h>
-#include <action/context.h>
+#include <action/state.h>
+#include <cassert>
 
 namespace Antares
 {
-namespace ExtSource
+namespace Action
 {
-namespace Handler
+const char* StateToString(State state)
 {
-/*!
-** \brief Apply all actions
-*/
-void Apply(Antares::Action::Context::Ptr context,
-           Antares::Action::IAction::Ptr actions,
-           bool windowRequired = false);
+    static const char* const str[] = {
+      "unknown",
+      "disabled",
+      "error",
+      "nothing to do",
+      "ready",
+      "conflict",
+    };
+    assert((uint)state < (uint)stMax);
+    return str[(uint)state];
+}
 
-} // namespace Handler
-} // namespace ExtSource
+} // namespace Action
 } // namespace Antares
-
-#endif // __ANTARES_TOOLBOX_EXT_SOURCE_APPLY_H__
