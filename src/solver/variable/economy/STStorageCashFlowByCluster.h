@@ -62,7 +62,7 @@ struct VCardSTstorageCashFlowByCluster
         //! Data Level
         categoryDataLevel = Category::area,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::de_sts),
+        categoryFileLevel = ResultsType::categoryFile & Category::de_sts,
         //! Precision (views)
         precision = Category::all,
         //! Indentation (GUI)
@@ -128,9 +128,7 @@ public:
     };
 
 public:
-    STstorageCashFlowByCluster() : pValuesForTheCurrentYear(nullptr)
-    {
-    }
+    STstorageCashFlowByCluster() = default;
 
     ~STstorageCashFlowByCluster()
     {
@@ -233,12 +231,13 @@ public:
         for (uint clusterIndex = 0; clusterIndex != state.area->shortTermStorage.count();
              ++clusterIndex)
         {
+            const auto& stsHourlyResults = state.hourlyResults->ShortTermStorage[state.hourInTheWeek];
             // ST storage injection for the current cluster and this hour
             // CashFlow[h] = (withdrawal - injection) * MRG. PRICE
             pValuesForTheCurrentYear[numSpace][clusterIndex].hour[state.hourInTheYear]
-            = (state.hourlyResults->ShortTermStorage[state.hourInTheWeek].withdrawal[clusterIndex]
-            - state.hourlyResults->ShortTermStorage[state.hourInTheWeek].injection[clusterIndex])
-            * (-state.hourlyResults->CoutsMarginauxHoraires[state.hourInTheWeek]);
+                = (stsHourlyResults.withdrawal[clusterIndex]
+                 - stsHourlyResults.injection[clusterIndex])
+                * (-state.hourlyResults->CoutsMarginauxHoraires[state.hourInTheWeek]);
             // Note: The marginal price provided by the solver is negative (naming convention).
         }
 
@@ -296,9 +295,9 @@ public:
 
 private:
     //! Intermediate values for each year
-    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    size_t nbClusters_;
-    unsigned int pNbYearsParallel;
+    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear = nullptr;
+    size_t nbClusters_ = 0;
+    unsigned int pNbYearsParallel = 0;
 
 }; // class STstorageCashFlowByCluster
 
