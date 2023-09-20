@@ -1,9 +1,14 @@
 #pragma once
-#include "constraint_builder.h"
+#include "new_constraint_builder.h"
+struct MaxPumpingData
+{
+    const bool& PresenceDePompageModulable;
+    std::vector<int>& NumeroDeContrainteMaxPompage;
+};
 
-class MaxPumping : private Constraint
+class MaxPumping : private NewConstraint
 {
 public:
-    using Constraint::Constraint;
-    void add(int pays);
+    using NewConstraint::NewConstraint;
+    void add(int pays, std::shared_ptr<MaxPumpingData> data);
 };

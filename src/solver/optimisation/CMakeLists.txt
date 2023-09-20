@@ -140,6 +140,8 @@ set(RTESOLVER_OPT
 		HydraulicSmoothingGroup.cpp
 		MinMaxHydroPowerGroup.h
 		MinMaxHydroPowerGroup.cpp
+		MaxPumpingGroup.h
+		MaxPumpingGroup.cpp
 
 	)
 

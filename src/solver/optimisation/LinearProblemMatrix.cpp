@@ -30,9 +30,6 @@
 #include "../utils/filename.h"
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"
-#include "MinHydroPower.h"
-#include "MaxHydroPower.h"
-#include "MaxPumping.h"
 #include "AreaHydroLevel.h"
 #include "FinalStockEquivalent.h"
 #include "FinalStockExpression.h"
@@ -58,8 +55,6 @@ void LinearProblemMatrix::Run()
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo_->NamedProblems);
 
-    MaxPumping maxPumping(problemeHebdo_);
-
     AreaHydroLevel areaHydroLevel(problemeHebdo_);
 
     FinalStockEquivalent finalStockEquivalent(problemeHebdo_);
@@ -68,11 +63,6 @@ void LinearProblemMatrix::Run()
     for (auto& group : constraintgroups_)
     {
         group->Build();
-    }
-
-    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
-    {
-        maxPumping.add(pays);
     }
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
