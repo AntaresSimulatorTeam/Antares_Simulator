@@ -238,7 +238,7 @@ public:
             pValuesForTheCurrentYear[numSpace][clusterIndex].hour[state.hourInTheYear]
             = (state.hourlyResults->ShortTermStorage[state.hourInTheWeek].withdrawal[clusterIndex]
             - state.hourlyResults->ShortTermStorage[state.hourInTheWeek].injection[clusterIndex])
-            * state.hourlyResults->CoutsMarginauxHoraires[state.hourInTheWeek];
+            * (-state.hourlyResults->CoutsMarginauxHoraires[state.hourInTheWeek]);
             // Note: The marginal price provided by the solver is negative (naming convention).
         }
 
