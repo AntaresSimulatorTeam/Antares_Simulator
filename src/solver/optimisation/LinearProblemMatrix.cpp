@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "LinearProblemMatrixBuilder.h"
+#include "LinearProblemMatrix.h"
 #include "opt_export_structure.h"
 #include "../utils/filename.h"
 #include "opt_fonctions.h"
@@ -40,7 +40,7 @@
 #include "Group1.h"
 
 using namespace Antares::Data;
-void LinearProblemMatrixBuilder::Run()
+void LinearProblemMatrix::Run()
 {
     int var;
 

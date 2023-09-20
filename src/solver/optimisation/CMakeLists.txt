@@ -125,8 +125,8 @@ set(RTESOLVER_OPT
 		MinDownTime.h
 		MinDownTime.cpp
 
-		LinearProblemMatrixBuilder.h
-		LinearProblemMatrixBuilder.cpp
+		LinearProblemMatrix.h
+		LinearProblemMatrix.cpp
 		ConstraintGroup.h
 		Group1.h
 		Group1.cpp

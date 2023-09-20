@@ -37,11 +37,10 @@
 #include <antares/study.h>
 
 using namespace Antares::Data;
-class LinearProblemMatrixBuilder
+class LinearProblemMatrix
 {
 public:
-    explicit LinearProblemMatrixBuilder(PROBLEME_HEBDO* problemeHebdo,
-                                        Solver::IResultWriter& writer) :
+    explicit LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo, Solver::IResultWriter& writer) :
      problemeHebdo_(problemeHebdo),
      writer_(writer),
      group1_(problemeHebdo),
