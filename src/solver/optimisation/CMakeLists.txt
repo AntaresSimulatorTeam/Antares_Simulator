@@ -142,6 +142,8 @@ set(RTESOLVER_OPT
 		MinMaxHydroPowerGroup.cpp
 		MaxPumpingGroup.h
 		MaxPumpingGroup.cpp
+		AreaHydroLevelGroup.h
+		AreaHydroLevelGroup.cpp
 
 	)
 

@@ -55,29 +55,12 @@ void LinearProblemMatrix::Run()
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
                                     problemeHebdo_->NamedProblems);
 
-    AreaHydroLevel areaHydroLevel(problemeHebdo_);
-
     FinalStockEquivalent finalStockEquivalent(problemeHebdo_);
     FinalStockExpression finalStockExpression(problemeHebdo_);
 
     for (auto& group : constraintgroups_)
     {
         group->Build();
-    }
-
-    for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-    {
-        const auto& CorrespondanceVarNativesVarOptim
-          = problemeHebdo_->CorrespondanceVarNativesVarOptim[pdt];
-        CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-          = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt];
-
-        int timeStepInYear = problemeHebdo_->weekInTheYear * 168 + pdt;
-        constraintNamer.UpdateTimeStep(timeStepInYear);
-        for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
-        {
-            areaHydroLevel.add(pays, pdt);
-        }
     }
 
     /* For each area with ad hoc properties, two possible sets of two additional constraints */

@@ -34,6 +34,7 @@
 #include "HydraulicSmoothingGroup.h"
 #include "MinMaxHydroPowerGroup.h"
 #include "MaxPumpingGroup.h"
+#include "AreaHydroLevelGroup.h"
 
 #include <antares/study.h>
 
@@ -50,7 +51,8 @@ public:
      hydroPowerGroup_(problemeHebdo),
      hydraulicSmoothingGroup_(problemeHebdo),
      minMaxHydroPowerGroup_(problemeHebdo),
-     maxPumpingGroup_(problemeHebdo)
+     maxPumpingGroup_(problemeHebdo),
+     areaHydroLevelGroup_(problemeHebdo)
     {
         constraintgroups_ = {&group1_,
                              &bindingConstraintDayGroup_,
@@ -58,7 +60,8 @@ public:
                              &hydroPowerGroup_,
                              &hydraulicSmoothingGroup_,
                              &minMaxHydroPowerGroup_,
-                             &maxPumpingGroup_};
+                             &maxPumpingGroup_,
+                             &areaHydroLevelGroup_};
     }
 
     void Run();
@@ -73,5 +76,6 @@ private:
     HydraulicSmoothingGroup hydraulicSmoothingGroup_;
     MinMaxHydroPowerGroup minMaxHydroPowerGroup_;
     MaxPumpingGroup maxPumpingGroup_;
+    AreaHydroLevelGroup areaHydroLevelGroup_;
     std::vector<ConstraintGroup*> constraintgroups_;
 };

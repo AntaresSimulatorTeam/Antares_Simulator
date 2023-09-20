@@ -1,9 +1,16 @@
 #pragma once
-#include "constraint_builder.h"
+#include "new_constraint_builder.h"
 
-class AreaHydroLevel : private Constraint
+struct AreaHydroLevelData
+{
+    std::vector<int>& NumeroDeContrainteDesNiveauxPays;
+    const bool& SuiviNiveauHoraire;
+    const double& PumpingRatio;
+};
+
+class AreaHydroLevel : private NewConstraint
 {
     public:
-    using Constraint::Constraint;
-    void add(int pays, int pdt);
+        using NewConstraint::NewConstraint;
+        void add(int pays, int pdt, std::shared_ptr<AreaHydroLevelData> data);
 };

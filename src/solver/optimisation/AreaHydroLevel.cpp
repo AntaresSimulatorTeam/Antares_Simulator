@@ -1,36 +1,28 @@
 #include "AreaHydroLevel.h"
 
-void AreaHydroLevel::add(int pays, int pdt)
+void AreaHydroLevel::add(int pays, int pdt, std::shared_ptr<AreaHydroLevelData> data)
 {
-    const auto& CorrespondanceVarNativesVarOptim
-      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-      = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-    CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays]
-      = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-    if (problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
+    data->NumeroDeContrainteDesNiveauxPays[pays] = builder->data->nombreDeContraintes;
+    if (data->SuiviNiveauHoraire)
     {
-        builder.updateHourWithinWeek(pdt).include(Variable::HydroLevel(pays), 1.0);
+        builder->updateHourWithinWeek(pdt).include(NewVariable::HydroLevel(pays), 1.0);
         if (pdt > 0)
         {
-            builder.updateHourWithinWeek(pdt - 1).include(Variable::HydroLevel(pays), -1.0);
+            builder->updateHourWithinWeek(pdt - 1).include(NewVariable::HydroLevel(pays), -1.0);
         }
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
+        ConstraintNamer namer(builder->data->NomDesContraintes, builder->data->NamedProblems);
 
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        namer.AreaHydroLevel(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-        CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-        builder.updateHourWithinWeek(pdt)
-          .include(Variable::HydProd(pays), 1.0)
-          .include(Variable::Pumping(pays),
-                   -problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio)
-          .include(Variable::Overflow(pays), 1.)
+        namer.UpdateArea(builder->data->NomsDesPays[pays]);
+        namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
+        namer.AreaHydroLevel(builder->data->nombreDeContraintes);
+        data->NumeroDeContrainteDesNiveauxPays[pays] = builder->data->nombreDeContraintes;
+        builder->updateHourWithinWeek(pdt)
+          .include(NewVariable::HydProd(pays), 1.0)
+          .include(NewVariable::Pumping(pays), -data->PumpingRatio)
+          .include(NewVariable::Overflow(pays), 1.)
           .equalTo()
           .build();
     }
     else
-        CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays] = -1;
+        data->NumeroDeContrainteDesNiveauxPays[pays] = -1;
 }
