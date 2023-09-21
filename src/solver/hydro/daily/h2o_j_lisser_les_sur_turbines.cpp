@@ -34,34 +34,34 @@ void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int Numer
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
-    std::vector<double>& TurbineMax = DonneesMensuelles->TurbineMax;
-    std::vector<double>& Turbine = DonneesMensuelles->Turbine;
-    std::vector<double>& TurbineCible = DonneesMensuelles->TurbineCible;
-
-    char* Flag = (char*) ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme].Xmax.data();
+    auto& Turbine = DonneesMensuelles->Turbine;
+    const auto& TurbineMax = DonneesMensuelles->TurbineMax;
+    const auto& TurbineCible = DonneesMensuelles->TurbineCible;
 
     const int NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
+
+    std::vector<bool> flag(NbPdt);
 
     double SurTurbineARepartir = 0.0;
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        Flag[Pdt] = 0;
+        flag[Pdt] = 0;
         if (Turbine[Pdt] - TurbineCible[Pdt] > ZERO)
-            Flag[Pdt] = 1;
+            flag[Pdt] = 1;
     }
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        if (Flag[Pdt] == 1)
+        if (flag[Pdt] == 1)
             SurTurbineARepartir += Turbine[Pdt] - TurbineCible[Pdt];
     }
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-        Flag[Pdt] = 0;
+        flag[Pdt] = 0;
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         if (TurbineMax[Pdt] - TurbineCible[Pdt] > ZERO)
-            Flag[Pdt] = 1;
+            flag[Pdt] = 1;
     }
 
     int NbCycles = 0;
@@ -70,7 +70,7 @@ BoucleDeRepartition:
     int Np = 0;
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        if (Flag[Pdt] == 1)
+        if (flag[Pdt] == 1)
             Np++;
     }
     if (Np <= 0)
@@ -83,7 +83,7 @@ BoucleDeRepartition:
         MargeMin += TurbineMax[Pdt];
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        if (Flag[Pdt] == 1)
+        if (flag[Pdt] == 1)
         {
             if (TurbineMax[Pdt] - TurbineCible[Pdt] < MargeMin)
                 MargeMin = TurbineMax[Pdt] - TurbineCible[Pdt];
@@ -100,7 +100,7 @@ BoucleDeRepartition:
     char LimiteAtteinte = 0;
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        if (Flag[Pdt] == 0)
+        if (flag[Pdt] == 0)
             continue;
 
         Turbine[Pdt] = TurbineCible[Pdt] + SurTurbine;
@@ -108,7 +108,7 @@ BoucleDeRepartition:
         {
             SurTurbineARepartir -= SurTurbine;
             LimiteAtteinte = 1;
-            Flag[Pdt] = 0;
+            flag[Pdt] = 0;
         }
     }
 
