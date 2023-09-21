@@ -1,14 +1,13 @@
 #pragma once
 
 #include <antares/logs/logs.h>
-#include "opt_structure_probleme_a_resoudre.h"
-#include "opt_rename_problem.h"
-#include "opt_fonctions.h"
+#include "../opt_structure_probleme_a_resoudre.h"
+#include "../opt_rename_problem.h"
+#include "../opt_fonctions.h"
 
 // TODO remove relative include
-#include "../simulation/sim_structure_probleme_economique.h"
+#include "../../simulation/sim_structure_probleme_economique.h"
 
-#include <variant>
 #include <utility>
 
 namespace Variable

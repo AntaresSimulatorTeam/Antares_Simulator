@@ -32,12 +32,12 @@
 
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"
-#include "PMaxDispatchableGeneration.h"
-#include "PMinDispatchableGeneration.h"
-#include "ConsistenceNODU.h"
-#include "NbUnitsOutageLessThanNbUnitsStop.h"
-#include "NbDispUnitsMinBoundSinceMinUpTime.h"
-#include "MinDownTime.h"
+#include "constraints/PMaxDispatchableGeneration.h"
+#include "constraints/PMinDispatchableGeneration.h"
+#include "constraints/ConsistenceNODU.h"
+#include "constraints/NbUnitsOutageLessThanNbUnitsStop.h"
+#include "constraints/NbDispUnitsMinBoundSinceMinUpTime.h"
+#include "constraints/MinDownTime.h"
 
 using namespace Antares::Data;
 
