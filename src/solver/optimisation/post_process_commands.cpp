@@ -36,7 +36,7 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
             {
                 auto& cluster = *(i->second);
                 uint chro = NumeroChroniquesTireesParPays[thread_number_][area.index]
-                              ->ThermiqueParPalier[cluster.areaWideIndex];
+                              .ThermiqueParPalier[cluster.areaWideIndex];
                 auto& matrix = cluster.series->timeSeries;
                 assert(chro < matrix.width);
                 auto& column = matrix.entry[chro];
@@ -118,7 +118,7 @@ DTGmarginForAdqPatchPostProcessCmd::DTGmarginForAdqPatchPostProcessCmd(
 ** */
 void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
 {
-    for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
+    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area] != physicalAreaInsideAdqPatch)
             continue;
@@ -190,8 +190,8 @@ CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(const AdqPatc
                                                                    AreaList& areas,
                                                                    unsigned int thread_number) :
     basePostProcessCommand(problemeHebdo),
-    adqPatchParams_(adqPatchParams),
     area_list_(areas), 
+    adqPatchParams_(adqPatchParams),
     thread_number_(thread_number)
 {
 }
@@ -219,7 +219,7 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
 {
     double totalLmrViolation = 0.0;
 
-    for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
+    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area] == physicalAreaInsideAdqPatch)
         {
@@ -280,7 +280,7 @@ std::set<int> CurtailmentSharingPostProcessCmd::identifyHoursForCurtailmentShari
 std::vector<double> CurtailmentSharingPostProcessCmd::calculateENSoverAllAreasForEachHour() const
 {
     std::vector<double> sumENS(nbHoursInWeek, 0.0);
-    for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
+    for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)

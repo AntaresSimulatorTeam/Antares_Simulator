@@ -31,15 +31,13 @@
 #include <yuni/core/math.h>
 #include <yuni/core/string.h>
 
-#include <antares/study.h>
-#include <antares/logs.h>
-#include <antares/emergency.h>
-#include <i_writer.h>
+#include <antares/study/study.h>
+#include <antares/logs/logs.h>
+#include <antares/writer/i_writer.h>
 
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
 #include "../simulation/sim_extern_variables_globales.h"
 #include "../aleatoire/alea_fonctions.h"
 
@@ -92,9 +90,8 @@ private:
                                const T& duration);
 
 private:
-    uint nbHoursPerYear;
-
-    const uint daysPerYear;
+    const uint nbHoursPerYear = HOURS_PER_YEAR;
+    const uint daysPerYear = DAYS_PER_YEAR;
 
     MersenneTwister& rndgenerator;
 
@@ -139,12 +136,10 @@ private:
 GeneratorTempData::GeneratorTempData(Data::Study& study,
                                      Solver::Progression::Task& progr,
                                      IResultWriter::Ptr writer) :
- study(study),
- nbHoursPerYear(study.runtime->nbHoursPerYear),
- daysPerYear(study.runtime->nbDaysPerYear),
- rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
- pProgression(progr),
- pWriter(writer)
+    study(study),
+    rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
+    pProgression(progr),
+    pWriter(writer)
 {
     auto& parameters = study.parameters;
 

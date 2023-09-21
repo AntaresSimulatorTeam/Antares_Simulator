@@ -24,11 +24,11 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_ALEA_H__
-#define __SOLVER_ALEA_H__
+#pragma once
 
-void ALEA_TirageAuSortChroniques(double** thermalNoisesByArea, uint numSpace);
+#include "../simulation/sim_structure_donnees.h"
+#include "antares/study/study.h"
 
-void HydroVentilation();
-
-#endif // __SOLVER_ALEA_H__
+void ApplyRandomTSnumbers(const Antares::Data::Study& study,
+                          unsigned int year,
+                          uint numSpace);

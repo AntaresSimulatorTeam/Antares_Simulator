@@ -27,11 +27,12 @@
 
 #include <yuni/yuni.h>
 #include "resources.h"
+#include "wx-wrapper.h"
 #include <antares/resources/resources.h>
 #include <wx/image.h>
 #include <wx/filename.h>
 #include <vector>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 

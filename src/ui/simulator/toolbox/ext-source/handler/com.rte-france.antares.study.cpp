@@ -27,15 +27,15 @@
 
 #include "handler.h"
 #include "../apply.h"
-#include <antares/study/action/action.h>
-#include <antares/study/action/text.h>
-#include <antares/study/action/settings/suffix-for-area-names.h>
-#include <antares/study/action/settings/suffix-for-cluster-names.h>
-#include <antares/study/action/settings/suffix-for-constraint-names.h>
-#include <antares/study/action/settings/decal-area-position.h>
-#include <antares/study/action/handler/antares-study/area/create.h>
-#include <antares/study/action/handler/antares-study/link/create.h>
-#include <antares/study/action/handler/antares-study/constraint/create.h>
+#include <action/action.h>
+#include <action/text.h>
+#include <action/settings/suffix-for-area-names.h>
+#include <action/settings/suffix-for-cluster-names.h>
+#include <action/settings/suffix-for-constraint-names.h>
+#include <action/settings/decal-area-position.h>
+#include <action/handler/antares-study/area/create.h>
+#include <action/handler/antares-study/link/create.h>
+#include <action/handler/antares-study/constraint/create.h>
 #include <set>
 #include "build-context.h"
 #include "../../jobs.h"
@@ -71,7 +71,7 @@ static bool AppendCommand(BuildContext& ctx, const AnyString& command, const Any
     if (command == "import-thermal-cluster")
     {
         Data::AreaName from;
-        Data::ClusterName to;
+        YString to;
         String s = value;
         if (s.size() < 3)
             return false;
@@ -315,8 +315,8 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
     {
         auto* clusterNode = new Antares::Action::Text<>("Thermal clusters");
 
-        const BuildContext::LinkSet::const_iterator end = ctx.cluster.end();
-        for (BuildContext::LinkSet::const_iterator i = ctx.cluster.begin(); i != end; ++i)
+        auto end = ctx.cluster.end();
+        for (auto i = ctx.cluster.begin(); i != end; ++i)
         {
             if (i->second.empty())
                 continue;
@@ -327,8 +327,8 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
             else
                 create = new Antares::Action::AntaresStudy::Area::Create(i->first, wantedName);
 
-            std::map<Data::ClusterName, bool>::const_iterator send = i->second.end();
-            for (std::map<Data::ClusterName, bool>::const_iterator j = i->second.begin(); j != send;
+            std::map<YString, bool>::const_iterator send = i->second.end();
+            for (std::map<YString, bool>::const_iterator j = i->second.begin(); j != send;
                  ++j)
             {
                 *create += Antares::Action::AntaresStudy::Area::Create::

@@ -26,18 +26,15 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <yuni/core/getopt.h>
 #include "../ui/common/winmain.hxx"
-#include <antares/utils.h>
-#include <antares/study/cleaner.h>
 #include <antares/version.h>
 #include "atsp/atsp.h"
-#include <antares/hostinfo.h>
-#include <antares/inifile.h>
+#include <antares/logs/hostinfo.h>
+#include <antares/inifile/inifile.h>
 #include <antares/sys/policy.h>
 #include <antares/locale.h>
-#include "../config.h"
 
 using namespace Yuni;
 using namespace Antares;

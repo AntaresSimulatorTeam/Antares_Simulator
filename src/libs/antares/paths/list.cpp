@@ -28,13 +28,12 @@
 #include <yuni/yuni.h>
 #include <yuni/io/directory.h>
 #include <yuni/io/directory/iterator.h>
-#include "list.h"
-#include "../sys/mem-wrapper.h"
-#include <time.h>
+#include "antares/paths/list.h"
+#include <ctime>
 #ifdef YUNI_OS_WINDOWS
 #include <direct.h>
 #endif
-#include "../logs.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;
@@ -156,7 +155,7 @@ protected:
         return IO::flowSkip;
     }
 
-    virtual Flow onFile(const String& filename, const String&, const String&, uint64 size)
+    virtual Flow onFile(const String& filename, const String&, const String&, uint64_t size)
     {
         if (pathListOptNotFound == exclude.find(filename.c_str() + offset))
             list.add(filename.c_str() + offset, (size_t)size);

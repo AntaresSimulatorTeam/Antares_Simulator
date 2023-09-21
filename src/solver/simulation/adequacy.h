@@ -34,6 +34,7 @@
 #include "common-eco-adq.h"
 
 #include "solver.h" // for definition of type yearRandomNumbers
+#include "antares/infoCollection/StudyInfoCollector.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -56,7 +57,7 @@ public:
     */
     Adequacy(Data::Study& study);
     //! Destructor
-    ~Adequacy();
+    ~Adequacy() = default;
     //@}
 
     Benchmarking::OptimizationInfo getOptimizationInfo() const;
@@ -79,7 +80,8 @@ protected:
               uint numSpace,
               yearRandomNumbers& randomForYear,
               std::list<uint>& failedWeekList,
-              bool isFirstPerformedYearOfSimulation);
+              bool isFirstPerformedYearOfSimulation,
+              const ALL_HYDRO_VENTILATION_RESULTS&);
 
     void incrementProgression(Progression::Task& progression);
 
@@ -93,13 +95,15 @@ protected:
     void initializeState(Variable::State& state, uint numSpace);
 
 private:
-    bool simplexIsRequired(uint hourInTheYear, uint numSpace) const;
+    bool simplexIsRequired(uint hourInTheYear,
+                           uint numSpace,
+                           const ALL_HYDRO_VENTILATION_RESULTS&) const;
 
     uint pNbWeeks;
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
-    PROBLEME_HEBDO** pProblemesHebdo;
+    std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     Matrix<> pRES;
 
 }; // class Adequacy

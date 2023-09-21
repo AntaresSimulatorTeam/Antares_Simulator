@@ -29,6 +29,7 @@
 
 #include "../base_weekly_optimization.h"
 #include "../simulation/sim_structure_probleme_economique.h"
+#include "../simulation/sim_structure_donnees.h"
 #include "antares/study/area/area.h"
 
 using Antares::Data::AreaList;
@@ -38,10 +39,16 @@ namespace Antares::Solver::Optimization
 class AdequacyPatchOptimization : public WeeklyOptimization
 {
 public:
-    explicit AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHebdo, 
-                                       Antares::Data::AdequacyPatch::AdqPatchParams&, 
-                                       uint numSpace);
+    explicit AdequacyPatchOptimization(const Antares::Data::Study& study,
+                                       const OptimizationOptions& options,
+                                       PROBLEME_HEBDO* problemeHebdo,
+                                       Antares::Data::AdequacyPatch::AdqPatchParams&,
+                                       uint numSpace,
+                                       IResultWriter& writer);
+
     ~AdequacyPatchOptimization() override = default;
     void solve(uint weekInTheYear, int hourInTheYear) override;
+private:
+    const Antares::Data::Study& study_;
 };
 } // namespace Antares::Solver::Optimization

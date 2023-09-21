@@ -29,12 +29,12 @@
 #include <yuni/core/system/memory.h>
 #include <yuni/core/system/windows.hdr.h>
 #include <yuni/core/string/wstring.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
 template<class StringT>
-static inline StringT& BytesToStringW(StringT& out, uint64 size)
+static inline StringT& BytesToStringW(StringT& out, uint64_t size)
 {
     if (0 == size)
         return out << L"0 byte";
@@ -54,10 +54,10 @@ static inline StringT& BytesToStringW(StringT& out, uint64 size)
     return out << Math::Round(s, 1) << L" GiB";
 }
 
-static inline uint64 DiskFreeSpace(const AnyString& folder)
+static inline uint64_t DiskFreeSpace(const AnyString& folder)
 {
     if (folder.empty())
-        return (yuint64)-1; // error
+        return (uint64_t)-1; // error
 
 #ifdef YUNI_OS_WINDOWS
     unsigned __int64 i64FreeBytesToCaller;
@@ -67,7 +67,7 @@ static inline uint64 DiskFreeSpace(const AnyString& folder)
     {
         Yuni::WString wstr(folder);
         if (wstr.empty())
-            return (yuint64)-1; // error
+            return (uint64_t)-1; // error
 
         if (GetDiskFreeSpaceExW(wstr.c_str(),
                                 (PULARGE_INTEGER)&i64FreeBytesToCaller,
@@ -85,7 +85,7 @@ static inline uint64 DiskFreeSpace(const AnyString& folder)
         // retrying with the standard path
         Yuni::WString wstr(folder);
         if (wstr.empty())
-            return (yuint64)-1; // error
+            return (uint64_t)-1; // error
 
         if (GetDiskFreeSpaceExW(wstr.c_str(),
                                 (PULARGE_INTEGER)&i64FreeBytesToCaller,
@@ -105,5 +105,5 @@ static inline uint64 DiskFreeSpace(const AnyString& folder)
 #endif
 
     (void)folder;
-    return (yuint64)-1; // obviously an error
+    return (uint64_t)-1; // obviously an error
 }

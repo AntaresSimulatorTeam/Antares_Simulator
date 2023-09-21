@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOW_BINDING_CONSTRAINT_H__
 #define __ANTARES_APPLICATION_WINDOW_BINDING_CONSTRAINT_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../toolbox/components/notebook/notebook.h"
 #include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/input/bindingconstraint.h"
@@ -37,7 +36,6 @@ namespace Antares
 {
 namespace Window
 {
-class BindingConstraintDataPanel;
 class BindingConstraintWeightsPanel;
 class BindingConstraintOffsetsPanel;
 
@@ -79,15 +77,9 @@ private:
     Component::Notebook::Page* pPageList;
     Component::Notebook::Page* pPageWeights;
     Component::Notebook::Page* pPageOffsets;
-    Component::Notebook::Page* pPageEqual;
-    Component::Notebook::Page* pPageLess;
-    Component::Notebook::Page* pPageGreater;
     Toolbox::InputSelector::BindingConstraint* pAllConstraints;
     Data::BindingConstraint* pSelected;
 
-    BindingConstraintDataPanel* pDataPanelEqual;
-    BindingConstraintDataPanel* pDataPanelLess;
-    BindingConstraintDataPanel* pDataPanelGreater;
     BindingConstraintWeightsPanel* pWeightsPanel;
     BindingConstraintOffsetsPanel* pOffsetsPanel;
 

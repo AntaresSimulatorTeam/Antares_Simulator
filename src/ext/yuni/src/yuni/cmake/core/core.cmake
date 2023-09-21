@@ -65,8 +65,6 @@ if (MSVC)
 	set(yuni_additional_os_specific
 		core/system/gettimeofday.cpp
 		core/system/username.cpp
-		core/system/windows/msinttypes/inttypes.h
-		core/system/windows/msinttypes/stdint.h
 		core/system/windows.hdr.h)
 else()
 	set(yuni_additional_os_specific "")
@@ -533,3 +531,9 @@ install(FILES io/directory/info/iterator.inc.hpp
 install(FILES "${YUNI_LIBYUNI_CONFIG_TARGET_INIFILE}"
 	COMPONENT ${YUNICOMPONENT_CORE}
 	DESTINATION include/yuni RENAME "yuni.config.${YUNI_LIBYUNI_CONFIG_COMPILER}")
+
+# Marginal addition so that dependent include automatically yuni root directory
+# Note: if we want to use an installed version of yuni, we'll
+#       need to add INSTALL_INTERFACE.
+target_include_directories(yuni-static-core PUBLIC
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../>)

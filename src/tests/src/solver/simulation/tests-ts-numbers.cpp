@@ -1,8 +1,9 @@
 #define BOOST_TEST_MODULE test solver simulation things
+#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include <timeseries-numbers.h>
 
@@ -17,7 +18,7 @@ void initializeStudy(Study::Ptr study)
 {
 	study->parameters.derated = false;
 
-	study->runtime = new StudyRuntimeInfos(1);
+	study->runtime = new StudyRuntimeInfos();
 	study->runtime->rangeLimits.year[rangeBegin] = 0;
 	study->runtime->rangeLimits.year[rangeEnd] = 0;
 	study->runtime->rangeLimits.year[rangeCount] = 1;
@@ -691,9 +692,9 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
     auto bc = study->bindingConstraints.add("dummy");
     bc->group("dummy");
+    study->bindingConstraintsGroups.add(bc->group());
     bc->RHSTimeSeries().resize(42, 1);
-    study->bindingConstraints.groupToTimeSeriesNumbers["dummy"] = BindingConstraintTimeSeriesNumbers();
-    study->bindingConstraints.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    study->bindingConstraintsGroups.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	BOOST_CHECK(Generate(*study));
 
@@ -704,7 +705,7 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
 	uint solarTsNumber = area->solar.series->timeseriesNumbers[0][year];
 	uint hydroTsNumber = area->hydro.series->timeseriesNumbers[0][year];
 	uint thermalTsNumber = thCluster->series->timeseriesNumbers[0][year];
-	auto binding_constraints_TS_number = study->bindingConstraints.groupToTimeSeriesNumbers["dummy"].timeseriesNumbers[0][year];
+	auto binding_constraints_TS_number = study->bindingConstraintsGroups["dummy"]->timeseriesNumbers[0][year];
 
 	BOOST_CHECK(loadTsNumber < loadNumberOfTs);
 	BOOST_CHECK(windTsNumber < windNumberOfTs);

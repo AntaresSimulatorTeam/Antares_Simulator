@@ -45,7 +45,7 @@ Cell::~Cell()
 void Cell::onStudyLoaded()
 {
     // We are sure study is loaded now.
-    study_ = Data::Study::Current::Get();
+    study_ = GetCurrentStudy();
 }
 
 bool Cell::isTSgeneratorOn() const

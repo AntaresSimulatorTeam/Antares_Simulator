@@ -26,8 +26,7 @@
 */
 
 #include "runtime.h"
-#include <functional>
-#include "../../emergency.h"
+#include "antares/fatal-error.h"
 
 #include "../area/scratchpad.h"
 
@@ -38,6 +37,7 @@ namespace Antares::Data
 static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos& r)
 {
     uint areaCount = study.areas.size();
+    uint nbYearsInParallel = study.maxNbYearsInParallel;
 
     // For each area
     for (uint a = 0; a != areaCount; ++a)
@@ -90,8 +90,8 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
             area.thermal.mustrunList.calculationOfSpinning();
         }
 
-        area.scratchpad.reserve(area.nbYearsInParallel);
-        for (uint numSpace = 0; numSpace < area.nbYearsInParallel; numSpace++)
+        area.scratchpad.reserve(nbYearsInParallel);
+        for (uint numSpace = 0; numSpace < nbYearsInParallel; numSpace++)
             area.scratchpad.emplace_back(r, area);
 
         // statistics
@@ -206,8 +206,7 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
         simulationDaysPerMonth[(uint)ca.month] = (uint)(cb.dayYear - ca.dayYear + 1);
         if (simulationDaysPerMonth[(uint)ca.month] > study.calendar.months[(uint)ca.month].days)
         {
-            logs.fatal() << "Internal error when preparing the calendar";
-            AntaresSolverEmergencyShutdown(); // will never return
+            throw FatalError("Internal error when preparing the calendar");
         }
     }
     else
@@ -242,32 +241,17 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     // weeks, this value must be greater than or equal to 168
     if (limits.hour[rangeCount] < 168)
     {
-        logs.info();
-        logs.fatal() << "At least one week is required to run a simulation.";
-        // Since this method is only called by the solver, we will abort now.
-        // However, we have to release all locks held by the study before to avoid
-        // a timeout for a future use of the study
-        AntaresSolverEmergencyShutdown(); // will never return
+        throw FatalError("At least one week is required to run a simulation.");
     }
 }
 
-StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
- nbYears(0),
- nbHoursPerYear(0),
- nbDaysPerYear(0),
- nbMonthsPerYear(0),
- parameters(nullptr),
- timeseriesNumberYear(nullptr),
- thermalPlantTotalCount(0),
- thermalPlantTotalCountMustRun(0),
- quadraticOptimizationHasFailed(false)
+StudyRuntimeInfos::StudyRuntimeInfos() :
+    nbYears(0),
+    parameters(nullptr),
+    thermalPlantTotalCount(0),
+    thermalPlantTotalCountMustRun(0),
+    quadraticOptimizationHasFailed(false)
 {
-    // Evite les confusions de numeros de TS entre AMC
-    timeseriesNumberYear = new uint[nbYearsParallel];
-    for (uint numSpace = 0; numSpace < nbYearsParallel; numSpace++)
-    {
-        timeseriesNumberYear[numSpace] = 999999;
-    }
 }
 
 void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
@@ -290,9 +274,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     auto& gd = study.parameters;
 
     nbYears = gd.nbYears;
-    nbHoursPerYear = 8760;
-    nbDaysPerYear = 365;
-    nbMonthsPerYear = 12;
     parameters = &study.parameters;
     mode = gd.mode;
     thermalPlantTotalCount = 0;
@@ -301,14 +282,14 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "Generating calendar informations";
     if (study.usedByTheSolver)
     {
-        study.calendar.reset(gd, false);
+        study.calendar.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, false});
     }
     else
     {
-        study.calendar.reset(gd);
+        study.calendar.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
     }
     logs.debug() << "  :: generating calendar dedicated to the output";
-    study.calendarOutput.reset(gd);
+    study.calendarOutput.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
     initializeRangeLimits(study, rangeLimits);
 
     // Removing disabled thermal clusters from solver computations
@@ -352,7 +333,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
     logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
     logs.info() << "     short-term storages: " << shortTermStorageCount;
-    logs.info() << "     binding constraints: " << study.bindingConstraints.enabled().size();
+    logs.info() << "     binding constraints: " << study.bindingConstraints.activeContraints().size();
     logs.info() << "     geographic trimming:" << (gd.geographicTrimming ? "true" : "false");
     logs.info() << "     memory : " << ((study.memoryUsage()) / 1024 / 1024) << "Mo";
     logs.info();
@@ -459,16 +440,6 @@ void StudyRuntimeInfos::removeAllRenewableClustersFromSolverComputations(Study& 
 StudyRuntimeInfos::~StudyRuntimeInfos()
 {
     logs.debug() << "Releasing runtime data";
-
-    delete[] timeseriesNumberYear;
-}
-
-void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& u)
-{
-    u.requiredMemoryForInput += sizeof(StudyRuntimeInfos);
-    u.study.areas.each([&](const Data::Area& area) {
-        u.requiredMemoryForInput += sizeof(AreaLink*) * area.links.size();
-    });
 }
 
 #ifndef NDEBUG

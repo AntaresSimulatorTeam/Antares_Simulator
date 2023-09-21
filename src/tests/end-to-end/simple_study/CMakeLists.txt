@@ -13,15 +13,14 @@ add_executable(tests-simple-study
 target_link_libraries(tests-simple-study
 						PRIVATE
 						test_utils
-						libantares-core
-						libantares-solver-main-economy
-						libantares-solver-main-adequacy
-						libantares-solver-hydro
-						libantares-solver-aleatoire
-						libantares-solver-variable
-						libantares-solver-simulation
-						libantares-solver-ts-generator
-						libmodel_antares
+						antares-solver-main-economy
+						antares-solver-main-adequacy
+						antares-solver-hydro
+						antares-solver-aleatoire
+						antares-solver-variable
+						antares-solver-simulation
+						antares-solver-ts-generator
+						model_antares
 						${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
 			)
 			
@@ -30,8 +29,6 @@ target_include_directories(tests-simple-study
 							${CMAKE_SOURCE_DIR}/solver
 							${CMAKE_CURRENT_SOURCE_DIR}/../utils
 							)
-
-target_compile_definitions(tests-simple-study PRIVATE "BOOST_TEST_DYN_LINK=1")
 
 add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)
 set_property(TEST end-to-end-simple-study PROPERTY LABELS end-to-end)

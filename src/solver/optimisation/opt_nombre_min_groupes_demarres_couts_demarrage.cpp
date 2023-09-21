@@ -25,15 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include <yuni/yuni.h>
-#include <yuni/core/string.h>
 
 #include "opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
-#include <yuni/io/file.h>
 #include "opt_fonctions.h"
 
 extern "C"
@@ -41,10 +38,6 @@ extern "C"
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
 }
-
-#include <antares/logs.h>
-#include <antares/study.h>
-#include <antares/emergency.h>
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -71,7 +64,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
     double eps_prodTherm = 1.0;
     double eps_nbGroupes = 1.0;
 
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
     {
         const RESULTATS_HORAIRES& ResultatsHoraires = problemeHebdo->ResultatsHoraires[pays];
         const std::vector<PRODUCTION_THERMIQUE_OPTIMALE>& ProductionThermique
@@ -340,10 +333,10 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     NombreDeVariables += NombreDePasDeTemps;
     NombreDeVariables += NombreDePasDeTemps;
 
-    auto NumeroDeVariableDeM = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
-    auto NumeroDeVariableDeMMoinsMoins = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
-    auto NumeroDeVariableDeMPlus = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
-    auto NumeroDeVariableDeMMoins = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
+    std::vector<int> NumeroDeVariableDeM(NombreDePasDeTemps);
+    std::vector<int> NumeroDeVariableDeMMoinsMoins(NombreDePasDeTemps);
+    std::vector<int> NumeroDeVariableDeMPlus(NombreDePasDeTemps);
+    std::vector<int> NumeroDeVariableDeMMoins(NombreDePasDeTemps);
 
     int NombreDeContraintes = 0;
     NombreDeContraintes += NombreDePasDeTemps;
@@ -352,18 +345,18 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     NombreDeContraintes += NombreDePasDeTemps;
     NombreDeContraintes += NombreDePasDeTemps;
 
-    auto PositionDeLaVariable = (int*)MemAlloc(NombreDeVariables * sizeof(int));
-    auto CoutLineaire = (double*)MemAlloc(NombreDeVariables * sizeof(double));
-    auto Xsolution = (double*)MemAlloc(NombreDeVariables * sizeof(double));
-    auto Xmin = (double*)MemAlloc(NombreDeVariables * sizeof(double));
-    auto Xmax = (double*)MemAlloc(NombreDeVariables * sizeof(double));
-    auto TypeDeVariable = (int*)MemAlloc(NombreDeVariables * sizeof(int));
+    std::vector<int> PositionDeLaVariable(NombreDeVariables);
+    std::vector<double> CoutLineaire(NombreDeVariables);
+    std::vector<double> Xsolution(NombreDeVariables);
+    std::vector<double> Xmin(NombreDeVariables);
+    std::vector<double> Xmax(NombreDeVariables);
+    std::vector<int> TypeDeVariable(NombreDeVariables);
 
-    auto ComplementDeLaBase = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
-    auto IndicesDebutDeLigne = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
-    auto NombreDeTermesDesLignes = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
-    auto Sens = (char*)MemAlloc(NombreDeContraintes * sizeof(char));
-    auto SecondMembre = (double*)MemAlloc(NombreDeContraintes * sizeof(double));
+    std::vector<int> ComplementDeLaBase(NombreDeContraintes);
+    std::vector<int> IndicesDebutDeLigne(NombreDeContraintes);
+    std::vector<int> NombreDeTermesDesLignes(NombreDeContraintes);
+    std::vector<char> Sens(NombreDeContraintes);
+    std::vector<double> SecondMembre(NombreDeContraintes);
 
     int NbTermesMatrice = 0;
     NbTermesMatrice += 4 * NombreDePasDeTemps;
@@ -373,24 +366,9 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
       += NombreDePasDeTemps * (1 + (2 * DureeMinimaleDeMarcheDUnGroupeDuPalierThermique));
     NbTermesMatrice += NombreDePasDeTemps * (1 + DureeMinimaleDArretDUnGroupeDuPalierThermique);
 
-    auto IndicesColonnes = (int*)MemAlloc(NbTermesMatrice * sizeof(int));
-    auto CoefficientsDeLaMatriceDesContraintes
-      = (double*)MemAlloc(NbTermesMatrice * sizeof(double));
+    std::vector<int> IndicesColonnes(NbTermesMatrice);
+    std::vector<double> CoefficientsDeLaMatriceDesContraintes(NbTermesMatrice);
 
-    if (NumeroDeVariableDeM == nullptr || NumeroDeVariableDeMMoinsMoins == nullptr
-        || NumeroDeVariableDeMPlus == nullptr || NumeroDeVariableDeMMoins == nullptr
-        || PositionDeLaVariable == nullptr || CoutLineaire == nullptr || Xsolution == nullptr
-        || Xmin == nullptr || Xmax == nullptr || TypeDeVariable == nullptr
-        || ComplementDeLaBase == nullptr || IndicesDebutDeLigne == nullptr
-        || NombreDeTermesDesLignes == nullptr || Sens == nullptr || SecondMembre == nullptr
-        || IndicesColonnes == nullptr || CoefficientsDeLaMatriceDesContraintes == nullptr)
-    {
-        logs.info();
-        logs.error() << "Internal error: insufficient memory";
-        logs.info();
-        AntaresSolverEmergencyShutdown();
-        return;
-    }
 
     NombreDeVariables = 0;
     for (int pdt = 0; pdt < NombreDePasDeTemps; pdt++)
@@ -587,20 +565,20 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     Probleme.NombreMaxDIterations = -1;
     Probleme.DureeMaxDuCalcul = -1.;
 
-    Probleme.CoutLineaire = CoutLineaire;
-    Probleme.X = Xsolution;
-    Probleme.Xmin = Xmin;
-    Probleme.Xmax = Xmax;
+    Probleme.CoutLineaire = CoutLineaire.data();
+    Probleme.X = Xsolution.data();
+    Probleme.Xmin = Xmin.data();
+    Probleme.Xmax = Xmax.data();
     Probleme.NombreDeVariables = NombreDeVariables;
-    Probleme.TypeDeVariable = TypeDeVariable;
+    Probleme.TypeDeVariable = TypeDeVariable.data();
 
     Probleme.NombreDeContraintes = NombreDeContraintes;
-    Probleme.IndicesDebutDeLigne = IndicesDebutDeLigne;
-    Probleme.NombreDeTermesDesLignes = NombreDeTermesDesLignes;
-    Probleme.IndicesColonnes = IndicesColonnes;
-    Probleme.CoefficientsDeLaMatriceDesContraintes = CoefficientsDeLaMatriceDesContraintes;
-    Probleme.Sens = Sens;
-    Probleme.SecondMembre = SecondMembre;
+    Probleme.IndicesDebutDeLigne = IndicesDebutDeLigne.data();
+    Probleme.NombreDeTermesDesLignes = NombreDeTermesDesLignes.data();
+    Probleme.IndicesColonnes = IndicesColonnes.data();
+    Probleme.CoefficientsDeLaMatriceDesContraintes = CoefficientsDeLaMatriceDesContraintes.data();
+    Probleme.Sens = Sens.data();
+    Probleme.SecondMembre = SecondMembre.data();
 
     Probleme.ChoixDeLAlgorithme = SPX_DUAL;
 
@@ -608,9 +586,9 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     Probleme.FaireDuScaling = OUI_SPX;
     Probleme.StrategieAntiDegenerescence = AGRESSIF;
 
-    Probleme.PositionDeLaVariable = PositionDeLaVariable;
+    Probleme.PositionDeLaVariable = PositionDeLaVariable.data();
     Probleme.NbVarDeBaseComplementaires = 0;
-    Probleme.ComplementDeLaBase = ComplementDeLaBase;
+    Probleme.ComplementDeLaBase = ComplementDeLaBase.data();
 
     Probleme.LibererMemoireALaFin = OUI_SPX;
 
@@ -640,24 +618,6 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
         printf("Pas de solution au probleme auxiliaire\n");
 #endif
     }
-
-    MemFree(NumeroDeVariableDeM);
-    MemFree(NumeroDeVariableDeMMoinsMoins);
-    MemFree(NumeroDeVariableDeMPlus);
-    MemFree(NumeroDeVariableDeMMoins);
-    MemFree(PositionDeLaVariable);
-    MemFree(CoutLineaire);
-    MemFree(Xsolution);
-    MemFree(Xmin);
-    MemFree(Xmax);
-    MemFree(TypeDeVariable);
-    MemFree(ComplementDeLaBase);
-    MemFree(IndicesDebutDeLigne);
-    MemFree(NombreDeTermesDesLignes);
-    MemFree(Sens);
-    MemFree(SecondMembre);
-    MemFree(IndicesColonnes);
-    MemFree(CoefficientsDeLaMatriceDesContraintes);
 
     return;
 }

@@ -30,12 +30,12 @@
 #include <yuni/core/math.h>
 #include <cassert>
 #include <cmath>
+#include <boost/algorithm/string/case_conv.hpp>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "cluster.h"
-#include "../../../inifile.h"
-#include "../../../logs.h"
-#include "../../../utils.h"
+#include <antares/inifile/inifile.h>
+#include <antares/logs/logs.h>
+#include <antares/utils/utils.h>
 
 using namespace Yuni;
 using namespace Antares;
@@ -97,62 +97,39 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
         parentArea->forceReload();
 }
 
+const std::map < RenewableCluster::RenewableGroup, const char* > groupToName =
+{
+    {RenewableCluster::thermalSolar, "solar thermal"},
+    {RenewableCluster::PVSolar, "solar pv"},
+    {RenewableCluster::rooftopSolar, "solar rooftop"},
+    {RenewableCluster::windOnShore, "wind onshore"},
+    {RenewableCluster::windOffShore,"wind offshore"},
+    {RenewableCluster::renewableOther1, "other res 1"},
+    {RenewableCluster::renewableOther2, "other res 2"},
+    {RenewableCluster::renewableOther3, "other res 3"},
+    {RenewableCluster::renewableOther4, "other res 4"}
+};
+
 void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
 {
-    if (not newgrp)
+    if (newgrp.empty())
     {
         groupID = renewableOther1;
         pGroup.clear();
         return;
     }
     pGroup = newgrp;
-    newgrp.toLower();
+    boost::to_lower(newgrp);
 
-    if (newgrp == "solar thermal")
+    for (const auto& [group, name] : groupToName)
     {
-        groupID = thermalSolar;
-        return;
+        if (newgrp == name)
+        {
+            groupID = group;
+            return;
+        }        
     }
-    if (newgrp == "solar pv")
-    {
-        groupID = PVSolar;
-        return;
-    }
-    if (newgrp == "solar rooftop")
-    {
-        groupID = rooftopSolar;
-        return;
-    }
-    if (newgrp == "wind onshore")
-    {
-        groupID = windOnShore;
-        return;
-    }
-    if (newgrp == "wind offshore")
-    {
-        groupID = windOffShore;
-        return;
-    }
-    if (newgrp == "other renewable 1")
-    {
-        groupID = renewableOther1;
-        return;
-    }
-    if (newgrp == "other renewable 2")
-    {
-        groupID = renewableOther2;
-        return;
-    }
-    if (newgrp == "other renewable 3")
-    {
-        groupID = renewableOther3;
-        return;
-    }
-    if (newgrp == "other renewable 4")
-    {
-        groupID = renewableOther4;
-        return;
-    }
+
     // assigning a default value
     groupID = renewableOther1;
 }
@@ -194,34 +171,6 @@ bool Data::RenewableCluster::integrityCheck()
         ret = false;
     }
     return ret;
-}
-
-const char* Data::RenewableCluster::GroupName(enum RenewableGroup grp)
-{
-    switch (grp)
-    {
-    case windOffShore:
-        return "Wind offshore";
-    case windOnShore:
-        return "Wind onshore";
-    case thermalSolar:
-        return "Solar thermal";
-    case PVSolar:
-        return "Solar PV";
-    case rooftopSolar:
-        return "Solar rooftop";
-    case renewableOther1:
-        return "Other RES 1";
-    case renewableOther2:
-        return "Other RES 2";
-    case renewableOther3:
-        return "Other RES 3";
-    case renewableOther4:
-        return "Other RES 4";
-    case groupMax:
-        return "";
-    }
-    return "";
 }
 
 bool Data::RenewableCluster::setTimeSeriesModeFromString(const YString& value)
@@ -269,9 +218,9 @@ double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepInde
     return 0.;
 }
 
-uint64 RenewableCluster::memoryUsage() const
+uint64_t RenewableCluster::memoryUsage() const
 {
-    uint64 amount = sizeof(RenewableCluster);
+    uint64_t amount = sizeof(RenewableCluster);
     if (series)
         amount += DataSeriesMemoryUsage(series);
     return amount;

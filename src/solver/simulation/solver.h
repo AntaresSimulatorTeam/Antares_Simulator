@@ -27,11 +27,10 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_H__
 #define __SOLVER_SIMULATION_SOLVER_H__
 
-#include <antares/study/memory-usage.h>
-#include <antares/study.h>
-#include <antares/logs.h>
+#include <antares/study/study.h>
+#include <antares/logs/logs.h>
 #include <antares/study/fwd.h> // PowerFluctuations
-#include <antares/benchmarking.h>
+#include <antares/benchmarking/DurationCollector.h>
 
 #include <yuni/core/string.h>
 #include <yuni/job/queue/service.h>
@@ -41,10 +40,11 @@
 #include "solver.utils.h"
 #include "../hydro/management/management.h"
 
-#include <writer_factory.h>
+#include <antares/writer/writer_factory.h>
 
 namespace Antares::Solver::Simulation
 {
+
 template<class Impl>
 class yearJob;
 
@@ -65,7 +65,7 @@ public:
     */
     ISimulation(Data::Study& study,
                 const ::Settings& settings,
-                Benchmarking::IDurationCollector* duration_collector);
+                Benchmarking::IDurationCollector& duration_collector);
     //! Destructor
     ~ISimulation();
     //@}
@@ -86,16 +86,6 @@ public:
     ** \param year The current year, if applicable
     */
     void writeResults(bool synthesis, uint year = 0, uint numSpace = 9999);
-
-    static void estimateMemoryUsage(Antares::Data::StudyMemoryUsage& u);
-    static void estimateMemoryForRandomNumbers(Antares::Data::StudyMemoryUsage& u);
-    static void estimateMemoryForWeeklyPb(Antares::Data::StudyMemoryUsage& u);
-    static void estimateMemoryForOptimizationPb(Antares::Data::StudyMemoryUsage& u,
-                                                int& nbVars,
-                                                int& nbConstraints);
-    static void estimateMemoryForSplxPb(Antares::Data::StudyMemoryUsage& u,
-                                        int& nbVars,
-                                        int& nbConstraints);
 
 public:
     //! Reference to the current study
@@ -156,6 +146,7 @@ private:
     */
     void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State>& state);
 
+
 private:
     //! Some temporary to avoid performing useless complex checks
     Solver::Private::Simulation::CacheData pData;
@@ -166,7 +157,7 @@ private:
     //! Year by year output results
     bool pYearByYear;
     //! Hydro management
-    HydroManagement pHydroManagement;
+    HydroManagement hydroManagement;
     //! Hydro hot start
     bool pHydroHotStart;
     //! The first set of parallel year(s) with a performed year was already run ?
@@ -176,13 +167,14 @@ private:
     annualCostsStatistics pAnnualCostsStatistics;
 
     // Collecting durations inside the simulation
-    Benchmarking::IDurationCollector* pDurationCollector;
+    Benchmarking::IDurationCollector& pDurationCollector;
 
 public:
     //! The queue service that runs every set of parallel years
     std::shared_ptr<Yuni::Job::QueueService> pQueueService = nullptr;
     //! Result writer
     Antares::Solver::IResultWriter::Ptr pResultWriter = nullptr;
+
 }; // class ISimulation
 } // namespace Antares::Solver::Simulation
 

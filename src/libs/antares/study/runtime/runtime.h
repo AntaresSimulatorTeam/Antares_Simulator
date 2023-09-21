@@ -30,7 +30,7 @@
 #include <string>
 #include <vector>
 #include "../study.h"
-#include "../../mersenne-twister/mersenne-twister.h"
+#include <antares/mersenne-twister/mersenne-twister.h>
 
 namespace Antares::Data
 {
@@ -76,7 +76,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    StudyRuntimeInfos(uint nbYearsParallel);
+    StudyRuntimeInfos();
     /*!
     ** \brief Destructor
     */
@@ -91,12 +91,6 @@ public:
 public:
     //! The number of years to process
     uint nbYears;
-    //! How many hours per year
-    uint nbHoursPerYear; // default: 8760
-    //! Number of days per year
-    uint nbDaysPerYear;
-    //! Number
-    uint nbMonthsPerYear;
 
     //! Alias for General data
     Parameters* parameters;
@@ -114,14 +108,6 @@ public:
 
     //! Random numbers generators
     MersenneTwister random[seedMax];
-
-    /*!
-    ** \brief The index to use when retrieving the time-series numbers
-    **
-    ** To allow the drop of the years with no solution, we can not fully rely
-    ** on the current year. So we have to maintain a rotating index (0..nbYears)
-    */
-    uint* timeseriesNumberYear;
 
     //! Total
     uint thermalPlantTotalCount;
@@ -159,12 +145,6 @@ private:
     void disableAllFilters(Study& study);
     void checkThermalTSGeneration(Study& study);
 }; // struct StudyRuntimeInfos
-
-/*!
-** \brief Get the size (bytes) occupied in memory by a StudyRuntimeInfos structure
-** \ingroup runtimedata
-*/
-void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& study);
 
 } // namespace Antares::Data
 

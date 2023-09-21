@@ -39,28 +39,14 @@ using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-Economy::Economy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
+Economy::Economy(Data::Study& study) : study(study), preproOnly(false)
 {
-}
-
-Economy::~Economy()
-{
-    if (pProblemesHebdo)
-    {
-        for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
-        {
-            OPT_LiberationMemoireDuProblemeAOptimiser(pProblemesHebdo[numSpace]);
-            SIM_DesallocationProblemeHebdo(*pProblemesHebdo[numSpace]);
-            delete pProblemesHebdo[numSpace];
-        }
-        delete[] pProblemesHebdo;
-    }
 }
 
 Benchmarking::OptimizationInfo Economy::getOptimizationInfo() const
 {
     const uint numSpace = 0;
-    const auto& Pb = pProblemesHebdo[numSpace]->ProblemeAResoudre;
+    const auto& Pb = pProblemesHebdo[numSpace].ProblemeAResoudre;
     Benchmarking::OptimizationInfo optInfo;
 
     optInfo.nbVariables = Pb->NombreDeVariables;
@@ -76,7 +62,7 @@ void Economy::setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel)
 
 void Economy::initializeState(Variable::State& state, uint numSpace)
 {
-    state.problemeHebdo = pProblemesHebdo[numSpace];
+    state.problemeHebdo = &pProblemesHebdo[numSpace];
     state.numSpace = numSpace;
 }
 
@@ -84,44 +70,42 @@ bool Economy::simulationBegin()
 {
     if (!preproOnly)
     {
-        pProblemesHebdo = new PROBLEME_HEBDO*[pNbMaxPerformedYearsInParallel];
+        pProblemesHebdo.resize(pNbMaxPerformedYearsInParallel);
         weeklyOptProblems_.resize(pNbMaxPerformedYearsInParallel);
         postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
-            pProblemesHebdo[numSpace] = new PROBLEME_HEBDO();
-            SIM_InitialisationProblemeHebdo(study, *pProblemesHebdo[numSpace], 168, numSpace);
+            SIM_InitialisationProblemeHebdo(study, pProblemesHebdo[numSpace], 168, numSpace);
 
-            if ((uint)nbHoursInAWeek != (uint)pProblemesHebdo[numSpace]->NombreDePasDeTemps)
+            if ((uint)nbHoursInAWeek != (uint)pProblemesHebdo[numSpace].NombreDePasDeTemps)
             {
                 logs.fatal() << "internal error";
                 return false;
             }
 
+            auto options = createOptimizationOptions(study);
             weeklyOptProblems_[numSpace] =
                 Antares::Solver::Optimization::WeeklyOptimization::create(
+                                                    study,
+                                                    options,
                                                     study.parameters.adqPatchParams,
-                                                    pProblemesHebdo[numSpace],
-                                                    numSpace);
+                                                    &pProblemesHebdo[numSpace],
+                                                    numSpace,
+                                                    *study.resultWriter);
             postProcessesList_[numSpace] =
                 interfacePostProcessList::create(study.parameters.adqPatchParams,
-                                                 pProblemesHebdo[numSpace],
+                                                 &pProblemesHebdo[numSpace],
                                                  numSpace,
                                                  study.areas,
                                                  study.parameters.shedding.policy,
                                                  study.parameters.simplexOptimizationRange,
                                                  study.calendar);
         }
-
-        SIM_InitialisationResultats();
     }
 
-    if (pProblemesHebdo)
-    {
-        for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
-            pProblemesHebdo[numSpace]->TypeDOptimisation = OPTIMISATION_LINEAIRE;
-    }
+    for (auto& pb : pProblemesHebdo)
+        pb.TypeDOptimisation = OPTIMISATION_LINEAIRE;
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
     pNbWeeks = study.parameters.simulationDays.numberOfWeeks();
@@ -134,19 +118,20 @@ bool Economy::year(Progression::Task& progression,
                    uint numSpace,
                    yearRandomNumbers& randomForYear,
                    std::list<uint>& failedWeekList,
-                   bool isFirstPerformedYearOfSimulation)
+                   bool isFirstPerformedYearOfSimulation,
+                   const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
 {
     // No failed week at year start
     failedWeekList.clear();
-    pProblemesHebdo[numSpace]->year = state.year;
+    pProblemesHebdo[numSpace].year = state.year;
 
-    PrepareRandomNumbers(study, *pProblemesHebdo[numSpace], randomForYear);
+    PrepareRandomNumbers(study, pProblemesHebdo[numSpace], randomForYear);
 
     state.startANewYear();
 
     int hourInTheYear = pStartTime;
     if (isFirstPerformedYearOfSimulation)
-        pProblemesHebdo[numSpace]->firstWeekOfSimulation = true;
+        pProblemesHebdo[numSpace].firstWeekOfSimulation = true;
     bool reinitOptim = true;
 
     OptimizationStatisticsWriter optWriter(study.resultWriter, state.year);
@@ -154,14 +139,17 @@ bool Economy::year(Progression::Task& progression,
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
-        pProblemesHebdo[numSpace]->weekInTheYear = state.weekInTheYear = w;
-        pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
+        pProblemesHebdo[numSpace].weekInTheYear = state.weekInTheYear = w;
+        pProblemesHebdo[numSpace].HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(
-          *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
+        ::SIM_RenseignementProblemeHebdo(study, pProblemesHebdo[numSpace], state.weekInTheYear, 
+                                         numSpace, hourInTheYear, hydroVentilationResults);
+
+        BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace], 
+                                        numSpace, hourInTheYear, randomForYear.pThermalNoisesByArea);
 
         // Reinit optimisation if needed
-        pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim;
+        pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;
         reinitOptim = false;
 
         try
@@ -180,7 +168,7 @@ bool Economy::year(Progression::Task& progression,
             {
                 state.hourInTheWeek = hw;
 
-                state.ntc = pProblemesHebdo[numSpace]->ValeursDeNTC[hw];
+                state.ntc = pProblemesHebdo[numSpace].ValeursDeNTC[hw];
 
                 variables.hourBegin(state.hourInTheYear);
 
@@ -195,12 +183,12 @@ bool Economy::year(Progression::Task& progression,
 
             for (int opt = 0; opt < 7; opt++)
             {
-                state.optimalSolutionCost1 += pProblemesHebdo[numSpace]->coutOptimalSolution1[opt];
-                state.optimalSolutionCost2 += pProblemesHebdo[numSpace]->coutOptimalSolution2[opt];
+                state.optimalSolutionCost1 += pProblemesHebdo[numSpace].coutOptimalSolution1[opt];
+                state.optimalSolutionCost2 += pProblemesHebdo[numSpace].coutOptimalSolution2[opt];
             }
             optWriter.addTime(w,
-                              pProblemesHebdo[numSpace]->tempsResolution1[0],
-                              pProblemesHebdo[numSpace]->tempsResolution2[0]);
+                              pProblemesHebdo[numSpace].tempsResolution1[0],
+                              pProblemesHebdo[numSpace].tempsResolution2[0]);
         }
         catch (Data::AssertionError& ex)
         {
@@ -231,15 +219,15 @@ bool Economy::year(Progression::Task& progression,
 
         hourInTheYear += nbHoursInAWeek;
 
-        pProblemesHebdo[numSpace]->firstWeekOfSimulation = false;
+        pProblemesHebdo[numSpace].firstWeekOfSimulation = false;
 
         ++progression;
     }
 
-    updatingAnnualFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
+    updatingAnnualFinalHydroLevel(study.areas, pProblemesHebdo[numSpace]);
 
     optWriter.finalize();
-    finalizeOptimizationStatistics(*pProblemesHebdo[numSpace], state);
+    finalizeOptimizationStatistics(pProblemesHebdo[numSpace], state);
 
     return true;
 }
@@ -271,7 +259,7 @@ void Economy::simulationEnd()
     if (!preproOnly && study.runtime->interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
-        ComputeFlowQuad(study, *pProblemesHebdo[0], balance, pNbWeeks);
+        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
     }
 }
 

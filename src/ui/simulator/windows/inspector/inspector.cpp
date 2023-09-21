@@ -25,7 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/wx-wrapper.h>
 #include <wx/frame.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
@@ -162,7 +161,7 @@ void Show()
 void SelectStudy(const Data::Study::Ptr& study)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
     if (study)
@@ -178,7 +177,7 @@ void SelectStudy(const Data::Study::Ptr& study)
 void AddStudy(const Data::Study::Ptr& study)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     if (gData->studies.insert(study).second)
     {
@@ -191,7 +190,7 @@ void AddStudy(const Data::Study::Ptr& study)
 void SelectArea(const Data::Area* area)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
     if (area)
@@ -207,7 +206,7 @@ void SelectArea(const Data::Area* area)
 void AddArea(const Data::Area* area)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     if (gData->areas.insert(const_cast<Data::Area*>(area)).second)
     {
@@ -223,7 +222,7 @@ void AddAreas(const Data::Area::Vector& list)
         return;
 
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     bool notEmpty = false;
     Data::Area::Vector::const_iterator end = list.end();
@@ -248,7 +247,7 @@ void AddAreas(const Data::Area::Set& list)
         return;
 
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     bool notEmpty = false;
     Data::Area::Set::const_iterator end = list.end();
@@ -273,7 +272,7 @@ void AddLinks(const Data::AreaLink::Vector& list)
         return;
 
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     bool notEmpty = false;
     Data::AreaLink::Vector::const_iterator end = list.end();
@@ -293,7 +292,7 @@ void AddLinks(const Data::AreaLink::Set& list)
     if (list.empty())
         return;
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     bool notEmpty = false;
     Data::AreaLink::Set::const_iterator end = list.end();
@@ -318,7 +317,7 @@ void AddBindingConstraints(const Data::BindingConstraintsRepository::Set& list)
     if (list.empty())
         return;
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     bool notEmpty = false;
     auto end = list.end();
@@ -337,7 +336,7 @@ void AddBindingConstraints(const Data::BindingConstraintsRepository::Set& list)
 void AddLink(const Data::AreaLink* link)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     if (gData->links.insert(const_cast<Data::AreaLink*>(link)).second)
     {
@@ -351,7 +350,7 @@ void AddLink(const Data::AreaLink* link)
 void AddThermalCluster(const Data::ThermalCluster* cluster)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     if (gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
     {
@@ -367,7 +366,7 @@ void AddThermalClusters(const Data::ThermalCluster::Vector& list)
     if (list.empty())
         return;
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     bool notEmpty = false;
     Data::ThermalCluster::Vector::const_iterator end = list.end();
@@ -389,7 +388,7 @@ void AddThermalClusters(const Data::ThermalCluster::Set& list)
     if (list.empty())
         return;
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     bool notEmpty = false;
     Data::ThermalCluster::Set::const_iterator end = list.end();
@@ -448,7 +447,7 @@ void RemoveRenewableCluster(const Data::RenewableCluster* cluster)
 void SelectAreas(const Data::Area::Vector& areas)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
     if (!areas.empty())
@@ -471,7 +470,7 @@ void SelectAreas(const Data::Area::Vector& areas)
 void SelectAreas(const Data::Area::Set& areas)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
     if (!areas.empty())
@@ -494,7 +493,7 @@ void SelectAreas(const Data::Area::Set& areas)
 void SelectLink(const Data::AreaLink* lnk)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
     if (lnk)
@@ -509,7 +508,7 @@ void SelectLink(const Data::AreaLink* lnk)
 void SelectLinks(const Data::AreaLink::Vector& lnks)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
     if (!lnks.empty())
@@ -528,7 +527,7 @@ void SelectLinks(const Data::AreaLink::Vector& lnks)
 void SelectThermalCluster(const Data::ThermalCluster* cluster)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
     if (cluster)
@@ -544,7 +543,7 @@ void SelectThermalCluster(const Data::ThermalCluster* cluster)
 void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
 
@@ -566,7 +565,7 @@ void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
 void SelectRenewableCluster(const Data::RenewableCluster* cluster)
 {
     if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(GetCurrentStudy());
 
     gData->clear();
     if (cluster)
@@ -580,7 +579,7 @@ void SelectRenewableCluster(const Data::RenewableCluster* cluster)
 
 uint CopyToClipboard()
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr || !gData)
         return 0; // nothing was copied
 
@@ -772,7 +771,7 @@ bool LinksSelected(std::map<Data::AreaName, std::map<Data::AreaName, bool>>& set
 }
 
 // gp : never used - to be removed
-bool IsThermalClusterSelected(const Data::AreaName& area, const Data::ClusterName& name)
+bool IsThermalClusterSelected(const Data::AreaName& area, const YString& name)
 {
     (void)area;
     (void)name;

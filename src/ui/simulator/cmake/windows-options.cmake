@@ -19,16 +19,17 @@ set(SRC_UI_WINDOWS_OPTIONS
 	windows/options/advanced/advanced.h
 	windows/options/advanced/advanced.cpp
 )
-add_Library(libantares-ui-windows-options ${SRC_UI_WINDOWS_OPTIONS})
+add_Library(antares-ui-windows-options ${SRC_UI_WINDOWS_OPTIONS})
 
-target_include_directories(libantares-ui-windows-options
+target_include_directories(antares-ui-windows-options
 							PRIVATE
 								"${CMAKE_SOURCE_DIR}/ui/simulator"
 )
 
-target_link_libraries(libantares-ui-windows-options
+target_link_libraries(antares-ui-windows-options
 						PUBLIC
 							${wxWidgets_LIBRARIES}
 						PRIVATE
-							libantares-ui-common
+							antares-ui-common
+							Antares::sys
 )

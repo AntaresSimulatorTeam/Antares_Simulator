@@ -26,8 +26,9 @@
 */
 
 #include "week.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include <antares/study/study.h>
+#include "application/study.h"
 
 namespace Antares
 {
@@ -43,7 +44,7 @@ Week::Week(Input* parent) : AFilterBase(parent)
 bool Week::rowIsValid(int row) const
 {
     // TODO Do not use global study
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return false;
     auto& study = *studyptr;

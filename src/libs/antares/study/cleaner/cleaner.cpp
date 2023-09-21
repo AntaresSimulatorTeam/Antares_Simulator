@@ -28,17 +28,14 @@
 #include <yuni/yuni.h>
 #include <yuni/string.h>
 #include "../cleaner.h"
-#include "../../sys/mem-wrapper.h"
 #include "versions.h"
-#include "../../logs.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
 #define STUDY_CLEANER_LOG "[study cleaner] "
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 StudyCleaningInfos::StudyCleaningInfos()
 {
@@ -50,9 +47,7 @@ StudyCleaningInfos::StudyCleaningInfos(const AnyString& path) : folder(path)
     version = versionUnknown;
 }
 
-StudyCleaningInfos::~StudyCleaningInfos()
-{
-}
+StudyCleaningInfos::~StudyCleaningInfos() = default;
 
 bool StudyCleaningInfos::analyze()
 {
@@ -127,7 +122,7 @@ void StudyCleaningInfos::performCleanup()
     }
 }
 
-Yuni::uint64 StudyCleaningInfos::totalSize() const
+uint64_t StudyCleaningInfos::totalSize() const
 {
     return intruders.totalSizeInBytes();
 }
@@ -136,5 +131,5 @@ void StudyCleaningInfos::setCustomExcludeList(const Yuni::String& c)
 {
     customExclude = c;
 }
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

@@ -90,8 +90,8 @@ private:
     // The second value is the default one
     union TriboolValue
     {
-        yint8 flags[2];
-        yuint16 u16;
+        int8_t flags[2];
+        uint16_t u16;
     } pValue;
 
 }; // class Tribool

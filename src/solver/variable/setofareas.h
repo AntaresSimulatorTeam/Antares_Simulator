@@ -28,7 +28,7 @@
 #define __SOLVER_VARIABLE_SET_OF_AREAS_H__
 
 #include "state.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 namespace Antares
 {
@@ -107,11 +107,6 @@ public:
 
 public:
     /*!
-    ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
-    */
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage&);
-
-    /*!
     ** \brief Retrieve the list of all individual variables
     **
     ** The predicate must implement the method `add(name, unit, comment)`.
@@ -171,7 +166,7 @@ public:
 
     void beforeYearByYearExport(uint year, uint numSpace);
 
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     template<class I>
     static void provideInformations(I& infos);

@@ -26,7 +26,7 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "connection.h"
 #include "../components/captionpanel.h"
 #include "../../application/study.h"
@@ -298,9 +298,9 @@ void Connections::update()
     // Set all items at once
     pListbox->DeleteAllItems();
 
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return;
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     pListbox->Freeze();
 

@@ -12,8 +12,8 @@ target_include_directories(${EXECUTABLE_NAME}
 target_link_libraries(${EXECUTABLE_NAME}
                       PRIVATE
                       Boost::unit_test_framework
-                      libmodel_antares
-                      libantares-core
+                      model_antares
+ 					  array
 )
 
 # Storing tests-ts-numbers under the folder Unit-tests in the IDE

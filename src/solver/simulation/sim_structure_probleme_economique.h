@@ -40,6 +40,11 @@ class AdequacyPatchRuntimeData;
 
 struct CORRESPONDANCES_DES_VARIABLES
 {
+    // Avoid accidental copies
+    CORRESPONDANCES_DES_VARIABLES() = default;
+    CORRESPONDANCES_DES_VARIABLES(const CORRESPONDANCES_DES_VARIABLES&) = delete;
+    CORRESPONDANCES_DES_VARIABLES(CORRESPONDANCES_DES_VARIABLES&&) = default;
+
     std::vector<int> NumeroDeVariableDeLInterconnexion;
     std::vector<int> NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;
     std::vector<int> NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
@@ -75,6 +80,11 @@ struct CORRESPONDANCES_DES_VARIABLES
 
 struct CORRESPONDANCES_DES_CONTRAINTES
 {
+    // Avoid accidental copies
+    CORRESPONDANCES_DES_CONTRAINTES() = default;
+    CORRESPONDANCES_DES_CONTRAINTES(const CORRESPONDANCES_DES_CONTRAINTES&) = delete;
+    CORRESPONDANCES_DES_CONTRAINTES(CORRESPONDANCES_DES_CONTRAINTES&&) = default;
+
     std::vector<int> NumeroDeContrainteDesBilansPays;
     std::vector<int> NumeroDeContraintePourEviterLesChargesFictives;
 
@@ -110,9 +120,6 @@ struct VALEURS_DE_NTC_ET_RESISTANCES
     std::vector<double> ValeurDeLoopFlowOrigineVersExtremite;
     std::vector<double> ValeurDuFlux;
 
-    std::vector<double> ValeurDuFluxUp;
-    std::vector<double> ValeurDuFluxDown;
-
     std::vector<double> ResistanceApparente;
 };
 
@@ -140,7 +147,6 @@ struct CONTRAINTES_COUPLANTES
     char SensDeLaContrainteCouplante;
 
     std::vector<double> SecondMembreDeLaContrainteCouplante;
-    std::vector<double> SecondMembreDeLaContrainteCouplanteRef;
 
     int NombreDElementsDansLaContrainteCouplante;
     int NombreDInterconnexionsDansLaContrainteCouplante;
@@ -172,6 +178,7 @@ struct PROPERTIES
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
 
     int clusterGlobalIndex;
+    std::string name;
 };
 
 using AREA_INPUT = std::vector<::ShortTermStorage::PROPERTIES>; // index is local
@@ -243,15 +250,12 @@ struct SOLDE_MOYEN_DES_ECHANGES
 struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 {
     std::vector<double> PuissanceDisponibleDuPalierThermique;
-
     std::vector<double> PuissanceDisponibleDuPalierThermiqueRef;
-    std::vector<double> PuissanceDisponibleDuPalierThermiqueRef_SV;
 
     std::vector<double> PuissanceMinDuPalierThermique;
-    std::vector<double> PuissanceMinDuPalierThermique_SV;
+    std::vector<double> PuissanceMinDuPalierThermiqueRef;
 
     std::vector<double> CoutHoraireDeProductionDuPalierThermique;
-    std::vector<double> CoutHoraireDeProductionDuPalierThermiqueRef;
 
     std::vector<double> CoutHoraireDuPalierThermiqueUp;
     std::vector<double> CoutHoraireDuPalierThermiqueDown;
@@ -280,6 +284,7 @@ struct PALIERS_THERMIQUES
     std::vector<double> PmaxDUnGroupeDuPalierThermique;
     std::vector<int> DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
     std::vector<int> DureeMinimaleDArretDUnGroupeDuPalierThermique;
+    std::vector<std::string> NomsDesPaliersThermiques;
 };
 
 struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
@@ -287,7 +292,6 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     std::vector<double> MinEnergieHydrauParIntervalleOptimise;
     std::vector<double> MaxEnergieHydrauParIntervalleOptimise;
 
-    std::vector<double> CntEnergieH2OParIntervalleOptimiseRef;
     std::vector<double> CntEnergieH2OParIntervalleOptimise;
     std::vector<double> CntEnergieH2OParJour;
 
@@ -298,8 +302,6 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     std::vector<double> ContrainteDePmaxPompageHoraire;
 
     double MaxDesPmaxHydrauliques;
-
-    double MaxDesPmaxHydrauliquesRef;
 
     bool PresenceDePompageModulable;
     bool PresenceDHydrauliqueModulable;
@@ -406,7 +408,6 @@ public:
 struct RESERVE_JMOINS1
 {
     std::vector<double> ReserveHoraireJMoins1;
-    std::vector<double> ReserveHoraireJMoins1Ref;
 };
 
 struct PRODUCTION_THERMIQUE_OPTIMALE
@@ -477,39 +478,37 @@ struct VARIABLES_DUALES_INTERCONNEXIONS
 
 struct PROBLEME_HEBDO
 {
-    unsigned int weekInTheYear = 0;
-    unsigned int year = 0;
+    uint32_t weekInTheYear = 0;
+    uint32_t year = 0;
 
     /* Business problem */
     bool OptimisationAuPasHebdomadaire = false;
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
     bool WaterValueAccurate = false;
     bool OptimisationAvecCoutsDeDemarrage = false;
-    int NombreDePays = 0;
+    uint32_t NombreDePays = 0;
     std::vector<const char*> NomsDesPays;
-    int NombreDePaliersThermiques = 0;
+    uint32_t NombreDePaliersThermiques = 0;
 
-    int NombreDInterconnexions = 0;
+    uint32_t NombreDInterconnexions = 0;
     std::vector<int> PaysOrigineDeLInterconnexion;
     std::vector<int> PaysExtremiteDeLInterconnexion;
     mutable std::vector<COUTS_DE_TRANSPORT> CoutDeTransport;
 
     mutable std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTC;
-    std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTCRef;
 
-    unsigned int NombreDePasDeTemps = 0;
-    unsigned int NombreDePasDeTempsRef = 0;
-    std::vector<int> NumeroDeJourDuPasDeTemps;
+    uint32_t NombreDePasDeTemps = 0;
+    std::vector<int32_t> NumeroDeJourDuPasDeTemps;
 
-    int NombreDePasDeTempsPourUneOptimisation = 0;
-    std::vector<int> NumeroDIntervalleOptimiseDuPasDeTemps;
-    int NombreDeJours = 0;
+    //TODO use uint32_t and figure why tests fails
+    int32_t NombreDePasDeTempsPourUneOptimisation = 0;
+    std::vector<int32_t> NumeroDIntervalleOptimiseDuPasDeTemps;
+    uint32_t NombreDeJours = 0;
 
-    int NombreDePasDeTempsDUneJournee = 0;
-    int NombreDePasDeTempsDUneJourneeRef = 0;
+    //TODO same as NombreDePasDeTemps
+    int32_t NombreDePasDeTempsDUneJournee = 0;
 
     mutable std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattues;
-    std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattuesRef;
 
     std::vector<double> CoutDeDefaillancePositive;
     std::vector<double> CoutDeDefaillanceNegative;
@@ -518,12 +517,12 @@ struct PROBLEME_HEBDO
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     mutable std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
-    int NumberOfShortTermStorages = 0;
+    uint32_t NumberOfShortTermStorages = 0;
     // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;
     std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
 
     /* Optimization problem */
-    int NbTermesContraintesPourLesCoutsDeDemarrage = 0;
+    uint32_t NbTermesContraintesPourLesCoutsDeDemarrage = 0;
     std::vector<bool> DefaillanceNegativeUtiliserPMinThermique;
     std::vector<bool> DefaillanceNegativeUtiliserHydro;
     std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue;
@@ -531,7 +530,7 @@ struct PROBLEME_HEBDO
     char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
     std::vector<std::vector<double>> BruitSurCoutHydraulique;
 
-    int NombreDeContraintesCouplantes = 0;
+    uint32_t NombreDeContraintesCouplantes = 0;
     mutable std::vector<CONTRAINTES_COUPLANTES> MatriceDesContraintesCouplantes;
     std::vector<RESULTATS_CONTRAINTES_COUPLANTES> ResultatsContraintesCouplantes;
 
@@ -542,13 +541,13 @@ struct PROBLEME_HEBDO
     Data::mpsExportStatus ExportMPS = Data::mpsExportStatus::NO_EXPORT;
     bool exportMPSOnError = false;
     bool ExportStructure = false;
+    bool NamedProblems = false;
 
-    unsigned int HeureDansLAnnee = 0;
+    uint32_t HeureDansLAnnee = 0;
     bool LeProblemeADejaEteInstancie = false;
     bool firstWeekOfSimulation = false;
 
-    // TODO VP: Not working if we're not using a pointer, need more investigation
-    std::vector<CORRESPONDANCES_DES_VARIABLES*> CorrespondanceVarNativesVarOptim;
+    std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES> CorrespondanceCntNativesCntOptimJournalieres;
     CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES CorrespondanceCntNativesCntOptimHebdomadaires;
@@ -681,7 +680,7 @@ public:
     std::vector<int> NbGrpCourbeGuide; // ?
     std::vector<int> NbGrpOpt;         // ?
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = nullptr;
+    std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE> ProblemeAResoudre;
 
     double maxPminThermiqueByDay[366];
 };

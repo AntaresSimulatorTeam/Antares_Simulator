@@ -29,10 +29,9 @@
 #include <yuni/io/file.h>
 #include <stdio.h>
 #include "series.h"
-#include "../../../inifile.h"
-#include "../../../logs.h"
+#include <antares/inifile/inifile.h>
+#include <antares/logs/logs.h>
 #include "../../study.h"
-#include "../../memory-usage.h"
 
 using namespace Yuni;
 
@@ -210,25 +209,6 @@ void DataSeriesHydro::markAsModified() const
     mingen.markAsModified();
 }
 
-void DataSeriesHydro::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += sizeof(DataSeriesHydro);
-    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-    // series
-    if ((timeSeriesHydro & u.study.parameters.timeSeriesToGenerate))
-    {
-        ror.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, HOURS_PER_YEAR);
-        storage.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, 12);
-        mingen.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, HOURS_PER_YEAR);
-    }
-    else
-    {
-        ror.estimateMemoryUsage(u);
-        storage.estimateMemoryUsage(u);
-        mingen.estimateMemoryUsage(u);
-    }
-}
-
 void DataSeriesHydro::reset()
 {
     ror.reset(1, HOURS_PER_YEAR);
@@ -237,7 +217,7 @@ void DataSeriesHydro::reset()
     count = 1;
 }
 
-uint64 DataSeriesHydro::memoryUsage() const
+uint64_t DataSeriesHydro::memoryUsage() const
 {
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage();
 }

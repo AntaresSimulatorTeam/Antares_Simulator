@@ -20,14 +20,14 @@ bool ClusterUpdater::changeName(const wxVariant& value)
 {
     if (clusters.size() != 1)
         return false;
-    Data::ClusterName name;
+    YString name;
     wxStringToString(value.GetString(), name);
     name.trim(" \r\n\t");
     if (!name)
         return false;
 
     Data::Cluster* cluster = *(clusters.begin());
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study) && study->clusterRename(cluster, name))
     {
         // Notify
@@ -43,7 +43,7 @@ bool ClusterUpdater::changeGroup(const wxVariant& value)
     wxString vs = value.GetString();
     String newgroup;
     wxStringToString(vs, newgroup);
-    Data::ClusterName name;
+    YString name;
 
     if (not newgroup.empty())
     {

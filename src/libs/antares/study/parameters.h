@@ -32,10 +32,11 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include "../constants.h"
-#include <stdlib.h>
-#include <assert.h>
-#include "../date.h"
-#include "../inifile.h"
+#include <cstdlib>
+#include <cassert>
+#include <antares/writer/result_format.h>
+#include <antares/date/date.h>
+#include <antares/inifile/inifile.h>
 #include "fwd.h"
 #include "variable-print-info.h"
 #include "parameters/adq-patch-params.h"
@@ -161,7 +162,7 @@ public:
     /*!
     ** \brief Get the amount of memory used by the general data
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Reset MC year weight to 1 for all years
@@ -520,6 +521,9 @@ public:
     //@}
     // Format of results. Currently, only single files or zip archive are supported
     ResultFormat resultFormat = legacyFilesDirectories;
+
+    // Naming constraints and variables in problems
+    bool namedProblems;
 
 private:
     //! Load data from an INI file

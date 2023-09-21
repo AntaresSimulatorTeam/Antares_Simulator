@@ -28,7 +28,7 @@
 #include "main.h"
 #include "../study.h"
 #include "../menus.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include <wx/menuitem.h>
 #include "../../toolbox/components/refresh.h"
 #include "../../../common/lock.h"
@@ -51,20 +51,20 @@ struct CompareByStudyMode final
 
 struct CompareByTimestamp final
 {
-    bool operator()(const sint64 a, const sint64 b) const
+    bool operator()(const int64_t a, const int64_t b) const
     {
         return b < a;
     }
 };
 
 template<class S>
-static inline bool TimestampToString(S& out, sint64 timestamp)
+static inline bool TimestampToString(S& out, int64_t timestamp)
 {
     return DateTime::TimestampToString(out, "%A,%d %B %Y at %H:%M", timestamp);
 }
 
 template<class S>
-static inline bool OutputTimestampToString(S& out, sint64 timestamp)
+static inline bool OutputTimestampToString(S& out, int64_t timestamp)
 {
     if (DateTime::TimestampToString(out, "%d %b %Y (%a) %H:%M", timestamp))
     {
@@ -76,14 +76,14 @@ static inline bool OutputTimestampToString(S& out, sint64 timestamp)
 
 void ApplWnd::refreshMenuInput()
 {
-    if (not Data::Study::Current::Valid() or IsGUIAboutToQuit())
+    if (not CurrentStudyIsValid() or IsGUIAboutToQuit())
     {
         pMenuInputCreation->SetItemLabel(wxT("No study"));
         pMenuInputLastSaved->SetItemLabel(wxT("Last save: never"));
         return;
     }
 
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     String nowstr;
     if (not TimestampToString(nowstr, study.header.dateCreated))
@@ -118,7 +118,7 @@ void ApplWnd::refreshMenuOutput()
     // NOTE : in some rare cases, it may happen that two simulations have the
     // same timestamp
     using StudyModeT = Data::StudyMode;
-    using TemporalMap = std::map<Yuni::sint64, Data::Output::List, CompareByTimestamp>;
+    using TemporalMap = std::map<int64_t, Data::Output::List, CompareByTimestamp>;
     using Map = std::map<StudyModeT, TemporalMap, CompareByStudyMode>;
 
     // Getting the list of all available outputs
@@ -330,7 +330,7 @@ void ApplWnd::refreshMenuOutput()
 
 void ApplWnd::refreshMenuOptions(Data::Study::Ptr study)
 {
-    if (not Data::Study::Current::Valid() or IsGUIAboutToQuit())
+    if (not CurrentStudyIsValid() or IsGUIAboutToQuit())
         return;
 
     // Disabling the Configure menu's scenario builder item after loading a study

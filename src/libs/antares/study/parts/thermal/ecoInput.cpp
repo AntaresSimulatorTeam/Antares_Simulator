@@ -30,10 +30,8 @@
 #include <yuni/io/directory.h>
 #include <yuni/core/math.h>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "ecoInput.h"
-#include "../../../logs.h"
-#include "../../../array/array1d.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
@@ -69,25 +67,24 @@ bool EconomicInputData::saveToFolder(const AnyString& folder) const
 bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
 {
     bool ret = true;
-    auto& buffer = study.bufferLoadingTS;
 
     if (study.header.version >= 870)
     {
-        buffer.clear() << folder << SEP << "fuelCost.txt";
-        if (IO::File::Exists(buffer))
+        YString filename;
+        Yuni::Clob dataBuffer;
+
+        filename << folder << SEP << "fuelCost.txt";
+        if (IO::File::Exists(filename))
         {
-            ret = fuelcost.loadFromCSVFile(
-                    buffer, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &study.dataBuffer)
-                  && ret;
+            ret = fuelcost.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &dataBuffer) && ret;
             if (study.usedByTheSolver && study.parameters.derated)
                 fuelcost.averageTimeseries();
         }
 
-        buffer.clear() << folder << SEP << "CO2Cost.txt";
-        if (IO::File::Exists(buffer))
+        filename.clear() << folder << SEP << "CO2Cost.txt";
+        if (IO::File::Exists(filename))
         {
-            ret = co2cost.loadFromCSVFile(
-                    buffer, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &study.dataBuffer)
+            ret = co2cost.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &dataBuffer)
                   && ret;
             if (study.usedByTheSolver && study.parameters.derated)
                 co2cost.averageTimeseries();
@@ -108,24 +105,13 @@ void EconomicInputData::markAsModified() const
     co2cost.markAsModified();
 }
 
-void EconomicInputData::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    if (timeSeriesThermal & u.study.parameters.timeSeriesToGenerate)
-    {
-        fuelcost.estimateMemoryUsage(u, true, fuelcost.width, HOURS_PER_YEAR);
-        u.requiredMemoryForInput += sizeof(EconomicInputData);
-        co2cost.estimateMemoryUsage(u, true, co2cost.width, HOURS_PER_YEAR);
-        u.requiredMemoryForInput += sizeof(EconomicInputData);
-    }
-}
-
 void EconomicInputData::reset()
 {
     fuelcost.reset(1, HOURS_PER_YEAR, true);
     co2cost.reset(1, HOURS_PER_YEAR, true);
 }
 
-Yuni::uint64 EconomicInputData::memoryUsage() const
+uint64_t EconomicInputData::memoryUsage() const
 {
     return sizeof(EconomicInputData);
 }

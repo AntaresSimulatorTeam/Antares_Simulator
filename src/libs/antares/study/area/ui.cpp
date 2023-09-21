@@ -26,9 +26,9 @@
 */
 
 #include "ui.h"
-#include "../../logs.h"
+#include <antares/logs/logs.h>
 #include <yuni/core/math.h>
-#include "../../inifile.h"
+#include <antares/inifile/inifile.h>
 #include <sstream>
 
 using namespace Yuni;
@@ -339,6 +339,21 @@ bool AreaUI::saveToFile(const AnyString& filename, bool force) const
         return false;
     }
     return true;
+}
+
+uint64_t AreaUI::memoryUsage() const
+{
+    return sizeof(AreaUI);
+}
+
+bool AreaUI::modified() const
+{
+    return pModified;
+}
+
+void AreaUI::markAsModified()
+{
+    pModified = true;
 }
 
 } // namespace Data

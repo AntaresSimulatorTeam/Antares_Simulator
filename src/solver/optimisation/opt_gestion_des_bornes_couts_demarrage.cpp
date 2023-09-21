@@ -30,17 +30,7 @@
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
-#include "../simulation/sim_extern_variables_globales.h"
-
 #include "opt_fonctions.h"
-#include <math.h>
-#include <yuni/core/math.h>
-#include <limits.h>
-
-#include "spx_constantes_externes.h"
-
-#define EPSILON_DEFAILLANCE 1e-3
 
 using namespace Yuni;
 
@@ -49,22 +39,22 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
   const int PremierPdtDeLIntervalle,
   const int DernierPdtDeLIntervalle)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
     int NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-    double** AdresseOuPlacerLaValeurDesVariablesOptimisees
+    std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
-    double* Xmin = ProblemeAResoudre->Xmin;
-    double* Xmax = ProblemeAResoudre->Xmax;
+    std::vector<double>& Xmin = ProblemeAResoudre->Xmin;
+    std::vector<double>& Xmax = ProblemeAResoudre->Xmax;
 
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
+        const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
+          =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
 
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             const PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];
@@ -81,7 +71,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                   = PuissanceDisponibleEtCout.NombreMinDeGroupesEnMarcheDuPalierThermique;
 
                 int var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
+                            .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
                 Xmax[var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo];
                 Xmin[var] = NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo];
 
@@ -91,7 +81,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
 
                 var = CorrespondanceVarNativesVarOptim
-                        ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier];
+                        .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier];
                 Xmax[var] = LINFINI_ANTARES;
                 Xmin[var] = 0;
                 adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
@@ -100,7 +90,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
 
                 var = CorrespondanceVarNativesVarOptim
-                        ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
+                        .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
                 Xmax[var] = LINFINI_ANTARES;
                 Xmin[var] = 0;
                 adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
@@ -110,7 +100,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
 
                 var
                   = CorrespondanceVarNativesVarOptim
-                      ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier];
+                      .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier];
                 Xmin[var] = 0;
                 int t1 = pdtHebdo;
                 int t1moins1 = t1 - 1;

@@ -112,21 +112,21 @@ bool ReadAsBool(const AnyString& name)
     return false;
 }
 
-yint64 ReadAsInt64(const AnyString& name, yint64 defvalue)
+int64_t ReadAsInt64(const AnyString& name, int64_t defvalue)
 {
 #ifdef YUNI_OS_WINDOWS
     {
         String out;
         ReadImpl(name, out, false);
         if (not out.empty())
-            return out.to<yint64>();
+            return out.to<int64_t>();
     }
 #else
     {
 #ifdef YUNI_HAS_STDLIB_H
         AnyString value = ::getenv(name.c_str());
         if (not value.empty())
-            return value.to<yint64>();
+            return value.to<int64_t>();
 #else
 #error not implemented
 #endif

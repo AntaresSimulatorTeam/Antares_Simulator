@@ -28,7 +28,7 @@
 #define __SOLVER_SIMULATION_GENERATE_TIMESERIES_H__
 
 #include <yuni/yuni.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <vector>
 #include "ITimeSeriesNumbersWriter.h"
 
@@ -39,7 +39,7 @@ namespace Antares::Solver::TimeSeriesNumbers
 */
 bool Generate(Data::Study& study);
 
-void StoreTimeSeriesNumbersIntoOuput(Data::Study &study, Simulation::ITimeSeriesNumbersWriter& writer);
+void StoreTimeSeriesNumbersIntoOuput(Data::Study &study);
 
 // Exported for unit-tests
 bool checkAllElementsIdenticalOrOne(const std::vector<uint>& w);

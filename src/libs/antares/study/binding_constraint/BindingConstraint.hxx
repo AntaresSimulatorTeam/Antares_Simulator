@@ -26,7 +26,7 @@
 */
 #pragma once
 
-#include "../../utils.h"
+#include <antares/utils/utils.h>
 
 namespace Antares::Data
 {
@@ -75,15 +75,19 @@ inline BindingConstraint::Type BindingConstraint::type() const
     return pType;
 }
 
-inline void BindingConstraint::mutateTypeWithoutCheck(Type t)
+inline void BindingConstraint::setTimeGranularity(Type t)
 {
     if (t != typeUnknown and t != typeMax)
         pType = t;
 }
 
-        inline bool BindingConstraint::skipped() const
+inline bool BindingConstraint::skipped() const
 {
-    return linkCount() == 0 && enabledClusterCount() == 0;
+    return linkCount() == 0 && clusterCount() == 0;
+}
+
+inline bool BindingConstraint::isActive() const {
+    return enabled() && !skipped();
 }
 
 inline BindingConstraint::iterator BindingConstraint::begin() {

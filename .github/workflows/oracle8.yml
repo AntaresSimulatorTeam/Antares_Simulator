@@ -3,6 +3,11 @@ name: Oracle 8 CI (push and/or release)
 on:
   release:
     types: [created]
+  push:
+    branches:
+      - develop
+  schedule:
+    - cron: '21 2 * * *'
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
@@ -28,7 +33,7 @@ jobs:
 
     - name: Install libraries
       run: |
-           dnf install -y epel-release git cmake wget rpm-build
+           dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
            dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-9-toolchain
 
     - name: Checkout
@@ -38,7 +43,7 @@ jobs:
     - name: Init submodule
       run: |
            git config --global safe.directory '*'
-           git submodule update --init --recursive src/antares-deps src/tests/resources/Antares_Simulator_Tests
+           git submodule update --init --remote src/antares-deps src/tests/resources/Antares_Simulator_Tests
 
     - name: Install dependencies
       run: |
@@ -48,15 +53,21 @@ jobs:
       run: |
            source /opt/rh/gcc-toolset-9/enable
            cmake -B _build -S src \
-           -DCMAKE_BUILD_TYPE=release \
-           -DBUILD_TESTING=ON \
-           -DBUILD_UI=OFF \
-
+             -DCMAKE_BUILD_TYPE=release \
+             -DBUILD_TESTING=ON \
+             -DBUILD_TOOLS=OFF \
+             -DBUILD_UI=OFF \
 
     - name: Build
       run: |
            source /opt/rh/gcc-toolset-9/enable
            cmake --build _build --config Release -j2
+
+    - name: Run unit and end-to-end tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      run: |
+        cd _build
+        ctest -C Release --output-on-failure -L "unit|end-to-end"
 
     - name: Installer .rpm creation
       run: |

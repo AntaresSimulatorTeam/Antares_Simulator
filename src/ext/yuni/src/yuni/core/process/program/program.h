@@ -181,7 +181,7 @@ public:
     ** \return The exit status of the process
     ** \see durationPrecision()
     */
-    int wait(sint64* duration = nullptr);
+    int wait(int64_t* duration = nullptr);
 
     /*!
     ** \brief Terminate the execution of the process

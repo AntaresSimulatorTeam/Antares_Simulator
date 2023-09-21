@@ -35,7 +35,7 @@ namespace Forms
 {
 void ApplWnd::evtOnCleanCurrentStudyFolder(wxCommandEvent&)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         if (study->parameters.readonly)

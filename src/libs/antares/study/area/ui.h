@@ -71,7 +71,7 @@ public:
     /*!
     ** \brief Amount of memory consummed by the instance
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Get if the structure has been modified
@@ -112,7 +112,5 @@ private:
 
 } // namespace Data
 } // namespace Antares
-
-#include "ui.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_UI_H__

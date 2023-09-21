@@ -27,14 +27,13 @@
 #ifndef __ANTARES_TOOLBOX_FILTER_COMPONENT_H__
 #define __ANTARES_TOOLBOX_FILTER_COMPONENT_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/panel.h>
 #include <vector>
 #include <list>
 #include "input.h"
 #include "../gridhelper.h"
 #include "filter.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include "component/panel.h"
 
 namespace Antares

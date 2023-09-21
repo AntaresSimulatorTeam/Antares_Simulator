@@ -25,7 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/study.h>
+#include <sstream>
+
+#include <antares/study/study.h>
 #include <antares/study/area/constants.h>
 #include <antares/study/area/scratchpad.h>
 
@@ -34,7 +36,7 @@
 #include "sim_structure_probleme_economique.h"
 #include "sim_extern_variables_globales.h"
 #include "adequacy_patch_runtime_data.h"
-#include <antares/emergency.h>
+#include <antares/fatal-error.h>
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -60,6 +62,7 @@ static void importShortTermStorages(
             toInsert.injectionNominalCapacity = st->properties.injectionNominalCapacity.value();
             toInsert.withdrawalNominalCapacity = st->properties.withdrawalNominalCapacity.value();
             toInsert.initialLevel = st->properties.initialLevel;
+            toInsert.name = st->properties.name;
 
             toInsert.series = st->series;
 
@@ -95,7 +98,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.WaterValueAccurate
       = (study.parameters.hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP);
 
-    SIM_AllocationProblemeHebdo(problem, NombreDePasDeTemps);
+    SIM_AllocationProblemeHebdo(study, problem, NombreDePasDeTemps);
 
     problem.NombreDePasDeTemps = NombreDePasDeTemps;
 
@@ -107,11 +110,12 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.NumberOfShortTermStorages = study.runtime->shortTermStorageCount;
 
-    auto enabledBindingConstraints = study.bindingConstraints.enabled();
-    problem.NombreDeContraintesCouplantes = enabledBindingConstraints.size();
+    auto activeContraints = study.bindingConstraints.activeContraints();
+    problem.NombreDeContraintesCouplantes = activeContraints.size();
 
     problem.ExportMPS = study.parameters.include.exportMPS;
     problem.ExportStructure = study.parameters.include.exportStructure;
+    problem.NamedProblems = study.parameters.namedProblems;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
     problem.OptimisationAvecCoutsDeDemarrage
@@ -220,9 +224,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.PaysExtremiteDeLInterconnexion[i] = link.with->index;
     }
 
-    for (uint i = 0; i < enabledBindingConstraints.size(); ++i)
+    for (uint i = 0; i < activeContraints.size(); ++i)
     {
-        auto bc = enabledBindingConstraints[i];
+        auto bc = activeContraints[i];
         CONTRAINTES_COUPLANTES& PtMat = problem.MatriceDesContraintesCouplantes[i];
         PtMat.NombreDInterconnexionsDansLaContrainteCouplante = bc->linkCount();
         PtMat.NombreDePaliersDispatchDansLaContrainteCouplante = bc->clusterCount();
@@ -273,27 +277,32 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         auto& pbPalier = problem.PaliersThermiquesDuPays[i];
         pbPalier.NombreDePaliersThermiques = area.thermal.list.size();
 
-        for (uint l = 0; l != area.thermal.list.size(); ++l)
+        for (uint clusterIndex = 0; clusterIndex != area.thermal.list.size(); ++clusterIndex)
         {
-            auto& cluster = *(area.thermal.list.byIndex[l]);
-            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[l] = NombrePaliers + l;
-            pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[l]
+            auto& cluster = *(area.thermal.list.byIndex[clusterIndex]);
+            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[clusterIndex]
+              = NombrePaliers + clusterIndex;
+            pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[clusterIndex]
               = cluster.nominalCapacityWithSpinning;
-            pbPalier.PminDuPalierThermiquePendantUneHeure[l] = cluster.minStablePower;
-            pbPalier.PminDuPalierThermiquePendantUnJour[l] = 0;
-            pbPalier.minUpDownTime[l] = cluster.minUpDownTime;
+            pbPalier.PminDuPalierThermiquePendantUneHeure[clusterIndex] = cluster.minStablePower;
+            pbPalier.PminDuPalierThermiquePendantUnJour[clusterIndex] = 0;
+            pbPalier.minUpDownTime[clusterIndex] = cluster.minUpDownTime;
 
-            pbPalier.CoutDeDemarrageDUnGroupeDuPalierThermique[l] = cluster.startupCost;
-            pbPalier.CoutDArretDUnGroupeDuPalierThermique[l] = 0;
-            pbPalier.CoutFixeDeMarcheDUnGroupeDuPalierThermique[l] = cluster.fixedCost;
-            pbPalier.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[l] = cluster.minUpTime;
-            pbPalier.DureeMinimaleDArretDUnGroupeDuPalierThermique[l] = cluster.minDownTime;
+            pbPalier.CoutDeDemarrageDUnGroupeDuPalierThermique[clusterIndex] = cluster.startupCost;
+            pbPalier.CoutDArretDUnGroupeDuPalierThermique[clusterIndex] = 0;
+            pbPalier.CoutFixeDeMarcheDUnGroupeDuPalierThermique[clusterIndex] = cluster.fixedCost;
+            pbPalier.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[clusterIndex]
+              = cluster.minUpTime;
+            pbPalier.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex]
+              = cluster.minDownTime;
 
-            pbPalier.PmaxDUnGroupeDuPalierThermique[l] = cluster.nominalCapacityWithSpinning;
-            pbPalier.pminDUnGroupeDuPalierThermique[l]
-              = (pbPalier.PmaxDUnGroupeDuPalierThermique[l] < cluster.minStablePower)
-                  ? pbPalier.PmaxDUnGroupeDuPalierThermique[l]
+            pbPalier.PmaxDUnGroupeDuPalierThermique[clusterIndex]
+              = cluster.nominalCapacityWithSpinning;
+            pbPalier.pminDUnGroupeDuPalierThermique[clusterIndex]
+              = (pbPalier.PmaxDUnGroupeDuPalierThermique[clusterIndex] < cluster.minStablePower)
+                  ? pbPalier.PmaxDUnGroupeDuPalierThermique[clusterIndex]
                   : cluster.minStablePower;
+            pbPalier.NomsDesPaliersThermiques[clusterIndex] = cluster.name().c_str();
         }
 
         NombrePaliers += area.thermal.list.size();
@@ -304,37 +313,14 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.LeProblemeADejaEteInstancie = false;
 }
 
-void SIM_InitialisationResultats()
-{
-    auto& study = *Data::Study::Current::Get();
-    const size_t sizeOfNbHoursDouble = study.runtime->nbHoursPerYear * sizeof(double);
-    const size_t sizeOfNbHoursLong = study.runtime->nbHoursPerYear * sizeof(int);
-
-    for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
-    {
-        auto& interconnexion = *ResultatsParInterconnexion[i];
-        memset(interconnexion.VariablesDualesMoyennes, 0, sizeOfNbHoursDouble);
-        memset(interconnexion.TransitMoyen, 0, sizeOfNbHoursDouble);
-        memset(interconnexion.TransitStdDev, 0, sizeOfNbHoursDouble);
-        memset(interconnexion.TransitMinimumNo, 0, sizeOfNbHoursLong);
-        memset(interconnexion.TransitMaximumNo, 0, sizeOfNbHoursLong);
-        memset(interconnexion.RenteHoraire, 0, sizeOfNbHoursDouble);
-        memset(interconnexion.TransitAnnuel, 0, study.runtime->nbYears * sizeof(double));
-        for (uint j = 0; j < study.runtime->nbHoursPerYear; j++)
-        {
-            interconnexion.TransitMinimum[j] = (double)LINFINI_ENTIER;
-            interconnexion.TransitMaximum[j] = (double)-LINFINI_ENTIER;
-        }
-    }
-}
-
 void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int PasDeTempsDebut,
-                               const BindingConstraintsRepository &bindingConstraints, const uint weekFirstDay, int pasDeTemps) {
-    auto enabledConstraints = bindingConstraints.enabled();
-    const auto constraintCount = enabledConstraints.size();
+                               const BindingConstraintsRepository &bindingConstraints, const uint weekFirstDay, int pasDeTemps) 
+{
+    auto activeContraints = bindingConstraints.activeContraints();
+    const auto constraintCount = activeContraints.size();
     for (unsigned constraintIndex = 0; constraintIndex != constraintCount; ++constraintIndex)
     {
-        auto bc = enabledConstraints[constraintIndex];
+        auto bc = activeContraints[constraintIndex];
         assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
         //If there is only one TS, always select it.
         const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc->group()];
@@ -347,10 +333,6 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
                 problem.MatriceDesContraintesCouplantes[constraintIndex]
                         .SecondMembreDeLaContrainteCouplante[pasDeTemps]
                         = column[PasDeTempsDebut + pasDeTemps];
-                problem.MatriceDesContraintesCouplantes[constraintIndex]
-                        .SecondMembreDeLaContrainteCouplanteRef[pasDeTemps]
-                        = problem.MatriceDesContraintesCouplantes[constraintIndex]
-                        .SecondMembreDeLaContrainteCouplante[pasDeTemps];
                 break;
             }
             case BindingConstraint::typeDaily:
@@ -361,14 +343,10 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
                 std::vector<double>& sndMember
                     = problem.MatriceDesContraintesCouplantes[constraintIndex]
                         .SecondMembreDeLaContrainteCouplante;
-                std::vector<double>& sndMemberRef
-                    = problem.MatriceDesContraintesCouplantes[constraintIndex]
-                        .SecondMembreDeLaContrainteCouplanteRef;
+
                 for (unsigned day = 0; day != 7; ++day)
-                {
                     sndMember[day] = column[weekFirstDay + day];
-                    sndMemberRef[day] = sndMember[day];
-                }
+
                 break;
             }
             case BindingConstraint::typeWeekly:
@@ -382,9 +360,6 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
 
                 problem.MatriceDesContraintesCouplantes[constraintIndex]
                     .SecondMembreDeLaContrainteCouplante[0]
-                        = sum;
-                problem.MatriceDesContraintesCouplantes[constraintIndex]
-                    .SecondMembreDeLaContrainteCouplanteRef[0]
                         = sum;
                 break;
             }
@@ -400,20 +375,19 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
     }
 }
 
-void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
+void SIM_RenseignementProblemeHebdo(const Study& study,
+                                    PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
                                     uint numSpace,
-                                    const int PasDeTempsDebut)
+                                    const int PasDeTempsDebut,
+                                    const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
 {
-    auto& study = *Data::Study::Current::Get();
     const auto& parameters = study.parameters;
     auto& studyruntime = *study.runtime;
     const uint nbPays = study.areas.size();
     const size_t pasDeTempsSizeDouble = problem.NombreDePasDeTemps * sizeof(double);
 
     const uint weekFirstDay = study.calendar.hours[PasDeTempsDebut].dayYear;
-
-    int indx = PasDeTempsDebut;
 
     for (int opt = 0; opt < 7; opt++)
     {
@@ -474,16 +448,18 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             double nivInit = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
             if (nivInit < 0.)
             {
-                logs.fatal() << "Area " << area.name << ", week " << weekInTheYear + 1
-                             << " : initial level < 0";
-                AntaresSolverEmergencyShutdown();
+                std::ostringstream msg;
+                msg << "Area " << area.name << ", week " << weekInTheYear + 1
+                    << " : initial level < 0";
+                throw FatalError(msg.str());
             }
 
             if (nivInit > area.hydro.reservoirCapacity)
             {
-                logs.fatal() << "Area " << area.name << ", week " << weekInTheYear + 1
-                             << " : initial level over capacity";
-                AntaresSolverEmergencyShutdown();
+                std::ostringstream msg;
+                msg << "Area " << area.name << ", week " << weekInTheYear + 1
+                    << " : initial level over capacity";
+                throw FatalError(msg.str());
             }
 
             if (area.hydro.powerToLevel)
@@ -561,9 +537,11 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         }
     }
 
-    for (unsigned j = 0; j < problem.NombreDePasDeTemps; ++j, ++indx)
+    int hourInYear = PasDeTempsDebut;
+
+    for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps; ++hourInWeek, ++hourInYear)
     {
-        VALEURS_DE_NTC_ET_RESISTANCES& ntc = problem.ValeursDeNTC[j];
+        VALEURS_DE_NTC_ET_RESISTANCES& ntc = problem.ValeursDeNTC[hourInWeek];
         {
             uint linkCount = studyruntime.interconnectionsCount();
             for (uint k = 0; k != linkCount; ++k)
@@ -572,117 +550,84 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 const int tsIndex
                   = NumeroChroniquesTireesParInterconnexion[numSpace][k].TransmissionCapacities;
 
-                assert((uint)indx < lnk.directCapacities.height);
+                assert((uint)hourInYear < lnk.directCapacities.height);
                 assert((uint)tsIndex < lnk.directCapacities.width);
                 assert((uint)tsIndex < lnk.indirectCapacities.width);
 
-                ntc.ValeurDeNTCOrigineVersExtremite[k] = lnk.directCapacities[tsIndex][indx];
-                ntc.ValeurDeNTCExtremiteVersOrigine[k] = lnk.indirectCapacities[tsIndex][indx];
-                ntc.ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][indx];
+                ntc.ValeurDeNTCOrigineVersExtremite[k] = lnk.directCapacities[tsIndex][hourInYear];
+                ntc.ValeurDeNTCExtremiteVersOrigine[k] = lnk.indirectCapacities[tsIndex][hourInYear];
+                ntc.ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][hourInYear];
             }
         }
+        preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, study.bindingConstraints, weekFirstDay, hourInWeek);
 
-        problem.ValeursDeNTCRef[j].ValeurDeNTCOrigineVersExtremite
-            = ntc.ValeurDeNTCOrigineVersExtremite;
-        problem.ValeursDeNTCRef[j].ValeurDeNTCExtremiteVersOrigine
-            = ntc.ValeurDeNTCExtremiteVersOrigine;
-        problem.ValeursDeNTCRef[j].ValeurDeLoopFlowOrigineVersExtremite
-            = ntc.ValeurDeLoopFlowOrigineVersExtremite;
-
-        preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, study.bindingConstraints, weekFirstDay, j);
-
-        const uint dayInTheYear = study.calendar.hours[indx].dayYear;
+        const uint dayInTheYear = study.calendar.hours[hourInYear].dayYear;
 
         for (uint k = 0; k < nbPays; ++k)
         {
-            auto& tsIndex = *NumeroChroniquesTireesParPays[numSpace][k];
+            auto& tsIndex = NumeroChroniquesTireesParPays[numSpace][k];
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
 
             assert(&scratchpad);
-            assert((uint)indx < scratchpad.ts.load.height);
+            assert((uint)hourInYear < scratchpad.ts.load.height);
             assert((uint)tsIndex.Consommation < scratchpad.ts.load.width);
             if (parameters.renewableGeneration.isAggregated())
             {
-                assert((uint)indx < scratchpad.ts.solar.height);
-                assert((uint)indx < scratchpad.ts.wind.height);
+                assert((uint)hourInYear < scratchpad.ts.solar.height);
+                assert((uint)hourInYear < scratchpad.ts.wind.height);
                 assert((uint)tsIndex.Eolien < scratchpad.ts.wind.width);
                 assert((uint)tsIndex.Solar < scratchpad.ts.solar.width);
             }
 
             uint tsFatalIndex = (uint)tsIndex.Hydraulique < ror.width ? tsIndex.Hydraulique : 0;
-            double& mustRunGen = problem.AllMustRunGeneration[j].AllMustRunGenerationOfArea[k];
+            double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                mustRunGen = scratchpad.ts.wind[tsIndex.Eolien][indx]
-                             + scratchpad.ts.solar[tsIndex.Solar][indx]
-                             + scratchpad.miscGenSum[indx] + ror[tsFatalIndex][indx]
-                             + scratchpad.mustrunSum[indx];
+                mustRunGen = scratchpad.ts.wind[tsIndex.Eolien][hourInYear]
+                             + scratchpad.ts.solar[tsIndex.Solar][hourInYear]
+                             + scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
+                             + scratchpad.mustrunSum[hourInYear];
             }
 
             // Renewable
             if (parameters.renewableGeneration.isClusters())
             {
-                mustRunGen = scratchpad.miscGenSum[indx] + ror[tsFatalIndex][indx]
-                             + scratchpad.mustrunSum[indx];
+                mustRunGen = scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
+                             + scratchpad.mustrunSum[hourInYear];
 
                 area.renewable.list.each([&](const RenewableCluster& cluster) {
                     assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
                     mustRunGen += cluster.valueAtTimeStep(
-                      tsIndex.RenouvelableParPalier[cluster.areaWideIndex], (uint)indx);
+                      tsIndex.RenouvelableParPalier[cluster.areaWideIndex], (uint)hourInYear);
                 });
             }
 
             assert(
-              !Math::NaN(problem.AllMustRunGeneration[j].AllMustRunGenerationOfArea[k])
+              !Math::NaN(problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k])
               && "NaN detected for 'AllMustRunGeneration', probably from miscGenSum/mustrunSum");
 
-            problem.ConsommationsAbattues[j].ConsommationAbattueDuPays[k]
-              = +scratchpad.ts.load[tsIndex.Consommation][indx]
-                - problem.AllMustRunGeneration[j].AllMustRunGenerationOfArea[k];
-
-            area.thermal.list.each([&](const Data::ThermalCluster& cluster) {
-                assert((uint)tsIndex.ThermiqueParPalier[cluster.areaWideIndex]
-                       < cluster.series->timeSeries.width);
-                assert((uint)indx < cluster.series->timeSeries.height);
-                assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
-
-                auto& Pt
-                  = problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[cluster.index];
-                auto& PtValGen = *ValeursGenereesParPays[numSpace][k];
-
-                Pt.PuissanceDisponibleDuPalierThermique[j]
-                  = cluster.series
-                      ->timeSeries[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][indx];
-
-                Pt.CoutHoraireDeProductionDuPalierThermique[j]
-                  = cluster.getMarketBidCost(tsIndex.ThermiqueParPalier[cluster.areaWideIndex],
-                                             indx)
-                    + PtValGen.AleaCoutDeProductionParPalier[cluster.areaWideIndex];
-
-                Pt.PuissanceMinDuPalierThermique[j]
-                  = (Pt.PuissanceDisponibleDuPalierThermique[j] < cluster.PthetaInf[indx])
-                      ? Pt.PuissanceDisponibleDuPalierThermique[j]
-                      : cluster.PthetaInf[indx];
-            });
+            problem.ConsommationsAbattues[hourInWeek].ConsommationAbattueDuPays[k]
+              = +scratchpad.ts.load[tsIndex.Consommation][hourInYear]
+                - problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
-                problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire[j]
+                problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire[hourInWeek]
                   = scratchpad.optimalMaxPower[dayInTheYear]
                     * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation;
             }
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDePompageModulable)
             {
-                problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxPompageHoraire[j]
+                problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxPompageHoraire[hourInWeek]
                   = scratchpad.pumpingMaxPower[dayInTheYear]
                     * problem.CaracteristiquesHydrauliques[k].WeeklyPumpingModulation;
             }
 
-            problem.ReserveJMoins1[k].ReserveHoraireJMoins1[j]
-              = area.reserves[fhrDayBefore][PasDeTempsDebut + j];
+            problem.ReserveJMoins1[k].ReserveHoraireJMoins1[hourInWeek]
+              = area.reserves[fhrDayBefore][PasDeTempsDebut + hourInWeek];
         }
     }
 
@@ -692,18 +637,15 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
                 auto& area = *study.areas.byIndex[k];
-                uint tsIndex = (*NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
+                uint tsIndex = (NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
                 auto& inflowsmatrix = area.hydro.series->storage;
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
-                {
                 auto& mingenmatrix = area.hydro.series->mingen;
-                auto const& srcmingen
-                      = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
-                    for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)
-                    {
-                        problem.CaracteristiquesHydrauliques[k].MingenHoraire[j]
-                          = srcmingen[PasDeTempsDebut + j];
-                    }
+                auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
+                for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)
+                {
+                    problem.CaracteristiquesHydrauliques[k].MingenHoraire[j]
+                        = srcmingen[PasDeTempsDebut + j];
                 }
 
                 if (area.hydro.reservoirManagement)
@@ -739,8 +681,8 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                         std::vector<double>& DGL = problem.CaracteristiquesHydrauliques[k]
                                         .MinEnergieHydrauParIntervalleOptimise;
 
-                        double* DNT
-                          = ValeursGenereesParPays[numSpace][k]->HydrauliqueModulableQuotidien;
+                        const std::vector<double>& DNT
+                          = hydroVentilationResults[numSpace][k].HydrauliqueModulableQuotidien;
 
                         double WSL
                           = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
@@ -829,8 +771,8 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                     for (uint j = 0; j < 7; ++j)
                     {
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
-                        weekTarget_tmp += ValeursGenereesParPays[numSpace][k]
-                                            ->HydrauliqueModulableQuotidien[day];
+                        weekTarget_tmp += hydroVentilationResults[numSpace][k]
+                                            .HydrauliqueModulableQuotidien[day];
                     }
 
                     if (weekTarget_tmp != 0.)
@@ -850,7 +792,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
                         problem.CaracteristiquesHydrauliques[k]
                           .CntEnergieH2OParIntervalleOptimise[j]
-                          = ValeursGenereesParPays[numSpace][k]->HydrauliqueModulableQuotidien[day]
+                          = hydroVentilationResults[numSpace][k].HydrauliqueModulableQuotidien[day]
                             * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation
                             * marginGen / weekGenerationTarget;
                     }
@@ -964,35 +906,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
     for (uint k = 0; k < nbPays; ++k)
     {
-        auto& area = *study.areas.byIndex[k];
-
-        for (uint l = 0; l != area.thermal.list.size(); ++l)
-        {
-            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                .PuissanceDisponibleDuPalierThermiqueRef
-                =
-                problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                .PuissanceDisponibleDuPalierThermique;
-
-            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                .CoutHoraireDeProductionDuPalierThermiqueRef
-                =
-                problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                .CoutHoraireDeProductionDuPalierThermique;
-        }
-
-        problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimiseRef
-            = problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimise;
         problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraireRef
             = problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire;
-
-        problem.ReserveJMoins1[k].ReserveHoraireJMoins1Ref
-            = problem.ReserveJMoins1[k].ReserveHoraireJMoins1;
-    }
-
-    for (unsigned int j = 0; j < problem.NombreDePasDeTemps; ++j)
-    {
-        problem.ConsommationsAbattuesRef[j].ConsommationAbattueDuPays
-            = problem.ConsommationsAbattues[j].ConsommationAbattueDuPays;
     }
 }

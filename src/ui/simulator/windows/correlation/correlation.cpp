@@ -31,9 +31,8 @@
 #include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/components/datagrid/renderer/correlation.h"
 #include "../../toolbox/components/refresh.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include "../../toolbox/resources.h"
-#include <antares/array/correlation.h>
 
 #include <wx/tglbtn.h>
 #include <wx/stattext.h>
@@ -240,7 +239,7 @@ void CorrelationPanel::reload()
     // Reset to nullptr
     pData->pCorrelation = nullptr;
     // Retrieving the good pointer to the correlation coefficients
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         switch (pData->timeseries)

@@ -37,17 +37,17 @@
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
     assert(ProblemeAResoudre != NULL);
 
     int nombreDeVariables = 0;
 
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+    CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
       = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
-    for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
+    for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco]
+        CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco]
           = nombreDeVariables;
         ProblemeAResoudre->TypeDeVariable[nombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
         nombreDeVariables++;

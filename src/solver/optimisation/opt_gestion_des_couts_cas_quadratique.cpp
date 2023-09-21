@@ -28,27 +28,24 @@
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
 
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtHebdo)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
 
-    memset((char*)ProblemeAResoudre->CoutLineaire,
-           0,
-           ProblemeAResoudre->NombreDeVariables * sizeof(double));
+    ProblemeAResoudre->CoutLineaire.assign(ProblemeAResoudre->NombreDeVariables, 0.);
 
     const VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeResistances
       = problemeHebdo->ValeursDeNTC[PdtHebdo];
-    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
       = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
-    for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
+    for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
+        int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
         if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             ProblemeAResoudre->CoutQuadratique[var]
               = ValeursDeResistances.ResistanceApparente[interco];

@@ -32,7 +32,6 @@
 #include "../simulation/adequacy_patch_runtime_data.h"
 
 #include <cmath>
-#include "../study/area/scratchpad.h"
 
 using namespace Yuni;
 
@@ -122,7 +121,7 @@ void HourlyCSRProblem::calculateCsrParameters()
     double netPositionInit;
     int hour = triggeredHour;
 
-    for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
+    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area] == physicalAreaInsideAdqPatch)
         {
@@ -142,11 +141,6 @@ void HourlyCSRProblem::calculateCsrParameters()
             rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
         }
     }
-}
-
-void HourlyCSRProblem::resetProblem()
-{
-    OPT_FreeOptimizationData(&problemeAResoudre_);
 }
 
 void HourlyCSRProblem::allocateProblem()
@@ -198,8 +192,8 @@ void HourlyCSRProblem::buildProblemConstraintsRHS()
 void HourlyCSRProblem::setProblemCost()
 {
     logs.debug() << "[CSR] cost";
-    std::fill_n(problemeAResoudre_.CoutLineaire, problemeAResoudre_.NombreDeVariables, 0.);
-    std::fill_n(problemeAResoudre_.CoutQuadratique, problemeAResoudre_.NombreDeVariables, 0.);
+    problemeAResoudre_.CoutLineaire.assign(problemeAResoudre_.NombreDeVariables, 0.);
+    problemeAResoudre_.CoutQuadratique.assign(problemeAResoudre_.NombreDeVariables, 0.);
 
     setQuadraticCost();
     if (adqPatchParams_.curtailmentSharing.includeHurdleCost)

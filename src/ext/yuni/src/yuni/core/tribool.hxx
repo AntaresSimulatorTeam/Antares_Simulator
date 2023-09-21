@@ -54,7 +54,7 @@ inline bool Tribool::defaultValue() const
 
 inline void Tribool::defaultValue(bool defvalue)
 {
-    pValue.flags[1] = static_cast<yuint8>(defvalue);
+    pValue.flags[1] = static_cast<uint8_t>(defvalue);
 }
 
 inline bool Tribool::toBool() const

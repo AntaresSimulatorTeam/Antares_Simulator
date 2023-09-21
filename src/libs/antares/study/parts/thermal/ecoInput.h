@@ -28,7 +28,7 @@
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__
 
 #include "cluster.h"
-#include "../../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include "defines.h"
 #include "../../fwd.h"
 #include <memory>
@@ -53,7 +53,7 @@ public:
 
     void markAsModified() const;
 
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     /*!
     ** \brief Reset all values to their default ones
@@ -82,14 +82,14 @@ public:
     /*!
     ** \brief Get the amount of memory used by the class
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     //! All {FO,PO}{Duration,Rate} annual values
     // max x DAYS_PER_YEAR
     Matrix<double> fuelcost;
     Matrix<double> co2cost;
-    
-}; // class PreproThermal
+
+}; // class EconomicInputData
 
 } // namespace Antares::Data
 #endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__

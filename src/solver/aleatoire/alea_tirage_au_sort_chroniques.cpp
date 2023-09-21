@@ -24,45 +24,26 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include "alea_sys.h"
-#include <yuni/core/math.h>
 
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
 #include "../simulation/sim_extern_variables_globales.h"
 #include "alea_fonctions.h"
-#include <algorithm>
-#include <iterator>
-#include <limits>
-#include <antares/logs.h>
-#include <antares/date.h>
-#include <antares/emergency.h>
 #include <cassert>
 
 using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
-  double** thermalNoisesByArea,
-  uint numSpace)
+void ApplyRandomTSnumbers(const Study& study,
+                          unsigned int year,
+                          uint numSpace)
 {
-    auto& study = *Data::Study::Current::Get();
-    auto& runtime = *study.runtime;
-
-    uint year = runtime.timeseriesNumberYear[numSpace];
-
-    const size_t nbDaysPerYearDouble = runtime.nbDaysPerYear * sizeof(double);
-
     // each area
     const unsigned int count = study.areas.size();
-    for (unsigned int i = 0; i != count; ++i)
+    for (unsigned int areaIndex = 0; areaIndex != count; ++areaIndex)
     {
         // Variables - the current area
-        NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = *NumeroChroniquesTireesParPays[numSpace][i];
-        auto& area = *(study.areas.byIndex[i]);
-        VALEURS_GENEREES_PAR_PAYS& ptvalgen = *(ValeursGenereesParPays[numSpace][i]);
+        NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = NumeroChroniquesTireesParPays[numSpace][areaIndex];
+        auto& area = *(study.areas.byIndex[areaIndex]);
 
         // Load
         {
@@ -84,8 +65,6 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             assert(year < data.timeseriesNumbers.height);
             ptchro.Hydraulique
               = (data.count != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
-            // Hydro - mod
-            memset(ptvalgen.HydrauliqueModulableQuotidien, 0, nbDaysPerYearDouble);
         }
         // Wind
         {
@@ -107,101 +86,64 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
 
                 const auto& data = *cluster->series;
                 assert(year < data.timeseriesNumbers.height);
-                unsigned int index = cluster->areaWideIndex;
+                unsigned int clusterIndex = cluster->areaWideIndex;
 
-                ptchro.RenouvelableParPalier[index] = (data.timeSeries.width != 1)
-                                                        ? (long)data.timeseriesNumbers[0][year]
-                                                        : 0; // zero-based
+                ptchro.RenouvelableParPalier[clusterIndex] = (data.timeSeries.width != 1)
+                                                             ? (long)data.timeseriesNumbers[0][year]
+                                                             : 0; // zero-based
             }
         }
 
         // Thermal
         {
-            uint indexCluster = 0;
             auto end = area.thermal.list.mapping.end();
             for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
             {
                 ThermalClusterList::SharedPtr cluster = it->second;
-                // Draw a new random number, whatever the cluster is
-                double rnd = thermalNoisesByArea[i][indexCluster];
 
                 if (!cluster->enabled)
                 {
-                    indexCluster++;
                     continue;
                 }
 
                 const auto& data = *cluster->series;
                 assert(year < data.timeseriesNumbers.height);
-                unsigned int index = cluster->areaWideIndex;
+                unsigned int clusterIndex = cluster->areaWideIndex;
 
                 // the matrix data.series should be properly initialized at this stage
                 // because the ts-generator has already been launched
-                ptchro.ThermiqueParPalier[index] = (data.timeSeries.width != 1)
-                                                     ? (long)data.timeseriesNumbers[0][year]
-                                                     : 0; // zero-based
-
-                // ptvalgen.AleaCoutDeProductionParPalier[index] =
-                //	(rnd - 0.5) * (cluster->spreadCost + 1e-4);
-                // MBO
-                // 15/04/2014 : bornage du cout thermique
-                // 01/12/2014 : prise en compte du spreadCost non nul
-
-                if (cluster->spreadCost == 0) // 5e-4 < |AleaCoutDeProductionParPalier| < 6e-4
-                {
-                    if (rnd < 0.5)
-                        ptvalgen.AleaCoutDeProductionParPalier[index] = 1e-4 * (5 + 2 * rnd);
-                    else
-                        ptvalgen.AleaCoutDeProductionParPalier[index]
-                          = -1e-4 * (5 + 2 * (rnd - 0.5));
-                }
-                else
-                {
-                    ptvalgen.AleaCoutDeProductionParPalier[index]
-                      = (rnd - 0.5) * (cluster->spreadCost);
-
-                    if (Math::Abs(ptvalgen.AleaCoutDeProductionParPalier[index]) < 5.e-4)
-                    {
-                        if (Math::Abs(ptvalgen.AleaCoutDeProductionParPalier[index]) >= 0)
-                            ptvalgen.AleaCoutDeProductionParPalier[index] += 5.e-4;
-                        else
-                            ptvalgen.AleaCoutDeProductionParPalier[index] -= 5.e-4;
-                    }
-                }
-
-                indexCluster++;
+                ptchro.ThermiqueParPalier[clusterIndex] = (data.timeSeries.width != 1)
+                                                          ? (long)data.timeseriesNumbers[0][year]
+                                                          : 0; // zero-based
             }
         } // thermal
     }     // each area
+
+    // ------------------------------
     // Transmission capacities
+    // ------------------------------
     // each link
-    for (unsigned int i = 0; i < runtime.interconnectionsCount(); ++i)
+    for (unsigned int linkIndex = 0; linkIndex < study.runtime->interconnectionsCount(); ++linkIndex)
     {
-        AreaLink* link = runtime.areaLink[i];
+        AreaLink* link = study.runtime->areaLink[linkIndex];
         assert(year < link->timeseriesNumbers.height);
         NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION& ptchro
-          = NumeroChroniquesTireesParInterconnexion[numSpace][i];
+          = NumeroChroniquesTireesParInterconnexion[numSpace][linkIndex];
         const uint directWidth = link->directCapacities.width;
         [[maybe_unused]] const uint indirectWidth = link->indirectCapacities.width;
         assert(directWidth == indirectWidth);
         ptchro.TransmissionCapacities
           = (directWidth != 1) ? link->timeseriesNumbers[0][year] : 0; // zero-based
     }
+    
+    // ------------------------------
     //Binding constraints
+    // ------------------------------
     //Setting 0 for time_series of width 0 is done when using the value.
     //To do this here we would have to check every BC for its width
-    for (const auto& [group_name, _] : study.bindingConstraints.groupToTimeSeriesNumbers) {
-        auto number_of_ts_numbers = study.bindingConstraints.groupToTimeSeriesNumbers[group_name].timeseriesNumbers.height;
+    for (const auto& group: study.bindingConstraintsGroups) {
+        [[maybe_unused]] auto number_of_ts_numbers = group->timeseriesNumbers.height;
         assert(year < number_of_ts_numbers); //If only 1 ts_number we suppose only one TS. Any "year" will be converted to "0" later
-        NumeroChroniquesTireesParGroup[numSpace][group_name] = study.bindingConstraints.groupToTimeSeriesNumbers[group_name].timeseriesNumbers[0][year];
+        NumeroChroniquesTireesParGroup[numSpace][group->name()] = group->timeseriesNumbers[0][year];
     }
-}
-
-void ALEA_TirageAuSortChroniques(double** thermalNoisesByArea, uint numSpace)
-{
-    // Time-series numbers
-    // Retrieve all time-series numbers
-    // Initialize in the same time the production costs of all thermal clusters.
-    InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
-      thermalNoisesByArea, numSpace);
 }

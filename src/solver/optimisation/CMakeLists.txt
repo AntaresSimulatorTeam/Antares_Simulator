@@ -1,7 +1,6 @@
 set(RTESOLVER_OPT
 		opt_optimisation_hebdo.cpp
 		opt_appel_solveur_quadratique.cpp
-		opt_gestion_des_pmax.cpp
 		opt_gestion_second_membre_cas_lineaire.cpp
 		opt_optimisation_lineaire.cpp
 		opt_chainage_intercos.cpp
@@ -69,6 +68,8 @@ set(RTESOLVER_OPT
 		adequacy_patch_csr/count_constraints_variables.cpp
 
 		opt_period_string_generator_base.h
+		opt_rename_problem.h
+		opt_rename_problem.cpp
 	)
 
 
@@ -77,20 +78,20 @@ set(SRC_MODEL
 	${RTESOLVER_OPT}
 )
 
-add_library(libmodel_antares ${SRC_MODEL})
+add_library(model_antares ${SRC_MODEL})
 if(NOT MSVC)
-	target_compile_options(libmodel_antares
+	target_compile_options(model_antares
 			PUBLIC
 			"-Wno-unused-variable")
 else()
 	#set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 	#set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 endif()
-target_link_libraries(libmodel_antares
+target_link_libraries(model_antares
 		PUBLIC
-		libantares-core
 		utils
 		sirius_solver
 		infeasible_problem_analysis
-		libantares-solver-simulation
-		)
+		antares-solver-simulation
+		Antares::benchmarking
+)

@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_FILTER_OPERATION_H__
 #define __ANTARES_TOOLBOX_FILTER_OPERATION_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/sizer.h>
 #include "filter.h"
 #include "parameter/parameter.h"

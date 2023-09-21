@@ -8,7 +8,6 @@ endif(MSVC)
 
 
 add_subdirectory(infeasible-problem-analysis)
-add_subdirectory(writer)
 add_subdirectory(variable)
 add_subdirectory(hydro)
 add_subdirectory(simulation)
@@ -47,8 +46,6 @@ OMESSAGE("  :: application solver")
 set(exec_name "antares-${ANTARES_PRG_VERSION}-solver")
 
 add_executable(antares-solver
-	memory/mem.h
-
 	misc/options.h
 	misc/options.cpp
 	misc/process-priority.cpp
@@ -59,6 +56,9 @@ add_executable(antares-solver
 
 	misc/system-memory.h
 	misc/system-memory.cpp
+
+    misc/write-command-line.h
+    misc/write-command-line.cpp
 
 	${SRCS}
 	main.cpp
@@ -73,23 +73,28 @@ add_executable(antares-solver
 
 set_target_properties(antares-solver PROPERTIES OUTPUT_NAME ${exec_name})
 
-set(ANTARES_SOLVER_LIBS		
-	libantares-core-calendar
+set(ANTARES_SOLVER_LIBS
+	Antares::date
+	Antares::benchmarking
+	Antares::result_writer
+	Antares::sys
+	Antares::infoCollection
+	Antares::checks
 	yuni-static-uuid
 	yuni-static-core		
 	${CMAKE_THREADS_LIBS_INIT}
 )
 
 set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
-	libantares-solver-main-economy
-	libantares-solver-main-adequacy
-	libantares-solver-hydro
-	libantares-solver-aleatoire
-	libantares-solver-variable
-	libantares-solver-simulation
-	libantares-solver-ts-generator
-	libmodel_antares
-	libantares-core)
+	antares-solver-main-economy
+	antares-solver-main-adequacy
+	antares-solver-hydro
+	antares-solver-aleatoire
+	antares-solver-variable
+	antares-solver-simulation
+	antares-solver-ts-generator
+	model_antares
+	antares-core)
 
 target_link_libraries(antares-solver
 		PRIVATE

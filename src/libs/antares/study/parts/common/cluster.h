@@ -4,7 +4,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 #include "series.h"
-#include "../../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include "../../fwd.h"
 
 #include <set>
@@ -66,7 +66,7 @@ public:
     /*!
     ** \brief Get the memory consummed by the renewable cluster (in bytes)
     */
-    virtual Yuni::uint64 memoryUsage() const = 0;
+    virtual uint64_t memoryUsage() const = 0;
     //@}
 
     /*!

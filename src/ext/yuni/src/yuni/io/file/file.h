@@ -25,8 +25,8 @@ namespace File
 // constants
 enum
 {
-    //! The maximum allowed size for a file in memory (Default: 80Mo)
-    sizeHardLimit = 83886080u, // 80Mo = 80 * 1024 * 1024
+    //! The maximum allowed size for a file in memory (Default: 80Go)
+    sizeHardLimit = 85899345920u, // 80Gb = 80 * 1024 * 1024 * 1024
 };
 
 /*!
@@ -48,7 +48,7 @@ bool Exists(const AnyString& filename);
 *error has occured
 ** \return True if the operation succeeded, False otherwise
 */
-bool Size(const AnyString& filename, uint64& size);
+bool Size(const AnyString& filename, uint64_t& size);
 
 /*!
 ** \brief Get the size (in bytes) of a file
@@ -62,7 +62,7 @@ bool Size(const AnyString& filename, uint64& size);
 ** using namespace Yuni;
 ** int main()
 ** {
-**	Unit::Data::Octet::SIBaseUnit<uint64> size = IO::File::Size("/path/to/my/file");
+**	Unit::Data::Octet::SIBaseUnit<uint64_t> size = IO::File::Size("/path/to/my/file");
 **	std::cout << Unit::Data::Octet::Megaoctet<double>(size) << std::endl;
 **	return 0;
 ** }
@@ -72,14 +72,14 @@ bool Size(const AnyString& filename, uint64& size);
 ** \return The size (in bytes) of the file. The returned value is guaranteed to be null is an error
 *has occured
 */
-uint64 Size(const AnyString& filename);
+uint64_t Size(const AnyString& filename);
 
 //! \name Date / Time
 //@{
 /*!
 ** \brief Get the unix timestamp of the last modification
 */
-sint64 LastModificationTime(const AnyString& filename);
+int64_t LastModificationTime(const AnyString& filename);
 //@}
 
 //! \name Load the content of a file
@@ -96,7 +96,7 @@ sint64 LastModificationTime(const AnyString& filename);
 */
 IO::Error LoadFromFile(std::string& out,
                        const AnyString& filename,
-                       uint64 hardlimit = sizeHardLimit);
+                       uint64_t hardlimit = sizeHardLimit);
 /*!
 ** \brief Load the entire content of a file into memory
 **
@@ -107,7 +107,7 @@ IO::Error LoadFromFile(std::string& out,
 ** \param hardlimit If the size of the file exceeds this limit, it will not be loaded
 ** \return errNone if successful
 */
-IO::Error LoadFromFile(String& out, const AnyString& filename, uint64 hardlimit = sizeHardLimit);
+IO::Error LoadFromFile(String& out, const AnyString& filename, uint64_t hardlimit = sizeHardLimit);
 /*!
 ** \brief Load the entire content of a file into memory
 **
@@ -118,7 +118,7 @@ IO::Error LoadFromFile(String& out, const AnyString& filename, uint64 hardlimit 
 ** \param hardlimit If the size of the file exceeds this limit, it will not be loaded
 ** \return errNone if successful
 */
-IO::Error LoadFromFile(Clob& out, const AnyString& filename, uint64 hardlimit = sizeHardLimit);
+IO::Error LoadFromFile(Clob& out, const AnyString& filename, uint64_t hardlimit = sizeHardLimit);
 
 /*!
 ** \brief Save the content of a string into a file

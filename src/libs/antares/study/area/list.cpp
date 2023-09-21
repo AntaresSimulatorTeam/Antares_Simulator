@@ -27,16 +27,11 @@
 
 #include "../../antares.h"
 #include <yuni/io/file.h>
-#include <yuni/core/string.h>
 #include "../study.h"
-#include <assert.h>
+#include <cassert>
 #include "area.h"
-#include "../../array/array1d.h"
-#include "../../inifile/inifile.h"
-#include "../../logs.h"
-#include "../memory-usage.h"
-#include "../../config.h"
-#include "../filter.h"
+#include <antares/inifile/inifile.h>
+#include <antares/logs/logs.h>
 #include "constants.h"
 #include "antares/study/parts/parts.h"
 #include "antares/study/parts/load/prepro.h"
@@ -45,9 +40,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 namespace // anonymous
 {
@@ -287,6 +280,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
         ret = area.thermal.list.savePreproToFolder(buffer) && ret;
         buffer.clear() << folder << SEP << "input" << SEP << "thermal" << SEP << "series";
         ret = area.thermal.list.saveDataSeriesToFolder(buffer) && ret;
+        ret = area.thermal.list.saveEconomicCosts(buffer) && ret;
     }
 
     // Renewable cluster list
@@ -368,6 +362,11 @@ AreaList::AreaList(Study& study) : byIndex(nullptr), pStudy(study)
 AreaList::~AreaList()
 {
     clear();
+}
+
+bool AreaList::empty() const
+{
+    return areas.empty();
 }
 
 AreaLink* AreaListAddLink(AreaList* l, const char area[], const char with[], bool warning)
@@ -483,8 +482,7 @@ Area* AreaList::add(Area* a)
     }
     return a;
 }
-
-Area* AreaListAddFromName(AreaList& list, const AnyString& name, uint nbParallelYears)
+Area* addAreaToListOfAreas(AreaList& list, const AnyString& name)
 {
     // Initializing names
     AreaName cname;
@@ -493,21 +491,19 @@ Area* AreaListAddFromName(AreaList& list, const AnyString& name, uint nbParallel
     TransformNameIntoID(cname, lname);
 
     // Add the area
-    return AreaListAddFromNames(list, cname, lname, nbParallelYears);
+    return AreaListAddFromNames(list, cname, lname);
 }
 
 Area* AreaListAddFromNames(AreaList& list,
                            const AnyString& name,
-                           const AnyString& lname,
-                           uint nbParallelYears)
+                           const AnyString& lname)
 {
     if (!name || !lname)
         return nullptr;
     // Look up
     if (!AreaListLFind(&list, lname.c_str()))
     {
-        // Creating the area
-        Area* area = new Area(name, lname, nbParallelYears);
+        Area* area = new Area(name, lname);
         // Adding it
         Area* ret = list.add(area);
         if (!ret)
@@ -559,8 +555,13 @@ bool AreaList::loadListFromFile(const AnyString& filename)
                            << ": line " << line;
             continue;
         }
+        if (CheckForbiddenCharacterInAreaName(name))
+        {
+            logs.error() << "character '*' is forbidden in area name: `" << name << "`";
+            continue;
+        }
         // Add the area in the list
-        AreaListAddFromNames(*this, name, lname, pStudy.maxNbYearsInParallel);
+        AreaListAddFromNames(*this, name, lname);
     }
 
     switch (areas.size())
@@ -936,6 +937,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) && ret;
         buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
         ret = area.thermal.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
+        ret = area.thermal.list.loadEconomicCosts(study, buffer) && ret;
 
         // In adequacy mode, all thermal clusters must be in 'mustrun' mode
         if (study.usedByTheSolver && study.parameters.mode == stdmAdequacy)
@@ -1350,28 +1352,11 @@ void AreaListEnsureDataThermalPrepro(AreaList* l)
     l->each([&](Data::Area& area) { area.thermal.list.ensureDataPrepro(); });
 }
 
-uint64 AreaList::memoryUsage() const
+uint64_t AreaList::memoryUsage() const
 {
-    Yuni::uint64 ret = sizeof(AreaList) + sizeof(Area**) * areas.size();
+    uint64_t ret = sizeof(AreaList) + sizeof(Area**) * areas.size();
     each([&](const Data::Area& area) { ret += area.memoryUsage(); });
     return ret;
-}
-
-void AreaList::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += (sizeof(void*) * 3) * areas.size();
-    each([&](const Data::Area& area) { area.estimateMemoryUsage(u); });
-}
-
-double AreaList::memoryUsageAveragePerArea() const
-{
-    if (!areas.empty()) // avoid division by 0
-    {
-        Yuni::uint64 ret = 0;
-        each([&](const Data::Area& area) { ret += area.memoryUsage(); });
-        return (double)((double)ret / (double)areas.size());
-    }
-    return 0;
 }
 
 uint AreaList::areaLinkCount() const
@@ -1406,6 +1391,11 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
     if (!oldid || !newName || !newid || areas.empty())
         return false;
 
+    if (CheckForbiddenCharacterInAreaName(newName))
+    {
+        logs.error() << "character '*' is forbidden in area name: `" << newName << "`";
+        return false;
+    }
     // Detaching the area from the list
     Area* area;
     {
@@ -1645,5 +1635,5 @@ void AreaList::removeThermalTimeseries()
     });
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+
