@@ -208,14 +208,16 @@ bool Properties::validate()
 
     if (initialLevel < 0)
     {
-        logs.warning() << "initiallevel for cluster: " << name << " should be positive";
-        initialLevel = 0;
+        initialLevel = initiallevelDefault;
+        logs.warning() << "initiallevel for cluster: " << name << " should be positive, value has been set to " << initialLevel;
+
     }
 
     if (initialLevel > 1)
     {
-        logs.warning() << "initiallevel for cluster: " << name << " should be inferior to 1";
-        initialLevel = 1;
+        initialLevel = initiallevelDefault;
+        logs.warning() << "initiallevel for cluster: " << name << " should be inferior to 1, value has been set to " << initialLevel;
+
     }
 
     return true;
