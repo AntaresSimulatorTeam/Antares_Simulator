@@ -71,8 +71,8 @@ set(RTESOLVER_OPT
 		opt_rename_problem.h
 		opt_rename_problem.cpp
 
-		constraints/constraint_builder.cpp
-		constraints/constraint_builder.h
+		constraints/ConstraintBuilder.cpp
+		constraints/ConstraintBuilder.h
 		constraints/AreaBalance.h
 		constraints/AreaBalance.cpp
 		constraints/FictitiousLoad.h

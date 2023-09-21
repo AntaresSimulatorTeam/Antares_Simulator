@@ -1,5 +1,5 @@
 #pragma once
-#include "constraint_builder.h"
+#include "ConstraintBuilder.h"
 
 class HydroPowerSmoothingUsingVariationMaxUp : private Constraint
 {
