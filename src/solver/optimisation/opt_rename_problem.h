@@ -8,8 +8,7 @@ const std::string AREA_SEP = "$$";
 class TargetVectorUpdater
 {
 public:
-    TargetVectorUpdater(std::vector<std::string>& target) :
-     target_(target)
+    explicit TargetVectorUpdater(std::vector<std::string>& target) : target_(target)
     {
     }
 
@@ -25,8 +24,7 @@ private:
 class Namer
 {
 public:
-    Namer(std::vector<std::string>& target) :
-     targetUpdater_(target)
+    explicit Namer(std::vector<std::string>& target) : targetUpdater_(target)
     {
 #ifdef __linux__
         std::cout << "Namer::Namer :" << __PRETTY_FUNCTION__ << "\n";
