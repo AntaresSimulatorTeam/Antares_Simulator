@@ -63,8 +63,7 @@ void BindingConstraintDay::add(int cntCouplante)
         char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
         builder.SetOperator(op);
         {
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
             namer.UpdateTimeStep(jour);
             namer.BindingConstraintDay(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
                                        MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);

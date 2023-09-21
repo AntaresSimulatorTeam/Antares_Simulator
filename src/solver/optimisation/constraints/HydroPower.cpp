@@ -37,8 +37,7 @@ void HydroPower::add(int pays)
 
         builder.equalTo();
         {
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
             namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
             namer.HydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);

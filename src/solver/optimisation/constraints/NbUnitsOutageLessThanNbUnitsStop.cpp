@@ -23,8 +23,7 @@ void NbUnitsOutageLessThanNbUnitsStop::add(int pays,
 
         if (builder.NumberOfVariables() > 0)
         {
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
             namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
             namer.NbUnitsOutageLessThanNbUnitsStop(

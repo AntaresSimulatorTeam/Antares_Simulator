@@ -21,8 +21,7 @@ void FlowDissociation::add(int pdt, int interco)
               = problemeHebdo->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
             const auto destination
               = problemeHebdo->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
             namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
             namer.FlowDissociation(
               problemeHebdo->ProblemeAResoudre->NombreDeContraintes, origin, destination);

@@ -44,8 +44,7 @@ void NbDispUnitsMinBoundSinceMinUpTime::add(int pays,
               .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[cluster]
               = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
 
             namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);

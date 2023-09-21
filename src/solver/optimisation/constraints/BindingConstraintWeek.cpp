@@ -52,8 +52,7 @@ void BindingConstraintWeek::add(int cntCouplante)
       = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
     // Name
     {
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
             namer.UpdateTimeStep(semaine);
             namer.BindingConstraintWeek(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
                                         MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);

@@ -15,8 +15,7 @@ void FictitiousLoad::add(int pdt, int pays)
 
     // TODO improve this
     {
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
 
         namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);

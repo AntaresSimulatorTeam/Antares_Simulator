@@ -19,8 +19,7 @@ void PMaxDispatchableGeneration::add(int pays,
           .lessThan();
         if (builder.NumberOfVariables() > 0)
         {
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
 
             namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);

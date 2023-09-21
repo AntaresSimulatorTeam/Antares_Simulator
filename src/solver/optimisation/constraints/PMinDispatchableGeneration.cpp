@@ -20,8 +20,7 @@ void PMinDispatchableGeneration::add(int pays,
         /*consider Adding naming constraint inside the builder*/
         if (builder.NumberOfVariables() > 0)
         {
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                                  problemeHebdo->NamedProblems);
+            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
             namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
 
             namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);

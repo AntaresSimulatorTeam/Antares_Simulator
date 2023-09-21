@@ -15,8 +15,7 @@ void FinalStockExpression::add(int pays)
         problemeHebdo->NumeroDeContrainteExpressionStockFinal[pays]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
 
         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);

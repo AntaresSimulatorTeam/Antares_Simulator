@@ -15,8 +15,7 @@ void AreaHydroLevel::add(int pays, int pdt)
         {
             builder.updateHourWithinWeek(pdt - 1).HydroLevel(pays, -1.0);
         }
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
 
         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);

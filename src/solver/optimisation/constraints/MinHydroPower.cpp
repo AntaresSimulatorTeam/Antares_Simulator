@@ -15,8 +15,7 @@ void MinHydroPower::add(int pays)
         const int NombreDePasDeTempsPourUneOptimisation
           = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
         namer.MinHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
