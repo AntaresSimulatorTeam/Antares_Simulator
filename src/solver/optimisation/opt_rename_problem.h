@@ -33,7 +33,7 @@ public:
      targetUpdater_(namedProblems, target)
     {
 #ifdef __linux__
-        std::cout << "Namer::Namer :", __PRETTY_FUNCTION__ << "\n";
+        std::cout << "Namer::Namer :" << __PRETTY_FUNCTION__ << "\n";
 #endif
     }
 
