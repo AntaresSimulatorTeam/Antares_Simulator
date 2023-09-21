@@ -35,7 +35,7 @@ struct VCardSTstorageCashFlowByCluster
     //! Caption
     static std::string Caption()
     {
-        return "STS Cashflow";
+        return "STS Cashflow By Cluster";
     }
     //! Unit
     static std::string Unit()
@@ -46,7 +46,7 @@ struct VCardSTstorageCashFlowByCluster
     //! The short description of the variable
     static std::string Description()
     {
-        return "Cash Flow for short term storage";
+        return "Cash Flow by short term storage";
     }
 
     //! The expecte results
@@ -184,9 +184,9 @@ public:
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // Reset the values for the current year
-        for (unsigned int i = 0; i != nbClusters_; ++i)
+        for (unsigned int clusterIndex = 0; i != nbClusters_; ++clusterIndex)
         {
-            pValuesForTheCurrentYear[numSpace][i].reset();
+            pValuesForTheCurrentYear[numSpace][clusterIndex].reset();
         }
         // Next variable
         NextType::yearBegin(year, numSpace);
@@ -228,13 +228,14 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
+        unsigned int hourInYear = state.hourInTheYear;
         for (uint clusterIndex = 0; clusterIndex != state.area->shortTermStorage.count();
              ++clusterIndex)
         {
             const auto& stsHourlyResults = state.hourlyResults->ShortTermStorage[state.hourInTheWeek];
             // ST storage injection for the current cluster and this hour
             // CashFlow[h] = (withdrawal - injection) * MRG. PRICE
-            pValuesForTheCurrentYear[numSpace][clusterIndex].hour[state.hourInTheYear]
+            pValuesForTheCurrentYear[numSpace][clusterIndex].hour[hourInYear]
                 = (stsHourlyResults.withdrawal[clusterIndex]
                  - stsHourlyResults.injection[clusterIndex])
                 * (-state.hourlyResults->CoutsMarginauxHoraires[state.hourInTheWeek]);
