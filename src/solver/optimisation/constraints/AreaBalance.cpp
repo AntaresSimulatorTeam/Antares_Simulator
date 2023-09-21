@@ -24,7 +24,7 @@ void AreaBalance::add(int pdt, int pays)
     /******/
     // TODO improve this
     {
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre.get()->NomDesContraintes,
                               problemeHebdo->NamedProblems);
         namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
