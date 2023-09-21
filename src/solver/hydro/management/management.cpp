@@ -314,30 +314,27 @@ bool HydroManagement::checkHourlyMinGeneration(uint tsIndex, Data::Area& area) c
     auto const& maxPower = area.hydro.maxPower;
     auto const& maxP = maxPower[Data::PartHydro::genMaxP];
 
-    if (!area.hydro.reservoirManagement)
+    for (uint month = 0; month != 12; ++month)
     {
-        for (uint month = 0; month != 12; ++month)
-        {
-            uint realmonth = calendar_.months[month].realmonth;
-            uint simulationMonth = calendar_.mapping.months[realmonth];
-            auto daysPerMonth = calendar_.months[simulationMonth].days;
-            uint firstDay = calendar_.months[simulationMonth].daysYear.first;
-            uint endDay = firstDay + daysPerMonth;
+        uint realmonth = calendar_.months[month].realmonth;
+        uint simulationMonth = calendar_.mapping.months[realmonth];
+        auto daysPerMonth = calendar_.months[simulationMonth].days;
+        uint firstDay = calendar_.months[simulationMonth].daysYear.first;
+        uint endDay = firstDay + daysPerMonth;
 
-            for (uint day = firstDay; day != endDay; ++day)
+        for (uint day = firstDay; day != endDay; ++day)
+        {
+            for (uint h = 0; h < 24; ++h)
             {
-                for (uint h = 0; h < 24; ++h)
+                if (srcmingen[day * 24 + h] > maxP[day])
                 {
-                    if (srcmingen[day * 24 + h] > maxP[day])
-                    {
-                        logs.error()
-                          << "In area: " << area.name << " [hourly] minimum generation of "
-                          << srcmingen[day * 24 + h] << " MW in timestep " << day * 24 + h + 1
-                          << " of TS-" << tsIndex + 1
-                          << " is incompatible with the maximum generation of " << maxP[day]
-                          << " MW.";
-                        return false;
-                    }
+                    logs.error()
+                        << "In area: " << area.name << " [hourly] minimum generation of "
+                        << srcmingen[day * 24 + h] << " MW in timestep " << day * 24 + h + 1
+                        << " of TS-" << tsIndex + 1
+                        << " is incompatible with the maximum generation of " << maxP[day]
+                        << " MW.";
+                    return false;
                 }
             }
         }
