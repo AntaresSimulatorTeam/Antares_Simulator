@@ -23,7 +23,7 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
         const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
 
         builder.updateHourWithinWeek(pdt).NTCDirect(
-          interco, poids, offset, true, problemeHebdo->NombreDePasDeTemps);
+          interco, poids, offset, problemeHebdo->NombreDePasDeTemps);
     }
 
     // Thermal clusters
@@ -40,7 +40,7 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
         const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
 
         builder.updateHourWithinWeek(pdt).DispatchableProduction(
-          palier, poids, offset, true, problemeHebdo->NombreDePasDeTemps);
+          palier, poids, offset, problemeHebdo->NombreDePasDeTemps);
     }
 
     char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;

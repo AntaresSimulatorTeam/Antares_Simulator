@@ -23,7 +23,7 @@ void BindingConstraintWeek::add(int cntCouplante)
         for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
             builder.updateHourWithinWeek(pdt).NTCDirect(
-              interco, poids, offset, true, problemeHebdo->NombreDePasDeTemps);
+              interco, poids, offset, problemeHebdo->NombreDePasDeTemps);
         }
     }
 
@@ -40,7 +40,7 @@ void BindingConstraintWeek::add(int cntCouplante)
             for (int pdt = 0; pdt < problemeHebdo->NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
             builder.updateHourWithinWeek(pdt).DispatchableProduction(
-              palier, poids, offset, true, problemeHebdo->NombreDePasDeTemps);
+              palier, poids, offset, problemeHebdo->NombreDePasDeTemps);
             }
         }
 

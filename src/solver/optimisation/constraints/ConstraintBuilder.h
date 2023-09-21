@@ -157,134 +157,132 @@ public:
         return *this;
     }
 
+    /*! \addtogroup group
+     *  @brief  Documentation for non obvious method
+     *  @param offset: offset from the current time step
+     *  @param delta: number of time steps for the variable
+     *  @return VariableManager object
+     *@{
+     */
     ConstraintBuilder& DispatchableProduction(unsigned int index,
                                               double coeff,
-                                              int shift = 0,
-                                              bool wrap = false,
-                                              int delta = 0)
-    ;
+                                              int offset = 0,
+                                              int delta = 0);
 
-    ConstraintBuilder& NODU(unsigned int index,
-                            double coeff,
-                            int shift = 0,
-                            bool wrap = false,
-                            int delta = 0);
+    ConstraintBuilder& NODU(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
     ConstraintBuilder& NumberStoppingDispatchableUnits(unsigned int index,
                                                        double coeff,
-                                                       int shift = 0,
-                                                       bool wrap = false,
+                                                       int offset = 0,
                                                        int delta = 0);
 
     ConstraintBuilder& NumberStartingDispatchableUnits(unsigned int index,
                                                        double coeff,
-                                                       int shift = 0,
-                                                       bool wrap = false,
+                                                       int offset = 0,
                                                        int delta = 0);
 
     ConstraintBuilder& NumberBreakingDownDispatchableUnits(unsigned int index,
                                                            double coeff,
-                                                           int shift = 0,
-                                                           bool wrap = false,
+                                                           int offset = 0,
+
                                                            int delta = 0);
 
     ConstraintBuilder& NTCDirect(unsigned int index,
                                  double coeff,
-                                 int shift = 0,
-                                 bool wrap = false,
+                                 int offset = 0,
+
                                  int delta = 0);
 
     ConstraintBuilder& IntercoDirectCost(unsigned int index,
                                          double coeff,
-                                         int shift = 0,
-                                         bool wrap = false,
+                                         int offset = 0,
+
                                          int delta = 0);
 
     ConstraintBuilder& IntercoIndirectCost(unsigned int index,
-                                         double coeff,
-                                         int shift = 0,
-                                         bool wrap = false,
-                                         int delta = 0);
+                                           double coeff,
+                                           int offset = 0,
+
+                                           int delta = 0);
 
     ConstraintBuilder& ShortTermStorageInjection(unsigned int index,
-                                         double coeff,
-                                         int shift = 0,
-                                         bool wrap = false,
-                                         int delta = 0);
+                                                 double coeff,
+                                                 int offset = 0,
+
+                                                 int delta = 0);
 
     ConstraintBuilder& ShortTermStorageWithdrawal(unsigned int index,
                                                   double coeff,
-                                                  int shift = 0,
-                                                  bool wrap = false,
+                                                  int offset = 0,
+
                                                   int delta = 0);
 
     ConstraintBuilder& ShortTermStorageLevel(unsigned int index,
-                                                  double coeff,
-                                                  int shift = 0,
-                                                  bool wrap = false,
-                                                  int delta = 0);
+                                             double coeff,
+                                             int offset = 0,
+
+                                             int delta = 0);
 
     ConstraintBuilder& HydProd(unsigned int index,
                                double coeff,
-                               int shift = 0,
-                               bool wrap = false,
+                               int offset = 0,
+
                                int delta = 0);
 
     ConstraintBuilder& HydProdDown(unsigned int index,
                                    double coeff,
-                                   int shift = 0,
-                                   bool wrap = false,
+                                   int offset = 0,
+
                                    int delta = 0);
 
     ConstraintBuilder& HydProdUp(unsigned int index,
                                  double coeff,
-                                 int shift = 0,
-                                 bool wrap = false,
+                                 int offset = 0,
+
                                  int delta = 0);
 
     ConstraintBuilder& Pumping(unsigned int index,
                                double coeff,
-                               int shift = 0,
-                               bool wrap = false,
+                               int offset = 0,
+
                                int delta = 0);
 
     ConstraintBuilder& HydroLevel(unsigned int index,
                                   double coeff,
-                                  int shift = 0,
-                                  bool wrap = false,
+                                  int offset = 0,
+
                                   int delta = 0);
 
     ConstraintBuilder& Overflow(unsigned int index,
                                 double coeff,
-                                int shift = 0,
-                                bool wrap = false,
+                                int offset = 0,
+
                                 int delta = 0);
 
     ConstraintBuilder& FinalStorage(unsigned int index,
                                     double coeff,
-                                    int shift = 0,
-                                    bool wrap = false,
+                                    int offset = 0,
+
                                     int delta = 0);
 
     ConstraintBuilder& PositiveUnsuppliedEnergy(unsigned int index,
                                                 double coeff,
-                                                int shift = 0,
-                                                bool wrap = false,
+                                                int offset = 0,
+
                                                 int delta = 0);
 
     ConstraintBuilder& NegativeUnsuppliedEnergy(unsigned int index,
                                                 double coeff,
-                                                int shift = 0,
-                                                bool wrap = false,
+                                                int offset = 0,
                                                 int delta = 0);
     ConstraintBuilder& LayerStorage(unsigned area,
                                     unsigned layer,
                                     double coeff,
-                                    int shift = 0,
-                                    bool wrap = false,
+                                    int offset = 0,
                                     int delta = 0);
+    /*! @} */
 
-    class ConstraintBuilderInvalidOperator : public std::runtime_error
+        class ConstraintBuilderInvalidOperator : public std::runtime_error
     {
     public:
         ConstraintBuilderInvalidOperator(const std::string& error_message) :
@@ -339,9 +337,15 @@ private:
     int nombreDeTermes_ = 0;
     // ConstraintNamer ConstraintNameManager;
 
-    int GetShiftedTimeStep(int shift, bool wrap, int delta) const;
+    int GetShiftedTimeStep(int offset, int delta) const;
     void AddVariable(int index, double coeff);
-    Variable::VariableManager GetVariableManager( int shift = 0, bool wrap = false, int delta = 0);
+
+    /*
+    @param offset: offset from the current time step
+    @param delta: number of time steps for the variable
+    @return VariableManager object
+    */
+    Variable::VariableManager GetVariableManager(int offset = 0, int delta = 0);
 };
 
 class ConstraintFactory

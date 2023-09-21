@@ -29,7 +29,7 @@ void ShortTermStorageLevel::add(int pdt, int pays)
 
         builder.ShortTermStorageLevel(index, 1.0)
           .ShortTermStorageLevel(
-            index, -1.0, -1, true, problemeHebdo->NombreDePasDeTempsPourUneOptimisation)
+            index, -1.0, -1, problemeHebdo->NombreDePasDeTempsPourUneOptimisation)
           .ShortTermStorageInjection(index, -1.0 * storage.efficiency)
           .ShortTermStorageWithdrawal(index, 1.0)
           .equalTo()
