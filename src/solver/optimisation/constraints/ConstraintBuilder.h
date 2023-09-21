@@ -157,7 +157,6 @@ public:
         return *this;
     }
 
-public:
     ConstraintBuilder& DispatchableProduction(unsigned int index,
                                               double coeff,
                                               int shift = 0,
