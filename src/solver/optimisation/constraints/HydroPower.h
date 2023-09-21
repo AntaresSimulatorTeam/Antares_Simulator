@@ -1,9 +1,9 @@
 #pragma once
 #include "ConstraintBuilder.h"
 
-class HydroPower : private Constraint
+class HydroPower : private ConstraintFactory
 {
 public:
-    using Constraint::Constraint;
+    using ConstraintFactory::ConstraintFactory;
     void add(int pays);
 };

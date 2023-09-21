@@ -1,9 +1,9 @@
 #pragma once
 #include "ConstraintBuilder.h"
 
-class BindingConstraintHour : private Constraint
+class BindingConstraintHour : private ConstraintFactory
 {
     public:
-    using Constraint::Constraint;
+    using ConstraintFactory::ConstraintFactory;
     void add(int pdt, int cntCouplante);
 };

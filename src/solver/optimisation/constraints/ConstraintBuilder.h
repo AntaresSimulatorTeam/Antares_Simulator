@@ -344,10 +344,10 @@ private:
     Variable::VariableManager GetVariableManager( int shift = 0, bool wrap = false, int delta = 0);
 };
 
-class Constraint
+class ConstraintFactory
 {
 public:
-    explicit Constraint(PROBLEME_HEBDO* problemeHebdo) :
+    explicit ConstraintFactory(PROBLEME_HEBDO* problemeHebdo) :
      problemeHebdo(problemeHebdo),
      builder(*problemeHebdo, problemeHebdo->CorrespondanceVarNativesVarOptim)
     {

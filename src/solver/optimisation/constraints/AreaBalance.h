@@ -1,10 +1,10 @@
 #pragma once
 #include "ConstraintBuilder.h"
 
-class AreaBalance : private Constraint
+class AreaBalance : private ConstraintFactory
 {
 public:
-    using Constraint::Constraint;
+    using ConstraintFactory::ConstraintFactory;
 
     void add(int pdt, int pays);
 };

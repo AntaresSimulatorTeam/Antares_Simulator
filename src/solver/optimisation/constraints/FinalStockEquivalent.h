@@ -1,9 +1,9 @@
 #pragma once
 #include "ConstraintBuilder.h"
 
-class FinalStockEquivalent : private Constraint
+class FinalStockEquivalent : private ConstraintFactory
 {
     public:
-    using Constraint::Constraint;
+    using ConstraintFactory::ConstraintFactory;
     void add(int pays);
 };

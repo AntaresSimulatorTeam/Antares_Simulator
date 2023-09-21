@@ -2,9 +2,9 @@
 #pragma once
 #include "ConstraintBuilder.h"
 
-class FictitiousLoad : private Constraint
+class FictitiousLoad : private ConstraintFactory
 {
 public:
-    using Constraint::Constraint;
+    using ConstraintFactory::ConstraintFactory;
     void add(int pdt, int pays);
 };

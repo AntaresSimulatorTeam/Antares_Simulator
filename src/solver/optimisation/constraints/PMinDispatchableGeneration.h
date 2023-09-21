@@ -1,10 +1,10 @@
 #pragma once
 #include "ConstraintBuilder.h"
 
-class PMinDispatchableGeneration : private Constraint
+class PMinDispatchableGeneration : private ConstraintFactory
 {
 public:
-    using Constraint::Constraint;
+    using ConstraintFactory::ConstraintFactory;
     void add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation);
     int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
 };

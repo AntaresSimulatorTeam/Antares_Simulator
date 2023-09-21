@@ -23,7 +23,6 @@ static void shortTermStorageBalance(
     }
 }
 
-// Constraint definitions
 void AreaBalance::add(int pdt, int pays)
 {
     /** can be done without this --- keep it for now**/

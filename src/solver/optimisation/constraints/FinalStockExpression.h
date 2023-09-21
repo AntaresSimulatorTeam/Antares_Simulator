@@ -2,9 +2,9 @@
 
 #include "ConstraintBuilder.h"
 
-class FinalStockExpression : private Constraint
+class FinalStockExpression : private ConstraintFactory
 {
 public:
-    using Constraint::Constraint;
+    using ConstraintFactory::ConstraintFactory;
     void add(int pays);
 };

@@ -1,9 +1,9 @@
 #pragma once
 #include "ConstraintBuilder.h"
 
-class HydroPowerSmoothingUsingVariationMaxUp : private Constraint
+class HydroPowerSmoothingUsingVariationMaxUp : private ConstraintFactory
 {
 public:
-    using Constraint::Constraint;
+    using ConstraintFactory::ConstraintFactory;
     void add(int pays, int pdt);
 };
