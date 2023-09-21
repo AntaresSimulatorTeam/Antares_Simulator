@@ -17,8 +17,7 @@ void MaxPumping::add(int pays)
         }
         problemeHebdo->NumeroDeContrainteMaxPompage[pays]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes,
-                              problemeHebdo->NamedProblems);
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
         namer.MaxPumping(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
