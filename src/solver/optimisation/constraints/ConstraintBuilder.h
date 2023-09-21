@@ -30,7 +30,7 @@ public:
         return nativeOptimVar.NumeroDeVariableDuPalierThermique[index];
     }
 
-    int NODU(unsigned int index) const
+    int NumberOfDispatchableUnits(unsigned int index) const
     {
         return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[index];
     }
@@ -169,7 +169,10 @@ public:
                                               int offset = 0,
                                               int delta = 0);
 
-    ConstraintBuilder& NODU(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& NumberOfDispatchableUnits(unsigned int index,
+                                                 double coeff,
+                                                 int offset = 0,
+                                                 int delta = 0);
 
     ConstraintBuilder& NumberStoppingDispatchableUnits(unsigned int index,
                                                        double coeff,

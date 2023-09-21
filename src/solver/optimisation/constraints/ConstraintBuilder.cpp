@@ -62,13 +62,13 @@ ConstraintBuilder& ConstraintBuilder::DispatchableProduction(unsigned int index,
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::NODU(unsigned int index,
-                                           double coeff,
-                                           int offset,
+ConstraintBuilder& ConstraintBuilder::NumberOfDispatchableUnits(unsigned int index,
+                                                                double coeff,
+                                                                int offset,
 
-                                           int delta)
+                                                                int delta)
 {
-    AddVariable(GetVariableManager(offset, delta).NODU(index), coeff);
+    AddVariable(GetVariableManager(offset, delta).NumberOfDispatchableUnits(index), coeff);
     return *this;
 }
 
