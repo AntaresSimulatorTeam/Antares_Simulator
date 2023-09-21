@@ -27,15 +27,15 @@
 
 #include "handler.h"
 #include "../apply.h"
-#include <antares/study/action/action.h>
-#include <antares/study/action/text.h>
-#include <antares/study/action/settings/suffix-for-area-names.h>
-#include <antares/study/action/settings/suffix-for-cluster-names.h>
-#include <antares/study/action/settings/suffix-for-constraint-names.h>
-#include <antares/study/action/settings/decal-area-position.h>
-#include <antares/study/action/handler/antares-study/area/create.h>
-#include <antares/study/action/handler/antares-study/link/create.h>
-#include <antares/study/action/handler/antares-study/constraint/create.h>
+#include <action/action.h>
+#include <action/text.h>
+#include <action/settings/suffix-for-area-names.h>
+#include <action/settings/suffix-for-cluster-names.h>
+#include <action/settings/suffix-for-constraint-names.h>
+#include <action/settings/decal-area-position.h>
+#include <action/handler/antares-study/area/create.h>
+#include <action/handler/antares-study/link/create.h>
+#include <action/handler/antares-study/constraint/create.h>
 #include <set>
 #include "build-context.h"
 #include "../../jobs.h"

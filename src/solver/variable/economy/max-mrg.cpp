@@ -175,7 +175,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
 
 void PrepareMaxMRG(const State& state, double* opmrg, uint numSpace)
 {
-    if (state.simplexHasBeenRan)
+    if (state.simplexRunNeeded)
         PrepareMaxMRGFor<true>(state, opmrg, numSpace);
     else
         PrepareMaxMRGFor<false>(state, opmrg, numSpace);

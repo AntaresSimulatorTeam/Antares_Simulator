@@ -564,7 +564,7 @@ bool Study::checkHydroHotStart()
 bool Study::initializeRuntimeInfos()
 {
     delete runtime;
-    runtime = new StudyRuntimeInfos(maxNbYearsInParallel);
+    runtime = new StudyRuntimeInfos();
     return runtime->loadFromStudy(*this);
 }
 

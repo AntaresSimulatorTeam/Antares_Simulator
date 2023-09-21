@@ -31,7 +31,7 @@
 #include <yuni/thread/thread.h>
 #include <wx/timer.h>
 #include <wx/dialog.h>
-#include <antares/study/action/action.h>
+#include <action/action.h>
 #include "../components/progressbar.h"
 
 namespace Antares
