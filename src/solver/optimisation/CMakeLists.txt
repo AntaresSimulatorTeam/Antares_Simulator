@@ -70,6 +70,56 @@ set(RTESOLVER_OPT
 		opt_period_string_generator_base.h
 		opt_rename_problem.h
 		opt_rename_problem.cpp
+
+		constraints/ConstraintBuilder.cpp
+		constraints/ConstraintBuilder.h
+		constraints/AreaBalance.h
+		constraints/AreaBalance.cpp
+		constraints/FictitiousLoad.h
+		constraints/FictitiousLoad.cpp
+		constraints/ShortTermStorageLevel.h
+		constraints/ShortTermStorageLevel.cpp
+		constraints/FlowDissociation.h
+		constraints/FlowDissociation.cpp
+		constraints/BindingConstraintHour.h
+		constraints/BindingConstraintHour.cpp
+		constraints/BindingConstraintDay.h
+		constraints/BindingConstraintDay.cpp
+		constraints/BindingConstraintWeek.h
+		constraints/BindingConstraintWeek.cpp
+		constraints/HydroPower.h
+		constraints/HydroPower.cpp
+		constraints/HydroPowerSmoothingUsingVariationSum.h
+		constraints/HydroPowerSmoothingUsingVariationSum.cpp
+		constraints/HydroPowerSmoothingUsingVariationMaxDown.h
+		constraints/HydroPowerSmoothingUsingVariationMaxDown.cpp
+		constraints/HydroPowerSmoothingUsingVariationMaxUp.h
+		constraints/HydroPowerSmoothingUsingVariationMaxUp.cpp
+		constraints/MinHydroPower.h
+		constraints/MinHydroPower.cpp
+		constraints/MaxHydroPower.h
+		constraints/MaxHydroPower.cpp
+		constraints/MaxPumping.h
+		constraints/MaxPumping.cpp
+		constraints/AreaHydroLevel.h
+		constraints/AreaHydroLevel.cpp
+		constraints/FinalStockEquivalent.h
+		constraints/FinalStockEquivalent.cpp
+		constraints/FinalStockExpression.h
+		constraints/FinalStockExpression.cpp
+		constraints/PMaxDispatchableGeneration.h
+		constraints/PMaxDispatchableGeneration.cpp
+		constraints/PMinDispatchableGeneration.h
+		constraints/PMinDispatchableGeneration.cpp
+		constraints/ConsistenceNODU.h
+		constraints/ConsistenceNODU.cpp
+		constraints/NbUnitsOutageLessThanNbUnitsStop.h
+		constraints/NbUnitsOutageLessThanNbUnitsStop.cpp
+		constraints/NbDispUnitsMinBoundSinceMinUpTime.h
+		constraints/NbDispUnitsMinBoundSinceMinUpTime.cpp
+		constraints/MinDownTime.h
+		constraints/MinDownTime.cpp
+
 	)
 
 
