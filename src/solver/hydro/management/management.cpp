@@ -355,24 +355,29 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
         bool followLoadModulations = area.hydro.followLoadModulations;
         bool reservoirManagement = area.hydro.reservoirManagement;
 
-        if (useHeuristicTarget && followLoadModulations && !reservoirManagement)
+        if (!reservoirManagement)
+        {
+            ret = checkHourlyMinGeneration(tsIndex, area) && ret;
+        }
+
+        if (!useHeuristicTarget)
+            return;
+
+        // Now we're in useHeuristicTarget = true
+
+        if (followLoadModulations && !reservoirManagement)
         {
             ret = checkMonthlyMinGeneration(numSpace, tsIndex, area) && ret;
         }
 
-        if (useHeuristicTarget && followLoadModulations && reservoirManagement)
+        if (followLoadModulations && reservoirManagement)
         {
             ret = checkYearlyMinGeneration(numSpace, tsIndex, area) && ret;
         }
 
-        if (useHeuristicTarget && !followLoadModulations)
+        if (!followLoadModulations)
         {
             ret = checkWeeklyMinGeneration(tsIndex, area) && ret;
-        }
-          
-        if (!reservoirManagement)
-        {
-            ret = checkHourlyMinGeneration(tsIndex, area) && ret;
         }
     });
     return ret;
