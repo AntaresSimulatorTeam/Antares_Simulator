@@ -190,13 +190,12 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
     if (!flowQuadEnabled)
         return false;
 
-    uint maxHours = study.runtime->nbHoursPerYear;
     for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
     {
         auto& lnk = *(study.runtime->areaLink[j]);
         auto& impedances = lnk.parameters[Data::fhlImpedances];
 
-        for (uint hour = 0; hour < maxHours; ++hour)
+        for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
             if (Math::Abs(impedances[hour]) >= 1e-100)
             {
@@ -301,6 +300,44 @@ void PrepareRandomNumbers(Data::Study& study,
         }
         problem.CoutDeDefaillanceNegative[area.index] = area.thermal.spilledEnergyCost + alea;
 
+
+        //-----------------------------
+        // Thermal noises
+        //-----------------------------
+        auto end = area.thermal.list.mapping.end();
+        for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
+        {
+            auto cluster = it->second;
+            if (!cluster->enabled)
+                continue;
+            uint clusterIndex = cluster->areaWideIndex;
+            double& rnd = randomForYear.pThermalNoisesByArea[indexArea][clusterIndex];
+            double randomClusterProdCost(0.);
+            if (cluster->spreadCost == 0) // 5e-4 < |randomClusterProdCost| < 6e-4
+            {
+                if (rnd < 0.5)
+                    randomClusterProdCost = 1e-4 * (5 + 2 * rnd);
+                else
+                    randomClusterProdCost = -1e-4 * (5 + 2 * (rnd - 0.5));
+            }
+            else
+            {
+                randomClusterProdCost = (rnd - 0.5) * (cluster->spreadCost);
+
+                if (Math::Abs(randomClusterProdCost) < 5.e-4)
+                {
+                    if (Math::Abs(randomClusterProdCost) >= 0)
+                        randomClusterProdCost += 5.e-4;
+                    else
+                        randomClusterProdCost -= 5.e-4;
+                }
+            }
+            rnd = randomClusterProdCost;
+        }
+
+        //-----------------------------
+        // Hydro noises
+        //-----------------------------
         auto& noise = problem.BruitSurCoutHydraulique[area.index];
         switch (study.parameters.power.fluctuations)
         {
@@ -345,9 +382,60 @@ void PrepareRandomNumbers(Data::Study& study,
     });
 }
 
+void BuildThermalPartOfWeeklyProblem(Data::Study& study,
+                                     PROBLEME_HEBDO& problem,
+                                     uint numSpace,
+                                     const int PasDeTempsDebut,
+                                     double** thermalNoises)
+{
+    int hourInYear = PasDeTempsDebut;
+    const uint nbPays = study.areas.size();
+    for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps; ++hourInWeek, ++hourInYear)
+    {
+        for (uint areaIdx = 0; areaIdx < nbPays; ++areaIdx)
+        {
+            auto& area = *study.areas.byIndex[areaIdx];
+            auto& tsIndex = NumeroChroniquesTireesParPays[numSpace][areaIdx];
+            area.thermal.list.each([&](const Data::ThermalCluster& cluster)
+            {
+                    auto& Pt = problem.PaliersThermiquesDuPays[areaIdx]
+                               .PuissanceDisponibleEtCout[cluster.index];
+
+                    Pt.CoutHoraireDeProductionDuPalierThermique[hourInWeek] =
+                        cluster.getMarketBidCost(tsIndex.ThermiqueParPalier[cluster.areaWideIndex], hourInYear)
+                        + thermalNoises[areaIdx][cluster.areaWideIndex];
+
+                    Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
+                        = cluster.series
+                        ->timeSeries[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][hourInYear];
+
+                    Pt.PuissanceMinDuPalierThermique[hourInWeek]
+                        = (Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] < cluster.PthetaInf[hourInYear])
+                        ? Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
+                        : cluster.PthetaInf[hourInYear];
+            });
+        }
+    }
+
+    for (uint k = 0; k < nbPays; ++k)
+    {
+        auto& area = *study.areas.byIndex[k];
+
+        for (uint l = 0; l != area.thermal.list.size(); ++l)
+        {
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
+                   .PuissanceDisponibleDuPalierThermiqueRef
+            =
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
+                   .PuissanceDisponibleDuPalierThermique;
+        }
+    }
+
+}
+
 int retrieveAverageNTC(const Data::Study& study,
                        const Matrix<>& capacities,
-                       const Matrix<Yuni::uint32>& tsNumbers,
+                       const Matrix<uint32_t>& tsNumbers,
                        std::vector<double>& avg)
 {
     const auto& parameters = study.parameters;
@@ -358,21 +446,21 @@ int retrieveAverageNTC(const Data::Study& study,
     const auto width = capacities.width;
     avg.assign(HOURS_PER_YEAR, 0);
 
-    std::map<Yuni::uint32, double> weightOfTS;
+    std::map<uint32_t, double> weightOfTS;
 
     for (uint y = 0; y < study.parameters.nbYears; y++)
     {
         if (!yearsFilter[y])
             continue;
 
-        Yuni::uint32 tsIndex = (width == 1) ? 0 : tsNumbers[0][y];
+        uint32_t tsIndex = (width == 1) ? 0 : tsNumbers[0][y];
         weightOfTS[tsIndex] += yearsWeight[y];
     }
 
     // No need for the year number, only the TS index is required
     for (const auto& it : weightOfTS)
     {
-        const Yuni::uint32 tsIndex = it.first;
+        const uint32_t tsIndex = it.first;
         const double weight = it.second;
 
         for (uint h = 0; h < HOURS_PER_YEAR; h++)

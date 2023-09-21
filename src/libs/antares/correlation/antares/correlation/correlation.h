@@ -140,7 +140,7 @@ public:
     /*!
     ** \brief Get the amount of memory used the correlation matrices
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Invalidate all matrices
@@ -243,7 +243,7 @@ IniFile* InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l)
 } // namespace Data
 } // namespace Antares
 
-#include "../study/area.h"
+#include <antares/study/area/area.h>
 #include "correlation.hxx"
 
 #endif /* __ANTARES_LIBS_ARRAY_CORRELATION_H__ */

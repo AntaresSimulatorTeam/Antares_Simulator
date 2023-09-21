@@ -217,7 +217,7 @@ inline void IIterator<DetachedT>::onEndFolder(const String&, const String&, cons
 }
 
 template<bool DetachedT>
-inline Flow IIterator<DetachedT>::onFile(const String&, const String&, const String&, uint64)
+inline Flow IIterator<DetachedT>::onFile(const String&, const String&, const String&, uint64_t)
 {
     return flowContinue; // Do nothing
 }

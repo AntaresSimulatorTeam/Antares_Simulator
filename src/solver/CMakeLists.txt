@@ -73,31 +73,32 @@ add_executable(antares-solver
 
 set_target_properties(antares-solver PROPERTIES OUTPUT_NAME ${exec_name})
 
-set(ANTARES_SOLVER_LIBS		
-	date
+set(ANTARES_SOLVER_LIBS
+	Antares::date
+	Antares::benchmarking
+	Antares::result_writer
+	Antares::sys
+	Antares::infoCollection
+	Antares::checks
 	yuni-static-uuid
 	yuni-static-core		
 	${CMAKE_THREADS_LIBS_INIT}
 )
 
 set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
-	libantares-solver-main-economy
-	libantares-solver-main-adequacy
-	libantares-solver-hydro
-	libantares-solver-aleatoire
-	libantares-solver-variable
-	libantares-solver-simulation
-	libantares-solver-ts-generator
-	libmodel_antares
-	libantares-core)
+	antares-solver-main-economy
+	antares-solver-main-adequacy
+	antares-solver-hydro
+	antares-solver-aleatoire
+	antares-solver-variable
+	antares-solver-simulation
+	antares-solver-ts-generator
+	model_antares
+	antares-core)
 
 target_link_libraries(antares-solver
 		PRIVATE
 			${ANTARES_SOLVER_LIBS}
-			Antares::benchmarking
-			result_writer
-			Antares::sys
-			Antares::infoCollection
 		)
 
 target_include_directories(antares-solver

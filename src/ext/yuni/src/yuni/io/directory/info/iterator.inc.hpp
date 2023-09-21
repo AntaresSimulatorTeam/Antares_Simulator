@@ -17,9 +17,9 @@ struct Model
         //! The type of the orignal object
         typedef String value_type;
         //! An uintegral type
-        typedef uint64 uint64ype;
+        typedef uint64_t uint64_type;
         //! A signed integral type
-        typedef sint64 difference_type;
+        typedef int64_t difference_type;
 
         enum
         {
@@ -90,9 +90,9 @@ struct Model
         //! The type of the orignal object
         typedef String value_type;
         //! An uintegral type
-        typedef uint64 uint64ype;
+        typedef uint64_t uint64_type;
         //! A signed integral type
-        typedef sint64 difference_type;
+        typedef int64_t difference_type;
 
         enum
         {
@@ -124,13 +124,13 @@ struct Model
         }
 
         //! Size in bytes
-        uint64 size() const
+        uint64_t size() const
         {
             return Private::IO::Directory::IteratorDataSize(pData);
         }
 
         //! Date of the last modification
-        sint64 modified() const
+        int64_t modified() const
         {
             return Private::IO::Directory::IteratorDataModified(pData);
         }

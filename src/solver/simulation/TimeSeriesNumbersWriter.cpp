@@ -28,7 +28,7 @@ namespace // anonymous
 
 // TODO : remove duplication
 static void genericStoreTimeseriesNumbers(const Solver::IResultWriter::Ptr& writer,
-                                          const Matrix<Yuni::uint32>& timeseriesNumbers,
+                                          const Matrix<uint32_t>& timeseriesNumbers,
                                           const std::string& id,
                                           const std::string& directory)
 {

@@ -166,7 +166,7 @@ protected:
           report, results, dataLevel, fileLevel, precision);
     }
 
-    Yuni::uint64 memoryUsage() const
+    uint64_t memoryUsage() const
     {
         return sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
     }

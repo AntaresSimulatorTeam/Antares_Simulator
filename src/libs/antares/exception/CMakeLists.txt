@@ -8,9 +8,10 @@ set(SRC_PROJ
         antares/exception/UnfeasibleProblemError.hpp
         antares/exception/LoadingError.hpp
 )
-source_group("exception" FILES ${SRC_EXCEPTION})
+source_group("exception" FILES ${SRC_PROJ})
 
 add_library(${PROJ} ${SRC_PROJ})
+add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 target_link_libraries(${PROJ}
         PRIVATE

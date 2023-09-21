@@ -33,7 +33,7 @@
 class ModifiedINode : public FSWalker::IExtension
 {
 public:
-    ModifiedINode(yint64 dateLimit);
+    ModifiedINode(int64_t dateLimit);
     virtual ~ModifiedINode()
     {
     }
@@ -47,13 +47,13 @@ public:
     virtual void userdataDestroy(void* userdata);
 
 public:
-    yuint64 bytesDeleted;
-    yuint64 filesDeleted;
-    yuint64 foldersDeleted;
+    uint64_t bytesDeleted;
+    uint64_t filesDeleted;
+    uint64_t foldersDeleted;
 
 private:
     Yuni::Mutex pMutex;
-    yint64 pDateLimit;
+    int64_t pDateLimit;
     FSWalker::DispatchJobEvent pQueue;
 
 }; // class ModifiedINode

@@ -217,7 +217,7 @@ void DataSeriesHydro::reset()
     count = 1;
 }
 
-uint64 DataSeriesHydro::memoryUsage() const
+uint64_t DataSeriesHydro::memoryUsage() const
 {
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage();
 }

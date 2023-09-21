@@ -32,7 +32,6 @@
 #include "../simulation/adequacy_patch_runtime_data.h"
 
 #include <cmath>
-#include "../study/area/scratchpad.h"
 
 using namespace Yuni;
 

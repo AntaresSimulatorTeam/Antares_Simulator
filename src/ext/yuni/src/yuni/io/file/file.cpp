@@ -39,7 +39,7 @@ bool CreateEmptyFile(const AnyString& filename)
 
 #ifdef YUNI_OS_WINDOWS
 
-bool Size(const AnyString& filename, uint64& value)
+bool Size(const AnyString& filename, uint64_t& value)
 {
     uint len = filename.size();
     if (!len)
@@ -84,7 +84,7 @@ bool Size(const AnyString& filename, uint64& value)
         value = 0u;
         return false;
     }
-    value = (uint64)v.QuadPart;
+    value = (uint64_t)v.QuadPart;
 
     CloseHandle(hndl);
     return true;
@@ -92,12 +92,12 @@ bool Size(const AnyString& filename, uint64& value)
 
 #else
 
-bool Size(const AnyString& filename, uint64& value)
+bool Size(const AnyString& filename, uint64_t& value)
 {
     struct stat results;
     if (not filename.empty() and stat(filename.c_str(), &results) == 0)
     {
-        value = (uint64)results.st_size;
+        value = (uint64_t)results.st_size;
         return true;
     }
     value = 0u;
@@ -167,10 +167,10 @@ bool GetLastWriteTime(HANDLE hFile)
 
 #endif
 
-sint64 LastModificationTime(const AnyString& filename)
+int64_t LastModificationTime(const AnyString& filename)
 {
-    uint64 size;
-    sint64 lastModified;
+    uint64_t size;
+    int64_t lastModified;
     IO::FetchFileStatus(filename, size, lastModified);
     return lastModified;
 }
@@ -180,7 +180,7 @@ namespace // anonymous
 template<class StringT>
 static inline IO::Error LoadFromFileImpl(StringT& out,
                                          const AnyString& filename,
-                                         const uint64 hardlimit)
+                                         const uint64_t hardlimit)
 {
     out.clear();
     Yuni::IO::File::Stream f(filename);
@@ -189,7 +189,7 @@ static inline IO::Error LoadFromFileImpl(StringT& out,
 
     // retrieve the file size in bytes
     f.seekFromEndOfFile(0);
-    uint64 filesize = (uint64)f.tell();
+    uint64_t filesize = (uint64_t)f.tell();
 
     if (filesize == 0)
     {
@@ -204,11 +204,11 @@ static inline IO::Error LoadFromFileImpl(StringT& out,
         {
             smallFragment = 512 * 1024
         };
-        uint64 offset = 0;
+        uint64_t offset = 0;
         do
         {
             out.reserve(((typename StringT::size_type)offset) + smallFragment);
-            uint64 numread = f.read((char*)out.data() + offset, smallFragment);
+            uint64_t numread = f.read((char*)out.data() + offset, smallFragment);
             if (numread != smallFragment)
             {
                 out.resize((typename StringT::size_type)(offset + numread));
@@ -238,7 +238,7 @@ static inline IO::Error LoadFromFileImpl(StringT& out,
     };
     if (filesize < fragment)
     {
-        uint64 numread = f.read((char*)out.data(), filesize);
+        uint64_t numread = f.read((char*)out.data(), filesize);
         if (numread != filesize)
         {
             out.clear();
@@ -247,10 +247,10 @@ static inline IO::Error LoadFromFileImpl(StringT& out,
     }
     else
     {
-        uint64 offset = 0;
+        uint64_t offset = 0;
         while (filesize >= fragment)
         {
-            uint64 numread = f.read((char*)out.data() + offset, fragment);
+            uint64_t numread = f.read((char*)out.data() + offset, fragment);
             if (numread != fragment)
             {
                 out.resize((typename StringT::size_type)offset);
@@ -261,7 +261,7 @@ static inline IO::Error LoadFromFileImpl(StringT& out,
         }
         if (filesize != 0)
         {
-            uint64 numread = f.read((char*)out.data() + offset, filesize);
+            uint64_t numread = f.read((char*)out.data() + offset, filesize);
             if (numread != filesize)
             {
                 out.resize((typename StringT::size_type)offset);
@@ -275,17 +275,17 @@ static inline IO::Error LoadFromFileImpl(StringT& out,
 
 } // anonymous namespace
 
-IO::Error LoadFromFile(std::string& out, const AnyString& filename, uint64 hardlimit)
+IO::Error LoadFromFile(std::string& out, const AnyString& filename, uint64_t hardlimit)
 {
     return LoadFromFileImpl(out, filename, hardlimit);
 }
 
-IO::Error LoadFromFile(String& out, const AnyString& filename, uint64 hardlimit)
+IO::Error LoadFromFile(String& out, const AnyString& filename, uint64_t hardlimit)
 {
     return LoadFromFileImpl(out, filename, hardlimit);
 }
 
-IO::Error LoadFromFile(Clob& out, const AnyString& filename, uint64 hardlimit)
+IO::Error LoadFromFile(Clob& out, const AnyString& filename, uint64_t hardlimit)
 {
     return LoadFromFileImpl(out, filename, hardlimit);
 }

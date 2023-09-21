@@ -39,9 +39,13 @@ set(SRC_UI_WINDOWS_STUDYPARTS
 		windows/bindingconstraint/edit.h
 		windows/bindingconstraint/edit.cpp
 )
-add_Library(libantares-ui-windows-studyparts  ${SRC_UI_WINDOWS_STUDYPARTS})
+add_Library(antares-ui-windows-studyparts  ${SRC_UI_WINDOWS_STUDYPARTS})
 
 
-target_link_libraries(libantares-ui-windows-studyparts PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(libantares-ui-windows-studyparts PRIVATE libantares-ui-common)
+target_link_libraries(antares-ui-windows-studyparts
+		PUBLIC
+		${wxWidgets_LIBRARIES}
+		Antares::study
+)
+target_link_libraries(antares-ui-windows-studyparts PRIVATE antares-ui-common)
 

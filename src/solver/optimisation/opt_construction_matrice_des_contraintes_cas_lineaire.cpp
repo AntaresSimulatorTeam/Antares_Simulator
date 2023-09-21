@@ -31,7 +31,7 @@
 #include "opt_rename_problem.h"
 #include "sim_structure_probleme_economique.h"
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 using namespace Antares::Data;
 
@@ -171,8 +171,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-    ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
-                                    problemeHebdo->NamedProblems);
+    ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes);
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {

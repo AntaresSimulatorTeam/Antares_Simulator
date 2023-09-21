@@ -24,7 +24,7 @@ namespace // anonymous
 struct InfoItem
 {
     bool isFile;
-    uint64 size;
+    uint64_t size;
     String filename;
 };
 typedef std::vector<InfoItem> List;
@@ -57,7 +57,7 @@ bool Copy(const AnyString& src,
     List list;
     list.reserve(512);
     // the total number of bytes to copy
-    uint64 totalSize = 0;
+    uint64_t totalSize = 0;
 
     // get the complete list of all files to copy and all folders to create
     {
@@ -105,7 +105,7 @@ bool Copy(const AnyString& src,
     if (YUNI_UNLIKELY(nullptr == buffer))
         return false;
 
-    uint64 current = 0;
+    uint64_t current = 0;
     // A temporary string
     String tmp;
     tmp.reserve(1024);
@@ -163,7 +163,7 @@ bool Copy(const AnyString& src,
                 if (toFile.open(tmp, IO::OpenMode::write | IO::OpenMode::truncate))
                 {
                     // reading the whole source file
-                    uint64 numRead;
+                    uint64_t numRead;
                     while ((numRead = fromFile.read(buffer, bufferSize)) > 0)
                     {
                         // progression

@@ -1,7 +1,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOWS_SELECTOUTPUT_H__
 #define __ANTARES_APPLICATION_WINDOWS_SELECTOUTPUT_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../../toolbox/components/datagrid/component.h"
 #include <wx/dialog.h>
 #include <wx/checkbox.h>

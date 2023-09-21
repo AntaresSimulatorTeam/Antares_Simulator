@@ -147,7 +147,7 @@ public:
                 {
                     isFolder = true;
                     size = 0;
-                    modified = (sint64)s.st_mtime;
+                    modified = (int64_t)s.st_mtime;
                     return true;
                 }
             }
@@ -156,8 +156,8 @@ public:
                 if (0 != (flags & Yuni::IO::Directory::Info::itFile))
                 {
                     isFolder = false;
-                    size = (uint64)s.st_size;
-                    modified = (sint64)s.st_mtime;
+                    size = (uint64_t)s.st_size;
+                    modified = (int64_t)s.st_mtime;
                     return true;
                 }
             }
@@ -207,7 +207,7 @@ public:
                 {
                     isFolder = true;
                     size = 0;
-                    modified = (sint64)data.time_write;
+                    modified = (int64_t)data.time_write;
                     return true;
                 }
             }
@@ -216,8 +216,8 @@ public:
                 if (0 != (flags & Yuni::IO::Directory::Info::itFile))
                 {
                     isFolder = false;
-                    size = (uint64)data.size;
-                    modified = (sint64)data.time_write;
+                    size = (uint64_t)data.size;
+                    modified = (int64_t)data.time_write;
                     return true;
                 }
             }
@@ -235,9 +235,9 @@ public:
     //! The complete filename of the current node
     String filename;
     //! File size
-    uint64 size;
+    uint64_t size;
     //! Date of the last modification
-    sint64 modified;
+    int64_t modified;
     //! Flag to determine whether the inode is a folder or a file
     bool isFolder;
 
@@ -381,13 +381,13 @@ const String& IteratorDataName(const IteratorData* data)
     return data->dirinfo.front().name;
 }
 
-uint64 IteratorDataSize(const IteratorData* data)
+uint64_t IteratorDataSize(const IteratorData* data)
 {
     assert(data != NULL);
     return data->dirinfo.front().size;
 }
 
-sint64 IteratorDataModified(const IteratorData* data)
+int64_t IteratorDataModified(const IteratorData* data)
 {
     assert(data != NULL);
     return data->dirinfo.front().modified;

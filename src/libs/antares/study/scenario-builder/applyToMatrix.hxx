@@ -58,7 +58,7 @@ bool ApplyToMatrix(uint& errors,
     const uint nbYears = data.timeseriesNumbers.height;
     // The matrix m has only one column
     assert(data.timeseriesNumbers.width == 1);
-    typename Matrix<uint32>::ColumnType& target = data.timeseriesNumbers[0];
+    typename Matrix<uint32_t>::ColumnType& target = data.timeseriesNumbers[0];
 
     for (uint y = 0; y != nbYears; ++y)
     {

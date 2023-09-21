@@ -28,7 +28,7 @@
 #include "links.h"
 #include "../../../../../application/study.h"
 #include "../../component.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <wx/wx.h>
 
 using namespace Yuni;

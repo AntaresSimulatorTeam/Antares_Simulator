@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_BINDINGCONSTRAINT_WEIGHT_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_BINDINGCONSTRAINT_WEIGHT_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../gridhelper.h"
 #include "../../renderer.h"
 #include <yuni/core/event.h>

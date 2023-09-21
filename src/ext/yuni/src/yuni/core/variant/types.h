@@ -21,13 +21,13 @@ enum VariantInnerType
     variantTBool,
     //! char
     variantTChar,
-    //! sint32
+    //! int32_t
     variantTInt32,
-    //! sint64
+    //! int64_t
     variantTInt64,
-    //! uint32
+    //! uint32_t
     variantTUInt32,
-    //! uint64
+    //! uint64_t
     variantTUInt64,
     //! string
     variantTString,

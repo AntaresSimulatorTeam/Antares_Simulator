@@ -26,7 +26,7 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "state.h"
 
 using namespace Yuni;
@@ -67,7 +67,7 @@ State::State(Data::Study& s) :
  unitCommitmentMode(s.parameters.unitCommitment.ucMode),
  study(s),
  thermal(s.areas),
- simplexHasBeenRan(true),
+ simplexRunNeeded(true),
  annualSystemCost(0.),
  optimalSolutionCost1(0.),
  optimalSolutionCost2(0.),

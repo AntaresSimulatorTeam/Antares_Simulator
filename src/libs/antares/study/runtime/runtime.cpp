@@ -245,23 +245,13 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
 }
 
-StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
- nbYears(0),
- nbHoursPerYear(0),
- nbDaysPerYear(0),
- nbMonthsPerYear(0),
- parameters(nullptr),
- timeseriesNumberYear(nullptr),
- thermalPlantTotalCount(0),
- thermalPlantTotalCountMustRun(0),
- quadraticOptimizationHasFailed(false)
+StudyRuntimeInfos::StudyRuntimeInfos() :
+    nbYears(0),
+    parameters(nullptr),
+    thermalPlantTotalCount(0),
+    thermalPlantTotalCountMustRun(0),
+    quadraticOptimizationHasFailed(false)
 {
-    // Evite les confusions de numeros de TS entre AMC
-    timeseriesNumberYear = new uint[nbYearsParallel];
-    for (uint numSpace = 0; numSpace < nbYearsParallel; numSpace++)
-    {
-        timeseriesNumberYear[numSpace] = 999999;
-    }
 }
 
 void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
@@ -284,9 +274,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     auto& gd = study.parameters;
 
     nbYears = gd.nbYears;
-    nbHoursPerYear = 8760;
-    nbDaysPerYear = 365;
-    nbMonthsPerYear = 12;
     parameters = &study.parameters;
     mode = gd.mode;
     thermalPlantTotalCount = 0;
@@ -295,14 +282,14 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "Generating calendar informations";
     if (study.usedByTheSolver)
     {
-        study.calendar.reset(gd, false);
+        study.calendar.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, false});
     }
     else
     {
-        study.calendar.reset(gd);
+        study.calendar.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
     }
     logs.debug() << "  :: generating calendar dedicated to the output";
-    study.calendarOutput.reset(gd);
+    study.calendarOutput.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
     initializeRangeLimits(study, rangeLimits);
 
     // Removing disabled thermal clusters from solver computations
@@ -453,8 +440,6 @@ void StudyRuntimeInfos::removeAllRenewableClustersFromSolverComputations(Study& 
 StudyRuntimeInfos::~StudyRuntimeInfos()
 {
     logs.debug() << "Releasing runtime data";
-
-    delete[] timeseriesNumberYear;
 }
 
 #ifndef NDEBUG

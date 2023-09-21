@@ -36,62 +36,62 @@ namespace Statistics
 /*!
 ** \brief Get the amount of data (in bytes) which have been read from the disk
 */
-Yuni::uint64 ReadFromDisk();
+uint64_t ReadFromDisk();
 
 /*!
 ** \brief Get the amount of data (in bytes) which have been written to the disk
 */
-Yuni::uint64 WrittenToDisk();
+uint64_t WrittenToDisk();
 
 /*!
 ** \brief Get the amount of data (in bytes) which have been read from the disk since the startup
 */
-Yuni::uint64 ReadFromDiskSinceStartup();
+uint64_t ReadFromDiskSinceStartup();
 
 /*!
 ** \brief Get the amount of data (in bytes) which have been written to the disk since the startup
 */
-Yuni::uint64 WrittenToDiskSinceStartup();
+uint64_t WrittenToDiskSinceStartup();
 
 /*!
 ** \brief Get the amount of data (in bytes) which have been read from the network
 */
-Yuni::uint64 ReadFromNetwork();
+uint64_t ReadFromNetwork();
 
 /*!
 ** \brief Get the amount of data (in bytes) which have been written to the network
 */
-Yuni::uint64 WrittenToNetwork();
+uint64_t WrittenToNetwork();
 
 /*!
 ** \brief Get the amount of data (in bytes) which have been read from the network since the startup
 */
-Yuni::uint64 ReadFromNetworkSinceStartup();
+uint64_t ReadFromNetworkSinceStartup();
 
 /*!
 ** \brief Get the amount of data (in bytes) which have been written to the network since the startup
 */
-Yuni::uint64 WrittenToNetworkSinceStartup();
+uint64_t WrittenToNetworkSinceStartup();
 
 /*!
 ** \brief Notify taht a certain amount of data (in bytes) has been read from disk
 */
-void HasReadFromDisk(Yuni::uint64 size);
+void HasReadFromDisk(uint64_t size);
 
 /*!
 ** \brief Notify taht a certain amount of data (in bytes) has been written to disk
 */
-void HasWrittenToDisk(Yuni::uint64 size);
+void HasWrittenToDisk(uint64_t size);
 
 /*!
 ** \brief Notify taht a certain amount of data (in bytes) has been read from the network
 */
-void HasReadFromNetwork(Yuni::uint64 size);
+void HasReadFromNetwork(uint64_t size);
 
 /*!
 ** \brief Notify taht a certain amount of data (in bytes) has been sent to the network
 */
-void HasWrittenToNetwork(Yuni::uint64 size);
+void HasWrittenToNetwork(uint64_t size);
 
 /*!
 ** \brief Reset the internal counters

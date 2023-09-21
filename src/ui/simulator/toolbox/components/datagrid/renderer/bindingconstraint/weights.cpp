@@ -26,9 +26,8 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "weights.h"
-#include <antares/wx-wrapper.h>
 #include <wx/window.h>
 #include "antares/study/ui-runtimeinfos.h"
 

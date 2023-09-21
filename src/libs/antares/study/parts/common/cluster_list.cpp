@@ -1,6 +1,6 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include "cluster_list.h"
-#include "../../../utils.h"
+#include <antares/utils/utils.h>
 #include "../../study.h"
 
 using namespace Yuni;
@@ -8,7 +8,7 @@ namespace // anonymous
 {
 struct TSNumbersPredicate
 {
-    uint32 operator()(uint32 value) const
+    uint32_t operator()(uint32_t value) const
     {
         return value + 1;
     }
@@ -224,9 +224,9 @@ typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(
 }
 
 template<class ClusterT>
-Yuni::uint64 ClusterList<ClusterT>::memoryUsage() const
+uint64_t ClusterList<ClusterT>::memoryUsage() const
 {
-    uint64 ret = sizeof(ClusterList) + (2 * sizeof(void*)) * this->size();
+    uint64_t ret = sizeof(ClusterList) + (2 * sizeof(void*)) * this->size();
 
     each([&](const ClusterT& cluster) { ret += cluster.memoryUsage(); });
     return ret;
@@ -368,39 +368,19 @@ int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const
     return ret;
 }
 
-template<>
-int ClusterList<ThermalCluster>::loadDataSeriesFromFolder(Study& s,
-                                                          const StudyLoadOptions& options,
-                                                          const AnyString& folder)
+template<class ClusterT>
+int ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
+                                                    const StudyLoadOptions& options,
+                                                    const AnyString& folder)
 {
     if (empty())
         return 1;
 
     int ret = 1;
 
-    each([&ret, &options, &s, &folder](ThermalCluster& c) {
+    each([&](ClusterT& c) {
         if (c.series)
             ret = c.loadDataSeriesFromFolder(s, folder) and ret;
-
-        ++options.progressTicks;
-        options.pushProgressLogs();
-    });
-    return ret;
-}
-
-template<>
-int ClusterList<RenewableCluster>::loadDataSeriesFromFolder(Study& s,
-                                                            const StudyLoadOptions& options,
-                                                            const AnyString& folder)
-{
-    if (empty())
-        return 1;
-
-    int ret = 1;
-
-    each([&](Cluster& cluster) {
-        if (cluster.series)
-            ret = cluster.loadDataSeriesFromFolder(s, folder) and ret;
 
         ++options.progressTicks;
         options.pushProgressLogs();
