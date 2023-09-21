@@ -350,11 +350,6 @@ public:
     */
     void reverseWeightSign(const AreaLink* lnk);
 
-    /*!
-    ** \brief Get if the given binding constraint is identical
-    */
-    bool contains(const BindingConstraint* bc) const;
-    /*!
     ** \brief Get if the binding constraint is linked with a given area
     */
     bool contains(const Area* area) const;

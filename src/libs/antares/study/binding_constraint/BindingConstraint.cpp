@@ -453,11 +453,6 @@ uint64_t BindingConstraint::memoryUsage() const
            + pClusterOffsets.size() * (sizeof(int) + 3 * sizeof(void *));
 }
 
-bool BindingConstraint::contains(const BindingConstraint* bc) const
-{
-    return (this == bc);
-}
-
 bool BindingConstraint::contains(const AreaLink* lnk) const
 {
     const auto i = pLinkWeights.find(lnk);
