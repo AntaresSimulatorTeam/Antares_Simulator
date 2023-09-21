@@ -14,9 +14,6 @@ void ConsistenceNODU::add(int pays, int cluster, int clusterIndex, int pdt, bool
         if (Pdtmoins1 < 0)
             Pdtmoins1 = NombreDePasDeTempsPourUneOptimisation + Pdtmoins1;
 
-        CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptimTmoins1
-          = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdtmoins1];
-
         builder.updateHourWithinWeek(pdt)
           .NumberOfDispatchableUnits(cluster, 1.0)
           .updateHourWithinWeek(Pdtmoins1)
