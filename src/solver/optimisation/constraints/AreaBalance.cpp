@@ -1,25 +1,13 @@
 #include "AreaBalance.h"
 
-static void shortTermStorageBalance(
-  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-  ConstraintBuilder& constraintBuilder,
-  const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim)
+static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+                                    ConstraintBuilder& constraintBuilder)
 {
     for (const auto& storage : shortTermStorageInput)
     {
         unsigned index = storage.clusterGlobalIndex;
-        if (const int varInjection
-            = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.InjectionVariable[index];
-            varInjection >= 0)
-        {
-            constraintBuilder.ShortTermStorageInjection(index, 1.0);
-        }
-        if (const int varWithdrawal
-            = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.WithdrawalVariable[index];
-            varWithdrawal >= 0)
-        {
-            constraintBuilder.ShortTermStorageWithdrawal(index, -1.0);
-        }
+        constraintBuilder.ShortTermStorageInjection(index, 1.0);
+        constraintBuilder.ShortTermStorageWithdrawal(index, -1.0);
     }
 }
 
@@ -65,8 +53,7 @@ void AreaBalance::add(int pdt, int pays)
       .PositiveUnsuppliedEnergy(pays, -1.0)
       .NegativeUnsuppliedEnergy(pays, 1.0);
 
-    shortTermStorageBalance(
-      problemeHebdo->ShortTermStorage[pays], builder, CorrespondanceVarNativesVarOptim);
+    shortTermStorageBalance(problemeHebdo->ShortTermStorage[pays], builder);
 
     builder.equalTo();
     builder.build();
