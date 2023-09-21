@@ -108,11 +108,7 @@ public:
 
     typedef VariableAccessor<ResultsType, VCardType::columnCount> VariableAccessorType;
 
-    enum
-    {
-        //! How many items have we got
-        count = 1 + NextT::count,
-    };
+    static constexpr int count = 1 + NextT::count;
 
     template<int CDataLevel, int CFile>
     struct Statistics
