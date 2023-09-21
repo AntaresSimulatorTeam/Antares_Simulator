@@ -272,13 +272,12 @@ bool HydroManagement::checkYearlyMinGeneration(uint numSpace, uint tsIndex, cons
 
 bool HydroManagement::checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) const
 {
-    const auto& calendar = study.calendar;
     auto& inflowsmatrix = area.hydro.series->storage;
     auto& mingenmatrix = area.hydro.series->mingen;
     auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
     auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
     // Weekly minimum generation <= Weekly inflows for each week
-    for (uint week = 0; week < calendar.maxWeeksInYear - 1; ++week)
+    for (uint week = 0; week < calendar_.maxWeeksInYear - 1; ++week)
     {
         double totalWeekMingen = 0.0;
         double totalWeekInflows = 0.0;
