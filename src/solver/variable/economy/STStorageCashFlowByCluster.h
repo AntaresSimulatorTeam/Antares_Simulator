@@ -184,7 +184,7 @@ public:
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // Reset the values for the current year
-        for (unsigned int clusterIndex = 0; i != nbClusters_; ++clusterIndex)
+        for (unsigned int clusterIndex = 0; clusterIndex != nbClusters_; ++clusterIndex)
         {
             pValuesForTheCurrentYear[numSpace][clusterIndex].reset();
         }
