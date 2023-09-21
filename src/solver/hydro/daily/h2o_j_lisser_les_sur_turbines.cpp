@@ -28,6 +28,8 @@
 #include "h2o_j_donnees_mensuelles.h"
 #include "h2o_j_fonctions.h"
 
+#include <algorithm>
+
 #define ZERO 1.e-9
 
 void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
@@ -44,51 +46,29 @@ void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int Numer
 
     double SurTurbineARepartir = 0.0;
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-    {
-        flag[Pdt] = 0;
-        if (Turbine[Pdt] - TurbineCible[Pdt] > ZERO)
-            flag[Pdt] = 1;
-    }
+        flag[Pdt] = (Turbine[Pdt] - TurbineCible[Pdt] > ZERO);
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-    {
-        if (flag[Pdt] == 1)
+        if (flag[Pdt])
             SurTurbineARepartir += Turbine[Pdt] - TurbineCible[Pdt];
-    }
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-        flag[Pdt] = 0;
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-    {
-        if (TurbineMax[Pdt] - TurbineCible[Pdt] > ZERO)
-            flag[Pdt] = 1;
-    }
+        flag[Pdt] = (TurbineMax[Pdt] - TurbineCible[Pdt] > ZERO);;
 
     int NbCycles = 0;
 BoucleDeRepartition:
 
-    int Np = 0;
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-    {
-        if (flag[Pdt] == 1)
-            Np++;
-    }
-    if (Np <= 0)
-    {
+    int Np = std::count(flag.begin(), flag.end(), true);
+    if (Np == 0)
         return;
-    }
 
     double MargeMin = 0.;
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
         MargeMin += TurbineMax[Pdt];
+
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-    {
-        if (flag[Pdt] == 1)
-        {
-            if (TurbineMax[Pdt] - TurbineCible[Pdt] < MargeMin)
-                MargeMin = TurbineMax[Pdt] - TurbineCible[Pdt];
-        }
-    }
+        if (flag[Pdt] && TurbineMax[Pdt] - TurbineCible[Pdt] < MargeMin)
+            MargeMin = TurbineMax[Pdt] - TurbineCible[Pdt];
 
     double Xmoy = SurTurbineARepartir / Np;
     double SurTurbine;
@@ -97,22 +77,22 @@ BoucleDeRepartition:
     else
         SurTurbine = MargeMin;
 
-    char LimiteAtteinte = 0;
+    bool limiteAtteinte = 0;
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        if (flag[Pdt] == 0)
+        if (!flag[Pdt])
             continue;
 
         Turbine[Pdt] = TurbineCible[Pdt] + SurTurbine;
         if (TurbineMax[Pdt] - Turbine[Pdt] <= ZERO)
         {
             SurTurbineARepartir -= SurTurbine;
-            LimiteAtteinte = 1;
-            flag[Pdt] = 0;
+            limiteAtteinte = true;
+            flag[Pdt] = false;
         }
     }
 
-    if (LimiteAtteinte == 1 && SurTurbineARepartir > 0.0)
+    if (limiteAtteinte && SurTurbineARepartir > 0.0)
     {
         NbCycles++;
         if (NbCycles <= NbPdt)
