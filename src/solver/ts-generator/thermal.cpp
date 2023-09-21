@@ -60,7 +60,7 @@ class GeneratorTempData final
 public:
     GeneratorTempData(Data::Study& study,
                       Solver::Progression::Task& progr,
-                      IResultWriter::Ptr writer);
+                      IResultWriter& writer);
 
     void prepareOutputFoldersForAllAreas(uint year);
 
@@ -96,46 +96,32 @@ private:
     MersenneTwister& rndgenerator;
 
     double AVP[366];
-
     enum
     {
-
         Log_size = 4000
     };
-
     int LOG[Log_size];
-
     int LOGP[Log_size];
 
     double lf[366];
     double lp[366];
-
     double ff[366];
-
     double pp[366];
-
     double af[366];
-
     double ap[366];
-
     double bf[366];
-
     double bp[366];
-
     double FPOW[366][102];
-
     double PPOW[366][102];
 
     String pTempFilename;
-
     Solver::Progression::Task& pProgression;
-
-    IResultWriter::Ptr pWriter;
+    IResultWriter& pWriter;
 };
 
 GeneratorTempData::GeneratorTempData(Data::Study& study,
                                      Solver::Progression::Task& progr,
-                                     IResultWriter::Ptr writer) :
+                                     IResultWriter& writer) :
     study(study),
     rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
     pProgression(progr),
@@ -169,7 +155,7 @@ void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
         std::string buffer;
         cluster.series->timeSeries.saveToBuffer(buffer, precision);
 
-        pWriter->addEntryFromBuffer(pTempFilename.c_str(), buffer);
+        pWriter.addEntryFromBuffer(pTempFilename.c_str(), buffer);
     }
 
     ++pProgression;
@@ -631,7 +617,7 @@ bool GenerateThermalTimeSeries(Data::Study& study,
                                uint year,
                                bool globalThermalTSgeneration,
                                bool refreshTSonCurrentYear,
-                               Antares::Solver::IResultWriter::Ptr writer)
+                               Antares::Solver::IResultWriter& writer)
 {
     logs.info();
     logs.info() << "Generating the thermal time-series";

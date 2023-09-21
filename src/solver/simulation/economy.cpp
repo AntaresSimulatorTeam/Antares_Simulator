@@ -32,7 +32,6 @@
 #include "../optimisation/opt_fonctions.h"
 #include "../optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "common-eco-adq.h"
-#include "opt_time_writer.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
@@ -119,7 +118,8 @@ bool Economy::year(Progression::Task& progression,
                    yearRandomNumbers& randomForYear,
                    std::list<uint>& failedWeekList,
                    bool isFirstPerformedYearOfSimulation,
-                   const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
+                   const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                   OptimizationStatisticsWriter& optWriter)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -133,8 +133,6 @@ bool Economy::year(Progression::Task& progression,
     if (isFirstPerformedYearOfSimulation)
         pProblemesHebdo[numSpace].firstWeekOfSimulation = true;
     bool reinitOptim = true;
-
-    OptimizationStatisticsWriter optWriter(study.resultWriter, state.year);
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {

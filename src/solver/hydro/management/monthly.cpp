@@ -247,7 +247,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
             assert(!Math::Infinite(data.MOL[realmonth]) && "infinite value detected for MOL");
         }
 #endif
-        if (parameters_.hydroDebug && resultWriter_)
+        if (parameters_.hydroDebug)
         {
             std::ostringstream buffer, path;
             path << "debug" << SEP << "solver" << SEP << (1 + y) << SEP << "monthly." << area.name
@@ -292,7 +292,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                 buffer << '\n';
             }
             auto content = buffer.str();
-            resultWriter_->addEntryFromBuffer(path.str(), content);
+            resultWriter_.addEntryFromBuffer(path.str(), content);
         }
     });
 }

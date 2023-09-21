@@ -97,7 +97,7 @@ struct DebugData
     std::array<double, 12> CoutTotal{0};
     std::array<double, 12> previousMonthWaste{0};
 
-    Solver::IResultWriter::Ptr pWriter;
+    Solver::IResultWriter& pWriter;
     const TmpDataByArea& data;
     const VENTILATION_HYDRO_RESULTS_BY_AREA& ventilationResults;
     const InflowsType& srcinflows;
@@ -107,7 +107,7 @@ struct DebugData
     const ReservoirLevelType& lowLevel;
     const double reservoirCapacity;
 
-    DebugData(Solver::IResultWriter::Ptr writer,
+    DebugData(Solver::IResultWriter& writer,
               const TmpDataByArea& data,
               const VENTILATION_HYDRO_RESULTS_BY_AREA& ventilationResults,
               const InflowsType& srcinflows,
@@ -150,7 +150,7 @@ struct DebugData
             buffer << '\n';
         }
         auto buffer_str = buffer.str();
-        pWriter->addEntryFromBuffer(path.str(), buffer_str);
+        pWriter.addEntryFromBuffer(path.str(), buffer_str);
     }
 
     void writeDailyDebugData(const Date::Calendar& calendar,
@@ -218,7 +218,7 @@ struct DebugData
             }
         }
         auto buffer_str = buffer.str();
-        pWriter->addEntryFromBuffer(path.str(), buffer_str);
+        pWriter.addEntryFromBuffer(path.str(), buffer_str);
     }
 };
 
@@ -260,7 +260,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     
     std::shared_ptr<DebugData> debugData(nullptr);
 
-    if (parameters_.hydroDebug && resultWriter_)
+    if (parameters_.hydroDebug)
     {
         debugData = std::make_shared<DebugData>(resultWriter_,
                                                 data,

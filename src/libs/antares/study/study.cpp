@@ -700,7 +700,7 @@ void Study::saveAboutTheStudy()
     path.reserve(1024);
 
     path.clear() << "about-the-study";
-    simulationComments.saveUsingWriter(resultWriter, path);
+    simulationComments.saveUsingWriter(*resultWriter, path);
 
     // Write the header as a reminder
     {
@@ -711,7 +711,8 @@ void Study::saveAboutTheStudy()
         std::string writeBuffer;
         ini.saveToString(writeBuffer);
 
-        resultWriter->addEntryFromBuffer(path.c_str(), writeBuffer);
+        if (resultWriter)
+            resultWriter->addEntryFromBuffer(path.c_str(), writeBuffer);
     }
 
     // Write parameters.ini
@@ -720,7 +721,8 @@ void Study::saveAboutTheStudy()
         dest << "about-the-study" << SEP << "parameters.ini";
 
         buffer.clear() << folderSettings << SEP << "generaldata.ini";
-        resultWriter->addEntryFromFile(dest.c_str(), buffer.c_str());
+        if (resultWriter)
+            resultWriter->addEntryFromFile(dest.c_str(), buffer.c_str());
     }
 
     // antares-output.info
@@ -737,7 +739,8 @@ void Study::saveAboutTheStudy()
     f << "\ntimestamp = " << pStartTime;
     f << "\n\n";
     auto output = f.str();
-    resultWriter->addEntryFromBuffer(path.c_str(), output);
+    if (resultWriter)
+        resultWriter->addEntryFromBuffer(path.c_str(), output);
 
     if (usedByTheSolver and !parameters.noOutput)
     {
@@ -751,7 +754,8 @@ void Study::saveAboutTheStudy()
                     buffer << "@ " << i->first << "\r\n";
             }
             areas.each([&](const Data::Area& area) { buffer << area.name << "\r\n"; });
-            resultWriter->addEntryFromBuffer(path.c_str(), buffer);
+            if (resultWriter)            
+                resultWriter->addEntryFromBuffer(path.c_str(), buffer);
         }
 
         // Write all available links as a reminder
@@ -759,7 +763,8 @@ void Study::saveAboutTheStudy()
             path.clear() << "about-the-study" << SEP << "links.txt";
             Yuni::Clob buffer;
             areas.saveLinkListToBuffer(buffer);
-            resultWriter->addEntryFromBuffer(path.c_str(), buffer);
+            if (resultWriter)
+                resultWriter->addEntryFromBuffer(path.c_str(), buffer);
         }
     }
 }

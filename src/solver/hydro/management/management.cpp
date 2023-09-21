@@ -82,7 +82,7 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
                                  const Data::Parameters& params,
                                  const Date::Calendar& calendar,
                                  unsigned int maxNbYearsInParallel,
-                                 Solver::IResultWriter::Ptr resultWriter) :
+                                 Solver::IResultWriter& resultWriter) :
     areas_(areas),
     calendar_(calendar),
     parameters_(params),

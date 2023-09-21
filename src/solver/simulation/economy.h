@@ -36,6 +36,7 @@
 
 #include "solver.h" // for definition of type yearRandomNumbers
 #include "antares/infoCollection/StudyInfoCollector.h"
+#include "opt_time_writer.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -82,7 +83,8 @@ protected:
               yearRandomNumbers& randomForYear,
               std::list<uint>& failedWeekList,
               bool isFirstPerformedYearOfSimulation,
-              const ALL_HYDRO_VENTILATION_RESULTS&);
+              const ALL_HYDRO_VENTILATION_RESULTS&,
+              OptimizationStatisticsWriter& optWriter);
 
     void incrementProgression(Progression::Task& progression);
 

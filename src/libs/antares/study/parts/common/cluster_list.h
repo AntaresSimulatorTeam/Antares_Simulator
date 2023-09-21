@@ -186,7 +186,7 @@ public:
     */
     void resizeAllTimeseriesNumbers(uint n);
 
-    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
+    void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 
     //@}
 

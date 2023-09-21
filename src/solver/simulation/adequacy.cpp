@@ -28,7 +28,6 @@
 #include "adequacy.h"
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/exception/AssertionError.hpp>
-#include "opt_time_writer.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
@@ -124,7 +123,8 @@ bool Adequacy::year(Progression::Task& progression,
                     yearRandomNumbers& randomForYear,
                     std::list<uint>& failedWeekList,
                     bool isFirstPerformedYearOfSimulation,
-                    const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
+                    const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                    OptimizationStatisticsWriter& optWriter)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -138,8 +138,6 @@ bool Adequacy::year(Progression::Task& progression,
     if (isFirstPerformedYearOfSimulation)
         pProblemesHebdo[numSpace].firstWeekOfSimulation = true;
     bool reinitOptim = true;
-
-    OptimizationStatisticsWriter optWriter(study.resultWriter, state.year);
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {

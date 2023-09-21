@@ -183,7 +183,7 @@ bool AreaLink::loadTimeSeries(const Study& study, const AnyString& folder)
         return linkLoadTimeSeries_for_version_820_and_later(folder);
 }
 
-void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const
+void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
     Clob path;
     TSNumbersPredicate predicate;
@@ -193,7 +193,7 @@ void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const
          << SEP << with->id << ".txt";
 
     timeseriesNumbers.saveToBuffer(buffer, 0, true, predicate, true);
-    writer->addEntryFromBuffer(path.c_str(), buffer);
+    writer.addEntryFromBuffer(path.c_str(), buffer);
 }
 
 void AreaLink::detach()
