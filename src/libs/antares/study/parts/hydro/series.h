@@ -105,13 +105,6 @@ public:
     */
     void checkMinGenTsNumber(Study& s, const AreaName& areaID);
 
-private:
-    /*!
-    ** \brief Support old studies due to new sets of data
-    */
-    void AutoTransferData(Matrix<double, Yuni::sint32>& matrix,
-                          const Matrix<double>::ColumnType& maxPower);
-
 public:
     /*!
     ** \brief Run-of-the-river - ROR (MW)
@@ -141,14 +134,14 @@ public:
     **
     ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
-    Matrix<double, Yuni::sint32> maxgen;
+    Matrix<double, int32_t> maxgen;
 
     /*!
     ** \brief Maximum Pumping (MW)
     **
     ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
-    Matrix<double, Yuni::sint32> maxpump;
+    Matrix<double, int32_t> maxpump;
 
     /*!
     ** \brief The number of time-series

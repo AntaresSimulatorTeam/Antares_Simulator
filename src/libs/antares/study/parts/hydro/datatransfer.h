@@ -58,7 +58,7 @@ public:
 
     bool LoadFromFolder(Study& study, const AnyString& folder, Area& area);
     bool AutoTransferHours(Study& study, const AnyString& folder, Area& area);
-    void AutoTransferPower(Matrix<double, Yuni::sint32>& matrix,
+    void AutoTransferPower(Matrix<double, int32_t>& matrix,
                                        const Matrix<double>::ColumnType& maxPower);
     bool SupportForOldStudies(Study& study, const AnyString& folder, Area& area);
 

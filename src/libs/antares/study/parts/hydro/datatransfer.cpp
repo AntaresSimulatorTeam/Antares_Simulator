@@ -151,7 +151,7 @@ bool DataTransfer::SupportForOldStudies(Study& study, const AnyString& folder, A
     return ret;
 }
 
-void DataTransfer::AutoTransferPower(Matrix<double, Yuni::sint32>& matrix,
+void DataTransfer::AutoTransferPower(Matrix<double, int32_t>& matrix,
                                        const Matrix<double>::ColumnType& maxP)
 {
     uint hours = 0;

@@ -691,7 +691,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
             uint nbTimeSeries = area.hydro.series->maxgen.width;
             if (nbTimeSeries != 1)
             {
-                area.hydro.series->timeseriesNumbersPowerCredits[0][year] = static_cast<uint32>(
+                area.hydro.series->timeseriesNumbersPowerCredits[0][year] = static_cast<uint32_t>(
                   (floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries)));
             }
         }

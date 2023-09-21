@@ -335,7 +335,7 @@ private:
 class TimeSeriesHydroMaxGen final : public ATimeSeries
 {
 public:
-    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
+    using AncestorType = Renderer::Matrix<double, int32_t>;
 
     TimeSeriesHydroMaxGen(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
      ATimeSeries(control, notifier)
@@ -367,7 +367,7 @@ private:
 class TimeSeriesHydroMaxPump final : public ATimeSeries
 {
 public:
-    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
+    using AncestorType = Renderer::Matrix<double, int32_t>;
 
     TimeSeriesHydroMaxPump(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
      ATimeSeries(control, notifier)

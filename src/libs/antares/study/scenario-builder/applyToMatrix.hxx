@@ -109,7 +109,7 @@ bool ApplyToMatrixPowerCredits(uint& errors,
     const uint nbYears = data.timeseriesNumbersPowerCredits.height;
     // The matrix m has only one column
     assert(data.timeseriesNumbersPowerCredits.width == 1);
-    typename Matrix<uint32>::ColumnType& target = data.timeseriesNumbersPowerCredits[0];
+    typename Matrix<uint32_t>::ColumnType& target = data.timeseriesNumbersPowerCredits[0];
 
     for (uint y = 0; y != nbYears; ++y)
     {

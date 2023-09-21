@@ -28,7 +28,7 @@ bool createFile(const my_string& folder_path, const my_string& file_name)
     }
 }
 
-void InstantiateMatrix(Matrix<double, Yuni::sint32>& matrix, double seed, uint type)
+void InstantiateMatrix(Matrix<double, int32_t>& matrix, double seed, uint type)
 {
     for (uint i = 0; i < matrix.width; i++)
     {

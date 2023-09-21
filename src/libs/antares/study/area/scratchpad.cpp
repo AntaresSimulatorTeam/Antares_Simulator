@@ -136,7 +136,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
 
 AreaScratchpad::~AreaScratchpad() = default;
 
-bool AreaScratchpad::CheckForPositiveEnergy(const Matrix<double, Yuni::sint32>& matrix,
+bool AreaScratchpad::CheckForPositiveEnergy(const Matrix<double, int32_t>& matrix,
                                             const Matrix<double>::ColumnType& hours)
 {
     double value = 0.;

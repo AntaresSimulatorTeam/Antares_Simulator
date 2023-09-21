@@ -100,7 +100,7 @@ public:
     double dispatchableGenerationMargin[168];
 
 private:
-    bool CheckForPositiveEnergy(const Matrix<double, Yuni::sint32>& matrix,
+    bool CheckForPositiveEnergy(const Matrix<double, int32_t>& matrix,
                                 const Matrix<double>::ColumnType& hours);
 }; // class AreaScratchpad
 
