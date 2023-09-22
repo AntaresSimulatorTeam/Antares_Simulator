@@ -33,7 +33,7 @@
 #include <signal.h>
 #include <stddef.h>
 #include <string.h>
-#include <memory.h>
+#include <memory>
 #include <time.h>
 
 #endif /* __SOLVER_H2O_J_SYS__ */

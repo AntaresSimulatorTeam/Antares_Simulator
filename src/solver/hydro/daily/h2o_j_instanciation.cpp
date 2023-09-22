@@ -28,9 +28,9 @@
 #include "h2o_j_donnees_mensuelles.h"
 #include "h2o_j_fonctions.h"
 
-DONNEES_MENSUELLES* H2O_J_Instanciation(void)
+std::unique_ptr<DONNEES_MENSUELLES> H2O_J_Instanciation(void)
 {
-    DONNEES_MENSUELLES* DonneesMensuelles = new DONNEES_MENSUELLES;
+    std::unique_ptr<DONNEES_MENSUELLES> DonneesMensuelles = std::make_unique<DONNEES_MENSUELLES>();
 
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
