@@ -164,7 +164,7 @@ ColumnNTC::ColumnNTC() : Column(timeSeriesTransmissionCapacities, "  Links NTC  
 }
 
 // -------------------------------
-// Column Hydro Power Credits
+// Column Hydro Max Power
 // -------------------------------
 ColumnHydroPowerCredits::ColumnHydroPowerCredits() : Column(timeSeriesHydroPowerCredits, "   Hydro-Power-Credits   ")
 {

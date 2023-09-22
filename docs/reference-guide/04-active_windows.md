@@ -97,10 +97,10 @@ These two parts are detailed hereafter.
 
 ### RIGHT PART: Time-series management
 
-For the different kinds of time-series that Antares manages in a non-deterministic way (load, thermal generation, hydro power, hydro power credits, wind power, solar power or renewable depending on the option chosen):
+For the different kinds of time-series that Antares manages in a non-deterministic way (load, thermal generation, hydro power, hydro max power, wind power, solar power or renewable depending on the option chosen):
 
 1. **Choice of the kind of time-series to use**
-Either « ready-made » or «stochastic » (i.e. Antares-generated), defined by setting the value to either "on" or "off". Exception is hydro power credits that can only be « ready-made ». Note that for Thermal time-series, the cluster-wise parameter may overrule this global parameter (see Thermal window description below).
+Either « ready-made » or «stochastic » (i.e. Antares-generated), defined by setting the value to either "on" or "off". Exception is hydro max power that can only be « ready-made ». Note that for Thermal time-series, the cluster-wise parameter may overrule this global parameter (see Thermal window description below).
 
 2. **For stochastic TS only**:
     - **Number** Number of TS to generate

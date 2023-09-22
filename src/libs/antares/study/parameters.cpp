@@ -1146,13 +1146,13 @@ void Parameters::fixGenRefreshForHydroPowerCredits()
     if ((timeSeriesHydroPowerCredits & timeSeriesToGenerate) != 0)
     {
         timeSeriesToGenerate &= ~timeSeriesHydroPowerCredits;
-        logs.error() << "Time-series generation is not available for hydro power credits. It "
+        logs.error() << "Time-series generation is not available for hydro max power. It "
                         "will be automatically disabled.";
     }
     if ((timeSeriesHydroPowerCredits & timeSeriesToRefresh) != 0)
     {
         timeSeriesToRefresh &= ~timeSeriesHydroPowerCredits;
-        logs.error() << "Time-series refresh is not available for hydro power credits. It will "
+        logs.error() << "Time-series refresh is not available for hydro max power. It will "
                         "be automatically disabled.";
     }
 }

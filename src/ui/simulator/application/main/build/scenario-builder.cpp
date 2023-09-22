@@ -176,7 +176,7 @@ class hydroScBuilderPageMaker final : public simpleScBuilderPageMaker
     }
 };
 
-// Hydro Power Credits ...
+// Hydro Max Power ...
 class hydroPowerCreditsScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;

@@ -99,7 +99,7 @@ public:
 };
 
 // -------------------------------
-// Column for Hydro Power Credits
+// Column for Hydro Max Power
 // -------------------------------
 class ColumnHydroPowerCredits final : public Column
 {

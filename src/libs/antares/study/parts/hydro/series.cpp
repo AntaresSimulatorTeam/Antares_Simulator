@@ -221,7 +221,7 @@ bool DataSeriesHydro::LoadHydroPowerCredits(Study& study, const AreaName& areaID
     {
         if (countpowercredits == 0)
         {
-            logs.error() << "Hydro Power Credits: `" << areaID
+            logs.error() << "Hydro Max Power: `" << areaID
                          << "`: empty matrix detected. Fixing it with default values";
 
             maxgen.reset(1, HOURS_PER_YEAR);
@@ -233,7 +233,7 @@ bool DataSeriesHydro::LoadHydroPowerCredits(Study& study, const AreaName& areaID
             {
                 if (maxpump.width != 1 && maxgen.width != 1)
                 {
-                    logs.fatal() << "Hydro Power Credits: `" << areaID
+                    logs.fatal() << "Hydro Max Power: `" << areaID
                                  << "`: The matrices Maximum Generation and Maximum Pumping must "
                                     "have the same number of time-series.";
                     study.gotFatalError = true;
@@ -260,7 +260,7 @@ bool DataSeriesHydro::LoadHydroPowerCredits(Study& study, const AreaName& areaID
                     {
                         areaToInvalidate->invalidateJIT = true;
                         logs.info() << "  '" << areaID
-                                    << "': The hydro power credits data have been normalized to "
+                                    << "': The hydro max power data have been normalized to "
                                     << countpowercredits << " timeseries";
                     }
                     else

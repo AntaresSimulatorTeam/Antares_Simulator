@@ -129,7 +129,7 @@ struct commonFixture
         area_2->hydro.series->count = nbReadyMadeTS;
         area_3->hydro.series->count = nbReadyMadeTS;
 
-        // Hydro Power Credits : set the nb of ready made TS
+        // Hydro Max Power : set the nb of ready made TS
         nbReadyMadeTS = 15;
         area_1->hydro.series->countpowercredits = nbReadyMadeTS;
         area_2->hydro.series->countpowercredits = nbReadyMadeTS;

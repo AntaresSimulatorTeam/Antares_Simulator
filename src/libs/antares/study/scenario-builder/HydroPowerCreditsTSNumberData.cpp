@@ -35,7 +35,7 @@ bool hydroPowerCreditsTSNumberData::apply(Study& study)
         assert(areaIndex < pTSNumberRules.width);
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
-        logprefix.clear() << "Hydro Power Credits: Area '" << area.name << "': ";
+        logprefix.clear() << "Hydro Max Power: Area '" << area.name << "': ";
         ret = ApplyToMatrixPowerCredits(errors, logprefix, *area.hydro.series, col, tsGenCountHydroPowerCredits) && ret;
     }
     return ret;

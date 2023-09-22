@@ -116,7 +116,7 @@ public:
     solarTSNumberData solar;
     //! Hydro
     hydroTSNumberData hydro;
-    //! Hydro Power Credits
+    //! Hydro Max Power
     hydroPowerCreditsTSNumberData hydroPowerCredits;
     //! Wind
     windTSNumberData wind;

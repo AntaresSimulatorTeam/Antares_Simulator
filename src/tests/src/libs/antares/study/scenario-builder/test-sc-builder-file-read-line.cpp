@@ -87,7 +87,7 @@ struct Fixture
 		area_2->hydro.series->count = nbReadyMadeTS;
 		area_3->hydro.series->count = nbReadyMadeTS;
 		
-		// Hydro Power Credits: set the nb of ready made TS
+		// Hydro Max Power: set the nb of ready made TS
 		nbReadyMadeTS = 15;
 		area_1->hydro.series->countpowercredits = nbReadyMadeTS;
 		area_2->hydro.series->countpowercredits = nbReadyMadeTS;
@@ -239,7 +239,7 @@ BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_15__solar_TS_number_3_is_chosen__re
 }
 
 // =================
-// Tests on Hydro Power Credits
+// Tests on Hydro Max Power
 // =================
 BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_10__hydro_power_credits_TS_number_6_is_chosen__reading_OK, Fixture)
 {

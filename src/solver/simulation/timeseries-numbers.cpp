@@ -448,7 +448,7 @@ bool checkInterModalConsistencyForArea(Area& area,
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
-    // Hydro Power Credits : Add hydro's power credits number of TS in area ...
+    // Hydro Max Power : Add hydro's max power number of TS in area ...
     indexTS = ts_to_tsIndex.at(timeSeriesHydroPowerCredits);
     if (isTSintermodal[indexTS])
     {
@@ -566,7 +566,7 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
             area.hydro.series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
 
         // -------------
-        // Hydro Power Credits ...
+        // Hydro Max Power ...
         // -------------
         assert(year < area.hydro.series->timeseriesNumbersPowerCredits.height);
         indexTS = ts_to_tsIndex.at(timeSeriesHydroPowerCredits);
@@ -682,7 +682,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         }
 
         // -------------
-        // Hydro Power Credits...
+        // Hydro Max Power...
         // -------------
         indexTS = ts_to_tsIndex.at(timeSeriesHydroPowerCredits);
 
@@ -895,7 +895,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
         // Hydro
         fixTSNumbersSingleAreaSingleMode(
           area.hydro.series->timeseriesNumbers, area.hydro.series->count, years);
-        // Hydro Power Credits
+        // Hydro Max Power
         fixTSNumbersSingleAreaSingleMode(
           area.hydro.series->timeseriesNumbersPowerCredits, area.hydro.series->countpowercredits, years);
 
@@ -980,7 +980,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
          (bool)(timeSeriesSolar & parameters.timeSeriesToRefresh),
          false,  // TS generation is always disabled for renewables
          false,  // TS generation is always disabled for links transmission capacities
-         false}; // TS generation is always disabled for hydro power credits
+         false}; // TS generation is always disabled for hydro max power
 
     if (not checkIntraModalConsistency(nbTimeseriesByMode, isTSintramodal, isTSgenerated, study))
         return false;

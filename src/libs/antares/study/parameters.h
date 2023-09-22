@@ -161,7 +161,7 @@ public:
 
     /*!
     ** \brief Try to detect then fix TS generation/refresh parameters
-    *         for Hydro Power Credits
+    *         for Hydro Max Power
     */
     void fixGenRefreshForHydroPowerCredits();
 

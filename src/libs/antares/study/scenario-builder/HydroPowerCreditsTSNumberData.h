@@ -3,7 +3,7 @@
 #include "TSnumberData.h"
 
 // =====================
-// Hydro Power Credits...
+// Hydro Max Power...
 // =====================
 
 namespace Antares::Data::ScenarioBuilder

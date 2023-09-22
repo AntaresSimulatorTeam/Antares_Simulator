@@ -59,7 +59,7 @@ void ApplyRandomTSnumbers(const Study& study,
             ptchro.Solar
               = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
-        // Hydro and Hydro Power Credits
+        // Hydro and Hydro Max Power
         {
             const Data::DataSeriesHydro& data = *area.hydro.series;
             assert(year < data.timeseriesNumbers.height);
