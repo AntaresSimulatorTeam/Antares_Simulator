@@ -150,42 +150,72 @@ void ProblemSimplexeNommeConverter::CopyRows(MPSolver* solver)
 } // namespace Optimization
 } // namespace Antares
 
-static void extract_from_MPSolver(const MPSolver* solver,
+// TODO MIP status for MPSolver is immutable
+// It seems that we need 2 separate MPSolver objects
+static void solveRelaxation(MPSolver* solver)
+{
+  for (auto var : solver->variables())
+    var->SetInteger(false);
+  solver->Solve();
+}
+
+static void extractSolutionValues(const std::vector<MPVariable*>& variables,
                                   Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
-    auto& variables = solver->variables();
     int nbVar = problemeSimplexe->NombreDeVariables;
-    bool isMIP = problemeSimplexe->isMIP();
-
-    // Extracting variable values and reduced costs
+    assert(nbVar == variables.size());
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
         auto& var = variables[idxVar];
         problemeSimplexe->X[idxVar] = var->solution_value();
-        // if (isMIP && problemeSimplexe->NumeroOptimisation == 1)
-        // {
-        //     problemeSimplexe->CoutsReduits[idxVar] = 0;
-        // }
-        // else
-        // {
-        //     problemeSimplexe->CoutsReduits[idxVar] = var->reduced_cost();
-        // }
+    }
+}
+
+static void extractReducedCosts(const std::vector<MPVariable*>& variables,
+                                Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+{
+    int nbVar = problemeSimplexe->NombreDeVariables;
+    assert(nbVar == variables.size());
+    for (int idxVar = 0; idxVar < nbVar; ++idxVar)
+    {
+        auto& var = variables[idxVar];
+        problemeSimplexe->CoutsReduits[idxVar] = var->reduced_cost();
+    }
+}
+
+static void extractDualValues(const std::vector<MPConstraint*>& constraints,
+                              Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+{
+  int nbRows = problemeSimplexe->NombreDeContraintes;
+  assert(nbRows == constraints.size());
+  for (int idxRow = 0; idxRow < nbRows; ++idxRow)
+  {
+      auto& row = constraints[idxRow];
+      problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
+  }
+}
+
+static void extract_from_MPSolver(MPSolver* solver,
+                                  Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+{
+    assert(solver);
+    assert(problemeSimplexe);
+
+    const bool isMIP = problemeSimplexe->isMIP();
+
+    extractSolutionValues(solver->variables(),
+                          problemeSimplexe);
+
+    if (isMIP)
+    {
+        solveRelaxation(solver);
     }
 
-    // auto& constraints = solver->constraints();
-    // int nbRow = problemeSimplexe->NombreDeContraintes;
-    // for (int idxRow = 0; idxRow < nbRow; ++idxRow)
-    // {
-    //     auto& row = constraints[idxRow];
-    //     if (isMIP && problemeSimplexe->NumeroOptimisation == 1)
-    //     {
-    //         problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = 0;
-    //     }
-    //     else
-    //     {
-    //         problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
-    //     }
-    // }
+    extractReducedCosts(solver->variables(),
+                        problemeSimplexe);
+
+    extractDualValues(solver->constraints(),
+                      problemeSimplexe);
 }
 
 std::string generateTempPath(const std::string& filename)
