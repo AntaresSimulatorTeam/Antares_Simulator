@@ -33,24 +33,6 @@ namespace
 // CHECK nécessaire d'un choix simultané entre " unit-commitment = MILP " et " ortools-used "
 // avec " ortools-solver != Sirius "
 // TODO déplacer dans libs/antares/checks/checkLoadedInputData.cpp
-void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
-                       bool ortoolsUsed,
-                       const std::string& solverName)
-{
-    using namespace Antares::Data;
-    if (ucMode == UnitCommitmentMode::ucMILP)
-    {
-        if (!ortoolsUsed)
-        {
-            throw Error::IncompatibleMILPWithoutOrtools();
-        }
-
-        if (solverName == "sirius")
-        {
-            throw Error::IncompatibleMILPOrtoolsSolver();
-        }
-    }
-}
 
 void printSolvers()
 {
