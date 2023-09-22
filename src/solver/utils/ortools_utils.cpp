@@ -256,7 +256,8 @@ MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
 {
     if (solver == nullptr)
     {
-        return Antares::Optimization::ProblemSimplexeNommeConverter(solverName, Probleme).Convert();
+        Antares::Optimization::ProblemSimplexeNommeConverter converter(solverName, Probleme);
+        return converter.Convert();
     }
     else
     {
