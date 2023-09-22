@@ -6,8 +6,8 @@ static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortT
     for (const auto& storage : shortTermStorageInput)
     {
         unsigned index = storage.clusterGlobalIndex;
-        constraintBuilder.ShortTermStorageInjection(index, 1.0);
-        constraintBuilder.ShortTermStorageWithdrawal(index, -1.0);
+        constraintBuilder.ShortTermStorageInjection(index, 1.0)
+        .ShortTermStorageWithdrawal(index, -1.0);
     }
 }
 
