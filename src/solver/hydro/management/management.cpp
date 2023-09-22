@@ -375,9 +375,9 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
 
 void HydroManagement::changeInflowsToAccommodateFinalLevels(uint numSpace, uint year)
 {
-    study.areas.each([this, &numSpace, &year](Data::Area& area) 
+    areas_.each([this, &numSpace, &year](Data::Area& area) 
     {
-        auto& data = pAreas[numSpace][area.index];
+        auto& data = tmpDataByArea_[numSpace][area.index];
 
         if (!area.hydro.finalLevelInflowsModifier.isApplicable(year))
             return;
