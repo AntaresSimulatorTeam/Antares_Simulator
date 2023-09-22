@@ -45,11 +45,9 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
 
     char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
     builder.SetOperator(op);
-    {
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        namer.BindingConstraintHour(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-                                    MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
-    }
+    ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
+    namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+    namer.BindingConstraintHour(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+                                MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
     builder.build();
 }

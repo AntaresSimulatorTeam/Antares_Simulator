@@ -269,7 +269,7 @@ public:
     class ConstraintBuilderInvalidOperator : public std::runtime_error
     {
     public:
-        ConstraintBuilderInvalidOperator(const std::string& error_message) :
+        explicit ConstraintBuilderInvalidOperator(const std::string& error_message) :
          std::runtime_error(error_message)
         {
         }
@@ -344,9 +344,7 @@ private:
     unsigned int hourInWeek_ = 0;
 
     char operator_ = '=';
-    double rhs_ = 0;
     int nombreDeTermes_ = 0;
-    // ConstraintNamer ConstraintNameManager;
 
     int GetShiftedTimeStep(int offset, int delta) const;
     void AddVariable(int index, double coeff);
@@ -357,7 +355,7 @@ private:
      * @param delta: number of time steps for the variable
      * @return VariableManager object
      */
-    Variable::VariableManager GetVariableManager(int offset = 0, int delta = 0);
+    Variable::VariableManager GetVariableManager(int offset = 0, int delta = 0) const;
 };
 
 /*! factory class to build a Constraint */

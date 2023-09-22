@@ -3,24 +3,16 @@
 
 void FictitiousLoad::add(int pdt, int pays)
 {
-    /** can be done without this --- keep it for now**/
-    CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
     CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
       = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
     CorrespondanceCntNativesCntOptim.NumeroDeContraintePourEviterLesChargesFictives[pays]
       = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
-    /******/
+    ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
 
-    // TODO improve this
-    {
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.FictiveLoads(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-    }
+    namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+    namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+    namer.FictiveLoads(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
 
     builder.updateHourWithinWeek(pdt);
     exportPaliers(*problemeHebdo, builder, pays);

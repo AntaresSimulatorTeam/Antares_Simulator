@@ -50,12 +50,10 @@ void BindingConstraintWeek::add(int cntCouplante)
     CorrespondanceCntNativesCntOptimHebdomadaires
       .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
       = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-    // Name
-    {
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-            namer.UpdateTimeStep(semaine);
-            namer.BindingConstraintWeek(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-                                        MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
-    }
+
+    ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
+    namer.UpdateTimeStep(semaine);
+    namer.BindingConstraintWeek(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+                                MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
     builder.build();
 }

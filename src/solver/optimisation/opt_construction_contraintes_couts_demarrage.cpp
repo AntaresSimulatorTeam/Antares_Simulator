@@ -50,8 +50,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-    std::vector<double>& Pi = ProblemeAResoudre->Pi;
-    std::vector<int>& Colonne = ProblemeAResoudre->Colonne;
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes);
     int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
@@ -130,9 +128,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index];
-            if (DureeMinimaleDeMarcheDUnGroupeDuPalierThermique <= 0)
+            if (PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index] <= 0)
                 continue;
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];

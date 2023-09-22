@@ -2,15 +2,9 @@
 
 void ShortTermStorageLevel::add(int pdt, int pays)
 {
-    // TODO improve this
     ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-    /** can be done without this --- keep it for now**/
-    CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
     CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
       = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-
-    /******/
 
     const int hourInTheYear = problemeHebdo->weekInTheYear * 168 + pdt;
     namer.UpdateTimeStep(hourInTheYear);

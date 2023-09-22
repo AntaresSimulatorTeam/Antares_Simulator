@@ -13,29 +13,24 @@ static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortT
 
 void AreaBalance::add(int pdt, int pays)
 {
-    CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
     CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
       = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
     CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesBilansPays[pays]
       = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
-    // TODO improve this
-    {
         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
         namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
         namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         namer.AreaBalance(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-    }
 
-    builder.updateHourWithinWeek(pdt);
+        builder.updateHourWithinWeek(pdt);
 
-    int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
-    while (interco >= 0)
-    {
+        int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
+        while (interco >= 0)
+        {
         builder.NTCDirect(interco, 1.0);
         interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
-    }
+        }
 
     interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
     while (interco >= 0)

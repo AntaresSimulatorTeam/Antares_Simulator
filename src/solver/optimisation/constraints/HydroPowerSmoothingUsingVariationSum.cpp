@@ -11,10 +11,6 @@ void HydroPowerSmoothingUsingVariationSum::add(int pays)
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
-        const auto& CorrespondanceVarNativesVarOptim
-          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-        int nombreDeTermes = 0;
-
         int pdt1 = pdt + 1;
         if (pdt1 >= nombreDePasDeTempsPourUneOptimisation)
             pdt1 = 0;
@@ -26,9 +22,9 @@ void HydroPowerSmoothingUsingVariationSum::add(int pays)
 
         builder.updateHourWithinWeek(pdt)
           .HydProd(pays, 1.0)
-          .updateHourWithinWeek(pdt1) /* /!\ Re-check*/
+          .updateHourWithinWeek(pdt1)
           .HydProd(pays, -1.0)
-          .updateHourWithinWeek(pdt) /* /!\ Re-check*/
+          .updateHourWithinWeek(pdt)
           .HydProdDown(pays, -1.0)
           .HydProdUp(pays, 1.0)
           .equalTo()

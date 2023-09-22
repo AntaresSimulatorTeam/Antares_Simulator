@@ -15,10 +15,6 @@ void MinDownTime::add(int pays, int cluster, int clusterIndex, int pdt, bool Sim
         int NombreDePasDeTempsPourUneOptimisation
           = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-        const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
-          = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
-              .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-
         builder.updateHourWithinWeek(pdt).NumberOfDispatchableUnits(cluster, 1.0);
 
         for (int k = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique + 1; k <= pdt; k++)

@@ -2,8 +2,6 @@
 
 void AreaHydroLevel::add(int pays, int pdt)
 {
-    const auto& CorrespondanceVarNativesVarOptim
-      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
     CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
       = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
     CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesNiveauxPays[pays]

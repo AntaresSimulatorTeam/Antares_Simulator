@@ -13,7 +13,7 @@ void BindingConstraintDay::add(int cntCouplante)
       = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
 
     const int NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation; // TODO
+      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
     const int NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
     int pdtDebut = 0;
     while (pdtDebut < NombreDePasDeTempsPourUneOptimisation)
@@ -57,17 +57,12 @@ void BindingConstraintDay::add(int cntCouplante)
           .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
-        std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
-          = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
-
         char op = MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante;
         builder.SetOperator(op);
-        {
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-            namer.UpdateTimeStep(jour);
-            namer.BindingConstraintDay(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-                                       MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
-        }
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
+        namer.UpdateTimeStep(jour);
+        namer.BindingConstraintDay(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+                                   MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
         builder.build();
         pdtDebut += problemeHebdo->NombreDePasDeTempsDUneJournee;
     }

@@ -36,12 +36,10 @@ void HydroPower::add(int pays)
           = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
         builder.equalTo();
-        {
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-            namer.HydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-        }
+        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
+        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+        namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
+        namer.HydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
         builder.build();
     }
     else

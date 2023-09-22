@@ -4,10 +4,9 @@ void ConstraintBuilder::build()
 {
     std::vector<double>& Pi = problemeAResoudre.Pi;
     std::vector<int>& Colonne = problemeAResoudre.Colonne;
-    // TODO check operator_
+
     if (nombreDeTermes_ > 0)
     {
-                // Matrix
         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
           &problemeAResoudre, Pi, Colonne, nombreDeTermes_, operator_);
     }
@@ -44,7 +43,7 @@ void ConstraintBuilder::AddVariable(int varIndex, double coeff)
         nombreDeTermes_++;
     }
 }
-Variable::VariableManager ConstraintBuilder::GetVariableManager(int offset, int delta)
+Variable::VariableManager ConstraintBuilder::GetVariableManager(int offset, int delta) const
 {
     auto pdt = GetShiftedTimeStep(offset, delta);
     return Variable::VariableManager(varNative[pdt],

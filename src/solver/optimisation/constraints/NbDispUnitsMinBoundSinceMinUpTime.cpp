@@ -20,10 +20,6 @@ void NbDispUnitsMinBoundSinceMinUpTime::add(int pays,
         int NombreDePasDeTempsPourUneOptimisation
           = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-        const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
-          = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[clusterIndex]
-              .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-
         builder.updateHourWithinWeek(pdt).NumberOfDispatchableUnits(cluster, 1.0);
 
         for (int k = pdt - DureeMinimaleDeMarcheDUnGroupeDuPalierThermique + 1; k <= pdt; k++)

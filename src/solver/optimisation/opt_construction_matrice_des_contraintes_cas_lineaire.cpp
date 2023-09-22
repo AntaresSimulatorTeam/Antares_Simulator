@@ -63,9 +63,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-    std::vector<double>& Pi = ProblemeAResoudre->Pi;
-    std::vector<int>& Colonne = ProblemeAResoudre->Colonne;
-
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes);
@@ -97,9 +94,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     {
         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
         constraintNamer.UpdateTimeStep(timeStepInYear);
-        CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-        CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-            = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
@@ -183,10 +177,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
-        const auto& CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-        CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-            = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-
         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
         constraintNamer.UpdateTimeStep(timeStepInYear);
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
