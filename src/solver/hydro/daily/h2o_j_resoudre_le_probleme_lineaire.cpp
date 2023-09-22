@@ -65,7 +65,7 @@ void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int
         return;
     }
 
-    char PremierPassage = OUI;
+    bool PremierPassage = true;
 
 RESOLUTION:
 
@@ -125,7 +125,7 @@ RESOLUTION:
     Probleme->CoutsReduits = ProblemeLineairePartieVariable.CoutsReduits.data();
 
 #ifndef NDEBUG
-    if (PremierPassage == OUI)
+    if (PremierPassage)
         Probleme->AffichageDesTraces = NON_SPX;
     else
         Probleme->AffichageDesTraces = OUI_SPX;
@@ -142,15 +142,14 @@ RESOLUTION:
 
     ProblemeLineairePartieVariable.ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
 
-    if (ProblemeLineairePartieVariable.ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI
-        && ProbSpx != NULL)
+    if (ProblemeLineairePartieVariable.ExistenceDUneSolution != OUI_SPX && PremierPassage && ProbSpx)
     {
         if (ProblemeLineairePartieVariable.ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
             SPX_LibererProbleme(ProbSpx);
 
             ProbSpx = NULL;
-            PremierPassage = NON;
+            PremierPassage = false;
             goto RESOLUTION;
         }
         else
