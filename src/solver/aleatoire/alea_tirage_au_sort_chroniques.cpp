@@ -59,17 +59,21 @@ void ApplyRandomTSnumbers(const Study& study,
             ptchro.Solar
               = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
-        // Hydro and Hydro Max Power
+        // Hydro
         {
             const Data::DataSeriesHydro& data = *area.hydro.series;
             assert(year < data.timeseriesNumbers.height);
-            assert(year < data.timeseriesNumbersHydroMaxPower.height);
+
             ptchro.Hydraulique
               = (data.count != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
-            ptchro.HydrauliqueMaxPower
-              = (data.countpowercredits != 1)
-                  ? static_cast<long>(data.timeseriesNumbersHydroMaxPower[0][year])
-                  : 0;
+        }
+        // Hydro Max Power
+        {
+            const Data::DataSeriesHydro& data = *area.hydro.series;
+            assert(year < data.timeseriesNumbersHydroMaxPower.height);
+            ptchro.HydrauliqueMaxPower = (data.countpowercredits != 1)
+                                           ? (data.timeseriesNumbersHydroMaxPower[0][year])
+                                           : 0; // zero-based
         }
         // Wind
         {
