@@ -105,7 +105,7 @@ public:
                     const Data::Parameters& params,
                     const Date::Calendar& calendar,
                     unsigned int maxNbYearsInParallel,
-                    Solver::IResultWriter::Ptr resultWriter);
+                    Solver::IResultWriter& resultWriter);
 
     ~HydroManagement();
 
@@ -172,7 +172,7 @@ private:
     const Data::Parameters& parameters_;
     MersenneTwister random_;
     unsigned int maxNbYearsInParallel_ = 0;
-    Solver::IResultWriter::Ptr resultWriter_;
+    Solver::IResultWriter& resultWriter_;
 
     ALL_HYDRO_VENTILATION_RESULTS ventilationResults_;
 }; // class HydroManagement

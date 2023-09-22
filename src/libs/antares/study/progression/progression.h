@@ -143,7 +143,7 @@ public:
 
     void add(Section section, int nbTicks);
 
-    bool saveToFile(const Yuni::String& filename, IResultWriter::Ptr writer);
+    bool saveToFile(const Yuni::String& filename, IResultWriter& writer);
 
     void setNumberOfParallelYears(uint nb);
 

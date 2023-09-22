@@ -76,7 +76,7 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
     });
 }
 
-bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter::Ptr writer)
+bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter& writer)
 {
     logs.info() << "Generating the hydro time-series";
 
@@ -302,14 +302,14 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
                     std::string buffer;
                     area.hydro.series->ror.saveToBuffer(buffer, precision);
                     output.clear() << study.buffer << SEP << "ror.txt";
-                    writer->addEntryFromBuffer(output.c_str(), buffer);
+                    writer.addEntryFromBuffer(output.c_str(), buffer);
                 }
 
                 {
                     std::string buffer;
                     area.hydro.series->storage.saveToBuffer(buffer, precision);
                     output.clear() << study.buffer << SEP << "storage.txt";
-                    writer->addEntryFromBuffer(output.c_str(), buffer);
+                    writer.addEntryFromBuffer(output.c_str(), buffer);
                 }
                 ++progression;
             });

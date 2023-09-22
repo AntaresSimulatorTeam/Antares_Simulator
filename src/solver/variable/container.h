@@ -218,7 +218,7 @@ public:
     void exportSurveyResults(bool global,
                              const Yuni::String& output,
                              unsigned int numSpace,
-                             IResultWriter::Ptr writer);
+                             IResultWriter& writer);
 
     /*!
     ** \brief Ask to all variables to fullfil the digest

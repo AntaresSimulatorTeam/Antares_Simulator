@@ -39,7 +39,7 @@
 #include "apply-scenario.h"
 #include <antares/fatal-error.h>
 #include "../ts-generator/generator.h"
-
+#include "opt_time_writer.h"
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
 
 #include <yuni/core/system/suspend.h>
@@ -63,7 +63,8 @@ public:
             Data::Study& pStudy,
             std::vector<Variable::State>& pState,
             bool pYearByYear,
-            Benchmarking::IDurationCollector& durationCollector) :
+            Benchmarking::IDurationCollector& durationCollector,
+            IResultWriter& resultWriter) :
      simulation_(simulation),
      y(pY),
      yearFailed(pYearFailed),
@@ -75,7 +76,8 @@ public:
      study(pStudy),
      state(pState),
      yearByYear(pYearByYear),
-     pDurationCollector(durationCollector)
+     pDurationCollector(durationCollector),
+     pResultWriter(resultWriter)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
     }
@@ -94,7 +96,7 @@ private:
     bool yearByYear;
     bool hydroHotStart;
     Benchmarking::IDurationCollector& pDurationCollector;
-
+    IResultWriter& pResultWriter;
 private:
     /*
     ** \brief Log failed week
@@ -179,13 +181,15 @@ private:
               = isFirstPerformedYearOfASet[y] && not firstSetParallelWithAPerformedYearWasRun;
             std::list<uint> failedWeekList;
 
+            OptimizationStatisticsWriter optWriter(pResultWriter, y);
             yearFailed[y] = !simulation_->year(progression,
                                                state[numSpace],
                                                numSpace,
                                                randomForCurrentYear,
                                                failedWeekList,
                                                isFirstPerformedYearOfSimulation,
-                                               simulation_->hydroManagement.ventilationResults());
+                                               simulation_->hydroManagement.ventilationResults(),
+                                               optWriter);
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
@@ -241,11 +245,11 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
                     study.parameters, 
                     study.calendar, 
                     study.maxNbYearsInParallel,
-                    study.resultWriter),
+                    *study.resultWriter),
     pFirstSetParallelWithAPerformedYearWasRun(false),
     pDurationCollector(duration_collector),
     pQueueService(study.pQueueService),
-    pResultWriter(study.resultWriter)
+    pResultWriter(*study.resultWriter)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -265,14 +269,9 @@ template<class Impl>
 inline void ISimulation<Impl>::checkWriter() const
 {
     // The zip writer needs a queue service (async mutexed write)
-    if (!pQueueService)
+    if (!pQueueService && pResultWriter.needsTheJobQueue())
     {
         throw Solver::Initialization::Error::NoQueueService();
-    }
-
-    if (!pResultWriter)
-    {
-        throw Solver::Initialization::Error::NoResultWriter();
     }
 }
 
@@ -947,7 +946,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     {
         int numThreads = pNbMaxPerformedYearsInParallel;
         // If the result writer uses the job queue, add one more thread for it
-        if (pResultWriter && pResultWriter->needsTheJobQueue())
+        if (pResultWriter.needsTheJobQueue())
             numThreads++;
         pQueueService->maximumThreadCount(numThreads);
     }
@@ -998,7 +997,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                               study,
                                               state,
                                               pYearByYear,
-                                              pDurationCollector));
+                                              pDurationCollector,
+                                              pResultWriter));
 
         } // End loop over years of the current set of parallel years
 
@@ -1043,11 +1043,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     } // End loop over sets of parallel years
 
     // Writing annual costs statistics
-    if (pResultWriter)
-    {
-        pAnnualCostsStatistics.endStandardDeviations();
-        pAnnualCostsStatistics.writeToOutput(pResultWriter);
-    }
+    pAnnualCostsStatistics.endStandardDeviations();
+    pAnnualCostsStatistics.writeToOutput(pResultWriter);
 }
 
 } // namespace Antares::Solver::Simulation

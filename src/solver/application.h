@@ -9,7 +9,6 @@
 #include "antares/infoCollection/StudyInfoCollector.h"
 
 #include <antares/writer/i_writer.h>
-
 #include <yuni/core/string.h>
 
 namespace Antares::Solver
