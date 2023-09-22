@@ -4,8 +4,6 @@
 #include "../opt_structure_probleme_a_resoudre.h"
 #include "../opt_rename_problem.h"
 #include "../opt_fonctions.h"
-
-// TODO remove relative include
 #include "../../simulation/sim_structure_probleme_economique.h"
 
 #include <utility>
@@ -269,10 +267,7 @@ public:
     class ConstraintBuilderInvalidOperator : public std::runtime_error
     {
     public:
-        explicit ConstraintBuilderInvalidOperator(const std::string& error_message) :
-         std::runtime_error(error_message)
-        {
-        }
+        using std::runtime_error::std::runtime_error;
     };
 
     /*!
