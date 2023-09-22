@@ -98,6 +98,8 @@ private:
     void onSelectSHPMinimizeDuration(wxCommandEvent& evt);
 
     void onUnitCommitmentMode(Component::Button&, wxMenu& menu, void*);
+
+    void onSelectUCMode(Antares::Data::UnitCommitmentMode mode);
     void onSelectUCHeuristicFast(wxCommandEvent& evt);
     void onSelectUCHeuristicAccurate(wxCommandEvent& evt);
     void onSelectUCMILP(wxCommandEvent& evt);

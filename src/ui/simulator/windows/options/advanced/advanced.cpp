@@ -836,46 +836,33 @@ void AdvancedParameters::onUnitCommitmentMode(Component::Button&, wxMenu& menu, 
                  this);
 }
 
-void AdvancedParameters::onSelectUCHeuristicFast(wxCommandEvent& /* evt */)
+void AdvancedParameters::onSelectUCMode(Antares::Data::UnitCommitmentMode mode)
 {
     if (not CurrentStudyIsValid())
         return;
-    auto& study = *GetCurrentStudy();
+    auto study = GetCurrentStudy();
 
-    if (study.parameters.unitCommitment.ucMode != Data::ucHeuristicFast)
+    if (study->parameters.unitCommitment.ucMode != mode)
     {
-        study.parameters.unitCommitment.ucMode = Data::ucHeuristicFast;
+        study->parameters.unitCommitment.ucMode = mode;
         MarkTheStudyAsModified();
         refresh();
     }
+}
+
+void AdvancedParameters::onSelectUCHeuristicFast(wxCommandEvent& /* evt */)
+{
+    onSelectUCMode(Data::ucHeuristicFast);
 }
 
 void AdvancedParameters::onSelectUCHeuristicAccurate(wxCommandEvent& /* evt */)
 {
-    if (not CurrentStudyIsValid())
-        return;
-    auto& study = *GetCurrentStudy();
-
-    if (study.parameters.unitCommitment.ucMode != Data::ucHeuristicAccurate)
-    {
-        study.parameters.unitCommitment.ucMode = Data::ucHeuristicAccurate;
-        MarkTheStudyAsModified();
-        refresh();
-    }
+    onSelectUCMode(Data::ucHeuristicAccurate);
 }
 
 void AdvancedParameters::onSelectUCMILP(wxCommandEvent& /* evt */)
 {
-    if (not CurrentStudyIsValid())
-        return;
-    auto& study = *GetCurrentStudy();
-
-    if (study.parameters.unitCommitment.ucMode != Data::ucMILP)
-    {
-        study.parameters.unitCommitment.ucMode = Data::ucMILP;
-        MarkTheStudyAsModified();
-        refresh();
-    }
+    onSelectUCMode(Data::ucMILP);
 }
 
 void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*)
