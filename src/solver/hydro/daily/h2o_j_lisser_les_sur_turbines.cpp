@@ -58,7 +58,8 @@ void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int Numer
     int NbCycles = 0;
 BoucleDeRepartition:
 
-    int Np = std::count(flag.begin(), flag.end(), true);
+    const int Np = std::count(flag.begin(), flag.end(), true);
+
     if (Np == 0)
         return;
 
@@ -77,7 +78,7 @@ BoucleDeRepartition:
     else
         SurTurbine = MargeMin;
 
-    bool limiteAtteinte = 0;
+    bool limiteAtteinte = false;
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         if (!flag[Pdt])
