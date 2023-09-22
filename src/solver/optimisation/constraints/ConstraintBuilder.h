@@ -139,6 +139,16 @@ private:
 
 } // namespace Variable
 
+/*! this class build up a the business object 'Constraint',
+Math:
+|coeff11 coeff12 .. coeff1n||var1| |sign_1|   |rhs1|       |constraint1||sign_1||rhs1|
+|..      ..             ...||....| |......|   |....| <===> |...........||......||....|
+|coeffn1 coeffn2 .. coeffnn||varn| |sign_n|   |rhsn|       |constraintn||sign_n||rhsn|
+
+ it propose a set of methods  to attach 'Variables' to the Constraint
+ex: calling NTCDirect() implies adding Direct NTC Variable to the current Constraint
+finally the build() method gather all variables and put them into the matrix
+    */
 class ConstraintBuilder
 {
 public:
@@ -294,6 +304,11 @@ public:
         }
     };
 
+    /*!
+       @brief set the the operator of the constraint (sign)
+       @param op: the operator of the constraint to op
+       @return reference of *this
+    */
     ConstraintBuilder& SetOperator(char op)
     {
         if (op == '<' || op == '=' || op == '>')
@@ -306,16 +321,33 @@ public:
         return *this;
     }
 
+    /*!
+     @brief set the sign of the constraint to '=',
+     building a constraint equal to rhs
+     @return reference of *this
+    */
     ConstraintBuilder& equalTo()
     {
         operator_ = '=';
         return *this;
     }
+
+    /*!
+    @brief set the sign of the constraint to '<',
+    building a constraint less than rhs
+    @return reference of *this
+    */
     ConstraintBuilder& lessThan()
     {
         operator_ = '<';
         return *this;
     }
+
+    /*!
+     @brief set the sign of the constraint to '>',
+      building a constraint greather than rhs
+     @return reference of *this
+    */
     ConstraintBuilder& greaterThan()
     {
         operator_ = '>';
@@ -344,13 +376,15 @@ private:
     void AddVariable(int index, double coeff);
 
     /*
-    @param offset: offset from the current time step
-    @param delta: number of time steps for the variable
-    @return VariableManager object
+
+    * @param offset: offset from the current time step
+    * @param delta: number of time steps for the variable
+    * @return VariableManager object
     */
     Variable::VariableManager GetVariableManager(int offset = 0, int delta = 0);
 };
 
+/*! factory class to  */
 class ConstraintFactory
 {
 public:
