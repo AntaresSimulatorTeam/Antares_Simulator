@@ -567,12 +567,15 @@ void SurveyResults::exportDigestAllYears(std::string& buffer)
 {
     // Main Header
     {
+        const unsigned int nbLinks = data.study.runtime->interconnectionsCount();
         buffer.append("\tdigest\n\tVARIABLES\tAREAS\tLINKS\n")
           .append("\t")
           .append(std::to_string(data.columnIndex))
           .append("\t")
           .append(std::to_string(data.rowCaptions.size()))
-          .append("\t0\n\n");
+          .append("\t")
+          .append(std::to_string(nbLinks))
+          .append("\n\n");
     }
     // Header - All columns
     for (uint rowIndex = 0; rowIndex != captionCount; ++rowIndex)
