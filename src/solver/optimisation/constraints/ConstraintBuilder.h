@@ -374,7 +374,6 @@ public:
     ConstraintBuilder builder;
 };
 
-// #TODO move this function to a suitable place
 // Helper functions
 inline void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
                           ConstraintBuilder& constraintBuilder,
