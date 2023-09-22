@@ -282,7 +282,7 @@ const char* UnitCommitmentModeToCString(UnitCommitmentMode ucommitment)
     case ucHeuristicAccurate:
         return "accurate"; // (slow)
     case ucMILP:
-        return "milp";
+        return "milp"; // (possibly very slow)
     case ucUnknown:
         return "";
     }
