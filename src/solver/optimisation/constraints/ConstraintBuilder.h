@@ -13,6 +13,9 @@
 namespace Variable
 {
 
+/*!
+Factory class that hold variables indices
+*/
 class VariableManager
 {
 public:
@@ -139,16 +142,18 @@ private:
 
 } // namespace Variable
 
-/*! this class build up a the business object 'Constraint',
+/*! \verbatim
+this class build up a the business object 'Constraint',
 Math:
 |coeff11 coeff12 .. coeff1n||var1| |sign_1|   |rhs1|       |constraint1||sign_1||rhs1|
 |..      ..             ...||....| |......|   |....| <===> |...........||......||....|
 |coeffn1 coeffn2 .. coeffnn||varn| |sign_n|   |rhsn|       |constraintn||sign_n||rhsn|
 
- it propose a set of methods  to attach 'Variables' to the Constraint
+it propose a set of methods  to attach 'Variables' to the Constraint
 ex: calling NTCDirect() implies adding Direct NTC Variable to the current Constraint
 finally the build() method gather all variables and put them into the matrix
-    */
+\endverbatim
+*/
 class ConstraintBuilder
 {
 public:
@@ -166,14 +171,14 @@ public:
         hourInWeek_ = hour;
         return *this;
     }
-
-    /*! \addtogroup group
-     *  @brief  Documentation for non obvious method
+    /** @name variables_method
+     *  @brief  Documentation for non obvious methods
+     *  @param index: local index of the variable
      *  @param offset: offset from the current time step
      *  @param delta: number of time steps for the variable
      *  @return VariableManager object
-     *@{
      */
+    //@{
     ConstraintBuilder& DispatchableProduction(unsigned int index,
                                               double coeff,
                                               int offset = 0,
@@ -200,102 +205,67 @@ public:
 
                                                            int delta = 0);
 
-    ConstraintBuilder& NTCDirect(unsigned int index,
-                                 double coeff,
-                                 int offset = 0,
-
-                                 int delta = 0);
+    ConstraintBuilder& NTCDirect(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
     ConstraintBuilder& IntercoDirectCost(unsigned int index,
                                          double coeff,
                                          int offset = 0,
-
                                          int delta = 0);
 
     ConstraintBuilder& IntercoIndirectCost(unsigned int index,
                                            double coeff,
                                            int offset = 0,
-
                                            int delta = 0);
 
     ConstraintBuilder& ShortTermStorageInjection(unsigned int index,
                                                  double coeff,
                                                  int offset = 0,
-
                                                  int delta = 0);
 
     ConstraintBuilder& ShortTermStorageWithdrawal(unsigned int index,
                                                   double coeff,
                                                   int offset = 0,
-
                                                   int delta = 0);
 
     ConstraintBuilder& ShortTermStorageLevel(unsigned int index,
                                              double coeff,
                                              int offset = 0,
-
                                              int delta = 0);
 
-    ConstraintBuilder& HydProd(unsigned int index,
-                               double coeff,
-                               int offset = 0,
+    ConstraintBuilder& HydProd(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
-                               int delta = 0);
+    ConstraintBuilder& HydProdDown(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
-    ConstraintBuilder& HydProdDown(unsigned int index,
-                                   double coeff,
-                                   int offset = 0,
+    ConstraintBuilder& HydProdUp(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
-                                   int delta = 0);
+    ConstraintBuilder& Pumping(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
-    ConstraintBuilder& HydProdUp(unsigned int index,
-                                 double coeff,
-                                 int offset = 0,
+    ConstraintBuilder& HydroLevel(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
-                                 int delta = 0);
-
-    ConstraintBuilder& Pumping(unsigned int index,
-                               double coeff,
-                               int offset = 0,
-
-                               int delta = 0);
-
-    ConstraintBuilder& HydroLevel(unsigned int index,
-                                  double coeff,
-                                  int offset = 0,
-
-                                  int delta = 0);
-
-    ConstraintBuilder& Overflow(unsigned int index,
-                                double coeff,
-                                int offset = 0,
-
-                                int delta = 0);
+    ConstraintBuilder& Overflow(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
     ConstraintBuilder& FinalStorage(unsigned int index,
                                     double coeff,
                                     int offset = 0,
-
                                     int delta = 0);
 
     ConstraintBuilder& PositiveUnsuppliedEnergy(unsigned int index,
                                                 double coeff,
                                                 int offset = 0,
-
                                                 int delta = 0);
-
     ConstraintBuilder& NegativeUnsuppliedEnergy(unsigned int index,
                                                 double coeff,
                                                 int offset = 0,
                                                 int delta = 0);
+
     ConstraintBuilder& LayerStorage(unsigned area,
                                     unsigned layer,
                                     double coeff,
                                     int offset = 0,
                                     int delta = 0);
-    /*! @} */
+    //@}
 
-        class ConstraintBuilderInvalidOperator : public std::runtime_error
+    class ConstraintBuilderInvalidOperator : public std::runtime_error
     {
     public:
         ConstraintBuilderInvalidOperator(const std::string& error_message) :
@@ -305,8 +275,8 @@ public:
     };
 
     /*!
-       @brief set the the operator of the constraint (sign)
-       @param op: the operator of the constraint to op
+       @brief set the operator of the constraint (sign)
+       @param op: the operator of the constraint
        @return reference of *this
     */
     ConstraintBuilder& SetOperator(char op)
@@ -354,7 +324,11 @@ public:
         return *this;
     }
 
+    /*!
+     * @brief add the constraint in the matrix
+     */
     void build();
+
     int NumberOfVariables() const
     {
         return nombreDeTermes_;
@@ -375,12 +349,12 @@ private:
     int GetShiftedTimeStep(int offset, int delta) const;
     void AddVariable(int index, double coeff);
 
-    /*
-
-    * @param offset: offset from the current time step
-    * @param delta: number of time steps for the variable
-    * @return VariableManager object
-    */
+    /*!
+     * @brief
+     * @param offset: offset from the current time step
+     * @param delta: number of time steps for the variable
+     * @return VariableManager object
+     */
     Variable::VariableManager GetVariableManager(int offset = 0, int delta = 0);
 };
 

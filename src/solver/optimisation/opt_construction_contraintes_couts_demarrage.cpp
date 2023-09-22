@@ -34,7 +34,7 @@
 #include "opt_rename_problem.h"
 #include "constraints/PMaxDispatchableGeneration.h"
 #include "constraints/PMinDispatchableGeneration.h"
-#include "constraints/ConsistenceNODU.h"
+#include "constraints/ConsistenceNumberOfDispatchableUnits.h"
 #include "constraints/NbUnitsOutageLessThanNbUnitsStop.h"
 #include "constraints/NbDispUnitsMinBoundSinceMinUpTime.h"
 #include "constraints/MinDownTime.h"
@@ -91,10 +91,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                ConsistenceNODU consistenceNODU(problemeHebdo);
-                consistenceNODU.add(pays, palier, index, pdt, Simulation);
+                ConsistenceNumberOfDispatchableUnits consistenceNumberOfDispatchableUnits(
+                  problemeHebdo);
+                consistenceNumberOfDispatchableUnits.add(pays, palier, index, pdt, Simulation);
                 nbTermesContraintesPourLesCoutsDeDemarrage
-                  += consistenceNODU.nbTermesContraintesPourLesCoutsDeDemarrage;
+                  += consistenceNumberOfDispatchableUnits
+                       .nbTermesContraintesPourLesCoutsDeDemarrage;
             }
         }
     }

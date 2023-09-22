@@ -1,6 +1,10 @@
 #include "ConsistenceNODU.h"
 
-void ConsistenceNODU::add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)
+void ConsistenceNumberOfDispatchableUnits::add(int pays,
+                                               int cluster,
+                                               int clusterIndex,
+                                               int pdt,
+                                               bool Simulation)
 {
     if (!Simulation)
     {

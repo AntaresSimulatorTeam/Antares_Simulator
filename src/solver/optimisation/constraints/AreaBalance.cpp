@@ -13,7 +13,6 @@ static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortT
 
 void AreaBalance::add(int pdt, int pays)
 {
-    /** can be done without this --- keep it for now**/
     CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
       = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
     CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
@@ -21,7 +20,6 @@ void AreaBalance::add(int pdt, int pays)
     CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesBilansPays[pays]
       = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
 
-    /******/
     // TODO improve this
     {
         ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);

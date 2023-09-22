@@ -2,13 +2,12 @@
 #include "ConstraintBuilder.h"
 
 /*!
- * represent 'PMinDispatchableGeneration' Constraint type
+ * represent 'Consistence Number Of Dispatchable Units Constraint' type
  */
-class PMinDispatchableGeneration : private ConstraintFactory
+class ConsistenceNumberOfDispatchableUnits : private ConstraintFactory
 {
 public:
     using ConstraintFactory::ConstraintFactory;
-
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area

@@ -111,8 +111,8 @@ set(RTESOLVER_OPT
 		constraints/PMaxDispatchableGeneration.cpp
 		constraints/PMinDispatchableGeneration.h
 		constraints/PMinDispatchableGeneration.cpp
-		constraints/ConsistenceNODU.h
-		constraints/ConsistenceNODU.cpp
+		constraints/ConsistenceNumberOfDispatchableUnits.h
+		constraints/ConsistenceNumberOfDispatchableUnits.cpp
 		constraints/NbUnitsOutageLessThanNbUnitsStop.h
 		constraints/NbUnitsOutageLessThanNbUnitsStop.cpp
 		constraints/NbDispUnitsMinBoundSinceMinUpTime.h
