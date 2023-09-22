@@ -389,7 +389,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             uint firstDay = calendar_.months[simulationMonth].daysYear.first;
             uint endDay = firstDay + daysPerMonth;
 
-            std::unique_ptr<DONNEES_MENSUELLES> problem = H2O_J_Instanciation();
+            auto problem = H2O_J_Instanciation();
             H2O_J_AjouterBruitAuCout(*problem);
             problem->NombreDeJoursDuMois = (int)daysPerMonth;
             problem->TurbineDuMois = data.MOG[realmonth];
