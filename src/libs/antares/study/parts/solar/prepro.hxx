@@ -51,6 +51,4 @@ inline void Prepro::resetToDefault()
 
 } // namespace Antares::Data::Solar
 
-
-
 #endif // __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_H__

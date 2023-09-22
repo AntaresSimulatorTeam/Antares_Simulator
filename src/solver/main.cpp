@@ -28,7 +28,7 @@
 
 #include <antares/logs/logs.h>
 #include "application.h"
-#include "../ui/common/winmain.hxx"  //TODO: remove that reverse dependency to UI
+#include "../ui/common/winmain.hxx" //TODO: remove that reverse dependency to UI
 
 #include <antares/fatal-error.h>
 #include <antares/memory/memory.h>
@@ -39,8 +39,8 @@ using namespace Yuni;
 
 #define SEP Yuni::IO::Separator
 
-namespace {
-
+namespace
+{
 const char* const GPL_ANNOUNCEMENT
   = "Copyright 2007-2023 RTE  - Authors: The Antares_Simulator Team \n"
     "\n"
@@ -106,15 +106,15 @@ void logAbortion()
     }
 }
 
-}
+} // namespace
 
 /*!
 ** \brief main
 */
 int main(int argc, char** argv)
 {
-    try {
-
+    try
+    {
         logs.info(ANTARES_LOGO);
         logs.info(GPL_ANNOUNCEMENT);
         // Name of the running application for the logger
@@ -141,17 +141,20 @@ int main(int argc, char** argv)
 
         return EXIT_SUCCESS;
     }
-    catch (const std::bad_alloc& exc) {
+    catch (const std::bad_alloc& exc)
+    {
         logs.fatal() << exc.what();
         logAbortion();
         return ALLOCATION_FAILURE_EXIT_CODE;
     }
-    catch (const std::exception& exc) {
+    catch (const std::exception& exc)
+    {
         logs.fatal() << exc.what();
         logAbortion();
         return EXIT_FAILURE;
     }
-    catch (...) {
+    catch (...)
+    {
         logs.fatal() << "An unexpected error occurred.";
         logAbortion();
         return EXIT_FAILURE;

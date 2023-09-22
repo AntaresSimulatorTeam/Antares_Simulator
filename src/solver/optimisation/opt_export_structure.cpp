@@ -34,8 +34,7 @@
 // Export de la structure des LPs
 ////////////////////////////////////////////////////////////////////
 
-void OPT_ExportInterco(Antares::Solver::IResultWriter& writer,
-                       PROBLEME_HEBDO* problemeHebdo)
+void OPT_ExportInterco(Antares::Solver::IResultWriter& writer, PROBLEME_HEBDO* problemeHebdo)
 {
     Yuni::Clob Flot;
     for (uint32_t i(0); i < problemeHebdo->NombreDInterconnexions; ++i)
@@ -56,7 +55,7 @@ void OPT_ExportAreaName(Antares::Solver::IResultWriter& writer,
     // TODO[FOM] "area.txt"
     std::string filename = "area-1-1.txt";
     Yuni::Clob Flot;
-    for (const char* name: areaNames)
+    for (const char* name : areaNames)
     {
         Flot.appendFormat("%s\n", name);
     }

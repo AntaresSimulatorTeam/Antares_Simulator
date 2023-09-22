@@ -47,4 +47,4 @@ inline CString<512, false> ntcTSNumberData::get_prefix() const
 {
     return "ntc,";
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

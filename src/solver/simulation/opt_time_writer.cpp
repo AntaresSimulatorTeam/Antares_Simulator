@@ -26,9 +26,8 @@
 */
 #include "opt_time_writer.h"
 
-OptimizationStatisticsWriter::OptimizationStatisticsWriter(
-  Antares::Solver::IResultWriter& writer,
-  uint year) :
+OptimizationStatisticsWriter::OptimizationStatisticsWriter(Antares::Solver::IResultWriter& writer,
+                                                           uint year) :
  pWriter(writer)
 {
     printHeader();

@@ -148,9 +148,8 @@ void Application::prepare(int argc, char* argv[])
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
     if (pParameters->adqPatchParams.enabled)
-        pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,
-                                                        pStudy->areas,
-                                                        pParameters->include.hurdleCosts);
+        pParameters->adqPatchParams.checkAdqPatchParams(
+          pParameters->mode, pStudy->areas, pParameters->include.hurdleCosts);
 
     bool tsGenThermal
       = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
@@ -255,7 +254,8 @@ void Application::resetLogFilename() const
     // Making sure that the folder
     if (!Yuni::IO::Directory::Create(logfile))
     {
-        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.c_str() + ". Aborting now.");
+        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.c_str()
+                         + ". Aborting now.");
     }
 
     // Date/time
@@ -399,7 +399,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
 
-    //alloc global vectors
+    // alloc global vectors
     SIM_AllocationTableaux(study);
 
     // Random-numbers generators
@@ -447,7 +447,8 @@ Application::~Application()
         logs.info() << LOG_UI_SOLVER_DONE;
 
         // Copy the log file
-        if (!pStudy->parameters.noOutput) {
+        if (!pStudy->parameters.noOutput)
+        {
             pStudy->importLogsToOutputFolder();
         }
 
@@ -459,4 +460,3 @@ Application::~Application()
     }
 }
 } // namespace Antares::Solver
-

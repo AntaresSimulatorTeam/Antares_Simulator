@@ -54,7 +54,7 @@ void computingHydroLevels(const Data::AreaList& areas,
         double reservoirCapacity = area.hydro.reservoirCapacity;
 
         std::vector<double>& inflows
-            = problem.CaracteristiquesHydrauliques[index].ApportNaturelHoraire;
+          = problem.CaracteristiquesHydrauliques[index].ApportNaturelHoraire;
 
         RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
 
@@ -68,13 +68,8 @@ void computingHydroLevels(const Data::AreaList& areas,
 
         std::vector<double>& ovf = weeklyResults.debordementsHoraires;
 
-        computeTimeStepLevel computeLvlObj(nivInit,
-                                           inflows,
-                                           ovf,
-                                           turb,
-                                           pumpingRatio,
-                                           pump,
-                                           reservoirCapacity);
+        computeTimeStepLevel computeLvlObj(
+          nivInit, inflows, ovf, turb, pumpingRatio, pump, reservoirCapacity);
 
         for (uint h = 0; h < nbHoursInAWeek - 1; h++)
         {
@@ -122,22 +117,19 @@ void interpolateWaterValue(const Data::AreaList& areas,
         std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
         Antares::Data::getWaterValue(
-                problem.previousSimulationFinalLevel[index] * 100 / reservoirCapacity,
-                area.hydro.waterValues,
-                weekFirstDay,
-                waterVal[0]);
+          problem.previousSimulationFinalLevel[index] * 100 / reservoirCapacity,
+          area.hydro.waterValues,
+          weekFirstDay,
+          waterVal[0]);
         for (uint h = 1; h < nbHoursInAWeek; h++)
         {
-            Antares::Data::getWaterValue(niv[h - 1],
-                                         area.hydro.waterValues,
-                                         daysOfWeek[h / 24],
-                                         waterVal[h]);
+            Antares::Data::getWaterValue(
+              niv[h - 1], area.hydro.waterValues, daysOfWeek[h / 24], waterVal[h]);
         }
     });
 }
 
-void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas,
-                                   PROBLEME_HEBDO& problem)
+void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem)
 {
     areas.each([&](const Data::Area& area) {
         if (!area.hydro.reservoirManagement)

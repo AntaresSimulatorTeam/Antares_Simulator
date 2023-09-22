@@ -66,7 +66,8 @@ uint64_t Available()
     // see http://msdn.microsoft.com/en-us/library/aa366589(VS.85).aspx
     MEMORYSTATUSEX statex;
     statex.dwLength = (DWORD)sizeof(statex);
-    return (GlobalMemoryStatusEx(&statex)) ? (uint64_t)statex.ullAvailPhys : (uint64_t)defaultAvailable;
+    return (GlobalMemoryStatusEx(&statex)) ? (uint64_t)statex.ullAvailPhys
+                                           : (uint64_t)defaultAvailable;
 }
 
 bool Usage::update()

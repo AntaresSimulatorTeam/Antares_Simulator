@@ -148,8 +148,8 @@ void XCast::applyTransferFunction(PredicateT& predicate)
                 if (p1[x] <= p0[x])
                 {
                     std::ostringstream msg;
-                    msg << "Transfer function: invalid X-coordinate at index (" << i
-                        << ", " << (i + 1) << ")";
+                    msg << "Transfer function: invalid X-coordinate at index (" << i << ", "
+                        << (i + 1) << ")";
                     throw FatalError(msg.str());
                 }
                 a[i] = (p1[y] - p0[y]) / (p1[x] - p0[x]);

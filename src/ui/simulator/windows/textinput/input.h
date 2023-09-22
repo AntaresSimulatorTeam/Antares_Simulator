@@ -27,7 +27,6 @@
 #ifndef __ANTARES_WINDOWS_TEXTINPUT_INPUT_H__
 #define __ANTARES_WINDOWS_TEXTINPUT_INPUT_H__
 
-
 namespace Antares
 {
 namespace Window

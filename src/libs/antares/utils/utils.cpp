@@ -43,8 +43,6 @@ void BeautifyName(YString& out, AnyString oldname)
 
     out.reserve(oldname.size());
 
-
-
     auto end = oldname.utf8end();
     for (auto i = oldname.utf8begin(); i != end; ++i)
     {

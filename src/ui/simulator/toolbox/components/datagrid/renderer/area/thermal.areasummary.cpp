@@ -204,7 +204,8 @@ bool ThermalClusterSummarySingleArea::cellValue(int x, int y, const String& v)
         case 8:
             return Update<double, NoCheck, RefeshInspector>(cluster->spinning, v);
         case 9:
-            return Update<double, NoCheck, RefeshInspector>(cluster->emissions.factors[Antares::Data::Pollutant::CO2], v);
+            return Update<double, NoCheck, RefeshInspector>(
+              cluster->emissions.factors[Antares::Data::Pollutant::CO2], v);
         case 10:
             return Update<double, NoCheck, RefeshInspector>(cluster->marginalCost, v);
         case 11:

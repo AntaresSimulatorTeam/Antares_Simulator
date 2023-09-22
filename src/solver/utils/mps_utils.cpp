@@ -58,7 +58,9 @@ using namespace Yuni;
 class ProblemConverter
 {
 public:
-    void copyProbSimplexeToProbMps(PROBLEME_MPS* dest, PROBLEME_SIMPLEXE_NOMME* src, NameTranslator& nameTranslator)
+    void copyProbSimplexeToProbMps(PROBLEME_MPS* dest,
+                                   PROBLEME_SIMPLEXE_NOMME* src,
+                                   NameTranslator& nameTranslator)
     {
         // Variables
         dest->NbVar = src->NombreDeVariables;
@@ -87,7 +89,8 @@ public:
 
         // Names
         dest->LabelDeLaVariable = nameTranslator.translate(src->VariableNames(), mVariableNames);
-        dest->LabelDeLaContrainte = nameTranslator.translate(src->ConstraintNames(), mConstraintNames);
+        dest->LabelDeLaContrainte
+          = nameTranslator.translate(src->ConstraintNames(), mConstraintNames);
     }
 
 private:
@@ -138,8 +141,7 @@ fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver, uint optNumber) :
  I_MPS_writer(optNumber), solver_(solver)
 {
 }
-void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter& writer,
-                                       const std::string& filename)
+void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& filename)
 {
     ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, writer, filename);
 }

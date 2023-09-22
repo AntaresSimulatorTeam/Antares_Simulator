@@ -40,8 +40,6 @@ namespace Data
 class DataSeriesWind
 {
 public:
-
-
     bool forceReload(bool reload = false) const;
 
     void markAsModified() const;

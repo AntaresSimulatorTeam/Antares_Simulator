@@ -8,8 +8,8 @@
 #include "antares/study/parts/hydro/series.h"
 #include "yuni/core/system/stdint.h"
 
-namespace Antares::Data::ScenarioBuilder {
-
+namespace Antares::Data::ScenarioBuilder
+{
 static constexpr unsigned maxErrors = 20;
 
 template<class D>
@@ -33,14 +33,16 @@ inline bool CheckValidity<Data::AreaLink>(uint value,
                                           const Data::AreaLink& data,
                                           uint /* tsGenMax */)
 {
-    //Value = index of time series
-    //Direct Capacities = all time series
-    //directCapacities.width = Number of time series
+    // Value = index of time series
+    // Direct Capacities = all time series
+    // directCapacities.width = Number of time series
     return value < data.directCapacities.width;
 }
 
 template<>
-inline bool CheckValidity<BindingConstraintGroup>(uint value, const BindingConstraintGroup& group, uint)
+inline bool CheckValidity<BindingConstraintGroup>(uint value,
+                                                  const BindingConstraintGroup& group,
+                                                  uint)
 {
     return value < group.numberOfTimeseries();
 }
@@ -89,4 +91,4 @@ bool ApplyToMatrix(uint& errors,
 
     return ret;
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

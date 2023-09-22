@@ -2,8 +2,8 @@
 #include <string>
 #include "antares/benchmarking/DurationCollector.h"
 
-namespace Benchmarking {
-
+namespace Benchmarking
+{
 void DurationCollector::addDuration(const std::string& name, int64_t duration)
 {
     const std::lock_guard<std::mutex> lock(mutex_);

@@ -126,7 +126,7 @@ double Data::cellNumericValue(int x, int y) const
         assert(bindingconstraint);
         if (bindingconstraint)
         {
-            //Deleted some code. UI is deprecated but not yet removed
+            // Deleted some code. UI is deprecated but not yet removed
             return 0;
         }
     }
@@ -152,8 +152,7 @@ void Data::applyLayerFiltering(size_t layerID, VGridHelper* gridHelper)
     for (int x = 0; x < gridHelper->virtualSize.x; ++x)
     {
         // The current constraint
-        auto constraint
-          = study->uiinfo->byOperator[pOperator][pType][x];
+        auto constraint = study->uiinfo->byOperator[pOperator][pType][x];
 
         if (constraint->hasAllWeightedLinksOnLayer(layerID))
         {
@@ -196,7 +195,7 @@ bool Data::cellValue(int x, int y, const String& value)
         double v;
         if (value.to(v))
         {
-            //Deleted some code. UI is deprecated but not yet removed
+            // Deleted some code. UI is deprecated but not yet removed
             return true;
         }
     }

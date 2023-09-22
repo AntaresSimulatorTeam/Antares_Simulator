@@ -386,11 +386,13 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         const bool renewable_details = fileLevel & Category::de_res;
         const bool st_storage_details = fileLevel & Category::de_sts;
 
-        std::array<bool, 3> kind_of_details = { thermal_details, renewable_details , st_storage_details };
+        std::array<bool, 3> kind_of_details
+          = {thermal_details, renewable_details, st_storage_details};
 
         // The current result file must be a detail file and of one kind only.
         // So the vector above must contain one true. No less, no more.
-        auto how_many_kinds_of_details = std::count(kind_of_details.begin(), kind_of_details.end(), true);
+        auto how_many_kinds_of_details
+          = std::count(kind_of_details.begin(), kind_of_details.end(), true);
 
         if (how_many_kinds_of_details != 1)
         {

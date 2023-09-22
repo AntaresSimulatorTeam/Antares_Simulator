@@ -118,7 +118,6 @@ public:
 
     void Notify() override
     {
-
     }
 
 private:
@@ -351,8 +350,8 @@ Run::Run(wxWindow* parent, bool preproOnly) :
     // When opening the Run window, the solver mode is default.
     // Therefore, the number of cores must be set (back) to the value associated with default mode
     // (== 1).
-    uint& minNbCores = GetCurrentStudy()
-                         ->minNbYearsInParallel; // For run window's simulation cores field.
+    uint& minNbCores
+      = GetCurrentStudy()->minNbYearsInParallel; // For run window's simulation cores field.
     uint& maxNbCores = GetCurrentStudy()->maxNbYearsInParallel; // For RAM estimation
     minNbCores = 1;
     maxNbCores = 1;
@@ -759,12 +758,12 @@ void Run::prepareMenuSolverMode(Antares::Component::Button&, wxMenu& menu, void*
     for (uint i = 0; i != featuresCount; ++i)
     {
         const wxMenuItem* it = Menu::CreateItem(&menu,
-                                          wxID_ANY,
-                                          featuresNames[i],
-                                          "images/16x16/empty.png",
-                                          wxEmptyString,
-                                          wxITEM_NORMAL,
-                                          (i == 0));
+                                                wxID_ANY,
+                                                featuresNames[i],
+                                                "images/16x16/empty.png",
+                                                wxEmptyString,
+                                                wxITEM_NORMAL,
+                                                (i == 0));
 
         pMappingSolverMode[it->GetId()] = i;
         menu.Connect(it->GetId(),

@@ -222,11 +222,11 @@ void SelectOutput::updateCaption()
     {
         uint nbPrintedVars = d.variablesPrintInfo.numberOfEnabledVariables();
         if (nbPrintedVars < 2)
-            pStatus->SetLabel(wxString()
-                              << wxT(" Ask for selecting ") << nbPrintedVars << wxT(" output variable  "));
+            pStatus->SetLabel(wxString() << wxT(" Ask for selecting ") << nbPrintedVars
+                                         << wxT(" output variable  "));
         else
-            pStatus->SetLabel(wxString()
-                              << wxT(" Ask for selecting ") << nbPrintedVars << wxT(" output variables  "));
+            pStatus->SetLabel(wxString() << wxT(" Ask for selecting ") << nbPrintedVars
+                                         << wxT(" output variables  "));
     }
     else
         pStatus->SetLabel(wxT(" Ask for selecting output variables "));

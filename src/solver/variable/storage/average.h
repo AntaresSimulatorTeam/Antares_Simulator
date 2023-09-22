@@ -105,25 +105,24 @@ protected:
         {
             switch (precision)
             {
-                case Category::hourly:
-                    InternalExportValues<maxHoursInAYear, VCardT, Category::hourly>(
-                      report, Memory::RawPointer(avgdata.hourly));
-                    break;
-                case Category::daily:
-                    InternalExportValues<maxDaysInAYear, VCardT, Category::daily>(report,
-                                                                                  avgdata.daily);
-                    break;
-                case Category::weekly:
-                    InternalExportValues<maxWeeksInAYear, VCardT, Category::weekly>(report,
-                                                                                    avgdata.weekly);
-                    break;
-                case Category::monthly:
-                    InternalExportValues<maxMonths, VCardT, Category::monthly>(report,
-                                                                               avgdata.monthly);
-                    break;
-                case Category::annual:
-                    InternalExportValues<1, VCardT, Category::annual>(report, avgdata.year);
-                    break;
+            case Category::hourly:
+                InternalExportValues<maxHoursInAYear, VCardT, Category::hourly>(
+                  report, Memory::RawPointer(avgdata.hourly));
+                break;
+            case Category::daily:
+                InternalExportValues<maxDaysInAYear, VCardT, Category::daily>(report,
+                                                                              avgdata.daily);
+                break;
+            case Category::weekly:
+                InternalExportValues<maxWeeksInAYear, VCardT, Category::weekly>(report,
+                                                                                avgdata.weekly);
+                break;
+            case Category::monthly:
+                InternalExportValues<maxMonths, VCardT, Category::monthly>(report, avgdata.monthly);
+                break;
+            case Category::annual:
+                InternalExportValues<1, VCardT, Category::annual>(report, avgdata.year);
+                break;
             }
         }
         // Next

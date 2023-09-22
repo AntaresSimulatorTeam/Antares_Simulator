@@ -134,10 +134,10 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
         buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
                        << area.id << '.' << study.inputExtension;
 
-       // GUI part patch :
-       // We need to know, when estimating the RAM required by the solver, if the current area
-       // is hydro modulable. Therefore, reading the area's daily max power at this stage is
-       // necessary.
+        // GUI part patch :
+        // We need to know, when estimating the RAM required by the solver, if the current area
+        // is hydro modulable. Therefore, reading the area's daily max power at this stage is
+        // necessary.
 
         if (!study.usedByTheSolver)
         {
@@ -150,7 +150,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
             ret = area.hydro.maxPower.loadFromCSVFile(
                     buffer, 4, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
-                && ret;
+                  && ret;
 
             if (enabledModeIsChanged)
                 JIT::enabled = true; // Back to the previous loading mode.
@@ -159,7 +159,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
         {
             ret = area.hydro.maxPower.loadFromCSVFile(
                     buffer, 4, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
-                && ret;
+                  && ret;
         }
 
         buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
@@ -174,15 +174,14 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                 buffer, 3, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
               && ret;
 
-
-        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                       << "waterValues_" << area.id << '.' << study.inputExtension;
+        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "waterValues_"
+                       << area.id << '.' << study.inputExtension;
         ret = area.hydro.waterValues.loadFromCSVFile(
                 buffer, 101, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
               && ret;
 
-        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                       << "inflowPattern_" << area.id << '.' << study.inputExtension;
+        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "inflowPattern_"
+                       << area.id << '.' << study.inputExtension;
         ret = area.hydro.inflowPattern.loadFromCSVFile(
                 buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
               && ret;
@@ -590,7 +589,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
     study.areas.each([&](Data::Area& area) {
         if (area.hydro.leewayLowerBound > area.hydro.leewayUpperBound)
             logs.error() << area.id << ": Leeway lower bound greater than leeway upper bound.";
-        });
+    });
 
     if ((section = ini.find("pumping efficiency")))
     {
@@ -809,9 +808,8 @@ void getWaterValue(const double& level /* format : in % of reservoir capacity */
     if ((int)(levelUp) == (int)(levelDown))
         waterValueToReturn = waterValues[(int)(levelUp)][day];
     else
-        waterValueToReturn
-          = waterValues[(int)(levelUp)][day] * (level - levelDown)
-            + waterValues[(int)(levelDown)][day] * (levelUp - level);
+        waterValueToReturn = waterValues[(int)(levelUp)][day] * (level - levelDown)
+                             + waterValues[(int)(levelDown)][day] * (levelUp - level);
 }
 
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,

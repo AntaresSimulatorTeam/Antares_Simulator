@@ -119,8 +119,7 @@ protected:
                                                                                 rawdata.weekly);
                 break;
             case Category::monthly:
-                InternalExportValues<Category::monthly, maxMonths, VCardT>(report,
-                                                                           rawdata.monthly);
+                InternalExportValues<Category::monthly, maxMonths, VCardT>(report, rawdata.monthly);
                 break;
             case Category::annual:
                 InternalExportValues<Category::annual, 1, VCardT>(report, rawdata.year);
@@ -138,8 +137,7 @@ protected:
         if ((dataLevel & Category::area || dataLevel & Category::setOfAreas)
             && digestLevel & Category::digestAllYears)
         {
-            assert(report.data.columnIndex < report.maxVariables
-                    && "Column index out of bounds");
+            assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
             report.captions[0][report.data.columnIndex] = report.variableCaption;
             report.captions[1][report.data.columnIndex] = report.variableUnit;
@@ -147,12 +145,12 @@ protected:
 
             // Precision
             report.precision[report.data.columnIndex]
-                = PrecisionToPrintfFormat<VCardT::decimal>::Value();
+              = PrecisionToPrintfFormat<VCardT::decimal>::Value();
             // Value
             report.values[report.data.columnIndex][report.data.rowIndex] = rawdata.allYears;
             // Non applicability
             report.digestNonApplicableStatus[report.data.rowIndex][report.data.columnIndex]
-                = *report.isCurrentVarNA;
+              = *report.isCurrentVarNA;
 
             ++(report.data.columnIndex);
         }

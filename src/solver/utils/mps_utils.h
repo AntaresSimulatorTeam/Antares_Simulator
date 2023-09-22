@@ -57,8 +57,7 @@ class nullMPSwriter : public I_MPS_writer
 {
 public:
     using I_MPS_writer::I_MPS_writer;
-    void runIfNeeded(Solver::IResultWriter& /*writer*/,
-                     const std::string& /*filename*/) override
+    void runIfNeeded(Solver::IResultWriter& /*writer*/, const std::string& /*filename*/) override
     {
         // Does nothing
     }

@@ -83,13 +83,13 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
                                  const Date::Calendar& calendar,
                                  unsigned int maxNbYearsInParallel,
                                  Solver::IResultWriter& resultWriter) :
-    areas_(areas),
-    calendar_(calendar),
-    parameters_(params),
-    maxNbYearsInParallel_(maxNbYearsInParallel),
-    resultWriter_(resultWriter)
+ areas_(areas),
+ calendar_(calendar),
+ parameters_(params),
+ maxNbYearsInParallel_(maxNbYearsInParallel),
+ resultWriter_(resultWriter)
 {
-    tmpDataByArea_ = new TmpDataByArea* [maxNbYearsInParallel_];
+    tmpDataByArea_ = new TmpDataByArea*[maxNbYearsInParallel_];
     for (uint numSpace = 0; numSpace < maxNbYearsInParallel_; numSpace++)
         tmpDataByArea_[numSpace] = new TmpDataByArea[areas_.size()];
 
@@ -106,12 +106,15 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
             auto& area = *areas_.byIndex[areaIndex];
             size_t clusterCount = area.thermal.clusterCount();
 
-            ventilationResults_[numSpace][areaIndex].HydrauliqueModulableQuotidien.assign(nbDaysPerYear, 0);
+            ventilationResults_[numSpace][areaIndex].HydrauliqueModulableQuotidien.assign(
+              nbDaysPerYear, 0);
 
             if (area.hydro.reservoirManagement)
             {
-                ventilationResults_[numSpace][areaIndex].NiveauxReservoirsDebutJours.assign(nbDaysPerYear, 0.);
-                ventilationResults_[numSpace][areaIndex].NiveauxReservoirsFinJours.assign(nbDaysPerYear, 0.);
+                ventilationResults_[numSpace][areaIndex].NiveauxReservoirsDebutJours.assign(
+                  nbDaysPerYear, 0.);
+                ventilationResults_[numSpace][areaIndex].NiveauxReservoirsFinJours.assign(
+                  nbDaysPerYear, 0.);
             }
         }
     }
@@ -126,118 +129,118 @@ HydroManagement::~HydroManagement()
 
 void HydroManagement::prepareInflowsScaling(uint numSpace)
 {
-    areas_.each([&](Data::Area& area)
-      {
-          uint z = area.index;
+    areas_.each([&](Data::Area& area) {
+        uint z = area.index;
 
-          auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
+        auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
 
-          auto& inflowsmatrix = area.hydro.series->storage;
-          assert(inflowsmatrix.width && inflowsmatrix.height);
-          auto tsIndex = (uint)ptchro.Hydraulique;
-          auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
+        auto& inflowsmatrix = area.hydro.series->storage;
+        assert(inflowsmatrix.width && inflowsmatrix.height);
+        auto tsIndex = (uint)ptchro.Hydraulique;
+        auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
 
-          auto& data = tmpDataByArea_[numSpace][z];
-          double totalYearInflows = 0.0;
+        auto& data = tmpDataByArea_[numSpace][z];
+        double totalYearInflows = 0.0;
 
-          for (uint month = 0; month != 12; ++month)
-          {
-              uint realmonth = calendar_.months[month].realmonth;
+        for (uint month = 0; month != 12; ++month)
+        {
+            uint realmonth = calendar_.months[month].realmonth;
 
-              double totalMonthInflows = 0.0;
+            double totalMonthInflows = 0.0;
 
-              uint firstDayOfMonth = calendar_.months[month].daysYear.first;
+            uint firstDayOfMonth = calendar_.months[month].daysYear.first;
 
-              uint firstDayOfNextMonth = calendar_.months[month].daysYear.end;
+            uint firstDayOfNextMonth = calendar_.months[month].daysYear.end;
 
-              for (uint d = firstDayOfMonth; d != firstDayOfNextMonth; ++d)
-                  totalMonthInflows += srcinflows[d];
+            for (uint d = firstDayOfMonth; d != firstDayOfNextMonth; ++d)
+                totalMonthInflows += srcinflows[d];
 
-              data.totalMonthInflows[realmonth] = totalMonthInflows;
-              totalYearInflows += totalMonthInflows;
+            data.totalMonthInflows[realmonth] = totalMonthInflows;
+            totalYearInflows += totalMonthInflows;
 
-              if (not(area.hydro.reservoirCapacity < 1e-4))
-              {
-                  if (area.hydro.reservoirManagement)
-                  {
-                      data.inflows[realmonth] = totalMonthInflows / (area.hydro.reservoirCapacity);
-                      assert(!Math::NaN(data.inflows[month]) && "nan value detect in inflows");
-                  }
-                  else
-                  {
-                      data.inflows[realmonth] = totalMonthInflows;
-                  }
-              }
-              else
-              {
-                  data.inflows[realmonth] = totalMonthInflows;
-              }
-          }
-          data.totalYearInflows = totalYearInflows;
-      });
+            if (not(area.hydro.reservoirCapacity < 1e-4))
+            {
+                if (area.hydro.reservoirManagement)
+                {
+                    data.inflows[realmonth] = totalMonthInflows / (area.hydro.reservoirCapacity);
+                    assert(!Math::NaN(data.inflows[month]) && "nan value detect in inflows");
+                }
+                else
+                {
+                    data.inflows[realmonth] = totalMonthInflows;
+                }
+            }
+            else
+            {
+                data.inflows[realmonth] = totalMonthInflows;
+            }
+        }
+        data.totalYearInflows = totalYearInflows;
+    });
 }
 
 void HydroManagement::minGenerationScaling(uint numSpace)
 {
-    areas_.each([this, &numSpace](Data::Area& area)
-      {
-          uint z = area.index;
+    areas_.each([this, &numSpace](Data::Area& area) {
+        uint z = area.index;
 
-          const auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
-          auto& mingenmatrix = area.hydro.series->mingen;
-          auto tsIndex = (uint)ptchro.Hydraulique;
-          auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
+        const auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
+        auto& mingenmatrix = area.hydro.series->mingen;
+        auto tsIndex = (uint)ptchro.Hydraulique;
+        auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
 
-          auto& data = tmpDataByArea_[numSpace][z];
-          double totalYearMingen = 0.0;
+        auto& data = tmpDataByArea_[numSpace][z];
+        double totalYearMingen = 0.0;
 
-          for (uint month = 0; month != 12; ++month)
-          {
-              uint realmonth = calendar_.months[month].realmonth;
-              uint firstDayOfMonth = calendar_.months[month].daysYear.first;
-              uint firstDayOfNextMonth = calendar_.months[month].daysYear.end;
+        for (uint month = 0; month != 12; ++month)
+        {
+            uint realmonth = calendar_.months[month].realmonth;
+            uint firstDayOfMonth = calendar_.months[month].daysYear.first;
+            uint firstDayOfNextMonth = calendar_.months[month].daysYear.end;
 
-              double totalMonthMingen = std::accumulate(
-                srcmingen + firstDayOfMonth * 24, srcmingen + firstDayOfNextMonth * 24, 0.);
+            double totalMonthMingen = std::accumulate(
+              srcmingen + firstDayOfMonth * 24, srcmingen + firstDayOfNextMonth * 24, 0.);
 
-              data.totalMonthMingen[realmonth] = totalMonthMingen;
-              totalYearMingen += totalMonthMingen;
+            data.totalMonthMingen[realmonth] = totalMonthMingen;
+            totalYearMingen += totalMonthMingen;
 
-              if (!(area.hydro.reservoirCapacity < 1e-4))
-              {
-                  if (area.hydro.reservoirManagement)
-                  {
-                      // Set monthly mingen, used later for h2o_m
-                      data.mingens[realmonth] = totalMonthMingen / (area.hydro.reservoirCapacity);
-                      assert(!Math::NaN(data.mingens[month]) && "nan value detect in mingen");
-                  }
-                  else
-                  {
-                      data.mingens[realmonth] = totalMonthMingen;
-                  }
-              }
-              else
-              {
-                  data.mingens[realmonth] = totalMonthMingen;
-              }
+            if (!(area.hydro.reservoirCapacity < 1e-4))
+            {
+                if (area.hydro.reservoirManagement)
+                {
+                    // Set monthly mingen, used later for h2o_m
+                    data.mingens[realmonth] = totalMonthMingen / (area.hydro.reservoirCapacity);
+                    assert(!Math::NaN(data.mingens[month]) && "nan value detect in mingen");
+                }
+                else
+                {
+                    data.mingens[realmonth] = totalMonthMingen;
+                }
+            }
+            else
+            {
+                data.mingens[realmonth] = totalMonthMingen;
+            }
 
-              // Set daily mingen, used later for h2o_d
-              uint simulationMonth = calendar_.mapping.months[realmonth];
-              auto daysPerMonth = calendar_.months[simulationMonth].days;
-              uint firstDay = calendar_.months[simulationMonth].daysYear.first;
-              uint endDay = firstDay + daysPerMonth;
+            // Set daily mingen, used later for h2o_d
+            uint simulationMonth = calendar_.mapping.months[realmonth];
+            auto daysPerMonth = calendar_.months[simulationMonth].days;
+            uint firstDay = calendar_.months[simulationMonth].daysYear.first;
+            uint endDay = firstDay + daysPerMonth;
 
-              for (uint day = firstDay; day != endDay; ++day)
-              {
-                  data.dailyMinGen[day]
-                    = std::accumulate(srcmingen + day * 24, srcmingen + day * 24 + 24, 0.);
-              }
-          }
-          data.totalYearMingen = totalYearMingen;
-      });
+            for (uint day = firstDay; day != endDay; ++day)
+            {
+                data.dailyMinGen[day]
+                  = std::accumulate(srcmingen + day * 24, srcmingen + day * 24 + 24, 0.);
+            }
+        }
+        data.totalYearMingen = totalYearMingen;
+    });
 }
 
-bool HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const
+bool HydroManagement::checkMonthlyMinGeneration(uint numSpace,
+                                                uint tsIndex,
+                                                const Data::Area& area) const
 {
     const auto& data = tmpDataByArea_[numSpace][area.index];
     for (uint month = 0; month != 12; ++month)
@@ -256,7 +259,9 @@ bool HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint tsIndex, con
     return true;
 }
 
-bool HydroManagement::checkYearlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const
+bool HydroManagement::checkYearlyMinGeneration(uint numSpace,
+                                               uint tsIndex,
+                                               const Data::Area& area) const
 {
     const auto& data = tmpDataByArea_[numSpace][area.index];
     if (data.totalYearMingen > data.totalYearInflows)
@@ -328,12 +333,11 @@ bool HydroManagement::checkHourlyMinGeneration(uint tsIndex, Data::Area& area) c
             {
                 if (srcmingen[day * 24 + h] > maxP[day])
                 {
-                    logs.error()
-                        << "In area: " << area.name << " [hourly] minimum generation of "
-                        << srcmingen[day * 24 + h] << " MW in timestep " << day * 24 + h + 1
-                        << " of TS-" << tsIndex + 1
-                        << " is incompatible with the maximum generation of " << maxP[day]
-                        << " MW.";
+                    logs.error() << "In area: " << area.name << " [hourly] minimum generation of "
+                                 << srcmingen[day * 24 + h] << " MW in timestep "
+                                 << day * 24 + h + 1 << " of TS-" << tsIndex + 1
+                                 << " is incompatible with the maximum generation of " << maxP[day]
+                                 << " MW.";
                     return false;
                 }
             }
@@ -345,8 +349,7 @@ bool HydroManagement::checkHourlyMinGeneration(uint tsIndex, Data::Area& area) c
 bool HydroManagement::checkMinGeneration(uint numSpace)
 {
     bool ret = true;
-    areas_.each([this, &numSpace, &ret](Data::Area& area)
-    {
+    areas_.each([this, &numSpace, &ret](Data::Area& area) {
         uint z = area.index;
         const auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
         auto tsIndex = (uint)ptchro.Hydraulique;
@@ -366,7 +369,7 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
             ret = checkWeeklyMinGeneration(tsIndex, area) && ret;
             return;
         }
-               
+
         if (reservoirManagement)
             ret = checkYearlyMinGeneration(numSpace, tsIndex, area) && ret;
         else

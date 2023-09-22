@@ -95,4 +95,3 @@ private:
     Benchmarking::OptimizationInfo pOptimizationInfo;
 }; // class Application
 } // namespace Antares::Solver
-

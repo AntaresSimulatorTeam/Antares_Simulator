@@ -8,8 +8,8 @@
 #include "../../../config.h"
 
 using namespace Antares::Data;
-namespace Benchmarking {
-
+namespace Benchmarking
+{
 // Collecting data study
 // ---------------------------
 void StudyInfoCollector::toFileContent(FileContent& file_content)
@@ -84,17 +84,17 @@ void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent
     {
         switch (activeContraints[i]->type())
         {
-            case BindingConstraint::Type::typeHourly:
-                nbEnabledHourlyBC++;
-                break;
-            case BindingConstraint::Type::typeDaily:
-                nbEnabledDailyBC++;
-                break;
-            case BindingConstraint::Type::typeWeekly:
-                nbEnabledWeeklyBC++;
-                break;
-            default:
-                break;
+        case BindingConstraint::Type::typeHourly:
+            nbEnabledHourlyBC++;
+            break;
+        case BindingConstraint::Type::typeDaily:
+            nbEnabledDailyBC++;
+            break;
+        case BindingConstraint::Type::typeWeekly:
+            nbEnabledWeeklyBC++;
+            break;
+        default:
+            break;
         }
     }
 
@@ -107,7 +107,7 @@ void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent
 void StudyInfoCollector::unitCommitmentModeToFileContent(FileContent& file_content)
 {
     const char* unitCommitment
-            = UnitCommitmentModeToCString(study_.parameters.unitCommitment.ucMode);
+      = UnitCommitmentModeToCString(study_.parameters.unitCommitment.ucMode);
     file_content.addItemToSection("study", "unit commitment", unitCommitment);
 }
 
@@ -120,7 +120,7 @@ void StudyInfoCollector::solverVersionToFileContent(FileContent& file_content)
 {
     // Example : 8.3.0 -> 830
     const unsigned int version
-            = 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO + ANTARES_VERSION_BUILD;
+      = 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO + ANTARES_VERSION_BUILD;
 
     file_content.addItemToSection("study", "antares version", version);
 }
@@ -149,7 +149,7 @@ void SimulationInfoCollector::toFileContent(FileContent& file_content)
     file_content.addItemToSection("optimization problem", "variables", opt_info_.nbVariables);
     file_content.addItemToSection("optimization problem", "constraints", opt_info_.nbConstraints);
     file_content.addItemToSection(
-            "optimization problem", "non-zero coefficients", opt_info_.nbNonZeroCoeffs);
+      "optimization problem", "non-zero coefficients", opt_info_.nbNonZeroCoeffs);
 }
 
-}
+} // namespace Benchmarking

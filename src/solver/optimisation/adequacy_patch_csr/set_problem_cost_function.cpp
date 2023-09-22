@@ -33,10 +33,12 @@
 
 namespace
 {
-
 using namespace Antares::Data::AdequacyPatch;
 
-double calculateQuadraticCost(const PROBLEME_HEBDO* problemeHebdo, const AdqPatchPTO priceTakingOrder, int hour, int area)
+double calculateQuadraticCost(const PROBLEME_HEBDO* problemeHebdo,
+                              const AdqPatchPTO priceTakingOrder,
+                              int hour,
+                              int area)
 {
     using namespace Data::AdequacyPatch;
     double priceTakingOrders = 0.0; // PTO
@@ -78,10 +80,11 @@ void HourlyCSRProblem::setQuadraticCost()
             int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[area];
             if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
             {
-                problemeAResoudre_.CoutQuadratique[var] = calculateQuadraticCost(problemeHebdo_, 
-                                                                                 adqPatchParams_.curtailmentSharing.priceTakingOrder, 
-                                                                                 triggeredHour, 
-                                                                                 area);
+                problemeAResoudre_.CoutQuadratique[var]
+                  = calculateQuadraticCost(problemeHebdo_,
+                                           adqPatchParams_.curtailmentSharing.priceTakingOrder,
+                                           triggeredHour,
+                                           area);
                 logs.debug() << var << ". Quad C = " << problemeAResoudre_.CoutQuadratique[var];
             }
         }

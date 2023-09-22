@@ -51,4 +51,4 @@ inline CString<512, false> renewableTSNumberData::get_prefix() const
 {
     return "r,";
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

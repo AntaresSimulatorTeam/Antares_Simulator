@@ -51,8 +51,8 @@ struct VCardSTstorageLevelsByCluster
 
     //! The expecte results
     typedef Results<R::AllYears::Average< // The average values throughout all years
-        >>
-        ResultsType;
+      >>
+      ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardSTstorageLevelsByCluster VCardForSpatialAggregate;
@@ -92,8 +92,7 @@ struct VCardSTstorageLevelsByCluster
 */
 template<class NextT = Container::EndOfList>
 class STstorageLevelsByCluster
-    : public Variable::
-    IVariable<STstorageLevelsByCluster<NextT>, NextT, VCardSTstorageLevelsByCluster>
+ : public Variable::IVariable<STstorageLevelsByCluster<NextT>, NextT, VCardSTstorageLevelsByCluster>
 {
 public:
     //! Type of the next static variable
@@ -101,8 +100,7 @@ public:
     //! VCard
     typedef VCardSTstorageLevelsByCluster VCardType;
     //! Ancestor
-    typedef Variable::IVariable<STstorageLevelsByCluster<NextT>, NextT, VCardType>
-        AncestorType;
+    typedef Variable::IVariable<STstorageLevelsByCluster<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -122,15 +120,14 @@ public:
         {
             count
             = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                ? (NextType::template Statistics<CDataLevel, CFile>::count
+                 ? (NextType::template Statistics<CDataLevel, CFile>::count
                     + VCardType::columnCount * ResultsType::count)
-                : NextType::template Statistics<CDataLevel, CFile>::count),
+                 : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
 public:
-    STstorageLevelsByCluster() :
-        pValuesForTheCurrentYear(nullptr)
+    STstorageLevelsByCluster() : pValuesForTheCurrentYear(nullptr)
     {
     }
 
@@ -155,7 +152,7 @@ public:
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
                 pValuesForTheCurrentYear[numSpace]
-                = new VCardType::IntermediateValuesDeepType[nbClusters_];
+                  = new VCardType::IntermediateValuesDeepType[nbClusters_];
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
                 for (unsigned int i = 0; i != nbClusters_; ++i)
@@ -200,23 +197,25 @@ public:
     {
         for (unsigned int clusterIndex = 0; clusterIndex < nbClusters_; ++clusterIndex)
         {
-            // Compute all statistics from hourly results for the current year (daily, weekly, monthly, ...)
-            pValuesForTheCurrentYear[numSpace][clusterIndex].computeAveragesForCurrentYearFromHourlyResults();
+            // Compute all statistics from hourly results for the current year (daily, weekly,
+            // monthly, ...)
+            pValuesForTheCurrentYear[numSpace][clusterIndex]
+              .computeAveragesForCurrentYearFromHourlyResults();
         }
         // Next variable
         NextType::yearEnd(year, numSpace);
     }
 
     void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-        unsigned int nbYearsForCurrentSummary)
+                        unsigned int nbYearsForCurrentSummary)
     {
         for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
         {
             for (unsigned int clusterIndex = 0; clusterIndex < nbClusters_; ++clusterIndex)
             {
                 // Merge all those values with the global results
-                AncestorType::pResults[clusterIndex].merge(numSpaceToYear[numSpace],
-                    pValuesForTheCurrentYear[numSpace][clusterIndex]);
+                AncestorType::pResults[clusterIndex].merge(
+                  numSpaceToYear[numSpace], pValuesForTheCurrentYear[numSpace][clusterIndex]);
             }
         }
 
@@ -251,8 +250,8 @@ public:
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-        unsigned int column,
-        unsigned int numSpace) const
+      unsigned int column,
+      unsigned int numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace][column].hour;
     }
@@ -260,16 +259,16 @@ public:
     inline uint64_t memoryUsage() const
     {
         uint64_t r = (sizeof(IntermediateValues) * nbClusters_ + IntermediateValues::MemoryUsage())
-            * pNbYearsParallel;
+                     * pNbYearsParallel;
         r += sizeof(double) * nbClusters_ * maxHoursInAYear * pNbYearsParallel;
         r += AncestorType::memoryUsage();
         return r;
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
-        int fileLevel,
-        int precision,
-        unsigned int numSpace) const
+                                      int fileLevel,
+                                      int precision,
+                                      unsigned int numSpace) const
     {
         // Initializing external pointer on current variable non applicable status
         results.isCurrentVarNA = AncestorType::isNonApplicable;
@@ -286,8 +285,8 @@ public:
                 const auto* cluster = shortTermStorage.storagesByIndex[clusterIndex];
                 results.variableCaption = cluster->properties.name;
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][clusterIndex].template buildAnnualSurveyReport<VCardType>(
-                    results, fileLevel, precision);
+                pValuesForTheCurrentYear[numSpace][clusterIndex]
+                  .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }
     }

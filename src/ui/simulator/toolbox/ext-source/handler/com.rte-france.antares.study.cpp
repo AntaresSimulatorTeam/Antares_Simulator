@@ -328,8 +328,7 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
                 create = new Antares::Action::AntaresStudy::Area::Create(i->first, wantedName);
 
             std::map<YString, bool>::const_iterator send = i->second.end();
-            for (std::map<YString, bool>::const_iterator j = i->second.begin(); j != send;
-                 ++j)
+            for (std::map<YString, bool>::const_iterator j = i->second.begin(); j != send; ++j)
             {
                 *create += Antares::Action::AntaresStudy::Area::Create::
                   StandardActionsToCopyThermalCluster(i->first, j->first);

@@ -34,7 +34,6 @@
 
 namespace Antares::Data
 {
-
 enum RangeLimitsIndex
 {
     rangeBegin = 0,

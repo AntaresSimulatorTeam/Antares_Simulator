@@ -100,15 +100,13 @@ wxString ThermalClusterCommonModulation::cellValue(int x, int y) const
         case Data::thermalMinGenModulation:
             return DoubleToWxString(Math::Round((*pMatrix)[Data::thermalMinGenModulation][y], 3));
         case (Data::thermalModulationCost + Data::thermalModulationMax):
-            return DoubleToWxString(
-              Math::Round((*pMatrix)[Data::thermalModulationCost][y]
-                            * pCluster->costsTimeSeries[0].marginalCostTS[y],
-                          3));
+            return DoubleToWxString(Math::Round((*pMatrix)[Data::thermalModulationCost][y]
+                                                  * pCluster->costsTimeSeries[0].marginalCostTS[y],
+                                                3));
         case (Data::thermalModulationMarketBid + Data::thermalModulationMax):
-            return DoubleToWxString(
-              Math::Round((*pMatrix)[Data::thermalModulationMarketBid][y]
-                            * pCluster->costsTimeSeries[0].marketBidCostTS[y],
-                          3));
+            return DoubleToWxString(Math::Round((*pMatrix)[Data::thermalModulationMarketBid][y]
+                                                  * pCluster->costsTimeSeries[0].marketBidCostTS[y],
+                                                3));
         case (Data::thermalModulationCapacity + Data::thermalModulationMax):
             return DoubleToWxString(Math::Round(
               (*pMatrix)[Data::thermalModulationCapacity][y] * pCluster->nominalCapacity, 2));

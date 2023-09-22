@@ -35,7 +35,6 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
     int NbPdt;
     int Var;
 
-
     const std::vector<double>& TurbineMax = DonneesMensuelles->TurbineMax;
     const std::vector<double>& TurbineMin = DonneesMensuelles->TurbineMin;
     const std::vector<double>& TurbineCible = DonneesMensuelles->TurbineCible;
@@ -46,15 +45,15 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
     NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
 
     const CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
-        = ProblemeHydraulique.CorrespondanceDesVariables[NumeroDeProbleme];
+      = ProblemeHydraulique.CorrespondanceDesVariables[NumeroDeProbleme];
 
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-        = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
+      = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
 
     std::vector<double>& Xmin = ProblemeLineairePartieVariable.Xmin;
     std::vector<double>& Xmax = ProblemeLineairePartieVariable.Xmax;
     std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
-        = ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees;
+      = ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {

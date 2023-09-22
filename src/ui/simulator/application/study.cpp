@@ -1008,7 +1008,7 @@ void OpenStudyFromFolder(wxString folder)
     if ((uint)version > (uint)Data::versionLatest)
     {
         logs.error() << "A more recent version of Antares is required to open `" << studyfolder
-            << "`  (" << Data::VersionToCStr(version) << ')';
+                     << "`  (" << Data::VersionToCStr(version) << ')';
         return;
     }
 

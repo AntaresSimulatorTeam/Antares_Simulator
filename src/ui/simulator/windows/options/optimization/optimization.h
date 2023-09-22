@@ -112,7 +112,7 @@ private:
     void onPopupMenuLinkType(Component::Button&, wxMenu& menu, void*);
     void onPopupMenuExportMPSstatus(Component::Button&, wxMenu& menu, void*);
     void onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& menu, void*);
-    
+
     void onInternalMotion(wxMouseEvent&);
 
 private:

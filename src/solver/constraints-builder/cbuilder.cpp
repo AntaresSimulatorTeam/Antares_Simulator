@@ -87,12 +87,11 @@ bool CBuilder::checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour)
     for (uint tsIndex = 0; tsIndex < link->indirectCapacities.width; ++tsIndex)
     {
         if ((-1.0 * link->indirectCapacities[tsIndex][hour]
-                    > link->parameters[Data::fhlLoopFlow][hour])
-                || (link->directCapacities[tsIndex][hour]
-                    < link->parameters[Data::fhlLoopFlow][hour]))
+             > link->parameters[Data::fhlLoopFlow][hour])
+            || (link->directCapacities[tsIndex][hour] < link->parameters[Data::fhlLoopFlow][hour]))
         {
-            logs.error() << "Error on loop flow to NTC comparison validity at hour "
-                << hour + 1 << " for line " << linkInfo->getName();
+            logs.error() << "Error on loop flow to NTC comparison validity at hour " << hour + 1
+                         << " for line " << linkInfo->getName();
             return false;
         }
     }
@@ -101,30 +100,28 @@ bool CBuilder::checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour)
         double sum = 0.0;
         for (auto lnk : areaToLinks[link->from])
         {
-            sum += link->from == lnk->ptr->from
-                ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
-                : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
+            sum += link->from == lnk->ptr->from ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
+                                                : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
         }
 
         if (sum != 0.0)
         {
             logs.error() << "Error on loop flow sum validity (!= 0) at hour " << hour + 1
-                << " on node " << link->from->id;
+                         << " on node " << link->from->id;
             return false;
         }
 
         sum = 0.0;
         for (auto lnk : areaToLinks[link->with])
         {
-            sum += link->with == lnk->ptr->from
-                ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
-                : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
+            sum += link->with == lnk->ptr->from ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
+                                                : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
         }
 
         if (sum != 0.0)
         {
             logs.error() << "Error on loop flow sum validity (!= 0) at hour " << hour + 1
-                << " on node " << link->with->id;
+                         << " on node " << link->with->id;
             return false;
         }
     }
@@ -135,11 +132,10 @@ bool CBuilder::checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour)
 bool CBuilder::checkLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
 {
     if (Data::AreaLink* link = linkInfo->ptr;
-            link->parameters[Data::fhlPShiftMinus][hour]
-            > link->parameters[Data::fhlPShiftPlus][hour])
+        link->parameters[Data::fhlPShiftMinus][hour] > link->parameters[Data::fhlPShiftPlus][hour])
     {
         logs.error() << "Error on phase shift calendar validity at hour " << hour + 1
-            << " for line " << linkInfo->getName();
+                     << " for line " << linkInfo->getName();
         return false;
     }
     return true;
@@ -148,8 +144,7 @@ bool CBuilder::checkLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
 void CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
 {
     if (Data::AreaLink* link = linkInfo->ptr;
-            link->parameters[Data::fhlPShiftMinus][hour]
-            != link->parameters[Data::fhlPShiftPlus][hour])
+        link->parameters[Data::fhlPShiftMinus][hour] != link->parameters[Data::fhlPShiftPlus][hour])
         linkInfo->hasPShiftsEqual = false;
 }
 
@@ -175,7 +170,8 @@ bool CBuilder::updateLinks()
         linkInfo->avgImpedance = link->parameters[columnImpedance][0];
         for (size_t hour = 0; hour < HOURS_PER_YEAR - 1; hour++)
         {
-            if (link->parameters[columnImpedance][hour + 1] != link->parameters[columnImpedance][hour])
+            if (link->parameters[columnImpedance][hour + 1]
+                != link->parameters[columnImpedance][hour])
             {
                 impedances.insert(link->parameters[columnImpedance][hour + 1]);
             }
@@ -190,7 +186,6 @@ bool CBuilder::updateLinks()
             updateLinkPhaseShift(linkInfo, hour);
             if (!checkLinkPhaseShift(linkInfo, hour))
                 return false;
-
         }
 
         linkInfo->nImpedanceChanges = (uint)impedances.size();
@@ -214,7 +209,6 @@ bool CBuilder::updateLinks()
         linkInfo->weight = linkInfo->getWeightWithImpedance();
     }
     return true;
-
 }
 
 bool CBuilder::update()
@@ -225,7 +219,7 @@ bool CBuilder::update()
     pMesh.clear();
 
     // Update impedances from study file and compute impedance changes
-    if(!updateLinks())
+    if (!updateLinks())
         return false;
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)

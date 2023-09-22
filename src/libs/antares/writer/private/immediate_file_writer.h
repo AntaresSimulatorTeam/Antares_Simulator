@@ -22,4 +22,3 @@ private:
     Yuni::String pOutputFolder;
 };
 } // namespace Antares::Solver
-

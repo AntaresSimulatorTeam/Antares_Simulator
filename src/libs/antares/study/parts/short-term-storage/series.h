@@ -47,6 +47,7 @@ public:
     std::vector<double> inflows;
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;
+
 private:
     bool validateSizes() const;
     bool validateMaxInjection() const;

@@ -91,7 +91,8 @@ void CsrQuadraticProblem::setConstraintsOnFlows(std::vector<double>& Pi, std::ve
     }
 }
 
-void CsrQuadraticProblem::setNodeBalanceConstraints(std::vector<double>& Pi, std::vector<int>& Colonne)
+void CsrQuadraticProblem::setNodeBalanceConstraints(std::vector<double>& Pi,
+                                                    std::vector<int>& Colonne)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
     const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim

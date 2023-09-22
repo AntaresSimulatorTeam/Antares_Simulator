@@ -79,8 +79,4 @@ std::list<E> enumList()
 
 } // namespace Antares::Data::Enum
 
-
-
-
-
 #endif // ANTARES_DATA_ENUM_HXX

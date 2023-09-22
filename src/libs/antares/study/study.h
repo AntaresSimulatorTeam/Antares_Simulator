@@ -63,7 +63,7 @@ namespace Antares::Data
 */
 
 class UIRuntimeInfo;
-class Study: public Yuni::NonCopyable<Study>, public IObject, public LayerData
+class Study : public Yuni::NonCopyable<Study>, public IObject, public LayerData
 {
 public:
     using Ptr = std::shared_ptr<Study>;
@@ -240,7 +240,8 @@ public:
     ** \param name The name of the new area
     ** \return A pointer to a new area, or NULL if the operation failed
     */
-    // TODO no need for the 2nd argument, remove it after the GUI has been removed, keeping the default value
+    // TODO no need for the 2nd argument, remove it after the GUI has been removed, keeping the
+    // default value
     Area* areaAdd(const AreaName& name, bool update = false);
 
     /*!
@@ -720,7 +721,6 @@ YString StudyCreateOutputPath(StudyMode mode,
                               const YString& label,
                               int64_t startTime);
 } // namespace Antares::Data
-
 
 #include "study.hxx"
 #include "runtime.h"

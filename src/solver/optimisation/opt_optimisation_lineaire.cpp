@@ -63,10 +63,10 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
 }
 
 bool runWeeklyOptimization(const OptimizationOptions& options,
-                                  PROBLEME_HEBDO* problemeHebdo,
-                                  const AdqPatchParams& adqPatchParams,
-                                  Solver::IResultWriter& writer,
-                                  int optimizationNumber)
+                           PROBLEME_HEBDO* problemeHebdo,
+                           const AdqPatchParams& adqPatchParams,
+                           Solver::IResultWriter& writer,
+                           int optimizationNumber)
 {
     const int NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
@@ -134,7 +134,6 @@ void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
     }
 }
 } // namespace
-
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,

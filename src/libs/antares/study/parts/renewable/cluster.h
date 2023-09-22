@@ -91,6 +91,7 @@ public:
 
     //! Set of renewable clusters
     using Set = std::set<RenewableCluster*, CompareClusterName>;
+
 public:
     //! \name Constructor & Destructor
     //@{

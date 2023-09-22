@@ -102,5 +102,4 @@ public:
 
 } // namespace Antares::Data
 
-
 #endif /* __ANTARES_LIBS_STUDY_CLEANER_H__ */

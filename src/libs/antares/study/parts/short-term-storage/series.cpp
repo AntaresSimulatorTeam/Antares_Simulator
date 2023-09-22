@@ -37,7 +37,6 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-
 bool Series::loadFromFolder(const std::string& folder)
 {
     bool ret = true;
@@ -90,13 +89,13 @@ bool loadFile(const std::string& path, std::vector<double>& vect)
     catch (const std::invalid_argument& ex)
     {
         logs.error() << "Failed reading file: " << path << " conversion to double failed at line "
-            << lineCount + 1 << "  value: " << line;
+                     << lineCount + 1 << "  value: " << line;
         return false;
     }
     catch (const std::out_of_range& ex)
     {
         logs.error() << "Failed reading file: " << path << " value is out of bounds at line "
-            << lineCount + 1 << "  value: " << line;
+                     << lineCount + 1 << "  value: " << line;
         return false;
     }
     return true;
@@ -162,12 +161,12 @@ bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
 bool Series::validate() const
 {
     return validateSizes() && validateMaxInjection() && validateMaxWithdrawal()
-        && validateRuleCurves();
+           && validateRuleCurves();
 }
 
-static bool checkVectBetweenZeroOne(const std::vector<double>& v, const std::string& name )
+static bool checkVectBetweenZeroOne(const std::vector<double>& v, const std::string& name)
 {
-    if(!std::all_of(v.begin(), v.end(), [](double d){ return (d >= 0.0 && d <= 1.0); }))
+    if (!std::all_of(v.begin(), v.end(), [](double d) { return (d >= 0.0 && d <= 1.0); }))
     {
         logs.warning() << "Values for " << name << " series should be between 0 and 1";
         return false;
@@ -195,7 +194,6 @@ bool Series::validateMaxInjection() const
 bool Series::validateMaxWithdrawal() const
 {
     return checkVectBetweenZeroOne(maxWithdrawalModulation, "PMAX withdrawal");
-
 }
 
 bool Series::validateRuleCurves() const

@@ -103,7 +103,7 @@ std::string Constraint::getTimeStepInYear() const
     case ConstraintType::binding_constraint_daily:
     case ConstraintType::fictitious_load:
     case ConstraintType::hydro_reservoir_level:
-        return StringBetweenAngleBrackets (mItems.at(mItems.size()-2));
+        return StringBetweenAngleBrackets(mItems.at(mItems.size() - 2));
     default:
         return "-1";
     }

@@ -47,4 +47,4 @@ inline CString<512, false> thermalTSNumberData::get_prefix() const
 {
     return "t,";
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

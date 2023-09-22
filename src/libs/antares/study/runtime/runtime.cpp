@@ -246,11 +246,11 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
 }
 
 StudyRuntimeInfos::StudyRuntimeInfos() :
-    nbYears(0),
-    parameters(nullptr),
-    thermalPlantTotalCount(0),
-    thermalPlantTotalCountMustRun(0),
-    quadraticOptimizationHasFailed(false)
+ nbYears(0),
+ parameters(nullptr),
+ thermalPlantTotalCount(0),
+ thermalPlantTotalCountMustRun(0),
+ quadraticOptimizationHasFailed(false)
 {
 }
 
@@ -286,10 +286,12 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     }
     else
     {
-        study.calendar.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
+        study.calendar.reset(
+          {gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
     }
     logs.debug() << "  :: generating calendar dedicated to the output";
-    study.calendarOutput.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
+    study.calendarOutput.reset(
+      {gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
     initializeRangeLimits(study, rangeLimits);
 
     // Removing disabled thermal clusters from solver computations
@@ -333,7 +335,8 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
     logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
     logs.info() << "     short-term storages: " << shortTermStorageCount;
-    logs.info() << "     binding constraints: " << study.bindingConstraints.activeContraints().size();
+    logs.info() << "     binding constraints: "
+                << study.bindingConstraints.activeContraints().size();
     logs.info() << "     geographic trimming:" << (gd.geographicTrimming ? "true" : "false");
     logs.info() << "     memory : " << ((study.memoryUsage()) / 1024 / 1024) << "Mo";
     logs.info();
@@ -471,4 +474,4 @@ void StudyRuntimeInfos::disableAllFilters(Study& study)
     });
 }
 
-} // namespace Antares
+} // namespace Antares::Data

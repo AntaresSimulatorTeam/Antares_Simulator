@@ -37,7 +37,6 @@ namespace Antares
 {
 namespace Component
 {
-
 namespace Datagrid
 {
 /*!

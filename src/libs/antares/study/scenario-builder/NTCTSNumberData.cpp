@@ -94,4 +94,4 @@ uint ntcTSNumberData::get_tsGenCount(const Study& /* study */) const
 {
     return 0;
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

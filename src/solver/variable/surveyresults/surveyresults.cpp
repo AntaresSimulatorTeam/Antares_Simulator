@@ -234,9 +234,7 @@ namespace Solver
 {
 namespace Variable
 {
-static inline uint GetRangeLimit(const Data::Study& study,
-                                 int precisionLevel,
-                                 int index)
+static inline uint GetRangeLimit(const Data::Study& study, int precisionLevel, int index)
 {
     assert(study.runtime && "invalid runtime data");
     switch (precisionLevel)
@@ -488,15 +486,13 @@ static inline void WriteIndexHeaderToFileDescriptor(int precisionLevel,
     s += '\n';
 }
 
-SurveyResults::SurveyResults(const Data::Study& s,
-                             const String& o,
-                             IResultWriter& writer) :
+SurveyResults::SurveyResults(const Data::Study& s, const String& o, IResultWriter& writer) :
  data(s, o),
  yearByYearResults(false),
  isCurrentVarNA(nullptr),
  isPrinted(nullptr),
  pResultWriter(writer)
-{    
+{
     variableCaption.reserve(10);
 
     maxVariables = s.parameters.variablesPrintInfo.getTotalMaxColumnsCount();
@@ -727,11 +723,11 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
 
         for (uint x = 0; x != data.columnIndex; ++x)
             AppendDoubleValue(error,
-                    values[x][y],
-                    data.fileBuffer,
-                    conversionBuffer,
-                    precision[x],
-                    nonApplicableStatus[x]);
+                              values[x][y],
+                              data.fileBuffer,
+                              conversionBuffer,
+                              precision[x],
+                              nonApplicableStatus[x]);
 
         // End of line
         data.fileBuffer += '\n';

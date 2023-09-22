@@ -371,12 +371,12 @@ inline bool Abstract<Q, Child, T, P, N>::operator>(const Abstract<Q1, C1, T1, P1
     }
 
 #define YUNI_UNIT_OPERATOR_FOR_ALLSTD_TYPES(OP) \
-    YUNI_UNIT_OPERATOR_ASSIGN(OP, int16_t)       \
-    YUNI_UNIT_OPERATOR_ASSIGN(OP, int32_t)       \
-    YUNI_UNIT_OPERATOR_ASSIGN(OP, int64_t)       \
+    YUNI_UNIT_OPERATOR_ASSIGN(OP, int16_t)      \
+    YUNI_UNIT_OPERATOR_ASSIGN(OP, int32_t)      \
+    YUNI_UNIT_OPERATOR_ASSIGN(OP, int64_t)      \
     YUNI_UNIT_OPERATOR_ASSIGN(OP, uint16)       \
-    YUNI_UNIT_OPERATOR_ASSIGN(OP, uint32_t)       \
-    YUNI_UNIT_OPERATOR_ASSIGN(OP, uint64_t)       \
+    YUNI_UNIT_OPERATOR_ASSIGN(OP, uint32_t)     \
+    YUNI_UNIT_OPERATOR_ASSIGN(OP, uint64_t)     \
     YUNI_UNIT_OPERATOR_ASSIGN(OP, float)        \
     YUNI_UNIT_OPERATOR_ASSIGN(OP, double)       \
     YUNI_UNIT_OPERATOR_ASSIGN(OP, long double)  \

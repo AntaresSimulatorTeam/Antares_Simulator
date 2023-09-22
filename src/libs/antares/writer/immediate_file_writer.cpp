@@ -5,7 +5,6 @@
 #include <antares/io/file.h>
 #include <antares/logs/logs.h>
 
-
 // Create directory hierarchy (incl. root)
 // Don't complain if directories already exist
 // Example. Assuming /root exists, `createDirectoryHierarchy("/root", "a/b/c");`

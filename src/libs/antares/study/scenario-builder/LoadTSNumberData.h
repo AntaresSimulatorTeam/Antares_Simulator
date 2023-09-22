@@ -20,4 +20,4 @@ inline CString<512, false> loadTSNumberData::get_prefix() const
     return "l,";
 }
 
-}
+} // namespace Antares::Data::ScenarioBuilder

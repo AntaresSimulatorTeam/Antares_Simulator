@@ -271,10 +271,11 @@ template<class U>
 inline uint64_t Stream::write(const U& buffer, uint64_t maxsize)
 {
     String string(buffer);
-    return (uint64_t)::fwrite(string.c_str(),
-                            1,
-                            string.size() > maxsize ? static_cast<size_t>(maxsize) : string.size(),
-                            pFd);
+    return (uint64_t)::fwrite(
+      string.c_str(),
+      1,
+      string.size() > maxsize ? static_cast<size_t>(maxsize) : string.size(),
+      pFd);
 }
 
 inline bool Stream::operator!() const

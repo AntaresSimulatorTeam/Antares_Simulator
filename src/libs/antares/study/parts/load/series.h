@@ -40,8 +40,6 @@ namespace Data
 class DataSeriesLoad
 {
 public:
-
-
     bool forceReload(bool reload = false) const;
 
     /*!

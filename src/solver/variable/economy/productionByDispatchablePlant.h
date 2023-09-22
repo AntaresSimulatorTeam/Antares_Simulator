@@ -343,7 +343,7 @@ public:
     inline uint64_t memoryUsage() const
     {
         uint64_t r = (sizeof(IntermediateValues) * pSize + IntermediateValues::MemoryUsage())
-                         * pNbYearsParallel;
+                     * pNbYearsParallel;
         r += sizeof(double) * pSize * maxHoursInAYear * pNbYearsParallel;
         r += AncestorType::memoryUsage();
         return r;

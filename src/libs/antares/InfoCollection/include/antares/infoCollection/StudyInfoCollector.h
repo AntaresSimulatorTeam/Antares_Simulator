@@ -6,7 +6,8 @@
 
 #include "antares/study/study.h"
 
-namespace Benchmarking {
+namespace Benchmarking
+{
 class FileContent;
 
 class StudyInfoCollector
@@ -35,7 +36,6 @@ private:
     const Antares::Data::Study& study_;
 };
 
-
 struct OptimizationInfo
 {
     unsigned int nbVariables = 0;
@@ -53,4 +53,4 @@ public:
 private:
     const OptimizationInfo& opt_info_;
 };
-}
+} // namespace Benchmarking

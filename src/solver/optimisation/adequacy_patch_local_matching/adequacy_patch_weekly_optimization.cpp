@@ -42,7 +42,7 @@ AdequacyPatchOptimization::AdequacyPatchOptimization(const Antares::Data::Study&
                                                      AdqPatchParams& adqPatchParams,
                                                      uint thread_number,
                                                      IResultWriter& writer) :
-    WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer), study_(study)
+ WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer), study_(study)
 {
 }
 
@@ -57,12 +57,13 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[pays]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS
-                = problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDeDefaillancePositive;
+              = problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDeDefaillancePositive;
         else
             std::fill(problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS.begin(),
-                    problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS.end(), 0);
+                      problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS.end(),
+                      0);
     }
-    
+
     OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
 }
 

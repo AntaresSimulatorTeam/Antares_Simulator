@@ -98,7 +98,8 @@ void storeTimeseriesNumbersForRenewable(Solver::IResultWriter& writer, const Are
     area.renewable.list.storeTimeseriesNumbers(writer);
 }
 
-void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writer, const Area& area)
+void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writer,
+                                                     const Area& area)
 {
     // No links originating from this area
     // do not create an empty directory
@@ -117,4 +118,3 @@ void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writ
     }
 }
 } // namespace Antares::Data
-

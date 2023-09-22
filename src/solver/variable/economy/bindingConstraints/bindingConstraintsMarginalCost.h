@@ -252,8 +252,7 @@ public:
             for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
             {
                 pValuesForTheCurrentYear[numSpace].day[dayInTheYear]
-                  -= state.problemeHebdo
-                       ->ResultatsContraintesCouplantes[bindConstraintGlobalIndex_]
+                  -= state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalIndex_]
                        .variablesDuales[dayInTheWeek];
 
                 dayInTheYear++;
@@ -361,7 +360,8 @@ private:
     // ---------------
     std::string getBindConstraintCaption() const
     {
-        std::string mathOperator(Antares::Data::BindingConstraint::MathOperatorToCString(associatedBC_->operatorType()));
+        std::string mathOperator(
+          Antares::Data::BindingConstraint::MathOperatorToCString(associatedBC_->operatorType()));
         return std::string() + associatedBC_->name().c_str() + " (" + mathOperator + ")";
     }
 
@@ -395,7 +395,7 @@ private:
     unsigned int pNbYearsParallel = 0;
     std::shared_ptr<Data::BindingConstraint> associatedBC_ = nullptr;
     int bindConstraintGlobalIndex_ = -1;
-    uint nbCount_ = 0; // Number of inequality BCs 
+    uint nbCount_ = 0; // Number of inequality BCs
 
 }; // class BindingConstMarginCost
 

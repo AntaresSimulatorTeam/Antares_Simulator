@@ -6,42 +6,36 @@
 
 namespace Antares::Solver::Simulation
 {
-
-basePostProcessCommand::basePostProcessCommand(PROBLEME_HEBDO* problemeHebdo) 
-    : problemeHebdo_(problemeHebdo)
+basePostProcessCommand::basePostProcessCommand(PROBLEME_HEBDO* problemeHebdo) :
+ problemeHebdo_(problemeHebdo)
 {
 }
 
 interfacePostProcessList::interfacePostProcessList(PROBLEME_HEBDO* problemesHebdo, uint numSpace) :
-    problemeHebdo_(problemesHebdo), thread_number_(numSpace)
+ problemeHebdo_(problemesHebdo), thread_number_(numSpace)
 {
 }
 
-
 std::unique_ptr<interfacePostProcessList> interfacePostProcessList::create(
-    AdqPatchParams& adqPatchParams,
-    PROBLEME_HEBDO* problemeHebdo,
-    uint thread_number,
-    AreaList& areas,
-    SheddingPolicy sheddingPolicy,
-    SimplexOptimization splxOptimization,
-    Calendar& calendar)
+  AdqPatchParams& adqPatchParams,
+  PROBLEME_HEBDO* problemeHebdo,
+  uint thread_number,
+  AreaList& areas,
+  SheddingPolicy sheddingPolicy,
+  SimplexOptimization splxOptimization,
+  Calendar& calendar)
 {
     if (adqPatchParams.enabled)
         return std::make_unique<AdqPatchPostProcessList>(adqPatchParams,
-                                                         problemeHebdo, 
+                                                         problemeHebdo,
                                                          thread_number,
                                                          areas,
                                                          sheddingPolicy,
                                                          splxOptimization,
                                                          calendar);
     else
-        return std::make_unique<OptPostProcessList>(problemeHebdo, 
-                                                    thread_number,
-                                                    areas, 
-                                                    sheddingPolicy,
-                                                    splxOptimization,
-                                                    calendar);
+        return std::make_unique<OptPostProcessList>(
+          problemeHebdo, thread_number, areas, sheddingPolicy, splxOptimization, calendar);
 }
 
 void interfacePostProcessList::runAll(const optRuntimeData& opt_runtime_data)

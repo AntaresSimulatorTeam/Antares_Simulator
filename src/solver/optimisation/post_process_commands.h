@@ -91,6 +91,7 @@ private:
 class CurtailmentSharingPostProcessCmd : public basePostProcessCommand
 {
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+
 public:
     CurtailmentSharingPostProcessCmd(const AdqPatchParams& adqPatchParams,
                                      PROBLEME_HEBDO* problemeHebdo,

@@ -29,8 +29,8 @@
 
 #include <stdexcept>
 
-namespace Antares {
-
+namespace Antares
+{
 /*!
 ** \brief A generic exception for errors that should end the program.
 */
@@ -40,6 +40,6 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-}
+} // namespace Antares
 
 #endif // __ANTARES_LIB_FATAL_ERROR_H__

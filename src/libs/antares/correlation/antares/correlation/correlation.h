@@ -37,7 +37,6 @@ namespace Antares
 {
 namespace Data
 {
-
 class Correlation final
 {
 public:
@@ -102,9 +101,7 @@ public:
     ** \param version Format version expected. Use studyVersionUnknown to use the format version
     **   of the given study
     */
-    bool loadFromFile(Study& study,
-                      const AnyString& filename,
-                      bool warnings = true);
+    bool loadFromFile(Study& study, const AnyString& filename, bool warnings = true);
 
     /*!
     ** \brief Save the correlation matrices into an INI file

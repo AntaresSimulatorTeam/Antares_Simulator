@@ -40,4 +40,4 @@ bool windTSNumberData::apply(/*const*/ Study& study)
     }
     return ret;
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

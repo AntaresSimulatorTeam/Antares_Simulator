@@ -40,8 +40,6 @@ namespace Data
 class DataSeriesSolar
 {
 public:
-
-
     bool forceReload(bool reload = false) const;
 
     void markAsModified() const;

@@ -27,7 +27,6 @@
 #ifndef __ANTARES_WINDOW_VERSION_H__
 #define __ANTARES_WINDOW_VERSION_H__
 
-
 #include <wx/string.h>
 
 namespace Antares

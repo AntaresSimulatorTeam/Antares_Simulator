@@ -34,7 +34,6 @@
 
 using namespace Yuni;
 
-
 namespace Antares::Date
 {
 static const uint StandardDaysPerMonths[12] = {
@@ -664,4 +663,3 @@ void Calendar::reset()
 }
 
 } // namespace Antares::Date
-

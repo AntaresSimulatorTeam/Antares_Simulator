@@ -101,8 +101,7 @@ public:
     //! VCard
     typedef VCardSTstorageInjectionByCluster VCardType;
     //! Ancestor
-    typedef Variable::IVariable<STstorageInjectionByCluster<NextT>, NextT, VCardType>
-      AncestorType;
+    typedef Variable::IVariable<STstorageInjectionByCluster<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -129,8 +128,7 @@ public:
     };
 
 public:
-    STstorageInjectionByCluster() :
-     pValuesForTheCurrentYear(nullptr)
+    STstorageInjectionByCluster() : pValuesForTheCurrentYear(nullptr)
     {
     }
 
@@ -200,7 +198,8 @@ public:
     {
         for (unsigned int clusterIndex = 0; clusterIndex < nbClusters_; ++clusterIndex)
         {
-            // Compute all statistics from hourly results for the current year (daily, weekly, monthly, ...)
+            // Compute all statistics from hourly results for the current year (daily, weekly,
+            // monthly, ...)
             pValuesForTheCurrentYear[numSpace][clusterIndex].computeStatisticsForTheCurrentYear();
         }
         // Next variable
@@ -215,8 +214,8 @@ public:
             for (unsigned int clusterIndex = 0; clusterIndex < nbClusters_; ++clusterIndex)
             {
                 // Merge all those values with the global results
-                AncestorType::pResults[clusterIndex].merge(numSpaceToYear[numSpace],
-                                                pValuesForTheCurrentYear[numSpace][clusterIndex]);
+                AncestorType::pResults[clusterIndex].merge(
+                  numSpaceToYear[numSpace], pValuesForTheCurrentYear[numSpace][clusterIndex]);
             }
         }
 
@@ -260,7 +259,7 @@ public:
     inline uint64_t memoryUsage() const
     {
         uint64_t r = (sizeof(IntermediateValues) * nbClusters_ + IntermediateValues::MemoryUsage())
-                         * pNbYearsParallel;
+                     * pNbYearsParallel;
         r += sizeof(double) * nbClusters_ * maxHoursInAYear * pNbYearsParallel;
         r += AncestorType::memoryUsage();
         return r;

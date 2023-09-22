@@ -185,4 +185,3 @@ bool AskForInput(wxString& out, const wxString& title, const wxString& caption)
 }
 
 } // namespace Antares::Window
-

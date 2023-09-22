@@ -317,6 +317,3 @@ IAction* Create::StandardActionsToCopyThermalCluster(const Data::AreaName& area,
 }
 
 } // namespace Antares::Action::AntaresStudy::Area
-
-
-

@@ -171,10 +171,9 @@ public:
     void simulationEnd()
     {
         // Flow assessed over all MC years (linear)
-        (void)::memcpy(
-          pValuesForTheCurrentYear.hour,
-          transitMoyenInterconnexionsRecalculQuadratique[pLinkGlobalIndex].data(),
-          sizeof(double) * pNbHours);
+        (void)::memcpy(pValuesForTheCurrentYear.hour,
+                       transitMoyenInterconnexionsRecalculQuadratique[pLinkGlobalIndex].data(),
+                       sizeof(double) * pNbHours);
 
         // Compute all statistics for the current year (daily,weekly,monthly)
         pValuesForTheCurrentYear.computeStatisticsForTheCurrentYear();

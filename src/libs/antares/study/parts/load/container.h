@@ -36,7 +36,6 @@ namespace Data
 {
 namespace Load
 {
-
 class Prepro;
 class Container final : private Yuni::NonCopyable<Container>
 {

@@ -42,7 +42,10 @@ using namespace Yuni;
 namespace Antares::Solver::Simulation
 {
 template<uint step>
-static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint numSpace, uint hourInYear)
+static bool Remix(const Data::AreaList& areas,
+                  PROBLEME_HEBDO& problem,
+                  uint numSpace,
+                  uint hourInYear)
 {
     double HE[168];
 

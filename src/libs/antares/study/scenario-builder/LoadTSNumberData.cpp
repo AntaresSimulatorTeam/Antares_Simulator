@@ -41,4 +41,4 @@ bool loadTSNumberData::apply(Study& study)
     }
     return ret;
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

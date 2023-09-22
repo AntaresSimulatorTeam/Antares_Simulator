@@ -47,7 +47,6 @@ namespace Antares
 {
 namespace Optimization
 {
-
 class Nomenclature
 {
 public:

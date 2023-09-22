@@ -21,7 +21,6 @@ namespace Private
 {
 namespace LogsDecorator
 {
-
 void WriteCurrentTimestampToBuffer(char buffer[32])
 {
 #ifdef YUNI_OS_MSVC
@@ -29,7 +28,6 @@ void WriteCurrentTimestampToBuffer(char buffer[32])
 #else
     time_t rawtime = ::time(nullptr);
 #endif
-
 
 #if defined(YUNI_OS_MSVC)
     struct tm timeinfo;
@@ -40,7 +38,7 @@ void WriteCurrentTimestampToBuffer(char buffer[32])
 
 #else
     // Unixes
-    ::strftime(buffer, 32, "%F %T",  ::localtime(&rawtime));
+    ::strftime(buffer, 32, "%F %T", ::localtime(&rawtime));
 #endif
 }
 

@@ -8,8 +8,8 @@
 #include <antares/inifile/inifile.h>
 #include <antares/array/matrix.h>
 
-namespace Antares::Data {
-
+namespace Antares::Data
+{
 class AreaList;
 class EnvForLoading final
 {
@@ -32,4 +32,4 @@ public:
     unsigned version;
 };
 
-} // Data
+} // namespace Antares::Data

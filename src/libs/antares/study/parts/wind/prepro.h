@@ -52,7 +52,6 @@ public:
     ** \brief Try to estimate the amount of memory required by this class for a simulation
     */
 
-
     /*!
     ** \brief Load data from a folder
     */
@@ -86,8 +85,6 @@ public:
 }; // Prepro
 
 } // namespace Antares::Data::Wind
-
-
 
 #include "prepro.hxx"
 

@@ -148,7 +148,6 @@ bool Properties::saveToFolder(const std::string& folder) const
     s->add("efficiency", this->efficiencyFactor);
     s->add("initialleveloptim", this->initialLevelOptim);
 
-
     return ini.save(pathIni);
 }
 

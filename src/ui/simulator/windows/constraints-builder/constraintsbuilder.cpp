@@ -202,8 +202,7 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
         flexSz->AddSpacer(3);
         flexSz->AddSpacer(3);
 
-        std::string layerName
-          = GetCurrentStudy()->layers.at(GetCurrentStudy()->activeLayerID);
+        std::string layerName = GetCurrentStudy()->layers.at(GetCurrentStudy()->activeLayerID);
         mapName = Antares::Component::CreateLabel(panelGrid, wxString(layerName));
 
         flexSz->Add(Antares::Component::CreateLabel(panelGrid, wxT("Map name : "), true),

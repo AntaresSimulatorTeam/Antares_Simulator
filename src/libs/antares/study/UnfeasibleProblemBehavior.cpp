@@ -125,4 +125,3 @@ const std::initializer_list<std::string>& getNames<UnfeasibleProblemBehavior>()
 } // namespace Enum
 
 } // namespace Antares::Data
-

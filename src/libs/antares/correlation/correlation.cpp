@@ -716,4 +716,3 @@ void Correlation::copyFrom(const Correlation& source,
 }
 
 } // namespace Antares::Data
-

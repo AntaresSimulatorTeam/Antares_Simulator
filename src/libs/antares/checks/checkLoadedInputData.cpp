@@ -46,8 +46,7 @@ void checkStudyVersion(const AnyString& optStudyFolder)
     {
         if ((uint)version > (uint)versionLatest)
         {
-            throw Error::InvalidVersion(VersionToCStr(version),
-                                        VersionToCStr(versionLatest));
+            throw Error::InvalidVersion(VersionToCStr(version), VersionToCStr(versionLatest));
         }
     }
 }
@@ -170,14 +169,14 @@ static void checkThermalColumnNumber(const Antares::Data::AreaList& areas,
 
 void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas)
 {
-    checkThermalColumnNumber<Antares::Error::IncompatibleFuelCostColumns>(areas,
-                             &Antares::Data::EconomicInputData::fuelcost);
+    checkThermalColumnNumber<Antares::Error::IncompatibleFuelCostColumns>(
+      areas, &Antares::Data::EconomicInputData::fuelcost);
 }
 
 void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas)
 {
-    checkThermalColumnNumber<Antares::Error::IncompatibleCO2CostColumns>(areas,
-                             &Antares::Data::EconomicInputData::co2cost);
+    checkThermalColumnNumber<Antares::Error::IncompatibleCO2CostColumns>(
+      areas, &Antares::Data::EconomicInputData::co2cost);
 }
 
 } // namespace Antares::Check

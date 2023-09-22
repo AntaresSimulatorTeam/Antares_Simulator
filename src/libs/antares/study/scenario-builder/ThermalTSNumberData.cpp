@@ -18,8 +18,8 @@ bool thermalTSNumberData::reset(const Study& study)
     // WARNING: At this point in time, the variable pArea->thermal.clusterCount()
     //   might not be valid (because not really initialized yet)
     uint clusterCount = (study.usedByTheSolver)
-                        ? (pArea->thermal.list.size() + pArea->thermal.mustrunList.size())
-                        : pArea->thermal.list.size();
+                          ? (pArea->thermal.list.size() + pArea->thermal.mustrunList.size())
+                          : pArea->thermal.list.size();
 
     // Resize
     pTSNumberRules.reset(clusterCount, nbYears);
@@ -107,4 +107,4 @@ uint thermalTSNumberData::get_tsGenCount(const Study& study) const
     bool tsGenThermal = (0 != (parameters.timeSeriesToGenerate & timeSeriesThermal));
     return tsGenThermal ? parameters.nbTimeSeriesThermal : 0u;
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

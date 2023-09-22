@@ -19,4 +19,4 @@ inline CString<512, false> solarTSNumberData::get_prefix() const
 {
     return "s,";
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

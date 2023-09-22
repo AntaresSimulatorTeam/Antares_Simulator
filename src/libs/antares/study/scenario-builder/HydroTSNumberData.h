@@ -19,4 +19,4 @@ inline CString<512, false> hydroTSNumberData::get_prefix() const
 {
     return "h,";
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

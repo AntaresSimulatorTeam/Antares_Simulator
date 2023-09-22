@@ -406,7 +406,7 @@ typename Grid<NodeT>::VectorEdgeP Grid<NodeT>::findShortestPath(NodeP node1, Nod
     std::map<NodeP, double> dist;
     std::map<NodeP, NodeP> prev;
 
-    //decorate to avoid warnings at compile
+    // decorate to avoid warnings at compile
     [[maybe_unused]] bool checkNode1(false), checkNode2(false);
     VectorNodeP nodes = pNodesList;
 

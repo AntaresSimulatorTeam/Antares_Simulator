@@ -43,7 +43,7 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo)
         for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
             if (COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
-                    CoutDeTransport.IntercoGereeAvecDesCouts)
+                CoutDeTransport.IntercoGereeAvecDesCouts)
             {
                 CoutDeTransport.CoutDeTransportOrigineVersExtremite[pdt]
                   = CoutDeTransport.CoutDeTransportOrigineVersExtremiteRef[pdt];
@@ -132,15 +132,12 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo)
                       = PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt];
 
                     if (PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt]
-                        > PuissanceDisponibleEtCout
-                            .PuissanceDisponibleDuPalierThermiqueRef[pdt])
+                        > PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermiqueRef[pdt])
                     {
                         PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt]
-                          = PuissanceDisponibleEtCout
-                              .PuissanceDisponibleDuPalierThermiqueRef[pdt];
+                          = PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermiqueRef[pdt];
                         PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt]
-                          = PuissanceDisponibleEtCout
-                              .PuissanceDisponibleDuPalierThermiqueRef[pdt];
+                          = PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermiqueRef[pdt];
                     }
                 }
             }

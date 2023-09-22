@@ -123,21 +123,21 @@ namespace Antares
 namespace Data
 {
 Data::ThermalCluster::ThermalCluster(Area* parent) :
-    Cluster(parent),
-    groupID(thermalDispatchGrpOther1),
-    mustrun(false),
-    mustrunOrigin(false),
-    nominalCapacityWithSpinning(0.),
-    minStablePower(0.),
-    minUpTime(1),
-    minDownTime(1),
-    spinning(0.),
-    forcedVolatility(0.),
-    plannedVolatility(0.),
-    forcedLaw(thermalLawUniform),
-    plannedLaw(thermalLawUniform),
-    PthetaInf(HOURS_PER_YEAR, 0),
-    costsTimeSeries(1, CostsTimeSeries())
+ Cluster(parent),
+ groupID(thermalDispatchGrpOther1),
+ mustrun(false),
+ mustrunOrigin(false),
+ nominalCapacityWithSpinning(0.),
+ minStablePower(0.),
+ minUpTime(1),
+ minDownTime(1),
+ spinning(0.),
+ forcedVolatility(0.),
+ plannedVolatility(0.),
+ forcedLaw(thermalLawUniform),
+ plannedLaw(thermalLawUniform),
+ PthetaInf(HOURS_PER_YEAR, 0),
+ costsTimeSeries(1, CostsTimeSeries())
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");
@@ -251,7 +251,7 @@ static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(Data::Cluste
          {"other 4", ThermalCluster::thermalDispatchGrpOther4}};
 
     boost::to_lower(newgrp);
-    if (auto res = mapping.find(newgrp);res != mapping.end())
+    if (auto res = mapping.find(newgrp); res != mapping.end())
     {
         return res->second;
     }
@@ -410,10 +410,9 @@ void ThermalCluster::ComputeProductionCostTS()
     }
 }
 
-
 double Data::ThermalCluster::computeMarketBidCost(double fuelCost,
-                                                         double co2EmissionFactor,
-                                                         double co2cost)
+                                                  double co2EmissionFactor,
+                                                  double co2cost)
 {
     return fuelCost * 360.0 / fuelEfficiency + co2EmissionFactor * co2cost + variableomcost;
 }
@@ -816,7 +815,8 @@ void ThermalCluster::checkAndCorrectAvailability()
                        << " available power lifted to match Pmin and Pnom requirements";
 }
 
-bool ThermalCluster::isActive() const {
+bool ThermalCluster::isActive() const
+{
     return enabled && !mustrun;
 }
 

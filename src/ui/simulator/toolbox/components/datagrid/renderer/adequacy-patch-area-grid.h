@@ -83,6 +83,6 @@ private:
 
 }; // class AdequacyPatchAreaGrid
 
-}
+} // namespace Antares::Component::Datagrid::Renderer
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_ADEQUACY_PATCH_AREAS_GRID_H__

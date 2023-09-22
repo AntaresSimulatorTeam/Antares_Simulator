@@ -7,8 +7,10 @@
 #include <antares/inifile/inifile.h>
 #include "antares/study/fwd.h"
 
-namespace Antares::Data {
-class BindingConstraintSaver {
+namespace Antares::Data
+{
+class BindingConstraintSaver
+{
 public:
     class EnvForSaving final
     {
@@ -29,6 +31,6 @@ public:
     ** \param env All information needed to perform the task
     ** \return True if the operation succeeded, false otherwise
     */
-    static bool saveToEnv(EnvForSaving& env, const BindingConstraint *bindingConstraint) ;
+    static bool saveToEnv(EnvForSaving& env, const BindingConstraint* bindingConstraint);
 };
-}
+} // namespace Antares::Data

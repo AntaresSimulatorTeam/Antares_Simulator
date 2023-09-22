@@ -155,8 +155,7 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
         bool isTheActiveRule = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
         if (!updaterMode and isTheActiveRule)
         {
-            std::string clusterId
-              = (area->id).to<std::string>() + "." + clustername;
+            std::string clusterId = (area->id).to<std::string>() + "." + clustername;
             disabledClustersOnRuleActive[clusterId].push_back(year + 1);
             return false;
         }
@@ -192,8 +191,7 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
         bool isTheActiveRule = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
         if (!updaterMode and isTheActiveRule)
         {
-            std::string clusterId
-              = (area->id).to<std::string>() + "." + clustername;
+            std::string clusterId = (area->id).to<std::string>() + "." + clustername;
             disabledClustersOnRuleActive[clusterId].push_back(year + 1);
             return false;
         }
@@ -314,13 +312,15 @@ bool Rules::checkGroupExists(const std::string& groupName) const
     const auto& groups = study_.bindingConstraintsGroups;
     if (!groups[groupName])
     {
-        logs.warning() << "[scenario-builder] The binding constraint group '" << groupName << "' does not exist";
+        logs.warning() << "[scenario-builder] The binding constraint group '" << groupName
+                       << "' does not exist";
         return false;
     }
     return true;
 }
 
-bool Rules::readBindingConstraints(const AreaName::Vector &splitKey, String value) {
+bool Rules::readBindingConstraints(const AreaName::Vector& splitKey, String value)
+{
     std::string group_name = splitKey[1].c_str();
     auto year = std::stoi(splitKey[2].c_str());
 

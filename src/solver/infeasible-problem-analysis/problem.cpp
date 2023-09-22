@@ -11,7 +11,8 @@ namespace Antares
 {
 namespace Optimization
 {
-InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
+InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(const std::string& solverName,
+                                                     const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
 {
     mSolver
       = std::unique_ptr<MPSolver>(ProblemSimplexeNommeConverter(solverName, ProbSpx).Convert());

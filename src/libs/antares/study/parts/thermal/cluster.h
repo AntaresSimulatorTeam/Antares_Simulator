@@ -379,20 +379,18 @@ private:
     //
     // Calculation of market bid and marginals costs per hour
     //
-    // These time series can be set 
+    // These time series can be set
     // Market bid and marginal costs are set manually.
     // Or if time series are used the formula is:
     // Marginal_Cost[€/MWh] = Market_Bid_Cost[€/MWh] = (Fuel_Cost[€/GJ] * 3.6 * 100 / Efficiency[%])
     // CO2_emission_factor[tons/MWh] * C02_cost[€/tons] + Variable_O&M_cost[€/MWh]
-    
+
     void fillMarketBidCostTS();
     void fillMarginalCostTS();
     void resizeCostTS();
     void ComputeMarketBidTS();
     void MarginalCostEqualsMarketBid();
     void ComputeProductionCostTS();
-
-
 
 }; // class ThermalCluster
 } // namespace Data

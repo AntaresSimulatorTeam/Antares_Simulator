@@ -104,4 +104,4 @@ bool renewableTSNumberData::reset(const Study& study)
     pTSNumberRules.reset(clusterCount, nbYears);
     return true;
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

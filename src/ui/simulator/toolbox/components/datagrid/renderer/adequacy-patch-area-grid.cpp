@@ -104,7 +104,7 @@ double AdequacyPatchAreaGrid::cellNumericValue(int, int row) const
         case Data::AdequacyPatch::physicalAreaInsideAdqPatch:
             return 2.;
         default:
-           return 0.;
+            return 0.;
         }
     }
     return 0.;
@@ -152,4 +152,4 @@ IRenderer::CellStyle AdequacyPatchAreaGrid::cellStyle(int, int row) const
     }
     return IRenderer::cellStyleConstraintNoWeight;
 }
-}
+} // namespace Antares::Component::Datagrid::Renderer

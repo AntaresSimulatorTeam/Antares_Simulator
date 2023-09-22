@@ -52,7 +52,6 @@ void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int
     double* pt;
     char PremierPassage;
 
-
     PROBLEME_SIMPLEXE* Probleme;
     PROBLEME_SPX* ProbSpx;
 
@@ -61,10 +60,10 @@ void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-        = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
+      = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
 
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
-        = ProblemeHydraulique.ProblemeLineairePartieFixe[NumeroDeProbleme];
+      = ProblemeHydraulique.ProblemeLineairePartieFixe[NumeroDeProbleme];
 
     ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[NumeroDeProbleme];
 

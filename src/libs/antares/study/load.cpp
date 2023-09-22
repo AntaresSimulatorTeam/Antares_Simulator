@@ -143,11 +143,20 @@ void Study::parameterFiller(const StudyLoadOptions& options)
 
     // calendar update
     if (usedByTheSolver)
-        calendar.reset({parameters.dayOfThe1stJanuary, parameters.firstWeekday, parameters.firstMonthInYear, false});
+        calendar.reset({parameters.dayOfThe1stJanuary,
+                        parameters.firstWeekday,
+                        parameters.firstMonthInYear,
+                        false});
     else
-        calendar.reset({parameters.dayOfThe1stJanuary, parameters.firstWeekday, parameters.firstMonthInYear, parameters.leapYear});
+        calendar.reset({parameters.dayOfThe1stJanuary,
+                        parameters.firstWeekday,
+                        parameters.firstMonthInYear,
+                        parameters.leapYear});
 
-    calendarOutput.reset({parameters.dayOfThe1stJanuary, parameters.firstWeekday, parameters.firstMonthInYear, parameters.leapYear});
+    calendarOutput.reset({parameters.dayOfThe1stJanuary,
+                          parameters.firstWeekday,
+                          parameters.firstMonthInYear,
+                          parameters.leapYear});
 
     // In case hydro hot start is enabled, check all conditions are met.
     // (has to be called after areas load and calendar building)
@@ -216,19 +225,19 @@ bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
 {
     // Load
     if (!options.loadOnlyNeeded || timeSeriesLoad & parameters.timeSeriesToRefresh
-            || timeSeriesLoad & parameters.timeSeriesToGenerate)
+        || timeSeriesLoad & parameters.timeSeriesToGenerate)
     {
         buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP
-            << "correlation.ini";
+                       << "correlation.ini";
         preproLoadCorrelation.loadFromFile(*this, buffer);
     }
 
     // Solar
     if (!options.loadOnlyNeeded || timeSeriesSolar & parameters.timeSeriesToRefresh
-            || timeSeriesSolar & parameters.timeSeriesToGenerate)
+        || timeSeriesSolar & parameters.timeSeriesToGenerate)
     {
         buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP
-            << "correlation.ini";
+                       << "correlation.ini";
         preproSolarCorrelation.loadFromFile(*this, buffer);
     }
 
@@ -262,7 +271,8 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
     // (actually internalLoadFromFolder)
     buffer.clear() << folderInput << SEP << "bindingconstraints";
     bool r = bindingConstraints.loadFromFolder(*this, options, buffer);
-    if (r) {
+    if (r)
+    {
         r &= bindingConstraintsGroups.buildFrom(bindingConstraints);
     }
     return (!r && options.loadOnlyNeeded) ? false : r;

@@ -50,7 +50,7 @@ void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int Numer
     std::vector<double>& Turbine = DonneesMensuelles->Turbine;
     std::vector<double>& TurbineCible = DonneesMensuelles->TurbineCible;
 
-    Flag = (char*) ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme].Xmax.data();
+    Flag = (char*)ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme].Xmax.data();
 
     NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
 

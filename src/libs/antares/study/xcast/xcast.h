@@ -217,7 +217,6 @@ protected:
 
 } // namespace Antares::Data
 
-
 #include "xcast.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_XCAST_XCAST_H__

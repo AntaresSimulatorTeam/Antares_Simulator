@@ -277,14 +277,17 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        for (uint clusterIndex = 0; clusterIndex != state.area->renewable.clusterCount(); ++clusterIndex)
+        for (uint clusterIndex = 0; clusterIndex != state.area->renewable.clusterCount();
+             ++clusterIndex)
         {
             const auto* renewableCluster = state.area->renewable.clusters[clusterIndex];
             uint serieIndex = state.timeseriesIndex->RenouvelableParPalier[clusterIndex];
-            double renewableClusterProduction = renewableCluster->valueAtTimeStep(serieIndex, state.hourInTheYear);
+            double renewableClusterProduction
+              = renewableCluster->valueAtTimeStep(serieIndex, state.hourInTheYear);
 
-            pValuesForTheCurrentYear[numSpace][renewableCluster->areaWideIndex].hour[state.hourInTheYear]
-                += renewableClusterProduction;
+            pValuesForTheCurrentYear[numSpace][renewableCluster->areaWideIndex]
+              .hour[state.hourInTheYear]
+              += renewableClusterProduction;
         }
 
         // Next variable
@@ -307,7 +310,7 @@ public:
     inline uint64_t memoryUsage() const
     {
         uint64_t r = (sizeof(IntermediateValues) * pSize + IntermediateValues::MemoryUsage())
-                         * pNbYearsParallel;
+                     * pNbYearsParallel;
         r += sizeof(double) * pSize * maxHoursInAYear * pNbYearsParallel;
         r += AncestorType::memoryUsage();
         return r;

@@ -11,13 +11,12 @@ using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 
 namespace Antares::Solver::Simulation
 {
-
-
 struct optRuntimeData
 {
     optRuntimeData(unsigned int y, unsigned int w, unsigned int h) :
-        year(y), week(w), hourInTheYear(h)
-    {}
+     year(y), week(w), hourInTheYear(h)
+    {
+    }
 
     unsigned int year = 0;
     unsigned int week = 0;
@@ -46,7 +45,7 @@ public:
     // gp : we should put all these arguments in a structure, so that we pass a structure
     // gp : to the create(...) method, and to underlying calls to constructors.
     // gp : In case we need new data for a new post process, we would not have to change
-    // gp : the constructors' signatures of the post process list classes. 
+    // gp : the constructors' signatures of the post process list classes.
     static std::unique_ptr<interfacePostProcessList> create(AdqPatchParams& adqPatchParams,
                                                             PROBLEME_HEBDO* problemeHebdo,
                                                             uint thread_number,
@@ -55,7 +54,7 @@ public:
                                                             SimplexOptimization splxOptimization,
                                                             Calendar& calendar);
     void runAll(const optRuntimeData& opt_runtime_data);
-    
+
 protected:
     // Member functions
     interfacePostProcessList(PROBLEME_HEBDO* problemeHebdo, uint thread_number);

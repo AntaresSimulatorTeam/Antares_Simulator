@@ -311,7 +311,7 @@ public:
     //! Information for the UI
     AreaUI* ui = nullptr;
     //@}
-    
+
     //! \name Dynamic
     //@{
     /*!
@@ -335,7 +335,6 @@ private:
     void internalInitialize();
     void createMissingTimeSeries();
     void createMissingPrepros();
-
 
 }; // class Area
 
@@ -542,7 +541,6 @@ public:
     //! Get if the container is empty
     bool empty() const;
 
-
     /*!
     ** \brief Invalidate all areas
     **
@@ -657,7 +655,6 @@ public:
     /*!
     ** \brief Try to estimate the amount of memory required by the class for a simulation
     */
-
 
     /*!
     ** \brief Get the average amount of memory currently used by each area
@@ -780,9 +777,7 @@ Area* addAreaToListOfAreas(AreaList& list, const AnyString& name);
 ** \param lname The name of the area in lowercase
 ** \return A valid pointer to the area if successful, NULL otherwise
 */
-Area* AreaListAddFromNames(AreaList& list,
-                           const AnyString& name,
-                           const AnyString& lname);
+Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyString& lname);
 
 /*!
 ** \brief Try to establish a link between two areas

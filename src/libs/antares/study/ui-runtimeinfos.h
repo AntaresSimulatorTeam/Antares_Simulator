@@ -40,7 +40,8 @@ namespace Data
 class UIRuntimeInfo final
 {
 public:
-    using VectorByType = std::map<enum BindingConstraint::Type, BindingConstraintsRepository::Vector>;
+    using VectorByType
+      = std::map<enum BindingConstraint::Type, BindingConstraintsRepository::Vector>;
     using ByOperatorAndType = std::map<enum BindingConstraint::Operator, VectorByType>;
 
 public:

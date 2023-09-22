@@ -81,7 +81,7 @@ private:
     void onPopupMenuNTC(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
     void onPopupMenuPTO(Component::Button&, wxMenu& menu, void*);
 
-    void onInternalMotion(wxMouseEvent&);  
+    void onInternalMotion(wxMouseEvent&);
     void onEditThresholds(wxCommandEvent&);
 
     Component::Button* pBtnAdequacyPatch;
@@ -97,6 +97,6 @@ private:
 
 }; // class AdequacyPatchOptions
 
-}
+} // namespace Antares::Window::Options
 
 #endif // __ANTARES_APPLICATION_WINDOWS_OPTIONS_ADEQUACY_PATCH_H__

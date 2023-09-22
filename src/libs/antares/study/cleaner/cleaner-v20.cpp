@@ -42,8 +42,10 @@ namespace Data
 namespace // anonymous
 {
 template<class StringT>
-static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, const Area* area,
-        StringT& buffer)
+static void listOfFilesAnDirectoriesToKeepForArea(PathList& e,
+                                                  PathList& p,
+                                                  const Area* area,
+                                                  StringT& buffer)
 {
     // ID of the current area
     const AreaName& id = area->id;
@@ -98,7 +100,7 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
     buffer.clear() << "input/hydro/series/" << id << "/mod.txt";
     e.add(buffer);
     buffer.clear() << "input/hydro/series/" << id << "/mingen.txt";
-    e.add(buffer);    
+    e.add(buffer);
     buffer.clear() << "input/hydro/allocation/" << id << ".ini";
     p.add(buffer);
     buffer.clear() << "input/hydro/prepro/" << id;

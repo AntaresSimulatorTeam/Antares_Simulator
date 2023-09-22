@@ -322,9 +322,10 @@ BindingConstraint::BindingConstraint(wxWindow* parent) :
 
     // Second membre
     {
-        n->add(new Component::Panel(n), wxT("antares-web"), wxT("  Please use Antares Web to edit BC data  "));
+        n->add(new Component::Panel(n),
+               wxT("antares-web"),
+               wxT("  Please use Antares Web to edit BC data  "));
     }
-    
 
     // Post
     n->select(wxT("list"));

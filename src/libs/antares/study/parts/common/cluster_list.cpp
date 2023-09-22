@@ -427,4 +427,3 @@ template class ClusterList<ThermalCluster>;
 template class ClusterList<RenewableCluster>;
 
 } // namespace Antares::Data
-

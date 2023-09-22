@@ -59,6 +59,6 @@ private:
 
 }; // class AdequacyPatchAreas
 
-}
+} // namespace Antares::Window::Options
 
 #endif // __ANTARES_APPLICATION_WINDOWS_ADEQUACY_PATCH_AREAS_H__

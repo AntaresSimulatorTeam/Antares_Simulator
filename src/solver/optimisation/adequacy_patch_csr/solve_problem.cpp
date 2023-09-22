@@ -157,7 +157,7 @@ double calculateCSRcost(const PROBLEME_POINT_INTERIEUR& Probleme,
     {
         logs.debug() << "i: " << i;
         if (hourlyCsrProblem.ensVariablesInsideAdqPatch.find(i)
-                != hourlyCsrProblem.ensVariablesInsideAdqPatch.end())
+            != hourlyCsrProblem.ensVariablesInsideAdqPatch.end())
         {
             cost += Probleme.X[i] * Probleme.X[i] * Probleme.CoutQuadratique[i];
             logs.debug() << "X-Q: " << Probleme.X[i] * 1e3;
@@ -167,8 +167,7 @@ double calculateCSRcost(const PROBLEME_POINT_INTERIEUR& Probleme,
 
         auto itLink = hourlyCsrProblem.linkInsideAdqPatch.find(i);
         if ((itLink == hourlyCsrProblem.linkInsideAdqPatch.end())
-                || adqPatchParams.curtailmentSharing.includeHurdleCost
-                || !itLink->second.check())
+            || adqPatchParams.curtailmentSharing.includeHurdleCost || !itLink->second.check())
             continue;
 
         if (Probleme.X[i] >= 0)
@@ -191,7 +190,6 @@ double calculateCSRcost(const PROBLEME_POINT_INTERIEUR& Probleme,
             {
                 logs.warning() << "VarIndirect < 0 detected, this should not happen";
                 continue;
-
             }
             cost -= Probleme.X[i] * Probleme.CoutLineaire[varIndirect];
             logs.debug() << "X-: " << Probleme.X[i] * 1e3;
@@ -257,13 +255,15 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                    int yearNb)
 {
     auto interiorPointProblem = buildInteriorPointProblem(ProblemeAResoudre);
-    double costPriorToCsr = calculateCSRcost(*interiorPointProblem, hourlyCsrProblem, adqPatchParams);
+    double costPriorToCsr
+      = calculateCSRcost(*interiorPointProblem, hourlyCsrProblem, adqPatchParams);
     PI_Quamin(interiorPointProblem.get()); // resolution
     if (interiorPointProblem->ExistenceDUneSolution == OUI_PI)
     {
         setToZeroIfBelowThreshold(ProblemeAResoudre, hourlyCsrProblem);
-        double costAfterCsr = calculateCSRcost(*interiorPointProblem, hourlyCsrProblem, adqPatchParams);
-        storeOrDisregardInteriorPointResults(ProblemeAResoudre, 
+        double costAfterCsr
+          = calculateCSRcost(*interiorPointProblem, hourlyCsrProblem, adqPatchParams);
+        storeOrDisregardInteriorPointResults(ProblemeAResoudre,
                                              hourlyCsrProblem,
                                              adqPatchParams,
                                              weekNb,
@@ -274,7 +274,8 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
     }
     else
     {
-        handleInteriorPointError(*interiorPointProblem, hourlyCsrProblem.triggeredHour, weekNb, yearNb);
+        handleInteriorPointError(
+          *interiorPointProblem, hourlyCsrProblem.triggeredHour, weekNb, yearNb);
         return false;
     }
 }

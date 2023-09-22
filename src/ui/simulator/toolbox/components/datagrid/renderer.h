@@ -44,7 +44,7 @@ namespace Component
 {
 namespace Datagrid
 {
-    class VGridHelper;
+class VGridHelper;
 namespace Renderer
 {
 /*!
@@ -91,7 +91,6 @@ public:
         cellStyleAdqPatchVirtual,
         cellStyleAdqPatchOutside,
         cellStyleAdqPatchInside,
-
 
         cellStyleMax /* Max items in the list */
     };

@@ -38,19 +38,19 @@ using namespace Antares::Data;
 using namespace Yuni;
 
 static void shortTermStorageLevelsRHS(
-    const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
-    int numberOfAreas,
-    std::vector<double>& SecondMembre,
-    const CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim,
-    int hourInTheYear)
+  const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
+  int numberOfAreas,
+  std::vector<double>& SecondMembre,
+  const CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim,
+  int hourInTheYear)
 {
     for (int areaIndex = 0; areaIndex < numberOfAreas; areaIndex++)
     {
         for (auto& storage : shortTermStorageInput[areaIndex])
         {
             const int clusterGlobalIndex = storage.clusterGlobalIndex;
-            const int cnt
-              = CorrespondanceCntNativesCntOptim.ShortTermStorageLevelConstraint[clusterGlobalIndex];
+            const int cnt = CorrespondanceCntNativesCntOptim
+                              .ShortTermStorageLevelConstraint[clusterGlobalIndex];
             SecondMembre[cnt] = storage.series->inflows[hourInTheYear];
         }
     }
@@ -159,7 +159,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
             if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
-                    CoutDeTransport.IntercoGereeAvecDesCouts)
+                CoutDeTransport.IntercoGereeAvecDesCouts)
             {
                 int cnt = CorrespondanceCntNativesCntOptim
                             .NumeroDeContrainteDeDissociationDeFlux[interco];
@@ -187,7 +187,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                 SecondMembre[cnt]
                   = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[pdtHebdo];
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
-                  = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales.data()
+                  = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante]
+                      .variablesDuales.data()
                     + pdtHebdo;
             }
         }
@@ -199,15 +200,14 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         int indexCorrespondanceCnt = (!problemeHebdo->OptimisationAuPasHebdomadaire) ? 0 : jour;
 
         CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES& CorrespondanceCntNativesCntOptimJournalieres
-              = problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[indexCorrespondanceCnt];
+          = problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[indexCorrespondanceCnt];
 
         for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
             const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
               = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
-            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante
-                == CONTRAINTE_JOURNALIERE)
+            if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante == CONTRAINTE_JOURNALIERE)
             {
                 int cnt = CorrespondanceCntNativesCntOptimJournalieres
                             .NumeroDeContrainteDesContraintesCouplantes[cntCouplante];
@@ -216,7 +216,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                     SecondMembre[cnt]
                       = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[jour];
                     AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
-                      = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales.data()
+                      = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante]
+                          .variablesDuales.data()
                         + jour;
                 }
             }
@@ -248,7 +249,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                 SecondMembre[cnt]
                   = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[0];
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
-                  = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante].variablesDuales.data();
+                  = problemeHebdo->ResultatsContraintesCouplantes[cntCouplante]
+                      .variablesDuales.data();
             }
         }
     }
@@ -270,7 +272,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
           = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
         bool TurbEntreBornes
           = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-        if (presenceHydro && (TurbEntreBornes
+        if (presenceHydro
+            && (TurbEntreBornes
                 || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
         {
             int cnt = NumeroDeContrainteMinEnergieHydraulique[pays];
@@ -289,7 +292,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
           = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
         bool TurbEntreBornes
           = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-        if (presenceHydro && (TurbEntreBornes
+        if (presenceHydro
+            && (TurbEntreBornes
                 || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
         {
             int cnt = NumeroDeContrainteMaxEnergieHydraulique[pays];

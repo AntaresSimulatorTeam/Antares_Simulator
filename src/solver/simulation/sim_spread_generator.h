@@ -34,6 +34,7 @@ namespace SIM
 class SpreadGenerator
 {
     static constexpr double rangeDefault = 1.e-3;
+
 public:
     explicit SpreadGenerator(double range = rangeDefault);
     void reset(unsigned int seed);

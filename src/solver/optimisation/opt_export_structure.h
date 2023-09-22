@@ -41,15 +41,13 @@ namespace Antares
 {
 namespace Data
 {
-
 class Study;
 } // namespace Data
 } // namespace Antares
 
 struct PROBLEME_HEBDO;
 
-void OPT_ExportInterco(Antares::Solver::IResultWriter& writer,
-                       PROBLEME_HEBDO* problemeHebdo);
+void OPT_ExportInterco(Antares::Solver::IResultWriter& writer, PROBLEME_HEBDO* problemeHebdo);
 void OPT_ExportAreaName(Antares::Solver::IResultWriter& writer,
                         const std::vector<const char*>& areaNames);
 

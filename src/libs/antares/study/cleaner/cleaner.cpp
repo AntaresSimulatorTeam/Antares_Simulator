@@ -132,4 +132,3 @@ void StudyCleaningInfos::setCustomExcludeList(const Yuni::String& c)
     customExclude = c;
 }
 } // namespace Antares::Data
-

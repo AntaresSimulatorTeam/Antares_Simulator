@@ -216,7 +216,6 @@ void Parameters::resetSeeds()
         seed[i] = (s += increment);
 }
 
-
 void Parameters::resetPlayedYears(uint nbOfYears)
 {
     // Set the number of years
@@ -956,9 +955,9 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     reset();
     // A temporary buffer, used for the values in lowercase
     using Callback = bool (*)(
-      Parameters&,   // [out] Parameter object to load the data into
-      const String&, // [in] Key, comes left to the '=' sign in the .ini file
-      const String&, // [in] Lowercase value, comes right to the '=' sign in the .ini file
+      Parameters&,    // [out] Parameter object to load the data into
+      const String&,  // [in] Key, comes left to the '=' sign in the .ini file
+      const String&,  // [in] Lowercase value, comes right to the '=' sign in the .ini file
       const String&); // [in] Raw value as writtent right to the '=' sign in the .ini file
 
     static const std::map<String, Callback> sectionAssociatedToKeysProcess

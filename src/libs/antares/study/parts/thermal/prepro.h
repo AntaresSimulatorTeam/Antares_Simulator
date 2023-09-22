@@ -74,8 +74,6 @@ public:
 
     void markAsModified() const;
 
-
-
     /*!
     ** \brief Reset all values to their default ones
     */

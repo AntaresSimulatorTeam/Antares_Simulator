@@ -88,15 +88,14 @@ struct TmpDataByArea
 typedef struct
 {
     std::vector<double> HydrauliqueModulableQuotidien; /* indice par jour */
-    std::vector<double> NiveauxReservoirsDebutJours;   //Niveaux (quotidiens) du reservoir de début
-    //de jour (en cas de gestion des reservoirs).
-    std::vector<double> NiveauxReservoirsFinJours; //Niveaux (quotidiens) du reservoir de fin
-    //de jour (en cas de gestion des reservoirs).
+    std::vector<double> NiveauxReservoirsDebutJours;   // Niveaux (quotidiens) du reservoir de début
+    // de jour (en cas de gestion des reservoirs).
+    std::vector<double> NiveauxReservoirsFinJours; // Niveaux (quotidiens) du reservoir de fin
+    // de jour (en cas de gestion des reservoirs).
 } VENTILATION_HYDRO_RESULTS_BY_AREA;
 
 // vector of [numSpace][area]
 using ALL_HYDRO_VENTILATION_RESULTS = std::vector<std::vector<VENTILATION_HYDRO_RESULTS_BY_AREA>>;
-
 
 class HydroManagement final
 {
@@ -113,11 +112,14 @@ public:
 
     //! Perform the hydro ventilation
     void makeVentilation(double* randomReservoirLevel,
-                        Solver::Variable::State& state,
-                        uint y,
-                        uint numSpace);
+                         Solver::Variable::State& state,
+                         uint y,
+                         uint numSpace);
 
-    ALL_HYDRO_VENTILATION_RESULTS& ventilationResults() { return ventilationResults_; }
+    ALL_HYDRO_VENTILATION_RESULTS& ventilationResults()
+    {
+        return ventilationResults_;
+    }
 
 private:
     //! Prepare inflows scaling for each area
@@ -147,9 +149,7 @@ private:
     // \return The total inflow for the whole year
     double prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data);
 
-    void prepareDailyOptimalGenerations(Solver::Variable::State& state,
-                                        uint y,
-                                        uint numSpace);
+    void prepareDailyOptimalGenerations(Solver::Variable::State& state, uint y, uint numSpace);
 
     void prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                         Data::Area& area,

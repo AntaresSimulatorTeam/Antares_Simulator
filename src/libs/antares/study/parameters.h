@@ -43,7 +43,6 @@
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 
-
 namespace Antares::Data
 {
 /*!
@@ -487,7 +486,6 @@ public:
     //! Simplex optimization range (day/week)
     SimplexOptimization simplexOptimizationRange;
     //@}
-
 
     AdequacyPatch::AdqPatchParams adqPatchParams;
 

@@ -45,7 +45,7 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
          pdtHebdo++, pdtJour++)
     {
         const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-          =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
+          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {

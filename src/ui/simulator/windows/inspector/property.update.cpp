@@ -803,7 +803,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
             (*i)->marginalCost = d;
             (*i)->ComputeCostTimeSeries(); // update
         }
-        
+
         pFrame.delayApply();
         // Notify
         OnStudyThermalClusterCommonSettingsChanged();

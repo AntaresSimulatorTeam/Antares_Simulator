@@ -47,7 +47,6 @@
 
 namespace Antares::Solver::Simulation
 {
-
 template<class Impl>
 class yearJob final : public Yuni::Job::IJob
 {
@@ -97,6 +96,7 @@ private:
     bool hydroHotStart;
     Benchmarking::IDurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
+
 private:
     /*
     ** \brief Log failed week
@@ -148,7 +148,8 @@ private:
 
             // 1 - Applying random levels for current year
             if (hydroHotStart && firstSetParallelWithAPerformedYearWasRun)
-                randomReservoirLevel = state[numSpace].problemeHebdo->previousYearFinalLevels.data();
+                randomReservoirLevel
+                  = state[numSpace].problemeHebdo->previousYearFinalLevels.data();
             else
                 randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
@@ -162,10 +163,8 @@ private:
             // 4 - Hydraulic ventilation
             {
                 Benchmarking::Timer timer;
-                simulation_->hydroManagement.makeVentilation(randomReservoirLevel,
-                                                             state[numSpace],
-                                                             y,
-                                                             numSpace);
+                simulation_->hydroManagement.makeVentilation(
+                  randomReservoirLevel, state[numSpace], y, numSpace);
                 timer.stop();
                 pDurationCollector.addDuration("hydro_ventilation", timer.get_duration());
             }
@@ -233,23 +232,23 @@ private:
 
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
-    const ::Settings& settings,
-    Benchmarking::IDurationCollector& duration_collector) :
-    ImplementationType(study),
-    study(study),
-    settings(settings),
-    pNbYearsReallyPerformed(0),
-    pNbMaxPerformedYearsInParallel(0),
-    pYearByYear(study.parameters.yearByYear),
-    hydroManagement(study.areas, 
-                    study.parameters, 
-                    study.calendar, 
-                    study.maxNbYearsInParallel,
-                    *study.resultWriter),
-    pFirstSetParallelWithAPerformedYearWasRun(false),
-    pDurationCollector(duration_collector),
-    pQueueService(study.pQueueService),
-    pResultWriter(*study.resultWriter)
+                                      const ::Settings& settings,
+                                      Benchmarking::IDurationCollector& duration_collector) :
+ ImplementationType(study),
+ study(study),
+ settings(settings),
+ pNbYearsReallyPerformed(0),
+ pNbMaxPerformedYearsInParallel(0),
+ pYearByYear(study.parameters.yearByYear),
+ hydroManagement(study.areas,
+                 study.parameters,
+                 study.calendar,
+                 study.maxNbYearsInParallel,
+                 *study.resultWriter),
+ pFirstSetParallelWithAPerformedYearWasRun(false),
+ pDurationCollector(duration_collector),
+ pQueueService(study.pQueueService),
+ pResultWriter(*study.resultWriter)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -695,7 +694,8 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
                 uint clusterIndex = it->second->areaWideIndex;
                 double thermalNoise = runtime.random[Data::seedThermalCosts].next();
                 if (isPerformed)
-                    randomForYears.pYears[indexYear].pThermalNoisesByArea[a][clusterIndex] = thermalNoise;
+                    randomForYears.pYears[indexYear].pThermalNoisesByArea[a][clusterIndex]
+                      = thermalNoise;
             }
         }
 
@@ -718,9 +718,8 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
             // Previous month's first day in the year
             int firstDayOfMonth = study.calendar.months[initResLevelOnSimMonth].daysYear.first;
 
-            double randomLevel = hydroManagement.randomReservoirLevel(min[firstDayOfMonth],
-                                                                       avg[firstDayOfMonth],
-                                                                       max[firstDayOfMonth]);
+            double randomLevel = hydroManagement.randomReservoirLevel(
+              min[firstDayOfMonth], avg[firstDayOfMonth], max[firstDayOfMonth]);
 
             // Possibly update the intial level from scenario builder
             if (study.parameters.useCustomScenario)

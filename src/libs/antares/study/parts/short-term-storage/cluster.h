@@ -49,6 +49,5 @@ public:
 
     std::shared_ptr<Series> series = std::make_shared<Series>();
     Properties properties;
-
 };
 } // namespace Antares::Data::ShortTermStorage

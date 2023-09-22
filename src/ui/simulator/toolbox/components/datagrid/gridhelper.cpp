@@ -355,7 +355,7 @@ public:
         internalAppendCSSCode(s, CellStyle::cellStyleFilterSynthesisOn);
         internalAppendCSSCode(s, CellStyle::cellStyleFilterSynthesisOff);
         internalAppendCSSCode(s, CellStyle::cellStyleFilterUndefined);
-         internalAppendCSSCode(s, CellStyle::cellStyleAdqPatchVirtual);
+        internalAppendCSSCode(s, CellStyle::cellStyleAdqPatchVirtual);
         internalAppendCSSCode(s, CellStyle::cellStyleAdqPatchOutside);
         internalAppendCSSCode(s, CellStyle::cellStyleAdqPatchInside);
     }

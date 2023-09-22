@@ -31,7 +31,6 @@
 
 namespace Antares::Data::AdequacyPatch
 {
-
 /*!
  * Calculates curtailment sharing rule parameters netPositionInit, densNew and totalNodeBalance per
  * given area and hour.

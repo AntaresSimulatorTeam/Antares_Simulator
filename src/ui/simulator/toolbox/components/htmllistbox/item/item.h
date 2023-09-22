@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_H__
 #define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_H__
 
-
 #include <memory>
 #include <vector>
 #include <wx/wx.h>

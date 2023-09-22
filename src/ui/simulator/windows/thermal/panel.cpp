@@ -120,12 +120,14 @@ Panel::Panel(Component::Notebook* parent) :
 
         pageThermalTimeSeriesFuelCost = subbook->add(
           new Component::Datagrid::Component(
-            subbook, new Component::Datagrid::Renderer::TimeSeriesThermalClusterFuelCost(subbook, tag)),
+            subbook,
+            new Component::Datagrid::Renderer::TimeSeriesThermalClusterFuelCost(subbook, tag)),
           wxT("Fuel Cost [\u20AC/GJ]"));
 
         pageThermalTimeSeriesCO2Cost = subbook->add(
           new Component::Datagrid::Component(
-            subbook, new Component::Datagrid::Renderer::TimeSeriesThermalClusterCO2Cost(subbook, tag)),
+            subbook,
+            new Component::Datagrid::Renderer::TimeSeriesThermalClusterCO2Cost(subbook, tag)),
           wxT("CO2 Cost [\u20AC/ton]"));
 
         // Availability (ex Time Series)

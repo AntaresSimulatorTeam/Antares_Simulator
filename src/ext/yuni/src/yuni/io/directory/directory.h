@@ -107,7 +107,8 @@ enum CopyState
     cpsGatheringInformation,
     cpsCopying
 };
-typedef Yuni::Bind<bool(CopyState, const String&, const String&, uint64_t, uint64_t)> CopyOnUpdateBind;
+typedef Yuni::Bind<bool(CopyState, const String&, const String&, uint64_t, uint64_t)>
+  CopyOnUpdateBind;
 
 /*!
 ** \brief Copy a directory

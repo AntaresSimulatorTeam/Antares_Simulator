@@ -96,20 +96,17 @@ struct SimplexResult
     mpsWriterFactory mps_writer_factory;
 };
 
-static SimplexResult OPT_TryToCallSimplex(
-        const OptimizationOptions& options,
-        PROBLEME_HEBDO* problemeHebdo,
-        Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
-        const int NumIntervalle,
-        const int optimizationNumber,
-        const OptPeriodStringGenerator& optPeriodStringGenerator,
-        bool PremierPassage,
-        IResultWriter& writer
-        )
+static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
+                                          PROBLEME_HEBDO* problemeHebdo,
+                                          Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
+                                          const int NumIntervalle,
+                                          const int optimizationNumber,
+                                          const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                          bool PremierPassage,
+                                          IResultWriter& writer)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
-    auto ProbSpx
-      = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
+    auto ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
     auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
 
     const int opt = optimizationNumber - 1;
@@ -154,8 +151,9 @@ static SimplexResult OPT_TryToCallSimplex(
             TimeMeasurement measure;
             if (options.useOrtools)
             {
-                ORTOOLS_ModifierLeVecteurCouts(
-                  solver, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
+                ORTOOLS_ModifierLeVecteurCouts(solver,
+                                               ProblemeAResoudre->CoutLineaire.data(),
+                                               ProblemeAResoudre->NombreDeVariables);
                 ORTOOLS_ModifierLeVecteurSecondMembre(solver,
                                                       ProblemeAResoudre->SecondMembre.data(),
                                                       ProblemeAResoudre->Sens.data(),
@@ -168,8 +166,9 @@ static SimplexResult OPT_TryToCallSimplex(
             }
             else
             {
-                SPX_ModifierLeVecteurCouts(
-                  ProbSpx, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
+                SPX_ModifierLeVecteurCouts(ProbSpx,
+                                           ProblemeAResoudre->CoutLineaire.data(),
+                                           ProblemeAResoudre->NombreDeVariables);
                 SPX_ModifierLeVecteurSecondMembre(ProbSpx,
                                                   ProblemeAResoudre->SecondMembre.data(),
                                                   ProblemeAResoudre->Sens.data(),
@@ -203,7 +202,7 @@ static SimplexResult OPT_TryToCallSimplex(
 
     Probleme.TypeDePricing = PRICING_STEEPEST_EDGE;
 
-    Probleme.FaireDuScaling = ( PremierPassage ? OUI_SPX : NON_SPX );
+    Probleme.FaireDuScaling = (PremierPassage ? OUI_SPX : NON_SPX);
 
     Probleme.StrategieAntiDegenerescence = AGRESSIF;
 
@@ -220,7 +219,7 @@ static SimplexResult OPT_TryToCallSimplex(
     Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits.data();
 
 #ifndef NDEBUG
-    Probleme.AffichageDesTraces = ( PremierPassage ? OUI_SPX : NON_SPX );
+    Probleme.AffichageDesTraces = (PremierPassage ? OUI_SPX : NON_SPX);
 #else
     Probleme.AffichageDesTraces = NON_SPX;
 #endif
@@ -286,7 +285,8 @@ static SimplexResult OPT_TryToCallSimplex(
             {
                 logs.info() << " solver: resetting";
             }
-            return {.success=false, .solveTime=solveTime, .mps_writer_factory=mps_writer_factory};
+            return {
+              .success = false, .solveTime = solveTime, .mps_writer_factory = mps_writer_factory};
         }
 
         else
@@ -294,7 +294,7 @@ static SimplexResult OPT_TryToCallSimplex(
             throw FatalError("Internal error: insufficient memory");
         }
     }
-    return {.success=true, .solveTime=solveTime, .mps_writer_factory=mps_writer_factory};
+    return {.success = true, .solveTime = solveTime, .mps_writer_factory = mps_writer_factory};
 }
 
 bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
@@ -313,15 +313,26 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
     bool PremierPassage = true;
 
-    struct SimplexResult simplexResult =
-        OPT_TryToCallSimplex(options, problemeHebdo, Probleme, NumIntervalle, optimizationNumber,
-                optPeriodStringGenerator, PremierPassage, writer);
+    struct SimplexResult simplexResult = OPT_TryToCallSimplex(options,
+                                                              problemeHebdo,
+                                                              Probleme,
+                                                              NumIntervalle,
+                                                              optimizationNumber,
+                                                              optPeriodStringGenerator,
+                                                              PremierPassage,
+                                                              writer);
 
     if (!simplexResult.success)
     {
         PremierPassage = false;
-        simplexResult = OPT_TryToCallSimplex(options, problemeHebdo, Probleme,  NumIntervalle, optimizationNumber,
-                optPeriodStringGenerator, PremierPassage, writer);
+        simplexResult = OPT_TryToCallSimplex(options,
+                                             problemeHebdo,
+                                             Probleme,
+                                             NumIntervalle,
+                                             optimizationNumber,
+                                             optPeriodStringGenerator,
+                                             PremierPassage,
+                                             writer);
     }
 
     long long solveTime = simplexResult.solveTime;
@@ -392,7 +403,8 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         }
 
         auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();
-        const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
+        const std::string filename
+          = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
         mps_writer_on_error->runIfNeeded(writer, filename);
 
         return false;

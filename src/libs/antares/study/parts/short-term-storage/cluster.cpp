@@ -33,7 +33,6 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-
 bool STStorageCluster::loadFromSection(const IniFile::Section& section)
 {
     if (!section.firstProperty)

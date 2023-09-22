@@ -44,7 +44,6 @@
 
 namespace Antares::Solver::Simulation
 {
-
 template<class Impl>
 class yearJob;
 
@@ -145,7 +144,6 @@ private:
     ** \param endYear   The last MC year
     */
     void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State>& state);
-
 
 private:
     //! Some temporary to avoid performing useless complex checks

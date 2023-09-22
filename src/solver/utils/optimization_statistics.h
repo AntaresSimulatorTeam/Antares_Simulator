@@ -28,17 +28,17 @@ public:
         this->reset();
     }
 
-    OptimizationStatistics(OptimizationStatistics &&rhs)
-        :
-        totalSolveTime(rhs.totalSolveTime.load()),
-        nbSolve(rhs.nbSolve.load()),
-        totalUpdateTime(rhs.totalUpdateTime.load()),
-        nbUpdate(rhs.nbUpdate.load())
-    {}
+    OptimizationStatistics(OptimizationStatistics&& rhs) :
+     totalSolveTime(rhs.totalSolveTime.load()),
+     nbSolve(rhs.nbSolve.load()),
+     totalUpdateTime(rhs.totalUpdateTime.load()),
+     nbUpdate(rhs.nbUpdate.load())
+    {
+    }
 
     OptimizationStatistics(const OptimizationStatistics&) = delete;
     OptimizationStatistics& operator=(const OptimizationStatistics&) = delete;
-    OptimizationStatistics& operator=( OptimizationStatistics&&) = delete;
+    OptimizationStatistics& operator=(OptimizationStatistics&&) = delete;
 
     void add(const OptimizationStatistics& other)
     {

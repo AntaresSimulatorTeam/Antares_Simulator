@@ -68,7 +68,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
     {
         const RESULTATS_HORAIRES& ResultatsHoraires = problemeHebdo->ResultatsHoraires[pays];
         const std::vector<PRODUCTION_THERMIQUE_OPTIMALE>& ProductionThermique
-            = ResultatsHoraires.ProductionThermique;
+          = ResultatsHoraires.ProductionThermique;
 
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
@@ -125,8 +125,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
 
                 for (int pdtHebdo = 0; pdtHebdo < NombreDePasDeTempsProblemeHebdo; pdtHebdo++)
                 {
-                    double X
-                      = ProductionThermique[pdtHebdo].NombreDeGroupesEnMarcheDuPalier[index];
+                    double X = ProductionThermique[pdtHebdo].NombreDeGroupesEnMarcheDuPalier[index];
                     if (X > NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo] + Eps)
                     {
                         printf(
@@ -368,7 +367,6 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
 
     std::vector<int> IndicesColonnes(NbTermesMatrice);
     std::vector<double> CoefficientsDeLaMatriceDesContraintes(NbTermesMatrice);
-
 
     NombreDeVariables = 0;
     for (int pdt = 0; pdt < NombreDePasDeTemps; pdt++)

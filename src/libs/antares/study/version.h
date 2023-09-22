@@ -104,11 +104,11 @@ const wchar_t* VersionToWStr(const Version v);
 */
 Version VersionIntToVersion(uint version);
 
-class StudyVersion {
+class StudyVersion
+{
 public:
     [[nodiscard]] bool isStudyLatestVersion(std::string studyFolder) const;
 };
 } // namespace Antares::Data
-
 
 #endif // __ANTARES_LIBS_STUDY_VERSION_H__

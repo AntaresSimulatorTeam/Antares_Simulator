@@ -20,4 +20,4 @@ inline CString<512, false> windTSNumberData::get_prefix() const
 {
     return "w,";
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

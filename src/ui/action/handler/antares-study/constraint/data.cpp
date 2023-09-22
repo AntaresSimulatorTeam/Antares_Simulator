@@ -63,7 +63,7 @@ bool Data::performWL(Context& ctx)
 
         if (source && source != ctx.constraint)
         {
-            //Deleted some code. UI is deprecated but not yet removed
+            // Deleted some code. UI is deprecated but not yet removed
             return true;
         }
     }

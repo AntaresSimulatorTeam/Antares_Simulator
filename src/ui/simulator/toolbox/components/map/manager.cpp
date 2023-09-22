@@ -476,17 +476,13 @@ void Manager::selectOnly(Item* item)
                 Data::BindingConstraintsRepository::Set constraintlist;
 
                 const auto cEnd = pStudy->bindingConstraints.end();
-                for (auto i = pStudy->bindingConstraints.begin();
-                     i != cEnd;
-                     ++i)
+                for (auto i = pStudy->bindingConstraints.begin(); i != cEnd; ++i)
                 {
                     bool stop = false;
                     // alias to the current constraint
                     auto constraint = *i;
                     const auto lend = constraint->end();
-                    for (auto ly = constraint->begin();
-                         ly != lend;
-                         ++ly)
+                    for (auto ly = constraint->begin(); ly != lend; ++ly)
                     {
                         if (!linklist.count(const_cast<Data::AreaLink*>(ly->first)))
                         {
@@ -533,15 +529,13 @@ void Manager::changeItemSelectionState(Item* item)
             Data::BindingConstraintsRepository::Set constraintlist;
 
             const auto cEnd = pStudy->bindingConstraints.end();
-            for (auto i = pStudy->bindingConstraints.begin(); i != cEnd;
-                 ++i)
+            for (auto i = pStudy->bindingConstraints.begin(); i != cEnd; ++i)
             {
                 bool stop = false;
                 // alias to the current constraint
                 auto constraint = *i;
                 const auto lend = constraint->end();
-                for (auto ly = constraint->begin(); ly != lend;
-                     ++ly)
+                for (auto ly = constraint->begin(); ly != lend; ++ly)
                 {
                     if (!linklist.count(const_cast<Data::AreaLink*>(ly->first)))
                     {
@@ -804,15 +798,13 @@ void Manager::selectFromBoundingBox(const wxPoint& a, const wxPoint& b, const si
         if (mouseSelectionConstraints)
         {
             const auto end = pStudy->bindingConstraints.end();
-            for (auto i = pStudy->bindingConstraints.begin(); i != end;
-                 ++i)
+            for (auto i = pStudy->bindingConstraints.begin(); i != end; ++i)
             {
                 bool stop = false;
                 // alias to the current constraint
                 auto constraint = *i;
                 const auto lend = constraint->end();
-                for (auto ly = constraint->begin(); ly != lend;
-                     ++ly)
+                for (auto ly = constraint->begin(); ly != lend; ++ly)
                 {
                     if (!linklist.count(const_cast<Data::AreaLink*>(ly->first)))
                     {

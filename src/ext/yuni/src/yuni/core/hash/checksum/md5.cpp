@@ -97,7 +97,7 @@ namespace Checksum
 namespace // anonymous
 {
 typedef unsigned char MD5TypeByte; // 8-bit byte
-typedef uint32_t MD5TypeUInt32;      // 32-bit word
+typedef uint32_t MD5TypeUInt32;    // 32-bit word
 
 /*!
  * \brief Define the state of the MD5 Algorithm

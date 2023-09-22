@@ -45,12 +45,11 @@
 #include "area/constants.h"
 
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
-#include <cmath>                 // For use of floor(...) and ceil(...)
+#include <cmath>                  // For use of floor(...) and ceil(...)
 #include <antares/writer/writer_factory.h>
 #include "ui-runtimeinfos.h"
 
 using namespace Yuni;
-
 
 namespace Antares::Data
 {
@@ -754,7 +753,7 @@ void Study::saveAboutTheStudy()
                     buffer << "@ " << i->first << "\r\n";
             }
             areas.each([&](const Data::Area& area) { buffer << area.name << "\r\n"; });
-            if (resultWriter)            
+            if (resultWriter)
                 resultWriter->addEntryFromBuffer(path.c_str(), buffer);
         }
 
@@ -1144,7 +1143,7 @@ void Study::destroyAllThermalTSGeneratorData()
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
 {
-    for(const auto& constraint: bindingConstraints)
+    for (const auto& constraint : bindingConstraints)
     {
         if (not JIT::IsReady(constraint->RHSTimeSeries().jit))
             constraint->forceReload(true);
@@ -1554,4 +1553,3 @@ void Study::prepareWriter(Benchmarking::IDurationCollector& duration_collector)
 }
 
 } // namespace Antares::Data
-

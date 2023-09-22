@@ -53,10 +53,10 @@ void SIM_AllocationTableaux(const Data::Study& study)
         {
             auto& area = *study.areas.byIndex[i];
 
-            NumeroChroniquesTireesParPays[numSpace][i].ThermiqueParPalier
-                .assign(area.thermal.clusterCount(), 0);
-            NumeroChroniquesTireesParPays[numSpace][i].RenouvelableParPalier
-                .assign(area.renewable.clusterCount(), 0);
+            NumeroChroniquesTireesParPays[numSpace][i].ThermiqueParPalier.assign(
+              area.thermal.clusterCount(), 0);
+            NumeroChroniquesTireesParPays[numSpace][i].RenouvelableParPalier.assign(
+              area.renewable.clusterCount(), 0);
         }
     }
     NumeroChroniquesTireesParInterconnexion.resize(study.maxNbYearsInParallel);

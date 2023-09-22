@@ -449,8 +449,7 @@ wxMenu* ApplWnd::createMenuOptions()
                           wxT("Set advanced parameters"));
 
     delete pMenuAdequacyPatch;
-    pMenuAdequacyPatch
-      = pMenuOptions->AppendSubMenu(new wxMenu(), wxT("Adequacy Patch..."));
+    pMenuAdequacyPatch = pMenuOptions->AppendSubMenu(new wxMenu(), wxT("Adequacy Patch..."));
 
     wxMenu* adqPatchSubMenu = pMenuAdequacyPatch->GetSubMenu();
     Menu::CreateItem(adqPatchSubMenu,

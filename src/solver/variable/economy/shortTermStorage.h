@@ -187,12 +187,12 @@ public:
     {
         // Here we perform time-aggregations :
         // ---------------------------------
-        // For a given MC year, from hourly results we compute daily, weekly, monthly and annual 
+        // For a given MC year, from hourly results we compute daily, weekly, monthly and annual
         // results by aggregation operations (averages or sums).
-        // Caution : 
+        // Caution :
         //  - level results are stored in columns of which indices satisfy : col_index % 3 == 2.
         //    They are time-aggregated by means of averages
-        //  - injection and withdrawal results are stored in columns of which indices 
+        //  - injection and withdrawal results are stored in columns of which indices
         //    satisfy : col_index % 3 != 2.
         //    They are time-aggregated by means of sums.
 
@@ -203,7 +203,8 @@ public:
             bool isALevelColumn = (col_index % 3) == 2;
 
             if (isALevelColumn)
-                pValuesForTheCurrentYear[numSpace][col_index].computeAveragesForCurrentYearFromHourlyResults();
+                pValuesForTheCurrentYear[numSpace][col_index]
+                  .computeAveragesForCurrentYearFromHourlyResults();
             if (isAnInjectionColumn || isAnWithdrawalColumn)
                 pValuesForTheCurrentYear[numSpace][col_index].computeStatisticsForTheCurrentYear();
         }
@@ -215,7 +216,7 @@ public:
     void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
                         unsigned int nbYearsForCurrentSummary)
     {
-        // Here we compute synthesis : 
+        // Here we compute synthesis :
         //  for each interval of any time period results (hourly, daily, weekly, ...),
         //  we compute the average over all MC years :
         //  For instance :
@@ -223,9 +224,8 @@ public:
         //      - or we compute the average of the results of the n-th day over all MC years
         for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
         {
-            VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
-                                                 AncestorType::pResults,
-                                                 numSpaceToYear[numSpace]);
+            VariableAccessorType::ComputeSummary(
+              pValuesForTheCurrentYear[numSpace], AncestorType::pResults, numSpaceToYear[numSpace]);
         }
 
         // Next variable

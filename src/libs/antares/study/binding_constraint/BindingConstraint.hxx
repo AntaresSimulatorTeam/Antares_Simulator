@@ -86,39 +86,49 @@ inline bool BindingConstraint::skipped() const
     return linkCount() == 0 && clusterCount() == 0;
 }
 
-inline bool BindingConstraint::isActive() const {
+inline bool BindingConstraint::isActive() const
+{
     return enabled() && !skipped();
 }
 
-inline BindingConstraint::iterator BindingConstraint::begin() {
+inline BindingConstraint::iterator BindingConstraint::begin()
+{
     return pLinkWeights.begin();
 }
 
-inline BindingConstraint::iterator BindingConstraint::end() {
+inline BindingConstraint::iterator BindingConstraint::end()
+{
     return pLinkWeights.end();
 }
 
-inline BindingConstraint::const_iterator BindingConstraint::begin() const {
+inline BindingConstraint::const_iterator BindingConstraint::begin() const
+{
     return pLinkWeights.begin();
 }
 
-inline BindingConstraint::const_iterator BindingConstraint::end() const {
+inline BindingConstraint::const_iterator BindingConstraint::end() const
+{
     return pLinkWeights.end();
 }
 
 template<class Env>
-inline std::string BindingConstraint::timeSeriesFileName(const Env &env) const {
-    switch (operatorType()) {
-        case BindingConstraint::opLess:
-            return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_lt" + ".txt";
-        case BindingConstraint::opGreater:
-            return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_gt" + ".txt";
-        case BindingConstraint::opEquality:
-            return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_eq" + ".txt";
-        default:
-            logs.error("Cannot load/save time series of type other that eq/gt/lt");
-            return "";
+inline std::string BindingConstraint::timeSeriesFileName(const Env& env) const
+{
+    switch (operatorType())
+    {
+    case BindingConstraint::opLess:
+        return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_lt"
+               + ".txt";
+    case BindingConstraint::opGreater:
+        return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_gt"
+               + ".txt";
+    case BindingConstraint::opEquality:
+        return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_eq"
+               + ".txt";
+    default:
+        logs.error("Cannot load/save time series of type other that eq/gt/lt");
+        return "";
     }
 }
 
-} // namespace Antares
+} // namespace Antares::Data

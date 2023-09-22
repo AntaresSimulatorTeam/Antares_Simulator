@@ -79,5 +79,3 @@ void Container::resetToDefault()
 }
 
 } // namespace Antares::Data::Load
-
-

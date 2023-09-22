@@ -97,18 +97,16 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
         parentArea->forceReload();
 }
 
-const std::map < RenewableCluster::RenewableGroup, const char* > groupToName =
-{
-    {RenewableCluster::thermalSolar, "solar thermal"},
-    {RenewableCluster::PVSolar, "solar pv"},
-    {RenewableCluster::rooftopSolar, "solar rooftop"},
-    {RenewableCluster::windOnShore, "wind onshore"},
-    {RenewableCluster::windOffShore,"wind offshore"},
-    {RenewableCluster::renewableOther1, "other res 1"},
-    {RenewableCluster::renewableOther2, "other res 2"},
-    {RenewableCluster::renewableOther3, "other res 3"},
-    {RenewableCluster::renewableOther4, "other res 4"}
-};
+const std::map<RenewableCluster::RenewableGroup, const char*> groupToName
+  = {{RenewableCluster::thermalSolar, "solar thermal"},
+     {RenewableCluster::PVSolar, "solar pv"},
+     {RenewableCluster::rooftopSolar, "solar rooftop"},
+     {RenewableCluster::windOnShore, "wind onshore"},
+     {RenewableCluster::windOffShore, "wind offshore"},
+     {RenewableCluster::renewableOther1, "other res 1"},
+     {RenewableCluster::renewableOther2, "other res 2"},
+     {RenewableCluster::renewableOther3, "other res 3"},
+     {RenewableCluster::renewableOther4, "other res 4"}};
 
 void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
 {
@@ -127,7 +125,7 @@ void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
         {
             groupID = group;
             return;
-        }        
+        }
     }
 
     // assigning a default value

@@ -383,11 +383,12 @@ private:
     /*!
     ** \brief add one constraint to the study
     */
-    std::shared_ptr<Antares::Data::BindingConstraint> addConstraint(const Data::ConstraintName& name,
-                                                    const Yuni::String& op,
-                                                    const Yuni::String& type,
-                                                    const WeightMap& weights,
-                                                    const double& secondMember);
+    std::shared_ptr<Antares::Data::BindingConstraint> addConstraint(
+      const Data::ConstraintName& name,
+      const Yuni::String& op,
+      const Yuni::String& type,
+      const WeightMap& weights,
+      const double& secondMember);
 
 public:
     Vector pLink;

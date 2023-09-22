@@ -34,7 +34,6 @@
 
 using namespace Yuni;
 
-
 namespace Antares::Data
 {
 // TODO this method should be removed - use Yuni::String instead
@@ -207,4 +206,3 @@ uint StudyHeader::ReadVersionFromFile(const AnyString& filename)
 }
 
 } // namespace Antares::Data
-

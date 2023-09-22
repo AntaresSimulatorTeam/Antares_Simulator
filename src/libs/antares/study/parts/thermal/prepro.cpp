@@ -163,7 +163,7 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 
 bool PreproThermal::forceReload(bool reload) const
 {
-    return data.forceReload(reload); 
+    return data.forceReload(reload);
 }
 
 void PreproThermal::markAsModified() const

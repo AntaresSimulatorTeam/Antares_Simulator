@@ -39,7 +39,6 @@ namespace Antares
 {
 namespace Data
 {
-
 const char* XCast::TSTranslationUseToCString(TSTranslationUse use)
 {
     static const char* const names[3] = {"never", "before-conversion", "after-conversion"};
@@ -254,8 +253,8 @@ bool XCast::loadFromFolder(const AnyString& folder)
     buffer.clear() << folder << SEP << "data.txt";
 
     // Performing normal loading
-    ret = data.loadFromCSVFile(buffer, (uint)dataMax, 12, Matrix<>::optFixedSize, &readBuffer)
-        && ret;
+    ret
+      = data.loadFromCSVFile(buffer, (uint)dataMax, 12, Matrix<>::optFixedSize, &readBuffer) && ret;
 
     // K
     buffer.clear() << folder << SEP << "k.txt";

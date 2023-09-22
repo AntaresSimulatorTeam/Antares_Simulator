@@ -64,16 +64,16 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
     ProblemeHydraulique.Probleme = NULL;
 
     std::vector<CORRESPONDANCE_DES_VARIABLES>& CorrespondanceDesVariables
-        = ProblemeHydraulique.CorrespondanceDesVariables;
+      = ProblemeHydraulique.CorrespondanceDesVariables;
 
     std::vector<CORRESPONDANCE_DES_CONTRAINTES>& CorrespondanceDesContraintes
-        = ProblemeHydraulique.CorrespondanceDesContraintes;
+      = ProblemeHydraulique.CorrespondanceDesContraintes;
 
     std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE>& ProblemeLineairePartieFixe
-        = ProblemeHydraulique.ProblemeLineairePartieFixe;
+      = ProblemeHydraulique.ProblemeLineairePartieFixe;
 
     std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE>& ProblemeLineairePartieVariable
-        = ProblemeHydraulique.ProblemeLineairePartieVariable;
+      = ProblemeHydraulique.ProblemeLineairePartieVariable;
 
     for (int i = 0; i < NombreDeProblemes; i++)
     {

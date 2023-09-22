@@ -64,8 +64,8 @@ bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* problemeHebdo)
 
             OPT_InitialiserLesCoutsQuadratiques(problemeHebdo, pdtHebdo);
 
-            result
-              = OPT_AppelDuSolveurQuadratique(problemeHebdo->ProblemeAResoudre.get(), pdtHebdo) && result;
+            result = OPT_AppelDuSolveurQuadratique(problemeHebdo->ProblemeAResoudre.get(), pdtHebdo)
+                     && result;
         }
     }
 

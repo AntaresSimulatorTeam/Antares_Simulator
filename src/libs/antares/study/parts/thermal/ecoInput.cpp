@@ -76,7 +76,9 @@ bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
         filename << folder << SEP << "fuelCost.txt";
         if (IO::File::Exists(filename))
         {
-            ret = fuelcost.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &dataBuffer) && ret;
+            ret = fuelcost.loadFromCSVFile(
+                    filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &dataBuffer)
+                  && ret;
             if (study.usedByTheSolver && study.parameters.derated)
                 fuelcost.averageTimeseries();
         }
@@ -84,7 +86,8 @@ bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
         filename.clear() << folder << SEP << "CO2Cost.txt";
         if (IO::File::Exists(filename))
         {
-            ret = co2cost.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &dataBuffer)
+            ret = co2cost.loadFromCSVFile(
+                    filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &dataBuffer)
                   && ret;
             if (study.usedByTheSolver && study.parameters.derated)
                 co2cost.averageTimeseries();

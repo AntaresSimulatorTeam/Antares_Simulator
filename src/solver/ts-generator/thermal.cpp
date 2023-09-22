@@ -58,9 +58,7 @@ namespace
 class GeneratorTempData final
 {
 public:
-    GeneratorTempData(Data::Study& study,
-                      Solver::Progression::Task& progr,
-                      IResultWriter& writer);
+    GeneratorTempData(Data::Study& study, Solver::Progression::Task& progr, IResultWriter& writer);
 
     void prepareOutputFoldersForAllAreas(uint year);
 
@@ -122,10 +120,10 @@ private:
 GeneratorTempData::GeneratorTempData(Data::Study& study,
                                      Solver::Progression::Task& progr,
                                      IResultWriter& writer) :
-    study(study),
-    rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
-    pProgression(progr),
-    pWriter(writer)
+ study(study),
+ rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
+ pProgression(progr),
+ pWriter(writer)
 {
     auto& parameters = study.parameters;
 

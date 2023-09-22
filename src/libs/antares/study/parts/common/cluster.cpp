@@ -121,4 +121,3 @@ bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
 }
 
 } // namespace Antares::Data
-

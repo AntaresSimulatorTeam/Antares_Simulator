@@ -12,9 +12,10 @@
 #include "BindingConstraint.h"
 #include "BindingConstraintSaver.h"
 
-namespace Antares::Data {
-
-class BindingConstraintGroupRepository {
+namespace Antares::Data
+{
+class BindingConstraintGroupRepository
+{
 public:
     [[nodiscard]] unsigned size() const;
 
@@ -44,4 +45,4 @@ private:
     std::vector<std::unique_ptr<BindingConstraintGroup>> groups_;
 };
 
-} // Data
+} // namespace Antares::Data

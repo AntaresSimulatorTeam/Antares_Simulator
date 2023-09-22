@@ -124,10 +124,7 @@ inline void Spotlight::IItem::addTag(const StringT& text)
 }
 
 template<class StringT>
-inline void Spotlight::IItem::addTag(const StringT& text,
-                                     uint8_t r,
-                                     uint8_t g,
-                                     uint8_t b)
+inline void Spotlight::IItem::addTag(const StringT& text, uint8_t r, uint8_t g, uint8_t b)
 {
     pLeftTags.push_back(std::make_shared<Tag>(text, r, g, b));
 }
@@ -139,10 +136,7 @@ inline void Spotlight::IItem::addRightTag(const StringT& text)
 }
 
 template<class StringT>
-inline void Spotlight::IItem::addRightTag(const StringT& text,
-                                          uint8_t r,
-                                          uint8_t g,
-                                          uint8_t b)
+inline void Spotlight::IItem::addRightTag(const StringT& text, uint8_t r, uint8_t g, uint8_t b)
 {
     pRightTags.push_back(std::make_shared<Tag>(text, r, g, b));
 }

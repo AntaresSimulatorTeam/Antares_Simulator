@@ -164,7 +164,7 @@ bool DataTimeseries::performWL(Context& ctx)
                     source->hydro.series->ror.unloadFromMemory();
                     source->hydro.series->storage.unloadFromMemory();
                     source->hydro.series->mingen.unloadFromMemory();
-                                        
+
                     break;
                 }
                 case Data::timeSeriesThermal:

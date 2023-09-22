@@ -29,7 +29,6 @@
 
 namespace Antares::Data::Wind
 {
-
 inline uint64_t Prepro::memoryUsage() const
 {
     return xcast.memoryUsage();
@@ -51,7 +50,5 @@ inline void Prepro::resetToDefault()
 }
 
 } // namespace Antares::Data::Wind
-
-
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_H__

@@ -174,7 +174,6 @@ public:
 
 }; // class PartHydro
 
-
 // Interpolates a water value from a table according to a level and a day.
 // As this function can be called a lot of times, we pass working variables and returned variables
 // as arguments, so that we don't have to create them locally (as in a classical function) each

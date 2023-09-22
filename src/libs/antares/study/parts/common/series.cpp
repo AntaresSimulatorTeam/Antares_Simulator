@@ -35,7 +35,6 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 
-
 namespace Antares::Data
 {
 bool DataSeriesCommon::forceReload(bool reload) const
@@ -48,6 +47,4 @@ void DataSeriesCommon::markAsModified() const
     timeSeries.markAsModified();
 }
 
-
 } // namespace Antares::Data
-

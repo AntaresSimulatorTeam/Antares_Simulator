@@ -296,13 +296,13 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
     // Short term storage
 
     // save sts in list.ini for this area
-    buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "clusters"
-        << SEP << area.id;
+    buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "clusters" << SEP
+                   << area.id;
     ret = area.shortTermStorage.saveToFolder(buffer.c_str()) && ret;
 
     // save the series files
-    buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "series"
-        << SEP << area.id;
+    buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "series" << SEP
+                   << area.id;
     ret = area.shortTermStorage.saveDataSeriesToFolder(buffer.c_str()) && ret;
 
     return ret;
@@ -494,9 +494,7 @@ Area* addAreaToListOfAreas(AreaList& list, const AnyString& name)
     return AreaListAddFromNames(list, cname, lname);
 }
 
-Area* AreaListAddFromNames(AreaList& list,
-                           const AnyString& name,
-                           const AnyString& lname)
+Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyString& lname)
 {
     if (!name || !lname)
         return nullptr;
@@ -818,8 +816,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Fatal hors hydro - Misc Gen.
     buffer.clear() << study.folderInput << SEP << "misc-gen" << SEP << "miscgen-" << area.id
                    << ".txt";
-    ret = area.miscGen.loadFromCSVFile(buffer, fhhMax, HOURS_PER_YEAR, Matrix<>::optFixedSize)
-          && ret;
+    ret
+      = area.miscGen.loadFromCSVFile(buffer, fhhMax, HOURS_PER_YEAR, Matrix<>::optFixedSize) && ret;
 
     // Check misc gen
     {
@@ -881,7 +879,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             buffer.clear() << study.folderInput << SEP << "solar" << SEP << "series";
             ret = DataSeriesSolarLoadFromFolder(study, area.solar.series, area.id, buffer.c_str())
-                && ret;
+                  && ret;
         }
 
         ++options.progressTicks;
@@ -947,8 +945,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Short term storage
     if (study.header.version >= 860)
     {
-        buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series"
-            << SEP << area.id;
+        buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series" << SEP
+                       << area.id;
 
         ret = area.shortTermStorage.loadSeriesFromFolder(buffer.c_str()) && ret;
         ret = area.shortTermStorage.validate() && ret;
@@ -1011,8 +1009,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                 if (!p->value.to<double>(area.spreadUnsuppliedEnergyCost))
                 {
                     area.spreadUnsuppliedEnergyCost = 0.;
-                    logs.warning()
-                      << area.name << ": invalid spread for unsupplied energy cost";
+                    logs.warning() << area.name << ": invalid spread for unsupplied energy cost";
                 }
                 continue;
             }
@@ -1021,8 +1018,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                 if (!p->value.to<double>(area.spreadSpilledEnergyCost))
                 {
                     area.spreadSpilledEnergyCost = 0.;
-                    logs.warning()
-                      << area.name << ": invalid spread for spilled energy cost";
+                    logs.warning() << area.name << ": invalid spread for spilled energy cost";
                 }
                 continue;
             }
@@ -1122,7 +1118,8 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         {
             for (const auto& [id, area] : areas)
             {
-                buffer.clear() << pStudy.folderInput << SEP << "st-storage" << SEP << "clusters" << SEP << area->id;
+                buffer.clear() << pStudy.folderInput << SEP << "st-storage" << SEP << "clusters"
+                               << SEP << area->id;
                 ret = area->shortTermStorage.createSTStorageClustersFromIniFile(buffer.c_str())
                       && ret;
             }
@@ -1494,7 +1491,8 @@ void AreaList::resizeAllTimeseriesNumbers(uint n)
     each([&](Data::Area& area) { area.resizeAllTimeseriesNumbers(n); });
 }
 
-void AreaList::fixOrientationForAllInterconnections(BindingConstraintsRepository& bindingconstraints)
+void AreaList::fixOrientationForAllInterconnections(
+  BindingConstraintsRepository& bindingconstraints)
 {
     each([&](Data::Area& area) {
         bool mustLoop;
@@ -1630,10 +1628,10 @@ void AreaList::removeWindTimeseries()
 void AreaList::removeThermalTimeseries()
 {
     each([&](Data::Area& area) {
-        area.thermal.list.each(
-          [&](Data::ThermalCluster& cluster) { cluster.series->timeSeries.reset(1, HOURS_PER_YEAR); });
+        area.thermal.list.each([&](Data::ThermalCluster& cluster) {
+            cluster.series->timeSeries.reset(1, HOURS_PER_YEAR);
+        });
     });
 }
 
 } // namespace Antares::Data
-

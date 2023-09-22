@@ -85,8 +85,7 @@ public:
         Tag(const wxChar* t, uint8_t r, uint8_t g, uint8_t b) : text(t), color(r, g, b)
         {
         }
-        Tag(const wxString& t, uint8_t r, uint8_t g, uint8_t b) :
-         text(t), color(r, g, b)
+        Tag(const wxString& t, uint8_t r, uint8_t g, uint8_t b) : text(t), color(r, g, b)
         {
         }
 

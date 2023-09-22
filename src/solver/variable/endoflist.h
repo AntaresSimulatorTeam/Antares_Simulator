@@ -65,7 +65,6 @@ public:
     };
 
 public:
-
     /*!
     ** \brief Retrieve the list of all individual variables
     **

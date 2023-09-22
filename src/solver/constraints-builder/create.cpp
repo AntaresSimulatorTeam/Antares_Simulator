@@ -83,38 +83,33 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
                 if (currentCycle.opType == Data::BindingConstraint::opEquality)
                 {
                     ub += ((*line)->ptr->parameters[columnImpedance][hour]
-                                 * (*line)->ptr->parameters[columnLoopFlow][hour]
-                                 * (int)includeLoopFlow
-                             + (*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
-                                 * includePhaseShift)
-                         * currentCycle.sign[i];
+                             * (*line)->ptr->parameters[columnLoopFlow][hour] * (int)includeLoopFlow
+                           + (*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
+                               * includePhaseShift)
+                          * currentCycle.sign[i];
                 }
                 else if (currentCycle.opType == Data::BindingConstraint::opBoth
                          && hour + 1 <= calendarEnd && hour + 1 >= calendarStart)
                 {
                     ub += ((*line)->ptr->parameters[columnImpedance][hour]
-                               * (*line)->ptr->parameters[columnLoopFlow][hour]
-                               * (int)includeLoopFlow)
-                               * currentCycle.sign[i]
-                            + std::min(
-                                 ((*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
-                                    * includePhaseShift)
-                                    * currentCycle.sign[i],
-                                 ((*line)->ptr->parameters[Data::fhlPShiftPlus][hour]
-                                    * includePhaseShift)
-                                    * currentCycle.sign[i]);
+                           * (*line)->ptr->parameters[columnLoopFlow][hour] * (int)includeLoopFlow)
+                            * currentCycle.sign[i]
+                          + std::min(((*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
+                                      * includePhaseShift)
+                                       * currentCycle.sign[i],
+                                     ((*line)->ptr->parameters[Data::fhlPShiftPlus][hour]
+                                      * includePhaseShift)
+                                       * currentCycle.sign[i]);
 
                     lb += ((*line)->ptr->parameters[columnImpedance][hour]
-                               * (*line)->ptr->parameters[columnLoopFlow][hour]
-                               * (int)includeLoopFlow)
-                               * currentCycle.sign[i]
-                            + std::max(
-                                 ((*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
-                                    * includePhaseShift)
-                                    * currentCycle.sign[i],
-                                 ((*line)->ptr->parameters[Data::fhlPShiftPlus][hour]
-                                    * includePhaseShift)
-                                    * currentCycle.sign[i]);
+                           * (*line)->ptr->parameters[columnLoopFlow][hour] * (int)includeLoopFlow)
+                            * currentCycle.sign[i]
+                          + std::max(((*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
+                                      * includePhaseShift)
+                                       * currentCycle.sign[i],
+                                     ((*line)->ptr->parameters[Data::fhlPShiftPlus][hour]
+                                      * includePhaseShift)
+                                       * currentCycle.sign[i]);
                 }
                 else
                 {
@@ -163,7 +158,7 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
                                   0); // vocabulary is not so obvious here (less or greater)
                 ret = constraint != nullptr;
                 state->secondMember.resizeWithoutDataLost(
-                        constraint->RHSTimeSeries().width, constraint->RHSTimeSeries().height, 0);
+                  constraint->RHSTimeSeries().width, constraint->RHSTimeSeries().height, 0);
                 constraint->RHSTimeSeries() = state->secondMember;
 
                 // iterate the counter
@@ -179,7 +174,7 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
                                   0); // vocabulary is not so obvious here (less or greater)
                 ret = constraint != nullptr;
                 state->secondMember.resizeWithoutDataLost(
-                        constraint->RHSTimeSeries().width, constraint->RHSTimeSeries().height, 0);
+                  constraint->RHSTimeSeries().width, constraint->RHSTimeSeries().height, 0);
                 constraint->RHSTimeSeries() = state->secondMember;
             }
         }
@@ -189,11 +184,12 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
     return ret;
 }
 
-std::shared_ptr<Antares::Data::BindingConstraint> CBuilder::addConstraint(const Data::ConstraintName& name,
-                                                          const String& op,
-                                                          const String& type,
-                                                          const WeightMap& weights,
-                                                          const double& secondMember)
+std::shared_ptr<Antares::Data::BindingConstraint> CBuilder::addConstraint(
+  const Data::ConstraintName& name,
+  const String& op,
+  const String& type,
+  const WeightMap& weights,
+  const double& secondMember)
 {
     // Create a new contraint
     auto constraint = pStudy->bindingConstraints.add(name);

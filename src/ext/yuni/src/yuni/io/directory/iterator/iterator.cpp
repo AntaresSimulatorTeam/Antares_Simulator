@@ -117,8 +117,8 @@ Flow TraverseUnixFolder(const String& filename, Options& opts, IDetachedThread* 
             if (files)
             {
                 // The node is a file
-                switch (
-                  opts.self->onFile(newFilename, filename, newName, static_cast<uint64_t>(s.st_size)))
+                switch (opts.self->onFile(
+                  newFilename, filename, newName, static_cast<uint64_t>(s.st_size)))
                 {
                 case Yuni::IO::flowContinue:
                     break;

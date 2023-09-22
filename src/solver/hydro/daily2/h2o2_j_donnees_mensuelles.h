@@ -43,10 +43,10 @@ typedef struct
     /* En entree: seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
        avoir appele H2O2_J_Instanciation */
     int NombreDeJoursDuMois; /* A renseigner par l'appelant */
-    double TurbineDuMois; /* A renseigner par l'appelant (somme des turbines cibles du mois) */
-    double* TurbineMax;   /* A renseigner par l'appelant : 1 valeur par jour */
-    double* TurbineMin;   /*Minimum Hourly Hydro-Storage Generation*/
-    double* TurbineCible; /* A renseigner par l'appelant : 1 valeur par jour */
+    double TurbineDuMois;    /* A renseigner par l'appelant (somme des turbines cibles du mois) */
+    double* TurbineMax;      /* A renseigner par l'appelant : 1 valeur par jour */
+    double* TurbineMin;      /*Minimum Hourly Hydro-Storage Generation*/
+    double* TurbineCible;    /* A renseigner par l'appelant : 1 valeur par jour */
     double reservoirCapacity;
     double NiveauInitialDuMois;
     double* niveauBas;

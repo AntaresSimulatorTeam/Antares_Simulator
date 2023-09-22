@@ -117,7 +117,8 @@ void UIRuntimeInfo::reloadBindingConstraints()
     {
         const auto end = pStudy.bindingConstraints.end();
         auto i = pStudy.bindingConstraints.begin();
-        for (; i != end; ++i) {
+        for (; i != end; ++i)
+        {
             auto bc = *i;
             orderedConstraint.insert(bc);
         }

@@ -89,7 +89,6 @@ std::shared_ptr<Data::Study> GetCurrentStudy();
 */
 bool CurrentStudyIsValid();
 
-
 /*!
 ** \brief Export the current study map into a folder
 */

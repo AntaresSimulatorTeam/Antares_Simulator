@@ -153,7 +153,8 @@ static void shortTermStorageLevels(
     }
 }
 
-void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo, Solver::IResultWriter& writer)
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
+                                                             Solver::IResultWriter& writer)
 {
     int var;
 
@@ -177,9 +178,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     {
         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
         constraintNamer.UpdateTimeStep(timeStepInYear);
-        CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+        CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
+          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
         CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-            = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+          = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
@@ -447,8 +449,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         {
             int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
             CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES&
-                CorrespondanceCntNativesCntOptimJournalieres
-                = problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[jour];
+              CorrespondanceCntNativesCntOptimJournalieres
+              = problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[jour];
             int nombreDeTermes = 0;
 
             for (int index = 0; index < nbInterco; index++)
@@ -539,7 +541,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     {
         int semaine = problemeHebdo->weekInTheYear;
         CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondanceCntNativesCntOptimHebdomadaires
-            = problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires;
+          = problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires;
         for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
@@ -734,8 +736,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     nombreDeTermes++;
                 }
 
-                if (int var2 = CorrespondanceVarNativesVarOptim
-                                 .NumeroDeVariablesVariationHydALaBaisse[pays];
+                if (int var2
+                    = CorrespondanceVarNativesVarOptim.NumeroDeVariablesVariationHydALaBaisse[pays];
                     var2 >= 0)
                 {
                     Pi[nombreDeTermes] = -1.0;
@@ -743,8 +745,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     nombreDeTermes++;
                 }
 
-                if (int var3 = CorrespondanceVarNativesVarOptim
-                                 .NumeroDeVariablesVariationHydALaHausse[pays];
+                if (int var3
+                    = CorrespondanceVarNativesVarOptim.NumeroDeVariablesVariationHydALaHausse[pays];
                     var3 >= 0)
                 {
                     Pi[nombreDeTermes] = 1.0;
@@ -855,7 +857,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
         if (presenceHydro
             && (TurbEntreBornes
-            || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
+                || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
         {
             int nombreDeTermes = 0;
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
@@ -914,9 +916,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
-        const auto& CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+        const auto& CorrespondanceVarNativesVarOptim
+          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
         CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-            = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+          = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
 
         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
         constraintNamer.UpdateTimeStep(timeStepInYear);

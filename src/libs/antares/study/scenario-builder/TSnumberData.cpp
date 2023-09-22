@@ -31,7 +31,6 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-
 bool TSNumberData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;
@@ -77,4 +76,4 @@ void TSNumberData::set_value(uint x, uint y, uint value)
 {
     pTSNumberRules.entry[y][x] = value;
 }
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder

@@ -90,7 +90,6 @@ MemoryStatisticsData::~MemoryStatisticsData()
 } // namespace Private
 } // namespace Antares
 
-
 namespace Antares::Window
 {
 namespace // anonymous
@@ -349,4 +348,3 @@ void MemoryStatistics::onClose(void*)
 }
 
 } // namespace Antares::Window
-

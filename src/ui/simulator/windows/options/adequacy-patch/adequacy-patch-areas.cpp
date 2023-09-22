@@ -137,4 +137,4 @@ void AdequacyPatchAreas::mouseMoved(wxMouseEvent&)
     Antares::Component::Panel::OnMouseMoveFromExternalComponent();
 }
 
-}
+} // namespace Antares::Window::Options

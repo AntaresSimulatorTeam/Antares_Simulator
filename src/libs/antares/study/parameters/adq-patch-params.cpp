@@ -7,7 +7,6 @@
 
 namespace Antares::Data::AdequacyPatch
 {
-
 // -------------------
 // Local matching
 // -------------------
@@ -31,8 +30,10 @@ bool LocalMatching::updateFromKeyValue(const Yuni::String& key, const Yuni::Stri
 
 void LocalMatching::addProperties(IniFile::Section* section) const
 {
-    section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step", setToZeroOutsideInsideLinks);
-    section->add("set-to-null-ntc-between-physical-out-for-first-step", setToZeroOutsideOutsideLinks);
+    section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
+                 setToZeroOutsideInsideLinks);
+    section->add("set-to-null-ntc-between-physical-out-for-first-step",
+                 setToZeroOutsideOutsideLinks);
     section->add("enable-first-step", enabled);
 }
 
@@ -55,7 +56,8 @@ void CurtailmentSharing::resetThresholds()
     thresholdVarBoundsRelaxation = defaultValueThresholdVarBoundsRelaxation;
 }
 
-static bool StringToPriceTakingOrder(const AnyString& PTO_as_string, AdequacyPatch::AdqPatchPTO& PTO_as_enum)
+static bool StringToPriceTakingOrder(const AnyString& PTO_as_string,
+                                     AdequacyPatch::AdqPatchPTO& PTO_as_enum)
 {
     Yuni::CString<24, false> s = PTO_as_string;
     s.trim();
@@ -151,13 +153,13 @@ void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
     }
 }
 
-
 bool AdqPatchParams::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
 {
     if (key == "include-adq-patch")
         return value.to<bool>(enabled);
 
-    return curtailmentSharing.updateFromKeyValue(key, value) != localMatching.updateFromKeyValue(key, value); // XOR
+    return curtailmentSharing.updateFromKeyValue(key, value)
+           != localMatching.updateFromKeyValue(key, value); // XOR
 }
 
 void AdqPatchParams::saveToINI(IniFile& ini) const
@@ -192,9 +194,9 @@ void AdqPatchParams::checkAdqPatchStudyModeEconomyOnly(const StudyMode studyMode
 void AdqPatchParams::checkAdqPatchContainsAdqPatchArea(const Antares::Data::AreaList& areas) const
 {
     const bool containsAdqArea
-        = std::any_of(areas.cbegin(), areas.cend(), [](const std::pair<AreaName, Area*>& area) {
-                return area.second->adequacyPatchMode == physicalAreaInsideAdqPatch;
-                });
+      = std::any_of(areas.cbegin(), areas.cend(), [](const std::pair<AreaName, Area*>& area) {
+            return area.second->adequacyPatchMode == physicalAreaInsideAdqPatch;
+        });
 
     if (!containsAdqArea)
         throw Error::NoAreaInsideAdqPatchMode();
@@ -212,4 +214,4 @@ void AdqPatchParams::checkAdqPatchDisabledLocalMatching() const
         throw Error::AdqPatchDisabledLMR();
 }
 
-} // Antares::Data::AdequacyPatch
+} // namespace Antares::Data::AdequacyPatch

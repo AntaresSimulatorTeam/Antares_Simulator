@@ -128,11 +128,11 @@ void HourlyCSRProblem::calculateCsrParameters()
             problemeHebdo_->adequacyPatchRuntimeData->addCSRTriggeredAtAreaHour(Area, hour);
 
             // calculate netPositionInit and the RHS of the AreaBalance constraints
-            std::tie(netPositionInit, std::ignore, std::ignore) 
-                = calculateAreaFlowBalance(problemeHebdo_, 
-                                           adqPatchParams_.localMatching.setToZeroOutsideInsideLinks,
-                                           Area, 
-                                           hour);
+            std::tie(netPositionInit, std::ignore, std::ignore)
+              = calculateAreaFlowBalance(problemeHebdo_,
+                                         adqPatchParams_.localMatching.setToZeroOutsideInsideLinks,
+                                         Area,
+                                         hour);
             double ensInit
               = problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesDeDefaillancePositive[hour];
             double spillageInit
@@ -166,7 +166,8 @@ void HourlyCSRProblem::buildProblemVariables()
 
 void HourlyCSRProblem::buildProblemConstraintsLHS()
 {
-    Antares::Solver::Optimization::CsrQuadraticProblem csrProb(problemeHebdo_, problemeAResoudre_, *this);
+    Antares::Solver::Optimization::CsrQuadraticProblem csrProb(
+      problemeHebdo_, problemeAResoudre_, *this);
     csrProb.buildConstraintMatrix();
 }
 

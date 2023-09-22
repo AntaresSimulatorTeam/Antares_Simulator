@@ -46,7 +46,6 @@ YUNI_STATIC_ASSERT((uint)versionFromCMake == (uint)Antares::Data::versionLatest,
 
 namespace Antares::Data
 {
-
 static inline Version StudyFormatCheck(const String& headerFile)
 {
     // The raw version number
@@ -175,12 +174,13 @@ Version VersionIntToVersion(uint version)
     case versionUnknown:
         return versionUnknown;
     default:
-        logs.error() << "Study version " << version << " is not supported by this version of "
-            "antares-solver";
+        logs.error() << "Study version " << version
+                     << " is not supported by this version of "
+                        "antares-solver";
 
         logs.error() << "Studies in version <7.0 are no longer supported. Please upgrade it first"
-            << " if it's the case";
-    return versionUnknown;
+                     << " if it's the case";
+        return versionUnknown;
     }
 }
 
@@ -204,8 +204,8 @@ Version StudyTryToFindTheVersion(const AnyString& folder)
     return versionUnknown;
 }
 
-bool StudyVersion::isStudyLatestVersion(std::string studyFolder) const {
+bool StudyVersion::isStudyLatestVersion(std::string studyFolder) const
+{
     return StudyTryToFindTheVersion(studyFolder) == versionLatest;
 }
 } // namespace Antares::Data
-

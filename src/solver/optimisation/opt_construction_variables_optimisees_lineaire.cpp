@@ -100,21 +100,24 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             {
                 const int clusterGlobalIndex = storage.clusterGlobalIndex;
                 // 1. Injection
-                CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex]
+                CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
+                  .InjectionVariable[clusterGlobalIndex]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ShortTermStorageInjection(NombreDeVariables, storage.name);
                 NombreDeVariables++;
                 // 2. Withdrawal
-                CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex]
+                CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
+                  .WithdrawalVariable[clusterGlobalIndex]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ShortTermStorageWithdrawal(NombreDeVariables, storage.name);
                 NombreDeVariables++;
                 // 3. Level
-                CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex]
+                CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
+                  .LevelVariable[clusterGlobalIndex]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -233,7 +236,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         variableNamer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168
-                                      + NombreDePasDeTempsPourUneOptimisation - 1);
+                                     + NombreDePasDeTempsPourUneOptimisation - 1);
         variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
         {

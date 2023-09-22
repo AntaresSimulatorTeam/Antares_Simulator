@@ -80,9 +80,8 @@ public:
     PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
 
-    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams,PROBLEME_HEBDO* p) :
-        adqPatchParams_(adqPatchParams),
-        problemeHebdo_(p)
+    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams, PROBLEME_HEBDO* p) :
+     adqPatchParams_(adqPatchParams), problemeHebdo_(p)
     {
         double temp = pow(10, -adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
         belowThisThresholdSetToZero = std::min(temp, 0.1);

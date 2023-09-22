@@ -69,7 +69,8 @@ void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
     }
     else
     {
-        throw FatalError("Bug: TypeDOptimisation, OPTIMISATION_LINEAIRE ou OPTIMISATION_QUADRATIQUE "
-                         "non initialise");
+        throw FatalError(
+          "Bug: TypeDOptimisation, OPTIMISATION_LINEAIRE ou OPTIMISATION_QUADRATIQUE "
+          "non initialise");
     }
 }

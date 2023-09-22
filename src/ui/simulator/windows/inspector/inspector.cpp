@@ -322,8 +322,7 @@ void AddBindingConstraints(const Data::BindingConstraintsRepository::Set& list)
     bool notEmpty = false;
     auto end = list.end();
     for (auto i = list.begin(); i != end; ++i)
-        notEmpty
-          = gData->constraints.insert(*i).second || notEmpty;
+        notEmpty = gData->constraints.insert(*i).second || notEmpty;
 
     if (notEmpty)
     {
@@ -719,7 +718,7 @@ bool ConstraintsSelected(const std::set<Yuni::String>& set)
     auto end = gData->constraints.end();
     for (auto i = gData->constraints.begin(); i != end; ++i)
     {
-       auto constraint = *i;
+        auto constraint = *i;
         if (set.find(constraint->name()) == set.end())
         {
             return false;

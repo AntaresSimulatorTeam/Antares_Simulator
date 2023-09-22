@@ -33,31 +33,31 @@ using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-void ApplyRandomTSnumbers(const Study& study,
-                          unsigned int year,
-                          uint numSpace)
+void ApplyRandomTSnumbers(const Study& study, unsigned int year, uint numSpace)
 {
     // each area
     const unsigned int count = study.areas.size();
     for (unsigned int areaIndex = 0; areaIndex != count; ++areaIndex)
     {
         // Variables - the current area
-        NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = NumeroChroniquesTireesParPays[numSpace][areaIndex];
+        NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro
+          = NumeroChroniquesTireesParPays[numSpace][areaIndex];
         auto& area = *(study.areas.byIndex[areaIndex]);
 
         // Load
         {
             const Data::DataSeriesLoad& data = *area.load.series;
             assert(year < data.timeseriesNumbers.height);
-            ptchro.Consommation
-              = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+            ptchro.Consommation = (data.timeSeries.width != 1)
+                                    ? (long)data.timeseriesNumbers[0][year]
+                                    : 0; // zero-based
         }
         // Solar
         {
             const Data::DataSeriesSolar& data = *area.solar.series;
             assert(year < data.timeseriesNumbers.height);
-            ptchro.Solar
-              = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+            ptchro.Solar = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year]
+                                                        : 0; // zero-based
         }
         // Hydro
         {
@@ -70,8 +70,8 @@ void ApplyRandomTSnumbers(const Study& study,
         {
             const Data::DataSeriesWind& data = *area.wind.series;
             assert(year < data.timeseriesNumbers.height);
-            ptchro.Eolien
-              = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+            ptchro.Eolien = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year]
+                                                         : 0; // zero-based
         }
         // Renewable
         {
@@ -88,9 +88,9 @@ void ApplyRandomTSnumbers(const Study& study,
                 assert(year < data.timeseriesNumbers.height);
                 unsigned int clusterIndex = cluster->areaWideIndex;
 
-                ptchro.RenouvelableParPalier[clusterIndex] = (data.timeSeries.width != 1)
-                                                             ? (long)data.timeseriesNumbers[0][year]
-                                                             : 0; // zero-based
+                ptchro.RenouvelableParPalier[clusterIndex]
+                  = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year]
+                                                 : 0; // zero-based
             }
         }
 
@@ -113,8 +113,8 @@ void ApplyRandomTSnumbers(const Study& study,
                 // the matrix data.series should be properly initialized at this stage
                 // because the ts-generator has already been launched
                 ptchro.ThermiqueParPalier[clusterIndex] = (data.timeSeries.width != 1)
-                                                          ? (long)data.timeseriesNumbers[0][year]
-                                                          : 0; // zero-based
+                                                            ? (long)data.timeseriesNumbers[0][year]
+                                                            : 0; // zero-based
             }
         } // thermal
     }     // each area
@@ -123,7 +123,8 @@ void ApplyRandomTSnumbers(const Study& study,
     // Transmission capacities
     // ------------------------------
     // each link
-    for (unsigned int linkIndex = 0; linkIndex < study.runtime->interconnectionsCount(); ++linkIndex)
+    for (unsigned int linkIndex = 0; linkIndex < study.runtime->interconnectionsCount();
+         ++linkIndex)
     {
         AreaLink* link = study.runtime->areaLink[linkIndex];
         assert(year < link->timeseriesNumbers.height);
@@ -135,15 +136,17 @@ void ApplyRandomTSnumbers(const Study& study,
         ptchro.TransmissionCapacities
           = (directWidth != 1) ? link->timeseriesNumbers[0][year] : 0; // zero-based
     }
-    
+
     // ------------------------------
-    //Binding constraints
+    // Binding constraints
     // ------------------------------
-    //Setting 0 for time_series of width 0 is done when using the value.
-    //To do this here we would have to check every BC for its width
-    for (const auto& group: study.bindingConstraintsGroups) {
+    // Setting 0 for time_series of width 0 is done when using the value.
+    // To do this here we would have to check every BC for its width
+    for (const auto& group : study.bindingConstraintsGroups)
+    {
         [[maybe_unused]] auto number_of_ts_numbers = group->timeseriesNumbers.height;
-        assert(year < number_of_ts_numbers); //If only 1 ts_number we suppose only one TS. Any "year" will be converted to "0" later
+        assert(year < number_of_ts_numbers); // If only 1 ts_number we suppose only one TS. Any
+                                             // "year" will be converted to "0" later
         NumeroChroniquesTireesParGroup[numSpace][group->name()] = group->timeseriesNumbers[0][year];
     }
 }

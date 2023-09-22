@@ -48,9 +48,9 @@ struct PROBLEME_LINEAIRE_PARTIE_FIXE
 {
     int NombreDeVariables;
     std::vector<double> CoutLineaire;
-    std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
-                           (voir le fichier spx_constantes_externes.h mais ne jamais utiliser les
-                           valeurs explicites des constantes): VARIABLE_FIXE                  ,
+    std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les
+                           suivantes (voir le fichier spx_constantes_externes.h mais ne jamais
+                           utiliser les valeurs explicites des constantes): VARIABLE_FIXE ,
                             VARIABLE_BORNEE_DES_DEUX_COTES ,
                             VARIABLE_BORNEE_INFERIEUREMENT ,
                             VARIABLE_BORNEE_SUPERIEUREMENT ,
@@ -92,11 +92,14 @@ struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
                                   pas de solution
                                                  */
 
-    std::vector<int> PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    std::vector<int> ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    std::vector<double> CoutsReduits;      /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
-    std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer les couts
-                                             marginaux */
+    std::vector<int>
+      PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    std::vector<int>
+      ComplementDeLaBase; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    std::vector<double>
+      CoutsReduits; /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
+    std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer
+                                             les couts marginaux */
 };
 
 /* Les correspondances fixes des contraintes */
@@ -110,7 +113,7 @@ struct CORRESPONDANCE_DES_CONTRAINTES
 struct CORRESPONDANCE_DES_VARIABLES
 {
     std::vector<int> NumeroDeVariableTurbine; /* Turbines */
-    int NumeroDeLaVariableMu;     /* Variable de deversement (total sur la periode) */
+    int NumeroDeLaVariableMu;                 /* Variable de deversement (total sur la periode) */
     int NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible quand le turbine
                                  est inferieur au turbine cible */
 };
@@ -130,8 +133,7 @@ struct PROBLEME_HYDRAULIQUE
     std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE> ProblemeLineairePartieVariable;
 
     std::vector<void*> ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
-    void* Probleme;     /* Le probleme en cours passe au simplexe */
-
+    void* Probleme;                 /* Le probleme en cours passe au simplexe */
 };
 
 #endif

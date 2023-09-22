@@ -299,7 +299,6 @@ protected:
     }
 };
 
-
 class TimeSeriesHydroMinGen final : public ATimeSeries
 {
 public:
@@ -431,7 +430,8 @@ protected:
 class TimeSeriesThermalClusterFuelCost final : public TimeSeriesCluster
 {
 public:
-    TimeSeriesThermalClusterFuelCost(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
+    TimeSeriesThermalClusterFuelCost(wxWindow* control,
+                                     Toolbox::InputSelector::ThermalCluster* notifier);
     ~TimeSeriesThermalClusterFuelCost() override;
 
 private:
@@ -445,7 +445,8 @@ private:
 class TimeSeriesThermalClusterCO2Cost final : public TimeSeriesCluster
 {
 public:
-    TimeSeriesThermalClusterCO2Cost(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
+    TimeSeriesThermalClusterCO2Cost(wxWindow* control,
+                                    Toolbox::InputSelector::ThermalCluster* notifier);
     ~TimeSeriesThermalClusterCO2Cost() override;
 
 private:

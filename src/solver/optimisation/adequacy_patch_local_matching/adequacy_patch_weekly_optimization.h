@@ -48,6 +48,7 @@ public:
 
     ~AdequacyPatchOptimization() override = default;
     void solve(uint weekInTheYear, int hourInTheYear) override;
+
 private:
     const Antares::Data::Study& study_;
 };

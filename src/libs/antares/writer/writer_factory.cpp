@@ -20,4 +20,3 @@ IResultWriter::Ptr resultWriterFactory(Antares::Data::ResultFormat fmt,
     }
 }
 } // namespace Antares::Solver
-

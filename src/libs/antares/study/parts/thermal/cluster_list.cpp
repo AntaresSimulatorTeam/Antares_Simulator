@@ -86,17 +86,16 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
         // allow startup cost between [-5 000 000 ;-5 000 000] (was [-50 000;50 000])
 
         // Modulation
-        modulationFile.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro"
-                               << SEP << cluster->parentArea->id << SEP << cluster->id()
-                               << SEP << "modulation." << study.inputExtension;
-
+        modulationFile.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
+                               << cluster->parentArea->id << SEP << cluster->id() << SEP
+                               << "modulation." << study.inputExtension;
 
         enum
         {
             options = Matrix<>::optFixedSize,
         };
         bool r = cluster->modulation.loadFromCSVFile(
-                modulationFile, thermalModulationMax, HOURS_PER_YEAR, options);
+          modulationFile, thermalModulationMax, HOURS_PER_YEAR, options);
         if (not r and study.usedByTheSolver)
         {
             cluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
@@ -117,8 +116,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                 cluster->minDownTime = 1;
             }
             else
-                cluster->minUpDownTime
-                  = Math::Max(cluster->minUpTime, cluster->minDownTime);
+                cluster->minUpDownTime = Math::Max(cluster->minUpTime, cluster->minDownTime);
 
             if (not study.parameters.include.reserve.spinning)
                 cluster->spinning = 0;
@@ -134,8 +132,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
         if (not added)
         {
             // This error should never happen
-            logs.error() << "Impossible to add the thermal cluster '" << cluster->name()
-                         << "'";
+            logs.error() << "Impossible to add the thermal cluster '" << cluster->name() << "'";
             continue;
         }
         // keeping track of the cluster
@@ -231,9 +228,9 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     if (p->key == "variableomcost")
         return p->value.to<double>(cluster.variableomcost);
 
-    //pollutant
+    // pollutant
     if (auto it = Pollutant::namesToEnum.find(p->key.c_str()); it != Pollutant::namesToEnum.end())
-        return p->value.to<double> (cluster.emissions.factors[it->second]);
+        return p->value.to<double>(cluster.emissions.factors[it->second]);
 
     // The property is unknown
     return false;
@@ -391,7 +388,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
 
             // costs
             if (c.costgeneration != setManually)
-                s->add("costgeneration", c.costgeneration);            
+                s->add("costgeneration", c.costgeneration);
             if (not Math::Zero(c.marginalCost))
                 s->add("marginal-cost", Math::Round(c.marginalCost, 3));
             if (not Math::Zero(c.spreadCost))
@@ -403,13 +400,11 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             if (not Math::Zero(c.marketBidCost))
                 s->add("market-bid-cost", Math::Round(c.marketBidCost, 3));
             if (!Math::Zero(c.variableomcost))
-                s->add("variableomcost", Math::Round(c.variableomcost,3));
+                s->add("variableomcost", Math::Round(c.variableomcost, 3));
 
-
-            //pollutant factor
+            // pollutant factor
             for (auto const& [key, val] : Pollutant::namesToEnum)
                 s->add(key, c.emissions.factors[val]);
-
 
             buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
                            << c.parentArea->id << SEP << c.id();
@@ -502,13 +497,12 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
 
             ret = result and ret;
         }
-        
+
         ++options.progressTicks;
         options.pushProgressLogs();
     }
     return ret;
 }
-
 
 bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder)
 {

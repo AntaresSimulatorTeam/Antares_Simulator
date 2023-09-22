@@ -61,9 +61,7 @@ public:
     ** \param o The output folder
     ** \param year The current year, if any
     */
-    SurveyResults(const Data::Study& s,
-                  const Yuni::String& o,
-                  IResultWriter& writer);
+    SurveyResults(const Data::Study& s, const Yuni::String& o, IResultWriter& writer);
     /*!
     ** \brief Destructor
     */
@@ -154,7 +152,5 @@ private:
 }; // class SurveyResults
 
 } // namespace Antares::Solver::Variable
-
-
 
 #endif // __SOLVER_VARIABLE_SURVEY_RESULTS_SURVEY_RESULTS_H__

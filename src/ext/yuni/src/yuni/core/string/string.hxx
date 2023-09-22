@@ -3194,14 +3194,13 @@ inline bool CString<ChunkSizeT, ExpandableT>::append(const wchar_t* wbuffer, Siz
 }
 
 template<uint ChunkSizeT, bool ExpandableT>
-CString<ChunkSizeT, ExpandableT>::CString(const std::string& rhs):
-    CString(rhs.c_str())
+CString<ChunkSizeT, ExpandableT>::CString(const std::string& rhs) : CString(rhs.c_str())
 {
 }
 
 template<uint ChunkSizeT, bool ExpandableT>
-CString<ChunkSizeT, ExpandableT>&
-CString<ChunkSizeT, ExpandableT>::operator=(const std::string& rhs)
+CString<ChunkSizeT, ExpandableT>& CString<ChunkSizeT, ExpandableT>::operator=(
+  const std::string& rhs)
 {
     return (*this = rhs.c_str());
 }

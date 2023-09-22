@@ -44,16 +44,13 @@ void Area::internalInitialize()
         ui = new AreaUI();
 }
 
-Area::Area() :
-    reserves(fhrMax, HOURS_PER_YEAR),
-    miscGen(fhhMax, HOURS_PER_YEAR)
+Area::Area() : reserves(fhrMax, HOURS_PER_YEAR), miscGen(fhhMax, HOURS_PER_YEAR)
 {
     internalInitialize();
 }
 
 Area::Area(const AnyString& name) :
-    reserves(fhrMax, HOURS_PER_YEAR),
-    miscGen(fhhMax, HOURS_PER_YEAR)
+ reserves(fhrMax, HOURS_PER_YEAR), miscGen(fhhMax, HOURS_PER_YEAR)
 {
     internalInitialize();
     this->name = name;
@@ -62,8 +59,7 @@ Area::Area(const AnyString& name) :
 
 Area::Area(const AnyString& name, const AnyString& id) :
 
-    reserves(fhrMax, HOURS_PER_YEAR),
-    miscGen(fhhMax, HOURS_PER_YEAR)
+ reserves(fhrMax, HOURS_PER_YEAR), miscGen(fhhMax, HOURS_PER_YEAR)
 {
     internalInitialize();
     this->name = name;
@@ -431,4 +427,4 @@ void Area::buildLinksIndexes()
     }
 }
 
-} // namespace Antares
+} // namespace Antares::Data

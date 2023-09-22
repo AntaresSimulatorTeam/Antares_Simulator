@@ -10,7 +10,6 @@
 #include "antares/writer/i_writer.h"
 #include <antares/benchmarking/DurationCollector.h>
 
-
 namespace Antares::Solver
 {
 enum class ZipState
@@ -25,7 +24,7 @@ class ZipWriteJob final : public Yuni::Job::IJob
 {
 public:
     ZipWriteJob(ZipWriter& writer,
-                std::string  entryPath,
+                std::string entryPath,
                 ContentT& content,
                 Benchmarking::IDurationCollector& duration_collector);
     virtual void onExecute() override;
@@ -80,6 +79,5 @@ private:
     void addEntryFromBufferHelper(const std::string& entryPath, ContentType& entryContent);
 };
 } // namespace Antares::Solver
-
 
 #include "zip_writer.hxx"

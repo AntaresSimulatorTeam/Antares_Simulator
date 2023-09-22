@@ -125,17 +125,17 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
         bc.getPrintStatusFromStudy(study);
     }
 
-    // Here we supply the max number of columns to the variable print info collector 
+    // Here we supply the max number of columns to the variable print info collector
     // This is a ugly hack (it's a work around).
     // We should have a simple call to :
     //      NextType::supplyMaxNumberOfColumns(study);
     // Instead, we have a few lines as a hack.
     // What we have to do is add to the print info collector a single VariablePrintInfo
     // that has a max columns size of : (nb of inequality BCs) x ResultsType::count
-    // But note that for now, BC output variables are chained statically (one output variable per inequality BC).
-    // The hack is to make the first BC output variable able to supply max columns size for all BC output variables
-    // with its method getMaxNumberColumns().
-    // A solution would be to make BC output variables (like BindingConstMarginCost) some DYNAMIC variables.
+    // But note that for now, BC output variables are chained statically (one output variable per
+    // inequality BC). The hack is to make the first BC output variable able to supply max columns
+    // size for all BC output variables with its method getMaxNumberColumns(). A solution would be
+    // to make BC output variables (like BindingConstMarginCost) some DYNAMIC variables.
     if (pBCcount > 0)
     {
         NextType& bc = pBindConstraints[0];

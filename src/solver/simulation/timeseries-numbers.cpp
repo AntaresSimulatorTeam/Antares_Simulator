@@ -392,8 +392,8 @@ bool checkInterModalConsistencyForArea(Area& area,
     int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
     if (isTSintermodal[indexTS])
     {
-        uint nbTimeSeries
-          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesLoad : area.load.series->timeSeries.width;
+        uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesLoad
+                                                   : area.load.series->timeSeries.width;
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -401,8 +401,8 @@ bool checkInterModalConsistencyForArea(Area& area,
     indexTS = ts_to_tsIndex.at(timeSeriesSolar);
     if (isTSintermodal[indexTS])
     {
-        uint nbTimeSeries
-          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesSolar : area.solar.series->timeSeries.width;
+        uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesSolar
+                                                   : area.solar.series->timeSeries.width;
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -410,8 +410,8 @@ bool checkInterModalConsistencyForArea(Area& area,
     indexTS = ts_to_tsIndex.at(timeSeriesWind);
     if (isTSintermodal[indexTS])
     {
-        uint nbTimeSeries
-          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesWind : area.wind.series->timeSeries.width;
+        uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesWind
+                                                   : area.wind.series->timeSeries.width;
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -597,8 +597,8 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         {
             uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
                                                        : area.load.series->timeSeries.width;
-            area.load.series->timeseriesNumbers[0][year]
-              = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+            area.load.series->timeseriesNumbers[0][year] = (uint32_t)(
+              floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
 
         // -------------
@@ -610,8 +610,8 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         {
             uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
                                                        : area.solar.series->timeSeries.width;
-            area.solar.series->timeseriesNumbers[0][year]
-              = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+            area.solar.series->timeseriesNumbers[0][year] = (uint32_t)(
+              floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
 
         // -------------
@@ -623,8 +623,8 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         {
             uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
                                                        : area.wind.series->timeSeries.width;
-            area.wind.series->timeseriesNumbers[0][year]
-              = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+            area.wind.series->timeseriesNumbers[0][year] = (uint32_t)(
+              floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
 
         // -------------
@@ -636,8 +636,8 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         {
             uint nbTimeSeries
               = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.hydro.series->ror.width;
-            area.hydro.series->timeseriesNumbers[0][year]
-              = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+            area.hydro.series->timeseriesNumbers[0][year] = (uint32_t)(
+              floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
 
         // -------------
@@ -713,7 +713,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         }
     });
     // Binding constraints
-    for (auto& group: study.bindingConstraintsGroups)
+    for (auto& group : study.bindingConstraintsGroups)
     {
         const auto nbTimeSeries = group->numberOfTimeseries();
         auto& value = group->timeseriesNumbers[0][year];
@@ -723,7 +723,8 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         }
         else
         {
-            value  = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+            value = (uint32_t)(
+              floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
     }
 }
@@ -823,13 +824,13 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
     study.areas.each([&years](Area& area) {
         // Load
         fixTSNumbersSingleAreaSingleMode(
-                area.load.series->timeseriesNumbers, area.load.series->timeSeries.width, years);
+          area.load.series->timeseriesNumbers, area.load.series->timeSeries.width, years);
         // Solar
         fixTSNumbersSingleAreaSingleMode(
-                area.solar.series->timeseriesNumbers, area.solar.series->timeSeries.width, years);
+          area.solar.series->timeseriesNumbers, area.solar.series->timeSeries.width, years);
         // Wind
         fixTSNumbersSingleAreaSingleMode(
-                area.wind.series->timeseriesNumbers, area.wind.series->timeSeries.width, years);
+          area.wind.series->timeseriesNumbers, area.wind.series->timeSeries.width, years);
         // Hydro
         fixTSNumbersSingleAreaSingleMode(
           area.hydro.series->timeseriesNumbers, area.hydro.series->count, years);

@@ -240,9 +240,6 @@ private:
 
 } // namespace Antares::Solver::Variable::Container
 
-
-
-
 #include "surveyresults/reportbuilder.hxx"
 #include "container.hxx"
 

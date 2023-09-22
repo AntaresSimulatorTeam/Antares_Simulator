@@ -31,12 +31,13 @@ class HourlyCSRProblem;
 
 namespace Antares::Solver::Optimization
 {
-
 class CsrQuadraticProblem
 {
 public:
-    CsrQuadraticProblem(const PROBLEME_HEBDO* p, PROBLEME_ANTARES_A_RESOUDRE& pa, HourlyCSRProblem& hourly) :
-      problemeHebdo_(p), problemeAResoudre_(pa), hourlyCsrProblem_(hourly)
+    CsrQuadraticProblem(const PROBLEME_HEBDO* p,
+                        PROBLEME_ANTARES_A_RESOUDRE& pa,
+                        HourlyCSRProblem& hourly) :
+     problemeHebdo_(p), problemeAResoudre_(pa), hourlyCsrProblem_(hourly)
     {
     }
 
@@ -52,4 +53,4 @@ private:
     void setBindingConstraints(std::vector<double>& Pi, std::vector<int>& Colonne);
 };
 
-} //namespace Antares::Solver::Optimization
+} // namespace Antares::Solver::Optimization

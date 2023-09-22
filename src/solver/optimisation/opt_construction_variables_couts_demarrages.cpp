@@ -47,7 +47,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+          = problemeHebdo->PaliersThermiquesDuPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
@@ -64,7 +65,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                     continue;
                 }
                 CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-                  =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+                  = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
                 CorrespondanceVarNativesVarOptim
                   .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier]

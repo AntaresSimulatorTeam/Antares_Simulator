@@ -545,8 +545,6 @@ class Sets;
 
 } // namespace Antares::Data::ScenarioBuilder
 
-
-
 namespace Benchmarking
 {
 class IDurationCollector;

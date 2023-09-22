@@ -41,19 +41,19 @@ struct DONNEES_MENSUELLES
 {
     /* En entree: seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
        avoir appele H2O_J_Instanciation */
-    int NombreDeJoursDuMois; /* A renseigner par l'appelant */
-    double TurbineDuMois;    /* A renseigner par l'appelant (c'est le turbine opt du mois) */
-    std::vector<double> TurbineMax;      /* A renseigner par l'appelant : 1 valeur par jour */
+    int NombreDeJoursDuMois;        /* A renseigner par l'appelant */
+    double TurbineDuMois;           /* A renseigner par l'appelant (c'est le turbine opt du mois) */
+    std::vector<double> TurbineMax; /* A renseigner par l'appelant : 1 valeur par jour */
     std::vector<double> TurbineMin;
-    std::vector<double> TurbineCible;    /* A renseigner par l'appelant : 1 valeur par jour */
+    std::vector<double> TurbineCible; /* A renseigner par l'appelant : 1 valeur par jour */
     /* Les resultats */
     char
-      ResultatsValides; /* Vaut:
-                           OUI si la solution est exploitable pour le reservoir
-                           NON s'il y a eu un probleme dans la resolution
-                                                                                                                     EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne
-                                                                                                      */
-    std::vector<double> Turbine;    /* Resultat a recuperer par l'appelant */
+      ResultatsValides;          /* Vaut:
+                                    OUI si la solution est exploitable pour le reservoir
+                                    NON s'il y a eu un probleme dans la resolution
+                                                                                                                              EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne
+                                                                                                               */
+    std::vector<double> Turbine; /* Resultat a recuperer par l'appelant */
 
     /******************************************************************************************/
     /* Problemes internes (utilise uniquement par l'optimisation) */

@@ -104,7 +104,10 @@ private:
     Bind<bool(uint64_t)> pCallback;
 };
 
-Thread::Timer::Ptr every(uint ms, bool precise, const Bind<bool(uint64_t)>& callback, bool autostart)
+Thread::Timer::Ptr every(uint ms,
+                         bool precise,
+                         const Bind<bool(uint64_t)>& callback,
+                         bool autostart)
 {
     Thread::Timer* timer;
 

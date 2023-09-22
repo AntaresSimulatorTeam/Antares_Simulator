@@ -90,7 +90,7 @@ bool Adequacy::simulationBegin()
     return true;
 }
 
-bool Adequacy::simplexIsRequired(uint hourInTheYear, 
+bool Adequacy::simplexIsRequired(uint hourInTheYear,
                                  uint numSpace,
                                  const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults) const
 {
@@ -105,9 +105,10 @@ bool Adequacy::simplexIsRequired(uint hourInTheYear,
         {
             auto& hydroVentilation = hydroVentilationResults[numSpace][areaIdx];
 
-            double quantity
-              = pProblemesHebdo[numSpace].ConsommationsAbattues[j].ConsommationAbattueDuPays[areaIdx]
-                - hydroVentilation.HydrauliqueModulableQuotidien[dayInTheYear] / 24.;
+            double quantity = pProblemesHebdo[numSpace]
+                                .ConsommationsAbattues[j]
+                                .ConsommationAbattueDuPays[areaIdx]
+                              - hydroVentilation.HydrauliqueModulableQuotidien[dayInTheYear] / 24.;
 
             if (quantity > 0.)
                 return true; // Call to the solver is required to find an optimal solution
@@ -145,19 +146,27 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace].weekInTheYear = state.weekInTheYear = w;
         pProblemesHebdo[numSpace].HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(study, pProblemesHebdo[numSpace], state.weekInTheYear, 
-                                         numSpace, hourInTheYear, hydroVentilationResults);
+        ::SIM_RenseignementProblemeHebdo(study,
+                                         pProblemesHebdo[numSpace],
+                                         state.weekInTheYear,
+                                         numSpace,
+                                         hourInTheYear,
+                                         hydroVentilationResults);
 
-        BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace],
-                                        numSpace, hourInTheYear, randomForYear.pThermalNoisesByArea);
+        BuildThermalPartOfWeeklyProblem(study,
+                                        pProblemesHebdo[numSpace],
+                                        numSpace,
+                                        hourInTheYear,
+                                        randomForYear.pThermalNoisesByArea);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;
         reinitOptim = false;
 
-        state.simplexRunNeeded = (w == 0) || simplexIsRequired(hourInTheYear, numSpace, hydroVentilationResults);
+        state.simplexRunNeeded
+          = (w == 0) || simplexIsRequired(hourInTheYear, numSpace, hydroVentilationResults);
         if (state.simplexRunNeeded) // Call to Solver is mandatory for the first week and optional
-                                     // otherwise
+                                    // otherwise
         {
             uint nbAreas = study.areas.size();
             for (uint ar = 0; ar != nbAreas; ++ar)
@@ -245,8 +254,7 @@ bool Adequacy::year(Progression::Task& progression,
 
             for (uint i = 0; i != nbHoursInAWeek; ++i)
             {
-                auto& varduales
-                  = pProblemesHebdo[numSpace].VariablesDualesDesContraintesDeNTC[i];
+                auto& varduales = pProblemesHebdo[numSpace].VariablesDualesDesContraintesDeNTC[i];
                 for (uint lnkindex = 0; lnkindex != runtime.interconnectionsCount(); ++lnkindex)
                     varduales.VariableDualeParInterconnexion[lnkindex] = 0.;
             }
@@ -262,22 +270,26 @@ bool Adequacy::year(Progression::Task& progression,
                 auto& hourlyResults = pProblemesHebdo[numSpace].ResultatsHoraires[ar];
 
                 std::fill(hourlyResults.ValeursHorairesDeDefaillancePositive.begin(),
-                        hourlyResults.ValeursHorairesDeDefaillancePositive.end(), 0);
+                          hourlyResults.ValeursHorairesDeDefaillancePositive.end(),
+                          0);
 
                 std::fill(hourlyResults.ValeursHorairesDeDefaillanceNegative.begin(),
-                        hourlyResults.ValeursHorairesDeDefaillanceNegative.end(), 0);
+                          hourlyResults.ValeursHorairesDeDefaillanceNegative.end(),
+                          0);
 
                 std::fill(hourlyResults.CoutsMarginauxHoraires.begin(),
-                        hourlyResults.CoutsMarginauxHoraires.end(), 0);
+                          hourlyResults.CoutsMarginauxHoraires.end(),
+                          0);
 
-                std::fill(hourlyResults.PompageHoraire.begin(),
-                        hourlyResults.PompageHoraire.end(), 0);
+                std::fill(
+                  hourlyResults.PompageHoraire.begin(), hourlyResults.PompageHoraire.end(), 0);
 
                 std::fill(hourlyResults.debordementsHoraires.begin(),
-                        hourlyResults.debordementsHoraires.end(), 0);
+                          hourlyResults.debordementsHoraires.end(),
+                          0);
 
-                std::fill(hourlyResults.niveauxHoraires.begin(),
-                        hourlyResults.niveauxHoraires.end(), 0);
+                std::fill(
+                  hourlyResults.niveauxHoraires.begin(), hourlyResults.niveauxHoraires.end(), 0);
             }
 
             uint indx = hourInTheYear;

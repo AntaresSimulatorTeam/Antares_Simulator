@@ -262,7 +262,6 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 
     std::vector<int> NombreMaxDeGroupesEnMarcheDuPalierThermique;
     std::vector<int> NombreMinDeGroupesEnMarcheDuPalierThermique;
-
 };
 
 struct PALIERS_THERMIQUES
@@ -331,10 +330,10 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     bool DirectLevelAccess; /*  determines the type of constraints bearing on the final stok level*/
     bool AccurateWaterValue;     /*  determines the type of modelling used for water budget*/
     double LevelForTimeInterval; /*  value computed by the simulator in water-value based modes*/
-    std::vector<double> WaterLayerValues; /*  reference costs for the last time step (caution : dimension set to
-                                 100, should be made dynamic)*/
-    std::vector<double> InflowForTimeInterval; /*  Energy input to the reservoir, used to in the bounding
-                                      constraint on final level*/
+    std::vector<double> WaterLayerValues;      /*  reference costs for the last time step (caution :
+                                      dimension set to      100, should be made dynamic)*/
+    std::vector<double> InflowForTimeInterval; /*  Energy input to the reservoir, used to in the
+                                      bounding constraint on final level*/
 };
 
 class computeTimeStepLevel
@@ -352,23 +351,22 @@ private:
     double excessDown;
 
 public:
-    computeTimeStepLevel(
-            const double& startLvl,
-            std::vector<double>& infl,
-            std::vector<double>& overfl,
-            std::vector<double>& H,
-            double pumpEff,
-            std::vector<double>& Pump,
-            double rc) :
-        step(0),
-        level(startLvl),
-        capacity(rc),
-        inflows(infl),
-        ovf(overfl),
-        turb(H),
-        pumpRatio(pumpEff),
-        pump(Pump),
-        excessDown(0.)
+    computeTimeStepLevel(const double& startLvl,
+                         std::vector<double>& infl,
+                         std::vector<double>& overfl,
+                         std::vector<double>& H,
+                         double pumpEff,
+                         std::vector<double>& Pump,
+                         double rc) :
+     step(0),
+     level(startLvl),
+     capacity(rc),
+     inflows(infl),
+     ovf(overfl),
+     turb(H),
+     pumpRatio(pumpEff),
+     pump(Pump),
+     excessDown(0.)
     {
     }
 
@@ -423,14 +421,13 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
     std::vector<double> NombreDeGroupesQuiSArretentDuPalier;
 
     std::vector<double> NombreDeGroupesQuiTombentEnPanneDuPalier;
-
 };
 
 struct RESULTATS_HORAIRES
 {
     std::vector<double> ValeursHorairesDeDefaillancePositive;
-    std::vector<double> ValeursHorairesDENS;                  // adq patch domestic unsupplied energy
-    mutable std::vector<int> ValeursHorairesLmrViolations;    // adq patch lmr violations
+    std::vector<double> ValeursHorairesDENS;               // adq patch domestic unsupplied energy
+    mutable std::vector<int> ValeursHorairesLmrViolations; // adq patch lmr violations
     std::vector<double> ValeursHorairesSpilledEnergyAfterCSR; // adq patch spillage after CSR
     std::vector<double> ValeursHorairesDtgMrgCsr;             // adq patch DTG MRG after CSR
     std::vector<double> ValeursHorairesDeDefaillancePositiveUp;
@@ -468,7 +465,6 @@ struct COUTS_DE_TRANSPORT
 
     std::vector<double> CoutDeTransportOrigineVersExtremiteRef;
     std::vector<double> CoutDeTransportExtremiteVersOrigineRef;
-
 };
 
 struct VARIABLES_DUALES_INTERCONNEXIONS
@@ -500,12 +496,12 @@ struct PROBLEME_HEBDO
     uint32_t NombreDePasDeTemps = 0;
     std::vector<int32_t> NumeroDeJourDuPasDeTemps;
 
-    //TODO use uint32_t and figure why tests fails
+    // TODO use uint32_t and figure why tests fails
     int32_t NombreDePasDeTempsPourUneOptimisation = 0;
     std::vector<int32_t> NumeroDIntervalleOptimiseDuPasDeTemps;
     uint32_t NombreDeJours = 0;
 
-    //TODO same as NombreDePasDeTemps
+    // TODO same as NombreDePasDeTemps
     int32_t NombreDePasDeTempsDUneJournee = 0;
 
     mutable std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattues;
@@ -527,7 +523,8 @@ struct PROBLEME_HEBDO
     std::vector<bool> DefaillanceNegativeUtiliserHydro;
     std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue;
 
-    char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
+    char TypeDOptimisation
+      = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
     std::vector<std::vector<double>> BruitSurCoutHydraulique;
 
     uint32_t NombreDeContraintesCouplantes = 0;
@@ -549,7 +546,8 @@ struct PROBLEME_HEBDO
 
     std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
-    std::vector<CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES> CorrespondanceCntNativesCntOptimJournalieres;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES>
+      CorrespondanceCntNativesCntOptimJournalieres;
     CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES CorrespondanceCntNativesCntOptimHebdomadaires;
 
     mutable std::vector<RESERVE_JMOINS1> ReserveJMoins1;

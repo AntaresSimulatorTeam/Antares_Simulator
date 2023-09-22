@@ -111,7 +111,6 @@ public:
     void getPrintStatusFromStudy(Data::Study& study);
     void supplyMaxNumberOfColumns(Data::Study& study);
 
-
 public:
     //! \name Constructor
     //@{

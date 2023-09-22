@@ -73,7 +73,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
                 const CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdtJour];
                 int cnt = CorrespondanceCntNativesCntOptim
-                        .NumeroDeContrainteDesContraintesDeDureeMinDArret[palier];
+                            .NumeroDeContrainteDesContraintesDeDureeMinDArret[palier];
                 if (cnt >= 0)
                 {
                     int t1 = pdtHebdo - DureeMinimaleDArretDUnGroupeDuPalierThermique;

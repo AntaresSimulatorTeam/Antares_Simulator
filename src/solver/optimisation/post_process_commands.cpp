@@ -185,14 +185,15 @@ void HydroLevelsFinalUpdatePostProcessCmd::execute(const optRuntimeData&)
 // --------------------------------------
 //  Curtailment sharing for adq patch
 // --------------------------------------
-CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(const AdqPatchParams& adqPatchParams,
-                                                                   PROBLEME_HEBDO* problemeHebdo,
-                                                                   AreaList& areas,
-                                                                   unsigned int thread_number) :
-    basePostProcessCommand(problemeHebdo),
-    area_list_(areas), 
-    adqPatchParams_(adqPatchParams),
-    thread_number_(thread_number)
+CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(
+  const AdqPatchParams& adqPatchParams,
+  PROBLEME_HEBDO* problemeHebdo,
+  AreaList& areas,
+  unsigned int thread_number) :
+ basePostProcessCommand(problemeHebdo),
+ area_list_(areas),
+ adqPatchParams_(adqPatchParams),
+ thread_number_(thread_number)
 {
 }
 
@@ -225,11 +226,11 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
         {
             for (uint hour = 0; hour < nbHoursInWeek; hour++)
             {
-                const auto [netPositionInit, densNew, totalNodeBalance]
-                    = calculateAreaFlowBalance(problemeHebdo_, 
-                                               adqPatchParams_.localMatching.setToZeroOutsideInsideLinks, 
-                                               Area,
-                                               hour);
+                const auto [netPositionInit, densNew, totalNodeBalance] = calculateAreaFlowBalance(
+                  problemeHebdo_,
+                  adqPatchParams_.localMatching.setToZeroOutsideInsideLinks,
+                  Area,
+                  hour);
                 // adjust densNew according to the new specification/request by ELIA
                 /* DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A)
                                         + ? flows (node 1 -> node A) - DTG.MRG(node A)] */
@@ -245,10 +246,11 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
                       .ValeursHorairesDeDefaillanceNegative[hour];
                 // check LMR violations
                 totalLmrViolation += LmrViolationAreaHour(
-                            problemeHebdo_, 
-                            totalNodeBalance, 
-                            adqPatchParams_.curtailmentSharing.thresholdDisplayViolations,
-                            Area, hour);
+                  problemeHebdo_,
+                  totalNodeBalance,
+                  adqPatchParams_.curtailmentSharing.thresholdDisplayViolations,
+                  Area,
+                  hour);
             }
         }
     }

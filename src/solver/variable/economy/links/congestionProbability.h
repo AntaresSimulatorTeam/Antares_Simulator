@@ -357,6 +357,6 @@ private:
 
 }; // class CongestionProbability
 
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy
 
 #endif // __SOLVER_VARIABLE_ECONOMY_CongestionProbability_H__

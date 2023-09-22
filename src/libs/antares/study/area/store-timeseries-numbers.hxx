@@ -72,8 +72,9 @@ template<int TimeSeriesT>
 void storeTimeseriesNumbers(Solver::IResultWriter& writer, const AreaList& area)
 {
     // Each area in the list
-    area.each([&writer](const Area& a) { singleAreaStoreTimeseriesNumbers<TimeSeriesT>(writer, a); });
+    area.each(
+      [&writer](const Area& a) { singleAreaStoreTimeseriesNumbers<TimeSeriesT>(writer, a); });
 }
-} //namespace Antares::Data
+} // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_STORE_TIMESERIES_HXX__
