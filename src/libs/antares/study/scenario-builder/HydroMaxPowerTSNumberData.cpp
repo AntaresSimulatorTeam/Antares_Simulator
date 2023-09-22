@@ -1,10 +1,10 @@
 
 
-#include "HydroPowerCreditsTSNumberData.h"
+#include "HydroMaxPowerTSNumberData.h"
 #include "applyToMatrix.hxx"
 
 // ================================
-// Hydro Energy Credits...
+// Hydro Max Power...
 // ================================
 
 namespace Antares::Data::ScenarioBuilder

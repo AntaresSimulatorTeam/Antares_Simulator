@@ -40,7 +40,7 @@
 #include "HydroTSNumberData.h"
 #include "WindTSNumberData.h"
 #include "LoadTSNumberData.h"
-#include "HydroPowerCreditsTSNumberData.h"
+#include "HydroMaxPowerTSNumberData.h"
 #include <map>
 #include <memory>
 

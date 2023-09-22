@@ -23,8 +23,8 @@ set(SRC_STUDY_SCENARIO_BUILDER
         scenario-builder/ThermalTSNumberData.h
         scenario-builder/HydroTSNumberData.h
         scenario-builder/HydroTSNumberData.cpp
-        scenario-builder/HydroPowerCreditsTSNumberData.h
-        scenario-builder/HydroPowerCreditsTSNumberData.cpp
+        scenario-builder/HydroMaxPowerTSNumberData.h
+        scenario-builder/HydroMaxPowerTSNumberData.cpp
         scenario-builder/SolarTSNumberData.cpp
         scenario-builder/solarTSNumberData.h
         scenario-builder/WindTSNumberData.h
