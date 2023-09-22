@@ -363,7 +363,7 @@ public:
     {
     }
 
-    PROBLEME_HEBDO* problemeHebdo; // TODO remove
+    PROBLEME_HEBDO* problemeHebdo;
     ConstraintBuilder builder;
 };
 
