@@ -343,7 +343,7 @@ private:
 
     unsigned int hourInWeek_ = 0;
 
-    char operator_;
+    char operator_ = '=';
     double rhs_ = 0;
     int nombreDeTermes_ = 0;
     // ConstraintNamer ConstraintNameManager;
