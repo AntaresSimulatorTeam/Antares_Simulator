@@ -15,3 +15,4 @@ public:
      */
     void add(int pays);
 };
+
