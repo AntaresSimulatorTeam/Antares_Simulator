@@ -1,6 +1,6 @@
 /*
 ** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
+** Authors: RTE-international / Redstork / Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
 **
@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "scenario-builder-hydro-levels-renderer.h"
+#include "scenario-builder-hydro-final-levels-renderer.h"
 #include "antares/study/scenario-builder/scBuilderUtils.h"
 
 using namespace Antares::Data::ScenarioBuilder;
@@ -38,39 +38,39 @@ namespace Datagrid
 {
 namespace Renderer
 {
-wxString hydroLevelsScBuilderRenderer::cellValue(int x, int y) const
+wxString hydroFinalLevelsScBuilderRenderer::cellValue(int x, int y) const
 {
     const double d = cellNumericValue(x, y);
-    return (std::isnan(d)) ? wxString() << wxT("rand") : wxString() << fromHydroLevelToString(d);
+    return (std::isnan(d)) ? wxString() << wxT("init") : wxString() << fromHydroLevelToString(d);
 }
 
-bool hydroLevelsScBuilderRenderer::cellValue(int x, int y, const Yuni::String& value)
+bool hydroFinalLevelsScBuilderRenderer::cellValue(int x, int y, const Yuni::String& value)
 {
     if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears
         && (uint)y < study->areas.size())
     {
-        assert((uint)y < pRules->hydroInitialLevels.width());
-        assert((uint)x < pRules->hydroInitialLevels.height());
+        assert((uint)y < pRules->hydroFinalLevels.width());
+        assert((uint)x < pRules->hydroFinalLevels.height());
         double val = fromStringToHydroLevel(value, 100.) / 100.;
-        pRules->hydroInitialLevels.set_value(x, y, val);
+        pRules->hydroFinalLevels.set_value(x, y, val);
         return true;
     }
     return false;
 }
 
-double hydroLevelsScBuilderRenderer::cellNumericValue(int x, int y) const
+double hydroFinalLevelsScBuilderRenderer::cellNumericValue(int x, int y) const
 {
     if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears
         && (uint)y < study->areas.size())
     {
-        assert((uint)y < pRules->hydroInitialLevels.width());
-        assert((uint)x < pRules->hydroInitialLevels.height());
-        return pRules->hydroInitialLevels.get_value(x, y) * 100.;
+        assert((uint)y < pRules->hydroFinalLevels.width());
+        assert((uint)x < pRules->hydroFinalLevels.height());
+        return pRules->hydroFinalLevels.get_value(x, y) * 100.;
     }
     return 0.;
 }
 
-IRenderer::CellStyle hydroLevelsScBuilderRenderer::cellStyle(int x, int y) const
+IRenderer::CellStyle hydroFinalLevelsScBuilderRenderer::cellStyle(int x, int y) const
 {
     bool valid = (!(!study) && !(!pRules) && std::isnan(cellNumericValue(x, y)));
     return valid ? cellStyleDefaultCenterDisabled : cellStyleDefaultCenter;

@@ -1,6 +1,6 @@
 /*
 ** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
+** Authors: RTE-international / Redstork / Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
 **
@@ -24,42 +24,33 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_H__
-#define __ANTARES_LIBS_STUDY_PARTS_H__
+#ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_HYDRO_FINAL_LEVELS_SCENARIO_BUILDER_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_HYDRO_FINAL_LEVELS_SCENARIO_BUILDER_H__
 
-// Load
-#include "load/series.h"
-#include "load/container.h"
+#include "scenario-builder-renderer-base.h"
 
-// Solar
-#include "solar/series.h"
-#include "solar/prepro.h"
-#include "solar/container.h"
+namespace Antares
+{
+namespace Component
+{
+namespace Datagrid
+{
+namespace Renderer
+{
+class hydroFinalLevelsScBuilderRenderer : public ScBuilderRendererAreasAsRows
+{
+public:
+    hydroFinalLevelsScBuilderRenderer() = default;
 
-// Hydro
-#include "hydro/prepro.h"
-#include "hydro/series.h"
-#include "hydro/finallevelinflowsmodifyer.h"
-#include "hydro/container.h"
-#include "hydro/datatransfer.h"
+    wxString cellValue(int x, int y) const;
+    bool cellValue(int x, int y, const Yuni::String& value);
+    double cellNumericValue(int x, int y) const;
+    IRenderer::CellStyle cellStyle(int x, int y) const;
+}; // class hydroLevelsScBuilderRenderer
 
-// Wind
-#include "wind/prepro.h"
-#include "wind/series.h"
-#include "wind/container.h"
+} // namespace Renderer
+} // namespace Datagrid
+} // namespace Component
+} // namespace Antares
 
-// Thermal
-#include "thermal/defines.h"
-#include "thermal/prepro.h"
-#include "thermal/cluster.h"
-#include "thermal/container.h"
-
-// Renewable
-#include "renewable/defines.h"
-#include "renewable/cluster.h"
-#include "renewable/container.h"
-
-// Short-term storage
-#include "short-term-storage/container.h"
-
-#endif // __ANTARES_LIBS_STUDY_PARTS_H__
+#endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_HYDRO_FINAL_LEVELS_SCENARIO_BUILDER_H__

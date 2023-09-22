@@ -425,14 +425,13 @@ BOOST_FIXTURE_TEST_CASE(
 }
 
 // ========================
-// Tests on Hydro levels
+// Tests on Hydro initial levels
 // ========================
-BOOST_FIXTURE_TEST_CASE(
-  HYDRO_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+BOOST_FIXTURE_TEST_CASE(HYDRO_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
-    my_rule->hydroLevels.setTSnumber(area_1->index, 9, 9);
-    my_rule->hydroLevels.setTSnumber(area_3->index, 18, 7);
-    my_rule->hydroLevels.setTSnumber(area_1->index, 5, 8);
+    my_rule->hydroInitialLevels.setTSnumber(area_1->index, 9, 9);
+    my_rule->hydroInitialLevels.setTSnumber(area_3->index, 18, 7);
+    my_rule->hydroInitialLevels.setTSnumber(area_1->index, 5, 8);
 
     saveScenarioBuilder();
 
@@ -441,6 +440,27 @@ BOOST_FIXTURE_TEST_CASE(
     referenceFile.append("hl,area 1,5 = 8");
     referenceFile.append("hl,area 1,9 = 9");
     referenceFile.append("hl,area 3,18 = 7");
+    referenceFile.write();
+
+    BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
+// ========================
+// Tests on Hydro final levels
+// ========================
+BOOST_FIXTURE_TEST_CASE(HYDRO_FINAL_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+{
+    my_rule->hydroFinalLevels.setTSnumber(area_1->index, 4, 8);
+    my_rule->hydroFinalLevels.setTSnumber(area_2->index, 11, 3);
+    my_rule->hydroFinalLevels.setTSnumber(area_3->index, 15, 2);
+
+    saveScenarioBuilder();
+
+    // Build reference scenario builder file
+    referenceFile.append("[my rule name]");
+    referenceFile.append("hfl,area 1,4 = 8");
+    referenceFile.append("hfl,area 2,11 = 3");
+    referenceFile.append("hfl,area 3,15 = 2");
     referenceFile.write();
 
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
@@ -505,7 +525,7 @@ BOOST_FIXTURE_TEST_CASE(
     my_rule->renewable[area_3->index].setTSnumber(rnCluster_32.get(), 5, 13);
     my_rule->linksNTC[area_1->index].setDataForLink(link_13, 19, 8);
     my_rule->linksNTC[area_2->index].setDataForLink(link_23, 2, 4);
-    my_rule->hydroLevels.setTSnumber(area_1->index, 5, 8);
+    my_rule->hydroInitialLevels.setTSnumber(area_1->index, 5, 8);
     my_rule->binding_constraints.setTSnumber("group3", 10, 6);
 
     saveScenarioBuilder();

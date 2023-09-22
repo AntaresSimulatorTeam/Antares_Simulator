@@ -87,3 +87,38 @@ add_test(NAME time_series COMMAND test-time_series)
 
 set_property(TEST time_series PROPERTY LABELS unit)
 
+# ===================================
+# Tests on hydro final reservoir level functions
+# ===================================
+set(SRC_HYDRO_FINAL_LEVEL
+	${src_libs_antares_study}/parts/hydro/finallevelinflowsmodifyer.h
+	${src_libs_antares_study}/parts/hydro/finallevelinflowsmodifyer.cpp
+)
+
+add_executable(test-hydro_final
+	test-hydro-final-reservoir-level-functions.cpp
+	${SRC_HYDRO_FINAL_LEVEL})
+
+target_include_directories(test-hydro_final
+	PRIVATE
+	"${src_solver_simulation}"
+	"${src_libs_antares_study}"
+)
+target_link_libraries(test-hydro_final
+	PRIVATE
+	Boost::unit_test_framework
+	Antares::study
+	antares-solver-simulation
+	Antares::array
+)
+
+# Linux
+if(UNIX AND NOT APPLE)
+	target_link_libraries(test-hydro_final PRIVATE stdc++fs)
+endif()
+
+set_target_properties(test-hydro_final PROPERTIES FOLDER Unit-tests)
+
+add_test(NAME hydro_final COMMAND test-hydro_final)
+
+set_property(TEST hydro_final PROPERTY LABELS unit)

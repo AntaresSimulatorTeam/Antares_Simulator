@@ -256,7 +256,9 @@ bool HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint tsIndex, con
     return true;
 }
 
-bool HydroManagement::checkYearlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const
+bool HydroManagement::checkYearlyMinGeneration(uint numSpace,
+                                               uint tsIndex,
+                                               const Data::Area& area) const
 {
     const auto& data = tmpDataByArea_[numSpace][area.index];
     if (data.totalYearMingen > data.totalYearInflows)
@@ -369,6 +371,24 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
 
     });
     return ret;
+}
+
+void HydroManagement::changeInflowsToAccommodateFinalLevels(uint numSpace, uint year)
+{
+    study.areas.each([this, &numSpace, &year](Data::Area& area) 
+    {
+        auto& data = pAreas[numSpace][area.index];
+
+        if (!area.hydro.finalLevelInflowsModifier.isApplicable(year))
+            return;
+
+        // Must be done before prepareMonthlyTargetGenerations
+        double delta = area.hydro.finalLevelInflowsModifier.deltaLevel[year];
+        if (delta > 0)
+            data.inflows[0] += delta;
+        else if (delta < 0)
+            data.inflows[11] += delta;
+    });
 }
 
 template<enum Data::StudyMode ModeT>
@@ -526,6 +546,8 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
     {
         throw FatalError("hydro management: invalid minimum generation");
     }
+
+    changeInflowsToAccommodateFinalLevels(numSpace, y);
 
     if (parameters_.adequacy())
         prepareNetDemand<Data::stdmAdequacy>(numSpace);

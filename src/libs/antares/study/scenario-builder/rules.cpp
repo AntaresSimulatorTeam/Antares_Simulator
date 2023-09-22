@@ -67,7 +67,8 @@ void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
             linksNTC[i].saveToINIFile(study_, file);
         }
         // hydro levels
-        hydroLevels.saveToINIFile(study_, file);
+        hydroInitialLevels.saveToINIFile(study_, file);
+        hydroFinalLevels.saveToINIFile(study_, file);
     }
     binding_constraints.saveToINIFile(study_, file);
     file << '\n';
@@ -104,7 +105,8 @@ bool Rules::reset()
         renewable[i].reset(study_);
     }
 
-    hydroLevels.reset(study_);
+    hydroInitialLevels.reset(study_);
+    hydroFinalLevels.reset(study_);
 
     // links NTC
     linksNTC.clear();
@@ -274,7 +276,7 @@ bool Rules::readSolar(const AreaName::Vector& splitKey, String value, bool updat
     return true;
 }
 
-bool Rules::readHydroLevels(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readInitialHydroLevels(const AreaName::Vector& splitKey, String value, bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
@@ -284,7 +286,21 @@ bool Rules::readHydroLevels(const AreaName::Vector& splitKey, String value, bool
         return false;
 
     double val = fromStringToHydroLevel(value, 1.);
-    hydroLevels.setTSnumber(area->index, year, val);
+    hydroInitialLevels.setTSnumber(area->index, year, val);
+    return true;
+}
+
+bool Rules::readFinalHydroLevels(const AreaName::Vector& splitKey, String value, bool updaterMode)
+{
+    const uint year = splitKey[2].to<uint>();
+    const AreaName& areaname = splitKey[1];
+
+    const Data::Area* area = getArea(areaname, updaterMode);
+    if (!area)
+        return false;
+
+    double finalLevel = fromStringToHydroLevel(value, 1.);
+    hydroFinalLevels.setTSnumber(area->index, year, finalLevel);
     return true;
 }
 
@@ -373,7 +389,9 @@ bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool update
     else if (kind_of_scenario == "s")
         return readSolar(splitKey, value, updaterMode);
     else if (kind_of_scenario == "hl")
-        return readHydroLevels(splitKey, value, updaterMode);
+        return readInitialHydroLevels(splitKey, value, updaterMode);
+    else if (kind_of_scenario == "hfl")
+        return readFinalHydroLevels(splitKey, value, updaterMode);
     else if (kind_of_scenario == "ntc")
         return readLink(splitKey, value, updaterMode);
     else if (kind_of_scenario == "bc")
@@ -397,7 +415,8 @@ bool Rules::apply()
             returned_status = renewable[i].apply(study_) && returned_status;
             returned_status = linksNTC[i].apply(study_) && returned_status;
         }
-        returned_status = hydroLevels.apply(study_) && returned_status;
+        returned_status = hydroInitialLevels.apply(study_) && returned_status;
+        returned_status = hydroFinalLevels.apply(study_) && returned_status;
         returned_status = binding_constraints.apply(study_) && returned_status;
     }
     else

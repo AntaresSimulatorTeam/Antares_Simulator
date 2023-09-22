@@ -39,7 +39,7 @@ namespace Antares
 {
 namespace Data
 {
-PartHydro::PartHydro() :
+PartHydro::PartHydro(const Data::Area& area) :
  interDailyBreakdown(0.),
  intraDailyModulation(2.),
  intermonthlyBreakdown(0),
@@ -57,7 +57,8 @@ PartHydro::PartHydro() :
  pumpingEfficiency(1.),
  hydroModulable(false),
  prepro(nullptr),
- series(nullptr)
+ series(nullptr),
+ finalLevelInflowsModifier(*this, area.index, area.name)
 {
 }
 

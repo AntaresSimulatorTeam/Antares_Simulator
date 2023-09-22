@@ -36,6 +36,12 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
+hydroLevelsData::hydroLevelsData(std::string& iniFilePrefix,
+                                 std::function<void(Study&, MatrixType&)> applyToTarget) :
+ addToPrefix(iniFilePrefix), applyToTarget_(applyToTarget)
+{
+}
+
 bool hydroLevelsData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;
@@ -50,7 +56,7 @@ void hydroLevelsData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& 
 {
     // Prefix
     CString<512, false> prefix;
-    prefix += "hl,";
+    prefix += addToPrefix;
 
     // Turning values into strings (precision 4)
     std::ostringstream value_into_string;
@@ -85,7 +91,7 @@ void hydroLevelsData::set_value(uint x, uint y, double value)
 
 bool hydroLevelsData::apply(Study& study)
 {
-    study.scenarioHydroLevels.copyFrom(pHydroLevelsRules);
+    applyToTarget_(study, pHydroLevelsRules);
     return true;
 }
 

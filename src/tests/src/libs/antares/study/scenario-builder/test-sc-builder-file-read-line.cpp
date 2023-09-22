@@ -333,7 +333,7 @@ BOOST_FIXTURE_TEST_CASE(on_rn_cluster32_of_area3_and_on_year_2__solar_TS_number_
 
 
 // ========================
-// Tests on Hydro levels
+// Tests on Hydro initial levels
 // ========================
 BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_17__hydro_level_0_123_is_chosen__reading_OK, Fixture)
 {
@@ -342,10 +342,10 @@ BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_17__hydro_level_0_123_is_chosen__re
 	AreaName::Vector splitKey = { "hl", "area 1", yearNumber };
 	my_rule.readLine(splitKey, level);
 
-	BOOST_CHECK_EQUAL(my_rule.hydroLevels.get_value(yearNumber.to<uint>(), area_1->index), level.to<double>());
+	BOOST_CHECK_EQUAL(my_rule.hydroInitialLevels.get_value(yearNumber.to<uint>(), area_1->index), level.to<double>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(study->scenarioHydroLevels[area_1->index][yearNumber.to<uint>()], level.to<double>());
+	BOOST_CHECK_EQUAL(study->scenarioInitialHydroLevels[area_1->index][yearNumber.to<uint>()], level.to<double>());
 }
 
 BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_9__hydro_level_1_5_is_chosen_level_lowered_to_1__reading_OK, Fixture)
@@ -355,10 +355,10 @@ BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_9__hydro_level_1_5_is_chosen_level_
 	AreaName::Vector splitKey = { "hl", "area 2", yearNumber };
 	BOOST_CHECK(my_rule.readLine(splitKey, level));
 
-	BOOST_CHECK_EQUAL(my_rule.hydroLevels.get_value(yearNumber.to<uint>(), area_2->index), 1.);
+	BOOST_CHECK_EQUAL(my_rule.hydroInitialLevels.get_value(yearNumber.to<uint>(), area_2->index), 1.);
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(study->scenarioHydroLevels[area_2->index][yearNumber.to<uint>()], 1.);
+	BOOST_CHECK_EQUAL(study->scenarioInitialHydroLevels[area_2->index][yearNumber.to<uint>()], 1.);
 }
 
 BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_5__hydro_level_neg_3_5_is_chosen__level_raised_to_0__reading_OK, Fixture)
@@ -368,10 +368,58 @@ BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_5__hydro_level_neg_3_5_is_chosen__l
 	AreaName::Vector splitKey = { "hl", "area 3", yearNumber };
 	BOOST_CHECK(my_rule.readLine(splitKey, level));
 
-	BOOST_CHECK_EQUAL(my_rule.hydroLevels.get_value(yearNumber.to<uint>(), area_3->index), 0.);
+	BOOST_CHECK_EQUAL(my_rule.hydroInitialLevels.get_value(yearNumber.to<uint>(), area_3->index), 0.);
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(study->scenarioHydroLevels[area_3->index][yearNumber.to<uint>()], 0.);
+	BOOST_CHECK_EQUAL(study->scenarioInitialHydroLevels[area_3->index][yearNumber.to<uint>()], 0.);
+}
+
+// ========================
+// Tests on Hydro final levels
+// ========================
+BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_8__hydro_level_0_342_is_chosen__reading_OK, Fixture)
+{
+        AreaName yearNumber = "8";
+        String level = "0.342";
+        AreaName::Vector splitKey = {"hfl", "area 1", yearNumber};
+        my_rule.readLine(splitKey, level, false);
+
+        BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(yearNumber.to<uint>(), area_1->index),
+                          level.to<double>());
+
+        BOOST_CHECK(my_rule.apply());
+        BOOST_CHECK_EQUAL(study->scenarioFinalHydroLevels[area_1->index][yearNumber.to<uint>()],
+                          level.to<double>());
+}
+
+BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_1__hydro_level_2_4_is_chosen_level_lowered_to_1__reading_OK, Fixture)
+{
+        AreaName yearNumber = "1";
+        String level = "2.4";
+        AreaName::Vector splitKey = {"hfl", "area 2", yearNumber};
+        BOOST_CHECK(my_rule.readLine(splitKey, level, false));
+
+        BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(yearNumber.to<uint>(), area_2->index),
+                          1.);
+
+        BOOST_CHECK(my_rule.apply());
+        BOOST_CHECK_EQUAL(study->scenarioFinalHydroLevels[area_2->index][yearNumber.to<uint>()],
+                          1.);
+}
+
+BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_3__hydro_level_neg_5_2_is_chosen__level_raised_to_0__reading_OK, Fixture)
+{
+        AreaName yearNumber = "3";
+        String level = "-5.2";
+        AreaName::Vector splitKey = {"hfl", "area 3", yearNumber};
+        BOOST_CHECK(my_rule.readLine(splitKey, level, false));
+
+        BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(yearNumber.to<uint>(), area_3->index),
+                          0.);
+
+        BOOST_CHECK(my_rule.apply());
+        BOOST_CHECK_EQUAL(study->scenarioFinalHydroLevels[area_3->index][yearNumber.to<uint>()],
+                          0.);
 }
 
 // ======================
