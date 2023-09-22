@@ -360,7 +360,7 @@ private:
     Variable::VariableManager GetVariableManager(int offset = 0, int delta = 0);
 };
 
-/*! factory class to  */
+/*! factory class to build a Constraint */
 class ConstraintFactory
 {
 public:
