@@ -33,19 +33,19 @@
 namespace Antares::Data
 {
     template<int TimeSeriesT>
-    void singleAreaStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer, const Area& area);
+    void singleAreaStoreTimeseriesNumbers(Solver::IResultWriter& writer, const Area& area);
 
     template<int TimeSeriesT>
-    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer, const AreaList& area);
+    void storeTimeseriesNumbers(Solver::IResultWriter& writer, const AreaList& area);
 
     // Store time-series numbers
-    void storeTimeseriesNumbersForLoad(Solver::IResultWriter::Ptr writer, const Area& area);
-    void storeTimeseriesNumbersForSolar(Solver::IResultWriter::Ptr writer, const Area& area);
-    void storeTimeseriesNumbersForWind(Solver::IResultWriter::Ptr writer, const Area& area);
-    void storeTimeseriesNumbersForHydro(Solver::IResultWriter::Ptr writer, const Area& area);
-    void storeTimeseriesNumbersForThermal(Solver::IResultWriter::Ptr writer, const Area& area);
-    void storeTimeseriesNumbersForRenewable(Solver::IResultWriter::Ptr writer, const Area& area);
-    void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter::Ptr writer, const Area& area);
+    void storeTimeseriesNumbersForLoad(Solver::IResultWriter& writer, const Area& area);
+    void storeTimeseriesNumbersForSolar(Solver::IResultWriter& writer, const Area& area);
+    void storeTimeseriesNumbersForWind(Solver::IResultWriter& writer, const Area& area);
+    void storeTimeseriesNumbersForHydro(Solver::IResultWriter& writer, const Area& area);
+    void storeTimeseriesNumbersForThermal(Solver::IResultWriter& writer, const Area& area);
+    void storeTimeseriesNumbersForRenewable(Solver::IResultWriter& writer, const Area& area);
+    void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writer, const Area& area);
 
 } //Antares::Data
 

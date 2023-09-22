@@ -33,125 +33,6 @@ set(SRC_STUDY_SCENARIO_BUILDER
 )
 source_group("study\\scenario builder" FILES ${SRC_MATRIX})
 
-set(SRC_STUDY_ACTIONS
-        action/fwd.h
-        action/action.h
-        action/action.hxx
-        action/action.cpp
-        action/text.h
-        action/text.hxx
-        action/settings/suffix-for-area-names.h
-        action/settings/suffix-for-area-names.hxx
-        action/settings/suffix-for-area-names.cpp
-        action/settings/suffix-for-cluster-names.h
-        action/settings/suffix-for-cluster-names.hxx
-        action/settings/suffix-for-cluster-names.cpp
-        action/settings/suffix-for-constraint-names.h
-        action/settings/suffix-for-constraint-names.hxx
-        action/settings/suffix-for-constraint-names.cpp
-        action/settings/decal-area-position.h
-        action/settings/decal-area-position.hxx
-        action/settings/decal-area-position.cpp
-        action/behavior.h
-        action/behavior.cpp
-        action/state.h
-        action/state.cpp
-        action/context.h
-        action/context.cpp)
-source_group("study\\actions" FILES ${SRC_STUDY_ACTIONS})
-
-set(SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_AREA
-        action/handler/antares-study/area/create.h
-        action/handler/antares-study/area/create.hxx
-        action/handler/antares-study/area/create.cpp
-        action/handler/antares-study/area/position.h
-        action/handler/antares-study/area/position.cpp
-        action/handler/antares-study/area/filtering.h
-        action/handler/antares-study/area/filtering.cpp
-        action/handler/antares-study/area/color.h
-        action/handler/antares-study/area/color.cpp
-        action/handler/antares-study/area/nodal-optimization.h
-        action/handler/antares-study/area/nodal-optimization.cpp
-        action/handler/antares-study/area/reserves.h
-        action/handler/antares-study/area/reserves.cpp
-        action/handler/antares-study/area/misc-gen.h
-        action/handler/antares-study/area/misc-gen.cpp
-        action/handler/antares-study/area/timeseries.h
-        action/handler/antares-study/area/timeseries.cpp
-        action/handler/antares-study/area/ts-generator.h
-        action/handler/antares-study/area/ts-generator.cpp
-        action/handler/antares-study/area/ts-node.h
-        action/handler/antares-study/area/ts-node.hxx
-        action/handler/antares-study/area/ts-node.cpp
-        action/handler/antares-study/area/correlation.h
-        action/handler/antares-study/area/correlation.cpp
-        action/handler/antares-study/area/correlation-post.h
-        action/handler/antares-study/area/correlation-post.hxx
-        action/handler/antares-study/area/correlation-post.cpp
-
-        action/handler/antares-study/area/allocation-hydro.h
-        action/handler/antares-study/area/allocation-hydro.cpp
-        action/handler/antares-study/area/allocation-hydro-post.h
-        action/handler/antares-study/area/allocation-hydro-post.hxx
-        action/handler/antares-study/area/allocation-hydro-post.cpp)
-source_group("study\\actions\\handler\\antares study\\area" FILES ${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_AREA})
-
-set(SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_LINK
-        action/handler/antares-study/link/create.h
-        action/handler/antares-study/link/create.hxx
-        action/handler/antares-study/link/create.cpp
-        action/handler/antares-study/link/ntc.h
-        action/handler/antares-study/link/ntc.cpp
-        action/handler/antares-study/link/hurdles-cost.h
-        action/handler/antares-study/link/hurdles-cost.cpp
-        action/handler/antares-study/link/impedances.h
-        action/handler/antares-study/link/impedances.cpp
-        action/handler/antares-study/link/comments.h
-        action/handler/antares-study/link/comments.hxx
-        action/handler/antares-study/link/comments.cpp
-        action/handler/antares-study/link/copper-plate.h
-        action/handler/antares-study/link/copper-plate.cpp
-        action/handler/antares-study/link/filtering.h
-        action/handler/antares-study/link/filtering.cpp
-        action/handler/antares-study/link/unload-data.h
-        action/handler/antares-study/link/unload-data.hxx
-        action/handler/antares-study/link/unload-data.cpp)
-source_group("study\\actions\\handler\\antares study\\link" FILES ${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_LINK})
-
-set(SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_THERMAL
-        action/handler/antares-study/thermal-cluster/create.h
-        action/handler/antares-study/thermal-cluster/create.hxx
-        action/handler/antares-study/thermal-cluster/create.cpp
-        action/handler/antares-study/thermal-cluster/root-node.h
-        action/handler/antares-study/thermal-cluster/root-node.hxx
-        action/handler/antares-study/thermal-cluster/root-node.cpp
-        action/handler/antares-study/thermal-cluster/common.h
-        action/handler/antares-study/thermal-cluster/common.cpp
-)
-source_group("study\\action\\handler\\sntares study\\thermal cluster" FILES ${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_THERMAL})
-
-
-set(SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_CONSTRAINT
-        action/handler/antares-study/constraint/create.h
-        action/handler/antares-study/constraint/create.hxx
-        action/handler/antares-study/constraint/create.cpp
-        action/handler/antares-study/constraint/comments.h
-        action/handler/antares-study/constraint/comments.hxx
-        action/handler/antares-study/constraint/comments.cpp
-        action/handler/antares-study/constraint/data.h
-        action/handler/antares-study/constraint/data.hxx
-        action/handler/antares-study/constraint/data.cpp
-        action/handler/antares-study/constraint/weights.h
-        action/handler/antares-study/constraint/weights.cpp
-        action/handler/antares-study/constraint/offsets.h
-        action/handler/antares-study/constraint/offsets.cpp
-        action/handler/antares-study/constraint/enabled.h
-        action/handler/antares-study/constraint/enabled.hxx
-        action/handler/antares-study/constraint/enabled.cpp
-)
-source_group("study\\action\\handler\\antares study\\constraint" FILES ${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_CONSTRAINT})
-
-
 set(SRC_AREAS
         area/constants.h
         area/area.h
@@ -401,11 +282,6 @@ set(SRC_ALL
         ${SRC_AREAS}
         ${SRC_XCAST}
         ${SRC_STUDY_AREA_UI}
-        ${SRC_STUDY_ACTIONS}
-        ${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_THERMAL}
-        ${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_AREA}
-        ${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_LINK}
-        ${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_CONSTRAINT}
         ${SRC_STUDY_UI}
         ${SRC_STUDY_PARAMETERS}
         ${SRC_STUDY_FINDER}
@@ -427,7 +303,6 @@ target_link_libraries(study
     PUBLIC
         Boost::boost
         yuni-static-core
-        Boost::boost
         Antares::array #xcast
         Antares::date #parameters
         Antares::inifile #parameters

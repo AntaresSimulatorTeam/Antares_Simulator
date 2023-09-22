@@ -35,6 +35,7 @@
 
 #include "solver.h" // for definition of type yearRandomNumbers
 #include "antares/infoCollection/StudyInfoCollector.h"
+#include "opt_time_writer.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -73,7 +74,7 @@ public:
 protected:
     void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
 
-    bool simulationBegin(const VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+    bool simulationBegin();
 
     bool year(Progression::Task& progression,
               Variable::State& state,
@@ -81,7 +82,8 @@ protected:
               yearRandomNumbers& randomForYear,
               std::list<uint>& failedWeekList,
               bool isFirstPerformedYearOfSimulation,
-              const VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+              const ALL_HYDRO_VENTILATION_RESULTS&,
+              OptimizationStatisticsWriter& optWriter);
 
     void incrementProgression(Progression::Task& progression);
 
@@ -95,8 +97,9 @@ protected:
     void initializeState(Variable::State& state, uint numSpace);
 
 private:
-    bool simplexIsRequired(uint hourInTheYear, uint numSpace,
-            const VAL_GEN_PAR_PAYS& valeursGenereesParPays) const;
+    bool simplexIsRequired(uint hourInTheYear,
+                           uint numSpace,
+                           const ALL_HYDRO_VENTILATION_RESULTS&) const;
 
     uint pNbWeeks;
     uint pStartTime;

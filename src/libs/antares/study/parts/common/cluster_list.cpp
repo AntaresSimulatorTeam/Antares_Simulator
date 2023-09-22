@@ -163,7 +163,7 @@ void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n)
 #define SEP IO::Separator
 
 template<class ClusterT>
-void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const
+void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
     if (cluster.empty())
         return;
@@ -177,7 +177,7 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter::Ptr wr
                      << cluster.id() << ".txt";
         ts_content.clear(); // We must clear ts_content here, since saveToBuffer does not do it.
         cluster.series->timeseriesNumbers.saveToBuffer(ts_content, 0, true, predicate, true);
-        writer->addEntryFromBuffer(path.c_str(), ts_content);
+        writer.addEntryFromBuffer(path.c_str(), ts_content);
     });
 }
 

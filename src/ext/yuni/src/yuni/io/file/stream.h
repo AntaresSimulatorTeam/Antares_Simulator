@@ -311,7 +311,7 @@ public:
     //! Write an interger
     uint write(int64_t value);
     //! Write an interger
-    uint write(uint16 value);
+    uint write(uint16_t value);
     //! Write an interger
     uint write(uint32_t value);
     //! Write an interger
@@ -341,7 +341,7 @@ public:
     //! Write an interger
     uint write(int64_t value, uint64_t maxsize);
     //! Write an interger
-    uint write(uint16 value, uint64_t maxsize);
+    uint write(uint16_t value, uint64_t maxsize);
     //! Write an interger
     uint write(uint32_t value, uint64_t maxsize);
     //! Write an interger

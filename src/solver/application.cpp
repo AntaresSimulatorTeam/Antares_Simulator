@@ -194,7 +194,7 @@ void Application::prepare(int argc, char* argv[])
     {
         auto& filename = pStudy->buffer;
         filename.clear() << "about-the-study" << Yuni::IO::Separator << "map";
-        pStudy->progression.saveToFile(filename, pStudy->resultWriter);
+        pStudy->progression.saveToFile(filename, *pStudy->resultWriter);
         pStudy->progression.start();
     }
     else
@@ -409,8 +409,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             if (!pSettings.commentFile.empty())
             {
                 auto writer = pStudy->resultWriter;
-                if (writer)
-                    writer->addEntryFromFile(study.buffer.c_str(), pSettings.commentFile.c_str());
+                writer->addEntryFromFile(study.buffer.c_str(), pSettings.commentFile.c_str());
 
                 pSettings.commentFile.clear();
                 pSettings.commentFile.shrink();

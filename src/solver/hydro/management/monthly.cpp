@@ -87,7 +87,7 @@ static void CheckHydroAllocationProblem(Data::Area& area,
 }
 
 
-double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, PerArea& data)
+double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data)
 {
     double total = 0;
 
@@ -147,10 +147,10 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                                                        uint numSpace)
 {
     uint indexArea = 0;
-    study.areas.each([&](Data::Area& area) {
+    areas_.each([&](Data::Area& area) {
         uint z = area.index;
 
-        auto& data = pAreas[numSpace][z];
+        auto& data = tmpDataByArea_[numSpace][z];
 
         auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
         auto& maxLvl = area.hydro.reservoirLevel[Data::PartHydro::maximum];
@@ -181,8 +181,8 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
             {
                 uint realmonth = (initReservoirLvlMonth + month) % 12;
 
-                uint simulationMonth = study.calendar.mapping.months[realmonth];
-                uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
+                uint simulationMonth = calendar_.mapping.months[realmonth];
+                uint firstDay = calendar_.months[simulationMonth].daysYear.first;
 
                 problem.TurbineMax[month] = totalInflowsYear;
                 problem.TurbineMin[month] = data.mingens[realmonth];
@@ -247,8 +247,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
             assert(!Math::Infinite(data.MOL[realmonth]) && "infinite value detected for MOL");
         }
 #endif
-        auto writer = study.resultWriter;
-        if (study.parameters.hydroDebug && writer)
+        if (parameters_.hydroDebug)
         {
             std::ostringstream buffer, path;
             path << "debug" << SEP << "solver" << SEP << (1 + y) << SEP << "monthly." << area.name
@@ -276,11 +275,11 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
             {
                 uint realmonth = (initReservoirLvlMonth + month) % 12;
 
-                uint simulationMonth = study.calendar.mapping.months[realmonth];
+                uint simulationMonth = calendar_.mapping.months[realmonth];
 
-                uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
+                uint firstDay = calendar_.months[simulationMonth].daysYear.first;
 
-                auto monthName = study.calendar.text.months[simulationMonth].name;
+                auto monthName = calendar_.text.months[simulationMonth].name;
 
                 buffer << monthName[0] << monthName[1] << monthName[2] << '\t';
                 buffer << '\t';
@@ -293,7 +292,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                 buffer << '\n';
             }
             auto content = buffer.str();
-            writer->addEntryFromBuffer(path.str(), content);
+            resultWriter_.addEntryFromBuffer(path.str(), content);
         }
     });
 }

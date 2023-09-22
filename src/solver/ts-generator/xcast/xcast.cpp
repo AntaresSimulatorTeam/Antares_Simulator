@@ -59,7 +59,7 @@ enum
     mu = Data::XCast::dataCoeffMu,
 };
 
-XCast::XCast(Data::Study& study, Data::TimeSeries ts, IResultWriter::Ptr writer) :
+XCast::XCast(Data::Study& study, Data::TimeSeries ts, IResultWriter& writer) :
  study(study),
  timeSeriesType(ts),
  pNeverInitialized(true),
@@ -98,7 +98,7 @@ void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, Predicat
             std::string buffer;
             predicate.matrix(area).saveToBuffer(buffer);
 
-            pWriter->addEntryFromBuffer(filename.c_str(), buffer);
+            pWriter.addEntryFromBuffer(filename.c_str(), buffer);
 
             ++progression;
         });
