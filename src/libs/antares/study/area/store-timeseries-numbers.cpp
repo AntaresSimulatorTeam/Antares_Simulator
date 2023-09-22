@@ -48,7 +48,7 @@ struct TSNumbersPredicate
 };
 } // anonymous namespace
 
-static void genericStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer,
+static void storeTSnumbers(Solver::IResultWriter::Ptr writer,
                                           const Matrix<uint32_t>& timeseriesNumbers,
                                           const String& id,
                                           const String& directory)
@@ -69,28 +69,28 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer,
 
 void storeTimeseriesNumbersForLoad(Solver::IResultWriter::Ptr writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.load.series->timeseriesNumbers, area.id, "load");
+    storeTSnumbers(writer, area.load.series->timeseriesNumbers, area.id, "load");
 }
 
 void storeTimeseriesNumbersForSolar(Solver::IResultWriter::Ptr writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.solar.series->timeseriesNumbers, area.id, "solar");
+    storeTSnumbers(writer, area.solar.series->timeseriesNumbers, area.id, "solar");
 }
 
 void storeTimeseriesNumbersForHydro(Solver::IResultWriter::Ptr writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.hydro.series->timeseriesNumbers, area.id, "hydro");
+    storeTSnumbers(writer, area.hydro.series->timeseriesNumbers, area.id, "hydro");
 }
 
 
-void storeTimeseriesNumbersForHydroPowerCredits(Solver::IResultWriter::Ptr writer, const Area& area)
+void storeTimeseriesNumbersForHydroMaxPower(Solver::IResultWriter::Ptr writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.hydro.series->timeseriesNumbersPowerCredits, area.id, "power-credits");
+    storeTSnumbers(writer, area.hydro.series->timeseriesNumbersHydroMaxPower, area.id, "max-power");
 }
 
 void storeTimeseriesNumbersForWind(Solver::IResultWriter::Ptr writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.wind.series->timeseriesNumbers, area.id, "wind");
+    storeTSnumbers(writer, area.wind.series->timeseriesNumbers, area.id, "wind");
 }
 
 void storeTimeseriesNumbersForThermal(Solver::IResultWriter::Ptr writer, const Area& area)

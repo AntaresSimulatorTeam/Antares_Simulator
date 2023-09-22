@@ -46,7 +46,7 @@ inline bool CheckValidity<BindingConstraintGroup>(uint value, const BindingConst
 }
 
 template<class D>
-static inline bool CheckValidityHydroPowerCredits(uint value, const D& data, uint tsGenMax)
+static inline bool CheckValidityHydroMaxPower(uint value, const D& data, uint tsGenMax)
 {
     // TS Generator never used
     return (!tsGenMax) ? (value < data.countpowercredits) : (value < tsGenMax);
@@ -98,7 +98,7 @@ bool ApplyToMatrix(uint& errors,
 }
 
 template<class StringT, class D>
-bool ApplyToMatrixPowerCredits(uint& errors,
+bool ApplyToMatrixMaxPower(uint& errors,
                                 StringT& logprefix,
                                 D& data,
                                 const TSNumberData::MatrixType::ColumnType& years, uint tsGenMax)
@@ -106,10 +106,10 @@ bool ApplyToMatrixPowerCredits(uint& errors,
     bool ret = true;
 
     // In this case, m.height represents the total number of years
-    const uint nbYears = data.timeseriesNumbersPowerCredits.height;
+    const uint nbYears = data.timeseriesNumbersHydroMaxPower.height;
     // The matrix m has only one column
-    assert(data.timeseriesNumbersPowerCredits.width == 1);
-    typename Matrix<uint32_t>::ColumnType& target = data.timeseriesNumbersPowerCredits[0];
+    assert(data.timeseriesNumbersHydroMaxPower.width == 1);
+    typename Matrix<uint32_t>::ColumnType& target = data.timeseriesNumbersHydroMaxPower[0];
 
     for (uint y = 0; y != nbYears; ++y)
     {
@@ -119,7 +119,7 @@ bool ApplyToMatrixPowerCredits(uint& errors,
             uint tsNum = years[y] - 1;
 
             // When the TS-Generators are not used
-            if (!CheckValidityHydroPowerCredits(tsNum, data, tsGenMax))
+            if (!CheckValidityHydroMaxPower(tsNum, data, tsGenMax))
             {
                 if (errors <= maxErrors)
                 {

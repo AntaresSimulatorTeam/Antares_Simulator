@@ -5,7 +5,7 @@ For each area, new files are added **input/hydro/series/&lt;area&gt;/maxgen.txt*
 
 Also for each area, new files are added **input/hydro/common/capacity/maxhoursGen_&lt;area&gt;** and **input/hydro/common/capacity/maxhoursPump_&lt;area&gt;**. These files have just one column and 365 rows. For old studies, file **input/hydro/common/capacity/maxpower_&lt;area&gt;** will be deleted after upgrading the study and corresponding data from that file will be copied to already mentioned new files, even if study is upgraded or not.
 ### Input
-Under `Configure/MC Scenario Builder` new section added `Hydro-Power-Credits`
+Under `Configure/MC Scenario Builder` new section added `Hydro Max Power`
 In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added:
 * **hgp,&lt;area&gt;,&lt;year&gt; = &lt;hgp-value&gt;**
 ## v8.7.0

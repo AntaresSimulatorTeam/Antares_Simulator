@@ -46,14 +46,14 @@ public:
     double cellNumericValue(int x, int y) const;
 }; // class hydroScBuilderRenderer
 
-class hydroPowerCreditsScBuilderRenderer : public ScBuilderRendererAreasAsRows
+class hydroMaxPowerScBuilderRenderer : public ScBuilderRendererAreasAsRows
 {
 public:
-    hydroPowerCreditsScBuilderRenderer() = default;
+    hydroMaxPowerScBuilderRenderer() = default;
 
     bool cellValue(int x, int y, const Yuni::String& value);
     double cellNumericValue(int x, int y) const;
-}; // class hydroPowerCreditsScBuilderRenderer
+}; // class hydroMaxPowerScBuilderRenderer
 
 } // namespace Renderer
 } // namespace Datagrid

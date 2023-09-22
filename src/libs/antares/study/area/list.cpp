@@ -919,7 +919,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (area.hydro.series)
         {
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->LoadHydroPowerCredits(study, area.id, buffer) && ret;
+            ret = area.hydro.series->LoadMaxPower(study, area.id, buffer) && ret;
         }
 
         buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "common" << SEP

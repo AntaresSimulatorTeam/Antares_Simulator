@@ -307,7 +307,7 @@ bool HydroManagement::checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) c
 }
 
 bool HydroManagement::checkHourlyMinMaxGeneration(uint tsIndex,
-                                                  uint tsIndexPowerCredits,
+                                                  uint tsIndexMaxPower,
                                                   Data::Area& area) const
 {
     // Hourly minimum generation <= hourly inflows for each hour
@@ -315,7 +315,7 @@ bool HydroManagement::checkHourlyMinMaxGeneration(uint tsIndex,
     auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
     auto& maxgenmatrix = area.hydro.series->maxgen;
     auto const& srcmaxgen
-      = maxgenmatrix[tsIndexPowerCredits < maxgenmatrix.width ? tsIndexPowerCredits : 0];
+      = maxgenmatrix[tsIndexMaxPower < maxgenmatrix.width ? tsIndexMaxPower : 0];
 
     for (uint h = 0; h < HOURS_PER_YEAR; ++h)
     {
@@ -327,7 +327,7 @@ bool HydroManagement::checkHourlyMinMaxGeneration(uint tsIndex,
             logs.error() << "In area: " << area.name << " [hourly] minimum generation of " << min
                          << " MW in timestep " << h + 1 << " of TS-" << tsIndex + 1
                          << " is incompatible with the maximum generation of " << max
-                         << " MW in timestep " << h + 1 << " of TS-" << tsIndexPowerCredits + 1
+                         << " MW in timestep " << h + 1 << " of TS-" << tsIndexMaxPower + 1
                          << " MW.";
             return false;
         }
@@ -344,14 +344,14 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
         uint z = area.index;
         const auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
         auto tsIndex = (uint)ptchro.Hydraulique;
-        auto tsIndexPowerCredits = ptchro.HydrauliquePowerCredits;
+        auto tsIndexMaxPower = ptchro.HydrauliqueMaxPower;
 
         bool useHeuristicTarget = area.hydro.useHeuristicTarget;
         bool followLoadModulations = area.hydro.followLoadModulations;
         bool reservoirManagement = area.hydro.reservoirManagement;
 
         if (!reservoirManagement)
-            ret = checkHourlyMinMaxGeneration(tsIndex, tsIndexPowerCredits, area) && ret;
+            ret = checkHourlyMinMaxGeneration(tsIndex, tsIndexMaxPower, area) && ret;
 
         if (!useHeuristicTarget)
             return;

@@ -166,7 +166,7 @@ ColumnNTC::ColumnNTC() : Column(timeSeriesTransmissionCapacities, "  Links NTC  
 // -------------------------------
 // Column Hydro Max Power
 // -------------------------------
-ColumnHydroPowerCredits::ColumnHydroPowerCredits() : Column(timeSeriesHydroPowerCredits, "   Hydro-Power-Credits   ")
+ColumnHydroMaxPower::ColumnHydroMaxPower() : Column(timeSeriesHydroMaxPower, "   Hydro-Max-Power   ")
 {
     cells_ = {new_check_allocation<blankCell>(),
               new_check_allocation<inactiveCell>(wxT("On")),

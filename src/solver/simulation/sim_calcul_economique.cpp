@@ -564,19 +564,19 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         for (uint k = 0; k < nbPays; ++k)
         {
             auto& tsIndex = NumeroChroniquesTireesParPays[numSpace][k];
-            uint tsIndexPowerCredits = tsIndex.HydrauliquePowerCredits;
+            uint tsIndexMaxPower = tsIndex.HydrauliqueMaxPower;
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
 
             auto& maxgenmatrix = area.hydro.series->maxgen;
             auto const& srcmaxgen
-              = maxgenmatrix[tsIndexPowerCredits < maxgenmatrix.width ? tsIndexPowerCredits : 0];
+              = maxgenmatrix[tsIndexMaxPower < maxgenmatrix.width ? tsIndexMaxPower : 0];
             auto const& ContrainteDePmaxHydrauliqueHoraire = srcmaxgen[PasDeTempsDebut + hourInWeek];
 
             auto& maxpumpmatrix = area.hydro.series->maxpump;
             auto const& srcmaxpump
-              = maxpumpmatrix[tsIndexPowerCredits < maxpumpmatrix.width ? tsIndexPowerCredits
+              = maxpumpmatrix[tsIndexMaxPower < maxpumpmatrix.width ? tsIndexMaxPower
                                                                          : 0];
             auto const& ContrainteDePmaxPompageHoraire = srcmaxpump[PasDeTempsDebut + hourInWeek];
 
@@ -652,11 +652,11 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 uint tsIndex = (NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
                 auto& inflowsmatrix = area.hydro.series->storage;
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
-                uint tsIndexPowerCredits = (NumeroChroniquesTireesParPays[numSpace][k]).HydrauliquePowerCredits;
+                uint tsIndexMaxPower = (NumeroChroniquesTireesParPays[numSpace][k]).HydrauliqueMaxPower;
                 auto& maxgenmatrix = area.hydro.series->maxgen;
-                auto const& srcmaxgen = maxgenmatrix[tsIndexPowerCredits < maxgenmatrix.width ? tsIndexPowerCredits : 0];
+                auto const& srcmaxgen = maxgenmatrix[tsIndexMaxPower < maxgenmatrix.width ? tsIndexMaxPower : 0];
                 auto& maxpumpmatrix = area.hydro.series->maxpump;
-                auto const& srcmaxpump = maxpumpmatrix[tsIndexPowerCredits < maxpumpmatrix.width ? tsIndexPowerCredits : 0];
+                auto const& srcmaxpump = maxpumpmatrix[tsIndexMaxPower < maxpumpmatrix.width ? tsIndexMaxPower : 0];
                 auto& mingenmatrix = area.hydro.series->mingen;
                 auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
                 for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)

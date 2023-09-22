@@ -253,10 +253,10 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     auto const& maxPowerHours = area.hydro.maxHoursGen;
     auto const& maxPower = area.hydro.series->maxgen;
 
-    uint tsIndexPowerCredits
-      = (NumeroChroniquesTireesParPays[numSpace][z]).HydrauliquePowerCredits;
+    uint tsIndexMaxPower
+      = (NumeroChroniquesTireesParPays[numSpace][z]).HydrauliqueMaxPower;
 
-    auto const& maxP = maxPower[tsIndexPowerCredits < maxPower.width ? tsIndexPowerCredits : 0];
+    auto const& maxP = maxPower[tsIndexMaxPower < maxPower.width ? tsIndexMaxPower : 0];
     auto const& maxE = maxPowerHours[0];
 
     auto& ventilationResults = ventilationResults_[numSpace][z];

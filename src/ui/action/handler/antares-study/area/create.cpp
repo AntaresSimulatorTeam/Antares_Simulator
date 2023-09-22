@@ -286,7 +286,7 @@ void Create::createActionsForAStandardAreaCopy(Context& ctx, bool copyPosition)
     *tsNode += new Action::AntaresStudy::Area::AllocationHydro(pOriginalAreaName);
 
     //Hydro Max Power
-    *tsNode += new DataTimeseries(Data::timeSeriesHydroPowerCredits, pOriginalAreaName);
+    *tsNode += new DataTimeseries(Data::timeSeriesHydroMaxPower, pOriginalAreaName);
 
     // Thermal
     auto* area = ctx.extStudy->areas.findFromName(pOriginalAreaName);

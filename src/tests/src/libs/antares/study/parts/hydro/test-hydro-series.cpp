@@ -95,7 +95,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width, Fixt
     maxpump.reset(3, HOURS_PER_YEAR);
 
     buffer.clear() << base_folder << SEP << series_folder;
-    ret = area_1->hydro.series->LoadHydroPowerCredits(*study, area_1->id, buffer);
+    ret = area_1->hydro.series->LoadMaxPower(*study, area_1->id, buffer);
     BOOST_CHECK(ret);
 }
 
@@ -120,7 +120,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_different_width_case
     maxpump.reset(3, HOURS_PER_YEAR);
 
     buffer.clear() << base_folder << SEP << series_folder;
-    ret = area_1->hydro.series->LoadHydroPowerCredits(*study, area_1->id, buffer);
+    ret = area_1->hydro.series->LoadMaxPower(*study, area_1->id, buffer);
     BOOST_CHECK(ret);
     BOOST_CHECK_EQUAL(maxgen.width, 3);
 }
@@ -146,7 +146,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_different_width_case
     maxpump.reset(1, HOURS_PER_YEAR);
 
     buffer.clear() << base_folder << SEP << series_folder;
-    ret = area_1->hydro.series->LoadHydroPowerCredits(*study, area_1->id, buffer);
+    ret = area_1->hydro.series->LoadMaxPower(*study, area_1->id, buffer);
     BOOST_CHECK(ret);
     BOOST_CHECK_EQUAL(maxpump.width, 3);
 }
@@ -174,7 +174,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_no_solver, Fixture)
     maxpump.reset(3, HOURS_PER_YEAR);
 
     buffer.clear() << base_folder << SEP << series_folder;
-    ret = area_No_Solver->hydro.series->LoadHydroPowerCredits(
+    ret = area_No_Solver->hydro.series->LoadMaxPower(
       *studyNoSolver, area_No_Solver->id, buffer);
     BOOST_CHECK(ret);
     BOOST_CHECK(area_No_Solver->hydro.hydroModulable);

@@ -101,11 +101,11 @@ public:
 // -------------------------------
 // Column for Hydro Max Power
 // -------------------------------
-class ColumnHydroPowerCredits final : public Column
+class ColumnHydroMaxPower final : public Column
 {
 public:
-    ColumnHydroPowerCredits();
-    ~ColumnHydroPowerCredits() override = default;
+    ColumnHydroMaxPower();
+    ~ColumnHydroMaxPower() override = default;
 };
 
 } // namespace Renderer

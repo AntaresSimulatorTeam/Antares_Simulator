@@ -199,7 +199,7 @@ void DataSeriesHydro::checkMinGenTsNumber(Study& study, const AreaName& areaID)
     }
 }
 
-bool DataSeriesHydro::LoadHydroPowerCredits(Study& study, const AreaName& areaID, const AnyString& folder)
+bool DataSeriesHydro::LoadMaxPower(Study& study, const AreaName& areaID, const AnyString& folder)
 {
     bool ret = true;
     auto& buffer = study.bufferLoadingTS;
@@ -288,7 +288,7 @@ bool DataSeriesHydro::LoadHydroPowerCredits(Study& study, const AreaName& areaID
         }
     }
 
-    timeseriesNumbersPowerCredits.clear();
+    timeseriesNumbersHydroMaxPower.clear();
 
     return ret;
 }

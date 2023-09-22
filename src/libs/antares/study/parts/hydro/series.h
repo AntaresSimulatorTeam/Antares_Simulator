@@ -167,8 +167,8 @@ public:
     ** \brief Monte-Carlo
     */
     Matrix<uint32_t> timeseriesNumbers;
-    Matrix<uint32_t> timeseriesNumbersPowerCredits;
-    bool LoadHydroPowerCredits(Study& study, const AreaName& areaID, const AnyString& folder);
+    Matrix<uint32_t> timeseriesNumbersHydroMaxPower;
+    bool LoadMaxPower(Study& study, const AreaName& areaID, const AnyString& folder);
 
 }; // class DataSeriesHydro
 

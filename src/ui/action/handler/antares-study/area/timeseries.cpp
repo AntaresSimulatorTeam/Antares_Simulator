@@ -57,8 +57,8 @@ DataTimeseries::DataTimeseries(Data::TimeSeries ts, const AnyString& areaname) :
     case Data::timeSeriesThermal:
         pInfos.caption << "Thermal : Timeseries";
         break;
-    case Data::timeSeriesHydroPowerCredits:
-        pInfos.caption << "Power-Credits : Timeseries";
+    case Data::timeSeriesHydroMaxPower:
+        pInfos.caption << "Max-Power : Timeseries";
         break;
     default:
         break;
@@ -106,8 +106,8 @@ void DataTimeseries::registerViewsWL(Context& ctx)
     case Data::timeSeriesThermal:
         ctx.view["6:Thermal"]["1:TS"] = this;
         break;
-    case Data::timeSeriesHydroPowerCredits:
-        ctx.view["7:Power-Credits"]["1:TS"] = this;
+    case Data::timeSeriesHydroMaxPower:
+        ctx.view["7:Max-Power"]["1:TS"] = this;
         break;
     default:
         break;
@@ -173,7 +173,7 @@ bool DataTimeseries::performWL(Context& ctx)
 
                     break;
                 }
-                case Data::timeSeriesHydroPowerCredits:
+                case Data::timeSeriesHydroMaxPower:
                 {
                     ctx.area->hydro.series->maxgen = source->hydro.series->maxgen;
                     ctx.area->hydro.series->maxpump = source->hydro.series->maxpump;
