@@ -171,12 +171,13 @@ public:
         hourInWeek_ = hour;
         return *this;
     }
+
     /** @name variables_method
      *  @brief  Documentation for non obvious methods
      *  @param index: local index of the variable
      *  @param offset: offset from the current time step
      *  @param delta: number of time steps for the variable
-     *  @return VariableManager object
+     *  @return reference of *this
      */
     //@{
     ConstraintBuilder& DispatchableProduction(unsigned int index,
@@ -325,7 +326,8 @@ public:
     }
 
     /*!
-     * @brief add the constraint in the matrix
+      @brief add the constraint in the matrix
+      @return
      */
     void build();
 
