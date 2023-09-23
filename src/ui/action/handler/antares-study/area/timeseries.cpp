@@ -175,13 +175,13 @@ bool DataTimeseries::performWL(Context& ctx)
                 }
                 case Data::timeSeriesHydroMaxPower:
                 {
-                    ctx.area->hydro.series->maxgen = source->hydro.series->maxgen;
-                    ctx.area->hydro.series->maxpump = source->hydro.series->maxpump;
+                    ctx.area->hydro.series->maxHourlyGenPower = source->hydro.series->maxHourlyGenPower;
+                    ctx.area->hydro.series->maxHourlyPumpPower = source->hydro.series->maxHourlyPumpPower;
 
                     ctx.area->hydro.series->countpowercredits = source->hydro.series->countpowercredits;
 
-                    source->hydro.series->maxgen.unloadFromMemory();
-                    source->hydro.series->maxpump.unloadFromMemory();
+                    source->hydro.series->maxHourlyGenPower.unloadFromMemory();
+                    source->hydro.series->maxHourlyPumpPower.unloadFromMemory();
                 }
                 case Data::timeSeriesThermal:
                 {

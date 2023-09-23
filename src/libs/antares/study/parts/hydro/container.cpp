@@ -116,161 +116,145 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
     bool ret = true;
 
     // Initialize all alpha values to 0
-    study.areas.each([&](Data::Area& area) {
-        area.hydro.interDailyBreakdown = 1.;
-        area.hydro.intraDailyModulation = 24.;
-        area.hydro.intermonthlyBreakdown = 1.;
-        area.hydro.reservoirManagement = false;
-        area.hydro.followLoadModulations = true;
-        area.hydro.useWaterValue = false;
-        area.hydro.hardBoundsOnRuleCurves = false;
-        area.hydro.useHeuristicTarget = true;
-        area.hydro.useLeeway = false;
-        area.hydro.powerToLevel = false;
-        area.hydro.leewayLowerBound = 1.;
-        area.hydro.leewayUpperBound = 1.;
-        area.hydro.initializeReservoirLevelDate = 0;
-        area.hydro.reservoirCapacity = 0.;
-        area.hydro.pumpingEfficiency = 1.;
+    study.areas.each(
+      [&](Data::Area& area)
+      {
+          area.hydro.interDailyBreakdown = 1.;
+          area.hydro.intraDailyModulation = 24.;
+          area.hydro.intermonthlyBreakdown = 1.;
+          area.hydro.reservoirManagement = false;
+          area.hydro.followLoadModulations = true;
+          area.hydro.useWaterValue = false;
+          area.hydro.hardBoundsOnRuleCurves = false;
+          area.hydro.useHeuristicTarget = true;
+          area.hydro.useLeeway = false;
+          area.hydro.powerToLevel = false;
+          area.hydro.leewayLowerBound = 1.;
+          area.hydro.leewayUpperBound = 1.;
+          area.hydro.initializeReservoirLevelDate = 0;
+          area.hydro.reservoirCapacity = 0.;
+          area.hydro.pumpingEfficiency = 1.;
 
-        if (study.header.version >= 870)
-        {
-            // GUI part patch :
-            // We need to know, when estimating the RAM required by the solver, if the current area
-            // is hydro modulable. Therefore, reading the area's daily max power at this stage is
-            // necessary.
+          if (study.header.version >= 870)
+          {
+              // GUI part patch :
+              // We need to know, when estimating the RAM required by the solver, if the current
+              // area is hydro modulable. Therefore, reading the area's daily max power at this
+              // stage is necessary.
 
-            if (!study.usedByTheSolver)
-            {
-                bool enabledModeIsChanged = false;
-                if (JIT::enabled)
-                {
-                    JIT::enabled = false; // Allowing to read the area's daily max power
-                    enabledModeIsChanged = true;
-                }
+              if (!study.usedByTheSolver)
+              {
+                  bool enabledModeIsChanged = false;
+                  if (JIT::enabled)
+                  {
+                      JIT::enabled = false; // Allowing to read the area's daily max power
+                      enabledModeIsChanged = true;
+                  }
 
-                ret = area.hydro.LoadHours(study, area, folder);
+                  ret = area.hydro.LoadHours(study, area, folder);
 
-                if (enabledModeIsChanged)
-                    JIT::enabled = true; // Back to the previous loading mode.
-            }
-            else
-            {
-                ret = area.hydro.LoadHours(study, area, folder);
-            }
-        }
+                  if (enabledModeIsChanged)
+                      JIT::enabled = true; // Back to the previous loading mode.
+              }
+              else
+              {
+                  ret = area.hydro.LoadHours(study, area, folder);
+              }
+          }
 
-        if (study.header.version < 870)
-        {
-            std::shared_ptr<DataTransfer> datatransfer = std::make_shared<DataTransfer>();
+          if (study.header.version < 870)
+          {
+              std::shared_ptr<DataTransfer> datatransfer = std::make_shared<DataTransfer>();
 
-            ret = datatransfer->LoadFromFolder(study, folder, area);
-            ret = datatransfer->AutoTransferHours(study, folder, area);
-        }
+              ret = datatransfer->LoadFromFolder(study, folder, area);
+              ret = datatransfer->AutoTransferHours(study, folder, area);
+          }
 
-        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                       << "creditmodulations_" << area.id << '.' << study.inputExtension;
-        ret = area.hydro.creditModulation.loadFromCSVFile(
-                buffer, 101, 2, Matrix<>::optFixedSize, &study.dataBuffer)
-              && ret;
+          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+                         << "creditmodulations_" << area.id << '.' << study.inputExtension;
+          ret = area.hydro.creditModulation.loadFromCSVFile(
+                  buffer, 101, 2, Matrix<>::optFixedSize, &study.dataBuffer)
+                && ret;
 
-        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "reservoir_"
-                       << area.id << '.' << study.inputExtension;
-        ret = area.hydro.reservoirLevel.loadFromCSVFile(
-                buffer, 3, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
-              && ret;
+          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "reservoir_"
+                         << area.id << '.' << study.inputExtension;
+          ret = area.hydro.reservoirLevel.loadFromCSVFile(
+                  buffer, 3, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+                && ret;
 
+          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "waterValues_"
+                         << area.id << '.' << study.inputExtension;
+          ret = area.hydro.waterValues.loadFromCSVFile(
+                  buffer, 101, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+                && ret;
 
-        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                       << "waterValues_" << area.id << '.' << study.inputExtension;
-        ret = area.hydro.waterValues.loadFromCSVFile(
-                buffer, 101, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
-              && ret;
+          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+                         << "inflowPattern_" << area.id << '.' << study.inputExtension;
+          ret = area.hydro.inflowPattern.loadFromCSVFile(
+                  buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+                && ret;
 
-        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                       << "inflowPattern_" << area.id << '.' << study.inputExtension;
-        ret = area.hydro.inflowPattern.loadFromCSVFile(
-                buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
-              && ret;
+          if (study.usedByTheSolver)
+          {
+              auto& col = area.hydro.inflowPattern[0];
+              bool errorInflow = false;
+              for (int day = 0; day < DAYS_PER_YEAR; day++)
+              {
+                  if (col[day] < 0 && !errorInflow)
+                  {
+                      logs.error() << area.name << ": invalid inflow value";
+                      errorInflow = true;
+                      ret = false;
+                  }
+              }
+              bool errorLevels = false;
+              auto& colMin = area.hydro.reservoirLevel[minimum];
+              auto& colAvg = area.hydro.reservoirLevel[average];
+              auto& colMax = area.hydro.reservoirLevel[maximum];
+              for (int day = 0; day < DAYS_PER_YEAR; day++)
+              {
+                  if (!errorLevels
+                      && (colMin[day] < 0 || colAvg[day] < 0 || colMin[day] > colMax[day]
+                          || colAvg[day] > 100 || colMax[day] > 100))
+                  {
+                      logs.error() << area.name << ": invalid reservoir level value";
+                      errorLevels = true;
+                      ret = false;
+                  }
+              }
 
-        if (study.usedByTheSolver)
-        {
-            auto& col = area.hydro.inflowPattern[0];
-            bool errorInflow = false;
-            for (int day = 0; day < DAYS_PER_YEAR; day++)
-            {
-                if (col[day] < 0 && !errorInflow)
-                {
-                    logs.error() << area.name << ": invalid inflow value";
-                    errorInflow = true;
-                    ret = false;
-                }
-            }
-            bool errorLevels = false;
-            auto& colMin = area.hydro.reservoirLevel[minimum];
-            auto& colAvg = area.hydro.reservoirLevel[average];
-            auto& colMax = area.hydro.reservoirLevel[maximum];
-            for (int day = 0; day < DAYS_PER_YEAR; day++)
-            {
-                if (!errorLevels
-                    && (colMin[day] < 0 || colAvg[day] < 0 || colMin[day] > colMax[day]
-                        || colAvg[day] > 100 || colMax[day] > 100))
-                {
-                    logs.error() << area.name << ": invalid reservoir level value";
-                    errorLevels = true;
-                    ret = false;
-                }
-            }
+              bool errorHours = false;
+              auto& colGen = area.hydro.maxHourlyGenEnergy[0];
+              auto& colPump = area.hydro.maxHourlyPumpEnergy[0];
 
-            bool errorHours = false;
-            auto& colGen = area.hydro.maxHourlyGenEnergy[0];
-            auto& colPump = area.hydro.maxHourlyPumpEnergy[0];
+              for (int day = 0; day < DAYS_PER_YEAR; day++)
+              {
+                  if (!errorHours && (colGen[day] < 0 || (colGen[day] > 24)))
+                  {
+                      logs.error() << area.name << ": invalid power or energy value";
+                      errorHours = true;
+                      ret = false;
+                  }
 
-            for (int day = 0; day < DAYS_PER_YEAR; day++)
-            {
-                if (!errorHours && (colGen[day] < 0 || (colGen[day] > 24)))
-                {
-                    logs.error() << area.name << ": invalid power or energy value";
-                    errorHours = true;
-                    ret = false;
-                }
+                  if (!errorHours && (colPump[day] < 0 || (colPump[day] > 24)))
+                  {
+                      logs.error() << area.name << ": invalid power or energy value";
+                      errorHours = true;
+                      ret = false;
+                  }
+              }
 
-                if (!errorHours && (colPump[day] < 0 || (colPump[day] > 24)))
-                {
-                    logs.error() << area.name << ": invalid power or energy value";
-                    errorHours = true;
-                    ret = false;
-                }
-            }
-
-            for (int i = 0; i < 101; i++)
-            {
-                if ((area.hydro.creditModulation[i][0] < 0)
-                    || (area.hydro.creditModulation[i][1] < 0))
-                {
-                    logs.error() << area.name << ": invalid credit modulation value";
-                    ret = false;
-                }
-            }
-        }
-        else
-        {
-            /*
-            Maxgen matrix is not initialized at this moment, so this code will induce
-            Segmentation fault (core dumped) because maxgen matrix pointing to invalid memory
-            address. This code block is moved to series.cpp file for hydro.
-
-            Is area hydro modulable ?
-
-            auto& max = area.hydro.series->maxgen;
-
-            if (MatrixTestForAtLeastOnePositiveValue(max))
-            {
-                area.hydro.hydroModulable = true;
-            }
-            */
-        }
-    });
+              for (int i = 0; i < 101; i++)
+              {
+                  if ((area.hydro.creditModulation[i][0] < 0)
+                      || (area.hydro.creditModulation[i][1] < 0))
+                  {
+                      logs.error() << area.name << ": invalid credit modulation value";
+                      ret = false;
+                  }
+              }
+          }
+      });
 
     IniFile ini;
     if (not ini.open(buffer.clear() << folder << SEP << "hydro.ini"))

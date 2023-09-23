@@ -250,14 +250,14 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     uint dayYear = 0;
 
-    auto const& maxPowerHours = area.hydro.maxHourlyGenEnergy;
-    auto const& maxPower = area.hydro.series->maxgen;
+    auto const& maxHourlyGenEnergy = area.hydro.maxHourlyGenEnergy;
+    auto const& maxHourlyGenPower = area.hydro.series->maxHourlyGenPower;
 
     uint tsIndexMaxPower
       = (NumeroChroniquesTireesParPays[numSpace][z]).HydrauliqueMaxPower;
 
-    auto const& maxP = maxPower[tsIndexMaxPower < maxPower.width ? tsIndexMaxPower : 0];
-    auto const& maxE = maxPowerHours[0];
+    auto const& maxP = maxHourlyGenPower[tsIndexMaxPower < maxHourlyGenPower.width ? tsIndexMaxPower : 0];
+    auto const& maxE = maxHourlyGenEnergy[0];
 
     auto& ventilationResults = ventilationResults_[numSpace][z];
     
@@ -281,7 +281,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
         auto daysPerMonth = calendar_.months[month].days;
         assert(daysPerMonth <= maxOPP);
         assert(daysPerMonth <= maxDailyTargetGen);
-        assert(daysPerMonth + dayYear - 1 < maxPower.height);
+        assert(daysPerMonth + dayYear - 1 < maxHourlyGenPower.height);
 
         for (uint day = 0; day != daysPerMonth; ++day)
         {

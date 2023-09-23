@@ -88,10 +88,10 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
      bool hydroGenerationPermission = false;
 
     // ... Getting hydro max power
-    auto const& maxPower = area.hydro.series->maxgen;
+    auto const& maxHourlyGenPower = area.hydro.series->maxHourlyGenPower;
     auto const& maxHourlyGenEnergy = area.hydro.maxHourlyGenEnergy[0];
 
-    hydroGenerationPermission = CheckForPositiveEnergy(maxPower, maxHourlyGenEnergy);
+    hydroGenerationPermission = CheckForPositiveEnergy(maxHourlyGenPower, maxHourlyGenEnergy);
 
     // ---------------------
     // Hydro has inflows
@@ -127,11 +127,11 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
     // ... Hydro max power
 
     // ... Hydro max pumping power and energy
-     auto const& maxPumpingP = area.hydro.series->maxpump;
+     auto const& maxHourlyPumpPower = area.hydro.series->maxHourlyPumpPower;
      auto const& maxHourlyPumpEnergy = area.hydro.maxHourlyPumpEnergy[0];
 
     // If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
-    pumpHasMod = CheckForPositiveEnergy(maxPumpingP, maxHourlyPumpEnergy);
+    pumpHasMod = CheckForPositiveEnergy(maxHourlyPumpPower, maxHourlyPumpEnergy);
 }
 
 AreaScratchpad::~AreaScratchpad() = default;

@@ -46,12 +46,12 @@ struct Fixture
         createFolder(buffer, area1_folder);
         createFolder(buffer, area_No_Solver_folder);
 
-        // maxgen and maxpump files
+        // maxHourlyGenPower and maxHourlyPumpPower files
         buffer.clear() << base_folder << SEP << series_folder << SEP << area1_folder;
         createFile(buffer, maxgentxt);
         createFile(buffer, maxpumptxt);
 
-        // maxgen and maxpump files
+        // maxHourlyGenPower and maxHourlyPumpPower files
         buffer.clear() << base_folder << SEP << series_folder << SEP << area_No_Solver_folder;
         createFile(buffer, maxgentxt);
         createFile(buffer, maxpumptxt);
@@ -63,8 +63,8 @@ struct Fixture
     Area* area_No_Solver;
     my_string base_folder = fs::current_path().string();
     my_string series_folder = "series";
-    my_string maxgentxt = "maxgen.txt";
-    my_string maxpumptxt = "maxpump.txt";
+    my_string maxgentxt = "maxHourlyGenPower.txt";
+    my_string maxpumptxt = "maxHourlyPumpPower.txt";
 
     ~Fixture()
     {
@@ -77,22 +77,22 @@ BOOST_AUTO_TEST_SUITE(s)
 BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width, Fixture)
 {
     bool ret = false;
-    auto& maxgen = area_1->hydro.series->maxgen;
-    auto& maxpump = area_1->hydro.series->maxpump;
-    maxgen.reset(3, HOURS_PER_YEAR);
-    maxpump.reset(3, HOURS_PER_YEAR);
+    auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower;
+    auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower;
+    maxHourlyGenPower.reset(3, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(3, HOURS_PER_YEAR);
 
-    InstantiateMatrix(maxgen, 400., HOURS_PER_YEAR);
-    InstantiateMatrix(maxpump, 200., HOURS_PER_YEAR);
+    InstantiateMatrix(maxHourlyGenPower, 400., HOURS_PER_YEAR);
+    InstantiateMatrix(maxHourlyPumpPower, 200., HOURS_PER_YEAR);
 
     my_string buffer;
     buffer.clear() << base_folder << SEP << series_folder << SEP << area_1->id << SEP << maxgentxt;
-    maxgen.saveToCSVFile(buffer, 0);
+    maxHourlyGenPower.saveToCSVFile(buffer, 0);
     buffer.clear() << base_folder << SEP << series_folder << SEP << area_1->id << SEP << maxpumptxt;
-    maxpump.saveToCSVFile(buffer, 0);
+    maxHourlyPumpPower.saveToCSVFile(buffer, 0);
 
-    maxgen.reset(3, HOURS_PER_YEAR);
-    maxpump.reset(3, HOURS_PER_YEAR);
+    maxHourlyGenPower.reset(3, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(3, HOURS_PER_YEAR);
 
     buffer.clear() << base_folder << SEP << series_folder;
     ret = area_1->hydro.series->LoadMaxPower(*study, area_1->id, buffer);
@@ -102,76 +102,76 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width, Fixt
 BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_different_width_case_1, Fixture)
 {
     bool ret = false;
-    auto& maxgen = area_1->hydro.series->maxgen;
-    auto& maxpump = area_1->hydro.series->maxpump;
-    maxgen.reset(1, HOURS_PER_YEAR);
-    maxpump.reset(3, HOURS_PER_YEAR);
+    auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower;
+    auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower;
+    maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(3, HOURS_PER_YEAR);
 
-    InstantiateMatrix(maxgen, 400., HOURS_PER_YEAR);
-    InstantiateMatrix(maxpump, 200., HOURS_PER_YEAR);
+    InstantiateMatrix(maxHourlyGenPower, 400., HOURS_PER_YEAR);
+    InstantiateMatrix(maxHourlyPumpPower, 200., HOURS_PER_YEAR);
 
     my_string buffer;
     buffer.clear() << base_folder << SEP << series_folder << SEP << area_1->id << SEP << maxgentxt;
-    maxgen.saveToCSVFile(buffer, 0);
+    maxHourlyGenPower.saveToCSVFile(buffer, 0);
     buffer.clear() << base_folder << SEP << series_folder << SEP << area_1->id << SEP << maxpumptxt;
-    maxpump.saveToCSVFile(buffer, 0);
+    maxHourlyPumpPower.saveToCSVFile(buffer, 0);
 
-    maxgen.reset(1, HOURS_PER_YEAR);
-    maxpump.reset(3, HOURS_PER_YEAR);
+    maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(3, HOURS_PER_YEAR);
 
     buffer.clear() << base_folder << SEP << series_folder;
     ret = area_1->hydro.series->LoadMaxPower(*study, area_1->id, buffer);
     BOOST_CHECK(ret);
-    BOOST_CHECK_EQUAL(maxgen.width, 3);
+    BOOST_CHECK_EQUAL(maxHourlyGenPower.width, 3);
 }
 
 BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_different_width_case_2, Fixture)
 {
     bool ret = false;
-    auto& maxgen = area_1->hydro.series->maxgen;
-    auto& maxpump = area_1->hydro.series->maxpump;
-    maxgen.reset(3, HOURS_PER_YEAR);
-    maxpump.reset(1, HOURS_PER_YEAR);
+    auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower;
+    auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower;
+    maxHourlyGenPower.reset(3, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
 
-    InstantiateMatrix(maxgen, 400., HOURS_PER_YEAR);
-    InstantiateMatrix(maxpump, 200., HOURS_PER_YEAR);
+    InstantiateMatrix(maxHourlyGenPower, 400., HOURS_PER_YEAR);
+    InstantiateMatrix(maxHourlyPumpPower, 200., HOURS_PER_YEAR);
 
     my_string buffer;
     buffer.clear() << base_folder << SEP << series_folder << SEP << area_1->id << SEP << maxgentxt;
-    maxgen.saveToCSVFile(buffer, 0);
+    maxHourlyGenPower.saveToCSVFile(buffer, 0);
     buffer.clear() << base_folder << SEP << series_folder << SEP << area_1->id << SEP << maxpumptxt;
-    maxpump.saveToCSVFile(buffer, 0);
+    maxHourlyPumpPower.saveToCSVFile(buffer, 0);
 
-    maxgen.reset(3, HOURS_PER_YEAR);
-    maxpump.reset(1, HOURS_PER_YEAR);
+    maxHourlyGenPower.reset(3, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
 
     buffer.clear() << base_folder << SEP << series_folder;
     ret = area_1->hydro.series->LoadMaxPower(*study, area_1->id, buffer);
     BOOST_CHECK(ret);
-    BOOST_CHECK_EQUAL(maxpump.width, 3);
+    BOOST_CHECK_EQUAL(maxHourlyPumpPower.width, 3);
 }
 
 BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_no_solver, Fixture)
 {
     bool ret = false;
-    auto& maxgen = area_No_Solver->hydro.series->maxgen;
-    auto& maxpump = area_No_Solver->hydro.series->maxpump;
-    maxgen.reset(3, HOURS_PER_YEAR);
-    maxpump.reset(3, HOURS_PER_YEAR);
+    auto& maxHourlyGenPower = area_No_Solver->hydro.series->maxHourlyGenPower;
+    auto& maxHourlyPumpPower = area_No_Solver->hydro.series->maxHourlyPumpPower;
+    maxHourlyGenPower.reset(3, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(3, HOURS_PER_YEAR);
 
-    InstantiateMatrix(maxgen, 400., HOURS_PER_YEAR);
-    InstantiateMatrix(maxpump, 200., HOURS_PER_YEAR);
+    InstantiateMatrix(maxHourlyGenPower, 400., HOURS_PER_YEAR);
+    InstantiateMatrix(maxHourlyPumpPower, 200., HOURS_PER_YEAR);
 
     my_string buffer;
     buffer.clear() << base_folder << SEP << series_folder << SEP << area_No_Solver->id << SEP
                    << maxgentxt;
-    maxgen.saveToCSVFile(buffer, 0);
+    maxHourlyGenPower.saveToCSVFile(buffer, 0);
     buffer.clear() << base_folder << SEP << series_folder << SEP << area_No_Solver->id << SEP
                    << maxpumptxt;
-    maxpump.saveToCSVFile(buffer, 0);
+    maxHourlyPumpPower.saveToCSVFile(buffer, 0);
 
-    maxgen.reset(3, HOURS_PER_YEAR);
-    maxpump.reset(3, HOURS_PER_YEAR);
+    maxHourlyGenPower.reset(3, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(3, HOURS_PER_YEAR);
 
     buffer.clear() << base_folder << SEP << series_folder;
     ret = area_No_Solver->hydro.series->LoadMaxPower(

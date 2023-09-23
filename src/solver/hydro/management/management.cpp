@@ -313,13 +313,14 @@ bool HydroManagement::checkHourlyMinMaxGeneration(uint tsIndex,
     // Hourly minimum generation <= hourly inflows for each hour
     auto& mingenmatrix = area.hydro.series->mingen;
     auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
-    auto& maxgenmatrix = area.hydro.series->maxgen;
-    auto const& srcmaxgen
-      = maxgenmatrix[tsIndexMaxPower < maxgenmatrix.width ? tsIndexMaxPower : 0];
+    auto& maxHourlyGenPowerMatrix = area.hydro.series->maxHourlyGenPower;
+    auto const& srcMaxHourlyGenPower
+      = maxHourlyGenPowerMatrix[tsIndexMaxPower < maxHourlyGenPowerMatrix.width ? tsIndexMaxPower
+                                                                                : 0];
 
     for (uint h = 0; h < HOURS_PER_YEAR; ++h)
     {
-        const auto& max = srcmaxgen[h];
+        const auto& max = srcMaxHourlyGenPower[h];
         const auto& min = srcmingen[h];
 
         if (max < min)

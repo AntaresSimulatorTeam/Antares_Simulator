@@ -45,11 +45,11 @@ DataSeriesHydro::DataSeriesHydro() : count(0)
 {
     // Pmin was introduced in v8.6
     // The previous behavior was Pmin=0
-    // For compatibility reasons with existing studies, mingen, maxgen and maxpump are set to one
+    // For compatibility reasons with existing studies, mingen, maxHourlyGenPower and maxHourlyPumpPower are set to one
     // column of zeros by default
     mingen.reset(1, HOURS_PER_YEAR);
-    maxgen.reset(1, HOURS_PER_YEAR);
-    maxpump.reset(1, HOURS_PER_YEAR);
+    maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
 }
 
 bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& folder) const
@@ -68,10 +68,10 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& fold
         ret = storage.saveToCSVFile(buffer, 0) && ret;
         buffer.clear() << folder << SEP << areaID << SEP << "mingen.txt";
         ret = mingen.saveToCSVFile(buffer, 0) && ret;
-        buffer.clear() << folder << SEP << areaID << SEP << "maxgen.txt";
-        ret = maxgen.saveToCSVFile(buffer, 0) && ret;
-        buffer.clear() << folder << SEP << areaID << SEP << "maxpump.txt";
-        ret = maxpump.saveToCSVFile(buffer, 0) && ret;
+        buffer.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower.txt";
+        ret = maxHourlyGenPower.saveToCSVFile(buffer, 0) && ret;
+        buffer.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower.txt";
+        ret = maxHourlyPumpPower.saveToCSVFile(buffer, 0) && ret;
         return ret;
     }
     return false;
@@ -206,16 +206,16 @@ bool DataSeriesHydro::LoadMaxPower(Study& study, const AreaName& areaID, const A
 
     if (study.header.version >= 870)
     {
-        buffer.clear() << folder << SEP << areaID << SEP << "maxgen." << study.inputExtension;
-        ret = maxgen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
-        buffer.clear() << folder << SEP << areaID << SEP << "maxpump." << study.inputExtension;
-        ret = maxpump.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+        buffer.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower." << study.inputExtension;
+        ret = maxHourlyGenPower.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+        buffer.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower." << study.inputExtension;
+        ret = maxHourlyPumpPower.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
     }
 
-    countpowercredits = maxgen.width;
+    countpowercredits = maxHourlyGenPower.width;
 
-    if (maxpump.width > countpowercredits)
-        countpowercredits = maxpump.width;
+    if (maxHourlyPumpPower.width > countpowercredits)
+        countpowercredits = maxHourlyPumpPower.width;
 
     if (study.usedByTheSolver)
     {
@@ -224,14 +224,14 @@ bool DataSeriesHydro::LoadMaxPower(Study& study, const AreaName& areaID, const A
             logs.error() << "Hydro Max Power: `" << areaID
                          << "`: empty matrix detected. Fixing it with default values";
 
-            maxgen.reset(1, HOURS_PER_YEAR);
-            maxpump.reset(1, HOURS_PER_YEAR);
+            maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
+            maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
         }
         else
         {
-            if (countpowercredits > 1 && maxgen.width != maxpump.width)
+            if (countpowercredits > 1 && maxHourlyGenPower.width != maxHourlyPumpPower.width)
             {
-                if (maxpump.width != 1 && maxgen.width != 1)
+                if (maxHourlyPumpPower.width != 1 && maxHourlyGenPower.width != 1)
                 {
                     logs.fatal() << "Hydro Max Power: `" << areaID
                                  << "`: The matrices Maximum Generation and Maximum Pumping must "
@@ -240,19 +240,19 @@ bool DataSeriesHydro::LoadMaxPower(Study& study, const AreaName& areaID, const A
                 }
                 else
                 {
-                    if (maxpump.width == 1)
+                    if (maxHourlyPumpPower.width == 1)
                     {
-                        maxpump.resizeWithoutDataLost(countpowercredits, maxpump.height);
+                        maxHourlyPumpPower.resizeWithoutDataLost(countpowercredits, maxHourlyPumpPower.height);
                         for (uint x = 1; x < countpowercredits; ++x)
-                            maxpump.pasteToColumn(x, maxpump[0]);
+                            maxHourlyPumpPower.pasteToColumn(x, maxHourlyPumpPower[0]);
                     }
                     else
                     {
-                        if (maxgen.width == 1)
+                        if (maxHourlyGenPower.width == 1)
                         {
-                            maxgen.resizeWithoutDataLost(countpowercredits, maxgen.height);
+                            maxHourlyGenPower.resizeWithoutDataLost(countpowercredits, maxHourlyGenPower.height);
                             for (uint x = 1; x < countpowercredits; ++x)
-                                maxgen.pasteToColumn(x, maxgen[0]);
+                                maxHourlyGenPower.pasteToColumn(x, maxHourlyGenPower[0]);
                         }
                     }
                     Area* areaToInvalidate = study.areas.find(areaID);
@@ -272,8 +272,8 @@ bool DataSeriesHydro::LoadMaxPower(Study& study, const AreaName& areaID, const A
 
         if (study.parameters.derated)
         {
-            maxgen.averageTimeseries();
-            maxpump.averageTimeseries();
+            maxHourlyGenPower.averageTimeseries();
+            maxHourlyPumpPower.averageTimeseries();
             countpowercredits = 1;
         }
     }
@@ -282,7 +282,7 @@ bool DataSeriesHydro::LoadMaxPower(Study& study, const AreaName& areaID, const A
         // Is area hydro modulable ?
         Area* area = study.areas.find(areaID);
 
-        if (MatrixTestForAtLeastOnePositiveValue(maxgen))
+        if (MatrixTestForAtLeastOnePositiveValue(maxHourlyGenPower))
         {
             area->hydro.hydroModulable = true;
         }
@@ -299,8 +299,8 @@ bool DataSeriesHydro::forceReload(bool reload) const
     ret = ror.forceReload(reload) && ret;
     ret = storage.forceReload(reload) && ret;
     ret = mingen.forceReload(reload) && ret;
-    ret = maxgen.forceReload(reload) && ret;
-    ret = maxpump.forceReload(reload) && ret;
+    ret = maxHourlyGenPower.forceReload(reload) && ret;
+    ret = maxHourlyPumpPower.forceReload(reload) && ret;
     return ret;
 }
 
@@ -309,8 +309,8 @@ void DataSeriesHydro::markAsModified() const
     ror.markAsModified();
     storage.markAsModified();
     mingen.markAsModified();
-    maxgen.markAsModified();
-    maxpump.markAsModified();
+    maxHourlyGenPower.markAsModified();
+    maxHourlyPumpPower.markAsModified();
 }
 
 void DataSeriesHydro::reset()
@@ -318,8 +318,8 @@ void DataSeriesHydro::reset()
     ror.reset(1, HOURS_PER_YEAR);
     storage.reset(1, DAYS_PER_YEAR);
     mingen.reset(1, HOURS_PER_YEAR);
-    maxgen.reset(1, HOURS_PER_YEAR);
-    maxpump.reset(1, HOURS_PER_YEAR);
+    maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
     count = 1;
     countpowercredits = 1;
 }
@@ -327,7 +327,7 @@ void DataSeriesHydro::reset()
 uint64_t DataSeriesHydro::memoryUsage() const
 {
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage()
-           + maxgen.memoryUsage() + maxpump.memoryUsage();
+           + maxHourlyGenPower.memoryUsage() + maxHourlyPumpPower.memoryUsage();
 }
 } // namespace Data
 } // namespace Antares

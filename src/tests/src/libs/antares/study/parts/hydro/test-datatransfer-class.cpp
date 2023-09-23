@@ -57,7 +57,7 @@ struct Fixture
         createFolder(buffer, area1_folder);
         buffer.clear() << base_folder << SEP << hydro_folder << SEP << series_folder << SEP
                        << area1_folder;
-        // maxgen and maxpump files
+        // maxHourlyGenPower and maxHourlyPumpPower files
         createFile(buffer, maxgentxt);
         createFile(buffer, maxpumptxt);
 
@@ -91,8 +91,8 @@ struct Fixture
     my_string maxhoursGen = "maxHourlyGenEnergy_";
     my_string maxhoursPump = "maxHourlyPumpEnergy_";
     my_string maxpower = "maxpower_";
-    my_string maxgentxt = "maxgen.txt";
-    my_string maxpumptxt = "maxpump.txt";
+    my_string maxgentxt = "maxHourlyGenPower.txt";
+    my_string maxpumptxt = "maxHourlyPumpPower.txt";
 
     ~Fixture()
     {

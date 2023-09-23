@@ -130,23 +130,23 @@ bool DataTransfer::SupportForOldStudies(Study& study, const AnyString& folder, A
 {
     bool ret = true;
     auto& buffer = study.bufferLoadingTS;
-    auto& maxgen = area.hydro.series->maxgen;
-    auto& maxpump = area.hydro.series->maxpump;
+    auto& maxHourlyGenPower = area.hydro.series->maxHourlyGenPower;
+    auto& maxHourlyPumpPower = area.hydro.series->maxHourlyPumpPower;
 
     auto& dailyMaxGen = dailyMaxPumpAndGen[genMaxP];
     auto& dailyMaxPump = dailyMaxPumpAndGen[pumpMaxP];
 
-    maxgen.reset(1, HOURS_PER_YEAR);
-    maxpump.reset(1, HOURS_PER_YEAR);
+    maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
 
-    AutoTransferPower(maxgen, dailyMaxGen);
-    AutoTransferPower(maxpump, dailyMaxPump);
+    AutoTransferPower(maxHourlyGenPower, dailyMaxGen);
+    AutoTransferPower(maxHourlyPumpPower, dailyMaxPump);
 
-    buffer.clear() << folder << SEP << "series" << SEP << area.id << SEP << "maxgen." << study.inputExtension;
-    ret = maxgen.saveToCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+    buffer.clear() << folder << SEP << "series" << SEP << area.id << SEP << "maxHourlyGenPower." << study.inputExtension;
+    ret = maxHourlyGenPower.saveToCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
 
-    buffer.clear() << folder << SEP << "series" << SEP << area.id << SEP << "maxpump." << study.inputExtension;
-    ret = maxpump.saveToCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+    buffer.clear() << folder << SEP << "series" << SEP << area.id << SEP << "maxHourlyPumpPower." << study.inputExtension;
+    ret = maxHourlyPumpPower.saveToCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
 
     return ret;
 }

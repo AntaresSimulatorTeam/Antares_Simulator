@@ -134,14 +134,14 @@ public:
     **
     ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
-    Matrix<double, int32_t> maxgen;
+    Matrix<double, int32_t> maxHourlyGenPower;
 
     /*!
     ** \brief Maximum Pumping (MW)
     **
     ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
-    Matrix<double, int32_t> maxpump;
+    Matrix<double, int32_t> maxHourlyPumpPower;
 
     /*!
     ** \brief The number of time-series
@@ -154,11 +154,11 @@ public:
     uint count;
 
     /*!
-    ** \brief The number of time-series for maxgen and maxpump matrices
+    ** \brief The number of time-series for maxHourlyGenPower and maxHourlyPumpPower matrices
     **
-    ** This value must be the same as the width of the matrices `maxgen` and `maxpump`.
+    ** This value must be the same as the width of the matrices `maxHourlyGenPower` and `maxHourlyPumpPower`.
     ** It is only provided for convenience to avoid same strange and ambiguous code
-    ** (for example using `maxgen.width` and `maxpump.width` in the same routine, it might
+    ** (for example using `maxHourlyGenPower.width` and `maxHourlyPumpPower.width` in the same routine, it might
     ** indicate that the two values are not strictly equal)
     */
     uint countpowercredits = 0;
