@@ -54,7 +54,7 @@ public:
         pumpMaxE,
     };
 
-    Matrix<double, double> maxPower;
+    Matrix<double, double> dailyMaxPumpAndGen;
 
     bool LoadFromFolder(Study& study, const AnyString& folder, Area& area);
     bool AutoTransferHours(Study& study, const AnyString& folder, Area& area);

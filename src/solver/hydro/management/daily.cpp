@@ -250,7 +250,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     uint dayYear = 0;
 
-    auto const& maxPowerHours = area.hydro.maxHoursGen;
+    auto const& maxPowerHours = area.hydro.maxHourlyGenEnergy;
     auto const& maxPower = area.hydro.series->maxgen;
 
     uint tsIndexMaxPower

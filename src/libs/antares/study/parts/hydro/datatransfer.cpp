@@ -38,7 +38,7 @@ namespace Antares::Data
 
 DataTransfer::DataTransfer()
 {
-    maxPower.reset(4, DAYS_PER_YEAR, true);
+    dailyMaxPumpAndGen.reset(4, DAYS_PER_YEAR, true);
 }
 
 bool DataTransfer::LoadFromFolder(Study& study, const AnyString& folder, Area& area)
@@ -63,7 +63,7 @@ bool DataTransfer::LoadFromFolder(Study& study, const AnyString& folder, Area& a
             enabledModeIsChanged = true;
         }
 
-        ret = maxPower.loadFromCSVFile(
+        ret = dailyMaxPumpAndGen.loadFromCSVFile(
                 buffer, 4, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
               && ret;
 
@@ -72,14 +72,14 @@ bool DataTransfer::LoadFromFolder(Study& study, const AnyString& folder, Area& a
     }
     else
     {
-        ret = maxPower.loadFromCSVFile(
+        ret = dailyMaxPumpAndGen.loadFromCSVFile(
                 buffer, 4, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
               && ret;
 
         bool errorPowers = false;
         for (uint i = 0; i < 4; ++i)
         {
-            auto& col = maxPower[i];
+            auto& col = dailyMaxPumpAndGen[i];
             for (uint day = 0; day < DAYS_PER_YEAR; ++day)
             {
                 if (!errorPowers && (col[day] < 0 || (i % 2 /*column hours*/ && col[day] > 24)))
@@ -100,28 +100,28 @@ bool DataTransfer::AutoTransferHours(Study& study, const AnyString& folder, Area
     auto& buffer = study.bufferLoadingTS;
     bool ret = true;
 
-    auto& maxHoursGen = area.hydro.maxHoursGen;
-    auto& maxHoursPump = area.hydro.maxHoursPump;
+    auto& maxHourlyGenEnergy = area.hydro.maxHourlyGenEnergy;
+    auto& maxHourlyPumpEnergy = area.hydro.maxHourlyPumpEnergy;
 
-    maxHoursGen.reset(1, DAYS_PER_YEAR, true);
-    maxHoursGen.fillColumn(0, 24.);
+    maxHourlyGenEnergy.reset(1, DAYS_PER_YEAR, true);
+    maxHourlyGenEnergy.fillColumn(0, 24.);
 
-    maxHoursPump.reset(1, DAYS_PER_YEAR, true);
-    maxHoursPump.fillColumn(0, 24.);
+    maxHourlyPumpEnergy.reset(1, DAYS_PER_YEAR, true);
+    maxHourlyPumpEnergy.fillColumn(0, 24.);
 
     for (uint day = 0; day < DAYS_PER_YEAR; ++day)
     {
-        maxHoursGen[0][day] = maxPower[genMaxE][day];
-        maxHoursPump[0][day] = maxPower[pumpMaxE][day];
+        maxHourlyGenEnergy[0][day] = dailyMaxPumpAndGen[genMaxE][day];
+        maxHourlyPumpEnergy[0][day] = dailyMaxPumpAndGen[pumpMaxE][day];
     }
 
-    buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxhoursGen_"
+    buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxHourlyGenEnergy_"
                    << area.id << ".txt";
-    ret = maxHoursGen.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+    ret = maxHourlyGenEnergy.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
 
-    buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxhoursPump_"
+    buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxHourlyPumpEnergy_"
                    << area.id << ".txt";
-    ret = maxHoursPump.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+    ret = maxHourlyPumpEnergy.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
 
     return ret;
 }
@@ -133,14 +133,14 @@ bool DataTransfer::SupportForOldStudies(Study& study, const AnyString& folder, A
     auto& maxgen = area.hydro.series->maxgen;
     auto& maxpump = area.hydro.series->maxpump;
 
-    auto& MaxPowerGen = maxPower[genMaxP];
-    auto& MaxPowerPump = maxPower[pumpMaxP];
+    auto& dailyMaxGen = dailyMaxPumpAndGen[genMaxP];
+    auto& dailyMaxPump = dailyMaxPumpAndGen[pumpMaxP];
 
     maxgen.reset(1, HOURS_PER_YEAR);
     maxpump.reset(1, HOURS_PER_YEAR);
 
-    AutoTransferPower(maxgen, MaxPowerGen);
-    AutoTransferPower(maxpump, MaxPowerPump);
+    AutoTransferPower(maxgen, dailyMaxGen);
+    AutoTransferPower(maxpump, dailyMaxPump);
 
     buffer.clear() << folder << SEP << "series" << SEP << area.id << SEP << "maxgen." << study.inputExtension;
     ret = maxgen.saveToCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;

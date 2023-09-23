@@ -102,9 +102,9 @@ void HydroMonthlyHours::internalAreaChanged(Antares::Data::Area* area)
     Data::PartHydro* pHydro = (area) ? &(area->hydro) : nullptr;
     Renderer::ARendererArea::internalAreaChanged(area);
     if (pHydro && hoursType == HoursType::Generation)
-        MatrixAncestorType::matrix(&pHydro->maxHoursGen);
+        MatrixAncestorType::matrix(&pHydro->maxHourlyGenEnergy);
     else if (pHydro && hoursType == HoursType::Pumping)
-        MatrixAncestorType::matrix(&pHydro->maxHoursPump);
+        MatrixAncestorType::matrix(&pHydro->maxHourlyPumpEnergy);
     else
         MatrixAncestorType::matrix(nullptr);
 }
