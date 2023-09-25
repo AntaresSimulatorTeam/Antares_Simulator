@@ -25,7 +25,7 @@ jobs:
              cd doxygen-awesome-css
              git checkout v2.2.1
              
-      - name: Doxygen Action
+      - name: Doxygen
         uses: mattnotmitt/doxygen-action@1.9.5
 
       - name: Deploy
