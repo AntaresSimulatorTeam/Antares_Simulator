@@ -49,7 +49,7 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     TuneSolverSpecificOptions(solver);
 
     // Create the variables and set objective cost.
-    CopyVariables(solver);
+    CopyObjective(solver);
 
     // Create constraints and set coefs
     CopyRows(solver);
@@ -100,7 +100,7 @@ void ProblemSimplexeNommeConverter::UpdateCoefficient(unsigned idxVar,
                                                       MPObjective* const objective)
 {
     double min_l = 0.0;
-    if (problemeSimplexe_->Xmin != NULL)
+    if (problemeSimplexe_->Xmin != NULL) // TODO[FOM] Remove enclosing if ?
     {
         min_l = problemeSimplexe_->Xmin[idxVar];
     }
@@ -109,11 +109,10 @@ void ProblemSimplexeNommeConverter::UpdateCoefficient(unsigned idxVar,
     objective->SetCoefficient(var, problemeSimplexe_->CoutLineaire[idxVar]);
 }
 
-void ProblemSimplexeNommeConverter::CopyVariables(MPSolver* solver)
+void ProblemSimplexeNommeConverter::CopyObjective(MPSolver* solver)
 
 {
     MPObjective* const objective = solver->MutableObjective();
-
     for (int idxVar = 0; idxVar < problemeSimplexe_->NombreDeVariables; ++idxVar)
     {
         UpdateCoefficient(idxVar, solver, objective);
