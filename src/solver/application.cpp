@@ -332,13 +332,12 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     study.prepareOutput();
 
     // Initialize the result writer
-    /* study.prepareWriter(pDurationCollector); */
     prepareWriter(study, pDurationCollector);
 
     Antares::Solver::initializeSignalHandlers(resultWriter);
 
     // Save about-the-study files (comments, notes, etc.)
-    study.saveAboutTheStudy();
+    study.saveAboutTheStudy(*resultWriter);
 
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())

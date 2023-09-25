@@ -344,7 +344,7 @@ public:
     */
     void prepareOutput();
 
-    void saveAboutTheStudy();
+    void saveAboutTheStudy(Solver::IResultWriter& resultWriter);
 
     /*!
     ** \brief Initialize the progress meter
@@ -492,8 +492,6 @@ public:
     ** Should be call then all inforation is suplied in to the thermal clusters.
     */
     void computePThetaInfForThermalClusters() const;
-
-    void prepareWriter(Benchmarking::IDurationCollector& duration_collector);
 
     //! Header (general information about the study)
     StudyHeader header;
@@ -656,7 +654,6 @@ public:
     //! The queue service that runs every set of parallel years
     std::shared_ptr<Yuni::Job::QueueService> pQueueService;
 
-    //! Result writer, required to write residual files (comments, about-the-study, etc.)
     Solver::IResultWriter::Ptr resultWriter = nullptr;
 
 public:

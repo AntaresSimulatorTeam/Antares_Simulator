@@ -694,13 +694,13 @@ void Study::prepareOutput()
     logs.info() << "  Output folder : " << folderOutput;
 }
 
-void Study::saveAboutTheStudy()
+void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
 {
     String path;
     path.reserve(1024);
 
     path.clear() << "about-the-study";
-    simulationComments.saveUsingWriter(*resultWriter, path);
+    simulationComments.saveUsingWriter(resultWriter, path);
 
     // Write the header as a reminder
     {
@@ -711,8 +711,7 @@ void Study::saveAboutTheStudy()
         std::string writeBuffer;
         ini.saveToString(writeBuffer);
 
-        if (resultWriter)
-            resultWriter->addEntryFromBuffer(path.c_str(), writeBuffer);
+        resultWriter.addEntryFromBuffer(path.c_str(), writeBuffer);
     }
 
     // Write parameters.ini
@@ -721,8 +720,7 @@ void Study::saveAboutTheStudy()
         dest << "about-the-study" << SEP << "parameters.ini";
 
         buffer.clear() << folderSettings << SEP << "generaldata.ini";
-        if (resultWriter)
-            resultWriter->addEntryFromFile(dest.c_str(), buffer.c_str());
+        resultWriter.addEntryFromFile(dest.c_str(), buffer.c_str());
     }
 
     // antares-output.info
@@ -739,8 +737,7 @@ void Study::saveAboutTheStudy()
     f << "\ntimestamp = " << pStartTime;
     f << "\n\n";
     auto output = f.str();
-    if (resultWriter)
-        resultWriter->addEntryFromBuffer(path.c_str(), output);
+    resultWriter.addEntryFromBuffer(path.c_str(), output);
 
     if (usedByTheSolver and !parameters.noOutput)
     {
@@ -754,8 +751,7 @@ void Study::saveAboutTheStudy()
                     buffer << "@ " << i->first << "\r\n";
             }
             areas.each([&](const Data::Area& area) { buffer << area.name << "\r\n"; });
-            if (resultWriter)            
-                resultWriter->addEntryFromBuffer(path.c_str(), buffer);
+            resultWriter.addEntryFromBuffer(path.c_str(), buffer);
         }
 
         // Write all available links as a reminder
@@ -763,8 +759,7 @@ void Study::saveAboutTheStudy()
             path.clear() << "about-the-study" << SEP << "links.txt";
             Yuni::Clob buffer;
             areas.saveLinkListToBuffer(buffer);
-            if (resultWriter)
-                resultWriter->addEntryFromBuffer(path.c_str(), buffer);
+            resultWriter.addEntryFromBuffer(path.c_str(), buffer);
         }
     }
 }
@@ -1545,12 +1540,6 @@ void Study::computePThetaInfForThermalClusters() const
                                         * cluster->unitCount * cluster->nominalCapacity;
         }
     }
-}
-
-void Study::prepareWriter(Benchmarking::IDurationCollector& duration_collector)
-{
-    resultWriter = Solver::resultWriterFactory(
-      parameters.resultFormat, folderOutput, pQueueService, duration_collector);
 }
 
 } // namespace Antares::Data
