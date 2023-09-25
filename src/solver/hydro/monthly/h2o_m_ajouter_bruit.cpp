@@ -22,7 +22,7 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
     Antares::MersenneTwister noiseGenerator;
     noiseGenerator.reset(Constants::seed); // Arbitrary seed, hard-coded since we don't really want
                                            // the user to change it
-    const std::vector<std::vector<int>*> monthlyVariables
+    const std::vector<const std::vector<int>*> monthlyVariables
       = {&CorrespondanceDesVariables.NumeroDeVariableVolume,
          &CorrespondanceDesVariables.NumeroDeVariableTurbine,
          &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax,
@@ -32,9 +32,8 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
 
     for (const auto& variable : monthlyVariables)
     {
-        for (const auto& v : *variable)
+        for (int Var : *variable)
         {
-            int Var = v;
             CoutLineaireBruite[Var]
               = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
         }
