@@ -30,11 +30,11 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
          &CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible,
          &CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible};
 
-    for (const auto variable : monthlyVariables)
+    for (const auto& variable : monthlyVariables)
     {
-        for (int Pdt = 0; Pdt < DonneesAnnuelles.NombreDePasDeTemps; Pdt++)
+        for (const auto& v : *variable)
         {
-            int Var = (*variable)[Pdt];
+            int Var = v;
             CoutLineaireBruite[Var]
               = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
         }
