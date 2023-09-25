@@ -25,6 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <antares/writer/writer_factory.h>
+#include <antares/benchmarking/DurationCollector.h>
+
 #include <cassert>
 #include "application.h"
 #include "main.h"
@@ -154,8 +157,15 @@ static void AbortProgram(int code)
         }
         else
         {
+            Benchmarking::DurationCollector duration_collector;
+            auto resultWriter = Antares::Solver::resultWriterFactory(
+                currentStudy->parameters.resultFormat,
+                currentStudy->folderOutput,
+                currentStudy->pQueueService,
+                duration_collector);
+
             if (!(!currentStudy))
-                currentStudy->importLogsToOutputFolder();
+                currentStudy->importLogsToOutputFolder(*resultWriter);
             logs.error() << "Aborting now. See logs for more details";
         }
         // release currentStudy

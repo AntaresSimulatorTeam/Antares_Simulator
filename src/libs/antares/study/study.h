@@ -482,7 +482,7 @@ public:
     /*!
     ** \brief Copy the log file from the 'logs' folder to the current output folder
     */
-    void importLogsToOutputFolder() const;
+    void importLogsToOutputFolder(Solver::IResultWriter& resultWriter) const;
     //@}
     //! \name Check validity of Min Stable Power of Thermal Clusters
     //@{

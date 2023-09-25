@@ -374,7 +374,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             // However, since we have warnings/errors, it allows to have a piece of
             // log when the unexpected happens.
             if (!study.parameters.noOutput)
-                study.importLogsToOutputFolder();
+                study.importLogsToOutputFolder(*resultWriter);
             // empty line
             logs.info();
         }
@@ -455,7 +455,7 @@ Application::~Application()
 
         // Copy the log file
         if (!pStudy->parameters.noOutput) {
-            pStudy->importLogsToOutputFolder();
+            pStudy->importLogsToOutputFolder(*resultWriter);
         }
 
         // release all reference to the current study held by this class
