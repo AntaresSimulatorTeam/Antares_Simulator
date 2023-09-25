@@ -12,7 +12,7 @@ public:
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pdt : timestep
-     * @param pays : area9999
+     * @param pays : area
      */
     void add(int pdt, int pays);
 };
