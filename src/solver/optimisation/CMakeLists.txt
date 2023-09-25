@@ -1,0 +1,147 @@
+set(RTESOLVER_OPT
+		opt_optimisation_hebdo.cpp
+		opt_appel_solveur_quadratique.cpp
+		opt_gestion_second_membre_cas_lineaire.cpp
+		opt_optimisation_lineaire.cpp
+		opt_chainage_intercos.cpp
+		opt_fonctions.h
+		opt_pilotage_optimisation_lineaire.cpp
+		opt_pilotage_optimisation_quadratique.cpp
+		opt_structure_probleme_a_resoudre.h
+		opt_constants.h
+		opt_alloc_probleme_a_optimiser.cpp
+		opt_gestion_des_bornes_cas_quadratique.cpp
+		opt_construction_variables_optimisees_lineaire.cpp
+		opt_gestion_des_couts_cas_lineaire.cpp
+		opt_gestion_second_membre_cas_quadratique.cpp
+		opt_gestion_des_pmin.cpp
+		opt_calcul_des_pmin_MUT_MDT.cpp
+		opt_numero_de_jour_du_pas_de_temps.cpp
+		opt_construction_variables_optimisees_quadratique.cpp
+		opt_decompte_variables_et_contraintes.cpp
+		opt_construction_matrice_des_contraintes_cas_quadratique.cpp
+		opt_construction_matrice_des_contraintes_cas_lineaire.cpp
+		opt_construction_matrice_des_contraintes_outils.cpp
+		opt_gestion_des_bornes_cas_lineaire.cpp
+		opt_verification_presence_reserve_jmoins1.cpp
+		opt_init_contraintes_hydrauliques.cpp
+		opt_appel_solveur_lineaire.cpp
+		opt_liberation_problemes_simplexe.cpp
+		opt_restaurer_les_donnees.cpp
+		opt_gestion_des_couts_cas_quadratique.cpp
+		opt_construction_contraintes_couts_demarrage.cpp
+		opt_construction_variables_couts_demarrages.cpp
+		opt_gestion_des_bornes_couts_demarrage.cpp
+		opt_gestion_des_couts_couts_demarrage.cpp
+		opt_gestion_second_membre_couts_demarrage.cpp
+		opt_gestion_second_membre_couts_demarrage.cpp
+		opt_decompte_variables_et_contraintes_couts_demarrage.cpp
+		opt_init_minmax_groupes_couts_demarrage.cpp
+		opt_nombre_min_groupes_demarres_couts_demarrage.cpp
+		opt_export_structure.h
+		opt_export_structure.cpp
+		base_weekly_optimization.h
+		base_weekly_optimization.cpp
+		adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h
+		adequacy_patch_local_matching/adequacy_patch_weekly_optimization.cpp
+		weekly_optimization.h
+		weekly_optimization.cpp
+		optim_post_process_list.h
+		optim_post_process_list.cpp
+		post_process_commands.h
+		post_process_commands.cpp
+		adequacy_patch_csr/hourly_csr_problem.h
+		adequacy_patch_csr/adq_patch_post_process_list.h
+		adequacy_patch_csr/adq_patch_post_process_list.cpp
+		adequacy_patch_local_matching/adq_patch_local_matching.h
+		adequacy_patch_local_matching/adq_patch_local_matching.cpp
+		adequacy_patch_csr/adq_patch_curtailment_sharing.h
+		adequacy_patch_csr/adq_patch_curtailment_sharing.cpp
+		adequacy_patch_csr/solve_problem.cpp
+		adequacy_patch_csr/set_variable_boundaries.cpp
+		adequacy_patch_csr/set_problem_cost_function.cpp
+		adequacy_patch_csr/construct_problem_variables.cpp
+		adequacy_patch_csr/construct_problem_constraints_RHS.cpp
+		adequacy_patch_csr/csr_quadratic_problem.h
+		adequacy_patch_csr/csr_quadratic_problem.cpp
+		adequacy_patch_csr/count_constraints_variables.h
+		adequacy_patch_csr/count_constraints_variables.cpp
+
+		opt_period_string_generator_base.h
+		opt_rename_problem.h
+		opt_rename_problem.cpp
+
+		constraints/ConstraintBuilder.cpp
+		constraints/ConstraintBuilder.h
+		constraints/AreaBalance.h
+		constraints/AreaBalance.cpp
+		constraints/FictitiousLoad.h
+		constraints/FictitiousLoad.cpp
+		constraints/ShortTermStorageLevel.h
+		constraints/ShortTermStorageLevel.cpp
+		constraints/FlowDissociation.h
+		constraints/FlowDissociation.cpp
+		constraints/BindingConstraintHour.h
+		constraints/BindingConstraintHour.cpp
+		constraints/BindingConstraintDay.h
+		constraints/BindingConstraintDay.cpp
+		constraints/BindingConstraintWeek.h
+		constraints/BindingConstraintWeek.cpp
+		constraints/HydroPower.h
+		constraints/HydroPower.cpp
+		constraints/HydroPowerSmoothingUsingVariationSum.h
+		constraints/HydroPowerSmoothingUsingVariationSum.cpp
+		constraints/HydroPowerSmoothingUsingVariationMaxDown.h
+		constraints/HydroPowerSmoothingUsingVariationMaxDown.cpp
+		constraints/HydroPowerSmoothingUsingVariationMaxUp.h
+		constraints/HydroPowerSmoothingUsingVariationMaxUp.cpp
+		constraints/MinHydroPower.h
+		constraints/MinHydroPower.cpp
+		constraints/MaxHydroPower.h
+		constraints/MaxHydroPower.cpp
+		constraints/MaxPumping.h
+		constraints/MaxPumping.cpp
+		constraints/AreaHydroLevel.h
+		constraints/AreaHydroLevel.cpp
+		constraints/FinalStockEquivalent.h
+		constraints/FinalStockEquivalent.cpp
+		constraints/FinalStockExpression.h
+		constraints/FinalStockExpression.cpp
+		constraints/PMaxDispatchableGeneration.h
+		constraints/PMaxDispatchableGeneration.cpp
+		constraints/PMinDispatchableGeneration.h
+		constraints/PMinDispatchableGeneration.cpp
+		constraints/ConsistenceNumberOfDispatchableUnits.h
+		constraints/ConsistenceNumberOfDispatchableUnits.cpp
+		constraints/NbUnitsOutageLessThanNbUnitsStop.h
+		constraints/NbUnitsOutageLessThanNbUnitsStop.cpp
+		constraints/NbDispUnitsMinBoundSinceMinUpTime.h
+		constraints/NbDispUnitsMinBoundSinceMinUpTime.cpp
+		constraints/MinDownTime.h
+		constraints/MinDownTime.cpp
+
+	)
+
+
+
+set(SRC_MODEL
+	${RTESOLVER_OPT}
+)
+
+add_library(model_antares ${SRC_MODEL})
+if(NOT MSVC)
+	target_compile_options(model_antares
+			PUBLIC
+			"-Wno-unused-variable")
+else()
+	#set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
+	#set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
+endif()
+target_link_libraries(model_antares
+		PUBLIC
+		utils
+		sirius_solver
+		infeasible_problem_analysis
+		antares-solver-simulation
+		Antares::benchmarking
+)

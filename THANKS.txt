@@ -1,0 +1,32 @@
+ATTRIBUTION NOTICES
+===================
+
+Antares_Simulator uses external libraries and makes extensive use of the 
+following persons' or companies code. Source and binary forms of these programs
+are distributed along with Antares_Simulator with NO WARRANTY:
+
+Wxwidgets 3.0.2		Copyright (c) 1998-2017  	The wxWidget Team
+license:	wxWindows Library License,V3.1		https://spdx.org/licenses/wxWindows.html
+
+libYuni	  1.1.0		https://github.com/libyuni	
+license:			Mozilla Public License 2.0	https://spdx.org/licenses/MPL-2.0.html
+
+Mersenne Twister	Copyright (c) 1997-2002  M.Matsumoto and T.Nishimura   
+license:	3-clause BSD						https://spdx.org/licenses/BSD-3-Clause.html
+
+Sirius_Solver 6.0.0	Copyright (c) 2007-2018  RTE
+license:	EPL 2.0								https://spdx.org/licenses/EPL-2.0.html
+  
+  
+SPECIAL THANKS
+==============
+  
+Special thanks are due to a few Authors without whom Antares_Simulator would not be what it is:
+
+	
+	Robert 		Gonzalez 	(also author of the Sirius_Solver library) 
+	Damien 		Gerard   	(also developer of the libYuni library)
+	Papa		Ndiaye		(system map editor, constraints builder, power flow physics)
+	Guillaume	Pierre 		(parallel computing, generic power storage facility modelling)
+	Sylvain		Marandon	(also author of the Antares_Data_Organizer application) 
+	Michel 		Doquet		(project initiator)

@@ -1,0 +1,48 @@
+
+set(YUNI_TARGET_DEBUG   true)
+set(YUNI_TARGET_RELEASE true)
+
+# Detecting 64-bit Windows
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+	if(WIN32)
+		set(WIN64 true)
+	endif()
+endif()
+
+string(COMPARE EQUAL "${CMAKE_BUILD_TYPE}" "" NO_BUILD_TYPE)
+if(NO_BUILD_TYPE)
+	string(COMPARE EQUAL "${TARGET}" "" NO_BUILD_TYPE)
+	if(NO_BUILD_TYPE)
+		string(COMPARE EQUAL "${YUNI_TARGET}" "" NO_BUILD_TYPE)
+		if(NO_BUILD_TYPE)
+			set(CMAKE_BUILD_TYPE "debug")
+		else()
+			set(CMAKE_BUILD_TYPE "${YUNI_TARGET}")
+		endif()
+	else()
+		set(CMAKE_BUILD_TYPE "${TARGET}")
+	endif()
+endif()
+
+string(COMPARE EQUAL "${CMAKE_BUILD_TYPE}" "debug"   BUILD_TYPE_IS_DEBUG)
+string(COMPARE EQUAL "${CMAKE_BUILD_TYPE}" "release" BUILD_TYPE_IS_RELEASE)
+if(NOT BUILD_TYPE_IS_DEBUG AND NOT BUILD_TYPE_IS_RELEASE)
+	set(CMAKE_BUILD_TYPE "debug")
+endif()
+
+
+string(COMPARE EQUAL "${CMAKE_BUILD_TYPE}" "debug"   BUILD_TYPE_IS_DEBUG)
+string(COMPARE EQUAL "${CMAKE_BUILD_TYPE}" "release" BUILD_TYPE_IS_RELEASE)
+if(BUILD_TYPE_IS_DEBUG)
+	set(YUNI_TARGET_DEBUG    true)
+	set(YUNI_TARGET_RELEASE  false)
+endif()
+if(BUILD_TYPE_IS_RELEASE)
+	set(YUNI_TARGET_DEBUG    false)
+	set(YUNI_TARGET_RELEASE  true)
+endif()
+
+# Reset
+set(YUNI_TARGET "${CMAKE_BUILD_TYPE}")
+set(TARGET "${CMAKE_BUILD_TYPE}")
+

@@ -1,0 +1,16 @@
+name: Branch name validation
+
+on:
+  push:
+
+jobs:
+  valid-branch-name:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Verify branch name
+      run: |
+        if ! [[ "$GITHUB_REF_NAME" =~ ^feature/.*|^features/.*|^fix/.*|^release/.*|^doc/.*|develop|^issue-* ]]; then
+            exit 1
+        fi

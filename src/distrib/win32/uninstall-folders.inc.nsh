@@ -1,0 +1,1 @@
+rmdir /r "$INSTDIR\Sources"
