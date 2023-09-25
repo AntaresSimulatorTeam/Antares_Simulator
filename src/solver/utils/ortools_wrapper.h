@@ -3,6 +3,7 @@
 
 #include <string>
 #include "named_problem.h"
+#include "ortools_utils.h"
 
 using namespace operations_research;
 
@@ -12,6 +13,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
 
 MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
                                   const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
+                                  const Antares::Optimization::IMixedIntegerProblemManager& mixedProblemManager,
                                   MPSolver* solver);
 
 void ORTOOLS_ModifierLeVecteurCouts(MPSolver* ProbSpx, const double* costs, int nbVar);

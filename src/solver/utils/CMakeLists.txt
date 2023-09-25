@@ -1,6 +1,8 @@
 set(SRC
         ortools_utils.h
         ortools_utils.cpp
+        ortools_wrapper.h
+        ortools_wrapper.cpp
         filename.h
         filename.cpp
         named_problem.h
