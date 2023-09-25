@@ -40,8 +40,8 @@ namespace Antares::Solver::Simulation
 {
 Economy::Economy(Data::Study& study, IResultWriter& resultWriter) :
     study(study),
-    resultWriter(resultWriter),
-    preproOnly(false)
+    preproOnly(false),
+    resultWriter(resultWriter)
 {
 }
 
@@ -260,7 +260,7 @@ void Economy::simulationEnd()
     if (!preproOnly && study.runtime->interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
-        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
+        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks, resultWriter);
     }
 }
 

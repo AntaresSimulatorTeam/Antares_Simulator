@@ -89,7 +89,8 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study);
 void ComputeFlowQuad(Data::Study& study,
                      PROBLEME_HEBDO& problem,
                      const std::vector<AvgExchangeResults*>& balance,
-                     unsigned int nbWeeks);
+                     unsigned int nbWeeks,
+                     IResultWriter& resultWriter);
 
 /*!
 ** \brief Hydro Remix

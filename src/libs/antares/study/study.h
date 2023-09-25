@@ -654,8 +654,6 @@ public:
     //! The queue service that runs every set of parallel years
     std::shared_ptr<Yuni::Job::QueueService> pQueueService;
 
-    Solver::IResultWriter::Ptr resultWriter = nullptr;
-
 public:
     //! \name TS Generators
     //@{
