@@ -236,7 +236,7 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
     const ::Settings& settings,
     Benchmarking::IDurationCollector& duration_collector,
     IResultWriter& resultWriter) :
-    ImplementationType(study),
+    ImplementationType(study, resultWriter),
     study(study),
     settings(settings),
     pNbYearsReallyPerformed(0),

@@ -56,7 +56,7 @@ public:
     **
     ** \param study The current study
     */
-    Adequacy(Data::Study& study);
+    Adequacy(Data::Study& study, IResultWriter& resultWriter);
     //! Destructor
     ~Adequacy() = default;
     //@}
@@ -107,6 +107,7 @@ private:
     bool pPreproOnly;
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     Matrix<> pRES;
+    IResultWriter& resultWriter;
 
 }; // class Adequacy
 

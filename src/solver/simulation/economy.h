@@ -57,7 +57,7 @@ public:
     **
     ** \param study The current study
     */
-    Economy(Data::Study& study);
+    Economy(Data::Study& study, IResultWriter& resultWriter);
     //! Destructor
     ~Economy() = default;
     //@}
@@ -105,6 +105,7 @@ private:
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     std::vector<std::unique_ptr<Antares::Solver::Optimization::WeeklyOptimization>> weeklyOptProblems_;
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
+    IResultWriter& resultWriter;
 }; // class Economy
 
 } // namespace Antares::Solver::Simulation

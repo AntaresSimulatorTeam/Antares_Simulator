@@ -38,7 +38,10 @@ using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-Economy::Economy(Data::Study& study) : study(study), preproOnly(false)
+Economy::Economy(Data::Study& study, IResultWriter& resultWriter) :
+    study(study),
+    resultWriter(resultWriter),
+    preproOnly(false)
 {
 }
 
@@ -91,7 +94,7 @@ bool Economy::simulationBegin()
                                                     study.parameters.adqPatchParams,
                                                     &pProblemesHebdo[numSpace],
                                                     numSpace,
-                                                    *study.resultWriter);
+                                                    resultWriter);
             postProcessesList_[numSpace] =
                 interfacePostProcessList::create(study.parameters.adqPatchParams,
                                                  &pProblemesHebdo[numSpace],
