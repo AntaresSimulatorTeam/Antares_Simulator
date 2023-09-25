@@ -27,7 +27,6 @@
 #ifndef __SOLVER_H2O2_J_STRUCTURE_INTERNE__
 #define __SOLVER_H2O2_J_STRUCTURE_INTERNE__
 
-#include "../daily/h2o_j_sys.h"
 #include "../daily/h2o_j_donnees_optimisation.h"
 #include <antares/study/study.h>
 #include <antares/mersenne-twister/mersenne-twister.h>

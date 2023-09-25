@@ -39,105 +39,98 @@ extern "C"
 #include "h2o_m_donnees_annuelles.h"
 #include "h2o_m_fonctions.h"
 
-void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES* DonneesAnnuelles)
+void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
-    int Var;
-    int Pdt;
-    int NbPdt;
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
-    CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
-    PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
+        = ProblemeHydraulique.ProblemeLineairePartieVariable;
+    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
+        = ProblemeHydraulique.ProblemeLineairePartieFixe;
+    CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
+        = ProblemeHydraulique.CorrespondanceDesVariables;
 
-    NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
+    const int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
+    int Var = 0;
 
-    ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
-    CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables;
-    ProblemeLineairePartieFixe = ProblemeHydraulique->ProblemeLineairePartieFixe;
-    ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable;
-
-    Var = 0;
-
-    Pdt = 0;
-    CorrespondanceDesVariables->NumeroDeVariableVolume[Pdt] = Var;
-    ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
-    ProblemeLineairePartieVariable->Xmax[Var] = 1.0;
-    ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-    ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
-      = &(DonneesAnnuelles->Volume[Pdt]);
+    CorrespondanceDesVariables.NumeroDeVariableVolume[0] = Var;
+    ProblemeLineairePartieVariable.Xmin[Var] = 0.0;
+    ProblemeLineairePartieVariable.Xmax[Var] = 1.0;
+    ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+    ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
+      = &(DonneesAnnuelles.Volume[0]);
     Var++;
 
-    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
     {
-        CorrespondanceDesVariables->NumeroDeVariableVolume[Pdt] = Var;
-        ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
-        ProblemeLineairePartieVariable->Xmax[Var] = 1.0;
-        ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-        ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
-          = &(DonneesAnnuelles->Volume[Pdt]);
+        CorrespondanceDesVariables.NumeroDeVariableVolume[Pdt] = Var;
+        ProblemeLineairePartieVariable.Xmin[Var] = 0.0;
+        ProblemeLineairePartieVariable.Xmax[Var] = 1.0;
+        ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+        ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
+          = &(DonneesAnnuelles.Volume[Pdt]);
         Var++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        CorrespondanceDesVariables->NumeroDeVariableTurbine[Pdt] = Var;
-        ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
-        ProblemeLineairePartieVariable->Xmax[Var] = 0.0;
-        ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-        ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
-          = &(DonneesAnnuelles->Turbine[Pdt]);
+        CorrespondanceDesVariables.NumeroDeVariableTurbine[Pdt] = Var;
+        ProblemeLineairePartieVariable.Xmin[Var] = 0.0;
+        ProblemeLineairePartieVariable.Xmax[Var] = 0.0;
+        ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+        ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
+          = &(DonneesAnnuelles.Turbine[Pdt]);
         Var++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMax[Pdt] = Var;
-        ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
-        ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
-        ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+        CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax[Pdt] = Var;
+        ProblemeLineairePartieVariable.Xmin[Var] = 0.0;
+        ProblemeLineairePartieVariable.Xmax[Var] = LINFINI;
+        ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
         Var++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMin[Pdt] = Var;
-        ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
-        ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
-        ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+        CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin[Pdt] = Var;
+        ProblemeLineairePartieVariable.Xmin[Var] = 0.0;
+        ProblemeLineairePartieVariable.Xmax[Var] = LINFINI;
+        ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
         Var++;
     }
 
-    CorrespondanceDesVariables->NumeroDeLaVariableViolMaxVolumeMin = Var;
-    ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
-    ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
-    ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+    CorrespondanceDesVariables.NumeroDeLaVariableViolMaxVolumeMin = Var;
+    ProblemeLineairePartieVariable.Xmin[Var] = 0.0;
+    ProblemeLineairePartieVariable.Xmax[Var] = LINFINI;
+    ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
     Var++;
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        CorrespondanceDesVariables->NumeroDeVariableDEcartPositifAuTurbineCible[Pdt] = Var;
-        ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
-        ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
-        ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+        CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible[Pdt] = Var;
+        ProblemeLineairePartieVariable.Xmin[Var] = 0.0;
+        ProblemeLineairePartieVariable.Xmax[Var] = LINFINI;
+        ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
         Var++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        CorrespondanceDesVariables->NumeroDeVariableDEcartNegatifAuTurbineCible[Pdt] = Var;
-        ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
-        ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
-        ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+        CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible[Pdt] = Var;
+        ProblemeLineairePartieVariable.Xmin[Var] = 0.0;
+        ProblemeLineairePartieVariable.Xmax[Var] = LINFINI;
+        ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
         Var++;
     }
 
-    CorrespondanceDesVariables->NumeroDeLaVariableXi = Var;
-    ProblemeLineairePartieVariable->Xmin[Var] = -LINFINI;
-    ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
-    ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_NON_BORNEE;
+    CorrespondanceDesVariables.NumeroDeLaVariableXi = Var;
+    ProblemeLineairePartieVariable.Xmin[Var] = -LINFINI;
+    ProblemeLineairePartieVariable.Xmax[Var] = LINFINI;
+    ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_NON_BORNEE;
     Var++;
 
-    ProblemeLineairePartieFixe->NombreDeVariables = Var;
+    ProblemeLineairePartieFixe.NombreDeVariables = Var;
 
     return;
 }
