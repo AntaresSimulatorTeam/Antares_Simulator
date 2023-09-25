@@ -141,7 +141,7 @@ private:
 } // namespace Variable
 
 /*! \verbatim
-this class build up a the business object 'Constraint',
+this class build up the business object 'Constraint',
 Math:
 |coeff11 coeff12 .. coeff1n||var1| |sign_1|   |rhs1|       |constraint1||sign_1||rhs1|
 |..      ..             ...||....| |......|   |....| <===> |...........||......||....|
