@@ -234,7 +234,8 @@ private:
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
     const ::Settings& settings,
-    Benchmarking::IDurationCollector& duration_collector) :
+    Benchmarking::IDurationCollector& duration_collector,
+    IResultWriter& resultWriter) :
     ImplementationType(study),
     study(study),
     settings(settings),
@@ -249,7 +250,7 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
     pFirstSetParallelWithAPerformedYearWasRun(false),
     pDurationCollector(duration_collector),
     pQueueService(study.pQueueService),
-    pResultWriter(*study.resultWriter)
+    pResultWriter(resultWriter)
 {
     // Ask to the interface to show the messages
     logs.info();

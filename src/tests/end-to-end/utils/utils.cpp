@@ -4,7 +4,6 @@
 
 void initializeStudy(Study::Ptr study)
 {
-    study->resultWriter = std::make_shared<NullResultWriter>();
     study->parameters.reset();
 }
 
@@ -134,7 +133,8 @@ void SimulationHandler::create()
 
     simulation_ = std::make_shared<ISimulation<Economy>>(study_,
                                                          settings_,
-                                                         nullDurationCollector_);
+                                                         nullDurationCollector_,
+                                                         *std::make_shared<NullResultWriter>());
     SIM_AllocationTableaux(study_);
 }
 
