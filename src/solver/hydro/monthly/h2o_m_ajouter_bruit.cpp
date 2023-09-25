@@ -22,19 +22,19 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
     Antares::MersenneTwister noiseGenerator;
     noiseGenerator.reset(Constants::seed); // Arbitrary seed, hard-coded since we don't really want
                                            // the user to change it
-    const std::vector<int*>& monthlyVariables
-      = {CorrespondanceDesVariables.NumeroDeVariableVolume.data(),
-         CorrespondanceDesVariables.NumeroDeVariableTurbine.data(),
-         CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax.data(),
-         CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin.data(),
-         CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible.data(),
-         CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible.data()};
+    const std::vector<std::vector<int>*> monthlyVariables
+      = {&CorrespondanceDesVariables.NumeroDeVariableVolume,
+         &CorrespondanceDesVariables.NumeroDeVariableTurbine,
+         &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax,
+         &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin,
+         &CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible,
+         &CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible};
 
     for (const auto variable : monthlyVariables)
     {
         for (int Pdt = 0; Pdt < DonneesAnnuelles.NombreDePasDeTemps; Pdt++)
         {
-            int Var = variable[Pdt];
+            int Var = (*variable)[Pdt];
             CoutLineaireBruite[Var]
               = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
         }
