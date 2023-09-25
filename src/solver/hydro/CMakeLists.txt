@@ -30,7 +30,6 @@ set(SRC_EXT_SOLVER_H2O_MONTHLY
 	monthly/h2o_m_optimiser_une_annee.cpp
     monthly/h2o_m_ajouter_bruit.cpp
 	monthly/h2o_m_resoudre_le_probleme_lineaire.cpp
-	monthly/h2o_m_sys.h
 )
 
 set(SRC_EXT_SOLVER_H2O2_DAILY

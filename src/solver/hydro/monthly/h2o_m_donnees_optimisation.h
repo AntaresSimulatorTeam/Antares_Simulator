@@ -27,7 +27,7 @@
 #ifndef __SOLVER_H2O_M_STRUCTURE_INTERNE__
 #define __SOLVER_H2O_M_STRUCTURE_INTERNE__
 
-#include "h2o_m_sys.h"
+#include <vector>
 
 #define LINFINI 1.e+80
 
