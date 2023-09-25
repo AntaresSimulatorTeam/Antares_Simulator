@@ -45,8 +45,7 @@ namespace Antares::Solver::Simulation
 static void RecalculDesEchangesMoyens(Data::Study& study,
                                       PROBLEME_HEBDO& problem,
                                       const std::vector<AvgExchangeResults*>& balance,
-                                      int PasDeTempsDebut,
-                                      IResultWriter& resultWriter)
+                                      int PasDeTempsDebut)
 {
     for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; i++)
     {
@@ -96,6 +95,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
     try
     {
+        NullResultWriter resultWriter;
         OPT_OptimisationHebdomadaire(createOptimizationOptions(study), &problem, study.parameters.adqPatchParams, resultWriter);
     }
     catch (Data::UnfeasibleProblemError&)
@@ -210,8 +210,7 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
 void ComputeFlowQuad(Data::Study& study,
                      PROBLEME_HEBDO& problem,
                      const std::vector<AvgExchangeResults*>& balance,
-                     uint nbWeeks,
-                     IResultWriter& resultWriter)
+                     uint nbWeeks)
 {
     uint startTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
 
@@ -224,7 +223,7 @@ void ComputeFlowQuad(Data::Study& study,
         for (uint w = 0; w != nbWeeks; ++w)
         {
             int PasDeTempsDebut = startTime + (w * problem.NombreDePasDeTemps);
-            RecalculDesEchangesMoyens(study, problem, balance, PasDeTempsDebut, resultWriter);
+            RecalculDesEchangesMoyens(study, problem, balance, PasDeTempsDebut);
         }
     }
     else
