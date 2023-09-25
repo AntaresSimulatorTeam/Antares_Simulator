@@ -37,9 +37,9 @@ inline bool Study::readonly() const
 }
 
 template<unsigned int TimeSeriesT>
-inline void Study::storeTimeSeriesNumbers() const
+inline void Study::storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) const
 {
-    storeTimeseriesNumbers<TimeSeriesT>(*resultWriter, areas);
+    storeTimeseriesNumbers<TimeSeriesT>(resultWriter, areas);
 }
 
 template<enum TimeSeries TS>

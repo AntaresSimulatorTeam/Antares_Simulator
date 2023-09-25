@@ -246,7 +246,7 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
                     study.parameters, 
                     study.calendar, 
                     study.maxNbYearsInParallel,
-                    *study.resultWriter),
+                    resultWriter),
     pFirstSetParallelWithAPerformedYearWasRun(false),
     pDurationCollector(duration_collector),
     pQueueService(study.pQueueService),
@@ -384,7 +384,7 @@ void ISimulation<Impl>::run()
         ImplementationType::variables.simulationEnd();
 
         // Export ts-numbers into output
-        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study);
+        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, pResultWriter);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.

@@ -321,7 +321,7 @@ public:
     ** \return True if the operation succeeded (the file have been written), false otherwise
     */
     template<unsigned int TimeSeriesT>
-    void storeTimeSeriesNumbers() const;
+    void storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) const;
     //@}
 
     //! \name Simulation
