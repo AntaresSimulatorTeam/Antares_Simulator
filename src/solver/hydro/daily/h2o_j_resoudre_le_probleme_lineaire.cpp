@@ -46,6 +46,8 @@ extern "C"
 #define SNPRINTF snprintf
 #endif
 
+#include <memory>
+
 void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
