@@ -27,8 +27,6 @@
 #ifndef __SOLVER_H2O_J_STRUCTURE_INTERNE__
 #define __SOLVER_H2O_J_STRUCTURE_INTERNE__
 
-#include "h2o_j_sys.h"
-
 #define LINFINI 1.e+80
 
 #define JOURS_28 28
