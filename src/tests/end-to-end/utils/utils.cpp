@@ -207,24 +207,3 @@ std::shared_ptr<BindingConstraint> addBindingConstraints(Study& study, std::stri
     g->add(bc);
     return bc;
 }
-
-void NullResultWriter::addEntryFromBuffer(const std::string&, Clob&)
-{
-
-}
-void NullResultWriter::addEntryFromBuffer(const std::string&, std::string&)
-{
-
-}
-void NullResultWriter::addEntryFromFile(const std::string&, const std::string&)
-{
-
-}
-bool NullResultWriter::needsTheJobQueue() const
-{
-    return false;
-}
-void NullResultWriter::finalize(bool)
-{
-
-}

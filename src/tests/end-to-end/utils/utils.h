@@ -139,19 +139,6 @@ private:
     Rules::Ptr rules_;
 };
 
-
-class NullResultWriter: public Solver::IResultWriter {
-    void addEntryFromBuffer(const std::string &, Clob &) override;
-
-    void addEntryFromBuffer(const std::string &, std::string &) override;
-
-    void addEntryFromFile(const std::string &, const std::string &) override;
-
-    bool needsTheJobQueue() const override;
-
-    void finalize(bool ) override;
-};
-
 // =====================
 // Simulation handler
 // =====================
