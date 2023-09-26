@@ -85,15 +85,6 @@ int DataSeriesSolarLoadFromFolder(Study& s,
 ** \return A non-zero value if the operation succeeded, 0 otherwise
 */
 int DataSeriesSolarSaveToFolder(DataSeriesSolar* d, const AreaName& areaID, const char folder[]);
-
-/*!
-** \brief Get the size (bytes) in memory occupied by a `DataSeriesSolar` structure
-*/
-uint64_t DataSeriesSolarMemoryUsage(DataSeriesSolar* w);
-
 } // namespace Data
 } // namespace Antares
-
-#include "series.hxx"
-
 #endif /* __ANTARES_LIBS_STUDY_PARTS_SOLAR_TIMESERIES_H__ */

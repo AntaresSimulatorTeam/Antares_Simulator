@@ -44,6 +44,8 @@ public:
 
     uint64_t memoryUsage() const;
 
+    double getValue(unsigned int hour, unsigned int year) const;
+
 public:
     /*!
     ** \brief Series (MW)

@@ -148,7 +148,7 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace].HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(study, pProblemesHebdo[numSpace], state.weekInTheYear, 
-                                         numSpace, hourInTheYear, hydroVentilationResults);
+                                         numSpace, hourInTheYear, hydroVentilationResults, state.year);
 
         BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace],
                                         numSpace, hourInTheYear, randomForYear.pThermalNoisesByArea);

@@ -68,8 +68,10 @@ void Container::markAsModified() const
 
 uint64_t Container::memoryUsage() const
 {
-    return sizeof(Container) + ((!series) ? 0 : DataSeriesSolarMemoryUsage(series))
-           + ((!prepro) ? 0 : prepro->memoryUsage());
+    // TODO
+    // return sizeof(Container) + ((!series) ? 0 : series->memoryUsage())
+    //        + ((!prepro) ? 0 : prepro->memoryUsage());
+    return 0;
 }
 
 void Container::resetToDefault()

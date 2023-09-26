@@ -28,38 +28,13 @@
 #define __ANTARES_LIBS_STUDY_PARTS_WIND_TIMESERIES_H__
 
 #include <antares/array/matrix.h>
+#include "../common/series.h"
 #include "../../fwd.h"
 
 namespace Antares
 {
 namespace Data
 {
-/*!
-** \brief Data series (Wind)
-*/
-class DataSeriesWind
-{
-public:
-
-
-    bool forceReload(bool reload = false) const;
-
-    void markAsModified() const;
-
-public:
-    /*!
-    ** \brief Time series (MW)
-    **
-    ** Merely a matrix of TimeSeriesCount * 8760 values
-    */
-    Matrix<double, int32_t> timeSeries;
-
-    /*!
-    ** \brief Monte-Carlo
-    */
-    Matrix<uint32_t> timeseriesNumbers;
-
-}; /* class DataSeriesWind */
 
 /*!
 ** \brief Load wind data series from a file
@@ -71,7 +46,7 @@ public:
 ** \return A non-zero value if the operation succeeded, 0 otherwise
 */
 int DataSeriesWindLoadFromFolder(Study& s,
-                                 DataSeriesWind* d,
+                                 DataSeriesCommon* d,
                                  const AreaName& areaID,
                                  const char folder[]);
 
@@ -84,16 +59,10 @@ int DataSeriesWindLoadFromFolder(Study& s,
 ** \param folder The target folder
 ** \return A non-zero value if the operation succeeded, 0 otherwise
 */
-int DataSeriesWindSaveToFolder(DataSeriesWind* d, const AreaName& areaID, const char folder[]);
-
-/*!
-** \brief Get the size (bytes) in memory occupied by a `DataSeriesWind` structure
-*/
-uint64_t DataSeriesWindMemoryUsage(DataSeriesWind* w);
-
+int DataSeriesWindSaveToFolder(const DataSeriesCommon* d, const AreaName& areaID, const char folder[]);
 } // namespace Data
 } // namespace Antares
 
-#include "series.hxx"
+
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_WIND_TIMESERIES_H__ */

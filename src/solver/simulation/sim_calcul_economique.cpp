@@ -380,7 +380,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                     uint weekInTheYear,
                                     uint numSpace,
                                     const int PasDeTempsDebut,
-                                    const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
+                                    const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                                    unsigned int year)
 {
     const auto& parameters = study.parameters;
     auto& studyruntime = *study.runtime;
@@ -576,8 +577,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             if (parameters.renewableGeneration.isAggregated())
             {
                 assert((uint)hourInYear < scratchpad.ts.solar.height);
-                assert((uint)hourInYear < scratchpad.ts.wind.height);
-                assert((uint)tsIndex.Eolien < scratchpad.ts.wind.width);
+                assert((uint)hourInYear < scratchpad.ts.wind.timeSeries.height);
                 assert((uint)tsIndex.Solar < scratchpad.ts.solar.width);
             }
 
@@ -585,10 +585,10 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                mustRunGen = scratchpad.ts.wind[tsIndex.Eolien][hourInYear]
-                             + scratchpad.ts.solar[tsIndex.Solar][hourInYear]
-                             + scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
-                             + scratchpad.mustrunSum[hourInYear];
+                mustRunGen = scratchpad.ts.wind.getValue(hourInYear, year)
+                  + scratchpad.ts.solar[tsIndex.Solar][hourInYear]
+                  + scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
+                  + scratchpad.mustrunSum[hourInYear];
             }
 
             // Renewable

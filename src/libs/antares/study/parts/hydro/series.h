@@ -148,7 +148,4 @@ public:
 
 } // namespace Data
 } // namespace Antares
-
-#include "series.hxx"
-
 #endif /* __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__ */

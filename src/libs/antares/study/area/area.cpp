@@ -209,8 +209,6 @@ void Area::createMissingTimeSeries()
         load.series = new DataSeriesLoad();
     if (!solar.series)
         solar.series = new DataSeriesSolar();
-    if (!wind.series)
-        wind.series = new DataSeriesWind();
     if (!hydro.series)
         hydro.series = new DataSeriesHydro();
     thermal.list.ensureDataTimeSeries();
@@ -271,14 +269,13 @@ void Area::resizeAllTimeseriesNumbers(uint n)
     // asserts
     assert(load.series and "load.series must not be nullptr !");
     assert(solar.series and "solar.series must not be nullptr !");
-    assert(wind.series and "wind.series must not be nullptr !");
     assert(hydro.series and "series must not be nullptr !");
 
     if (!n)
     {
         load.series->timeseriesNumbers.clear();
         solar.series->timeseriesNumbers.clear();
-        wind.series->timeseriesNumbers.clear();
+        wind.series.timeseriesNumbers.clear();
         hydro.series->timeseriesNumbers.clear();
         for (auto& namedLink : links)
         {
@@ -290,7 +287,7 @@ void Area::resizeAllTimeseriesNumbers(uint n)
     {
         load.series->timeseriesNumbers.resize(1, n);
         solar.series->timeseriesNumbers.resize(1, n);
-        wind.series->timeseriesNumbers.resize(1, n);
+        wind.series.timeseriesNumbers.resize(1, n);
         hydro.series->timeseriesNumbers.resize(1, n);
         for (auto& namedLink : links)
         {

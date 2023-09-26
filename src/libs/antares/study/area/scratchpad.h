@@ -32,6 +32,7 @@
 #include <yuni/core/noncopyable.h>
 #include "../fwd.h"
 #include <antares/array/matrix.h>
+#include <antares/study/parts/common/series.h>
 #include <vector>
 #include <set>
 
@@ -70,7 +71,7 @@ public:
         //! Alias to the solar time-series
         const TSMatrix& solar;
         //! Alias to the wind time-series
-        const TSMatrix& wind;
+        const DataSeriesCommon& wind;
     };
 
     //! Timeseries

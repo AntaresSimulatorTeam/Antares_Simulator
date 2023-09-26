@@ -136,7 +136,7 @@ private:
     bool checkMinGeneration(uint numSpace);
     //! Prepare the net demand for each area
     template<enum Data::StudyMode ModeT>
-    void prepareNetDemand(uint numSpace);
+    void prepareNetDemand(uint numSpace, uint year);
     //! Prepare the effective demand for each area
     void prepareEffectiveDemand(uint numSpace);
     //! Monthly Optimal generations

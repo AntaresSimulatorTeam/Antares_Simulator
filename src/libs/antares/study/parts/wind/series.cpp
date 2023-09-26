@@ -39,7 +39,7 @@ namespace Antares
 namespace Data
 {
 int DataSeriesWindLoadFromFolder(Study& s,
-                                 DataSeriesWind* d,
+                                 DataSeriesCommon* d,
                                  const AreaName& areaID,
                                  const char folder[])
 {
@@ -59,7 +59,7 @@ int DataSeriesWindLoadFromFolder(Study& s,
     return ret;
 }
 
-int DataSeriesWindSaveToFolder(DataSeriesWind* d, const AreaName& areaID, const char folder[])
+int DataSeriesWindSaveToFolder(const DataSeriesCommon* d, const AreaName& areaID, const char folder[])
 {
     if (!d)
         return 1;
@@ -71,16 +71,5 @@ int DataSeriesWindSaveToFolder(DataSeriesWind* d, const AreaName& areaID, const 
 
     return ret;
 }
-
-bool DataSeriesWind::forceReload(bool reload) const
-{
-    return timeSeries.forceReload(reload);
-}
-
-void DataSeriesWind::markAsModified() const
-{
-    timeSeries.markAsModified();
-}
-
 } // namespace Data
 } // namespace Antares

@@ -417,7 +417,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same
 	area->load.series->timeSeries.resize(5, 1); // Ready made TS for load
 
 	// ... Wind
-	area->wind.series->timeSeries.resize(5, 1);	// Ready made TS for wind
+	area->wind.series.timeSeries.resize(5, 1);	// Ready made TS for wind
 
 	// ... Thermal
 	study->parameters.timeSeriesToRefresh |= timeSeriesThermal; // Generated TS for thermal
@@ -433,7 +433,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same
 	// TS number checks
 	uint year = 0;
 	uint drawnTsNbForLoad = area->load.series->timeseriesNumbers[0][year];
-	BOOST_CHECK_EQUAL(area->wind.series->timeseriesNumbers[0][year], drawnTsNbForLoad);
+	BOOST_CHECK_EQUAL(area->wind.series.timeseriesNumbers[0][year], drawnTsNbForLoad);
 	BOOST_CHECK_EQUAL(thCluster_1->series->timeseriesNumbers[0][year], drawnTsNbForLoad);
 	BOOST_CHECK_EQUAL(thCluster_2->series->timeseriesNumbers[0][year], drawnTsNbForLoad);
 }
@@ -455,7 +455,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same
 	area->load.series->timeSeries.resize(1, 1); // Ready made TS for load
 
 	// ... Wind
-	area->wind.series->timeSeries.resize(5, 1);	// Ready made TS for wind
+	area->wind.series.timeSeries.resize(5, 1);	// Ready made TS for wind
 
 	// ... Thermal
 	study->parameters.timeSeriesToRefresh |= timeSeriesThermal; // Generated TS for thermal
@@ -471,7 +471,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same
 	// TS number checks
 	uint year = 0;
 	uint drawnTsNbForLoad = area->load.series->timeseriesNumbers[0][year];
-	BOOST_CHECK_EQUAL(area->wind.series->timeseriesNumbers[0][year], drawnTsNbForLoad);
+	BOOST_CHECK_EQUAL(area->wind.series.timeseriesNumbers[0][year], drawnTsNbForLoad);
 	BOOST_CHECK_EQUAL(thCluster_1->series->timeseriesNumbers[0][year], drawnTsNbForLoad);
 	BOOST_CHECK_EQUAL(thCluster_2->series->timeseriesNumbers[0][year], drawnTsNbForLoad);
 }
@@ -493,7 +493,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__diff
 	area->load.series->timeSeries.resize(5, 1); // Ready made TS for load
 
 	// ... Wind
-	area->wind.series->timeSeries.resize(5, 1);	// Ready made TS for wind
+	area->wind.series.timeSeries.resize(5, 1);	// Ready made TS for wind
 
 	// ... Thermal
 	study->parameters.timeSeriesToRefresh |= timeSeriesThermal; // Generated TS for thermal
@@ -624,7 +624,7 @@ BOOST_AUTO_TEST_CASE(load_wind_thermal_in_intra_and_inter_modal____check_all_ts_
 	// ... Load
 	area_1->load.series->timeSeries.resize(5, 1); // Ready made TS for load
 	// ... Wind
-	area_1->wind.series->timeSeries.resize(5, 1);	// Ready made TS for wind
+	area_1->wind.series.timeSeries.resize(5, 1);	// Ready made TS for wind
 	// ... Thermal
 	auto thCluster_area_1 = addClusterToArea<ThermalCluster>(area_1, "th-cluster-area-1");
 
@@ -637,7 +637,7 @@ BOOST_AUTO_TEST_CASE(load_wind_thermal_in_intra_and_inter_modal____check_all_ts_
 	// ... Load
 	area_2->load.series->timeSeries.resize(5, 1); // Ready made TS for load
 	// ... Wind
-	area_2->wind.series->timeSeries.resize(5, 1);	// Ready made TS for wind
+	area_2->wind.series.timeSeries.resize(5, 1);	// Ready made TS for wind
 	// ... Thermal
 	auto thCluster_area_2 = addClusterToArea<ThermalCluster>(area_2, "th-cluster-area-2");
 
@@ -651,8 +651,8 @@ BOOST_AUTO_TEST_CASE(load_wind_thermal_in_intra_and_inter_modal____check_all_ts_
 	uint year = 0;
 	uint referenceLoadTsNumber = area_1->load.series->timeseriesNumbers[0][year];
 	BOOST_CHECK_EQUAL(area_2->load.series->timeseriesNumbers[0][year], referenceLoadTsNumber);
-	BOOST_CHECK_EQUAL(area_1->wind.series->timeseriesNumbers[0][year], referenceLoadTsNumber);
-	BOOST_CHECK_EQUAL(area_2->wind.series->timeseriesNumbers[0][year], referenceLoadTsNumber);
+	BOOST_CHECK_EQUAL(area_1->wind.series.timeseriesNumbers[0][year], referenceLoadTsNumber);
+	BOOST_CHECK_EQUAL(area_2->wind.series.timeseriesNumbers[0][year], referenceLoadTsNumber);
 	BOOST_CHECK_EQUAL(thCluster_area_1->series->timeseriesNumbers[0][year], referenceLoadTsNumber);
 	BOOST_CHECK_EQUAL(thCluster_area_2->series->timeseriesNumbers[0][year], referenceLoadTsNumber);
 }
@@ -701,7 +701,7 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
 	// TS number checks : each energy drawn ts numbers are up-bounded with the number of TS of the related energy
 	uint year = 0;
 	uint loadTsNumber = area->load.series->timeseriesNumbers[0][year];
-	uint windTsNumber = area->wind.series->timeseriesNumbers[0][year];
+	uint windTsNumber = area->wind.series.timeseriesNumbers[0][year];
 	uint solarTsNumber = area->solar.series->timeseriesNumbers[0][year];
 	uint hydroTsNumber = area->hydro.series->timeseriesNumbers[0][year];
 	uint thermalTsNumber = thCluster->series->timeseriesNumbers[0][year];

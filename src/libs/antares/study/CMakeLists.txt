@@ -115,7 +115,6 @@ set(SRC_STUDY_PART_WIND
         parts/wind/container.h
         parts/wind/container.cpp
         parts/wind/series.h
-        parts/wind/series.hxx
         parts/wind/series.cpp
         parts/wind/prepro.h
         parts/wind/prepro.hxx
@@ -127,7 +126,6 @@ set(SRC_STUDY_PART_HYDRO
         parts/hydro/container.h
         parts/hydro/container.cpp
         parts/hydro/series.h
-        parts/hydro/series.hxx
         parts/hydro/series.cpp
         parts/hydro/prepro.h
         parts/hydro/prepro.cpp
@@ -203,7 +201,6 @@ set(SRC_STUDY
         parts/load/container.h
         parts/load/container.cpp
         parts/load/series.h
-        parts/load/series.hxx
         parts/load/series.cpp
         parts/load/prepro.cpp
         parts/load/prepro.h
@@ -213,7 +210,6 @@ set(SRC_STUDY
         parts/solar/container.h
         parts/solar/container.cpp
         parts/solar/series.h
-        parts/solar/series.hxx
         parts/solar/series.cpp
         parts/solar/prepro.cpp
         parts/solar/prepro.h

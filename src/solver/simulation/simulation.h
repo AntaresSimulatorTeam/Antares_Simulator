@@ -58,7 +58,8 @@ void SIM_RenseignementProblemeHebdo(const Antares::Data::Study& study,
                                     uint weekInTheYear,
                                     uint numSpace,
                                     const int,
-                                    const ALL_HYDRO_VENTILATION_RESULTS&);
+                                    const ALL_HYDRO_VENTILATION_RESULTS&,
+                                    unsigned int year);
 
 void SIM_RenseignementProblemeHoraireAdequation(uint);
 

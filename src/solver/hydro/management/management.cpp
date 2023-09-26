@@ -376,7 +376,7 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
 }
 
 template<enum Data::StudyMode ModeT>
-void HydroManagement::prepareNetDemand(uint numSpace)
+void HydroManagement::prepareNetDemand(uint numSpace, uint year)
 {
     areas_.each([&](Data::Area& area) {
         uint z = area.index;
@@ -401,7 +401,7 @@ void HydroManagement::prepareNetDemand(uint numSpace)
             if (parameters_.renewableGeneration.isAggregated())
             {
                 netdemand = +scratchpad.ts.load[ptchro.Consommation][hour]
-                            - scratchpad.ts.wind[ptchro.Eolien][hour] - scratchpad.miscGenSum[hour]
+                  - scratchpad.ts.wind.getValue(hour, year) - scratchpad.miscGenSum[hour]
                             - scratchpad.ts.solar[ptchro.Solar][hour] - ror[hour]
                             - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
@@ -532,9 +532,9 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
     }
 
     if (parameters_.adequacy())
-        prepareNetDemand<Data::stdmAdequacy>(numSpace);
+        prepareNetDemand<Data::stdmAdequacy>(numSpace, y);
     else
-        prepareNetDemand<Data::stdmEconomy>(numSpace);
+        prepareNetDemand<Data::stdmEconomy>(numSpace, y);
 
     prepareEffectiveDemand(numSpace);
 

@@ -73,8 +73,7 @@ public:
     //! Data for the pre-processor
     Data::Wind::Prepro* prepro;
     /*! Data for time-series */
-    DataSeriesWind* series;
-
+    DataSeriesCommon series;
 }; // class Container
 
 } // namespace Wind

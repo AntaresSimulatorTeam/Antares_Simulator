@@ -113,9 +113,9 @@ struct commonFixture
 
         // Wind : set the nb of ready made TS
         nbReadyMadeTS = 17;
-        area_1->wind.series->timeSeries.resize(nbReadyMadeTS, 1);
-        area_2->wind.series->timeSeries.resize(nbReadyMadeTS, 1);
-        area_3->wind.series->timeSeries.resize(nbReadyMadeTS, 1);
+        area_1->wind.series.timeSeries.resize(nbReadyMadeTS, 1);
+        area_2->wind.series.timeSeries.resize(nbReadyMadeTS, 1);
+        area_3->wind.series.timeSeries.resize(nbReadyMadeTS, 1);
 
         // Solar : set the nb of ready made TS
         nbReadyMadeTS = 9;

@@ -34,7 +34,6 @@ typedef struct
     std::vector<int> ThermiqueParPalier;
     std::vector<int> RenouvelableParPalier;
     int Hydraulique;
-    int Eolien;
     int Consommation;
     int Solar;
 } NUMERO_CHRONIQUES_TIREES_PAR_PAYS;

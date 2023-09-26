@@ -97,7 +97,7 @@ bool Study::importTimeseriesIntoInput()
             areas.each([&](const Data::Area& area) {
                 logs.info() << "Importing wind timeseries : " << area.name;
                 buffer.clear() << folderInput << SEP << "wind" << SEP << "series";
-                ret = DataSeriesWindSaveToFolder(area.wind.series, area.id, buffer.c_str()) && ret;
+                ret = DataSeriesWindSaveToFolder(&area.wind.series, area.id, buffer.c_str()) && ret;
                 ++progression;
             });
         }

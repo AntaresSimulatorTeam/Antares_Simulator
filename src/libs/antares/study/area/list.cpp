@@ -263,10 +263,10 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
                            << area.id;
             ret = area.wind.prepro->saveToFolder(buffer) && ret;
         }
-        if (area.wind.series) // Series
+        // Series
         {
             buffer.clear() << folder << SEP << "input" << SEP << "wind" << SEP << "series";
-            ret = DataSeriesWindSaveToFolder(area.wind.series, area.id, buffer.c_str()) && ret;
+            ret = DataSeriesWindSaveToFolder(&area.wind.series, area.id, buffer.c_str()) && ret;
         }
     }
 
@@ -920,10 +920,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                            << area.id;
             ret = area.wind.prepro->loadFromFolder(buffer) && ret;
         }
-        if (area.wind.series && (!options.loadOnlyNeeded || !area.wind.prepro)) // Series
+        if (!options.loadOnlyNeeded || !area.wind.prepro) // Series
         {
             buffer.clear() << study.folderInput << SEP << "wind" << SEP << "series";
-            ret = DataSeriesWindLoadFromFolder(study, area.wind.series, area.id, buffer.c_str())
+            ret = DataSeriesWindLoadFromFolder(study, &area.wind.series, area.id, buffer.c_str())
                   && ret;
         }
 
@@ -1038,7 +1038,6 @@ void AreaList::ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded)
 {
     AreaListEnsureDataLoadTimeSeries(this);
     AreaListEnsureDataSolarTimeSeries(this);
-    AreaListEnsureDataWindTimeSeries(this);
     AreaListEnsureDataHydroTimeSeries(this);
     AreaListEnsureDataThermalTimeSeries(this);
     AreaListEnsureDataRenewableTimeSeries(this);
@@ -1287,17 +1286,6 @@ void AreaListEnsureDataSolarPrepro(AreaList* l)
     l->each([&](Data::Area& area) {
         if (!area.solar.prepro)
             area.solar.prepro = new Antares::Data::Solar::Prepro();
-    });
-}
-
-void AreaListEnsureDataWindTimeSeries(AreaList* l)
-{
-    /* Asserts */
-    assert(l);
-
-    l->each([&](Data::Area& area) {
-        if (!area.wind.series)
-            area.wind.series = new DataSeriesWind();
     });
 }
 
@@ -1624,7 +1612,7 @@ void AreaList::removeSolarTimeseries()
 
 void AreaList::removeWindTimeseries()
 {
-    each([&](Data::Area& area) { area.wind.series->timeSeries.reset(1, HOURS_PER_YEAR); });
+    each([&](Data::Area& area) { area.wind.series.timeSeries.reset(1, HOURS_PER_YEAR); });
 }
 
 void AreaList::removeThermalTimeseries()

@@ -197,10 +197,11 @@ public:
         if (isRenewableGenerationAggregrated)
         {
             // The current wind time-series
-            (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour,
-                           pArea->wind.series->timeSeries
-                             .entry[NumeroChroniquesTireesParPays[numSpace][pArea->index].Eolien],
-                           sizeof(double) * pArea->wind.series->timeSeries.height);
+            // TODO
+            // (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour,
+            //                pArea->wind.series.timeSeries
+            //                  .entry[NumeroChroniquesTireesParPays[numSpace][pArea->index].Eolien],
+            //                sizeof(double) * pArea->wind.series.timeSeries.height);
         }
 
         // Next variable

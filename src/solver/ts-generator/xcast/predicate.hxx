@@ -59,10 +59,9 @@ public:
         return !Yuni::Math::Zero(area.wind.prepro->xcast.capacity);
     }
 
-    Matrix<double, int32_t>& matrix(Data::Area& area) const
+    Matrix<double>& matrix(Data::Area& area) const
     {
-        assert(area.wind.series != NULL);
-        return area.wind.series->timeSeries;
+        return area.wind.series.timeSeries;
     }
 
     Data::XCast& xcastData(Data::Area& area) const
