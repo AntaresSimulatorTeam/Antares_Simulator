@@ -98,13 +98,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     if (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable == NULL)
         return (0);
 
-    ProblemeHydrauliqueEtendu->ProblemeSpx = (void**)malloc(NombreDeProblemes * sizeof(void*));
-    if (ProblemeHydrauliqueEtendu->ProblemeSpx == NULL)
-        return (0);
-
-    for (i = 0; i < NombreDeProblemes; i++)
-        ProblemeHydrauliqueEtendu->ProblemeSpx[i] = NULL;
-
+    ProblemeHydrauliqueEtendu->ProblemeSpx.assign(NombreDeProblemes, nullptr);
     ProblemeHydrauliqueEtendu->Probleme = NULL;
 
     CorrespondanceDesVariables = ProblemeHydrauliqueEtendu->CorrespondanceDesVariables;
