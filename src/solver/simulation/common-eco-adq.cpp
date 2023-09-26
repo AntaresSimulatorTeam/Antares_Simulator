@@ -386,7 +386,8 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      uint numSpace,
                                      const int PasDeTempsDebut,
-                                     double** thermalNoises)
+                                     double** thermalNoises,
+                                     unsigned int year)
 {
     int hourInYear = PasDeTempsDebut;
     const uint nbPays = study.areas.size();
@@ -406,8 +407,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                         + thermalNoises[areaIdx][cluster.areaWideIndex];
 
                     Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
-                        = cluster.series
-                        ->timeSeries[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][hourInYear];
+                        = cluster.series->getValue(hourInYear, year);
 
                     Pt.PuissanceMinDuPalierThermique[hourInWeek]
                         = (Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] < cluster.PthetaInf[hourInYear])

@@ -93,30 +93,6 @@ void ApplyRandomTSnumbers(const Study& study,
                                                              : 0; // zero-based
             }
         }
-
-        // Thermal
-        {
-            auto end = area.thermal.list.mapping.end();
-            for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
-            {
-                ThermalClusterList::SharedPtr cluster = it->second;
-
-                if (!cluster->enabled)
-                {
-                    continue;
-                }
-
-                const auto& data = *cluster->series;
-                assert(year < data.timeseriesNumbers.height);
-                unsigned int clusterIndex = cluster->areaWideIndex;
-
-                // the matrix data.series should be properly initialized at this stage
-                // because the ts-generator has already been launched
-                ptchro.ThermiqueParPalier[clusterIndex] = (data.timeSeries.width != 1)
-                                                          ? (long)data.timeseriesNumbers[0][year]
-                                                          : 0; // zero-based
-            }
-        } // thermal
     }     // each area
 
     // ------------------------------

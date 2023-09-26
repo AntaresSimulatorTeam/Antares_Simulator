@@ -192,22 +192,12 @@ public:
         NextType::simulationEnd();
     }
 
-    void addThermalClusterList(Data::ThermalClusterList& list, unsigned int numSpace)
+    void addThermalClusterList(Data::ThermalClusterList& list, unsigned int year, unsigned int numSpace)
     {
-        typedef Matrix<double, int32_t> MatrixType;
-
-        const Data::ThermalClusterList::const_iterator end = list.end();
-        for (Data::ThermalClusterList::const_iterator i = list.begin(); i != end; ++i)
+        for (auto& [name, cluster] : list)
         {
-            Data::ThermalCluster& cluster = *(i->second);
-            unsigned int chro = NumeroChroniquesTireesParPays[numSpace][pArea->index]
-                                  .ThermiqueParPalier[cluster.areaWideIndex];
-            const MatrixType& matrix = cluster.series->timeSeries;
-            assert(chro < matrix.width);
-            const MatrixType::ColumnType& column = matrix.entry[chro];
-
-            for (unsigned int y = 0; y != matrix.height; ++y)
-                pValuesForTheCurrentYear[numSpace].hour[y] += column[y];
+            for (unsigned int hour = 0; hour != cluster->series->timeSeries.height; ++hour)
+                pValuesForTheCurrentYear[numSpace].hour[hour] += cluster->series->getValue(hour, year);
         }
     }
 
@@ -216,8 +206,8 @@ public:
         // Somme de toutes les productions disponibles pour l'ensemble des
         // paliers thermiques (+must-run)
         pValuesForTheCurrentYear[numSpace].reset();
-        addThermalClusterList(pArea->thermal.list, numSpace);
-        addThermalClusterList(pArea->thermal.mustrunList, numSpace);
+        addThermalClusterList(pArea->thermal.list, year, numSpace);
+        addThermalClusterList(pArea->thermal.mustrunList, year, numSpace);
 
         // Next variable
         NextType::yearBegin(year, numSpace);
