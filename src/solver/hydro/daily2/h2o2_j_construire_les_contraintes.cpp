@@ -31,7 +31,7 @@
 void H2O2_J_ConstruireLesContraintes(
   int NbPdt,
   int* IndicesDebutDeLigne,
-  char* Sens,
+  std::vector<char>& Sens,
   int* NombreDeTermesDesLignes,
   std::vector<double>& CoefficientsDeLaMatriceDesContraintes,
   int* IndicesColonnes,

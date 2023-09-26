@@ -195,9 +195,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         NombreDeContraintes += NbPdt;
 
         PlFixe->NombreDeContraintes = NombreDeContraintes;
-        PlFixe->Sens = (char*)malloc(NombreDeContraintes * sizeof(char));
-        if (PlFixe->Sens == NULL)
-            return (0);
+        PlFixe->Sens.assign(NombreDeContraintes, 0);
 
         PlFixe->IndicesDebutDeLigne = (int*)malloc(NombreDeContraintes * sizeof(int));
         if (PlFixe->IndicesDebutDeLigne == NULL)

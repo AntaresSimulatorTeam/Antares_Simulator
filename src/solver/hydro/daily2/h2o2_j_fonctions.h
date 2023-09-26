@@ -33,7 +33,7 @@ void H2O2_J_OptimiserUnMois(DONNEES_MENSUELLES_ETENDUES*);
 void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES*);
 void H2O2_J_ConstruireLesContraintes(int,
                                      int*,
-                                     char*,
+                                     std::vector<char>&,
                                      int*,
                                      std::vector<double>&,
                                      int*,
