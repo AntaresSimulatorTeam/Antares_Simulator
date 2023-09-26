@@ -57,10 +57,11 @@ double DataSeriesCommon::getValue(unsigned int hour, unsigned int year) const
 {
     if (timeSeries.width == 1)
         return timeSeries[0][hour];
-    if (timeseriesNumbers[0][year] < timeSeries.width)
-        return timeSeries[year][hour];
-    logs.warning() << "Invalid index";
-    return 0;
+    else
+    {
+        const unsigned int tsIndex = timeseriesNumbers[0][year];
+        return timeSeries[tsIndex][hour];
+    }
 }
 } // namespace Antares::Data
 
