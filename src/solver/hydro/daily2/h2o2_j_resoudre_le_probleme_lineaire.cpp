@@ -106,7 +106,7 @@ RESOLUTION:
     Probleme->DureeMaxDuCalcul = -1.;
 
     Probleme->CoutLineaire = ProblemeLineaireEtenduPartieFixe->CoutLineaire.data();
-    Probleme->X = ProblemeLineaireEtenduPartieVariable->X;
+    Probleme->X = ProblemeLineaireEtenduPartieVariable->X.data();
     Probleme->Xmin = ProblemeLineaireEtenduPartieVariable->Xmin.data();
     Probleme->Xmax = ProblemeLineaireEtenduPartieVariable->Xmax.data();
     Probleme->NombreDeVariables = ProblemeLineaireEtenduPartieFixe->NombreDeVariables;
@@ -137,8 +137,8 @@ RESOLUTION:
     Probleme->CoutMax = 0.0;
 
     Probleme->CoutsMarginauxDesContraintes
-      = ProblemeLineaireEtenduPartieVariable->CoutsMarginauxDesContraintes;
-    Probleme->CoutsReduits = ProblemeLineaireEtenduPartieVariable->CoutsReduits;
+      = ProblemeLineaireEtenduPartieVariable->CoutsMarginauxDesContraintes.data();
+    Probleme->CoutsReduits = ProblemeLineaireEtenduPartieVariable->CoutsReduits.data();
 
 #ifndef NDEBUG
     if (PremierPassage == OUI)
