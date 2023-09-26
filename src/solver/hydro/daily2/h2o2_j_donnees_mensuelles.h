@@ -49,8 +49,8 @@ typedef struct
     std::vector<double> TurbineCible; /* A renseigner par l'appelant : 1 valeur par jour */
     double reservoirCapacity;
     double NiveauInitialDuMois;
-    double* niveauBas;
-    double* apports;
+    std::vector<double> niveauBas;
+    std::vector<double> apports;
 
     /* Les resultats */
     char ResultatsValides; /* Vaut:
