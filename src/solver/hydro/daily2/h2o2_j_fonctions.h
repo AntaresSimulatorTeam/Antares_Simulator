@@ -32,9 +32,9 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation();
 void H2O2_J_OptimiserUnMois(DONNEES_MENSUELLES_ETENDUES*);
 void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES*);
 void H2O2_J_ConstruireLesContraintes(int,
-                                     int*,
+                                     std::vector<int>&,
                                      std::vector<char>&,
-                                     int*,
+                                     std::vector<int>&,
                                      std::vector<double>&,
                                      int*,
                                      CORRESPONDANCE_DES_VARIABLES_PB_ETENDU*);

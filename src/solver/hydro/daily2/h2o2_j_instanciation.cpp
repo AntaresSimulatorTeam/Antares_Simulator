@@ -51,10 +51,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     if (DonneesMensuellesEtendues == NULL)
         return (NULL);
 
-    DonneesMensuellesEtendues->ProblemeHydrauliqueEtendu
-      = (PROBLEME_HYDRAULIQUE_ETENDU*)malloc(sizeof(PROBLEME_HYDRAULIQUE_ETENDU));
-    if (DonneesMensuellesEtendues->ProblemeHydrauliqueEtendu == NULL)
-        return (NULL);
+    DonneesMensuellesEtendues->ProblemeHydrauliqueEtendu = new PROBLEME_HYDRAULIQUE_ETENDU;
 
     ProblemeHydrauliqueEtendu = DonneesMensuellesEtendues->ProblemeHydrauliqueEtendu;
 
@@ -188,13 +185,8 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         PlFixe->NombreDeContraintes = NombreDeContraintes;
         PlFixe->Sens.assign(NombreDeContraintes, 0);
 
-        PlFixe->IndicesDebutDeLigne = (int*)malloc(NombreDeContraintes * sizeof(int));
-        if (PlFixe->IndicesDebutDeLigne == NULL)
-            return (0);
-
-        PlFixe->NombreDeTermesDesLignes = (int*)malloc(NombreDeContraintes * sizeof(int));
-        if (PlFixe->NombreDeTermesDesLignes == NULL)
-            return (0);
+        PlFixe->IndicesDebutDeLigne.assign(NombreDeContraintes, 0.);
+        PlFixe->NombreDeTermesDesLignes.assign(NombreDeContraintes, 0.);
 
         NombreDeTermesAlloues = 0;
         NombreDeTermesAlloues += 3;

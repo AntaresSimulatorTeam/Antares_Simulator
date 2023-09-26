@@ -59,8 +59,8 @@ typedef struct
     /* La matrice des contraintes */
     int NombreDeContraintes;
     std::vector<char> Sens;
-    int* IndicesDebutDeLigne;
-    int* NombreDeTermesDesLignes;
+    std::vector<int> IndicesDebutDeLigne;
+    std::vector<int> NombreDeTermesDesLignes;
     std::vector<double> CoefficientsDeLaMatriceDesContraintes;
     int* IndicesColonnes;
     int NombreDeTermesAlloues;
