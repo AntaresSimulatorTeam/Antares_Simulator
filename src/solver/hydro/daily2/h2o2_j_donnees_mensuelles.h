@@ -59,11 +59,11 @@ typedef struct
                                                          EMERGENCY_SHUT_DOWN si la resolution du
                               probleme a donne lieu a une erreur interne
                                                    */
-    double* Turbine;       /* Resultat a recuperer par l'appelant */
-    double* niveauxFinJours;
-    double* overflows;
-    double* deviations;
-    double* violations;
+    std::vector<double> Turbine;       /* Resultat a recuperer par l'appelant */
+    std::vector<double> niveauxFinJours;
+    std::vector<double> overflows;
+    std::vector<double> deviations;
+    std::vector<double> violations;
     double deviationMax;
     double violationMax;
     double waste;

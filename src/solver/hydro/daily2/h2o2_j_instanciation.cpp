@@ -78,26 +78,12 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     DonneesMensuellesEtendues->niveauBas.assign(NbJoursDUnProbleme[3], 0.);
     DonneesMensuellesEtendues->apports.assign(NbJoursDUnProbleme[3], 0.);
 
-    DonneesMensuellesEtendues->Turbine = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->Turbine == NULL)
-        return (NULL);
+    DonneesMensuellesEtendues->Turbine.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuellesEtendues->niveauxFinJours.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuellesEtendues->overflows.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuellesEtendues->deviations.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuellesEtendues->violations.assign(NbJoursDUnProbleme[3], 0.);
 
-    DonneesMensuellesEtendues->niveauxFinJours
-      = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->niveauxFinJours == NULL)
-        return (NULL);
-
-    DonneesMensuellesEtendues->overflows = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->overflows == NULL)
-        return (NULL);
-
-    DonneesMensuellesEtendues->deviations = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->deviations == NULL)
-        return (NULL);
-
-    DonneesMensuellesEtendues->violations = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->violations == NULL)
-        return (NULL);
 
     NombreDeProblemes = ProblemeHydrauliqueEtendu->NombreDeProblemes;
 
