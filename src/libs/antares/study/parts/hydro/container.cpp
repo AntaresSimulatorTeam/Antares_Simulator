@@ -28,7 +28,7 @@
 #include "../../study.h"
 #include "container.h"
 #include <antares/inifile/inifile.h>
-#include "datatransfer.h"
+#include "hydromaxtimeseriesreader.h"
 
 using namespace Antares;
 using namespace Yuni;
@@ -92,10 +92,10 @@ void PartHydro::reset()
     reservoirLevel.fillColumn(average, 0.5);
     reservoirLevel.fillColumn(maximum, 1.);
     waterValues.reset(101, DAYS_PER_YEAR, true);
-    maxHourlyGenEnergy.reset(1, DAYS_PER_YEAR, true);
-    maxHourlyGenEnergy.fillColumn(0, 24.);
-    maxHourlyPumpEnergy.reset(1, DAYS_PER_YEAR, true);
-    maxHourlyPumpEnergy.fillColumn(0, 24.);
+    maxDailyGenEnergy.reset(1, DAYS_PER_YEAR, true);
+    maxDailyGenEnergy.fillColumn(0, 24.);
+    maxDailyPumpEnergy.reset(1, DAYS_PER_YEAR, true);
+    maxDailyPumpEnergy.fillColumn(0, 24.);
     creditModulation.reset(101, 2, true);
     creditModulation.fill(1);
     // reset of the hydro allocation - however we don't have any information
@@ -151,23 +151,38 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                       enabledModeIsChanged = true;
                   }
 
-                  ret = area.hydro.LoadHours(study, area, folder);
+                  ret = area.hydro.LoadDailyMaxEnergy(area, folder);
 
                   if (enabledModeIsChanged)
                       JIT::enabled = true; // Back to the previous loading mode.
               }
               else
               {
-                  ret = area.hydro.LoadHours(study, area, folder);
+                  ret = area.hydro.LoadDailyMaxEnergy(area, folder);
+
+                  // Check is moved here, because in case of old study
+                  // maxDailyGenEnergy and maxDailyPumpEnergy are not yet initialized.
+                  bool errorHours = false;
+                  auto& colGen = area.hydro.maxDailyGenEnergy[0];
+                  auto& colPump = area.hydro.maxDailyPumpEnergy[0];
+
+                  for (int day = 0; day < DAYS_PER_YEAR; day++)
+                  {
+                      if (!errorHours && (colGen[day] < 0 || (colGen[day] > 24)))
+                      {
+                          logs.error() << area.name << ": invalid power or energy value";
+                          errorHours = true;
+                          ret = false;
+                      }
+
+                      if (!errorHours && (colPump[day] < 0 || (colPump[day] > 24)))
+                      {
+                          logs.error() << area.name << ": invalid power or energy value";
+                          errorHours = true;
+                          ret = false;
+                      }
+                  }
               }
-          }
-
-          if (study.header.version < 870)
-          {
-              std::shared_ptr<DataTransfer> datatransfer = std::make_shared<DataTransfer>();
-
-              ret = datatransfer->LoadFromFolder(study, folder, area);
-              ret = datatransfer->AutoTransferHours(study, folder, area);
           }
 
           buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
@@ -219,27 +234,6 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                   {
                       logs.error() << area.name << ": invalid reservoir level value";
                       errorLevels = true;
-                      ret = false;
-                  }
-              }
-
-              bool errorHours = false;
-              auto& colGen = area.hydro.maxHourlyGenEnergy[0];
-              auto& colPump = area.hydro.maxHourlyPumpEnergy[0];
-
-              for (int day = 0; day < DAYS_PER_YEAR; day++)
-              {
-                  if (!errorHours && (colGen[day] < 0 || (colGen[day] > 24)))
-                  {
-                      logs.error() << area.name << ": invalid power or energy value";
-                      errorHours = true;
-                      ret = false;
-                  }
-
-                  if (!errorHours && (colPump[day] < 0 || (colPump[day] > 24)))
-                  {
-                      logs.error() << area.name << ": invalid power or energy value";
-                      errorHours = true;
                       ret = false;
                   }
               }
@@ -691,13 +685,13 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
             sPowerToLevel->add(area.id, true);
 
         // max hours gen
-        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxHourlyGenEnergy_"
+        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxDailyGenEnergy_"
                        << area.id << ".txt";
-        ret = area.hydro.maxHourlyGenEnergy.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+        ret = area.hydro.maxDailyGenEnergy.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
         // max hours pump
-        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxHourlyPumpEnergy_"
+        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxDailyPumpEnergy_"
                        << area.id << ".txt";
-        ret = area.hydro.maxHourlyPumpEnergy.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+        ret = area.hydro.maxDailyPumpEnergy.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
         // credit modulations
         buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
                        << "creditmodulations_" << area.id << ".txt";
@@ -727,8 +721,8 @@ bool PartHydro::forceReload(bool reload) const
     ret = inflowPattern.forceReload(reload) && ret;
     ret = reservoirLevel.forceReload(reload) && ret;
     ret = waterValues.forceReload(reload) && ret;
-    ret = maxHourlyGenEnergy.forceReload(reload) && ret;
-    ret = maxHourlyPumpEnergy.forceReload(reload) && ret;
+    ret = maxDailyGenEnergy.forceReload(reload) && ret;
+    ret = maxDailyPumpEnergy.forceReload(reload) && ret;
 
     if (series)
         ret = series->forceReload(reload) && ret;
@@ -744,8 +738,8 @@ void PartHydro::markAsModified() const
     reservoirLevel.markAsModified();
     waterValues.markAsModified();
     creditModulation.markAsModified();
-    maxHourlyGenEnergy.markAsModified();
-    maxHourlyPumpEnergy.markAsModified();
+    maxDailyGenEnergy.markAsModified();
+    maxDailyPumpEnergy.markAsModified();
 
     if (series)
         series->markAsModified();
@@ -798,38 +792,39 @@ void PartHydro::copyFrom(const PartHydro& rhs)
         pumpingEfficiency = rhs.pumpingEfficiency;
     }
 
-    // max hours gen
+    // max daily gen
     {
-        maxHourlyGenEnergy = rhs.maxHourlyGenEnergy;
-        maxHourlyGenEnergy.unloadFromMemory();
-        rhs.maxHourlyGenEnergy.unloadFromMemory();
+        maxDailyGenEnergy = rhs.maxDailyGenEnergy;
+        maxDailyGenEnergy.unloadFromMemory();
+        rhs.maxDailyGenEnergy.unloadFromMemory();
     }
 
-    // max hours pump
+    // max daily pump
     {
-        maxHourlyPumpEnergy = rhs.maxHourlyPumpEnergy;
-        maxHourlyPumpEnergy.unloadFromMemory();
-        rhs.maxHourlyPumpEnergy.unloadFromMemory();
+        maxDailyPumpEnergy = rhs.maxDailyPumpEnergy;
+        maxDailyPumpEnergy.unloadFromMemory();
+        rhs.maxDailyPumpEnergy.unloadFromMemory();
     }
 }
 
-bool PartHydro::LoadHours(Study& study, Area& area, const AnyString& folder)
+bool PartHydro::LoadDailyMaxEnergy(Area& area, const AnyString& folder)
 {
-    auto& buffer = study.bufferLoadingTS;
+    YString filePath;
+    Matrix<>::BufferType fileContent;
     bool ret = true;
 
-    buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxHourlyPumpEnergy_"
-                   << area.id << '.' << study.inputExtension;
+    filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+                     << "maxDailyGenEnergy_" << area.id << '.' << "txt";
 
-    ret = area.hydro.maxHourlyGenEnergy.loadFromCSVFile(
-            buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+    ret = area.hydro.maxDailyGenEnergy.loadFromCSVFile(
+            filePath, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &fileContent)
           && ret;
 
-    buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxHourlyPumpEnergy_"
-                   << area.id << '.' << study.inputExtension;
+    filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+                     << "maxDailyPumpEnergy_" << area.id << '.' << "txt";
 
-    ret = area.hydro.maxHourlyPumpEnergy.loadFromCSVFile(
-            buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+    ret = area.hydro.maxDailyPumpEnergy.loadFromCSVFile(
+            filePath, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &fileContent)
           && ret;
 
     return ret;

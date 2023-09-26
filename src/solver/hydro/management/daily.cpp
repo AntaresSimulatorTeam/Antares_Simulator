@@ -250,14 +250,14 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     uint dayYear = 0;
 
-    auto const& maxHourlyGenEnergy = area.hydro.maxHourlyGenEnergy;
+    auto const& maxDailyGenEnergy = area.hydro.maxDailyGenEnergy;
     auto const& maxHourlyGenPower = area.hydro.series->maxHourlyGenPower;
 
     uint tsIndexMaxPower
       = (NumeroChroniquesTireesParPays[numSpace][z]).HydrauliqueMaxPower;
 
     auto const& maxP = maxHourlyGenPower[tsIndexMaxPower < maxHourlyGenPower.width ? tsIndexMaxPower : 0];
-    auto const& maxE = maxHourlyGenEnergy[0];
+    auto const& maxE = maxDailyGenEnergy[0];
 
     auto& ventilationResults = ventilationResults_[numSpace][z];
     

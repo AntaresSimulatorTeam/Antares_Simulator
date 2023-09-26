@@ -25,22 +25,26 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_DATA_TRANSFER_H__
-#define __ANTARES_LIBS_STUDY_PARTS_HYDRO_DATA_TRANSFER_H__
+#ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_MAX_TIME_SERIES_READER_H__
+#define __ANTARES_LIBS_STUDY_PARTS_HYDRO_MAX_TIME_SERIES_READER_H__
 
 #include "../../../array/antares//array/matrix.h"
 
 namespace Antares::Data
 {
 /*!
-** \brief Hydro for a single area
+**  This class provides support for old studies, reading from deprecated files,
+**  fils matrix dailyMaxPumpAndGen and transfers data to the corresponding data class members of
+**  class PartHydro
 */
-class DataTransfer
+class HydroMaxTimeSeriesReader
 {
-
 public:
+    HydroMaxTimeSeriesReader();
 
-    DataTransfer();
+    bool operator()(const AnyString& folder, Area& area);
+
+    Matrix<double, double> dailyMaxPumpAndGen;
 
     enum powerDailyE
     {
@@ -54,17 +58,19 @@ public:
         pumpMaxE,
     };
 
-    Matrix<double, double> dailyMaxPumpAndGen;
-
-    bool LoadFromFolder(Study& study, const AnyString& folder, Area& area);
-    bool AutoTransferHours(Study& study, const AnyString& folder, Area& area);
-    void AutoTransferPower(Matrix<double, int32_t>& matrix,
-                                       const Matrix<double>::ColumnType& maxPower);
-    bool SupportForOldStudies(Study& study, const AnyString& folder, Area& area);
-
-
+private:
+    bool LoadDailyMaxPowersAndEnergies(const AnyString& folder, Area& area);
+    bool SaveDailyMaxEnergy(const AnyString& folder, Area& area);
+    bool SaveDailyMaxPowerAsHourly(const AnyString& folder, Area& area);
+    bool SaveMaxGenerationEnergy(const AnyString& folder, Area& area);
+    bool SaveMaxPumpingEnergy(const AnyString& folder, Area& area);
+    bool SaveDailyMaxGenPowerAsHourly(const AnyString& folder, Area& area);
+    bool SaveDailyMaxPumpPowerAsHourly(const AnyString& folder, Area& area);
 };
 
-} // Antares::Data
+void TransferDailyMaxPowerAsHourly(Matrix<double, int32_t>::ColumnType& hourlyColumn,
+                                   const Matrix<double>::ColumnType& dailyColumn);
 
-#endif /*__ANTARES_LIBS_STUDY_PARTS_HYDRO_DATA_TRANSFER_H__*/
+} // namespace Antares::Data
+
+#endif /*__ANTARES_LIBS_STUDY_PARTS_HYDRO_MAX_TIME_SERIES_READER_H__*/

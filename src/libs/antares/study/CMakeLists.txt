@@ -137,8 +137,8 @@ set(SRC_STUDY_PART_HYDRO
         parts/hydro/allocation.h
         parts/hydro/allocation.hxx
         parts/hydro/allocation.cpp
-        parts/hydro/datatransfer.h
-        parts/hydro/datatransfer.cpp
+        parts/hydro/hydromaxtimeseriesreader.h
+        parts/hydro/hydromaxtimeseriesreader.cpp
 )
 source_group("study\\part\\hydro" FILES ${SRC_STUDY_PART_HYDRO})
 

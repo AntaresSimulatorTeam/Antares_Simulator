@@ -87,11 +87,9 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
     e.add(buffer);
     buffer.clear() << "input/hydro/common/capacity/inflowPattern_" << id << ".txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/common/capacity/maxpower_" << id << ".txt";
+    buffer.clear() << "input/hydro/common/capacity/maxDailyGenEnergy_" << id << ".txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/common/capacity/maxHourlyGenEnergy_" << id << ".txt";
-    e.add(buffer);
-    buffer.clear() << "input/hydro/common/capacity/maxHourlyPumpEnergy_" << id << ".txt";
+    buffer.clear() << "input/hydro/common/capacity/maxDailyPumpEnergy_" << id << ".txt";
     e.add(buffer);
     buffer.clear() << "input/hydro/common/capacity/reservoir_" << id << ".txt";
     e.add(buffer);

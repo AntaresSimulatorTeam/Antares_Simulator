@@ -11,7 +11,7 @@ struct Fixture
     Fixture()
     {
         study = make_shared<Study>(true);
-        datatransfer = make_shared<DataTransfer>();
+        reader = make_shared<HydroMaxTimeSeriesReader>();
         study->inputExtension = "txt";
         // Add areas
         area_1 = study->areaAdd("Area1");
@@ -21,23 +21,23 @@ struct Fixture
         // Create necessary folders and files for these two areas
         createFoldersAndFiles();
 
-        auto& gen = datatransfer->dailyMaxPumpAndGen[DataTransfer::genMaxP];
+        auto& gen = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxP];
         InstantiateColumn(gen, 300., DAYS_PER_YEAR);
 
-        auto& pump = datatransfer->dailyMaxPumpAndGen[DataTransfer::pumpMaxP];
+        auto& pump = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxP];
         InstantiateColumn(pump, 200., DAYS_PER_YEAR);
 
-        auto& hoursGen = datatransfer->dailyMaxPumpAndGen[DataTransfer::genMaxE];
+        auto& hoursGen = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxE];
         InstantiateColumn(hoursGen, 20., DAYS_PER_YEAR);
 
-        auto& hoursPump = datatransfer->dailyMaxPumpAndGen[DataTransfer::pumpMaxE];
+        auto& hoursPump = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxE];
         InstantiateColumn(hoursPump, 14., DAYS_PER_YEAR);
 
         my_string buffer;
-        my_string file_name = "maxpower_" + area_2->id + ".txt";
+        my_string file_name = "maxpower_" + area_1->id + ".txt";
         buffer.clear() << base_folder << SEP << hydro_folder << SEP << common_folder << SEP
                        << capacity_folder << SEP << file_name;
-        datatransfer->dailyMaxPumpAndGen.saveToCSVFile(buffer, 2);
+        reader->dailyMaxPumpAndGen.saveToCSVFile(buffer, 2);
     }
 
     void createFoldersAndFiles()
@@ -70,9 +70,9 @@ struct Fixture
         // maxhours files
         buffer.clear() << base_folder << SEP << hydro_folder << SEP << common_folder << SEP
                        << capacity_folder;
-        my_string file1_name = maxhoursGen << SEP << area_2->id << SEP << ".txt";
-        my_string file2_name = maxhoursPump << SEP << area_2->id << SEP << ".txt";
-        my_string file3_name = maxpower << SEP << area_2->id << SEP << ".txt";
+        my_string file1_name = maxhoursGen << SEP << area_1->id << SEP << ".txt";
+        my_string file2_name = maxhoursPump << SEP << area_1->id << SEP << ".txt";
+        my_string file3_name = maxpower << SEP << area_1->id << SEP << ".txt";
 
         createFile(buffer, file1_name);
         createFile(buffer, file2_name);
@@ -80,7 +80,7 @@ struct Fixture
     }
 
     shared_ptr<Study> study;
-    shared_ptr<DataTransfer> datatransfer;
+    shared_ptr<HydroMaxTimeSeriesReader> reader;
     Area* area_1;
     Area* area_2;
     my_string base_folder = fs::current_path().string();
@@ -88,8 +88,8 @@ struct Fixture
     my_string series_folder = "series";
     my_string common_folder = "common";
     my_string capacity_folder = "capacity";
-    my_string maxhoursGen = "maxHourlyGenEnergy_";
-    my_string maxhoursPump = "maxHourlyPumpEnergy_";
+    my_string maxhoursGen = "maxDailyGenEnergy_";
+    my_string maxhoursPump = "maxDailyPumpEnergy_";
     my_string maxpower = "maxpower_";
     my_string maxgentxt = "maxHourlyGenPower.txt";
     my_string maxpumptxt = "maxHourlyPumpPower.txt";
@@ -106,50 +106,16 @@ BOOST_FIXTURE_TEST_CASE(Testing_support_for_old_studies, Fixture)
 {
     my_string buffer;
     bool ret = false;
+    auto& colMaxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower[0];
+    auto& colMaxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower[0];
+    auto& gen = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxP];
+    auto& pump = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxP];
 
     buffer.clear() << base_folder << SEP << hydro_folder;
-    ret = datatransfer->SupportForOldStudies(*study, buffer, *area_1);
+    ret = (*reader)(buffer, *area_1);
     BOOST_CHECK(ret);
-}
-
-BOOST_FIXTURE_TEST_CASE(Testing_auto_transfer_hours, Fixture)
-{
-    my_string buffer;
-    bool ret = false;
-
-    buffer.clear() << base_folder << SEP << hydro_folder;
-    ret = datatransfer->AutoTransferHours(*study, buffer, *area_2);
-    BOOST_CHECK(ret);
-}
-
-BOOST_FIXTURE_TEST_CASE(Testing_load_from_folder_when_retuns_true, Fixture)
-{
-    my_string buffer;
-    bool ret = false;
-    datatransfer->dailyMaxPumpAndGen.reset(4, DAYS_PER_YEAR, true);
-
-    buffer.clear() << base_folder << SEP << hydro_folder;
-    ret = datatransfer->LoadFromFolder(*study, buffer, *area_2);
-    BOOST_CHECK(ret);
-}
-
-BOOST_FIXTURE_TEST_CASE(Testing_load_from_folder_when_retuns_false, Fixture)
-{
-    my_string buffer;
-    bool ret = false;
-
-    auto& hoursGen = datatransfer->dailyMaxPumpAndGen[DataTransfer::genMaxE];
-    InstantiateColumn(hoursGen, 25., DAYS_PER_YEAR);
-
-    my_string file_name = "maxpower_" + area_2->id + ".txt";
-    buffer.clear() << base_folder << SEP << hydro_folder << SEP << common_folder << SEP
-                   << capacity_folder << SEP << file_name;
-    datatransfer->dailyMaxPumpAndGen.saveToCSVFile(buffer, 2);
-    datatransfer->dailyMaxPumpAndGen.reset(4, DAYS_PER_YEAR, true);
-
-    buffer.clear() << base_folder << SEP << hydro_folder;
-    ret = datatransfer->LoadFromFolder(*study, buffer, *area_2);
-    BOOST_CHECK(!ret);
+    BOOST_CHECK(DailyMaxPowerAsHourlyTransferCheck(colMaxHourlyGenPower, gen));
+    BOOST_CHECK(DailyMaxPowerAsHourlyTransferCheck(colMaxHourlyPumpPower, pump));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

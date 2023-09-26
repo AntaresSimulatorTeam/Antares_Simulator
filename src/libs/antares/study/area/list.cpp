@@ -909,11 +909,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
         if (area.hydro.series && study.header.version < 870)
         {
-            std::shared_ptr<DataTransfer> datatransfer = std::make_shared<DataTransfer>();
             buffer.clear() << study.folderInput << SEP << "hydro";
 
-            datatransfer->LoadFromFolder(study, buffer, area);
-            datatransfer->SupportForOldStudies(study, buffer, area);
+            HydroMaxTimeSeriesReader reader;
+            ret = reader(buffer, area) && ret;
         }
 
         if (area.hydro.series)
@@ -922,14 +921,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = area.hydro.series->LoadMaxPower(study, area.id, buffer) && ret;
         }
 
-        buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "common" << SEP
-                       << "capacity" << SEP << "maxpower_" << area.id << '.'
-                       << study.inputExtension;
-
-        bool exists = IO::File::Exists(buffer);
-
-        if (study.header.version >= 870 && exists)
+        if (bool exists = IO::File::Exists(buffer); study.header.version >= 870 && exists)
         {
+            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "common" << SEP
+                           << "capacity" << SEP << "maxpower_" << area.id << ".txt";
             IO::File::Delete(buffer);
         }
 

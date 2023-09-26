@@ -182,6 +182,8 @@ bool DataTimeseries::performWL(Context& ctx)
 
                     source->hydro.series->maxHourlyGenPower.unloadFromMemory();
                     source->hydro.series->maxHourlyPumpPower.unloadFromMemory();
+
+                    break;
                 }
                 case Data::timeSeriesThermal:
                 {

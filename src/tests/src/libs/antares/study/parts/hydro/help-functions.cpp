@@ -75,3 +75,30 @@ void removeFolder(my_string& path, my_string& folder_name)
             }
         }
 }
+
+bool DailyMaxPowerAsHourlyTransferCheck(Matrix<double, int32_t>::ColumnType& hourlyColumn,
+                                        const Matrix<double>::ColumnType& dailyColumn)
+{
+    uint hours = 0;
+    uint days = 0;
+    bool check = true;
+
+    while (hours < HOURS_PER_YEAR && days < DAYS_PER_YEAR)
+    {
+        for (uint i = 0; i < 24; ++i)
+        {
+            if (hourlyColumn[hours] != dailyColumn[days])
+            {
+                check = false;
+                break;
+            }
+            ++hours;
+        }
+
+        if (!check)
+            break;
+
+        ++days;
+    }
+    return check;
+}

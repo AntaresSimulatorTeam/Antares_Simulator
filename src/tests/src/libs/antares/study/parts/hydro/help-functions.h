@@ -17,3 +17,5 @@ bool createFile(const my_string& folder_path, const my_string& file_name);
 void InstantiateMatrix(Matrix<double, int32_t>& matrix, double seed, uint type);
 void InstantiateColumn(Matrix<double>::ColumnType& col, double seed, uint type);
 void removeFolder(my_string& path, my_string& folder_name);
+bool DailyMaxPowerAsHourlyTransferCheck(Matrix<double, int32_t>::ColumnType& hourlyColumn,
+                                        const Matrix<double>::ColumnType& dailyColumn);

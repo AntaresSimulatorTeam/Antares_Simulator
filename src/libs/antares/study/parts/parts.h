@@ -40,7 +40,7 @@
 #include "hydro/prepro.h"
 #include "hydro/series.h"
 #include "hydro/container.h"
-#include "hydro/datatransfer.h"
+#include "hydro/hydromaxtimeseriesreader.h"
 
 // Wind
 #include "wind/prepro.h"

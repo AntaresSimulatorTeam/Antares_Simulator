@@ -100,9 +100,9 @@ public:
     void markAsModified() const;
 
     /*!
-    ** \brief Load hours data
+    ** \brief Load daily max energy
     */
-    bool LoadHours(Study& study, Area& area, const AnyString& folder);
+    bool LoadDailyMaxEnergy(Area& area, const AnyString& folder);
 
 public:
     //! Inter-daily breakdown (previously called Smoothing Factor or alpha)
@@ -162,8 +162,8 @@ public:
     //! Data for time-series
     DataSeriesHydro* series;
 
-    Matrix<double, double> maxHourlyGenEnergy;
-    Matrix<double, double> maxHourlyPumpEnergy;
+    Matrix<double, double> maxDailyGenEnergy;
+    Matrix<double, double> maxDailyPumpEnergy;
 
 }; // class PartHydro
 

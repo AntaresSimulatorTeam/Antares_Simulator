@@ -3,21 +3,21 @@ set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
 set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
 
 # Hydro data transfer
-set(SRC_DATA_TRANSFER
-	test-datatransfer-class.cpp
+set(SRC_HYDRO_READER
+	test-hydroreader-class.cpp
 	help-functions.h
 	help-functions.cpp)
 
-add_executable(test-hydro-data-transfer ${SRC_DATA_TRANSFER})
+add_executable(test-hydro-reader ${SRC_HYDRO_READER})
 
-target_include_directories(test-hydro-data-transfer
+target_include_directories(test-hydro-reader
 	PRIVATE
 	"${src_libs_antares_study}"
 	"${src_libs_antares_study}/parts/hydro"
 	"${src_libs_antares}/array/antares/array"
 )
 
-target_link_libraries(test-hydro-data-transfer
+target_link_libraries(test-hydro-reader
 	PRIVATE
 	Boost::unit_test_framework
 	antares-core
@@ -28,12 +28,12 @@ target_link_libraries(test-hydro-data-transfer
 
 # Linux
 if(UNIX AND NOT APPLE)
-	target_link_libraries(test-hydro-data-transfer PRIVATE stdc++fs)
+	target_link_libraries(test-hydro-reader PRIVATE stdc++fs)
 endif()
 
-set_target_properties(test-hydro-data-transfer PROPERTIES FOLDER Unit-tests)
-add_test(NAME test-hydro-data-transfer COMMAND test-hydro-data-transfer)
-set_property(TEST test-hydro-data-transfer PROPERTY LABELS unit)
+set_target_properties(test-hydro-reader PROPERTIES FOLDER Unit-tests)
+add_test(NAME test-hydro-reader COMMAND test-hydro-reader)
+set_property(TEST test-hydro-reader PROPERTY LABELS unit)
 
 # Useful variables definitions
 set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
