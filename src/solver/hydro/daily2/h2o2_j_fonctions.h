@@ -42,7 +42,7 @@ void H2O2_j_ConstruireLesVariables(int,
                                    DONNEES_MENSUELLES_ETENDUES*,
                                    std::vector<double>&,
                                    std::vector<double>&,
-                                   int*,
+                                   std::vector<int>&,
                                    std::vector<double*>&,
                                    CORRESPONDANCE_DES_VARIABLES_PB_ETENDU*);
 void H2O2_J_apply_costs(const Hydro_problem_costs&, DONNEES_MENSUELLES_ETENDUES&);

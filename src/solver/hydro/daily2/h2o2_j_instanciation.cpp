@@ -144,9 +144,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         PlFixe->NombreDeVariables = NombreDeVariables;
         PlFixe->CoutLineaire.assign(NombreDeVariables, 0);
 
-        PlFixe->TypeDeVariable = (int*)malloc(NombreDeVariables * sizeof(int));
-        if (PlFixe->TypeDeVariable == NULL)
-            return (0);
+        PlFixe->TypeDeVariable.assign(NombreDeVariables, 0);
 
         NombreDeContraintes = 0;
         NombreDeContraintes += NbPdt;
