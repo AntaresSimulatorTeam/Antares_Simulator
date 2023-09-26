@@ -44,7 +44,7 @@ void H2O2_j_ConstruireLesVariables(
   std::vector<double>& Xmin,
   std::vector<double>& Xmax,
   int* TypeDeVariable,
-  double** AdresseOuPlacerLaValeurDesVariablesOptimisees,
+  std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees,
   CORRESPONDANCE_DES_VARIABLES_PB_ETENDU* CorrespondanceDesVariables)
 {
     int Var;

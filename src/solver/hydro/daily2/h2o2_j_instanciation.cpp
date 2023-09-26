@@ -206,16 +206,13 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
 
         PlVariable = ProblemeLineaireEtenduPartieVariable[i];
 
+        PlVariable->X.assign(NombreDeVariables, 0.);
         PlVariable->Xmin.assign(NombreDeVariables, 0.);
         PlVariable->Xmax.assign(NombreDeVariables, 0.);
         PlVariable->SecondMembre.assign(NombreDeContraintes, 0.);
 
-        PlVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees
-          = (double**)malloc(NombreDeVariables * sizeof(double*));
-        if (PlVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees == NULL)
-            return (0);
+        PlVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees.assign(NombreDeVariables, nullptr);
 
-        PlVariable->X.assign(NombreDeVariables, 0.);
 
         for (j = 0; j < NombreDeVariables; j++)
             PlVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[j] = NULL;
