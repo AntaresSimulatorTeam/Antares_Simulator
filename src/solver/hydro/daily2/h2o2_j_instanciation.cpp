@@ -121,20 +121,11 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
 
     for (i = 0; i < NombreDeProblemes; i++)
     {
-        CorrespondanceDesVariables[i] = (CORRESPONDANCE_DES_VARIABLES_PB_ETENDU*)malloc(
-          sizeof(CORRESPONDANCE_DES_VARIABLES_PB_ETENDU));
-        if (CorrespondanceDesVariables[i] == NULL)
-            return (0);
+        CorrespondanceDesVariables[i] = new CORRESPONDANCE_DES_VARIABLES_PB_ETENDU;
 
-        ProblemeLineaireEtenduPartieFixe[i] = (PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE*)malloc(
-          sizeof(PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE));
-        if (ProblemeLineaireEtenduPartieFixe[i] == NULL)
-            return (0);
+        ProblemeLineaireEtenduPartieFixe[i] = new PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE;
 
-        ProblemeLineaireEtenduPartieVariable[i] = (PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE*)malloc(
-          sizeof(PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE));
-        if (ProblemeLineaireEtenduPartieVariable[i] == NULL)
-            return (0);
+        ProblemeLineaireEtenduPartieVariable[i] = new PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE;
     }
 
     for (i = 0; i < NombreDeProblemes; i++)
