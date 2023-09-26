@@ -37,14 +37,14 @@ void H2O2_J_ConstruireLesContraintes(int,
                                      std::vector<int>&,
                                      std::vector<double>&,
                                      std::vector<int>&,
-                                     CORRESPONDANCE_DES_VARIABLES_PB_ETENDU*);
+                                     CORRESPONDANCE_DES_VARIABLES_PB_ETENDU&);
 void H2O2_j_ConstruireLesVariables(int,
                                    DONNEES_MENSUELLES_ETENDUES*,
                                    std::vector<double>&,
                                    std::vector<double>&,
                                    std::vector<int>&,
                                    std::vector<double*>&,
-                                   CORRESPONDANCE_DES_VARIABLES_PB_ETENDU*);
+                                   CORRESPONDANCE_DES_VARIABLES_PB_ETENDU&);
 void H2O2_J_apply_costs(const Hydro_problem_costs&, DONNEES_MENSUELLES_ETENDUES&);
 void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES*, int);
 void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES*, int);

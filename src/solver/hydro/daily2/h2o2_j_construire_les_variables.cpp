@@ -45,7 +45,7 @@ void H2O2_j_ConstruireLesVariables(
   std::vector<double>& Xmax,
   std::vector<int>& TypeDeVariable,
   std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees,
-  CORRESPONDANCE_DES_VARIABLES_PB_ETENDU* CorrespondanceDesVariables)
+  CORRESPONDANCE_DES_VARIABLES_PB_ETENDU& CorrespondanceDesVariables)
 {
     int Var;
     int Pdt;
@@ -54,7 +54,7 @@ void H2O2_j_ConstruireLesVariables(
 
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        CorrespondanceDesVariables->NumeroVar_Turbine[Pdt] = Var;
+        CorrespondanceDesVariables.NumeroVar_Turbine[Pdt] = Var;
         Xmin[Var] = 0.0;
         Xmax[Var] = 0.0;
         TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -65,7 +65,7 @@ void H2O2_j_ConstruireLesVariables(
 
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        CorrespondanceDesVariables->NumeroVar_niveauxFinJours[Pdt] = Var;
+        CorrespondanceDesVariables.NumeroVar_niveauxFinJours[Pdt] = Var;
         Xmin[Var] = 0.0;
         Xmax[Var] = 1.0;
         TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -74,7 +74,7 @@ void H2O2_j_ConstruireLesVariables(
         Var++;
     }
 
-    CorrespondanceDesVariables->NumeroVar_waste = Var;
+    CorrespondanceDesVariables.NumeroVar_waste = Var;
     Xmin[Var] = 0.0;
     Xmax[Var] = LINFINI;
     TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
@@ -83,7 +83,7 @@ void H2O2_j_ConstruireLesVariables(
 
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        CorrespondanceDesVariables->NumeroVar_overflow[Pdt] = Var;
+        CorrespondanceDesVariables.NumeroVar_overflow[Pdt] = Var;
         Xmin[Var] = 0.0;
         Xmax[Var] = LINFINI;
         TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
@@ -94,7 +94,7 @@ void H2O2_j_ConstruireLesVariables(
 
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        CorrespondanceDesVariables->NumeroVar_deviations[Pdt] = Var;
+        CorrespondanceDesVariables.NumeroVar_deviations[Pdt] = Var;
         Xmin[Var] = 0.0;
         Xmax[Var] = LINFINI;
         TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
@@ -105,7 +105,7 @@ void H2O2_j_ConstruireLesVariables(
 
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        CorrespondanceDesVariables->NumeroVar_violations[Pdt] = Var;
+        CorrespondanceDesVariables.NumeroVar_violations[Pdt] = Var;
         Xmin[Var] = 0.0;
         Xmax[Var] = LINFINI;
         TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
@@ -114,14 +114,14 @@ void H2O2_j_ConstruireLesVariables(
         Var++;
     }
 
-    CorrespondanceDesVariables->NumeroVar_deviationMax = Var;
+    CorrespondanceDesVariables.NumeroVar_deviationMax = Var;
     Xmin[Var] = 0.0;
     Xmax[Var] = LINFINI;
     TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
     AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(DonneesMensuellesEtendues->deviationMax);
     Var++;
 
-    CorrespondanceDesVariables->NumeroVar_violationMax = Var;
+    CorrespondanceDesVariables.NumeroVar_violationMax = Var;
     Xmin[Var] = 0.0;
     Xmax[Var] = LINFINI;
     TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;

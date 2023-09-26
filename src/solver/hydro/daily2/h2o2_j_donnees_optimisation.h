@@ -124,7 +124,7 @@ typedef struct
     int NombreDeProblemes;
     std::vector<int> NbJoursDUnProbleme;
 
-    CORRESPONDANCE_DES_VARIABLES_PB_ETENDU** CorrespondanceDesVariables;
+    std::vector<CORRESPONDANCE_DES_VARIABLES_PB_ETENDU> CorrespondanceDesVariables;
 
     PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE** ProblemeLineaireEtenduPartieFixe;
     PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE** ProblemeLineaireEtenduPartieVariable;

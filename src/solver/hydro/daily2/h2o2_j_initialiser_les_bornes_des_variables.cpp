@@ -38,19 +38,18 @@ void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES* Donnee
     const auto& TurbineMin = DonneesMensuelles->TurbineMin;
 
     PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
-    CORRESPONDANCE_DES_VARIABLES_PB_ETENDU* CorrespondanceDesVariables;
     PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE* ProblemeLineaireEtenduPartieVariable;
 
     ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
 
     NbPdt = ProblemeHydrauliqueEtendu->NbJoursDUnProbleme[NumeroDeProbleme];
 
-    CorrespondanceDesVariables
+    auto& CorrespondanceDesVariables
       = ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[NumeroDeProbleme];
     ProblemeLineaireEtenduPartieVariable
       = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
 
-    auto& NumeroVar_Turbine = CorrespondanceDesVariables->NumeroVar_Turbine;
+    auto& NumeroVar_Turbine = CorrespondanceDesVariables.NumeroVar_Turbine;
 
     auto& Xmax = ProblemeLineaireEtenduPartieVariable->Xmax;
     auto& Xmin = ProblemeLineaireEtenduPartieVariable->Xmin;

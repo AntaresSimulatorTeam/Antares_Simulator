@@ -40,10 +40,8 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     DONNEES_MENSUELLES_ETENDUES* DonneesMensuellesEtendues = new DONNEES_MENSUELLES_ETENDUES;
     PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
 
-    CORRESPONDANCE_DES_VARIABLES_PB_ETENDU** CorrespondanceDesVariables;
     PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE** ProblemeLineaireEtenduPartieFixe;
     PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE** ProblemeLineaireEtenduPartieVariable;
-    CORRESPONDANCE_DES_VARIABLES_PB_ETENDU* CorrVar;
     PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE* PlFixe;
     PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE* PlVariable;
 
@@ -80,11 +78,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
 
     NombreDeProblemes = ProblemeHydrauliqueEtendu->NombreDeProblemes;
 
-    ProblemeHydrauliqueEtendu->CorrespondanceDesVariables
-      = (CORRESPONDANCE_DES_VARIABLES_PB_ETENDU**)malloc(
-        NombreDeProblemes * sizeof(CORRESPONDANCE_DES_VARIABLES_PB_ETENDU));
-    if (ProblemeHydrauliqueEtendu->CorrespondanceDesVariables == NULL)
-        return (0);
+    ProblemeHydrauliqueEtendu->CorrespondanceDesVariables.resize(NombreDeProblemes);
 
     ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe
       = (PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE**)malloc(
@@ -101,15 +95,13 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     ProblemeHydrauliqueEtendu->ProblemeSpx.assign(NombreDeProblemes, nullptr);
     ProblemeHydrauliqueEtendu->Probleme = NULL;
 
-    CorrespondanceDesVariables = ProblemeHydrauliqueEtendu->CorrespondanceDesVariables;
+    auto& CorrespondanceDesVariables = ProblemeHydrauliqueEtendu->CorrespondanceDesVariables;
     ProblemeLineaireEtenduPartieFixe = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe;
     ProblemeLineaireEtenduPartieVariable
       = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable;
 
     for (i = 0; i < NombreDeProblemes; i++)
     {
-        CorrespondanceDesVariables[i] = new CORRESPONDANCE_DES_VARIABLES_PB_ETENDU;
-
         ProblemeLineaireEtenduPartieFixe[i] = new PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE;
 
         ProblemeLineaireEtenduPartieVariable[i] = new PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE;
@@ -119,13 +111,13 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     {
         NbPdt = NbJoursDUnProbleme[i];
 
-        CorrVar = CorrespondanceDesVariables[i];
+        auto& CorrVar = CorrespondanceDesVariables[i];
 
-        CorrVar->NumeroVar_Turbine.assign(NbPdt, 0);
-        CorrVar->NumeroVar_niveauxFinJours.assign(NbPdt, 0);
-        CorrVar->NumeroVar_overflow.assign(NbPdt, 0);
-        CorrVar->NumeroVar_deviations.assign(NbPdt, 0);
-        CorrVar->NumeroVar_violations.assign(NbPdt, 0);
+        CorrVar.NumeroVar_Turbine.assign(NbPdt, 0);
+        CorrVar.NumeroVar_niveauxFinJours.assign(NbPdt, 0);
+        CorrVar.NumeroVar_overflow.assign(NbPdt, 0);
+        CorrVar.NumeroVar_deviations.assign(NbPdt, 0);
+        CorrVar.NumeroVar_violations.assign(NbPdt, 0);
 
         PlFixe = ProblemeLineaireEtenduPartieFixe[i];
 
