@@ -42,6 +42,8 @@ public:
 
     void markAsModified() const;
 
+    uint64_t memoryUsage() const;
+
 public:
     /*!
     ** \brief Series (MW)
@@ -55,8 +57,5 @@ public:
     */
     Matrix<uint32_t> timeseriesNumbers;
 }; // class DataSeriesCommon
-
-uint64_t DataSeriesMemoryUsage(DataSeriesCommon* t);
-
-} // namespace Antares
+} // namespace Antares::Data
 #endif /* __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__ */

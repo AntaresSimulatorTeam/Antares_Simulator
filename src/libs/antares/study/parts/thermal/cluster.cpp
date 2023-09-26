@@ -648,7 +648,7 @@ uint64_t ThermalCluster::memoryUsage() const
     if (prepro)
         amount += prepro->memoryUsage();
     if (series)
-        amount += DataSeriesMemoryUsage(series);
+        amount += series->memoryUsage();
     amount += ecoInput.memoryUsage();
     return amount;
 }

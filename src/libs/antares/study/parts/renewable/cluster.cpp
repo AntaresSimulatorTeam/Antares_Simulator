@@ -222,7 +222,7 @@ uint64_t RenewableCluster::memoryUsage() const
 {
     uint64_t amount = sizeof(RenewableCluster);
     if (series)
-        amount += DataSeriesMemoryUsage(series);
+        amount += series->memoryUsage();
     return amount;
 }
 
