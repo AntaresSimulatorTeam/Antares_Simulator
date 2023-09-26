@@ -102,15 +102,15 @@ typedef struct
 /* Les correspondances des variables */
 typedef struct
 {
-    int* NumeroVar_Turbine; /* Turbines */
+    std::vector<int> NumeroVar_Turbine; /* Turbines */
 
-    int* NumeroVar_niveauxFinJours; // Niveaux fin jours
+    std::vector<int> NumeroVar_niveauxFinJours; // Niveaux fin jours
     int NumeroVar_waste;            // Waste
-    int* NumeroVar_overflow;   // Deversements (ecarts journaliers entre niveaux et les 100 % du
+    std::vector<int> NumeroVar_overflow;   // Deversements (ecarts journaliers entre niveaux et les 100 % du
                                // reservoir)
-    int* NumeroVar_deviations; // Deviations (ecarts journaliers entre turbin?s et cr?dits cibles
+    std::vector<int> NumeroVar_deviations; // Deviations (ecarts journaliers entre turbin?s et cr?dits cibles
                                // brutes)
-    int* NumeroVar_violations; // Violations (ecarts journaliers entre niveaux et courbes guides sup
+    std::vector<int> NumeroVar_violations; // Violations (ecarts journaliers entre niveaux et courbes guides sup
                                // et inf)
     int NumeroVar_deviationMax; // Deviation max sur le mois
     int NumeroVar_violationMax; // Violation max sur le mois

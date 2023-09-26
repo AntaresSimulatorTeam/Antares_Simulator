@@ -53,11 +53,6 @@ void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
 
     for (i = 0; i < NombreDeProblemes; i++)
     {
-        free(ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i]->NumeroVar_Turbine);
-        free(ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i]->NumeroVar_niveauxFinJours);
-        free(ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i]->NumeroVar_overflow);
-        free(ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i]->NumeroVar_deviations);
-        free(ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i]->NumeroVar_violations);
         free(ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i]);
 
         free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i]->TypeDeVariable);

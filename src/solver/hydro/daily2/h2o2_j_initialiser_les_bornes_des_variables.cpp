@@ -34,8 +34,6 @@ void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES* Donnee
     int NbPdt;
     int Var;
 
-    int* NumeroVar_Turbine;
-
     const auto& TurbineMax = DonneesMensuelles->TurbineMax;
     const auto& TurbineMin = DonneesMensuelles->TurbineMin;
 
@@ -52,7 +50,7 @@ void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES* Donnee
     ProblemeLineaireEtenduPartieVariable
       = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
 
-    NumeroVar_Turbine = CorrespondanceDesVariables->NumeroVar_Turbine;
+    auto& NumeroVar_Turbine = CorrespondanceDesVariables->NumeroVar_Turbine;
 
     auto& Xmax = ProblemeLineaireEtenduPartieVariable->Xmax;
     auto& Xmin = ProblemeLineaireEtenduPartieVariable->Xmin;

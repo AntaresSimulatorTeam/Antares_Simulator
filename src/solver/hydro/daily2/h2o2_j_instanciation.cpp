@@ -131,25 +131,11 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
 
         CorrVar = CorrespondanceDesVariables[i];
 
-        CorrVar->NumeroVar_Turbine = (int*)malloc(NbPdt * sizeof(int));
-        if (CorrVar->NumeroVar_Turbine == NULL)
-            return (0);
-
-        CorrVar->NumeroVar_niveauxFinJours = (int*)malloc(NbPdt * sizeof(int));
-        if (CorrVar->NumeroVar_niveauxFinJours == NULL)
-            return (0);
-
-        CorrVar->NumeroVar_overflow = (int*)malloc(NbPdt * sizeof(int));
-        if (CorrVar->NumeroVar_overflow == NULL)
-            return (0);
-
-        CorrVar->NumeroVar_deviations = (int*)malloc(NbPdt * sizeof(int));
-        if (CorrVar->NumeroVar_deviations == NULL)
-            return (0);
-
-        CorrVar->NumeroVar_violations = (int*)malloc(NbPdt * sizeof(int));
-        if (CorrVar->NumeroVar_violations == NULL)
-            return (0);
+        CorrVar->NumeroVar_Turbine.assign(NbPdt, 0);
+        CorrVar->NumeroVar_niveauxFinJours.assign(NbPdt, 0);
+        CorrVar->NumeroVar_overflow.assign(NbPdt, 0);
+        CorrVar->NumeroVar_deviations.assign(NbPdt, 0);
+        CorrVar->NumeroVar_violations.assign(NbPdt, 0);
 
         PlFixe = ProblemeLineaireEtenduPartieFixe[i];
 
