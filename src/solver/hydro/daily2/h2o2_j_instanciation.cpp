@@ -178,9 +178,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         NombreDeVariables += 1;
 
         PlFixe->NombreDeVariables = NombreDeVariables;
-        PlFixe->CoutLineaire = (double*)malloc(NombreDeVariables * sizeof(double));
-        if (PlFixe->CoutLineaire == NULL)
-            return (0);
+        PlFixe->CoutLineaire.assign(NombreDeVariables, 0);
 
         PlFixe->TypeDeVariable = (int*)malloc(NombreDeVariables * sizeof(int));
         if (PlFixe->TypeDeVariable == NULL)
@@ -221,10 +219,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         NombreDeTermesAlloues += 2 * NbPdt;
 
         PlFixe->NombreDeTermesAlloues = NombreDeTermesAlloues;
-        PlFixe->CoefficientsDeLaMatriceDesContraintes
-          = (double*)malloc(NombreDeTermesAlloues * sizeof(double));
-        if (PlFixe->CoefficientsDeLaMatriceDesContraintes == NULL)
-            return (0);
+        PlFixe->CoefficientsDeLaMatriceDesContraintes.assign(NombreDeTermesAlloues, 0.);
 
         PlFixe->IndicesColonnes = (int*)malloc(NombreDeTermesAlloues * sizeof(int));
         if (PlFixe->IndicesColonnes == NULL)

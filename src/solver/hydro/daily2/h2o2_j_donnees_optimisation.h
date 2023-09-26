@@ -46,7 +46,7 @@
 typedef struct
 {
     int NombreDeVariables;
-    double* CoutLineaire;
+    std::vector<double> CoutLineaire;
     int* TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
                                                         (voir le fichier spx_constantes_externes.h
                             mais ne jamais utiliser les valeurs explicites des constantes):
@@ -61,7 +61,7 @@ typedef struct
     char* Sens;
     int* IndicesDebutDeLigne;
     int* NombreDeTermesDesLignes;
-    double* CoefficientsDeLaMatriceDesContraintes;
+    std::vector<double> CoefficientsDeLaMatriceDesContraintes;
     int* IndicesColonnes;
     int NombreDeTermesAlloues;
 } PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE;
