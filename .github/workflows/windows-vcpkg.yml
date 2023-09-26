@@ -10,7 +10,7 @@ on:
       - issue-*
       - release/*
       - doc/*
-      - windows-long-test
+      - windows-long-test2-develop
   schedule:
     - cron: '21 2 * * *'
 
