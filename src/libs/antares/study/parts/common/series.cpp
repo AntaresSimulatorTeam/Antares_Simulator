@@ -48,6 +48,9 @@ void DataSeriesCommon::markAsModified() const
     timeSeries.markAsModified();
 }
 
-
+uint64_t DataSeriesMemoryUsage(DataSeriesCommon* t)
+{
+    return (t) ? t->timeSeries.memoryUsage() : 0;
+}
 } // namespace Antares::Data
 

@@ -30,9 +30,7 @@
 #include <antares/array/matrix.h>
 #include "../../fwd.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Data series (Common)
@@ -57,9 +55,8 @@ public:
     */
     Matrix<uint32_t> timeseriesNumbers;
 }; // class DataSeriesCommon
-} // namespace Data
+
+uint64_t DataSeriesMemoryUsage(DataSeriesCommon* t);
+
 } // namespace Antares
-
-#include "series.hxx"
-
 #endif /* __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__ */
