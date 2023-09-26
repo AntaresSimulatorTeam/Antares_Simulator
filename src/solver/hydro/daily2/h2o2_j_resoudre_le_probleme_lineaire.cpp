@@ -127,9 +127,9 @@ RESOLUTION:
     Probleme->FaireDuScaling = OUI_SPX;
     Probleme->StrategieAntiDegenerescence = AGRESSIF;
 
-    Probleme->PositionDeLaVariable = ProblemeLineaireEtenduPartieVariable->PositionDeLaVariable;
+    Probleme->PositionDeLaVariable = ProblemeLineaireEtenduPartieVariable->PositionDeLaVariable.data();
     Probleme->NbVarDeBaseComplementaires = 0;
-    Probleme->ComplementDeLaBase = ProblemeLineaireEtenduPartieVariable->ComplementDeLaBase;
+    Probleme->ComplementDeLaBase = ProblemeLineaireEtenduPartieVariable->ComplementDeLaBase.data();
 
     Probleme->LibererMemoireALaFin = NON_SPX;
 

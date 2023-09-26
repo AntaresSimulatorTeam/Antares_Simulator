@@ -65,9 +65,6 @@ void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
 
         free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])
                ->AdresseOuPlacerLaValeurDesVariablesOptimisees);
-        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])
-               ->PositionDeLaVariable);
-        free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i]->ComplementDeLaBase);
         free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i]);
 
         ProbSpx = (PROBLEME_SPX*)ProblemeHydrauliqueEtendu->ProblemeSpx[i];

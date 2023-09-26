@@ -220,16 +220,10 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         for (j = 0; j < NombreDeVariables; j++)
             PlVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[j] = NULL;
 
-        PlVariable->PositionDeLaVariable = (int*)malloc(NombreDeVariables * sizeof(int));
-        if (PlVariable->PositionDeLaVariable == NULL)
-            return (0);
-
-        PlVariable->ComplementDeLaBase = (int*)malloc(NombreDeContraintes * sizeof(int));
-        if (PlVariable->ComplementDeLaBase == NULL)
-            return (0);
+        PlVariable->PositionDeLaVariable.assign(NombreDeVariables, 0);
+        PlVariable->ComplementDeLaBase.assign(NombreDeContraintes, 0);
 
         PlVariable->CoutsReduits.assign(NombreDeVariables, 0.);
-
         PlVariable->CoutsMarginauxDesContraintes.assign(NombreDeContraintes, 0.);
     }
 
