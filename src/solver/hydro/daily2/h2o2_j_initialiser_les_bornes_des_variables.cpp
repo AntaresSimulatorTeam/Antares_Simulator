@@ -38,8 +38,8 @@ void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES* Donnee
 
     int* NumeroVar_Turbine;
 
-    double* TurbineMax = DonneesMensuelles->TurbineMax;
-    const double* TurbineMin = DonneesMensuelles->TurbineMin;
+    const auto& TurbineMax = DonneesMensuelles->TurbineMax;
+    const auto& TurbineMin = DonneesMensuelles->TurbineMin;
 
     PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
     CORRESPONDANCE_DES_VARIABLES_PB_ETENDU* CorrespondanceDesVariables;

@@ -44,9 +44,9 @@ typedef struct
        avoir appele H2O2_J_Instanciation */
     int NombreDeJoursDuMois; /* A renseigner par l'appelant */
     double TurbineDuMois; /* A renseigner par l'appelant (somme des turbines cibles du mois) */
-    double* TurbineMax;   /* A renseigner par l'appelant : 1 valeur par jour */
-    double* TurbineMin;   /*Minimum Hourly Hydro-Storage Generation*/
-    double* TurbineCible; /* A renseigner par l'appelant : 1 valeur par jour */
+    std::vector<double> TurbineMax;   /* A renseigner par l'appelant : 1 valeur par jour */
+    std::vector<double> TurbineMin;   /*Minimum Hourly Hydro-Storage Generation*/
+    std::vector<double> TurbineCible; /* A renseigner par l'appelant : 1 valeur par jour */
     double reservoirCapacity;
     double NiveauInitialDuMois;
     double* niveauBas;

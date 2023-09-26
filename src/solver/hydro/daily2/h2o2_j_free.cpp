@@ -101,9 +101,6 @@ void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
     free(ProblemeHydrauliqueEtendu->Probleme);
     free(ProblemeHydrauliqueEtendu);
 
-    free(DonneesMensuelles->TurbineMax);
-    free(DonneesMensuelles->TurbineMin);
-    free(DonneesMensuelles->TurbineCible);
     free(DonneesMensuelles->Turbine);
 
     free(DonneesMensuelles->niveauBas);

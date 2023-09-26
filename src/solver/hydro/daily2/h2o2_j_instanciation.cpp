@@ -73,18 +73,9 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     NbJoursDUnProbleme[2] = 30;
     NbJoursDUnProbleme[3] = 31;
 
-    DonneesMensuellesEtendues->TurbineMax = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->TurbineMax == NULL)
-        return (NULL);  
- 
-    DonneesMensuellesEtendues->TurbineMin = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->TurbineMin == NULL)
-        return (NULL); 
-
-    DonneesMensuellesEtendues->TurbineCible
-      = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->TurbineCible == NULL)
-        return (NULL);
+    DonneesMensuellesEtendues->TurbineMax.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuellesEtendues->TurbineMin.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuellesEtendues->TurbineCible.assign(NbJoursDUnProbleme[3], 0.);
 
     DonneesMensuellesEtendues->niveauBas = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
     if (DonneesMensuellesEtendues->niveauBas == NULL)
