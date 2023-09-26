@@ -38,7 +38,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     int NombreDeVariables;
     int NombreDeContraintes;
     int NombreDeTermesAlloues;
-    DONNEES_MENSUELLES_ETENDUES* DonneesMensuellesEtendues;
+    DONNEES_MENSUELLES_ETENDUES* DonneesMensuellesEtendues = new DONNEES_MENSUELLES_ETENDUES;
     PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
 
     CORRESPONDANCE_DES_VARIABLES_PB_ETENDU** CorrespondanceDesVariables;
@@ -48,8 +48,6 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE* PlFixe;
     PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE* PlVariable;
 
-    DonneesMensuellesEtendues
-      = (DONNEES_MENSUELLES_ETENDUES*)malloc(sizeof(DONNEES_MENSUELLES_ETENDUES));
     if (DonneesMensuellesEtendues == NULL)
         return (NULL);
 
