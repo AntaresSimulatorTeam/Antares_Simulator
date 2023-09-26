@@ -97,7 +97,7 @@ RESOLUTION:
         Probleme->BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
 
         SPX_ModifierLeVecteurSecondMembre(ProbSpx,
-                                          ProblemeLineaireEtenduPartieVariable->SecondMembre,
+                                          ProblemeLineaireEtenduPartieVariable->SecondMembre.data(),
                                           ProblemeLineaireEtenduPartieFixe->Sens.data(),
                                           ProblemeLineaireEtenduPartieFixe->NombreDeContraintes);
     }
@@ -107,8 +107,8 @@ RESOLUTION:
 
     Probleme->CoutLineaire = ProblemeLineaireEtenduPartieFixe->CoutLineaire.data();
     Probleme->X = ProblemeLineaireEtenduPartieVariable->X;
-    Probleme->Xmin = ProblemeLineaireEtenduPartieVariable->Xmin;
-    Probleme->Xmax = ProblemeLineaireEtenduPartieVariable->Xmax;
+    Probleme->Xmin = ProblemeLineaireEtenduPartieVariable->Xmin.data();
+    Probleme->Xmax = ProblemeLineaireEtenduPartieVariable->Xmax.data();
     Probleme->NombreDeVariables = ProblemeLineaireEtenduPartieFixe->NombreDeVariables;
     Probleme->TypeDeVariable = ProblemeLineaireEtenduPartieFixe->TypeDeVariable;
 
@@ -119,7 +119,7 @@ RESOLUTION:
     Probleme->CoefficientsDeLaMatriceDesContraintes
       = ProblemeLineaireEtenduPartieFixe->CoefficientsDeLaMatriceDesContraintes.data();
     Probleme->Sens = ProblemeLineaireEtenduPartieFixe->Sens.data();
-    Probleme->SecondMembre = ProblemeLineaireEtenduPartieVariable->SecondMembre;
+    Probleme->SecondMembre = ProblemeLineaireEtenduPartieVariable->SecondMembre.data();
 
     Probleme->ChoixDeLAlgorithme = SPX_DUAL;
 

@@ -41,8 +41,8 @@ extern "C"
 void H2O2_j_ConstruireLesVariables(
   int NbPdt,
   DONNEES_MENSUELLES_ETENDUES* DonneesMensuellesEtendues,
-  double* Xmin,
-  double* Xmax,
+  std::vector<double>& Xmin,
+  std::vector<double>& Xmax,
   int* TypeDeVariable,
   double** AdresseOuPlacerLaValeurDesVariablesOptimisees,
   CORRESPONDANCE_DES_VARIABLES_PB_ETENDU* CorrespondanceDesVariables)

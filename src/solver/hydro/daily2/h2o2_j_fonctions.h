@@ -40,8 +40,8 @@ void H2O2_J_ConstruireLesContraintes(int,
                                      CORRESPONDANCE_DES_VARIABLES_PB_ETENDU*);
 void H2O2_j_ConstruireLesVariables(int,
                                    DONNEES_MENSUELLES_ETENDUES*,
-                                   double*,
-                                   double*,
+                                   std::vector<double>&,
+                                   std::vector<double>&,
                                    int*,
                                    double**,
                                    CORRESPONDANCE_DES_VARIABLES_PB_ETENDU*);
