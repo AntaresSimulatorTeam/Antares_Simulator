@@ -67,7 +67,6 @@ void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
         }
     }
 
-    free(ProblemeHydrauliqueEtendu->NbJoursDUnProbleme);
     free(ProblemeHydrauliqueEtendu->CorrespondanceDesVariables);
     free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe);
     free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable);

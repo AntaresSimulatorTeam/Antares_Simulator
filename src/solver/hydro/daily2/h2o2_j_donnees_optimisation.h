@@ -122,7 +122,7 @@ typedef struct
     char LesCoutsOntEteInitialises; /* Vaut OUI ou NON */
 
     int NombreDeProblemes;
-    int* NbJoursDUnProbleme;
+    std::vector<int> NbJoursDUnProbleme;
 
     CORRESPONDANCE_DES_VARIABLES_PB_ETENDU** CorrespondanceDesVariables;
 

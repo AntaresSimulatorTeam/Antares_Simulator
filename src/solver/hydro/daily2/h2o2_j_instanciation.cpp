@@ -31,7 +31,6 @@
 DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
 {
     int i;
-    int* NbJoursDUnProbleme;
     int NombreDeProblemes;
     int NbPdt;
     int j;
@@ -57,12 +56,9 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
 
     ProblemeHydrauliqueEtendu->NombreDeProblemes = 4;
 
-    ProblemeHydrauliqueEtendu->NbJoursDUnProbleme
-      = (int*)malloc(ProblemeHydrauliqueEtendu->NombreDeProblemes * sizeof(int));
-    if (ProblemeHydrauliqueEtendu->NbJoursDUnProbleme == NULL)
-        return (0);
+    auto& NbJoursDUnProbleme = ProblemeHydrauliqueEtendu->NbJoursDUnProbleme;
+    NbJoursDUnProbleme.assign(ProblemeHydrauliqueEtendu->NombreDeProblemes, 0);
 
-    NbJoursDUnProbleme = ProblemeHydrauliqueEtendu->NbJoursDUnProbleme;
     NbJoursDUnProbleme[0] = 28;
     NbJoursDUnProbleme[1] = 29;
     NbJoursDUnProbleme[2] = 30;
