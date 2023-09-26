@@ -65,7 +65,8 @@ public:
     */
     ISimulation(Data::Study& study,
                 const ::Settings& settings,
-                Benchmarking::IDurationCollector& duration_collector);
+                Benchmarking::IDurationCollector& duration_collector,
+                IResultWriter& resultWriter);
     //! Destructor
     ~ISimulation();
     //@}

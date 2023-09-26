@@ -969,22 +969,22 @@ bool TimeSeriesNumbers::Generate(Study& study)
     return true;
 }
 
-void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study)
+void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study, IResultWriter& resultWriter)
 {
     using namespace Antares::Data;
 
     if (study.parameters.storeTimeseriesNumbers)
     {
         fixTSNumbersWhenWidthIsOne(study);
-        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesLoad>();
-        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesSolar>();
-        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesHydro>();
-        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesWind>();
-        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesThermal>();
-        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesRenewable>();
-        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesTransmissionCapacities>();
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesLoad>(resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesSolar>(resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesHydro>(resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesWind>(resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesThermal>(resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesRenewable>(resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesTransmissionCapacities>(resultWriter);
 
-        Simulation::BindingConstraintsTimeSeriesNumbersWriter ts_writer(*study.resultWriter);
+        Simulation::BindingConstraintsTimeSeriesNumbersWriter ts_writer(resultWriter);
         ts_writer.write(study.bindingConstraintsGroups);
     }
 }

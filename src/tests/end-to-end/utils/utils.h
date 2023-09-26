@@ -139,7 +139,6 @@ private:
     Rules::Ptr rules_;
 };
 
-
 // =====================
 // Simulation handler
 // =====================
@@ -161,6 +160,7 @@ private:
     NullDurationCollector nullDurationCollector_;
     Settings settings_;
     Study& study_;
+    NullResultWriter resultWriter_;
 };
 
 
@@ -184,15 +184,3 @@ struct StudyBuilder
 };
 
 std::shared_ptr<Antares::Data::BindingConstraint> addBindingConstraints(Antares::Data::Study& study, std::string name, std::string group);
-
-class NullResultWriter: public Solver::IResultWriter {
-    void addEntryFromBuffer(const std::string &, Clob &) override;
-
-    void addEntryFromBuffer(const std::string &, std::string &) override;
-
-    void addEntryFromFile(const std::string &, const std::string &) override;
-
-    bool needsTheJobQueue() const override;
-
-    void finalize(bool ) override;
-};

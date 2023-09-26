@@ -234,8 +234,9 @@ private:
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
     const ::Settings& settings,
-    Benchmarking::IDurationCollector& duration_collector) :
-    ImplementationType(study),
+    Benchmarking::IDurationCollector& duration_collector,
+    IResultWriter& resultWriter) :
+    ImplementationType(study, resultWriter),
     study(study),
     settings(settings),
     pNbYearsReallyPerformed(0),
@@ -245,11 +246,11 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
                     study.parameters, 
                     study.calendar, 
                     study.maxNbYearsInParallel,
-                    *study.resultWriter),
+                    resultWriter),
     pFirstSetParallelWithAPerformedYearWasRun(false),
     pDurationCollector(duration_collector),
     pQueueService(study.pQueueService),
-    pResultWriter(*study.resultWriter)
+    pResultWriter(resultWriter)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -383,7 +384,7 @@ void ISimulation<Impl>::run()
         ImplementationType::variables.simulationEnd();
 
         // Export ts-numbers into output
-        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study);
+        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, pResultWriter);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.

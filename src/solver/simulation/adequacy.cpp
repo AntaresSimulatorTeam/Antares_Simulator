@@ -34,7 +34,10 @@ using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-Adequacy::Adequacy(Data::Study& study) : study(study), preproOnly(false)
+Adequacy::Adequacy(Data::Study& study, IResultWriter& resultWriter) :
+    study(study),
+    preproOnly(false),
+    resultWriter(resultWriter)
 {
 }
 
@@ -196,7 +199,7 @@ bool Adequacy::year(Progression::Task& progression,
                 OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
                                              &pProblemesHebdo[numSpace],
                                              study.parameters.adqPatchParams,
-                                             *study.resultWriter);
+                                             resultWriter);
 
                 computingHydroLevels(study.areas, pProblemesHebdo[numSpace], false);
 
