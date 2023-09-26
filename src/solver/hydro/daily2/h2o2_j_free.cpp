@@ -61,7 +61,6 @@ void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
         free(ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i]);
 
         free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i]->TypeDeVariable);
-        free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i]->IndicesColonnes);
         free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i]);
 
         free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i]->Xmin);

@@ -202,9 +202,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         PlFixe->NombreDeTermesAlloues = NombreDeTermesAlloues;
         PlFixe->CoefficientsDeLaMatriceDesContraintes.assign(NombreDeTermesAlloues, 0.);
 
-        PlFixe->IndicesColonnes = (int*)malloc(NombreDeTermesAlloues * sizeof(int));
-        if (PlFixe->IndicesColonnes == NULL)
-            return (0);
+        PlFixe->IndicesColonnes.assign(NombreDeTermesAlloues, 0);
 
         PlVariable = ProblemeLineaireEtenduPartieVariable[i];
         PlVariable->Xmin = (double*)malloc(NombreDeVariables * sizeof(double));

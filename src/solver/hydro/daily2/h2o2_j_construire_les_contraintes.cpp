@@ -34,7 +34,7 @@ void H2O2_J_ConstruireLesContraintes(
   std::vector<char>& Sens,
   std::vector<int>& NombreDeTermesDesLignes,
   std::vector<double>& CoefficientsDeLaMatriceDesContraintes,
-  int* IndicesColonnes,
+  std::vector<int>& IndicesColonnes,
   CORRESPONDANCE_DES_VARIABLES_PB_ETENDU* CorrespondanceDesVariables)
 {
     int NombreDeContraintes;
