@@ -31,12 +31,11 @@ void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES* DonneesMensue
                                       int NumeroDeProbleme)
 {
     PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
-    PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
 
     ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
-    ProblemeLineairePartieVariable
-      = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
-    auto& SecondMembre = ProblemeLineairePartieVariable->SecondMembre;
+    auto& ProblemeLineairePartieVariable
+        = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
+    auto& SecondMembre = ProblemeLineairePartieVariable.SecondMembre;
 
     int NbPdt, Pdt, Cnt;
 

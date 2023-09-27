@@ -40,9 +40,6 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     DONNEES_MENSUELLES_ETENDUES* DonneesMensuellesEtendues = new DONNEES_MENSUELLES_ETENDUES;
     PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
 
-    PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE** ProblemeLineaireEtenduPartieVariable;
-    PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE* PlVariable;
-
     if (DonneesMensuellesEtendues == NULL)
         return (NULL);
 
@@ -73,30 +70,20 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     DonneesMensuellesEtendues->deviations.assign(NbJoursDUnProbleme[3], 0.);
     DonneesMensuellesEtendues->violations.assign(NbJoursDUnProbleme[3], 0.);
 
-
     NombreDeProblemes = ProblemeHydrauliqueEtendu->NombreDeProblemes;
 
     ProblemeHydrauliqueEtendu->CorrespondanceDesVariables.resize(NombreDeProblemes);
     ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe.resize(NombreDeProblemes);
-
-    ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable
-      = (PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE**)malloc(
-        NombreDeProblemes * sizeof(PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE));
-    if (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable == NULL)
-        return (0);
+    ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable.resize(NombreDeProblemes);
 
     ProblemeHydrauliqueEtendu->ProblemeSpx.assign(NombreDeProblemes, nullptr);
     ProblemeHydrauliqueEtendu->Probleme = NULL;
 
     auto& CorrespondanceDesVariables = ProblemeHydrauliqueEtendu->CorrespondanceDesVariables;
-    auto& ProblemeLineaireEtenduPartieFixe = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe;
-    ProblemeLineaireEtenduPartieVariable
-      = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable;
-
-    for (i = 0; i < NombreDeProblemes; i++)
-    {
-        ProblemeLineaireEtenduPartieVariable[i] = new PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE;
-    }
+    auto& ProblemeLineaireEtenduPartieFixe
+        = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe;
+    auto& ProblemeLineaireEtenduPartieVariable
+        = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable;
 
     for (i = 0; i < NombreDeProblemes; i++)
     {
@@ -161,24 +148,20 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
 
         PlFixe.IndicesColonnes.assign(NombreDeTermesAlloues, 0);
 
-        PlVariable = ProblemeLineaireEtenduPartieVariable[i];
+        auto& PlVariable = ProblemeLineaireEtenduPartieVariable[i];
 
-        PlVariable->X.assign(NombreDeVariables, 0.);
-        PlVariable->Xmin.assign(NombreDeVariables, 0.);
-        PlVariable->Xmax.assign(NombreDeVariables, 0.);
-        PlVariable->SecondMembre.assign(NombreDeContraintes, 0.);
+        PlVariable.X.assign(NombreDeVariables, 0.);
+        PlVariable.Xmin.assign(NombreDeVariables, 0.);
+        PlVariable.Xmax.assign(NombreDeVariables, 0.);
+        PlVariable.SecondMembre.assign(NombreDeContraintes, 0.);
 
-        PlVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees.assign(NombreDeVariables, nullptr);
+        PlVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees.assign(NombreDeVariables, nullptr);
 
+        PlVariable.PositionDeLaVariable.assign(NombreDeVariables, 0);
+        PlVariable.ComplementDeLaBase.assign(NombreDeContraintes, 0);
 
-        for (j = 0; j < NombreDeVariables; j++)
-            PlVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[j] = NULL;
-
-        PlVariable->PositionDeLaVariable.assign(NombreDeVariables, 0);
-        PlVariable->ComplementDeLaBase.assign(NombreDeContraintes, 0);
-
-        PlVariable->CoutsReduits.assign(NombreDeVariables, 0.);
-        PlVariable->CoutsMarginauxDesContraintes.assign(NombreDeContraintes, 0.);
+        PlVariable.CoutsReduits.assign(NombreDeVariables, 0.);
+        PlVariable.CoutsMarginauxDesContraintes.assign(NombreDeContraintes, 0.);
     }
 
     for (i = 0; i < NombreDeProblemes; i++)
@@ -186,10 +169,10 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         H2O2_j_ConstruireLesVariables(
           NbJoursDUnProbleme[i],
           DonneesMensuellesEtendues,
-          ProblemeLineaireEtenduPartieVariable[i]->Xmin,
-          ProblemeLineaireEtenduPartieVariable[i]->Xmax,
+          ProblemeLineaireEtenduPartieVariable[i].Xmin,
+          ProblemeLineaireEtenduPartieVariable[i].Xmax,
           ProblemeLineaireEtenduPartieFixe[i].TypeDeVariable,
-          ProblemeLineaireEtenduPartieVariable[i]->AdresseOuPlacerLaValeurDesVariablesOptimisees,
+          ProblemeLineaireEtenduPartieVariable[i].AdresseOuPlacerLaValeurDesVariablesOptimisees,
           CorrespondanceDesVariables[i]);
 
         H2O2_J_ConstruireLesContraintes(
