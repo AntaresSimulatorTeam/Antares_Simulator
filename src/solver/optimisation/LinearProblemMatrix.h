@@ -63,7 +63,8 @@ public:
                              &hydraulicSmoothingGroup_,
                              &minMaxHydroPowerGroup_,
                              &maxPumpingGroup_,
-                             &areaHydroLevelGroup_};
+                             &areaHydroLevelGroup_,
+                             &finalStockGroup_};
     }
 
     void Run();
