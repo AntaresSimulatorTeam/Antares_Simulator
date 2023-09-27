@@ -43,13 +43,16 @@ void LinearProblemMatrix::ExportStructures()
         OPT_ExportAreaName(writer_, problemeHebdo_->NomsDesPays);
     }
 }
+void LinearProblemMatrix::InitiliazeProblemAResoudreCounters()
+{
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre.get();
+    ProblemeAResoudre->NombreDeContraintes = 0;
+    ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
+}
 
 void LinearProblemMatrix::Run()
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre.get();
-
-    ProblemeAResoudre->NombreDeContraintes = 0;
-    ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
+    InitiliazeProblemAResoudreCounters();
 
     for (auto& group : constraintgroups_)
     {

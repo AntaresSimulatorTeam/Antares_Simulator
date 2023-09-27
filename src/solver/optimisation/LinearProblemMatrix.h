@@ -82,4 +82,6 @@ private:
     AreaHydroLevelGroup areaHydroLevelGroup_;
     FinalStockGroup finalStockGroup_;
     std::vector<ConstraintGroup*> constraintgroups_;
+
+    void InitiliazeProblemAResoudreCounters();
 };
