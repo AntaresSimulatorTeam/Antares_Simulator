@@ -1,35 +1,25 @@
 #include "MaxHydroPower.h"
 
-void MaxHydroPower::add(int pays)
+void MaxHydroPower::add(int pays, std::shared_ptr<MaxHydroPowerData> data)
 {
-    bool presenceHydro
-      = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
-    bool TurbEntreBornes = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-    if (presenceHydro
-        && (TurbEntreBornes
-            || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
+    if (data->presenceHydro && (data->TurbEntreBornes || data->PresenceDePompageModulable))
     {
-        problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        data->NumeroDeContrainteMaxEnergieHydraulique[pays] = builder->data->nombreDeContraintes;
 
-        const int NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-        for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
+        for (int pdt = 0; pdt < builder->data->NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
-            builder.updateHourWithinWeek(pdt);
-            builder.HydProd(pays, 1.0);
+            builder->updateHourWithinWeek(pdt);
+            builder->HydProd(pays, 1.0);
         }
-        problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        data->NumeroDeContrainteMaxEnergieHydraulique[pays] = builder->data->nombreDeContraintes;
 
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-        namer.MaxHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        ConstraintNamer namer(builder->data->NomDesContraintes);
+        namer.UpdateArea(builder->data->NomsDesPays[pays]);
+        namer.UpdateTimeStep(builder->data->weekInTheYear);
+        namer.MaxHydroPower(builder->data->nombreDeContraintes);
 
-        builder.lessThan().build();
+        builder->lessThan().build();
     }
     else
-        problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays] = -1;
+        data->NumeroDeContrainteMaxEnergieHydraulique[pays] = -1;
 }
