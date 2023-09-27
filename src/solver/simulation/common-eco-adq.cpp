@@ -129,7 +129,6 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uin
         if (inAdequacy)
             memset(scratchpad.originalMustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
 
-        auto& PtChro = NumeroChroniquesTireesParPays[numSpace][i];
         double* mrs = scratchpad.mustrunSum;
         double* adq = scratchpad.originalMustrunSum;
 
@@ -139,25 +138,19 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uin
             for (auto i = area.thermal.mustrunList.begin(); i != end; ++i)
             {
                 auto& cluster = *(i->second);
-                auto& series = cluster.series->timeSeries;
-                uint tsIndex = static_cast<uint>(PtChro.ThermiqueParPalier[cluster.areaWideIndex]);
-                if (tsIndex >= series.width)
-                    tsIndex = 0;
-
-                auto& column = series[tsIndex];
 
                 if (inAdequacy && cluster.mustrunOrigin)
                 {
-                    for (uint h = 0; h != series.height; ++h)
+                    for (uint h = 0; h != 168; ++h)
                     {
-                        mrs[h] += column[h];
-                        adq[h] += column[h];
+                        mrs[h] += cluster.series->getValue(h, year);
+                        adq[h] += cluster.series->getValue(h, year);
                     }
                 }
                 else
                 {
-                    for (uint h = 0; h != series.height; ++h)
-                        mrs[h] += column[h];
+                    for (uint h = 0; h != 168; ++h)
+                        mrs[h] += cluster.series->getValue(h, year);
                 }
             }
         }
@@ -171,14 +164,8 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uin
                 if (!cluster.mustrunOrigin)
                     continue;
 
-                auto& series = cluster.series->timeSeries;
-                uint tsIndex = static_cast<uint>(PtChro.ThermiqueParPalier[cluster.areaWideIndex]);
-                if (tsIndex >= series.width)
-                    tsIndex = 0;
-
-                auto& column = series[tsIndex];
-                for (uint h = 0; h != series.height; ++h)
-                    adq[h] += column[h];
+                for (uint h = 0; h != 168; ++h)
+                    adq[h] += cluster.series->getValue(h, year);
             }
         }
     }
