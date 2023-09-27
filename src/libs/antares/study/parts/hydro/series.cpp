@@ -199,100 +199,6 @@ void DataSeriesHydro::checkMinGenTsNumber(Study& study, const AreaName& areaID)
     }
 }
 
-bool DataSeriesHydro::LoadMaxPower(Study& study, const AreaName& areaID, const AnyString& folder)
-{
-    bool ret = true;
-    auto& buffer = study.bufferLoadingTS;
-
-    if (study.header.version >= 870)
-    {
-        buffer.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower." << study.inputExtension;
-        ret = maxHourlyGenPower.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
-        buffer.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower." << study.inputExtension;
-        ret = maxHourlyPumpPower.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
-    }
-
-    countpowercredits = maxHourlyGenPower.width;
-
-    if (maxHourlyPumpPower.width > countpowercredits)
-        countpowercredits = maxHourlyPumpPower.width;
-
-    if (study.usedByTheSolver)
-    {
-        if (countpowercredits == 0)
-        {
-            logs.error() << "Hydro Max Power: `" << areaID
-                         << "`: empty matrix detected. Fixing it with default values";
-
-            maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
-            maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
-        }
-        else
-        {
-            if (countpowercredits > 1 && maxHourlyGenPower.width != maxHourlyPumpPower.width)
-            {
-                if (maxHourlyPumpPower.width != 1 && maxHourlyGenPower.width != 1)
-                {
-                    logs.fatal() << "Hydro Max Power: `" << areaID
-                                 << "`: The matrices Maximum Generation and Maximum Pumping must "
-                                    "have the same number of time-series.";
-                    study.gotFatalError = true;
-                }
-                else
-                {
-                    if (maxHourlyPumpPower.width == 1)
-                    {
-                        maxHourlyPumpPower.resizeWithoutDataLost(countpowercredits, maxHourlyPumpPower.height);
-                        for (uint x = 1; x < countpowercredits; ++x)
-                            maxHourlyPumpPower.pasteToColumn(x, maxHourlyPumpPower[0]);
-                    }
-                    else
-                    {
-                        if (maxHourlyGenPower.width == 1)
-                        {
-                            maxHourlyGenPower.resizeWithoutDataLost(countpowercredits, maxHourlyGenPower.height);
-                            for (uint x = 1; x < countpowercredits; ++x)
-                                maxHourlyGenPower.pasteToColumn(x, maxHourlyGenPower[0]);
-                        }
-                    }
-                    Area* areaToInvalidate = study.areas.find(areaID);
-                    if (areaToInvalidate)
-                    {
-                        areaToInvalidate->invalidateJIT = true;
-                        logs.info() << "  '" << areaID
-                                    << "': The hydro max power data have been normalized to "
-                                    << countpowercredits << " timeseries";
-                    }
-                    else
-                        logs.error()
-                          << "Impossible to find the area `" << areaID << "` to invalidate it";
-                }
-            }
-        }
-
-        if (study.parameters.derated)
-        {
-            maxHourlyGenPower.averageTimeseries();
-            maxHourlyPumpPower.averageTimeseries();
-            countpowercredits = 1;
-        }
-    }
-    else
-    {
-        // Is area hydro modulable ?
-        Area* area = study.areas.find(areaID);
-
-        if (MatrixTestForAtLeastOnePositiveValue(maxHourlyGenPower))
-        {
-            area->hydro.hydroModulable = true;
-        }
-    }
-
-    timeseriesNumbersHydroMaxPower.clear();
-
-    return ret;
-}
-
 bool DataSeriesHydro::forceReload(bool reload) const
 {
     bool ret = true;
@@ -329,5 +235,159 @@ uint64_t DataSeriesHydro::memoryUsage() const
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage()
            + maxHourlyGenPower.memoryUsage() + maxHourlyPumpPower.memoryUsage();
 }
+
+bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& folder)
+{
+    bool ret = true;
+    YString filepath;
+    Matrix<>::BufferType fileContent;
+
+    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower"
+                     << ".txt";
+    ret = maxHourlyGenPower.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
+    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower"
+                     << ".txt";
+    ret = maxHourlyPumpPower.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
+
+    timeseriesNumbersHydroMaxPower.clear();
+
+    return ret;
+}
+
+bool DataSeriesHydro::postProcessMaxPowerTS(Area& area)
+{
+    NbTsComparer nbTSCompare(maxHourlyGenPower.width, maxHourlyPumpPower.width);
+    TsActions tsActions(maxHourlyGenPower, maxHourlyPumpPower);
+    //  What will happen if one width is 0 and second one is 1
+    //  This case is not cover even in previous version
+    if (nbTSCompare.bothZeros())
+    {
+        tsActions.handleBothZeros(area.id);
+        return false;
+    }
+
+    if (nbTSCompare.same())
+        return true;
+
+    if (nbTSCompare.differentAndGreaterThanOne(countpowercredits))
+    {
+        tsActions.handleBothGreaterThanOne(area.id);
+        return false;
+    }
+
+    tsActions.resizeWhenOneTS(area, countpowercredits);
+
+    return true;
+}
+
+void DataSeriesHydro::setHydroModulability(Study& study, const AreaName& areaID)
+{
+    Area* area = study.areas.find(areaID);
+
+    if (MatrixTestForAtLeastOnePositiveValue(maxHourlyGenPower))
+    {
+        area->hydro.hydroModulable = true;
+    }
+}
+
+void DataSeriesHydro::setCountVariable()
+{
+    auto& maxHourlyGenPower_ = maxHourlyGenPower.width;
+    auto& maxHourlyPumpPower_ = maxHourlyPumpPower.width;
+
+    countpowercredits
+      = (maxHourlyGenPower_ >= maxHourlyPumpPower_) ? maxHourlyGenPower_ : maxHourlyPumpPower_;
+}
+
+void DataSeriesHydro::setMaxPowerTSWhenDeratedMode(Study& study)
+{
+    if (study.parameters.derated)
+    {
+        maxHourlyGenPower.averageTimeseries();
+        maxHourlyPumpPower.averageTimeseries();
+        countpowercredits = 1;
+    }
+}
+
+DataSeriesHydro::NbTsComparer::NbTsComparer(uint32_t nbOfGenPowerTs_, uint32_t nbOfPumpPowerTs_) :
+ nbOfGenPowerTs(nbOfGenPowerTs_), nbOfPumpPowerTs(nbOfPumpPowerTs_)
+{
+}
+
+bool DataSeriesHydro::NbTsComparer::bothZeros()
+{
+    return (nbOfGenPowerTs || nbOfPumpPowerTs) ? false : true;
+}
+
+bool DataSeriesHydro::NbTsComparer::same()
+{
+    return (nbOfGenPowerTs == nbOfPumpPowerTs) ? true : false;
+}
+
+bool DataSeriesHydro::NbTsComparer::differentAndGreaterThanOne(uint countpowercredits_)
+{
+    return (countpowercredits_ > 1 && (nbOfGenPowerTs != 1) && (nbOfPumpPowerTs != 1)) ? true
+                                                                                       : false;
+}
+
+DataSeriesHydro::TsActions::TsActions(Matrix<double, int32_t>& maxHourlyGenPower_,
+                                      Matrix<double, int32_t>& maxHourlyPumpPower_) :
+ maxHourlyGenPower(maxHourlyGenPower_), maxHourlyPumpPower(maxHourlyPumpPower_)
+{
+}
+
+void DataSeriesHydro::TsActions::handleBothZeros(const AreaName& areaID)
+{
+    logs.error() << "Hydro Max Power: `" << areaID
+                 << "`: empty matrix detected. Fixing it with default values";
+
+    maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
+}
+
+void DataSeriesHydro::TsActions::handleBothGreaterThanOne(const AreaName& areaID)
+{
+    logs.fatal() << "Hydro Max Power: `" << areaID
+                 << "`: The matrices Maximum Generation and Maximum Pumping must "
+                    "have the same number of time-series.";
+    throw Error::ReadingStudy();
+}
+
+void DataSeriesHydro::TsActions::resizeWhenOneTS(Area& area, uint countpowercredits)
+{
+    if (maxHourlyGenPower.width == 1)
+    {
+        resizeMatrixNoDataLoss(maxHourlyGenPower, countpowercredits);
+        areaToInvalidate(&area, countpowercredits);
+        return;
+    }
+
+    if (maxHourlyPumpPower.width == 1)
+    {
+        resizeMatrixNoDataLoss(maxHourlyPumpPower, countpowercredits);
+        areaToInvalidate(&area, countpowercredits);
+        return;
+    }
+}
+
+void DataSeriesHydro::TsActions::areaToInvalidate(Area* area, uint countpowercredits)
+{
+    if (area)
+    {
+        area->invalidateJIT = true;
+        logs.info() << "  '" << area->id << "': The hydro max power data have been normalized to "
+                    << countpowercredits << " timeseries";
+    }
+    else
+        logs.error() << "Impossible to find the area `" << area->id << "` to invalidate it";
+}
+
+void resizeMatrixNoDataLoss(Matrix<double, int32_t>& matrixToResize, uint width)
+{
+    matrixToResize.resizeWithoutDataLost(width, matrixToResize.height);
+    for (uint x = 1; x < width; ++x)
+        matrixToResize.pasteToColumn(x, matrixToResize[0]);
+}
+
 } // namespace Data
 } // namespace Antares

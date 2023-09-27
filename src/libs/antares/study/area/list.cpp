@@ -915,10 +915,19 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = reader(buffer, area) && ret;
         }
 
-        if (area.hydro.series)
+        if (area.hydro.series && study.header.version >= 870)
         {
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->LoadMaxPower(study, area.id, buffer) && ret;
+            ret = area.hydro.series->LoadMaxPower(area.id, buffer) && ret;
+
+            if (study.usedByTheSolver)
+            {
+                area.hydro.series->setCountVariable();
+                ret = area.hydro.series->postProcessMaxPowerTS(area) && ret;
+                area.hydro.series->setMaxPowerTSWhenDeratedMode(study);
+            }
+            else
+                area.hydro.series->setHydroModulability(study, area.id);
         }
 
         buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "common" << SEP

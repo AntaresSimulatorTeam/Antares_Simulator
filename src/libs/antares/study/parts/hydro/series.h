@@ -29,6 +29,7 @@
 
 #include <antares/array/matrix.h>
 #include "../../fwd.h"
+#include <antares/exception/antares/exception/LoadingError.hpp>
 
 namespace Antares
 {
@@ -168,9 +169,46 @@ public:
     */
     Matrix<uint32_t> timeseriesNumbers;
     Matrix<uint32_t> timeseriesNumbersHydroMaxPower;
-    bool LoadMaxPower(Study& study, const AreaName& areaID, const AnyString& folder);
+    bool LoadMaxPower(const AreaName& areaID, const AnyString& folder);
+    bool postProcessMaxPowerTS(Area& area);
+    void setHydroModulability(Study& study, const AreaName& areaID);
+    void setCountVariable();
+    void setMaxPowerTSWhenDeratedMode(Study& study);
+
+    class NbTsComparer
+    {
+    public:
+        NbTsComparer(uint32_t nbOfGenPowerTs_, uint32_t nbOfPumpPowerTs_);
+
+        bool bothZeros();
+        bool same();
+        bool differentAndGreaterThanOne(uint countpowercredits_);
+
+    private:
+        uint32_t nbOfGenPowerTs{0};
+        uint32_t nbOfPumpPowerTs{0};
+    };
+
+    class TsActions
+    {
+    public:
+        TsActions(Matrix<double, int32_t>& maxHourlyGenPower_,
+                  Matrix<double, int32_t>& maxHourlyPumpPower_);
+
+        void handleBothZeros(const AreaName& areaID);
+        void handleBothGreaterThanOne(const AreaName& areaID);
+        void resizeWhenOneTS(Area& area, uint countpowercredits);
+
+    private:
+        Matrix<double, int32_t>& maxHourlyGenPower;
+        Matrix<double, int32_t>& maxHourlyPumpPower;
+
+        void areaToInvalidate(Area* area, uint countpowercredits);
+    };
 
 }; // class DataSeriesHydro
+
+void resizeMatrixNoDataLoss(Matrix<double, int32_t>& maxHourlyGenPower, uint width);
 
 } // namespace Data
 } // namespace Antares

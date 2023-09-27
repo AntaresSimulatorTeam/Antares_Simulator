@@ -52,6 +52,8 @@ target_include_directories(test-hydro-series
 	"${src_libs_antares_study}"
 	"${src_libs_antares_study}/parts/hydro"
 	"${src_libs_antares}/array/antares/array"
+	"${src_libs_antares}/array/antares/array"
+	"${src_libs_antares}/exception/antares/exception"
 )
 
 target_link_libraries(test-hydro-series
@@ -61,6 +63,7 @@ target_link_libraries(test-hydro-series
 	model_antares
 	antares-solver-hydro
 	yuni-static-core
+	exception
 )
 
 # Linux
