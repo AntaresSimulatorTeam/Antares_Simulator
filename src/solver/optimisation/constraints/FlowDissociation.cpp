@@ -1,31 +1,26 @@
 #include "FlowDissociation.h"
+#include "opt_rename_problem.h"
 
-void FlowDissociation::add(int pdt, int interco)
+void FlowDissociation::add(int pdt, int interco, std::shared_ptr<FlowDissociationData> data)
 {
-    if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
+    if (const COUTS_DE_TRANSPORT& CoutDeTransport = data->CoutDeTransport[interco];
         CoutDeTransport.IntercoGereeAvecDesCouts)
     {
-        CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-          = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-        CorrespondanceCntNativesCntOptim.NumeroDeContrainteDeDissociationDeFlux[interco]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-
-        const auto origin
-          = problemeHebdo->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
+        data->NumeroDeContrainteDeDissociationDeFlux[interco] = builder->data->nombreDeContraintes;
+        const auto origin = builder->data->NomsDesPays[data->PaysOrigineDeLInterconnexion[interco]];
         const auto destination
-          = problemeHebdo->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        namer.FlowDissociation(
-          problemeHebdo->ProblemeAResoudre->NombreDeContraintes, origin, destination);
+          = builder->data->NomsDesPays[data->PaysExtremiteDeLInterconnexion[interco]];
+        ConstraintNamer namer(builder->data->NomDesContraintes);
+        namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
+        namer.FlowDissociation(builder->data->nombreDeContraintes, origin, destination);
 
-        builder.updateHourWithinWeek(pdt);
-        builder.NTCDirect(interco, 1.0)
+        builder->updateHourWithinWeek(pdt);
+        builder->NTCDirect(interco, 1.0)
           .IntercoDirectCost(interco, -1.0)
           .IntercoIndirectCost(interco, 1.0);
 
-        builder.equalTo();
+        builder->equalTo();
 
-        builder.build();
+        builder->build();
     }
 }
