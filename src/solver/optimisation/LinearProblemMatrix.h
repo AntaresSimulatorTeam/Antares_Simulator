@@ -36,7 +36,7 @@
 #include "constraints/MaxPumpingGroup.h"
 #include "constraints/AreaHydroLevelGroup.h"
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 using namespace Antares::Data;
 class LinearProblemMatrix
