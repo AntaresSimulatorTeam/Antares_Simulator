@@ -31,7 +31,7 @@ jobs:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_windows-latest_static_sirius.zip"
-      RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
+      RUN_EXTENDED_TESTS: 'true'
 
     steps:
     - uses: actions/checkout@v3
@@ -204,6 +204,9 @@ jobs:
         batch-name: medium-tests
         os: ${{ matrix.test-platform }}
 
+    - name: Disk free
+      run: fsutil volume diskfree d:
+
     - name: Run long-tests-1
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
@@ -211,6 +214,9 @@ jobs:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-1
         os: ${{ matrix.test-platform }}
+
+    - name: Disk free
+      run: fsutil volume diskfree d:
 
     - name: Run long-tests-2
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
