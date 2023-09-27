@@ -35,7 +35,7 @@
 
 #include <antares/Enum.hpp>
 #include "antares/writer/i_writer.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 namespace Antares
 {

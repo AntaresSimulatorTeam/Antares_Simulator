@@ -186,7 +186,7 @@ public:
     */
     void resizeAllTimeseriesNumbers(uint n);
 
-    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
+    void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 
     //@}
 
@@ -216,7 +216,7 @@ public:
     ** \brief Get the size (bytes) occupied in memory by a `ClusterList` structure
     ** \return A size (in bytes)
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
 public:
     //! All clusters by their index

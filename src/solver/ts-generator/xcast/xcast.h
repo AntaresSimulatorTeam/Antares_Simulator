@@ -74,7 +74,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    XCast(Data::Study& study, Data::TimeSeries ts, IResultWriter::Ptr writer);
+    XCast(Data::Study& study, Data::TimeSeries ts, IResultWriter& writer);
     /*!
     ** \brief Destructor
     */
@@ -250,7 +250,7 @@ private:
     //! Name of the current timeseries
     Yuni::CString<32, false> pTSName;
 
-    IResultWriter::Ptr pWriter;
+    IResultWriter& pWriter;
 }; // class XCast
 
 } // namespace XCast

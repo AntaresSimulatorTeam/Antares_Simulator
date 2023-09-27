@@ -30,13 +30,10 @@
 
 void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES* DonneesMensuelles)
 {
-    int NumeroDeProbleme;
-    int i;
-
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
-    NumeroDeProbleme = -1;
-    for (i = 0; i < ProblemeHydraulique.NombreDeProblemes; i++)
+    int NumeroDeProbleme = -1;
+    for (int i = 0; i < ProblemeHydraulique.NombreDeProblemes; i++)
     {
         if (DonneesMensuelles->NombreDeJoursDuMois == ProblemeHydraulique.NbJoursDUnProbleme[i])
         {
@@ -53,11 +50,8 @@ void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES* DonneesMensuelles)
     DonneesMensuelles->ResultatsValides = NON;
 
     H2O_J_InitialiserLeSecondMembre(DonneesMensuelles, NumeroDeProbleme);
-
     H2O_J_InitialiserLesBornesdesVariables(DonneesMensuelles, NumeroDeProbleme);
-
     H2O_J_ResoudreLeProblemeLineaire(DonneesMensuelles, NumeroDeProbleme);
-
     H2O_J_LisserLesSurTurbines(DonneesMensuelles, NumeroDeProbleme);
 
     return;

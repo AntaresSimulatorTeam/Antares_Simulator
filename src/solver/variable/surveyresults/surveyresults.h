@@ -30,17 +30,13 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include "../constants.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "../categories.h"
 #include "data.h"
 #include <antares/study/variable-print-info.h>
 #include <antares/writer/i_writer.h>
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 /*!
 ** \brief Class utility for building CSV results files
@@ -67,7 +63,7 @@ public:
     */
     SurveyResults(const Data::Study& s,
                   const Yuni::String& o,
-                  IResultWriter::Ptr writer);
+                  IResultWriter& writer);
     /*!
     ** \brief Destructor
     */
@@ -142,7 +138,7 @@ public:
     //! Same thing for print status (do we print the current output variable ?)
     bool* isPrinted;
     // File writer
-    IResultWriter::Ptr pResultWriter;
+    IResultWriter& pResultWriter;
 
 private:
     template<class StringT, class ConvertT, class PrecisionT>
@@ -157,8 +153,8 @@ private:
 
 }; // class SurveyResults
 
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable
+
+
 
 #endif // __SOLVER_VARIABLE_SURVEY_RESULTS_SURVEY_RESULTS_H__

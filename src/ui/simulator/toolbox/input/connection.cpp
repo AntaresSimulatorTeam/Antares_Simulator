@@ -26,7 +26,7 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "connection.h"
 #include "../components/captionpanel.h"
 #include "../../application/study.h"

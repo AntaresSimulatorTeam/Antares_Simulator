@@ -82,7 +82,7 @@ public:
     /*!
     ** \brief Get the amount of memory used by the class
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     //! All {FO,PO}{Duration,Rate} annual values
     // max x DAYS_PER_YEAR

@@ -121,14 +121,14 @@ wxColour XCastTranslation<T>::horizontalBorderColor(int x, int y) const
 template<enum Data::TimeSeries T>
 void XCastTranslation<T>::onStudyClosed()
 {
-    Renderer::Matrix<yint32>::onStudyClosed();
+    Renderer::Matrix<int32_t>::onStudyClosed();
     Renderer::ARendererArea::onStudyClosed();
 }
 
 template<enum Data::TimeSeries T>
 void XCastTranslation<T>::onStudyLoaded()
 {
-    Renderer::Matrix<yint32>::onStudyLoaded();
+    Renderer::Matrix<int32_t>::onStudyLoaded();
     Renderer::ARendererArea::onStudyLoaded();
 }
 

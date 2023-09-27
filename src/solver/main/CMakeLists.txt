@@ -8,16 +8,14 @@ set(SRC_SOLVER_MAIN_ADEQUACY       adequacy.cpp)
 
 
 
-add_library(libantares-solver-main-adequacy  ${SRC_SOLVER_MAIN_ADEQUACY})
-target_link_libraries(libantares-solver-main-adequacy
+add_library(antares-solver-main-adequacy  ${SRC_SOLVER_MAIN_ADEQUACY})
+target_link_libraries(antares-solver-main-adequacy
         PRIVATE
-        libantares-core
         Antares::infoCollection
 )
 
-add_library(libantares-solver-main-economy   ${SRC_SOLVER_MAIN_ECONOMY})
-target_link_libraries(libantares-solver-main-economy
+add_library(antares-solver-main-economy   ${SRC_SOLVER_MAIN_ECONOMY})
+target_link_libraries(antares-solver-main-economy
         PRIVATE
-        libantares-core
         Antares::infoCollection
 )

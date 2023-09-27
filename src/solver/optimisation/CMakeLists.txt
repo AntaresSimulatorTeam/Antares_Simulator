@@ -70,80 +70,79 @@ set(RTESOLVER_OPT
 		opt_rename_problem.h
 		opt_rename_problem.cpp
 
-		constraint_builder.cpp
-		constraint_builder.h
-		new_constraint_builder.cpp
-		new_constraint_builder.h
-		new_constraint_builder_utils.cpp
-		new_constraint_builder_utils.h
 
-		AreaBalance.h
-		AreaBalance.cpp
-		FictitiousLoad.h
-		FictitiousLoad.cpp
-		ShortTermStorageLevel.h
-		ShortTermStorageLevel.cpp
-		FlowDissociation.h
-		FlowDissociation.cpp
-		BindingConstraintHour.h
-		BindingConstraintHour.cpp
-		BindingConstraintDay.h
-		BindingConstraintDay.cpp
-		BindingConstraintWeek.h
-		BindingConstraintWeek.cpp
-		HydroPower.h
-		HydroPower.cpp
-		HydroPowerSmoothingUsingVariationSum.h
-		HydroPowerSmoothingUsingVariationSum.cpp
-		HydroPowerSmoothingUsingVariationMaxDown.h
-		HydroPowerSmoothingUsingVariationMaxDown.cpp
-		HydroPowerSmoothingUsingVariationMaxUp.h
-		HydroPowerSmoothingUsingVariationMaxUp.cpp
-		MinHydroPower.h
-		MinHydroPower.cpp
-		MaxHydroPower.h
-		MaxHydroPower.cpp
-		MaxPumping.h
-		MaxPumping.cpp
-		AreaHydroLevel.h
-		AreaHydroLevel.cpp
-		FinalStockEquivalent.h
-		FinalStockEquivalent.cpp
-		FinalStockExpression.h
-		FinalStockExpression.cpp
-
-		PMaxDispatchableGeneration.h
-		PMaxDispatchableGeneration.cpp
-		PMinDispatchableGeneration.h
-		PMinDispatchableGeneration.cpp
-		ConsistenceNODU.h
-		ConsistenceNODU.cpp
-		NbUnitsOutageLessThanNbUnitsStop.h
-		NbUnitsOutageLessThanNbUnitsStop.cpp
-		NbDispUnitsMinBoundSinceMinUpTime.h
-		NbDispUnitsMinBoundSinceMinUpTime.cpp
-		MinDownTime.h
-		MinDownTime.cpp
+		constraints/new_constraint_builder.cpp
+		constraints/new_constraint_builder.h
+		constraints/new_constraint_builder_utils.cpp
+		constraints/new_constraint_builder_utils.h
+		constraints/ConstraintBuilder.cpp
+		constraints/ConstraintBuilder.h
+		constraints/AreaBalance.h
+		constraints/AreaBalance.cpp
+		constraints/FictitiousLoad.h
+		constraints/FictitiousLoad.cpp
+		constraints/ShortTermStorageLevel.h
+		constraints/ShortTermStorageLevel.cpp
+		constraints/FlowDissociation.h
+		constraints/FlowDissociation.cpp
+		constraints/BindingConstraintHour.h
+		constraints/BindingConstraintHour.cpp
+		constraints/BindingConstraintDay.h
+		constraints/BindingConstraintDay.cpp
+		constraints/BindingConstraintWeek.h
+		constraints/BindingConstraintWeek.cpp
+		constraints/HydroPower.h
+		constraints/HydroPower.cpp
+		constraints/HydroPowerSmoothingUsingVariationSum.h
+		constraints/HydroPowerSmoothingUsingVariationSum.cpp
+		constraints/HydroPowerSmoothingUsingVariationMaxDown.h
+		constraints/HydroPowerSmoothingUsingVariationMaxDown.cpp
+		constraints/HydroPowerSmoothingUsingVariationMaxUp.h
+		constraints/HydroPowerSmoothingUsingVariationMaxUp.cpp
+		constraints/MinHydroPower.h
+		constraints/MinHydroPower.cpp
+		constraints/MaxHydroPower.h
+		constraints/MaxHydroPower.cpp
+		constraints/MaxPumping.h
+		constraints/MaxPumping.cpp
+		constraints/AreaHydroLevel.h
+		constraints/AreaHydroLevel.cpp
+		constraints/FinalStockEquivalent.h
+		constraints/FinalStockEquivalent.cpp
+		constraints/FinalStockExpression.h
+		constraints/FinalStockExpression.cpp
+		constraints/PMaxDispatchableGeneration.h
+		constraints/PMaxDispatchableGeneration.cpp
+		constraints/PMinDispatchableGeneration.h
+		constraints/PMinDispatchableGeneration.cpp
+		constraints/ConsistenceNumberOfDispatchableUnits.h
+		constraints/ConsistenceNumberOfDispatchableUnits.cpp
+		constraints/NbUnitsOutageLessThanNbUnitsStop.h
+		constraints/NbUnitsOutageLessThanNbUnitsStop.cpp
+		constraints/NbDispUnitsMinBoundSinceMinUpTime.h
+		constraints/NbDispUnitsMinBoundSinceMinUpTime.cpp
+		constraints/MinDownTime.h
+		constraints/MinDownTime.cpp
 
 		LinearProblemMatrix.h
 		LinearProblemMatrix.cpp
-		ConstraintGroup.h
-		Group1.h
-		Group1.cpp
-		BindingConstraintDayGroup.h
-		BindingConstraintDayGroup.cpp
-		BindingConstraintWeekGroup.h
-		BindingConstraintWeekGroup.cpp
-		HydroPowerGroup.h
-		HydroPowerGroup.cpp
-		HydraulicSmoothingGroup.h
-		HydraulicSmoothingGroup.cpp
-		MinMaxHydroPowerGroup.h
-		MinMaxHydroPowerGroup.cpp
-		MaxPumpingGroup.h
-		MaxPumpingGroup.cpp
-		AreaHydroLevelGroup.h
-		AreaHydroLevelGroup.cpp
+		constraints/ConstraintGroup.h
+		constraints/Group1.h
+		constraints/Group1.cpp
+		constraints/BindingConstraintDayGroup.h
+		constraints/BindingConstraintDayGroup.cpp
+		constraints/BindingConstraintWeekGroup.h
+		constraints/BindingConstraintWeekGroup.cpp
+		constraints/HydroPowerGroup.h
+		constraints/HydroPowerGroup.cpp
+		constraints/HydraulicSmoothingGroup.h
+		constraints/HydraulicSmoothingGroup.cpp
+		constraints/MinMaxHydroPowerGroup.h
+		constraints/MinMaxHydroPowerGroup.cpp
+		constraints/MaxPumpingGroup.h
+		constraints/MaxPumpingGroup.cpp
+		constraints/AreaHydroLevelGroup.h
+		constraints/AreaHydroLevelGroup.cpp
 
 	)
 
@@ -153,19 +152,20 @@ set(SRC_MODEL
 	${RTESOLVER_OPT}
 )
 
-add_library(libmodel_antares ${SRC_MODEL})
+add_library(model_antares ${SRC_MODEL})
 if(NOT MSVC)
-	target_compile_options(libmodel_antares
+	target_compile_options(model_antares
 			PUBLIC
 			"-Wno-unused-variable")
 else()
 	#set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 	#set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 endif()
-target_link_libraries(libmodel_antares
+target_link_libraries(model_antares
 		PUBLIC
-		libantares-core
 		utils
 		sirius_solver
 		infeasible_problem_analysis
-		libantares-solver-simulation)
+		antares-solver-simulation
+		Antares::benchmarking
+)

@@ -27,7 +27,7 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_H__
 #define __SOLVER_SIMULATION_SOLVER_H__
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <antares/logs/logs.h>
 #include <antares/study/fwd.h> // PowerFluctuations
 #include <antares/benchmarking/DurationCollector.h>
@@ -65,7 +65,8 @@ public:
     */
     ISimulation(Data::Study& study,
                 const ::Settings& settings,
-                Benchmarking::IDurationCollector* duration_collector);
+                Benchmarking::IDurationCollector& duration_collector,
+                IResultWriter& resultWriter);
     //! Destructor
     ~ISimulation();
     //@}
@@ -157,7 +158,7 @@ private:
     //! Year by year output results
     bool pYearByYear;
     //! Hydro management
-    HydroManagement pHydroManagement;
+    HydroManagement hydroManagement;
     //! Hydro hot start
     bool pHydroHotStart;
     //! The first set of parallel year(s) with a performed year was already run ?
@@ -167,15 +168,13 @@ private:
     annualCostsStatistics pAnnualCostsStatistics;
 
     // Collecting durations inside the simulation
-    Benchmarking::IDurationCollector* pDurationCollector;
-
-    VAL_GEN_PAR_PAYS valeursGenereesParPays;
+    Benchmarking::IDurationCollector& pDurationCollector;
 
 public:
     //! The queue service that runs every set of parallel years
     std::shared_ptr<Yuni::Job::QueueService> pQueueService = nullptr;
     //! Result writer
-    Antares::Solver::IResultWriter::Ptr pResultWriter = nullptr;
+    Antares::Solver::IResultWriter& pResultWriter;
 
 }; // class ISimulation
 } // namespace Antares::Solver::Simulation

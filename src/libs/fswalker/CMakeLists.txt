@@ -3,7 +3,7 @@ OMESSAGE("Antares Filesystem Walker library")
 
 
 
-add_library(libantares-fswalker
+add_library(antares-fswalker
 	fswalker.h
 	fswalker.cpp
 	statistics.h
@@ -13,11 +13,11 @@ add_library(libantares-fswalker
 	job.cpp
 )
 
-target_include_directories(libantares-fswalker
+target_include_directories(antares-fswalker
 		PRIVATE
 			${CMAKE_SOURCE_DIR}/libs
 		)
-target_link_libraries(libantares-fswalker
+target_link_libraries(antares-fswalker
 		PRIVATE
 			yuni-static-core
 			logs

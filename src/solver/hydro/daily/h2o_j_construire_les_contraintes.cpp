@@ -39,17 +39,12 @@ void H2O_J_ConstruireLesContraintes(int NbPdt,
                                     std::vector<int>& IndicesColonnes,
                                     CORRESPONDANCE_DES_CONTRAINTES& CorrespondanceDesContraintes)
 {
-    int NombreDeContraintes;
-    int il;
-    int Pdt;
-    int NombreDeTermes;
+    int NombreDeContraintes = 0;
+    int NombreDeTermes = 0;
+    int il = 0;
 
-    NombreDeContraintes = 0;
-    il = 0;
-
-    NombreDeTermes = 0;
     IndicesDebutDeLigne[NombreDeContraintes] = il;
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
         IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt];
@@ -67,7 +62,7 @@ void H2O_J_ConstruireLesContraintes(int NbPdt,
     CorrespondanceDesContraintes.NumeroDeContrainteDEnergieMensuelle = NombreDeContraintes;
     NombreDeContraintes++;
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         NombreDeTermes = 0;
         IndicesDebutDeLigne[NombreDeContraintes] = il;

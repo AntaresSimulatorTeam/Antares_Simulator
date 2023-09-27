@@ -252,7 +252,7 @@ public:
     ** \return The number of bytes that have been read
     */
     template<uint CSizeT, bool ExpT>
-    uint64 read(CString<CSizeT, ExpT>& buffer, uint64 size);
+    uint64_t read(CString<CSizeT, ExpT>& buffer, uint64_t size);
 
     /*!
     ** \brief Read a buffer
@@ -261,7 +261,7 @@ public:
     ** \param size Size (in bytes) of the data to read (and size of the buffer)
     ** \return The number of bytes that have been read
     */
-    uint64 read(char* buffer, uint64 size);
+    uint64_t read(char* buffer, uint64_t size);
 
     /*!
     ** \brief Read data into a string buffer
@@ -274,7 +274,7 @@ public:
     ** \return The number of bytes that have been read
     */
     template<uint CSizeT, bool ExpT>
-    uint64 chunkRead(CString<CSizeT, ExpT>& buffer);
+    uint64_t chunkRead(CString<CSizeT, ExpT>& buffer);
     //@}
 
     //! \name Write
@@ -291,7 +291,7 @@ public:
     ** \param size Size of the buffer to write
     ** \return The number of bytes that have been written
     */
-    uint64 write(const char* buffer, uint64 size);
+    uint64_t write(const char* buffer, uint64_t size);
 
     /*!
     ** \brief Write any arbitrary buffer
@@ -300,22 +300,22 @@ public:
     ** \return The number of bytes that have been written
     */
     template<class U>
-    uint64 write(const U& buffer);
+    uint64_t write(const U& buffer);
 
     //! Write an interger
     uint write(char buffer);
     //! Write an interger
-    uint write(sint16 value);
+    uint write(int16_t value);
     //! Write an interger
-    uint write(sint32 value);
+    uint write(int32_t value);
     //! Write an interger
-    uint write(sint64 value);
+    uint write(int64_t value);
     //! Write an interger
-    uint write(uint16 value);
+    uint write(uint16_t value);
     //! Write an interger
-    uint write(uint32 value);
+    uint write(uint32_t value);
     //! Write an interger
-    uint write(uint64 value);
+    uint write(uint64_t value);
     //! Write a bool
     uint write(bool value);
     //! Write a float
@@ -331,27 +331,27 @@ public:
     ** \return The number of bytes that have been written
     */
     template<class U>
-    uint64 write(const U& buffer, uint64 maxsize);
-    uint write(char buffer, uint64 maxsize);
+    uint64_t write(const U& buffer, uint64_t maxsize);
+    uint write(char buffer, uint64_t maxsize);
 
     //! Write an interger
-    uint write(sint16 value, uint64 maxsize);
+    uint write(int16_t value, uint64_t maxsize);
     //! Write an interger
-    uint write(sint32 value, uint64 maxsize);
+    uint write(int32_t value, uint64_t maxsize);
     //! Write an interger
-    uint write(sint64 value, uint64 maxsize);
+    uint write(int64_t value, uint64_t maxsize);
     //! Write an interger
-    uint write(uint16 value, uint64 maxsize);
+    uint write(uint16_t value, uint64_t maxsize);
     //! Write an interger
-    uint write(uint32 value, uint64 maxsize);
+    uint write(uint32_t value, uint64_t maxsize);
     //! Write an interger
-    uint write(uint64 value, uint64 maxsize);
+    uint write(uint64_t value, uint64_t maxsize);
     //! Write a bool
-    uint write(bool value, uint64 maxsize);
+    uint write(bool value, uint64_t maxsize);
     //! Write a float
-    uint write(float value, uint64 maxsize);
+    uint write(float value, uint64_t maxsize);
     //! Write a double
-    uint write(double value, uint64 maxsize);
+    uint write(double value, uint64_t maxsize);
     //@}
 
     //! \name Locking
@@ -393,7 +393,7 @@ public:
     ** \param ensureAllocation True to make sure that the data are really allocated
     ** \return True if the file has been resized
     */
-    bool truncate(uint64 size, bool ensureAllocation = false);
+    bool truncate(uint64_t size, bool ensureAllocation = false);
     //@}
 
     //! \name Native

@@ -74,7 +74,7 @@ public:
 
     bool loadTimeSeries(const Study& study, const AnyString& folder);
 
-    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
+    void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 
     //! \name Area
     //@{
@@ -114,7 +114,7 @@ public:
     /*!
     ** \brief Get the size (bytes) in memory occupied by a `AreaLink` structure
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     bool isVisibleOnLayer(const size_t& layerID) const;
 
@@ -148,7 +148,7 @@ public:
     Matrix<> indirectCapacities;
 
     //! Monte-Carlo
-    Matrix<Yuni::uint32> timeseriesNumbers;
+    Matrix<uint32_t> timeseriesNumbers;
 
     //! Flag for using loop flow
     bool useLoopFlow;

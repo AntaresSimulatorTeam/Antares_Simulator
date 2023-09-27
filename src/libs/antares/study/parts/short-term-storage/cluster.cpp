@@ -24,7 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include <antares/utils.h>
+#include <antares/utils/utils.h>
 #include <antares/logs/logs.h>
 #include <yuni/core/string.h>
 #include <yuni/io/file.h>

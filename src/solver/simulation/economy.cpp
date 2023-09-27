@@ -32,14 +32,16 @@
 #include "../optimisation/opt_fonctions.h"
 #include "../optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "common-eco-adq.h"
-#include "opt_time_writer.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-Economy::Economy(Data::Study& study) : study(study), preproOnly(false)
+Economy::Economy(Data::Study& study, IResultWriter& resultWriter) :
+    study(study),
+    preproOnly(false),
+    resultWriter(resultWriter)
 {
 }
 
@@ -66,7 +68,7 @@ void Economy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
-bool Economy::simulationBegin(const VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+bool Economy::simulationBegin()
 {
     if (!preproOnly)
     {
@@ -92,8 +94,7 @@ bool Economy::simulationBegin(const VAL_GEN_PAR_PAYS& valeursGenereesParPays)
                                                     study.parameters.adqPatchParams,
                                                     &pProblemesHebdo[numSpace],
                                                     numSpace,
-                                                    *study.resultWriter,
-                                                    valeursGenereesParPays);
+                                                    resultWriter);
             postProcessesList_[numSpace] =
                 interfacePostProcessList::create(study.parameters.adqPatchParams,
                                                  &pProblemesHebdo[numSpace],
@@ -120,7 +121,8 @@ bool Economy::year(Progression::Task& progression,
                    yearRandomNumbers& randomForYear,
                    std::list<uint>& failedWeekList,
                    bool isFirstPerformedYearOfSimulation,
-                   VAL_GEN_PAR_PAYS& valeursGenereesParPays)
+                   const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                   OptimizationStatisticsWriter& optWriter)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -135,17 +137,17 @@ bool Economy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace].firstWeekOfSimulation = true;
     bool reinitOptim = true;
 
-    OptimizationStatisticsWriter optWriter(study.resultWriter, state.year);
-
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
         pProblemesHebdo[numSpace].weekInTheYear = state.weekInTheYear = w;
         pProblemesHebdo[numSpace].HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(state.study,
-          pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear,
-          valeursGenereesParPays);
+        ::SIM_RenseignementProblemeHebdo(study, pProblemesHebdo[numSpace], state.weekInTheYear, 
+                                         numSpace, hourInTheYear, hydroVentilationResults);
+
+        BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace], 
+                                        numSpace, hourInTheYear, randomForYear.pThermalNoisesByArea);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;

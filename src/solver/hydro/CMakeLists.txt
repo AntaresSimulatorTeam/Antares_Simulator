@@ -13,7 +13,6 @@ set(SRC_EXT_SOLVER_H2O_DAILY
 	daily/h2o_j_optimiser_un_mois.cpp
 	daily/h2o_j_resoudre_le_probleme_lineaire.cpp
 	daily/h2o_j_lisser_les_sur_turbines.cpp
-	daily/h2o_j_sys.h
     daily/h2o_j_ajouter_bruit_au_cout.cpp
 )
 
@@ -30,7 +29,6 @@ set(SRC_EXT_SOLVER_H2O_MONTHLY
 	monthly/h2o_m_optimiser_une_annee.cpp
     monthly/h2o_m_ajouter_bruit.cpp
 	monthly/h2o_m_resoudre_le_probleme_lineaire.cpp
-	monthly/h2o_m_sys.h
 )
 
 set(SRC_EXT_SOLVER_H2O2_DAILY
@@ -59,18 +57,21 @@ set(SRC_MANAGEMENT
 
 
 
-add_library(libantares-solver-hydro
+add_library(antares-solver-hydro
 	${SRC_EXT_SOLVER_H2O_DAILY}
 	${SRC_EXT_SOLVER_H2O_MONTHLY}
 	${SRC_EXT_SOLVER_H2O2_DAILY}
 	${SRC_MANAGEMENT} )
 
-target_link_libraries(libantares-solver-hydro
-	PRIVATE
-	libmodel_antares
-	libantares-solver-variable PUBLIC sirius_solver)
+target_link_libraries(antares-solver-hydro
+		PRIVATE
+		model_antares
+		antares-solver-variable
+		Antares::study
+		Antares::mersenne
+		PUBLIC sirius_solver)
 
-target_include_directories(libantares-solver-hydro
+target_include_directories(antares-solver-hydro
 		PRIVATE
 		${CMAKE_SOURCE_DIR}/solver)
 

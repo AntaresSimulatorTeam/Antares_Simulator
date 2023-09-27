@@ -185,23 +185,23 @@ void Stream::unlock()
 #endif
 }
 
-uint64 Stream::read(char* buffer, uint64 size)
+uint64_t Stream::read(char* buffer, uint64_t size)
 {
     // TODO We should not read with block too large (especially on 32bits)
     // systems. It can make the process/thread interruptible  too long
-    return (uint64)::fread(buffer, 1, (size_t)size, pFd);
+    return (uint64_t)::fread(buffer, 1, (size_t)size, pFd);
 }
 
-uint64 Stream::write(const char* buffer, uint64 size)
+uint64_t Stream::write(const char* buffer, uint64_t size)
 {
     // TODO We should not write with block too large (especially on 32bits)
     // systems. It can make the process/thread interruptible  too long
-    return (uint64)::fwrite(buffer, 1, (size_t)size, pFd);
+    return (uint64_t)::fwrite(buffer, 1, (size_t)size, pFd);
 }
 
 #if !defined(YUNI_HAS_POSIX_FALLOCATE) and !defined(YUNI_OS_MAC)
 
-static bool TruncateFileDefault(Stream& file, uint64 size)
+static bool TruncateFileDefault(Stream& file, uint64_t size)
 {
     // Default implementation
 
@@ -213,12 +213,12 @@ static bool TruncateFileDefault(Stream& file, uint64 size)
 #ifndef YUNI_OS_MSVC
     bool result = (0 == ::ftruncate(FILENO(file.nativeHandle()), (off_t)size));
 #else
-    bool result = (0 == _chsize_s(FILENO(file.nativeHandle()), (sint64)size));
+    bool result = (0 == _chsize_s(FILENO(file.nativeHandle()), (int64_t)size));
 #endif
     if (result)
     {
         // if the file was already bigger than the new size, there is nothing to do
-        if ((uint64)end >= size)
+        if ((uint64_t)end >= size)
             return true;
 
         if (not file.seekFromBeginning(end))
@@ -228,7 +228,7 @@ static bool TruncateFileDefault(Stream& file, uint64 size)
         {
             bufferSize = 1024 * 1024
         };
-        size -= (uint64)end;
+        size -= (uint64_t)end;
 
         if (size)
         {
@@ -262,7 +262,7 @@ static bool TruncateFileDefault(Stream& file, uint64 size)
 
 #endif
 
-bool Stream::truncate(uint64 size, bool ensureAllocation)
+bool Stream::truncate(uint64_t size, bool ensureAllocation)
 {
     if (pFd)
     {
@@ -273,7 +273,7 @@ bool Stream::truncate(uint64 size, bool ensureAllocation)
 #ifndef YUNI_OS_MSVC
             return (0 == ::ftruncate(fd, (off_t)size));
 #else
-            return (0 == _chsize_s(fd, (sint64)size));
+            return (0 == _chsize_s(fd, (int64_t)size));
 #endif
         }
         else

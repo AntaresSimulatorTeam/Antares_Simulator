@@ -24,7 +24,7 @@ namespace Memory
 ** value will be used. (see defaultAvailable)
 ** \return A value in bytes
 */
-YUNI_DECL uint64 Total();
+YUNI_DECL uint64_t Total();
 
 /*!
 ** \brief Get the amount of available physical memory
@@ -33,7 +33,7 @@ YUNI_DECL uint64 Total();
 ** value will be used. (see defaultAvailable)
 ** \return A value in bytes
 */
-YUNI_DECL uint64 Available();
+YUNI_DECL uint64_t Available();
 
 /*!
 ** \brief Information about the current memory usage
@@ -73,9 +73,9 @@ public:
 
 public:
     //! The amount of the available physical memory (in bytes)
-    uint64 available;
+    uint64_t available;
     //! The amount of the total physical memory (in bytes)
-    uint64 total;
+    uint64_t total;
 
 }; // class Usage
 

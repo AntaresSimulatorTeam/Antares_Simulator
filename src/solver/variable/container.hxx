@@ -241,7 +241,7 @@ inline void List<NextT>::retrieveResultsForLink(
 }
 
 template<class NextT>
-inline Yuni::uint64 List<NextT>::memoryUsage() const
+inline uint64_t List<NextT>::memoryUsage() const
 {
     return sizeof(ListType) + NextType::memoryUsage();
 }
@@ -317,7 +317,7 @@ template<class NextT>
 void List<NextT>::exportSurveyResults(bool global,
                                       const Yuni::String& output,
                                       unsigned int numSpace,
-                                      IResultWriter::Ptr writer)
+                                      IResultWriter& writer)
 {
     using namespace Antares;
 

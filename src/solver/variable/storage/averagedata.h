@@ -27,7 +27,7 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_AVERAGE_DATA_H__
 #define __SOLVER_VARIABLE_STORAGE_AVERAGE_DATA_H__
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 namespace Antares
 {
@@ -57,7 +57,7 @@ public:
 
     void merge(unsigned int year, const IntermediateValues& rhs);
 
-    Yuni::uint64 dynamicMemoryUsage() const
+    uint64_t dynamicMemoryUsage() const
     {
         return sizeof(double) * maxHoursInAYear + sizeof(double) * nbYearsCapacity;
     }

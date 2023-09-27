@@ -28,7 +28,7 @@
 #define __SOLVER_VARIABLE_SET_OF_AREAS_H__
 
 #include "state.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 namespace Antares
 {
@@ -166,7 +166,7 @@ public:
 
     void beforeYearByYearExport(uint year, uint numSpace);
 
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     template<class I>
     static void provideInformations(I& infos);

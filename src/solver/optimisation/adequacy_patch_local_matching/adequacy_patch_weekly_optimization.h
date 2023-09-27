@@ -44,13 +44,11 @@ public:
                                        PROBLEME_HEBDO* problemeHebdo,
                                        Antares::Data::AdequacyPatch::AdqPatchParams&,
                                        uint numSpace,
-                                       IResultWriter& writer,
-                                       const VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+                                       IResultWriter& writer);
 
     ~AdequacyPatchOptimization() override = default;
     void solve(uint weekInTheYear, int hourInTheYear) override;
 private:
     const Antares::Data::Study& study_;
-    const VAL_GEN_PAR_PAYS& valeursGenereesParPays_;
 };
 } // namespace Antares::Solver::Optimization

@@ -62,6 +62,12 @@ void PrepareRandomNumbers(Data::Study& study,
                           PROBLEME_HEBDO& problem,
                           yearRandomNumbers& randomForYear);
 
+void BuildThermalPartOfWeeklyProblem(Data::Study& study,
+                                     PROBLEME_HEBDO& problem,
+                                     uint numSpace,
+                                     const int PasDeTempsDebut,
+                                     double** thermalNoises);
+
 /*!
 ** \brief Prepare data from clusters in mustrun mode (eco+adq)
 */
@@ -155,7 +161,7 @@ void updatingAnnualFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& 
 */
 int retrieveAverageNTC(const Data::Study& study,
                        const Matrix<>& capacities,
-                       const Matrix<Yuni::uint32>& tsNumbers,
+                       const Matrix<uint32_t>& tsNumbers,
                        std::vector<double>& avg);
 
 void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,

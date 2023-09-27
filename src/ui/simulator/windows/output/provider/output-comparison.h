@@ -27,7 +27,6 @@
 #ifndef __ANTARES_WINDOWS_OUTPUT_PROVIDER_COMPARISON_H__
 #define __ANTARES_WINDOWS_OUTPUT_PROVIDER_COMPARISON_H__
 
-#include <antares/wx-wrapper.h>
 #include <ui/common/component/spotlight.h>
 #include "../fwd.h"
 #include <wx/bitmap.h>

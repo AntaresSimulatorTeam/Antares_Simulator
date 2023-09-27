@@ -1,7 +1,7 @@
 #pragma once
 
 #include "misc/options.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <antares/study/load-options.h>
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/benchmarking/timer.h>
@@ -9,7 +9,6 @@
 #include "antares/infoCollection/StudyInfoCollector.h"
 
 #include <antares/writer/i_writer.h>
-
 #include <yuni/core/string.h>
 
 namespace Antares::Solver
@@ -94,6 +93,12 @@ private:
     Benchmarking::Timer pTotalTimer;
     Benchmarking::DurationCollector pDurationCollector;
     Benchmarking::OptimizationInfo pOptimizationInfo;
+
+    IResultWriter::Ptr resultWriter = nullptr;
+
+    void prepareWriter(Antares::Data::Study& study,
+                       Benchmarking::IDurationCollector& duration_collector);
+
 }; // class Application
 } // namespace Antares::Solver
 

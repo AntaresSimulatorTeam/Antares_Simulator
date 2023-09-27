@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOWS_STARTUP_WIZARD_H__
 #define __ANTARES_APPLICATION_WINDOWS_STARTUP_WIZARD_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/dialog.h>
 #include <map>
 #include "../toolbox/components/button.h"

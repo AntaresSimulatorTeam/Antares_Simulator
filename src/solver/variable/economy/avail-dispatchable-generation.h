@@ -194,7 +194,7 @@ public:
 
     void addThermalClusterList(Data::ThermalClusterList& list, unsigned int numSpace)
     {
-        typedef Matrix<double, Yuni::sint32> MatrixType;
+        typedef Matrix<double, int32_t> MatrixType;
 
         const Data::ThermalClusterList::const_iterator end = list.end();
         for (Data::ThermalClusterList::const_iterator i = list.begin(); i != end; ++i)

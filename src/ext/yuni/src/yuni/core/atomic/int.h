@@ -97,15 +97,15 @@ public:
     /*!
     ** \brief Constructor with an initial value (int16)
     */
-    Int(sint16 v);
+    Int(int16_t v);
     /*!
-    ** \brief Constructor with an initial value (int32)
+    ** \brief Constructor with an initial value (int32_t)
     */
-    Int(sint32 v);
+    Int(int32_t v);
     /*!
     ** \brief Constructor with an initial value (int64)
     */
-    Int(sint64 v);
+    Int(int64_t v);
 
     /*!
     ** \brief Copy constructor

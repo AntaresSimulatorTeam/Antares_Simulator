@@ -32,12 +32,12 @@
 
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"
-#include "PMaxDispatchableGeneration.h"
-#include "PMinDispatchableGeneration.h"
-#include "ConsistenceNODU.h"
-#include "NbUnitsOutageLessThanNbUnitsStop.h"
-#include "NbDispUnitsMinBoundSinceMinUpTime.h"
-#include "MinDownTime.h"
+#include "constraints/PMaxDispatchableGeneration.h"
+#include "constraints/PMinDispatchableGeneration.h"
+#include "constraints/ConsistenceNumberOfDispatchableUnits.h"
+#include "constraints/NbUnitsOutageLessThanNbUnitsStop.h"
+#include "constraints/NbDispUnitsMinBoundSinceMinUpTime.h"
+#include "constraints/MinDownTime.h"
 
 using namespace Antares::Data;
 
@@ -50,10 +50,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-    std::vector<double>& Pi = ProblemeAResoudre->Pi;
-    std::vector<int>& Colonne = ProblemeAResoudre->Colonne;
-    ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
-                                    problemeHebdo->NamedProblems);
+    ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes);
     int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
@@ -92,10 +89,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                ConsistenceNODU consistenceNODU(problemeHebdo);
-                consistenceNODU.add(pays, palier, index, pdt, Simulation);
+                ConsistenceNumberOfDispatchableUnits consistenceNumberOfDispatchableUnits(
+                  problemeHebdo);
+                consistenceNumberOfDispatchableUnits.add(pays, palier, index, pdt, Simulation);
                 nbTermesContraintesPourLesCoutsDeDemarrage
-                  += consistenceNODU.nbTermesContraintesPourLesCoutsDeDemarrage;
+                  += consistenceNumberOfDispatchableUnits
+                       .nbTermesContraintesPourLesCoutsDeDemarrage;
             }
         }
     }
@@ -129,9 +128,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index];
-            if (DureeMinimaleDeMarcheDUnGroupeDuPalierThermique <= 0)
+            if (PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index] <= 0)
                 continue;
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];

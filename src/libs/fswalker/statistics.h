@@ -48,11 +48,11 @@ public:
 
 public:
     //! The number of file encountered
-    yuint64 fileCount;
+    uint64_t fileCount;
     //! The number of folders encountered
-    yuint64 folderCount;
+    uint64_t folderCount;
     //! The amount of bytes that has been copied
-    yuint64 bytesCopied;
+    uint64_t bytesCopied;
     //! Flag to determine whether the operation has been aborted or not
     bool aborted;
 
