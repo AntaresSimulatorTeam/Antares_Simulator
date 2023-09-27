@@ -2,18 +2,12 @@
 
 void HydroPowerSmoothingUsingVariationMaxDown::add(int pays, int pdt)
 {
-    if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
-    {
-        return;
-    }
+    ConstraintNamer namer(builder->data->NomDesContraintes);
+    namer.UpdateArea(builder->data->NomsDesPays[pays]);
+    namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
+    namer.HydroPowerSmoothingUsingVariationMaxDown(builder->data->nombreDeContraintes);
 
-    ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-    namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-    namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-    namer.HydroPowerSmoothingUsingVariationMaxDown(
-      problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-
-    builder.updateHourWithinWeek(pdt)
+    builder->updateHourWithinWeek(pdt)
       .HydProd(pays, 1.0)
       .updateHourWithinWeek(0)
       .HydProdDown(pays, -1.0)

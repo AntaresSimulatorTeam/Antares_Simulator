@@ -1,14 +1,14 @@
 #pragma once
-#include "ConstraintBuilder.h"
+#include "new_constraint_builder.h"
 
 /*!
  * represent 'Hydraulic Power Smoothing Using Variation Max Down' constraint type
  */
-class HydroPowerSmoothingUsingVariationMaxDown : private ConstraintFactory
+
+class HydroPowerSmoothingUsingVariationMaxDown : private NewConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
-
+    using NewConstraintFactory::NewConstraintFactory;
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pdt : timestep
