@@ -59,7 +59,7 @@ public:
     };
 
 private:
-    bool LoadDailyMaxPowersAndEnergies(const AnyString& folder, Area& area);
+    bool LoadDailyMaxPowersAndEnergies(const AnyString& folder, const Area& area);
     bool SaveDailyMaxEnergy(const AnyString& folder, Area& area);
     bool SaveDailyMaxPowerAsHourly(const AnyString& folder, Area& area);
     bool SaveMaxGenerationEnergy(const AnyString& folder, Area& area);

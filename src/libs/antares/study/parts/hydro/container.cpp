@@ -151,37 +151,19 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                       enabledModeIsChanged = true;
                   }
 
-                  ret = area.hydro.LoadDailyMaxEnergy(area, folder);
+                  ret = area.hydro.LoadDailyMaxEnergy(folder, area.id) && ret;
 
                   if (enabledModeIsChanged)
                       JIT::enabled = true; // Back to the previous loading mode.
               }
               else
               {
-                  ret = area.hydro.LoadDailyMaxEnergy(area, folder);
+                  ret = area.hydro.LoadDailyMaxEnergy(folder, area.id) && ret;
 
                   // Check is moved here, because in case of old study
                   // maxDailyGenEnergy and maxDailyPumpEnergy are not yet initialized.
-                  bool errorHours = false;
-                  auto& colGen = area.hydro.maxDailyGenEnergy[0];
-                  auto& colPump = area.hydro.maxDailyPumpEnergy[0];
 
-                  for (int day = 0; day < DAYS_PER_YEAR; day++)
-                  {
-                      if (!errorHours && (colGen[day] < 0 || (colGen[day] > 24)))
-                      {
-                          logs.error() << area.name << ": invalid power or energy value";
-                          errorHours = true;
-                          ret = false;
-                      }
-
-                      if (!errorHours && (colPump[day] < 0 || (colPump[day] > 24)))
-                      {
-                          logs.error() << area.name << ": invalid power or energy value";
-                          errorHours = true;
-                          ret = false;
-                      }
-                  }
+                  ret = area.hydro.CheckDailyMaxEnergy(area.name) && ret;
               }
           }
 
@@ -807,25 +789,52 @@ void PartHydro::copyFrom(const PartHydro& rhs)
     }
 }
 
-bool PartHydro::LoadDailyMaxEnergy(Area& area, const AnyString& folder)
+bool PartHydro::LoadDailyMaxEnergy(const AnyString& folder, const AnyString& areaid)
 {
     YString filePath;
     Matrix<>::BufferType fileContent;
     bool ret = true;
 
     filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                     << "maxDailyGenEnergy_" << area.id << '.' << "txt";
+                     << "maxDailyGenEnergy_" << areaid << ".txt";
 
-    ret = area.hydro.maxDailyGenEnergy.loadFromCSVFile(
+    ret = maxDailyGenEnergy.loadFromCSVFile(
             filePath, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &fileContent)
           && ret;
 
     filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                     << "maxDailyPumpEnergy_" << area.id << '.' << "txt";
+                     << "maxDailyPumpEnergy_" << areaid << ".txt";
 
-    ret = area.hydro.maxDailyPumpEnergy.loadFromCSVFile(
+    ret = maxDailyPumpEnergy.loadFromCSVFile(
             filePath, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &fileContent)
           && ret;
+
+    return ret;
+}
+
+bool PartHydro::CheckDailyMaxEnergy(const AnyString& areaName)
+{
+    bool ret = true;
+    bool errorEnergy = false;
+    auto& colGen = maxDailyGenEnergy[0];
+    auto& colPump = maxDailyPumpEnergy[0];
+
+    for (int day = 0; day < DAYS_PER_YEAR; day++)
+    {
+        if (!errorEnergy && (colGen[day] < 0 || (colGen[day] > 24)))
+        {
+            logs.error() << areaName << ": invalid maximum generation energy value";
+            errorEnergy = true;
+            ret = false;
+        }
+
+        if (!errorEnergy && (colPump[day] < 0 || (colPump[day] > 24)))
+        {
+            logs.error() << areaName << ": invalid maximum pumping energy value";
+            errorEnergy = true;
+            ret = false;
+        }
+    }
 
     return ret;
 }

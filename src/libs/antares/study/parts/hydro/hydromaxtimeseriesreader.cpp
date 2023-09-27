@@ -41,7 +41,7 @@ HydroMaxTimeSeriesReader::HydroMaxTimeSeriesReader()
     dailyMaxPumpAndGen.reset(4, DAYS_PER_YEAR, true);
 }
 
-bool HydroMaxTimeSeriesReader::LoadDailyMaxPowersAndEnergies(const AnyString& folder, Area& area)
+bool HydroMaxTimeSeriesReader::LoadDailyMaxPowersAndEnergies(const AnyString& folder, const Area& area)
 {
     YString filePath;
     Matrix<>::BufferType fileContent;

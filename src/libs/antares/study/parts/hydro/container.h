@@ -102,7 +102,9 @@ public:
     /*!
     ** \brief Load daily max energy
     */
-    bool LoadDailyMaxEnergy(Area& area, const AnyString& folder);
+    bool LoadDailyMaxEnergy(const AnyString& folder, const AnyString& areaid);
+
+    bool CheckDailyMaxEnergy(const AnyString& areaName);
 
 public:
     //! Inter-daily breakdown (previously called Smoothing Factor or alpha)

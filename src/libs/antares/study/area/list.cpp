@@ -921,10 +921,11 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = area.hydro.series->LoadMaxPower(study, area.id, buffer) && ret;
         }
 
+        buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "common" << SEP
+                       << "capacity" << SEP << "maxpower_" << area.id << ".txt";
+
         if (bool exists = IO::File::Exists(buffer); study.header.version >= 870 && exists)
         {
-            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "common" << SEP
-                           << "capacity" << SEP << "maxpower_" << area.id << ".txt";
             IO::File::Delete(buffer);
         }
 
