@@ -49,15 +49,15 @@ extern "C"
 void H2O2_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles,
                                        int NumeroDeProbleme)
 {
-    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
+    auto& ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
 
     auto& ProblemeLineaireEtenduPartieVariable
-      = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
+      = ProblemeHydrauliqueEtendu.ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
     auto& ProblemeLineaireEtenduPartieFixe
-      = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[NumeroDeProbleme];
+      = ProblemeHydrauliqueEtendu.ProblemeLineaireEtenduPartieFixe[NumeroDeProbleme];
 
-    PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydrauliqueEtendu->ProblemeSpx[NumeroDeProbleme];
-    PROBLEME_SIMPLEXE* Probleme = (PROBLEME_SIMPLEXE*)ProblemeHydrauliqueEtendu->Probleme;
+    PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydrauliqueEtendu.ProblemeSpx[NumeroDeProbleme];
+    PROBLEME_SIMPLEXE* Probleme = (PROBLEME_SIMPLEXE*)ProblemeHydrauliqueEtendu.Probleme;
     if (!Probleme)
     {
         Probleme = (PROBLEME_SIMPLEXE*)malloc(sizeof(PROBLEME_SIMPLEXE));
@@ -66,7 +66,7 @@ void H2O2_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES_ETENDUES* DonneesMensu
             DonneesMensuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
             return;
         }
-        ProblemeHydrauliqueEtendu->Probleme = (void*)Probleme;
+        ProblemeHydrauliqueEtendu.Probleme = (void*)Probleme;
     }
 
     bool premierPassage = true;
@@ -142,7 +142,7 @@ RESOLUTION:
     ProbSpx = SPX_Simplexe(Probleme, ProbSpx);
 
     if (ProbSpx)
-        ProblemeHydrauliqueEtendu->ProblemeSpx[NumeroDeProbleme] = (void*)ProbSpx;
+        ProblemeHydrauliqueEtendu.ProblemeSpx[NumeroDeProbleme] = (void*)ProbSpx;
 
     ProblemeLineaireEtenduPartieVariable.ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
 

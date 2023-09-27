@@ -34,14 +34,12 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     if (DonneesMensuellesEtendues == NULL)
         return (NULL);
 
-    DonneesMensuellesEtendues->ProblemeHydrauliqueEtendu = new PROBLEME_HYDRAULIQUE_ETENDU;
+    auto& ProblemeHydrauliqueEtendu = DonneesMensuellesEtendues->ProblemeHydrauliqueEtendu;
 
-    auto ProblemeHydrauliqueEtendu = DonneesMensuellesEtendues->ProblemeHydrauliqueEtendu;
+    ProblemeHydrauliqueEtendu.NombreDeProblemes = 4;
 
-    ProblemeHydrauliqueEtendu->NombreDeProblemes = 4;
-
-    auto& NbJoursDUnProbleme = ProblemeHydrauliqueEtendu->NbJoursDUnProbleme;
-    NbJoursDUnProbleme.assign(ProblemeHydrauliqueEtendu->NombreDeProblemes, 0);
+    auto& NbJoursDUnProbleme = ProblemeHydrauliqueEtendu.NbJoursDUnProbleme;
+    NbJoursDUnProbleme.assign(ProblemeHydrauliqueEtendu.NombreDeProblemes, 0);
 
     NbJoursDUnProbleme[0] = 28;
     NbJoursDUnProbleme[1] = 29;
@@ -61,20 +59,20 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     DonneesMensuellesEtendues->deviations.assign(NbJoursDUnProbleme[3], 0.);
     DonneesMensuellesEtendues->violations.assign(NbJoursDUnProbleme[3], 0.);
 
-    int NombreDeProblemes = ProblemeHydrauliqueEtendu->NombreDeProblemes;
+    int NombreDeProblemes = ProblemeHydrauliqueEtendu.NombreDeProblemes;
 
-    ProblemeHydrauliqueEtendu->CorrespondanceDesVariables.resize(NombreDeProblemes);
-    ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe.resize(NombreDeProblemes);
-    ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable.resize(NombreDeProblemes);
+    ProblemeHydrauliqueEtendu.CorrespondanceDesVariables.resize(NombreDeProblemes);
+    ProblemeHydrauliqueEtendu.ProblemeLineaireEtenduPartieFixe.resize(NombreDeProblemes);
+    ProblemeHydrauliqueEtendu.ProblemeLineaireEtenduPartieVariable.resize(NombreDeProblemes);
 
-    ProblemeHydrauliqueEtendu->ProblemeSpx.assign(NombreDeProblemes, nullptr);
-    ProblemeHydrauliqueEtendu->Probleme = NULL;
+    ProblemeHydrauliqueEtendu.ProblemeSpx.assign(NombreDeProblemes, nullptr);
+    ProblemeHydrauliqueEtendu.Probleme = NULL;
 
-    auto& CorrespondanceDesVariables = ProblemeHydrauliqueEtendu->CorrespondanceDesVariables;
+    auto& CorrespondanceDesVariables = ProblemeHydrauliqueEtendu.CorrespondanceDesVariables;
     auto& ProblemeLineaireEtenduPartieFixe
-        = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe;
+        = ProblemeHydrauliqueEtendu.ProblemeLineaireEtenduPartieFixe;
     auto& ProblemeLineaireEtenduPartieVariable
-        = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable;
+        = ProblemeHydrauliqueEtendu.ProblemeLineaireEtenduPartieVariable;
 
     for (int i = 0; i < NombreDeProblemes; i++)
     {

@@ -73,7 +73,7 @@ typedef struct
     /******************************************************************************************/
 
     /* Problemes internes (utilise uniquement par l'optimisation) */
-    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
+    PROBLEME_HYDRAULIQUE_ETENDU ProblemeHydrauliqueEtendu;
 } DONNEES_MENSUELLES_ETENDUES;
 
 #endif

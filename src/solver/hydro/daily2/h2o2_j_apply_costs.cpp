@@ -31,11 +31,11 @@
 
 void H2O2_J_apply_costs(const Hydro_problem_costs& h2o2_costs, DONNEES_MENSUELLES_ETENDUES& problem)
 {
-    int NombreDeProblemes = problem.ProblemeHydrauliqueEtendu->NombreDeProblemes;
+    int NombreDeProblemes = problem.ProblemeHydrauliqueEtendu.NombreDeProblemes;
     auto& ProblemeLineaireEtenduPartieFixe
-      = problem.ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe;
-    auto& CorrespondanceDesVariables = problem.ProblemeHydrauliqueEtendu->CorrespondanceDesVariables;
-    const auto& NbJoursDUnProbleme = problem.ProblemeHydrauliqueEtendu->NbJoursDUnProbleme;
+      = problem.ProblemeHydrauliqueEtendu.ProblemeLineaireEtenduPartieFixe;
+    auto& CorrespondanceDesVariables = problem.ProblemeHydrauliqueEtendu.CorrespondanceDesVariables;
+    const auto& NbJoursDUnProbleme = problem.ProblemeHydrauliqueEtendu.NbJoursDUnProbleme;
 
     for (int pb_num = 0; pb_num < NombreDeProblemes; pb_num++)
     {

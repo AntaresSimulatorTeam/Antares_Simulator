@@ -30,13 +30,13 @@
 
 void H2O2_J_OptimiserUnMois(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
 {
-    auto ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
+    auto& ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
 
     int NumeroDeProbleme = -1;
-    for (int i = 0; i < ProblemeHydrauliqueEtendu->NombreDeProblemes; i++)
+    for (int i = 0; i < ProblemeHydrauliqueEtendu.NombreDeProblemes; i++)
     {
         if (DonneesMensuelles->NombreDeJoursDuMois
-            == ProblemeHydrauliqueEtendu->NbJoursDUnProbleme[i])
+            == ProblemeHydrauliqueEtendu.NbJoursDUnProbleme[i])
         {
             NumeroDeProbleme = i;
             break;

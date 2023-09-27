@@ -42,19 +42,17 @@ extern "C"
 
 void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
 {
-    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
-    int NombreDeProblemes = ProblemeHydrauliqueEtendu->NombreDeProblemes;
+    auto& ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
+    int NombreDeProblemes = ProblemeHydrauliqueEtendu.NombreDeProblemes;
 
     for (int i = 0; i < NombreDeProblemes; i++)
     {
-        PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydrauliqueEtendu->ProblemeSpx[i];
+        PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydrauliqueEtendu.ProblemeSpx[i];
         if (ProbSpx)
             SPX_LibererProbleme(ProbSpx);
     }
 
-    free(ProblemeHydrauliqueEtendu->Probleme);
-    free(ProblemeHydrauliqueEtendu);
-
+    free(ProblemeHydrauliqueEtendu.Probleme);
     free(DonneesMensuelles);
 
     return;
