@@ -26,15 +26,15 @@
 */
 #include "opt_structure_probleme_a_resoudre.h"
 #include "sim_structure_probleme_economique.h"
-#include "ConstraintGroup.h"
-#include "Group1.h"
-#include "BindingConstraintDayGroup.h"
-#include "BindingConstraintWeekGroup.h"
-#include "HydroPowerGroup.h"
-#include "HydraulicSmoothingGroup.h"
-#include "MinMaxHydroPowerGroup.h"
-#include "MaxPumpingGroup.h"
-#include "AreaHydroLevelGroup.h"
+#include "constraints/ConstraintGroup.h"
+#include "constraints/Group1.h"
+#include "constraints/BindingConstraintDayGroup.h"
+#include "constraints/BindingConstraintWeekGroup.h"
+#include "constraints/HydroPowerGroup.h"
+#include "constraints/HydraulicSmoothingGroup.h"
+#include "constraints/MinMaxHydroPowerGroup.h"
+#include "constraints/MaxPumpingGroup.h"
+#include "constraints/AreaHydroLevelGroup.h"
 
 #include <antares/study.h>
 

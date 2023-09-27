@@ -30,11 +30,8 @@
 #include "../utils/filename.h"
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"
-#include "AreaHydroLevel.h"
-#include "FinalStockEquivalent.h"
-#include "FinalStockExpression.h"
-#include "new_constraint_builder_utils.h"
-#include "Group1.h"
+#include "constraints/FinalStockEquivalent.h"
+#include "constraints/FinalStockExpression.h"
 
 using namespace Antares::Data;
 void LinearProblemMatrix::Run()
