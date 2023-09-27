@@ -1,5 +1,4 @@
 #include "BindingConstraintHour.h"
-#include "opt_rename_problem.h"
 
 void BindingConstraintHour::add(int pdt,
                                 int cntCouplante,

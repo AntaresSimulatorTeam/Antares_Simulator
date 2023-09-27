@@ -29,9 +29,6 @@
 #include "opt_export_structure.h"
 #include "../utils/filename.h"
 #include "opt_fonctions.h"
-#include "opt_rename_problem.h"
-#include "constraints/FinalStockEquivalent.h"
-#include "constraints/FinalStockExpression.h"
 
 using namespace Antares::Data;
 

@@ -1,5 +1,4 @@
 #include "ShortTermStorageLevel.h"
-#include "opt_rename_problem.h"
 
 void ShortTermStorageLevel::add(int pdt, int pays, std::shared_ptr<ShortTermStorageLevelData> data)
 {
