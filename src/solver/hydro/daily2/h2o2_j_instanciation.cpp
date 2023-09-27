@@ -40,9 +40,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     DONNEES_MENSUELLES_ETENDUES* DonneesMensuellesEtendues = new DONNEES_MENSUELLES_ETENDUES;
     PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
 
-    PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE** ProblemeLineaireEtenduPartieFixe;
     PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE** ProblemeLineaireEtenduPartieVariable;
-    PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE* PlFixe;
     PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE* PlVariable;
 
     if (DonneesMensuellesEtendues == NULL)
@@ -79,12 +77,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     NombreDeProblemes = ProblemeHydrauliqueEtendu->NombreDeProblemes;
 
     ProblemeHydrauliqueEtendu->CorrespondanceDesVariables.resize(NombreDeProblemes);
-
-    ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe
-      = (PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE**)malloc(
-        NombreDeProblemes * sizeof(PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE));
-    if (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe == NULL)
-        return (0);
+    ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe.resize(NombreDeProblemes);
 
     ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable
       = (PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE**)malloc(
@@ -96,14 +89,12 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     ProblemeHydrauliqueEtendu->Probleme = NULL;
 
     auto& CorrespondanceDesVariables = ProblemeHydrauliqueEtendu->CorrespondanceDesVariables;
-    ProblemeLineaireEtenduPartieFixe = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe;
+    auto& ProblemeLineaireEtenduPartieFixe = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe;
     ProblemeLineaireEtenduPartieVariable
       = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable;
 
     for (i = 0; i < NombreDeProblemes; i++)
     {
-        ProblemeLineaireEtenduPartieFixe[i] = new PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE;
-
         ProblemeLineaireEtenduPartieVariable[i] = new PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE;
     }
 
@@ -119,7 +110,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         CorrVar.NumeroVar_deviations.assign(NbPdt, 0);
         CorrVar.NumeroVar_violations.assign(NbPdt, 0);
 
-        PlFixe = ProblemeLineaireEtenduPartieFixe[i];
+        auto& PlFixe = ProblemeLineaireEtenduPartieFixe[i];
 
         NombreDeVariables = 0;
         NombreDeVariables += NbPdt;
@@ -133,10 +124,10 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         NombreDeVariables += 1;
         NombreDeVariables += 1;
 
-        PlFixe->NombreDeVariables = NombreDeVariables;
-        PlFixe->CoutLineaire.assign(NombreDeVariables, 0);
+        PlFixe.NombreDeVariables = NombreDeVariables;
+        PlFixe.CoutLineaire.assign(NombreDeVariables, 0);
 
-        PlFixe->TypeDeVariable.assign(NombreDeVariables, 0);
+        PlFixe.TypeDeVariable.assign(NombreDeVariables, 0);
 
         NombreDeContraintes = 0;
         NombreDeContraintes += NbPdt;
@@ -148,11 +139,11 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         NombreDeContraintes += NbPdt;
         NombreDeContraintes += NbPdt;
 
-        PlFixe->NombreDeContraintes = NombreDeContraintes;
-        PlFixe->Sens.assign(NombreDeContraintes, 0);
+        PlFixe.NombreDeContraintes = NombreDeContraintes;
+        PlFixe.Sens.assign(NombreDeContraintes, 0);
 
-        PlFixe->IndicesDebutDeLigne.assign(NombreDeContraintes, 0.);
-        PlFixe->NombreDeTermesDesLignes.assign(NombreDeContraintes, 0.);
+        PlFixe.IndicesDebutDeLigne.assign(NombreDeContraintes, 0.);
+        PlFixe.NombreDeTermesDesLignes.assign(NombreDeContraintes, 0.);
 
         NombreDeTermesAlloues = 0;
         NombreDeTermesAlloues += 3;
@@ -165,10 +156,10 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         NombreDeTermesAlloues += 2 * NbPdt;
         NombreDeTermesAlloues += 2 * NbPdt;
 
-        PlFixe->NombreDeTermesAlloues = NombreDeTermesAlloues;
-        PlFixe->CoefficientsDeLaMatriceDesContraintes.assign(NombreDeTermesAlloues, 0.);
+        PlFixe.NombreDeTermesAlloues = NombreDeTermesAlloues;
+        PlFixe.CoefficientsDeLaMatriceDesContraintes.assign(NombreDeTermesAlloues, 0.);
 
-        PlFixe->IndicesColonnes.assign(NombreDeTermesAlloues, 0);
+        PlFixe.IndicesColonnes.assign(NombreDeTermesAlloues, 0);
 
         PlVariable = ProblemeLineaireEtenduPartieVariable[i];
 
@@ -197,17 +188,17 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
           DonneesMensuellesEtendues,
           ProblemeLineaireEtenduPartieVariable[i]->Xmin,
           ProblemeLineaireEtenduPartieVariable[i]->Xmax,
-          ProblemeLineaireEtenduPartieFixe[i]->TypeDeVariable,
+          ProblemeLineaireEtenduPartieFixe[i].TypeDeVariable,
           ProblemeLineaireEtenduPartieVariable[i]->AdresseOuPlacerLaValeurDesVariablesOptimisees,
           CorrespondanceDesVariables[i]);
 
         H2O2_J_ConstruireLesContraintes(
           NbJoursDUnProbleme[i],
-          ProblemeLineaireEtenduPartieFixe[i]->IndicesDebutDeLigne,
-          ProblemeLineaireEtenduPartieFixe[i]->Sens,
-          ProblemeLineaireEtenduPartieFixe[i]->NombreDeTermesDesLignes,
-          ProblemeLineaireEtenduPartieFixe[i]->CoefficientsDeLaMatriceDesContraintes,
-          ProblemeLineaireEtenduPartieFixe[i]->IndicesColonnes,
+          ProblemeLineaireEtenduPartieFixe[i].IndicesDebutDeLigne,
+          ProblemeLineaireEtenduPartieFixe[i].Sens,
+          ProblemeLineaireEtenduPartieFixe[i].NombreDeTermesDesLignes,
+          ProblemeLineaireEtenduPartieFixe[i].CoefficientsDeLaMatriceDesContraintes,
+          ProblemeLineaireEtenduPartieFixe[i].IndicesColonnes,
           CorrespondanceDesVariables[i]);
     }
 

@@ -52,8 +52,6 @@ void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
 
     for (i = 0; i < NombreDeProblemes; i++)
     {
-        free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i]);
-
         free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i]);
 
         PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydrauliqueEtendu->ProblemeSpx[i];
@@ -61,7 +59,6 @@ void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
             SPX_LibererProbleme(ProbSpx);
     }
 
-    free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe);
     free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable);
     free(ProblemeHydrauliqueEtendu->Probleme);
     free(ProblemeHydrauliqueEtendu);
