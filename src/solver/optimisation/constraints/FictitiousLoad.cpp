@@ -1,6 +1,5 @@
 
 #include "FictitiousLoad.h"
-#include "opt_rename_problem.h"
 
 void FictitiousLoad::add(int pdt, int pays, std::shared_ptr<FictitiousLoadData> data)
 {
