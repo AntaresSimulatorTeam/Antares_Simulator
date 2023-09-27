@@ -67,6 +67,7 @@ public:
     }
 
     void Run();
+    void ExportStructures();
 
 private:
     PROBLEME_HEBDO* problemeHebdo_;

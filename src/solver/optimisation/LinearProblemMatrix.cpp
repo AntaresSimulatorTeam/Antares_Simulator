@@ -34,6 +34,16 @@
 #include "constraints/FinalStockExpression.h"
 
 using namespace Antares::Data;
+
+void LinearProblemMatrix::ExportStructures()
+{
+    if (problemeHebdo_->ExportStructure && problemeHebdo_->firstWeekOfSimulation)
+    {
+        OPT_ExportInterco(writer_, problemeHebdo_);
+        OPT_ExportAreaName(writer_, problemeHebdo_->NomsDesPays);
+    }
+}
+
 void LinearProblemMatrix::Run()
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre.get();
@@ -50,12 +60,6 @@ void LinearProblemMatrix::Run()
     {
         OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo_,
                                                                                 false);
-    }
-
-    if (problemeHebdo_->ExportStructure && problemeHebdo_->firstWeekOfSimulation)
-    {
-        OPT_ExportInterco(writer_, problemeHebdo_);
-        OPT_ExportAreaName(writer_, problemeHebdo_->NomsDesPays);
     }
 
     return;

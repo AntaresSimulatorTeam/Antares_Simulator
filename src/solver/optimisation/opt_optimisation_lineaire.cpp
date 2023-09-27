@@ -159,7 +159,9 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(problemeHebdo);
 
-    LinearProblemMatrix(problemeHebdo, writer).Run();
+    LinearProblemMatrix linearProblemMatrix(problemeHebdo, writer);
+    linearProblemMatrix.Run();
+    linearProblemMatrix.ExportStructures();
 
     bool ret = runWeeklyOptimization(
       options, problemeHebdo, adqPatchParams, writer, PREMIERE_OPTIMISATION);
