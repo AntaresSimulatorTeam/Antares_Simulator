@@ -1,26 +1,19 @@
 #include "HydroPowerSmoothingUsingVariationSum.h"
 
-void HydroPowerSmoothingUsingVariationSum::add(int pays)
+void HydroPowerSmoothingUsingVariationSum::add(int pays,
+                                               const int nombreDePasDeTempsPourUneOptimisation)
 {
-    if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
-    {
-        return;
-    }
-
-    const int nombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
         int pdt1 = pdt + 1;
         if (pdt1 >= nombreDePasDeTempsPourUneOptimisation)
             pdt1 = 0;
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        namer.HydroPowerSmoothingUsingVariationSum(
-          problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        ConstraintNamer namer(builder->data->NomDesContraintes);
+        namer.UpdateArea(builder->data->NomsDesPays[pays]);
+        namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
+        namer.HydroPowerSmoothingUsingVariationSum(builder->data->nombreDeContraintes);
 
-        builder.updateHourWithinWeek(pdt)
+        builder->updateHourWithinWeek(pdt)
           .HydProd(pays, 1.0)
           .updateHourWithinWeek(pdt1)
           .HydProd(pays, -1.0)
