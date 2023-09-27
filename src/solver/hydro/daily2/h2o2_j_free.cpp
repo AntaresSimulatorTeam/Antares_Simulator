@@ -42,15 +42,10 @@ extern "C"
 
 void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
 {
-    int i;
-    int NombreDeProblemes;
+    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
+    int NombreDeProblemes = ProblemeHydrauliqueEtendu->NombreDeProblemes;
 
-    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
-
-    ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
-    NombreDeProblemes = ProblemeHydrauliqueEtendu->NombreDeProblemes;
-
-    for (i = 0; i < NombreDeProblemes; i++)
+    for (int i = 0; i < NombreDeProblemes; i++)
     {
         PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydrauliqueEtendu->ProblemeSpx[i];
         if (ProbSpx)

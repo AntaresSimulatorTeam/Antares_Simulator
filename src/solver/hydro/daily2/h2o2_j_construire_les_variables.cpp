@@ -47,12 +47,9 @@ void H2O2_j_ConstruireLesVariables(
   std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees,
   CORRESPONDANCE_DES_VARIABLES_PB_ETENDU& CorrespondanceDesVariables)
 {
-    int Var;
-    int Pdt;
+    int Var = 0;
 
-    Var = 0;
-
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         CorrespondanceDesVariables.NumeroVar_Turbine[Pdt] = Var;
         Xmin[Var] = 0.0;
@@ -63,7 +60,7 @@ void H2O2_j_ConstruireLesVariables(
         Var++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         CorrespondanceDesVariables.NumeroVar_niveauxFinJours[Pdt] = Var;
         Xmin[Var] = 0.0;
@@ -81,7 +78,7 @@ void H2O2_j_ConstruireLesVariables(
     AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(DonneesMensuellesEtendues->waste);
     Var++;
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         CorrespondanceDesVariables.NumeroVar_overflow[Pdt] = Var;
         Xmin[Var] = 0.0;
@@ -92,7 +89,7 @@ void H2O2_j_ConstruireLesVariables(
         Var++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         CorrespondanceDesVariables.NumeroVar_deviations[Pdt] = Var;
         Xmin[Var] = 0.0;
@@ -103,7 +100,7 @@ void H2O2_j_ConstruireLesVariables(
         Var++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         CorrespondanceDesVariables.NumeroVar_violations[Pdt] = Var;
         Xmin[Var] = 0.0;

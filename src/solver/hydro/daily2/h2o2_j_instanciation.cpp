@@ -30,22 +30,13 @@
 
 DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
 {
-    int i;
-    int NombreDeProblemes;
-    int NbPdt;
-    int j;
-    int NombreDeVariables;
-    int NombreDeContraintes;
-    int NombreDeTermesAlloues;
     DONNEES_MENSUELLES_ETENDUES* DonneesMensuellesEtendues = new DONNEES_MENSUELLES_ETENDUES;
-    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
-
     if (DonneesMensuellesEtendues == NULL)
         return (NULL);
 
     DonneesMensuellesEtendues->ProblemeHydrauliqueEtendu = new PROBLEME_HYDRAULIQUE_ETENDU;
 
-    ProblemeHydrauliqueEtendu = DonneesMensuellesEtendues->ProblemeHydrauliqueEtendu;
+    auto ProblemeHydrauliqueEtendu = DonneesMensuellesEtendues->ProblemeHydrauliqueEtendu;
 
     ProblemeHydrauliqueEtendu->NombreDeProblemes = 4;
 
@@ -70,7 +61,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     DonneesMensuellesEtendues->deviations.assign(NbJoursDUnProbleme[3], 0.);
     DonneesMensuellesEtendues->violations.assign(NbJoursDUnProbleme[3], 0.);
 
-    NombreDeProblemes = ProblemeHydrauliqueEtendu->NombreDeProblemes;
+    int NombreDeProblemes = ProblemeHydrauliqueEtendu->NombreDeProblemes;
 
     ProblemeHydrauliqueEtendu->CorrespondanceDesVariables.resize(NombreDeProblemes);
     ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe.resize(NombreDeProblemes);
@@ -85,9 +76,9 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     auto& ProblemeLineaireEtenduPartieVariable
         = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable;
 
-    for (i = 0; i < NombreDeProblemes; i++)
+    for (int i = 0; i < NombreDeProblemes; i++)
     {
-        NbPdt = NbJoursDUnProbleme[i];
+        int NbPdt = NbJoursDUnProbleme[i];
 
         auto& CorrVar = CorrespondanceDesVariables[i];
 
@@ -99,7 +90,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
 
         auto& PlFixe = ProblemeLineaireEtenduPartieFixe[i];
 
-        NombreDeVariables = 0;
+        int NombreDeVariables = 0;
         NombreDeVariables += NbPdt;
 
         NombreDeVariables += NbPdt;
@@ -116,7 +107,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
 
         PlFixe.TypeDeVariable.assign(NombreDeVariables, 0);
 
-        NombreDeContraintes = 0;
+        int NombreDeContraintes = 0;
         NombreDeContraintes += NbPdt;
 
         NombreDeContraintes += 1;
@@ -132,7 +123,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         PlFixe.IndicesDebutDeLigne.assign(NombreDeContraintes, 0.);
         PlFixe.NombreDeTermesDesLignes.assign(NombreDeContraintes, 0.);
 
-        NombreDeTermesAlloues = 0;
+        int NombreDeTermesAlloues = 0;
         NombreDeTermesAlloues += 3;
         NombreDeTermesAlloues += 4 * (NbPdt - 1);
         NombreDeTermesAlloues += 1;
@@ -164,7 +155,7 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         PlVariable.CoutsMarginauxDesContraintes.assign(NombreDeContraintes, 0.);
     }
 
-    for (i = 0; i < NombreDeProblemes; i++)
+    for (int i = 0; i < NombreDeProblemes; i++)
     {
         H2O2_j_ConstruireLesVariables(
           NbJoursDUnProbleme[i],

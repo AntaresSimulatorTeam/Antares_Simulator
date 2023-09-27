@@ -30,9 +30,7 @@
 
 void H2O2_J_OptimiserUnMois(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
 {
-    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
-
-    ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
+    auto ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
 
     int NumeroDeProbleme = -1;
     for (int i = 0; i < ProblemeHydrauliqueEtendu->NombreDeProblemes; i++)
@@ -54,9 +52,7 @@ void H2O2_J_OptimiserUnMois(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
     DonneesMensuelles->ResultatsValides = NON;
 
     H2O2_J_InitialiserLeSecondMembre(DonneesMensuelles, NumeroDeProbleme);
-
     H2O2_J_InitialiserLesBornesdesVariables(DonneesMensuelles, NumeroDeProbleme);
-
     H2O2_J_ResoudreLeProblemeLineaire(DonneesMensuelles, NumeroDeProbleme);
 
     return;

@@ -31,10 +31,7 @@
 
 void H2O2_J_apply_costs(const Hydro_problem_costs& h2o2_costs, DONNEES_MENSUELLES_ETENDUES& problem)
 {
-    int NombreDeProblemes;
-    int NbPdt;
-
-    NombreDeProblemes = problem.ProblemeHydrauliqueEtendu->NombreDeProblemes;
+    int NombreDeProblemes = problem.ProblemeHydrauliqueEtendu->NombreDeProblemes;
     auto& ProblemeLineaireEtenduPartieFixe
       = problem.ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe;
     auto& CorrespondanceDesVariables = problem.ProblemeHydrauliqueEtendu->CorrespondanceDesVariables;
@@ -42,7 +39,7 @@ void H2O2_J_apply_costs(const Hydro_problem_costs& h2o2_costs, DONNEES_MENSUELLE
 
     for (int pb_num = 0; pb_num < NombreDeProblemes; pb_num++)
     {
-        NbPdt = NbJoursDUnProbleme[pb_num];
+        int NbPdt = NbJoursDUnProbleme[pb_num];
 
         for (int var = 0; var < ProblemeLineaireEtenduPartieFixe[pb_num].NombreDeVariables; var++)
             ProblemeLineaireEtenduPartieFixe[pb_num].CoutLineaire[var] = 0.0;

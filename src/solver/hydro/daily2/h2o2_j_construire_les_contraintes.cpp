@@ -37,12 +37,8 @@ void H2O2_J_ConstruireLesContraintes(
   std::vector<int>& IndicesColonnes,
   CORRESPONDANCE_DES_VARIABLES_PB_ETENDU& CorrespondanceDesVariables)
 {
-    int NombreDeContraintes;
-    int il;
-    int Pdt;
-
-    NombreDeContraintes = 0;
-    il = 0;
+    int NombreDeContraintes = 0;
+    int il = 0;
 
     IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -61,7 +57,7 @@ void H2O2_J_ConstruireLesContraintes(
 
     NombreDeContraintes++;
 
-    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -88,7 +84,7 @@ void H2O2_J_ConstruireLesContraintes(
 
     IndicesDebutDeLigne[NombreDeContraintes] = il;
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
         IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_Turbine[Pdt];
@@ -103,7 +99,7 @@ void H2O2_J_ConstruireLesContraintes(
     NombreDeTermesDesLignes[NombreDeContraintes] = NbPdt + 1;
     NombreDeContraintes++;
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -120,7 +116,7 @@ void H2O2_J_ConstruireLesContraintes(
         NombreDeContraintes++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -137,7 +133,7 @@ void H2O2_J_ConstruireLesContraintes(
         NombreDeContraintes++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -154,7 +150,7 @@ void H2O2_J_ConstruireLesContraintes(
         NombreDeContraintes++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -171,7 +167,7 @@ void H2O2_J_ConstruireLesContraintes(
         NombreDeContraintes++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 

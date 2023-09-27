@@ -30,23 +30,19 @@
 void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles,
                                       int NumeroDeProbleme)
 {
-    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
+    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
 
-    ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
     auto& ProblemeLineairePartieVariable
         = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
     auto& SecondMembre = ProblemeLineairePartieVariable.SecondMembre;
 
-    int NbPdt, Pdt, Cnt;
-
-    NbPdt = ProblemeHydrauliqueEtendu->NbJoursDUnProbleme[NumeroDeProbleme];
-
-    Cnt = 0;
+    int NbPdt = ProblemeHydrauliqueEtendu->NbJoursDUnProbleme[NumeroDeProbleme];
+    int Cnt = 0;
 
     SecondMembre[Cnt] = DonneesMensuelles->NiveauInitialDuMois + DonneesMensuelles->apports[0];
     Cnt++;
 
-    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
     {
         SecondMembre[Cnt] = DonneesMensuelles->apports[Pdt];
         Cnt++;
@@ -55,31 +51,31 @@ void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES* DonneesMensue
     SecondMembre[Cnt] = DonneesMensuelles->TurbineDuMois;
     Cnt++;
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
         Cnt++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
         Cnt++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         SecondMembre[Cnt] = 0.;
         Cnt++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         SecondMembre[Cnt] = DonneesMensuelles->niveauBas[Pdt];
         Cnt++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         SecondMembre[Cnt] = 0.;
         Cnt++;
