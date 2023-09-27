@@ -116,7 +116,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     }
 }
 
-void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
+void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uint year)
 {
     bool inAdequacy = (study.parameters.mode == Data::stdmAdequacy);
 

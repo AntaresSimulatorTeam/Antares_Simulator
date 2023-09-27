@@ -155,7 +155,7 @@ private:
             ApplyRandomTSnumbers(study, y, numSpace);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
-            simulation_->prepareClustersInMustRunMode(numSpace);
+            simulation_->prepareClustersInMustRunMode(numSpace, y);
 
             // 4 - Hydraulic ventilation
             {

@@ -385,9 +385,9 @@ void Adequacy::simulationEnd()
     }
 }
 
-void Adequacy::prepareClustersInMustRunMode(uint numSpace)
+void Adequacy::prepareClustersInMustRunMode(uint numSpace, uint year)
 {
-    PrepareDataFromClustersInMustrunMode(study, numSpace);
+    PrepareDataFromClustersInMustrunMode(study, numSpace, year);
 }
 
 } // namespace Antares::Solver::Simulation
