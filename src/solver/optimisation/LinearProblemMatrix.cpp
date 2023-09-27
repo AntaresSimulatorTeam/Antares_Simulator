@@ -36,36 +36,14 @@
 using namespace Antares::Data;
 void LinearProblemMatrix::Run()
 {
-    int var;
-
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre.get();
-
-    int nombreDePasDeTempsDUneJournee = problemeHebdo_->NombreDePasDeTempsDUneJournee;
-    int nombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
-
-    std::vector<double>& Pi = ProblemeAResoudre->Pi;
-    std::vector<int>& Colonne = ProblemeAResoudre->Colonne;
 
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-    ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes,
-                                    problemeHebdo_->NamedProblems);
-
-    FinalStockEquivalent finalStockEquivalent(problemeHebdo_);
-    FinalStockExpression finalStockExpression(problemeHebdo_);
 
     for (auto& group : constraintgroups_)
     {
         group->Build();
-    }
-
-    /* For each area with ad hoc properties, two possible sets of two additional constraints */
-    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
-    {
-        finalStockEquivalent.add(pays);
-
-        finalStockExpression.add(pays);
     }
 
     if (problemeHebdo_->OptimisationAvecCoutsDeDemarrage)
@@ -74,7 +52,6 @@ void LinearProblemMatrix::Run()
                                                                                 false);
     }
 
-    // Export structure
     if (problemeHebdo_->ExportStructure && problemeHebdo_->firstWeekOfSimulation)
     {
         OPT_ExportInterco(writer_, problemeHebdo_);

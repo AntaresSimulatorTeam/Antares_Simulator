@@ -139,6 +139,7 @@ private:
 };
 } // namespace NewVariable
 
+// TODO God struct should be decomposed
 class NewConstraintBuilderData
 {
 public:

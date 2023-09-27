@@ -1,25 +1,24 @@
 #include "FinalStockExpression.h"
 
-void FinalStockExpression::add(int pays)
+void FinalStockExpression::add(int pays, std::shared_ptr<FinalStockExpressionData> data)
 {
-    const auto pdt = problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1;
+    const auto pdt = builder->data->NombreDePasDeTempsPourUneOptimisation - 1;
 
-    if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
+    if (data->AccurateWaterValue)
     /*  expression constraint : - StockFinal +sum (stocklayers) = 0*/
     {
-        builder.updateHourWithinWeek(pdt).FinalStorage(pays, -1.0);
+        builder->updateHourWithinWeek(pdt).FinalStorage(pays, -1.0);
         for (int layerindex = 0; layerindex < 100; layerindex++)
         {
-            builder.LayerStorage(pays, layerindex, 1.0);
+            builder->LayerStorage(pays, layerindex, 1.0);
         }
-        problemeHebdo->NumeroDeContrainteExpressionStockFinal[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        data->NumeroDeContrainteExpressionStockFinal[pays] = builder->data->nombreDeContraintes;
 
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
+        ConstraintNamer namer(builder->data->NomDesContraintes);
 
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        namer.FinalStockExpression(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-        builder.equalTo().build();
+        namer.UpdateArea(builder->data->NomsDesPays[pays]);
+        namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
+        namer.FinalStockExpression(builder->data->nombreDeContraintes);
+        builder->equalTo().build();
     }
 }

@@ -143,6 +143,8 @@ set(RTESOLVER_OPT
 		constraints/MaxPumpingGroup.cpp
 		constraints/AreaHydroLevelGroup.h
 		constraints/AreaHydroLevelGroup.cpp
+		constraints/FinalStockGroup.h
+		constraints/FinalStockGroup.cpp
 
 	)
 
