@@ -1,7 +1,7 @@
 #pragma once
 
 #include "sim_structure_probleme_economique.h"
-#include "opt_structure_probleme_a_resoudre.h"
+#include "../opt_structure_probleme_a_resoudre.h"
 #include "new_constraint_builder_utils.h"
 
 class ConstraintGroup
