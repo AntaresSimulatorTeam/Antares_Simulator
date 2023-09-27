@@ -1,47 +1,37 @@
 #include "HydroPower.h"
 
-void HydroPower::add(int pays)
+void HydroPower::add(int pays, std::shared_ptr<HydroPowerData> data)
 {
-    bool presenceHydro
-      = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
-    bool TurbEntreBornes = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-
     const int NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-    if (presenceHydro && !TurbEntreBornes)
+      = builder->data->NombreDePasDeTempsPourUneOptimisation;
+    if (data->presenceHydro && !data->TurbEntreBornes)
     {
-        if (bool presencePompage
-            = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
+        if (data->presencePompage)
         {
-            problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays]
-              = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+            data->NumeroDeContrainteEnergieHydraulique[pays] = builder->data->nombreDeContraintes;
 
-            const double pumpingRatio
-              = problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
+            const double pumpingRatio = data->pumpingRatio;
             for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                builder.updateHourWithinWeek(pdt);
-                builder.HydProd(pays, 1.0).Pumping(pays, -pumpingRatio);
+                builder->updateHourWithinWeek(pdt).HydProd(pays, 1.0).Pumping(pays, -pumpingRatio);
             }
         }
         else
         {
             for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                builder.updateHourWithinWeek(pdt);
-                builder.HydProd(pays, 1.0);
+                builder->updateHourWithinWeek(pdt).HydProd(pays, 1.0);
             }
         }
-        problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        data->NumeroDeContrainteEnergieHydraulique[pays] = builder->data->nombreDeContraintes;
 
-        builder.equalTo();
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-        namer.HydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-        builder.build();
+        builder->equalTo();
+        ConstraintNamer namer(builder->data->NomDesContraintes);
+        namer.UpdateArea(builder->data->NomsDesPays[pays]);
+        namer.UpdateTimeStep(builder->data->weekInTheYear);
+        namer.HydroPower(builder->data->nombreDeContraintes);
+        builder->build();
     }
     else
-        problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays] = -1;
+        data->NumeroDeContrainteEnergieHydraulique[pays] = -1;
 }
