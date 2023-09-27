@@ -205,7 +205,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Disk free
-      run: fsutil volume diskfree d:
+      run: "fsutil volume diskfree d:"
 
     - name: Run long-tests-1
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -216,7 +216,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Disk free
-      run: fsutil volume diskfree d:
+      run: "fsutil volume diskfree d:"
 
     - name: Run long-tests-2
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
