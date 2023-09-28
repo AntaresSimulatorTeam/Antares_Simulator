@@ -73,26 +73,7 @@ void ApplyRandomTSnumbers(const Study& study,
             ptchro.Eolien
               = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
-        // Renewable
-        {
-            auto end = area.renewable.list.cluster.end();
-            for (auto it = area.renewable.list.cluster.begin(); it != end; ++it)
-            {
-                RenewableClusterList::SharedPtr cluster = it->second;
-                if (!cluster->enabled)
-                {
-                    continue;
-                }
 
-                const auto& data = *cluster->series;
-                assert(year < data.timeseriesNumbers.height);
-                unsigned int clusterIndex = cluster->areaWideIndex;
-
-                ptchro.RenouvelableParPalier[clusterIndex] = (data.timeSeries.width != 1)
-                                                             ? (long)data.timeseriesNumbers[0][year]
-                                                             : 0; // zero-based
-            }
-        }
     }     // each area
 
     // ------------------------------
@@ -111,7 +92,7 @@ void ApplyRandomTSnumbers(const Study& study,
         ptchro.TransmissionCapacities
           = (directWidth != 1) ? link->timeseriesNumbers[0][year] : 0; // zero-based
     }
-    
+
     // ------------------------------
     //Binding constraints
     // ------------------------------
