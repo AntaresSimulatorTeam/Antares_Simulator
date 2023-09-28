@@ -131,9 +131,11 @@ private:
     //! check Weekly minimum generation is lower than available inflows
     bool checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) const;
     //! check Hourly minimum generation is lower than available inflows
-    bool checkHourlyMinMaxGeneration(uint tsIndex, uint tsIndexMaxPower, Data::Area& area) const;
+    bool checkGenerationPowerConsistency(uint numSpace) const;
     //! check minimum generation is lower than available inflows
     bool checkMinGeneration(uint numSpace);
+    //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false
+    bool checksOnGenerationPowerBounds(uint numSpace);
     //! Prepare the net demand for each area
     template<enum Data::StudyMode ModeT>
     void prepareNetDemand(uint numSpace);
