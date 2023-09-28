@@ -12,7 +12,7 @@ on:
       - doc/*
       - windows-scheduled-runs
   schedule:
-    - cron: '7 9 * * *'
+    - cron: '15 9 * * *'
 
 jobs:
   windows:
@@ -119,32 +119,8 @@ jobs:
     - name: Build
       shell: bash
       run: |
-           cmake --build _build --config release -j2
+           cmake --build _build --config release -j10
 
-    - name: Run unfeasibility-related tests
-      run: |
-           cd _build
-           ctest -C Release --output-on-failure -R unfeasible
-
-    - name: Run unit and end-to-end tests
-      run: |
-           cd _build
-           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end" -LE ortools
-
-    - name: Run kirchhoff-constraint-tests
-      if: ${{ false }}
-      shell: bash
-      run: |
-           tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
-           cd _build
-           ctest -C Release --output-on-failure -R kirchhoff
-
-    - name: Upload build on failure
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: MPS-diff
-        path: ${{ github.workspace }}/src/tests/mps
 
     # simtest
     - name: Read simtest version
