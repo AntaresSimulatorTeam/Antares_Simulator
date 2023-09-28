@@ -149,7 +149,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uin
                 }
                 else
                 {
-                    for (uint h = 0; h != 168; ++h)
+                    for (uint h = 0; h != cluster.series->timeSeries.height; ++h)
                         mrs[h] += cluster.series->getAvailablePower(h, year);
                 }
             }
@@ -164,7 +164,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uin
                 if (!cluster.mustrunOrigin)
                     continue;
 
-                for (uint h = 0; h != 168; ++h)
+                for (uint h = 0; h != cluster.series->timeSeries.height; ++h)
                     adq[h] += cluster.series->getAvailablePower(h, year);
             }
         }
