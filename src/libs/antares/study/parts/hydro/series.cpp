@@ -227,7 +227,7 @@ void DataSeriesHydro::reset()
     maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
     count = 1;
-    countpowercredits = 1;
+    nbTimeSeriesSup = 1;
 }
 
 uint64_t DataSeriesHydro::memoryUsage() const
@@ -269,10 +269,10 @@ bool DataSeriesHydro::postProcessMaxPowerTS(Area& area)
     if (nbTSCompare.same())
         return true;
 
-    if (nbTSCompare.differentAndGreaterThanOne(countpowercredits))
+    if (nbTSCompare.differentAndGreaterThanOne(nbTimeSeriesSup))
         tsActions.handleBothGreaterThanOne(area.id);
 
-    tsActions.resizeWhenOneTS(area, countpowercredits);
+    tsActions.resizeWhenOneTS(area, nbTimeSeriesSup);
 
     return true;
 }
@@ -292,7 +292,7 @@ void DataSeriesHydro::setCountVariable()
     const auto& maxHourlyGenPower_ = maxHourlyGenPower.width;
     const auto& maxHourlyPumpPower_ = maxHourlyPumpPower.width;
 
-    countpowercredits
+    nbTimeSeriesSup
       = (maxHourlyGenPower_ >= maxHourlyPumpPower_) ? maxHourlyGenPower_ : maxHourlyPumpPower_;
 }
 
@@ -302,7 +302,7 @@ void DataSeriesHydro::setMaxPowerTSWhenDeratedMode(const Study& study)
     {
         maxHourlyGenPower.averageTimeseries();
         maxHourlyPumpPower.averageTimeseries();
-        countpowercredits = 1;
+        nbTimeSeriesSup = 1;
     }
 }
 
@@ -321,9 +321,9 @@ bool DataSeriesHydro::NbTsComparer::same() const
     return (nbOfGenPowerTs == nbOfPumpPowerTs) ? true : false;
 }
 
-bool DataSeriesHydro::NbTsComparer::differentAndGreaterThanOne(uint countpowercredits_) const
+bool DataSeriesHydro::NbTsComparer::differentAndGreaterThanOne(uint nbTimeSeriesSup_) const
 {
-    return (countpowercredits_ > 1 && (nbOfGenPowerTs != 1) && (nbOfPumpPowerTs != 1)) ? true
+    return (nbTimeSeriesSup_ > 1 && (nbOfGenPowerTs != 1) && (nbOfPumpPowerTs != 1)) ? true
                                                                                        : false;
 }
 
@@ -350,32 +350,32 @@ void DataSeriesHydro::TsActions::handleBothZeros(const AreaName& areaID)
     throw Error::ReadingStudy();
 }
 
-void DataSeriesHydro::TsActions::resizeWhenOneTS(Area& area, uint countpowercredits_)
+void DataSeriesHydro::TsActions::resizeWhenOneTS(Area& area, uint nbTimeSeriesSup_)
 {
     if (maxHourlyGenPower.width == 1)
     {
-        resizeMatrixNoDataLoss(maxHourlyGenPower, countpowercredits_);
-        areaToInvalidate(&area, area.id, countpowercredits_);
+        resizeMatrixNoDataLoss(maxHourlyGenPower, nbTimeSeriesSup_);
+        areaToInvalidate(&area, area.id, nbTimeSeriesSup_);
         return;
     }
 
     if (maxHourlyPumpPower.width == 1)
     {
-        resizeMatrixNoDataLoss(maxHourlyPumpPower, countpowercredits_);
-        areaToInvalidate(&area, area.id, countpowercredits_);
+        resizeMatrixNoDataLoss(maxHourlyPumpPower, nbTimeSeriesSup_);
+        areaToInvalidate(&area, area.id, nbTimeSeriesSup_);
         return;
     }
 }
 
 void DataSeriesHydro::TsActions::areaToInvalidate(Area* area,
                                                   const AreaName& areaID,
-                                                  uint countpowercredits_) const
+                                                  uint nbTimeSeriesSup_) const
 {
     if (area)
     {
         area->invalidateJIT = true;
         logs.info() << "  '" << area->id << "': The hydro max power data have been normalized to "
-                    << countpowercredits_ << " timeseries";
+                    << nbTimeSeriesSup_ << " timeseries";
     }
     else
         logs.error() << "Impossible to find the area `" << areaID << "` to invalidate it";

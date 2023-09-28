@@ -49,7 +49,7 @@ template<class D>
 static inline bool CheckValidityHydroMaxPower(uint value, const D& data, uint tsGenMax)
 {
     // TS Generator never used
-    return (!tsGenMax) ? (value < data.countpowercredits) : (value < tsGenMax);
+    return (!tsGenMax) ? (value < data.nbTimeSeriesSup) : (value < tsGenMax);
 }
 
 template<class StringT, class D>

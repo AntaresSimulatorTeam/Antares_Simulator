@@ -162,7 +162,7 @@ public:
     ** (for example using `maxHourlyGenPower.width` and `maxHourlyPumpPower.width` in the same routine, it might
     ** indicate that the two values are not strictly equal)
     */
-    uint countpowercredits = 0;
+    uint nbTimeSeriesSup = 0;
 
     /*!
     ** \brief Monte-Carlo
@@ -182,7 +182,7 @@ public:
 
         bool bothZeros() const;
         bool same() const;
-        bool differentAndGreaterThanOne(uint countpowercredits_) const;
+        bool differentAndGreaterThanOne(uint nbTimeSeriesSup_) const;
 
     private:
         uint32_t nbOfGenPowerTs{0};
@@ -197,13 +197,13 @@ public:
 
         void handleBothZeros(const AreaName& areaID);
         [[noreturn]] void handleBothGreaterThanOne(const AreaName& areaID) const;
-        void resizeWhenOneTS(Area& area, uint countpowercredits_);
+        void resizeWhenOneTS(Area& area, uint nbTimeSeriesSup_);
 
     private:
         Matrix<double, int32_t>& maxHourlyGenPower;
         Matrix<double, int32_t>& maxHourlyPumpPower;
 
-        void areaToInvalidate(Area* area, const AreaName& areaID, uint countpowercredits_) const;
+        void areaToInvalidate(Area* area, const AreaName& areaID, uint nbTimeSeriesSup_) const;
     };
 
 }; // class DataSeriesHydro

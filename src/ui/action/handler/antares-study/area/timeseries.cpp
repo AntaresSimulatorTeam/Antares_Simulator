@@ -178,7 +178,7 @@ bool DataTimeseries::performWL(Context& ctx)
                     ctx.area->hydro.series->maxHourlyGenPower = source->hydro.series->maxHourlyGenPower;
                     ctx.area->hydro.series->maxHourlyPumpPower = source->hydro.series->maxHourlyPumpPower;
 
-                    ctx.area->hydro.series->countpowercredits = source->hydro.series->countpowercredits;
+                    ctx.area->hydro.series->nbTimeSeriesSup = source->hydro.series->nbTimeSeriesSup;
 
                     source->hydro.series->maxHourlyGenPower.unloadFromMemory();
                     source->hydro.series->maxHourlyPumpPower.unloadFromMemory();
