@@ -116,7 +116,6 @@ typedef struct
     PROBLEME_LINEAIRE_PARTIE_VARIABLE ProblemeLineairePartieVariable;
 
     std::vector<void*>  ProblemeSpx; /* Il y en a 1 par reservoir */
-    void* Probleme;     /* Le probleme en cours passe au simplexe */
 
     double CoutDeLaSolution;
     double CoutDeLaSolutionBruite;
