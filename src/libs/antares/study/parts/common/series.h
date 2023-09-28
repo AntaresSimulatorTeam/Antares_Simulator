@@ -38,7 +38,7 @@ namespace Antares::Data
 class DataSeriesCommon
 {
 public:
-    using AllYears = Matrix<uint32_t>;
+    using AllYears = Matrix<double>;
     using SingleYear = AllYears::ColumnType;
 
     bool forceReload(bool reload = false) const;
