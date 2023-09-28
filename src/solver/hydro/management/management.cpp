@@ -355,8 +355,7 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
         bool followLoadModulations = area.hydro.followLoadModulations;
         bool reservoirManagement = area.hydro.reservoirManagement;
 
-        if (!reservoirManagement)
-            ret = checkHourlyMinGeneration(tsIndex, area) && ret;
+        ret = checkHourlyMinGeneration(tsIndex, area) && ret;
 
         if (!useHeuristicTarget)
             return;
