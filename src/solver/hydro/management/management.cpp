@@ -334,7 +334,7 @@ bool HydroManagement::checkGenerationPowerConsistency(uint numSpace) const
 
               if (max < min)
               { //  Maybe we should put and day in which exception happens?
-                //  Now use can only see in which hour this error log
+                //  Now user can only see in hourly resolution when an exception occur.
                   logs.error() << "In area: " << area.name << " [hourly] minimum generation of "
                                << min << " MW in timestep " << h + 1 << " of TS-" << tsIndex + 1
                                << " is incompatible with the maximum generation of " << max
