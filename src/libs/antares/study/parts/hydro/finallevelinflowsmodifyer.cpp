@@ -46,6 +46,7 @@ FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
 bool FinalLevelInflowsModifier::CheckInfeasibility(unsigned int year)
 {
     ComputeDelta(year);
+    logInfoFinLvlNotApplicable(year);
 
     if (!isActive())
         return true;
@@ -147,6 +148,20 @@ bool FinalLevelInflowsModifier::isActive()
             isValidLevel(initialReservoirLevel_);
 }
 
+// if the user specifies the final reservoir level, but does not specifies initial reservoir level
+// or uses wrong hydro options
+// we should inform the user that the final reservoir level wont be reached
+void FinalLevelInflowsModifier::logInfoFinLvlNotApplicable(unsigned int year)
+{
+    if (isValidLevel(finalReservoirLevel_)
+        && (!hydro_.reservoirManagement || hydro_.useWaterValue
+            || !isValidLevel(initialReservoirLevel_)))
+        logs.info() << "Final reservoir level not applicable! Year:" << year + 1
+                    << ", Area:" << areaName_
+                    << ". Check: Reservoir management = Yes, Use water values = No and proper initial "
+                       "reservoir level is provided ";
+}
+
 bool FinalLevelInflowsModifier::makeChecks(unsigned int year)
 {
     // Simulation must end on day 365 and reservoir level must be initiated in January
@@ -169,7 +184,7 @@ bool FinalLevelInflowsModifier::isApplicable(unsigned int year)
 {
     // If isApplicable_.size() == 0, then instance was not properly initialized
     // and is not applicable.
-    return isActive() && isApplicable_.size() && isApplicable_.at(year);
+    return !isApplicable_.empty() && isApplicable_.at(year);
 }
 
 } // namespace Antares::Data
