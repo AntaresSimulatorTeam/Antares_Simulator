@@ -27,6 +27,18 @@
 #ifndef __SOLVER_H2O_M_STRUCTURE_INTERNE__
 #define __SOLVER_H2O_M_STRUCTURE_INTERNE__
 
+#ifdef __CPLUSPLUS
+extern "C"
+{
+#endif
+
+#include "spx_definition_arguments.h"
+#include "spx_fonctions.h"
+
+#ifdef __CPLUSPLUS
+}
+#endif
+
 #include <vector>
 
 #define LINFINI 1.e+80
@@ -115,7 +127,7 @@ typedef struct
     PROBLEME_LINEAIRE_PARTIE_FIXE ProblemeLineairePartieFixe;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE ProblemeLineairePartieVariable;
 
-    std::vector<void*>  ProblemeSpx; /* Il y en a 1 par reservoir */
+    std::vector<PROBLEME_SPX*> ProblemeSpx; /* Il y en a 1 par reservoir */
 
     double CoutDeLaSolution;
     double CoutDeLaSolutionBruite;

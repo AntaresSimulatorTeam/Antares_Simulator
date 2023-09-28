@@ -27,6 +27,18 @@
 #ifndef __SOLVER_H2O_J_STRUCTURE_INTERNE__
 #define __SOLVER_H2O_J_STRUCTURE_INTERNE__
 
+#ifdef __CPLUSPLUS
+extern "C"
+{
+#endif
+
+#include "spx_definition_arguments.h"
+#include "spx_fonctions.h"
+
+#ifdef __CPLUSPLUS
+}
+#endif
+
 #define LINFINI 1.e+80
 
 #define JOURS_28 28
@@ -127,7 +139,7 @@ struct PROBLEME_HYDRAULIQUE
     std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE> ProblemeLineairePartieFixe;
     std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE> ProblemeLineairePartieVariable;
 
-    std::vector<void*> ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
+    std::vector<PROBLEME_SPX*> ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
 };
 
 #endif
