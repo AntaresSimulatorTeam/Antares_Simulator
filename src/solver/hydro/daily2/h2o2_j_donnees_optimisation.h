@@ -27,6 +27,18 @@
 #ifndef __SOLVER_H2O2_J_STRUCTURE_INTERNE__
 #define __SOLVER_H2O2_J_STRUCTURE_INTERNE__
 
+#ifdef __CPLUSPLUS
+extern "C"
+{
+#endif
+
+#include "spx_definition_arguments.h"
+#include "spx_fonctions.h"
+
+#ifdef __CPLUSPLUS
+}
+
+#endif
 #include "../daily/h2o_j_donnees_optimisation.h"
 #include <antares/study/study.h>
 #include <antares/mersenne-twister/mersenne-twister.h>
@@ -129,7 +141,7 @@ typedef struct
     std::vector<PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE> ProblemeLineaireEtenduPartieFixe;
     std::vector<PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE> ProblemeLineaireEtenduPartieVariable;
 
-    std::vector<void*> ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
+    std::vector<PROBLEME_SPX*> ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
 } PROBLEME_HYDRAULIQUE_ETENDU;
 
 namespace Antares::Constants
