@@ -132,11 +132,11 @@ jobs:
 
 
     - name: Run long-tests-2
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: long-tests-2
-        os: ${{ matrix.test-platform }}
+      shell: bash {0}
+      run: |
+        cd _build
+        ctest -C Release --output-on-failure -R json -VV
+        echo "RET_CODE=$?" >> $GITHUB_ENV
 
     
     - name: Solver archive creation

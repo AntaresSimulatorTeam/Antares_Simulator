@@ -1,0 +1,146 @@
+a
+	b
+	c
+	d
+aa
+	bb
+	cc
+	dd
+b
+	e
+	f
+bb
+	ee
+	ff
+c
+	d
+	h
+cc
+	dd
+	f
+	hh
+d
+	g
+	h
+dd
+	gg
+	hh
+e
+	f
+	g
+	i
+ee
+	ff
+	gg
+	ii
+f
+	i
+ff
+	ii
+g
+	j
+	k
+gg
+	jj
+	kk
+h
+	j
+hh
+	jj
+i
+	k
+	m
+ii
+	kk
+	mm
+j
+	k
+	l
+jj
+	kk
+	ll
+k
+	l
+kk
+	ll
+l
+	m
+	n
+ll
+	mm
+	nn
+m
+	o
+mm
+	oo
+n
+	o
+	p
+	q
+nn
+	oo
+	pp
+	qq
+o
+	r
+	s
+oo
+	rr
+	ss
+p
+	q
+	t
+pp
+	qq
+	s
+	tt
+q
+	t
+	u
+qq
+	tt
+	uu
+r
+	s
+	u
+	v
+rr
+	ss
+	uu
+	vv
+s
+	v
+ss
+	vv
+t
+	w
+tt
+	ww
+u
+	w
+	x
+uu
+	ww
+	xx
+v
+	x
+	z
+vv
+	xx
+	zz
+w
+	x
+	y
+ww
+	xx
+	yy
+x
+	y
+xx
+	yy
+y
+	z
+yy
+	zz
+z
+zz

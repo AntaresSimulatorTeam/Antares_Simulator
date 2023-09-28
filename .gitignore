@@ -35,7 +35,7 @@ src/ext/yuni/docs/*
 src/ext/yuni/nany/*
 src/ext/yuni/src/compiler-flags-*
 
-src/tests/resources/batches/*
+
 src/tests/benchmark/results.json
 
 src/distrib/win32/version.nsh
