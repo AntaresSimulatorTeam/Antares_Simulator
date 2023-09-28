@@ -143,14 +143,14 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uin
                 {
                     for (uint h = 0; h != 168; ++h)
                     {
-                        mrs[h] += cluster.series->getValue(h, year);
-                        adq[h] += cluster.series->getValue(h, year);
+                        mrs[h] += cluster.series->getAvailablePower(h, year);
+                        adq[h] += cluster.series->getAvailablePower(h, year);
                     }
                 }
                 else
                 {
                     for (uint h = 0; h != 168; ++h)
-                        mrs[h] += cluster.series->getValue(h, year);
+                        mrs[h] += cluster.series->getAvailablePower(h, year);
                 }
             }
         }
@@ -165,7 +165,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uin
                     continue;
 
                 for (uint h = 0; h != 168; ++h)
-                    adq[h] += cluster.series->getValue(h, year);
+                    adq[h] += cluster.series->getAvailablePower(h, year);
             }
         }
     }
@@ -394,7 +394,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                         + thermalNoises[areaIdx][cluster.areaWideIndex];
 
                     Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
-                        = cluster.series->getValue(hourInYear, year);
+                        = cluster.series->getAvailablePower(hourInYear, year);
 
                     Pt.PuissanceMinDuPalierThermique[hourInWeek]
                         = (Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] < cluster.PthetaInf[hourInYear])

@@ -85,7 +85,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
     // alias to the current thermal cluster
     thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
     double thermalClusterAvailableProduction
-     = thermalCluster->series->getValue(hourInTheYear, this->year);
+     = thermalCluster->series->getAvailablePower(hourInTheYear, this->year);
 
     // Minimum power of a group of the cluster for the current hour in the year
     double thermalClusterPMinOfAGroup = 0.;
@@ -264,7 +264,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
         ON_max[h] = 0u;
 
         // Getting available production from cluster data
-        double thermalClusterAvailableProduction = currentCluster->series->getValue(h, this->year);
+        double thermalClusterAvailableProduction = currentCluster->series->getAvailablePower(h, this->year);
         double thermalClusterProduction = 0.;
         if (currentCluster->mustrun)
         {

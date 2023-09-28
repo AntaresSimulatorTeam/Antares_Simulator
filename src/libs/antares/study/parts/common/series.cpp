@@ -53,7 +53,7 @@ uint64_t DataSeriesCommon::memoryUsage() const
     return timeSeries.memoryUsage();
 }
 
-double DataSeriesCommon::getValue(unsigned int hour, unsigned int year) const
+double DataSeriesCommon::getAvailablePower(unsigned int hour, unsigned int year) const
 {
     if (timeSeries.width == 1)
         return timeSeries[0][hour];

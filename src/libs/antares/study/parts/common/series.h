@@ -44,7 +44,7 @@ public:
 
     uint64_t memoryUsage() const;
 
-    double getValue(unsigned int hour, unsigned int year) const;
+    double getAvailablePower(unsigned int hour, unsigned int year) const;
 
 public:
     /*!

@@ -39,7 +39,7 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
                 {
                     double production = hourlyResults.ProductionThermique[h]
                                           .ProductionThermiqueDuPalier[cluster.index];
-                    double availability = cluster.series->getValue(h, year);
+                    double availability = cluster.series->getAvailablePower(h, year);
                     dtgmrg[h] += availability - production;
                 }
             }
