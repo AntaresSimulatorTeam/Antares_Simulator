@@ -36,9 +36,7 @@
 #include <set>
 #include <numeric>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Scratchpad for temporary data performed by the solver
@@ -99,14 +97,36 @@ public:
     */
     double dispatchableGenerationMargin[168];
 
+    /*!
+    ** \brief Daily mean maximum power matrices
+    **
+    ** These matrices will be calculated based on maximum
+    ** hourly generation/pumping matrices
+    */
+    Matrix<double, int32_t> meanMaxDailyGenPower;
+    Matrix<double, int32_t> meanMaxDailyPumpPower;
+
 private:
-    bool CheckForPositiveEnergy(const Matrix<double, int32_t>& matrix,
-                                const Matrix<double>::ColumnType& hours);
+    /*!
+    ** \brief Caluclation of daily mean maximum power matrices
+    **
+    ** Calculates daily mean maximum generation/pumping power
+    ** power matrices meanMaxDailyGenPower/meanMaxDailyPumpPower
+    */
+    void CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& hourlyMaxGenMatrix,
+                                            const Matrix<double>& hourlyMaxPumpMatrix,
+                                            uint nbOfMaxPowerTimeSeries);
+
 }; // class AreaScratchpad
 
-double CalculateDailyMeanPower(uint dYear, const Matrix<double>::ColumnType&  maxPower);
+//  Calculates daily mean maximum generation/pumping power for one column/time-serie
+void CalculateDailyMeanPower(const Matrix<double>::ColumnType& hourlyColumn,
+                                    Matrix<double>::ColumnType& dailyColumn);
 
-} // namespace Data
-} // namespace Antares
+//  Return true if maximum generated energy just in one day and for every TS is grated than 0
+bool CheckForPositiveEnergy(const Matrix<double, int32_t>& matrix,
+                            const Matrix<double>::ColumnType& hours);
+
+} // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_AREA_SCRATCHPAD_H__

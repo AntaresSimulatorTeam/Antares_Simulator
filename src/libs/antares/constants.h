@@ -42,6 +42,8 @@
 /*! Hours per year */
 #define HOURS_PER_YEAR 8760
 
+#define HOURS_PER_DAY 24
+
 namespace Antares::Constants
 {
 extern const std::array<unsigned int, 12> daysPerMonth;

@@ -88,7 +88,7 @@ struct TmpDataByArea
 typedef struct
 {
     std::vector<double> HydrauliqueModulableQuotidien; /* indice par jour */
-    std::vector<double> NiveauxReservoirsDebutJours;   //Niveaux (quotidiens) du reservoir de d�but
+    std::vector<double> NiveauxReservoirsDebutJours;   //Niveaux (quotidiens) du reservoir de début
     //de jour (en cas de gestion des reservoirs).
     std::vector<double> NiveauxReservoirsFinJours; //Niveaux (quotidiens) du reservoir de fin
     //de jour (en cas de gestion des reservoirs).

@@ -202,7 +202,7 @@ void TransferDailyMaxPowerAsHourly(Matrix<double, int32_t>::ColumnType& hourlyCo
 
     while (hours < HOURS_PER_YEAR && days < DAYS_PER_YEAR)
     {
-        for (uint i = 0; i < 24; ++i)
+        for (uint i = 0; i < HOURS_PER_DAY; ++i)
         {
             hourlyColumn[hours] = dailyColumn[days];
             ++hours;
