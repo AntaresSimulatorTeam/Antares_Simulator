@@ -46,7 +46,6 @@ public:
 
     double getAvailablePower(unsigned int hour, unsigned int year) const;
 
-
     /*!
     ** \brief Series (MW)
     **
