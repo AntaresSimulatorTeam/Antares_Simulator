@@ -64,7 +64,6 @@ void PrepareRandomNumbers(Data::Study& study,
 
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
-                                     uint numSpace,
                                      const int PasDeTempsDebut,
                                      double** thermalNoises,
                                      unsigned int year);

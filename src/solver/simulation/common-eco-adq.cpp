@@ -141,7 +141,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uin
 
                 if (inAdequacy && cluster.mustrunOrigin)
                 {
-                    for (uint h = 0; h != 168; ++h)
+                    for (uint h = 0; h != cluster.series->timeSeries.height; ++h)
                     {
                         mrs[h] += cluster.series->getAvailablePower(h, year);
                         adq[h] += cluster.series->getAvailablePower(h, year);
@@ -371,7 +371,6 @@ void PrepareRandomNumbers(Data::Study& study,
 
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
-                                     uint numSpace,
                                      const int PasDeTempsDebut,
                                      double** thermalNoises,
                                      unsigned int year)
