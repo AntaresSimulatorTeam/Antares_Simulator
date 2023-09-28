@@ -383,14 +383,13 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
         for (uint areaIdx = 0; areaIdx < nbPays; ++areaIdx)
         {
             auto& area = *study.areas.byIndex[areaIdx];
-            auto& tsIndex = NumeroChroniquesTireesParPays[numSpace][areaIdx];
             area.thermal.list.each([&](const Data::ThermalCluster& cluster)
             {
                     auto& Pt = problem.PaliersThermiquesDuPays[areaIdx]
                                .PuissanceDisponibleEtCout[cluster.index];
 
                     Pt.CoutHoraireDeProductionDuPalierThermique[hourInWeek] =
-                        cluster.getMarketBidCost(tsIndex.ThermiqueParPalier[cluster.areaWideIndex], hourInYear)
+                        cluster.getMarketBidCost(cluster.series->getSeriesIndex(hourInYear, year), hourInYear)
                         + thermalNoises[areaIdx][cluster.areaWideIndex];
 
                     Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
