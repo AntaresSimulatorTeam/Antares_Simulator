@@ -257,6 +257,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
         maxDurationON = endHourForCurrentYear;
 
     // min, and max unit ON calculation
+    const auto& availableProduction = currentCluster->series->getAvailablePowerYearly(this->year);
     for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
     {
         maxUnitNeeded = 0u;
@@ -264,15 +265,13 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
         ON_max[h] = 0u;
 
         // Getting available production from cluster data
-        double thermalClusterAvailableProduction = currentCluster->series->getAvailablePower(h, this->year);
+        double thermalClusterAvailableProduction = availableProduction[h];
         double thermalClusterProduction = 0.;
         if (currentCluster->mustrun)
         {
             // When the cluster is in must-run mode, the production value
             // directly comes from the time-series
-            thermalClusterProduction
-              = thermalClusterAvailableProduction; // in mustrun, production==available
-            // production
+            thermalClusterProduction = availableProduction[h]; // in mustrun, production==available
         }
         else
         {

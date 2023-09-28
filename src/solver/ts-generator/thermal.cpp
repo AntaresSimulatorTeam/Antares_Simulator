@@ -356,7 +356,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
     auto& modulation = cluster.modulation[Data::thermalModulationCapacity];
 
-    Matrix<>::ColumnType* dstSeries = nullptr;
+    Antares::Data::DataSeriesCommon::SingleYear dstSeries = nullptr;
 
     const uint tsCount = nbThermalTimeseries + 2;
     for (uint tsIndex = 0; tsIndex != tsCount; ++tsIndex)
@@ -364,7 +364,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
         uint hour = 0;
 
         if (tsIndex > 1)
-            dstSeries = &cluster.series->timeSeries[tsIndex - 2];
+            dstSeries = cluster.series->timeSeries[tsIndex - 2];
 
         for (uint dayInTheYear = 0; dayInTheYear < daysPerYear; ++dayInTheYear)
         {
@@ -596,7 +596,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
                 double AVPDayInTheYear = AVP[dayInTheYear];
                 for (uint h = 0; h != 24; ++h)
                 {
-                    (*dstSeries)[hour] = Math::Round(AVPDayInTheYear * modulation[hour]);
+                    dstSeries[hour] = Math::Round(AVPDayInTheYear * modulation[hour]);
                     ++hour;
                 }
             }

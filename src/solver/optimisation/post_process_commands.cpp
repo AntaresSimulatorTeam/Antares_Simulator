@@ -35,12 +35,12 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
             for (auto i = area.thermal.list.begin(); i != end; ++i)
             {
                 auto& cluster = *(i->second);
+                const auto& availableProduction = cluster.series->getAvailablePowerYearly(year);
                 for (uint h = 0; h != nbHoursInWeek; ++h)
                 {
                     double production = hourlyResults.ProductionThermique[h]
                                           .ProductionThermiqueDuPalier[cluster.index];
-                    double availability = cluster.series->getAvailablePower(h + hourInYear, year);
-                    dtgmrg[h] += availability - production;
+                    dtgmrg[h] += availableProduction[h + hourInYear] - production;
                 }
             }
         }

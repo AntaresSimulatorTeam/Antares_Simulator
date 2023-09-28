@@ -196,8 +196,9 @@ public:
     {
         for (auto& [name, cluster] : list)
         {
+            const auto& availableProduction = cluster->series->getAvailablePowerYearly(year);
             for (unsigned int hour = 0; hour != cluster->series->timeSeries.height; ++hour)
-                pValuesForTheCurrentYear[numSpace].hour[hour] += cluster->series->getAvailablePower(hour, year);
+                pValuesForTheCurrentYear[numSpace].hour[hour] += availableProduction[hour];
         }
     }
 
