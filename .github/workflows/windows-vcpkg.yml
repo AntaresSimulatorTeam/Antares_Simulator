@@ -132,7 +132,6 @@ jobs:
 
 
     - name: Run long-tests-2
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
