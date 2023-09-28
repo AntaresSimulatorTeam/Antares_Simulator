@@ -1,0 +1,119 @@
+name: Oracle 8 CI (push and/or release)
+
+on:
+  release:
+    types: [created]
+  push:
+    branches:
+      - develop
+  schedule:
+    - cron: '21 2 * * *'
+
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+  IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
+  IS_PUSH: ${{ github.event_name == 'push' }}
+
+jobs:
+
+  build:
+    name: Build
+    env:
+      ORTOOLSDIR: ${{ github.workspace }}/or-tools
+
+    runs-on: ubuntu-latest
+    container: 'oraclelinux:8'
+
+    steps:
+
+    - name: Set up Python
+      run: |
+           dnf update -y
+           dnf install -y python3 python3-pip
+
+    - name: Install libraries
+      run: |
+           dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
+           dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-9-toolchain
+
+    - name: Checkout
+      run: |
+           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
+
+    - name: Init submodule
+      run: |
+           git config --global safe.directory '*'
+           git submodule update --init --remote src/antares-deps src/tests/resources/Antares_Simulator_Tests
+
+    - name: Install dependencies
+      run: |
+          pip3 install -r src/tests/examples/requirements.txt
+
+    - name: Configure
+      run: |
+           source /opt/rh/gcc-toolset-9/enable
+           cmake -B _build -S src \
+             -DCMAKE_BUILD_TYPE=release \
+             -DBUILD_TESTING=ON \
+             -DBUILD_TOOLS=OFF \
+             -DBUILD_UI=OFF \
+
+    - name: Build
+      run: |
+           source /opt/rh/gcc-toolset-9/enable
+           cmake --build _build --config Release -j2
+
+    - name: Run unit and end-to-end tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      run: |
+        cd _build
+        ctest -C Release --output-on-failure -L "unit|end-to-end"
+
+    - name: Installer .rpm creation
+      run: |
+           cd _build
+           cpack -G RPM
+
+    - name: Solver archive creation
+      run: |
+           cd _build
+           cmake --install . --prefix install
+           pushd .
+           cd install/bin
+           tar czf ../../antares-solver_oracle8.tar.gz antares-*-solver libsirius_solver.so
+           popd
+           rm -rf install
+
+    - name: .tar.gz creation
+      run: |
+           cd _build
+           cpack -G TGZ
+
+    - name: Installer TGZ push
+      uses: actions/upload-artifact@v3
+      with:
+        path: _build/*.tar.gz
+
+    - name: Installer RPM push
+      uses: actions/upload-artifact@v3
+      with:
+        path: _build/*.rpm
+
+  publish_assets:
+    name: Publish assets
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download all artifacts
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: actions/download-artifact@v3
+
+
+    - name: Publish assets
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: alexellis/upload-assets@0.4.0
+      env:
+          GITHUB_TOKEN: ${{ github.token }}
+      with:
+          asset_paths: '["*/*.tar.gz", "*/*.rpm"]'

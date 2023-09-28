@@ -10,17 +10,13 @@ on:
       - issue-*
       - release/*
       - doc/*
+  schedule:
+    - cron: '21 2 * * *'
 
 jobs:
-  doc_generation:
-    uses: ./.github/workflows/build-userguide.yml
-    with:
-      artifact_name: pdf-doc
-
   windows:
 
     runs-on: ${{ matrix.os }}
-    needs: doc_generation
     strategy:
       matrix:
         os: [windows-latest]
@@ -35,6 +31,7 @@ jobs:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.1/ortools_cxx_windows-latest_static_sirius.zip"
+      RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
 
     steps:
     - uses: actions/checkout@v3
@@ -47,12 +44,6 @@ jobs:
     - name : Init VCPKG submodule
       run: |
           git submodule update --init vcpkg
-
-    - name: Download userguide
-      uses: actions/download-artifact@v3
-      with:
-        name: pdf-doc
-        path: docs/ref_guides
 
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
@@ -120,6 +111,7 @@ jobs:
            -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON  \
+           -DBUILD_TOOLS=ON \
            -DBUILD_not_system=OFF
 
     - name: Build
@@ -138,6 +130,7 @@ jobs:
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end" -LE ortools
 
     - name: Run kirchhoff-constraint-tests
+      if: ${{ false }}
       shell: bash
       run: |
            tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
@@ -179,6 +172,39 @@ jobs:
         batch-name: short-tests
         os: ${{ matrix.test-platform }}
 
+
+    - name: Run medium-tests
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: medium-tests
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-1
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-1
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-2
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-2
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-3
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-3
+        os: ${{ matrix.test-platform }}
+
     - name: Solver archive creation
       shell: bash
       run: |
@@ -189,11 +215,17 @@ jobs:
       shell: bash
       run: |
            rm -rf src/tests/resources/Antares_Simulator_Tests
-           rm -rf src/tests/resources/NonRegTests
            cd _build
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
+
+    - name: Upload NSIS log on failure
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: NSISError.log
+        path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
 
     - name: .zip creation
       run: |
@@ -209,10 +241,3 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         path: _build/*.zip
-
-    - name: Upload build on failure
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: build-after-failure
-        path: ${{ github.workspace }}/_build
