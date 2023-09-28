@@ -12,7 +12,7 @@ on:
       - doc/*
       - windows-scheduled-runs
   schedule:
-    - cron: '40 10 * * *'
+    - cron: '7 9 * * *'
 
 jobs:
   windows:
