@@ -270,10 +270,7 @@ bool DataSeriesHydro::postProcessMaxPowerTS(Area& area)
         return true;
 
     if (nbTSCompare.differentAndGreaterThanOne(countpowercredits))
-    {
         tsActions.handleBothGreaterThanOne(area.id);
-        return false;
-    }
 
     tsActions.resizeWhenOneTS(area, countpowercredits);
 

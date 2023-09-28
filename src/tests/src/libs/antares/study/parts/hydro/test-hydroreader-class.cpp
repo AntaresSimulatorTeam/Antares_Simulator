@@ -12,7 +12,6 @@ struct Fixture
     {
         study = make_shared<Study>(true);
         reader = make_shared<HydroMaxTimeSeriesReader>();
-        study->inputExtension = "txt";
         // Add areas
         area_1 = study->areaAdd("Area1");
         area_2 = study->areaAdd("Area2");
@@ -58,8 +57,8 @@ struct Fixture
         buffer.clear() << base_folder << SEP << hydro_folder << SEP << series_folder << SEP
                        << area1_folder;
         // maxHourlyGenPower and maxHourlyPumpPower files
-        createFile(buffer, maxgentxt);
-        createFile(buffer, maxpumptxt);
+        createFile(buffer, maxHourlyGenPower);
+        createFile(buffer, maxHourlyPumpPower);
 
         // common and capacity folders
         buffer.clear() << base_folder << SEP << hydro_folder;
@@ -70,8 +69,8 @@ struct Fixture
         // maxhours files
         buffer.clear() << base_folder << SEP << hydro_folder << SEP << common_folder << SEP
                        << capacity_folder;
-        my_string file1_name = maxhoursGen << SEP << area_1->id << SEP << ".txt";
-        my_string file2_name = maxhoursPump << SEP << area_1->id << SEP << ".txt";
+        my_string file1_name = maxDailyGenEnergy_ << SEP << area_1->id << SEP << ".txt";
+        my_string file2_name = maxDailyPumpEnergy_ << SEP << area_1->id << SEP << ".txt";
         my_string file3_name = maxpower << SEP << area_1->id << SEP << ".txt";
 
         createFile(buffer, file1_name);
@@ -88,11 +87,11 @@ struct Fixture
     my_string series_folder = "series";
     my_string common_folder = "common";
     my_string capacity_folder = "capacity";
-    my_string maxhoursGen = "maxDailyGenEnergy_";
-    my_string maxhoursPump = "maxDailyPumpEnergy_";
+    my_string maxDailyGenEnergy_ = "maxDailyGenEnergy_";
+    my_string maxDailyPumpEnergy_ = "maxDailyPumpEnergy_";
     my_string maxpower = "maxpower_";
-    my_string maxgentxt = "maxHourlyGenPower.txt";
-    my_string maxpumptxt = "maxHourlyPumpPower.txt";
+    my_string maxHourlyGenPower = "maxHourlyGenPower.txt";
+    my_string maxHourlyPumpPower = "maxHourlyPumpPower.txt";
 
     ~Fixture()
     {
