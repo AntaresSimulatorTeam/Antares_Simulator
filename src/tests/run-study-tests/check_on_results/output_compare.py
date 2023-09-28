@@ -33,6 +33,8 @@ class output_compare(check_interface):
         # Folder of results (of which content is compared to content of reference folder)
         # ... of form yyyymmdd-hhmm<mode> (ex : 20230105-0944eco)
         path_to_output = find_dated_output_folder(self.study_path)
+        print("****path_to_output content****")
+        print(list(path_to_output.iterdir()))
         # ... can be "adequacy", "economy"
         other_folder = find_simulation_folder(path_to_output)
         output_folder = ref_simulation_folder.parent
