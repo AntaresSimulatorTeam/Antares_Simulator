@@ -63,5 +63,13 @@ double DataSeriesCommon::getAvailablePower(unsigned int hour, unsigned int year)
         return timeSeries[tsIndex][hour];
     }
 }
+double DataSeriesCommon::getSeriesIndex(unsigned int hour, unsigned int year) const
+{
+    if (timeSeries.width == 1)
+        return timeSeries[0][hour];
+    else
+        return timeseriesNumbers[0][year];
+}
+
 } // namespace Antares::Data
 
