@@ -280,7 +280,7 @@ bool DataSeriesHydro::postProcessMaxPowerTS(Area& area)
     return true;
 }
 
-void DataSeriesHydro::setHydroModulability(Study& study, const AreaName& areaID)
+void DataSeriesHydro::setHydroModulability(Study& study, const AreaName& areaID) const
 {
     Area* area = study.areas.find(areaID);
 
@@ -292,14 +292,14 @@ void DataSeriesHydro::setHydroModulability(Study& study, const AreaName& areaID)
 
 void DataSeriesHydro::setCountVariable()
 {
-    auto& maxHourlyGenPower_ = maxHourlyGenPower.width;
-    auto& maxHourlyPumpPower_ = maxHourlyPumpPower.width;
+    const auto& maxHourlyGenPower_ = maxHourlyGenPower.width;
+    const auto& maxHourlyPumpPower_ = maxHourlyPumpPower.width;
 
     countpowercredits
       = (maxHourlyGenPower_ >= maxHourlyPumpPower_) ? maxHourlyGenPower_ : maxHourlyPumpPower_;
 }
 
-void DataSeriesHydro::setMaxPowerTSWhenDeratedMode(Study& study)
+void DataSeriesHydro::setMaxPowerTSWhenDeratedMode(const Study& study)
 {
     if (study.parameters.derated)
     {
@@ -314,17 +314,17 @@ DataSeriesHydro::NbTsComparer::NbTsComparer(uint32_t nbOfGenPowerTs_, uint32_t n
 {
 }
 
-bool DataSeriesHydro::NbTsComparer::bothZeros()
+bool DataSeriesHydro::NbTsComparer::bothZeros() const
 {
     return (nbOfGenPowerTs || nbOfPumpPowerTs) ? false : true;
 }
 
-bool DataSeriesHydro::NbTsComparer::same()
+bool DataSeriesHydro::NbTsComparer::same() const
 {
     return (nbOfGenPowerTs == nbOfPumpPowerTs) ? true : false;
 }
 
-bool DataSeriesHydro::NbTsComparer::differentAndGreaterThanOne(uint countpowercredits_)
+bool DataSeriesHydro::NbTsComparer::differentAndGreaterThanOne(uint countpowercredits_) const
 {
     return (countpowercredits_ > 1 && (nbOfGenPowerTs != 1) && (nbOfPumpPowerTs != 1)) ? true
                                                                                        : false;
@@ -345,7 +345,7 @@ void DataSeriesHydro::TsActions::handleBothZeros(const AreaName& areaID)
     maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
 }
 
-void DataSeriesHydro::TsActions::handleBothGreaterThanOne(const AreaName& areaID)
+[[noreturn]] void DataSeriesHydro::TsActions::handleBothGreaterThanOne(const AreaName& areaID) const
 {
     logs.fatal() << "Hydro Max Power: `" << areaID
                  << "`: The matrices Maximum Generation and Maximum Pumping must "
@@ -353,24 +353,26 @@ void DataSeriesHydro::TsActions::handleBothGreaterThanOne(const AreaName& areaID
     throw Error::ReadingStudy();
 }
 
-void DataSeriesHydro::TsActions::resizeWhenOneTS(Area& area, uint countpowercredits)
+void DataSeriesHydro::TsActions::resizeWhenOneTS(Area& area, uint countpowercredits_)
 {
     if (maxHourlyGenPower.width == 1)
     {
-        resizeMatrixNoDataLoss(maxHourlyGenPower, countpowercredits);
-        areaToInvalidate(&area, countpowercredits);
+        resizeMatrixNoDataLoss(maxHourlyGenPower, countpowercredits_);
+        areaToInvalidate(&area, area.id, countpowercredits_);
         return;
     }
 
     if (maxHourlyPumpPower.width == 1)
     {
-        resizeMatrixNoDataLoss(maxHourlyPumpPower, countpowercredits);
-        areaToInvalidate(&area, countpowercredits);
+        resizeMatrixNoDataLoss(maxHourlyPumpPower, countpowercredits_);
+        areaToInvalidate(&area, area.id, countpowercredits_);
         return;
     }
 }
 
-void DataSeriesHydro::TsActions::areaToInvalidate(Area* area, uint countpowercredits)
+void DataSeriesHydro::TsActions::areaToInvalidate(Area* area,
+                                                  const AreaName& areaID,
+                                                  uint countpowercredits) const
 {
     if (area)
     {
@@ -379,7 +381,7 @@ void DataSeriesHydro::TsActions::areaToInvalidate(Area* area, uint countpowercre
                     << countpowercredits << " timeseries";
     }
     else
-        logs.error() << "Impossible to find the area `" << area->id << "` to invalidate it";
+        logs.error() << "Impossible to find the area `" << areaID << "` to invalidate it";
 }
 
 void resizeMatrixNoDataLoss(Matrix<double, int32_t>& matrixToResize, uint width)

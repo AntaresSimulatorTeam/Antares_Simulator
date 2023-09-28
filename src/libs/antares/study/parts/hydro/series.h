@@ -171,18 +171,18 @@ public:
     Matrix<uint32_t> timeseriesNumbersHydroMaxPower;
     bool LoadMaxPower(const AreaName& areaID, const AnyString& folder);
     bool postProcessMaxPowerTS(Area& area);
-    void setHydroModulability(Study& study, const AreaName& areaID);
+    void setHydroModulability(Study& study, const AreaName& areaID) const;
     void setCountVariable();
-    void setMaxPowerTSWhenDeratedMode(Study& study);
+    void setMaxPowerTSWhenDeratedMode(const Study& study);
 
     class NbTsComparer
     {
     public:
         NbTsComparer(uint32_t nbOfGenPowerTs_, uint32_t nbOfPumpPowerTs_);
 
-        bool bothZeros();
-        bool same();
-        bool differentAndGreaterThanOne(uint countpowercredits_);
+        bool bothZeros() const;
+        bool same() const;
+        bool differentAndGreaterThanOne(uint countpowercredits_) const;
 
     private:
         uint32_t nbOfGenPowerTs{0};
@@ -196,14 +196,14 @@ public:
                   Matrix<double, int32_t>& maxHourlyPumpPower_);
 
         void handleBothZeros(const AreaName& areaID);
-        void handleBothGreaterThanOne(const AreaName& areaID);
-        void resizeWhenOneTS(Area& area, uint countpowercredits);
+        [[noreturn]] void handleBothGreaterThanOne(const AreaName& areaID) const;
+        void resizeWhenOneTS(Area& area, uint countpowercredits_);
 
     private:
         Matrix<double, int32_t>& maxHourlyGenPower;
         Matrix<double, int32_t>& maxHourlyPumpPower;
 
-        void areaToInvalidate(Area* area, uint countpowercredits);
+        void areaToInvalidate(Area* area, const AreaName& areaID, uint countpowercredits_) const;
     };
 
 }; // class DataSeriesHydro
