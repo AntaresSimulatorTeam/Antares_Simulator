@@ -49,13 +49,6 @@ void SIM_AllocationTableaux(const Data::Study& study)
     for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
     {
         NumeroChroniquesTireesParPays[numSpace].resize(study.areas.size());
-        for (uint i = 0; i < study.areas.size(); ++i)
-        {
-            auto& area = *study.areas.byIndex[i];
-
-            NumeroChroniquesTireesParPays[numSpace][i].RenouvelableParPalier
-                .assign(area.renewable.clusterCount(), 0);
-        }
     }
     NumeroChroniquesTireesParInterconnexion.resize(study.maxNbYearsInParallel);
 

@@ -200,10 +200,11 @@ YString Data::RenewableCluster::getTimeSeriesModeAsString() const
     return "unknown";
 }
 
-double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepIndex) const
+double RenewableCluster::valueAtTimeStep(uint year, uint timeStepIndex) const
 {
     if (!enabled)
         return 0.;
+    uint timeSeriesIndex = (series->timeSeries.width == 1) ? 0 : series->timeseriesNumbers[0][year];
 
     assert(timeStepIndex < series->timeSeries.height);
     assert(timeSeriesIndex < series->timeSeries.width);
