@@ -311,7 +311,7 @@ bool HydroManagement::checkGenerationPowerConsistency(uint numSpace) const
     bool ret = true;
 
     areas_.each(
-      [this, &numSpace, &ret](Data::Area& area) -> decltype(ret)
+      [&numSpace, &ret](Data::Area& area) -> decltype(ret)
       {
           uint z = area.index;
           const auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
@@ -358,7 +358,6 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
         uint z = area.index;
         const auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
         auto tsIndex = (uint)ptchro.Hydraulique;
-        auto tsIndexMaxPower = ptchro.HydrauliqueMaxPower;
 
         bool useHeuristicTarget = area.hydro.useHeuristicTarget;
         bool followLoadModulations = area.hydro.followLoadModulations;
