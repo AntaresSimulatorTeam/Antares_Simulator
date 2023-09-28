@@ -1,6 +1,13 @@
 Antares Changelog
 =================
 
+
+v8.4.4 (09/2023)
+--------------------
+## Bugfix
+* Fix duplicate TS numbers for thermal clusters (#1090) -- backport from 8.5.x
+
+
 v8.4.3 (08/2023)
 --------------------
 ## Features
