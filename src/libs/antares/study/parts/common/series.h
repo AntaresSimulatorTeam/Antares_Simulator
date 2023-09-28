@@ -30,9 +30,7 @@
 #include <antares/array/matrix.h>
 #include "../../fwd.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Data series (Common)
@@ -44,7 +42,10 @@ public:
 
     void markAsModified() const;
 
-public:
+    uint64_t memoryUsage() const;
+
+    double getAvailablePower(unsigned int hour, unsigned int year) const;
+
     /*!
     ** \brief Series (MW)
     **
@@ -56,10 +57,10 @@ public:
     ** \brief Monte-Carlo
     */
     Matrix<uint32_t> timeseriesNumbers;
+
+private:
+    uint getSeriesIndex(unsigned int year) const;
+
 }; // class DataSeriesCommon
-} // namespace Data
-} // namespace Antares
-
-#include "series.hxx"
-
+} // namespace Antares::Data
 #endif /* __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__ */

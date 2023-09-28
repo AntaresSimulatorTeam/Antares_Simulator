@@ -117,7 +117,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     }
 }
 
-void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
+void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uint year)
 {
     bool inAdequacy = (study.parameters.mode == Data::stdmAdequacy);
 
@@ -130,7 +130,6 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
         if (inAdequacy)
             memset(scratchpad.originalMustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
 
-        auto& PtChro = NumeroChroniquesTireesParPays[numSpace][i];
         double* mrs = scratchpad.mustrunSum;
         double* adq = scratchpad.originalMustrunSum;
 
@@ -140,25 +139,19 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
             for (auto i = area.thermal.mustrunList.begin(); i != end; ++i)
             {
                 auto& cluster = *(i->second);
-                auto& series = cluster.series->timeSeries;
-                uint tsIndex = static_cast<uint>(PtChro.ThermiqueParPalier[cluster.areaWideIndex]);
-                if (tsIndex >= series.width)
-                    tsIndex = 0;
-
-                auto& column = series[tsIndex];
 
                 if (inAdequacy && cluster.mustrunOrigin)
                 {
-                    for (uint h = 0; h != series.height; ++h)
+                    for (uint h = 0; h != cluster.series->timeSeries.height; ++h)
                     {
-                        mrs[h] += column[h];
-                        adq[h] += column[h];
+                        mrs[h] += cluster.series->getAvailablePower(h, year);
+                        adq[h] += cluster.series->getAvailablePower(h, year);
                     }
                 }
                 else
                 {
-                    for (uint h = 0; h != series.height; ++h)
-                        mrs[h] += column[h];
+                    for (uint h = 0; h != cluster.series->timeSeries.height; ++h)
+                        mrs[h] += cluster.series->getAvailablePower(h, year);
                 }
             }
         }
@@ -172,14 +165,8 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
                 if (!cluster.mustrunOrigin)
                     continue;
 
-                auto& series = cluster.series->timeSeries;
-                uint tsIndex = static_cast<uint>(PtChro.ThermiqueParPalier[cluster.areaWideIndex]);
-                if (tsIndex >= series.width)
-                    tsIndex = 0;
-
-                auto& column = series[tsIndex];
-                for (uint h = 0; h != series.height; ++h)
-                    adq[h] += column[h];
+                for (uint h = 0; h != cluster.series->timeSeries.height; ++h)
+                    adq[h] += cluster.series->getAvailablePower(h, year);
             }
         }
     }
@@ -385,9 +372,9 @@ void PrepareRandomNumbers(Data::Study& study,
 
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
-                                     uint numSpace,
                                      const int PasDeTempsDebut,
-                                     double** thermalNoises)
+                                     double** thermalNoises,
+                                     unsigned int year)
 {
     int hourInYear = PasDeTempsDebut;
     const uint nbPays = study.areas.size();
@@ -396,19 +383,17 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
         for (uint areaIdx = 0; areaIdx < nbPays; ++areaIdx)
         {
             auto& area = *study.areas.byIndex[areaIdx];
-            auto& tsIndex = NumeroChroniquesTireesParPays[numSpace][areaIdx];
             area.thermal.list.each([&](const Data::ThermalCluster& cluster)
             {
                     auto& Pt = problem.PaliersThermiquesDuPays[areaIdx]
                                .PuissanceDisponibleEtCout[cluster.index];
 
                     Pt.CoutHoraireDeProductionDuPalierThermique[hourInWeek] =
-                        cluster.getMarketBidCost(tsIndex.ThermiqueParPalier[cluster.areaWideIndex], hourInYear)
+                        cluster.getMarketBidCost(hourInYear, year)
                         + thermalNoises[areaIdx][cluster.areaWideIndex];
 
                     Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
-                        = cluster.series
-                        ->timeSeries[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][hourInYear];
+                        = cluster.series->getAvailablePower(hourInYear, year);
 
                     Pt.PuissanceMinDuPalierThermique[hourInWeek]
                         = (Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] < cluster.PthetaInf[hourInYear])

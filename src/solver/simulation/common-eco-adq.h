@@ -64,14 +64,14 @@ void PrepareRandomNumbers(Data::Study& study,
 
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
-                                     uint numSpace,
                                      const int PasDeTempsDebut,
-                                     double** thermalNoises);
+                                     double** thermalNoises,
+                                     unsigned int year);
 
 /*!
 ** \brief Prepare data from clusters in mustrun mode (eco+adq)
 */
-void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace);
+void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uint year);
 
 /*!
 ** \brief Get if the quadratic optimization should be used according
