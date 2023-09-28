@@ -376,7 +376,7 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
 }
 
 template<enum Data::StudyMode ModeT>
-void HydroManagement::prepareNetDemand(uint numSpace)
+void HydroManagement::prepareNetDemand(uint numSpace, uint year)
 {
     areas_.each([&](Data::Area& area) {
         uint z = area.index;
@@ -417,8 +417,7 @@ void HydroManagement::prepareNetDemand(uint numSpace)
 
                 area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
                     assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
-                    netdemand -= cluster.valueAtTimeStep(
-                      ptchro.RenouvelableParPalier[cluster.areaWideIndex], hour);
+                    netdemand -= cluster.valueAtTimeStep(year, hour);
                 });
             }
 
@@ -532,9 +531,9 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
     }
 
     if (parameters_.adequacy())
-        prepareNetDemand<Data::stdmAdequacy>(numSpace);
+        prepareNetDemand<Data::stdmAdequacy>(numSpace, y);
     else
-        prepareNetDemand<Data::stdmEconomy>(numSpace);
+        prepareNetDemand<Data::stdmEconomy>(numSpace, y);
 
     prepareEffectiveDemand(numSpace);
 
