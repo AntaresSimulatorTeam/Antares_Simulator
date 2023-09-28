@@ -56,8 +56,8 @@ void H2O2_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES_ETENDUES& DonneesMensu
     auto& ProblemeLineaireEtenduPartieFixe
       = ProblemeHydrauliqueEtendu.ProblemeLineaireEtenduPartieFixe[NumeroDeProbleme];
 
-    PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydrauliqueEtendu.ProblemeSpx[NumeroDeProbleme];
-    std::unique_ptr<PROBLEME_SIMPLEXE> Probleme = std::make_unique<PROBLEME_SIMPLEXE>();
+    auto ProbSpx = (PROBLEME_SPX*)ProblemeHydrauliqueEtendu.ProblemeSpx[NumeroDeProbleme];
+    auto Probleme = std::make_unique<PROBLEME_SIMPLEXE>();
 
     if (!Probleme)
     {
