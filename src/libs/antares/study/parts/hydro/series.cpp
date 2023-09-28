@@ -369,13 +369,13 @@ void DataSeriesHydro::TsActions::resizeWhenOneTS(Area& area, uint countpowercred
 
 void DataSeriesHydro::TsActions::areaToInvalidate(Area* area,
                                                   const AreaName& areaID,
-                                                  uint countpowercredits) const
+                                                  uint countpowercredits_) const
 {
     if (area)
     {
         area->invalidateJIT = true;
         logs.info() << "  '" << area->id << "': The hydro max power data have been normalized to "
-                    << countpowercredits << " timeseries";
+                    << countpowercredits_ << " timeseries";
     }
     else
         logs.error() << "Impossible to find the area `" << areaID << "` to invalidate it";
