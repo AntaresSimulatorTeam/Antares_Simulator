@@ -57,7 +57,7 @@ double DataSeriesCommon::getAvailablePower(unsigned int hour, unsigned int year)
 {
     return timeSeries[getSeriesIndex(hour,year)][hour];
 }
-double DataSeriesCommon::getSeriesIndex(unsigned int hour, unsigned int year) const
+uint DataSeriesCommon::getSeriesIndex(unsigned int hour, unsigned int year) const
 {
     if (timeSeries.width == 1)
         return 0;
