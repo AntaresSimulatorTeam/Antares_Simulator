@@ -26,10 +26,14 @@ class study_run:
             command.append('--ortools-solver=' + self.ortools_solver)
         if self.named_mps_problems:
             command.append('--named-mps-problems')
-        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True)
+        for stdout_line in iter(process.stdout.readline, ""):
+            print (stdout_line) 
+        # process.stdout.close()
+        # self.return_code = process.wait()
         process.communicate()
 
-        self.return_code = process.returncode
+        # self.return_code = process.returncode
 
         if not self.raise_exception_on_failure:
             return

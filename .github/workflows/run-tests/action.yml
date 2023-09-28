@@ -30,7 +30,7 @@ runs:
     shell: bash {0}
     run: |
            cd _build
-           ctest -C Release --output-on-failure -R ${{inputs.variant}}
+           ctest -C Release --output-on-failure -R ${{inputs.variant}} -VV
            echo "RET_CODE=$?" >> $GITHUB_ENV
 
   - name: Clean batches
