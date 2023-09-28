@@ -55,9 +55,9 @@ uint64_t DataSeriesCommon::memoryUsage() const
 
 double DataSeriesCommon::getAvailablePower(unsigned int hour, unsigned int year) const
 {
-    return timeSeries[getSeriesIndex(hour,year)][hour];
+    return timeSeries[getSeriesIndex(year)][hour];
 }
-uint DataSeriesCommon::getSeriesIndex(unsigned int hour, unsigned int year) const
+uint DataSeriesCommon::getSeriesIndex(unsigned int year) const
 {
     if (timeSeries.width == 1)
         return 0;

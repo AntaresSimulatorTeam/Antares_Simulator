@@ -46,9 +46,7 @@ public:
 
     double getAvailablePower(unsigned int hour, unsigned int year) const;
 
-    uint getSeriesIndex(unsigned int hour, unsigned int year) const;
 
-public:
     /*!
     ** \brief Series (MW)
     **
@@ -60,6 +58,10 @@ public:
     ** \brief Monte-Carlo
     */
     Matrix<uint32_t> timeseriesNumbers;
+
+private:
+    uint getSeriesIndex(unsigned int year) const;
+
 }; // class DataSeriesCommon
 } // namespace Antares::Data
 #endif /* __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__ */
