@@ -52,8 +52,7 @@ void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
             SPX_LibererProbleme(ProbSpx);
     }
 
-    free(ProblemeHydrauliqueEtendu.Probleme);
-    free(DonneesMensuelles);
+    delete DonneesMensuelles;
 
     return;
 }

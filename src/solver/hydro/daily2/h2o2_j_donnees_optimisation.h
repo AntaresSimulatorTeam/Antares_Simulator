@@ -130,8 +130,6 @@ typedef struct
     std::vector<PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE> ProblemeLineaireEtenduPartieVariable;
 
     std::vector<void*> ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
-    void* Probleme;     /* Le probleme en cours passe au simplexe */
-
 } PROBLEME_HYDRAULIQUE_ETENDU;
 
 namespace Antares::Constants
