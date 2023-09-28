@@ -57,16 +57,12 @@ void H2O2_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES_ETENDUES* DonneesMensu
       = ProblemeHydrauliqueEtendu.ProblemeLineaireEtenduPartieFixe[NumeroDeProbleme];
 
     PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydrauliqueEtendu.ProblemeSpx[NumeroDeProbleme];
-    PROBLEME_SIMPLEXE* Probleme = (PROBLEME_SIMPLEXE*)ProblemeHydrauliqueEtendu.Probleme;
+    std::unique_ptr<PROBLEME_SIMPLEXE> Probleme = std::make_unique<PROBLEME_SIMPLEXE>();
+
     if (!Probleme)
     {
-        Probleme = (PROBLEME_SIMPLEXE*)malloc(sizeof(PROBLEME_SIMPLEXE));
-        if (!Probleme)
-        {
-            DonneesMensuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
-            return;
-        }
-        ProblemeHydrauliqueEtendu.Probleme = (void*)Probleme;
+        DonneesMensuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
+        return;
     }
 
     bool premierPassage = true;
@@ -139,7 +135,7 @@ RESOLUTION:
 
     Probleme->NombreDeContraintesCoupes = 0;
 
-    ProbSpx = SPX_Simplexe(Probleme, ProbSpx);
+    ProbSpx = SPX_Simplexe(Probleme.get(), ProbSpx);
 
     if (ProbSpx)
         ProblemeHydrauliqueEtendu.ProblemeSpx[NumeroDeProbleme] = (void*)ProbSpx;
