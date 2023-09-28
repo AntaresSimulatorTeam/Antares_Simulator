@@ -28,14 +28,14 @@
 #include "h2o2_j_donnees_mensuelles.h"
 #include "h2o2_j_fonctions.h"
 
-void H2O2_J_OptimiserUnMois(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
+void H2O2_J_OptimiserUnMois(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles)
 {
-    auto& ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
+    auto& ProblemeHydrauliqueEtendu = DonneesMensuelles.ProblemeHydrauliqueEtendu;
 
     int NumeroDeProbleme = -1;
     for (int i = 0; i < ProblemeHydrauliqueEtendu.NombreDeProblemes; i++)
     {
-        if (DonneesMensuelles->NombreDeJoursDuMois
+        if (DonneesMensuelles.NombreDeJoursDuMois
             == ProblemeHydrauliqueEtendu.NbJoursDUnProbleme[i])
         {
             NumeroDeProbleme = i;
@@ -45,11 +45,11 @@ void H2O2_J_OptimiserUnMois(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
 
     if (NumeroDeProbleme < 0)
     {
-        DonneesMensuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
+        DonneesMensuelles.ResultatsValides = EMERGENCY_SHUT_DOWN;
         return;
     }
 
-    DonneesMensuelles->ResultatsValides = NON;
+    DonneesMensuelles.ResultatsValides = NON;
 
     H2O2_J_InitialiserLeSecondMembre(DonneesMensuelles, NumeroDeProbleme);
     H2O2_J_InitialiserLesBornesdesVariables(DonneesMensuelles, NumeroDeProbleme);

@@ -40,9 +40,9 @@ extern "C"
 #include "h2o2_j_donnees_mensuelles.h"
 #include "h2o2_j_fonctions.h"
 
-void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
+void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles)
 {
-    auto& ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
+    auto& ProblemeHydrauliqueEtendu = DonneesMensuelles.ProblemeHydrauliqueEtendu;
     int NombreDeProblemes = ProblemeHydrauliqueEtendu.NombreDeProblemes;
 
     for (int i = 0; i < NombreDeProblemes; i++)
@@ -51,8 +51,6 @@ void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
         if (ProbSpx)
             SPX_LibererProbleme(ProbSpx);
     }
-
-    delete DonneesMensuelles;
 
     return;
 }

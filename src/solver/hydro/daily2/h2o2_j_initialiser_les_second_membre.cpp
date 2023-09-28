@@ -27,10 +27,10 @@
 
 #include "h2o2_j_donnees_mensuelles.h"
 
-void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles,
+void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles,
                                       int NumeroDeProbleme)
 {
-    auto& ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
+    auto& ProblemeHydrauliqueEtendu = DonneesMensuelles.ProblemeHydrauliqueEtendu;
 
     auto& ProblemeLineairePartieVariable
         = ProblemeHydrauliqueEtendu.ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
@@ -39,27 +39,27 @@ void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES* DonneesMensue
     int NbPdt = ProblemeHydrauliqueEtendu.NbJoursDUnProbleme[NumeroDeProbleme];
     int Cnt = 0;
 
-    SecondMembre[Cnt] = DonneesMensuelles->NiveauInitialDuMois + DonneesMensuelles->apports[0];
+    SecondMembre[Cnt] = DonneesMensuelles.NiveauInitialDuMois + DonneesMensuelles.apports[0];
     Cnt++;
 
     for (int Pdt = 1; Pdt < NbPdt; Pdt++)
     {
-        SecondMembre[Cnt] = DonneesMensuelles->apports[Pdt];
+        SecondMembre[Cnt] = DonneesMensuelles.apports[Pdt];
         Cnt++;
     }
 
-    SecondMembre[Cnt] = DonneesMensuelles->TurbineDuMois;
+    SecondMembre[Cnt] = DonneesMensuelles.TurbineDuMois;
     Cnt++;
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
+        SecondMembre[Cnt] = DonneesMensuelles.TurbineCible[Pdt];
         Cnt++;
     }
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
+        SecondMembre[Cnt] = DonneesMensuelles.TurbineCible[Pdt];
         Cnt++;
     }
 
@@ -71,7 +71,7 @@ void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES* DonneesMensue
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        SecondMembre[Cnt] = DonneesMensuelles->niveauBas[Pdt];
+        SecondMembre[Cnt] = DonneesMensuelles.niveauBas[Pdt];
         Cnt++;
     }
 

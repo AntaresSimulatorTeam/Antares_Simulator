@@ -46,10 +46,10 @@ extern "C"
 #define SNPRINTF snprintf
 #endif
 
-void H2O2_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles,
+void H2O2_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles,
                                        int NumeroDeProbleme)
 {
-    auto& ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
+    auto& ProblemeHydrauliqueEtendu = DonneesMensuelles.ProblemeHydrauliqueEtendu;
 
     auto& ProblemeLineaireEtenduPartieVariable
       = ProblemeHydrauliqueEtendu.ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
@@ -61,7 +61,7 @@ void H2O2_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES_ETENDUES* DonneesMensu
 
     if (!Probleme)
     {
-        DonneesMensuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
+        DonneesMensuelles.ResultatsValides = EMERGENCY_SHUT_DOWN;
         return;
     }
 
@@ -155,18 +155,18 @@ RESOLUTION:
         }
         else
         {
-            DonneesMensuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
+            DonneesMensuelles.ResultatsValides = EMERGENCY_SHUT_DOWN;
             return;
         }
     }
 
     if (ProblemeLineaireEtenduPartieVariable.ExistenceDUneSolution == OUI_SPX)
     {
-        DonneesMensuelles->CoutSolution = 0.0;
+        DonneesMensuelles.CoutSolution = 0.0;
         for (int Var = 0; Var < Probleme->NombreDeVariables; Var++)
-            DonneesMensuelles->CoutSolution += Probleme->CoutLineaire[Var] * Probleme->X[Var];
+            DonneesMensuelles.CoutSolution += Probleme->CoutLineaire[Var] * Probleme->X[Var];
 
-        DonneesMensuelles->ResultatsValides = OUI;
+        DonneesMensuelles.ResultatsValides = OUI;
 
         for (int Var = 0; Var < ProblemeLineaireEtenduPartieFixe.NombreDeVariables; Var++)
         {
@@ -178,7 +178,7 @@ RESOLUTION:
     }
     else
     {
-        DonneesMensuelles->ResultatsValides = NON;
+        DonneesMensuelles.ResultatsValides = NON;
         return;
     }
 

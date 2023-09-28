@@ -27,13 +27,13 @@
 
 #include "h2o2_j_donnees_mensuelles.h"
 
-void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles,
+void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles,
                                              int NumeroDeProbleme)
 {
-    const auto& TurbineMax = DonneesMensuelles->TurbineMax;
-    const auto& TurbineMin = DonneesMensuelles->TurbineMin;
+    const auto& TurbineMax = DonneesMensuelles.TurbineMax;
+    const auto& TurbineMin = DonneesMensuelles.TurbineMin;
 
-    auto& ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
+    auto& ProblemeHydrauliqueEtendu = DonneesMensuelles.ProblemeHydrauliqueEtendu;
 
     int NbPdt = ProblemeHydrauliqueEtendu.NbJoursDUnProbleme[NumeroDeProbleme];
 

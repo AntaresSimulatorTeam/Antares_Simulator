@@ -28,13 +28,11 @@
 #include "h2o2_j_donnees_mensuelles.h"
 #include "h2o2_j_fonctions.h"
 
-DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
+DONNEES_MENSUELLES_ETENDUES H2O2_J_Instanciation()
 {
-    DONNEES_MENSUELLES_ETENDUES* DonneesMensuellesEtendues = new DONNEES_MENSUELLES_ETENDUES;
-    if (DonneesMensuellesEtendues == NULL)
-        return (NULL);
+    DONNEES_MENSUELLES_ETENDUES DonneesMensuellesEtendues;
 
-    auto& ProblemeHydrauliqueEtendu = DonneesMensuellesEtendues->ProblemeHydrauliqueEtendu;
+    auto& ProblemeHydrauliqueEtendu = DonneesMensuellesEtendues.ProblemeHydrauliqueEtendu;
 
     ProblemeHydrauliqueEtendu.NombreDeProblemes = 4;
 
@@ -46,18 +44,18 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     NbJoursDUnProbleme[2] = 30;
     NbJoursDUnProbleme[3] = 31;
 
-    DonneesMensuellesEtendues->TurbineMax.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuellesEtendues->TurbineMin.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuellesEtendues->TurbineCible.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuellesEtendues.TurbineMax.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuellesEtendues.TurbineMin.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuellesEtendues.TurbineCible.assign(NbJoursDUnProbleme[3], 0.);
 
-    DonneesMensuellesEtendues->niveauBas.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuellesEtendues->apports.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuellesEtendues.niveauBas.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuellesEtendues.apports.assign(NbJoursDUnProbleme[3], 0.);
 
-    DonneesMensuellesEtendues->Turbine.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuellesEtendues->niveauxFinJours.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuellesEtendues->overflows.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuellesEtendues->deviations.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuellesEtendues->violations.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuellesEtendues.Turbine.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuellesEtendues.niveauxFinJours.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuellesEtendues.overflows.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuellesEtendues.deviations.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuellesEtendues.violations.assign(NbJoursDUnProbleme[3], 0.);
 
     int NombreDeProblemes = ProblemeHydrauliqueEtendu.NombreDeProblemes;
 
@@ -173,5 +171,5 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
           CorrespondanceDesVariables[i]);
     }
 
-    return (DonneesMensuellesEtendues);
+    return DonneesMensuellesEtendues;
 }
