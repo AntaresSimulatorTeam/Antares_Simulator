@@ -57,6 +57,9 @@ def find_simulation_files(reference_folder, other_folder):
             if skip_file(file):
                 continue
             current_file_path = Path(current_folder) / file
+            print(f"******* current_file_path = {current_file_path}*************")
+            print(f"******* other_folder = {other_folder}*************")
+            print(f"******* reference_folder = {reference_folder}*************")
             list_files_to_compare.append((current_file_path, other_folder / current_file_path.relative_to(reference_folder)))
 
     return list_files_to_compare
