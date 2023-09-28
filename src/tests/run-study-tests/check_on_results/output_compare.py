@@ -35,7 +35,9 @@ class output_compare(check_interface):
         path_to_output = find_dated_output_folder(self.study_path)
         # ... can be "adequacy", "economy"
         other_folder = find_simulation_folder(path_to_output)
-
+        output_folder = ref_simulation_folder.parent
+        print("****output folder content****")
+        print(list(output_folder.iterdir()))
         simulation_files = find_simulation_files(ref_simulation_folder, other_folder)
 
         (comparison_ok, output_var_if_failure) = compare_simulation_files(simulation_files, self.tol)
