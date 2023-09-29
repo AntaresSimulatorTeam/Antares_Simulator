@@ -922,7 +922,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
             if (study.usedByTheSolver)
             {
-                area.hydro.series->setCountVariable();
+                area.hydro.series->setNbTimeSeriesSup();
                 ret = area.hydro.series->postProcessMaxPowerTS(area) && ret;
                 area.hydro.series->setMaxPowerTSWhenDeratedMode(study);
             }

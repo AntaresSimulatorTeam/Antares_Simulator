@@ -287,7 +287,7 @@ void DataSeriesHydro::setHydroModulability(Study& study, const AreaName& areaID)
     }
 }
 
-void DataSeriesHydro::setCountVariable()
+void DataSeriesHydro::setNbTimeSeriesSup()
 {
     const auto& maxHourlyGenPower_ = maxHourlyGenPower.width;
     const auto& maxHourlyPumpPower_ = maxHourlyPumpPower.width;

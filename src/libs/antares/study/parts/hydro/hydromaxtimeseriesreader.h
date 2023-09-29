@@ -35,7 +35,7 @@ namespace Antares::Data
 /*!
 **  This class provides support for old studies, reading from deprecated files,
 **  fils matrix dailyMaxPumpAndGen and transfers data to the corresponding data class members of
-**  class PartHydro
+**  class PartHydro. Just version below 8.7 will use this class to be compatible with current implemetation.
 */
 class HydroMaxTimeSeriesReader
 {
@@ -59,11 +59,28 @@ public:
     };
 
 private:
+    /**
+     * \brief Loading deprecated files
+     *  This function provides reading from deprecated files
+     *  which contains daily maximum generation/pumping power data.
+     */
     bool LoadDailyMaxPowersAndEnergies(const AnyString& folder, const Area& area);
+
+    /**
+     * \brief Save energy functions
+     *  These functions provides instantiation of necessary matrices for
+     *  computation and saving matrices data to the newly created files.
+     */
     bool SaveDailyMaxEnergy(const AnyString& folder, Area& area);
-    bool SaveDailyMaxPowerAsHourly(const AnyString& folder, Area& area);
     bool SaveMaxGenerationEnergy(const AnyString& folder, Area& area);
     bool SaveMaxPumpingEnergy(const AnyString& folder, Area& area);
+
+    /**
+     * \brief Save power functions
+     *  These functions provides instantiation of necessary matrices for
+     *  computation and saving matrices data to the newly created files.
+     */
+    bool SaveDailyMaxPowerAsHourly(const AnyString& folder, Area& area);
     bool SaveDailyMaxGenPowerAsHourly(const AnyString& folder, Area& area);
     bool SaveDailyMaxPumpPowerAsHourly(const AnyString& folder, Area& area);
 };

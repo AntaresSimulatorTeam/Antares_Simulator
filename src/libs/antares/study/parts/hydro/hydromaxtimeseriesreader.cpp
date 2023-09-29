@@ -140,7 +140,7 @@ bool HydroMaxTimeSeriesReader::SaveDailyMaxPowerAsHourly(const AnyString& folder
 
     ret = SaveDailyMaxGenPowerAsHourly(folder, area) && ret;
     ret = SaveDailyMaxPumpPowerAsHourly(folder, area) && ret;
-    area.hydro.series->setCountVariable();
+    area.hydro.series->setNbTimeSeriesSup();
 
     return ret;
 }

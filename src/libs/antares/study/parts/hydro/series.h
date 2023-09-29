@@ -169,12 +169,35 @@ public:
     */
     Matrix<uint32_t> timeseriesNumbers;
     Matrix<uint32_t> timeseriesNumbersHydroMaxPower;
+
+    /**
+     * \brief Loading hydro maximum generation and pumping TS's
+     */
     bool LoadMaxPower(const AreaName& areaID, const AnyString& folder);
+
+    /**
+     * \brief Post processing numbers of TS's
+     *  Checking whether or not TS's numbers are different
+     *  and taking proper action based on corresponding check
+     */
     bool postProcessMaxPowerTS(Area& area);
+
     void setHydroModulability(Study& study, const AreaName& areaID) const;
-    void setCountVariable();
+
+    /**
+     * \brief Setting TS's number of maximum generation and pumping matrices
+     */
+    void setNbTimeSeriesSup();
+
+    /**
+     * \brief Setting TS's when derated mode is on
+     */
     void setMaxPowerTSWhenDeratedMode(const Study& study);
 
+    /**
+     * This class provides comparing two integers
+     * that represents width of two corresponding matrices.
+     */
     class NbTsComparer
     {
     public:
@@ -189,6 +212,10 @@ public:
         uint32_t nbOfPumpPowerTs{0};
     };
 
+    /**
+     * This class provides actions based on the return
+     * values of the NbTsComparer class member functions
+     */
     class TsActions
     {
     public:
