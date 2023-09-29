@@ -517,7 +517,7 @@ double HydroManagement::randomReservoirLevel(double min, double avg, double max)
     return x * max + (1. - x) * min;
 }
 
-void HydroManagement::makeVentilation(double* randomReservoirLevel,
+void HydroManagement::makeVentilation(const std::vector<double>& randomReservoirLevel,
                                       Solver::Variable::State& state,
                                       uint y,
                                       uint numSpace)

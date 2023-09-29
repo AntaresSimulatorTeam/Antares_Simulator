@@ -267,7 +267,7 @@ public:
         delete[] pThermalNoisesByArea;
 
         // Reservoir levels, spilled and unsupplied energy
-        delete[] pReservoirLevels;
+        pReservoirLevels.clear();
         delete[] pUnsuppliedEnergy;
         delete[] pSpilledEnergy;
 
@@ -314,7 +314,7 @@ public:
             memset(pThermalNoisesByArea[a], 0, pNbClustersByArea[a] * sizeof(double));
 
         // Reservoir levels, spilled and unsupplied energy costs
-        memset(pReservoirLevels, 0, pNbAreas * sizeof(double));
+        pReservoirLevels.assign(pNbAreas, 0);
         memset(pUnsuppliedEnergy, 0, pNbAreas * sizeof(double));
         memset(pSpilledEnergy, 0, pNbAreas * sizeof(double));
 
@@ -350,7 +350,7 @@ public:
     size_t* pNbClustersByArea;
 
     // Data for reservoir levels
-    double* pReservoirLevels;
+    std::vector<double> pReservoirLevels;
 
     // Data for unsupplied and spilled energy costs
     double* pUnsuppliedEnergy;

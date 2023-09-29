@@ -172,7 +172,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
     std::cout << "optimisationAllocateProblem:172 problemeHebdo->ProblemeAResoudre.get() =  "
               << problemeHebdo->ProblemeAResoudre.get() << "\n";
     std::cout << "optimisationAllocateProblem:174 NbTermes =  " << NbTermes << "\n";
-    OPT_AllocateFromNumberOfVariableConstraints(problemeHebdo->ProblemeAResoudre.get(), NbTermes);
+    OPT_AllocateFromNumberOfVariableConstraints(ProblemeAResoudre, NbTermes);
     logs.info() << " optimisationAllocateProblem:176 \n";
 
     int NbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;

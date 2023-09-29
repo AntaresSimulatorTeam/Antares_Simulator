@@ -88,7 +88,7 @@ struct TmpDataByArea
 typedef struct
 {
     std::vector<double> HydrauliqueModulableQuotidien; /* indice par jour */
-    std::vector<double> NiveauxReservoirsDebutJours;   //Niveaux (quotidiens) du reservoir de début
+    std::vector<double> NiveauxReservoirsDebutJours;   //Niveaux (quotidiens) du reservoir de dï¿½but
     //de jour (en cas de gestion des reservoirs).
     std::vector<double> NiveauxReservoirsFinJours; //Niveaux (quotidiens) du reservoir de fin
     //de jour (en cas de gestion des reservoirs).
@@ -112,10 +112,10 @@ public:
     double randomReservoirLevel(double min, double avg, double max);
 
     //! Perform the hydro ventilation
-    void makeVentilation(double* randomReservoirLevel,
-                        Solver::Variable::State& state,
-                        uint y,
-                        uint numSpace);
+    void makeVentilation(const std::vector<double>& randomReservoirLevel,
+                         Solver::Variable::State& state,
+                         uint y,
+                         uint numSpace);
 
     ALL_HYDRO_VENTILATION_RESULTS& ventilationResults() { return ventilationResults_; }
 
@@ -140,7 +140,9 @@ private:
     //! Prepare the effective demand for each area
     void prepareEffectiveDemand(uint numSpace);
     //! Monthly Optimal generations
-    void prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y, uint numSpace);
+    void prepareMonthlyOptimalGenerations(const std::vector<double>& random_reservoir_level,
+                                          uint y,
+                                          uint numSpace);
 
     //! Monthly target generations
     // note: inflows may have two different types, if in swap mode or not
