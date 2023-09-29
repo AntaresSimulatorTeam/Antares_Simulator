@@ -139,19 +139,19 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uin
             for (auto i = area.thermal.mustrunList.begin(); i != end; ++i)
             {
                 auto& cluster = *(i->second);
-
+                const auto& availableProduction = cluster.series->getAvailablePowerYearly(year);
                 if (inAdequacy && cluster.mustrunOrigin)
                 {
                     for (uint h = 0; h != cluster.series->timeSeries.height; ++h)
                     {
-                        mrs[h] += cluster.series->getAvailablePower(h, year);
-                        adq[h] += cluster.series->getAvailablePower(h, year);
+                        mrs[h] += availableProduction[h];
+                        adq[h] += availableProduction[h];
                     }
                 }
                 else
                 {
                     for (uint h = 0; h != cluster.series->timeSeries.height; ++h)
-                        mrs[h] += cluster.series->getAvailablePower(h, year);
+                        mrs[h] += availableProduction[h];
                 }
             }
         }
@@ -165,8 +165,9 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uin
                 if (!cluster.mustrunOrigin)
                     continue;
 
+                const auto& availableProduction = cluster.series->getAvailablePowerYearly(year);
                 for (uint h = 0; h != cluster.series->timeSeries.height; ++h)
-                    adq[h] += cluster.series->getAvailablePower(h, year);
+                    adq[h] += availableProduction[h];
             }
         }
     }

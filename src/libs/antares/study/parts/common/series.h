@@ -38,6 +38,9 @@ namespace Antares::Data
 class DataSeriesCommon
 {
 public:
+    using AllYears = Matrix<double>;
+    using SingleYear = AllYears::ColumnType;
+
     bool forceReload(bool reload = false) const;
 
     void markAsModified() const;
@@ -45,13 +48,14 @@ public:
     uint64_t memoryUsage() const;
 
     double getAvailablePower(unsigned int hour, unsigned int year) const;
+    const SingleYear& getAvailablePowerYearly(unsigned int year) const;
 
     /*!
     ** \brief Series (MW)
     **
     ** Merely a matrix of TimeSeriesCount * 8760 values
     */
-    Matrix<double> timeSeries;
+    AllYears timeSeries;
 
     /*!
     ** \brief Monte-Carlo
