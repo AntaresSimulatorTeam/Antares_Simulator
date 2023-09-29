@@ -144,13 +144,13 @@ private:
 
             // Getting random tables for this year
             yearRandomNumbers& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
-            double* randomReservoirLevel = nullptr;
+            std::vector<double>* randomReservoirLevelVec;
 
             // 1 - Applying random levels for current year
             if (hydroHotStart && firstSetParallelWithAPerformedYearWasRun)
-                randomReservoirLevel = state[numSpace].problemeHebdo->previousYearFinalLevels.data();
+                randomReservoirLevelVec = &state[numSpace].problemeHebdo->previousYearFinalLevels;
             else
-                randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
+                randomReservoirLevelVec = &randomForCurrentYear.pReservoirLevels;
 
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
@@ -162,10 +162,8 @@ private:
             // 4 - Hydraulic ventilation
             {
                 Benchmarking::Timer timer;
-                simulation_->hydroManagement.makeVentilation(randomReservoirLevel,
-                                                             state[numSpace],
-                                                             y,
-                                                             numSpace);
+                simulation_->hydroManagement.makeVentilation(
+                  *randomReservoirLevelVec, state[numSpace], y, numSpace);
                 timer.stop();
                 pDurationCollector.addDuration("hydro_ventilation", timer.get_duration());
             }
@@ -641,7 +639,7 @@ void ISimulation<Impl>::allocateMemoryForRandomNumbers(randomNumbers& randomForP
         }
 
         // Reservoir levels
-        randomForParallelYears.pYears[y].pReservoirLevels = new double[nbAreas];
+        randomForParallelYears.pYears[y].pReservoirLevels.assign(nbAreas, 0);
 
         // Noises on unsupplied and spilled energy
         randomForParallelYears.pYears[y].pUnsuppliedEnergy = new double[nbAreas];
