@@ -151,7 +151,16 @@ public:
                                  int precision,
                                  uint numSpace) const;
 
-    uint64_t memoryUsage() const;
+    uint64_t memoryUsage() const
+    {
+        uint64_t result = 0;
+        for (unsigned int i = 0; i != pBCcount; ++i)
+        {
+            result += sizeof(NextType) + sizeof(void*); // overhead vector
+            result += pBindConstraints[i].memoryUsage();
+        }
+        return result;
+    }
 
     template<class I>
     static void provideInformations(I& infos);
