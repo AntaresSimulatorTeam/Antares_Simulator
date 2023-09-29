@@ -156,10 +156,5 @@ IncompatibleFuelCostColumns::IncompatibleFuelCostColumns() :
 {
 }
 
-InvalidThermalClusterSpinning::InvalidThermalClusterSpinning() :
- LoadingError("Spinning value invalid for at least one thermal cluster, see logs")
-{
-}
-
 } // namespace Error
 } // namespace Antares

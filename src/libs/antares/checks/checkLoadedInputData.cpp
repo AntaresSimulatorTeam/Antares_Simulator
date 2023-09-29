@@ -138,26 +138,6 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
     }
 }
 
-void checkThermalClusterSpinning(const Antares::Data::AreaList& areas)
-{
-    bool atLeastOneSpinningWrong = false;
-    for (const auto& [areaName, area] : areas)
-    {
-        for (const auto& [clusterName, cluster] : area->thermal.list)
-        {
-            if (double sp = cluster->spinning; sp >= 100)
-            {
-                logs.warning() << "Spinning value " << sp << " invalid for thermal cluster `"
-                               << clusterName << "` in area `" << areaName << "`";
-                atLeastOneSpinningWrong = true;
-            }
-        }
-    }
-
-    if (atLeastOneSpinningWrong)
-        throw Error::InvalidThermalClusterSpinning();
-}
-
 // Number of columns for Fuel & CO2 cost in thermal clusters must be one, or same as the number of
 // TS
 template<class ExceptionT>

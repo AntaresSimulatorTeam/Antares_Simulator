@@ -209,11 +209,5 @@ public:
     IncompatibleFuelCostColumns();
 };
 
-class InvalidThermalClusterSpinning : public LoadingError
-{
-public:
-    InvalidThermalClusterSpinning();
-};
-
 } // namespace Error
 } // namespace Antares
