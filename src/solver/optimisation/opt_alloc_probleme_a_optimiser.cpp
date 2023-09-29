@@ -140,10 +140,12 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
     logs.info();
 
     OPT_AllocateFromNumberOfVariableConstraints(problemeHebdo->ProblemeAResoudre.get(), NbTermes);
+    logs.info() << " optimisationAllocateProblem:143 \n";
 
     int NbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
     ProblemeAResoudre->ProblemesSpx.assign(NbIntervalles, nullptr);
+    logs.info() << " optimisationAllocateProblem:143 \n";
 
     logs.info();
     logs.info() << " Status of Preliminary Allocations for Generic Problem Resolution : Successful";
@@ -168,10 +170,14 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*
     logs.info() << " Expected Number of Non-zero terms in Problem Matrix : increased to : "
                 << NbTermes;
     logs.info();
+    logs.info() << " OPT_AugmenterLaTailleDeLaMatriceDesContraintes:173 \n";
 
     ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.resize(NbTermes);
+    logs.info() << " OPT_AugmenterLaTailleDeLaMatriceDesContraintes:176 \n";
 
     ProblemeAResoudre->IndicesColonnes.resize(NbTermes);
+    logs.info() << " OPT_AugmenterLaTailleDeLaMatriceDesContraintes:179 \n";
 
     ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
+    logs.info() << " OPT_AugmenterLaTailleDeLaMatriceDesContraintes:182 \n";
 }
