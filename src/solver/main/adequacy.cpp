@@ -41,11 +41,16 @@ void Application::runSimulationInAdequacyMode()
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Adequacy> SimulationType;
     SimulationType simulation(*pStudy, pSettings, pDurationCollector, *resultWriter);
     simulation.checkWriter();
+    logs.info() << "********* HELLO adequacy.cpp::Application::runSimulationInadequacyMode:44\n";
     simulation.run();
+    logs.info() << "********* HELLO adequacy.cpp::Application::runSimulationInadequacyMode:46\n";
 
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
     {
         Benchmarking::Timer timer;
+        logs.info()
+          << "********* HELLO adequacy.cpp::Application::runSimulationInadequacyMode:51\n";
+
         simulation.writeResults(/*synthesis:*/ true);
         timer.stop();
         pDurationCollector.addDuration("synthesis_export", timer.get_duration());

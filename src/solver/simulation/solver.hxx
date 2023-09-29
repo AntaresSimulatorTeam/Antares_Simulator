@@ -213,7 +213,9 @@ private:
                 // Before writing, some variable may require minor modifications
                 simulation_->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
+                logs.info() << "********* HELLO solver.hxx::onExecute:216\n";
                 simulation_->writeResults(false, y, numSpace); // false for synthesis
+                logs.info() << "********* HELLO solver.hxx::onExecute:218\n";
                 timerYear.stop();
                 pDurationCollector.addDuration("yby_export", timerYear.get_duration());
             }
@@ -436,7 +438,7 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
             newPath << "mc-ind" << IO::Separator << "00000";
             newPath.overwriteRight(tmp);
         }
-
+        logs.info() << "********* HELLO solver.hxx::ISimulation<Impl>::writeResults:439\n";
         // Dumping
         ImplementationType::variables.exportSurveyResults(
           synthesis, newPath, numSpace, pResultWriter);

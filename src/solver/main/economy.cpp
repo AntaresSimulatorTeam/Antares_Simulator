@@ -41,11 +41,15 @@ void Application::runSimulationInEconomicMode()
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Economy> SimulationType;
     SimulationType simulation(*pStudy, pSettings, pDurationCollector, *resultWriter);
     simulation.checkWriter();
+    logs.info() << "********* HELLO economy.cpp::Application::runSimulationInEconomicMode:44\n";
     simulation.run();
 
+    logs.info() << "********* HELLO economy.cpp::Application::runSimulationInEconomicMode:46\n";
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
     {
         Benchmarking::Timer timer;
+        logs.info() << "********* HELLO economy.cpp::Application::runSimulationInEconomicMode:49\n";
+
         simulation.writeResults(/*synthesis:*/ true);
         timer.stop();
         pDurationCollector.addDuration("synthesis_export", timer.get_duration());
