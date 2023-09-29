@@ -261,6 +261,7 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
     // Running !
     logs.checkpoint() << "Running the simulation (" << ImplementationType::Name() << ')';
     logs.info() << "Allocating resources...";
+    logs.info() << "********* HELLO solver.hxx::ISimulation<Impl>::ISimulation:264\n";
 
     if (pYearByYear && (settings.noOutput || settings.tsGeneratorsOnly))
         pYearByYear = false;
