@@ -104,8 +104,7 @@ bool HydroMaxTimeSeriesReader::SaveMaxGenerationEnergy(const AnyString& folder, 
     maxDailyGenEnergy.reset(1, DAYS_PER_YEAR, true);
     maxDailyGenEnergy.fillColumn(0, 24.);
 
-    for (uint day = 0; day < DAYS_PER_YEAR; ++day)
-        maxDailyGenEnergy[0][day] = dailyMaxPumpAndGen[genMaxE][day];
+    maxDailyGenEnergy.pasteToColumn(0, dailyMaxPumpAndGen[genMaxE]);
 
     filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
                      << "maxDailyGenEnergy_" << area.id << ".txt";
@@ -124,8 +123,7 @@ bool HydroMaxTimeSeriesReader::SaveMaxPumpingEnergy(const AnyString& folder, Are
     maxDailyPumpEnergy.reset(1, DAYS_PER_YEAR, true);
     maxDailyPumpEnergy.fillColumn(0, 24.);
 
-    for (uint day = 0; day < DAYS_PER_YEAR; ++day)
-        maxDailyPumpEnergy[0][day] = dailyMaxPumpAndGen[pumpMaxE][day];
+    maxDailyPumpEnergy.pasteToColumn(0, dailyMaxPumpAndGen[pumpMaxE]);
 
     filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
                      << "maxDailyPumpEnergy_" << area.id << ".txt";

@@ -154,17 +154,6 @@ public:
     */
     uint count;
 
-private:
-    /*!
-    ** \brief The number of time-series for maxHourlyGenPower and maxHourlyPumpPower matrices
-    **
-    ** This value must be the same as the width of the matrices `maxHourlyGenPower` and `maxHourlyPumpPower`.
-    ** It is only provided for convenience to avoid same strange and ambiguous code
-    ** (for example using `maxHourlyGenPower.width` and `maxHourlyPumpPower.width` in the same routine, it might
-    ** indicate that the two values are not strictly equal)
-    */
-    uint nbTimeSeriesSup = 0;
-
 public:
     /*!
     ** \brief Monte-Carlo
@@ -205,6 +194,19 @@ public:
      * \brief Setting TS's when derated mode is on
      */
     void setMaxPowerTSWhenDeratedMode(const Study& study);
+
+private:
+    /*!
+    ** \brief The number of time-series for maxHourlyGenPower and maxHourlyPumpPower matrices
+    **
+    ** This value must be the same as the width of the matrices `maxHourlyGenPower` and
+    *`maxHourlyPumpPower`.
+    ** It is only provided for convenience to avoid same strange and ambiguous code
+    ** (for example using `maxHourlyGenPower.width` and `maxHourlyPumpPower.width` in the same
+    *routine, it might
+    ** indicate that the two values are not strictly equal)
+    */
+    uint nbTimeSeriesSup = 0;
 
     /**
      * This class provides comparing two integers
