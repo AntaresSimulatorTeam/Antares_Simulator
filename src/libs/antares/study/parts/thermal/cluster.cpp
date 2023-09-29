@@ -42,9 +42,7 @@
 using namespace Yuni;
 using namespace Antares;
 
-#define THERMALAGGREGATELIST_INITIAL_CAPACITY 10
-
-#define SEP IO::Separator
+constexpr double SPINNING_MAX = 99.999;
 
 namespace Yuni
 {
@@ -545,14 +543,14 @@ bool Data::ThermalCluster::integrityCheck()
         nominalCapacityWithSpinning = 0.;
         ret = false;
     }
-    if (spinning < 0. or spinning > 100.)
+    if (spinning < 0. or spinning > SPINNING_MAX)
     {
         if (spinning < 0.)
             spinning = 0;
         else
-            spinning = 100.;
+            spinning = SPINNING_MAX;
         logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                     << ": The spinning must be within the range [0,+100] (rounded to " << spinning
+                     << ": The spinning must be within the range [0, " <<  SPINNING_MAX << "] (rounded to " << spinning
                      << ')';
         ret = false;
         nominalCapacityWithSpinning = nominalCapacity;
