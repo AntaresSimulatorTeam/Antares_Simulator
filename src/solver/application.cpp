@@ -158,6 +158,8 @@ void Application::prepare(int argc, char* argv[])
 
     checkMinStablePower(tsGenThermal, pStudy->areas);
 
+    checkThermalClusterSpinning(pStudy->areas);
+
     checkFuelCostColumnNumber(pStudy->areas);
     checkCO2CostColumnNumber(pStudy->areas);
 
