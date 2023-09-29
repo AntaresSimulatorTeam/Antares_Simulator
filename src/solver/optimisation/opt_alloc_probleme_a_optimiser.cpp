@@ -145,7 +145,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
     int NbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
     ProblemeAResoudre->ProblemesSpx.assign(NbIntervalles, nullptr);
-    logs.info() << " optimisationAllocateProblem:143 \n";
+    logs.info() << " optimisationAllocateProblem:148 \n";
 
     logs.info();
     logs.info() << " Status of Preliminary Allocations for Generic Problem Resolution : Successful";
