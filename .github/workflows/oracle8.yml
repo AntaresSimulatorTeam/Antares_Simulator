@@ -43,7 +43,7 @@ jobs:
     - name: Init submodule
       run: |
            git config --global safe.directory '*'
-           git submodule update --init --remote src/antares-deps src/tests/resources/Antares_Simulator_Tests
+           git submodule update --init --recursive src .
 
     - name: Install dependencies
       run: |
