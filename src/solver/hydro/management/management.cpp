@@ -314,32 +314,23 @@ bool HydroManagement::checkGenerationPowerConsistency(uint numSpace) const
       [&numSpace, &ret](Data::Area& area) -> decltype(ret)
       {
           uint z = area.index;
-          const auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
-          auto tsIndex = (uint)ptchro.Hydraulique;
-          auto tsIndexMaxPower = ptchro.HydrauliqueMaxPower;
+          auto tsIndex = (uint)NumeroChroniquesTireesParPays[numSpace][z].Hydraulique;
+          auto tsIndexMaxPower = NumeroChroniquesTireesParPays[numSpace][z].HydrauliqueMaxPower;
 
-          // Hourly minimum generation <= hourly inflows for each hour
-          auto& mingenmatrix = area.hydro.series->mingen;
-          auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
-          auto& maxHourlyGenPowerMatrix = area.hydro.series->maxHourlyGenPower;
-          auto const& srcMaxHourlyGenPower
-            = maxHourlyGenPowerMatrix[tsIndexMaxPower < maxHourlyGenPowerMatrix.width
-                                        ? tsIndexMaxPower
-                                        : 0];
+          auto const& srcmingen = area.hydro.series->mingen;
+          auto const& srcmaxgen = area.hydro.series->maxHourlyGenPower;
 
           for (uint h = 0; h < HOURS_PER_YEAR; ++h)
           {
-              const auto& max = srcMaxHourlyGenPower[h];
-              const auto& min = srcmingen[h];
+              const auto& min = srcmingen[tsIndex < srcmingen.width ? tsIndex : 0][h];
+              const auto& max = srcmaxgen[tsIndexMaxPower < srcmaxgen.width ? tsIndexMaxPower : 0][h];
 
               if (max < min)
-              { //  Maybe we should put and day in which exception happens?
-                //  Now user can only see in hourly resolution when an exception occur.
+              {
                   logs.error() << "In area: " << area.name << " [hourly] minimum generation of "
                                << min << " MW in timestep " << h + 1 << " of TS-" << tsIndex + 1
                                << " is incompatible with the maximum generation of " << max
-                               << " MW in timestep " << h + 1 << " of TS-" << tsIndexMaxPower + 1
-                               << " MW.";
+                               << " MW in timestep " << h + 1 << " of TS-" << tsIndexMaxPower + 1 << " MW.";
                   ret = false;
                   return ret;
               }
