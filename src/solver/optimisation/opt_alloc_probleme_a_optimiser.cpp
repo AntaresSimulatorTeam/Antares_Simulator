@@ -168,14 +168,17 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
                 << ProblemeAResoudre->NombreDeContraintes << " Constraints) ";
     logs.info() << " Expected Number of Non-zero terms in Problem Matrix : " << NbTermes;
     logs.info();
-
+    std::cout << "optimisationAllocateProblem:171 problemeHebdo =  " << problemeHebdo << "\n";
+    std::cout << "optimisationAllocateProblem:172 problemeHebdo->ProblemeAResoudre.get() =  "
+              << problemeHebdo->ProblemeAResoudre.get() << "\n";
+    std::cout << "optimisationAllocateProblem:174 NbTermes =  " << NbTermes << "\n";
     OPT_AllocateFromNumberOfVariableConstraints(problemeHebdo->ProblemeAResoudre.get(), NbTermes);
-    logs.info() << " optimisationAllocateProblem:143 \n";
+    logs.info() << " optimisationAllocateProblem:176 \n";
 
     int NbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
     ProblemeAResoudre->ProblemesSpx.assign(NbIntervalles, nullptr);
-    logs.info() << " optimisationAllocateProblem:148 \n";
+    logs.info() << " optimisationAllocateProblem:181 \n";
 
     logs.info();
     logs.info() << " Status of Preliminary Allocations for Generic Problem Resolution : Successful";
