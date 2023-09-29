@@ -286,10 +286,12 @@ inline ISimulation<Impl>::~ISimulation()
 template<class Impl>
 void ISimulation<Impl>::run()
 {
+    logs.info() << "********* HELLO solver.hxx::ISimulation<Impl>::run:289\n";
     pNbMaxPerformedYearsInParallel = study.maxNbYearsInParallel;
 
     // Initialize all data
     ImplementationType::variables.initializeFromStudy(study);
+    logs.info() << "********* HELLO solver.hxx::ISimulation<Impl>::run:294\n";
     // Computing the max number columns a report of any kind can contain.
     study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
 
@@ -297,10 +299,12 @@ void ISimulation<Impl>::run()
 
     // Memory usage
     {
+        logs.info() << "********* HELLO solver.hxx::ISimulation<Impl>::run:302\n";
         logs.info() << " Variables:  ("
                     << (uint)(ImplementationType::variables.memoryUsage() / 1024 / 1024) << "Mo)";
         Variable::PrintInfosStdCout c;
         ImplementationType::variables.template provideInformations<Variable::PrintInfosStdCout>(c);
+        logs.info() << "********* HELLO solver.hxx::ISimulation<Impl>::run:307\n";
     }
 
     // The general data

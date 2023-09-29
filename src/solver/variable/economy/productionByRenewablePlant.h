@@ -306,6 +306,7 @@ public:
 
     inline uint64_t memoryUsage() const
     {
+        logs.info() << "********* HELLO solver.hxx::ISimulation<Impl>::run:289\n";
         uint64_t r = (sizeof(IntermediateValues) * pSize + IntermediateValues::MemoryUsage())
                          * pNbYearsParallel;
         r += sizeof(double) * pSize * maxHoursInAYear * pNbYearsParallel;
