@@ -271,7 +271,9 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
         {
             // When the cluster is in must-run mode, the production value
             // directly comes from the time-series
-            thermalClusterProduction = availableProduction[h]; // in mustrun, production==available
+            thermalClusterProduction
+              = thermalClusterAvailableProduction; // in mustrun, production==available
+            // production
         }
         else
         {
