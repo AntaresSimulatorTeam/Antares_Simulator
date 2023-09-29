@@ -78,7 +78,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
     //  Hourly maximum generation/pumping power matrices and their number of TS's (width of matrices)
     auto const& maxHourlyGenPower = area.hydro.series->maxHourlyGenPower;
     auto const& maxHourlyPumpPower = area.hydro.series->maxHourlyPumpPower;
-    uint nbOfMaxPowerTimeSeries = area.hydro.series->nbTimeSeriesSup;
+    uint nbOfMaxPowerTimeSeries = area.hydro.series->getNbTimeSeriesSup();
 
     //  Setting width and height of daily mean maximum generation/pumping power matrices
     meanMaxDailyGenPower.reset(nbOfMaxPowerTimeSeries, DAYS_PER_YEAR);

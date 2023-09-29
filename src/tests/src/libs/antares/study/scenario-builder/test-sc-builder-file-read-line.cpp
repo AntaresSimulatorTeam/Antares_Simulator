@@ -89,9 +89,9 @@ struct Fixture
 		
 		// Hydro Max Power: set the nb of ready made TS
 		nbReadyMadeTS = 15;
-		area_1->hydro.series->nbTimeSeriesSup = nbReadyMadeTS;
-		area_2->hydro.series->nbTimeSeriesSup = nbReadyMadeTS;
-		area_3->hydro.series->nbTimeSeriesSup = nbReadyMadeTS;
+		area_1->hydro.series->setNbTimeSeriesSup(nbReadyMadeTS);
+		area_2->hydro.series->setNbTimeSeriesSup(nbReadyMadeTS);
+		area_3->hydro.series->setNbTimeSeriesSup(nbReadyMadeTS);
 
 		// Links
 		link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);

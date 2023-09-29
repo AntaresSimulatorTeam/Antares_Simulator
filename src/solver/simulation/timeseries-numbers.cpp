@@ -168,7 +168,7 @@ public:
     }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
-        std::vector<uint> to_return = {area.hydro.series->nbTimeSeriesSup};
+        std::vector<uint> to_return = {area.hydro.series->getNbTimeSeriesSup()};
         return to_return;
     }
     uint getGeneratedTimeSeriesNumber() override
@@ -452,7 +452,7 @@ bool checkInterModalConsistencyForArea(Area& area,
     indexTS = ts_to_tsIndex.at(timeSeriesHydroMaxPower);
     if (isTSintermodal[indexTS])
     {
-        uint nbTimeSeries = area.hydro.series->nbTimeSeriesSup;
+        uint nbTimeSeries = area.hydro.series->getNbTimeSeriesSup();
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -897,7 +897,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
           area.hydro.series->timeseriesNumbers, area.hydro.series->count, years);
         // Hydro Max Power
         fixTSNumbersSingleAreaSingleMode(
-          area.hydro.series->timeseriesNumbersHydroMaxPower, area.hydro.series->nbTimeSeriesSup, years);
+          area.hydro.series->timeseriesNumbersHydroMaxPower, area.hydro.series->getNbTimeSeriesSup(), years);
 
         // Thermal
         std::for_each(area.thermal.clusters.cbegin(),

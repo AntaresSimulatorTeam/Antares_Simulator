@@ -154,6 +154,7 @@ public:
     */
     uint count;
 
+private:
     /*!
     ** \brief The number of time-series for maxHourlyGenPower and maxHourlyPumpPower matrices
     **
@@ -164,6 +165,7 @@ public:
     */
     uint nbTimeSeriesSup = 0;
 
+public:
     /*!
     ** \brief Monte-Carlo
     */
@@ -187,7 +189,17 @@ public:
     /**
      * \brief Setting TS's number of maximum generation and pumping matrices
      */
+    void setNbTimeSeriesSup(uint nbTimeSeriesSup_);
+
+    /**
+     * \brief Setting TS's number of maximum generation and pumping matrices
+     */
     void setNbTimeSeriesSup();
+
+    /**
+     * \brief Get function for TS's number of maximum generation and pumping matrices
+     */
+    uint getNbTimeSeriesSup() const;
 
     /**
      * \brief Setting TS's when derated mode is on
