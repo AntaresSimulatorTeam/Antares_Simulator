@@ -49,41 +49,71 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
 {
     const size_t nbVariables = ProblemeAResoudre->NombreDeVariables;
     const size_t nbConstraints = ProblemeAResoudre->NombreDeContraintes;
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:1 \n";
 
     ProblemeAResoudre->Sens.resize(nbConstraints);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:2 \n";
     ProblemeAResoudre->IndicesDebutDeLigne.assign(nbConstraints, 0);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:3 \n";
     ProblemeAResoudre->NombreDeTermesDesLignes.assign(nbConstraints, 0);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:4 \n";
 
     ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.assign(NbTermes, 0.);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:5 \n";
     ProblemeAResoudre->IndicesColonnes.assign(NbTermes, 0);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:6 \n";
 
     ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:7 \n";
     ProblemeAResoudre->IncrementDAllocationMatriceDesContraintes = (int)(0.1 * NbTermes);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:8 \n";
 
     ProblemeAResoudre->CoutQuadratique.assign(nbVariables, 0.);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:9 \n";
     ProblemeAResoudre->CoutLineaire.assign(nbVariables, 0.);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:10 \n";
     ProblemeAResoudre->TypeDeVariable.assign(nbVariables, 0);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:11 \n";
     ProblemeAResoudre->Xmin.assign(nbVariables, 0.);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:12 \n";
     ProblemeAResoudre->Xmax.assign(nbVariables, 0.);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:13 \n";
     ProblemeAResoudre->X.assign(nbVariables, 0.);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:14 \n";
 
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:15 \n";
     ProblemeAResoudre->SecondMembre.assign(nbConstraints, 0.);
 
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:16 \n";
     ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees.assign(nbVariables, nullptr);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:17 \n";
     ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits.assign(nbVariables, nullptr);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:18 \n";
     ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux.assign(nbConstraints, nullptr);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:19 \n";
 
     ProblemeAResoudre->CoutsMarginauxDesContraintes.assign(nbConstraints, 0.);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:20 \n";
     ProblemeAResoudre->CoutsReduits.assign(nbVariables, 0.);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:21 \n";
 
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:22 \n";
     ProblemeAResoudre->PositionDeLaVariable.assign(nbVariables, 0);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:23 \n";
     ProblemeAResoudre->ComplementDeLaBase.assign(nbConstraints, 0);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:24 \n";
 
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:25 \n";
     ProblemeAResoudre->Pi.assign(nbVariables, 0.);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:26 \n";
     ProblemeAResoudre->Colonne.assign(nbVariables, 0);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:27 \n";
 
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:28 \n";
     ProblemeAResoudre->NomDesVariables.resize(nbVariables);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:29 \n";
     ProblemeAResoudre->NomDesContraintes.resize(nbConstraints);
+    logs.info() << " OPT_AllocateFromNumberOfVariableConstraints:30 \n";
 }
 
 static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int mxPaliers)
