@@ -46,13 +46,13 @@ jobs:
            tar -xvf rte-antares-deps-centos7-Release.tar.gz
            rm -rf rte-antares-deps-centos7-Release.tar.gz
 
-   - name: Remove cmake 3.17.5
-     run: yum remove -y cmake3
+    - name: Remove cmake 3.17.5
+      run: yum remove -y cmake3
 
-   - name: Setup cmake 3.22
-     uses: jwlawson/actions-setup-cmake@v1.13
-     with:
-       cmake-version: '3.22.x'
+    - name: Setup cmake 3.22
+      uses: jwlawson/actions-setup-cmake@v1.13
+      with:
+        cmake-version: '3.22.x'
 
     - name: Configure
       run: |
