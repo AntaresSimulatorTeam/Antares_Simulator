@@ -34,7 +34,7 @@
 
 void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
 {
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE_J& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
     auto& Turbine = DonneesMensuelles->Turbine;
     const auto& TurbineMax = DonneesMensuelles->TurbineMax;

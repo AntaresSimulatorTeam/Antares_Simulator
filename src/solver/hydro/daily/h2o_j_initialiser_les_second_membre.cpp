@@ -30,7 +30,7 @@
 
 void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
 {
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE_J& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
     CORRESPONDANCE_DES_CONTRAINTES& CorrespondanceDesContraintes
         = ProblemeHydraulique.CorrespondanceDesContraintes[NumeroDeProbleme];

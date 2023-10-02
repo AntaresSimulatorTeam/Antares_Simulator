@@ -57,7 +57,7 @@ struct DONNEES_MENSUELLES
 
     /******************************************************************************************/
     /* Problemes internes (utilise uniquement par l'optimisation) */
-    PROBLEME_HYDRAULIQUE ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE_J ProblemeHydraulique;
 };
 
 #endif

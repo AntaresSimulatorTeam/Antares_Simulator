@@ -30,7 +30,7 @@
 
 void H2O_J_Instanciation(DONNEES_MENSUELLES& DonneesMensuelles)
 {
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles.ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE_J& ProblemeHydraulique = DonneesMensuelles.ProblemeHydraulique;
 
     ProblemeHydraulique.NombreDeProblemes = 4;
 

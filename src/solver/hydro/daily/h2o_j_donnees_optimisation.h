@@ -115,10 +115,10 @@ struct CORRESPONDANCE_DES_VARIABLES
 };
 
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */
-struct PROBLEME_HYDRAULIQUE
+struct PROBLEME_HYDRAULIQUE_J
 {
     char LesCoutsOntEteInitialises; /* Vaut OUI ou NON */
-    ~PROBLEME_HYDRAULIQUE()
+    ~PROBLEME_HYDRAULIQUE_J()
     {
         int a = 13;
     }

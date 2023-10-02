@@ -42,7 +42,7 @@ extern "C"
 
 void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
 {
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE_J& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
     for (int i = 0; i < ProblemeHydraulique.NombreDeProblemes; i++)
     {

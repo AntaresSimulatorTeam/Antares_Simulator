@@ -50,7 +50,7 @@ extern "C"
 
 void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
 {
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE_J& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
     PROBLEME_LINEAIRE_PARTIE_VARIABLE_J& ProblemeLineairePartieVariable
       = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];

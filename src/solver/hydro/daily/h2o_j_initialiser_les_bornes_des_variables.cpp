@@ -37,7 +37,7 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
     const std::vector<double>& TurbineCible = DonneesMensuelles->TurbineCible;
     std::vector<double>& Turbine = DonneesMensuelles->Turbine;
 
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE_J& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
     const int NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
 
