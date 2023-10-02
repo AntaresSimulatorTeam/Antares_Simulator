@@ -600,7 +600,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
                 area.renewable.list.each([&](const RenewableCluster& cluster) {
                     assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
-                    mustRunGen += cluster.valueAtTimeStep(problem.year, (uint)hourInYear);
+                    mustRunGen += cluster.valueAtTimeStep((uint)hourInYear, problem.year);
                 });
             }
 

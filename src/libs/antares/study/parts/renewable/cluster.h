@@ -155,7 +155,7 @@ public:
     /* !
     ** Get production value at time-step ts
     */
-    double valueAtTimeStep(uint year, uint timeStepIndex) const;
+    double valueAtTimeStep(uint timeStepIndex, uint year) const;
 
 public:
     /*!
