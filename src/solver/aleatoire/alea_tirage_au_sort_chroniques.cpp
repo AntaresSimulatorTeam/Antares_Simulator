@@ -66,13 +66,6 @@ void ApplyRandomTSnumbers(const Study& study,
             ptchro.Hydraulique
               = (data.count != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
-        // Wind
-        {
-            const Data::DataSeriesWind& data = *area.wind.series;
-            assert(year < data.timeseriesNumbers.height);
-            ptchro.Eolien
-              = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
-        }
 
     }     // each area
 
