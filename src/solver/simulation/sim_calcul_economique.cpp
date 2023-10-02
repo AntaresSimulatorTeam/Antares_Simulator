@@ -570,6 +570,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
+            auto& windSeries = area.wind.series;
 
             assert(&scratchpad);
             assert((uint)hourInYear < scratchpad.ts.load.height);
@@ -578,7 +579,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             {
                 assert((uint)hourInYear < scratchpad.ts.solar.height);
                 assert((uint)hourInYear < scratchpad.ts.wind.height);
-                assert((uint)tsIndex.Eolien < scratchpad.ts.wind.width);
+                assert(windSeries->getIndex(problem.year) < scratchpad.ts.wind.width);
                 assert((uint)tsIndex.Solar < scratchpad.ts.solar.width);
             }
 
@@ -586,7 +587,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                mustRunGen = scratchpad.ts.wind[tsIndex.Eolien][hourInYear]
+                mustRunGen = scratchpad.ts.wind[windSeries->getIndex(problem.year)][hourInYear]
                              + scratchpad.ts.solar[tsIndex.Solar][hourInYear]
                              + scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
                              + scratchpad.mustrunSum[hourInYear];

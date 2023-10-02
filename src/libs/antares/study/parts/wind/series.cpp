@@ -74,8 +74,12 @@ int DataSeriesWindSaveToFolder(DataSeriesWind* d, const AreaName& areaID, const 
 
 double* DataSeriesWind::getAvailablePower(unsigned int year) const
 {
-    uint index = (timeSeries.width != 1) ? (long)timeseriesNumbers[0][year] : 0;
-    return timeSeries[index];
+    return timeSeries[getIndex(year)];
+}
+
+unsigned int DataSeriesWind::getIndex(unsigned int year) const
+{
+    return (timeSeries.width != 1) ? (long)timeseriesNumbers[0][year] : 0;
 }
 
 bool DataSeriesWind::forceReload(bool reload) const
