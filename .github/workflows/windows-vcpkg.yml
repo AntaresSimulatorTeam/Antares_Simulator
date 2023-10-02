@@ -44,10 +44,6 @@ jobs:
       RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
 
     steps:
-      # Enable tmate debugging of manually-triggered workflows if the input option was provided
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-      # if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
 
     - uses: actions/checkout@v3
 
@@ -137,6 +133,11 @@ jobs:
            cmake --build _build --config release -j10
 
 
+    # Enable tmate debugging of manually-triggered workflows if the input option was provided
+    - name: Setup tmate session
+    uses: mxschmitt/action-tmate@v3
+    # if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+    
     # simtest
     - name: Read simtest version
       id: simtest-version
