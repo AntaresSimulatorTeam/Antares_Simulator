@@ -64,7 +64,8 @@ jobs:
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
-           -DBUILD_ortools=ON
+           -DBUILD_ortools=ON \
+           -DBUILD_UI=OFF
 
     - name: Build
       run: |
