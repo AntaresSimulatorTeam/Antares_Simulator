@@ -1,0 +1,14 @@
+UU	link	id	daily
+XX	VARIABLES	BEGIN	END
+	12	1	7
+
+UU	daily			FLOW LIN.	FLOW LIN.	UCAP LIN.	UCAP LIN.	CONG. FEE (ALG.)	CONG. FEE (ALG.)	CONG. FEE (ABS.)	CONG. FEE (ABS.)	MARG. COST	MARG. COST	HURDLE COST	HURDLE COST
+				MWh	MWh	MWh	MWh	Euro	Euro	Euro	Euro	Euro/MW	Euro/MW	Euro	Euro
+	index	day	month	min	max	min	max	min	max	min	max	min	max	min	max
+	1	01	JAN	1	1	1	1	1	1	1	1	1	1	1	1
+	2	02	JAN	1	1	1	1	1	1	1	1	1	1	1	1
+	3	03	JAN	1	1	1	1	1	1	1	1	1	1	1	1
+	4	04	JAN	1	1	1	1	1	1	1	1	1	1	1	1
+	5	05	JAN	1	1	1	1	1	1	1	1	1	1	1	1
+	6	06	JAN	1	1	1	1	1	1	1	1	1	1	1	1
+	7	07	JAN	1	1	1	1	1	1	1	1	1	1	1	1

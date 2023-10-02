@@ -1,0 +1,8 @@
+QQ	link	va	monthly
+TT	VARIABLES	BEGIN	END
+	28	1	1
+
+QQ	monthly		FLOW LIN.	FLOW LIN.	FLOW LIN.	FLOW LIN.	UCAP LIN.	UCAP LIN.	UCAP LIN.	UCAP LIN.	LOOP FLOW	FLOW QUAD.	CONG. FEE (ALG.)	CONG. FEE (ALG.)	CONG. FEE (ALG.)	CONG. FEE (ALG.)	CONG. FEE (ABS.)	CONG. FEE (ABS.)	CONG. FEE (ABS.)	CONG. FEE (ABS.)	MARG. COST	MARG. COST	MARG. COST	MARG. COST	CONG. PROB +	CONG. PROB -	HURDLE COST	HURDLE COST	HURDLE COST	HURDLE COST
+			MWh	MWh	MWh	MWh	MWh	MWh	MWh	MWh	MWh	MWh	Euro	Euro	Euro	Euro	Euro	Euro	Euro	Euro	Euro/MW	Euro/MW	Euro/MW	Euro/MW	%	%	Euro	Euro	Euro	Euro
+	index	month	EXP	std	min	max	EXP	std	min	max	values	values	EXP	std	min	max	EXP	std	min	max	EXP	std	min	max	values	values	EXP	std	min	max
+	1	JAN	2819	0	2819	2819	3015	0	3015	3015	0	2319	1085	0	1085	1085	1150	0	1150	1150	0	0	0	0	0	0	15	0	15	15

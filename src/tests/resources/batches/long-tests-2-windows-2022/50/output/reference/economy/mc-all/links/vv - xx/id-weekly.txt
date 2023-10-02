@@ -1,0 +1,8 @@
+VV	link	id	weekly
+XX	VARIABLES	BEGIN	END
+	12	1	1
+
+VV	weekly	FLOW LIN.	FLOW LIN.	UCAP LIN.	UCAP LIN.	CONG. FEE (ALG.)	CONG. FEE (ALG.)	CONG. FEE (ABS.)	CONG. FEE (ABS.)	MARG. COST	MARG. COST	HURDLE COST	HURDLE COST
+		MWh	MWh	MWh	MWh	Euro	Euro	Euro	Euro	Euro/MW	Euro/MW	Euro	Euro
+	week	min	max	min	max	min	max	min	max	min	max	min	max
+	1	1	1	1	1	1	1	1	1	1	1	1	1

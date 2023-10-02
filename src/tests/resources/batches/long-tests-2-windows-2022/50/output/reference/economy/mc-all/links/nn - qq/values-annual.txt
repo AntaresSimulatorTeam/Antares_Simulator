@@ -1,0 +1,8 @@
+NN	link	va	annual
+QQ	VARIABLES	BEGIN	END
+	28	1	1
+
+NN	annual	FLOW LIN.	FLOW LIN.	FLOW LIN.	FLOW LIN.	UCAP LIN.	UCAP LIN.	UCAP LIN.	UCAP LIN.	LOOP FLOW	FLOW QUAD.	CONG. FEE (ALG.)	CONG. FEE (ALG.)	CONG. FEE (ALG.)	CONG. FEE (ALG.)	CONG. FEE (ABS.)	CONG. FEE (ABS.)	CONG. FEE (ABS.)	CONG. FEE (ABS.)	MARG. COST	MARG. COST	MARG. COST	MARG. COST	CONG. PROB +	CONG. PROB -	HURDLE COST	HURDLE COST	HURDLE COST	HURDLE COST
+		MWh	MWh	MWh	MWh	MWh	MWh	MWh	MWh	MWh	MWh	Euro	Euro	Euro	Euro	Euro	Euro	Euro	Euro	Euro/MW	Euro/MW	Euro/MW	Euro/MW	%	%	Euro	Euro	Euro	Euro
+		EXP	std	min	max	EXP	std	min	max	values	values	EXP	std	min	max	EXP	std	min	max	EXP	std	min	max	values	values	EXP	std	min	max
+	Annual	2296	0	2296	2296	7668	0	7668	7668	0	550	35	0	35	35	567	0	567	567	0	0	0	0	0	0	38	0	38	38

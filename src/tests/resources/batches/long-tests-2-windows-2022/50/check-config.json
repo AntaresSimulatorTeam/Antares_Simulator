@@ -1,0 +1,10 @@
+[
+	{
+		"name" : "test_1",
+		"checks" :
+		{
+			"output_compare" : {},
+			"integrity_compare" : null
+		}
+	}
+]
