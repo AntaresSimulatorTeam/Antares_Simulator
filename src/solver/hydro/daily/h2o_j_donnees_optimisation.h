@@ -66,7 +66,7 @@ struct PROBLEME_LINEAIRE_PARTIE_FIXE_J
 };
 
 /* Partie variable renseignee avant le lancement de l'optimisation de chaque reservoir */
-struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
+struct PROBLEME_LINEAIRE_PARTIE_VARIABLE_J
 {
     /* Donnees variables de la matrice des contraintes */
     /* On met quand-meme les bornes dans la partie variable pour le cas ou on voudrait avoir
@@ -129,7 +129,7 @@ struct PROBLEME_HYDRAULIQUE
     std::vector<CORRESPONDANCE_DES_CONTRAINTES> CorrespondanceDesContraintes;
 
     std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE_J> ProblemeLineairePartieFixe;
-    std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE> ProblemeLineairePartieVariable;
+    std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE_J> ProblemeLineairePartieVariable;
 
     std::vector<void*> ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
     void* Probleme;     /* Le probleme en cours passe au simplexe */

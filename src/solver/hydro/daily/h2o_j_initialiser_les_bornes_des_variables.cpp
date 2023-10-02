@@ -44,7 +44,7 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
     const CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
         = ProblemeHydraulique.CorrespondanceDesVariables[NumeroDeProbleme];
 
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE_J& ProblemeLineairePartieVariable
         = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
 
     std::vector<double>& Xmin = ProblemeLineairePartieVariable.Xmin;

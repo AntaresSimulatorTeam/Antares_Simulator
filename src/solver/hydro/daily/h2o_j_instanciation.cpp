@@ -70,8 +70,8 @@ void H2O_J_Instanciation(DONNEES_MENSUELLES& DonneesMensuelles)
     std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE_J>& ProblemeLineairePartieFixe
       = ProblemeHydraulique.ProblemeLineairePartieFixe;
 
-    std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE>& ProblemeLineairePartieVariable
-        = ProblemeHydraulique.ProblemeLineairePartieVariable;
+    std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE_J>& ProblemeLineairePartieVariable
+      = ProblemeHydraulique.ProblemeLineairePartieVariable;
 
     for (int i = 0; i < NombreDeProblemes; i++)
     {
@@ -109,7 +109,7 @@ void H2O_J_Instanciation(DONNEES_MENSUELLES& DonneesMensuelles)
         PlFixe.CoefficientsDeLaMatriceDesContraintes.assign(NombreDeTermesAlloues, 0.);
         PlFixe.IndicesColonnes.assign(NombreDeTermesAlloues, 0);
 
-        PROBLEME_LINEAIRE_PARTIE_VARIABLE& PlVariable = ProblemeLineairePartieVariable[i];
+        PROBLEME_LINEAIRE_PARTIE_VARIABLE_J& PlVariable = ProblemeLineairePartieVariable[i];
 
         PlVariable.Xmin.assign(NombreDeVariables, 0.);
         PlVariable.Xmax.assign(NombreDeVariables, 0.);

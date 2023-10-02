@@ -52,8 +52,8 @@ void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-        = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE_J& ProblemeLineairePartieVariable
+      = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
 
     PROBLEME_LINEAIRE_PARTIE_FIXE_J& ProblemeLineairePartieFixe
       = ProblemeHydraulique.ProblemeLineairePartieFixe[NumeroDeProbleme];
