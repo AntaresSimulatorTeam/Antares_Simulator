@@ -46,18 +46,6 @@ jobs:
            tar -xvf rte-antares-deps-centos7-Release.tar.gz
            rm -rf rte-antares-deps-centos7-Release.tar.gz
 
-    - name: Config OR-Tools URL
-      run: |
-           echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_centos7_static_sirius.zip" >> $GITHUB_ENV
-
-    - name: Download OR-Tools
-      id: ortools
-      run: |
-            mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
-            wget -q -O ortools.zip ${{ env.URL_ORTOOLS }}
-            unzip -q ortools.zip
-            rm ortools.zip
-
     - name: Configure
       run: |
            source /opt/rh/devtoolset-9/enable
@@ -68,7 +56,7 @@ jobs:
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
-           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install \
+           -DBUILD_ortools=ON
 
     - name: Build
       run: |
