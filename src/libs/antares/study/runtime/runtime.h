@@ -92,9 +92,6 @@ public:
     //! The number of years to process
     uint nbYears;
 
-    //! Alias for General data
-    Parameters* parameters;
-
     //! Range limits
     StudyRangeLimits rangeLimits;
 
