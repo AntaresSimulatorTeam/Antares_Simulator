@@ -46,10 +46,18 @@ jobs:
            tar -xvf rte-antares-deps-centos7-Release.tar.gz
            rm -rf rte-antares-deps-centos7-Release.tar.gz
 
+    - name: Remove cmake3
+      run: yum remove -y cmake3
+
+   - name: Setup cmake
+     uses: jwlawson/actions-setup-cmake@v1.13
+     with:
+       cmake-version: '3.22.x'
+
     - name: Configure
       run: |
            source /opt/rh/devtoolset-9/enable
-           cmake3 -B _build -S src \
+           cmake -B _build -S src \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DDEPS_INSTALL_DIR=/rte-antares-deps-Release \
@@ -62,7 +70,7 @@ jobs:
       run: |
            source /opt/rh/devtoolset-9/enable
            source /opt/rh/rh-git227/enable
-           cmake3 --build _build --config Release -j2
+           cmake --build _build --config Release -j2
            ccache -s
 
     - name: Installer .rpm creation
@@ -73,7 +81,7 @@ jobs:
     - name: Solver archive creation
       run: |
            cd _build
-           cmake3 --install . --prefix install
+           cmake --install . --prefix install
            pushd .
            cd install/bin
            tar czf ../../antares-solver_centos7.tar.gz antares-*-solver libsirius_solver.so
