@@ -389,28 +389,30 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             uint firstDay = calendar_.months[simulationMonth].daysYear.first;
             uint endDay = firstDay + daysPerMonth;
 
-            DONNEES_MENSUELLES* problem = H2O_J_Instanciation();
-            H2O_J_AjouterBruitAuCout(*problem);
-            problem->NombreDeJoursDuMois = (int)daysPerMonth;
-            problem->TurbineDuMois = data.MOG[realmonth];
+            DONNEES_MENSUELLES problem;
+            H2O_J_Instanciation(problem);
+            H2O_J_AjouterBruitAuCout(problem);
+            problem.NombreDeJoursDuMois = (int)daysPerMonth;
+            problem.TurbineDuMois = data.MOG[realmonth];
 
             uint dayMonth = 0;
             for (uint day = firstDay; day != endDay; ++day)
             {
-                problem->TurbineMax[dayMonth] = maxP[day] * maxE[day];
-                problem->TurbineMin[dayMonth] = data.dailyMinGen[day];
-                problem->TurbineCible[dayMonth] = dailyTargetGen[day];
+                problem.TurbineMax[dayMonth] = maxP[day] * maxE[day];
+                problem.TurbineMin[dayMonth] = data.dailyMinGen[day];
+                problem.TurbineCible[dayMonth] = dailyTargetGen[day];
                 dayMonth++;
             }
 
-            H2O_J_OptimiserUnMois(problem);
-            switch (problem->ResultatsValides)
+            H2O_J_OptimiserUnMois(&problem);
+            switch (problem.ResultatsValides)
             {
             case OUI:
                 dayMonth = 0;
                 for (uint day = firstDay; day != endDay; ++day)
                 {
-                    ventilationResults.HydrauliqueModulableQuotidien[day] = problem->Turbine[dayMonth];
+                    ventilationResults.HydrauliqueModulableQuotidien[day]
+                      = problem.Turbine[dayMonth];
                     dayMonth++;
                 }
                 break;
@@ -422,7 +424,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 break;
             }
 
-            H2O_J_Free(problem);
+            H2O_J_Free(&problem);
 
 #ifndef NDEBUG
             for (uint day = firstDay; day != endDay; ++day)
