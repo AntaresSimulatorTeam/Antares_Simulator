@@ -124,8 +124,8 @@ jobs:
            -DBUILD_TESTING=ON  \
            -DBUILD_TOOLS=ON \
            -DBUILD_UI=OFF \
-           -DBUILD_not_system=OFF\
-           -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT="ProgramDatabase"\
+           -DBUILD_not_system=OFF \
+           -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT="ProgramDatabase" \
            -DCMAKE_EXE_LINKER_FLAGS_RELEASE="/INCREMENTAL:NO /DEBUG /OPT:REF /OPT:ICF"
 
     - name: Build
