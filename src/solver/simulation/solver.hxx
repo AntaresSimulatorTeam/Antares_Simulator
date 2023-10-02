@@ -344,7 +344,7 @@ void ISimulation<Impl>::run()
             throw FatalError("An unrecoverable error has occured. Can not continue.");
         }
 
-        if (parameters.useCustomScenario)
+        if (study.parameters.useCustomScenario)
             ApplyCustomScenario(study);
 
         // Launching the simulation for all years

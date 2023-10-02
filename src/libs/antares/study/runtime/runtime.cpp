@@ -82,7 +82,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         }
 
         // Spinning - Economic Only - If no prepro
-        if (!(timeSeriesThermal & r.parameters->timeSeriesToRefresh))
+        if (!(timeSeriesThermal & study.parameters.timeSeriesToRefresh))
         {
             // Calculation of the spinning
             area.thermal.list.calculationOfSpinning();
@@ -247,7 +247,6 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
 
 StudyRuntimeInfos::StudyRuntimeInfos() :
     nbYears(0),
-    parameters(nullptr),
     thermalPlantTotalCount(0),
     thermalPlantTotalCountMustRun(0),
     quadraticOptimizationHasFailed(false)
@@ -274,7 +273,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     auto& gd = study.parameters;
 
     nbYears = gd.nbYears;
-    parameters = &study.parameters;
     mode = gd.mode;
     thermalPlantTotalCount = 0;
     thermalPlantTotalCountMustRun = 0;
