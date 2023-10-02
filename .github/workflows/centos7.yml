@@ -76,7 +76,7 @@ jobs:
     - name: Installer .rpm creation
       run: |
            cd _build
-           cpack3 -G RPM
+           cpack -G RPM
 
     - name: Solver archive creation
       run: |
@@ -91,7 +91,7 @@ jobs:
     - name: .tar.gz creation
       run: |
            cd _build
-           cpack3 -G TGZ
+           cpack -G TGZ
 
     - name: Installer TGZ push
       uses: actions/upload-artifact@v3
