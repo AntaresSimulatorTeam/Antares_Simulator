@@ -160,6 +160,4 @@ void H2O_J_Instanciation(DONNEES_MENSUELLES& DonneesMensuelles)
           .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi]
           = 1.0;
     }
-
-    return DonneesMensuelles;
 }
