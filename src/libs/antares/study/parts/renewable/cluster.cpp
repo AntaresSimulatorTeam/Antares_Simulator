@@ -206,9 +206,9 @@ double RenewableCluster::valueAtTimeStep(uint hourInYear, uint year) const
         return 0.;
     uint timeSeriesIndex = (series->timeSeries.width == 1) ? 0 : series->timeseriesNumbers[0][year];
 
-    assert(timeStepIndex < series->timeSeries.height);
+    assert(hourInYear < series->timeSeries.height);
     assert(timeSeriesIndex < series->timeSeries.width);
-    const double tsValue = series->timeSeries[timeSeriesIndex][timeStepIndex];
+    const double tsValue = series->timeSeries[timeSeriesIndex][hourInYear];
     switch (tsMode)
     {
     case powerGeneration:
