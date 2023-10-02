@@ -26,6 +26,9 @@ class Namer
 public:
     explicit Namer(std::vector<std::string>& target) : targetUpdater_(target)
     {
+#ifdef __linux__
+        std::cout << "Namer::Namer :" << __PRETTY_FUNCTION__ << "\n";
+#endif
     }
 
     void UpdateTimeStep(unsigned int timeStep)

@@ -11,12 +11,20 @@ on:
       - release/*
       - doc/*
       - windows-scheduled-runs
+
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
+
   schedule:
     - cron: '15 9 * * *'
 
 jobs:
   windows:
-
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -35,6 +43,7 @@ jobs:
       RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
 
     steps:
+
     - uses: actions/checkout@v3
 
     - name: Pre-requisites
@@ -122,6 +131,11 @@ jobs:
       run: |
            cmake --build _build --config release -j10
 
+
+    # Enable tmate debugging of manually-triggered workflows if the input option was provided
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+    # if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
 
     # simtest
     - name: Read simtest version
