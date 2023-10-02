@@ -200,7 +200,7 @@ YString Data::RenewableCluster::getTimeSeriesModeAsString() const
     return "unknown";
 }
 
-double RenewableCluster::valueAtTimeStep(uint timeStepIndex, uint year) const
+double RenewableCluster::valueAtTimeStep(uint hourInYear, uint year) const
 {
     if (!enabled)
         return 0.;
