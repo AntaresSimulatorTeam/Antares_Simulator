@@ -28,7 +28,7 @@
 #include "h2o2_j_donnees_mensuelles.h"
 #include "h2o2_j_fonctions.h"
 
-DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
+void H2O2_J_Instanciation(DONNEES_MENSUELLES_ETENDUES& DonneesMensuellesEtendues)
 {
     int i;
     int* NbJoursDUnProbleme;
@@ -38,7 +38,6 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     int NombreDeVariables;
     int NombreDeContraintes;
     int NombreDeTermesAlloues;
-    DONNEES_MENSUELLES_ETENDUES* DonneesMensuellesEtendues;
     PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
 
     CORRESPONDANCE_DES_VARIABLES_PB_ETENDU** CorrespondanceDesVariables;
@@ -48,24 +47,19 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE* PlFixe;
     PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE* PlVariable;
 
-    DonneesMensuellesEtendues
-      = (DONNEES_MENSUELLES_ETENDUES*)malloc(sizeof(DONNEES_MENSUELLES_ETENDUES));
-    if (DonneesMensuellesEtendues == NULL)
-        return (NULL);
-
-    DonneesMensuellesEtendues->ProblemeHydrauliqueEtendu
+    DonneesMensuellesEtendues.ProblemeHydrauliqueEtendu
       = (PROBLEME_HYDRAULIQUE_ETENDU*)malloc(sizeof(PROBLEME_HYDRAULIQUE_ETENDU));
-    if (DonneesMensuellesEtendues->ProblemeHydrauliqueEtendu == NULL)
-        return (NULL);
+    if (DonneesMensuellesEtendues.ProblemeHydrauliqueEtendu == NULL)
+        return;
 
-    ProblemeHydrauliqueEtendu = DonneesMensuellesEtendues->ProblemeHydrauliqueEtendu;
+    ProblemeHydrauliqueEtendu = DonneesMensuellesEtendues.ProblemeHydrauliqueEtendu;
 
     ProblemeHydrauliqueEtendu->NombreDeProblemes = 4;
 
     ProblemeHydrauliqueEtendu->NbJoursDUnProbleme
       = (int*)malloc(ProblemeHydrauliqueEtendu->NombreDeProblemes * sizeof(int));
     if (ProblemeHydrauliqueEtendu->NbJoursDUnProbleme == NULL)
-        return (0);
+        return;
 
     NbJoursDUnProbleme = ProblemeHydrauliqueEtendu->NbJoursDUnProbleme;
     NbJoursDUnProbleme[0] = 28;
@@ -73,47 +67,47 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
     NbJoursDUnProbleme[2] = 30;
     NbJoursDUnProbleme[3] = 31;
 
-    DonneesMensuellesEtendues->TurbineMax = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->TurbineMax == NULL)
-        return (NULL);  
- 
-    DonneesMensuellesEtendues->TurbineMin = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->TurbineMin == NULL)
-        return (NULL); 
+    DonneesMensuellesEtendues.TurbineMax = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
+    if (DonneesMensuellesEtendues.TurbineMax == NULL)
+        return;
 
-    DonneesMensuellesEtendues->TurbineCible
+    DonneesMensuellesEtendues.TurbineMin = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
+    if (DonneesMensuellesEtendues.TurbineMin == NULL)
+        return;
+
+    DonneesMensuellesEtendues.TurbineCible
       = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->TurbineCible == NULL)
-        return (NULL);
+    if (DonneesMensuellesEtendues.TurbineCible == NULL)
+        return;
 
-    DonneesMensuellesEtendues->niveauBas = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->niveauBas == NULL)
-        return (NULL);
+    DonneesMensuellesEtendues.niveauBas = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
+    if (DonneesMensuellesEtendues.niveauBas == NULL)
+        return;
 
-    DonneesMensuellesEtendues->apports = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->apports == NULL)
-        return (NULL);
+    DonneesMensuellesEtendues.apports = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
+    if (DonneesMensuellesEtendues.apports == NULL)
+        return;
 
-    DonneesMensuellesEtendues->Turbine = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->Turbine == NULL)
-        return (NULL);
+    DonneesMensuellesEtendues.Turbine = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
+    if (DonneesMensuellesEtendues.Turbine == NULL)
+        return;
 
-    DonneesMensuellesEtendues->niveauxFinJours
+    DonneesMensuellesEtendues.niveauxFinJours
       = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->niveauxFinJours == NULL)
-        return (NULL);
+    if (DonneesMensuellesEtendues.niveauxFinJours == NULL)
+        return;
 
-    DonneesMensuellesEtendues->overflows = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->overflows == NULL)
-        return (NULL);
+    DonneesMensuellesEtendues.overflows = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
+    if (DonneesMensuellesEtendues.overflows == NULL)
+        return;
 
-    DonneesMensuellesEtendues->deviations = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->deviations == NULL)
-        return (NULL);
+    DonneesMensuellesEtendues.deviations = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
+    if (DonneesMensuellesEtendues.deviations == NULL)
+        return;
 
-    DonneesMensuellesEtendues->violations = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
-    if (DonneesMensuellesEtendues->violations == NULL)
-        return (NULL);
+    DonneesMensuellesEtendues.violations = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
+    if (DonneesMensuellesEtendues.violations == NULL)
+        return;
 
     NombreDeProblemes = ProblemeHydrauliqueEtendu->NombreDeProblemes;
 
@@ -121,23 +115,23 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
       = (CORRESPONDANCE_DES_VARIABLES_PB_ETENDU**)malloc(
         NombreDeProblemes * sizeof(CORRESPONDANCE_DES_VARIABLES_PB_ETENDU));
     if (ProblemeHydrauliqueEtendu->CorrespondanceDesVariables == NULL)
-        return (0);
+        return;
 
     ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe
       = (PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE**)malloc(
         NombreDeProblemes * sizeof(PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE));
     if (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe == NULL)
-        return (0);
+        return;
 
     ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable
       = (PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE**)malloc(
         NombreDeProblemes * sizeof(PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE));
     if (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable == NULL)
-        return (0);
+        return;
 
     ProblemeHydrauliqueEtendu->ProblemeSpx = (void**)malloc(NombreDeProblemes * sizeof(void*));
     if (ProblemeHydrauliqueEtendu->ProblemeSpx == NULL)
-        return (0);
+        return;
 
     for (i = 0; i < NombreDeProblemes; i++)
         ProblemeHydrauliqueEtendu->ProblemeSpx[i] = NULL;
@@ -154,17 +148,17 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         CorrespondanceDesVariables[i] = (CORRESPONDANCE_DES_VARIABLES_PB_ETENDU*)malloc(
           sizeof(CORRESPONDANCE_DES_VARIABLES_PB_ETENDU));
         if (CorrespondanceDesVariables[i] == NULL)
-            return (0);
+            return;
 
         ProblemeLineaireEtenduPartieFixe[i] = (PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE*)malloc(
           sizeof(PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE));
         if (ProblemeLineaireEtenduPartieFixe[i] == NULL)
-            return (0);
+            return;
 
         ProblemeLineaireEtenduPartieVariable[i] = (PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE*)malloc(
           sizeof(PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE));
         if (ProblemeLineaireEtenduPartieVariable[i] == NULL)
-            return (0);
+            return;
     }
 
     for (i = 0; i < NombreDeProblemes; i++)
@@ -175,23 +169,23 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
 
         CorrVar->NumeroVar_Turbine = (int*)malloc(NbPdt * sizeof(int));
         if (CorrVar->NumeroVar_Turbine == NULL)
-            return (0);
+            return;
 
         CorrVar->NumeroVar_niveauxFinJours = (int*)malloc(NbPdt * sizeof(int));
         if (CorrVar->NumeroVar_niveauxFinJours == NULL)
-            return (0);
+            return;
 
         CorrVar->NumeroVar_overflow = (int*)malloc(NbPdt * sizeof(int));
         if (CorrVar->NumeroVar_overflow == NULL)
-            return (0);
+            return;
 
         CorrVar->NumeroVar_deviations = (int*)malloc(NbPdt * sizeof(int));
         if (CorrVar->NumeroVar_deviations == NULL)
-            return (0);
+            return;
 
         CorrVar->NumeroVar_violations = (int*)malloc(NbPdt * sizeof(int));
         if (CorrVar->NumeroVar_violations == NULL)
-            return (0);
+            return;
 
         PlFixe = ProblemeLineaireEtenduPartieFixe[i];
 
@@ -210,11 +204,11 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         PlFixe->NombreDeVariables = NombreDeVariables;
         PlFixe->CoutLineaire = (double*)malloc(NombreDeVariables * sizeof(double));
         if (PlFixe->CoutLineaire == NULL)
-            return (0);
+            return;
 
         PlFixe->TypeDeVariable = (int*)malloc(NombreDeVariables * sizeof(int));
         if (PlFixe->TypeDeVariable == NULL)
-            return (0);
+            return;
 
         NombreDeContraintes = 0;
         NombreDeContraintes += NbPdt;
@@ -229,15 +223,15 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         PlFixe->NombreDeContraintes = NombreDeContraintes;
         PlFixe->Sens = (char*)malloc(NombreDeContraintes * sizeof(char));
         if (PlFixe->Sens == NULL)
-            return (0);
+            return;
 
         PlFixe->IndicesDebutDeLigne = (int*)malloc(NombreDeContraintes * sizeof(int));
         if (PlFixe->IndicesDebutDeLigne == NULL)
-            return (0);
+            return;
 
         PlFixe->NombreDeTermesDesLignes = (int*)malloc(NombreDeContraintes * sizeof(int));
         if (PlFixe->NombreDeTermesDesLignes == NULL)
-            return (0);
+            return;
 
         NombreDeTermesAlloues = 0;
         NombreDeTermesAlloues += 3;
@@ -254,60 +248,60 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
         PlFixe->CoefficientsDeLaMatriceDesContraintes
           = (double*)malloc(NombreDeTermesAlloues * sizeof(double));
         if (PlFixe->CoefficientsDeLaMatriceDesContraintes == NULL)
-            return (0);
+            return;
 
         PlFixe->IndicesColonnes = (int*)malloc(NombreDeTermesAlloues * sizeof(int));
         if (PlFixe->IndicesColonnes == NULL)
-            return (0);
+            return;
 
         PlVariable = ProblemeLineaireEtenduPartieVariable[i];
         PlVariable->Xmin = (double*)malloc(NombreDeVariables * sizeof(double));
         if (PlVariable->Xmin == NULL)
-            return (0);
+            return;
 
         PlVariable->Xmax = (double*)malloc(NombreDeVariables * sizeof(double));
         if (PlVariable->Xmax == NULL)
-            return (0);
+            return;
 
         PlVariable->SecondMembre = (double*)malloc(NombreDeContraintes * sizeof(double));
         if (PlVariable->SecondMembre == NULL)
-            return (0);
+            return;
 
         PlVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees
           = (double**)malloc(NombreDeVariables * sizeof(double*));
         if (PlVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees == NULL)
-            return (0);
+            return;
 
         PlVariable->X = (double*)malloc(NombreDeVariables * sizeof(double));
         if (PlVariable->X == NULL)
-            return (0);
+            return;
 
         for (j = 0; j < NombreDeVariables; j++)
             PlVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[j] = NULL;
 
         PlVariable->PositionDeLaVariable = (int*)malloc(NombreDeVariables * sizeof(int));
         if (PlVariable->PositionDeLaVariable == NULL)
-            return (0);
+            return;
 
         PlVariable->ComplementDeLaBase = (int*)malloc(NombreDeContraintes * sizeof(int));
         if (PlVariable->ComplementDeLaBase == NULL)
-            return (0);
+            return;
 
         PlVariable->CoutsReduits = (double*)malloc(NombreDeVariables * sizeof(double));
         if (PlVariable->CoutsReduits == NULL)
-            return (0);
+            return;
 
         PlVariable->CoutsMarginauxDesContraintes
           = (double*)malloc(NombreDeContraintes * sizeof(double));
         if (PlVariable->CoutsMarginauxDesContraintes == NULL)
-            return (0);
+            return;
     }
 
     for (i = 0; i < NombreDeProblemes; i++)
     {
         H2O2_j_ConstruireLesVariables(
           NbJoursDUnProbleme[i],
-          DonneesMensuellesEtendues,
+          &DonneesMensuellesEtendues,
           ProblemeLineaireEtenduPartieVariable[i]->Xmin,
           ProblemeLineaireEtenduPartieVariable[i]->Xmax,
           ProblemeLineaireEtenduPartieFixe[i]->TypeDeVariable,
@@ -323,6 +317,4 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
           ProblemeLineaireEtenduPartieFixe[i]->IndicesColonnes,
           CorrespondanceDesVariables[i]);
     }
-
-    return (DonneesMensuellesEtendues);
 }

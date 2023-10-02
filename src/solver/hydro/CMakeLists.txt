@@ -5,6 +5,7 @@ set(SRC_EXT_SOLVER_H2O_DAILY
 	daily/h2o_j_construire_les_variables.cpp
 	daily/h2o_j_donnees_mensuelles.h
 	daily/h2o_j_donnees_optimisation.h
+	daily/a.cpp
 	daily/h2o_j_fonctions.h
 	daily/h2o_j_free.cpp
 	daily/h2o_j_initialiser_les_bornes_des_variables.cpp

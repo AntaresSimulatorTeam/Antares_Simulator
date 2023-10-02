@@ -459,7 +459,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             uint firstDay = calendar_.months[simulationMonth].daysYear.first;
             uint endDay = firstDay + daysPerMonth;
 
-            DONNEES_MENSUELLES_ETENDUES& problem = *H2O2_J_Instanciation();
+            DONNEES_MENSUELLES_ETENDUES problem;
+            H2O2_J_Instanciation(problem);
             H2O2_J_apply_costs(h2o2_optim_costs, problem);
 
             if (debugData)

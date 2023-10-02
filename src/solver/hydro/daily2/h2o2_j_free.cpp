@@ -113,7 +113,7 @@ void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
     free(DonneesMensuelles->deviations);
     free(DonneesMensuelles->violations);
 
-    free(DonneesMensuelles);
+    // free(DonneesMensuelles);
 
     return;
 }

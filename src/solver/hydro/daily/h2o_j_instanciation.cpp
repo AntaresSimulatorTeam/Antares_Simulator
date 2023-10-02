@@ -67,8 +67,8 @@ void H2O_J_Instanciation(DONNEES_MENSUELLES& DonneesMensuelles)
     std::vector<CORRESPONDANCE_DES_CONTRAINTES>& CorrespondanceDesContraintes
         = ProblemeHydraulique.CorrespondanceDesContraintes;
 
-    std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE>& ProblemeLineairePartieFixe
-        = ProblemeHydraulique.ProblemeLineairePartieFixe;
+    std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE_J>& ProblemeLineairePartieFixe
+      = ProblemeHydraulique.ProblemeLineairePartieFixe;
 
     std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE>& ProblemeLineairePartieVariable
         = ProblemeHydraulique.ProblemeLineairePartieVariable;
@@ -80,7 +80,7 @@ void H2O_J_Instanciation(DONNEES_MENSUELLES& DonneesMensuelles)
         CorrespondanceDesVariables[i].NumeroDeVariableTurbine.assign(NbPdt, 0);
         CorrespondanceDesContraintes[i].NumeroDeContrainteSurXi.assign(NbPdt, 0);
 
-        PROBLEME_LINEAIRE_PARTIE_FIXE& PlFixe = ProblemeLineairePartieFixe[i];
+        PROBLEME_LINEAIRE_PARTIE_FIXE_J& PlFixe = ProblemeLineairePartieFixe[i];
 
         int NombreDeVariables = 0;
         NombreDeVariables += NbPdt;

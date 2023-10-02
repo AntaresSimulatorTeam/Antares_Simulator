@@ -55,8 +55,8 @@ void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
         = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
 
-    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
-        = ProblemeHydraulique.ProblemeLineairePartieFixe[NumeroDeProbleme];
+    PROBLEME_LINEAIRE_PARTIE_FIXE_J& ProblemeLineairePartieFixe
+      = ProblemeHydraulique.ProblemeLineairePartieFixe[NumeroDeProbleme];
 
     PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[NumeroDeProbleme];
     std::unique_ptr<PROBLEME_SIMPLEXE> Probleme = std::make_unique<PROBLEME_SIMPLEXE>();

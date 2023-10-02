@@ -42,8 +42,9 @@
 /* Matrice des contraintes: il y aura une seule instance pour tous les reservoirs */
 /* Dans ce struct il n'y a que des donnees qui sont lues et surtout pas ecrites   */
 /* Ce struct est instancie une seule fois                                         */
-struct PROBLEME_LINEAIRE_PARTIE_FIXE
+struct PROBLEME_LINEAIRE_PARTIE_FIXE_J
 {
+    ~PROBLEME_LINEAIRE_PARTIE_FIXE_J();
     int NombreDeVariables;
     std::vector<double> CoutLineaire;
     std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
@@ -117,14 +118,17 @@ struct CORRESPONDANCE_DES_VARIABLES
 struct PROBLEME_HYDRAULIQUE
 {
     char LesCoutsOntEteInitialises; /* Vaut OUI ou NON */
-
+    ~PROBLEME_HYDRAULIQUE()
+    {
+        int a = 13;
+    }
     int NombreDeProblemes;
     std::vector<int> NbJoursDUnProbleme;
 
     std::vector<CORRESPONDANCE_DES_VARIABLES> CorrespondanceDesVariables;
     std::vector<CORRESPONDANCE_DES_CONTRAINTES> CorrespondanceDesContraintes;
 
-    std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE> ProblemeLineairePartieFixe;
+    std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE_J> ProblemeLineairePartieFixe;
     std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE> ProblemeLineairePartieVariable;
 
     std::vector<void*> ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
