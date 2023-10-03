@@ -31,7 +31,6 @@
 
 typedef struct
 {
-    int Hydraulique;
     int Solar;
 } NUMERO_CHRONIQUES_TIREES_PAR_PAYS;
 

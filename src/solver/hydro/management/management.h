@@ -121,9 +121,9 @@ public:
 
 private:
     //! Prepare inflows scaling for each area
-    void prepareInflowsScaling(uint numSpace);
+    void prepareInflowsScaling(uint numSpace, uint year);
     //! Prepare minimum generation scaling for each area
-    void minGenerationScaling(uint numSpace);
+    void minGenerationScaling(uint numSpace, uint year);
     //! check Monthly minimum generation is lower than available inflows
     bool checkMonthlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const;
     //! check Yearly minimum generation is lower than available inflows
@@ -133,7 +133,7 @@ private:
     //! check Hourly minimum generation is lower than available inflows
     bool checkHourlyMinGeneration(uint tsIndex, Data::Area& area) const;
     //! check minimum generation is lower than available inflows
-    bool checkMinGeneration(uint numSpace);
+    bool checkMinGeneration(uint numSpace, uint year);
     //! Prepare the net demand for each area
     template<enum Data::StudyMode ModeT>
     void prepareNetDemand(uint numSpace, uint year);

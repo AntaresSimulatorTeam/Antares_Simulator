@@ -222,5 +222,10 @@ uint64_t DataSeriesHydro::memoryUsage() const
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage();
 }
 
+unsigned int DataSeriesHydro::getIndex(unsigned int year) const
+{
+    return (count != 1) ? (long)timeseriesNumbers[0][year] : 0;
+}
+
 } // namespace Data
 } // namespace Antares

@@ -570,25 +570,26 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
-            auto& windSeries = area.wind.series;
-            auto& loadSeries = area.load.series;
+            auto windSeriesIndex = area.wind.series->getIndex(problem.year);
+            auto loadSeriesIndex = area.load.series->getIndex(problem.year);
+            auto hydroSeriesIndex = area.hydro.series->getIndex(problem.year);
 
             assert(&scratchpad);
             assert((uint)hourInYear < scratchpad.ts.load.height);
-            assert(loadSeries->getIndex(problem.year) < scratchpad.ts.load.width);
+            assert(loadSeriesIndex < scratchpad.ts.load.width);
             if (parameters.renewableGeneration.isAggregated())
             {
                 assert((uint)hourInYear < scratchpad.ts.solar.height);
                 assert((uint)hourInYear < scratchpad.ts.wind.height);
-                assert(windSeries->getIndex(problem.year) < scratchpad.ts.wind.width);
+                assert(windSeriesIndex < scratchpad.ts.wind.width);
                 assert((uint)tsIndex.Solar < scratchpad.ts.solar.width);
             }
 
-            uint tsFatalIndex = (uint)tsIndex.Hydraulique < ror.width ? tsIndex.Hydraulique : 0;
+            uint tsFatalIndex = hydroSeriesIndex < ror.width ? hydroSeriesIndex : 0;
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                mustRunGen = scratchpad.ts.wind[windSeries->getIndex(problem.year)][hourInYear]
+                mustRunGen = scratchpad.ts.wind[windSeriesIndex][hourInYear]
                              + scratchpad.ts.solar[tsIndex.Solar][hourInYear]
                              + scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
                              + scratchpad.mustrunSum[hourInYear];
@@ -611,7 +612,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
               && "NaN detected for 'AllMustRunGeneration', probably from miscGenSum/mustrunSum");
 
             problem.ConsommationsAbattues[hourInWeek].ConsommationAbattueDuPays[k]
-              = +scratchpad.ts.load[loadSeries->getIndex(problem.year)][hourInYear]
+              = +scratchpad.ts.load[loadSeriesIndex][hourInYear]
                 - problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
@@ -639,7 +640,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
                 auto& area = *study.areas.byIndex[k];
-                uint tsIndex = (NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
+                uint tsIndex = area.hydro.series->getIndex(problem.year);
+;
                 auto& inflowsmatrix = area.hydro.series->storage;
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
                 auto& mingenmatrix = area.hydro.series->mingen;

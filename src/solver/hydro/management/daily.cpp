@@ -230,11 +230,9 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     uint z = area.index;
     assert(z < areas_.size());
 
-    auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
-
     auto& inflowsmatrix = area.hydro.series->storage;
 
-    auto tsIndex = (uint)ptchro.Hydraulique;
+    auto tsIndex = area.hydro.series->getIndex(y);
     auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
 
     auto& data = tmpDataByArea_[numSpace][z];

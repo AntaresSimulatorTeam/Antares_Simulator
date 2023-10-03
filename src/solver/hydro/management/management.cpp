@@ -124,17 +124,15 @@ HydroManagement::~HydroManagement()
     delete[] tmpDataByArea_;
 }
 
-void HydroManagement::prepareInflowsScaling(uint numSpace)
+void HydroManagement::prepareInflowsScaling(uint numSpace, uint year)
 {
     areas_.each([&](Data::Area& area)
       {
           uint z = area.index;
 
-          auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
-
           auto& inflowsmatrix = area.hydro.series->storage;
           assert(inflowsmatrix.width && inflowsmatrix.height);
-          auto tsIndex = (uint)ptchro.Hydraulique;
+          auto tsIndex = area.hydro.series->getIndex(year);
           auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
 
           auto& data = tmpDataByArea_[numSpace][z];
@@ -177,15 +175,14 @@ void HydroManagement::prepareInflowsScaling(uint numSpace)
       });
 }
 
-void HydroManagement::minGenerationScaling(uint numSpace)
+void HydroManagement::minGenerationScaling(uint numSpace, uint year)
 {
-    areas_.each([this, &numSpace](Data::Area& area)
+    areas_.each([this, &numSpace, &year](Data::Area& area)
       {
           uint z = area.index;
 
-          const auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
           auto& mingenmatrix = area.hydro.series->mingen;
-          auto tsIndex = (uint)ptchro.Hydraulique;
+          auto tsIndex = area.hydro.series->getIndex(year);
           auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
 
           auto& data = tmpDataByArea_[numSpace][z];
@@ -342,14 +339,13 @@ bool HydroManagement::checkHourlyMinGeneration(uint tsIndex, Data::Area& area) c
     return true;
 }
 
-bool HydroManagement::checkMinGeneration(uint numSpace)
+bool HydroManagement::checkMinGeneration(uint numSpace, uint year)
 {
     bool ret = true;
-    areas_.each([this, &numSpace, &ret](Data::Area& area)
+    areas_.each([this, &numSpace, &ret, &year](Data::Area& area)
     {
         uint z = area.index;
-        const auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
-        auto tsIndex = (uint)ptchro.Hydraulique;
+        auto tsIndex = area.hydro.series->getIndex(year);
 
         bool useHeuristicTarget = area.hydro.useHeuristicTarget;
         bool followLoadModulations = area.hydro.followLoadModulations;
@@ -386,7 +382,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year)
         auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
 
         auto& rormatrix = area.hydro.series->ror;
-        auto tsIndex = (uint)ptchro.Hydraulique;
+        auto tsIndex = area.hydro.series->getIndex(year);
         auto& ror = rormatrix[tsIndex < rormatrix.width ? tsIndex : 0];
 
         auto& data = tmpDataByArea_[numSpace][z];
@@ -523,9 +519,9 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
 {
     memset(tmpDataByArea_[numSpace], 0, sizeof(TmpDataByArea) * areas_.size());
 
-    prepareInflowsScaling(numSpace);
-    minGenerationScaling(numSpace);
-    if (!checkMinGeneration(numSpace))
+    prepareInflowsScaling(numSpace, y);
+    minGenerationScaling(numSpace, y);
+    if (!checkMinGeneration(numSpace, y))
     {
         throw FatalError("hydro management: invalid minimum generation");
     }

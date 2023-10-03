@@ -52,14 +52,6 @@ void ApplyRandomTSnumbers(const Study& study,
             ptchro.Solar
               = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
-        // Hydro
-        {
-            const Data::DataSeriesHydro& data = *area.hydro.series;
-            assert(year < data.timeseriesNumbers.height);
-            ptchro.Hydraulique
-              = (data.count != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
-        }
-
     }     // each area
 
     // ------------------------------
