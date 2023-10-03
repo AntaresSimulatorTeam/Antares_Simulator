@@ -1350,12 +1350,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     switch (mode)
     {
     case stdmEconomy:
-    {
-        // The year-by-year mode might have been requested from the command line
-        if (options.forceYearByYear)
-            yearByYear = true;
-        break;
-    }
     case stdmAdequacy:
     {
         // The year-by-year mode might have been requested from the command line
