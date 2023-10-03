@@ -86,7 +86,7 @@ int DataSeriesLoadSaveToFolder(DataSeriesLoad* s, const AreaName& areaID, const 
     return 0;
 }
 
-double* DataSeriesLoad::getCoefficient(unsigned int year) const
+double* DataSeriesLoad::getColumn(unsigned int year) const
 {
     return timeSeries[getIndex(year)];
 }

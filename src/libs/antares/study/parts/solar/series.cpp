@@ -86,7 +86,7 @@ int DataSeriesSolarSaveToFolder(DataSeriesSolar* s, const AreaName& areaID, cons
     return 0;
 }
 
-double* DataSeriesSolar::getCoefficient(unsigned int year) const
+double* DataSeriesSolar::getColumn(unsigned int year) const
 {
     return timeSeries[getIndex(year)];
 }

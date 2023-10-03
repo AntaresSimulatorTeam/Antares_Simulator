@@ -199,7 +199,7 @@ public:
         {
             // The current solar time-series
             (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour,
-                           pArea->solar.series->getCoefficient(year),
+                           pArea->solar.series->getColumn(year),
                            sizeof(double) * pArea->solar.series->timeSeries.height);
         }
 
