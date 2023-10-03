@@ -224,7 +224,7 @@ uint64_t DataSeriesHydro::memoryUsage() const
 
 unsigned int DataSeriesHydro::getIndex(unsigned int year) const
 {
-    return (count != 1) ? (long)timeseriesNumbers[0][year] : 0;
+    return (count != 1) ? timeseriesNumbers[0][year] : 0;
 }
 
 } // namespace Data

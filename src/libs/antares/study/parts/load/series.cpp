@@ -93,7 +93,7 @@ double* DataSeriesLoad::getAvailablePower(unsigned int year) const
 
 unsigned int DataSeriesLoad::getIndex(unsigned int year) const
 {
-    return (timeSeries.width != 1) ? (long)timeseriesNumbers[0][year] : 0;
+    return (timeSeries.width != 1) ? timeseriesNumbers[0][year] : 0;
 }
 
 bool DataSeriesLoad::forceReload(bool reload) const

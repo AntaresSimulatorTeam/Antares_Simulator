@@ -79,7 +79,7 @@ double* DataSeriesWind::getAvailablePower(unsigned int year) const
 
 unsigned int DataSeriesWind::getIndex(unsigned int year) const
 {
-    return (timeSeries.width != 1) ? (long)timeseriesNumbers[0][year] : 0;
+    return (timeSeries.width != 1) ? timeseriesNumbers[0][year] : 0;
 }
 
 bool DataSeriesWind::forceReload(bool reload) const
