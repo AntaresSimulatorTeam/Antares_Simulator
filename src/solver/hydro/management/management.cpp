@@ -379,8 +379,6 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year)
 
         auto& scratchpad = area.scratchpad[numSpace];
 
-        auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
-
         auto& rormatrix = area.hydro.series->ror;
         auto tsIndex = area.hydro.series->getIndex(year);
         auto& ror = rormatrix[tsIndex < rormatrix.width ? tsIndex : 0];

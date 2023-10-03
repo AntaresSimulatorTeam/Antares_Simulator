@@ -31,10 +31,6 @@
 
 typedef struct
 {
-} NUMERO_CHRONIQUES_TIREES_PAR_PAYS;
-
-typedef struct
-{
     int TransmissionCapacities;
 } NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION;
 

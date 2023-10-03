@@ -37,16 +37,6 @@ void ApplyRandomTSnumbers(const Study& study,
                           unsigned int year,
                           uint numSpace)
 {
-    // each area
-    const unsigned int count = study.areas.size();
-    for (unsigned int areaIndex = 0; areaIndex != count; ++areaIndex)
-    {
-        // Variables - the current area
-        NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = NumeroChroniquesTireesParPays[numSpace][areaIndex];
-        auto& area = *(study.areas.byIndex[areaIndex]);
-
-    }     // each area
-
     // ------------------------------
     // Transmission capacities
     // ------------------------------

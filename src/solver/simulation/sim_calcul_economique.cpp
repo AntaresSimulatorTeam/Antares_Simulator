@@ -566,7 +566,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
         for (uint k = 0; k < nbPays; ++k)
         {
-            auto& tsIndex = NumeroChroniquesTireesParPays[numSpace][k];
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
