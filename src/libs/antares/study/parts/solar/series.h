@@ -41,10 +41,12 @@ class DataSeriesSolar
 {
 public:
 
-
     bool forceReload(bool reload = false) const;
 
     void markAsModified() const;
+
+    double* getCoefficient(unsigned int year) const;
+    unsigned int getIndex(unsigned int year) const;
 
 public:
     /*!

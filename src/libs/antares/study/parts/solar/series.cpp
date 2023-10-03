@@ -86,6 +86,16 @@ int DataSeriesSolarSaveToFolder(DataSeriesSolar* s, const AreaName& areaID, cons
     return 0;
 }
 
+double* DataSeriesSolar::getCoefficient(unsigned int year) const
+{
+    return timeSeries[getIndex(year)];
+}
+
+unsigned int DataSeriesSolar::getIndex(unsigned int year) const
+{
+    return (timeSeries.width != 1) ? timeseriesNumbers[0][year] : 0;
+}
+
 bool DataSeriesSolar::forceReload(bool reload) const
 {
     return timeSeries.forceReload(reload);
