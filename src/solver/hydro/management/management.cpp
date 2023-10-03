@@ -344,7 +344,6 @@ bool HydroManagement::checkMinGeneration(uint numSpace, uint year)
     bool ret = true;
     areas_.each([this, &numSpace, &ret, &year](Data::Area& area)
     {
-        uint z = area.index;
         auto tsIndex = area.hydro.series->getIndex(year);
 
         bool useHeuristicTarget = area.hydro.useHeuristicTarget;
@@ -362,7 +361,7 @@ bool HydroManagement::checkMinGeneration(uint numSpace, uint year)
             ret = checkWeeklyMinGeneration(tsIndex, area) && ret;
             return;
         }
-               
+
         if (reservoirManagement)
             ret = checkYearlyMinGeneration(numSpace, tsIndex, area) && ret;
         else
