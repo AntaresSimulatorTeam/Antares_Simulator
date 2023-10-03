@@ -196,7 +196,6 @@ public:
     {
         if (isRenewableGenerationAggregrated)
         {
-            /* pValuesForTheCurrentYear[numSpace].hour = pArea->wind.series->getAvailablePower(year); */
             // The current wind time-series
             (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour,
                            pArea->wind.series->getAvailablePower(year),

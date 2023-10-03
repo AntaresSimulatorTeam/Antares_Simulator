@@ -575,15 +575,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             auto hydroSeriesIndex = area.hydro.series->getIndex(problem.year);
 
             assert(&scratchpad);
-            assert((uint)hourInYear < scratchpad.ts.load.height);
-            assert(loadSeriesIndex < scratchpad.ts.load.width);
-            if (parameters.renewableGeneration.isAggregated())
-            {
-                assert((uint)hourInYear < scratchpad.ts.solar.height);
-                assert((uint)hourInYear < scratchpad.ts.wind.height);
-                assert(windSeriesIndex < scratchpad.ts.wind.width);
-                assert((uint)tsIndex.Solar < scratchpad.ts.solar.width);
-            }
 
             uint tsFatalIndex = hydroSeriesIndex < ror.width ? hydroSeriesIndex : 0;
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
