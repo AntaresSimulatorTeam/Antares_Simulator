@@ -44,7 +44,6 @@
 /* Ce struct est instancie une seule fois                                         */
 struct PROBLEME_LINEAIRE_PARTIE_FIXE_J
 {
-    ~PROBLEME_LINEAIRE_PARTIE_FIXE_J();
     int NombreDeVariables;
     std::vector<double> CoutLineaire;
     std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
