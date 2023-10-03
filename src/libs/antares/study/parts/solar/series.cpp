@@ -91,6 +91,11 @@ double* DataSeriesSolar::getCoefficient(unsigned int year) const
     return timeSeries[getIndex(year)];
 }
 
+double DataSeriesSolar::getCoefficient(const unsigned int year, const unsigned int hour) const
+{
+    return timeSeries[getIndex(year)][hour];
+}
+
 unsigned int DataSeriesSolar::getIndex(unsigned int year) const
 {
     return (timeSeries.width != 1) ? timeseriesNumbers[0][year] : 0;
