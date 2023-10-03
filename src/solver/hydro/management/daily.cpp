@@ -256,7 +256,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     auto const& maxDailyGenEnergy = area.hydro.maxDailyGenEnergy;
 
-    uint tsIndexMaxPower = (NumeroChroniquesTireesParPays[numSpace][z]).HydrauliqueMaxPower;
+    uint tsIndexMaxPower = (NumeroChroniquesTireesParPays[numSpace][z]).HydroMaxPower;
 
     auto const& maxP = meanMaxDailyGenPower[tsIndexMaxPower];
     auto const& maxE = maxDailyGenEnergy[0];

@@ -565,7 +565,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         for (uint k = 0; k < nbPays; ++k)
         {
             auto& tsIndex = NumeroChroniquesTireesParPays[numSpace][k];
-            uint tsIndexMaxPower = tsIndex.HydrauliqueMaxPower;
+            uint tsIndexMaxPower = tsIndex.HydroMaxPower;
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
@@ -653,7 +653,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 uint tsIndex = (NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
                 auto& inflowsmatrix = area.hydro.series->storage;
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
-                uint tsIndexMaxPower = (NumeroChroniquesTireesParPays[numSpace][k]).HydrauliqueMaxPower;
+                uint tsIndexMaxPower = (NumeroChroniquesTireesParPays[numSpace][k]).HydroMaxPower;
                 auto& scratchpad = area.scratchpad[numSpace];
                 auto& dailyMeanMaxGenPower = scratchpad.meanMaxDailyGenPower[tsIndexMaxPower];
                 auto& dailyMeanMaxPumpPower = scratchpad.meanMaxDailyPumpPower[tsIndexMaxPower];

@@ -315,7 +315,7 @@ bool HydroManagement::checkGenerationPowerConsistency(uint numSpace) const
       {
           uint z = area.index;
           auto tsIndex = (uint)NumeroChroniquesTireesParPays[numSpace][z].Hydraulique;
-          auto tsIndexMaxPower = NumeroChroniquesTireesParPays[numSpace][z].HydrauliqueMaxPower;
+          auto tsIndexMaxPower = NumeroChroniquesTireesParPays[numSpace][z].HydroMaxPower;
 
           auto const& srcmingen = area.hydro.series->mingen;
           auto const& srcmaxgen = area.hydro.series->maxHourlyGenPower;
