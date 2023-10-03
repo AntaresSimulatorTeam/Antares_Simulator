@@ -47,12 +47,6 @@ void H2O2_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES_ETENDUES& DonneesMensu
     PROBLEME_SPX* ProbSpx = ProblemeHydrauliqueEtendu.ProblemeSpx[NumeroDeProbleme];
     auto Probleme = std::make_unique<PROBLEME_SIMPLEXE>();
 
-    if (!Probleme)
-    {
-        DonneesMensuelles.ResultatsValides = EMERGENCY_SHUT_DOWN;
-        return;
-    }
-
     bool premierPassage = true;
 
 RESOLUTION:
