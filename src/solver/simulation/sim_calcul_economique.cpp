@@ -631,11 +631,12 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
                 auto& area = *study.areas.byIndex[k];
-                uint tsIndex = area.hydro.series->getIndex(year);
-;
-                auto& inflowsmatrix = area.hydro.series->storage;
+                auto& hydroSeries = area.hydro.series;
+                uint tsIndex = hydroSeries->getIndex(year);
+
+                auto& inflowsmatrix = hydroSeries->storage;
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
-                auto& mingenmatrix = area.hydro.series->mingen;
+                auto& mingenmatrix = hydroSeries->mingen;
                 auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
                 for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)
                 {
