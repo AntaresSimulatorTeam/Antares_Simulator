@@ -395,7 +395,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year)
             {
                 netdemand = +area.load.series->getCoefficient(year, hour)
                             - area.wind.series->getCoefficient(year, hour) - scratchpad.miscGenSum[hour]
-                            - area.solar.series->getCoefficient(year, hour)
+                            - area.solar.series->getCoefficient(year, hour) - ror[hour]
                             - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
             }
