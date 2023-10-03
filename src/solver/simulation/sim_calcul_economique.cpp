@@ -624,10 +624,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
-                problem.CaracteristiquesHydrauliques[k]
-                  .ContrainteDePmaxHydrauliqueHoraire[hourInWeek]
+                problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire[hourInWeek]
                   = ContrainteDePmaxHydrauliqueHoraire
-
                     * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation;
             }
 
