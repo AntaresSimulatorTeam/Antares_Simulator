@@ -571,15 +571,14 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             auto& ror = area.hydro.series->ror;
 
             auto& maxHourlyGenPowerMatrix = area.hydro.series->maxHourlyGenPower;
-            auto const& srcMaxHourlyGenPower
-              = maxHourlyGenPowerMatrix[tsIndexMaxPower < maxHourlyGenPowerMatrix.width ? tsIndexMaxPower : 0];
-            auto const& ContrainteDePmaxHydrauliqueHoraire = srcMaxHourlyGenPower[PasDeTempsDebut + hourInWeek];
+            auto const& maxHourlyGenPowerTS
+              = maxHourlyGenPowerMatrix[tsIndexMaxPower];
+            auto const& ContrainteDePmaxHydrauliqueHoraire = maxHourlyGenPowerTS[PasDeTempsDebut + hourInWeek];
 
             auto& maxHourlyPumpPowerMatrix = area.hydro.series->maxHourlyPumpPower;
-            auto const& srcMaxHourlyPumpPower
-              = maxHourlyPumpPowerMatrix[tsIndexMaxPower < maxHourlyPumpPowerMatrix.width ? tsIndexMaxPower
-                                                                         : 0];
-            auto const& ContrainteDePmaxPompageHoraire = srcMaxHourlyPumpPower[PasDeTempsDebut + hourInWeek];
+            auto const& maxHourlyPumpPowerTS
+              = maxHourlyPumpPowerMatrix[tsIndexMaxPower];
+            auto const& ContrainteDePmaxPompageHoraire = maxHourlyPumpPowerTS[PasDeTempsDebut + hourInWeek];
 
             assert(&scratchpad);
             assert((uint)hourInYear < scratchpad.ts.load.height);

@@ -135,7 +135,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
     // Pmax
     uint tsIndex = (NumeroChroniquesTireesParPays[numSpace][index]).HydroMaxPower;
     auto& maxHourlyGenPowerMatrix = area.hydro.series->maxHourlyGenPower;
-    const auto& P = maxHourlyGenPowerMatrix[tsIndex < maxHourlyGenPowerMatrix.width ? tsIndex : 0];
+    const auto& P = maxHourlyGenPowerMatrix[tsIndex];
 
     do
     {
