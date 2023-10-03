@@ -124,8 +124,8 @@ void CalculateDailyMeanPower(const Matrix<double>::ColumnType& hourlyColumn,
                                     Matrix<double>::ColumnType& dailyColumn);
 
 //  Return true if maximum generated energy just in one day and for every TS is grated than 0
-bool CheckForPositiveEnergy(const Matrix<double, int32_t>& matrix,
-                            const Matrix<double>::ColumnType& hours);
+bool CheckForPositiveEnergy(const Matrix<double, int32_t>& power,
+                            const Matrix<double>::ColumnType& energy);
 
 } // namespace Antares::Data
 
