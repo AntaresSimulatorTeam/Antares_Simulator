@@ -157,7 +157,7 @@ private:
             ApplyRandomTSnumbers(study, y, numSpace);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
-            simulation_->prepareClustersInMustRunMode(numSpace);
+            simulation_->prepareClustersInMustRunMode(numSpace, y);
 
             // 4 - Hydraulic ventilation
             {
@@ -301,12 +301,9 @@ void ISimulation<Impl>::run()
         ImplementationType::variables.template provideInformations<Variable::PrintInfosStdCout>(c);
     }
 
-    // The general data
-    auto& parameters = *(study.runtime->parameters);
-
     // Preprocessors
     // Determine if we have to use the preprocessors at least one time.
-    pData.initialize(parameters);
+    pData.initialize(study.parameters);
 
     // Prepro only ?
     ImplementationType::preproOnly = settings.tsGeneratorsOnly;
@@ -347,7 +344,7 @@ void ISimulation<Impl>::run()
             throw FatalError("An unrecoverable error has occured. Can not continue.");
         }
 
-        if (parameters.useCustomScenario)
+        if (study.parameters.useCustomScenario)
             ApplyCustomScenario(study);
 
         // Launching the simulation for all years
@@ -416,7 +413,7 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
     {
         if (synthesis)
         {
-            auto& parameters = *(study.runtime->parameters);
+            const auto& parameters = study.parameters;
             if (not parameters.synthesis) // disabled by parameters
             {
                 logs.info() << "The simulation synthesis is disabled.";

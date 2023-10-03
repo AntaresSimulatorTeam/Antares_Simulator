@@ -31,7 +31,6 @@
 
 typedef struct
 {
-    std::vector<int> ThermiqueParPalier;
     std::vector<int> RenouvelableParPalier;
     int Hydraulique;
     int Eolien;

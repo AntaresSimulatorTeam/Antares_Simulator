@@ -648,7 +648,7 @@ uint64_t ThermalCluster::memoryUsage() const
     if (prepro)
         amount += prepro->memoryUsage();
     if (series)
-        amount += DataSeriesMemoryUsage(series);
+        amount += series->memoryUsage();
     amount += ecoInput.memoryUsage();
     return amount;
 }
@@ -770,8 +770,10 @@ double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) cons
      inside -> that is used for all (e.g.10) TS*/
 }
 
-double ThermalCluster::getMarketBidCost(uint serieIndex, uint hourInTheYear) const
+double ThermalCluster::getMarketBidCost(uint hourInTheYear, uint year) const
 {
+    uint serieIndex = (series->timeSeries.width == 1) ? 0 : series->timeseriesNumbers[0][year];
+
     double mod = modulation[thermalModulationMarketBid][serieIndex];
 
     if (costgeneration == Data::setManually)

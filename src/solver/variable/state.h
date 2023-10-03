@@ -206,8 +206,6 @@ public:
     //! Probleme Hebdo
     PROBLEME_HEBDO* problemeHebdo;
 
-    //! The timeseries indexes for the current area
-    NUMERO_CHRONIQUES_TIREES_PAR_PAYS* timeseriesIndex;
     //! Study mode: economy / adequacy
     Data::StudyMode studyMode;
     //! Study unit commitment mode: fast(ucHeuristic) / accurate(ucMILP)
