@@ -47,7 +47,7 @@ void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles)
 
     for (int i = 0; i < NombreDeProblemes; i++)
     {
-        auto ProbSpx = (PROBLEME_SPX*)ProblemeHydrauliqueEtendu.ProblemeSpx[i];
+        auto ProbSpx = ProblemeHydrauliqueEtendu.ProblemeSpx[i];
         if (ProbSpx)
             SPX_LibererProbleme(ProbSpx);
     }
