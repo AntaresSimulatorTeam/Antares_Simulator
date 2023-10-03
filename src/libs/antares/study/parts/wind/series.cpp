@@ -72,7 +72,7 @@ int DataSeriesWindSaveToFolder(DataSeriesWind* d, const AreaName& areaID, const 
     return ret;
 }
 
-double* DataSeriesWind::getAvailablePower(unsigned int year) const
+double* DataSeriesWind::getCoefficient(unsigned int year) const
 {
     return timeSeries[getIndex(year)];
 }
