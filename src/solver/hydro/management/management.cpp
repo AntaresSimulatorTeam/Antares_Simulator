@@ -400,7 +400,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year)
             // Aggregated renewable production: wind & solar
             if (parameters_.renewableGeneration.isAggregated())
             {
-                netdemand = +scratchpad.ts.load[ptchro.Consommation][hour]
+                netdemand = +scratchpad.ts.load[area.wind.series->getIndex(year)][hour]
                             - scratchpad.ts.wind[area.wind.series->getIndex(year)][hour] - scratchpad.miscGenSum[hour]
                             - scratchpad.ts.solar[ptchro.Solar][hour] - ror[hour]
                             - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
@@ -410,7 +410,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year)
             // Renewable clusters, if enabled
             else if (parameters_.renewableGeneration.isClusters())
             {
-                netdemand = scratchpad.ts.load[ptchro.Consommation][hour]
+                netdemand = scratchpad.ts.load[area.wind.series->getIndex(year)][hour]
                             - scratchpad.miscGenSum[hour] - ror[hour]
                             - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);

@@ -571,10 +571,11 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
             auto& windSeries = area.wind.series;
+            auto& loadSeries = area.load.series;
 
             assert(&scratchpad);
             assert((uint)hourInYear < scratchpad.ts.load.height);
-            assert((uint)tsIndex.Consommation < scratchpad.ts.load.width);
+            assert(loadSeries->getIndex(problem.year) < scratchpad.ts.load.width);
             if (parameters.renewableGeneration.isAggregated())
             {
                 assert((uint)hourInYear < scratchpad.ts.solar.height);
@@ -610,7 +611,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
               && "NaN detected for 'AllMustRunGeneration', probably from miscGenSum/mustrunSum");
 
             problem.ConsommationsAbattues[hourInWeek].ConsommationAbattueDuPays[k]
-              = +scratchpad.ts.load[tsIndex.Consommation][hourInYear]
+              = +scratchpad.ts.load[loadSeries->getIndex(problem.year)][hourInYear]
                 - problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)

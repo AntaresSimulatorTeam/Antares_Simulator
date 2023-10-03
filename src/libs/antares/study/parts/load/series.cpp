@@ -86,6 +86,16 @@ int DataSeriesLoadSaveToFolder(DataSeriesLoad* s, const AreaName& areaID, const 
     return 0;
 }
 
+double* DataSeriesLoad::getAvailablePower(unsigned int year) const
+{
+    return timeSeries[getIndex(year)];
+}
+
+unsigned int DataSeriesLoad::getIndex(unsigned int year) const
+{
+    return (timeSeries.width != 1) ? (long)timeseriesNumbers[0][year] : 0;
+}
+
 bool DataSeriesLoad::forceReload(bool reload) const
 {
     return timeSeries.forceReload(reload);

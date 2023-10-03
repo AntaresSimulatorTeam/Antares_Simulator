@@ -45,13 +45,6 @@ void ApplyRandomTSnumbers(const Study& study,
         NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = NumeroChroniquesTireesParPays[numSpace][areaIndex];
         auto& area = *(study.areas.byIndex[areaIndex]);
 
-        // Load
-        {
-            const Data::DataSeriesLoad& data = *area.load.series;
-            assert(year < data.timeseriesNumbers.height);
-            ptchro.Consommation
-              = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
-        }
         // Solar
         {
             const Data::DataSeriesSolar& data = *area.solar.series;

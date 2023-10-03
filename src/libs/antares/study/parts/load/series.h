@@ -49,6 +49,9 @@ public:
     */
     void markAsModified() const;
 
+    double* getAvailablePower(unsigned int year) const;
+    unsigned int getIndex(unsigned int year) const;
+
 public:
     /*!
     ** \brief Time series (MW)
