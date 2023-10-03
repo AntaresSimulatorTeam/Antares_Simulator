@@ -28,7 +28,7 @@ class study_run:
             command.append('--named-mps-problems')
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True)
         for stdout_line in iter(process.stdout.readline, ""):
-            print (stdout_line) 
+            print (stdout_line)
         # process.stdout.close()
         # self.return_code = process.wait()
         process.communicate()
