@@ -177,7 +177,7 @@ void HydroManagement::prepareInflowsScaling(uint numSpace, uint year)
 
 void HydroManagement::minGenerationScaling(uint numSpace, uint year)
 {
-    areas_.each([this, &numSpace, &year](Data::Area& area)
+    areas_.each(const [this, &numSpace, &year](Data::Area& area)
       {
           uint z = area.index;
 
@@ -342,7 +342,7 @@ bool HydroManagement::checkHourlyMinGeneration(uint tsIndex, Data::Area& area) c
 bool HydroManagement::checkMinGeneration(uint numSpace, uint year)
 {
     bool ret = true;
-    areas_.each([this, &numSpace, &ret, &year](Data::Area& area)
+    areas_.each(const [this, &numSpace, &ret, &year](Data::Area& area)
     {
         auto tsIndex = area.hydro.series->getIndex(year);
 
