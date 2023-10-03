@@ -539,6 +539,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
     }
 
     int hourInYear = PasDeTempsDebut;
+    unsigned int year = problem.year;
 
     for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps; ++hourInWeek, ++hourInYear)
     {
@@ -569,9 +570,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
-            auto loadSeries = area.load.series->getCoefficient(problem.year, hourInYear);
-            auto solarSeries = area.solar.series->getCoefficient(problem.year, hourInYear);
-            auto hydroSeriesIndex = area.hydro.series->getIndex(problem.year);
+            auto loadSeries = area.load.series->getCoefficient(year, hourInYear);
+            auto solarSeries = area.solar.series->getCoefficient(year, hourInYear);
+            auto hydroSeriesIndex = area.hydro.series->getIndex(year);
 
             assert(&scratchpad);
 
@@ -579,7 +580,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                mustRunGen = area.wind.series->getCoefficient(problem.year, hourInYear)
+                mustRunGen = area.wind.series->getCoefficient(year, hourInYear)
                              + solarSeries
                              + scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
                              + scratchpad.mustrunSum[hourInYear];
@@ -593,7 +594,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
                 area.renewable.list.each([&](const RenewableCluster& cluster) {
                     assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
-                    mustRunGen += cluster.valueAtTimeStep((uint)hourInYear, problem.year);
+                    mustRunGen += cluster.valueAtTimeStep((uint)hourInYear, year);
                 });
             }
 
@@ -630,7 +631,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
                 auto& area = *study.areas.byIndex[k];
-                uint tsIndex = area.hydro.series->getIndex(problem.year);
+                uint tsIndex = area.hydro.series->getIndex(year);
 ;
                 auto& inflowsmatrix = area.hydro.series->storage;
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
