@@ -1,8 +1,0 @@
-L	area	de	weekly
-	VARIABLES	BEGIN	END
-	12	1	1
-
-L	weekly	b	p	sb	b	p	sb	b	p	sb	b	p	sb
-		MWh	MWh	MWh	NP Cost - Euro	NP Cost - Euro	NP Cost - Euro	NODU	NODU	NODU	Profit - Euro	Profit - Euro	Profit - Euro
-	week	EXP	EXP	EXP	EXP	EXP	EXP	EXP	EXP	EXP	EXP	EXP	EXP
-	1	5129856	1486569	1786399	140000	0	0	5256	7896	3576	252883836	-106221	43335571

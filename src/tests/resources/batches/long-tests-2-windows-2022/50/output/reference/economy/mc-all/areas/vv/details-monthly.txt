@@ -1,8 +1,0 @@
-VV	area	de	monthly
-	VARIABLES	BEGIN	END
-	12	1	1
-
-VV	monthly		b	p	sb	b	p	sb	b	p	sb	b	p	sb
-			MWh	MWh	MWh	NP Cost - Euro	NP Cost - Euro	NP Cost - Euro	NODU	NODU	NODU	Profit - Euro	Profit - Euro	Profit - Euro
-	index	month	EXP	EXP	EXP	EXP	EXP	EXP	EXP	EXP	EXP	EXP	EXP	EXP
-	1	JAN	5036160	925801	1932000	280000	0	25000	5160	7392	3864	245113283	-197440	45645725

@@ -1,8 +1,0 @@
-P	link	id	monthly
-T	VARIABLES	BEGIN	END
-	12	1	1
-
-P	monthly		FLOW LIN.	FLOW LIN.	UCAP LIN.	UCAP LIN.	CONG. FEE (ALG.)	CONG. FEE (ALG.)	CONG. FEE (ABS.)	CONG. FEE (ABS.)	MARG. COST	MARG. COST	HURDLE COST	HURDLE COST
-			MWh	MWh	MWh	MWh	Euro	Euro	Euro	Euro	Euro/MW	Euro/MW	Euro	Euro
-	index	month	min	max	min	max	min	max	min	max	min	max	min	max
-	1	JAN	1	1	1	1	1	1	1	1	1	1	1	1

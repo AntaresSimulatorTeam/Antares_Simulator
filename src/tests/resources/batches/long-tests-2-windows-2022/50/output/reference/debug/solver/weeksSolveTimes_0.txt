@@ -1,2 +1,0 @@
-# Week Optimization_1_ms Optimization_2_ms
-0 115480.000000 39226.000000

@@ -1,8 +1,0 @@
-AA	area	de	annual
-	VARIABLES	BEGIN	END
-	12	1	1
-
-AA	annual	b	p	sb	b	p	sb	b	p	sb	b	p	sb
-		MWh	MWh	MWh	NP Cost - Euro	NP Cost - Euro	NP Cost - Euro	NODU	NODU	NODU	Profit - Euro	Profit - Euro	Profit - Euro
-		EXP	EXP	EXP	EXP	EXP	EXP	EXP	EXP	EXP	EXP	EXP	EXP
-	Annual	5574912	626997	1930373	0	0	25000	5712	7728	3888	274621395	-113984	47238895
