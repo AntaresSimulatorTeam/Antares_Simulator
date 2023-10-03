@@ -47,6 +47,7 @@ public:
     void markAsModified() const;
 
     double* getCoefficient(unsigned int year) const;
+    double getCoefficient(const unsigned int year, const unsigned int hour) const;
     unsigned int getIndex(unsigned int year) const;
 
 public:

@@ -77,6 +77,11 @@ double* DataSeriesWind::getCoefficient(unsigned int year) const
     return timeSeries[getIndex(year)];
 }
 
+double DataSeriesWind::getCoefficient(const unsigned int year, const unsigned int hour) const
+{
+    return timeSeries[getIndex(year)][hour];
+}
+
 unsigned int DataSeriesWind::getIndex(unsigned int year) const
 {
     return (timeSeries.width != 1) ? timeseriesNumbers[0][year] : 0;

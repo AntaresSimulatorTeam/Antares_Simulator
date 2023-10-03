@@ -395,7 +395,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year)
             if (parameters_.renewableGeneration.isAggregated())
             {
                 netdemand = +scratchpad.ts.load[area.load.series->getIndex(year)][hour]
-                            - scratchpad.ts.wind[area.wind.series->getIndex(year)][hour] - scratchpad.miscGenSum[hour]
+                            - area.wind.series->getCoefficient(year, hour) - scratchpad.miscGenSum[hour]
                             - scratchpad.ts.solar[area.solar.series->getIndex(year)][hour] - ror[hour]
                             - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
