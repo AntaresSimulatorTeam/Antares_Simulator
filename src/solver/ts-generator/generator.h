@@ -43,7 +43,7 @@ namespace TSGenerator
 /*!
 ** \brief Regenerate the time-series
 */
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
 
 bool GenerateThermalTimeSeries(Data::Study& study,
@@ -60,7 +60,7 @@ void DestroyAll(Data::Study& study);
 /*!
 ** \brief Destroy a TS generator if it exists and no longer needed
 */
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 void Destroy(Data::Study& study, uint year);
 
 } // namespace TSGenerator

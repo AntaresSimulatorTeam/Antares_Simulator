@@ -163,7 +163,7 @@ public:
 
     virtual bool valid() const;
 
-    void reloadDistributionLawsFromStudy(Data::TimeSeries ts);
+    void reloadDistributionLawsFromStudy(Data::TimeSeriesEnum ts);
 
     /*!
     ** \brief Reset internal variables according the current study

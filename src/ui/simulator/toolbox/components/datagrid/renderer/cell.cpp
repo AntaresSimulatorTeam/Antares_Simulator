@@ -30,7 +30,7 @@ static bool convertToDouble(const String& value, double& valueDouble)
 // -------------------
 // Base Cell class
 // -------------------
-Cell::Cell(TimeSeries ts) : tsKind_(ts)
+Cell::Cell(TimeSeriesEnum ts) : tsKind_(ts)
 {
     // We have to wait for the study to be loaded before initializing data members from study.
     // That's why constructor delegates to member function onStudyLoaded.
@@ -104,7 +104,7 @@ IRenderer::CellStyle inactiveCell::cellStyle() const
 // ===================
 // Status cell
 // ===================
-readyMadeTSstatus::readyMadeTSstatus(TimeSeries ts) : Cell(ts)
+readyMadeTSstatus::readyMadeTSstatus(TimeSeriesEnum ts) : Cell(ts)
 {
 }
 
@@ -138,7 +138,7 @@ IRenderer::CellStyle readyMadeTSstatus::cellStyle() const
 // ==========================
 // Generated TS status cell
 // ==========================
-generatedTSstatus::generatedTSstatus(TimeSeries ts) : Cell(ts)
+generatedTSstatus::generatedTSstatus(TimeSeriesEnum ts) : Cell(ts)
 {
 }
 
@@ -171,7 +171,7 @@ IRenderer::CellStyle generatedTSstatus::cellStyle() const
 // ===================
 // Number TS Cell
 // ===================
-NumberTsCell::NumberTsCell(TimeSeries ts) : Cell(ts)
+NumberTsCell::NumberTsCell(TimeSeriesEnum ts) : Cell(ts)
 {
     OnStudyLoaded.connect(this, &NumberTsCell::onStudyLoaded);
 }
@@ -237,7 +237,7 @@ IRenderer::CellStyle NumberTsCell::cellStyle() const
 // ===================
 // Refresh TS cell
 // ===================
-RefreshTsCell::RefreshTsCell(TimeSeries ts) : Cell(ts)
+RefreshTsCell::RefreshTsCell(TimeSeriesEnum ts) : Cell(ts)
 {
     OnStudyLoaded.connect(this, &RefreshTsCell::onStudyLoaded);
 }
@@ -274,7 +274,7 @@ IRenderer::CellStyle RefreshTsCell::cellStyle() const
 // ===================
 // Refresh Span cell
 // ===================
-RefreshSpanCell::RefreshSpanCell(TimeSeries ts) : Cell(ts)
+RefreshSpanCell::RefreshSpanCell(TimeSeriesEnum ts) : Cell(ts)
 {
     OnStudyLoaded.connect(this, &RefreshSpanCell::onStudyLoaded);
 }
@@ -330,7 +330,7 @@ IRenderer::CellStyle RefreshSpanCell::cellStyle() const
 // ============================
 //  Seasonal correlation cell
 // ============================
-SeasonalCorrelationCell::SeasonalCorrelationCell(TimeSeries ts) : Cell(ts)
+SeasonalCorrelationCell::SeasonalCorrelationCell(TimeSeriesEnum ts) : Cell(ts)
 {
     OnStudyLoaded.connect(this, &SeasonalCorrelationCell::onStudyLoaded);
 }
@@ -400,7 +400,7 @@ IRenderer::CellStyle SeasonalCorrelationCell::cellStyle() const
 // =====================
 // Store to input cell
 // =====================
-storeToInputCell::storeToInputCell(TimeSeries ts) : Cell(ts)
+storeToInputCell::storeToInputCell(TimeSeriesEnum ts) : Cell(ts)
 {
 }
 
@@ -442,7 +442,7 @@ IRenderer::CellStyle storeToInputCell::cellStyle() const
 // ======================
 // Store to output cell
 // ======================
-storeToOutputCell::storeToOutputCell(TimeSeries ts) : Cell(ts)
+storeToOutputCell::storeToOutputCell(TimeSeriesEnum ts) : Cell(ts)
 {
 }
 
@@ -484,7 +484,7 @@ IRenderer::CellStyle storeToOutputCell::cellStyle() const
 // ======================
 // Intra modal cell
 // ======================
-intraModalCell::intraModalCell(TimeSeries ts) : Cell(ts)
+intraModalCell::intraModalCell(TimeSeriesEnum ts) : Cell(ts)
 {
 }
 
@@ -520,7 +520,7 @@ IRenderer::CellStyle intraModalCell::cellStyle() const
 // ======================
 // Inter modal cell
 // ======================
-interModalCell::interModalCell(TimeSeries ts) : Cell(ts)
+interModalCell::interModalCell(TimeSeriesEnum ts) : Cell(ts)
 {
 }
 

@@ -36,7 +36,7 @@ namespace AntaresStudy
 {
 namespace Area
 {
-Correlation::Correlation(Data::TimeSeries ts, const AnyString& areaname) :
+Correlation::Correlation(Data::TimeSeriesEnum ts, const AnyString& areaname) :
  pType(ts), pOriginalAreaName(areaname)
 {
     switch (ts)

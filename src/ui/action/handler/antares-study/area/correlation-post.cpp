@@ -35,7 +35,7 @@ namespace AntaresStudy
 {
 namespace Area
 {
-CorrelationPost::CorrelationPost(IAction* parent, Data::TimeSeries ts, const AnyString& areaname) :
+CorrelationPost::CorrelationPost(IAction* parent, Data::TimeSeriesEnum ts, const AnyString& areaname) :
  pAction(parent), pType(ts), pOriginalAreaName(areaname)
 {
     pInfos.caption << "Correlation for " << areaname << " (deferred)";

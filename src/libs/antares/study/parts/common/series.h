@@ -28,6 +28,7 @@
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 
 #include <antares/array/matrix.h>
+#include <vector>
 #include "../../fwd.h"
 
 namespace Antares::Data
@@ -66,5 +67,6 @@ private:
     uint getSeriesIndex(unsigned int year) const;
 
 }; // class DataSeriesCommon
+
 } // namespace Antares::Data
 #endif /* __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__ */

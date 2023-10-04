@@ -20,7 +20,7 @@ using namespace Antares::Data;
 class Cell : public Yuni::IEventObserver<Cell>
 {
 public:
-    Cell(TimeSeries ts);
+    Cell(TimeSeriesEnum ts);
     ~Cell();
     virtual wxString cellValue() const = 0;
     virtual double cellNumericValue() const = 0;
@@ -33,7 +33,7 @@ protected:
 
 protected:
     Data::Study::Ptr study_;
-    TimeSeries tsKind_;
+    TimeSeriesEnum tsKind_;
 };
 
 class blankCell : public Cell
@@ -64,7 +64,7 @@ private:
 class readyMadeTSstatus : public Cell
 {
 public:
-    readyMadeTSstatus(TimeSeries ts);
+    readyMadeTSstatus(TimeSeriesEnum ts);
     ~readyMadeTSstatus() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
@@ -75,7 +75,7 @@ public:
 class generatedTSstatus : public Cell
 {
 public:
-    generatedTSstatus(TimeSeries ts);
+    generatedTSstatus(TimeSeriesEnum ts);
     ~generatedTSstatus() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
@@ -86,7 +86,7 @@ public:
 class NumberTsCell : public Cell
 {
 public:
-    NumberTsCell(TimeSeries ts);
+    NumberTsCell(TimeSeriesEnum ts);
     ~NumberTsCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
@@ -97,7 +97,7 @@ private:
     void onStudyLoaded();
 
 private:
-    std::map<TimeSeries, uint*> tsToNumberTs_;
+    std::map<TimeSeriesEnum, uint*> tsToNumberTs_;
 };
 
 class NumberTsCellThermal : public NumberTsCell
@@ -110,7 +110,7 @@ public:
 class RefreshTsCell : public Cell
 {
 public:
-    RefreshTsCell(TimeSeries ts);
+    RefreshTsCell(TimeSeriesEnum ts);
     ~RefreshTsCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
@@ -128,7 +128,7 @@ public:
 class RefreshSpanCell : public Cell
 {
 public:
-    RefreshSpanCell(TimeSeries ts);
+    RefreshSpanCell(TimeSeriesEnum ts);
     ~RefreshSpanCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
@@ -139,7 +139,7 @@ private:
     void onStudyLoaded();
 
 private:
-    std::map<TimeSeries, uint*> tsToRefreshSpan_;
+    std::map<TimeSeriesEnum, uint*> tsToRefreshSpan_;
 };
 
 class RefreshSpanCellThermal : public RefreshSpanCell
@@ -152,7 +152,7 @@ public:
 class SeasonalCorrelationCell : public Cell
 {
 public:
-    SeasonalCorrelationCell(TimeSeries ts);
+    SeasonalCorrelationCell(TimeSeriesEnum ts);
     ~SeasonalCorrelationCell() = default;
     virtual wxString cellValue() const override;
     double cellNumericValue() const override;
@@ -163,7 +163,7 @@ private:
     void onStudyLoaded();
 
 private:
-    std::map<TimeSeries, Correlation*> tsToCorrelation_;
+    std::map<TimeSeriesEnum, Correlation*> tsToCorrelation_;
 };
 
 class SeasonalCorrelationCellThermal : public SeasonalCorrelationCell
@@ -177,7 +177,7 @@ public:
 class storeToInputCell : public Cell
 {
 public:
-    storeToInputCell(TimeSeries ts);
+    storeToInputCell(TimeSeriesEnum ts);
     ~storeToInputCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
@@ -188,7 +188,7 @@ public:
 class storeToOutputCell : public Cell
 {
 public:
-    storeToOutputCell(TimeSeries ts);
+    storeToOutputCell(TimeSeriesEnum ts);
     ~storeToOutputCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
@@ -199,7 +199,7 @@ public:
 class intraModalCell : public Cell
 {
 public:
-    intraModalCell(TimeSeries ts);
+    intraModalCell(TimeSeriesEnum ts);
     ~intraModalCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
@@ -210,7 +210,7 @@ public:
 class interModalCell : public Cell
 {
 public:
-    interModalCell(TimeSeries ts);
+    interModalCell(TimeSeriesEnum ts);
     ~interModalCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;

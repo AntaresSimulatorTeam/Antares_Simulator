@@ -39,7 +39,7 @@ namespace Datagrid
 {
 namespace Renderer
 {
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 class XCastAllAreas final : public Renderer::IRenderer
 {
 public:

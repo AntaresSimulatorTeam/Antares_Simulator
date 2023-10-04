@@ -462,7 +462,7 @@ void AdvancedParameters::onEditSeedTSDraws(wxCommandEvent& evt)
 void AdvancedParameters::onNumericQuality(Component::Button&,
                                           wxMenu& menu,
                                           void*,
-                                          Data::TimeSeries ts)
+                                          Data::TimeSeriesEnum ts)
 {
     pCurrentTS = ts;
     wxMenuItem* it;

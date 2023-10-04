@@ -52,7 +52,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    explicit Correlation(Data::TimeSeries ts, const AnyString& areaname);
+    explicit Correlation(Data::TimeSeriesEnum ts, const AnyString& areaname);
     //! Destructor
     virtual ~Correlation();
     //@}
@@ -63,7 +63,7 @@ protected:
     virtual void createPostActionsWL(const IAction::Ptr& node);
 
 private:
-    Data::TimeSeries pType;
+    Data::TimeSeriesEnum pType;
     Data::AreaName pOriginalAreaName;
 
 }; // class IAction

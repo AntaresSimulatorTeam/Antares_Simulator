@@ -41,7 +41,7 @@ namespace Antares
 {
 namespace Window
 {
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 class XCast final : public wxPanel, public Yuni::IEventObserver<XCast<T>>
 {
 public:

@@ -72,7 +72,7 @@ private:
 
     void onEditSeedTSDraws(wxCommandEvent&);
 
-    void onNumericQuality(Component::Button&, wxMenu&, void*, Data::TimeSeries ts);
+    void onNumericQuality(Component::Button&, wxMenu&, void*, Data::TimeSeriesEnum ts);
     void onSelectNumericQualityStandard(wxCommandEvent& evt);
     void onSelectNumericQualityHigh(wxCommandEvent& evt);
 
@@ -127,7 +127,7 @@ private:
     Component::Button* pBtnNumberOfCores;
     wxTextCtrl* pEditSeeds[Data::seedMax];
     // Only used for menus
-    Data::TimeSeries pCurrentTS;
+    Data::TimeSeriesEnum pCurrentTS;
 
 }; // class AdvancedParameters
 

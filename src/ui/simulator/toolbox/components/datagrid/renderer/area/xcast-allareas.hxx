@@ -39,40 +39,40 @@ namespace Datagrid
 {
 namespace Renderer
 {
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 inline XCastAllAreas<T>::XCastAllAreas(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
  pControl(parent), pNotifier(notifier)
 {
     OnStudyAreaRename.connect(this, &XCastAllAreas<T>::onAreaRenamed);
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 inline XCastAllAreas<T>::~XCastAllAreas()
 {
     destroyBoundEvents();
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 inline int XCastAllAreas<T>::width() const
 {
     return 4;
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 inline int XCastAllAreas<T>::height() const
 {
     auto study = GetCurrentStudy();
     return !study ? 0 : study->areas.size();
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 inline bool XCastAllAreas<T>::valid() const
 {
     auto study = GetCurrentStudy();
     return !(!study) and study->areas.size() != 0;
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 wxString XCastAllAreas<T>::columnCaption(int colIndx) const
 {
     switch (colIndx)
@@ -89,7 +89,7 @@ wxString XCastAllAreas<T>::columnCaption(int colIndx) const
     return wxEmptyString;
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 wxString XCastAllAreas<T>::rowCaption(int rowIndx) const
 {
     auto study = GetCurrentStudy();
@@ -98,7 +98,7 @@ wxString XCastAllAreas<T>::rowCaption(int rowIndx) const
     return wxStringFromUTF8(study->areas.byIndex[rowIndx]->name);
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 IRenderer::CellStyle XCastAllAreas<T>::cellStyle(int x, int y) const
 {
     auto study = GetCurrentStudy();
@@ -132,7 +132,7 @@ IRenderer::CellStyle XCastAllAreas<T>::cellStyle(int x, int y) const
     return IRenderer::cellStyleDefaultCenter;
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 wxColour XCastAllAreas<T>::cellBackgroundColor(int, int y) const
 {
     auto study = GetCurrentStudy();
@@ -142,7 +142,7 @@ wxColour XCastAllAreas<T>::cellBackgroundColor(int, int y) const
     return wxColor(area.ui->color[0], area.ui->color[1], area.ui->color[2]);
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 wxString XCastAllAreas<T>::cellValue(int x, int y) const
 {
     auto study = GetCurrentStudy();
@@ -176,7 +176,7 @@ wxString XCastAllAreas<T>::cellValue(int x, int y) const
     return wxEmptyString;
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 double XCastAllAreas<T>::cellNumericValue(int x, int y) const
 {
     auto study = GetCurrentStudy();
@@ -209,7 +209,7 @@ double XCastAllAreas<T>::cellNumericValue(int x, int y) const
     return 0.;
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 bool XCastAllAreas<T>::cellValue(int x, int y, const Yuni::String& value)
 {
     auto study = GetCurrentStudy();
@@ -274,7 +274,7 @@ bool XCastAllAreas<T>::cellValue(int x, int y, const Yuni::String& value)
     return false;
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 void XCastAllAreas<T>::onAreaRenamed(Data::Area*)
 {
     if (pControl)

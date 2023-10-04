@@ -188,7 +188,7 @@ private:
 
 private:
     Yuni::Event<void(bool, uint)> onUpdateMaxTimeseries;
-    Yuni::Event<void(Data::TimeSeries)> onUpdateTimeseriesType;
+    Yuni::Event<void(Data::TimeSeriesEnum)> onUpdateTimeseriesType;
 
     //! \name Filesearch
     //@{
@@ -228,7 +228,7 @@ private:
 
     Component::Spotlight* pFileSearch;
 
-    Data::TimeSeries pTSSelected;
+    Data::TimeSeriesEnum pTSSelected;
     Component::Button* pTSSelector;
 
     bool pUpdating;

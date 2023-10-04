@@ -53,7 +53,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    NodeTimeseries(Data::TimeSeries ts);
+    NodeTimeseries(Data::TimeSeriesEnum ts);
     //! Destructor
     virtual ~NodeTimeseries();
     //@}
@@ -66,7 +66,7 @@ protected:
 
 private:
     //! Type of the timeseries
-    const Data::TimeSeries pType;
+    const Data::TimeSeriesEnum pType;
 
 }; // class IAction
 

@@ -52,7 +52,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    explicit CorrelationPost(IAction* parent, Data::TimeSeries ts, const AnyString& areaname);
+    explicit CorrelationPost(IAction* parent, Data::TimeSeriesEnum ts, const AnyString& areaname);
     //! Destructor
     virtual ~CorrelationPost();
     //@}
@@ -66,7 +66,7 @@ protected:
 private:
     //! The attached action
     IAction::Ptr pAction;
-    Data::TimeSeries pType;
+    Data::TimeSeriesEnum pType;
     Data::AreaName pOriginalAreaName;
 
 }; // class IAction

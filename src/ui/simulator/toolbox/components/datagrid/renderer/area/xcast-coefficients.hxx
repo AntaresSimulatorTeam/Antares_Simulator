@@ -36,20 +36,20 @@ namespace Datagrid
 {
 namespace Renderer
 {
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 inline XCastCoefficients<T>::XCastCoefficients(wxWindow* control,
                                                Toolbox::InputSelector::Area* notifier) :
  MatrixAncestorType(control), Renderer::ARendererArea(control, notifier)
 {
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 inline XCastCoefficients<T>::~XCastCoefficients()
 {
     destroyBoundEvents();
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 wxString XCastCoefficients<T>::columnCaption(int colIndx) const
 {
     static const wxString captions[Data::XCast::dataMax] = {wxT("        alpha        "),
@@ -61,19 +61,19 @@ wxString XCastCoefficients<T>::columnCaption(int colIndx) const
     return colIndx < Data::XCast::dataMax ? captions[colIndx] : wxString();
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 wxString XCastCoefficients<T>::cellValue(int x, int y) const
 {
     return MatrixAncestorType::cellValue(x, y);
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 double XCastCoefficients<T>::cellNumericValue(int x, int y) const
 {
     return MatrixAncestorType::cellNumericValue(x, y);
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 inline bool XCastCoefficients<T>::cellValue(int x, int y, const Yuni::String& value)
 {
     using namespace Antares::Data;
@@ -191,7 +191,7 @@ inline bool XCastCoefficients<T>::cellValue(int x, int y, const Yuni::String& va
     return MatrixAncestorType::cellValue(x, y, value);
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 void XCastCoefficients<T>::internalAreaChanged(Data::Area* area)
 {
     if (area)
@@ -204,7 +204,7 @@ void XCastCoefficients<T>::internalAreaChanged(Data::Area* area)
     Renderer::ARendererArea::internalAreaChanged(area);
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 IRenderer::CellStyle XCastCoefficients<T>::cellStyle(int col, int row) const
 {
     //   law \  coeff       alpha         beta     gamma    delta
@@ -336,7 +336,7 @@ IRenderer::CellStyle XCastCoefficients<T>::cellStyle(int col, int row) const
     return Yuni::Math::Zero(d) ? IRenderer::cellStyleDefaultDisabled : IRenderer::cellStyleDefault;
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 wxString XCastCoefficients<T>::rowCaption(int rowIndx) const
 {
     return ((uint)rowIndx < 12) ? wxString() << (1 + rowIndx) << wxT(" - ")
@@ -344,20 +344,20 @@ wxString XCastCoefficients<T>::rowCaption(int rowIndx) const
                                 : wxString();
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 inline Date::Precision XCastCoefficients<T>::precision()
 {
     return Date::monthly;
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 void XCastCoefficients<T>::onStudyClosed()
 {
     Renderer::Matrix<float>::onStudyClosed();
     Renderer::ARendererArea::onStudyClosed();
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 void XCastCoefficients<T>::onStudyLoaded()
 {
     Renderer::Matrix<float>::onStudyLoaded();

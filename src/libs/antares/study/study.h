@@ -357,7 +357,7 @@ public:
     /*!
     ** \brief Destroy all data of the TS generator '@TS'
     */
-    template<enum TimeSeries TS>
+    template<enum TimeSeriesEnum TS>
     void destroyTSGeneratorData();
 
     //! Destroy all data of the load TS generator

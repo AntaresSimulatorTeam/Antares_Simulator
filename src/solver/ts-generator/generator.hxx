@@ -49,7 +49,7 @@ inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study,
 }
 
 // --- TS Generators using XCast ---
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
 {
     auto* xcast = reinterpret_cast<XCast::XCast*>(
@@ -91,7 +91,7 @@ bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
     return r;
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesEnum T>
 void Destroy(Data::Study& study, uint year)
 {
     auto* xcast = reinterpret_cast<XCast::XCast*>(

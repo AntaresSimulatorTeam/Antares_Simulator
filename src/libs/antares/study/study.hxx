@@ -42,27 +42,27 @@ inline void Study::storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) c
     storeTimeseriesNumbers<TimeSeriesT>(resultWriter, areas);
 }
 
-template<enum TimeSeries TS>
+template<enum TimeSeriesEnum TS>
 inline void Study::destroyTSGeneratorData()
 {
     switch (TS)
     {
-    case TimeSeries::timeSeriesLoad:
+    case TimeSeriesEnum::timeSeriesLoad:
         destroyAllLoadTSGeneratorData();
         break;
-    case TimeSeries::timeSeriesSolar:
+    case TimeSeriesEnum::timeSeriesSolar:
         destroyAllSolarTSGeneratorData();
         break;
-    case TimeSeries::timeSeriesWind:
+    case TimeSeriesEnum::timeSeriesWind:
         destroyAllWindTSGeneratorData();
         break;
-    case TimeSeries::timeSeriesHydro:
+    case TimeSeriesEnum::timeSeriesHydro:
         destroyAllHydroTSGeneratorData();
         break;
-    case TimeSeries::timeSeriesThermal:
+    case TimeSeriesEnum::timeSeriesThermal:
         destroyAllThermalTSGeneratorData();
         break;
-    case TimeSeries::timeSeriesCount:
+    case TimeSeriesEnum::timeSeriesCount:
         break;
     }
 }
