@@ -33,6 +33,25 @@
 
 namespace Antares::Data
 {
+
+class TimeSeriesNumbers {
+public:
+    int getTSNumber(int year) const;
+
+private:
+    std::vector<int> tsNumbers_;
+};
+
+class TimeSeries {
+public:
+    TimeSeries(const TimeSeriesNumbers& tsNumbers);
+    double getCoefficient(int year, int hourInYear);
+
+private:
+    Matrix<> coefficients;
+    const TimeSeriesNumbers& tsNumbers;
+};
+
 /*!
 ** \brief Data series (Common)
 */
