@@ -38,6 +38,11 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
+
+TimeSeries::TimeSeries(const TimeSeriesNumbers& tsNumbers) : tsNumbers(tsNumbers)
+{}
+
+
 bool DataSeriesCommon::forceReload(bool reload) const
 {
     return timeSeries.forceReload(reload);
