@@ -2,6 +2,11 @@ Antares Changelog
 =================
 
 --------------------
+# v8.6.3 (10/2023)
+
+* Increase file size limit from 80Mo to 80Go when reading file. Fix issue on Windows
+
+--------------------
 # v8.6.2 (08/2023)
 
 * Backport [v8.4.3](#v843-082023) changes
