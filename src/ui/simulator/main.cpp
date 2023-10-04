@@ -29,7 +29,7 @@
 #include "application/application.h"
 #include "application/main.h"
 #include <yuni/core/getopt.h>
-#include "../common/winmain.hxx"
+#include <antares/args/args_to_utf8.h>
 #include <antares/resources/resources.h>
 #include <antares/sys/policy.h>
 #include <antares/logs/logs.h>

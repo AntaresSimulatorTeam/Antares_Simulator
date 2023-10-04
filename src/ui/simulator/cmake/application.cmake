@@ -72,7 +72,8 @@ target_link_libraries(antares-ui-application
 						PRIVATE
 							${wxWidgets_LIBRARIES}
 							antares-ui-common
-                            antares-core
+							antares-core
+							Antares::args_helper
 							Antares::sys
 							Antares::study
 )
