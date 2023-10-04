@@ -44,8 +44,7 @@ public:
                                                       Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams,
                                                       PROBLEME_HEBDO* problemesHebdo,
                                                       uint numSpace,
-                                                      IResultWriter& writer,
-                                                      const VAL_GEN_PAR_PAYS& valeursGenereesParPays);
+                                                      IResultWriter& writer);
 
 protected:
     explicit WeeklyOptimization(const OptimizationOptions& options,

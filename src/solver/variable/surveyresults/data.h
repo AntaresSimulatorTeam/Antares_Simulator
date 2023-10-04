@@ -57,7 +57,7 @@ public:
     ** It is composed by several files to completely describe the system
     ** and provide a good support for Excel macros.
     */
-    void exportGridInfos(IResultWriter::Ptr writer);
+    void exportGridInfos(IResultWriter& writer);
 
 public:
     //! The current column index

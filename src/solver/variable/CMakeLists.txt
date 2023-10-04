@@ -107,6 +107,7 @@ set(SRC_VARIABLE_ECONOMY
 		economy/STStorageInjectionByCluster.h
 		economy/STStorageWithdrawalByCluster.h
 		economy/STStorageLevelsByCluster.h
+		economy/STStorageCashFlowByCluster.h
 		economy/unsupliedEnergy.h
 		economy/domesticUnsuppliedEnergy.h
 		economy/localMatchingRuleViolations.h

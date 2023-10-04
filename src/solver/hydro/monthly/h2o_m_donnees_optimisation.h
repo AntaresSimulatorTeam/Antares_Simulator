@@ -27,7 +27,7 @@
 #ifndef __SOLVER_H2O_M_STRUCTURE_INTERNE__
 #define __SOLVER_H2O_M_STRUCTURE_INTERNE__
 
-#include "h2o_m_sys.h"
+#include <vector>
 
 #define LINFINI 1.e+80
 
@@ -38,9 +38,9 @@
 typedef struct
 {
     int NombreDeVariables;
-    double* CoutLineaire;
-    double* CoutLineaireBruite; /* Ajout de bruit pour forcer l'unicité des solutions */
-    int* TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
+    std::vector<double> CoutLineaire;
+    std::vector<double> CoutLineaireBruite; /* Ajout de bruit pour forcer l'unicité des solutions */
+    std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
                            (voir le fichier spx_constantes_externes.h mais ne jamais utiliser les
                            valeurs explicites des constantes): VARIABLE_FIXE                  ,
                             VARIABLE_BORNEE_DES_DEUX_COTES ,
@@ -50,11 +50,11 @@ typedef struct
                                            */
     /* La matrice des contraintes */
     int NombreDeContraintes;
-    char* Sens;
-    int* IndicesDebutDeLigne;
-    int* NombreDeTermesDesLignes;
-    double* CoefficientsDeLaMatriceDesContraintes;
-    int* IndicesColonnes;
+    std::vector<char> Sens;
+    std::vector<int> IndicesDebutDeLigne;
+    std::vector<int> NombreDeTermesDesLignes;
+    std::vector<double> CoefficientsDeLaMatriceDesContraintes;
+    std::vector<int> IndicesColonnes;
     int NombreDeTermesAlloues;
 } PROBLEME_LINEAIRE_PARTIE_FIXE;
 
@@ -64,15 +64,15 @@ typedef struct
     /* Donnees variables de la matrice des contraintes */
     /* On met quand-meme les bornes dans la partie variable pour le cas ou on voudrait avoir
              un jour des bornes min et max variables dans le temps et en fonction des reservoirs */
-    double* Xmin;
-    double* Xmax;
-    double* SecondMembre;
+    std::vector<double> Xmin;
+    std::vector<double> Xmax;
+    std::vector<double> SecondMembre;
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a X, il permet
        de renseigner directement les structures de description du reseau avec les
        resultats contenus dans X */
-    double** AdresseOuPlacerLaValeurDesVariablesOptimisees;
+    std::vector<double*>  AdresseOuPlacerLaValeurDesVariablesOptimisees;
     /* Resultat */
-    double* X;
+    std::vector<double> X;
     /* En Entree ou en Sortie */
     int ExistenceDUneSolution; /* En sortie, vaut :
                                   OUI_SPX s'il y a une solution,
@@ -84,23 +84,23 @@ typedef struct
                                   pas de solution
                                                  */
 
-    int* PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    int* ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    double* CoutsReduits;      /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
-    double* CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer les couts
+    std::vector<int> PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    std::vector<int> ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    std::vector<double> CoutsReduits;      /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
+    std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer les couts
                                              marginaux */
 } PROBLEME_LINEAIRE_PARTIE_VARIABLE;
 
 /* Les correspondances des variables */
 typedef struct
 {
-    int* NumeroDeVariableVolume;                      /* Volumes */
-    int* NumeroDeVariableTurbine;                     /* Turbines */
-    int* NumeroDeVariableDepassementVolumeMax;        /* Depassement du volume max */
-    int* NumeroDeVariableDepassementVolumeMin;        /* Depassement du volume min */
+    std::vector<int> NumeroDeVariableVolume;                      /* Volumes */
+    std::vector<int> NumeroDeVariableTurbine;                     /* Turbines */
+    std::vector<int> NumeroDeVariableDepassementVolumeMax;        /* Depassement du volume max */
+    std::vector<int> NumeroDeVariableDepassementVolumeMin;        /* Depassement du volume min */
     int NumeroDeLaVariableViolMaxVolumeMin;           // Depassement max du volume min
-    int* NumeroDeVariableDEcartPositifAuTurbineCible; /* Ecart positif au volume cible */
-    int* NumeroDeVariableDEcartNegatifAuTurbineCible; /* Ecart negatif au volume cible */
+    std::vector<int> NumeroDeVariableDEcartPositifAuTurbineCible; /* Ecart positif au volume cible */
+    std::vector<int> NumeroDeVariableDEcartNegatifAuTurbineCible; /* Ecart negatif au volume cible */
     int NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible */
 } CORRESPONDANCE_DES_VARIABLES;
 
@@ -110,12 +110,12 @@ typedef struct
     int NombreDeReservoirs;
     char LesCoutsOntEteInitialises; /* Vaut OUI ou NON */
 
-    CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
+    CORRESPONDANCE_DES_VARIABLES CorrespondanceDesVariables;
 
-    PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
+    PROBLEME_LINEAIRE_PARTIE_FIXE ProblemeLineairePartieFixe;
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE ProblemeLineairePartieVariable;
 
-    void** ProblemeSpx; /* Il y en a 1 par reservoir */
+    std::vector<void*>  ProblemeSpx; /* Il y en a 1 par reservoir */
     void* Probleme;     /* Le probleme en cours passe au simplexe */
 
     double CoutDeLaSolution;

@@ -91,13 +91,6 @@ public:
 
     //! Set of renewable clusters
     using Set = std::set<RenewableCluster*, CompareClusterName>;
-
-    /*!
-    ** \brief Get the group name string
-    ** \return A valid CString
-    */
-    static const char* GroupName(enum RenewableGroup grp);
-
 public:
     //! \name Constructor & Destructor
     //@{

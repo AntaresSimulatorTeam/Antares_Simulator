@@ -27,7 +27,6 @@
 #ifndef __SOLVER_H2O2_J_STRUCTURE_INTERNE__
 #define __SOLVER_H2O2_J_STRUCTURE_INTERNE__
 
-#include "../daily/h2o_j_sys.h"
 #include "../daily/h2o_j_donnees_optimisation.h"
 #include <antares/study/study.h>
 #include <antares/mersenne-twister/mersenne-twister.h>
@@ -144,7 +143,7 @@ constexpr unsigned int seed = 0x79683264; // "hyd2" in hexa
 class Hydro_problem_costs
 {
 public:
-    Hydro_problem_costs(const Data::Study& study);
+    Hydro_problem_costs(const Data::Parameters& parameters);
 
     inline double get_end_days_levels_cost() const
     {

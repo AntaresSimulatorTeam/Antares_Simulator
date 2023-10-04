@@ -39,7 +39,7 @@
 #include "apply-scenario.h"
 #include <antares/fatal-error.h>
 #include "../ts-generator/generator.h"
-
+#include "opt_time_writer.h"
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
 
 #include <yuni/core/system/suspend.h>
@@ -48,11 +48,12 @@
 
 namespace Antares::Solver::Simulation
 {
+
 template<class Impl>
 class yearJob final : public Yuni::Job::IJob
 {
 public:
-    yearJob(ISimulation<Impl>* pSimulationObj,
+    yearJob(ISimulation<Impl>* simulation,
             unsigned int pY,
             std::map<uint, bool>& pYearFailed,
             std::map<uint, bool>& pIsFirstPerformedYearOfASet,
@@ -63,8 +64,9 @@ public:
             Data::Study& pStudy,
             std::vector<Variable::State>& pState,
             bool pYearByYear,
-            Benchmarking::IDurationCollector& durationCollector) :
-     simulationObj(pSimulationObj),
+            Benchmarking::IDurationCollector& durationCollector,
+            IResultWriter& resultWriter) :
+     simulation_(simulation),
      y(pY),
      yearFailed(pYearFailed),
      isFirstPerformedYearOfASet(pIsFirstPerformedYearOfASet),
@@ -75,13 +77,14 @@ public:
      study(pStudy),
      state(pState),
      yearByYear(pYearByYear),
-     pDurationCollector(durationCollector)
+     pDurationCollector(durationCollector),
+     pResultWriter(resultWriter)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
     }
 
 private:
-    ISimulation<Impl>* simulationObj;
+    ISimulation<Impl>* simulation_;
     unsigned int y;
     std::map<uint, bool>& yearFailed;
     std::map<uint, bool>& isFirstPerformedYearOfASet;
@@ -94,7 +97,7 @@ private:
     bool yearByYear;
     bool hydroHotStart;
     Benchmarking::IDurationCollector& pDurationCollector;
-
+    IResultWriter& pResultWriter;
 private:
     /*
     ** \brief Log failed week
@@ -142,9 +145,9 @@ private:
 
             // Getting random tables for this year
             yearRandomNumbers& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
-            double const* const* thermalNoisesByArea = randomForCurrentYear.pThermalNoisesByArea;
             double* randomReservoirLevel = nullptr;
 
+            // 1 - Applying random levels for current year
             if (hydroHotStart && firstSetParallelWithAPerformedYearWasRun)
                 randomReservoirLevel = state[numSpace].problemeHebdo->previousYearFinalLevels.data();
             else
@@ -152,17 +155,18 @@ private:
 
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
-            ALEA_TirageAuSortChroniques(study, thermalNoisesByArea, numSpace,
-                    simulationObj->valeursGenereesParPays);
+            ApplyRandomTSnumbers(study, y, numSpace);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
-            simulationObj->prepareClustersInMustRunMode(numSpace);
+            simulation_->prepareClustersInMustRunMode(numSpace);
 
             // 4 - Hydraulic ventilation
             {
                 Benchmarking::Timer timer;
-                simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y,
-                        numSpace, simulationObj->valeursGenereesParPays);
+                simulation_->hydroManagement.makeVentilation(randomReservoirLevel,
+                                                             state[numSpace],
+                                                             y,
+                                                             numSpace);
                 timer.stop();
                 pDurationCollector.addDuration("hydro_ventilation", timer.get_duration());
             }
@@ -171,52 +175,53 @@ private:
             state[numSpace].year = y;
 
             // 5 - Resetting all variables for the output
-            simulationObj->variables.yearBegin(y, numSpace);
+            simulation_->variables.yearBegin(y, numSpace);
 
             // 6 - The Solver itself
             bool isFirstPerformedYearOfSimulation
               = isFirstPerformedYearOfASet[y] && not firstSetParallelWithAPerformedYearWasRun;
             std::list<uint> failedWeekList;
 
-            yearFailed[y] = !simulationObj->year(progression,
-                                                 state[numSpace],
-                                                 numSpace,
-                                                 randomForCurrentYear,
-                                                 failedWeekList,
-                                                 isFirstPerformedYearOfSimulation,
-                                                 simulationObj->valeursGenereesParPays);
+            OptimizationStatisticsWriter optWriter(pResultWriter, y);
+            yearFailed[y] = !simulation_->year(progression,
+                                               state[numSpace],
+                                               numSpace,
+                                               randomForCurrentYear,
+                                               failedWeekList,
+                                               isFirstPerformedYearOfSimulation,
+                                               simulation_->hydroManagement.ventilationResults(),
+                                               optWriter);
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
 
-            simulationObj->variables.yearEndBuild(state[numSpace], y, numSpace);
+            simulation_->variables.yearEndBuild(state[numSpace], y, numSpace);
 
             // 7 - End of the year, this is the last stade where the variables can retrieve
             // their data for this year.
-            simulationObj->variables.yearEnd(y, numSpace);
+            simulation_->variables.yearEnd(y, numSpace);
 
             // 8 - Spatial clusters
             // Notifying all variables to perform spatial aggregates.
             // This must be done only when all variables have finished to compute their
             // data for the year.
-            simulationObj->variables.yearEndSpatialAggregates(
-              simulationObj->variables, y, numSpace);
+            simulation_->variables.yearEndSpatialAggregates(simulation_->variables, y, numSpace);
 
             // 9 - Write results for the current year
             if (yearByYear)
             {
                 Benchmarking::Timer timerYear;
                 // Before writing, some variable may require minor modifications
-                simulationObj->variables.beforeYearByYearExport(y, numSpace);
+                simulation_->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
-                simulationObj->writeResults(false, y, numSpace); // false for synthesis
+                simulation_->writeResults(false, y, numSpace); // false for synthesis
                 timerYear.stop();
                 pDurationCollector.addDuration("yby_export", timerYear.get_duration());
             }
         }
         else
         {
-            simulationObj->incrementProgression(progression);
+            simulation_->incrementProgression(progression);
 
             logs.info() << "  playlist: ignoring the year " << (y + 1);
 
@@ -229,19 +234,24 @@ private:
 
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
-                                      const ::Settings& settings,
-                                      Benchmarking::IDurationCollector& duration_collector) :
- ImplementationType(study),
- study(study),
- settings(settings),
- pNbYearsReallyPerformed(0),
- pNbMaxPerformedYearsInParallel(0),
- pYearByYear(study.parameters.yearByYear),
- pHydroManagement(study),
- pFirstSetParallelWithAPerformedYearWasRun(false),
- pDurationCollector(duration_collector),
- pQueueService(study.pQueueService),
- pResultWriter(study.resultWriter)
+    const ::Settings& settings,
+    Benchmarking::IDurationCollector& duration_collector,
+    IResultWriter& resultWriter) :
+    ImplementationType(study, resultWriter),
+    study(study),
+    settings(settings),
+    pNbYearsReallyPerformed(0),
+    pNbMaxPerformedYearsInParallel(0),
+    pYearByYear(study.parameters.yearByYear),
+    hydroManagement(study.areas, 
+                    study.parameters, 
+                    study.calendar, 
+                    study.maxNbYearsInParallel,
+                    resultWriter),
+    pFirstSetParallelWithAPerformedYearWasRun(false),
+    pDurationCollector(duration_collector),
+    pQueueService(study.pQueueService),
+    pResultWriter(resultWriter)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -261,47 +271,15 @@ template<class Impl>
 inline void ISimulation<Impl>::checkWriter() const
 {
     // The zip writer needs a queue service (async mutexed write)
-    if (!pQueueService)
+    if (!pQueueService && pResultWriter.needsTheJobQueue())
     {
         throw Solver::Initialization::Error::NoQueueService();
-    }
-
-    if (!pResultWriter)
-    {
-        throw Solver::Initialization::Error::NoResultWriter();
     }
 }
 
 template<class Impl>
 inline ISimulation<Impl>::~ISimulation()
 {
-}
-
-static void allocateValeursGenereesParPays(VAL_GEN_PAR_PAYS& val,
-                                           const Data::Study& study)
-{
-    val.resize(study.maxNbYearsInParallel);
-    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
-    {
-        val[numSpace].resize(study.areas.size());
-        for (uint areaIndex = 0; areaIndex < study.areas.size(); ++areaIndex)
-        {
-            auto& area = *study.areas.byIndex[areaIndex];
-
-            val[numSpace][areaIndex].HydrauliqueModulableQuotidien
-                .assign(study.runtime->nbDaysPerYear,0 );
-            val[numSpace][areaIndex].AleaCoutDeProductionParPalier
-                .assign(area.thermal.clusterCount(), 0.);
-
-            if (area.hydro.reservoirManagement)
-            {
-                val[numSpace][areaIndex].NiveauxReservoirsDebutJours
-                    .assign(study.runtime->nbDaysPerYear, 0.);
-                val[numSpace][areaIndex].NiveauxReservoirsFinJours
-                    .assign(study.runtime->nbDaysPerYear, 0.);
-            }
-        }
-    }
 }
 
 template<class Impl>
@@ -327,8 +305,6 @@ void ISimulation<Impl>::run()
     // The general data
     auto& parameters = *(study.runtime->parameters);
 
-    allocateValeursGenereesParPays(valeursGenereesParPays, study);
-
     // Preprocessors
     // Determine if we have to use the preprocessors at least one time.
     pData.initialize(parameters);
@@ -353,7 +329,7 @@ void ISimulation<Impl>::run()
     }
     else
     {
-        if (not ImplementationType::simulationBegin(valeursGenereesParPays))
+        if (not ImplementationType::simulationBegin())
             return;
         // Allocating the memory
         ImplementationType::variables.simulationBegin();
@@ -412,7 +388,7 @@ void ISimulation<Impl>::run()
         ImplementationType::variables.simulationEnd();
 
         // Export ts-numbers into output
-        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study);
+        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, pResultWriter);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
@@ -709,8 +685,6 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
         if (isPerformed)
             randomForYears.yearNumberToIndex[y] = indexYear;
 
-        // logs.info() << "Year : " << y << " ------------";
-
         // General
         const unsigned int nbAreas = study.areas.size();
 
@@ -719,17 +693,14 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
         {
             // logs.info() << "   area : " << a << " :";
             auto& area = *(study.areas.byIndex[a]);
-            size_t nbClusters = area.thermal.list.mapping.size();
 
-            for (uint c = 0; c != nbClusters; ++c)
+            auto end = area.thermal.list.mapping.end();
+            for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
             {
+                uint clusterIndex = it->second->areaWideIndex;
+                double thermalNoise = runtime.random[Data::seedThermalCosts].next();
                 if (isPerformed)
-                    randomForYears.pYears[indexYear].pThermalNoisesByArea[a][c]
-                      = runtime.random[Data::seedThermalCosts].next();
-                else
-                    runtime.random[Data::seedThermalCosts].next();
-                // logs.info() << "      cluster : " << c << ", value : " <<
-                // randomForYears.pYears[indexYear].pThermalNoisesByArea[a][c];
+                    randomForYears.pYears[indexYear].pThermalNoisesByArea[a][clusterIndex] = thermalNoise;
             }
         }
 
@@ -752,10 +723,9 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
             // Previous month's first day in the year
             int firstDayOfMonth = study.calendar.months[initResLevelOnSimMonth].daysYear.first;
 
-            double randomLevel = pHydroManagement.randomReservoirLevel(
-              min[firstDayOfMonth], avg[firstDayOfMonth], max[firstDayOfMonth]);
-              // here in solver the random resevoair level is calulated! 
-              // to late for CR25 pre-checks!?
+            double randomLevel = hydroManagement.randomReservoirLevel(min[firstDayOfMonth],
+                                                                       avg[firstDayOfMonth],
+                                                                       max[firstDayOfMonth]);
 
             // Possibly update the intial level from scenario builder
             if (study.parameters.useCustomScenario)
@@ -981,7 +951,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     {
         int numThreads = pNbMaxPerformedYearsInParallel;
         // If the result writer uses the job queue, add one more thread for it
-        if (pResultWriter && pResultWriter->needsTheJobQueue())
+        if (pResultWriter.needsTheJobQueue())
             numThreads++;
         pQueueService->maximumThreadCount(numThreads);
     }
@@ -1013,7 +983,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             {
                 yearPerformed = true;
                 numSpace = set_it->performedYearToSpace[y];
-                study.runtime->timeseriesNumberYear[numSpace] = y;
             }
 
             // If the year has not to be rerun, we skip the computation of the year.
@@ -1033,7 +1002,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                               study,
                                               state,
                                               pYearByYear,
-                                              pDurationCollector));
+                                              pDurationCollector,
+                                              pResultWriter));
 
         } // End loop over years of the current set of parallel years
 
@@ -1078,11 +1048,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     } // End loop over sets of parallel years
 
     // Writing annual costs statistics
-    if (pResultWriter)
-    {
-        pAnnualCostsStatistics.endStandardDeviations();
-        pAnnualCostsStatistics.writeToOutput(pResultWriter);
-    }
+    pAnnualCostsStatistics.endStandardDeviations();
+    pAnnualCostsStatistics.writeToOutput(pResultWriter);
 }
 
 } // namespace Antares::Solver::Simulation

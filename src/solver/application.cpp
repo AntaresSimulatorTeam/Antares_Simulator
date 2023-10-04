@@ -10,6 +10,7 @@
 #include <antares/exception/LoadingError.hpp>
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/version.h>
+#include <antares/writer/writer_factory.h>
 
 #include "signal-handling/public.h"
 
@@ -169,7 +170,7 @@ void Application::prepare(int argc, char* argv[])
     {
         auto& filename = pStudy->buffer;
         filename.clear() << "about-the-study" << Yuni::IO::Separator << "map";
-        pStudy->progression.saveToFile(filename, pStudy->resultWriter);
+        pStudy->progression.saveToFile(filename, *resultWriter);
         pStudy->progression.start();
     }
     else
@@ -277,6 +278,13 @@ void Application::processCaption(const Yuni::String& caption)
     pArgv = Yuni::Process::Rename(pArgc, pArgv, caption);
 }
 
+void Application::prepareWriter(Antares::Data::Study& study,
+                                Benchmarking::IDurationCollector& duration_collector)
+{
+    resultWriter = resultWriterFactory(
+      study.parameters.resultFormat, study.folderOutput, study.pQueueService, duration_collector);
+}
+
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 {
     processCaption(Yuni::String() << "antares: loading \"" << pSettings.studyFolder << "\"");
@@ -324,11 +332,12 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     study.prepareOutput();
 
     // Initialize the result writer
-    study.prepareWriter(pDurationCollector);
-    Antares::Solver::initializeSignalHandlers(study.resultWriter);
+    prepareWriter(study, pDurationCollector);
+
+    Antares::Solver::initializeSignalHandlers(resultWriter);
 
     // Save about-the-study files (comments, notes, etc.)
-    study.saveAboutTheStudy();
+    study.saveAboutTheStudy(*resultWriter);
 
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
@@ -365,7 +374,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             // However, since we have warnings/errors, it allows to have a piece of
             // log when the unexpected happens.
             if (!study.parameters.noOutput)
-                study.importLogsToOutputFolder();
+                study.importLogsToOutputFolder(*resultWriter);
             // empty line
             logs.info();
         }
@@ -383,9 +392,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
             if (!pSettings.commentFile.empty())
             {
-                auto writer = pStudy->resultWriter;
-                if (writer)
-                    writer->addEntryFromFile(study.buffer.c_str(), pSettings.commentFile.c_str());
+                resultWriter->addEntryFromFile(study.buffer.c_str(), pSettings.commentFile.c_str());
 
                 pSettings.commentFile.clear();
                 pSettings.commentFile.shrink();
@@ -416,9 +423,8 @@ void Application::writeExectutionInfo()
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
 
-    auto writer = pStudy->resultWriter;
     // If no writer is available, we can't write
-    if (!writer)
+    if (!resultWriter)
         return;
 
     // Info collectors : they retrieve data from study and simulation
@@ -434,7 +440,7 @@ void Application::writeExectutionInfo()
     // Flush previous info into a record file
     const std::string exec_info_path = "execution_info.ini";
     std::string content = file_content.saveToBufferAsIni();
-    writer->addEntryFromBuffer(exec_info_path, content);
+    resultWriter->addEntryFromBuffer(exec_info_path, content);
 }
 
 Application::~Application()
@@ -449,7 +455,7 @@ Application::~Application()
 
         // Copy the log file
         if (!pStudy->parameters.noOutput) {
-            pStudy->importLogsToOutputFolder();
+            pStudy->importLogsToOutputFolder(*resultWriter);
         }
 
         // release all reference to the current study held by this class

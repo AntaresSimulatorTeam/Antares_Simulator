@@ -209,13 +209,13 @@ inline uint Stream::write(int64_t value, uint64_t maxsize)
                           pFd);
 }
 
-inline uint Stream::write(uint16 value)
+inline uint Stream::write(uint16_t value)
 {
     ShortString32 string(value);
     return (uint)::fwrite(string.c_str(), 1, string.size(), pFd);
 }
 
-inline uint Stream::write(uint16 value, uint64_t maxsize)
+inline uint Stream::write(uint16_t value, uint64_t maxsize)
 {
     ShortString32 string(value);
     return (uint)::fwrite(string.c_str(),

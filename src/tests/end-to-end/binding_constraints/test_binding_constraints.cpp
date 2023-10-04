@@ -87,7 +87,6 @@ StudyWithBConCluster::StudyWithBConCluster()
     BC->enabled(true);
 }
 
-
 BOOST_FIXTURE_TEST_SUITE(TESTS_BINDING_CONSTRAINTS_ON_A_LINK, StudyWithBConLink)
 
 BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)

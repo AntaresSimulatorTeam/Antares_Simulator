@@ -245,10 +245,9 @@ public:
 
     void weekForEachArea(State& state, unsigned int numSpace)
     {
-        {
-            double* rawhourly = Memory::RawPointer(pValuesForTheCurrentYear[numSpace].hour);
-            PrepareMaxMRG(state, rawhourly + state.hourInTheYear, numSpace);
-        }
+        double* rawhourly = Memory::RawPointer(pValuesForTheCurrentYear[numSpace].hour);
+        PrepareMaxMRG(state, rawhourly + state.hourInTheYear, numSpace);
+
         // next
         NextType::weekForEachArea(state, numSpace);
     }

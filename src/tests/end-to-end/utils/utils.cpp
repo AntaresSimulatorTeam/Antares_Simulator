@@ -4,7 +4,6 @@
 
 void initializeStudy(Study::Ptr study)
 {
-    study->resultWriter = std::make_shared<NullResultWriter>();
     study->parameters.reset();
 }
 
@@ -134,7 +133,8 @@ void SimulationHandler::create()
 
     simulation_ = std::make_shared<ISimulation<Economy>>(study_,
                                                          settings_,
-                                                         nullDurationCollector_);
+                                                         nullDurationCollector_,
+                                                         resultWriter_);
     SIM_AllocationTableaux(study_);
 }
 
@@ -206,25 +206,4 @@ std::shared_ptr<BindingConstraint> addBindingConstraints(Study& study, std::stri
     auto g = study.bindingConstraintsGroups.add(group);
     g->add(bc);
     return bc;
-}
-
-void NullResultWriter::addEntryFromBuffer(const std::string&, Clob&)
-{
-
-}
-void NullResultWriter::addEntryFromBuffer(const std::string&, std::string&)
-{
-
-}
-void NullResultWriter::addEntryFromFile(const std::string&, const std::string&)
-{
-
-}
-bool NullResultWriter::needsTheJobQueue() const
-{
-    return false;
-}
-void NullResultWriter::finalize(bool)
-{
-
 }

@@ -32,7 +32,7 @@
 #include <wx/stattext.h>
 #include <wx/timer.h>
 #include <wx/dialog.h>
-#include <antares/study/action/action.h>
+#include <action/action.h>
 
 namespace Antares
 {

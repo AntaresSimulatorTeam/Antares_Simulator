@@ -19,5 +19,14 @@ public:
     virtual bool needsTheJobQueue() const = 0;
     virtual void finalize(bool verbose) = 0;
 };
+
+class NullResultWriter: public Solver::IResultWriter {
+    void addEntryFromBuffer(const std::string &, Yuni::Clob &) override;
+    void addEntryFromBuffer(const std::string &, std::string &) override;
+    void addEntryFromFile(const std::string &, const std::string &) override;
+    bool needsTheJobQueue() const override;
+    void finalize(bool ) override;
+};
+
 } // namespace Solver
 } // namespace Antares
