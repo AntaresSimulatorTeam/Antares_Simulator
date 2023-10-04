@@ -74,7 +74,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    XCast(Data::Study& study, Data::TimeSeriesEnum ts, IResultWriter& writer);
+    XCast(Data::Study& study, Data::TimeSeriesType ts, IResultWriter& writer);
     /*!
     ** \brief Destructor
     */
@@ -104,7 +104,7 @@ public:
     //! The current year
     uint year;
     //! The time-series type
-    const Data::TimeSeriesEnum timeSeriesType;
+    const Data::TimeSeriesType timeSeriesType;
 
     //! The random generator to use
     MersenneTwister* random;

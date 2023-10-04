@@ -43,7 +43,7 @@ using namespace Yuni;
 using namespace Antares::Data;
 using namespace std;
 
-const map<TimeSeriesEnum, int> ts_to_tsIndex = {{timeSeriesLoad, 0},
+const map<TimeSeriesType, int> ts_to_tsIndex = {{timeSeriesLoad, 0},
                                             {timeSeriesHydro, 1},
                                             {timeSeriesWind, 2},
                                             {timeSeriesThermal, 3},
@@ -51,7 +51,7 @@ const map<TimeSeriesEnum, int> ts_to_tsIndex = {{timeSeriesLoad, 0},
                                             {timeSeriesRenewable, 5},
                                             {timeSeriesTransmissionCapacities, 6}};
 
-const map<TimeSeriesEnum, string> ts_to_tsTitle
+const map<TimeSeriesType, string> ts_to_tsTitle
   = {{timeSeriesLoad, "load"},
      {timeSeriesHydro, "hydro"},
      {timeSeriesWind, "wind"},
@@ -65,7 +65,7 @@ void addInterModalTimeSeriesToMessage(const array<bool, timeSeriesCount>& isTSin
 {
     bool isFirstLogged = true;
 
-    map<TimeSeriesEnum, int>::const_iterator it = ts_to_tsIndex.begin();
+    map<TimeSeriesType, int>::const_iterator it = ts_to_tsIndex.begin();
     for (; it != ts_to_tsIndex.end(); ++it)
     {
         if (isTSintermodal[it->second])
@@ -263,7 +263,7 @@ public:
 class IntraModalConsistencyChecker
 {
 public:
-    IntraModalConsistencyChecker(const TimeSeriesEnum ts,
+    IntraModalConsistencyChecker(const TimeSeriesType ts,
                                  const array<bool, timeSeriesCount>& isTSintramodal,
                                  const array<bool, timeSeriesCount>& isTSgenerated,
                                  areaNumberOfTSretriever* tsCounter,
@@ -344,7 +344,7 @@ bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode
 {
     // Initialization of a map associating a time-series to an object that retrieves
     // the number of time series inside an area
-    using mapTStoRetriever = map<TimeSeriesEnum, shared_ptr<areaNumberOfTSretriever>>;
+    using mapTStoRetriever = map<TimeSeriesType, shared_ptr<areaNumberOfTSretriever>>;
     mapTStoRetriever ts_to_numberOfTSretrievers;
     ts_to_numberOfTSretrievers[timeSeriesLoad] = make_shared<loadAreaNumberOfTSretriever>(study);
     ts_to_numberOfTSretrievers[timeSeriesHydro] = make_shared<hydroAreaNumberOfTSretriever>(study);
@@ -361,7 +361,7 @@ bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode
     mapTStoRetriever::iterator it = ts_to_numberOfTSretrievers.begin();
     for (; it != ts_to_numberOfTSretrievers.end(); ++it)
     {
-        const TimeSeriesEnum tsKind = it->first;
+        const TimeSeriesType tsKind = it->first;
         areaNumberOfTSretriever* tsRetriever = (it->second).get();
         int indexTS = ts_to_tsIndex.at(it->first);
         IntraModalConsistencyChecker intraModalchecker(
@@ -976,13 +976,13 @@ void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study, IRes
     if (study.parameters.storeTimeseriesNumbers)
     {
         fixTSNumbersWhenWidthIsOne(study);
-        study.storeTimeSeriesNumbers<TimeSeriesEnum::timeSeriesLoad>(resultWriter);
-        study.storeTimeSeriesNumbers<TimeSeriesEnum::timeSeriesSolar>(resultWriter);
-        study.storeTimeSeriesNumbers<TimeSeriesEnum::timeSeriesHydro>(resultWriter);
-        study.storeTimeSeriesNumbers<TimeSeriesEnum::timeSeriesWind>(resultWriter);
-        study.storeTimeSeriesNumbers<TimeSeriesEnum::timeSeriesThermal>(resultWriter);
-        study.storeTimeSeriesNumbers<TimeSeriesEnum::timeSeriesRenewable>(resultWriter);
-        study.storeTimeSeriesNumbers<TimeSeriesEnum::timeSeriesTransmissionCapacities>(resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesLoad>(resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesSolar>(resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesHydro>(resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesWind>(resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesThermal>(resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesRenewable>(resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesTransmissionCapacities>(resultWriter);
 
         Simulation::BindingConstraintsTimeSeriesNumbersWriter ts_writer(resultWriter);
         ts_writer.write(study.bindingConstraintsGroups);

@@ -38,7 +38,7 @@ namespace Datagrid
 {
 namespace Renderer
 {
-template<enum Data::TimeSeriesEnum T>
+template<enum Data::TimeSeriesType T>
 class XCastTranslation final : public Renderer::Matrix<int32_t>, public Renderer::ARendererArea
 {
 public:

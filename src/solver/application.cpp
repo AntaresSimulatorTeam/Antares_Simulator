@@ -154,7 +154,7 @@ void Application::prepare(int argc, char* argv[])
                                                         pParameters->include.hurdleCosts);
 
     bool tsGenThermal
-      = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeriesEnum::timeSeriesThermal));
+      = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeriesType::timeSeriesThermal));
 
     checkMinStablePower(tsGenThermal, pStudy->areas);
 

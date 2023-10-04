@@ -38,7 +38,7 @@ namespace AntaresStudy
 {
 namespace Area
 {
-DataTSGenerator::DataTSGenerator(Data::TimeSeriesEnum ts, const AnyString& areaname) :
+DataTSGenerator::DataTSGenerator(Data::TimeSeriesType ts, const AnyString& areaname) :
  pType(ts), pOriginalAreaName(areaname)
 {
     switch (ts)
@@ -63,7 +63,7 @@ DataTSGenerator::DataTSGenerator(Data::TimeSeriesEnum ts, const AnyString& arean
     }
 }
 
-DataTSGenerator::DataTSGenerator(Data::TimeSeriesEnum ts,
+DataTSGenerator::DataTSGenerator(Data::TimeSeriesType ts,
                                  const AnyString& areaname,
                                  const AnyString& clustername) :
  pType(ts), pOriginalAreaName(areaname), pOriginalPlantName(clustername)

@@ -1148,7 +1148,7 @@ void Study::ensureDataAreLoadedForAllBindingConstraints()
 
 namespace // anonymous
 {
-template<enum TimeSeriesEnum T>
+template<enum TimeSeriesType T>
 struct TS final
 {
     static bool IsNeeded(const Study& s, const uint y)

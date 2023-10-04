@@ -205,7 +205,7 @@ std::string styleToString(const StyleType& style);
 **
 ** These values are mainly used for mask bits
 */
-enum TimeSeriesEnum : unsigned int
+enum TimeSeriesType : unsigned int
 {
     //! TimeSeries : Load
     timeSeriesLoad = 1,

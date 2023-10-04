@@ -53,12 +53,12 @@ public:
     /*!
     ** \brief Default constructor
     */
-    DataTimeseries(Data::TimeSeriesEnum ts, const AnyString& areaname);
+    DataTimeseries(Data::TimeSeriesType ts, const AnyString& areaname);
 
     /*!
     ** \brief Default constructor
     */
-    DataTimeseries(Data::TimeSeriesEnum ts, const AnyString& areaname, const AnyString& clustername);
+    DataTimeseries(Data::TimeSeriesType ts, const AnyString& areaname, const AnyString& clustername);
 
     //! Destructor
     virtual ~DataTimeseries();
@@ -74,7 +74,7 @@ protected:
     virtual void registerViewsWL(Context& ctx);
 
 private:
-    Data::TimeSeriesEnum pType;
+    Data::TimeSeriesType pType;
     Data::AreaName pOriginalAreaName;
     Data::ClusterName pOriginalPlantName;
 

@@ -79,7 +79,7 @@ void Areas::initializeFromStudy()
     }
 }
 
-void Areas::reloadDistributionLawsFromStudy(Data::TimeSeriesEnum ts)
+void Areas::reloadDistributionLawsFromStudy(Data::TimeSeriesType ts)
 {
     if (!(!study))
     {

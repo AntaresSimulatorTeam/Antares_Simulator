@@ -123,7 +123,7 @@ public:
     /*!
     ** \brief Constructor
     */
-    XCast(TimeSeriesEnum ts);
+    XCast(TimeSeriesType ts);
     /*!
     ** \brief Destructor
     */
@@ -208,7 +208,7 @@ public:
     Matrix<float> conversion;
 
     //! The related time-series
-    const TimeSeriesEnum timeSeries;
+    const TimeSeriesType timeSeries;
 
 protected:
     void resetTransferFunction();
