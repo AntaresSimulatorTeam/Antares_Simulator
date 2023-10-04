@@ -43,6 +43,11 @@ TimeSeries::TimeSeries(const TimeSeriesNumbers& tsNumbers) : tsNumbers(tsNumbers
 {}
 
 
+uint32_t TimeSeriesNumbers::getTSNumber(uint32_t year) const
+{
+    return tsNumbers_[year];
+}
+
 bool DataSeriesCommon::forceReload(bool reload) const
 {
     return timeSeries.forceReload(reload);
