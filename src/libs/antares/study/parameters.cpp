@@ -345,7 +345,7 @@ void Parameters::reset()
     resetSeeds();
 }
 
-bool Parameters::isTSGeneratedByPrepro(const TimeSeries ts) const
+bool Parameters::isTSGeneratedByPrepro(const TimeSeriesType ts) const
 {
     return (timeSeriesToGenerate & ts);
 }
@@ -1090,7 +1090,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
 void Parameters::fixRefreshIntervals()
 {
     using T = std::
-      tuple<uint& /* refreshInterval */, enum TimeSeries /* ts */, const std::string /* label */>;
+      tuple<uint& /* refreshInterval */, enum TimeSeriesType /* ts */, const std::string /* label */>;
     const std::list<T> timeSeriesToCheck = {{refreshIntervalLoad, timeSeriesLoad, "load"},
                                             {refreshIntervalSolar, timeSeriesSolar, "solar"},
                                             {refreshIntervalHydro, timeSeriesHydro, "hydro"},
