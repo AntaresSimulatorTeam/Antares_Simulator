@@ -88,7 +88,7 @@ struct TmpDataByArea
 typedef struct
 {
     std::vector<double> HydrauliqueModulableQuotidien; /* indice par jour */
-    std::vector<double> NiveauxReservoirsDebutJours;   //Niveaux (quotidiens) du reservoir de début
+    std::vector<double> NiveauxReservoirsDebutJours;   //Niveaux (quotidiens) du reservoir de dÃ©but
     //de jour (en cas de gestion des reservoirs).
     std::vector<double> NiveauxReservoirsFinJours; //Niveaux (quotidiens) du reservoir de fin
     //de jour (en cas de gestion des reservoirs).
@@ -121,9 +121,9 @@ public:
 
 private:
     //! Prepare inflows scaling for each area
-    void prepareInflowsScaling(uint numSpace);
+    void prepareInflowsScaling(uint numSpace, uint year);
     //! Prepare minimum generation scaling for each area
-    void minGenerationScaling(uint numSpace);
+    void minGenerationScaling(uint numSpace, uint year) const;
     //! check Monthly minimum generation is lower than available inflows
     bool checkMonthlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const;
     //! check Yearly minimum generation is lower than available inflows
@@ -133,10 +133,10 @@ private:
     //! check Hourly minimum generation is lower than available inflows
     bool checkHourlyMinGeneration(uint tsIndex, Data::Area& area) const;
     //! check minimum generation is lower than available inflows
-    bool checkMinGeneration(uint numSpace);
+    bool checkMinGeneration(uint numSpace, uint year) const;
     //! Prepare the net demand for each area
     template<enum Data::StudyMode ModeT>
-    void prepareNetDemand(uint numSpace);
+    void prepareNetDemand(uint numSpace, uint year);
     //! Prepare the effective demand for each area
     void prepareEffectiveDemand(uint numSpace);
     //! Monthly Optimal generations

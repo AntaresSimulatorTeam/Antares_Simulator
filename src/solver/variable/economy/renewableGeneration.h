@@ -271,9 +271,8 @@ public:
              ++clusterIndex)
         {
             const auto* renewableCluster = state.area->renewable.clusters[clusterIndex];
-            uint serieIndex = renewableCluster->series->timeseriesNumbers[0][state.year];
             double renewableClusterProduction
-              = renewableCluster->valueAtTimeStep(serieIndex, state.hourInTheYear);
+              = renewableCluster->valueAtTimeStep(state.hourInTheYear, state.year);
 
             pValuesForTheCurrentYear[numSpace][renewableCluster->groupID][state.hourInTheYear]
               += renewableClusterProduction;
