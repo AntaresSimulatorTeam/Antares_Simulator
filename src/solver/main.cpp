@@ -28,7 +28,7 @@
 
 #include <antares/logs/logs.h>
 #include "application.h"
-#include "../ui/common/winmain.hxx"  //TODO: remove that reverse dependency to UI
+#include <antares/args/args_to_utf8.h>
 
 #include <antares/fatal-error.h>
 #include <antares/memory/memory.h>
