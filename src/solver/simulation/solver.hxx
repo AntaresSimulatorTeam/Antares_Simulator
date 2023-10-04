@@ -1018,7 +1018,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             if (failed)
             {
                 std::ostringstream msg;
-                msg << "Year " << year << " has failed in the previous set of parallel year.";
+                msg << "Year " << year + 1 << " has failed in the previous set of parallel year.";
                 throw FatalError(msg.str());
             }
         }
