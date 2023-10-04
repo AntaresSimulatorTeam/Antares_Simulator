@@ -305,7 +305,7 @@ bool HydroManagement::checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) c
 
 bool HydroManagement::checkHourlyMinGeneration(uint tsIndex, Data::Area& area) const
 {
-    // Hourly minimum generation <= hourly inflows for each hour
+    // Hourly minimum generation <= hourly max generation for each hour
     auto& mingenmatrix = area.hydro.series->mingen;
     auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
     auto const& maxPower = area.hydro.maxPower;
@@ -350,8 +350,7 @@ bool HydroManagement::checkMinGeneration(uint numSpace, uint year) const
         bool followLoadModulations = area.hydro.followLoadModulations;
         bool reservoirManagement = area.hydro.reservoirManagement;
 
-        if (!reservoirManagement)
-            ret = checkHourlyMinGeneration(tsIndex, area) && ret;
+        ret = checkHourlyMinGeneration(tsIndex, area) && ret;
 
         if (!useHeuristicTarget)
             return;
