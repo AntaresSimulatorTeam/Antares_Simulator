@@ -571,6 +571,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
             auto loadSeries = area.load.series->getCoefficient(year, hourInYear);
+            auto windSeries = area.wind.series->getCoefficient(year, hourInYear);
             auto solarSeries = area.solar.series->getCoefficient(year, hourInYear);
             auto hydroSeriesIndex = area.hydro.series->getIndex(year);
 
@@ -580,7 +581,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                mustRunGen = area.wind.series->getCoefficient(year, hourInYear)
+                mustRunGen = windSeries
                              + solarSeries
                              + scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
                              + scratchpad.mustrunSum[hourInYear];
