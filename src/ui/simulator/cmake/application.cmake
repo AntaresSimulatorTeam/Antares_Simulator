@@ -54,8 +54,6 @@ SET(SRC_APPLICATION
 		application/study.h
 		application/study.cpp
 
-		# The main
-		../common/winmain.hxx
 		main.cpp
 )
 
