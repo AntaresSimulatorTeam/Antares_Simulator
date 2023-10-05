@@ -51,7 +51,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes);
-    int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
@@ -67,14 +66,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 pMaxDispatchableGeneration.add(pays, palier, index, pdt, Simulation);
-                nbTermesContraintesPourLesCoutsDeDemarrage
-                  += pMaxDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage;
-                pMaxDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage = 0;
-       
                 pMinDispatchableGeneration.add(pays, palier, index, pdt, Simulation);
-                nbTermesContraintesPourLesCoutsDeDemarrage
-                  += pMinDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage;
-                pMinDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage =0;
             }
         }
     }
@@ -94,10 +86,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 ConsistenceNumberOfDispatchableUnits consistenceNumberOfDispatchableUnits(
                   problemeHebdo);
                 consistenceNumberOfDispatchableUnits.add(pays, palier, index, pdt, Simulation);
-                nbTermesContraintesPourLesCoutsDeDemarrage
-                  += consistenceNumberOfDispatchableUnits
-                       .nbTermesContraintesPourLesCoutsDeDemarrage;
-                consistenceNumberOfDispatchableUnits.nbTermesContraintesPourLesCoutsDeDemarrage=0;
             }
         }
     }
@@ -117,9 +105,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 nbUnitsOutageLessThanNbUnitsStop.add(pays, palier, index, pdt, Simulation);
-                nbTermesContraintesPourLesCoutsDeDemarrage
-                  += nbUnitsOutageLessThanNbUnitsStop.nbTermesContraintesPourLesCoutsDeDemarrage;
-                nbUnitsOutageLessThanNbUnitsStop.nbTermesContraintesPourLesCoutsDeDemarrage=0;
             }
         }
     }
@@ -140,9 +125,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 nbDispUnitsMinBoundSinceMinUpTime.add(pays, palier, index, pdt, Simulation);
-                nbTermesContraintesPourLesCoutsDeDemarrage
-                  += nbDispUnitsMinBoundSinceMinUpTime.nbTermesContraintesPourLesCoutsDeDemarrage;
-                nbDispUnitsMinBoundSinceMinUpTime.nbTermesContraintesPourLesCoutsDeDemarrage=0;
             }
         }
     }
@@ -160,16 +142,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 minDownTime.add(pays, palier, index, pdt, Simulation);
-                nbTermesContraintesPourLesCoutsDeDemarrage
-                  += minDownTime.nbTermesContraintesPourLesCoutsDeDemarrage;
-                minDownTime.nbTermesContraintesPourLesCoutsDeDemarrage=0;
             }
         }
     }
-
-    if (Simulation)
-        problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
-          = nbTermesContraintesPourLesCoutsDeDemarrage;
 
     return;
 }
