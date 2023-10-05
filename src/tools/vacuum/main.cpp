@@ -35,7 +35,7 @@
 #include <antares/antares.h>
 #include <fswalker/fswalker.h>
 #include <antares/logs/logs.h>
-#include "../../ui/common/winmain.hxx"
+#include <antares/args/args_to_utf8.h>
 #include <antares/version.h>
 #include <antares/locale.h>
 #include "modified-inode.h"

@@ -1,5 +1,5 @@
 set(SRC_ARGS_HELPER
-        args_to_utf8.h
+        include/antares/args/args_to_utf8.h
         args_to_utf8.cpp
 )
 
@@ -18,5 +18,5 @@ target_link_libraries(args_helper
 
 target_include_directories(args_helper
         PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
