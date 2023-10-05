@@ -39,9 +39,6 @@ using namespace Yuni;
 namespace Antares::Data
 {
 
-TimeSeries::TimeSeries(TSNumbers& tsNumbers) : tsNumbers(tsNumbers)
-    {}
-
 int TimeSeries::timeSeriesLoadFromFolder(Study& s,
         const AreaName& areaID,
         const std::string& folder,
@@ -61,24 +58,45 @@ int TimeSeries::timeSeriesLoadFromFolder(Study& s,
     return ret;
 }
 
+int TimeSeries::timeSeriesSaveToFolder(const AreaName& areaID, const std::string& folder,
+                                       const std::string& filename)
+{
+    Clob buffer;
+    int ret = 1;
+    buffer.clear() << folder << SEP << filename << areaID << ".txt";
+    ret = coefficients.saveToCSVFile(buffer, 0) && ret;
+
+    return ret;
+}
+
+void TimeSeries::reset()
+{
+    coefficients.reset(1, HOURS_PER_YEAR);
+}
+
 double TimeSeries::getCoefficient(uint32_t year, uint32_t hourInYear) const
 {
-    return coefficients[tsNumbers.get(year)][hourInYear];
+    return coefficients[tsNumbers[year]][hourInYear];
 }
 
 double* TimeSeries::getColumn(uint32_t year) const
 {
-    return coefficients[tsNumbers.get(year)];
+    return coefficients[tsNumbers[year]];
 }
 
-uint32_t TSNumbers::get(uint32_t year) const
+bool TimeSeries::forceReload(bool reload) const
 {
-    return tsNumbers_[year];
+    return coefficients.forceReload(reload);
 }
 
-void TSNumbers::clear()
+void TimeSeries::markAsModified() const
 {
-    tsNumbers_.clear();
+    coefficients.markAsModified();
+}
+
+uint64_t TimeSeries::memoryUsage() const
+{
+    return coefficients.memoryUsage();
 }
 
 bool DataSeriesCommon::forceReload(bool reload) const

@@ -29,6 +29,7 @@
 
 #include "prepro.h"
 #include "series.h"
+#include <antares/study/parts/common/series.h>
 
 namespace Antares
 {
@@ -73,7 +74,7 @@ public:
     //! Data for the pre-processor
     Data::Wind::Prepro* prepro;
     /*! Data for time-series */
-    DataSeriesWind* series;
+    TimeSeries series;
 
 }; // class Container
 

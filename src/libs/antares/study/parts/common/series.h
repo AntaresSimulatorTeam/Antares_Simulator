@@ -34,40 +34,46 @@
 namespace Antares::Data
 {
 
-class TSNumbers
-{
-public:
-    uint32_t get(uint32_t year) const;
-    void clear();
-
-private:
-    std::vector<uint32_t> tsNumbers_;
-};
-
 class TimeSeries
 {
 public:
-    TimeSeries(TSNumbers& tsNumbers);
-
+    typedef Matrix<uint32_t> TSNumbers;
     /*!
      ** \brief Load series from a file
      **
      ** \param d Data series
      ** \param areaID The ID of the area associated to the data series
      ** \param folder The source folder
+     ** \param filename The filename of the series
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
     int timeSeriesLoadFromFolder(Study& s,
                                  const AreaName& areaID,
                                  const std::string& folder,
                                  const std::string& filename);
+    /*!
+     ** \brief Save time series to a file
+     ** \ingroup windseries
+     **
+     ** \param areaID The ID of the area associated to the data series
+     ** \param folder The target folder
+     ** \param filename The filename of the series
+     ** \return A non-zero value if the operation succeeded, 0 otherwise
+     */
+    int timeSeriesSaveToFolder(const AreaName& areaID, const std::string& folder,
+                               const std::string& filename);
 
     double getCoefficient(uint32_t year, uint32_t hourInYear) const;
     double* getColumn(uint32_t year) const;
 
-private:
+    void reset();
+
+    bool forceReload(bool reload = false) const;
+    void markAsModified() const;
+    uint64_t memoryUsage() const;
+
     Matrix<double, int32_t> coefficients;
-    TSNumbers& tsNumbers;
+    TSNumbers tsNumbers;
 };
 
 /*!

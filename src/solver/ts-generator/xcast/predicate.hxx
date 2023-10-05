@@ -62,7 +62,7 @@ public:
     Matrix<double, int32_t>& matrix(Data::Area& area) const
     {
         assert(area.wind.series != NULL);
-        return area.wind.series->timeSeries;
+        return area.wind.series.timeSeries;
     }
 
     Data::XCast& xcastData(Data::Area& area) const

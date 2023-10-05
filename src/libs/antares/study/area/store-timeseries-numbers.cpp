@@ -84,7 +84,7 @@ void storeTimeseriesNumbersForHydro(Solver::IResultWriter& writer, const Area& a
 
 void storeTimeseriesNumbersForWind(Solver::IResultWriter& writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.wind.series->timeseriesNumbers, area.id, "wind");
+    genericStoreTimeseriesNumbers(writer, area.wind.series.tsNumbers, area.id, "wind");
 }
 
 void storeTimeseriesNumbersForThermal(Solver::IResultWriter& writer, const Area& area)

@@ -263,11 +263,9 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
                            << area.id;
             ret = area.wind.prepro->saveToFolder(buffer) && ret;
         }
-        if (area.wind.series) // Series
-        {
-            buffer.clear() << folder << SEP << "input" << SEP << "wind" << SEP << "series";
-            ret = DataSeriesWindSaveToFolder(area.wind.series, area.id, buffer.c_str()) && ret;
-        }
+
+        buffer.clear() << folder << SEP << "input" << SEP << "wind" << SEP << "series";
+        ret = area.wind.series.timeSeriesSaveToFolder(area.id, buffer.c_str(), "wind_") && ret;
     }
 
     // Thermal cluster list
@@ -920,7 +918,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                            << area.id;
             ret = area.wind.prepro->loadFromFolder(buffer) && ret;
         }
-        if (area.wind.series && (!options.loadOnlyNeeded || !area.wind.prepro)) // Series
+        if (!options.loadOnlyNeeded || !area.wind.prepro) // Series
         {
             buffer.clear() << study.folderInput << SEP << "wind" << SEP << "series";
             ret = DataSeriesWindLoadFromFolder(study, area.wind.series, area.id, buffer.c_str())
@@ -1624,7 +1622,7 @@ void AreaList::removeSolarTimeseries()
 
 void AreaList::removeWindTimeseries()
 {
-    each([&](Data::Area& area) { area.wind.series->timeSeries.reset(1, HOURS_PER_YEAR); });
+    each([&](Data::Area& area) { area.wind.series.timeSeries.reset(1, HOURS_PER_YEAR); });
 }
 
 void AreaList::removeThermalTimeseries()
