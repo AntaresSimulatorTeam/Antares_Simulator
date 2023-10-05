@@ -206,49 +206,48 @@ $(document).ready(function(){initNavTree('solver_2hydro_2management_2management_
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keywordtype">bool</span> checkWeeklyMinGeneration(uint tsIndex, <a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>&amp; area) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keywordtype">bool</span> checkHourlyMinGeneration(uint tsIndex, <a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>&amp; area) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="keywordtype">bool</span> checkMinGeneration(uint numSpace, uint year) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keyword">template</span>&lt;enum Data::StudyMode ModeT&gt;</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <span class="keywordtype">void</span> prepareNetDemand(uint numSpace, uint year);</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <span class="keywordtype">void</span> prepareEffectiveDemand(uint numSpace);</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    <span class="keywordtype">void</span> prepareMonthlyOptimalGenerations(<span class="keywordtype">double</span>* random_reservoir_level, uint y, uint numSpace);</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="comment">// note: inflows may have two different types, if in swap mode or not</span></div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="comment">// \return The total inflow for the whole year</span></div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="keywordtype">double</span> prepareMonthlyTargetGenerations(<a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>&amp; area, <a class="code hl_struct" href="structAntares_1_1TmpDataByArea.html">TmpDataByArea</a>&amp; data);</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keywordtype">void</span> prepareDailyOptimalGenerations(<a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1State.html">Solver::Variable::State</a>&amp; state,</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                                        uint y,</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>                                        uint numSpace);</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keywordtype">void</span> prepareDailyOptimalGenerations(<a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1State.html">Solver::Variable::State</a>&amp; state,</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                                        <a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>&amp; area,</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                                        uint y,</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                                        uint numSpace);</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keywordtype">void</span> prepareNetDemand(uint numSpace, uint year, Data::StudyMode mode);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="keywordtype">void</span> prepareEffectiveDemand(uint numSpace);</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="keywordtype">void</span> prepareMonthlyOptimalGenerations(<span class="keywordtype">double</span>* random_reservoir_level, uint y, uint numSpace);</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="comment">// note: inflows may have two different types, if in swap mode or not</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="comment">// \return The total inflow for the whole year</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="keywordtype">double</span> prepareMonthlyTargetGenerations(<a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>&amp; area, <a class="code hl_struct" href="structAntares_1_1TmpDataByArea.html">TmpDataByArea</a>&amp; data);</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="keywordtype">void</span> prepareDailyOptimalGenerations(<a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1State.html">Solver::Variable::State</a>&amp; state,</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                                        uint y,</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                                        uint numSpace);</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="keywordtype">void</span> prepareDailyOptimalGenerations(<a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1State.html">Solver::Variable::State</a>&amp; state,</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                                        <a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>&amp; area,</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                                        uint y,</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                                        uint numSpace);</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <span class="keywordtype">double</span> BetaVariable(<span class="keywordtype">double</span> a, <span class="keywordtype">double</span> b);</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    <span class="keywordtype">double</span> GammaVariable(<span class="keywordtype">double</span> a);</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <a class="code hl_struct" href="structAntares_1_1TmpDataByArea.html">TmpDataByArea</a>** tmpDataByArea_;</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1AreaList.html">Data::AreaList</a>&amp; areas_;</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Date_1_1Calendar.html">Date::Calendar</a>&amp; calendar_;</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Parameters.html">Data::Parameters</a>&amp; parameters_;</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <a class="code hl_class" href="classAntares_1_1MersenneTwister.html">MersenneTwister</a> random_;</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> maxNbYearsInParallel_ = 0;</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <a class="code hl_class" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; resultWriter_;</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    ALL_HYDRO_VENTILATION_RESULTS ventilationResults_;</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>}; <span class="comment">// class HydroManagement</span></div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_SOLVER_HYDRO_MANAGEMENT_MANAGEMENT_H__</span></div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keywordtype">double</span> BetaVariable(<span class="keywordtype">double</span> a, <span class="keywordtype">double</span> b);</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keywordtype">double</span> GammaVariable(<span class="keywordtype">double</span> a);</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <a class="code hl_struct" href="structAntares_1_1TmpDataByArea.html">TmpDataByArea</a>** tmpDataByArea_;</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1AreaList.html">Data::AreaList</a>&amp; areas_;</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Date_1_1Calendar.html">Date::Calendar</a>&amp; calendar_;</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Parameters.html">Data::Parameters</a>&amp; parameters_;</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <a class="code hl_class" href="classAntares_1_1MersenneTwister.html">MersenneTwister</a> random_;</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> maxNbYearsInParallel_ = 0;</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <a class="code hl_class" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; resultWriter_;</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    ALL_HYDRO_VENTILATION_RESULTS ventilationResults_;</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>}; <span class="comment">// class HydroManagement</span></div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_SOLVER_HYDRO_MANAGEMENT_MANAGEMENT_H__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaList_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a></div><div class="ttdoc">A list of areas.</div><div class="ttdef"><b>Definition:</b> area.h:375</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:54</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Parameters_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Parameters.html">Antares::Data::Parameters</a></div><div class="ttdoc">General data for a study.</div><div class="ttdef"><b>Definition:</b> parameters.h:55</div></div>
 <div class="ttc" id="aclassAntares_1_1Date_1_1Calendar_html"><div class="ttname"><a href="classAntares_1_1Date_1_1Calendar.html">Antares::Date::Calendar</a></div><div class="ttdef"><b>Definition:</b> date.h:187</div></div>
 <div class="ttc" id="aclassAntares_1_1HydroManagement_html"><div class="ttname"><a href="classAntares_1_1HydroManagement.html">Antares::HydroManagement</a></div><div class="ttdef"><b>Definition:</b> management.h:102</div></div>
-<div class="ttc" id="aclassAntares_1_1HydroManagement_html_a362609c8c4b2e35f76c4ac563b6dce07"><div class="ttname"><a href="classAntares_1_1HydroManagement.html#a362609c8c4b2e35f76c4ac563b6dce07">Antares::HydroManagement::makeVentilation</a></div><div class="ttdeci">void makeVentilation(double *randomReservoirLevel, Solver::Variable::State &amp;state, uint y, uint numSpace)</div><div class="ttdoc">Perform the hydro ventilation.</div><div class="ttdef"><b>Definition:</b> management.cpp:514</div></div>
+<div class="ttc" id="aclassAntares_1_1HydroManagement_html_a362609c8c4b2e35f76c4ac563b6dce07"><div class="ttname"><a href="classAntares_1_1HydroManagement.html#a362609c8c4b2e35f76c4ac563b6dce07">Antares::HydroManagement::makeVentilation</a></div><div class="ttdeci">void makeVentilation(double *randomReservoirLevel, Solver::Variable::State &amp;state, uint y, uint numSpace)</div><div class="ttdoc">Perform the hydro ventilation.</div><div class="ttdef"><b>Definition:</b> management.cpp:513</div></div>
 <div class="ttc" id="aclassAntares_1_1MersenneTwister_html"><div class="ttname"><a href="classAntares_1_1MersenneTwister.html">Antares::MersenneTwister</a></div><div class="ttdoc">MersenneTwister Pseudo random number generator.</div><div class="ttdef"><b>Definition:</b> mersenne-twister.h:47</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:13</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html">Antares::Solver::Variable::State</a></div><div class="ttdef"><b>Definition:</b> state.h:77</div></div>
