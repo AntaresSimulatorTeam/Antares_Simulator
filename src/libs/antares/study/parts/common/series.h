@@ -66,6 +66,7 @@ public:
 
     double getCoefficient(uint32_t year, uint32_t hourInYear) const;
     double* getColumn(uint32_t year) const;
+    uint32_t getSeriesIndex(uint32_t year) const;
 
     void reset();
 

@@ -76,12 +76,20 @@ void TimeSeries::reset()
 
 double TimeSeries::getCoefficient(uint32_t year, uint32_t hourInYear) const
 {
-    return timeSeries[timeseriesNumbers[0][year]][hourInYear];
+    return timeSeries[getSeriesIndex(year)][hourInYear];
 }
 
 double* TimeSeries::getColumn(uint32_t year) const
 {
-    return timeSeries[timeseriesNumbers[0][year]];
+    return timeSeries[getSeriesIndex(year)];
+}
+
+uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
+{
+    if (timeSeries.width == 1)
+        return 0;
+    else
+        return timeseriesNumbers[0][year];
 }
 
 bool TimeSeries::forceReload(bool reload) const
