@@ -369,8 +369,7 @@ bool HydroManagement::checkMinGeneration(uint numSpace, uint year) const
     return ret;
 }
 
-template<enum Data::StudyMode ModeT>
-void HydroManagement::prepareNetDemand(uint numSpace, uint year)
+void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::StudyMode mode)
 {
     areas_.each([&](Data::Area& area) {
         uint z = area.index;
@@ -398,7 +397,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year)
                 netdemand = + loadSeries[hour]
                             - windSeries[hour] - scratchpad.miscGenSum[hour]
                             - solarSeries[hour] - ror[hour]
-                            - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
+                            - ((mode != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
             }
 
@@ -407,7 +406,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year)
             {
                 netdemand = loadSeries[hour]
                             - scratchpad.miscGenSum[hour] - ror[hour]
-                            - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
+                            - ((mode != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
 
                 area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
@@ -525,12 +524,8 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
         throw FatalError("hydro management: invalid minimum generation");
     }
 
-    if (parameters_.adequacy())
-        prepareNetDemand<Data::stdmAdequacy>(numSpace, y);
-    else
-        prepareNetDemand<Data::stdmEconomy>(numSpace, y);
-
     prepareEffectiveDemand(numSpace);
+    prepareNetDemand(numSpace, y, parameters_.mode);
 
     prepareMonthlyOptimalGenerations(randomReservoirLevel, y, numSpace);
     prepareDailyOptimalGenerations(state, y, numSpace);
