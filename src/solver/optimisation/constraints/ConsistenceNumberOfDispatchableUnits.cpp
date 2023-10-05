@@ -41,7 +41,7 @@ void ConsistenceNumberOfDispatchableUnits::add(int pays,
     }
     else
     {
-        nbTermesContraintesPourLesCoutsDeDemarrage += 4;
+        problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage += 4;
         problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
     }
 }
