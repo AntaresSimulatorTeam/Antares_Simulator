@@ -69,10 +69,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 pMaxDispatchableGeneration.add(pays, palier, index, pdt, Simulation);
                 nbTermesContraintesPourLesCoutsDeDemarrage
                   += pMaxDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage;
-
+                pMaxDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage = 0;
+       
                 pMinDispatchableGeneration.add(pays, palier, index, pdt, Simulation);
                 nbTermesContraintesPourLesCoutsDeDemarrage
                   += pMinDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage;
+                pMinDispatchableGeneration.nbTermesContraintesPourLesCoutsDeDemarrage =0;
             }
         }
     }
@@ -95,6 +97,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 nbTermesContraintesPourLesCoutsDeDemarrage
                   += consistenceNumberOfDispatchableUnits
                        .nbTermesContraintesPourLesCoutsDeDemarrage;
+                consistenceNumberOfDispatchableUnits.nbTermesContraintesPourLesCoutsDeDemarrage=0;
             }
         }
     }
@@ -116,6 +119,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 nbUnitsOutageLessThanNbUnitsStop.add(pays, palier, index, pdt, Simulation);
                 nbTermesContraintesPourLesCoutsDeDemarrage
                   += nbUnitsOutageLessThanNbUnitsStop.nbTermesContraintesPourLesCoutsDeDemarrage;
+                nbUnitsOutageLessThanNbUnitsStop.nbTermesContraintesPourLesCoutsDeDemarrage=0;
             }
         }
     }
@@ -138,6 +142,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 nbDispUnitsMinBoundSinceMinUpTime.add(pays, palier, index, pdt, Simulation);
                 nbTermesContraintesPourLesCoutsDeDemarrage
                   += nbDispUnitsMinBoundSinceMinUpTime.nbTermesContraintesPourLesCoutsDeDemarrage;
+                nbDispUnitsMinBoundSinceMinUpTime.nbTermesContraintesPourLesCoutsDeDemarrage=0;
             }
         }
     }
@@ -157,6 +162,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 minDownTime.add(pays, palier, index, pdt, Simulation);
                 nbTermesContraintesPourLesCoutsDeDemarrage
                   += minDownTime.nbTermesContraintesPourLesCoutsDeDemarrage;
+                minDownTime.nbTermesContraintesPourLesCoutsDeDemarrage=0;
             }
         }
     }
