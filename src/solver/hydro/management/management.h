@@ -135,8 +135,7 @@ private:
     //! check minimum generation is lower than available inflows
     bool checkMinGeneration(uint numSpace, uint year) const;
     //! Prepare the net demand for each area
-    template<enum Data::StudyMode ModeT>
-    void prepareNetDemand(uint numSpace, uint year);
+    void prepareNetDemand(uint numSpace, uint year, Data::StudyMode mode);
     //! Prepare the effective demand for each area
     void prepareEffectiveDemand(uint numSpace);
     //! Monthly Optimal generations
