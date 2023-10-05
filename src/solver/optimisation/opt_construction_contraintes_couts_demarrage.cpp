@@ -45,7 +45,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
   PROBLEME_HEBDO* problemeHebdo,
   bool Simulation)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
+    const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
