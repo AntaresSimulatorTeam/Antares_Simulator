@@ -114,9 +114,6 @@ source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM
 set(SRC_STUDY_PART_WIND
         parts/wind/container.h
         parts/wind/container.cpp
-        parts/wind/series.h
-        parts/wind/series.hxx
-        parts/wind/series.cpp
         parts/wind/prepro.h
         parts/wind/prepro.hxx
         parts/wind/prepro.cpp

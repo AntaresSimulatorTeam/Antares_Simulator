@@ -43,7 +43,6 @@
 
 // Wind
 #include "wind/prepro.h"
-#include "wind/series.h"
 #include "wind/container.h"
 
 // Thermal
