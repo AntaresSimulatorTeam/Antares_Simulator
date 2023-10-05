@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 
     logs.applicationName("batchrun");
     IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
-
+    argv = toUTF8ArgsTranslator.convert();
     // Initializing the toolbox
     Antares::Resources::Initialize(argc, argv, true);
 

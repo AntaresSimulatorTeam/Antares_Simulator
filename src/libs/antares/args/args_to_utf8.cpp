@@ -7,19 +7,23 @@
 #include <string.h>
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN 1
-#endif
+#endif // WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <shellapi.h>
-#include <stdlib.h>
-#include <stdio.h>
-#endif
+#endif // YUNI_OS_WINDOWS
 
-IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char**& argv)
+#include <cstdlib>
+
+IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv)
     : argc_(argc), argv_(argv)
 {
-#ifdef YUNI_OS_WINDOWS
+}
+
+char** IntoUTF8ArgsTranslator::convert()
+{
+  #ifdef YUNI_OS_WINDOWS
     wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
-    argv = (char**)malloc(argc * sizeof(char*));
+    argv_ = (char**)malloc(argc * sizeof(char*));
     for (int i = 0; i != argc; ++i)
     {
         const uint len = (uint)wcslen(wargv[i]);
@@ -29,6 +33,9 @@ IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char**& argv)
         WideCharToMultiByte(CP_UTF8, 0, wargv[i], len, argv[i], newLen, NULL, NULL);
         argv[i][newLen] = '\0';
     }
+    return argv_;
+#else
+    return argv_;
 #endif
 }
 
