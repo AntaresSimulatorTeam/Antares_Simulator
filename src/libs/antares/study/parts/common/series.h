@@ -38,6 +38,7 @@ class TSNumbers
 {
 public:
     uint32_t get(uint32_t year) const;
+    void clear();
 
 private:
     std::vector<uint32_t> tsNumbers_;
@@ -46,13 +47,27 @@ private:
 class TimeSeries
 {
 public:
-    TimeSeries(const TSNumbers& tsNumbers);
+    TimeSeries(TSNumbers& tsNumbers);
+
+    /*!
+     ** \brief Load series from a file
+     **
+     ** \param d Data series
+     ** \param areaID The ID of the area associated to the data series
+     ** \param folder The source folder
+     ** \return A non-zero value if the operation succeeded, 0 otherwise
+     */
+    int timeSeriesLoadFromFolder(Study& s,
+                                 const AreaName& areaID,
+                                 const std::string& folder,
+                                 const std::string& filename);
+
     double getCoefficient(uint32_t year, uint32_t hourInYear) const;
     double* getColumn(uint32_t year) const;
 
 private:
     Matrix<double, int32_t> coefficients;
-    const TSNumbers& tsNumbers;
+    TSNumbers& tsNumbers;
 };
 
 /*!

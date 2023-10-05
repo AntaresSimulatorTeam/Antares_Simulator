@@ -39,8 +39,27 @@ using namespace Yuni;
 namespace Antares::Data
 {
 
-TimeSeries::TimeSeries(const TSNumbers& tsNumbers) : tsNumbers(tsNumbers)
-{}
+TimeSeries::TimeSeries(TSNumbers& tsNumbers) : tsNumbers(tsNumbers)
+    {}
+
+int TimeSeries::timeSeriesLoadFromFolder(Study& s,
+        const AreaName& areaID,
+        const std::string& folder,
+        const std::string& filename)
+{
+    String& buffer = s.bufferLoadingTS;
+
+    int ret = 1;
+    buffer.clear() << folder << SEP << filename << areaID << '.' << s.inputExtension;
+    ret = coefficients.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+
+    if (s.usedByTheSolver && s.parameters.derated)
+        coefficients.averageTimeseries();
+
+    tsNumbers.clear();
+
+    return ret;
+}
 
 double TimeSeries::getCoefficient(uint32_t year, uint32_t hourInYear) const
 {
@@ -55,6 +74,11 @@ double* TimeSeries::getColumn(uint32_t year) const
 uint32_t TSNumbers::get(uint32_t year) const
 {
     return tsNumbers_[year];
+}
+
+void TSNumbers::clear()
+{
+    tsNumbers_.clear();
 }
 
 bool DataSeriesCommon::forceReload(bool reload) const
