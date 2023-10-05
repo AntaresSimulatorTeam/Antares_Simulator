@@ -47,7 +47,7 @@ double TimeSeries::getCoefficient(uint32_t year, uint32_t hourInYear) const
     return coefficients[tsNumbers.get(year)][hourInYear];
 }
 
-std::vector<double> TimeSeries::getColumn(uint32_t year) const
+double* TimeSeries::getColumn(uint32_t year) const
 {
     return coefficients[tsNumbers.get(year)];
 }

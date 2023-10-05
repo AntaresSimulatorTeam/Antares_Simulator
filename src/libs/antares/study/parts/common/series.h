@@ -48,10 +48,10 @@ class TimeSeries
 public:
     TimeSeries(const TSNumbers& tsNumbers);
     double getCoefficient(uint32_t year, uint32_t hourInYear) const;
-    std::vector<double> getColumn(uint32_t year) const;
+    double* getColumn(uint32_t year) const;
 
 private:
-    std::vector<std::vector<double>> coefficients;
+    Matrix<double, int32_t> coefficients;
     const TSNumbers& tsNumbers;
 };
 
