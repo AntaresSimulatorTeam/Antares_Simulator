@@ -170,7 +170,7 @@ int main(int argc, char* argv[])
     InitializeDefaultLocale();
 
     logs.applicationName("updater");
-    argv = AntaresGetUTF8Arguments(argc, argv);
+    IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
 
     String::Vector optInput;
     bool optCleanup = false;

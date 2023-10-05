@@ -247,7 +247,7 @@ int main(int argc, char** argv)
     InitializeDefaultLocale();
 
     logs.applicationName("vacuum");
-    argv = AntaresGetUTF8Arguments(argc, argv);
+    IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
     String::Vector optInput;
     String::Vector optEachFolderIn;
     uint optMaxDays = 90; // days

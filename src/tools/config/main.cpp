@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
     InitializeDefaultLocale();
 
     logs.applicationName("config");
-    argv = AntaresGetUTF8Arguments(argc, argv);
+    IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
 
     // Initializing the toolbox
     Antares::Resources::Initialize(argc, argv, true);

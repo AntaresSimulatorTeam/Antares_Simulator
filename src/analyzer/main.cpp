@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
     InitializeDefaultLocale();
 
     logs.applicationName("analyzer");
-    argv = AntaresGetUTF8Arguments(argc, argv);
+    IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
 
     String optSettings;
 

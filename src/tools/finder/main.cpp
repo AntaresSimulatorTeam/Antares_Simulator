@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
     InitializeDefaultLocale();
 
     logs.applicationName("finder");
-    argv = AntaresGetUTF8Arguments(argc, argv);
+    IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
 
     Yuni::String::Vector optInput;
     bool optExtra = false;
