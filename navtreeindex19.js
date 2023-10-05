@@ -1,10 +1,5 @@
 var NAVTREEINDEX19 =
 {
-"context_8h_source.html":[5,0,0,5,0,1,0,5],
-"control_8h_source.html":[5,0,0,5,2,1,1,3,4],
-"copper-plate_8h_source.html":[5,0,0,5,0,0,0,2,2],
-"correlation-post_8h_source.html":[5,0,0,5,0,0,0,0,4],
-"correlation-post_8hxx_source.html":[5,0,0,5,0,0,0,0,5],
 "correlation-updater_8hxx_source.html":[5,0,0,1,0,18,12],
 "correlation_8hxx_source.html":[5,0,0,1,0,3,0,0,1],
 "count__constraints__variables_8h_source.html":[5,0,0,2,5,0,2],
@@ -249,5 +244,10 @@ var NAVTREEINDEX19 =
 "dir_fb9db63e4d8191b513033e48fa8d2457.html":[5,0,0,1,0,9,0,0],
 "dir_fbf1ff225a84ae76ebe1da6e7150b0cc.html":[5,0,0,1,0,21],
 "dir_feb7e25ca68853dd80a63fe3a78fa178.html":[5,0,0,1,0,14],
-"disabler_8h_source.html":[5,0,0,5,2,0,0,1]
+"disabler_8h_source.html":[5,0,0,5,2,0,0,1],
+"diskfreespace_8hxx_source.html":[5,0,0,5,2,1,8,0],
+"dispatchable-generation-margin_8h_source.html":[5,0,0,2,10,2,5],
+"dispatchableGeneration_8h_source.html":[5,0,0,2,10,2,6],
+"dispatcher_2dispatcher_8h_source.html":[5,0,0,5,1,1,2],
+"dispatcher_8h_source.html":[5,0,0,5,1,2]
 };

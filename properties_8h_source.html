@@ -159,7 +159,7 @@ $(document).ready(function(){initNavTree('properties_8h_source.html',''); initRe
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="comment">// Not optional   Reservoir capacity in MWh, &gt;= 0</span></div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    std::optional&lt;double&gt; reservoirCapacity;</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="comment">// Initial level, &lt;= 1</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    std::optional&lt;double&gt; initialLevel;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordtype">double</span> initialLevel = initiallevelDefault;</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="comment">// Bool to optimise or not initial level</span></div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordtype">bool</span> initialLevelOptim = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="comment">// Efficiency factor between 0 and 1</span></div>
@@ -170,8 +170,10 @@ $(document).ready(function(){initNavTree('properties_8h_source.html',''); initRe
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    std::string name;</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keyword">static</span> <span class="keyword">const</span> std::map&lt;std::string, enum Group&gt; ST_STORAGE_PROPERTY_GROUP_ENUM;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>};</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>} <span class="comment">// namespace Antares::Data::ShortTermStorage</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">double</span> initiallevelDefault = .5;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>};</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>} <span class="comment">// namespace Antares::Data::ShortTermStorage</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ShortTermStorage_1_1Properties_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ShortTermStorage_1_1Properties.html">Antares::Data::ShortTermStorage::Properties</a></div><div class="ttdef"><b>Definition:</b> properties.h:53</div></div>
 <div class="ttc" id="aclassAntares_1_1IniFile_1_1Property_html"><div class="ttname"><a href="classAntares_1_1IniFile_1_1Property.html">Antares::IniFile::Property</a></div><div class="ttdoc">A single entry in an INI file.</div><div class="ttdef"><b>Definition:</b> inifile.h:49</div></div>
 </div><!-- fragment --></div><!-- contents -->

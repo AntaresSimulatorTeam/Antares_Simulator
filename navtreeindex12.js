@@ -1,8 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"classAntares_1_1Map_1_1Tool_1_1ConnectionCreator.html#a2324eb0c10ce5d14e35d84a641f7ef33":[4,0,0,8,1,0,0],
-"classAntares_1_1Map_1_1Tool_1_1ConnectionCreator.html#a7fc281507f4fff9a9b13ee77358ebb04":[4,0,0,8,1,0,1],
-"classAntares_1_1Map_1_1Tool_1_1ConnectionCreator.html#aa85cf9410b351136ee4b27e34364e604":[4,0,0,8,1,0,2],
 "classAntares_1_1Map_1_1Tool_1_1Remover.html":[4,0,0,8,1,1],
 "classAntares_1_1Map_1_1Tool_1_1Remover.html#a0d47ecb6135173f511e632f7dd8c32c5":[4,0,0,8,1,1,0],
 "classAntares_1_1Map_1_1Tool_1_1Remover.html#a41842b51b3801e4b59ba9b047bfb9d5a":[4,0,0,8,1,1,1],
@@ -223,6 +220,7 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html":[4,0,0,11,0,0,0],
 "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoResultWriter.html":[4,0,0,11,0,0,1],
 "classAntares_1_1Solver_1_1IntraModalConsistencyChecker.html":[4,0,0,11,12],
+"classAntares_1_1Solver_1_1NullResultWriter.html":[4,0,0,11,15],
 "classAntares_1_1Solver_1_1Optimization_1_1AdequacyPatchOptimization.html":[4,0,0,11,1,0],
 "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html":[4,0,0,11,1,1],
 "classAntares_1_1Solver_1_1Optimization_1_1DefaultWeeklyOptimization.html":[4,0,0,11,1,2],
@@ -239,15 +237,17 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html#a9d549725424d31983df796f62a16741d":[4,0,0,11,2,0,0,0],
 "classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html#ab367507b8c1cc9d27d4b6edec8e8f430":[4,0,0,11,2,0,0,2],
 "classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html#abcf528357c8ec7d5d691207d46041ea2":[4,0,0,11,2,0,0,5],
-"classAntares_1_1Solver_1_1Progression.html":[4,0,0,11,15],
-"classAntares_1_1Solver_1_1Progression.html#a01ac24c5f0f17d8ad0811a2469f3adcc":[4,0,0,11,15,3],
-"classAntares_1_1Solver_1_1Progression.html#a7f75dc0a88f17f932e05132452f0aec0":[4,0,0,11,15,2],
-"classAntares_1_1Solver_1_1Progression.html#acc91b63aa49e391ff81b3a899d11a7d6":[4,0,0,11,15,1],
-"classAntares_1_1Solver_1_1Progression.html#ae9750d2c116965743c405d540bda397e":[4,0,0,11,15,4],
-"classAntares_1_1Solver_1_1Progression_1_1Task.html":[4,0,0,11,15,0],
+"classAntares_1_1Solver_1_1Progression.html":[4,0,0,11,16],
+"classAntares_1_1Solver_1_1Progression.html#a01ac24c5f0f17d8ad0811a2469f3adcc":[4,0,0,11,16,3],
+"classAntares_1_1Solver_1_1Progression.html#a7f75dc0a88f17f932e05132452f0aec0":[4,0,0,11,16,2],
+"classAntares_1_1Solver_1_1Progression.html#acc91b63aa49e391ff81b3a899d11a7d6":[4,0,0,11,16,1],
+"classAntares_1_1Solver_1_1Progression.html#ae9750d2c116965743c405d540bda397e":[4,0,0,11,16,4],
+"classAntares_1_1Solver_1_1Progression_1_1Task.html":[4,0,0,11,16,0],
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html":[4,0,0,11,3,0],
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a1cb7ab5edaa9358d7d1bc97fffa75f47":[4,0,0,11,3,0,5],
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a29e714ce3e5f065b2a5f17d2a452818d":[4,0,0,11,3,0,1],
-"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a44878d82b2e61007efdd7b19e9366392":[4,0,0,11,3,0,2],
-"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a5021ef33553b8704c9a32f6364e65ff5":[4,0,0,11,3,0,4]
+"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a3471b998c30f1ab1a27784e91cd0c359":[4,0,0,11,3,0,2],
+"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a5021ef33553b8704c9a32f6364e65ff5":[4,0,0,11,3,0,4],
+"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a897a59f63c89197b70396260f7c75447":[4,0,0,11,3,0,0],
+"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#aa2610ad198fe8b749e943d2ad1762513":[4,0,0,11,3,0,3]
 };

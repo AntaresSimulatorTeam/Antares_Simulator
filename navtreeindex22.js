@@ -1,12 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"scBuilderUtils_8h_source.html":[5,0,0,1,0,18,8,10],
-"scenario-builder-hydro-levels-renderer_8h_source.html":[5,0,0,5,2,1,1,1,1,17],
-"scenario-builder-hydro-renderer_8h_source.html":[5,0,0,5,2,1,1,1,1,18],
-"scenario-builder-load-renderer_8h_source.html":[5,0,0,5,2,1,1,1,1,19],
-"scenario-builder-ntc-renderer_8h_source.html":[5,0,0,5,2,1,1,1,1,20],
-"scenario-builder-renderer-base_8h_source.html":[5,0,0,5,2,1,1,1,1,21],
-"scenario-builder-renewable-renderer_8h_source.html":[5,0,0,5,2,1,1,1,1,22],
 "scenario-builder-solar-renderer_8h_source.html":[5,0,0,5,2,1,1,1,1,23],
 "scenario-builder-thermal-renderer_8h_source.html":[5,0,0,5,2,1,1,1,1,24],
 "scenario-builder-wind-renderer_8h_source.html":[5,0,0,5,2,1,1,1,1,25],
@@ -106,10 +99,6 @@ var NAVTREEINDEX22 =
 "structAntares_1_1Data_1_1AdequacyPatch_1_1LocalMatching.html#a4d70b54b04cb4d704e59ac85b9e93159":[4,0,0,2,0,2,2],
 "structAntares_1_1Data_1_1AdequacyPatch_1_1LocalMatching.html#a6726167ea64c213061e42cdc72a92010":[4,0,0,2,0,2,1],
 "structAntares_1_1Data_1_1AdequacyPatch_1_1LocalMatching.html#a71d764bbe95a77dc5bbcb861afd0544d":[4,0,0,2,0,2,0],
-"structAntares_1_1Data_1_1AreaScratchpad_1_1TimeseriesData.html":[4,0,0,2,10,0],
-"structAntares_1_1Data_1_1AreaScratchpad_1_1TimeseriesData.html#a4d74c621ad846f646a17b478d524c94e":[4,0,0,2,10,0,0],
-"structAntares_1_1Data_1_1AreaScratchpad_1_1TimeseriesData.html#ad6354cb67a14536459483815bb2c62c8":[4,0,0,2,10,0,2],
-"structAntares_1_1Data_1_1AreaScratchpad_1_1TimeseriesData.html#af1aec8ea5c65748d3ab71e6c2f3313a3":[4,0,0,2,10,0,1],
 "structAntares_1_1Data_1_1BindingConstraintStructures.html":[4,0,0,2,19],
 "structAntares_1_1Data_1_1CompareAreaName.html":[4,0,0,2,22],
 "structAntares_1_1Data_1_1CompareBindingConstraintName.html":[4,0,0,2,23],
@@ -249,5 +238,16 @@ var NAVTREEINDEX22 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster_1_1Statistics.html":[4,0,0,11,5,4,45,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster_1_1Statistics.html":[4,0,0,11,5,4,46,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageLevelsByCluster_1_1Statistics.html":[4,0,0,11,5,4,47,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster_1_1Statistics.html":[4,0,0,11,5,4,48,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster_1_1Statistics.html":[4,0,0,11,5,4,48,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ShortTermStorageByGroup_1_1Statistics.html":[4,0,0,11,5,4,40,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpillageSelector.html":[4,0,0,11,5,4,41],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpillageSelector_3_01false_01_4.html":[4,0,0,11,5,4,42],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergyAfterCSR_1_1Statistics.html":[4,0,0,11,5,4,44,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergy_1_1Statistics.html":[4,0,0,11,5,4,43,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions_1_1Statistics.html":[4,0,0,11,5,4,49,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro_1_1Statistics.html":[4,0,0,11,5,4,50,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad_1_1Statistics.html":[4,0,0,11,5,4,51,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar_1_1Statistics.html":[4,0,0,11,5,4,52,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesWind_1_1Statistics.html":[4,0,0,11,5,4,53,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy_1_1Statistics.html":[4,0,0,11,5,4,54,0]
 };

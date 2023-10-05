@@ -124,34 +124,42 @@ $(document).ready(function(){initNavTree('libs_2antares_2study_2parts_2common_2s
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;antares/array/matrix.h&gt;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;../../fwd.h&quot;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">namespace </span>Antares</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>{</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">namespace </span>Data</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>{</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1DataSeriesCommon.html">   40</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Data_1_1DataSeriesCommon.html">DataSeriesCommon</a></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>{</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">bool</span> forceReload(<span class="keywordtype">bool</span> reload = <span class="keyword">false</span>) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;../../fwd.h&quot;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">namespace </span>Antares::Data</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>{</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1DataSeriesCommon.html">   39</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Data_1_1DataSeriesCommon.html">DataSeriesCommon</a></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>{</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">using </span><a class="code hl_class" href="classAntares_1_1Matrix.html">AllYears</a> = <a class="code hl_class" href="classAntares_1_1Matrix.html">Matrix&lt;double&gt;</a>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">using </span>SingleYear = <a class="code hl_typedef" href="classAntares_1_1Matrix.html#a6eec615a826a63c0df822f87a4510f1f">AllYears::ColumnType</a>;</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">void</span> markAsModified() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">bool</span> forceReload(<span class="keywordtype">bool</span> reload = <span class="keyword">false</span>) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1DataSeriesCommon.html#a36c944efee48275761a482982544a55d">   53</a></span>    <a class="code hl_class" href="classAntares_1_1Matrix.html">Matrix&lt;double&gt;</a> <a class="code hl_variable" href="classAntares_1_1Data_1_1DataSeriesCommon.html#a36c944efee48275761a482982544a55d">timeSeries</a>;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1DataSeriesCommon.html#a0daaf4ae93dd97abb987a20cecec4cbc">   58</a></span>    <a class="code hl_class" href="classAntares_1_1Matrix.html">Matrix&lt;uint32_t&gt;</a> <a class="code hl_variable" href="classAntares_1_1Data_1_1DataSeriesCommon.html#a0daaf4ae93dd97abb987a20cecec4cbc">timeseriesNumbers</a>;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>}; <span class="comment">// class DataSeriesCommon</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>} <span class="comment">// namespace Data</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#include &quot;series.hxx&quot;</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">#endif </span><span class="comment">/* __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__ */</span><span class="preprocessor"></span></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1DataSeriesCommon_html"><div class="ttname"><a href="classAntares_1_1Data_1_1DataSeriesCommon.html">Antares::Data::DataSeriesCommon</a></div><div class="ttdoc">Data series (Common)</div><div class="ttdef"><b>Definition:</b> series.h:41</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1DataSeriesCommon_html_a0daaf4ae93dd97abb987a20cecec4cbc"><div class="ttname"><a href="classAntares_1_1Data_1_1DataSeriesCommon.html#a0daaf4ae93dd97abb987a20cecec4cbc">Antares::Data::DataSeriesCommon::timeseriesNumbers</a></div><div class="ttdeci">Matrix&lt; uint32_t &gt; timeseriesNumbers</div><div class="ttdoc">Monte-Carlo.</div><div class="ttdef"><b>Definition:</b> series.h:58</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1DataSeriesCommon_html_a36c944efee48275761a482982544a55d"><div class="ttname"><a href="classAntares_1_1Data_1_1DataSeriesCommon.html#a36c944efee48275761a482982544a55d">Antares::Data::DataSeriesCommon::timeSeries</a></div><div class="ttdeci">Matrix&lt; double &gt; timeSeries</div><div class="ttdoc">Series (MW)</div><div class="ttdef"><b>Definition:</b> series.h:53</div></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">void</span> markAsModified() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    uint64_t memoryUsage() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">double</span> getAvailablePower(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> hour, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">const</span> SingleYear&amp; getAvailablePowerYearly(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1DataSeriesCommon.html#a606a14f783c2b525f6b8a7379432b47f">   59</a></span>    <a class="code hl_class" href="classAntares_1_1Matrix.html">AllYears</a> <a class="code hl_variable" href="classAntares_1_1Data_1_1DataSeriesCommon.html#a606a14f783c2b525f6b8a7379432b47f">timeSeries</a>;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1DataSeriesCommon.html#a0daaf4ae93dd97abb987a20cecec4cbc">   64</a></span>    <a class="code hl_class" href="classAntares_1_1Matrix.html">Matrix&lt;uint32_t&gt;</a> <a class="code hl_variable" href="classAntares_1_1Data_1_1DataSeriesCommon.html#a0daaf4ae93dd97abb987a20cecec4cbc">timeseriesNumbers</a>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    uint getSeriesIndex(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>}; <span class="comment">// class DataSeriesCommon</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>} <span class="comment">// namespace Antares::Data</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#endif </span><span class="comment">/* __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1DataSeriesCommon_html"><div class="ttname"><a href="classAntares_1_1Data_1_1DataSeriesCommon.html">Antares::Data::DataSeriesCommon</a></div><div class="ttdoc">Data series (Common)</div><div class="ttdef"><b>Definition:</b> series.h:40</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1DataSeriesCommon_html_a0daaf4ae93dd97abb987a20cecec4cbc"><div class="ttname"><a href="classAntares_1_1Data_1_1DataSeriesCommon.html#a0daaf4ae93dd97abb987a20cecec4cbc">Antares::Data::DataSeriesCommon::timeseriesNumbers</a></div><div class="ttdeci">Matrix&lt; uint32_t &gt; timeseriesNumbers</div><div class="ttdoc">Monte-Carlo.</div><div class="ttdef"><b>Definition:</b> series.h:64</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1DataSeriesCommon_html_a606a14f783c2b525f6b8a7379432b47f"><div class="ttname"><a href="classAntares_1_1Data_1_1DataSeriesCommon.html#a606a14f783c2b525f6b8a7379432b47f">Antares::Data::DataSeriesCommon::timeSeries</a></div><div class="ttdeci">AllYears timeSeries</div><div class="ttdoc">Series (MW)</div><div class="ttdef"><b>Definition:</b> series.h:59</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html"><div class="ttname"><a href="classAntares_1_1Matrix.html">Antares::Matrix</a></div><div class="ttdoc">A n-by-n matrix.</div><div class="ttdef"><b>Definition:</b> matrix.h:50</div></div>
+<div class="ttc" id="aclassAntares_1_1Matrix_html_a6eec615a826a63c0df822f87a4510f1f"><div class="ttname"><a href="classAntares_1_1Matrix.html#a6eec615a826a63c0df822f87a4510f1f">Antares::Matrix::ColumnType</a></div><div class="ttdeci">typename Antares::Memory::Stored&lt; T &gt;::Type ColumnType</div><div class="ttdoc">Column type.</div><div class="ttdef"><b>Definition:</b> matrix.h:68</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

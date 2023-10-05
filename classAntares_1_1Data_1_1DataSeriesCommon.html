@@ -92,6 +92,7 @@ $(document).ready(function(){initNavTree('classAntares_1_1Data_1_1DataSeriesComm
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classAntares_1_1Data_1_1DataSeriesCommon-members.html">List of all members</a>  </div>
@@ -104,6 +105,15 @@ $(document).ready(function(){initNavTree('classAntares_1_1Data_1_1DataSeriesComm
 
 <p><code>#include &lt;<a class="el" href="libs_2antares_2study_2parts_2common_2series_8h_source.html">series.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a4d7d98baceac1ccba0eda513910d56fb"><td class="memItemLeft" align="right" valign="top"><a id="a4d7d98baceac1ccba0eda513910d56fb" name="a4d7d98baceac1ccba0eda513910d56fb"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>AllYears</b> = <a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double &gt;</td></tr>
+<tr class="separator:a4d7d98baceac1ccba0eda513910d56fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8edc0e69da823d705706d1916cd6bfb"><td class="memItemLeft" align="right" valign="top"><a id="ab8edc0e69da823d705706d1916cd6bfb" name="ab8edc0e69da823d705706d1916cd6bfb"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>SingleYear</b> = <a class="el" href="classAntares_1_1Matrix.html#a6eec615a826a63c0df822f87a4510f1f">AllYears::ColumnType</a></td></tr>
+<tr class="separator:ab8edc0e69da823d705706d1916cd6bfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a1af28067ae28528935e018dd7ab9364d"><td class="memItemLeft" align="right" valign="top"><a id="a1af28067ae28528935e018dd7ab9364d" name="a1af28067ae28528935e018dd7ab9364d"></a>
@@ -112,12 +122,21 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>forceReload</b> (bool
 <tr class="memitem:a18b70c36c47de6aebc16696669487ba5"><td class="memItemLeft" align="right" valign="top"><a id="a18b70c36c47de6aebc16696669487ba5" name="a18b70c36c47de6aebc16696669487ba5"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>markAsModified</b> () const</td></tr>
 <tr class="separator:a18b70c36c47de6aebc16696669487ba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55c8e6818cbb654c0acd5bbdbbeb4564"><td class="memItemLeft" align="right" valign="top"><a id="a55c8e6818cbb654c0acd5bbdbbeb4564" name="a55c8e6818cbb654c0acd5bbdbbeb4564"></a>
+uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>memoryUsage</b> () const</td></tr>
+<tr class="separator:a55c8e6818cbb654c0acd5bbdbbeb4564"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa496c6dd6571972ed61835a27234129"><td class="memItemLeft" align="right" valign="top"><a id="aaa496c6dd6571972ed61835a27234129" name="aaa496c6dd6571972ed61835a27234129"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getAvailablePower</b> (unsigned int hour, unsigned int year) const</td></tr>
+<tr class="separator:aaa496c6dd6571972ed61835a27234129"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cbe8dc56fa5970f704883c3d0d9d325"><td class="memItemLeft" align="right" valign="top"><a id="a1cbe8dc56fa5970f704883c3d0d9d325" name="a1cbe8dc56fa5970f704883c3d0d9d325"></a>
+const SingleYear &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getAvailablePowerYearly</b> (unsigned int year) const</td></tr>
+<tr class="separator:a1cbe8dc56fa5970f704883c3d0d9d325"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a36c944efee48275761a482982544a55d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1DataSeriesCommon.html#a36c944efee48275761a482982544a55d">timeSeries</a></td></tr>
-<tr class="memdesc:a36c944efee48275761a482982544a55d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Series (MW)  <a href="classAntares_1_1Data_1_1DataSeriesCommon.html#a36c944efee48275761a482982544a55d">More...</a><br /></td></tr>
-<tr class="separator:a36c944efee48275761a482982544a55d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a606a14f783c2b525f6b8a7379432b47f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Matrix.html">AllYears</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1DataSeriesCommon.html#a606a14f783c2b525f6b8a7379432b47f">timeSeries</a></td></tr>
+<tr class="memdesc:a606a14f783c2b525f6b8a7379432b47f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Series (MW)  <a href="classAntares_1_1Data_1_1DataSeriesCommon.html#a606a14f783c2b525f6b8a7379432b47f">More...</a><br /></td></tr>
+<tr class="separator:a606a14f783c2b525f6b8a7379432b47f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0daaf4ae93dd97abb987a20cecec4cbc"><td class="memItemLeft" align="right" valign="top"><a id="a0daaf4ae93dd97abb987a20cecec4cbc" name="a0daaf4ae93dd97abb987a20cecec4cbc"></a>
 <a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; uint32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>timeseriesNumbers</b></td></tr>
 <tr class="memdesc:a0daaf4ae93dd97abb987a20cecec4cbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Monte-Carlo. <br /></td></tr>
@@ -126,14 +145,14 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Data series (Common) </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="a36c944efee48275761a482982544a55d" name="a36c944efee48275761a482982544a55d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36c944efee48275761a482982544a55d">&#9670;&#160;</a></span>timeSeries</h2>
+<a id="a606a14f783c2b525f6b8a7379432b47f" name="a606a14f783c2b525f6b8a7379432b47f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a606a14f783c2b525f6b8a7379432b47f">&#9670;&#160;</a></span>timeSeries</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt;double&gt; Antares::Data::DataSeriesCommon::timeSeries</td>
+          <td class="memname"><a class="el" href="classAntares_1_1Matrix.html">AllYears</a> Antares::Data::DataSeriesCommon::timeSeries</td>
         </tr>
       </table>
 </div><div class="memdoc">

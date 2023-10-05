@@ -1,6 +1,5 @@
 var classAntares_1_1Data_1_1AreaScratchpad =
 [
-    [ "TimeseriesData", "structAntares_1_1Data_1_1AreaScratchpad_1_1TimeseriesData.html", "structAntares_1_1Data_1_1AreaScratchpad_1_1TimeseriesData" ],
     [ "TSMatrix", "classAntares_1_1Data_1_1AreaScratchpad.html#ad3b0b457da877adb015e5619cc7a6a27", null ],
     [ "AreaScratchpad", "classAntares_1_1Data_1_1AreaScratchpad.html#aa49e6a19f3dc3f642fb758825751b780", null ],
     [ "~AreaScratchpad", "classAntares_1_1Data_1_1AreaScratchpad.html#a860fae727ff9a1505f057a4cb05a7d49", null ],
@@ -9,6 +8,5 @@ var classAntares_1_1Data_1_1AreaScratchpad =
     [ "mustrunSum", "classAntares_1_1Data_1_1AreaScratchpad.html#a77d05c2e79e9b972605b7ff2aa4731f1", null ],
     [ "optimalMaxPower", "classAntares_1_1Data_1_1AreaScratchpad.html#ad904df03d6ecb48e7183db5a74bbb738", null ],
     [ "originalMustrunSum", "classAntares_1_1Data_1_1AreaScratchpad.html#a9e8319ba3949322a1fa855f8454404d8", null ],
-    [ "pumpHasMod", "classAntares_1_1Data_1_1AreaScratchpad.html#a18731e3bfc38f7f8bd77228bc1296703", null ],
-    [ "ts", "classAntares_1_1Data_1_1AreaScratchpad.html#a090e15e72d9477d18ae422aa49130274", null ]
+    [ "pumpHasMod", "classAntares_1_1Data_1_1AreaScratchpad.html#a18731e3bfc38f7f8bd77228bc1296703", null ]
 ];

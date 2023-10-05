@@ -234,13 +234,13 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>readonly</b> () const
 <tr class="memitem:af9ad1a7b6c23244c61ed1d54db2b78d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#af9ad1a7b6c23244c61ed1d54db2b78d4">resizeAllTimeseriesNumbers</a> (uint n)</td></tr>
 <tr class="memdesc:af9ad1a7b6c23244c61ed1d54db2b78d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resize all matrices dedicated to the sampled timeseries numbers.  <a href="classAntares_1_1Data_1_1Study.html#af9ad1a7b6c23244c61ed1d54db2b78d4">More...</a><br /></td></tr>
 <tr class="separator:af9ad1a7b6c23244c61ed1d54db2b78d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04ac5ada001c0e79ad14355c5530a167"><td class="memTemplParams" colspan="2">template&lt;unsigned int TimeSeriesT&gt; </td></tr>
-<tr class="memitem:a04ac5ada001c0e79ad14355c5530a167"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#a04ac5ada001c0e79ad14355c5530a167">storeTimeSeriesNumbers</a> () const</td></tr>
-<tr class="memdesc:a04ac5ada001c0e79ad14355c5530a167"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store the timeseries numbers.  <a href="classAntares_1_1Data_1_1Study.html#a04ac5ada001c0e79ad14355c5530a167">More...</a><br /></td></tr>
-<tr class="separator:a04ac5ada001c0e79ad14355c5530a167"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8741d43b1ce73c398a802bf089640634"><td class="memTemplParams" colspan="2">template&lt;unsigned int TimeSeriesT&gt; </td></tr>
+<tr class="memitem:a8741d43b1ce73c398a802bf089640634"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#a8741d43b1ce73c398a802bf089640634">storeTimeSeriesNumbers</a> (<a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a> &amp;resultWriter) const</td></tr>
+<tr class="memdesc:a8741d43b1ce73c398a802bf089640634"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store the timeseries numbers.  <a href="classAntares_1_1Data_1_1Study.html#a8741d43b1ce73c398a802bf089640634">More...</a><br /></td></tr>
+<tr class="separator:a8741d43b1ce73c398a802bf089640634"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Time-series Generators</div></td></tr>
 <tr class="memitem:aa1843bfc0ded4d958277fc78f1807e68"><td class="memTemplParams" colspan="2"><a id="aa1843bfc0ded4d958277fc78f1807e68" name="aa1843bfc0ded4d958277fc78f1807e68"></a>
-template&lt;enum TimeSeries TS&gt; </td></tr>
+template&lt;enum TimeSeriesType TS&gt; </td></tr>
 <tr class="memitem:aa1843bfc0ded4d958277fc78f1807e68"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>destroyTSGeneratorData</b> ()</td></tr>
 <tr class="memdesc:aa1843bfc0ded4d958277fc78f1807e68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy all data of the TS generator '@TS'. <br /></td></tr>
 <tr class="separator:aa1843bfc0ded4d958277fc78f1807e68"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -294,10 +294,10 @@ uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>memoryUsage</b> (
 <tr class="memdesc:af471ee675835101f03bd6a7942799bfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the amound of memory consummed by the study (in bytes) <br /></td></tr>
 <tr class="separator:af471ee675835101f03bd6a7942799bfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Logs</div></td></tr>
-<tr class="memitem:afdf0200588ce97ec24385f31ba626c25"><td class="memItemLeft" align="right" valign="top"><a id="afdf0200588ce97ec24385f31ba626c25" name="afdf0200588ce97ec24385f31ba626c25"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>importLogsToOutputFolder</b> () const</td></tr>
-<tr class="memdesc:afdf0200588ce97ec24385f31ba626c25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the log file from the 'logs' folder to the current output folder. <br /></td></tr>
-<tr class="separator:afdf0200588ce97ec24385f31ba626c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43e70c63ab3f91b02a55a9a24a81c4a6"><td class="memItemLeft" align="right" valign="top"><a id="a43e70c63ab3f91b02a55a9a24a81c4a6" name="a43e70c63ab3f91b02a55a9a24a81c4a6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>importLogsToOutputFolder</b> (<a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a> &amp;resultWriter) const</td></tr>
+<tr class="memdesc:a43e70c63ab3f91b02a55a9a24a81c4a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the log file from the 'logs' folder to the current output folder. <br /></td></tr>
+<tr class="separator:a43e70c63ab3f91b02a55a9a24a81c4a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classAntares_1_1IObject"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1IObject')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1IObject.html">Antares::IObject</a></td></tr>
 <tr class="memitem:a4bf105609265c86950227613fcfc43a8 inherit pub_methods_classAntares_1_1IObject"><td class="memItemLeft" align="right" valign="top"><a id="a4bf105609265c86950227613fcfc43a8" name="a4bf105609265c86950227613fcfc43a8"></a>
 const Ref &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>oid</b> () const</td></tr>
@@ -411,10 +411,6 @@ YString&#160;</td><td class="memItemRight" valign="bottom"><b>bufferLoadingTS</b
 std::shared_ptr&lt; Yuni::Job::QueueService &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pQueueService</b></td></tr>
 <tr class="memdesc:ac649f129a5739fc31fb6e02b2c04a160"><td class="mdescLeft">&#160;</td><td class="mdescRight">The queue service that runs every set of parallel years. <br /></td></tr>
 <tr class="separator:ac649f129a5739fc31fb6e02b2c04a160"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae53c6dcb1bae30cb466e52ffb714e9d1"><td class="memItemLeft" align="right" valign="top"><a id="ae53c6dcb1bae30cb466e52ffb714e9d1" name="ae53c6dcb1bae30cb466e52ffb714e9d1"></a>
-Solver::IResultWriter::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>resultWriter</b> = nullptr</td></tr>
-<tr class="memdesc:ae53c6dcb1bae30cb466e52ffb714e9d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result writer, required to write residual files (comments, about-the-study, etc.) <br /></td></tr>
-<tr class="separator:ae53c6dcb1bae30cb466e52ffb714e9d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">TS Generators</div></td></tr>
 <tr class="memitem:ac281be788c497684c273acbdfc6c20ba"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#ac281be788c497684c273acbdfc6c20ba">cacheTSGenerator</a> [timeSeriesCount]</td></tr>
 <tr class="memdesc:ac281be788c497684c273acbdfc6c20ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time-series generators used by the solver.  <a href="classAntares_1_1Data_1_1Study.html#ac281be788c497684c273acbdfc6c20ba">More...</a><br /></td></tr>
@@ -500,9 +496,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>loadLayers</b> (const
 void&#160;</td><td class="memItemRight" valign="bottom"><b>computePThetaInfForThermalClusters</b> () const</td></tr>
 <tr class="memdesc:af7987d6c6edc71b0bf67930f5c7e7edb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check validity between Min Stable Power and capacity modulation for each thermal cluster in the all area in the study. Should be call then all inforation is suplied in to the thermal clusters. <br /></td></tr>
 <tr class="separator:af7987d6c6edc71b0bf67930f5c7e7edb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a714247e8b34f56974ae5fd93b6d50cf5"><td class="memItemLeft" align="right" valign="top"><a id="a714247e8b34f56974ae5fd93b6d50cf5" name="a714247e8b34f56974ae5fd93b6d50cf5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>prepareWriter</b> (<a class="el" href="classBenchmarking_1_1IDurationCollector.html">Benchmarking::IDurationCollector</a> &amp;duration_collector)</td></tr>
-<tr class="separator:a714247e8b34f56974ae5fd93b6d50cf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Simulation</h2></td></tr>
 <tr class="memitem:a83df1f36832cd1cb70ce40c5949f2182"><td class="memItemLeft" align="right" valign="top"><a id="a83df1f36832cd1cb70ce40c5949f2182" name="a83df1f36832cd1cb70ce40c5949f2182"></a>
@@ -548,9 +541,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>initializeRuntimeInfo
 void&#160;</td><td class="memItemRight" valign="bottom"><b>prepareOutput</b> ()</td></tr>
 <tr class="memdesc:a2c8bcf73d2e4e9791c1e555f8b9b3ef9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepare the output where the results of the simulation will be written. <br /></td></tr>
 <tr class="separator:a2c8bcf73d2e4e9791c1e555f8b9b3ef9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af7bad810c73d9d0e60c4cdc7d42a6754"><td class="memItemLeft" align="right" valign="top"><a id="af7bad810c73d9d0e60c4cdc7d42a6754" name="af7bad810c73d9d0e60c4cdc7d42a6754"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>saveAboutTheStudy</b> ()</td></tr>
-<tr class="separator:af7bad810c73d9d0e60c4cdc7d42a6754"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f09b156f174f3569d4275e8f760f2ea"><td class="memItemLeft" align="right" valign="top"><a id="a3f09b156f174f3569d4275e8f760f2ea" name="a3f09b156f174f3569d4275e8f760f2ea"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>saveAboutTheStudy</b> (<a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a> &amp;resultWriter)</td></tr>
+<tr class="separator:a3f09b156f174f3569d4275e8f760f2ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5262eae0524c8e0cb695eddadd0c3d7"><td class="memItemLeft" align="right" valign="top"><a id="af5262eae0524c8e0cb695eddadd0c3d7" name="af5262eae0524c8e0cb695eddadd0c3d7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>initializeProgressMeter</b> (bool tsGeneratorOnly)</td></tr>
 <tr class="memdesc:af5262eae0524c8e0cb695eddadd0c3d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the progress meter. <br /></td></tr>
@@ -1396,8 +1389,8 @@ YString&#160;</td><td class="memItemRight" valign="bottom"><b>pCaption</b></td><
 
 </div>
 </div>
-<a id="a04ac5ada001c0e79ad14355c5530a167" name="a04ac5ada001c0e79ad14355c5530a167"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a04ac5ada001c0e79ad14355c5530a167">&#9670;&#160;</a></span>storeTimeSeriesNumbers()</h2>
+<a id="a8741d43b1ce73c398a802bf089640634" name="a8741d43b1ce73c398a802bf089640634"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8741d43b1ce73c398a802bf089640634">&#9670;&#160;</a></span>storeTimeSeriesNumbers()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1408,7 +1401,11 @@ template&lt;unsigned int TimeSeriesT&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void Antares::Data::Study::storeTimeSeriesNumbers</td>
+          <td class="memname">void Antares::Data::Study::storeTimeSeriesNumbers </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a> &amp;&#160;</td>
+          <td class="paramname"><em>resultWriter</em></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
   </td>

@@ -29,7 +29,7 @@ var searchData=
   ['sizer_26',['sizer',['../classAntares_1_1Component_1_1Datagrid_1_1InternalState.html#a0e880f6a4bec031e8c75774cb87ec618',1,'Antares::Component::Datagrid::InternalState']]],
   ['sizerforallcomponents_27',['sizerForAllComponents',['../classAntares_1_1Component_1_1Datagrid_1_1InternalState.html#a051201c5be93e6a2c4a7166015b18f3b',1,'Antares::Component::Datagrid::InternalState']]],
   ['sizerforinput_28',['sizerForInput',['../classAntares_1_1Component_1_1Datagrid_1_1InternalState.html#ab39139a6a01cb14403a69efdb84a419c',1,'Antares::Component::Datagrid::InternalState']]],
-  ['solar_29',['solar',['../classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a8da38fa854bfd552ffa4bc130f218199',1,'Antares::Data::ScenarioBuilder::Rules::solar()'],['../structAntares_1_1Data_1_1AreaScratchpad_1_1TimeseriesData.html#af1aec8ea5c65748d3ab71e6c2f3313a3',1,'Antares::Data::AreaScratchpad::TimeseriesData::solar()']]],
+  ['solar_29',['solar',['../classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a8da38fa854bfd552ffa4bc130f218199',1,'Antares::Data::ScenarioBuilder::Rules']]],
   ['sourcefilename_30',['sourceFilename',['../classJIT_1_1Informations.html#aefca06ed3eb0d0b449fc328e286122b5',1,'JIT::Informations']]],
   ['spillagebound_31',['spillageBound',['../classAntares_1_1Data_1_1Parameters.html#a736d5f9255c5ebe85499f7e8a9b8edb3',1,'Antares::Data::Parameters']]],
   ['spilledenergycost_32',['spilledEnergyCost',['../classAntares_1_1Data_1_1PartThermal.html#a6e0f75389659afa8369a9855080b23de',1,'Antares::Data::PartThermal']]],

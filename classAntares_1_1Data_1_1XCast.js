@@ -16,7 +16,7 @@ var classAntares_1_1Data_1_1XCast =
       [ "tsTranslationBeforeConversion", "classAntares_1_1Data_1_1XCast.html#a9d63568c3e292b02528b7dd1c99c2abca77c0dc0adf6bba8edd561beaf354974f", null ],
       [ "tsTranslationAfterConversion", "classAntares_1_1Data_1_1XCast.html#a9d63568c3e292b02528b7dd1c99c2abcaba8d19211b3f0ef379ed6e1c8bec757c", null ]
     ] ],
-    [ "XCast", "classAntares_1_1Data_1_1XCast.html#a772ef54707b292dfe0013ee7d6f2dd28", null ],
+    [ "XCast", "classAntares_1_1Data_1_1XCast.html#ac159177cec8ce6038c0ca2744c6407d2", null ],
     [ "~XCast", "classAntares_1_1Data_1_1XCast.html#a68e093ea14a112d281ae5690b4119d48", null ],
     [ "copyFrom", "classAntares_1_1Data_1_1XCast.html#a72657dea94cc3ff99b4647d2ac685f33", null ],
     [ "forceReload", "classAntares_1_1Data_1_1XCast.html#a063d8a5fa3fe7c4da73704ef9205f827", null ],
@@ -30,7 +30,7 @@ var classAntares_1_1Data_1_1XCast =
     [ "data", "classAntares_1_1Data_1_1XCast.html#aa0c930c30e594fc9cf210bc35afb39b9", null ],
     [ "distribution", "classAntares_1_1Data_1_1XCast.html#a240744a269ed67cb44095210d09bfdd4", null ],
     [ "K", "classAntares_1_1Data_1_1XCast.html#a7163f4cd43e003cc1bd703071f158a49", null ],
-    [ "timeSeries", "classAntares_1_1Data_1_1XCast.html#a8a52cf493a9a3714374d4fe7a5b2ab17", null ],
+    [ "timeSeries", "classAntares_1_1Data_1_1XCast.html#af2e5262633bfee38c771cda8554b9c16", null ],
     [ "translation", "classAntares_1_1Data_1_1XCast.html#a833afdd54049131ed6d67d579f2a1490", null ],
     [ "useConversion", "classAntares_1_1Data_1_1XCast.html#a558d6d6a8892a31904dde504f02c6703", null ],
     [ "useTranslation", "classAntares_1_1Data_1_1XCast.html#a5405b02aedc965a25a743b9aeb24b9c9", null ]

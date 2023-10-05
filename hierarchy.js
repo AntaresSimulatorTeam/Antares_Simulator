@@ -627,8 +627,8 @@ var hierarchy =
     ] ],
     [ "Antares::Solver::IResultWriter", "classAntares_1_1Solver_1_1IResultWriter.html", [
       [ "Antares::Solver::ImmediateFileResultWriter", "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html", null ],
-      [ "Antares::Solver::ZipWriter", "classAntares_1_1Solver_1_1ZipWriter.html", null ],
-      [ "NullResultWriter", "classNullResultWriter.html", null ]
+      [ "Antares::Solver::NullResultWriter", "classAntares_1_1Solver_1_1NullResultWriter.html", null ],
+      [ "Antares::Solver::ZipWriter", "classAntares_1_1Solver_1_1ZipWriter.html", null ]
     ] ],
     [ "Antares::Component::HTMLListbox::ISortPredicate", "structAntares_1_1Component_1_1HTMLListbox_1_1ISortPredicate.html", null ],
     [ "Antares::Map::Item", "classAntares_1_1Map_1_1Item.html", [
@@ -814,10 +814,12 @@ var hierarchy =
       [ "UserData", "classUserData.html", null ]
     ] ],
     [ "NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION", "structNUMERO__CHRONIQUES__TIREES__PAR__INTERCONNEXION.html", null ],
-    [ "NUMERO_CHRONIQUES_TIREES_PAR_PAYS", "structNUMERO__CHRONIQUES__TIREES__PAR__PAYS.html", null ],
     [ "object", null, [
       [ "benchmark.StudyList", "classbenchmark_1_1StudyList.html", null ],
       [ "kirchhoff_pytest.StudyReference", "classkirchhoff__pytest_1_1StudyReference.html", null ]
+    ] ],
+    [ "Yuni::Policy::ObjectLevelLockable", null, [
+      [ "Antares::IIntrusiveReference< ChildT, TP >", "classAntares_1_1IIntrusiveReference.html", null ]
     ] ],
     [ "Yuni::Policy::ObjectLevelLockable", null, [
       [ "Antares::Data::StudyFinder", "classAntares_1_1Data_1_1StudyFinder.html", [
@@ -827,9 +829,6 @@ var hierarchy =
         [ "StudyFinderCleaner", "classStudyFinderCleaner.html", null ]
       ] ],
       [ "Antares::Memory", "classAntares_1_1Memory.html", null ]
-    ] ],
-    [ "Yuni::Policy::ObjectLevelLockable", null, [
-      [ "Antares::IIntrusiveReference< ChildT, TP >", "classAntares_1_1IIntrusiveReference.html", null ]
     ] ],
     [ "Yuni::Policy::ObjectLevelLockableNotRecursive", null, [
       [ "Antares::Toolbox::Jobs::PartList", "classAntares_1_1Toolbox_1_1Jobs_1_1PartList.html", null ]
@@ -1244,7 +1243,6 @@ var hierarchy =
     [ "TimeSeriesConfigurer< MatrixType >", "classTimeSeriesConfigurer.html", null ],
     [ "TimeSeriesConfigurer< Matrix< double > >", "classTimeSeriesConfigurer.html", null ],
     [ "TimeSeriesConfigurer< Matrix< double, int32_t > >", "classTimeSeriesConfigurer.html", null ],
-    [ "Antares::Data::AreaScratchpad::TimeseriesData", "structAntares_1_1Data_1_1AreaScratchpad_1_1TimeseriesData.html", null ],
     [ "TimeSeriesFile", "structTimeSeriesFile.html", null ],
     [ "Antares::Data::TimeSeriesToCStr< T >", "structAntares_1_1Data_1_1TimeSeriesToCStr.html", null ],
     [ "Antares::Data::TimeSeriesToCStr< 1 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_011_01_4.html", null ],

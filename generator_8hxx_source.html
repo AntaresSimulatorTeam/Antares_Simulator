@@ -145,7 +145,7 @@ $(document).ready(function(){initNavTree('generator_8hxx_source.html',''); initR
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>}</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment">// --- TS Generators using XCast ---</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="keyword">template</span>&lt;enum Data::TimeSeries T&gt;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="keyword">template</span>&lt;enum Data::TimeSeriesType T&gt;</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keywordtype">bool</span> GenerateTimeSeries(Data::Study&amp; study, uint year, IResultWriter&amp; writer)</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>{</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">auto</span>* xcast = <span class="keyword">reinterpret_cast&lt;</span>XCast::XCast*<span class="keyword">&gt;</span>(</div>
@@ -187,7 +187,7 @@ $(document).ready(function(){initNavTree('generator_8hxx_source.html',''); initR
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keywordflow">return</span> r;</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>}</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="keyword">template</span>&lt;enum Data::TimeSeries T&gt;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="keyword">template</span>&lt;enum Data::TimeSeriesType T&gt;</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="keywordtype">void</span> Destroy(Data::Study&amp; study, uint year)</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>{</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keyword">auto</span>* xcast = <span class="keyword">reinterpret_cast&lt;</span>XCast::XCast*<span class="keyword">&gt;</span>(</div>

@@ -140,13 +140,13 @@ $(document).ready(function(){initNavTree('h2o2__j__donnees__mensuelles_8h_source
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">       avoir appele H2O2_J_Instanciation */</span></div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">int</span> NombreDeJoursDuMois; <span class="comment">/* A renseigner par l&#39;appelant */</span></div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">double</span> TurbineDuMois; <span class="comment">/* A renseigner par l&#39;appelant (somme des turbines cibles du mois) */</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">double</span>* TurbineMax;   <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur par jour */</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordtype">double</span>* TurbineMin;   <span class="comment">/*Minimum Hourly Hydro-Storage Generation*/</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordtype">double</span>* TurbineCible; <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur par jour */</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    std::vector&lt;double&gt; TurbineMax;   <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur par jour */</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    std::vector&lt;double&gt; TurbineMin;   <span class="comment">/*Minimum Hourly Hydro-Storage Generation*/</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::vector&lt;double&gt; TurbineCible; <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur par jour */</span></div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordtype">double</span> reservoirCapacity;</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">double</span> NiveauInitialDuMois;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">double</span>* niveauBas;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordtype">double</span>* apports;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    std::vector&lt;double&gt; niveauBas;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    std::vector&lt;double&gt; apports;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="comment">/* Les resultats */</span></div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">char</span> ResultatsValides; <span class="comment">/* Vaut:</span></div>
@@ -155,11 +155,11 @@ $(document).ready(function(){initNavTree('h2o2__j__donnees__mensuelles_8h_source
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="comment">                                                         EMERGENCY_SHUT_DOWN si la resolution du</span></div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">                              probleme a donne lieu a une erreur interne</span></div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">                                                   */</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">double</span>* Turbine;       <span class="comment">/* Resultat a recuperer par l&#39;appelant */</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordtype">double</span>* niveauxFinJours;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordtype">double</span>* overflows;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keywordtype">double</span>* deviations;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordtype">double</span>* violations;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    std::vector&lt;double&gt; Turbine;       <span class="comment">/* Resultat a recuperer par l&#39;appelant */</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    std::vector&lt;double&gt; niveauxFinJours;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    std::vector&lt;double&gt; overflows;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    std::vector&lt;double&gt; deviations;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    std::vector&lt;double&gt; violations;</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">double</span> deviationMax;</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordtype">double</span> violationMax;</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordtype">double</span> waste;</div>
@@ -169,12 +169,12 @@ $(document).ready(function(){initNavTree('h2o2__j__donnees__mensuelles_8h_source
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="comment">    /******************************************************************************************/</span></div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="comment">/* Problemes internes (utilise uniquement par l&#39;optimisation) */</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <a class="code hl_struct" href="structPROBLEME__HYDRAULIQUE__ETENDU.html">PROBLEME_HYDRAULIQUE_ETENDU</a>* ProblemeHydrauliqueEtendu;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <a class="code hl_struct" href="structPROBLEME__HYDRAULIQUE__ETENDU.html">PROBLEME_HYDRAULIQUE_ETENDU</a> ProblemeHydrauliqueEtendu;</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>} <a class="code hl_struct" href="structDONNEES__MENSUELLES__ETENDUES.html">DONNEES_MENSUELLES_ETENDUES</a>;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="astructDONNEES__MENSUELLES__ETENDUES_html"><div class="ttname"><a href="structDONNEES__MENSUELLES__ETENDUES.html">DONNEES_MENSUELLES_ETENDUES</a></div><div class="ttdef"><b>Definition:</b> h2o2_j_donnees_mensuelles.h:42</div></div>
-<div class="ttc" id="astructPROBLEME__HYDRAULIQUE__ETENDU_html"><div class="ttname"><a href="structPROBLEME__HYDRAULIQUE__ETENDU.html">PROBLEME_HYDRAULIQUE_ETENDU</a></div><div class="ttdef"><b>Definition:</b> h2o2_j_donnees_optimisation.h:122</div></div>
+<div class="ttc" id="astructPROBLEME__HYDRAULIQUE__ETENDU_html"><div class="ttname"><a href="structPROBLEME__HYDRAULIQUE__ETENDU.html">PROBLEME_HYDRAULIQUE_ETENDU</a></div><div class="ttdef"><b>Definition:</b> h2o2_j_donnees_optimisation.h:133</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

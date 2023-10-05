@@ -141,13 +141,13 @@ $(document).ready(function(){initNavTree('h2o__m__donnees__annuelles_8h_source.h
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">double</span> CoutDepassementVolume;  <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur */</span></div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">double</span> CoutViolMaxDuVolumeMin; <span class="comment">// A renseigner par l&#39;appelant : 1 valeur</span></div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">double</span> VolumeInitial;          <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur */</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordtype">double</span>* TurbineMax;            <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur par mois */</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordtype">double</span>* TurbineMin;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordtype">double</span>* TurbineCible;          <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur par mois */</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">double</span>* Apport;                <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur par mois */</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    std::vector&lt;double&gt; TurbineMax;            <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur par mois */</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::vector&lt;double&gt; TurbineMin;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    std::vector&lt;double&gt; TurbineCible;          <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur par mois */</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    std::vector&lt;double&gt; Apport;                <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur par mois */</span></div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="comment">/* Pour decrire la bande de volumes permise */</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordtype">double</span>* VolumeMin; <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur par mois */</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordtype">double</span>* VolumeMax; <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur par mois */</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    std::vector&lt;double&gt; VolumeMin; <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur par mois */</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    std::vector&lt;double&gt; VolumeMax; <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur par mois */</span></div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">/* Les resultats */</span></div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordtype">char</span></div>
@@ -156,18 +156,18 @@ $(document).ready(function(){initNavTree('h2o__m__donnees__annuelles_8h_source.h
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">                           NON s&#39;il y a eu un probleme dans la resolution</span></div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">                                                                                                                     EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne</span></div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment">                                                                                                      */</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordtype">double</span>* Turbine;    <span class="comment">/* Resultat a recuperer par l&#39;appelant */</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordtype">double</span>* Volume;     <span class="comment">/* Resultat a recuperer par l&#39;appelant */</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    std::vector&lt;double&gt; Turbine;    <span class="comment">/* Resultat a recuperer par l&#39;appelant */</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    std::vector&lt;double&gt; Volume;     <span class="comment">/* Resultat a recuperer par l&#39;appelant */</span></div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="comment">    /******************************************************************************************/</span></div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="comment">/* Problemes internes (utilise uniquement par l&#39;optimisation) */</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <a class="code hl_struct" href="structPROBLEME__HYDRAULIQUE.html">PROBLEME_HYDRAULIQUE</a>* ProblemeHydraulique;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <a class="code hl_struct" href="structPROBLEME__HYDRAULIQUE.html">PROBLEME_HYDRAULIQUE</a> ProblemeHydraulique;</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordtype">int</span> NombreDePasDeTemps; <span class="comment">/* 12 */</span></div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>} <a class="code hl_struct" href="structDONNEES__ANNUELLES.html">DONNEES_ANNUELLES</a>;</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="astructDONNEES__ANNUELLES_html"><div class="ttname"><a href="structDONNEES__ANNUELLES.html">DONNEES_ANNUELLES</a></div><div class="ttdef"><b>Definition:</b> h2o_m_donnees_annuelles.h:41</div></div>
-<div class="ttc" id="astructPROBLEME__HYDRAULIQUE_html"><div class="ttname"><a href="structPROBLEME__HYDRAULIQUE.html">PROBLEME_HYDRAULIQUE</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:120</div></div>
+<div class="ttc" id="astructPROBLEME__HYDRAULIQUE_html"><div class="ttname"><a href="structPROBLEME__HYDRAULIQUE.html">PROBLEME_HYDRAULIQUE</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:130</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
