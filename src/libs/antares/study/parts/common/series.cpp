@@ -48,55 +48,55 @@ int TimeSeries::timeSeriesLoadFromFolder(Study& s,
 
     int ret = 1;
     buffer.clear() << folder << SEP << filename << areaID << '.' << s.inputExtension;
-    ret = coefficients.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+    ret = timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
 
     if (s.usedByTheSolver && s.parameters.derated)
-        coefficients.averageTimeseries();
+        timeSeries.averageTimeseries();
 
-    tsNumbers.clear();
+    timeseriesNumbers.clear();
 
     return ret;
 }
 
 int TimeSeries::timeSeriesSaveToFolder(const AreaName& areaID, const std::string& folder,
-                                       const std::string& filename)
+                                       const std::string& filename) const
 {
     Clob buffer;
     int ret = 1;
     buffer.clear() << folder << SEP << filename << areaID << ".txt";
-    ret = coefficients.saveToCSVFile(buffer, 0) && ret;
+    ret = timeSeries.saveToCSVFile(buffer, 0) && ret;
 
     return ret;
 }
 
 void TimeSeries::reset()
 {
-    coefficients.reset(1, HOURS_PER_YEAR);
+    timeSeries.reset(1, HOURS_PER_YEAR);
 }
 
 double TimeSeries::getCoefficient(uint32_t year, uint32_t hourInYear) const
 {
-    return coefficients[tsNumbers[year]][hourInYear];
+    return timeSeries[*timeseriesNumbers[year]][hourInYear];
 }
 
 double* TimeSeries::getColumn(uint32_t year) const
 {
-    return coefficients[tsNumbers[year]];
+    return timeSeries[*timeseriesNumbers[year]];
 }
 
 bool TimeSeries::forceReload(bool reload) const
 {
-    return coefficients.forceReload(reload);
+    return timeSeries.forceReload(reload);
 }
 
 void TimeSeries::markAsModified() const
 {
-    coefficients.markAsModified();
+    timeSeries.markAsModified();
 }
 
 uint64_t TimeSeries::memoryUsage() const
 {
-    return coefficients.memoryUsage();
+    return timeSeries.memoryUsage();
 }
 
 bool DataSeriesCommon::forceReload(bool reload) const

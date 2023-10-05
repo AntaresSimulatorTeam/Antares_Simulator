@@ -149,8 +149,8 @@ bool DataTimeseries::performWL(Context& ctx)
                 }
                 case Data::timeSeriesWind:
                 {
-                    ctx.area->wind.series->timeSeries = source->wind.series->timeSeries;
-                    source->wind.series->timeSeries.unloadFromMemory();
+                    ctx.area->wind.series.timeSeries = source->wind.series.timeSeries;
+                    source->wind.series.timeSeries.unloadFromMemory();
                     break;
                 }
                 case Data::timeSeriesHydro:

@@ -38,6 +38,7 @@ class TimeSeries
 {
 public:
     typedef Matrix<uint32_t> TSNumbers;
+
     /*!
      ** \brief Load series from a file
      **
@@ -61,7 +62,7 @@ public:
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
     int timeSeriesSaveToFolder(const AreaName& areaID, const std::string& folder,
-                               const std::string& filename);
+                               const std::string& filename) const;
 
     double getCoefficient(uint32_t year, uint32_t hourInYear) const;
     double* getColumn(uint32_t year) const;
@@ -72,8 +73,8 @@ public:
     void markAsModified() const;
     uint64_t memoryUsage() const;
 
-    Matrix<double, int32_t> coefficients;
-    TSNumbers tsNumbers;
+    Matrix<double, int32_t> timeSeries;
+    TSNumbers timeseriesNumbers;
 };
 
 /*!

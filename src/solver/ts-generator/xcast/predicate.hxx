@@ -61,7 +61,6 @@ public:
 
     Matrix<double, int32_t>& matrix(Data::Area& area) const
     {
-        assert(area.wind.series != NULL);
         return area.wind.series.timeSeries;
     }
 

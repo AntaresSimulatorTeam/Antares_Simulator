@@ -816,11 +816,6 @@ void AreaListEnsureDataSolarTimeSeries(AreaList* l);
 void AreaListEnsureDataSolarPrepro(AreaList* l);
 
 /*!
-** \brief Ensure data for wind time-series are initialized
-*/
-void AreaListEnsureDataWindTimeSeries(AreaList* l);
-
-/*!
 ** \brief Ensure data for wind prepro are initialized
 */
 void AreaListEnsureDataWindPrepro(AreaList* l);

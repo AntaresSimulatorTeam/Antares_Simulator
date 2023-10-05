@@ -275,7 +275,7 @@ void Area::resizeAllTimeseriesNumbers(uint n)
     {
         load.series->timeseriesNumbers.clear();
         solar.series->timeseriesNumbers.clear();
-        wind.series.tsNumbers.clear();
+        wind.series.timeseriesNumbers.clear();
         hydro.series->timeseriesNumbers.clear();
         for (auto& namedLink : links)
         {
@@ -287,7 +287,7 @@ void Area::resizeAllTimeseriesNumbers(uint n)
     {
         load.series->timeseriesNumbers.resize(1, n);
         solar.series->timeseriesNumbers.resize(1, n);
-        wind.series.tsNumbers.resize(1, n);
+        wind.series.timeseriesNumbers.resize(1, n);
         hydro.series->timeseriesNumbers.resize(1, n);
         for (auto& namedLink : links)
         {

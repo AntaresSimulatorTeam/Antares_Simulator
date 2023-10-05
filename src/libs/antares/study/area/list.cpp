@@ -921,7 +921,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (!options.loadOnlyNeeded || !area.wind.prepro) // Series
         {
             buffer.clear() << study.folderInput << SEP << "wind" << SEP << "series";
-            ret = DataSeriesWindLoadFromFolder(study, area.wind.series, area.id, buffer.c_str())
+            ret = area.wind.series.timeSeriesLoadFromFolder(study, area.id, buffer.c_str(), "wind_")
                   && ret;
         }
 
@@ -1036,7 +1036,6 @@ void AreaList::ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded)
 {
     AreaListEnsureDataLoadTimeSeries(this);
     AreaListEnsureDataSolarTimeSeries(this);
-    AreaListEnsureDataWindTimeSeries(this);
     AreaListEnsureDataHydroTimeSeries(this);
     AreaListEnsureDataThermalTimeSeries(this);
     AreaListEnsureDataRenewableTimeSeries(this);
@@ -1285,17 +1284,6 @@ void AreaListEnsureDataSolarPrepro(AreaList* l)
     l->each([&](Data::Area& area) {
         if (!area.solar.prepro)
             area.solar.prepro = new Antares::Data::Solar::Prepro();
-    });
-}
-
-void AreaListEnsureDataWindTimeSeries(AreaList* l)
-{
-    /* Asserts */
-    assert(l);
-
-    l->each([&](Data::Area& area) {
-        if (!area.wind.series)
-            area.wind.series = new DataSeriesWind();
     });
 }
 
