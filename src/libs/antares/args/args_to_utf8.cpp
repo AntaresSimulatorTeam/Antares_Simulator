@@ -5,14 +5,13 @@
 
 #ifdef YUNI_OS_WINDOWS
 #include <string.h>
+#include <cstdlib>
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN 1
 #endif // WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <shellapi.h>
 #endif // YUNI_OS_WINDOWS
-
-#include <cstdlib>
 
 IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv)
     : argc_(argc), argv_(argv)
