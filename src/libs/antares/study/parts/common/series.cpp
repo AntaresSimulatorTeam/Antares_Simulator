@@ -39,7 +39,7 @@ using namespace Yuni;
 namespace Antares::Data
 {
 
-TimeSeries::TimeSeries(const TimeSeriesNumbers& tsNumbers) : tsNumbers(tsNumbers)
+TimeSeries::TimeSeries(const TSNumbers& tsNumbers) : tsNumbers(tsNumbers)
 {}
 
 double TimeSeries::getCoefficient(uint32_t year, uint32_t hourInYear) const
@@ -52,7 +52,7 @@ std::vector<double> TimeSeries::getColumn(uint32_t year) const
     return coefficients[tsNumbers.get(year)];
 }
 
-uint32_t TimeSeriesNumbers::get(uint32_t year) const
+uint32_t TSNumbers::get(uint32_t year) const
 {
     return tsNumbers_[year];
 }

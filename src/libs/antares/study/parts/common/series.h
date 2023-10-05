@@ -34,7 +34,7 @@
 namespace Antares::Data
 {
 
-class TimeSeriesNumbers
+class TSNumbers
 {
 public:
     uint32_t get(uint32_t year) const;
@@ -46,13 +46,13 @@ private:
 class TimeSeries
 {
 public:
-    TimeSeries(const TimeSeriesNumbers& tsNumbers);
+    TimeSeries(const TSNumbers& tsNumbers);
     double getCoefficient(uint32_t year, uint32_t hourInYear) const;
     std::vector<double> getColumn(uint32_t year) const;
 
 private:
     std::vector<std::vector<double>> coefficients;
-    const TimeSeriesNumbers& tsNumbers;
+    const TSNumbers& tsNumbers;
 };
 
 /*!
