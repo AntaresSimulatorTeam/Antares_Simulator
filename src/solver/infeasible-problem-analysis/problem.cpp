@@ -13,8 +13,7 @@ namespace Optimization
 {
 InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
 {
-    mSolver
-      = std::unique_ptr<MPSolver>(ProblemSimplexeNommeConverter(solverName, ProbSpx).Convert());
+    problem_ = std::unique_ptr<MPSolver>(ProblemSimplexeNommeConverter(solverName, ProbSpx).Convert());
 }
 
 void InfeasibleProblemAnalysis::addSlackVariables()
@@ -25,17 +24,17 @@ void InfeasibleProblemAnalysis::addSlackVariables()
        This should not happen in most cases.
     */
     const unsigned int selectedConstraintsInverseRatio = 3;
-    mSlackVariables.reserve(mSolver->NumConstraints() / selectedConstraintsInverseRatio);
+    mSlackVariables.reserve(problem_->NumConstraints() / selectedConstraintsInverseRatio);
     std::regex rgx(constraint_name_pattern);
     const double infinity = MPSolver::infinity();
-    for (MPConstraint* constraint : mSolver->constraints())
+    for (MPConstraint* constraint : problem_->constraints())
     {
         if (std::regex_search(constraint->name(), rgx))
         {
             if (constraint->lb() != -infinity)
             {
                 const MPVariable* slack
-                  = mSolver->MakeNumVar(0, infinity, constraint->name() + "::low");
+                  = problem_->MakeNumVar(0, infinity, constraint->name() + "::low");
                 constraint->SetCoefficient(slack, 1.);
                 mSlackVariables.push_back(slack);
             }
@@ -43,7 +42,7 @@ void InfeasibleProblemAnalysis::addSlackVariables()
             if (constraint->ub() != infinity)
             {
                 const MPVariable* slack
-                  = mSolver->MakeNumVar(0, infinity, constraint->name() + "::up");
+                  = problem_->MakeNumVar(0, infinity, constraint->name() + "::up");
                 constraint->SetCoefficient(slack, -1.);
                 mSlackVariables.push_back(slack);
             }
@@ -53,7 +52,7 @@ void InfeasibleProblemAnalysis::addSlackVariables()
 
 void InfeasibleProblemAnalysis::buildObjective() const
 {
-    MPObjective* objective = mSolver->MutableObjective();
+    MPObjective* objective = problem_->MutableObjective();
     // Reset objective function
     objective->Clear();
     // Only slack variables have a non-zero cost
@@ -66,7 +65,7 @@ void InfeasibleProblemAnalysis::buildObjective() const
 
 MPSolver::ResultStatus InfeasibleProblemAnalysis::Solve() const
 {
-    return mSolver->Solve();
+    return problem_->Solve();
 }
 
 InfeasibleProblemReport InfeasibleProblemAnalysis::produceReport()

@@ -32,9 +32,9 @@ namespace Antares
 namespace Optimization
 {
 ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
-  const std::string& solverName,
-  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe) :
- solverName_(solverName), problemeSimplexe_(problemeSimplexe)
+        const std::string& solverName,
+        const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+    : solverName_(solverName), problemeSimplexe_(problemeSimplexe)
 {
     if (problemeSimplexe_->UseNamedProblems())
     {
