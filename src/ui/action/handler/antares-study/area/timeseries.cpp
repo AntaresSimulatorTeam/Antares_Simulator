@@ -143,8 +143,8 @@ bool DataTimeseries::performWL(Context& ctx)
                 }
                 case Data::timeSeriesSolar:
                 {
-                    ctx.area->solar.series->timeSeries = source->solar.series->timeSeries;
-                    source->solar.series->timeSeries.unloadFromMemory();
+                    ctx.area->solar.series.timeSeries = source->solar.series.timeSeries;
+                    source->solar.series.timeSeries.unloadFromMemory();
                     break;
                 }
                 case Data::timeSeriesWind:

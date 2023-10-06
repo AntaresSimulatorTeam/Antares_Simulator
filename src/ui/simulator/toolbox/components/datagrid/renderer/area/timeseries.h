@@ -185,7 +185,7 @@ public:
 protected:
     virtual void internalAreaChanged(Antares::Data::Area* area)
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->solar.series->timeSeries) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->solar.series.timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };

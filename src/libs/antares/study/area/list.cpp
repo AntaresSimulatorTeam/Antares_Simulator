@@ -227,11 +227,8 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
                            << area.id;
             ret = area.solar.prepro->saveToFolder(buffer) && ret;
         }
-        if (area.solar.series) // Series
-        {
-            buffer.clear() << folder << SEP << "input" << SEP << "solar" << SEP << "series";
-            ret = DataSeriesSolarSaveToFolder(area.solar.series, area.id, buffer.c_str()) && ret;
-        }
+        buffer.clear() << folder << SEP << "input" << SEP << "solar" << SEP << "series";
+        ret = area.solar.series.timeSeriesSaveToFolder(area.id, buffer.c_str(), "solar_") && ret;
     }
 
     // Hydro
@@ -872,10 +869,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                            << area.id;
             ret = area.solar.prepro->loadFromFolder(buffer) && ret;
         }
-        if (area.solar.series && (!options.loadOnlyNeeded || !area.solar.prepro)) // Series
+        if (!options.loadOnlyNeeded || !area.solar.prepro) // Series
         {
             buffer.clear() << study.folderInput << SEP << "solar" << SEP << "series";
-            ret = DataSeriesSolarLoadFromFolder(study, area.solar.series, area.id, buffer.c_str())
+            ret = area.solar.series.timeSeriesLoadFromFolder(study, area.id, buffer.c_str(), "solar_")
                 && ret;
         }
 
@@ -1031,7 +1028,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
 void AreaList::ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded)
 {
-    AreaListEnsureDataSolarTimeSeries(this);
     AreaListEnsureDataHydroTimeSeries(this);
     AreaListEnsureDataThermalTimeSeries(this);
     AreaListEnsureDataRenewableTimeSeries(this);
@@ -1247,17 +1243,6 @@ void AreaListEnsureDataLoadPrepro(AreaList* l)
     l->each([&](Data::Area& area) {
         if (!area.load.prepro)
             area.load.prepro = new Antares::Data::Load::Prepro();
-    });
-}
-
-void AreaListEnsureDataSolarTimeSeries(AreaList* l)
-{
-    /* Asserts */
-    assert(l);
-
-    l->each([&](Data::Area& area) {
-        if (!area.solar.series)
-            area.solar.series = new DataSeriesSolar();
     });
 }
 
@@ -1590,7 +1575,7 @@ void AreaList::removeHydroTimeseries()
 
 void AreaList::removeSolarTimeseries()
 {
-    each([&](Data::Area& area) { area.solar.series->timeSeries.reset(1, HOURS_PER_YEAR); });
+    each([&](Data::Area& area) { area.solar.series.timeSeries.reset(1, HOURS_PER_YEAR); });
 }
 
 void AreaList::removeWindTimeseries()

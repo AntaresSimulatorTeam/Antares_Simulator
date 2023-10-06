@@ -119,9 +119,9 @@ struct commonFixture
 
         // Solar : set the nb of ready made TS
         nbReadyMadeTS = 9;
-        area_1->solar.series->timeSeries.resize(nbReadyMadeTS, 1);
-        area_2->solar.series->timeSeries.resize(nbReadyMadeTS, 1);
-        area_3->solar.series->timeSeries.resize(nbReadyMadeTS, 1);
+        area_1->solar.series.timeSeries.resize(nbReadyMadeTS, 1);
+        area_2->solar.series.timeSeries.resize(nbReadyMadeTS, 1);
+        area_3->solar.series.timeSeries.resize(nbReadyMadeTS, 1);
 
         // Hydro : set the nb of ready made TS
         nbReadyMadeTS = 12;

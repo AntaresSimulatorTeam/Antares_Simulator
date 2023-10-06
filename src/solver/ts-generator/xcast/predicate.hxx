@@ -145,8 +145,7 @@ public:
 
     Matrix<double, int32_t>& matrix(Data::Area& area) const
     {
-        assert(area.solar.series != NULL);
-        return area.solar.series->timeSeries;
+        return area.solar.series.timeSeries;
     }
 
     Data::XCast& xcastData(Data::Area& area) const

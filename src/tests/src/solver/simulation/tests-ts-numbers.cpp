@@ -702,7 +702,7 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
 	uint year = 0;
 	uint loadTsNumber = area->load.series.timeseriesNumbers[0][year];
 	uint windTsNumber = area->wind.series.timeseriesNumbers[0][year];
-	uint solarTsNumber = area->solar.series->timeseriesNumbers[0][year];
+	uint solarTsNumber = area->solar.series.timeseriesNumbers[0][year];
 	uint hydroTsNumber = area->hydro.series->timeseriesNumbers[0][year];
 	uint thermalTsNumber = thCluster->series->timeseriesNumbers[0][year];
 	auto binding_constraints_TS_number = study->bindingConstraintsGroups["dummy"]->timeseriesNumbers[0][year];

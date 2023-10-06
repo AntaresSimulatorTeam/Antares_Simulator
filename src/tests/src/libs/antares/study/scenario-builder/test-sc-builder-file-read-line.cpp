@@ -77,9 +77,9 @@ struct Fixture
 
 		// Solar : set the nb of ready made TS
 		nbReadyMadeTS = 9;
-		area_1->solar.series->timeSeries.resize(nbReadyMadeTS, 1);
-		area_2->solar.series->timeSeries.resize(nbReadyMadeTS, 1);
-		area_3->solar.series->timeSeries.resize(nbReadyMadeTS, 1);
+		area_1->solar.series.timeSeries.resize(nbReadyMadeTS, 1);
+		area_2->solar.series.timeSeries.resize(nbReadyMadeTS, 1);
+		area_3->solar.series.timeSeries.resize(nbReadyMadeTS, 1);
 
 		// Hydro : set the nb of ready made TS
 		nbReadyMadeTS = 12;
@@ -213,7 +213,7 @@ BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_4__solar_TS_number_8_is_chosen__rea
 	BOOST_CHECK_EQUAL(my_rule.solar.get_value(yearNumber.to<uint>(), area_1->index), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(area_1->solar.series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(area_1->solar.series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 // =================
