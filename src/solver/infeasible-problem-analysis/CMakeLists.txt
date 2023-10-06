@@ -7,8 +7,6 @@ set(SRC_INFEASIBLE_PROBLEM_ANALYSIS
   report.cpp
   constraint.h
   constraint.cpp
-  exceptions.h
-  exceptions.cpp
   )
 
 add_library(infeasible_problem_analysis ${SRC_INFEASIBLE_PROBLEM_ANALYSIS})

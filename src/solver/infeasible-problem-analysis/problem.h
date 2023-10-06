@@ -16,6 +16,7 @@ class InfeasibleProblemAnalysis
 public:
     InfeasibleProblemAnalysis() = delete;
     explicit InfeasibleProblemAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx);
+    bool run();
     InfeasibleProblemReport produceReport();
 
 private:

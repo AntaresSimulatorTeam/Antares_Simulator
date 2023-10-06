@@ -1,5 +1,5 @@
 #include "problem.h"
-#include "exceptions.h"
+#include <antares/logs/logs.h>
 
 #include <fstream>
 #include <regex>
@@ -68,21 +68,30 @@ MPSolver::ResultStatus InfeasibleProblemAnalysis::Solve() const
     return problem_->Solve();
 }
 
-InfeasibleProblemReport InfeasibleProblemAnalysis::produceReport()
+bool InfeasibleProblemAnalysis::run()
 {
+    logs.notice() << " Solver: Starting infeasibility analysis...";
     addSlackVariables();
     if (mSlackVariables.empty())
     {
-        throw SlackVariablesEmpty(
-          "Cannot generate infeasibility report: no constraints have been selected");
+        logs.error() << "Cannot generate infeasibility report: no constraints have been selected";
+        return false;
     }
+
     buildObjective();
+
     const MPSolver::ResultStatus status = Solve();
     if ((status != MPSolver::OPTIMAL) && (status != MPSolver::FEASIBLE))
     {
-        throw ProblemResolutionFailed(
-          "Linear problem could not be solved, and infeasibility analysis could not help");
+        logs.error() << "Linear problem could not be solved, and infeasibility analysis could not help";
+        return false;
     }
+
+    return true;
+}
+
+InfeasibleProblemReport InfeasibleProblemAnalysis::produceReport()
+{
     return InfeasibleProblemReport(mSlackVariables);
 }
 } // namespace Optimization
