@@ -4,7 +4,6 @@
 #include <string>
 
 #include <yuni/job/queue/service.h>
-#include <yuni/job/job.h>
 #include <yuni/core/string.h>
 
 #include "antares/writer/i_writer.h"
@@ -20,15 +19,23 @@ enum class ZipState
 };
 
 class ZipWriter;
+
+/*!
+ * In charge of writing one entry into the underlying zip.
+ * May be used as a function object.
+ */
 template<class ContentT>
-class ZipWriteJob final : public Yuni::Job::IJob
+class ZipWriteJob
 {
 public:
     ZipWriteJob(ZipWriter& writer,
                 std::string  entryPath,
                 ContentT& content,
                 Benchmarking::IDurationCollector& duration_collector);
-    virtual void onExecute() override;
+    void writeEntry();
+    void operator()() {
+        writeEntry();
+    }
 
 private:
     // Pointer to Zip handle

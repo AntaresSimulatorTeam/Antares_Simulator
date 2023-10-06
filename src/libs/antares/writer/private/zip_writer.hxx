@@ -1,5 +1,6 @@
 #pragma once
 
+#include "antares/concurrency/concurrency.h"
 #include "ensure_queue_started.h"
 
 namespace Antares::Solver
@@ -11,8 +12,9 @@ void ZipWriter::addEntryFromBufferHelper(const std::string& entryPath, ContentTy
         return;
 
     EnsureQueueStartedIfNeeded ensureQueue(this, pQueueService);
-    pQueueService->add(
-      new ZipWriteJob<ContentType>(*this, entryPath, entryContent, pDurationCollector),
-      Yuni::Job::priorityLow);
+    Antares::Concurrency::AddTask(*pQueueService,
+                                  ZipWriteJob<ContentType>(*this, entryPath, entryContent, pDurationCollector),
+                                  Yuni::Job::priorityLow);
 }
+
 } // namespace Antares::Solver

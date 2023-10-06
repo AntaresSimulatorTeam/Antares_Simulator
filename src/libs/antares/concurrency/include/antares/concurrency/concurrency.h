@@ -16,8 +16,13 @@ typedef std::future<void> TaskFuture;
 
 /*!
  * \brief Queues the provided function and returns the corresponding std::future.
+ *
+ * This allows to handle exceptions occuring in the underlying task,
+ * as opposite to Yuni::Job::QueueService::add which swallows them.
  */
-TaskFuture AddTask(Yuni::Job::QueueService& threadPool, const Task& task);
+TaskFuture AddTask(Yuni::Job::QueueService& threadPool,
+                   const Task& task,
+                   Yuni::Job::Priority priority = Yuni::Job::priorityDefault);
 
 /*!
  * \brief Utility class to gather futures to wait for.

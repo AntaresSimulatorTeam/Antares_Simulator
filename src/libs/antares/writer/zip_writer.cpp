@@ -46,7 +46,7 @@ static std::unique_ptr<mz_zip_file> createInfo(const std::string& entryPath)
 }
 
 template<class ContentT>
-void ZipWriteJob<ContentT>::onExecute()
+void ZipWriteJob<ContentT>::writeEntry()
 {
     // Don't write data if finalize() has been called
     if (pState != ZipState::can_receive_data)

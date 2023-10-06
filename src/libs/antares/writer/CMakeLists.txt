@@ -38,6 +38,7 @@ target_link_libraries(result_writer
         logs
         inifile
         io
+        Antares::concurrency
     )
 
 

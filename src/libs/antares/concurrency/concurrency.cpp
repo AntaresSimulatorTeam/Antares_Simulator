@@ -5,12 +5,16 @@
 #include "yuni/job/job.h"
 #include "antares/concurrency/concurrency.h"
 
-namespace Antares::Concurrency
-{
+namespace {
 
-class JobImpl : public Yuni::Job::IJob {
+using namespace Antares::Concurrency;
+
+/*!
+ * Just wraps an arbitrary task as a yuni job, and allows to retrieve the corresponding future.
+ */
+class PackagedJob : public Yuni::Job::IJob {
 public:
-    JobImpl(const Task& task) : task_(task) {}
+    PackagedJob(const Task& task) : task_(task) {}
 
     TaskFuture getFuture() {
         return task_.get_future();
@@ -25,18 +29,17 @@ private:
     std::packaged_task<void()> task_;
 };
 
-std::unique_ptr<Yuni::Job::IJob> MakeJob(const Task& task) {
-    return std::make_unique<JobImpl>(task);
 }
 
-std::unique_ptr<JobImpl> MakePackagedJob(const Task& task) {
-    return std::make_unique<JobImpl>(task);
-}
+namespace Antares::Concurrency
+{
 
-std::future<void> AddTask(Yuni::Job::QueueService& threadPool, const Task& task) {
-    auto job = MakePackagedJob(task);
+std::future<void> AddTask(Yuni::Job::QueueService& threadPool,
+                          const Task& task,
+                          Yuni::Job::Priority priority) {
+    auto job = std::make_unique<PackagedJob>(task);
     auto future = job->getFuture();
-    threadPool.add(Yuni::Job::IJob::Ptr(job.release()));
+    threadPool.add(Yuni::Job::IJob::Ptr(job.release()), priority);
     return future;
 }
 
