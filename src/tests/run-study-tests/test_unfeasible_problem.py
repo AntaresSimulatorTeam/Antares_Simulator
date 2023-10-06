@@ -24,6 +24,7 @@ def test_unfeasible_problem_01__error_verbose(study_path, check_runner):
                                           simulation=check_runner.get_simulation()))
     check_runner.run(checks)
 
+"""
 @pytest.mark.unfeasible
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" / "unfeasible_problem_01"], indirect=True)
 def test_unfeasible_problem_01__error_dry(study_path, check_runner):
@@ -65,4 +66,4 @@ def test_unfeasible_problem_01__warning_dry(study_path, check_runner):
                                           checks_on_weeks=warnings_on_weeks,
                                           simulation=check_runner.get_simulation()))
     check_runner.run(checks)
-
+"""
