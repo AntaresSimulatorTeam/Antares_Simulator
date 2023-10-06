@@ -124,17 +124,15 @@ HydroManagement::~HydroManagement()
     delete[] tmpDataByArea_;
 }
 
-void HydroManagement::prepareInflowsScaling(uint numSpace)
+void HydroManagement::prepareInflowsScaling(uint numSpace, uint year)
 {
     areas_.each([&](Data::Area& area)
       {
           uint z = area.index;
 
-          auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
-
           auto& inflowsmatrix = area.hydro.series->storage;
           assert(inflowsmatrix.width && inflowsmatrix.height);
-          auto tsIndex = (uint)ptchro.Hydraulique;
+          auto tsIndex = area.hydro.series->getIndex(year);
           auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
 
           auto& data = tmpDataByArea_[numSpace][z];
@@ -177,15 +175,14 @@ void HydroManagement::prepareInflowsScaling(uint numSpace)
       });
 }
 
-void HydroManagement::minGenerationScaling(uint numSpace)
+void HydroManagement::minGenerationScaling(uint numSpace, uint year) const
 {
-    areas_.each([this, &numSpace](Data::Area& area)
+    areas_.each([this, &numSpace, &year](Data::Area& area)
       {
           uint z = area.index;
 
-          const auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
           auto& mingenmatrix = area.hydro.series->mingen;
-          auto tsIndex = (uint)ptchro.Hydraulique;
+          auto tsIndex = area.hydro.series->getIndex(year);
           auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
 
           auto& data = tmpDataByArea_[numSpace][z];
@@ -308,7 +305,7 @@ bool HydroManagement::checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) c
 
 bool HydroManagement::checkHourlyMinGeneration(uint tsIndex, Data::Area& area) const
 {
-    // Hourly minimum generation <= hourly inflows for each hour
+    // Hourly minimum generation <= hourly max generation for each hour
     auto& mingenmatrix = area.hydro.series->mingen;
     auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
     auto const& maxPower = area.hydro.maxPower;
@@ -342,21 +339,18 @@ bool HydroManagement::checkHourlyMinGeneration(uint tsIndex, Data::Area& area) c
     return true;
 }
 
-bool HydroManagement::checkMinGeneration(uint numSpace)
+bool HydroManagement::checkMinGeneration(uint numSpace, uint year) const
 {
     bool ret = true;
-    areas_.each([this, &numSpace, &ret](Data::Area& area)
+    areas_.each([this, &numSpace, &ret, &year](Data::Area& area)
     {
-        uint z = area.index;
-        const auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
-        auto tsIndex = (uint)ptchro.Hydraulique;
+        auto tsIndex = area.hydro.series->getIndex(year);
 
         bool useHeuristicTarget = area.hydro.useHeuristicTarget;
         bool followLoadModulations = area.hydro.followLoadModulations;
         bool reservoirManagement = area.hydro.reservoirManagement;
 
-        if (!reservoirManagement)
-            ret = checkHourlyMinGeneration(tsIndex, area) && ret;
+        ret = checkHourlyMinGeneration(tsIndex, area) && ret;
 
         if (!useHeuristicTarget)
             return;
@@ -366,7 +360,7 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
             ret = checkWeeklyMinGeneration(tsIndex, area) && ret;
             return;
         }
-               
+
         if (reservoirManagement)
             ret = checkYearlyMinGeneration(numSpace, tsIndex, area) && ret;
         else
@@ -375,21 +369,21 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
     return ret;
 }
 
-template<enum Data::StudyMode ModeT>
-void HydroManagement::prepareNetDemand(uint numSpace)
+void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::StudyMode mode)
 {
     areas_.each([&](Data::Area& area) {
         uint z = area.index;
 
         auto& scratchpad = area.scratchpad[numSpace];
 
-        auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
-
         auto& rormatrix = area.hydro.series->ror;
-        auto tsIndex = (uint)ptchro.Hydraulique;
+        auto tsIndex = area.hydro.series->getIndex(year);
         auto& ror = rormatrix[tsIndex < rormatrix.width ? tsIndex : 0];
 
         auto& data = tmpDataByArea_[numSpace][z];
+        const double* loadSeries = area.load.series->getColumn(year);
+        const double* windSeries = area.wind.series->getColumn(year);
+        const double* solarSeries = area.solar.series->getColumn(year);
 
         for (uint hour = 0; hour != HOURS_PER_YEAR; ++hour)
         {
@@ -400,25 +394,24 @@ void HydroManagement::prepareNetDemand(uint numSpace)
             // Aggregated renewable production: wind & solar
             if (parameters_.renewableGeneration.isAggregated())
             {
-                netdemand = +scratchpad.ts.load[ptchro.Consommation][hour]
-                            - scratchpad.ts.wind[ptchro.Eolien][hour] - scratchpad.miscGenSum[hour]
-                            - scratchpad.ts.solar[ptchro.Solar][hour] - ror[hour]
-                            - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
+                netdemand = + loadSeries[hour]
+                            - windSeries[hour] - scratchpad.miscGenSum[hour]
+                            - solarSeries[hour] - ror[hour]
+                            - ((mode != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
             }
 
             // Renewable clusters, if enabled
             else if (parameters_.renewableGeneration.isClusters())
             {
-                netdemand = scratchpad.ts.load[ptchro.Consommation][hour]
+                netdemand = loadSeries[hour]
                             - scratchpad.miscGenSum[hour] - ror[hour]
-                            - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
+                            - ((mode != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
 
                 area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
                     assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
-                    netdemand -= cluster.valueAtTimeStep(
-                      ptchro.RenouvelableParPalier[cluster.areaWideIndex], hour);
+                    netdemand -= cluster.valueAtTimeStep(hour, year);
                 });
             }
 
@@ -524,18 +517,14 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
 {
     memset(tmpDataByArea_[numSpace], 0, sizeof(TmpDataByArea) * areas_.size());
 
-    prepareInflowsScaling(numSpace);
-    minGenerationScaling(numSpace);
-    if (!checkMinGeneration(numSpace))
+    prepareInflowsScaling(numSpace, y);
+    minGenerationScaling(numSpace, y);
+    if (!checkMinGeneration(numSpace, y))
     {
         throw FatalError("hydro management: invalid minimum generation");
     }
 
-    if (parameters_.adequacy())
-        prepareNetDemand<Data::stdmAdequacy>(numSpace);
-    else
-        prepareNetDemand<Data::stdmEconomy>(numSpace);
-
+    prepareNetDemand(numSpace, y, parameters_.mode);
     prepareEffectiveDemand(numSpace);
 
     prepareMonthlyOptimalGenerations(randomReservoirLevel, y, numSpace);

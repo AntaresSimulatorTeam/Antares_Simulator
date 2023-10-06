@@ -173,7 +173,8 @@ struct PROPERTIES
     double injectionNominalCapacity;
     double withdrawalNominalCapacity;
     double efficiency;
-    std::optional<double> initialLevel;
+    double initialLevel;
+    bool initialLevelOptim;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
 

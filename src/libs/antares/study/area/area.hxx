@@ -52,7 +52,7 @@ inline const Area* AreaList::operator[](uint i) const
     return byIndex[i];
 }
 
-template<enum TimeSeries T>
+template<enum TimeSeriesType T>
 inline XCast* Area::xcastData()
 {
     switch (T)
@@ -71,7 +71,7 @@ inline XCast* Area::xcastData()
     return nullptr;
 }
 
-template<enum TimeSeries T>
+template<enum TimeSeriesType T>
 inline const XCast* Area::xcastData() const
 {
     switch (T)

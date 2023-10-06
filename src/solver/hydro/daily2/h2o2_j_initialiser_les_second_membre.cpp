@@ -27,61 +27,55 @@
 
 #include "h2o2_j_donnees_mensuelles.h"
 
-void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles,
+void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles,
                                       int NumeroDeProbleme)
 {
-    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
-    PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
-    double* SecondMembre;
+    auto& ProblemeHydrauliqueEtendu = DonneesMensuelles.ProblemeHydrauliqueEtendu;
 
-    ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
-    ProblemeLineairePartieVariable
-      = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
-    SecondMembre = ProblemeLineairePartieVariable->SecondMembre;
+    auto& ProblemeLineairePartieVariable
+        = ProblemeHydrauliqueEtendu.ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
+    auto& SecondMembre = ProblemeLineairePartieVariable.SecondMembre;
 
-    int NbPdt, Pdt, Cnt;
+    int NbPdt = ProblemeHydrauliqueEtendu.NbJoursDUnProbleme[NumeroDeProbleme];
+    int Cnt = 0;
 
-    NbPdt = ProblemeHydrauliqueEtendu->NbJoursDUnProbleme[NumeroDeProbleme];
-
-    Cnt = 0;
-
-    SecondMembre[Cnt] = DonneesMensuelles->NiveauInitialDuMois + DonneesMensuelles->apports[0];
+    SecondMembre[Cnt] = DonneesMensuelles.NiveauInitialDuMois + DonneesMensuelles.apports[0];
     Cnt++;
 
-    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
     {
-        SecondMembre[Cnt] = DonneesMensuelles->apports[Pdt];
+        SecondMembre[Cnt] = DonneesMensuelles.apports[Pdt];
         Cnt++;
     }
 
-    SecondMembre[Cnt] = DonneesMensuelles->TurbineDuMois;
+    SecondMembre[Cnt] = DonneesMensuelles.TurbineDuMois;
     Cnt++;
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
+        SecondMembre[Cnt] = DonneesMensuelles.TurbineCible[Pdt];
         Cnt++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
+        SecondMembre[Cnt] = DonneesMensuelles.TurbineCible[Pdt];
         Cnt++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         SecondMembre[Cnt] = 0.;
         Cnt++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        SecondMembre[Cnt] = DonneesMensuelles->niveauBas[Pdt];
+        SecondMembre[Cnt] = DonneesMensuelles.niveauBas[Pdt];
         Cnt++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         SecondMembre[Cnt] = 0.;
         Cnt++;

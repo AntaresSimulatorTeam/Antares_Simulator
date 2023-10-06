@@ -37,43 +37,43 @@ namespace Datagrid
 {
 namespace Renderer
 {
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 XCastConversion<T>::XCastConversion(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
  MatrixAncestorType(control), Renderer::ARendererArea(control, notifier)
 {
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 XCastConversion<T>::~XCastConversion()
 {
     destroyBoundEvents();
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 inline wxString XCastConversion<T>::columnCaption(int colIndx) const
 {
     return wxString() << wxT(" point ") << (colIndx + 1) << wxT(' ');
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 inline wxString XCastConversion<T>::cellValue(int x, int y) const
 {
     return MatrixAncestorType::cellValue(x + 1, y);
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 double XCastConversion<T>::cellNumericValue(int x, int y) const
 {
     return MatrixAncestorType::cellNumericValue(x + 1, y);
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 inline bool XCastConversion<T>::cellValue(int x, int y, const Yuni::String& value)
 {
     return MatrixAncestorType::cellValue(x + 1, y, value);
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 void XCastConversion<T>::internalAreaChanged(Data::Area* area)
 {
     if (area)
@@ -86,7 +86,7 @@ void XCastConversion<T>::internalAreaChanged(Data::Area* area)
     Renderer::ARendererArea::internalAreaChanged(area);
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 IRenderer::CellStyle XCastConversion<T>::cellStyle(int col, int row) const
 {
     double b = MatrixAncestorType::cellNumericValue(col + 1, 0);
@@ -96,13 +96,13 @@ IRenderer::CellStyle XCastConversion<T>::cellStyle(int col, int row) const
              : MatrixAncestorType::cellStyle(col, row);
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 wxString XCastConversion<T>::rowCaption(int rowIndx) const
 {
     return (rowIndx == 0) ? wxT("IN") : wxT("OUT");
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 bool XCastConversion<T>::onMatrixResize(uint, uint, uint& newX, uint&)
 {
     if (newX > Data::XCast::conversionMaxPoints)
@@ -117,7 +117,7 @@ bool XCastConversion<T>::onMatrixResize(uint, uint, uint& newX, uint&)
     return false;
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 void XCastConversion<T>::onMatrixLoad()
 {
     auto& matrix = *pMatrix;
@@ -147,14 +147,14 @@ void XCastConversion<T>::onMatrixLoad()
     }
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 void XCastConversion<T>::onStudyClosed()
 {
     Renderer::Matrix<float>::onStudyClosed();
     Renderer::ARendererArea::onStudyClosed();
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 void XCastConversion<T>::onStudyLoaded()
 {
     Renderer::Matrix<float>::onStudyLoaded();

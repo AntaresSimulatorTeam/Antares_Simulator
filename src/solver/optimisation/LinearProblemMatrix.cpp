@@ -42,9 +42,9 @@ void LinearProblemMatrix::ExportStructures()
 }
 void LinearProblemMatrix::InitiliazeProblemAResoudreCounters()
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre.get();
-    ProblemeAResoudre->NombreDeContraintes = 0;
-    ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
+    PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
+    ProblemeAResoudre.NombreDeContraintes = 0;
+    ProblemeAResoudre.NombreDeTermesDansLaMatriceDesContraintes = 0;
 }
 
 void LinearProblemMatrix::Run()

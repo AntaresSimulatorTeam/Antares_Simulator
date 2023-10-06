@@ -30,30 +30,26 @@
 
 void H2O2_J_ConstruireLesContraintes(
   int NbPdt,
-  int* IndicesDebutDeLigne,
-  char* Sens,
-  int* NombreDeTermesDesLignes,
-  double* CoefficientsDeLaMatriceDesContraintes,
-  int* IndicesColonnes,
-  CORRESPONDANCE_DES_VARIABLES_PB_ETENDU* CorrespondanceDesVariables)
+  std::vector<int>& IndicesDebutDeLigne,
+  std::vector<char>& Sens,
+  std::vector<int>& NombreDeTermesDesLignes,
+  std::vector<double>& CoefficientsDeLaMatriceDesContraintes,
+  std::vector<int>& IndicesColonnes,
+  CORRESPONDANCE_DES_VARIABLES_PB_ETENDU& CorrespondanceDesVariables)
 {
-    int NombreDeContraintes;
-    int il;
-    int Pdt;
-
-    NombreDeContraintes = 0;
-    il = 0;
+    int NombreDeContraintes = 0;
+    int il = 0;
 
     IndicesDebutDeLigne[NombreDeContraintes] = il;
 
     CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-    IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[0];
+    IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_Turbine[0];
     il++;
     CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-    IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_niveauxFinJours[0];
+    IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_niveauxFinJours[0];
     il++;
     CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-    IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_overflow[0];
+    IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_overflow[0];
     il++;
 
     Sens[NombreDeContraintes] = '=';
@@ -61,24 +57,24 @@ void H2O2_J_ConstruireLesContraintes(
 
     NombreDeContraintes++;
 
-    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[Pdt];
+        IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_Turbine[Pdt];
         il++;
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_niveauxFinJours[Pdt];
+        IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_niveauxFinJours[Pdt];
         il++;
 
         CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_niveauxFinJours[Pdt - 1];
+        IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_niveauxFinJours[Pdt - 1];
         il++;
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_overflow[Pdt];
+        IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_overflow[Pdt];
         il++;
 
         Sens[NombreDeContraintes] = '=';
@@ -88,31 +84,31 @@ void H2O2_J_ConstruireLesContraintes(
 
     IndicesDebutDeLigne[NombreDeContraintes] = il;
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[Pdt];
+        IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_Turbine[Pdt];
         il++;
     }
 
     CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-    IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_waste;
+    IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_waste;
     il++;
 
     Sens[NombreDeContraintes] = '=';
     NombreDeTermesDesLignes[NombreDeContraintes] = NbPdt + 1;
     NombreDeContraintes++;
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[Pdt];
+        IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_Turbine[Pdt];
         il++;
 
         CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_deviations[Pdt];
+        IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_deviations[Pdt];
         il++;
 
         Sens[NombreDeContraintes] = '<';
@@ -120,16 +116,16 @@ void H2O2_J_ConstruireLesContraintes(
         NombreDeContraintes++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[Pdt];
+        IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_Turbine[Pdt];
         il++;
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_deviations[Pdt];
+        IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_deviations[Pdt];
         il++;
 
         Sens[NombreDeContraintes] = '>';
@@ -137,16 +133,16 @@ void H2O2_J_ConstruireLesContraintes(
         NombreDeContraintes++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_deviations[Pdt];
+        IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_deviations[Pdt];
         il++;
 
         CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_deviationMax;
+        IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_deviationMax;
         il++;
 
         Sens[NombreDeContraintes] = '<';
@@ -154,16 +150,16 @@ void H2O2_J_ConstruireLesContraintes(
         NombreDeContraintes++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_niveauxFinJours[Pdt];
+        IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_niveauxFinJours[Pdt];
         il++;
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_violations[Pdt];
+        IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_violations[Pdt];
         il++;
 
         Sens[NombreDeContraintes] = '>';
@@ -171,16 +167,16 @@ void H2O2_J_ConstruireLesContraintes(
         NombreDeContraintes++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_violations[Pdt];
+        IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_violations[Pdt];
         il++;
 
         CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_violationMax;
+        IndicesColonnes[il] = CorrespondanceDesVariables.NumeroVar_violationMax;
         il++;
 
         Sens[NombreDeContraintes] = '<';

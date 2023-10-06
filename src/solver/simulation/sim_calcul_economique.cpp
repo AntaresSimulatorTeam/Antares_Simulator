@@ -62,6 +62,7 @@ static void importShortTermStorages(
             toInsert.injectionNominalCapacity = st->properties.injectionNominalCapacity.value();
             toInsert.withdrawalNominalCapacity = st->properties.withdrawalNominalCapacity.value();
             toInsert.initialLevel = st->properties.initialLevel;
+            toInsert.initialLevelOptim = st->properties.initialLevelOptim;
             toInsert.name = st->properties.name;
 
             toInsert.series = st->series;
@@ -538,6 +539,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
     }
 
     int hourInYear = PasDeTempsDebut;
+    unsigned int year = problem.year;
 
     for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps; ++hourInWeek, ++hourInYear)
     {
@@ -565,28 +567,22 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
         for (uint k = 0; k < nbPays; ++k)
         {
-            auto& tsIndex = NumeroChroniquesTireesParPays[numSpace][k];
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
+            auto loadSeries = area.load.series->getCoefficient(year, hourInYear);
+            auto windSeries = area.wind.series->getCoefficient(year, hourInYear);
+            auto solarSeries = area.solar.series->getCoefficient(year, hourInYear);
+            auto hydroSeriesIndex = area.hydro.series->getIndex(year);
 
             assert(&scratchpad);
-            assert((uint)hourInYear < scratchpad.ts.load.height);
-            assert((uint)tsIndex.Consommation < scratchpad.ts.load.width);
-            if (parameters.renewableGeneration.isAggregated())
-            {
-                assert((uint)hourInYear < scratchpad.ts.solar.height);
-                assert((uint)hourInYear < scratchpad.ts.wind.height);
-                assert((uint)tsIndex.Eolien < scratchpad.ts.wind.width);
-                assert((uint)tsIndex.Solar < scratchpad.ts.solar.width);
-            }
 
-            uint tsFatalIndex = (uint)tsIndex.Hydraulique < ror.width ? tsIndex.Hydraulique : 0;
+            uint tsFatalIndex = hydroSeriesIndex < ror.width ? hydroSeriesIndex : 0;
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                mustRunGen = scratchpad.ts.wind[tsIndex.Eolien][hourInYear]
-                             + scratchpad.ts.solar[tsIndex.Solar][hourInYear]
+                mustRunGen = windSeries
+                             + solarSeries
                              + scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
                              + scratchpad.mustrunSum[hourInYear];
             }
@@ -599,8 +595,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
                 area.renewable.list.each([&](const RenewableCluster& cluster) {
                     assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
-                    mustRunGen += cluster.valueAtTimeStep(
-                      tsIndex.RenouvelableParPalier[cluster.areaWideIndex], (uint)hourInYear);
+                    mustRunGen += cluster.valueAtTimeStep((uint)hourInYear, year);
                 });
             }
 
@@ -609,7 +604,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
               && "NaN detected for 'AllMustRunGeneration', probably from miscGenSum/mustrunSum");
 
             problem.ConsommationsAbattues[hourInWeek].ConsommationAbattueDuPays[k]
-              = +scratchpad.ts.load[tsIndex.Consommation][hourInYear]
+              = +loadSeries
                 - problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
@@ -637,10 +632,12 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
                 auto& area = *study.areas.byIndex[k];
-                uint tsIndex = (NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
-                auto& inflowsmatrix = area.hydro.series->storage;
+                auto& hydroSeries = area.hydro.series;
+                uint tsIndex = hydroSeries->getIndex(year);
+
+                auto& inflowsmatrix = hydroSeries->storage;
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
-                auto& mingenmatrix = area.hydro.series->mingen;
+                auto& mingenmatrix = hydroSeries->mingen;
                 auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
                 for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)
                 {

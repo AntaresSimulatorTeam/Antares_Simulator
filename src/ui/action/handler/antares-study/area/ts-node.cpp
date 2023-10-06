@@ -38,7 +38,7 @@ namespace AntaresStudy
 {
 namespace Area
 {
-NodeTimeseries::NodeTimeseries(Data::TimeSeries ts) : pType(ts)
+NodeTimeseries::NodeTimeseries(Data::TimeSeriesType ts) : pType(ts)
 {
     // behavior
     pInfos.behavior = bhOverwrite;

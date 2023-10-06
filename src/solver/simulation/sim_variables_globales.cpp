@@ -28,7 +28,6 @@
 #include "sim_structure_donnees.h"
 #include "sim_structure_probleme_economique.h"
 
-std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_PAYS>> NumeroChroniquesTireesParPays;
 std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION>> NumeroChroniquesTireesParInterconnexion;
 
 std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;

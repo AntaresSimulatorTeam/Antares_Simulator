@@ -52,7 +52,7 @@ void NbDispUnitsMinBoundSinceMinUpTime::add(int pays,
     }
     else
     {
-        nbTermesContraintesPourLesCoutsDeDemarrage
+        problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
           += 1 + 2 * DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
         problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
     }

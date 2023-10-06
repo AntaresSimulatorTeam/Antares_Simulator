@@ -629,7 +629,7 @@ bool ATSP::computeMonthlyCorrelations()
     }
 
     // removing the mapping list
-    delete mapping;
+    delete[] mapping;
 
     return true;
 }

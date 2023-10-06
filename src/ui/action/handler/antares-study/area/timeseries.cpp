@@ -37,7 +37,7 @@ namespace AntaresStudy
 {
 namespace Area
 {
-DataTimeseries::DataTimeseries(Data::TimeSeries ts, const AnyString& areaname) :
+DataTimeseries::DataTimeseries(Data::TimeSeriesType ts, const AnyString& areaname) :
  pType(ts), pOriginalAreaName(areaname)
 {
     switch (ts)
@@ -62,7 +62,7 @@ DataTimeseries::DataTimeseries(Data::TimeSeries ts, const AnyString& areaname) :
     }
 }
 
-DataTimeseries::DataTimeseries(Data::TimeSeries ts,
+DataTimeseries::DataTimeseries(Data::TimeSeriesType ts,
                                const AnyString& areaname,
                                const AnyString& clustername) :
  pType(ts), pOriginalAreaName(areaname), pOriginalPlantName(clustername)

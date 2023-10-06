@@ -47,7 +47,7 @@ class Cell;
 class Column
 {
 public:
-    Column(Antares::Data::TimeSeries ts, const wxString& caption);
+    Column(Antares::Data::TimeSeriesType ts, const wxString& caption);
     virtual ~Column();
     Cell* getLine(int y) const;
     int getNumberOfLines() const;
@@ -55,7 +55,7 @@ public:
 
 protected:
     std::vector<Cell*> cells_;
-    Antares::Data::TimeSeries tsKind_;
+    Antares::Data::TimeSeriesType tsKind_;
     wxString caption_;
 };
 
@@ -65,7 +65,7 @@ protected:
 class classicColumn final : public Column
 {
 public:
-    classicColumn(Antares::Data::TimeSeries ts, const wxString& caption);
+    classicColumn(Antares::Data::TimeSeriesType ts, const wxString& caption);
     ~classicColumn() override = default;
 };
 

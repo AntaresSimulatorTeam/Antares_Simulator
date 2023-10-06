@@ -39,6 +39,7 @@ In May 2018 RTE decided to release the project under the GPLv3 license.
 
 - Antares web site :  https://antares-simulator.org
 - RTE web site  : http://www.rte-france.com/
+- Doxygen code documentation  : https://antaressimulatorteam.github.io/Antares_Simulator/
 
 
 # Installation

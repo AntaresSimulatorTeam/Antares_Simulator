@@ -59,7 +59,7 @@ enum
     mu = Data::XCast::dataCoeffMu,
 };
 
-XCast::XCast(Data::Study& study, Data::TimeSeries ts, IResultWriter& writer) :
+XCast::XCast(Data::Study& study, Data::TimeSeriesType ts, IResultWriter& writer) :
  study(study),
  timeSeriesType(ts),
  pNeverInitialized(true),

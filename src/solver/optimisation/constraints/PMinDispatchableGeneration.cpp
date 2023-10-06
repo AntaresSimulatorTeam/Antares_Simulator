@@ -32,7 +32,7 @@ void PMinDispatchableGeneration::add(int pays,
     }
     else
     {
-        nbTermesContraintesPourLesCoutsDeDemarrage += 2;
-        problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
+          problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage += 2;
+          problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
     }
 }
