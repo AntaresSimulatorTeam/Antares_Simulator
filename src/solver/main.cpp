@@ -128,7 +128,7 @@ int main(int argc, char** argv)
 
         // Getting real UTF8 arguments
         IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
-        argv = toUTF8ArgsTranslator.convert();
+        std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
         Antares::Solver::Application application;
         application.prepare(argc, argv);
         application.execute();

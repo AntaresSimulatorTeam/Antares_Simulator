@@ -603,7 +603,7 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
 
     IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
-    argv = toUTF8ArgsTranslator.convert();
+    std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
     // Load the local policy settings
     LocalPolicy::Open();
     LocalPolicy::CheckRootPrefix(argv[0]);

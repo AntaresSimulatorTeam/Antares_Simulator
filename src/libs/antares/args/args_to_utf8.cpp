@@ -13,14 +13,14 @@
 #include <shellapi.h>
 #endif // YUNI_OS_WINDOWS
 
-IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int& argc, char** argv)
+IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv)
     : argc_(argc), argv_(argv)
 {
 }
 
-char** IntoUTF8ArgsTranslator::convert()
+std::pair<int, char**> IntoUTF8ArgsTranslator::convert()
 {
-  #ifdef YUNI_OS_WINDOWS
+#ifdef YUNI_OS_WINDOWS
     wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(), &argc_);
     argv_ = (char**)malloc(argc_ * sizeof(char*));
     for (int i = 0; i != argc_; ++i)
@@ -32,10 +32,8 @@ char** IntoUTF8ArgsTranslator::convert()
         WideCharToMultiByte(CP_UTF8, 0, wargv[i], len, argv_[i], newLen, NULL, NULL);
         argv_[i][newLen] = '\0';
     }
-    return argv_;
-#else
-    return argv_;
 #endif
+    return {argc_, argv_};
 }
 
 IntoUTF8ArgsTranslator::~IntoUTF8ArgsTranslator()

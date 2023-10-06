@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
 
     logs.applicationName("analyzer");
     IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
-    argv = toUTF8ArgsTranslator.convert();
+    std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
 
     String optSettings;
 
