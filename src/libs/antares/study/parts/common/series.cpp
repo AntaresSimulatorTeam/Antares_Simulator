@@ -69,9 +69,9 @@ int TimeSeries::timeSeriesSaveToFolder(const AreaName& areaID, const std::string
     return ret;
 }
 
-void TimeSeries::reset()
+void TimeSeries::reset(uint32_t width, uint32_t height)
 {
-    timeSeries.reset(1, HOURS_PER_YEAR);
+    timeSeries.reset(width, height);
 }
 
 double TimeSeries::getCoefficient(uint32_t year, uint32_t hourInYear) const
