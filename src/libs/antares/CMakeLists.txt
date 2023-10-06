@@ -8,7 +8,7 @@ add_subdirectory(object)
 
 add_subdirectory(array)
 add_subdirectory(correlation)
-
+add_subdirectory(concurrency)
 
 add_subdirectory(logs)
 add_subdirectory(jit)
