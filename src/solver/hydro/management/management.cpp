@@ -383,7 +383,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year)
         auto& ror = rormatrix[tsIndex < rormatrix.width ? tsIndex : 0];
 
         auto& data = tmpDataByArea_[numSpace][z];
-        const double* loadSeries = area.load.series->getColumn(year);
+        const double* loadSeries = area.load.series.getColumn(year);
         const double* windSeries = area.wind.series.getColumn(year);
         const double* solarSeries = area.solar.series->getColumn(year);
 

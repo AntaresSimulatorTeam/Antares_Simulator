@@ -201,8 +201,8 @@ public:
         //
         (void)::memcpy(
           pValuesForTheCurrentYear[numSpace].hour,
-          pArea->load.series->getColumn(year),
-          sizeof(double) * pArea->load.series->timeSeries.height);
+          pArea->load.series.getColumn(year),
+          sizeof(double) * pArea->load.series.timeSeries.height);
 
         // Next variable
         NextType::yearBegin(year, numSpace);

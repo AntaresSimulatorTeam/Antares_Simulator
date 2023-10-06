@@ -89,7 +89,7 @@ static bool GenerateDeratedMode(Study& study)
         logs.warning() << "The derated mode is enabled. The custom building mode will be ignored";
 
     study.areas.each([&](Area& area) {
-        area.load.series->timeseriesNumbers.zero();
+        area.load.series.timeseriesNumbers.zero();
         area.solar.series->timeseriesNumbers.zero();
         area.wind.series.timeseriesNumbers.zero();
         area.hydro.series->timeseriesNumbers.zero();
@@ -131,7 +131,7 @@ public:
     }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
     {
-        std::vector<uint> to_return = {area.load.series->timeSeries.width};
+        std::vector<uint> to_return = {area.load.series.timeSeries.width};
         return to_return;
     }
     uint getGeneratedTimeSeriesNumber()
@@ -393,7 +393,7 @@ bool checkInterModalConsistencyForArea(Area& area,
     if (isTSintermodal[indexTS])
     {
         uint nbTimeSeries
-          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesLoad : area.load.series->timeSeries.width;
+          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesLoad : area.load.series.timeSeries.width;
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -500,11 +500,11 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
         // -------------
         // Load ...
         // -------------
-        assert(year < area.load.series->timeseriesNumbers.height);
+        assert(year < area.load.series.timeseriesNumbers.height);
         int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
 
         if (isTSintramodal[indexTS])
-            area.load.series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+            area.load.series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
 
         // -------------
         // Solar ...
@@ -596,8 +596,8 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         if (!isTSintramodal[indexTS])
         {
             uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
-                                                       : area.load.series->timeSeries.width;
-            area.load.series->timeseriesNumbers[0][year]
+                                                       : area.load.series.timeSeries.width;
+            area.load.series.timeseriesNumbers[0][year]
               = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
 
@@ -734,7 +734,7 @@ Matrix<uint32_t>* getFirstTSnumberInterModalMatrixFoundInArea(
 {
     Matrix<uint32_t>* tsNumbersMtx = nullptr;
     if (isTSintermodal[ts_to_tsIndex.at(timeSeriesLoad)])
-        tsNumbersMtx = &(area.load.series->timeseriesNumbers);
+        tsNumbersMtx = &(area.load.series.timeseriesNumbers);
     else
     {
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesSolar)])
@@ -765,9 +765,9 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32_t>* tsNumbersMtx,
         const uint draw = tsNumbersMtx->entry[0][year];
         assert(draw < 100000);
 
-        assert(year < area.load.series->timeseriesNumbers.height);
+        assert(year < area.load.series.timeseriesNumbers.height);
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesLoad)])
-            area.load.series->timeseriesNumbers[0][year] = draw;
+            area.load.series.timeseriesNumbers[0][year] = draw;
 
         assert(year < area.solar.series->timeseriesNumbers.height);
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesSolar)])
@@ -823,7 +823,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
     study.areas.each([&years](Area& area) {
         // Load
         fixTSNumbersSingleAreaSingleMode(
-                area.load.series->timeseriesNumbers, area.load.series->timeSeries.width, years);
+                area.load.series.timeseriesNumbers, area.load.series.timeSeries.width, years);
         // Solar
         fixTSNumbersSingleAreaSingleMode(
                 area.solar.series->timeseriesNumbers, area.solar.series->timeSeries.width, years);

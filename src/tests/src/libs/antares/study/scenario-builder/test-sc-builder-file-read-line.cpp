@@ -65,9 +65,9 @@ struct Fixture
 
 		// Load : set the nb of ready made TS
 		uint nbReadyMadeTS = 13;
-		area_1->load.series->timeSeries.resize(nbReadyMadeTS, 1);
-		area_2->load.series->timeSeries.resize(nbReadyMadeTS, 1);
-		area_3->load.series->timeSeries.resize(nbReadyMadeTS, 1);
+		area_1->load.series.timeSeries.resize(nbReadyMadeTS, 1);
+		area_2->load.series.timeSeries.resize(nbReadyMadeTS, 1);
+		area_3->load.series.timeSeries.resize(nbReadyMadeTS, 1);
 
 		// Wind : set the nb of ready made TS
 		nbReadyMadeTS = 17;
@@ -181,7 +181,7 @@ BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_18__load_TS_number_11_is_chosen__re
 	BOOST_CHECK_EQUAL(my_rule.load.get_value(yearNumber.to<uint>(), area_2->index), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(area_2->load.series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(area_2->load.series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 // =================

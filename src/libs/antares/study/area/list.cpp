@@ -215,11 +215,8 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
                            << area.id;
             ret = area.load.prepro->saveToFolder(buffer) && ret;
         }
-        if (area.load.series) // Series
-        {
-            buffer.clear() << folder << SEP << "input" << SEP << "load" << SEP << "series";
-            ret = DataSeriesLoadSaveToFolder(area.load.series, area.id, buffer.c_str()) && ret;
-        }
+        buffer.clear() << folder << SEP << "input" << SEP << "load" << SEP << "series";
+        area.load.series.timeSeriesSaveToFolder(area.id, buffer.c_str(), "load_") && ret;
     }
 
     // Solar
@@ -855,10 +852,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                            << area.id;
             ret = area.load.prepro->loadFromFolder(buffer) && ret;
         }
-        if (area.load.series && (!options.loadOnlyNeeded || !area.load.prepro)) // Series
+        if (!options.loadOnlyNeeded || !area.load.prepro) // Series
         {
             buffer.clear() << study.folderInput << SEP << "load" << SEP << "series";
-            ret = DataSeriesLoadLoadFromFolder(study, area.load.series, area.id, buffer.c_str())
+            ret = area.load.series.timeSeriesLoadFromFolder(study, area.id, buffer.c_str(), "load_")
                   && ret;
         }
 
@@ -1034,7 +1031,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
 void AreaList::ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded)
 {
-    AreaListEnsureDataLoadTimeSeries(this);
     AreaListEnsureDataSolarTimeSeries(this);
     AreaListEnsureDataHydroTimeSeries(this);
     AreaListEnsureDataThermalTimeSeries(this);
@@ -1241,17 +1237,6 @@ Area* AreaListFindPtr(AreaList* l, const Area* ptr)
         }
     }
     return nullptr;
-}
-
-void AreaListEnsureDataLoadTimeSeries(AreaList* l)
-{
-    /* Asserts */
-    assert(l);
-
-    l->each([&](Data::Area& area) {
-        if (!area.load.series)
-            area.load.series = new DataSeriesLoad();
-    });
 }
 
 void AreaListEnsureDataLoadPrepro(AreaList* l)
@@ -1590,7 +1575,7 @@ void AreaList::updateNameIDSet() const
 
 void AreaList::removeLoadTimeseries()
 {
-    each([&](Data::Area& area) { area.load.series->timeSeries.reset(1, HOURS_PER_YEAR); });
+    each([&](Data::Area& area) { area.load.series.timeSeries.reset(1, HOURS_PER_YEAR); });
 }
 
 void AreaList::removeHydroTimeseries()

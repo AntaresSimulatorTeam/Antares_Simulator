@@ -103,8 +103,7 @@ public:
 
     Matrix<double, int32_t>& matrix(Data::Area& area) const
     {
-        assert(area.load.series != NULL);
-        return area.load.series->timeSeries;
+        return area.load.series.timeSeries;
     }
 
     Data::XCast& xcastData(Data::Area& area) const
