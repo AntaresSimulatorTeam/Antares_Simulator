@@ -27,10 +27,10 @@ char** IntoUTF8ArgsTranslator::convert()
     {
         const uint len = (uint)wcslen(wargv[i]);
         const uint newLen = WideCharToMultiByte(CP_UTF8, 0, wargv[i], len, NULL, 0, NULL, NULL);
-        argv[i] = (char*)malloc((newLen + 1) * sizeof(char));
-        memset(argv[i], 0, (newLen + 1) * sizeof(char));
-        WideCharToMultiByte(CP_UTF8, 0, wargv[i], len, argv[i], newLen, NULL, NULL);
-        argv[i][newLen] = '\0';
+        argv_[i] = (char*)malloc((newLen + 1) * sizeof(char));
+        memset(argv_[i], 0, (newLen + 1) * sizeof(char));
+        WideCharToMultiByte(CP_UTF8, 0, wargv[i], len, argv_[i], newLen, NULL, NULL);
+        argv_[i][newLen] = '\0';
     }
     return argv_;
 #else
