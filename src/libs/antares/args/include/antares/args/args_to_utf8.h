@@ -7,6 +7,6 @@ public:
     char** convert();
 	~IntoUTF8ArgsTranslator();
 private:
-	int argc_ = 0;
+	int& argc_;
 	char** argv_;
 };

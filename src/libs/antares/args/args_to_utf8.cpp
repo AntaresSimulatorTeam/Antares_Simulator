@@ -13,7 +13,7 @@
 #include <shellapi.h>
 #endif // YUNI_OS_WINDOWS
 
-IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv)
+IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int& argc, char** argv)
     : argc_(argc), argv_(argv)
 {
 }
@@ -21,9 +21,9 @@ IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv)
 char** IntoUTF8ArgsTranslator::convert()
 {
   #ifdef YUNI_OS_WINDOWS
-    wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
-    argv_ = (char**)malloc(argc * sizeof(char*));
-    for (int i = 0; i != argc; ++i)
+    wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(), &argc_);
+    argv_ = (char**)malloc(argc_ * sizeof(char*));
+    for (int i = 0; i != argc_; ++i)
     {
         const uint len = (uint)wcslen(wargv[i]);
         const uint newLen = WideCharToMultiByte(CP_UTF8, 0, wargv[i], len, NULL, 0, NULL, NULL);
