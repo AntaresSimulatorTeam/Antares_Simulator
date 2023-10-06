@@ -206,9 +206,6 @@ set(SRC_STUDY
         # Solar
         parts/solar/container.h
         parts/solar/container.cpp
-        parts/solar/series.h
-        parts/solar/series.hxx
-        parts/solar/series.cpp
         parts/solar/prepro.cpp
         parts/solar/prepro.h
         parts/solar/prepro.hxx
