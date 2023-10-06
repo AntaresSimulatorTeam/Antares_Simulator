@@ -69,7 +69,7 @@ uint64_t Container::memoryUsage() const
 
 void Container::resetToDefault()
 {
-    series.reset(1, HOURS_PER_YEAR);
+    series.reset();
     if (prepro)
         prepro->resetToDefault();
 }

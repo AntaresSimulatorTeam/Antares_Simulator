@@ -68,7 +68,7 @@ public:
     double* getColumn(uint32_t year) const;
     uint32_t getSeriesIndex(uint32_t year) const;
 
-    void reset(uint32_t width, uint32_t height);
+    void reset();
 
     bool forceReload(bool reload = false) const;
     void markAsModified() const;
