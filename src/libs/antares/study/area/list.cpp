@@ -1644,10 +1644,7 @@ void AreaList::removeHydroTimeseries()
         area.hydro.series->ror.reset(1, HOURS_PER_YEAR);
         area.hydro.series->storage.reset(1, DAYS_PER_YEAR);
         area.hydro.series->mingen.reset(1, HOURS_PER_YEAR);
-        area.hydro.series->maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
-        area.hydro.series->maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
         area.hydro.series->count = 1;
-        area.hydro.series->setNbTimeSeriesSup(1);
     });
 }
 
