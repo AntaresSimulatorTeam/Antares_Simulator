@@ -60,6 +60,12 @@ The install procedure can be done
     sudo apt-get install libboost-test-dev
     ```
 
+=== "Debian Bookworm (apt-get)"
+
+    ```
+    sudo apt-get install uuid-dev libwxgtk3.2-dev libboost-test-dev
+    ```
+
 ## Automatic libraries compilation from git
 [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps) is used as a git submodule for automatic libraries compilation from git.
 

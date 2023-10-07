@@ -42,7 +42,7 @@ Here is a list of available CMake configure option :
 |`BUILD_TESTING`| Enable test build (default `OFF`)|
 |`BUILD_ORTOOLS`| Enable build for OR-Tools and its dependencies (requires an Internet connecton)|
 
-Additionnal options for windows
+Additional options for windows
 
 |Option |Description |
 |:-------|-------|
@@ -66,4 +66,6 @@ Additionnal options for windows
     cmake --build _build --config release -j8
     ```
 Note :
-> Compilation can be done on several processor with ```-j``` option.
+> Compilation can be done on several processors with `-j` option.
+
+The final GUI file can be executed at `_build/ui/simulator/antares-8.7-ui-simulator`
