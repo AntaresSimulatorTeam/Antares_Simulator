@@ -311,7 +311,7 @@ bool HydroManagement::checkGenerationPowerConsistency(uint numSpace) const
     bool ret = true;
 
     areas_.each(
-      [&numSpace, &ret](Data::Area& area) -> decltype(ret)
+      [&numSpace, &ret](Data::Area& area)
       {
           uint z = area.index;
           auto tsIndex = (uint)NumeroChroniquesTireesParPays[numSpace][z].Hydraulique;
@@ -332,10 +332,9 @@ bool HydroManagement::checkGenerationPowerConsistency(uint numSpace) const
                                << " is incompatible with the maximum generation of " << max
                                << " MW in timestep " << h + 1 << " of TS-" << tsIndexMaxPower + 1 << " MW.";
                   ret = false;
-                  return ret;
+                  return;
               }
           }
-          return ret;
       });
 
     return ret;
