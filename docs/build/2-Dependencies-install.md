@@ -6,12 +6,12 @@
 - [OR-Tools](https://github.com/rte-france.com/or-tools) (fork from [Google](https://github.com/google/or-tools))
 - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
   (Only for the complete Antares Simulator solution with GUI)
-- Boost librairies : test (Only for unit tests)
+- Boost libraries : test (Only for unit tests)
 
-This section describes the install procedures for the third-party Open source libraries used by *ANTARES*.
-The install procedure can be done
+This section describes the installation procedures for the third-party Open source libraries used by *ANTARES*.
+The installation procedure can be done
 
-- by compiling the sources after cloning the official git repository
+- by compiling the sources after cloning the official git repository (see [here](3-Build.md) for more informations)
 - by using a package manager
 
 ## Install with package manager
@@ -72,6 +72,14 @@ The install procedure can be done
 Apart from OR-Tools, all dependencies can be built at configure time using the option `-DBUILD_ALL=ON` (`OFF` by default). For a list of available option see [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps).
 
 You can set `-DBUILD_ORTOOLS=ON` to download & build OR-Tools. It is also possible to use a precompiled archive, see below.
+
+For compiling the package yourself from git, additional build dependencies are needed.
+
+Fore Debian 12 Bookworm and Ubuntu 23 the installation needs the following build and test dependencies:
+
+```
+sudo apt-get install git unzip cmake build-essentials uuid-dev libboost-test-dev libwxgtk3.2-dev python3-numpy python3-pytest
+```
 
 ### Pre-compiled OR-Tools : release+static only
 You can [download](https://github.com/rte-france/or-tools/releases) a precompiled OR-Tools archive that contains headers & static libraries.

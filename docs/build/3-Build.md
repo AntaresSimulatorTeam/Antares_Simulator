@@ -1,8 +1,8 @@
 # Build
-Before build, make sure that dependencies are installed (see [here](2-Dependencies-install.md) for more informations)
+Before build, make sure that dependencies are installed (see [here](2-Dependencies-install.md) for more informations).
 
-## Environnement settings
-On Centos enable `devtoolset-9` and `rh-git227`:
+## Environment settings
+On CentOS enable `devtoolset-9` and `rh-git227`:
 ```
 scl enable devtoolset-9 bash
 source /opt/rh/rh-git227/enable
@@ -19,7 +19,7 @@ git submodule update --init src/antares-deps
     ```
     cmake -B _build -S [antares_src] -DVCPKG_ROOT=[vcpkg_root] -DVCPKG_TARGET_TRIPLET=[vcpkg-triplet] -DCMAKE_BUILD_TYPE=release
     ```
-=== "Centos"
+=== "CentOS"
 
     ```
     cmake3 -B _build -S [antares_src] -DCMAKE_BUILD_TYPE=release
@@ -55,7 +55,7 @@ Additional options for windows
     ```
     cmake --build _build --config release -j8
     ```
-=== "Centos"
+=== "CentOS"
 
     ```
     cmake3 --build _build --config release -j8
