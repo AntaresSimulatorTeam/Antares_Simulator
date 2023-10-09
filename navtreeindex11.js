@@ -1,5 +1,6 @@
 var NAVTREEINDEX11 =
 {
+"classAntares_1_1Graph_1_1Grid.html#a186d8796bbf5dc1ab8f3ec6e35a6a0d8":[4,0,0,7,1,3],
 "classAntares_1_1Graph_1_1Grid.html#a1bf993f71a23a743dfddbd7bb9aa4962":[4,0,0,7,1,10],
 "classAntares_1_1Graph_1_1Grid.html#a7004065219923b83a5e2ee13978c4f3f":[4,0,0,7,1,5],
 "classAntares_1_1Graph_1_1Grid.html#a81b4bd6ed76dfa7c52cc997bac5c9632":[4,0,0,7,1,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX11 =
 "classAntares_1_1Map_1_1Settings.html":[4,0,0,8,13],
 "classAntares_1_1Map_1_1Tool_1_1ConnectionCreator.html":[4,0,0,8,1,0],
 "classAntares_1_1Map_1_1Tool_1_1ConnectionCreator.html#a2324eb0c10ce5d14e35d84a641f7ef33":[4,0,0,8,1,0,0],
-"classAntares_1_1Map_1_1Tool_1_1ConnectionCreator.html#a7fc281507f4fff9a9b13ee77358ebb04":[4,0,0,8,1,0,1],
-"classAntares_1_1Map_1_1Tool_1_1ConnectionCreator.html#aa85cf9410b351136ee4b27e34364e604":[4,0,0,8,1,0,2]
+"classAntares_1_1Map_1_1Tool_1_1ConnectionCreator.html#a7fc281507f4fff9a9b13ee77358ebb04":[4,0,0,8,1,0,1]
 };

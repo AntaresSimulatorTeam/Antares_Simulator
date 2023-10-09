@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1connectionNTCdirect.html":[4,0,0,1,0,0,19],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1connectionNTCindirect.html":[4,0,0,1,0,0,20],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1connectionParameters.html":[4,0,0,1,0,0,21],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1connectionParameters.html#a75c8c759eec6c24a08a653d3bad54fed":[4,0,0,1,0,0,21,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "classAntares_1_1Component_1_1Notebook_1_1Page.html":[4,0,0,1,9,0],
 "classAntares_1_1Component_1_1Notebook_1_1Page.html#a029d1430920a8edee25a1c4687479e68":[4,0,0,1,9,0,6],
 "classAntares_1_1Component_1_1Notebook_1_1Page.html#a0790a08b98e15e6f19810fc70521f764":[4,0,0,1,9,0,8],
-"classAntares_1_1Component_1_1Notebook_1_1Page.html#a080c4915912192b14c4ab77b94cd3a7b":[4,0,0,1,9,0,7],
-"classAntares_1_1Component_1_1Notebook_1_1Page.html#a2ea5cf94d76d431b79214ffd8cc19bb1":[4,0,0,1,9,0,5]
+"classAntares_1_1Component_1_1Notebook_1_1Page.html#a080c4915912192b14c4ab77b94cd3a7b":[4,0,0,1,9,0,7]
 };

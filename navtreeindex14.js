@@ -1,5 +1,6 @@
 var NAVTREEINDEX14 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#a1b6beddf1f3e6cce29576ca020bf814e":[4,0,0,11,5,4,29,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#a3e015800864ddf416a07776080e61ff0":[4,0,0,11,5,4,29,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#ab6693b6e18ec12db223458bb0328953a":[4,0,0,11,5,4,29,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#ae8100341abd51f9764eed1f6c34a3d3a":[4,0,0,11,5,4,29,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1Variable_1_1State.html#a7b375376dc9f5f80fcb61d8fef04d4ac":[4,0,0,11,5,35,6],
 "classAntares_1_1Solver_1_1Variable_1_1State.html#a7f134d1469bd9a672885f6d008d9f3fc":[4,0,0,11,5,35,11],
 "classAntares_1_1Solver_1_1Variable_1_1State.html#a88698220c1ac9e8871f25d3cd58ad00b":[4,0,0,11,5,35,15],
-"classAntares_1_1Solver_1_1Variable_1_1State.html#a8a24933757e710c38530817ff0d4b0bf":[4,0,0,11,5,35,20],
-"classAntares_1_1Solver_1_1Variable_1_1State.html#a8a7395e0a095bdd5264b4bd8d251b69d":[4,0,0,11,5,35,4]
+"classAntares_1_1Solver_1_1Variable_1_1State.html#a8a24933757e710c38530817ff0d4b0bf":[4,0,0,11,5,35,20]
 };

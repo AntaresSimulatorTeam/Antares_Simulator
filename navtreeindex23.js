@@ -1,5 +1,11 @@
 var NAVTREEINDEX23 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions_1_1Statistics.html":[4,0,0,11,5,4,49,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro_1_1Statistics.html":[4,0,0,11,5,4,50,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad_1_1Statistics.html":[4,0,0,11,5,4,51,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesSolar_1_1Statistics.html":[4,0,0,11,5,4,52,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesWind_1_1Statistics.html":[4,0,0,11,5,4,53,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy_1_1Statistics.html":[4,0,0,11,5,4,54,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html":[4,0,0,11,5,4,55],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#a0b17be82bf65ef7a4497ef3aebf208eb":[4,0,0,11,5,4,55,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#a2dd97977a3ebe27349071461bc552cf9":[4,0,0,11,5,4,55,0],
@@ -243,11 +249,5 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Window_1_1Inspector_1_1PAreaColor_1_1Color.html":[4,0,0,15,1,10,0],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaFiltering.html":[4,0,0,15,1,11],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaResortStatus.html":[4,0,0,15,1,12],
-"structAntares_1_1Window_1_1Inspector_1_1PAreaSpilledEnergyCost.html":[4,0,0,15,1,13],
-"structAntares_1_1Window_1_1Inspector_1_1PAreaUnsuppliedEnergyCost.html":[4,0,0,15,1,14],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterArea.html":[4,0,0,15,1,15],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterCO2.html":[4,0,0,15,1,16],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterCostGeneration.html":[4,0,0,15,1,17],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterDoGenerateTS.html":[4,0,0,15,1,18],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterEfficiency.html":[4,0,0,15,1,19]
+"structAntares_1_1Window_1_1Inspector_1_1PAreaSpilledEnergyCost.html":[4,0,0,15,1,13]
 };

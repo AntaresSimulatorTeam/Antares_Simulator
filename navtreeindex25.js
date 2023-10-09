@@ -1,16 +1,21 @@
 var NAVTREEINDEX25 =
 {
+"watervalues_8h_source.html":[5,0,0,5,2,1,1,1,1,1,15],
+"week_8h_source.html":[5,0,0,5,2,1,1,1,0,0,7],
+"weekday_8h_source.html":[5,0,0,5,2,1,1,1,0,0,8],
+"weekly__optimization_8h_source.html":[5,0,0,2,5,12],
+"wind_2prepro_8hxx_source.html":[5,0,0,1,0,19,5,7,2],
+"wind_2series_8hxx_source.html":[5,0,0,1,0,19,5,7,4],
 "wind_8h_source.html":[5,0,0,2,10,1,9],
 "windows_2bindingconstraint_2bindingconstraint_8h_source.html":[5,0,0,5,2,2,2,0],
 "windows_2connection_8h_source.html":[5,0,0,5,2,2,19],
 "windows_2output_2window_8h_source.html":[5,0,0,5,2,2,10,12],
 "windows_2textinput_2input_8h_source.html":[5,0,0,5,2,2,14,0],
-"winmain_8hxx_source.html":[5,0,0,5,1,5],
 "wip-panel_8h_source.html":[5,0,0,5,2,1,1,10],
 "wizardheader_8h_source.html":[5,0,0,5,2,1,1,11],
 "write-command-line_8h_source.html":[5,0,0,2,4,6],
-"writer__factory_8h_source.html":[5,0,0,1,0,21,0,0,2],
-"wx-wrapper_8hxx_source.html":[5,0,0,5,1,7],
+"writer__factory_8h_source.html":[5,0,0,1,0,22,0,0,2],
+"wx-wrapper_8hxx_source.html":[5,0,0,5,1,6],
 "wxgrid-renderer_8h_source.html":[5,0,0,5,2,1,1,1,10],
 "xcast-allareas_8h_source.html":[5,0,0,5,2,1,1,1,1,1,16],
 "xcast-allareas_8hxx_source.html":[5,0,0,5,2,1,1,1,1,1,17],
@@ -22,7 +27,7 @@ var NAVTREEINDEX25 =
 "xcast-k_8hxx_source.html":[5,0,0,5,2,1,1,1,1,1,23],
 "xcast-translation_8h_source.html":[5,0,0,5,2,1,1,1,1,1,24],
 "xcast-translation_8hxx_source.html":[5,0,0,5,2,1,1,1,1,1,25],
-"xpansion_8h_source.html":[5,0,0,1,0,32],
-"zip__writer_8h_source.html":[5,0,0,1,0,21,1,2],
-"zip__writer_8hxx_source.html":[5,0,0,1,0,21,1,3]
+"xpansion_8h_source.html":[5,0,0,1,0,33],
+"zip__writer_8h_source.html":[5,0,0,1,0,22,1,2],
+"zip__writer_8hxx_source.html":[5,0,0,1,0,22,1,3]
 };

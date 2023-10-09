@@ -1188,6 +1188,7 @@ var annotated_dup =
     [ "HydroPowerSmoothingUsingVariationSum", "classHydroPowerSmoothingUsingVariationSum.html", "classHydroPowerSmoothingUsingVariationSum" ],
     [ "I_MPS_writer", "classI__MPS__writer.html", null ],
     [ "IItem", "classIItem.html", "classIItem" ],
+    [ "IntoUTF8ArgsTranslator", "classIntoUTF8ArgsTranslator.html", null ],
     [ "IProvider", "classIProvider.html", "classIProvider" ],
     [ "JIT", "classJIT.html", "classJIT" ],
     [ "JobFileReader", "classJobFileReader.html", "classJobFileReader" ],

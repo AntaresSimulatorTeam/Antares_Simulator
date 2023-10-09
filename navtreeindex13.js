@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#aa2610ad198fe8b749e943d2ad1762513":[4,0,0,11,3,0,3],
 "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList.html":[4,0,0,11,3,1],
 "classAntares_1_1Solver_1_1Simulation_1_1BindingConstraintsTimeSeriesNumbersWriter.html":[4,0,0,11,3,4],
 "classAntares_1_1Solver_1_1Simulation_1_1CurtailmentSharingPostProcessCmd.html":[4,0,0,11,3,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html#a51e0c70f5ba0c1bad380b2f2a94b8f39":[4,0,0,11,5,4,28,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html#ac922b06776fc79163349a43a581520da":[4,0,0,11,5,4,28,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html#afbc5577dcc158c401546c84fd44d72ab":[4,0,0,11,5,4,28,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html":[4,0,0,11,5,4,29],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#a1b6beddf1f3e6cce29576ca020bf814e":[4,0,0,11,5,4,29,3]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html":[4,0,0,11,5,4,29]
 };
