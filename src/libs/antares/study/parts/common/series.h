@@ -37,7 +37,8 @@ namespace Antares::Data
 class TimeSeries
 {
 public:
-    typedef Matrix<uint32_t> TSNumbers;
+    using TSNumbers = Matrix<uint32_t>;
+    using TScoefficients = Matrix<double, int32_t>;
 
     /*!
      ** \brief Load series from a file
@@ -74,7 +75,7 @@ public:
     void markAsModified() const;
     uint64_t memoryUsage() const;
 
-    Matrix<double, int32_t> timeSeries;
+    TScoefficients timeSeries;
     TSNumbers timeseriesNumbers;
 
     static const double emptyColumn[HOURS_PER_YEAR];
