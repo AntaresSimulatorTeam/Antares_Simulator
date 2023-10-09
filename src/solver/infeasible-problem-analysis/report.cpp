@@ -3,6 +3,8 @@
 #include <antares/logs/logs.h>
 #include <algorithm>
 
+using namespace operations_research;
+
 static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,
                                   const Antares::Optimization::Constraint& b)
 {
@@ -13,20 +15,19 @@ namespace Antares
 {
 namespace Optimization
 {
-InfeasibleProblemReport::InfeasibleProblemReport(
-  const std::vector<const operations_research::MPVariable*>& slackVariables)
+InfeasibleProblemReport::InfeasibleProblemReport(const std::vector<const MPVariable*>& slackVariables)
 {
-    for (const operations_research::MPVariable* slack : slackVariables)
-    {
-        append(slack->name(), slack->solution_value());
-    }
+    turnSlackVarsIntoConstraints(slackVariables);
     sortConstraints();
     trimConstraints();
 }
 
-void InfeasibleProblemReport::append(const std::string& constraintName, double value)
+void InfeasibleProblemReport::turnSlackVarsIntoConstraints(const std::vector<const MPVariable*>& slackVariables)
 {
-    mConstraints.emplace_back(constraintName, value);
+    for (const MPVariable* slack : slackVariables)
+    {
+        mConstraints.emplace_back(slack->name(), slack->solution_value());
+    }
 }
 
 void InfeasibleProblemReport::extractItems()
