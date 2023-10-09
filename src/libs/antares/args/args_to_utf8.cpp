@@ -2,7 +2,6 @@
 #include <yuni/yuni.h>
 #include "antares/args/args_to_utf8.h"
 
-
 #ifdef YUNI_OS_WINDOWS
 #include <string.h>
 #include <cstdlib>
@@ -13,8 +12,7 @@
 #include <shellapi.h>
 #endif // YUNI_OS_WINDOWS
 
-IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv)
-    : argc_(argc), argv_(argv)
+IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv) : argc_(argc), argv_(argv)
 {
 }
 
