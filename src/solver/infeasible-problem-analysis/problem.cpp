@@ -24,7 +24,7 @@ void InfeasibleProblemAnalysis::addSlackVariables()
        This should not happen in most cases.
     */
     const unsigned int selectedConstraintsInverseRatio = 3;
-    mSlackVariables.reserve(problem_->NumConstraints() / selectedConstraintsInverseRatio);
+    slackVariables_.reserve(problem_->NumConstraints() / selectedConstraintsInverseRatio);
     std::regex rgx(constraint_name_pattern);
     const double infinity = MPSolver::infinity();
     for (MPConstraint* constraint : problem_->constraints())
@@ -36,7 +36,7 @@ void InfeasibleProblemAnalysis::addSlackVariables()
                 const MPVariable* slack
                   = problem_->MakeNumVar(0, infinity, constraint->name() + "::low");
                 constraint->SetCoefficient(slack, 1.);
-                mSlackVariables.push_back(slack);
+                slackVariables_.push_back(slack);
             }
 
             if (constraint->ub() != infinity)
@@ -44,7 +44,7 @@ void InfeasibleProblemAnalysis::addSlackVariables()
                 const MPVariable* slack
                   = problem_->MakeNumVar(0, infinity, constraint->name() + "::up");
                 constraint->SetCoefficient(slack, -1.);
-                mSlackVariables.push_back(slack);
+                slackVariables_.push_back(slack);
             }
         }
     }
@@ -56,7 +56,7 @@ void InfeasibleProblemAnalysis::buildObjective() const
     // Reset objective function
     objective->Clear();
     // Only slack variables have a non-zero cost
-    for (const MPVariable* slack : mSlackVariables)
+    for (const MPVariable* slack : slackVariables_)
     {
         objective->SetCoefficient(slack, 1.);
     }
@@ -72,7 +72,7 @@ bool InfeasibleProblemAnalysis::run()
 {
     logs.notice() << " Solver: Starting infeasibility analysis...";
     addSlackVariables();
-    if (mSlackVariables.empty())
+    if (slackVariables_.empty())
     {
         logs.error() << "Cannot generate infeasibility report: no constraints have been selected";
         return false;
@@ -92,7 +92,7 @@ bool InfeasibleProblemAnalysis::run()
 
 InfeasibleProblemReport InfeasibleProblemAnalysis::produceReport()
 {
-    return InfeasibleProblemReport(mSlackVariables);
+    return InfeasibleProblemReport(slackVariables_);
 }
 } // namespace Optimization
 } // namespace Antares
