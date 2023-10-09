@@ -90,7 +90,7 @@ static bool GenerateDeratedMode(Study& study)
 
     study.areas.each([&](Area& area) {
         area.load.series.timeseriesNumbers.zero();
-        area.solar.series->timeseriesNumbers.zero();
+        area.solar.series.timeseriesNumbers.zero();
         area.wind.series.timeseriesNumbers.zero();
         area.hydro.series->timeseriesNumbers.zero();
 
@@ -182,7 +182,7 @@ public:
     }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
     {
-        std::vector<uint> to_return = {area.solar.series->timeSeries.width};
+        std::vector<uint> to_return = {area.solar.series.timeSeries.width};
         return to_return;
     }
     uint getGeneratedTimeSeriesNumber()
@@ -402,7 +402,7 @@ bool checkInterModalConsistencyForArea(Area& area,
     if (isTSintermodal[indexTS])
     {
         uint nbTimeSeries
-          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesSolar : area.solar.series->timeSeries.width;
+          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesSolar : area.solar.series.timeSeries.width;
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -509,11 +509,11 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
         // -------------
         // Solar ...
         // -------------
-        assert(year < area.solar.series->timeseriesNumbers.height);
+        assert(year < area.solar.series.timeseriesNumbers.height);
         indexTS = ts_to_tsIndex.at(timeSeriesSolar);
 
         if (isTSintramodal[indexTS])
-            area.solar.series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+            area.solar.series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
 
         // -------------
         // Wind ...
@@ -609,8 +609,8 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         if (!isTSintramodal[indexTS])
         {
             uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
-                                                       : area.solar.series->timeSeries.width;
-            area.solar.series->timeseriesNumbers[0][year]
+                                                       : area.solar.series.timeSeries.width;
+            area.solar.series.timeseriesNumbers[0][year]
               = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
 
@@ -738,7 +738,7 @@ Matrix<uint32_t>* getFirstTSnumberInterModalMatrixFoundInArea(
     else
     {
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesSolar)])
-            tsNumbersMtx = &(area.solar.series->timeseriesNumbers);
+            tsNumbersMtx = &(area.solar.series.timeseriesNumbers);
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesWind)])
             tsNumbersMtx = &(area.wind.series.timeseriesNumbers);
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesHydro)])
@@ -769,9 +769,9 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32_t>* tsNumbersMtx,
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesLoad)])
             area.load.series.timeseriesNumbers[0][year] = draw;
 
-        assert(year < area.solar.series->timeseriesNumbers.height);
+        assert(year < area.solar.series.timeseriesNumbers.height);
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesSolar)])
-            area.solar.series->timeseriesNumbers[0][year] = draw;
+            area.solar.series.timeseriesNumbers[0][year] = draw;
 
         assert(year < area.wind.series.timeseriesNumbers.height);
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesWind)])
@@ -826,7 +826,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
                 area.load.series.timeseriesNumbers, area.load.series.timeSeries.width, years);
         // Solar
         fixTSNumbersSingleAreaSingleMode(
-                area.solar.series->timeseriesNumbers, area.solar.series->timeSeries.width, years);
+                area.solar.series.timeseriesNumbers, area.solar.series.timeSeries.width, years);
         // Wind
         fixTSNumbersSingleAreaSingleMode(
                 area.wind.series.timeseriesNumbers, area.wind.series.timeSeries.width, years);

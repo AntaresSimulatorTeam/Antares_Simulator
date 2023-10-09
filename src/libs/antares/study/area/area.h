@@ -801,11 +801,6 @@ void AreaListClearAllLinks(AreaList* l);
 void AreaListEnsureDataLoadPrepro(AreaList* l);
 
 /*!
-** \brief Ensure data for load time-series are initialized
-*/
-void AreaListEnsureDataSolarTimeSeries(AreaList* l);
-
-/*!
 ** \brief Ensure data for solar prepro are initialized
 */
 void AreaListEnsureDataSolarPrepro(AreaList* l);

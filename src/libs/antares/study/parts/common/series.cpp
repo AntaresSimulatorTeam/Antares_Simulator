@@ -39,6 +39,8 @@ using namespace Yuni;
 namespace Antares::Data
 {
 
+const double TimeSeries::emptyColumn[] = {0};
+
 int TimeSeries::timeSeriesLoadFromFolder(Study& s,
         const AreaName& areaID,
         const std::string& folder,
@@ -76,11 +78,15 @@ void TimeSeries::reset()
 
 double TimeSeries::getCoefficient(uint32_t year, uint32_t hourInYear) const
 {
+    if (timeSeries.width == 0)
+        return 0;
     return timeSeries[getSeriesIndex(year)][hourInYear];
 }
 
-double* TimeSeries::getColumn(uint32_t year) const
+const double* TimeSeries::getColumn(uint32_t year) const
 {
+    if (timeSeries.width == 0)
+        return emptyColumn;
     return timeSeries[getSeriesIndex(year)];
 }
 

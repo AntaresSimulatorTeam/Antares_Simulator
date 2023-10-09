@@ -572,7 +572,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             auto& ror = area.hydro.series->ror;
             auto loadSeries = area.load.series.getCoefficient(year, hourInYear);
             auto windSeries = area.wind.series.getCoefficient(year, hourInYear);
-            auto solarSeries = area.solar.series->getCoefficient(year, hourInYear);
+            auto solarSeries = area.solar.series.getCoefficient(year, hourInYear);
             auto hydroSeriesIndex = area.hydro.series->getIndex(year);
 
             assert(&scratchpad);

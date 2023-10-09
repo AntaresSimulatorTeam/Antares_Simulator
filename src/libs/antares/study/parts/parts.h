@@ -31,7 +31,6 @@
 #include "load/container.h"
 
 // Solar
-#include "solar/series.h"
 #include "solar/prepro.h"
 #include "solar/container.h"
 

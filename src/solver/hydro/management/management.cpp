@@ -385,7 +385,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year)
         auto& data = tmpDataByArea_[numSpace][z];
         const double* loadSeries = area.load.series.getColumn(year);
         const double* windSeries = area.wind.series.getColumn(year);
-        const double* solarSeries = area.solar.series->getColumn(year);
+        const double* solarSeries = area.solar.series.getColumn(year);
 
         for (uint hour = 0; hour != HOURS_PER_YEAR; ++hour)
         {
