@@ -83,6 +83,13 @@ MPSolver::ResultStatus InfeasibleProblemAnalysis::Solve() const
 bool InfeasibleProblemAnalysis::run()
 {
     logs.notice() << " Solver: Starting infeasibility analysis...";
+
+    for (auto& analysis : analysisList_)
+    {
+        if (!analysis->run())
+            return false;
+    }
+
     addSlackVariables();
     if (slackVariables_.empty())
     {

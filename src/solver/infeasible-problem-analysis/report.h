@@ -20,7 +20,8 @@ public:
     void prettyPrint();
 
 private:
-    void trim();
+    void sortConstraints();
+    void trimConstraints();
     void extractItems();
     void logSuspiciousConstraints();
     void append(const std::string& constraintName, double value);

@@ -20,7 +20,8 @@ InfeasibleProblemReport::InfeasibleProblemReport(
     {
         append(slack->name(), slack->solution_value());
     }
-    trim();
+    sortConstraints();
+    trimConstraints();
 }
 
 void InfeasibleProblemReport::append(const std::string& constraintName, double value)
@@ -74,9 +75,14 @@ void InfeasibleProblemReport::prettyPrint()
     logSuspiciousConstraints();
 }
 
-void InfeasibleProblemReport::trim()
+
+void InfeasibleProblemReport::sortConstraints()
 {
     std::sort(std::begin(mConstraints), std::end(mConstraints), ::compareSlackSolutions);
+}
+
+void InfeasibleProblemReport::trimConstraints()
+{
     if (nbVariables <= mConstraints.size())
     {
         mConstraints.resize(nbVariables);
