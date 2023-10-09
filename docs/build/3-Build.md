@@ -24,7 +24,7 @@ git submodule update --init src/antares-deps
     ```
     cmake3 -B _build -S [antares_src] -DCMAKE_BUILD_TYPE=release
     ```
-=== "Ubuntu"
+=== "Ubuntu/Debian"
 
     ```
     cmake -B _build -S [antares_src] -DCMAKE_BUILD_TYPE=release
@@ -60,7 +60,7 @@ Additional options for windows
     ```
     cmake3 --build _build --config release -j8
     ```
-=== "Ubuntu"
+=== "Ubuntu/Debian"
 
     ```
     cmake --build _build --config release -j8

@@ -53,14 +53,14 @@ The installation procedure can be done
     sudo yum install cmake3 devtoolset-9
     sudo yum install libuuid-devel unzip wxGTK3-devel boost-test boost-devel
     ```
-=== "Ubuntu (apt-get)"
+=== "Ubuntu 20.04 or 22.04 / Debian 11 (apt-get)"
 
     ```
     sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
     sudo apt-get install libboost-test-dev
     ```
 
-=== "Debian Bookworm (apt-get)"
+=== "Ubuntu 23.04 / Debian 12 (apt-get)"
 
     ```
     sudo apt-get install uuid-dev libwxgtk3.2-dev libboost-test-dev
@@ -73,9 +73,9 @@ Apart from OR-Tools, all dependencies can be built at configure time using the o
 
 You can set `-DBUILD_ORTOOLS=ON` to download & build OR-Tools. It is also possible to use a precompiled archive, see below.
 
-For compiling the package yourself from git, additional build dependencies are needed.
+For compiling the package yourself from git, additional build dependencies are needed (see [here](1-Development-requirements.md)).
 
-Fore Debian 12 Bookworm and Ubuntu 23 the installation needs the following build and test dependencies:
+For building on Debian 12 or Ubuntu 23.04 the installation requires the following build and test dependencies:
 
 ```
 sudo apt-get install git unzip cmake build-essentials uuid-dev libboost-test-dev libwxgtk3.2-dev python3-numpy python3-pytest
@@ -89,7 +89,7 @@ Please note that dynamic linking with OR-Tools is only supported in Linux.
 Decompress the archive, and provide its path as a `CMAKE_PREFIX_PATH`. If you use XPRESS, you may need also to specify `XPRESS_ROOT`.
 
 ### Defining dependency install directory
-When using multiple directories for antares development with multiple branches it can be useful to have a common dependency install directory.
+When using multiple directories for Antares development with multiple branches it can be useful to have a common dependency install directory.
 
 Dependency install directory can be specified with `DEPS_INSTALL_DIR`. By default install directory is `<antares_checkout_dir>/../rte-antares-deps-<build_type>`
 
