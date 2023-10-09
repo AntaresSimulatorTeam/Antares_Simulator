@@ -65,7 +65,7 @@ public:
                                const std::string& filename) const;
 
     double getCoefficient(uint32_t year, uint32_t hourInYear) const;
-    double* getColumn(uint32_t year) const;
+    const double* getColumn(uint32_t year) const;
     uint32_t getSeriesIndex(uint32_t year) const;
 
     void reset();
@@ -76,6 +76,8 @@ public:
 
     Matrix<double, int32_t> timeSeries;
     TSNumbers timeseriesNumbers;
+
+    static const double emptyColumn[HOURS_PER_YEAR];
 };
 
 /*!
