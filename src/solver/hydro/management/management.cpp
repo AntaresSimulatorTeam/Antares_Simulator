@@ -392,13 +392,14 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year)
             auto dayYear = calendar_.hours[hour].dayYear;
 
             double netdemand = 0;
+            auto solarHourValue = (solarSeries) ? solarSeries[hour] : 0;
 
             // Aggregated renewable production: wind & solar
             if (parameters_.renewableGeneration.isAggregated())
             {
                 netdemand = + loadSeries[hour]
                             - windSeries[hour] - scratchpad.miscGenSum[hour]
-                            - solarSeries[hour] - ror[hour]
+                            - solarHourValue - ror[hour]
                             - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
             }
