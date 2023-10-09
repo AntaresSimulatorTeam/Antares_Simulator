@@ -11,9 +11,21 @@ namespace Antares
 {
 namespace Optimization
 {
+
+SingleAnalysis::SingleAnalysis(std::shared_ptr<operations_research::MPSolver> problem)
+    : problem_(problem)
+{}
+
 InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
 {
     problem_ = std::unique_ptr<MPSolver>(ProblemSimplexeNommeConverter(solverName, ProbSpx).Convert());
+
+    analysisList_.push_back(std::make_unique<SlackVariablesAnalysis>(problem_));
+}
+
+bool SlackVariablesAnalysis::run()
+{
+    return true;
 }
 
 void InfeasibleProblemAnalysis::addSlackVariables()

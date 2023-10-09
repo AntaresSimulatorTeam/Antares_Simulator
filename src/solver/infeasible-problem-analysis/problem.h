@@ -37,6 +37,7 @@ private:
     const std::string constraint_name_pattern = "^AreaHydroLevel::|::hourly::|::daily::|::weekly::|^FictiveLoads::";
 };
 
+
 class InfeasibleProblemAnalysis
 {
 public:
@@ -52,7 +53,8 @@ private:
 
     std::shared_ptr<operations_research::MPSolver> problem_;
     std::vector<const operations_research::MPVariable*> slackVariables_;
-    const std::string constraint_name_pattern = "^AreaHydroLevel::|::hourly::|::daily::|::weekly::|^FictiveLoads::";                              
+    const std::string constraint_name_pattern = "^AreaHydroLevel::|::hourly::|::daily::|::weekly::|^FictiveLoads::";
+    std::vector<std::unique_ptr<SingleAnalysis>> analysisList_;
 };
 } // namespace Optimization
 } // namespace Antares
