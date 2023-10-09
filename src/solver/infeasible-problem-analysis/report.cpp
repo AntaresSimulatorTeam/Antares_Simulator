@@ -3,8 +3,6 @@
 #include <antares/logs/logs.h>
 #include <algorithm>
 
-using namespace operations_research;
-
 static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,
                                   const Antares::Optimization::Constraint& b)
 {
