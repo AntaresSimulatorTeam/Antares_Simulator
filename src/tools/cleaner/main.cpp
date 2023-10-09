@@ -28,7 +28,7 @@
 #include <antares/logs/logs.h>
 #include <antares/study/finder.h>
 #include <yuni/core/getopt.h>
-#include "../../ui/common/winmain.hxx"
+#include <antares/args/args_to_utf8.h>
 #include <antares/utils/utils.h>
 #include <antares/study/cleaner.h>
 #include <antares/version.h>
@@ -97,8 +97,8 @@ int main(int argc, char* argv[])
     InitializeDefaultLocale();
 
     Antares::logs.applicationName("cleaner");
-    argv = AntaresGetUTF8Arguments(argc, argv);
-
+    IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
+    std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
     String::Vector optInput;
     bool optPrintOnly = false;
     bool optMrProper = false;

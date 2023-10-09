@@ -28,6 +28,7 @@ INSTALL(EXPORT antares-study-finder
 set(FINDER_LIBS
 	antares-core
 	yuni-static-core
+	Antares::args_helper
 	${CMAKE_THREADS_LIBS_INIT}
 )
 

@@ -74,6 +74,7 @@ add_executable(antares-solver
 set_target_properties(antares-solver PROPERTIES OUTPUT_NAME ${exec_name})
 
 set(ANTARES_SOLVER_LIBS
+	Antares::args_helper
 	Antares::date
 	Antares::benchmarking
 	Antares::result_writer

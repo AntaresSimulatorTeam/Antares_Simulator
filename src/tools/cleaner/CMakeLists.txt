@@ -26,6 +26,7 @@ INSTALL(EXPORT antares-study-cleaner
 
 set(CLEANER_LIBS
 	yuni-static-core
+	Antares::args_helper
 	Antares::study
 	Antares::sys
 	antares-core #version.h
