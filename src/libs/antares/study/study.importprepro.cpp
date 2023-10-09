@@ -60,7 +60,7 @@ bool Study::importTimeseriesIntoInput()
             areas.each([&](const Data::Area& area) {
                 logs.info() << "Importing load timeseries : " << area.name;
                 buffer.clear() << folderInput << SEP << "load" << SEP << "series";
-                ret = DataSeriesLoadSaveToFolder(area.load.series, area.id, buffer.c_str()) && ret;
+                ret = area.load.series.timeSeriesSaveToFolder(area.id, buffer.c_str(), "load_") && ret;
                 ++progression;
             });
         }

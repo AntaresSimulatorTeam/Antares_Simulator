@@ -34,7 +34,7 @@ StudyFixture::StudyFixture()
 	cluster = addClusterToArea(area, "some cluster");
 
 	loadInArea = 7.0;
-	loadTSconfig = std::move(TimeSeriesConfigurer(area->load.series->timeSeries));
+	loadTSconfig = std::move(TimeSeriesConfigurer(area->load.series.timeSeries));
 	loadTSconfig.setColumnCount(1)
 				.fillColumnWith(0, loadInArea);
 

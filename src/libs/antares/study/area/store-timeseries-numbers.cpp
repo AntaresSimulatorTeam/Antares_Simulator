@@ -69,7 +69,7 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
 
 void storeTimeseriesNumbersForLoad(Solver::IResultWriter& writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.load.series->timeseriesNumbers, area.id, "load");
+    genericStoreTimeseriesNumbers(writer, area.load.series.timeseriesNumbers, area.id, "load");
 }
 
 void storeTimeseriesNumbersForSolar(Solver::IResultWriter& writer, const Area& area)

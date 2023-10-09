@@ -107,9 +107,9 @@ struct commonFixture
 
         // Load : set the nb of ready made TS
         uint nbReadyMadeTS = 13;
-        area_1->load.series->timeSeries.resize(nbReadyMadeTS, 1);
-        area_2->load.series->timeSeries.resize(nbReadyMadeTS, 1);
-        area_3->load.series->timeSeries.resize(nbReadyMadeTS, 1);
+        area_1->load.series.timeSeries.resize(nbReadyMadeTS, 1);
+        area_2->load.series.timeSeries.resize(nbReadyMadeTS, 1);
+        area_3->load.series.timeSeries.resize(nbReadyMadeTS, 1);
 
         // Wind : set the nb of ready made TS
         nbReadyMadeTS = 17;

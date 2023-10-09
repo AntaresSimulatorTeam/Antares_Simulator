@@ -27,7 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_LOAD_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_LOAD_CONTAINER_H__
 
-#include "series.h"
+#include <antares/study/parts/common/series.h>
 #include <yuni/core/noncopyable.h>
 
 namespace Antares
@@ -75,7 +75,7 @@ public:
     //! Data for the pre-processor
     Data::Load::Prepro* prepro;
     /*! Data for time-series */
-    DataSeriesLoad* series;
+    TimeSeries series;
 
 }; // class Container
 

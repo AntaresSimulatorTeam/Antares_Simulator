@@ -205,8 +205,6 @@ void Area::createMissingData()
 
 void Area::createMissingTimeSeries()
 {
-    if (!load.series)
-        load.series = new DataSeriesLoad();
     if (!solar.series)
         solar.series = new DataSeriesSolar();
     if (!hydro.series)
@@ -267,13 +265,12 @@ void Area::resizeAllTimeseriesNumbers(uint n)
     assert(n < 200000); // arbitrary number
 
     // asserts
-    assert(load.series and "load.series must not be nullptr !");
     assert(solar.series and "solar.series must not be nullptr !");
     assert(hydro.series and "series must not be nullptr !");
 
     if (!n)
     {
-        load.series->timeseriesNumbers.clear();
+        load.series.timeseriesNumbers.clear();
         solar.series->timeseriesNumbers.clear();
         wind.series.timeseriesNumbers.clear();
         hydro.series->timeseriesNumbers.clear();
@@ -285,7 +282,7 @@ void Area::resizeAllTimeseriesNumbers(uint n)
     }
     else
     {
-        load.series->timeseriesNumbers.resize(1, n);
+        load.series.timeseriesNumbers.resize(1, n);
         solar.series->timeseriesNumbers.resize(1, n);
         wind.series.timeseriesNumbers.resize(1, n);
         hydro.series->timeseriesNumbers.resize(1, n);

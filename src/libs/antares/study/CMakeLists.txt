@@ -199,9 +199,6 @@ set(SRC_STUDY
         # Load
         parts/load/container.h
         parts/load/container.cpp
-        parts/load/series.h
-        parts/load/series.hxx
-        parts/load/series.cpp
         parts/load/prepro.cpp
         parts/load/prepro.h
         parts/load/prepro.hxx

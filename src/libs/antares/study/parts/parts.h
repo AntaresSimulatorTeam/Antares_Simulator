@@ -28,7 +28,6 @@
 #define __ANTARES_LIBS_STUDY_PARTS_H__
 
 // Load
-#include "load/series.h"
 #include "load/container.h"
 
 // Solar
