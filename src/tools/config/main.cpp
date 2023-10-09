@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 
     logs.applicationName("config");
     IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
-
+    std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
     // Initializing the toolbox
     Antares::Resources::Initialize(argc, argv, true);
 

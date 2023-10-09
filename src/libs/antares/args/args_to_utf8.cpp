@@ -2,34 +2,36 @@
 #include <yuni/yuni.h>
 #include "antares/args/args_to_utf8.h"
 
-
 #ifdef YUNI_OS_WINDOWS
 #include <string.h>
+#include <cstdlib>
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN 1
-#endif
+#endif // WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <shellapi.h>
-#include <stdlib.h>
-#include <stdio.h>
-#endif
+#endif // YUNI_OS_WINDOWS
 
-IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char**& argv)
-    : argc_(argc), argv_(argv)
+IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv) : argc_(argc), argv_(argv)
+{
+}
+
+std::pair<int, char**> IntoUTF8ArgsTranslator::convert()
 {
 #ifdef YUNI_OS_WINDOWS
-    wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
-    argv = (char**)malloc(argc * sizeof(char*));
-    for (int i = 0; i != argc; ++i)
+    wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(), &argc_);
+    argv_ = (char**)malloc(argc_ * sizeof(char*));
+    for (int i = 0; i != argc_; ++i)
     {
         const uint len = (uint)wcslen(wargv[i]);
         const uint newLen = WideCharToMultiByte(CP_UTF8, 0, wargv[i], len, NULL, 0, NULL, NULL);
-        argv[i] = (char*)malloc((newLen + 1) * sizeof(char));
-        memset(argv[i], 0, (newLen + 1) * sizeof(char));
-        WideCharToMultiByte(CP_UTF8, 0, wargv[i], len, argv[i], newLen, NULL, NULL);
-        argv[i][newLen] = '\0';
+        argv_[i] = (char*)malloc((newLen + 1) * sizeof(char));
+        memset(argv_[i], 0, (newLen + 1) * sizeof(char));
+        WideCharToMultiByte(CP_UTF8, 0, wargv[i], len, argv_[i], newLen, NULL, NULL);
+        argv_[i][newLen] = '\0';
     }
 #endif
+    return {argc_, argv_};
 }
 
 IntoUTF8ArgsTranslator::~IntoUTF8ArgsTranslator()

@@ -171,6 +171,7 @@ int main(int argc, char* argv[])
 
     logs.applicationName("updater");
     IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
+    std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
 
     String::Vector optInput;
     bool optCleanup = false;

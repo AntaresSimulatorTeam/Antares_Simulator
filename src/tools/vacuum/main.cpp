@@ -248,6 +248,7 @@ int main(int argc, char** argv)
 
     logs.applicationName("vacuum");
     IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
+    std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
     String::Vector optInput;
     String::Vector optEachFolderIn;
     uint optMaxDays = 90; // days
