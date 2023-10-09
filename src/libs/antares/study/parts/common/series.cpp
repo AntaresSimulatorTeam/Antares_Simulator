@@ -42,14 +42,14 @@ namespace Antares::Data
 const double TimeSeries::emptyColumn[] = {0};
 
 int TimeSeries::timeSeriesLoadFromFolder(Study& s,
-        const AreaName& areaID,
-        const std::string& folder,
-        const std::string& filename)
+                                         const AreaName& areaID,
+                                         const std::string& folder,
+                                         const std::string& prefix)
 {
     String& buffer = s.bufferLoadingTS;
 
     int ret = 1;
-    buffer.clear() << folder << SEP << filename << areaID << '.' << s.inputExtension;
+    buffer.clear() << folder << SEP << prefix << areaID << '.' << s.inputExtension;
     ret = timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
 
     if (s.usedByTheSolver && s.parameters.derated)
@@ -61,14 +61,11 @@ int TimeSeries::timeSeriesLoadFromFolder(Study& s,
 }
 
 int TimeSeries::timeSeriesSaveToFolder(const AreaName& areaID, const std::string& folder,
-                                       const std::string& filename) const
+                                       const std::string& prefix) const
 {
     Clob buffer;
-    int ret = 1;
-    buffer.clear() << folder << SEP << filename << areaID << ".txt";
-    ret = timeSeries.saveToCSVFile(buffer, 0) && ret;
-
-    return ret;
+    buffer.clear() << folder << SEP << prefix << areaID << ".txt";
+    return timeSeries.saveToCSVFile(buffer, 0);
 }
 
 void TimeSeries::reset()

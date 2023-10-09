@@ -51,7 +51,7 @@ public:
     int timeSeriesLoadFromFolder(Study& s,
                                  const AreaName& areaID,
                                  const std::string& folder,
-                                 const std::string& filename);
+                                 const std::string& prefix);
     /*!
      ** \brief Save time series to a file
      ** \ingroup windseries
@@ -62,7 +62,7 @@ public:
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
     int timeSeriesSaveToFolder(const AreaName& areaID, const std::string& folder,
-                               const std::string& filename) const;
+                               const std::string& prefix) const;
 
     double getCoefficient(uint32_t year, uint32_t hourInYear) const;
     const double* getColumn(uint32_t year) const;
