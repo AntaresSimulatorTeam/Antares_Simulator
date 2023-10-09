@@ -11,8 +11,8 @@
 namespace Antares::Concurrency
 {
 
-typedef std::function<void()> Task;
-typedef std::future<void> TaskFuture;
+using Task = std::function<void()>;
+using TaskFuture = std::future<void>;
 
 /*!
  * \brief Queues the provided function and returns the corresponding std::future.
@@ -30,6 +30,14 @@ TaskFuture AddTask(Yuni::Job::QueueService& threadPool,
 class FutureSet
 {
 public:
+    FutureSet() = default;
+    ~FutureSet() = default;
+
+    FutureSet(const FutureSet&) = delete;
+    FutureSet& operator=(const FutureSet&) = delete;
+    FutureSet(FutureSet&&) = delete;
+    FutureSet& operator=(FutureSet&&) = delete;
+
     /*!
      * \brief Adds one future to be monitored by this set.
      *
@@ -41,10 +49,12 @@ public:
      * \brief Waits for completion of all added futures.
      *
      * If one of the future ends on exception, re-throws the first encountered exception.
+     * Note that futures cannot be added while some thread is waiting for completion.
      */
     void join();
 
 private:
+    std::mutex mutex_;
     std::vector<TaskFuture> futures_;
 };
 

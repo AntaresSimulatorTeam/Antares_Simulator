@@ -50,8 +50,6 @@
 namespace Antares::Solver::Simulation
 {
 
-using namespace Antares::Concurrency;
-
 template<class Impl>
 class yearJob
 {
@@ -969,7 +967,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
         std::vector<unsigned int>::iterator year_it;
 
         bool yearPerformed = false;
-        FutureSet results;
+        Concurrency::FutureSet results;
         for (year_it = set_it->yearsIndices.begin(); year_it != set_it->yearsIndices.end();
              ++year_it)
         {
@@ -1002,7 +1000,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                                  pYearByYear,
                                                  pDurationCollector,
                                                  pResultWriter);
-            results.add(AddTask(*pQueueService, task));
+            results.add(Concurrency::AddTask(*pQueueService, task));
         } // End loop over years of the current set of parallel years
 
         logPerformedYearsInAset(*set_it);

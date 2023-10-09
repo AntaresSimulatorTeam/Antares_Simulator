@@ -63,14 +63,14 @@ BOOST_AUTO_TEST_CASE(test_future_set)
     BOOST_CHECK(counter == 10);
 }
 
-class TestException1 {};
-class TestException2 {};
+template <int N>
+class TestExceptionN {};
 
-BOOST_AUTO_TEST_CASE(test_future_set_rethrows_first)
+BOOST_AUTO_TEST_CASE(test_future_set_rethrows_first_submitted)
 {
     auto threadPool = createThreadPool(2);
     FutureSet futures;
-    futures.add(AddTask(*threadPool, failingTask<TestException1>()));
-    futures.add(AddTask(*threadPool, failingTask<TestException2>()));
-    BOOST_CHECK_THROW(futures.join(), TestException1);
+    futures.add(AddTask(*threadPool, failingTask<TestExceptionN<1>>()));
+    futures.add(AddTask(*threadPool, failingTask<TestExceptionN<2>>()));
+    BOOST_CHECK_THROW(futures.join(), TestExceptionN<1>);
 }

@@ -5,13 +5,14 @@
 #include "yuni/job/job.h"
 #include "antares/concurrency/concurrency.h"
 
+namespace Antares::Concurrency
+{
+
 namespace {
 
-using namespace Antares::Concurrency;
-
 /*!
- * Just wraps an arbitrary task as a yuni job, and allows to retrieve the corresponding future.
- */
+* Just wraps an arbitrary task as a yuni job, and allows to retrieve the corresponding future.
+*/
 class PackagedJob : public Yuni::Job::IJob {
 public:
     PackagedJob(const Task& task) : task_(task) {}
@@ -31,23 +32,22 @@ private:
 
 }
 
-namespace Antares::Concurrency
-{
-
 std::future<void> AddTask(Yuni::Job::QueueService& threadPool,
                           const Task& task,
                           Yuni::Job::Priority priority) {
     auto job = std::make_unique<PackagedJob>(task);
     auto future = job->getFuture();
-    threadPool.add(Yuni::Job::IJob::Ptr(job.release()), priority);
+    threadPool.add(job.release(), priority);
     return future;
 }
 
 void FutureSet::add(TaskFuture&& f) {
+    std::lock_guard lock(mutex_);
     futures_.push_back(std::move(f));
 }
 
 void FutureSet::join() {
+    std::lock_guard lock(mutex_);
     for (auto& f: futures_) {
         f.get();
     }
