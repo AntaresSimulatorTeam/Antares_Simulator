@@ -207,8 +207,6 @@ void Area::createMissingTimeSeries()
 {
     if (!hydro.series)
         hydro.series = new DataSeriesHydro();
-    thermal.list.ensureDataTimeSeries();
-    renewable.list.ensureDataTimeSeries();
 }
 void Area::createMissingPrepros()
 {

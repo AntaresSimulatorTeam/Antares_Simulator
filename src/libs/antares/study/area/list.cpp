@@ -1029,8 +1029,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 void AreaList::ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded)
 {
     AreaListEnsureDataHydroTimeSeries(this);
-    AreaListEnsureDataThermalTimeSeries(this);
-    AreaListEnsureDataRenewableTimeSeries(this);
 
     if (loadOnlyNeeded)
     {
@@ -1288,18 +1286,6 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
         if (!area.hydro.prepro)
             area.hydro.prepro = new PreproHydro();
     });
-}
-
-void AreaListEnsureDataThermalTimeSeries(AreaList* l)
-{
-    assert(l);
-    l->each([&](Data::Area& area) { area.thermal.list.ensureDataTimeSeries(); });
-}
-
-void AreaListEnsureDataRenewableTimeSeries(AreaList* l)
-{
-    assert(l);
-    l->each([&](Data::Area& area) { area.renewable.list.ensureDataTimeSeries(); });
 }
 
 void AreaListEnsureDataThermalPrepro(AreaList* l)
@@ -1587,7 +1573,7 @@ void AreaList::removeThermalTimeseries()
 {
     each([&](Data::Area& area) {
         area.thermal.list.each(
-          [&](Data::ThermalCluster& cluster) { cluster.series->timeSeries.reset(1, HOURS_PER_YEAR); });
+          [&](Data::ThermalCluster& cluster) { cluster.series.timeSeries.reset(1, HOURS_PER_YEAR); });
     });
 }
 

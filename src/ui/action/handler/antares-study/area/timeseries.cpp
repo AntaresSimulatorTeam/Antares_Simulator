@@ -164,15 +164,15 @@ bool DataTimeseries::performWL(Context& ctx)
                     source->hydro.series->ror.unloadFromMemory();
                     source->hydro.series->storage.unloadFromMemory();
                     source->hydro.series->mingen.unloadFromMemory();
-                                        
+
                     break;
                 }
                 case Data::timeSeriesThermal:
                 {
                     if (ctx.cluster && ctx.originalPlant && ctx.cluster != ctx.originalPlant)
                     {
-                        ctx.cluster->series->timeSeries = ctx.originalPlant->series->timeSeries;
-                        ctx.originalPlant->series->timeSeries.unloadFromMemory();
+                        ctx.cluster->series.timeSeries = ctx.originalPlant->series.timeSeries;
+                        ctx.originalPlant->series.timeSeries.unloadFromMemory();
                     }
                     break;
                 }

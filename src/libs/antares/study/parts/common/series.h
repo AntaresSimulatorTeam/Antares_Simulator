@@ -38,7 +38,6 @@ class TimeSeries
 {
 public:
     using TSNumbers = Matrix<uint32_t>;
-    using TScoefficients = Matrix<double, int32_t>;
 
     /*!
      ** \brief Load series from a file
@@ -75,7 +74,7 @@ public:
     void markAsModified() const;
     uint64_t memoryUsage() const;
 
-    TScoefficients timeSeries;
+    Matrix<double, int32_t> timeSeries;
     TSNumbers timeseriesNumbers;
 
     static const double emptyColumn[HOURS_PER_YEAR];
@@ -97,7 +96,6 @@ public:
     uint64_t memoryUsage() const;
 
     double getAvailablePower(unsigned int hour, unsigned int year) const;
-    const SingleYear& getAvailablePowerYearly(unsigned int year) const;
 
     /*!
     ** \brief Series (MW)

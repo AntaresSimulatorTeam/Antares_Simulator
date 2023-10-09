@@ -340,10 +340,10 @@ private:
 //   CLUSTER COMMON
 // ----------------------
 
-class TimeSeriesCluster : public Renderer::Matrix<double>
+class TimeSeriesCluster : public Renderer::Matrix<double, int32_t>
 {
 public:
-    using AncestorType = Renderer::Matrix<double>;
+    using AncestorType = Renderer::Matrix<double, int32_t>;
 
 public:
     TimeSeriesCluster(wxWindow* control);
@@ -419,7 +419,7 @@ public:
 protected:
     void internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster)
     {
-        matrix((CurrentStudyIsValid() && cluster) ? &(cluster->series->timeSeries) : NULL);
+        matrix((CurrentStudyIsValid() && cluster) ? &(cluster->series.timeSeries) : NULL);
     }
 
     void onStudyClosed() override;
@@ -468,7 +468,7 @@ public:
 private:
     void internalRenewableClusterChanged(Antares::Data::RenewableCluster* cluster)
     {
-        matrix((CurrentStudyIsValid() && cluster) ? &(cluster->series->timeSeries) : NULL);
+        matrix((CurrentStudyIsValid() && cluster) ? &(cluster->series.timeSeries) : NULL);
     }
 
     void onStudyClosed() override;

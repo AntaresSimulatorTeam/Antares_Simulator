@@ -53,11 +53,6 @@ Data::RenewableCluster::RenewableCluster(Area* parent) :
     assert(parent and "A parent for a renewable dispatchable cluster can not be null");
 }
 
-Data::RenewableCluster::~RenewableCluster()
-{
-    delete series;
-}
-
 uint RenewableCluster::groupId() const
 {
     return groupID;
@@ -82,14 +77,10 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
     // ts-mode
     tsMode = cluster.tsMode;
 
-    // Making sure that the data related to the timeseries are present
-    if (not series)
-        series = new DataSeriesCommon();
-
     // timseries
-    series->timeSeries = cluster.series->timeSeries;
-    cluster.series->timeSeries.unloadFromMemory();
-    series->timeseriesNumbers.clear();
+    series.timeSeries = cluster.series.timeSeries;
+    cluster.series.timeSeries.unloadFromMemory();
+    series.timeseriesNumbers.clear();
 
     // The parent must be invalidated to make sure that the clusters are really
     // re-written at the next 'Save' from the user interface.
@@ -136,16 +127,12 @@ void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
 
 bool Data::RenewableCluster::forceReload(bool reload) const
 {
-    bool ret = true;
-    if (series)
-        ret = series->forceReload(reload) and ret;
-    return ret;
+    return series.forceReload(reload);
 }
 
 void Data::RenewableCluster::markAsModified() const
 {
-    if (series)
-        series->markAsModified();
+    series.markAsModified();
 }
 
 void Data::RenewableCluster::reset()
@@ -204,11 +191,11 @@ double RenewableCluster::valueAtTimeStep(uint hourInYear, uint year) const
 {
     if (!enabled)
         return 0.;
-    uint timeSeriesIndex = (series->timeSeries.width == 1) ? 0 : series->timeseriesNumbers[0][year];
+    uint timeSeriesIndex = series.getSeriesIndex(year);
 
-    assert(hourInYear < series->timeSeries.height);
-    assert(timeSeriesIndex < series->timeSeries.width);
-    const double tsValue = series->timeSeries[timeSeriesIndex][hourInYear];
+    assert(hourInYear < series.timeSeries.height);
+    assert(timeSeriesIndex < series.timeSeries.width);
+    const double tsValue = series.timeSeries[timeSeriesIndex][hourInYear];
     switch (tsMode)
     {
     case powerGeneration:
@@ -222,8 +209,7 @@ double RenewableCluster::valueAtTimeStep(uint hourInYear, uint year) const
 uint64_t RenewableCluster::memoryUsage() const
 {
     uint64_t amount = sizeof(RenewableCluster);
-    if (series)
-        amount += series->memoryUsage();
+    amount += series.memoryUsage();
     return amount;
 }
 

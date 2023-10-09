@@ -118,7 +118,7 @@ public:
     uint areaWideIndex;
 
     //! Series
-    DataSeriesCommon* series;
+    TimeSeries series;
 
     /*!
     ** \brief Modulation matrix
