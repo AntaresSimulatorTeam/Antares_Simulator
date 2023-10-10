@@ -25,7 +25,7 @@ void SlackVariablesAnalysis::run()
     addSlackVariables();
     if (slackVariables_.empty())
     {
-        logs.error() << "Slack variables analysis : no constraints have been selected";
+        logs.error() << title() << " : no constraints have been selected";
         return;
     }
 
@@ -34,7 +34,7 @@ void SlackVariablesAnalysis::run()
     const MPSolver::ResultStatus status = Solve();
     if ((status != MPSolver::OPTIMAL) && (status != MPSolver::FEASIBLE))
     {
-        logs.error() << "Slack variables analysis : modified linear problem could not be solved";
+        logs.error() << title() << " : modified linear problem could not be solved";
         return;
     }
 
@@ -132,7 +132,11 @@ bool VariablesBoundsAnalysis::foundIncorrectVariables()
 
 void VariablesBoundsAnalysis::printReport()
 {
-   
+    logs.notice() << "";
+    for (auto& var : incorrectVars_)
+    {
+
+    }
 }
 
 
@@ -156,6 +160,7 @@ void InfeasibleProblemAnalysis::run()
 
     for (auto& analysis : analysisList_)
     {
+        logs.notice() << analysis->title() << " :" ;
         analysis->run();
     }
 }

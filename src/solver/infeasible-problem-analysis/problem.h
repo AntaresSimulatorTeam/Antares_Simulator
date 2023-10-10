@@ -19,6 +19,7 @@ public:
     SingleAnalysis(std::shared_ptr<operations_research::MPSolver> problem_);
     virtual void run() = 0;
     virtual void printReport() = 0;
+    virtual std::string title() = 0;
     bool hasDetectedInfeasibilityCause() { return hasDetectedInfeasibilityCause_; }
 
 protected:
@@ -33,6 +34,7 @@ class SlackVariablesAnalysis : public SingleAnalysis
 public:
     void run() override;
     void printReport() override;
+    std::string title() override { return "Slack variables analysis"; }
 
 private:
     void buildObjective() const;
@@ -56,6 +58,7 @@ class VariablesBoundsAnalysis : public SingleAnalysis
 public:
     void run() override;
     void printReport() override;
+    std::string title() override { return "Variables analysis"; }
 
 private:
     void storeIncorrectVariable(std::string name, double lowBound, double upBound);
