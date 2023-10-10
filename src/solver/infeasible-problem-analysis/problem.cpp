@@ -140,13 +140,17 @@ void VariablesBoundsAnalysis::printReport()
 
 
 // ===============================
-// Unfeasibility analysis manager 
+// Unfeasibility analyzer 
 // ===============================
 
-// gp : this class should be renamed into UnfeasibilityAnalysisManager
+// gp : this class should be renamed into UnfeasibilityAnalyzer
 
 InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
 {
+    // gp : Here we have a dependency on PROBLEME_SIMPLEXE_NOMME and MPSolver.
+    // gp : We should Convert() the PROBLEME_SIMPLEXE_NOMME into a MPSolver outside (and before) this constructor.
+    // gp : And so we should have a MPSolver* passed here.
+    // gp : It would be easier to test this class in isolation.
     problem_ = std::unique_ptr<MPSolver>(ProblemSimplexeNommeConverter(solverName, ProbSpx).Convert());
 
     analysisList_.push_back(std::make_unique<VariablesBoundsAnalysis>(problem_));
