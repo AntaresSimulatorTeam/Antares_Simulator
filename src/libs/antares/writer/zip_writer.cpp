@@ -75,13 +75,14 @@ void ZipWriteJob<ContentT>::writeEntry()
     Benchmarking::Timer timer_write;
 
     if (int32_t ret = mz_zip_writer_entry_open(pZipHandle, file_info.get()); ret != MZ_OK)
-        logs.error() << "Error opening entry " << pEntryPath << " (" << ret << ")";
-
+    {
+        logErrorAndThrow("Error opening entry " + pEntryPath + " (" + std::to_string(ret) + ")");
+    }
     int32_t bw = mz_zip_writer_entry_write(pZipHandle, pContent.data(), pContent.size());
     if (static_cast<unsigned int>(bw) != pContent.size())
     {
-        logs.error() << "Error writing entry " << pEntryPath << "(written = " << bw
-                     << ", size = " << pContent.size() << ")";
+        logErrorAndThrow("Error writing entry " + pEntryPath + "(written = " + std::to_string(bw)
+                                                + ", size = " + std::to_string(pContent.size()) + ")");
     }
 
     timer_write.stop();
@@ -102,6 +103,7 @@ ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
     if (int32_t ret = mz_zip_writer_open_file(pZipHandle, pArchivePath.c_str(), 0, 0); ret != MZ_OK)
     {
         logs.error() << "Error opening zip file " << pArchivePath << " (" << ret << ")";
+        logErrorAndThrow("Error opening zip file " + pArchivePath + " (" + std::to_string(ret) + ")");
     }
     // TODO : make level of compression configurable
     mz_zip_writer_set_compress_level(pZipHandle, MZ_COMPRESS_LEVEL_FAST);

@@ -95,10 +95,8 @@ BOOST_AUTO_TEST_CASE(test_zip)
     context.writer->flush();
     context.writer->finalize(true);
 
-
     // Check content is correct
     ZipReaderHandle readerHandle;
-    int32_t status;
     mz_zip_reader_create(&readerHandle);
     BOOST_CHECK(mz_zip_reader_open_file(readerHandle, zipPath.c_str()) == MZ_OK);
     BOOST_CHECK(mz_zip_reader_open_file(readerHandle, zipPath.c_str()) == MZ_OK);
