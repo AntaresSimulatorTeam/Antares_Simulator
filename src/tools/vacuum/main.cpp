@@ -35,7 +35,7 @@
 #include <antares/antares.h>
 #include <fswalker/fswalker.h>
 #include <antares/logs/logs.h>
-#include "../../ui/common/winmain.hxx"
+#include <antares/args/args_to_utf8.h>
 #include <antares/version.h>
 #include <antares/locale.h>
 #include "modified-inode.h"
@@ -247,7 +247,8 @@ int main(int argc, char** argv)
     InitializeDefaultLocale();
 
     logs.applicationName("vacuum");
-    argv = AntaresGetUTF8Arguments(argc, argv);
+    IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
+    std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
     String::Vector optInput;
     String::Vector optEachFolderIn;
     uint optMaxDays = 90; // days

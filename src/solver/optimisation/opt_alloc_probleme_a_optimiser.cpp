@@ -90,7 +90,7 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
 
 static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int mxPaliers)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
+    const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     int NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;

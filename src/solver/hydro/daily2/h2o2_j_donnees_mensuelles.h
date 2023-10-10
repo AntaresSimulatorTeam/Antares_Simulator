@@ -44,13 +44,13 @@ typedef struct
        avoir appele H2O2_J_Instanciation */
     int NombreDeJoursDuMois; /* A renseigner par l'appelant */
     double TurbineDuMois; /* A renseigner par l'appelant (somme des turbines cibles du mois) */
-    double* TurbineMax;   /* A renseigner par l'appelant : 1 valeur par jour */
-    double* TurbineMin;   /*Minimum Hourly Hydro-Storage Generation*/
-    double* TurbineCible; /* A renseigner par l'appelant : 1 valeur par jour */
+    std::vector<double> TurbineMax;   /* A renseigner par l'appelant : 1 valeur par jour */
+    std::vector<double> TurbineMin;   /*Minimum Hourly Hydro-Storage Generation*/
+    std::vector<double> TurbineCible; /* A renseigner par l'appelant : 1 valeur par jour */
     double reservoirCapacity;
     double NiveauInitialDuMois;
-    double* niveauBas;
-    double* apports;
+    std::vector<double> niveauBas;
+    std::vector<double> apports;
 
     /* Les resultats */
     char ResultatsValides; /* Vaut:
@@ -59,11 +59,11 @@ typedef struct
                                                          EMERGENCY_SHUT_DOWN si la resolution du
                               probleme a donne lieu a une erreur interne
                                                    */
-    double* Turbine;       /* Resultat a recuperer par l'appelant */
-    double* niveauxFinJours;
-    double* overflows;
-    double* deviations;
-    double* violations;
+    std::vector<double> Turbine;       /* Resultat a recuperer par l'appelant */
+    std::vector<double> niveauxFinJours;
+    std::vector<double> overflows;
+    std::vector<double> deviations;
+    std::vector<double> violations;
     double deviationMax;
     double violationMax;
     double waste;
@@ -73,7 +73,7 @@ typedef struct
     /******************************************************************************************/
 
     /* Problemes internes (utilise uniquement par l'optimisation) */
-    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
+    PROBLEME_HYDRAULIQUE_ETENDU ProblemeHydrauliqueEtendu;
 } DONNEES_MENSUELLES_ETENDUES;
 
 #endif

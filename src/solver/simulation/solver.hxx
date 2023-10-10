@@ -157,7 +157,7 @@ private:
             ApplyRandomTSnumbers(study, y, numSpace);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
-            simulation_->prepareClustersInMustRunMode(numSpace);
+            simulation_->prepareClustersInMustRunMode(numSpace, y);
 
             // 4 - Hydraulic ventilation
             {
@@ -234,8 +234,9 @@ private:
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
     const ::Settings& settings,
-    Benchmarking::IDurationCollector& duration_collector) :
-    ImplementationType(study),
+    Benchmarking::IDurationCollector& duration_collector,
+    IResultWriter& resultWriter) :
+    ImplementationType(study, resultWriter),
     study(study),
     settings(settings),
     pNbYearsReallyPerformed(0),
@@ -245,11 +246,11 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
                     study.parameters, 
                     study.calendar, 
                     study.maxNbYearsInParallel,
-                    *study.resultWriter),
+                    resultWriter),
     pFirstSetParallelWithAPerformedYearWasRun(false),
     pDurationCollector(duration_collector),
     pQueueService(study.pQueueService),
-    pResultWriter(*study.resultWriter)
+    pResultWriter(resultWriter)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -300,12 +301,9 @@ void ISimulation<Impl>::run()
         ImplementationType::variables.template provideInformations<Variable::PrintInfosStdCout>(c);
     }
 
-    // The general data
-    auto& parameters = *(study.runtime->parameters);
-
     // Preprocessors
     // Determine if we have to use the preprocessors at least one time.
-    pData.initialize(parameters);
+    pData.initialize(study.parameters);
 
     // Prepro only ?
     ImplementationType::preproOnly = settings.tsGeneratorsOnly;
@@ -346,7 +344,7 @@ void ISimulation<Impl>::run()
             throw FatalError("An unrecoverable error has occured. Can not continue.");
         }
 
-        if (parameters.useCustomScenario)
+        if (study.parameters.useCustomScenario)
             ApplyCustomScenario(study);
 
         // Launching the simulation for all years
@@ -383,7 +381,7 @@ void ISimulation<Impl>::run()
         ImplementationType::variables.simulationEnd();
 
         // Export ts-numbers into output
-        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study);
+        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, pResultWriter);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
@@ -415,7 +413,7 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
     {
         if (synthesis)
         {
-            auto& parameters = *(study.runtime->parameters);
+            const auto& parameters = study.parameters;
             if (not parameters.synthesis) // disabled by parameters
             {
                 logs.info() << "The simulation synthesis is disabled.";
@@ -1020,7 +1018,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             if (failed)
             {
                 std::ostringstream msg;
-                msg << "Year " << year << " has failed in the previous set of parallel year.";
+                msg << "Year " << year + 1 << " has failed in the previous set of parallel year.";
                 throw FatalError(msg.str());
             }
         }

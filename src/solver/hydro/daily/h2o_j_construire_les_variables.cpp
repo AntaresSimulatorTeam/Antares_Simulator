@@ -47,12 +47,9 @@ void H2O_j_ConstruireLesVariables(int NbPdt,
                                   std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees,
                                   CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables)
 {
-    int Var;
-    int Pdt;
+    int Var = 0;
 
-    Var = 0;
-
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         NumeroDeVariableTurbine[Pdt] = Var;
         Xmin[Var] = 0.0;

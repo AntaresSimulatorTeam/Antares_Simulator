@@ -64,7 +64,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
 {
     int weekFirstHour = problemeHebdo->weekInTheYear * 168;
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
+    const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     std::vector<double>& SecondMembre = ProblemeAResoudre->SecondMembre;
 

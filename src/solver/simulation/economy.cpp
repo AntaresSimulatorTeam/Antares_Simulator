@@ -38,7 +38,10 @@ using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-Economy::Economy(Data::Study& study) : study(study), preproOnly(false)
+Economy::Economy(Data::Study& study, IResultWriter& resultWriter) :
+    study(study),
+    preproOnly(false),
+    resultWriter(resultWriter)
 {
 }
 
@@ -91,7 +94,7 @@ bool Economy::simulationBegin()
                                                     study.parameters.adqPatchParams,
                                                     &pProblemesHebdo[numSpace],
                                                     numSpace,
-                                                    *study.resultWriter);
+                                                    resultWriter);
             postProcessesList_[numSpace] =
                 interfacePostProcessList::create(study.parameters.adqPatchParams,
                                                  &pProblemesHebdo[numSpace],
@@ -144,7 +147,7 @@ bool Economy::year(Progression::Task& progression,
                                          numSpace, hourInTheYear, hydroVentilationResults);
 
         BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace], 
-                                        numSpace, hourInTheYear, randomForYear.pThermalNoisesByArea);
+                                        hourInTheYear, randomForYear.pThermalNoisesByArea, state.year);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;
@@ -261,9 +264,9 @@ void Economy::simulationEnd()
     }
 }
 
-void Economy::prepareClustersInMustRunMode(uint numSpace)
+void Economy::prepareClustersInMustRunMode(uint numSpace, uint year)
 {
-    PrepareDataFromClustersInMustrunMode(study, numSpace);
+    PrepareDataFromClustersInMustrunMode(study, numSpace, year);
 }
 
 } // namespace Antares::Solver::Simulation

@@ -409,11 +409,16 @@ MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* 
             solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).LPSolverName);
 
         if (!solver)
-            throw Antares::Data::AssertionError("Solver not found: " + solverName);
+        {
+            std::string msg_to_throw = "Solver " + solverName + " not found. \n";
+            msg_to_throw += "Please make sure that your OR-Tools install supports solver " + solverName + ".";
+
+            throw Antares::Data::AssertionError(msg_to_throw);
+        }
     }
     catch (...)
     {
-        Antares::logs.error() << "Solver creation failed";
+        Antares::logs.error() << "Solver creation failed.";
         throw;
     }
 

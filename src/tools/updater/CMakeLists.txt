@@ -26,6 +26,7 @@ INSTALL(EXPORT antares-study-updater
 
 set(UPDATER_LIBS
 		yuni-static-core
+		Antares::args_helper
 		Antares::study
 		Antares::sys
 		antares-core #version.h

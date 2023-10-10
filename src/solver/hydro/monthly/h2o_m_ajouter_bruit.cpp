@@ -9,49 +9,38 @@ constexpr double noiseAmplitude = 1e-3;
 constexpr unsigned int seed = 0x79686d64; // "hydm" in hexa
 } // namespace Constants
 
-void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES* DonneesAnnuelles)
+void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
-    CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
-    const double* CoutLineaire;
-    double* CoutLineaireBruite;
-    int Var;
-    int Pdt;
-    int NbPdt;
-    // We don't want to keep variables ProblemeHydraulique and ProblemeLineairePartieFixe
-    {
-        PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
-        PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
-        ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
-        ProblemeLineairePartieFixe = ProblemeHydraulique->ProblemeLineairePartieFixe;
-        CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables;
-        CoutLineaire = ProblemeLineairePartieFixe->CoutLineaire;
-        CoutLineaireBruite = ProblemeLineairePartieFixe->CoutLineaireBruite;
-        NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
-    }
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
+    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
+        = ProblemeHydraulique.ProblemeLineairePartieFixe;
+    CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
+        = ProblemeHydraulique.CorrespondanceDesVariables;
+    auto& CoutLineaireBruite = ProblemeLineairePartieFixe.CoutLineaireBruite;
+    const auto& CoutLineaire = ProblemeLineairePartieFixe.CoutLineaire;
 
     Antares::MersenneTwister noiseGenerator;
     noiseGenerator.reset(Constants::seed); // Arbitrary seed, hard-coded since we don't really want
                                            // the user to change it
-    const std::vector<const int*> monthlyVariables
-      = {CorrespondanceDesVariables->NumeroDeVariableVolume,
-         CorrespondanceDesVariables->NumeroDeVariableTurbine,
-         CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMax,
-         CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMin,
-         CorrespondanceDesVariables->NumeroDeVariableDEcartPositifAuTurbineCible,
-         CorrespondanceDesVariables->NumeroDeVariableDEcartNegatifAuTurbineCible};
+    const std::vector<const std::vector<int>*> monthlyVariables
+      = {&CorrespondanceDesVariables.NumeroDeVariableVolume,
+         &CorrespondanceDesVariables.NumeroDeVariableTurbine,
+         &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax,
+         &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin,
+         &CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible,
+         &CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible};
 
-    for (const auto variable : monthlyVariables)
+    for (const auto& variable : monthlyVariables)
     {
-        for (Pdt = 0; Pdt < NbPdt; Pdt++)
+        for (int Var : *variable)
         {
-            Var = variable[Pdt];
             CoutLineaireBruite[Var]
               = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
         }
     }
-    Var = CorrespondanceDesVariables->NumeroDeLaVariableViolMaxVolumeMin;
+    int Var = CorrespondanceDesVariables.NumeroDeLaVariableViolMaxVolumeMin;
     CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
 
-    Var = CorrespondanceDesVariables->NumeroDeLaVariableXi;
+    Var = CorrespondanceDesVariables.NumeroDeLaVariableXi;
     CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
 }

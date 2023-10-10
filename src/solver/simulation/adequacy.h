@@ -56,7 +56,7 @@ public:
     **
     ** \param study The current study
     */
-    Adequacy(Data::Study& study);
+    Adequacy(Data::Study& study, IResultWriter& resultWriter);
     //! Destructor
     ~Adequacy() = default;
     //@}
@@ -92,7 +92,7 @@ protected:
     /*!
     ** \brief Prepare clusters in 'must-run' mode
     */
-    void prepareClustersInMustRunMode(uint numSpace);
+    void prepareClustersInMustRunMode(uint numSpace, uint year);
 
     void initializeState(Variable::State& state, uint numSpace);
 
@@ -107,6 +107,7 @@ private:
     bool pPreproOnly;
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     Matrix<> pRES;
+    IResultWriter& resultWriter;
 
 }; // class Adequacy
 

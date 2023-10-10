@@ -72,6 +72,21 @@ int DataSeriesWindSaveToFolder(DataSeriesWind* d, const AreaName& areaID, const 
     return ret;
 }
 
+double* DataSeriesWind::getColumn(unsigned int year) const
+{
+    return timeSeries[getIndex(year)];
+}
+
+double DataSeriesWind::getCoefficient(const unsigned int year, const unsigned int hour) const
+{
+    return timeSeries[getIndex(year)][hour];
+}
+
+unsigned int DataSeriesWind::getIndex(unsigned int year) const
+{
+    return (timeSeries.width != 1) ? timeseriesNumbers[0][year] : 0;
+}
+
 bool DataSeriesWind::forceReload(bool reload) const
 {
     return timeSeries.forceReload(reload);

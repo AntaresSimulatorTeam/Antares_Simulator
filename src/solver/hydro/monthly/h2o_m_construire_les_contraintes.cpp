@@ -28,61 +28,39 @@
 #include "h2o_m_donnees_annuelles.h"
 #include "h2o_m_fonctions.h"
 
-void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES* DonneesAnnuelles)
+void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
-    int NombreDeContraintes;
-    int il;
-    int Pdt;
-    int NbPdt;
-    double* CoefficientsDeLaMatriceDesContraintes;
-    int* IndicesColonnes;
-    int* IndicesDebutDeLigne;
-    int* NombreDeTermesDesLignes;
-    char* Sens;
-    double ChgmtSens;
-    int* NumeroDeVariableVolume;
-    int* NumeroDeVariableTurbine;
-    int* NumeroDeVariableDepassementVolumeMax;
-    int* NumeroDeVariableDepassementVolumeMin;
-    int* NumeroDeVariableDEcartPositifAuTurbineCible;
-    int* NumeroDeVariableDEcartNegatifAuTurbineCible;
-    int NumeroDeLaVariableXi;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
+    CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
+        = ProblemeHydraulique.CorrespondanceDesVariables;
+    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
+        = ProblemeHydraulique.ProblemeLineairePartieFixe;
 
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
-    CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
-    PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
+    auto& CoefficientsDeLaMatriceDesContraintes
+      = ProblemeLineairePartieFixe.CoefficientsDeLaMatriceDesContraintes;
+    auto& IndicesColonnes = ProblemeLineairePartieFixe.IndicesColonnes;
+    auto& IndicesDebutDeLigne = ProblemeLineairePartieFixe.IndicesDebutDeLigne;
+    auto& Sens = ProblemeLineairePartieFixe.Sens;
+    auto& NombreDeTermesDesLignes = ProblemeLineairePartieFixe.NombreDeTermesDesLignes;
 
-    ChgmtSens = -1.0;
+    auto& NumeroDeVariableVolume = CorrespondanceDesVariables.NumeroDeVariableVolume;
+    auto& NumeroDeVariableTurbine = CorrespondanceDesVariables.NumeroDeVariableTurbine;
+    auto& NumeroDeVariableDepassementVolumeMax
+      = CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax;
+    auto& NumeroDeVariableDepassementVolumeMin
+      = CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin;
+    auto& NumeroDeVariableDEcartPositifAuTurbineCible
+      = CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible;
+    auto& NumeroDeVariableDEcartNegatifAuTurbineCible
+      = CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible;
+    int NumeroDeLaVariableXi = CorrespondanceDesVariables.NumeroDeLaVariableXi;
 
-    NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
+    double ChgmtSens = -1.0;
+    const int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
+    int NombreDeContraintes = 0;
+    int il = 0;
 
-    ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
-    CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables;
-    ProblemeLineairePartieFixe = ProblemeHydraulique->ProblemeLineairePartieFixe;
-
-    CoefficientsDeLaMatriceDesContraintes
-      = ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes;
-    IndicesColonnes = ProblemeLineairePartieFixe->IndicesColonnes;
-    IndicesDebutDeLigne = ProblemeLineairePartieFixe->IndicesDebutDeLigne;
-    Sens = ProblemeLineairePartieFixe->Sens;
-    NombreDeTermesDesLignes = ProblemeLineairePartieFixe->NombreDeTermesDesLignes;
-
-    NumeroDeVariableVolume = CorrespondanceDesVariables->NumeroDeVariableVolume;
-    NumeroDeVariableTurbine = CorrespondanceDesVariables->NumeroDeVariableTurbine;
-    NumeroDeVariableDepassementVolumeMax
-      = CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMax;
-    NumeroDeVariableDepassementVolumeMin
-      = CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMin;
-    NumeroDeVariableDEcartPositifAuTurbineCible
-      = CorrespondanceDesVariables->NumeroDeVariableDEcartPositifAuTurbineCible;
-    NumeroDeVariableDEcartNegatifAuTurbineCible
-      = CorrespondanceDesVariables->NumeroDeVariableDEcartNegatifAuTurbineCible;
-    NumeroDeLaVariableXi = CorrespondanceDesVariables->NumeroDeLaVariableXi;
-
-    NombreDeContraintes = 0;
-    il = 0;
-
-    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -117,7 +95,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES* DonneesAnnuelles)
     NombreDeTermesDesLignes[NombreDeContraintes] = 2;
     NombreDeContraintes++;
 
-    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -125,8 +103,8 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES* DonneesAnnuelles)
         IndicesColonnes[il] = NumeroDeVariableVolume[Pdt];
         il++;
 
-        ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-        ProblemeLineairePartieFixe->IndicesColonnes[il] = NumeroDeVariableDepassementVolumeMax[Pdt];
+        ProblemeLineairePartieFixe.CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
+        ProblemeLineairePartieFixe.IndicesColonnes[il] = NumeroDeVariableDepassementVolumeMax[Pdt];
         il++;
 
         Sens[NombreDeContraintes] = '<';
@@ -148,7 +126,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES* DonneesAnnuelles)
         NombreDeContraintes++;
     }
 
-    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -157,7 +135,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES* DonneesAnnuelles)
         il++;
 
         CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroDeLaVariableViolMaxVolumeMin;
+        IndicesColonnes[il] = CorrespondanceDesVariables.NumeroDeLaVariableViolMaxVolumeMin;
         il++;
 
         Sens[NombreDeContraintes] = '<';
@@ -165,7 +143,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES* DonneesAnnuelles)
         NombreDeContraintes++;
     }
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -204,7 +182,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES* DonneesAnnuelles)
         NombreDeContraintes++;
     }
 
-    ProblemeLineairePartieFixe->NombreDeContraintes = NombreDeContraintes;
+    ProblemeLineairePartieFixe.NombreDeContraintes = NombreDeContraintes;
 
     return;
 }

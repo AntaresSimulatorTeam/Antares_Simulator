@@ -209,9 +209,9 @@ public:
     /*!
     ** \brief Get the XCast data according a given time-series type
     */
-    template<enum TimeSeries T>
+    template<enum TimeSeriesType T>
     XCast* xcastData();
-    template<enum TimeSeries T>
+    template<enum TimeSeriesType T>
     const XCast* xcastData() const;
 
 public:

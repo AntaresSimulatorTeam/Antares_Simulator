@@ -190,10 +190,10 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                 // 3. Levels
                 int varLevel = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
                                  .LevelVariable[clusterGlobalIndex];
-                if (pdtHebdo == DernierPdtDeLIntervalle - 1 && storage.initialLevel.has_value())
+                if (pdtHebdo == DernierPdtDeLIntervalle - 1 && !storage.initialLevelOptim)
                 {
                     Xmin[varLevel] = Xmax[varLevel]
-                      = storage.reservoirCapacity * storage.initialLevel.value();
+                      = storage.reservoirCapacity * storage.initialLevel;
                 }
                 else
                 {
@@ -216,7 +216,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                                                             const int DernierPdtDeLIntervalle,
                                                             const int optimizationNumber)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
+    const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
