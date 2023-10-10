@@ -4,12 +4,16 @@
 
 #include <memory>
 #include <string>
+#include <stdexcept>
 
 namespace Antares
 {
 namespace Solver
 {
 
+/*!
+ * A generic I/O exception that may be thrown by writer operations.
+ */
 class IOError : public std::runtime_error
 {
 public:
@@ -26,6 +30,7 @@ public:
 
     /*!
      * Waits for completion of every write operation previously appended.
+     * An IOError may be raised if any of those fails.
      */
     virtual void flush() = 0;
     virtual bool needsTheJobQueue() const = 0;
