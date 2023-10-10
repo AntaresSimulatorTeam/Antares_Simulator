@@ -34,7 +34,7 @@ The compilation of  *antares-xpansion* requires C++17 support.
     ```
     scl enable devtoolset-9 bash
     ```
-=== "Ubuntu"
+=== "Ubuntu/Debian"
 
     ```
     sudo apt install build-essential
@@ -51,7 +51,7 @@ CMake 3.x must be used.
     sudo yum install epel-release
     sudo yum install cmake3
     ```
-=== "Ubuntu"
+=== "Ubuntu/Debian"
 
     ```
     sudo apt install cmake
@@ -68,7 +68,7 @@ Python 3.x is used for end-to-end test.
     ```
     sudo yum install python3 python3-pip
     ```
-=== "Ubuntu"
+=== "Ubuntu/Debian"
 
     ```
     sudo apt-get install python3 python3-pip
@@ -97,7 +97,7 @@ Git version must be above 2.15 for external dependencies build because `--ignore
     source /opt/rh/rh-git227/enable
     ```
     
-=== "Ubuntu"
+=== "Ubuntu/Debian"
 
     ```
     sudo apt-get install git

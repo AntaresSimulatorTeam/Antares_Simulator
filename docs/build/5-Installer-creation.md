@@ -33,7 +33,7 @@ CPack can be used to create the installer after the build phase :
     sudo yum install wxGTK3
     ```
 
-=== "Ubuntu"
+=== "Ubuntu/Debian"
 
     ### Ubuntu .deb (Experimental)
     ```
