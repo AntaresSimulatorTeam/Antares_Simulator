@@ -105,8 +105,29 @@ void SlackVariablesAnalysis::printReport()
 
 void VariablesBoundsAnalysis::run()
 {
+    for (auto& var : problem_->variables())
+    {
+        double lowBound = var->lb();
+        double upBound = var->ub();
+        std::string name = var->name();
+        if (lowBound > upBound)
+        {
+            storeIncorrectVariable(name, lowBound, upBound);
+        }
+    }
 
-    // hasDetectedInfeasibilityCause_ = true;
+    if (foundIncorrectVariables())
+        hasDetectedInfeasibilityCause_ = true;
+}
+
+void VariablesBoundsAnalysis::storeIncorrectVariable(std::string name, double lowBound, double upBound)
+{
+    incorrectVars_.push_back(VariableBounds(name, lowBound, upBound));
+}
+
+bool VariablesBoundsAnalysis::foundIncorrectVariables()
+{
+    return (incorrectVars_.size() != 0);
 }
 
 void VariablesBoundsAnalysis::printReport()

@@ -43,6 +43,12 @@ private:
     const std::string constraint_name_pattern = "^AreaHydroLevel::|::hourly::|::daily::|::weekly::|^FictiveLoads::";
 };
 
+struct VariableBounds
+{
+    std::string name;
+    double lowBound;
+    double upBound;
+};
 
 class VariablesBoundsAnalysis : public SingleAnalysis
 {
@@ -52,7 +58,10 @@ public:
     void printReport() override;
 
 private:
-    // gp : something here ?
+    void storeIncorrectVariable(std::string name, double lowBound, double upBound);
+    bool foundIncorrectVariables();
+
+    std::vector<VariableBounds> incorrectVars_;
 };
 
 class InfeasibleProblemAnalysis
