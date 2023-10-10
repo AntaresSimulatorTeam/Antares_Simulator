@@ -19,12 +19,10 @@ public:
     SingleAnalysis(std::shared_ptr<operations_research::MPSolver> problem_);
     virtual void run() = 0;
     virtual void printReport() = 0;
-    bool wasRun() { return wasRun_; }
     bool hasDetectedInfeasibilityCause() { return hasDetectedInfeasibilityCause_; }
 
 protected:
     std::shared_ptr<operations_research::MPSolver> problem_;
-    bool wasRun_ = false;
     bool hasDetectedInfeasibilityCause_ = false;
 };
 

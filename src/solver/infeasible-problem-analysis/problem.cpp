@@ -35,7 +35,6 @@ void SlackVariablesAnalysis::run()
     }
 
     hasDetectedInfeasibilityCause_ = true;
-    wasRun_ = true;
 }
 
 void SlackVariablesAnalysis::addSlackVariables()
