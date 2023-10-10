@@ -1,5 +1,4 @@
-
-add_executable(test-concurrency ${SRC_LINK_PROPERTIES})
+add_executable(test-concurrency)
 
 target_sources(test-concurrency PRIVATE test_concurrency.cpp)
 

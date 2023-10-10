@@ -32,8 +32,8 @@ target_include_directories(result_writer
 target_link_libraries(result_writer
         PUBLIC
         Antares::benchmarking
-        PRIVATE
         yuni-static-core
+        PRIVATE
         MINIZIP::minizip
         logs
         inifile

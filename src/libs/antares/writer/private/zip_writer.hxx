@@ -12,9 +12,9 @@ void ZipWriter::addEntryFromBufferHelper(const std::string& entryPath, ContentTy
         return;
 
     EnsureQueueStartedIfNeeded ensureQueue(this, pQueueService);
-    Concurrency::AddTask(*pQueueService,
+    pendingTasks_.add(Concurrency::AddTask(*pQueueService,
                          ZipWriteJob<ContentType>(*this, entryPath, entryContent, pDurationCollector),
-                         Yuni::Job::priorityLow);
+                         Yuni::Job::priorityLow));
 }
 
 } // namespace Antares::Solver

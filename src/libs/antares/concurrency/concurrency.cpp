@@ -47,8 +47,13 @@ void FutureSet::add(TaskFuture&& f) {
 }
 
 void FutureSet::join() {
-    std::lock_guard lock(mutex_);
-    for (auto& f: futures_) {
+    std::vector<TaskFuture> moved;
+    {
+        std::lock_guard lock(mutex_);
+        moved = std::move(futures_);
+        futures_ = std::vector<TaskFuture>{};
+    }
+    for (auto& f: moved) {
         f.get();
     }
 }

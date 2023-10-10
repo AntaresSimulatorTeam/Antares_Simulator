@@ -8,6 +8,7 @@
 
 #include "antares/writer/i_writer.h"
 #include <antares/benchmarking/DurationCollector.h>
+#include "antares/concurrency/concurrency.h"
 
 
 namespace Antares::Solver
@@ -62,9 +63,9 @@ public:
     void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
     void addEntryFromBuffer(const std::string& entryPath, std::string& entryContent) override;
     void addEntryFromFile(const std::string& entryPath, const std::string& filePath) override;
+    void flush() override;
     bool needsTheJobQueue() const override;
     void finalize(bool verbose) override;
-
     friend class ZipWriteJob<Yuni::Clob>;
     friend class ZipWriteJob<std::string>;
 
@@ -81,6 +82,8 @@ private:
     const std::string pArchivePath;
     // Benchmarking. Passed to jobs
     Benchmarking::IDurationCollector& pDurationCollector;
+
+    Concurrency::FutureSet pendingTasks_;
 
 private:
     template<class ContentType>

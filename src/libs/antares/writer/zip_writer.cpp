@@ -16,9 +16,22 @@ extern "C"
 
 #include <ctime> // std::time
 #include <utility>
+#include <sstream>
 
 namespace Antares::Solver
 {
+
+namespace
+{
+
+void logErrorAndThrow(const std::string& errorMessage)
+{
+    logs.error() << errorMessage;
+    throw IOError(errorMessage);
+}
+
+}
+
 // Class ZipWriteJob
 template<class ContentT>
 ZipWriteJob<ContentT>::ZipWriteJob(ZipWriter& writer,
@@ -82,7 +95,8 @@ ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
  pQueueService(qs),
  pState(ZipState::can_receive_data),
  pArchivePath(std::string(archivePath) + ".zip"),
- pDurationCollector(duration_collector)
+ pDurationCollector(duration_collector),
+ pendingTasks_()
 {
     mz_zip_writer_create(&pZipHandle);
     if (int32_t ret = mz_zip_writer_open_file(pZipHandle, pArchivePath.c_str(), 0, 0); ret != MZ_OK)
@@ -129,16 +143,16 @@ void ZipWriter::addEntryFromFile(const std::string& entryPath, const std::string
         addEntryFromBufferHelper<Yuni::Clob>(entryPath, buffer);
         break;
     case errNotFound:
-        logs.error() << filePath << ": file does not exist";
+        logErrorAndThrow(filePath + ": file does not exist");
         break;
-    case errReadFailed:
-        logs.error() << "Read failed '" << filePath << "'";
+   case errReadFailed:
+        logErrorAndThrow("Read failed '" + filePath + "'");
         break;
     case errMemoryLimit:
-        logs.error() << "Size limit hit for file '" << filePath << "'";
+        logErrorAndThrow("Size limit hit for file '" + filePath + "'");
         break;
     default:
-        logs.error() << "Unhandled error";
+        logErrorAndThrow("Unhandled error");
         break;
     }
 }
@@ -150,6 +164,9 @@ bool ZipWriter::needsTheJobQueue() const
 
 void ZipWriter::finalize(bool verbose)
 {
+    //wait for completion of pending writing tasks
+    flush();
+
     // Prevent new jobs from being submitted
     pState = ZipState::blocking;
 
@@ -169,4 +186,10 @@ void ZipWriter::finalize(bool verbose)
     if (verbose)
         logs.notice() << "Done";
 }
+
+void ZipWriter::flush()
+{
+    pendingTasks_.join();
+}
+
 } // namespace Antares::Solver

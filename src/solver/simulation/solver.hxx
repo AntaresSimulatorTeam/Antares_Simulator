@@ -944,13 +944,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     allocateMemoryForRandomNumbers(randomForParallelYears);
 
     // Number of threads to perform the jobs waiting in the queue
-    {
-        int numThreads = pNbMaxPerformedYearsInParallel;
-        // If the result writer uses the job queue, add one more thread for it
-        if (pResultWriter.needsTheJobQueue())
-            numThreads++;
-        pQueueService->maximumThreadCount(numThreads);
-    }
+    pQueueService->maximumThreadCount(pNbMaxPerformedYearsInParallel);
 
     // Loop over sets of parallel years
     std::vector<setOfParallelYears>::iterator set_it;
@@ -987,19 +981,19 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             // have to be rerun (meaning : they must be run once). if(!set_it->yearFailed[y])
             // continue;
 
-            std::function<void()> task = yearJob<ImplementationType>(this,
-                                                 y,
-                                                 set_it->yearFailed,
-                                                 set_it->isFirstPerformedYearOfASet,
-                                                 pFirstSetParallelWithAPerformedYearWasRun,
-                                                 numSpace,
-                                                 randomForParallelYears,
-                                                 performCalculations,
-                                                 study,
-                                                 state,
-                                                 pYearByYear,
-                                                 pDurationCollector,
-                                                 pResultWriter);
+            Concurrency::Task task = yearJob<ImplementationType>(this,
+                                                                 y,
+                                                                 set_it->yearFailed,
+                                                                 set_it->isFirstPerformedYearOfASet,
+                                                                 pFirstSetParallelWithAPerformedYearWasRun,
+                                                                 numSpace,
+                                                                 randomForParallelYears,
+                                                                 performCalculations,
+                                                                 study,
+                                                                 state,
+                                                                 pYearByYear,
+                                                                 pDurationCollector,
+                                                                 pResultWriter);
             results.add(Concurrency::AddTask(*pQueueService, task));
         } // End loop over years of the current set of parallel years
 
@@ -1010,6 +1004,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
         pQueueService->wait(Yuni::qseIdle);
         pQueueService->stop();
         results.join();
+        pResultWriter.flush();
 
         // At this point, the first set of parallel year(s) was run with at least one year performed
         if (!pFirstSetParallelWithAPerformedYearWasRun && yearPerformed)

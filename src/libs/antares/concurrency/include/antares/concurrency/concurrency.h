@@ -20,7 +20,7 @@ using TaskFuture = std::future<void>;
  * This allows to handle exceptions occuring in the underlying task,
  * as opposite to Yuni::Job::QueueService::add which swallows them.
  */
-TaskFuture AddTask(Yuni::Job::QueueService& threadPool,
+[[nodiscard]] TaskFuture AddTask(Yuni::Job::QueueService& threadPool,
                    const Task& task,
                    Yuni::Job::Priority priority = Yuni::Job::priorityDefault);
 
@@ -50,6 +50,8 @@ public:
      *
      * If one of the future ends on exception, re-throws the first encountered exception.
      * Note that futures cannot be added while some thread is waiting for completion.
+     *
+     * Joining also resets the list of tasks to wait for.
      */
     void join();
 
