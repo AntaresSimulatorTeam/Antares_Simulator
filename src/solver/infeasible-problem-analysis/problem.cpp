@@ -151,7 +151,7 @@ InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(const std::string& solverNa
     // gp : We should Convert() the PROBLEME_SIMPLEXE_NOMME into a MPSolver outside (and before) this constructor.
     // gp : And so we should have a MPSolver* passed here.
     // gp : It would be easier to test this class in isolation.
-    problem_ = std::unique_ptr<MPSolver>(ProblemSimplexeNommeConverter(solverName, ProbSpx).Convert());
+    problem_ = std::shared_ptr<MPSolver>(ProblemSimplexeNommeConverter(solverName, ProbSpx).Convert());
 
     analysisList_.push_back(std::make_unique<VariablesBoundsAnalysis>(problem_));
     analysisList_.push_back(std::make_unique<SlackVariablesAnalysis>(problem_));
@@ -159,12 +159,16 @@ InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(const std::string& solverNa
 
 void InfeasibleProblemAnalysis::run()
 {
-    logs.notice() << " Solver: Starting unfeasibility analysis...";
+    logs.info();
+    logs.info() << "Solver: Starting unfeasibility analysis...";
 
     for (auto& analysis : analysisList_)
     {
-        logs.notice() << analysis->title() << " :" ;
+        logs.info();
+        logs.info() << analysis->title() << " : running...";
         analysis->run();
+        if (!analysis->hasDetectedInfeasibilityCause())
+            logs.notice() << analysis->title() << " : nothing detected.";
     }
 }
 
@@ -174,7 +178,7 @@ void InfeasibleProblemAnalysis::printReport()
     {
         if (analysis->hasDetectedInfeasibilityCause())
         {
-            logs.notice() << analysis->title() << " : printing report";
+            logs.info() << analysis->title() << " : printing report";
             analysis->printReport();
             return;
         }

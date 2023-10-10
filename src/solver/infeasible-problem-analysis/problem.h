@@ -58,7 +58,7 @@ class VariablesBoundsAnalysis : public SingleAnalysis
 public:
     void run() override;
     void printReport() override;
-    std::string title() override { return "Variables analysis"; }
+    std::string title() override { return "Variables bounds analysis"; }
 
 private:
     void storeIncorrectVariable(std::string name, double lowBound, double upBound);
