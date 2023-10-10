@@ -16,6 +16,10 @@ SingleAnalysis::SingleAnalysis(std::shared_ptr<operations_research::MPSolver> pr
     : problem_(problem)
 {}
 
+// ============================
+// Slack variables analysis
+// ============================
+
 void SlackVariablesAnalysis::run()
 {
     addSlackVariables();
@@ -95,17 +99,39 @@ void SlackVariablesAnalysis::printReport()
     report.prettyPrint();
 }
 
+// ============================
+// Variables bounds analysis
+// ============================
+
+void VariablesBoundsAnalysis::run()
+{
+
+    // hasDetectedInfeasibilityCause_ = true;
+}
+
+void VariablesBoundsAnalysis::printReport()
+{
+   
+}
+
+
+// ===============================
+// Unfeasibility analysis manager 
+// ===============================
+
+// gp : this class should be renamed into UnfeasibilityAnalysisManager
 
 InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
 {
     problem_ = std::unique_ptr<MPSolver>(ProblemSimplexeNommeConverter(solverName, ProbSpx).Convert());
 
+    analysisList_.push_back(std::make_unique<VariablesBoundsAnalysis>(problem_));
     analysisList_.push_back(std::make_unique<SlackVariablesAnalysis>(problem_));
 }
 
 void InfeasibleProblemAnalysis::run()
 {
-    logs.notice() << " Solver: Starting infeasibility analysis...";
+    logs.notice() << " Solver: Starting unfeasibility analysis...";
 
     for (auto& analysis : analysisList_)
     {
@@ -123,6 +149,7 @@ void InfeasibleProblemAnalysis::printReport()
             return;
         }
     }
+    logs.notice() << "Solver: unfeasibility analysis : could not find the cause of unfeasibility.";
 }
 } // namespace Optimization
 } // namespace Antares

@@ -26,6 +26,7 @@ protected:
     bool hasDetectedInfeasibilityCause_ = false;
 };
 
+
 class SlackVariablesAnalysis : public SingleAnalysis
 {
     using SingleAnalysis::SingleAnalysis;
@@ -42,6 +43,17 @@ private:
     const std::string constraint_name_pattern = "^AreaHydroLevel::|::hourly::|::daily::|::weekly::|^FictiveLoads::";
 };
 
+
+class VariablesBoundsAnalysis : public SingleAnalysis
+{
+    using SingleAnalysis::SingleAnalysis;
+public:
+    void run() override;
+    void printReport() override;
+
+private:
+    // gp : something here ?
+};
 
 class InfeasibleProblemAnalysis
 {
