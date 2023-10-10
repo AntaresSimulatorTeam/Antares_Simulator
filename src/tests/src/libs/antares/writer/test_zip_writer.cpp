@@ -121,8 +121,8 @@ BOOST_AUTO_TEST_CASE(test_zip)
     // Check content is correct
     ZipReaderHandle readerHandle;
     mz_zip_reader_create(&readerHandle);
-    BOOST_CHECK(mz_zip_reader_open_file(readerHandle, zipPath.c_str()) == MZ_OK);
-    BOOST_CHECK(mz_zip_reader_open_file(readerHandle, zipPath.c_str()) == MZ_OK);
+    std::string zipPathStr = zipPath.string();
+    BOOST_CHECK(mz_zip_reader_open_file(readerHandle, zipPathStr.c_str()) == MZ_OK);
     checkZipContent(readerHandle, "test-path", "test-content1");
     checkZipContent(readerHandle, "test-second-path", "test-content2");
     mz_zip_reader_close(readerHandle);
