@@ -81,11 +81,12 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
 
     ProblemeAResoudre->Pi.assign(nbVariables, 0.);
     ProblemeAResoudre->Colonne.assign(nbVariables, 0);
+
     // Names
-    ProblemeAResoudre->NomDesVariables.resize(ProblemeAResoudre->NombreDeVariables);
-    ProblemeAResoudre->NomDesContraintes.resize(ProblemeAResoudre->NombreDeContraintes);
+    ProblemeAResoudre->NomDesVariables.resize(nbVariables);
+    ProblemeAResoudre->NomDesContraintes.resize(nbConstraints);
     // Integer variables ? (MILP)
-    ProblemeAResoudre->VariablesEntieres.resize(ProblemeAResoudre->NombreDeVariables);
+    ProblemeAResoudre->VariablesEntieres.resize(nbVariables);
 }
 
 static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int mxPaliers)
