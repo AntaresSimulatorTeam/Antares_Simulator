@@ -25,6 +25,7 @@ using Benchmarking::NullDurationCollector;
 using Benchmarking::IDurationCollector;
 using Antares::Solver::IResultWriter;
 
+// Handles lifetime of necessary objects
 struct TestContext
 {
     std::shared_ptr<QueueService> threadPool;
@@ -83,6 +84,7 @@ void checkZipContent(ZipReaderHandle handle, const std::string& path, const std:
 
 BOOST_AUTO_TEST_CASE(test_zip)
 {
+    // Writer some content to test.zip, possibly from 2 threads
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     auto zipPath = working_tmp_dir / "test.zip";
     auto context = createContext(zipPath, 2);
@@ -93,6 +95,8 @@ BOOST_AUTO_TEST_CASE(test_zip)
     context.writer->flush();
     context.writer->finalize(true);
 
+
+    // Check content is correct
     ZipReaderHandle readerHandle;
     int32_t status;
     mz_zip_reader_create(&readerHandle);
