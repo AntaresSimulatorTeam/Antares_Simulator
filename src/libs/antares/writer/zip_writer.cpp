@@ -84,7 +84,7 @@ ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
  pArchivePath(std::string(archivePath) + ".zip"),
  pDurationCollector(duration_collector)
 {
-    mz_zip_writer_create(&pZipHandle);
+    pZipHandle = mz_zip_writer_create();
     if (int32_t ret = mz_zip_writer_open_file(pZipHandle, pArchivePath.c_str(), 0, 0); ret != MZ_OK)
     {
         logs.error() << "Error opening zip file " << pArchivePath << " (" << ret << ")";
