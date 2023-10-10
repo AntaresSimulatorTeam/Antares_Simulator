@@ -167,13 +167,12 @@ void InfeasibleProblemAnalysis::run()
         logs.info();
         logs.info() << analysis->title() << " : running...";
         analysis->run();
-        if (!analysis->hasDetectedInfeasibilityCause())
+        if (analysis->hasDetectedInfeasibilityCause())
+            return;
+        else
         {
             logs.notice() << analysis->title() << " : nothing detected.";
         }
-        else
-            return;
-        
     }
 }
 
