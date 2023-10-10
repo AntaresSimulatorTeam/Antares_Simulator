@@ -33,7 +33,7 @@
 
 #include "opt_fonctions.h"
 
-#include "../utils/ortools_wrapper.h"
+#include "../utils/ortools_utils.h"
 
 extern "C"
 {

@@ -45,11 +45,9 @@ extern "C"
 
 #include "../utils/mps_utils.h"
 #include "../utils/filename.h"
-#include "../utils/ortools_wrapper.h"
 
 #include "../infeasible-problem-analysis/problem.h"
 #include "../infeasible-problem-analysis/exceptions.h"
-
 
 #include <chrono>
 
@@ -231,11 +229,7 @@ static SimplexResult OPT_TryToCallSimplex(
 
     if (options.useOrtools)
     {
-      auto mixedManager = IMixedIntegerProblemManager::factory(problemeHebdo->OptimisationAvecVariablesEntieres, Probleme.VariablesEntieres);
-      solver = ORTOOLS_ConvertIfNeeded(options.solverName,
-                                       &Probleme,
-                                       *mixedManager,
-                                       solver);
+        solver = ORTOOLS_ConvertIfNeeded(options.solverName, &Probleme, solver);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 

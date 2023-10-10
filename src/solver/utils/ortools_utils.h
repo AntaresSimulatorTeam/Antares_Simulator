@@ -4,10 +4,12 @@
 #include <string>
 
 #include <antares/writer/i_writer.h>
-#include "named_problem.h"
+
 #include "ortools/linear_solver/linear_solver.h"
 
-using operations_research::MPSolver, operations_research::MPObjective;
+#include "ortools_wrapper.h"
+
+using namespace operations_research;
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    Antares::Solver::IResultWriter& writer,
@@ -26,8 +28,7 @@ std::list<std::string> getAvailableOrtoolsSolverName();
  *  \return MPSolver
  */
 MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
-                          const std::string& solverName,
-                          bool MIP);
+                          const std::string& solverName);
 
 std::string generateTempPath(const std::string& filename);
 void removeTemporaryFile(const std::string& tmpPath);
@@ -42,8 +43,11 @@ public:
     static const std::map<std::string, struct SolverNames> solverMap;
 };
 
-namespace Antares::Optimization
+namespace Antares
 {
+namespace Optimization
+{
+
 class Nomenclature
 {
 public:
@@ -69,32 +73,7 @@ public:
 
 private:
     const std::vector<std::string>* target_ = nullptr;
-    const char prefix_;
-};
-
-class IMixedIntegerProblemManager {
-public:
-  virtual bool visit(int idxVar) const = 0;
-  virtual bool isMIP() const = 0;
-  static std::unique_ptr<IMixedIntegerProblemManager> factory(bool integer,
-                                                              const std::vector<bool>& integerVariable);
-};
-
-class Relaxation : public IMixedIntegerProblemManager
-{
-public:
-  bool visit(int idxVar) const override;
-  bool isMIP() const override;
-};
-
-class MILP : public IMixedIntegerProblemManager
-{
-public:
-  MILP(const std::vector<bool>& integerVariable);
-  bool visit(int idxVar) const override;
-  bool isMIP() const override;
-private:
-  const std::vector<bool>& integerVariable;
+    char prefix_;
 };
 
 class ProblemSimplexeNommeConverter
@@ -104,7 +83,7 @@ public:
       const std::string& solverName,
       const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
 
-    MPSolver* Convert(const IMixedIntegerProblemManager&);
+    MPSolver* Convert();
 
 private:
     const std::string& solverName_;
@@ -112,14 +91,12 @@ private:
     Nomenclature variableNameManager_ = Nomenclature('x');
     Nomenclature constraintNameManager_ = Nomenclature('c');
 
-    void CreateVariable(unsigned idxVar,
-                        MPSolver* solver,
-                        MPObjective* const objective,
-                        bool integerVar);
-    void CopyVariables(MPSolver* solver, const IMixedIntegerProblemManager&);
+    void UpdateCoefficient(unsigned idxVar, MPSolver* solver, MPObjective* const objective);
+    void CopyObjective(MPSolver* solver);
     void UpdateContraints(unsigned idxRow, MPSolver* solver);
-    void CopyConstraints(MPSolver* solver);
+    void CopyRows(MPSolver* solver);
     void TuneSolverSpecificOptions(MPSolver* solver) const;
     void CopyMatrix(const MPSolver* solver);
 };
-} // namespace Optimization::Antares
+} // namespace Optimization
+} // namespace Antares

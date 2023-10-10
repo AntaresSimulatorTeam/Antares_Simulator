@@ -13,9 +13,8 @@ namespace Optimization
 {
 InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
 {
-    Antares::Optimization::Relaxation relaxation;
     mSolver
-      = std::unique_ptr<MPSolver>(ProblemSimplexeNommeConverter(solverName, ProbSpx).Convert(relaxation));
+      = std::unique_ptr<MPSolver>(ProblemSimplexeNommeConverter(solverName, ProbSpx).Convert());
 }
 
 void InfeasibleProblemAnalysis::addSlackVariables()
