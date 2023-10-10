@@ -16,19 +16,29 @@ SingleAnalysis::SingleAnalysis(std::shared_ptr<operations_research::MPSolver> pr
     : problem_(problem)
 {}
 
-InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
+void SlackVariablesAnalysis::run()
 {
-    problem_ = std::unique_ptr<MPSolver>(ProblemSimplexeNommeConverter(solverName, ProbSpx).Convert());
+    addSlackVariables();
+    if (slackVariables_.empty())
+    {
+        logs.error() << "Slack variables analysis : no constraints have been selected";
+        return;
+    }
 
-    analysisList_.push_back(std::make_unique<SlackVariablesAnalysis>(problem_));
+    buildObjective();
+
+    const MPSolver::ResultStatus status = Solve();
+    if ((status != MPSolver::OPTIMAL) && (status != MPSolver::FEASIBLE))
+    {
+        logs.error() << "Slack variables analysis : modified linear problem could not be solved";
+        return;
+    }
+
+    hasDetectedInfeasibilityCause_ = true;
+    wasRun_ = true;
 }
 
-bool SlackVariablesAnalysis::run()
-{
-    return true;
-}
-
-void InfeasibleProblemAnalysis::addSlackVariables()
+void SlackVariablesAnalysis::addSlackVariables()
 {
     /* Optimization:
        We assess that less than 1 every 3 constraint will match
@@ -62,7 +72,7 @@ void InfeasibleProblemAnalysis::addSlackVariables()
     }
 }
 
-void InfeasibleProblemAnalysis::buildObjective() const
+void SlackVariablesAnalysis::buildObjective() const
 {
     MPObjective* objective = problem_->MutableObjective();
     // Reset objective function
@@ -75,43 +85,45 @@ void InfeasibleProblemAnalysis::buildObjective() const
     objective->SetMinimization();
 }
 
-MPSolver::ResultStatus InfeasibleProblemAnalysis::Solve() const
+MPSolver::ResultStatus SlackVariablesAnalysis::Solve() const
 {
     return problem_->Solve();
 }
 
-bool InfeasibleProblemAnalysis::run()
+void SlackVariablesAnalysis::printReport()
+{
+    InfeasibleProblemReport report(slackVariables_);
+    report.prettyPrint();
+}
+
+
+InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
+{
+    problem_ = std::unique_ptr<MPSolver>(ProblemSimplexeNommeConverter(solverName, ProbSpx).Convert());
+
+    analysisList_.push_back(std::make_unique<SlackVariablesAnalysis>(problem_));
+}
+
+void InfeasibleProblemAnalysis::run()
 {
     logs.notice() << " Solver: Starting infeasibility analysis...";
 
     for (auto& analysis : analysisList_)
     {
-        if (!analysis->run())
-            return false;
+        analysis->run();
     }
-
-    addSlackVariables();
-    if (slackVariables_.empty())
-    {
-        logs.error() << "Cannot generate infeasibility report: no constraints have been selected";
-        return false;
-    }
-
-    buildObjective();
-
-    const MPSolver::ResultStatus status = Solve();
-    if ((status != MPSolver::OPTIMAL) && (status != MPSolver::FEASIBLE))
-    {
-        logs.error() << "Linear problem could not be solved, and infeasibility analysis could not help";
-        return false;
-    }
-
-    return true;
 }
 
-InfeasibleProblemReport InfeasibleProblemAnalysis::produceReport()
+void InfeasibleProblemAnalysis::printReport()
 {
-    return InfeasibleProblemReport(slackVariables_);
+    for (auto& analysis : analysisList_)
+    {
+        if (analysis->hasDetectedInfeasibilityCause())
+        {
+            analysis->printReport();
+            return;
+        }
+    }
 }
 } // namespace Optimization
 } // namespace Antares

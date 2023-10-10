@@ -28,6 +28,19 @@ void InfeasibleProblemReport::turnSlackVarsIntoConstraints(const std::vector<con
     }
 }
 
+void InfeasibleProblemReport::sortConstraints()
+{
+    std::sort(std::begin(mConstraints), std::end(mConstraints), ::compareSlackSolutions);
+}
+
+void InfeasibleProblemReport::trimConstraints()
+{
+    if (nbVariables <= mConstraints.size())
+    {
+        mConstraints.resize(nbVariables);
+    }
+}
+
 void InfeasibleProblemReport::extractItems()
 {
     for (auto& c : mConstraints)
@@ -72,20 +85,6 @@ void InfeasibleProblemReport::prettyPrint()
 {
     extractItems();
     logSuspiciousConstraints();
-}
-
-
-void InfeasibleProblemReport::sortConstraints()
-{
-    std::sort(std::begin(mConstraints), std::end(mConstraints), ::compareSlackSolutions);
-}
-
-void InfeasibleProblemReport::trimConstraints()
-{
-    if (nbVariables <= mConstraints.size())
-    {
-        mConstraints.resize(nbVariables);
-    }
 }
 
 } // namespace Optimization

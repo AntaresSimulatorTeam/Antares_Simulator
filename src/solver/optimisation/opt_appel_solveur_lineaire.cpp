@@ -375,11 +375,8 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
         Probleme.SetUseNamedProblems(true);
         Optimization::InfeasibleProblemAnalysis analysis(options.solverName, &Probleme);
-        if (analysis.run())
-        {
-            Optimization::InfeasibleProblemReport report = analysis.produceReport();
-            report.prettyPrint();
-        }
+        analysis.run();
+        analysis.printReport();
 
         auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();
         const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
