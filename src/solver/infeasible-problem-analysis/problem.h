@@ -47,6 +47,10 @@ private:
 
 struct VariableBounds
 {
+    VariableBounds(std::string var_name, double low_bound, double up_bound) 
+        : name(var_name), lowBound(low_bound), upBound(up_bound)
+    {}
+
     std::string name;
     double lowBound;
     double upBound;
