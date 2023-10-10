@@ -195,24 +195,20 @@ static void extract_from_MPSolver(MPSolver* solver,
 
     if (isMIP)
     {
-      const int nbVar = problemeSimplexe->NombreDeVariables;
-      std::fill(problemeSimplexe->CoutsReduits,
-                problemeSimplexe->CoutsReduits + nbVar,
-                0.);
+        const int nbVar = problemeSimplexe->NombreDeVariables;
+        std::fill(problemeSimplexe->CoutsReduits, problemeSimplexe->CoutsReduits + nbVar, 0.);
 
-      const int nbRows = problemeSimplexe->NombreDeContraintes;
-      std::fill(problemeSimplexe->CoutsMarginauxDesContraintes,
-                problemeSimplexe->CoutsMarginauxDesContraintes + nbRows,
-                0.);
+        const int nbRows = problemeSimplexe->NombreDeContraintes;
+        std::fill(problemeSimplexe->CoutsMarginauxDesContraintes,
+                  problemeSimplexe->CoutsMarginauxDesContraintes + nbRows,
+                  0.);
     }
-    else 
+    else
     {
-        extractReducedCosts(solver->variables(),
-                            problemeSimplexe);
+        extractReducedCosts(solver->variables(), problemeSimplexe);
 
-        extractDualValues(solver->constraints(),
-                          problemeSimplexe);
-    } 
+        extractDualValues(solver->constraints(), problemeSimplexe);
+    }
 }
 
 std::string generateTempPath(const std::string& filename)
