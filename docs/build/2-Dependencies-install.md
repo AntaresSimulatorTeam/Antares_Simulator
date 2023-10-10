@@ -53,17 +53,17 @@ The installation procedure can be done
     sudo yum install cmake3 devtoolset-9
     sudo yum install libuuid-devel unzip wxGTK3-devel boost-test boost-devel
     ```
-=== "Ubuntu 20.04 or 22.04 / Debian 11 (apt-get)"
+=== "Ubuntu 20.04 or 22.04 / Debian 11 (apt)"
 
     ```
-    sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
-    sudo apt-get install libboost-test-dev
+    sudo apt install uuid-dev libwxgtk3.0-gtk3-dev
+    sudo apt install libboost-test-dev
     ```
 
-=== "Ubuntu 23.04 / Debian 12 (apt-get)"
+=== "Ubuntu 23.04 / Debian 12 (apt)"
 
     ```
-    sudo apt-get install uuid-dev libwxgtk3.2-dev libboost-test-dev
+    sudo apt install uuid-dev libwxgtk3.2-dev libboost-test-dev
     ```
 
 ## Automatic libraries compilation from git
@@ -74,12 +74,6 @@ Apart from OR-Tools, all dependencies can be built at configure time using the o
 You can set `-DBUILD_ORTOOLS=ON` to download & build OR-Tools. It is also possible to use a precompiled archive, see below.
 
 For compiling the package yourself from git, additional build dependencies are needed (see [here](1-Development-requirements.md)).
-
-For building on Debian 12 or Ubuntu 23.04 the installation requires the following build and test dependencies:
-
-```
-sudo apt-get install git unzip cmake build-essentials uuid-dev libboost-test-dev libwxgtk3.2-dev python3-numpy python3-pytest
-```
 
 ### Pre-compiled OR-Tools : release+static only
 You can [download](https://github.com/rte-france/or-tools/releases) a precompiled OR-Tools archive that contains headers & static libraries.
