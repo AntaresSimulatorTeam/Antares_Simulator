@@ -39,6 +39,7 @@ set(BATCHRUN_LIBS
 		antares-core #local.h
 		yuni-static-core
 		${CMAKE_THREADS_LIBS_INIT}
+		Antares::args_helper
 		Antares::study
 )
 

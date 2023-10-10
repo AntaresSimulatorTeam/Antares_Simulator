@@ -35,7 +35,7 @@
 #include <yuni/core/string.h>
 #include <yuni/core/getopt.h>
 #include <antares/study/finder.h>
-#include "../../ui/common/winmain.hxx"
+#include <antares/args/args_to_utf8.h>
 #include <antares/version.h>
 #include <antares/locale.h>
 #ifdef YUNI_OS_WINDOWS
@@ -78,8 +78,8 @@ int main(int argc, char* argv[])
     InitializeDefaultLocale();
 
     logs.applicationName("batchrun");
-    argv = AntaresGetUTF8Arguments(argc, argv);
-
+    IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
+    std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
     // Initializing the toolbox
     Antares::Resources::Initialize(argc, argv, true);
 
