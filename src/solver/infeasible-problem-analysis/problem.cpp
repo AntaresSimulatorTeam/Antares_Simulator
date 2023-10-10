@@ -132,10 +132,9 @@ bool VariablesBoundsAnalysis::foundIncorrectVariables()
 
 void VariablesBoundsAnalysis::printReport()
 {
-    logs.notice() << "";
     for (auto& var : incorrectVars_)
     {
-
+        logs.notice() << var.name << " : low bound = " << var.lowBound << ", up bound = " << var.upBound;
     }
 }
 
@@ -171,6 +170,7 @@ void InfeasibleProblemAnalysis::printReport()
     {
         if (analysis->hasDetectedInfeasibilityCause())
         {
+            logs.notice() << analysis->title() << " : printing report";
             analysis->printReport();
             return;
         }
