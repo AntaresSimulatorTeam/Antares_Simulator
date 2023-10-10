@@ -149,20 +149,10 @@ void ProblemSimplexeNommeConverter::CopyRows(MPSolver* solver)
 } // namespace Optimization
 } // namespace Antares
 
-// TODO MIP status for MPSolver is immutable
-// It seems that we need 2 separate MPSolver objects
-static void solveRelaxation(MPSolver* solver)
-{
-  for (auto var : solver->variables())
-    var->SetInteger(false);
-  solver->Solve();
-}
-
 static void extractSolutionValues(const std::vector<MPVariable*>& variables,
                                   Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
     int nbVar = problemeSimplexe->NombreDeVariables;
-    assert(nbVar == variables.size());
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
         auto& var = variables[idxVar];
@@ -174,7 +164,6 @@ static void extractReducedCosts(const std::vector<MPVariable*>& variables,
                                 Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
     int nbVar = problemeSimplexe->NombreDeVariables;
-    assert(nbVar == variables.size());
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
         auto& var = variables[idxVar];
@@ -186,7 +175,6 @@ static void extractDualValues(const std::vector<MPConstraint*>& constraints,
                               Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
   int nbRows = problemeSimplexe->NombreDeContraintes;
-  assert(nbRows == constraints.size());
   for (int idxRow = 0; idxRow < nbRows; ++idxRow)
   {
       auto& row = constraints[idxRow];
@@ -207,14 +195,24 @@ static void extract_from_MPSolver(MPSolver* solver,
 
     if (isMIP)
     {
-        solveRelaxation(solver);
+      const int nbVar = problemeSimplexe->NombreDeVariables;
+      std::fill(problemeSimplexe->CoutsReduits,
+                problemeSimplexe->CoutsReduits + nbVar,
+                0.);
+
+      const int nbRows = problemeSimplexe->NombreDeContraintes;
+      std::fill(problemeSimplexe->CoutsMarginauxDesContraintes,
+                problemeSimplexe->CoutsMarginauxDesContraintes + nbRows,
+                0.);
     }
+    else 
+    {
+        extractReducedCosts(solver->variables(),
+                            problemeSimplexe);
 
-    extractReducedCosts(solver->variables(),
-                        problemeSimplexe);
-
-    extractDualValues(solver->constraints(),
-                      problemeSimplexe);
+        extractDualValues(solver->constraints(),
+                          problemeSimplexe);
+    } 
 }
 
 std::string generateTempPath(const std::string& filename)
