@@ -1344,6 +1344,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     std::vector<std::string> excluded_vars;
     renewableGeneration.addExcludedVariables(excluded_vars);
     adqPatchParams.addExcludedVariables(excluded_vars);
+    unitCommitment.addExcludedVariables(excluded_vars);
 
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 
@@ -1791,5 +1792,21 @@ bool Parameters::RenewableGeneration::isAggregated() const
 bool Parameters::RenewableGeneration::isClusters() const
 {
     return rgModelling == Antares::Data::rgClusters;
+}
+
+void Parameters::UCMode::addExcludedVariables(std::vector<std::string>& out) const
+{
+    const static std::vector<std::string> milpExclude = {{"MARG. COST"},
+                                                         {"BC. MARG. COST"},
+                                                         {"CONG. FEE (ALG.)"},
+                                                         {"CONG. FEE (ABS.)"},
+                                                         {"MRG. PRICE"},
+                                                         {"STS Cashflow By Cluster"},
+                                                         {"Profit by plant"}};
+
+    if (ucMode == ucMILP)
+    {
+        out.insert(out.end(), milpExclude.begin(), milpExclude.end());
+    }
 }
 } // namespace Antares::Data
