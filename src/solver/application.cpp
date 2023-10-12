@@ -456,8 +456,9 @@ Application::~Application()
     {
         logs.info() << LOG_UI_SOLVER_DONE;
 
-        // Copy the log file
-        if (!pStudy->parameters.noOutput) {
+        // Copy the log file if a result writer is available
+        if (!pStudy->parameters.noOutput && resultWriter)
+        {
             pStudy->importLogsToOutputFolder(*resultWriter);
         }
 
