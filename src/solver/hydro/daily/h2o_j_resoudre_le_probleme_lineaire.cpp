@@ -25,18 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#ifdef __CPLUSPLUS
-extern "C"
-{
-#endif
-
-#include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
-
-#ifdef __CPLUSPLUS
-}
-#endif
-
 #include "h2o_j_donnees_mensuelles.h"
 #include "h2o_j_fonctions.h"
 
@@ -58,14 +46,8 @@ void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
         = ProblemeHydraulique.ProblemeLineairePartieFixe[NumeroDeProbleme];
 
-    PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[NumeroDeProbleme];
+    PROBLEME_SPX* ProbSpx = ProblemeHydraulique.ProblemeSpx[NumeroDeProbleme];
     std::unique_ptr<PROBLEME_SIMPLEXE> Probleme = std::make_unique<PROBLEME_SIMPLEXE>();
-
-    if (!Probleme)
-    {
-        DonneesMensuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
-        return;
-    }
 
     bool PremierPassage = true;
 
@@ -140,7 +122,7 @@ RESOLUTION:
     ProbSpx = SPX_Simplexe(Probleme.get(), ProbSpx);
 
     if (ProbSpx)
-        ProblemeHydraulique.ProblemeSpx[NumeroDeProbleme] = (void*)ProbSpx;
+        ProblemeHydraulique.ProblemeSpx[NumeroDeProbleme] = ProbSpx;
 
     ProblemeLineairePartieVariable.ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
 

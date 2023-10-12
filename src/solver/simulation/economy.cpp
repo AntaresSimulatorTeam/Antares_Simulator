@@ -147,7 +147,7 @@ bool Economy::year(Progression::Task& progression,
                                          numSpace, hourInTheYear, hydroVentilationResults);
 
         BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace], 
-                                        numSpace, hourInTheYear, randomForYear.pThermalNoisesByArea);
+                                        hourInTheYear, randomForYear.pThermalNoisesByArea, state.year);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;
@@ -264,9 +264,9 @@ void Economy::simulationEnd()
     }
 }
 
-void Economy::prepareClustersInMustRunMode(uint numSpace)
+void Economy::prepareClustersInMustRunMode(uint numSpace, uint year)
 {
-    PrepareDataFromClustersInMustrunMode(study, numSpace);
+    PrepareDataFromClustersInMustrunMode(study, numSpace, year);
 }
 
 } // namespace Antares::Solver::Simulation

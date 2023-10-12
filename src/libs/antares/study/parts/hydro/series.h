@@ -105,6 +105,8 @@ public:
     */
     void checkMinGenTsNumber(Study& s, const AreaName& areaID);
 
+    unsigned int getIndex(unsigned int year) const;
+
 public:
     /*!
     ** \brief Run-of-the-river - ROR (MW)

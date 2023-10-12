@@ -36,12 +36,8 @@ namespace Antares
 {
 namespace Data
 {
-AreaScratchpad::TimeseriesData::TimeseriesData(Area& area) :
-        load(area.load.series->timeSeries), solar(area.solar.series->timeSeries), wind(area.wind.series->timeSeries)
-{
-}
 
-AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts(area)
+AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area)
 {
     // alias to the simulation mode
     auto mode = rinfos.mode;

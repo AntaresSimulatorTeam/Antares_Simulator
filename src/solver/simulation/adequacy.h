@@ -92,7 +92,7 @@ protected:
     /*!
     ** \brief Prepare clusters in 'must-run' mode
     */
-    void prepareClustersInMustRunMode(uint numSpace);
+    void prepareClustersInMustRunMode(uint numSpace, uint year);
 
     void initializeState(Variable::State& state, uint numSpace);
 

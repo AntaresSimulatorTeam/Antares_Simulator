@@ -158,7 +158,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
     for (uint i = 0; i != DIM; ++i)
         NORM[i] = 0.;
 
-    uint nbTimeseries = studyRTI.parameters->nbTimeSeriesHydro;
+    uint nbTimeseries = study.parameters.nbTimeSeriesHydro;
 
     PreproHydroInitMatrices(study, nbTimeseries);
 

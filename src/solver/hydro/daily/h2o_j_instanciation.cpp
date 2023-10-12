@@ -61,8 +61,6 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 
     ProblemeHydraulique.ProblemeSpx.assign(NombreDeProblemes, nullptr);
 
-    ProblemeHydraulique.Probleme = NULL;
-
     std::vector<CORRESPONDANCE_DES_VARIABLES>& CorrespondanceDesVariables
         = ProblemeHydraulique.CorrespondanceDesVariables;
 

@@ -54,7 +54,7 @@ using namespace Antares::Data;
 
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo, Solver::IResultWriter& writer)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
+    const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     int nombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
     int nombreDePasDeTempsPourUneOptimisation

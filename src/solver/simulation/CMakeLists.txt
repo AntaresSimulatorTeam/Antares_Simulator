@@ -64,4 +64,5 @@ target_link_libraries(antares-solver-simulation PRIVATE
 		yuni-static-core
 		Antares::study
 		Antares::result_writer
+		Antares::concurrency
 )

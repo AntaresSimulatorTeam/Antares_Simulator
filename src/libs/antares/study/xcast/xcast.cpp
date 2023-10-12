@@ -129,7 +129,7 @@ XCast::Distribution XCast::StringToDistribution(AnyString text)
     return dtNone;
 }
 
-XCast::XCast(TimeSeries ts) :
+XCast::XCast(TimeSeriesType ts) :
  useTranslation(tsTranslationNone),
  distribution(dtBeta),
  capacity(0),

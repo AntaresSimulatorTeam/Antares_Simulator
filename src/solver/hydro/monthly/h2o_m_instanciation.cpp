@@ -51,7 +51,6 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     ProblemeHydraulique.NombreDeReservoirs = NombreDeReservoirs;
 
     ProblemeHydraulique.ProblemeSpx.assign(NombreDeReservoirs, nullptr);
-    ProblemeHydraulique.Probleme = nullptr;
 
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
         = ProblemeHydraulique.CorrespondanceDesVariables;

@@ -29,7 +29,7 @@
 #include <antares/resources/resources.h>
 #include <iostream>
 #include <yuni/core/getopt.h>
-#include "../../ui/common/winmain.hxx"
+#include <antares/args/args_to_utf8.h>
 #include <antares/version.h>
 #include <yuni/core/system/username.h>
 #include <antares/locale.h>
@@ -44,8 +44,8 @@ int main(int argc, char* argv[])
     InitializeDefaultLocale();
 
     logs.applicationName("config");
-    argv = AntaresGetUTF8Arguments(argc, argv);
-
+    IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
+    std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
     // Initializing the toolbox
     Antares::Resources::Initialize(argc, argv, true);
 

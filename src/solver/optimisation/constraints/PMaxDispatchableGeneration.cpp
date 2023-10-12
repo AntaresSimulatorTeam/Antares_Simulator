@@ -32,7 +32,7 @@ void PMaxDispatchableGeneration::add(int pays,
     }
     else
     {
-        nbTermesContraintesPourLesCoutsDeDemarrage += 2;
+        problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage += 2;
         problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
     }
 }

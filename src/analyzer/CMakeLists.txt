@@ -51,6 +51,7 @@ INSTALL(EXPORT antares-analyzer
 target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
 		PRIVATE
 			yuni-static-core
+			Antares::args_helper
 			${CMAKE_THREADS_LIBS_INIT}
 		antares-core #local.h
 		PUBLIC

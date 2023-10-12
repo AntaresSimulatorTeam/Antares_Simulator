@@ -34,7 +34,7 @@
 
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtHebdo)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
+    const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     ProblemeAResoudre->CoutLineaire.assign(ProblemeAResoudre->NombreDeVariables, 0.);
 

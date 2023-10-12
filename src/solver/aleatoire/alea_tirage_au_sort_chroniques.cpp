@@ -37,88 +37,6 @@ void ApplyRandomTSnumbers(const Study& study,
                           unsigned int year,
                           uint numSpace)
 {
-    // each area
-    const unsigned int count = study.areas.size();
-    for (unsigned int areaIndex = 0; areaIndex != count; ++areaIndex)
-    {
-        // Variables - the current area
-        NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = NumeroChroniquesTireesParPays[numSpace][areaIndex];
-        auto& area = *(study.areas.byIndex[areaIndex]);
-
-        // Load
-        {
-            const Data::DataSeriesLoad& data = *area.load.series;
-            assert(year < data.timeseriesNumbers.height);
-            ptchro.Consommation
-              = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
-        }
-        // Solar
-        {
-            const Data::DataSeriesSolar& data = *area.solar.series;
-            assert(year < data.timeseriesNumbers.height);
-            ptchro.Solar
-              = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
-        }
-        // Hydro
-        {
-            const Data::DataSeriesHydro& data = *area.hydro.series;
-            assert(year < data.timeseriesNumbers.height);
-            ptchro.Hydraulique
-              = (data.count != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
-        }
-        // Wind
-        {
-            const Data::DataSeriesWind& data = *area.wind.series;
-            assert(year < data.timeseriesNumbers.height);
-            ptchro.Eolien
-              = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
-        }
-        // Renewable
-        {
-            auto end = area.renewable.list.cluster.end();
-            for (auto it = area.renewable.list.cluster.begin(); it != end; ++it)
-            {
-                RenewableClusterList::SharedPtr cluster = it->second;
-                if (!cluster->enabled)
-                {
-                    continue;
-                }
-
-                const auto& data = *cluster->series;
-                assert(year < data.timeseriesNumbers.height);
-                unsigned int clusterIndex = cluster->areaWideIndex;
-
-                ptchro.RenouvelableParPalier[clusterIndex] = (data.timeSeries.width != 1)
-                                                             ? (long)data.timeseriesNumbers[0][year]
-                                                             : 0; // zero-based
-            }
-        }
-
-        // Thermal
-        {
-            auto end = area.thermal.list.mapping.end();
-            for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
-            {
-                ThermalClusterList::SharedPtr cluster = it->second;
-
-                if (!cluster->enabled)
-                {
-                    continue;
-                }
-
-                const auto& data = *cluster->series;
-                assert(year < data.timeseriesNumbers.height);
-                unsigned int clusterIndex = cluster->areaWideIndex;
-
-                // the matrix data.series should be properly initialized at this stage
-                // because the ts-generator has already been launched
-                ptchro.ThermiqueParPalier[clusterIndex] = (data.timeSeries.width != 1)
-                                                          ? (long)data.timeseriesNumbers[0][year]
-                                                          : 0; // zero-based
-            }
-        } // thermal
-    }     // each area
-
     // ------------------------------
     // Transmission capacities
     // ------------------------------
@@ -135,7 +53,7 @@ void ApplyRandomTSnumbers(const Study& study,
         ptchro.TransmissionCapacities
           = (directWidth != 1) ? link->timeseriesNumbers[0][year] : 0; // zero-based
     }
-    
+
     // ------------------------------
     //Binding constraints
     // ------------------------------

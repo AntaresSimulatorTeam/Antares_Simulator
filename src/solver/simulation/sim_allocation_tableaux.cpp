@@ -44,21 +44,6 @@ static void AllocateResultsForEconomicMode(const Data::Study& study)
 
 void SIM_AllocationTableaux(const Data::Study& study)
 {
-    NumeroChroniquesTireesParPays.resize(study.maxNbYearsInParallel);
-
-    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
-    {
-        NumeroChroniquesTireesParPays[numSpace].resize(study.areas.size());
-        for (uint i = 0; i < study.areas.size(); ++i)
-        {
-            auto& area = *study.areas.byIndex[i];
-
-            NumeroChroniquesTireesParPays[numSpace][i].ThermiqueParPalier
-                .assign(area.thermal.clusterCount(), 0);
-            NumeroChroniquesTireesParPays[numSpace][i].RenouvelableParPalier
-                .assign(area.renewable.clusterCount(), 0);
-        }
-    }
     NumeroChroniquesTireesParInterconnexion.resize(study.maxNbYearsInParallel);
 
     const uint intercoCount = study.areas.areaLinkCount();

@@ -35,7 +35,7 @@ void NbUnitsOutageLessThanNbUnitsStop::add(int pays,
     }
     else
     {
-        nbTermesContraintesPourLesCoutsDeDemarrage += 4;
+        problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage += 2;
         problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
     }
 }

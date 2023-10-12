@@ -21,7 +21,7 @@ DispatchableMarginPostProcessCmd::DispatchableMarginPostProcessCmd(PROBLEME_HEBD
 void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 {
     unsigned int hourInYear = opt_runtime_data.hourInTheYear;
-
+    unsigned int year = opt_runtime_data.year;
     area_list_.each([&](Data::Area& area) {
         double* dtgmrg = area.scratchpad[thread_number_].dispatchableGenerationMargin;
         for (uint h = 0; h != nbHoursInWeek; ++h)
@@ -30,23 +30,17 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
         if (not area.thermal.list.empty())
         {
             auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area.index];
-            auto end = area.thermal.list.end();
 
+            auto end = area.thermal.list.end();
             for (auto i = area.thermal.list.begin(); i != end; ++i)
             {
                 auto& cluster = *(i->second);
-                uint chro = NumeroChroniquesTireesParPays[thread_number_][area.index]
-                              .ThermiqueParPalier[cluster.areaWideIndex];
-                auto& matrix = cluster.series->timeSeries;
-                assert(chro < matrix.width);
-                auto& column = matrix.entry[chro];
-                assert(hourInYear + nbHoursInWeek <= matrix.height && "index out of bounds");
-
+                const auto& availableProduction = cluster.series->getAvailablePowerYearly(year);
                 for (uint h = 0; h != nbHoursInWeek; ++h)
                 {
                     double production = hourlyResults.ProductionThermique[h]
                                           .ProductionThermiqueDuPalier[cluster.index];
-                    dtgmrg[h] += column[h + hourInYear] - production;
+                    dtgmrg[h] += availableProduction[h + hourInYear] - production;
                 }
             }
         }

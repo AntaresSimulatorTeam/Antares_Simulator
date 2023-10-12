@@ -59,7 +59,6 @@ source_group("study\\area\\ui" FILES ${SRC_STUDY_AREA_UI})
 
 set(SRC_STUDY_PART_COMMON
         parts/common/series.h
-        parts/common/series.hxx
         parts/common/series.cpp
         parts/common/cluster.cpp
         parts/common/cluster.h
