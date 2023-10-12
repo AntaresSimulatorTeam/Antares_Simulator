@@ -305,7 +305,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Load the study from a folder
     Benchmarking::Timer timer;
 
-    std::exception_ptr eptr;
+    std::exception_ptr loadingException;
     try
     {
         if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
@@ -335,7 +335,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
     catch (...)
     {
-        eptr = std::current_exception();
+        loadingException = std::current_exception();
     }
     // This settings can only be enabled from the solver
     // Prepare the output for the study
@@ -347,9 +347,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Some checks may have failed, but we need a writer to copy the logs
     // to the output directory
     // So we wait until we have initialized the writer to rethrow
-    if (eptr)
+    if (loadingException)
     {
-        std::rethrow_exception(eptr);
+        std::rethrow_exception(loadingException);
     }
 
     Antares::Solver::initializeSignalHandlers(resultWriter);
