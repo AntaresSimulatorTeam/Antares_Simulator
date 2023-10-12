@@ -306,34 +306,36 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     Benchmarking::Timer timer;
 
     std::exception_ptr eptr;
-    try {
-    if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
+    try
     {
-        logs.info() << "The study is loaded.";
-        logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+        if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
+        {
+            logs.info() << "The study is loaded.";
+            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+        }
+
+        timer.stop();
+        pDurationCollector.addDuration("study_loading", timer.get_duration());
+
+        if (study.gotFatalError)
+            throw Error::ReadingStudy();
+
+        if (study.areas.empty())
+        {
+            throw Error::NoAreas();
+        }
+
+        // no output ?
+        study.parameters.noOutput = pSettings.noOutput;
+
+        if (pSettings.forceZipOutput)
+        {
+            pParameters->resultFormat = Antares::Data::zipArchive;
+        }
     }
-
-    timer.stop();
-    pDurationCollector.addDuration("study_loading", timer.get_duration());
-
-    if (study.gotFatalError)
-        throw Error::ReadingStudy();
-
-    if (study.areas.empty())
+    catch (...)
     {
-        throw Error::NoAreas();
-    }
-
-    // no output ?
-    study.parameters.noOutput = pSettings.noOutput;
-
-    if (pSettings.forceZipOutput)
-    {
-        pParameters->resultFormat = Antares::Data::zipArchive;
-    }
-    } catch (...)
-    {
-      eptr = std::current_exception();
+        eptr = std::current_exception();
     }
     // This settings can only be enabled from the solver
     // Prepare the output for the study
@@ -345,7 +347,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Some checks may have failed, but we need a writer to copy the logs
     // to the output directory
     // So we wait until we have initialized the writer to rethrow
-    if (eptr) {
+    if (eptr)
+    {
         std::rethrow_exception(eptr);
     }
 
@@ -422,7 +425,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
 
-    //alloc global vectors
+    // alloc global vectors
     SIM_AllocationTableaux(study);
 
     // Random-numbers generators
@@ -482,4 +485,3 @@ Application::~Application()
     }
 }
 } // namespace Antares::Solver
-
