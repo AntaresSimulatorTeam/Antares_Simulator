@@ -302,6 +302,7 @@ var hierarchy =
     [ "Fixture", "structFixture.html", null ],
     [ "FixtureStudyOnly", "structFixtureStudyOnly.html", null ],
     [ "Antares::Component::FrameShowData", "classAntares_1_1Component_1_1FrameShowData.html", null ],
+    [ "Antares::Concurrency::FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", null ],
     [ "global_JIT_manager", "classglobal__JIT__manager.html", null ],
     [ "Antares::Graph::Grid< NodeT >", "classAntares_1_1Graph_1_1Grid.html", null ],
     [ "Antares::Graph::Grid< Antares::Data::Area >", "classAntares_1_1Graph_1_1Grid.html", null ],
@@ -580,8 +581,6 @@ var hierarchy =
       [ "Antares::Private::Dispatcher::JobShowModalThenDestroy", "classAntares_1_1Private_1_1Dispatcher_1_1JobShowModalThenDestroy.html", null ],
       [ "Antares::Private::Dispatcher::JobSimpleDispatcher", "classAntares_1_1Private_1_1Dispatcher_1_1JobSimpleDispatcher.html", null ],
       [ "Antares::Private::OutputViewerData::Job", "classAntares_1_1Private_1_1OutputViewerData_1_1Job.html", null ],
-      [ "Antares::Solver::Simulation::yearJob< Impl >", "classAntares_1_1Solver_1_1Simulation_1_1yearJob.html", null ],
-      [ "Antares::Solver::ZipWriteJob< ContentT >", "classAntares_1_1Solver_1_1ZipWriteJob.html", null ],
       [ "Antares::Window::JobGUIUpdate", "classAntares_1_1Window_1_1JobGUIUpdate.html", null ],
       [ "Antares::Window::JobLoadLogFile", "classAntares_1_1Window_1_1JobLoadLogFile.html", null ],
       [ "FSWalker::IJob", "classFSWalker_1_1IJob.html", [
@@ -1020,6 +1019,7 @@ var hierarchy =
       [ "Antares::Optimization::ProblemResolutionFailed", "classAntares_1_1Optimization_1_1ProblemResolutionFailed.html", null ],
       [ "Antares::Optimization::SlackVariablesEmpty", "classAntares_1_1Optimization_1_1SlackVariablesEmpty.html", null ],
       [ "Antares::Optimization::StringIsNotWellFormated", "classAntares_1_1Optimization_1_1StringIsNotWellFormated.html", null ],
+      [ "Antares::Solver::IOError", "classAntares_1_1Solver_1_1IOError.html", null ],
       [ "Antares::Solver::Initialization::Error::NoQueueService", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html", null ],
       [ "Antares::Solver::Initialization::Error::NoResultWriter", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoResultWriter.html", null ],
       [ "ConstraintBuilder::ConstraintBuilderInvalidOperator", "classConstraintBuilder_1_1ConstraintBuilderInvalidOperator.html", null ]
@@ -1220,6 +1220,9 @@ var hierarchy =
     [ "IItem::Tag", "classIItem_1_1Tag.html", null ],
     [ "TargetVectorUpdater", "classTargetVectorUpdater.html", null ],
     [ "Antares::Solver::Progression::Task", "classAntares_1_1Solver_1_1Progression_1_1Task.html", null ],
+    [ "TestContext", "structTestContext.html", null ],
+    [ "TestException", "classTestException.html", null ],
+    [ "TestExceptionN< N >", "classTestExceptionN.html", null ],
     [ "Antares::Data::Parameters::IncludeOptions::Thermal", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Thermal.html", null ],
     [ "ThermalClusterConfig", "classThermalClusterConfig.html", null ],
     [ "ThermalIniFile", "structThermalIniFile.html", [
@@ -1559,7 +1562,9 @@ var hierarchy =
     [ "wxTreeItemData", null, [
       [ "Antares::Toolbox::InputSelector::TreeLeaf", "classAntares_1_1Toolbox_1_1InputSelector_1_1TreeLeaf.html", null ]
     ] ],
+    [ "Antares::Solver::Simulation::yearJob< Impl >", "classAntares_1_1Solver_1_1Simulation_1_1yearJob.html", null ],
     [ "Antares::Solver::Simulation::yearRandomNumbers", "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html", null ],
+    [ "Antares::Solver::ZipWriteJob< ContentT >", "classAntares_1_1Solver_1_1ZipWriteJob.html", null ],
     [ "check_interface", null, [
       [ "check_hydro_level.check_hydro_level", "classcheck__hydro__level_1_1check__hydro__level.html", null ],
       [ "check_logs_content.check_logs_content", "classcheck__logs__content_1_1check__logs__content.html", null ],

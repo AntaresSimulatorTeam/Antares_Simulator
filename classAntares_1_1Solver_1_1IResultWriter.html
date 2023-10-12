@@ -127,6 +127,8 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addEntryFromB
 <tr class="memitem:ae5b3b7e0bbf95c8f921783ee002483ef"><td class="memItemLeft" align="right" valign="top"><a id="ae5b3b7e0bbf95c8f921783ee002483ef" name="ae5b3b7e0bbf95c8f921783ee002483ef"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addEntryFromFile</b> (const std::string &amp;entryPath, const std::string &amp;filePath)=0</td></tr>
 <tr class="separator:ae5b3b7e0bbf95c8f921783ee002483ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a866bc43cd373dc27cf69ec3968737c8c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html#a866bc43cd373dc27cf69ec3968737c8c">flush</a> ()=0</td></tr>
+<tr class="separator:a866bc43cd373dc27cf69ec3968737c8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e9f122870f79dada049faf51d8dc5d5"><td class="memItemLeft" align="right" valign="top"><a id="a8e9f122870f79dada049faf51d8dc5d5" name="a8e9f122870f79dada049faf51d8dc5d5"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>needsTheJobQueue</b> () const =0</td></tr>
 <tr class="separator:a8e9f122870f79dada049faf51d8dc5d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,6 +136,35 @@ virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>needsTheJobQu
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>finalize</b> (bool verbose)=0</td></tr>
 <tr class="separator:a1a15d10f60950a3c0b3e89c5a5bf316a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a866bc43cd373dc27cf69ec3968737c8c" name="a866bc43cd373dc27cf69ec3968737c8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a866bc43cd373dc27cf69ec3968737c8c">&#9670;&#160;</a></span>flush()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Antares::Solver::IResultWriter::flush </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >Waits for completion of every write operation previously appended. An <a class="el" href="classAntares_1_1Solver_1_1IOError.html">IOError</a> may be raised if any of those fails. </p>
+
+<p>Implemented in <a class="el" href="classAntares_1_1Solver_1_1ImmediateFileResultWriter.html#af331f4ce440c90a0b402f9dbd6c67629">Antares::Solver::ImmediateFileResultWriter</a>, and <a class="el" href="classAntares_1_1Solver_1_1ZipWriter.html#a1aada9478675d3a460f1561be42a140e">Antares::Solver::ZipWriter</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/libs/antares/writer/antares/writer/<a class="el" href="i__writer_8h_source.html">i_writer.h</a></li>
 </ul>

@@ -94,26 +94,28 @@ $(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1ZipWriteJob.
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classAntares_1_1Solver_1_1ZipWriteJob-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">Antares::Solver::ZipWriteJob&lt; ContentT &gt; Class Template Reference<span class="mlabels"><span class="mlabel">final</span></span></div></div>
+  <div class="headertitle"><div class="title">Antares::Solver::ZipWriteJob&lt; ContentT &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Inheritance diagram for Antares::Solver::ZipWriteJob&lt; ContentT &gt;:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="classAntares_1_1Solver_1_1ZipWriteJob.png" alt=""/>
- </div></div>
+
+<p><code>#include &lt;<a class="el" href="zip__writer_8h_source.html">zip_writer.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a2159bde9a3ee473af960cf3afce0a5c4"><td class="memItemLeft" align="right" valign="top"><a id="a2159bde9a3ee473af960cf3afce0a5c4" name="a2159bde9a3ee473af960cf3afce0a5c4"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>ZipWriteJob</b> (<a class="el" href="classAntares_1_1Solver_1_1ZipWriter.html">ZipWriter</a> &amp;writer, std::string entryPath, ContentT &amp;content, <a class="el" href="classBenchmarking_1_1IDurationCollector.html">Benchmarking::IDurationCollector</a> &amp;duration_collector)</td></tr>
 <tr class="separator:a2159bde9a3ee473af960cf3afce0a5c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94f02c8862daa3f808d54f591d11caaa"><td class="memItemLeft" align="right" valign="top"><a id="a94f02c8862daa3f808d54f591d11caaa" name="a94f02c8862daa3f808d54f591d11caaa"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onExecute</b> () override</td></tr>
-<tr class="separator:a94f02c8862daa3f808d54f591d11caaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dbb249d778d3520efbb55aafc99257e"><td class="memItemLeft" align="right" valign="top"><a id="a4dbb249d778d3520efbb55aafc99257e" name="a4dbb249d778d3520efbb55aafc99257e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>writeEntry</b> ()</td></tr>
+<tr class="separator:a4dbb249d778d3520efbb55aafc99257e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3302c4a5702b380870f36cf296160f24"><td class="memItemLeft" align="right" valign="top"><a id="a3302c4a5702b380870f36cf296160f24" name="a3302c4a5702b380870f36cf296160f24"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>operator()</b> ()</td></tr>
+<tr class="separator:a3302c4a5702b380870f36cf296160f24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;class ContentT&gt;<br />
+class Antares::Solver::ZipWriteJob&lt; ContentT &gt;</div><p >In charge of writing one entry into the underlying zip. May be used as a function object. </p>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/libs/antares/writer/private/<a class="el" href="zip__writer_8h_source.html">zip_writer.h</a></li>
 <li>src/libs/antares/writer/zip_writer.cpp</li>
 </ul>

@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['jit_0',['JIT',['../classJIT.html',1,'']]],
-  ['jit_1',['jit',['../classAntares_1_1Matrix.html#a0299a9df246248542586fb3319c6ad24',1,'Antares::Matrix']]],
+  ['jit_0',['jit',['../classAntares_1_1Matrix.html#a0299a9df246248542586fb3319c6ad24',1,'Antares::Matrix']]],
+  ['jit_1',['JIT',['../classJIT.html',1,'']]],
   ['job_2',['Job',['../classAntares_1_1Private_1_1OutputViewerData_1_1Job.html',1,'Antares::Private::OutputViewerData::Job'],['../classAntares_1_1Toolbox_1_1Jobs_1_1Job.html',1,'Antares::Toolbox::Jobs::Job'],['../classAntares_1_1Private_1_1OutputViewerData_1_1Job.html#ab8957e3af9042cebe5d7a39cb36ccd84',1,'Antares::Private::OutputViewerData::Job::Job()'],['../classAntares_1_1Toolbox_1_1Jobs_1_1Job.html#a98977f374157a061e8009ad629958295',1,'Antares::Toolbox::Jobs::Job::Job()']]],
   ['jobexecute_3',['JobExecute',['../classAntares_1_1Toolbox_1_1Process_1_1JobExecute.html',1,'Antares::Toolbox::Process']]],
-  ['jobfilereader_4',['JobFileReader',['../classJobFileReader.html#a35f76210b50cd6c8a86c8d0ac72f517c',1,'JobFileReader::JobFileReader()'],['../classJobFileReader.html',1,'JobFileReader']]],
+  ['jobfilereader_4',['JobFileReader',['../classJobFileReader.html',1,'JobFileReader'],['../classJobFileReader.html#a35f76210b50cd6c8a86c8d0ac72f517c',1,'JobFileReader::JobFileReader()']]],
   ['jobguiupdate_5',['JobGUIUpdate',['../classAntares_1_1Window_1_1JobGUIUpdate.html',1,'Antares::Window']]],
   ['joblayout_6',['JobLayout',['../classAntares_1_1Private_1_1Dispatcher_1_1JobLayout.html',1,'Antares::Private::Dispatcher']]],
   ['jobloadlogfile_7',['JobLoadLogFile',['../classAntares_1_1Window_1_1JobLoadLogFile.html',1,'Antares::Window']]],
@@ -17,6 +17,7 @@ var searchData=
   ['jobsimpledispatcher_14',['JobSimpleDispatcher',['../classAntares_1_1Private_1_1Dispatcher_1_1JobSimpleDispatcher.html',1,'Antares::Private::Dispatcher']]],
   ['jobthread_15',['JobThread',['../classAntares_1_1Toolbox_1_1Jobs_1_1JobThread.html',1,'Antares::Toolbox::Jobs']]],
   ['join_16',['Join',['../classAntares_1_1Solver_1_1Variable_1_1Join.html',1,'Antares::Solver::Variable']]],
-  ['jsoncollector_17',['jsonCollector',['../classjson__collector_1_1jsonCollector.html',1,'json_collector']]],
-  ['just_5fin_5ftime_5fmanager_18',['just_in_time_manager',['../classJIT_1_1just__in__time__manager.html',1,'JIT']]]
+  ['join_17',['join',['../classAntares_1_1Concurrency_1_1FutureSet.html#a8cf68f6c1a66e76acaec9ce67cb20e5f',1,'Antares::Concurrency::FutureSet']]],
+  ['jsoncollector_18',['jsonCollector',['../classjson__collector_1_1jsonCollector.html',1,'json_collector']]],
+  ['just_5fin_5ftime_5fmanager_19',['just_in_time_manager',['../classJIT_1_1just__in__time__manager.html',1,'JIT']]]
 ];

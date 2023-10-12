@@ -96,22 +96,25 @@ $(document).ready(function(){initNavTree('zip__writer_8hxx_source.html',''); ini
 <div class="contents">
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;ensure_queue_started.h&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">namespace </span>Antares::Solver</div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>{</div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> ContentType&gt;</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keywordtype">void</span> ZipWriter::addEntryFromBufferHelper(<span class="keyword">const</span> std::string&amp; entryPath, ContentType&amp; entryContent)</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>{</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="keywordflow">if</span> (pState != ZipState::can_receive_data)</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    EnsureQueueStartedIfNeeded ensureQueue(<span class="keyword">this</span>, pQueueService);</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    pQueueService-&gt;add(</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>      <span class="keyword">new</span> ZipWriteJob&lt;ContentType&gt;(*<span class="keyword">this</span>, entryPath, entryContent, pDurationCollector),</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>      Yuni::Job::priorityLow);</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>}</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>} <span class="comment">// namespace Antares::Solver</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;antares/concurrency/concurrency.h&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;ensure_queue_started.h&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">namespace </span>Antares::Solver</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>{</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> ContentType&gt;</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keywordtype">void</span> ZipWriter::addEntryFromBufferHelper(<span class="keyword">const</span> std::string&amp; entryPath, ContentType&amp; entryContent)</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>{</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    <span class="keywordflow">if</span> (pState != ZipState::can_receive_data)</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    EnsureQueueStartedIfNeeded ensureQueue(<span class="keyword">this</span>, pQueueService);</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    pendingTasks_.<a class="code hl_function" href="classAntares_1_1Concurrency_1_1FutureSet.html#a1911ee50a617f632e1cdaccb6181083e">add</a>(Concurrency::AddTask(*pQueueService,</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>                         ZipWriteJob&lt;ContentType&gt;(*<span class="keyword">this</span>, entryPath, entryContent, pDurationCollector),</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>                         Yuni::Job::priorityLow));</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>}</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>} <span class="comment">// namespace Antares::Solver</span></div>
+<div class="ttc" id="aclassAntares_1_1Concurrency_1_1FutureSet_html_a1911ee50a617f632e1cdaccb6181083e"><div class="ttname"><a href="classAntares_1_1Concurrency_1_1FutureSet.html#a1911ee50a617f632e1cdaccb6181083e">Antares::Concurrency::FutureSet::add</a></div><div class="ttdeci">void add(TaskFuture &amp;&amp;f)</div><div class="ttdoc">Adds one future to be monitored by this set.</div><div class="ttdef"><b>Definition:</b> concurrency.cpp:67</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

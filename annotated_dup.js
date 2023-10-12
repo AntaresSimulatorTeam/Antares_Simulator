@@ -222,6 +222,9 @@ var annotated_dup =
         [ "Spotlight", "classAntares_1_1Component_1_1Spotlight.html", "classAntares_1_1Component_1_1Spotlight" ],
         [ "WIPPanel", "classAntares_1_1Component_1_1WIPPanel.html", "classAntares_1_1Component_1_1WIPPanel" ]
       ] ],
+      [ "Concurrency", null, [
+        [ "FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", "classAntares_1_1Concurrency_1_1FutureSet" ]
+      ] ],
       [ "Data", null, [
         [ "AdequacyPatch", null, [
           [ "AdqPatchParams", "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html", null ],
@@ -713,9 +716,10 @@ var annotated_dup =
         [ "areaNumberOfTSretriever", "classAntares_1_1Solver_1_1areaNumberOfTSretriever.html", null ],
         [ "EnsureQueueStartedIfNeeded", "classAntares_1_1Solver_1_1EnsureQueueStartedIfNeeded.html", null ],
         [ "hydroAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1hydroAreaNumberOfTSretriever.html", null ],
-        [ "ImmediateFileResultWriter", "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html", null ],
+        [ "ImmediateFileResultWriter", "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html", "classAntares_1_1Solver_1_1ImmediateFileResultWriter" ],
         [ "IntraModalConsistencyChecker", "classAntares_1_1Solver_1_1IntraModalConsistencyChecker.html", null ],
-        [ "IResultWriter", "classAntares_1_1Solver_1_1IResultWriter.html", null ],
+        [ "IOError", "classAntares_1_1Solver_1_1IOError.html", null ],
+        [ "IResultWriter", "classAntares_1_1Solver_1_1IResultWriter.html", "classAntares_1_1Solver_1_1IResultWriter" ],
         [ "loadAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1loadAreaNumberOfTSretriever.html", null ],
         [ "NullResultWriter", "classAntares_1_1Solver_1_1NullResultWriter.html", null ],
         [ "Progression", "classAntares_1_1Solver_1_1Progression.html", "classAntares_1_1Solver_1_1Progression" ],
@@ -724,7 +728,7 @@ var annotated_dup =
         [ "thermalAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1thermalAreaNumberOfTSretriever.html", null ],
         [ "windAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1windAreaNumberOfTSretriever.html", null ],
         [ "ZipWriteJob", "classAntares_1_1Solver_1_1ZipWriteJob.html", null ],
-        [ "ZipWriter", "classAntares_1_1Solver_1_1ZipWriter.html", null ]
+        [ "ZipWriter", "classAntares_1_1Solver_1_1ZipWriter.html", "classAntares_1_1Solver_1_1ZipWriter" ]
       ] ],
       [ "Statistics", null, [
         [ "LogsDumper", "classAntares_1_1Statistics_1_1LogsDumper.html", null ],
@@ -1266,6 +1270,9 @@ var annotated_dup =
     [ "StudyWithBConLink", "structStudyWithBConLink.html", null ],
     [ "SystemMemoryLogger", "classSystemMemoryLogger.html", null ],
     [ "TargetVectorUpdater", "classTargetVectorUpdater.html", null ],
+    [ "TestContext", "structTestContext.html", null ],
+    [ "TestException", "classTestException.html", null ],
+    [ "TestExceptionN", "classTestExceptionN.html", null ],
     [ "Text", "classText.html", "classText" ],
     [ "ThermalClusterConfig", "classThermalClusterConfig.html", null ],
     [ "ThermalIniFile", "structThermalIniFile.html", null ],
