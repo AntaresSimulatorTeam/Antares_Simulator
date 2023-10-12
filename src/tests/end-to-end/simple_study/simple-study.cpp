@@ -140,4 +140,58 @@ BOOST_AUTO_TEST_CASE(two_mc_years_with_different_weight__two_ts)
 	BOOST_TEST(output.overallCost(area).hour(0) == averageLoad * clusterCost, tt::tolerance(0.001));
 }
 
+BOOST_AUTO_TEST_CASE(milp_two_mc_single_unit_single_scenario)
+{
+	setNumberMCyears(1);
+
+    // Arbitrary large number, only characteristic is : larger than all
+    // other marginal costs
+    area->thermal.unsuppliedEnergyCost = 1000;
+
+    // Use OR-Tools / COIN for MILP
+    auto& p = study->parameters;
+    p.unitCommitment.ucMode = ucMILP;
+    p.ortoolsUsed = true;
+    p.ortoolsSolver = "coin";
+
+	simulation->create();
+	simulation->run();
+
+	OutputRetriever output(simulation->rawSimu());
+
+	BOOST_TEST(output.thermalGeneration(cluster.get()).hour(10) == loadInArea, tt::tolerance(0.001));
+    BOOST_TEST(output.thermalNbUnitsON(cluster.get()).hour(10) == 1, tt::tolerance(0.001));
+	BOOST_TEST(output.overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
+}
+
+BOOST_AUTO_TEST_CASE(milp_two_mc_two_unit_single_scenario)
+{
+	setNumberMCyears(1);
+
+	clusterConfig.setAvailablePower(0, 150.)
+				 .setUnitCount(2);
+
+	loadInArea = 150;
+	loadTSconfig.setColumnCount(1)
+				.fillColumnWith(0, loadInArea);
+    // Arbitrary large number, only characteristic is : larger than all
+    // other marginal costs
+    area->thermal.unsuppliedEnergyCost = 1000;
+
+    // Use OR-Tools / COIN for MILP
+    auto& p = study->parameters;
+    p.unitCommitment.ucMode = ucMILP;
+    p.ortoolsUsed = true;
+    p.ortoolsSolver = "coin";
+
+	simulation->create();
+	simulation->run();
+
+	OutputRetriever output(simulation->rawSimu());
+
+	BOOST_TEST(output.thermalGeneration(cluster.get()).hour(10) == loadInArea, tt::tolerance(0.001));
+    BOOST_TEST(output.thermalNbUnitsON(cluster.get()).hour(10) == 2, tt::tolerance(0.001));
+
+}
+
 BOOST_AUTO_TEST_SUITE_END()
