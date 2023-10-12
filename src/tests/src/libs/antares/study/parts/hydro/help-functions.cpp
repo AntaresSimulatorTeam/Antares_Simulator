@@ -1,12 +1,20 @@
 #include "help-functions.h"
 
-void createFolder(const my_string& path, const my_string& folder_name)
+void createFolder(const stringT& path, const stringT& folder_name)
 {
     fs::path folder_path = fs::path(path.c_str()) / folder_name.c_str();
-    fs::create_directory(folder_path);
+
+    try
+    {
+        fs::create_directory(folder_path);
+    }
+    catch (const fs::filesystem_error& e)
+    {
+        std::cerr << "Exception deleting folder '" + folder_name + "': " + e.what() + "\n";
+    }
 }
 
-bool createFile(const my_string& folder_path, const my_string& file_name)
+void createFile(const stringT& folder_path, const stringT& file_name)
 {
     // Construct the full path to the file
     fs::path path = fs::path(folder_path.c_str()) / file_name.c_str();
@@ -14,17 +22,24 @@ bool createFile(const my_string& folder_path, const my_string& file_name)
     // Create an output file stream
     std::ofstream outputFile(path);
 
-    if (outputFile.is_open())
+    try
     {
-        // File was successfully created and is open
-        outputFile << "This is a sample content." << std::endl;
-        outputFile.close();
-        return true;
+        if (outputFile.is_open())
+        {
+            // File was successfully created and is open
+            outputFile << "This is a sample content." << std::endl;
+            outputFile.close();
+            std::cout << "File " + file_name + " is created in " + folder_path + "\n";
+        }
+        else
+        {
+            // Failed to create or open the file
+            throw std::runtime_error("Failed to create file\n");
+        }
     }
-    else
+    catch(const std::exception& e)
     {
-        // Failed to create or open the file
-        return false;
+        std::cerr << "Error: " << e.what() << "\n";
     }
 }
 
@@ -57,7 +72,7 @@ void InstantiateColumn(Matrix<double>::ColumnType& col, double seed, uint type)
     }
 }
 
-void removeFolder(my_string& path, my_string& folder_name)
+void removeFolder(stringT& path, stringT& folder_name)
 {
     fs::path folder_path = fs::path(path.c_str()) / folder_name.c_str();
         if (fs::exists(folder_path))
@@ -65,40 +80,13 @@ void removeFolder(my_string& path, my_string& folder_name)
             try
             {
                 fs::remove_all(folder_path);
-                std::cout << "Folder '" << folder_name << "' at '" << folder_path
-                          << "' deleted.\n";
+                std::cout << "Folder '" + folder_name + "' at '" + folder_path.string()
+                          + "' deleted.\n";
             }
             catch (const fs::filesystem_error& e)
             {
-                std::cerr << "Exception deleting folder '" << folder_name << "': " << e.what()
-                          << "\n";
+                std::cerr << "Exception deleting folder '" + folder_name + "': " + e.what()
+                          + "\n";
             }
         }
-}
-
-bool DailyMaxPowerAsHourlyTransferCheck(Matrix<double, int32_t>::ColumnType& hourlyColumn,
-                                        const Matrix<double>::ColumnType& dailyColumn)
-{
-    uint hours = 0;
-    uint days = 0;
-    bool check = true;
-
-    while (hours < HOURS_PER_YEAR && days < DAYS_PER_YEAR)
-    {
-        for (uint i = 0; i < 24; ++i)
-        {
-            if (hourlyColumn[hours] != dailyColumn[days])
-            {
-                check = false;
-                break;
-            }
-            ++hours;
-        }
-
-        if (!check)
-            break;
-
-        ++days;
-    }
-    return check;
 }

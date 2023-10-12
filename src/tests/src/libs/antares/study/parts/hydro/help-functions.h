@@ -5,17 +5,13 @@
 #include <fstream>
 #include <matrix.h>
 
-#define SEP Yuni::IO::Separator
-
 using namespace Antares::Data;
-using my_string = Yuni::CString<256, false>;
+using stringT = std::string;
 using namespace std;
 namespace fs = std::filesystem;
 
-void createFolder(const my_string& path, const my_string& folder_name);
-bool createFile(const my_string& folder_path, const my_string& file_name);
+void createFolder(const stringT& path, const stringT& folder_name);
+void createFile(const stringT& folder_path, const stringT& file_name);
 void InstantiateMatrix(Matrix<double, int32_t>& matrix, double seed, uint type);
 void InstantiateColumn(Matrix<double>::ColumnType& col, double seed, uint type);
-void removeFolder(my_string& path, my_string& folder_name);
-bool DailyMaxPowerAsHourlyTransferCheck(Matrix<double, int32_t>::ColumnType& hourlyColumn,
-                                        const Matrix<double>::ColumnType& dailyColumn);
+void removeFolder(stringT& path, stringT& folder_name);

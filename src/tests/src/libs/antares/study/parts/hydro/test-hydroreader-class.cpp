@@ -5,6 +5,34 @@
 #include <boost/test/included/unit_test.hpp>
 #include "help-functions.h"
 #include <study.h>
+#define SEP "/"
+
+bool DailyMaxPowerAsHourlyTransferCheck(Matrix<double, int32_t>::ColumnType& hourlyColumn,
+                                        const Matrix<double>::ColumnType& dailyColumn)
+{
+    uint hours = 0;
+    uint days = 0;
+    bool check = true;
+
+    while (hours < HOURS_PER_YEAR && days < DAYS_PER_YEAR)
+    {
+        for (uint i = 0; i < 24; ++i)
+        {
+            if (hourlyColumn[hours] != dailyColumn[days])
+            {
+                check = false;
+                break;
+            }
+            ++hours;
+        }
+
+        if (!check)
+            break;
+
+        ++days;
+    }
+    return check;
+}
 
 struct Fixture
 {
@@ -32,46 +60,54 @@ struct Fixture
         auto& hoursPump = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxE];
         InstantiateColumn(hoursPump, 14., DAYS_PER_YEAR);
 
-        my_string buffer;
-        my_string file_name = "maxpower_" + area_1->id + ".txt";
-        buffer.clear() << base_folder << SEP << hydro_folder << SEP << common_folder << SEP
-                       << capacity_folder << SEP << file_name;
-        reader->dailyMaxPumpAndGen.saveToCSVFile(buffer, 2);
+        stringT buffer;
+        stringT file_name = std::string("maxpower_Area1.txt");
+        buffer.clear();
+        buffer = base_folder + SEP + hydro_folder + SEP + common_folder + SEP
+                       + capacity_folder + SEP + file_name;
+        Yuni::CString<256, false> temp(buffer);
+        reader->dailyMaxPumpAndGen.saveToCSVFile(temp, 2);
     }
 
     void createFoldersAndFiles()
     {
-        my_string buffer;
+        stringT buffer;
+        buffer.clear();
 
         // hydro folder
         createFolder(base_folder, hydro_folder);
 
         // series folder
-        buffer.clear() << base_folder << SEP << hydro_folder;
+        buffer = base_folder + SEP + hydro_folder;
         createFolder(buffer, series_folder);
 
         // area1 folder
-        my_string area1_folder = area_1->id;
-        buffer.clear() << base_folder << SEP << hydro_folder << SEP << series_folder;
+        stringT area1_folder = "Area1";
+        buffer.clear();
+        buffer = base_folder + SEP + hydro_folder + SEP + series_folder;
         createFolder(buffer, area1_folder);
-        buffer.clear() << base_folder << SEP << hydro_folder << SEP << series_folder << SEP
-                       << area1_folder;
+        buffer.clear();
+        buffer = base_folder + SEP + hydro_folder + SEP + series_folder + SEP
+                       + area1_folder;
         // maxHourlyGenPower and maxHourlyPumpPower files
         createFile(buffer, maxHourlyGenPower);
         createFile(buffer, maxHourlyPumpPower);
 
         // common and capacity folders
-        buffer.clear() << base_folder << SEP << hydro_folder;
+        buffer.clear();
+        buffer = base_folder + SEP + hydro_folder;
         createFolder(buffer, common_folder);
-        buffer.clear() << base_folder << SEP << hydro_folder << SEP << common_folder;
+        buffer.clear();
+        buffer = base_folder + SEP + hydro_folder + SEP + common_folder;
         createFolder(buffer, capacity_folder);
 
         // maxhours files
-        buffer.clear() << base_folder << SEP << hydro_folder << SEP << common_folder << SEP
-                       << capacity_folder;
-        my_string file1_name = maxDailyGenEnergy_ << SEP << area_1->id << SEP << ".txt";
-        my_string file2_name = maxDailyPumpEnergy_ << SEP << area_1->id << SEP << ".txt";
-        my_string file3_name = maxpower << SEP << area_1->id << SEP << ".txt";
+        buffer.clear();
+        buffer = base_folder + SEP + hydro_folder + SEP + common_folder + SEP
+                       + capacity_folder;
+        stringT file1_name = maxDailyGenEnergy_ + SEP + "Area1" + SEP + ".txt";
+        stringT file2_name = maxDailyPumpEnergy_ + SEP + "Area1" + SEP + ".txt";
+        stringT file3_name = maxpower + SEP + "Area1" + SEP + ".txt";
 
         createFile(buffer, file1_name);
         createFile(buffer, file2_name);
@@ -82,16 +118,16 @@ struct Fixture
     shared_ptr<HydroMaxTimeSeriesReader> reader;
     Area* area_1;
     Area* area_2;
-    my_string base_folder = fs::current_path().string();
-    my_string hydro_folder = "hydro";
-    my_string series_folder = "series";
-    my_string common_folder = "common";
-    my_string capacity_folder = "capacity";
-    my_string maxDailyGenEnergy_ = "maxDailyGenEnergy_";
-    my_string maxDailyPumpEnergy_ = "maxDailyPumpEnergy_";
-    my_string maxpower = "maxpower_";
-    my_string maxHourlyGenPower = "maxHourlyGenPower.txt";
-    my_string maxHourlyPumpPower = "maxHourlyPumpPower.txt";
+    stringT base_folder = fs::current_path().string();
+    stringT hydro_folder = "hydro";
+    stringT series_folder = "series";
+    stringT common_folder = "common";
+    stringT capacity_folder = "capacity";
+    stringT maxDailyGenEnergy_ = "maxDailyGenEnergy_";
+    stringT maxDailyPumpEnergy_ = "maxDailyPumpEnergy_";
+    stringT maxpower = "maxpower_";
+    stringT maxHourlyGenPower = "maxHourlyGenPower.txt";
+    stringT maxHourlyPumpPower = "maxHourlyPumpPower.txt";
 
     ~Fixture()
     {
@@ -103,14 +139,15 @@ BOOST_AUTO_TEST_SUITE(s)
 
 BOOST_FIXTURE_TEST_CASE(Testing_support_for_old_studies, Fixture)
 {
-    my_string buffer;
+    stringT buffer;
     bool ret = false;
     auto& colMaxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower[0];
     auto& colMaxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower[0];
     auto& gen = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxP];
     auto& pump = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxP];
 
-    buffer.clear() << base_folder << SEP << hydro_folder;
+    buffer.clear();
+    buffer = base_folder + SEP + hydro_folder;
     ret = (*reader)(buffer, *area_1);
     BOOST_CHECK(ret);
     BOOST_CHECK(DailyMaxPowerAsHourlyTransferCheck(colMaxHourlyGenPower, gen));
