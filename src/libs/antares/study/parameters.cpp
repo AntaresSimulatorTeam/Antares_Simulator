@@ -1794,8 +1794,13 @@ bool Parameters::RenewableGeneration::isClusters() const
     return rgModelling == Antares::Data::rgClusters;
 }
 
+// Some variables rely on dual values & marginal costs
 void Parameters::UCMode::addExcludedVariables(std::vector<std::string>& out) const
 {
+    // These variables rely on dual values & marginal costs
+    // these don't really make sense for MILP problems
+    // TODO : solve a LP problem with fixed values for integer variables
+    //        extract values for dual variables & marginal costs from LP problem
     const static std::vector<std::string> milpExclude = {{"MARG. COST"},
                                                          {"BC. MARG. COST"},
                                                          {"CONG. FEE (ALG.)"},

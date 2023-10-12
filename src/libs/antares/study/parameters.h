@@ -436,6 +436,8 @@ public:
     {
         //! Unit Commitment Mode
         UnitCommitmentMode ucMode;
+
+        //! Some variables rely on dual values & marginal costs
         void addExcludedVariables(std::vector<std::string>&) const;
     };
     UCMode unitCommitment;
