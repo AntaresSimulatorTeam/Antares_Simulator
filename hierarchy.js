@@ -833,6 +833,10 @@ var hierarchy =
     [ "Yuni::Policy::ObjectLevelLockableNotRecursive", null, [
       [ "Antares::Toolbox::Jobs::PartList", "classAntares_1_1Toolbox_1_1Jobs_1_1PartList.html", null ]
     ] ],
+    [ "OneAreaStudy", "structOneAreaStudy.html", [
+      [ "RenewableClusterStudy", "structRenewableClusterStudy.html", null ],
+      [ "ThermalClusterStudy", "structThermalClusterStudy.html", null ]
+    ] ],
     [ "Benchmarking::OptimizationInfo", "structBenchmarking_1_1OptimizationInfo.html", null ],
     [ "Antares::Solver::Optimization::OptimizationOptions", "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html", null ],
     [ "OptimizationStatistics", "classOptimizationStatistics.html", null ],
