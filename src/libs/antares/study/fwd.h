@@ -464,9 +464,16 @@ SheddingPolicy StringToSheddingPolicy(const AnyString& text);
 
 enum UnitCommitmentMode
 {
+    //! Heuristic in which 2 LP problems are solved
+    //! No explicit modelling for the number of ON/OFF units
     ucHeuristicFast = 0,
+    //! Heuristic in which 2 LP problems are solved
+    //! Explicit modelling for the number of ON/OFF units
     ucHeuristicAccurate,
+    //! A single MILP problem is solved, with explicit modelling
+    //! for the number of ON/OFF units
     ucMILP,
+    //! Unknown mode, mainly used for error handling
     ucUnknown,
 };
 
