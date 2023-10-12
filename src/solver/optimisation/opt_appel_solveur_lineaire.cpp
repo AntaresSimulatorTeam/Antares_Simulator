@@ -104,8 +104,7 @@ static SimplexResult OPT_TryToCallSimplex(
         const int optimizationNumber,
         const OptPeriodStringGenerator& optPeriodStringGenerator,
         bool PremierPassage,
-        IResultWriter& writer
-        )
+        IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     auto ProbSpx
