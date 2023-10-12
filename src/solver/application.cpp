@@ -281,8 +281,11 @@ void Application::processCaption(const Yuni::String& caption)
 void Application::prepareWriter(Antares::Data::Study& study,
                                 Benchmarking::IDurationCollector& duration_collector)
 {
+    ioQueueService = std::make_shared<Yuni::Job::QueueService>();
+    ioQueueService->maximumThreadCount(1);
+    ioQueueService->start();
     resultWriter = resultWriterFactory(
-      study.parameters.resultFormat, study.folderOutput, study.pQueueService, duration_collector);
+            study.parameters.resultFormat, study.folderOutput, ioQueueService, duration_collector);
 }
 
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
