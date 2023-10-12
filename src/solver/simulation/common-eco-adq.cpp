@@ -394,7 +394,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                         + thermalNoises[areaIdx][cluster.areaWideIndex];
 
                     Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
-                        = cluster.series.getCoefficient(hourInYear, year);
+                        = cluster.series.getCoefficient(year, hourInYear);
 
                     Pt.PuissanceMinDuPalierThermique[hourInWeek]
                         = (Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] < cluster.PthetaInf[hourInYear])

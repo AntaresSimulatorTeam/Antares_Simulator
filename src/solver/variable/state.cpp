@@ -85,7 +85,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
     // alias to the current thermal cluster
     thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
     double thermalClusterAvailableProduction
-     = thermalCluster->series.getCoefficient(hourInTheYear, this->year);
+     = thermalCluster->series.getCoefficient(this->year, hourInTheYear);
 
     // Minimum power of a group of the cluster for the current hour in the year
     double thermalClusterPMinOfAGroup = 0.;
