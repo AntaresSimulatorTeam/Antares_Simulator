@@ -33,7 +33,6 @@ namespace
 {
 // CHECK nécessaire d'un choix simultané entre " unit-commitment = MILP " et " ortools-used "
 // avec " ortools-solver != Sirius "
-// TODO déplacer dans libs/antares/checks/checkLoadedInputData.cpp
 
 void printSolvers()
 {
