@@ -31,9 +31,6 @@ using namespace Antares::Check;
 
 namespace
 {
-// CHECK nécessaire d'un choix simultané entre " unit-commitment = MILP " et " ortools-used "
-// avec " ortools-solver != Sirius "
-
 void printSolvers()
 {
     std::cout << "Available solvers :" << std::endl;
