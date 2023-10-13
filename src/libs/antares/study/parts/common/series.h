@@ -38,6 +38,7 @@ class TimeSeries
 {
 public:
     using TSNumbers = Matrix<uint32_t>;
+    using TS = Matrix<double>;
 
     /*!
      ** \brief Load series from a file
@@ -74,7 +75,7 @@ public:
     void markAsModified() const;
     uint64_t memoryUsage() const;
 
-    Matrix<double> timeSeries;
+    TS timeSeries;
     TSNumbers timeseriesNumbers;
 
     static const double emptyColumn[HOURS_PER_YEAR];
