@@ -1010,7 +1010,7 @@ bool Study::areaRename(Area* area, AreaName newName)
 bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 {
     // A name must not be empty
-    if (!cluster or !newName.empty())
+    if (!cluster or newName.empty())
         return false;
 
     String beautifyname;

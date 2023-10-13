@@ -192,5 +192,23 @@ BOOST_AUTO_TEST_CASE(milp_two_mc_two_unit_single_scenario)
                tt::tolerance(0.001));
     BOOST_TEST(output.thermalNbUnitsON(cluster.get()).hour(10) == 2, tt::tolerance(0.001));
 }
+BOOST_AUTO_TEST_SUITE_END()
 
+
+BOOST_AUTO_TEST_SUITE(error_cases)
+BOOST_AUTO_TEST_CASE(error_on_wrong_hydro_data)
+{
+    StudyBuilder builder;
+    builder.simulationBetweenDays(0, 7);
+    builder.setNumberMCyears(1);
+    Area& area = *builder.addAreaToStudy("A");
+    PartHydro& hydro = area.hydro;
+    TimeSeriesConfigurer(hydro.series->storage)
+            .setColumnCount(1)
+            .fillColumnWith(0, -1.0); //Negative inflow will cause a consistency error with mingen
+
+    auto simulation = builder.simulation;
+    simulation->create();
+    BOOST_CHECK_THROW(simulation->run(), Antares::FatalError);
+}
 BOOST_AUTO_TEST_SUITE_END()

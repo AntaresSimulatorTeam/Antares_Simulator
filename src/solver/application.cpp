@@ -284,8 +284,11 @@ void Application::processCaption(const Yuni::String& caption)
 void Application::prepareWriter(Antares::Data::Study& study,
                                 Benchmarking::IDurationCollector& duration_collector)
 {
+    ioQueueService = std::make_shared<Yuni::Job::QueueService>();
+    ioQueueService->maximumThreadCount(1);
+    ioQueueService->start();
     resultWriter = resultWriterFactory(
-      study.parameters.resultFormat, study.folderOutput, study.pQueueService, duration_collector);
+            study.parameters.resultFormat, study.folderOutput, ioQueueService, duration_collector);
 }
 
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
@@ -305,37 +308,52 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Load the study from a folder
     Benchmarking::Timer timer;
 
-    if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
+    std::exception_ptr loadingException;
+    try
     {
-        logs.info() << "The study is loaded.";
-        logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+        if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
+        {
+            logs.info() << "The study is loaded.";
+            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+        }
+
+        timer.stop();
+        pDurationCollector.addDuration("study_loading", timer.get_duration());
+
+        if (study.gotFatalError)
+            throw Error::ReadingStudy();
+
+        if (study.areas.empty())
+        {
+            throw Error::NoAreas();
+        }
+
+        // no output ?
+        study.parameters.noOutput = pSettings.noOutput;
+
+        if (pSettings.forceZipOutput)
+        {
+            pParameters->resultFormat = Antares::Data::zipArchive;
+        }
     }
-
-    timer.stop();
-    pDurationCollector.addDuration("study_loading", timer.get_duration());
-
-    if (study.gotFatalError)
-        throw Error::ReadingStudy();
-
-    if (study.areas.empty())
+    catch (...)
     {
-        throw Error::NoAreas();
+        loadingException = std::current_exception();
     }
-
-    // no output ?
-    study.parameters.noOutput = pSettings.noOutput;
-
-    if (pSettings.forceZipOutput)
-    {
-        pParameters->resultFormat = Antares::Data::zipArchive;
-    }
-
     // This settings can only be enabled from the solver
     // Prepare the output for the study
     study.prepareOutput();
 
     // Initialize the result writer
     prepareWriter(study, pDurationCollector);
+
+    // Some checks may have failed, but we need a writer to copy the logs
+    // to the output directory
+    // So we wait until we have initialized the writer to rethrow
+    if (loadingException)
+    {
+        std::rethrow_exception(loadingException);
+    }
 
     Antares::Solver::initializeSignalHandlers(resultWriter);
 
@@ -410,7 +428,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
 
-    //alloc global vectors
+    // alloc global vectors
     SIM_AllocationTableaux(study);
 
     // Random-numbers generators
@@ -456,8 +474,9 @@ Application::~Application()
     {
         logs.info() << LOG_UI_SOLVER_DONE;
 
-        // Copy the log file
-        if (!pStudy->parameters.noOutput) {
+        // Copy the log file if a result writer is available
+        if (!pStudy->parameters.noOutput && resultWriter)
+        {
             pStudy->importLogsToOutputFolder(*resultWriter);
         }
 
@@ -469,4 +488,3 @@ Application::~Application()
     }
 }
 } // namespace Antares::Solver
-
