@@ -27,13 +27,32 @@
 
 #include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
-#include <version.h>
+#include <antares/study/version.h>
 
-#include "checkLoadedInputData.h"
-#include "area.h"
+#include <antares/checks/checkLoadedInputData.h>
+#include <antares/study/area/area.h>
 
 namespace Antares::Check
 {
+void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
+                       bool ortoolsUsed,
+                       const std::string& solverName)
+{
+    using namespace Antares::Data;
+    if (ucMode == UnitCommitmentMode::ucMILP)
+    {
+        if (!ortoolsUsed)
+        {
+            throw Error::IncompatibleMILPWithoutOrtools();
+        }
+
+        if (solverName == "sirius")
+        {
+            throw Error::IncompatibleMILPOrtoolsSolver();
+        }
+    }
+}
+
 void checkStudyVersion(const AnyString& optStudyFolder)
 {
     using namespace Antares::Data;

@@ -35,7 +35,7 @@
 #include <vector>
 #include "../fwd.h"
 #include <yuni/io/file.h>
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 
 namespace Antares
 {
@@ -143,7 +143,7 @@ public:
 
     void add(Section section, int nbTicks);
 
-    bool saveToFile(const Yuni::String& filename, IResultWriter::Ptr writer);
+    bool saveToFile(const Yuni::String& filename, IResultWriter& writer);
 
     void setNumberOfParallelYears(uint nb);
 

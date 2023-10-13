@@ -34,8 +34,8 @@
 #include <yuni/yuni.h>
 
 #include <antares/Enum.hpp>
-#include "../writer/i_writer.h"
-#include <antares/study.h>
+#include "antares/writer/i_writer.h"
+#include <antares/study/study.h>
 
 namespace Antares
 {

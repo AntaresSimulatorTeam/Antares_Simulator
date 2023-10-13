@@ -40,7 +40,7 @@ extern "C"
 #include "srs_api.h"
 }
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/fatal-error.h>
 
 #include "../utils/mps_utils.h"
@@ -93,6 +93,7 @@ struct SimplexResult
 {
     bool success = false;
     long long solveTime = 0;
+    mpsWriterFactory mps_writer_factory;
 };
 
 static SimplexResult OPT_TryToCallSimplex(
@@ -103,18 +104,16 @@ static SimplexResult OPT_TryToCallSimplex(
         const int optimizationNumber,
         const OptPeriodStringGenerator& optPeriodStringGenerator,
         bool PremierPassage,
-        IResultWriter& writer,
-        mpsWriterFactory& mps_writer_factory
-        )
+        IResultWriter& writer)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
+    const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     auto ProbSpx
       = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
     auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
 
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
-    OptimizationStatistics* optimizationStatistics = &(problemeHebdo->optimizationStatistics[opt]);
+    OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
 
     if (!PremierPassage)
     {
@@ -176,7 +175,7 @@ static SimplexResult OPT_TryToCallSimplex(
                                                   ProblemeAResoudre->NombreDeContraintes);
             }
             measure.tick();
-            optimizationStatistics->addUpdateTime(measure.duration_ms());
+            optimizationStatistics.addUpdateTime(measure.duration_ms());
         }
     }
 
@@ -233,6 +232,13 @@ static SimplexResult OPT_TryToCallSimplex(
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
+    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
+                                        problemeHebdo->exportMPSOnError,
+                                        optimizationNumber,
+                                        &Probleme,
+                                        options.useOrtools,
+                                        solver);
+
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(writer, filename);
 
@@ -256,7 +262,7 @@ static SimplexResult OPT_TryToCallSimplex(
     }
     measure.tick();
     long long solveTime = measure.duration_ms();
-    optimizationStatistics->addSolveTime(solveTime);
+    optimizationStatistics.addSolveTime(solveTime);
 
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
     if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage)
@@ -279,7 +285,7 @@ static SimplexResult OPT_TryToCallSimplex(
             {
                 logs.info() << " solver: resetting";
             }
-            return {.success=false, .solveTime=solveTime};
+            return {.success=false, .solveTime=solveTime, .mps_writer_factory=mps_writer_factory};
         }
 
         else
@@ -287,7 +293,7 @@ static SimplexResult OPT_TryToCallSimplex(
             throw FatalError("Internal error: insufficient memory");
         }
     }
-    return {.success=true, .solveTime=solveTime};
+    return {.success=true, .solveTime=solveTime, .mps_writer_factory=mps_writer_factory};
 }
 
 bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
@@ -297,32 +303,25 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                          const OptPeriodStringGenerator& optPeriodStringGenerator,
                          IResultWriter& writer)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
+    const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
                                                    ProblemeAResoudre->NomDesContraintes,
+                                                   ProblemeAResoudre->VariablesEntieres,
                                                    ProblemeAResoudre->StatutDesVariables,
-                                                   ProblemeAResoudre->StatutDesContraintes);
-
-    auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
-
-    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
-                                        problemeHebdo->exportMPSOnError,
-                                        optimizationNumber,
-                                        &Probleme,
-                                        options.useOrtools,
-                                        solver);
+                                                   ProblemeAResoudre->StatutDesContraintes,
+                                                   problemeHebdo->NamedProblems);
 
     bool PremierPassage = true;
 
     struct SimplexResult simplexResult =
         OPT_TryToCallSimplex(options, problemeHebdo, Probleme, NumIntervalle, optimizationNumber,
-                optPeriodStringGenerator, PremierPassage, writer, mps_writer_factory);
+                optPeriodStringGenerator, PremierPassage, writer);
 
     if (!simplexResult.success)
     {
         PremierPassage = false;
         simplexResult = OPT_TryToCallSimplex(options, problemeHebdo, Probleme,  NumIntervalle, optimizationNumber,
-                optPeriodStringGenerator, PremierPassage, writer, mps_writer_factory);
+                optPeriodStringGenerator, PremierPassage, writer);
     }
 
     long long solveTime = simplexResult.solveTime;
@@ -375,6 +374,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
             logs.info() << " Solver: Safe resolution failed";
         }
 
+        Probleme.SetUseNamedProblems(true);
         Optimization::InfeasibleProblemAnalysis analysis(options.solverName, &Probleme);
         logs.notice() << " Solver: Starting infeasibility analysis...";
         try
@@ -391,7 +391,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
             logs.error() << ex.what();
         }
 
-        auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
+        auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();
         const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
         mps_writer_on_error->runIfNeeded(writer, filename);
 

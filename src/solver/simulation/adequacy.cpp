@@ -28,34 +28,23 @@
 #include "adequacy.h"
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/exception/AssertionError.hpp>
-#include "opt_time_writer.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-Adequacy::Adequacy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
+Adequacy::Adequacy(Data::Study& study, IResultWriter& resultWriter) :
+    study(study),
+    preproOnly(false),
+    resultWriter(resultWriter)
 {
-}
-
-Adequacy::~Adequacy()
-{
-    if (pProblemesHebdo)
-    {
-        for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
-        {
-            OPT_LiberationMemoireDuProblemeAOptimiser(pProblemesHebdo[numSpace]);
-            delete pProblemesHebdo[numSpace];
-        }
-        delete[] pProblemesHebdo;
-    }
 }
 
 Benchmarking::OptimizationInfo Adequacy::getOptimizationInfo() const
 {
     const uint numSpace = 0;
-    const auto& Pb = pProblemesHebdo[numSpace]->ProblemeAResoudre;
+    const auto& Pb = pProblemesHebdo[numSpace].ProblemeAResoudre;
     Benchmarking::OptimizationInfo optInfo;
 
     optInfo.nbVariables = Pb->NombreDeVariables;
@@ -71,24 +60,24 @@ void Adequacy::setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel)
 
 void Adequacy::initializeState(Variable::State& state, uint numSpace)
 {
-    state.problemeHebdo = pProblemesHebdo[numSpace];
+    state.problemeHebdo = &pProblemesHebdo[numSpace];
     state.resSpilled.reset(study.areas.size(), (uint)nbHoursInAWeek);
     state.numSpace = numSpace;
 }
 
+// valGen maybe_unused to match simulationBegin() declaration in economy.cpp
 bool Adequacy::simulationBegin()
 {
     if (!preproOnly)
     {
-        pProblemesHebdo = new PROBLEME_HEBDO*[pNbMaxPerformedYearsInParallel];
+        pProblemesHebdo.resize(pNbMaxPerformedYearsInParallel);
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
-            pProblemesHebdo[numSpace] = new PROBLEME_HEBDO();
-            SIM_InitialisationProblemeHebdo(study, *pProblemesHebdo[numSpace], 168, numSpace);
+            SIM_InitialisationProblemeHebdo(study, pProblemesHebdo[numSpace], 168, numSpace);
 
-            assert((uint)nbHoursInAWeek == (uint)pProblemesHebdo[numSpace]->NombreDePasDeTemps
+            assert((uint)nbHoursInAWeek == (uint)pProblemesHebdo[numSpace].NombreDePasDeTemps
                    && "inconsistency");
-            if ((uint)nbHoursInAWeek != (uint)pProblemesHebdo[numSpace]->NombreDePasDeTemps)
+            if ((uint)nbHoursInAWeek != (uint)pProblemesHebdo[numSpace].NombreDePasDeTemps)
             {
                 logs.fatal() << "internal error";
                 return false;
@@ -96,18 +85,17 @@ bool Adequacy::simulationBegin()
         }
     }
 
-    if (pProblemesHebdo)
-    {
-        for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
-            pProblemesHebdo[numSpace]->TypeDOptimisation = OPTIMISATION_LINEAIRE;
-    }
+    for (auto& pb : pProblemesHebdo)
+        pb.TypeDOptimisation = OPTIMISATION_LINEAIRE;
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
     pNbWeeks = study.parameters.simulationDays.numberOfWeeks();
     return true;
 }
 
-bool Adequacy::simplexIsRequired(uint hourInTheYear, uint numSpace) const
+bool Adequacy::simplexIsRequired(uint hourInTheYear, 
+                                 uint numSpace,
+                                 const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults) const
 {
     uint areaCount = study.areas.size();
     uint indx = hourInTheYear;
@@ -116,13 +104,13 @@ bool Adequacy::simplexIsRequired(uint hourInTheYear, uint numSpace) const
     {
         uint dayInTheYear = study.calendar.hours[indx].dayYear;
 
-        for (uint k = 0; k != areaCount; ++k)
+        for (uint areaIdx = 0; areaIdx != areaCount; ++areaIdx)
         {
-            auto& valgen = ValeursGenereesParPays[numSpace][k];
+            auto& hydroVentilation = hydroVentilationResults[numSpace][areaIdx];
 
             double quantity
-              = pProblemesHebdo[numSpace]->ConsommationsAbattues[j].ConsommationAbattueDuPays[k]
-                - valgen.HydrauliqueModulableQuotidien[dayInTheYear] / 24.;
+              = pProblemesHebdo[numSpace].ConsommationsAbattues[j].ConsommationAbattueDuPays[areaIdx]
+                - hydroVentilation.HydrauliqueModulableQuotidien[dayInTheYear] / 24.;
 
             if (quantity > 0.)
                 return true; // Call to the solver is required to find an optimal solution
@@ -137,38 +125,41 @@ bool Adequacy::year(Progression::Task& progression,
                     uint numSpace,
                     yearRandomNumbers& randomForYear,
                     std::list<uint>& failedWeekList,
-                    bool isFirstPerformedYearOfSimulation)
+                    bool isFirstPerformedYearOfSimulation,
+                    const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                    OptimizationStatisticsWriter& optWriter)
 {
     // No failed week at year start
     failedWeekList.clear();
-    pProblemesHebdo[numSpace]->year = state.year;
+    pProblemesHebdo[numSpace].year = state.year;
 
-    PrepareRandomNumbers(study, *pProblemesHebdo[numSpace], randomForYear);
+    PrepareRandomNumbers(study, pProblemesHebdo[numSpace], randomForYear);
 
     state.startANewYear();
 
     int hourInTheYear = pStartTime;
     if (isFirstPerformedYearOfSimulation)
-        pProblemesHebdo[numSpace]->firstWeekOfSimulation = true;
+        pProblemesHebdo[numSpace].firstWeekOfSimulation = true;
     bool reinitOptim = true;
-
-    OptimizationStatisticsWriter optWriter(study.resultWriter, state.year);
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
-        pProblemesHebdo[numSpace]->weekInTheYear = state.weekInTheYear = w;
-        pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
+        pProblemesHebdo[numSpace].weekInTheYear = state.weekInTheYear = w;
+        pProblemesHebdo[numSpace].HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(study,
-          *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
+        ::SIM_RenseignementProblemeHebdo(study, pProblemesHebdo[numSpace], state.weekInTheYear, 
+                                         numSpace, hourInTheYear, hydroVentilationResults);
+
+        BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace],
+                                        hourInTheYear, randomForYear.pThermalNoisesByArea, state.year);
 
         // Reinit optimisation if needed
-        pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim;
+        pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;
         reinitOptim = false;
 
-        state.simplexHasBeenRan = (w == 0) || simplexIsRequired(hourInTheYear, numSpace);
-        if (state.simplexHasBeenRan) // Call to Solver is mandatory for the first week and optional
+        state.simplexRunNeeded = (w == 0) || simplexIsRequired(hourInTheYear, numSpace, hydroVentilationResults);
+        if (state.simplexRunNeeded) // Call to Solver is mandatory for the first week and optional
                                      // otherwise
         {
             uint nbAreas = study.areas.size();
@@ -178,7 +169,7 @@ bool Adequacy::year(Progression::Task& progression,
                 for (uint hw = 0; hw != nbHoursInAWeek; ++hw)
                 {
                     double& conso = pProblemesHebdo[numSpace]
-                                      ->ConsommationsAbattues[hw]
+                                      .ConsommationsAbattues[hw]
                                       .ConsommationAbattueDuPays[ar];
                     double stratReserve
                       = area.reserves[Data::fhrStrategicReserve][hw + hourInTheYear];
@@ -206,20 +197,20 @@ bool Adequacy::year(Progression::Task& progression,
             try
             {
                 OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
-                                             pProblemesHebdo[numSpace],
+                                             &pProblemesHebdo[numSpace],
                                              study.parameters.adqPatchParams,
-                                             *study.resultWriter);
+                                             resultWriter);
 
-                computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
+                computingHydroLevels(study.areas, pProblemesHebdo[numSpace], false);
 
                 RemixHydroForAllAreas(study.areas,
-                                      *pProblemesHebdo[numSpace],
+                                      pProblemesHebdo[numSpace],
                                       study.parameters.shedding.policy,
                                       study.parameters.simplexOptimizationRange,
                                       numSpace,
                                       hourInTheYear);
 
-                computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
+                computingHydroLevels(study.areas, pProblemesHebdo[numSpace], true);
             }
             catch (Data::AssertionError& ex)
             {
@@ -258,20 +249,20 @@ bool Adequacy::year(Progression::Task& progression,
             for (uint i = 0; i != nbHoursInAWeek; ++i)
             {
                 auto& varduales
-                  = pProblemesHebdo[numSpace]->VariablesDualesDesContraintesDeNTC[i];
+                  = pProblemesHebdo[numSpace].VariablesDualesDesContraintesDeNTC[i];
                 for (uint lnkindex = 0; lnkindex != runtime.interconnectionsCount(); ++lnkindex)
                     varduales.VariableDualeParInterconnexion[lnkindex] = 0.;
             }
 
             for (uint hw = 0; hw != nbHoursInAWeek; ++hw)
             {
-                auto& ntc = pProblemesHebdo[numSpace]->ValeursDeNTC[hw];
+                auto& ntc = pProblemesHebdo[numSpace].ValeursDeNTC[hw];
                 ntc.ValeurDuFlux.resize(runtime.interconnectionsCount(), 0);
             }
 
             for (uint ar = 0; ar != nbAreas; ++ar)
             {
-                auto& hourlyResults = pProblemesHebdo[numSpace]->ResultatsHoraires[ar];
+                auto& hourlyResults = pProblemesHebdo[numSpace].ResultatsHoraires[ar];
 
                 std::fill(hourlyResults.ValeursHorairesDeDefaillancePositive.begin(),
                         hourlyResults.ValeursHorairesDeDefaillancePositive.end(), 0);
@@ -302,27 +293,27 @@ bool Adequacy::year(Progression::Task& progression,
                 {
                     assert(k < state.resSpilled.width);
                     assert(j < state.resSpilled.height);
-                    auto& valgen = ValeursGenereesParPays[numSpace][k];
-                    auto& hourlyResults = pProblemesHebdo[numSpace]->ResultatsHoraires[k];
+                    auto& hydroVentilation = hydroVentilationResults[numSpace][k];
+                    auto& hourlyResults = pProblemesHebdo[numSpace].ResultatsHoraires[k];
 
                     hourlyResults.TurbinageHoraire[j]
-                      = valgen.HydrauliqueModulableQuotidien[dayInTheYear] / 24.;
+                      = hydroVentilation.HydrauliqueModulableQuotidien[dayInTheYear] / 24.;
 
                     state.resSpilled[k][j]
-                      = +valgen.HydrauliqueModulableQuotidien[dayInTheYear] / 24.
+                      = +hydroVentilation.HydrauliqueModulableQuotidien[dayInTheYear] / 24.
                         - pProblemesHebdo[numSpace]
-                            ->ConsommationsAbattues[j]
+                            .ConsommationsAbattues[j]
                             .ConsommationAbattueDuPays[k];
                 }
             }
 
-            computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false, true);
+            computingHydroLevels(study.areas, pProblemesHebdo[numSpace], false, true);
         }
 
         interpolateWaterValue(
-          study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
+          study.areas, pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
 
-        updatingWeeklyFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
+        updatingWeeklyFinalHydroLevel(study.areas, pProblemesHebdo[numSpace]);
 
         variables.weekBegin(state);
         uint previousHourInTheYear = state.hourInTheYear;
@@ -332,7 +323,7 @@ bool Adequacy::year(Progression::Task& progression,
         {
             state.hourInTheWeek = hw;
 
-            state.ntc = pProblemesHebdo[numSpace]->ValeursDeNTC[hw];
+            state.ntc = pProblemesHebdo[numSpace].ValeursDeNTC[hw];
 
             variables.hourBegin(state.hourInTheYear);
 
@@ -347,19 +338,19 @@ bool Adequacy::year(Progression::Task& progression,
 
         hourInTheYear += nbHoursInAWeek;
 
-        pProblemesHebdo[numSpace]->firstWeekOfSimulation = false;
+        pProblemesHebdo[numSpace].firstWeekOfSimulation = false;
 
         optWriter.addTime(w,
-                          pProblemesHebdo[numSpace]->tempsResolution1[0],
-                          pProblemesHebdo[numSpace]->tempsResolution2[0]);
+                          pProblemesHebdo[numSpace].tempsResolution1[0],
+                          pProblemesHebdo[numSpace].tempsResolution2[0]);
 
         ++progression;
     }
 
-    updatingAnnualFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
+    updatingAnnualFinalHydroLevel(study.areas, pProblemesHebdo[numSpace]);
 
     optWriter.finalize();
-    finalizeOptimizationStatistics(*pProblemesHebdo[numSpace], state);
+    finalizeOptimizationStatistics(pProblemesHebdo[numSpace], state);
 
     return true;
 }
@@ -391,13 +382,13 @@ void Adequacy::simulationEnd()
     if (!preproOnly && study.runtime->interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
-        ComputeFlowQuad(study, *pProblemesHebdo[0], balance, pNbWeeks);
+        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
     }
 }
 
-void Adequacy::prepareClustersInMustRunMode(uint numSpace)
+void Adequacy::prepareClustersInMustRunMode(uint numSpace, uint year)
 {
-    PrepareDataFromClustersInMustrunMode(study, numSpace);
+    PrepareDataFromClustersInMustrunMode(study, numSpace, year);
 }
 
 } // namespace Antares::Solver::Simulation

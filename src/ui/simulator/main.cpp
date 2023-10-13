@@ -29,12 +29,10 @@
 #include "application/application.h"
 #include "application/main.h"
 #include <yuni/core/getopt.h>
-#include <yuni/io/io.h>
-#include "../../config.h"
-#include "../common/winmain.hxx"
+#include <antares/args/args_to_utf8.h>
 #include <antares/resources/resources.h>
 #include <antares/sys/policy.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/locale.h>
 
 #ifdef YUNI_OS_MSVC
@@ -56,7 +54,7 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
 
     // We have one or several arguments
-    argv = AntaresGetUTF8Arguments(argc, argv);
+    IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
 
     // locale
     InitializeDefaultLocale();
@@ -78,7 +76,6 @@ int main(int argc, char* argv[])
         // An error has occured
         if (options(argc, argv) == GetOpt::ReturnCode::error)
         {
-            FreeUTF8Arguments(argc, argv);
             return options.errors() ? 1 : 0;
         }
 
@@ -86,7 +83,6 @@ int main(int argc, char* argv[])
         if (optVersion)
         {
             std::cout << ANTARES_VERSION_STR << "\n";
-            FreeUTF8Arguments(argc, argv);
             return 0;
         }
     }
@@ -107,7 +103,6 @@ int main(int argc, char* argv[])
     const int ret = wxEntry(argc, argv);
 
     LocalPolicy::Close();
-    FreeUTF8Arguments(argc, argv);
     return ret;
 }
 

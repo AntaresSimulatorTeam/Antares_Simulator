@@ -6,7 +6,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
-#include "antares/study.h"
+#include <antares/study/study.h>
 #include <filesystem>
 #include <fstream>
 #include "utils.h"
@@ -19,7 +19,7 @@ void initializeStudy(Study& study)
 {
     study.parameters.derated = false;
 
-    study.runtime = new StudyRuntimeInfos(1);
+    study.runtime = new StudyRuntimeInfos();
     study.runtime->rangeLimits.year[rangeBegin] = 0;
     study.runtime->rangeLimits.year[rangeEnd] = 0;
     study.runtime->rangeLimits.year[rangeCount] = 1;

@@ -7,7 +7,7 @@ set(ANTARES_VERSION_REVISION  0)
 
 # Beta release
 set(ANTARES_BETA 0)
-set(ANTARES_RC 2)
+set(ANTARES_RC 0)
 
 set(ANTARES_VERSION_YEAR      2023)
 
@@ -285,7 +285,7 @@ find_package(minizip)
 if(NOT minizip_FOUND OR BUILD_MINIZIP)
     # Repository + tag
     set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
-    set(MZ_TAG "3.0.7")
+    set(MZ_TAG "4.0.1")
     # CMake flags
     set(MZ_LZMA "OFF" CACHE INTERNAL "")
     set(MZ_ZSTD "OFF" CACHE INTERNAL "")

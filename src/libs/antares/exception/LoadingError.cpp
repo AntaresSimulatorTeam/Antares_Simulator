@@ -1,4 +1,4 @@
-#include "LoadingError.hpp"
+#include "antares/exception/LoadingError.hpp"
 
 namespace Antares
 {
@@ -69,6 +69,16 @@ InvalidNumberOfMCYears::InvalidNumberOfMCYears(uint nbYears) :
 
 IncompatibleParallelOptions::IncompatibleParallelOptions() :
  LoadingError("Options --parallel and --force-parallel are incompatible")
+{
+}
+
+IncompatibleMILPWithoutOrtools::IncompatibleMILPWithoutOrtools() :
+ LoadingError("Unit Commitment mode 'milp' must be used with an OR-Tools solver ")
+{
+}
+
+IncompatibleMILPOrtoolsSolver::IncompatibleMILPOrtoolsSolver() :
+ LoadingError("'milp' mode does not work with OR-Tools using Sirius solver")
 {
 }
 

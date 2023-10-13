@@ -26,7 +26,7 @@
 */
 
 #include "panel.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include <ui/common/component/scrollbox/scrollbox.h>
 #include "../../toolbox/components/notebook/notebook.h"
 #include "../../toolbox/components/captionpanel.h"

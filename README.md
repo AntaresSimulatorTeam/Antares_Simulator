@@ -39,6 +39,7 @@ In May 2018 RTE decided to release the project under the GPLv3 license.
 
 - Antares web site :  https://antares-simulator.org
 - RTE web site  : http://www.rte-france.com/
+- Doxygen code documentation  : https://antaressimulatorteam.github.io/Antares_Simulator/
 
 
 # Installation
@@ -69,7 +70,7 @@ For installation instructions, please visit [INSTALL.md](INSTALL.md)
 * [src/distrib/](src/distrib)       - system redistributable libraries  Win(x64,x86),unix. 
 * [src/ext/](src/ext)     	 - third party libraries used by Antares_Simulator: libYuni, Sirius_Solver.
 * [src/libs/](src/libs)		   - miscellaneous Antares_Simulator libraries.
-* [src/simulator/](src/simulator)     - Time-series generation, Monte-Carlo simulation and weekly optimization modelling.
+* [src/solver/](src/solver)     - simulation and optimization part.
 * [src/tools/](src/tools)        - miscellaneous tools for dataset management. 
 * [src/ui/](src/ui)           - Graphic user interface. 
 

@@ -35,7 +35,7 @@
 // #include <stdio.h>
 #include <yuni/yuni.h>
 
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 
 #define SEP Yuni::IO::Separator
 
@@ -157,11 +157,8 @@ public:
         optimizationTime2.endStandardDeviation();
     };
 
-    void writeToOutput(IResultWriter::Ptr writer)
+    void writeToOutput(IResultWriter& writer)
     {
-        if (!writer)
-            return;
-
         writeSystemCostToOutput(writer);
         writeCriterionCostsToOutput(writer);
         writeOptimizationTimeToOutput(writer);
@@ -189,7 +186,7 @@ public:
     }
 
 private:
-    void writeSystemCostToOutput(IResultWriter::Ptr writer)
+    void writeSystemCostToOutput(IResultWriter& writer)
     {
         Yuni::Clob buffer;
         buffer << "EXP : " << round_to_closer_int(systemCost.costAverage) << "\n";
@@ -197,10 +194,10 @@ private:
         buffer << "MIN : " << round_to_closer_int(systemCost.costMin) << "\n";
         buffer << "MAX : " << round_to_closer_int(systemCost.costMax) << "\n";
 
-        writer->addEntryFromBuffer(systemCostFilename, buffer);
+        writer.addEntryFromBuffer(systemCostFilename, buffer);
     }
 
-    void writeCriterionCostsToOutput(IResultWriter::Ptr writer)
+    void writeCriterionCostsToOutput(IResultWriter& writer)
     {
         Yuni::Clob buffer;
         buffer << to_scientific(criterionCost1.costAverage) << "\n";
@@ -213,10 +210,10 @@ private:
         buffer << to_scientific(criterionCost2.costMin) << "\n";
         buffer << to_scientific(criterionCost2.costMax) << "\n";
 
-        writer->addEntryFromBuffer(criterionsCostsFilename, buffer);
+        writer.addEntryFromBuffer(criterionsCostsFilename, buffer);
     }
 
-    void writeOptimizationTimeToOutput(IResultWriter::Ptr writer)
+    void writeOptimizationTimeToOutput(IResultWriter& writer)
     {
         Yuni::Clob buffer;
         buffer << "First optimization :\n";
@@ -231,7 +228,7 @@ private:
         buffer << "MIN (ms) : " << optimizationTime2.costMin << "\n";
         buffer << "MAX (ms) : " << optimizationTime2.costMax << "\n";
 
-        writer->addEntryFromBuffer(optimizationTimeFilename, buffer);
+        writer.addEntryFromBuffer(optimizationTimeFilename, buffer);
     }
 
 public:

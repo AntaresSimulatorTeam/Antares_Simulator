@@ -32,11 +32,10 @@
 #include <cmath>
 #include <boost/algorithm/string/case_conv.hpp>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "cluster.h"
 #include <antares/inifile/inifile.h>
-#include "../../../logs.h"
-#include "../../../utils.h"
+#include <antares/logs/logs.h>
+#include <antares/utils/utils.h>
 
 using namespace Yuni;
 using namespace Antares;
@@ -98,6 +97,19 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
         parentArea->forceReload();
 }
 
+const std::map < RenewableCluster::RenewableGroup, const char* > groupToName =
+{
+    {RenewableCluster::thermalSolar, "solar thermal"},
+    {RenewableCluster::PVSolar, "solar pv"},
+    {RenewableCluster::rooftopSolar, "solar rooftop"},
+    {RenewableCluster::windOnShore, "wind onshore"},
+    {RenewableCluster::windOffShore,"wind offshore"},
+    {RenewableCluster::renewableOther1, "other res 1"},
+    {RenewableCluster::renewableOther2, "other res 2"},
+    {RenewableCluster::renewableOther3, "other res 3"},
+    {RenewableCluster::renewableOther4, "other res 4"}
+};
+
 void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
 {
     if (newgrp.empty())
@@ -109,51 +121,15 @@ void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
     pGroup = newgrp;
     boost::to_lower(newgrp);
 
-    if (newgrp == "solar thermal")
+    for (const auto& [group, name] : groupToName)
     {
-        groupID = thermalSolar;
-        return;
+        if (newgrp == name)
+        {
+            groupID = group;
+            return;
+        }        
     }
-    if (newgrp == "solar pv")
-    {
-        groupID = PVSolar;
-        return;
-    }
-    if (newgrp == "solar rooftop")
-    {
-        groupID = rooftopSolar;
-        return;
-    }
-    if (newgrp == "wind onshore")
-    {
-        groupID = windOnShore;
-        return;
-    }
-    if (newgrp == "wind offshore")
-    {
-        groupID = windOffShore;
-        return;
-    }
-    if (newgrp == "other renewable 1")
-    {
-        groupID = renewableOther1;
-        return;
-    }
-    if (newgrp == "other renewable 2")
-    {
-        groupID = renewableOther2;
-        return;
-    }
-    if (newgrp == "other renewable 3")
-    {
-        groupID = renewableOther3;
-        return;
-    }
-    if (newgrp == "other renewable 4")
-    {
-        groupID = renewableOther4;
-        return;
-    }
+
     // assigning a default value
     groupID = renewableOther1;
 }
@@ -197,34 +173,6 @@ bool Data::RenewableCluster::integrityCheck()
     return ret;
 }
 
-const char* Data::RenewableCluster::GroupName(enum RenewableGroup grp)
-{
-    switch (grp)
-    {
-    case windOffShore:
-        return "Wind offshore";
-    case windOnShore:
-        return "Wind onshore";
-    case thermalSolar:
-        return "Solar thermal";
-    case PVSolar:
-        return "Solar PV";
-    case rooftopSolar:
-        return "Solar rooftop";
-    case renewableOther1:
-        return "Other RES 1";
-    case renewableOther2:
-        return "Other RES 2";
-    case renewableOther3:
-        return "Other RES 3";
-    case renewableOther4:
-        return "Other RES 4";
-    case groupMax:
-        return "";
-    }
-    return "";
-}
-
 bool Data::RenewableCluster::setTimeSeriesModeFromString(const YString& value)
 {
     if (value == "power-generation")
@@ -252,14 +200,15 @@ YString Data::RenewableCluster::getTimeSeriesModeAsString() const
     return "unknown";
 }
 
-double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepIndex) const
+double RenewableCluster::valueAtTimeStep(uint hourInYear, uint year) const
 {
     if (!enabled)
         return 0.;
+    uint timeSeriesIndex = (series->timeSeries.width == 1) ? 0 : series->timeseriesNumbers[0][year];
 
-    assert(timeStepIndex < series->timeSeries.height);
+    assert(hourInYear < series->timeSeries.height);
     assert(timeSeriesIndex < series->timeSeries.width);
-    const double tsValue = series->timeSeries[timeSeriesIndex][timeStepIndex];
+    const double tsValue = series->timeSeries[timeSeriesIndex][hourInYear];
     switch (tsMode)
     {
     case powerGeneration:
@@ -270,11 +219,11 @@ double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepInde
     return 0.;
 }
 
-uint64 RenewableCluster::memoryUsage() const
+uint64_t RenewableCluster::memoryUsage() const
 {
-    uint64 amount = sizeof(RenewableCluster);
+    uint64_t amount = sizeof(RenewableCluster);
     if (series)
-        amount += DataSeriesMemoryUsage(series);
+        amount += series->memoryUsage();
     return amount;
 }
 

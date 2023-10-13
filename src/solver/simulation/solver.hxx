@@ -28,9 +28,9 @@
 #define __SOLVER_SIMULATION_SOLVER_HXX__
 
 #include "../variable/constants.h"
-#include <antares/logs.h>
-#include <antares/date.h>
-#include <antares/benchmarking.h>
+#include <antares/logs/logs.h>
+#include <antares/date/date.h>
+#include <antares/benchmarking/timer.h>
 #include <antares/exception/InitializationError.hpp>
 #include "../variable/print.h"
 #include <yuni/io/io.h>
@@ -39,19 +39,22 @@
 #include "apply-scenario.h"
 #include <antares/fatal-error.h>
 #include "../ts-generator/generator.h"
-
+#include "opt_time_writer.h"
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
 
+#include "antares/concurrency/concurrency.h"
+
 namespace Antares::Solver::Simulation
 {
+
 template<class Impl>
-class yearJob final : public Yuni::Job::IJob
+class yearJob
 {
 public:
-    yearJob(ISimulation<Impl>* pSimulationObj,
+    yearJob(ISimulation<Impl>* simulation,
             unsigned int pY,
             std::map<uint, bool>& pYearFailed,
             std::map<uint, bool>& pIsFirstPerformedYearOfASet,
@@ -62,8 +65,9 @@ public:
             Data::Study& pStudy,
             std::vector<Variable::State>& pState,
             bool pYearByYear,
-            Benchmarking::IDurationCollector* durationCollector) :
-     simulationObj(pSimulationObj),
+            Benchmarking::IDurationCollector& durationCollector,
+            IResultWriter& resultWriter) :
+     simulation_(simulation),
      y(pY),
      yearFailed(pYearFailed),
      isFirstPerformedYearOfASet(pIsFirstPerformedYearOfASet),
@@ -74,13 +78,14 @@ public:
      study(pStudy),
      state(pState),
      yearByYear(pYearByYear),
-     pDurationCollector(durationCollector)
+     pDurationCollector(durationCollector),
+     pResultWriter(resultWriter)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
     }
 
 private:
-    ISimulation<Impl>* simulationObj;
+    ISimulation<Impl>* simulation_;
     unsigned int y;
     std::map<uint, bool>& yearFailed;
     std::map<uint, bool>& isFirstPerformedYearOfASet;
@@ -92,8 +97,8 @@ private:
     std::vector<Variable::State>& state;
     bool yearByYear;
     bool hydroHotStart;
-    Benchmarking::IDurationCollector* pDurationCollector;
-
+    Benchmarking::IDurationCollector& pDurationCollector;
+    IResultWriter& pResultWriter;
 private:
     /*
     ** \brief Log failed week
@@ -130,7 +135,8 @@ private:
         }
     }
 
-    virtual void onExecute() override
+public:
+    void operator()()
     {
         Progression::Task progression(study, y, Solver::Progression::sectYear);
 
@@ -141,9 +147,9 @@ private:
 
             // Getting random tables for this year
             yearRandomNumbers& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
-            double** thermalNoisesByArea = randomForCurrentYear.pThermalNoisesByArea;
             double* randomReservoirLevel = nullptr;
 
+            // 1 - Applying random levels for current year
             if (hydroHotStart && firstSetParallelWithAPerformedYearWasRun)
                 randomReservoirLevel = state[numSpace].problemeHebdo->previousYearFinalLevels.data();
             else
@@ -151,68 +157,73 @@ private:
 
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
-            ALEA_TirageAuSortChroniques(study, thermalNoisesByArea, numSpace);
+            ApplyRandomTSnumbers(study, y, numSpace);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
-            simulationObj->prepareClustersInMustRunMode(numSpace);
+            simulation_->prepareClustersInMustRunMode(numSpace, y);
 
             // 4 - Hydraulic ventilation
             {
                 Benchmarking::Timer timer;
-                simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y, numSpace);
+                simulation_->hydroManagement.makeVentilation(randomReservoirLevel,
+                                                             state[numSpace],
+                                                             y,
+                                                             numSpace);
                 timer.stop();
-                pDurationCollector->addDuration("hydro_ventilation", timer.get_duration());
+                pDurationCollector.addDuration("hydro_ventilation", timer.get_duration());
             }
 
             // Updating the state
             state[numSpace].year = y;
 
             // 5 - Resetting all variables for the output
-            simulationObj->variables.yearBegin(y, numSpace);
+            simulation_->variables.yearBegin(y, numSpace);
 
             // 6 - The Solver itself
             bool isFirstPerformedYearOfSimulation
               = isFirstPerformedYearOfASet[y] && not firstSetParallelWithAPerformedYearWasRun;
             std::list<uint> failedWeekList;
 
-            yearFailed[y] = !simulationObj->year(progression,
-                                                 state[numSpace],
-                                                 numSpace,
-                                                 randomForCurrentYear,
-                                                 failedWeekList,
-                                                 isFirstPerformedYearOfSimulation);
+            OptimizationStatisticsWriter optWriter(pResultWriter, y);
+            yearFailed[y] = !simulation_->year(progression,
+                                               state[numSpace],
+                                               numSpace,
+                                               randomForCurrentYear,
+                                               failedWeekList,
+                                               isFirstPerformedYearOfSimulation,
+                                               simulation_->hydroManagement.ventilationResults(),
+                                               optWriter);
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
 
-            simulationObj->variables.yearEndBuild(state[numSpace], y, numSpace);
+            simulation_->variables.yearEndBuild(state[numSpace], y, numSpace);
 
             // 7 - End of the year, this is the last stade where the variables can retrieve
             // their data for this year.
-            simulationObj->variables.yearEnd(y, numSpace);
+            simulation_->variables.yearEnd(y, numSpace);
 
             // 8 - Spatial clusters
             // Notifying all variables to perform spatial aggregates.
             // This must be done only when all variables have finished to compute their
             // data for the year.
-            simulationObj->variables.yearEndSpatialAggregates(
-              simulationObj->variables, y, numSpace);
+            simulation_->variables.yearEndSpatialAggregates(simulation_->variables, y, numSpace);
 
             // 9 - Write results for the current year
             if (yearByYear)
             {
                 Benchmarking::Timer timerYear;
                 // Before writing, some variable may require minor modifications
-                simulationObj->variables.beforeYearByYearExport(y, numSpace);
+                simulation_->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
-                simulationObj->writeResults(false, y, numSpace); // false for synthesis
+                simulation_->writeResults(false, y, numSpace); // false for synthesis
                 timerYear.stop();
-                pDurationCollector->addDuration("yby_export", timerYear.get_duration());
+                pDurationCollector.addDuration("yby_export", timerYear.get_duration());
             }
         }
         else
         {
-            simulationObj->incrementProgression(progression);
+            simulation_->incrementProgression(progression);
 
             logs.info() << "  playlist: ignoring the year " << (y + 1);
 
@@ -225,19 +236,24 @@ private:
 
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
-                                      const ::Settings& settings,
-                                      Benchmarking::IDurationCollector* duration_collector) :
- ImplementationType(study),
- study(study),
- settings(settings),
- pNbYearsReallyPerformed(0),
- pNbMaxPerformedYearsInParallel(0),
- pYearByYear(study.parameters.yearByYear),
- pHydroManagement(study),
- pFirstSetParallelWithAPerformedYearWasRun(false),
- pDurationCollector(duration_collector),
- pQueueService(study.pQueueService),
- pResultWriter(study.resultWriter)
+    const ::Settings& settings,
+    Benchmarking::IDurationCollector& duration_collector,
+    IResultWriter& resultWriter) :
+    ImplementationType(study, resultWriter),
+    study(study),
+    settings(settings),
+    pNbYearsReallyPerformed(0),
+    pNbMaxPerformedYearsInParallel(0),
+    pYearByYear(study.parameters.yearByYear),
+    hydroManagement(study.areas, 
+                    study.parameters, 
+                    study.calendar, 
+                    study.maxNbYearsInParallel,
+                    resultWriter),
+    pFirstSetParallelWithAPerformedYearWasRun(false),
+    pDurationCollector(duration_collector),
+    pQueueService(study.pQueueService),
+    pResultWriter(resultWriter)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -257,14 +273,9 @@ template<class Impl>
 inline void ISimulation<Impl>::checkWriter() const
 {
     // The zip writer needs a queue service (async mutexed write)
-    if (!pQueueService)
+    if (!pQueueService && pResultWriter.needsTheJobQueue())
     {
         throw Solver::Initialization::Error::NoQueueService();
-    }
-
-    if (!pResultWriter)
-    {
-        throw Solver::Initialization::Error::NoResultWriter();
     }
 }
 
@@ -293,12 +304,9 @@ void ISimulation<Impl>::run()
         ImplementationType::variables.template provideInformations<Variable::PrintInfosStdCout>(c);
     }
 
-    // The general data
-    auto& parameters = *(study.runtime->parameters);
-
     // Preprocessors
     // Determine if we have to use the preprocessors at least one time.
-    pData.initialize(parameters);
+    pData.initialize(study.parameters);
 
     // Prepro only ?
     ImplementationType::preproOnly = settings.tsGeneratorsOnly;
@@ -310,7 +318,6 @@ void ISimulation<Impl>::run()
         // Only the preprocessors can be used
         // We only have to regenerate time-series according the settings
         // in general data of the study.
-        logs.info();
         logs.info() << " Only the preprocessors are enabled.";
 
         regenerateTimeSeries(0);
@@ -340,7 +347,7 @@ void ISimulation<Impl>::run()
             throw FatalError("An unrecoverable error has occured. Can not continue.");
         }
 
-        if (parameters.useCustomScenario)
+        if (study.parameters.useCustomScenario)
             ApplyCustomScenario(study);
 
         // Launching the simulation for all years
@@ -360,7 +367,7 @@ void ISimulation<Impl>::run()
             Benchmarking::Timer timer;
             loopThroughYears(0, finalYear, state);
             timer.stop();
-            pDurationCollector->addDuration("mc_years", timer.get_duration());
+            pDurationCollector.addDuration("mc_years", timer.get_duration());
         }
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
@@ -371,13 +378,13 @@ void ISimulation<Impl>::run()
             Benchmarking::Timer timer;
             ImplementationType::simulationEnd();
             timer.stop();
-            pDurationCollector->addDuration("post_processing", timer.get_duration());
+            pDurationCollector.addDuration("post_processing", timer.get_duration());
         }
 
         ImplementationType::variables.simulationEnd();
 
         // Export ts-numbers into output
-        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study);
+        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, pResultWriter);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
@@ -409,7 +416,7 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
     {
         if (synthesis)
         {
-            auto& parameters = *(study.runtime->parameters);
+            const auto& parameters = study.parameters;
             if (not parameters.synthesis) // disabled by parameters
             {
                 logs.info() << "The simulation synthesis is disabled.";
@@ -437,567 +444,6 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
 }
 
 template<class Impl>
-void ISimulation<Impl>::estimateMemoryUsage(Antares::Data::StudyMemoryUsage& u)
-{
-    auto& study = u.study;
-    auto& areas = study.areas;
-
-    // Variable state
-    u.requiredMemoryForInput += sizeof(Variable::State) * u.nbYearsParallel;
-
-    // Variables "NumeroChroniquesTireesParPays" and "ValeursGenereesParPays" (see :
-    // sim_allocation_tableaux.cpp)
-    u.requiredMemoryForInput += u.nbYearsParallel * sizeof(void*) * 2;
-
-    Yuni::uint64 tmpAmountMemory = 0;
-    tmpAmountMemory += areas.size() * sizeof(void*) * 2;
-    for (uint i = 0; i < areas.size(); ++i)
-    {
-        auto& area = *areas.byIndex[i];
-        tmpAmountMemory += sizeof(NUMERO_CHRONIQUES_TIREES_PAR_PAYS);
-        tmpAmountMemory += sizeof(VALEURS_GENEREES_PAR_PAYS);
-        tmpAmountMemory += area.thermal.clusterCount() * sizeof(int);
-        tmpAmountMemory += 366 * sizeof(double);
-        tmpAmountMemory += area.thermal.clusterCount() * sizeof(double);
-    }
-    u.requiredMemoryForInput += u.nbYearsParallel * tmpAmountMemory;
-
-    // Estimation for random numbers
-    estimateMemoryForRandomNumbers(u);
-
-    // Estimation for resolution problems
-    int nbVars = 0;
-    int nbConstraints = 0;
-
-    estimateMemoryForWeeklyPb(u);
-    estimateMemoryForOptimizationPb(u, nbVars, nbConstraints);
-    estimateMemoryForSplxPb(u, nbVars, nbConstraints);
-}
-
-template<class Impl>
-void ISimulation<Impl>::estimateMemoryForRandomNumbers(Antares::Data::StudyMemoryUsage& u)
-{
-    auto& study = u.study;
-    auto& areas = study.areas;
-    uint nbAreas = areas.size();
-
-    // Random numbers
-    for (uint y = 0; y < u.nbYearsParallel; y++)
-    {
-        // See method allocateMemoryForRandomNumbers(...) for details
-        // General :
-        u.requiredMemoryForInput += sizeof(size_t) * nbAreas;
-
-        // Thermal noises :
-        u.requiredMemoryForInput += sizeof(double*) * nbAreas;
-        for (uint a = 0; a != nbAreas; ++a)
-        {
-            auto& area = *(areas.byIndex[a]);
-            size_t nbClusters = area.thermal.list.mapping.size();
-            u.requiredMemoryForInput += sizeof(double) * nbClusters;
-        }
-
-        // Reservoir levels
-        u.requiredMemoryForInput += sizeof(double) * nbAreas;
-
-        // Noises on unsupplied energy
-        u.requiredMemoryForInput += sizeof(double) * nbAreas;
-
-        // Hydro costs noises
-        u.requiredMemoryForInput += sizeof(double*) * nbAreas;
-        for (uint a = 0; a != nbAreas; ++a)
-            u.requiredMemoryForInput += sizeof(double) * 8784;
-    } // End loop over years
-} // End method
-
-template<class Impl>
-void ISimulation<Impl>::estimateMemoryForWeeklyPb(Antares::Data::StudyMemoryUsage& u)
-{
-    /*
-            RAM estimation for the weekly problems (as much as parallel years)
-            See : sim_alloc_probleme_hebdo.cpp
-            First	: estimation of one weekly problem
-            Then	: multiplying this estimation by the number of years in parallel (== nb of
-       cores)
-    */
-
-    auto& study = u.study;
-    auto& bindingConstraints = study.bindingConstraints;
-    uint nbBindingConstraints = bindingConstraints.size();
-    uint nbAreas = study.areas.size();
-    uint nbLinks = study.areas.areaLinkCount();
-    int NombreDePasDeTemps = 168;
-
-    // Total number of clusters
-    uint thermalPlantTotalCount = 0;
-    for (uint i = 0; i != study.areas.size(); i++)
-    {
-        auto& area = *(study.areas.byIndex[i]);
-        thermalPlantTotalCount += area.thermal.list.size();
-    }
-
-    // Weekly problem size
-    Yuni::uint64 requiredMemoryForWeeklyPb = 0;
-
-    // ------------------------
-    // For maneuverability
-    // ------------------------
-    requiredMemoryForWeeklyPb += 2 * nbLinks * sizeof(double);
-    requiredMemoryForWeeklyPb += nbAreas * sizeof(double);
-
-    // -------------------------------------------------
-    // Memory allocated based on the number of areas
-    // -------------------------------------------------
-    requiredMemoryForWeeklyPb += 3 * nbAreas * sizeof(char);
-
-    requiredMemoryForWeeklyPb += 4 * nbAreas * sizeof(double);
-    requiredMemoryForWeeklyPb += 8784 * nbAreas * sizeof(double);
-
-    requiredMemoryForWeeklyPb += 7 * nbAreas * sizeof(void*); // For all pointers
-
-    requiredMemoryForWeeklyPb += 5 * nbAreas * sizeof(int);
-
-    for (int k = 0; k < NombreDePasDeTemps; k++)
-    {
-        requiredMemoryForWeeklyPb += 16 * nbAreas * sizeof(double);
-    }
-
-    // -------------------------------------------------------
-    // Memory allocated based on the number of clusters
-    // -------------------------------------------------------
-    for (int k = 0; k < NombreDePasDeTemps; k++)
-    {
-        requiredMemoryForWeeklyPb += 8 * thermalPlantTotalCount * sizeof(int);
-    }
-
-    // -------------------------------------------------
-    // Memory allocated based on the number of links
-    // -------------------------------------------------
-    requiredMemoryForWeeklyPb += 4 * nbLinks * sizeof(int);
-
-    requiredMemoryForWeeklyPb += nbLinks * sizeof(void*);
-
-    for (int k = 0; k < NombreDePasDeTemps; k++)
-    {
-        requiredMemoryForWeeklyPb += 9 * nbLinks * sizeof(double);
-        requiredMemoryForWeeklyPb += 4 * nbLinks * sizeof(int);
-    }
-
-    // ----------------------------------------------------------------
-    // Memory allocated based on the number of binding constraints
-    // ----------------------------------------------------------------
-    requiredMemoryForWeeklyPb += nbBindingConstraints * sizeof(void*);
-
-    for (int k = 0; k < NombreDePasDeTemps; k++)
-    {
-        requiredMemoryForWeeklyPb += nbBindingConstraints * sizeof(int);
-    }
-
-    for (int k = 0; k < 7; k++)
-    {
-        requiredMemoryForWeeklyPb += nbBindingConstraints * sizeof(int);
-    }
-
-    for (auto i = bindingConstraints.begin(); i != bindingConstraints.end(); ++i)
-    {
-        auto& constraint = *(*i);
-        requiredMemoryForWeeklyPb += 2 * constraint.linkCount() * sizeof(int);
-        requiredMemoryForWeeklyPb += constraint.linkCount() * sizeof(double);
-    }
-
-    // -----------------------------------------------------
-    // Memory allocated based on the number of time steps
-    // -----------------------------------------------------
-    requiredMemoryForWeeklyPb += 4 * NombreDePasDeTemps * sizeof(int);
-
-    requiredMemoryForWeeklyPb += 8 * NombreDePasDeTemps * sizeof(void*);
-
-    for (int k = 0; k < (int)nbLinks; ++k)
-    {
-        requiredMemoryForWeeklyPb += NombreDePasDeTemps * sizeof(COUTS_DE_TRANSPORT);
-        requiredMemoryForWeeklyPb += 4 * NombreDePasDeTemps * sizeof(double);
-    }
-
-    for (int k = 0; k < (int)nbBindingConstraints; k++)
-    {
-        requiredMemoryForWeeklyPb += 2 * NombreDePasDeTemps * sizeof(int);
-    }
-
-    for (int k = 0; k < (int)nbAreas; k++)
-    {
-        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
-
-        requiredMemoryForWeeklyPb += 10 * NombreDePasDeTemps * sizeof(double);
-        requiredMemoryForWeeklyPb += NombreDePasDeTemps * sizeof(void*);
-
-        for (int j = 0; j < (int)nbPaliers; ++j)
-        {
-            requiredMemoryForWeeklyPb += 7 * NombreDePasDeTemps * sizeof(double);
-            requiredMemoryForWeeklyPb += 2 * NombreDePasDeTemps * sizeof(int);
-        }
-    }
-
-    // ---------------------------------------------
-    // Memory allocated based on other things
-    // ---------------------------------------------
-    for (int k = 0; k < NombreDePasDeTemps; k++)
-    {
-        requiredMemoryForWeeklyPb += 2 * sizeof(VALEURS_DE_NTC_ET_RESISTANCES);
-        requiredMemoryForWeeklyPb += 2 * sizeof(CONSOMMATIONS_ABATTUES);
-        requiredMemoryForWeeklyPb += sizeof(SOLDE_MOYEN_DES_ECHANGES);
-        requiredMemoryForWeeklyPb += sizeof(CORRESPONDANCES_DES_VARIABLES);
-        requiredMemoryForWeeklyPb += sizeof(CORRESPONDANCES_DES_CONTRAINTES);
-        requiredMemoryForWeeklyPb += sizeof(VARIABLES_DUALES_INTERCONNEXIONS);
-    }
-
-    requiredMemoryForWeeklyPb += 7 * sizeof(void*);
-
-    for (int k = 0; k < 7; k++)
-        requiredMemoryForWeeklyPb += sizeof(CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES);
-
-    for (int k = 0; k < (int)nbBindingConstraints; k++)
-    {
-        requiredMemoryForWeeklyPb += sizeof(CONTRAINTES_COUPLANTES);
-    }
-
-    for (int k = 0; k < (int)nbAreas; k++)
-    {
-        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
-
-        requiredMemoryForWeeklyPb += sizeof(PALIERS_THERMIQUES);
-        requiredMemoryForWeeklyPb += sizeof(ENERGIES_ET_PUISSANCES_HYDRAULIQUES);
-        requiredMemoryForWeeklyPb += sizeof(RESERVE_JMOINS1);
-        requiredMemoryForWeeklyPb += sizeof(RESULTATS_HORAIRES);
-        requiredMemoryForWeeklyPb += nbPaliers * sizeof(int);
-        requiredMemoryForWeeklyPb += 30 * nbPaliers * sizeof(double);
-        requiredMemoryForWeeklyPb += 6 * nbPaliers * sizeof(int);
-        requiredMemoryForWeeklyPb += nbPaliers * sizeof(void*);
-
-        for (int j = 0; j < (int)nbPaliers; ++j)
-        {
-            requiredMemoryForWeeklyPb += sizeof(PDISP_ET_COUTS_HORAIRES_PAR_PALIER);
-        }
-
-        for (int j = 0; j < NombreDePasDeTemps; j++)
-        {
-            requiredMemoryForWeeklyPb += sizeof(PRODUCTION_THERMIQUE_OPTIMALE);
-            requiredMemoryForWeeklyPb += 5 * nbPaliers * sizeof(double);
-        }
-    }
-
-    requiredMemoryForWeeklyPb += 7 * sizeof(double); // cout optimal de la solution
-
-    // ---------------------------------------------
-    // Adding memory from weekly problems
-    // ---------------------------------------------
-    u.requiredMemoryForInput += requiredMemoryForWeeklyPb * u.nbYearsParallel;
-}
-
-template<class Impl>
-void ISimulation<Impl>::estimateMemoryForOptimizationPb(Antares::Data::StudyMemoryUsage& u,
-                                                        int& nbVars,
-                                                        int& nbConstraints)
-{
-    /*
-            RAM estimation for the optimization problems (as much as parallel years)
-            See : opt_alloc_probleme_a_optimiser.cpp
-            First	: estimation of one optimization problem
-            Then	: multiplying this estimation by the number of years in parallel (== nb of
-       cores)
-
-            Parameters 'nbVars' and 'nbConstraints' are computed and used during this computation.
-            These parameters are also required for the next estimation part of the solver estimation
-       (simplex problem).
-    */
-
-    auto& study = u.study;
-    auto& parameters = study.parameters;
-    auto& bindingConstraints = study.bindingConstraints;
-    uint nbLinks = study.areas.areaLinkCount();
-    uint nbAreas = study.areas.size();
-
-    // ========================================================================================
-    // Some preliminary variables computation before optimization problem RAM estimation
-    // ========================================================================================
-
-    // ------------------------------------
-    // Preliminary variables initialization
-    // ------------------------------------
-    int NombreDePasDeTempsPourUneOptimisation
-      = (parameters.simplexOptimizationRange == Data::sorWeek) ? 168 : 24;
-
-    int NombreDeVariables = 0;
-    int NombreDeContraintes = 0;
-    int NbTermesContraintesPourLesCoutsDeDemarrage = 0;
-    int NombreDePasDeTemps = 168;
-    int NombreDeJoursDansUnIntervalleOptimise = 0;
-    int mxPaliers = 0;
-    int NombreDeContraintesCouplantes = 0;
-    int Sparsity = 0;
-    int Adder = 0;
-
-    // ---------------------------------
-    // Preliminary variables computation
-    // ---------------------------------
-    /*
-            Computation of :
-            -	NombreDeVariables
-            -	NombreDeContraintes
-            -	NbTermesContraintesPourLesCoutsDeDemarrage
-    */
-    NombreDeVariables += nbLinks;
-    NombreDeVariables += 2 * nbLinks; /* Pour pouvoir decomposer en sens O vers E et E vers O */
-
-    for (uint i = 0; i != study.areas.size(); i++)
-    {
-        auto& area = *(study.areas.byIndex[i]);
-        NombreDeVariables += area.thermal.list.size();
-
-        if (area.hydro.hydroModulable)
-        {
-            NombreDeVariables++; /* La variable de production hydraulique */
-            NombreDeVariables++; // pumping
-            NombreDeVariables++; // levels
-            NombreDeVariables++; // overflow
-        }
-
-        NombreDeVariables += 2; /* Les groupes de defaillance positive et negative */
-    }
-
-    NombreDeVariables *= NombreDePasDeTempsPourUneOptimisation;
-
-    NombreDeContraintes = nbAreas;  /* Contraintes de bilan */
-    NombreDeContraintes += nbAreas; /* Contraintes pour eviter l'apparition de charges fictives */
-    NombreDeContraintes += nbLinks; /* Contraintes pour modeliser la partie positive/negative du
-                                       flux si l'interco est geree avec des couts */
-
-    for (auto i = bindingConstraints.begin(); i != bindingConstraints.end(); ++i)
-    {
-        auto& constraint = *(*i); // The current constraint
-        if (constraint.type() == Data::BindingConstraint::typeHourly)
-            NombreDeContraintes++;
-    }
-
-    NombreDeContraintes *= NombreDePasDeTempsPourUneOptimisation;
-
-    /* Contraintes couplantes journalieres */
-    if (NombreDePasDeTempsPourUneOptimisation > 24)
-        NombreDeJoursDansUnIntervalleOptimise = NombreDePasDeTemps / 24;
-    else
-        NombreDeJoursDansUnIntervalleOptimise = 1;
-
-    for (auto i = bindingConstraints.begin(); i != bindingConstraints.end(); ++i)
-    {
-        auto& constraint = *(*i);
-        if (constraint.type() == Data::BindingConstraint::typeDaily)
-            NombreDeContraintes += NombreDeJoursDansUnIntervalleOptimise;
-    }
-
-    for (auto i = bindingConstraints.begin(); i != bindingConstraints.end(); ++i)
-    {
-        auto& constraint = *(*i);
-        if (constraint.type() == Data::BindingConstraint::typeWeekly)
-            NombreDeContraintes++;
-    }
-
-    for (uint i = 0; i != study.areas.size(); i++)
-    {
-        auto& area = *(study.areas.byIndex[i]);
-        if (area.hydro.hydroModulable)
-        {
-            NombreDeContraintes++; /* Contraintes de turbine min */
-            NombreDeContraintes++; /* Contraintes de turbine max */
-            NombreDeContraintes++; // max energy pump
-            NombreDeContraintes += NombreDePasDeTempsPourUneOptimisation; // levels
-        }
-    }
-
-    if (parameters.power.fluctuations == Data::lssMinimizeRamping)
-    {
-        NombreDeVariables += nbAreas * NombreDePasDeTempsPourUneOptimisation * 2;
-        NombreDeContraintes += nbAreas * NombreDePasDeTempsPourUneOptimisation;
-    }
-    else if (parameters.power.fluctuations == Data::lssMinimizeExcursions)
-    {
-        NombreDeVariables += nbAreas * 2;
-        NombreDeContraintes += nbAreas * NombreDePasDeTempsPourUneOptimisation * 2;
-    }
-
-    // Mode accurate
-    if (parameters.unitCommitment.ucMode == Antares::Data::ucMILP)
-    {
-        for (uint i = 0; i != study.areas.size(); i++)
-        {
-            auto& area = *(study.areas.byIndex[i]);
-            uint nbClusters = (u.mode == Data::stdmEconomy) ? area.thermal.list.size() : 0;
-            for (uint j = 0; j < nbClusters; j++)
-            {
-                for (int Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
-                {
-                    NombreDeVariables += 4;
-                    NombreDeContraintes += 6;
-                } // End loop time steps
-            }     // End loop clusters
-        }         // End loop areas
-
-        for (uint i = 0; i != study.areas.size(); i++)
-        {
-            auto& area = *(study.areas.byIndex[i]);
-            uint nbClusters = (u.mode == Data::stdmEconomy) ? area.thermal.list.size() : 0;
-            if (!nbClusters)
-                break;
-            for (auto j = area.thermal.list.begin(); j != area.thermal.list.end(); ++j)
-            {
-                auto& cluster = *(j->second);
-                for (int Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
-                {
-                    NbTermesContraintesPourLesCoutsDeDemarrage += 12;
-                    for (int k = Pdt - cluster.minUpTime + 1; k <= Pdt; k++)
-                        NbTermesContraintesPourLesCoutsDeDemarrage += 3;
-                } // End loop time steps
-            }     // End loop clusters
-        }         // End loop areas
-
-    } // End if mode accurate
-
-    NombreDeVariables
-      += nbAreas * 3 * NombreDePasDeTempsPourUneOptimisation;               // pump, level, overflow
-    NombreDeContraintes += nbAreas * NombreDePasDeTempsPourUneOptimisation; // level modelling
-    NombreDeContraintes += nbAreas * 3; // hydro generation min,hydro generation max, pumping max
-
-    /*
-            Computation of mxPaliers
-    */
-    if (u.mode == Data::stdmEconomy)
-    {
-        for (uint i = 0; i != study.areas.size(); i++)
-        {
-            auto& area = *(study.areas.byIndex[i]);
-            uint nbClusters = area.thermal.list.size();
-            if ((int)nbClusters > mxPaliers)
-                mxPaliers = (int)nbClusters;
-        }
-    }
-
-    // ===============================================
-    // Optimization problem RAM estimation itself
-    // ===============================================
-
-    // Optimization problem size
-    Yuni::uint64 requiredMemoryForOptPb = 0;
-
-    size_t szNbVarsDouble = NombreDeVariables * sizeof(double);
-    size_t szNbVarsInt = NombreDeVariables * sizeof(int);
-    size_t szNbContInt = NombreDeContraintes * sizeof(int);
-    size_t szNbContDouble = NombreDeContraintes * sizeof(double);
-
-    int NbTermes = 0;
-
-    // Computation of NbTermes :
-    // -----------------------
-
-    for (auto i = bindingConstraints.begin(); i != bindingConstraints.end(); ++i)
-    {
-        NombreDeContraintesCouplantes++;
-    }
-
-    Sparsity = (int)mxPaliers * nbAreas;
-    Sparsity += nbLinks;
-    if (Sparsity > 100)
-        Sparsity = 100; /* The average number of non-zero coefficients in binding constraints is
-                           expected to be smaller than 100*/
-
-    NbTermes = 0;
-    NbTermes += NombreDeContraintes; // overhead to be safe - should be removable
-                                     /*  non-zero terms in node balance equations */
-    Adder = (int)mxPaliers;          /* thermal clusters*/
-    Adder += 4;           /* hydro generation, positive shedding, negative shedding, pumping*/
-    Adder *= nbAreas;     /* one balance equation per node...*/
-    Adder += 2 * nbLinks; /* Each interconnection appears twice in balance equations*/
-    Adder *= NombreDePasDeTempsPourUneOptimisation; /* one balance Equation per time step*/
-
-    NbTermes += Adder;
-
-    /* Non-zero Terms in node spillage limiting equation */
-
-    NbTermes += Adder;
-
-    /* non-zero Terms in flow decomposition equations*/
-
-    Adder
-      = 3 * nbLinks
-        * NombreDePasDeTempsPourUneOptimisation; /* Each interconnection flow F,  F+,F- may appear
-                                                    once in flow orientation decomposition*/
-    NbTermes += Adder;
-
-    /*  non-zero terms in binding constraints  equations */
-    Adder
-      = Sparsity
-        * NombreDeContraintesCouplantes; /* The average number of non-zero coefficients in binding
-                                            constraints is assumed to be smaller than 100*/
-    Adder *= (NombreDePasDeTempsPourUneOptimisation); /* Best case : all binding constraints are
-                                                         hourly */
-    Adder += Sparsity * (7 + 7)
-             * NombreDeContraintesCouplantes; /* Worst case : all binding constraints are deily */
-    NbTermes += Adder;
-
-    NbTermes += 3 * nbAreas * NombreDePasDeTempsPourUneOptimisation; // hydro min, max, pump
-    NbTermes += nbAreas * NombreDePasDeTempsPourUneOptimisation * 4; // in case of hydro-smoothing*/
-    NbTermes += nbAreas * NombreDePasDeTempsPourUneOptimisation
-                * 5; // if explicit hydro level and overflow modelling
-
-    /* Les contraintes pour la prise en compte des coûts de demarrage et durees min d'arret/marche
-     */
-    NbTermes += NbTermesContraintesPourLesCoutsDeDemarrage;
-
-    // Actual estimation :
-    // -----------------
-    requiredMemoryForOptPb += NombreDeContraintes * sizeof(char);
-    requiredMemoryForOptPb += 3 * szNbContInt;
-    requiredMemoryForOptPb += NbTermes * sizeof(double);
-    requiredMemoryForOptPb += NbTermes * sizeof(int);
-    requiredMemoryForOptPb += 7 * szNbVarsDouble;
-    requiredMemoryForOptPb += 3 * szNbVarsInt;
-    requiredMemoryForOptPb += 2 * szNbContDouble;
-    requiredMemoryForOptPb += 2 * NombreDeVariables * sizeof(void*);
-    requiredMemoryForOptPb += NombreDeContraintes * sizeof(void*);
-
-    // ================================================
-    // Adding memory from the optimization problem
-    // ================================================
-    u.requiredMemoryForInput += requiredMemoryForOptPb * u.nbYearsParallel;
-
-    // =========================
-    // Settings parameters
-    // =========================
-    nbVars = NombreDeVariables;
-    nbConstraints = nbVars;
-
-} // End method : estimateMemoryForOptimizationPb(...)
-
-template<class Impl>
-void ISimulation<Impl>::estimateMemoryForSplxPb(Antares::Data::StudyMemoryUsage& u,
-                                                int& nbVars,
-                                                int& nbConstraints)
-{
-    /*
-            Simplex problem RAM estimation by an empirical way.
-    */
-
-    auto& study = u.study;
-    auto& parameters = study.parameters;
-
-    int linearCombination = nbVars * (22 * sizeof(double) + 22 * sizeof(int) + 12 * sizeof(char));
-    linearCombination
-      += nbConstraints * (60 * sizeof(double) + 58 * sizeof(int) + 24 * sizeof(char));
-
-    if (parameters.unitCommitment.ucMode == Antares::Data::ucMILP)
-        u.requiredMemoryForInput += (uint)(5.51 * linearCombination) * u.nbYearsParallel;
-    else
-        u.requiredMemoryForInput += (uint)(5. * linearCombination) * u.nbYearsParallel;
-}
-
-template<class Impl>
 void ISimulation<Impl>::regenerateTimeSeries(uint year)
 {
     // A preprocessor can be launched for several reasons:
@@ -1011,7 +457,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         Benchmarking::Timer timer;
         GenerateTimeSeries<Data::timeSeriesLoad>(study, year, pResultWriter);
         timer.stop();
-        pDurationCollector->addDuration("tsgen_load", timer.get_duration());
+        pDurationCollector.addDuration("tsgen_load", timer.get_duration());
     }
     // Solar
     if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
@@ -1019,7 +465,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         Benchmarking::Timer timer;
         GenerateTimeSeries<Data::timeSeriesSolar>(study, year, pResultWriter);
         timer.stop();
-        pDurationCollector->addDuration("tsgen_solar", timer.get_duration());
+        pDurationCollector.addDuration("tsgen_solar", timer.get_duration());
     }
     // Wind
     if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
@@ -1027,7 +473,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         Benchmarking::Timer timer;
         GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter);
         timer.stop();
-        pDurationCollector->addDuration("tsgen_wind", timer.get_duration());
+        pDurationCollector.addDuration("tsgen_wind", timer.get_duration());
     }
     // Hydro
     if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
@@ -1035,7 +481,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         Benchmarking::Timer timer;
         GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter);
         timer.stop();
-        pDurationCollector->addDuration("tsgen_hydro", timer.get_duration());
+        pDurationCollector.addDuration("tsgen_hydro", timer.get_duration());
     }
     // Thermal
     const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
@@ -1044,7 +490,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         GenerateThermalTimeSeries(
           study, year, pData.haveToRefreshTSThermal, refreshTSonCurrentYear, pResultWriter);
         timer.stop();
-        pDurationCollector->addDuration("tsgen_thermal", timer.get_duration());
+        pDurationCollector.addDuration("tsgen_thermal", timer.get_duration());
     }
 }
 
@@ -1235,8 +681,6 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
         if (isPerformed)
             randomForYears.yearNumberToIndex[y] = indexYear;
 
-        // logs.info() << "Year : " << y << " ------------";
-
         // General
         const unsigned int nbAreas = study.areas.size();
 
@@ -1245,17 +689,14 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
         {
             // logs.info() << "   area : " << a << " :";
             auto& area = *(study.areas.byIndex[a]);
-            size_t nbClusters = area.thermal.list.mapping.size();
 
-            for (uint c = 0; c != nbClusters; ++c)
+            auto end = area.thermal.list.mapping.end();
+            for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
             {
+                uint clusterIndex = it->second->areaWideIndex;
+                double thermalNoise = runtime.random[Data::seedThermalCosts].next();
                 if (isPerformed)
-                    randomForYears.pYears[indexYear].pThermalNoisesByArea[a][c]
-                      = runtime.random[Data::seedThermalCosts].next();
-                else
-                    runtime.random[Data::seedThermalCosts].next();
-                // logs.info() << "      cluster : " << c << ", value : " <<
-                // randomForYears.pYears[indexYear].pThermalNoisesByArea[a][c];
+                    randomForYears.pYears[indexYear].pThermalNoisesByArea[a][clusterIndex] = thermalNoise;
             }
         }
 
@@ -1278,8 +719,9 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
             // Previous month's first day in the year
             int firstDayOfMonth = study.calendar.months[initResLevelOnSimMonth].daysYear.first;
 
-            double randomLevel = pHydroManagement.randomReservoirLevel(
-              min[firstDayOfMonth], avg[firstDayOfMonth], max[firstDayOfMonth]);
+            double randomLevel = hydroManagement.randomReservoirLevel(min[firstDayOfMonth],
+                                                                       avg[firstDayOfMonth],
+                                                                       max[firstDayOfMonth]);
 
             // Possibly update the intial level from scenario builder
             if (study.parameters.useCustomScenario)
@@ -1502,13 +944,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     allocateMemoryForRandomNumbers(randomForParallelYears);
 
     // Number of threads to perform the jobs waiting in the queue
-    {
-        int numThreads = pNbMaxPerformedYearsInParallel;
-        // If the result writer uses the job queue, add one more thread for it
-        if (pResultWriter && pResultWriter->needsTheJobQueue())
-            numThreads++;
-        pQueueService->maximumThreadCount(numThreads);
-    }
+    pQueueService->maximumThreadCount(pNbMaxPerformedYearsInParallel);
 
     // Loop over sets of parallel years
     std::vector<setOfParallelYears>::iterator set_it;
@@ -1525,6 +961,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
         std::vector<unsigned int>::iterator year_it;
 
         bool yearPerformed = false;
+        Concurrency::FutureSet results;
         for (year_it = set_it->yearsIndices.begin(); year_it != set_it->yearsIndices.end();
              ++year_it)
         {
@@ -1537,7 +974,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             {
                 yearPerformed = true;
                 numSpace = set_it->performedYearToSpace[y];
-                study.runtime->timeseriesNumberYear[numSpace] = y;
             }
 
             // If the year has not to be rerun, we skip the computation of the year.
@@ -1545,20 +981,20 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             // have to be rerun (meaning : they must be run once). if(!set_it->yearFailed[y])
             // continue;
 
-            pQueueService->add(
-              new yearJob<ImplementationType>(this,
-                                              y,
-                                              set_it->yearFailed,
-                                              set_it->isFirstPerformedYearOfASet,
-                                              pFirstSetParallelWithAPerformedYearWasRun,
-                                              numSpace,
-                                              randomForParallelYears,
-                                              performCalculations,
-                                              study,
-                                              state,
-                                              pYearByYear,
-                                              pDurationCollector));
-
+            Concurrency::Task task = yearJob<ImplementationType>(this,
+                                                                 y,
+                                                                 set_it->yearFailed,
+                                                                 set_it->isFirstPerformedYearOfASet,
+                                                                 pFirstSetParallelWithAPerformedYearWasRun,
+                                                                 numSpace,
+                                                                 randomForParallelYears,
+                                                                 performCalculations,
+                                                                 study,
+                                                                 state,
+                                                                 pYearByYear,
+                                                                 pDurationCollector,
+                                                                 pResultWriter);
+            results.add(Concurrency::AddTask(*pQueueService, task));
         } // End loop over years of the current set of parallel years
 
         logPerformedYearsInAset(*set_it);
@@ -1567,6 +1003,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
 
         pQueueService->wait(Yuni::qseIdle);
         pQueueService->stop();
+        results.join();
+        pResultWriter.flush();
 
         // At this point, the first set of parallel year(s) was run with at least one year performed
         if (!pFirstSetParallelWithAPerformedYearWasRun && yearPerformed)
@@ -1579,7 +1017,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             if (failed)
             {
                 std::ostringstream msg;
-                msg << "Year " << year << " has failed in the previous set of parallel year.";
+                msg << "Year " << year + 1 << " has failed in the previous set of parallel year.";
                 throw FatalError(msg.str());
             }
         }
@@ -1602,11 +1040,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     } // End loop over sets of parallel years
 
     // Writing annual costs statistics
-    if (pResultWriter)
-    {
-        pAnnualCostsStatistics.endStandardDeviations();
-        pAnnualCostsStatistics.writeToOutput(pResultWriter);
-    }
+    pAnnualCostsStatistics.endStandardDeviations();
+    pAnnualCostsStatistics.writeToOutput(pResultWriter);
 }
 
 } // namespace Antares::Solver::Simulation

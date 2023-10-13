@@ -27,7 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_WIND_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_WIND_TIMESERIES_H__
 
-#include "../../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include "../../fwd.h"
 
 namespace Antares
@@ -40,11 +40,15 @@ namespace Data
 class DataSeriesWind
 {
 public:
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     bool forceReload(bool reload = false) const;
 
     void markAsModified() const;
+
+    double* getColumn(unsigned int year) const;
+    double getCoefficient(const unsigned int year, const unsigned int hour) const;
+    unsigned int getIndex(unsigned int year) const;
 
 public:
     /*!
@@ -52,12 +56,12 @@ public:
     **
     ** Merely a matrix of TimeSeriesCount * 8760 values
     */
-    Matrix<double, Yuni::sint32> timeSeries;
+    Matrix<double, int32_t> timeSeries;
 
     /*!
     ** \brief Monte-Carlo
     */
-    Matrix<Yuni::uint32> timeseriesNumbers;
+    Matrix<uint32_t> timeseriesNumbers;
 
 }; /* class DataSeriesWind */
 
@@ -89,7 +93,7 @@ int DataSeriesWindSaveToFolder(DataSeriesWind* d, const AreaName& areaID, const 
 /*!
 ** \brief Get the size (bytes) in memory occupied by a `DataSeriesWind` structure
 */
-Yuni::uint64 DataSeriesWindMemoryUsage(DataSeriesWind* w);
+uint64_t DataSeriesWindMemoryUsage(DataSeriesWind* w);
 
 } // namespace Data
 } // namespace Antares

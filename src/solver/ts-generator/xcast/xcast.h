@@ -30,7 +30,7 @@
 #include <yuni/yuni.h>
 #include <antares/study/fwd.h>
 #include <antares/mersenne-twister/mersenne-twister.h>
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 #include "studydata.h"
 #include <yuni/core/noncopyable.h>
 
@@ -74,7 +74,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    XCast(Data::Study& study, Data::TimeSeries ts, IResultWriter::Ptr writer);
+    XCast(Data::Study& study, Data::TimeSeriesType ts, IResultWriter& writer);
     /*!
     ** \brief Destructor
     */
@@ -104,7 +104,7 @@ public:
     //! The current year
     uint year;
     //! The time-series type
-    const Data::TimeSeries timeSeriesType;
+    const Data::TimeSeriesType timeSeriesType;
 
     //! The random generator to use
     MersenneTwister* random;
@@ -250,7 +250,7 @@ private:
     //! Name of the current timeseries
     Yuni::CString<32, false> pTSName;
 
-    IResultWriter::Ptr pWriter;
+    IResultWriter& pWriter;
 }; // class XCast
 
 } // namespace XCast

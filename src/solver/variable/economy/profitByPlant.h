@@ -132,32 +132,6 @@ public:
         };
     };
 
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-    {
-        if (u.area)
-        {
-            for (unsigned int i = 0; i != u.area->thermal.list.size(); ++i)
-            {
-                Solver::Variable::IntermediateValues::EstimateMemoryUsage(u);
-                ResultsType::EstimateMemoryUsage(u);
-                u.requiredMemoryForOutput += sizeof(Solver::Variable::IntermediateValues);
-                u.requiredMemoryForOutput += sizeof(typename VCardType::ResultsType);
-                u.requiredMemoryForOutput += sizeof(void*) * 2;
-
-                // year-by-year
-                if (!u.gatheringInformationsForInput)
-                {
-                    if (u.study.parameters.yearByYear)
-                    {
-                        for (unsigned int i = 0; i != u.years; ++i)
-                            u.takeIntoConsiderationANewTimeserieForDiskOutput(false);
-                    }
-                }
-            }
-        }
-        NextType::EstimateMemoryUsage(u);
-    }
-
 public:
     ProfitByPlant() : pValuesForTheCurrentYear(nullptr), pNbClustersOfArea(0)
     {
@@ -303,7 +277,7 @@ public:
             auto* cluster = state.area->thermal.clusters[clusterIndex];
             double hourlyClusterProduction
               = thermal[area->index].thermalClustersProductions[clusterIndex];
-            uint tsIndex = state.timeseriesIndex->ThermiqueParPalier[cluster->areaWideIndex];
+            uint tsIndex = cluster->series->timeseriesNumbers[0][state.year];
             // Thermal cluster profit
             pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
               = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])

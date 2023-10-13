@@ -21,7 +21,7 @@ namespace Thread
 ** \warning This value should be considered as an arbitrary value
 **  (see implementation of pthread_self / GetCurrentThreadId)
 */
-YUNI_DECL uint64 ID();
+YUNI_DECL uint64_t ID();
 
 } // namespace Thread
 } // namespace Yuni

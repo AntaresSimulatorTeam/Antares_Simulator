@@ -28,10 +28,10 @@
 #include <string>
 #include <sstream>
 #include <yuni/yuni.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "xcast.h"
 #include "predicate.hxx"
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/fatal-error.h>
 #include <limits>
 #include <yuni/io/directory.h>
@@ -59,7 +59,7 @@ enum
     mu = Data::XCast::dataCoeffMu,
 };
 
-XCast::XCast(Data::Study& study, Data::TimeSeries ts, IResultWriter::Ptr writer) :
+XCast::XCast(Data::Study& study, Data::TimeSeriesType ts, IResultWriter& writer) :
  study(study),
  timeSeriesType(ts),
  pNeverInitialized(true),
@@ -98,7 +98,7 @@ void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, Predicat
             std::string buffer;
             predicate.matrix(area).saveToBuffer(buffer);
 
-            pWriter->addEntryFromBuffer(filename.c_str(), buffer);
+            pWriter.addEntryFromBuffer(filename.c_str(), buffer);
 
             ++progression;
         });

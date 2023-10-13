@@ -27,7 +27,7 @@
 #include "opt_time_writer.h"
 
 OptimizationStatisticsWriter::OptimizationStatisticsWriter(
-  Antares::Solver::IResultWriter::Ptr writer,
+  Antares::Solver::IResultWriter& writer,
   uint year) :
  pWriter(writer)
 {
@@ -49,6 +49,5 @@ void OptimizationStatisticsWriter::addTime(uint week, double opt_1_ms, double op
 
 void OptimizationStatisticsWriter::finalize()
 {
-    if (pWriter)
-        pWriter->addEntryFromBuffer(pFilename.c_str(), pBuffer);
+    pWriter.addEntryFromBuffer(pFilename.c_str(), pBuffer);
 }

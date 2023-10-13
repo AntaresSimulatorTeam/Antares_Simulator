@@ -35,6 +35,7 @@
 #include <sstream> // std::ostringstream
 #include <cassert>
 #include <climits>
+#include <optional>
 
 #include "study.h"
 #include "runtime.h"
@@ -44,15 +45,14 @@
 #include "area/constants.h"
 
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
-#include <math.h>                 // For use of floor(...) and ceil(...)
-#include <writer_factory.h>
+#include <cmath>                 // For use of floor(...) and ceil(...)
+#include <antares/writer/writer_factory.h>
 #include "ui-runtimeinfos.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 //! Clear then shrink a string
 template<class StringT>
@@ -192,7 +192,7 @@ void Study::reduceMemoryUsage()
     ClearAndShrink(bufferLoadingTS);
 }
 
-uint64 Study::memoryUsage() const
+uint64_t Study::memoryUsage() const
 {
     return folder.capacity()
            // Folders paths
@@ -564,7 +564,7 @@ bool Study::checkHydroHotStart()
 bool Study::initializeRuntimeInfos()
 {
     delete runtime;
-    runtime = new StudyRuntimeInfos(maxNbYearsInParallel);
+    runtime = new StudyRuntimeInfos();
     return runtime->loadFromStudy(*this);
 }
 
@@ -625,7 +625,7 @@ YString StudyCreateOutputPath(StudyMode mode,
                               ResultFormat fmt,
                               const YString& outputRoot,
                               const YString& label,
-                              Yuni::sint64 startTime)
+                              int64_t startTime)
 {
     auto suffix = getOutputSuffix(fmt);
 
@@ -694,7 +694,7 @@ void Study::prepareOutput()
     logs.info() << "  Output folder : " << folderOutput;
 }
 
-void Study::saveAboutTheStudy()
+void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
 {
     String path;
     path.reserve(1024);
@@ -711,7 +711,7 @@ void Study::saveAboutTheStudy()
         std::string writeBuffer;
         ini.saveToString(writeBuffer);
 
-        resultWriter->addEntryFromBuffer(path.c_str(), writeBuffer);
+        resultWriter.addEntryFromBuffer(path.c_str(), writeBuffer);
     }
 
     // Write parameters.ini
@@ -720,7 +720,7 @@ void Study::saveAboutTheStudy()
         dest << "about-the-study" << SEP << "parameters.ini";
 
         buffer.clear() << folderSettings << SEP << "generaldata.ini";
-        resultWriter->addEntryFromFile(dest.c_str(), buffer.c_str());
+        resultWriter.addEntryFromFile(dest.c_str(), buffer.c_str());
     }
 
     // antares-output.info
@@ -737,7 +737,7 @@ void Study::saveAboutTheStudy()
     f << "\ntimestamp = " << pStartTime;
     f << "\n\n";
     auto output = f.str();
-    resultWriter->addEntryFromBuffer(path.c_str(), output);
+    resultWriter.addEntryFromBuffer(path.c_str(), output);
 
     if (usedByTheSolver and !parameters.noOutput)
     {
@@ -751,7 +751,7 @@ void Study::saveAboutTheStudy()
                     buffer << "@ " << i->first << "\r\n";
             }
             areas.each([&](const Data::Area& area) { buffer << area.name << "\r\n"; });
-            resultWriter->addEntryFromBuffer(path.c_str(), buffer);
+            resultWriter.addEntryFromBuffer(path.c_str(), buffer);
         }
 
         // Write all available links as a reminder
@@ -759,12 +759,12 @@ void Study::saveAboutTheStudy()
             path.clear() << "about-the-study" << SEP << "links.txt";
             Yuni::Clob buffer;
             areas.saveLinkListToBuffer(buffer);
-            resultWriter->addEntryFromBuffer(path.c_str(), buffer);
+            resultWriter.addEntryFromBuffer(path.c_str(), buffer);
         }
     }
 }
 
-Area* Study::areaAdd(const AreaName& name)
+Area* Study::areaAdd(const AreaName& name, bool updateMode)
 {
     if (name.empty())
         return nullptr;
@@ -781,9 +781,17 @@ Area* Study::areaAdd(const AreaName& name)
     // The new scope is mandatory to rebuild the correlation matrices
     // and the scenario builder data
     {
-        CorrelationUpdater updater(*this);
-        ScenarioBuilderUpdater updaterSB(*this);
-
+        // These are only useful for the GUI, remove afterwards
+        // We need the constructors to be called here, and the destructors
+        // to be called at the end of the scope. Using std::optional is merely
+        // a means to that end.
+        std::optional<CorrelationUpdater> updater;
+        std::optional<ScenarioBuilderUpdater> updaterSB;
+        if (updateMode)
+        {
+            updater.emplace(*this);
+            updaterSB.emplace(*this);
+        }
         // Adding an area
         AreaName newName;
         if (not modifyAreaNameIfAlreadyTaken(newName, name) or newName.empty())
@@ -1002,7 +1010,7 @@ bool Study::areaRename(Area* area, AreaName newName)
 bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 {
     // A name must not be empty
-    if (!cluster or !newName.empty())
+    if (!cluster or newName.empty())
         return false;
 
     String beautifyname;
@@ -1140,7 +1148,7 @@ void Study::ensureDataAreLoadedForAllBindingConstraints()
 
 namespace // anonymous
 {
-template<enum TimeSeries T>
+template<enum TimeSeriesType T>
 struct TS final
 {
     static bool IsNeeded(const Study& s, const uint y)
@@ -1534,11 +1542,5 @@ void Study::computePThetaInfForThermalClusters() const
     }
 }
 
-void Study::prepareWriter(Benchmarking::IDurationCollector* duration_collector)
-{
-    resultWriter = Solver::resultWriterFactory(
-      parameters.resultFormat, folderOutput, pQueueService, duration_collector);
-}
+} // namespace Antares::Data
 
-} // namespace Data
-} // namespace Antares

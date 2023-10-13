@@ -32,7 +32,7 @@
 #include <yuni/core/static/types.h>
 #include <yuni/io/directory.h>
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 #include "../endoflist.h"
 #include "../categories.h"
@@ -217,7 +217,7 @@ public:
         SurveyReportBuilder<GlobalT, NextT, nextDataLevel>::Run(list, results, numSpace);
     }
 
-    static void RunDigest(const ListType& list, SurveyResults& results, IResultWriter::Ptr writer)
+    static void RunDigest(const ListType& list, SurveyResults& results, IResultWriter& writer)
     {
         logs.info() << "Exporting digest...";
         logs.debug() << " . Digest, truncating file";
@@ -253,7 +253,7 @@ public:
         // THIS FILE IS DEPRECATED !!!
         YString digestFileName;
         digestFileName << results.data.originalOutput << SEP << "grid" << SEP << "digest.txt";
-        writer->addEntryFromBuffer(digestFileName.c_str(), digestBuffer);
+        writer.addEntryFromBuffer(digestFileName.c_str(), digestBuffer);
     }
 
 private:

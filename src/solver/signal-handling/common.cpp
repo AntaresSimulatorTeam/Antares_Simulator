@@ -1,5 +1,5 @@
-#include <antares/logs.h>
-#include <antares/study.h>
+#include <antares/logs/logs.h>
+#include <antares/study/study.h>
 #include "common.h"
 
 using namespace Antares;

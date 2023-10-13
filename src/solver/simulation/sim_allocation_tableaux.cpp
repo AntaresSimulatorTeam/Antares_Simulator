@@ -30,7 +30,6 @@
 #include "simulation.h"
 #include "sim_structure_donnees.h"
 #include "sim_structure_probleme_economique.h"
-#include "sim_structure_probleme_adequation.h"
 #include "sim_extern_variables_globales.h"
 
 using namespace Antares;
@@ -40,40 +39,11 @@ static void AllocateResultsForEconomicMode(const Data::Study& study)
     transitMoyenInterconnexionsRecalculQuadratique.resize(study.runtime->interconnectionsCount());
 
     for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
-        transitMoyenInterconnexionsRecalculQuadratique[i]
-            .assign(study.runtime->nbHoursPerYear , 0.);
+        transitMoyenInterconnexionsRecalculQuadratique[i].assign(HOURS_PER_YEAR, 0.);
 }
 
 void SIM_AllocationTableaux(const Data::Study& study)
 {
-    ValeursGenereesParPays.resize(study.maxNbYearsInParallel);
-    NumeroChroniquesTireesParPays.resize(study.maxNbYearsInParallel);
-
-    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
-    {
-        ValeursGenereesParPays[numSpace].resize(study.areas.size());
-        NumeroChroniquesTireesParPays[numSpace].resize(study.areas.size());
-        for (uint i = 0; i < study.areas.size(); ++i)
-        {
-            auto& area = *study.areas.byIndex[i];
-
-            NumeroChroniquesTireesParPays[numSpace][i].ThermiqueParPalier
-                .assign(area.thermal.clusterCount(), 0);
-            NumeroChroniquesTireesParPays[numSpace][i].RenouvelableParPalier
-                .assign(area.renewable.clusterCount(), 0);
-            ValeursGenereesParPays[numSpace][i].HydrauliqueModulableQuotidien
-                .assign(study.runtime->nbDaysPerYear,0 );
-            ValeursGenereesParPays[numSpace][i].AleaCoutDeProductionParPalier
-                .assign(area.thermal.clusterCount(), 0.);
-            if (area.hydro.reservoirManagement)
-            {
-                ValeursGenereesParPays[numSpace][i].NiveauxReservoirsDebutJours
-                    .assign(study.runtime->nbDaysPerYear, 0.);
-                ValeursGenereesParPays[numSpace][i].NiveauxReservoirsFinJours
-                    .assign(study.runtime->nbDaysPerYear, 0.);
-            }
-        }
-    }
     NumeroChroniquesTireesParInterconnexion.resize(study.maxNbYearsInParallel);
 
     const uint intercoCount = study.areas.areaLinkCount();

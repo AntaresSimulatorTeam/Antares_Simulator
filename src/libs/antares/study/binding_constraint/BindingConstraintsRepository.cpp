@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 #include "BindingConstraint.h"
-#include "antares/study.h"
+#include <antares/study/study.h>
 #include "BindingConstraintLoader.h"
 #include "BindingConstraintSaver.h"
 
@@ -205,11 +205,11 @@ bool BindingConstraintsRepository::internalSaveToFolder(BindingConstraintSaver::
     if (constraints_.empty())
     {
         logs.info() << "No binding constraint to export.";
-        if (!IO::Directory::Create(env.folder))
+        if (!Yuni::IO::Directory::Create(env.folder))
             return false;
         // stripping the file
         env.folder << Yuni::IO::Separator << "bindingconstraints.ini";
-        return IO::File::CreateEmptyFile(env.folder);
+        return Yuni::IO::File::CreateEmptyFile(env.folder);
     }
 
     if (constraints_.size() == 1)
@@ -217,14 +217,14 @@ bool BindingConstraintsRepository::internalSaveToFolder(BindingConstraintSaver::
     else
         logs.info() << "Exporting " << constraints_.size() << " binding constraints...";
 
-    if (!IO::Directory::Create(env.folder))
+    if (!Yuni::IO::Directory::Create(env.folder))
         return false;
 
     IniFile ini;
     bool ret = true;
     uint index = 0;
     auto end = constraints_.end();
-    ShortString64 text;
+    Yuni::ShortString64 text;
 
     for (auto i = constraints_.begin(); i != end; ++i, ++index)
     {
@@ -242,14 +242,13 @@ void BindingConstraintsRepository::reverseWeightSign(const AreaLink* lnk)
     each([&lnk](BindingConstraint &constraint) { constraint.reverseWeightSign(lnk); });
 }
 
-uint64 BindingConstraintsRepository::memoryUsage() const
+uint64_t BindingConstraintsRepository::memoryUsage() const
 {
-    uint64 m = sizeof(BindingConstraintsRepository);
+    uint64_t m = sizeof(BindingConstraintsRepository);
     for (const auto & i : constraints_)
         m += i->memoryUsage();
     return m;
 }
-
 
 namespace // anonymous
 {
@@ -321,25 +320,6 @@ BindingConstraintsRepository::iterator BindingConstraintsRepository::end()
 BindingConstraintsRepository::const_iterator BindingConstraintsRepository::end() const
 {
     return constraints_.end();
-}
-
-
-void BindingConstraintsRepository::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    // Disabled by the optimization preferences
-    if (!u.study.parameters.include.constraints)
-        return;
-
-        // each constraint...
-    for (const auto &constraint: constraints_) {
-        u.requiredMemoryForInput += sizeof(void *) * 2;
-        uint count = (constraint->operatorType() == BindingConstraint::opBoth) ? 2 : 1;
-        for (uint constraints_counter = 0; constraints_counter != count; ++constraints_counter) {
-            u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * constraint->linkCount();
-            u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * constraint->clusterCount();
-            Matrix<>::EstimateMemoryUsage(u, 1, HOURS_PER_YEAR);
-        }
-    }
 }
 
 void BindingConstraintsRepository::markAsModified() const

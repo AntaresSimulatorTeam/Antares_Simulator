@@ -29,7 +29,6 @@
 #include <yuni/io/file.h>
 #include "series.h"
 #include "../../study.h"
-#include "../../memory-usage.h"
 
 using namespace Yuni;
 
@@ -73,6 +72,21 @@ int DataSeriesWindSaveToFolder(DataSeriesWind* d, const AreaName& areaID, const 
     return ret;
 }
 
+double* DataSeriesWind::getColumn(unsigned int year) const
+{
+    return timeSeries[getIndex(year)];
+}
+
+double DataSeriesWind::getCoefficient(const unsigned int year, const unsigned int hour) const
+{
+    return timeSeries[getIndex(year)][hour];
+}
+
+unsigned int DataSeriesWind::getIndex(unsigned int year) const
+{
+    return (timeSeries.width != 1) ? timeseriesNumbers[0][year] : 0;
+}
+
 bool DataSeriesWind::forceReload(bool reload) const
 {
     return timeSeries.forceReload(reload);
@@ -81,16 +95,6 @@ bool DataSeriesWind::forceReload(bool reload) const
 void DataSeriesWind::markAsModified() const
 {
     timeSeries.markAsModified();
-}
-
-void DataSeriesWind::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += sizeof(DataSeriesWind);
-    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-    timeSeries.estimateMemoryUsage(u,
-                               0 != (timeSeriesWind & u.study.parameters.timeSeriesToGenerate),
-                                    u.study.parameters.nbTimeSeriesWind,
-                                    HOURS_PER_YEAR);
 }
 
 } // namespace Data

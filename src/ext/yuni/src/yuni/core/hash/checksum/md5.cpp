@@ -97,7 +97,7 @@ namespace Checksum
 namespace // anonymous
 {
 typedef unsigned char MD5TypeByte; // 8-bit byte
-typedef uint32 MD5TypeUInt32;      // 32-bit word
+typedef uint32_t MD5TypeUInt32;      // 32-bit word
 
 /*!
  * \brief Define the state of the MD5 Algorithm
@@ -376,7 +376,7 @@ void md5DigestToString(String& s, MD5TypeByte digest[16])
 
 } // anonymous namespace
 
-const String& MD5::fromRawData(const void* rawdata, uint64 size)
+const String& MD5::fromRawData(const void* rawdata, uint64_t size)
 {
     pValue.clear();
     if (!rawdata)
@@ -408,7 +408,7 @@ const String& MD5::fromFile(const String& filename)
         md5ImplInit(&state);
 
         char buffer[1024];
-        uint64 len = 0u;
+        uint64_t len = 0u;
 
         while (0 != (len = stream.read((char*)buffer, 1024u)))
             md5ImplAppend(

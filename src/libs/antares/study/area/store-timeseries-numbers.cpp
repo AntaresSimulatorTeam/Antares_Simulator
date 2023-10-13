@@ -25,32 +25,31 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <i_writer.h>
-#include "../study.h"
-#include "../../logs.h"
+#include <antares/writer/i_writer.h>
+#include <antares/study/study.h>
+#include <antares/logs/logs.h>
 
 #include "store-timeseries-numbers.h"
 
 using namespace Yuni;
 
 #define SEP IO::Separator
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 namespace // anonymous
 {
 struct TSNumbersPredicate
 {
-    uint32 operator()(uint32 value) const
+    uint32_t operator()(uint32_t value) const
     {
         return value + 1;
     }
 };
 } // anonymous namespace
 
-static void genericStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer,
-                                          const Matrix<Yuni::uint32>& timeseriesNumbers,
+static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
+                                          const Matrix<uint32_t>& timeseriesNumbers,
                                           const String& id,
                                           const String& directory)
 {
@@ -65,41 +64,41 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer,
                                    predicate, // predicate
                                    true);     // save even if all coeffs are zero
 
-    writer->addEntryFromBuffer(path.c_str(), buffer);
+    writer.addEntryFromBuffer(path.c_str(), buffer);
 }
 
-void storeTimeseriesNumbersForLoad(Solver::IResultWriter::Ptr writer, const Area& area)
+void storeTimeseriesNumbersForLoad(Solver::IResultWriter& writer, const Area& area)
 {
     genericStoreTimeseriesNumbers(writer, area.load.series->timeseriesNumbers, area.id, "load");
 }
 
-void storeTimeseriesNumbersForSolar(Solver::IResultWriter::Ptr writer, const Area& area)
+void storeTimeseriesNumbersForSolar(Solver::IResultWriter& writer, const Area& area)
 {
     genericStoreTimeseriesNumbers(writer, area.solar.series->timeseriesNumbers, area.id, "solar");
 }
 
-void storeTimeseriesNumbersForHydro(Solver::IResultWriter::Ptr writer, const Area& area)
+void storeTimeseriesNumbersForHydro(Solver::IResultWriter& writer, const Area& area)
 {
     genericStoreTimeseriesNumbers(writer, area.hydro.series->timeseriesNumbers, area.id, "hydro");
 }
 
-void storeTimeseriesNumbersForWind(Solver::IResultWriter::Ptr writer, const Area& area)
+void storeTimeseriesNumbersForWind(Solver::IResultWriter& writer, const Area& area)
 {
     genericStoreTimeseriesNumbers(writer, area.wind.series->timeseriesNumbers, area.id, "wind");
 }
 
-void storeTimeseriesNumbersForThermal(Solver::IResultWriter::Ptr writer, const Area& area)
+void storeTimeseriesNumbersForThermal(Solver::IResultWriter& writer, const Area& area)
 {
     area.thermal.list.storeTimeseriesNumbers(writer);
     area.thermal.mustrunList.storeTimeseriesNumbers(writer);
 }
 
-void storeTimeseriesNumbersForRenewable(Solver::IResultWriter::Ptr writer, const Area& area)
+void storeTimeseriesNumbersForRenewable(Solver::IResultWriter& writer, const Area& area)
 {
     area.renewable.list.storeTimeseriesNumbers(writer);
 }
 
-void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter::Ptr writer, const Area& area)
+void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writer, const Area& area)
 {
     // No links originating from this area
     // do not create an empty directory
@@ -117,5 +116,5 @@ void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter::Ptr 
             value->storeTimeseriesNumbers(writer);
     }
 }
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

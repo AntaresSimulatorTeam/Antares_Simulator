@@ -34,11 +34,10 @@
 #include <cassert>
 #include <boost/algorithm/string/case_conv.hpp>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "cluster.h"
 #include <antares/inifile/inifile.h>
-#include "../../../logs.h"
-#include "../../../utils.h"
+#include <antares/logs/logs.h>
+#include <antares/utils/utils.h>
 
 using namespace Yuni;
 using namespace Antares;
@@ -643,13 +642,13 @@ const char* Data::ThermalCluster::GroupName(enum ThermalDispatchableGroup grp)
     return "";
 }
 
-uint64 ThermalCluster::memoryUsage() const
+uint64_t ThermalCluster::memoryUsage() const
 {
-    uint64 amount = sizeof(ThermalCluster) + modulation.memoryUsage();
+    uint64_t amount = sizeof(ThermalCluster) + modulation.memoryUsage();
     if (prepro)
         amount += prepro->memoryUsage();
     if (series)
-        amount += DataSeriesMemoryUsage(series);
+        amount += series->memoryUsage();
     amount += ecoInput.memoryUsage();
     return amount;
 }
@@ -771,8 +770,10 @@ double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) cons
      inside -> that is used for all (e.g.10) TS*/
 }
 
-double ThermalCluster::getMarketBidCost(uint serieIndex, uint hourInTheYear) const
+double ThermalCluster::getMarketBidCost(uint hourInTheYear, uint year) const
 {
+    uint serieIndex = (series->timeSeries.width == 1) ? 0 : series->timeseriesNumbers[0][year];
+
     double mod = modulation[thermalModulationMarketBid][serieIndex];
 
     if (costgeneration == Data::setManually)

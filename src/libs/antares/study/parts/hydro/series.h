@@ -27,7 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 
-#include "../../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include "../../fwd.h"
 
 namespace Antares
@@ -93,17 +93,19 @@ public:
     /*!
     ** \brief Get the size (bytes) in memory occupied by a `DataSeriesHydro` structure
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
     /*!
     ** \brief Try to estimate the amount of memory required for launching a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
     //@}
 
     /*!
     ** \brief Check TS number for Minimum Generation and logs error if necessary
     */
     void checkMinGenTsNumber(Study& s, const AreaName& areaID);
+
+    unsigned int getIndex(unsigned int year) const;
 
 public:
     /*!
@@ -112,7 +114,7 @@ public:
 
     ** (it was DAYS_PER_YEAR before 3.9)
     */
-    Matrix<double, Yuni::sint32> ror;
+    Matrix<double, int32_t> ror;
 
     /*!
     ** \brief Mod (MW)
@@ -120,14 +122,14 @@ public:
     ** Merely a matrix of TimeSeriesCount * 365 values
     ** This matrix is not used in `adequation` mode.
     */
-    Matrix<double, Yuni::sint32> storage;
+    Matrix<double, int32_t> storage;
 
     /*!
     ** \brief Minimum Generation (MW)
     **
     ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
-    Matrix<double, Yuni::sint32> mingen;
+    Matrix<double, int32_t> mingen;
 
     /*!
     ** \brief The number of time-series
@@ -142,7 +144,7 @@ public:
     /*!
     ** \brief Monte-Carlo
     */
-    Matrix<Yuni::uint32> timeseriesNumbers;
+    Matrix<uint32_t> timeseriesNumbers;
 
 }; // class DataSeriesHydro
 

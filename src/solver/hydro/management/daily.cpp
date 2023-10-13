@@ -32,7 +32,7 @@
 #include <yuni/io/directory.h>
 #include "management.h"
 #include <antares/fatal-error.h>
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 #include "../daily/h2o_j_donnees_mensuelles.h"
 #include "../daily/h2o_j_fonctions.h"
 #include "../daily2/h2o2_j_donnees_mensuelles.h"
@@ -81,8 +81,7 @@ enum
 
 struct DebugData
 {
-    using PerArea = HydroManagement::PerArea;
-    using InflowsType = Matrix<double, Yuni::sint32>::ColumnType;
+    using InflowsType = Matrix<double, int32_t>::ColumnType;
     using MaxPowerType = Matrix<double, double>::ColumnType;
     using ReservoirLevelType = Matrix<double>::ColumnType;
 
@@ -98,9 +97,9 @@ struct DebugData
     std::array<double, 12> CoutTotal{0};
     std::array<double, 12> previousMonthWaste{0};
 
-    Solver::IResultWriter::Ptr pWriter;
-    const PerArea& data;
-    const VALEURS_GENEREES_PAR_PAYS& valgen;
+    Solver::IResultWriter& pWriter;
+    const TmpDataByArea& data;
+    const VENTILATION_HYDRO_RESULTS_BY_AREA& ventilationResults;
     const InflowsType& srcinflows;
     const MaxPowerType& maxP;
     const MaxPowerType& maxE;
@@ -108,9 +107,9 @@ struct DebugData
     const ReservoirLevelType& lowLevel;
     const double reservoirCapacity;
 
-    DebugData(Solver::IResultWriter::Ptr writer,
-              const PerArea& data,
-              const VALEURS_GENEREES_PAR_PAYS& valgen,
+    DebugData(Solver::IResultWriter& writer,
+              const TmpDataByArea& data,
+              const VENTILATION_HYDRO_RESULTS_BY_AREA& ventilationResults,
               const InflowsType& srcinflows,
               const MaxPowerType& maxP,
               const MaxPowerType& maxE,
@@ -119,7 +118,7 @@ struct DebugData
               double reservoirCapacity) :
      pWriter(writer),
      data(data),
-     valgen(valgen),
+     ventilationResults(ventilationResults),
      srcinflows(srcinflows),
      maxP(maxP),
      maxE(maxE),
@@ -145,13 +144,13 @@ struct DebugData
         buffer << "\tTurbine\t\t\tOPP\t\t\t\tTurbine Cible\tDLE\t\t\t\tDLN\n";
         for (uint day = 0; day != 365; ++day)
         {
-            double value = valgen.HydrauliqueModulableQuotidien[day];
+            double value = ventilationResults.HydrauliqueModulableQuotidien[day];
             buffer << day << '\t' << value << '\t' << OPP[day] << '\t' << DailyTargetGen[day]
                    << '\t' << data.DLE[day] << '\t' << data.DLN[day];
             buffer << '\n';
         }
         auto buffer_str = buffer.str();
-        pWriter->addEntryFromBuffer(path.str(), buffer_str);
+        pWriter.addEntryFromBuffer(path.str(), buffer_str);
     }
 
     void writeDailyDebugData(const Date::Calendar& calendar,
@@ -189,9 +188,9 @@ struct DebugData
             uint dayMonth = 1;
             for (uint day = firstDay; day != endDay; ++day)
             {
-                double turbines = valgen.HydrauliqueModulableQuotidien[day] / reservoirCapacity;
-                double niveauDeb = valgen.NiveauxReservoirsDebutJours[day];
-                double niveauFin = valgen.NiveauxReservoirsFinJours[day];
+                double turbines = ventilationResults.HydrauliqueModulableQuotidien[day] / reservoirCapacity;
+                double niveauDeb = ventilationResults.NiveauxReservoirsDebutJours[day];
+                double niveauFin = ventilationResults.NiveauxReservoirsFinJours[day];
                 double apports = srcinflows[day] / reservoirCapacity;
                 double turbMax = maxP[day] * maxE[day] / reservoirCapacity;
                 double turbCible = dailyTargetGen[day] / reservoirCapacity;
@@ -219,7 +218,7 @@ struct DebugData
             }
         }
         auto buffer_str = buffer.str();
-        pWriter->addEntryFromBuffer(path.str(), buffer_str);
+        pWriter.addEntryFromBuffer(path.str(), buffer_str);
     }
 };
 
@@ -229,16 +228,14 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                                                             uint numSpace)
 {
     uint z = area.index;
-    assert(z < study.areas.size());
-
-    auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
+    assert(z < areas_.size());
 
     auto& inflowsmatrix = area.hydro.series->storage;
 
-    auto tsIndex = (uint)ptchro.Hydraulique;
+    auto tsIndex = area.hydro.series->getIndex(y);
     auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
 
-    auto& data = pAreas[numSpace][z];
+    auto& data = tmpDataByArea_[numSpace][z];
 
     auto& scratchpad = area.scratchpad[numSpace];
 
@@ -257,15 +254,15 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     auto const& maxP = maxPower[Data::PartHydro::genMaxP];
     auto const& maxE = maxPower[Data::PartHydro::genMaxE];
 
-    auto& valgen = ValeursGenereesParPays[numSpace][z];
+    auto& ventilationResults = ventilationResults_[numSpace][z];
 
     std::shared_ptr<DebugData> debugData(nullptr);
 
-    if (study.parameters.hydroDebug && study.resultWriter)
+    if (parameters_.hydroDebug)
     {
-        debugData = std::make_shared<DebugData>(study.resultWriter,
+        debugData = std::make_shared<DebugData>(resultWriter_,
                                                 data,
-                                                valgen,
+                                                ventilationResults,
                                                 srcinflows,
                                                 maxP,
                                                 maxE,
@@ -276,7 +273,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     for (uint month = 0; month != 12; ++month)
     {
-        auto daysPerMonth = study.calendar.months[month].days;
+        auto daysPerMonth = calendar_.months[month].days;
         assert(daysPerMonth <= maxOPP);
         assert(daysPerMonth <= maxDailyTargetGen);
         assert(daysPerMonth + dayYear - 1 < maxPower.height);
@@ -301,7 +298,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
         dayYear = 0;
         for (uint month = 0; month != 12; ++month)
         {
-            auto daysPerMonth = study.calendar.months[month].days;
+            auto daysPerMonth = calendar_.months[month].days;
             for (uint day = 0; day != daysPerMonth; ++day)
             {
                 dailyTargetGen[dayYear + day] = srcinflows[dayYear + day];
@@ -316,8 +313,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
         dayYear = 0;
         for (uint month = 0; month != 12; ++month)
         {
-            uint realmonth = study.calendar.months[month].realmonth;
-            auto daysPerMonth = study.calendar.months[month].days;
+            uint realmonth = calendar_.months[month].realmonth;
+            auto daysPerMonth = calendar_.months[month].days;
 
             if (area.hydro.followLoadModulations)
             {
@@ -368,7 +365,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     {
         for (uint month = 0; month != 12; ++month)
         {
-            auto daysPerMonth = study.calendar.months[month].days;
+            auto daysPerMonth = calendar_.months[month].days;
 
             for (uint day = 0; day != daysPerMonth; ++day)
             {
@@ -383,35 +380,35 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
         for (uint month = 0; month != 12; ++month)
         {
             uint realmonth = (initReservoirLvlMonth + month) % 12;
-            uint simulationMonth = study.calendar.mapping.months[realmonth];
+            uint simulationMonth = calendar_.mapping.months[realmonth];
 
-            auto daysPerMonth = study.calendar.months[simulationMonth].days;
+            auto daysPerMonth = calendar_.months[simulationMonth].days;
 
-            uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
+            uint firstDay = calendar_.months[simulationMonth].daysYear.first;
             uint endDay = firstDay + daysPerMonth;
 
-            DONNEES_MENSUELLES& problem = *H2O_J_Instanciation();
-            H2O_J_AjouterBruitAuCout(&problem);
-            problem.NombreDeJoursDuMois = (int)daysPerMonth;
-            problem.TurbineDuMois = data.MOG[realmonth];
+            DONNEES_MENSUELLES* problem = H2O_J_Instanciation();
+            H2O_J_AjouterBruitAuCout(*problem);
+            problem->NombreDeJoursDuMois = (int)daysPerMonth;
+            problem->TurbineDuMois = data.MOG[realmonth];
 
             uint dayMonth = 0;
             for (uint day = firstDay; day != endDay; ++day)
             {
-                problem.TurbineMax[dayMonth] = maxP[day] * maxE[day];
-                problem.TurbineMin[dayMonth] = data.dailyMinGen[day];
-                problem.TurbineCible[dayMonth] = dailyTargetGen[day];
+                problem->TurbineMax[dayMonth] = maxP[day] * maxE[day];
+                problem->TurbineMin[dayMonth] = data.dailyMinGen[day];
+                problem->TurbineCible[dayMonth] = dailyTargetGen[day];
                 dayMonth++;
             }
 
-            H2O_J_OptimiserUnMois(&problem);
-            switch (problem.ResultatsValides)
+            H2O_J_OptimiserUnMois(problem);
+            switch (problem->ResultatsValides)
             {
             case OUI:
                 dayMonth = 0;
                 for (uint day = firstDay; day != endDay; ++day)
                 {
-                    valgen.HydrauliqueModulableQuotidien[day] = problem.Turbine[dayMonth];
+                    ventilationResults.HydrauliqueModulableQuotidien[day] = problem->Turbine[dayMonth];
                     dayMonth++;
                 }
                 break;
@@ -423,13 +420,13 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 break;
             }
 
-            H2O_J_Free(&problem);
+            H2O_J_Free(problem);
 
 #ifndef NDEBUG
             for (uint day = firstDay; day != endDay; ++day)
             {
-                assert(!Math::NaN(valgen.HydrauliqueModulableQuotidien[day]));
-                assert(!Math::Infinite(valgen.HydrauliqueModulableQuotidien[day]));
+                assert(!Math::NaN(ventilationResults.HydrauliqueModulableQuotidien[day]));
+                assert(!Math::Infinite(ventilationResults.HydrauliqueModulableQuotidien[day]));
             }
 #endif
         }
@@ -446,19 +443,19 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
         double monthInitialLevel = data.MOL[initReservoirLvlMonth];
         double wasteFromPreviousMonth = 0.;
 
-        Hydro_problem_costs h2o2_optim_costs(study);
+        Hydro_problem_costs h2o2_optim_costs(parameters_);
 
         for (uint month = 0; month != 12; ++month)
         {
             uint realmonth = (initReservoirLvlMonth + month) % 12;
-            uint simulationMonth = study.calendar.mapping.months[realmonth];
+            uint simulationMonth = calendar_.mapping.months[realmonth];
 
-            auto daysPerMonth = study.calendar.months[simulationMonth].days;
+            auto daysPerMonth = calendar_.months[simulationMonth].days;
 
-            uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
+            uint firstDay = calendar_.months[simulationMonth].daysYear.first;
             uint endDay = firstDay + daysPerMonth;
 
-            DONNEES_MENSUELLES_ETENDUES& problem = *H2O2_J_Instanciation();
+            DONNEES_MENSUELLES_ETENDUES problem = H2O2_J_Instanciation();
             H2O2_J_apply_costs(h2o2_optim_costs, problem);
 
             if (debugData)
@@ -475,7 +472,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             uint dayMonth = 0;
             for (uint day = firstDay; day != endDay; ++day)
             {
-                problem.TurbineMax[dayMonth] = maxP[day] * maxE[day] / reservoirCapacity;       
+                problem.TurbineMax[dayMonth] = maxP[day] * maxE[day] / reservoirCapacity;
                 problem.TurbineMin[dayMonth] = data.dailyMinGen[day] / reservoirCapacity;
 
                 problem.TurbineCible[dayMonth]
@@ -488,7 +485,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 dayMonth++;
             }
 
-            H2O2_J_OptimiserUnMois(&problem);
+            H2O2_J_OptimiserUnMois(problem);
 
             switch (problem.ResultatsValides)
             {
@@ -505,10 +502,10 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 dayMonth = 0;
                 for (uint day = firstDay; day != endDay; ++day)
                 {
-                    valgen.HydrauliqueModulableQuotidien[day]
+                    ventilationResults.HydrauliqueModulableQuotidien[day]
                       = problem.Turbine[dayMonth] * reservoirCapacity;
 
-                    valgen.NiveauxReservoirsFinJours[day] = problem.niveauxFinJours[dayMonth];
+                    ventilationResults.NiveauxReservoirsFinJours[day] = problem.niveauxFinJours[dayMonth];
 
                     if (debugData)
                     {
@@ -520,10 +517,10 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                     dayMonth++;
                 }
 
-                valgen.NiveauxReservoirsDebutJours[firstDay] = monthInitialLevel;
+                ventilationResults.NiveauxReservoirsDebutJours[firstDay] = monthInitialLevel;
                 for (uint day = firstDay + 1; day != endDay; ++day)
-                    valgen.NiveauxReservoirsDebutJours[day]
-                      = valgen.NiveauxReservoirsFinJours[day - 1];
+                    ventilationResults.NiveauxReservoirsDebutJours[day]
+                      = ventilationResults.NiveauxReservoirsFinJours[day - 1];
 
                 monthInitialLevel = problem.niveauxFinJours[dayMonth - 1];
 
@@ -538,16 +535,16 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 break;
             }
 
-            H2O2_J_Free(&problem);
+            H2O2_J_Free(problem);
         }
 
-        uint firstDaySimu = study.parameters.simulationDays.first;
+        uint firstDaySimu = parameters_.simulationDays.first;
         state.problemeHebdo->previousSimulationFinalLevel[z]
-          = valgen.NiveauxReservoirsDebutJours[firstDaySimu] * reservoirCapacity;
+          = ventilationResults.NiveauxReservoirsDebutJours[firstDaySimu] * reservoirCapacity;
 
         if (debugData)
         {
-            debugData->writeDailyDebugData(study.calendar, initReservoirLvlMonth, y, area.name);
+            debugData->writeDailyDebugData(calendar_, initReservoirLvlMonth, y, area.name);
         }
     }
 }
@@ -556,8 +553,10 @@ void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& st
                                                      uint y,
                                                      uint numSpace)
 {
-    study.areas.each(
-      [&](Data::Area& area) { prepareDailyOptimalGenerations(state, area, y, numSpace); });
+    areas_.each(
+      [&](Data::Area& area) {
+          prepareDailyOptimalGenerations(state, area, y, numSpace);
+          });
 }
 
 } // namespace Antares

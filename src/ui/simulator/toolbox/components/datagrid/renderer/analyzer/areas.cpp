@@ -28,7 +28,7 @@
 #include "areas.h"
 #include "../../../../../application/study.h"
 #include "../../component.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 using namespace Yuni;
 
@@ -79,7 +79,7 @@ void Areas::initializeFromStudy()
     }
 }
 
-void Areas::reloadDistributionLawsFromStudy(Data::TimeSeries ts)
+void Areas::reloadDistributionLawsFromStudy(Data::TimeSeriesType ts)
 {
     if (!(!study))
     {

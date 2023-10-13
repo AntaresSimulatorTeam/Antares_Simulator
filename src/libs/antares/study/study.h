@@ -33,7 +33,7 @@
 #include <yuni/core/noncopyable.h>
 #include <yuni/job/queue/service.h>
 
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 
 #include "../antares.h"
 #include "../object/object.h"
@@ -47,18 +47,16 @@
 #include "sets.h"
 #include "progression/progression.h"
 #include "load-options.h"
-#include "../date.h"
+#include <antares/date/date.h>
 #include "layerdata.h"
-#include "antares/correlation/correlation.h"
+#include <antares/correlation/antares/correlation/correlation.h> //TODO Collision
 #include "area/store-timeseries-numbers.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 
 #include <memory>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Antares Study
@@ -242,7 +240,8 @@ public:
     ** \param name The name of the new area
     ** \return A pointer to a new area, or NULL if the operation failed
     */
-    Area* areaAdd(const AreaName& name);
+    // TODO no need for the 2nd argument, remove it after the GUI has been removed, keeping the default value
+    Area* areaAdd(const AreaName& name, bool update = false);
 
     /*!
     ** \brief Rename an area
@@ -322,7 +321,7 @@ public:
     ** \return True if the operation succeeded (the file have been written), false otherwise
     */
     template<unsigned int TimeSeriesT>
-    void storeTimeSeriesNumbers() const;
+    void storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) const;
     //@}
 
     //! \name Simulation
@@ -345,7 +344,7 @@ public:
     */
     void prepareOutput();
 
-    void saveAboutTheStudy();
+    void saveAboutTheStudy(Solver::IResultWriter& resultWriter);
 
     /*!
     ** \brief Initialize the progress meter
@@ -358,7 +357,7 @@ public:
     /*!
     ** \brief Destroy all data of the TS generator '@TS'
     */
-    template<enum TimeSeries TS>
+    template<enum TimeSeriesType TS>
     void destroyTSGeneratorData();
 
     //! Destroy all data of the load TS generator
@@ -476,47 +475,14 @@ public:
     /*!
     ** \brief Get the amound of memory consummed by the study (in bytes)
     */
-    Yuni::uint64 memoryUsage() const;
-
-    /*!
-    ** \brief Estimate the memory required by the input to launch a simulation
-    **
-    ** The real amount of memory required to launch this study
-    ** will be less than the returned value, but in the worst case
-    ** it can be equal (or nearly).
-    **
-    ** \param mode The mode of the study
-    ** \return A size in bytes, -1 when an error has occured.
-    */
-    void estimateMemoryUsageForInput(StudyMemoryUsage& u) const;
-
-    /*!
-    ** \brief Estimate the memory required by the output to launch a simulation
-    **
-    ** The real amount of memory required to launch this study
-    ** will be less than the returned value, but in the worst case
-    ** it can be equal (or nearly).
-    **
-    ** \param mode The mode of the study
-    ** \return A size in bytes, -1 when an error has occured.
-    */
-    void estimateMemoryUsageForOutput(StudyMemoryUsage& u) const;
-
-    /*!
-    ** \brief Create a thread to estimate the memory footprint of the input
-    **
-    ** This thread is actually a way to process in the background
-    ** all costly operations and to avoid the freeze from the interface
-    */
-    Yuni::Thread::IThread::Ptr createThreadToEstimateInputMemoryUsage() const;
-    //@}
+    uint64_t memoryUsage() const;
 
     //! \name Logs
     //@{
     /*!
     ** \brief Copy the log file from the 'logs' folder to the current output folder
     */
-    void importLogsToOutputFolder() const;
+    void importLogsToOutputFolder(Solver::IResultWriter& resultWriter) const;
     //@}
     //! \name Check validity of Min Stable Power of Thermal Clusters
     //@{
@@ -526,8 +492,6 @@ public:
     ** Should be call then all inforation is suplied in to the thermal clusters.
     */
     void computePThetaInfForThermalClusters() const;
-
-    void prepareWriter(Benchmarking::IDurationCollector* duration_collector);
 
     //! Header (general information about the study)
     StudyHeader header;
@@ -549,7 +513,7 @@ public:
     //! The current Simulation
     SimulationComments simulationComments;
 
-    Yuni::sint64 pStartTime;
+    int64_t pStartTime;
     // Used in GUI and solver
     // ----------------------
     // Maximum number of years in a set of parallel years.
@@ -690,9 +654,6 @@ public:
     //! The queue service that runs every set of parallel years
     std::shared_ptr<Yuni::Job::QueueService> pQueueService;
 
-    //! Result writer, required to write residual files (comments, about-the-study, etc.)
-    Solver::IResultWriter::Ptr resultWriter = nullptr;
-
 public:
     //! \name TS Generators
     //@{
@@ -752,9 +713,9 @@ YString StudyCreateOutputPath(StudyMode mode,
                               ResultFormat fmt,
                               const YString& folder,
                               const YString& label,
-                              Yuni::sint64 startTime);
-} // namespace Data
-} // namespace Antares
+                              int64_t startTime);
+} // namespace Antares::Data
+
 
 #include "study.hxx"
 #include "runtime.h"

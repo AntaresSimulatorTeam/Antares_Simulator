@@ -28,8 +28,8 @@
 #include "../application.h"
 #include "../simulation/solver.h"
 #include "../simulation/adequacy.h"
-#include <antares/benchmarking.h>
-#include <antares/logs.h>
+#include <antares/benchmarking/DurationCollector.h>
+#include <antares/logs/logs.h>
 
 namespace Antares
 {
@@ -39,7 +39,7 @@ void Application::runSimulationInAdequacyMode()
 {
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Adequacy> SimulationType;
-    SimulationType simulation(*pStudy, pSettings, &pDurationCollector);
+    SimulationType simulation(*pStudy, pSettings, pDurationCollector, *resultWriter);
     simulation.checkWriter();
     simulation.run();
 

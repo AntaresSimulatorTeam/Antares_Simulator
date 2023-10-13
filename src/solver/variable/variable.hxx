@@ -30,40 +30,8 @@
 #include <yuni/core/static/types.h>
 #include <antares/study/variable-print-info.h>
 
-namespace Antares
+namespace Antares::Solver::Variable
 {
-namespace Solver
-{
-namespace Variable
-{
-template<class ChildT, class NextT, class VCardT>
-inline void IVariable<ChildT, NextT, VCardT>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-{
-    if ((int)VCardT::columnCount != (int)Category::dynamicColumns)
-    {
-        // Results
-        for (uint i = 0; i != VCardT::columnCount; ++i)
-            ResultsType::EstimateMemoryUsage(u);
-
-        // Intermediate values
-        if (VCardT::hasIntermediateValues)
-        {
-            for (uint i = 0; i != VCardT::columnCount; ++i)
-                IntermediateValues::EstimateMemoryUsage(u);
-        }
-
-        // Year-by-year
-        if (!u.gatheringInformationsForInput)
-        {
-            if (u.study.parameters.yearByYear)
-            {
-                for (uint i = 0; i != u.years; ++i)
-                    u.takeIntoConsiderationANewTimeserieForDiskOutput(false);
-            }
-        }
-    }
-    NextType::EstimateMemoryUsage(u);
-}
 
 template<class ChildT, class NextT, class VCardT>
 inline IVariable<ChildT, NextT, VCardT>::IVariable()
@@ -380,9 +348,9 @@ inline void IVariable<ChildT, NextT, VCardT>::beforeYearByYearExport(uint year, 
 }
 
 template<class ChildT, class NextT, class VCardT>
-inline Yuni::uint64 IVariable<ChildT, NextT, VCardT>::memoryUsage() const
+inline uint64_t IVariable<ChildT, NextT, VCardT>::memoryUsage() const
 {
-    Yuni::uint64 r = VariableAccessorType::Value(pResults);
+    uint64_t r = VariableAccessorType::Value(pResults);
     if ((int)VCardT::columnCount != (int)Category::dynamicColumns)
     {
         // Intermediate values
@@ -780,8 +748,8 @@ inline void IVariable<ChildT, NextT, VCardT>::supplyMaxNumberOfColumns(Data::Stu
     NextType::supplyMaxNumberOfColumns(study);
 }
 
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable
+
+
 
 #endif // __SOLVER_VARIABLE_VARIABLE_HXX__

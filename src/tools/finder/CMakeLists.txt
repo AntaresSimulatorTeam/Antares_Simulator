@@ -26,14 +26,17 @@ INSTALL(EXPORT antares-study-finder
 )
 
 set(FINDER_LIBS
-	libantares-core
+	antares-core
 	yuni-static-core
+	Antares::args_helper
 	${CMAKE_THREADS_LIBS_INIT}
 )
 
 target_link_libraries(${execname}
 		PRIVATE
 			${FINDER_LIBS}
+		PUBLIC
+			Antares::study
 		)
 
 import_std_libs(${execname})

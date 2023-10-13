@@ -36,15 +36,12 @@ namespace Antares
 {
 namespace Data
 {
-AreaScratchpad::TimeseriesData::TimeseriesData(Area& area) :
-        load(area.load.series->timeSeries), solar(area.solar.series->timeSeries), wind(area.wind.series->timeSeries)
-{
-}
 
-AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts(area)
+AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area)
 {
     // alias to the simulation mode
     auto mode = rinfos.mode;
+    uint nbMonthsPerYear = 12;
 
     for (uint i = 0; i != 168; ++i)
         dispatchableGenerationMargin[i] = 0;
@@ -123,8 +120,8 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
         auto& colPowerOverWater = m[PreproHydro::powerOverWater];
         auto& colMaxEnergy = m[PreproHydro::maximumEnergy];
 
-        for (uint m = 0; m < rinfos.nbMonthsPerYear; ++m)
-            valueCol += colMaxEnergy[m] * (1. - colPowerOverWater[m]);
+        for (uint month = 0; month < nbMonthsPerYear; ++month)
+            valueCol += colMaxEnergy[month] * (1. - colPowerOverWater[month]);
 
         hydroHasInflows = (valueCol > 0.);
     }

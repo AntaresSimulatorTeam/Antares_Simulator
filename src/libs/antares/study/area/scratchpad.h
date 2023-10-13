@@ -31,7 +31,7 @@
 #include <yuni/core/string.h>
 #include <yuni/core/noncopyable.h>
 #include "../fwd.h"
-#include "../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include <vector>
 #include <set>
 
@@ -46,7 +46,7 @@ class AreaScratchpad final
 {
 public:
     //! Matrix used for time-series
-    using TSMatrix = Matrix<double, Yuni::sint32>;
+    using TSMatrix = Matrix<double, int32_t>;
 
     //! \name Constructor
     //@{
@@ -60,21 +60,6 @@ public:
 
     //! Sum of all fatal hors hydro
     double miscGenSum[HOURS_PER_YEAR];
-
-    //! Timeseries
-    struct TimeseriesData
-    {
-        TimeseriesData(Area& area);
-        //! Alias to the load time-series
-        const TSMatrix& load;
-        //! Alias to the solar time-series
-        const TSMatrix& solar;
-        //! Alias to the wind time-series
-        const TSMatrix& wind;
-    };
-
-    //! Timeseries
-    TimeseriesData ts;
 
     bool hydroHasMod;
 

@@ -28,7 +28,7 @@
 #include <string>
 #include <yuni/yuni.h>
 #include "study.h"
-#include "../logs.h"
+#include <antares/logs/logs.h>
 #include <yuni/io/file.h>
 
 using namespace Yuni;
@@ -37,7 +37,7 @@ namespace Antares
 {
 namespace Data
 {
-void Study::importLogsToOutputFolder() const
+void Study::importLogsToOutputFolder(Solver::IResultWriter& resultWriter) const
 {
     if (!logs.logfile())
         return;
@@ -53,8 +53,7 @@ void Study::importLogsToOutputFolder() const
         logs.closeLogfile();
     }
 
-    if (resultWriter)
-        resultWriter->addEntryFromFile(logPath, from.c_str());
+    resultWriter.addEntryFromFile(logPath, from.c_str());
 
     if (System::windows)
     {

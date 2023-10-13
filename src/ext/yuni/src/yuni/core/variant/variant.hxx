@@ -35,10 +35,10 @@ YUNI_VARIANT_DEFINE_SUPPORTED_TYPE(String);
 YUNI_VARIANT_DEFINE_SUPPORTED_TYPE(float);
 YUNI_VARIANT_DEFINE_SUPPORTED_TYPE(double);
 
-YUNI_VARIANT_DEFINE_SUPPORTED_TYPE(sint32);
-YUNI_VARIANT_DEFINE_SUPPORTED_TYPE(sint64);
-YUNI_VARIANT_DEFINE_SUPPORTED_TYPE(uint32);
-YUNI_VARIANT_DEFINE_SUPPORTED_TYPE(uint64);
+YUNI_VARIANT_DEFINE_SUPPORTED_TYPE(int32_t);
+YUNI_VARIANT_DEFINE_SUPPORTED_TYPE(int64_t);
+YUNI_VARIANT_DEFINE_SUPPORTED_TYPE(uint32_t);
+YUNI_VARIANT_DEFINE_SUPPORTED_TYPE(uint64_t);
 
 template<class T>
 inline Variant Variant::New<T>::Instance()
@@ -75,24 +75,24 @@ inline Variant Variant::New<double>::Instance()
 }
 
 template<>
-inline Variant Variant::New<uint32>::Instance()
+inline Variant Variant::New<uint32_t>::Instance()
 {
-    return Variant(uint32());
+    return Variant(uint32_t());
 }
 template<>
-inline Variant Variant::New<uint64>::Instance()
+inline Variant Variant::New<uint64_t>::Instance()
 {
-    return Variant(uint64());
+    return Variant(uint64_t());
 }
 template<>
-inline Variant Variant::New<sint32>::Instance()
+inline Variant Variant::New<int32_t>::Instance()
 {
-    return Variant(sint32());
+    return Variant(int32_t());
 }
 template<>
-inline Variant Variant::New<sint64>::Instance()
+inline Variant Variant::New<int64_t>::Instance()
 {
-    return Variant(sint64());
+    return Variant(int64_t());
 }
 
 template<>
@@ -149,22 +149,22 @@ inline Variant::Variant(char rhs) : pShareContent(false)
     assign(rhs);
 }
 
-inline Variant::Variant(sint32 rhs) : pShareContent(false)
+inline Variant::Variant(int32_t rhs) : pShareContent(false)
 {
     assign(rhs);
 }
 
-inline Variant::Variant(sint64 rhs) : pShareContent(false)
+inline Variant::Variant(int64_t rhs) : pShareContent(false)
 {
     assign(rhs);
 }
 
-inline Variant::Variant(uint32 rhs) : pShareContent(false)
+inline Variant::Variant(uint32_t rhs) : pShareContent(false)
 {
     assign(rhs);
 }
 
-inline Variant::Variant(uint64 rhs) : pShareContent(false)
+inline Variant::Variant(uint64_t rhs) : pShareContent(false)
 {
     assign(rhs);
 }

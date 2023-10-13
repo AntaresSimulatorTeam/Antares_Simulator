@@ -34,7 +34,7 @@
 #include "opt_fonctions.h"
 #include <stdio.h>
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 using namespace Antares;
 
@@ -82,13 +82,16 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
     ProblemeAResoudre->Pi.assign(nbVariables, 0.);
     ProblemeAResoudre->Colonne.assign(nbVariables, 0);
 
+    // Names
     ProblemeAResoudre->NomDesVariables.resize(nbVariables);
     ProblemeAResoudre->NomDesContraintes.resize(nbConstraints);
+    // Integer variables ? (MILP)
+    ProblemeAResoudre->VariablesEntieres.resize(nbVariables);
 }
 
 static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int mxPaliers)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
+    const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     int NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
@@ -174,9 +177,4 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*
     ProblemeAResoudre->IndicesColonnes.resize(NbTermes);
 
     ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
-}
-
-void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
-{
-    problemeHebdo->ProblemeAResoudre.reset();
 }

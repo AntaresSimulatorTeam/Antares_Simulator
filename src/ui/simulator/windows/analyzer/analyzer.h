@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOW_ANALYZER_H__
 #define __ANTARES_APPLICATION_WINDOW_ANALYZER_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/dialog.h>
 #include <wx/checkbox.h>
 #include <wx/radiobut.h>
@@ -189,7 +188,7 @@ private:
 
 private:
     Yuni::Event<void(bool, uint)> onUpdateMaxTimeseries;
-    Yuni::Event<void(Data::TimeSeries)> onUpdateTimeseriesType;
+    Yuni::Event<void(Data::TimeSeriesType)> onUpdateTimeseriesType;
 
     //! \name Filesearch
     //@{
@@ -229,7 +228,7 @@ private:
 
     Component::Spotlight* pFileSearch;
 
-    Data::TimeSeries pTSSelected;
+    Data::TimeSeriesType pTSSelected;
     Component::Button* pTSSelector;
 
     bool pUpdating;

@@ -29,7 +29,6 @@
 #include "../opt_fonctions.h"
 #include "../simulation/simulation.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
-#include "antares/study/area/scratchpad.h"
 #include "antares/study/fwd.h"
 
 using namespace Antares::Data::AdequacyPatch;
@@ -43,7 +42,7 @@ AdequacyPatchOptimization::AdequacyPatchOptimization(const Antares::Data::Study&
                                                      AdqPatchParams& adqPatchParams,
                                                      uint thread_number,
                                                      IResultWriter& writer) :
-  WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer), study_(study)
+    WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer), study_(study)
 {
 }
 
@@ -53,7 +52,7 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
     OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
     problemeHebdo_->adequacyPatchRuntimeData->AdequacyFirstStep = false;
 
-    for (int pays = 0; pays < problemeHebdo_->NombreDePays; ++pays)
+    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; ++pays)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[pays]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
@@ -63,10 +62,7 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
             std::fill(problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS.begin(),
                     problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS.end(), 0);
     }
-
-    // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
-    // part that we need
-    ::SIM_RenseignementProblemeHebdo(study_, *problemeHebdo_, weekInTheYear, thread_number_, hourInTheYear);
+    
     OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
 }
 

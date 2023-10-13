@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_XCAST_TRANSLATION_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_XCAST_TRANSLATION_H__
 
-#include <antares/wx-wrapper.h>
 #include "../area.h"
 #include "../matrix.h"
 
@@ -39,12 +38,12 @@ namespace Datagrid
 {
 namespace Renderer
 {
-template<enum Data::TimeSeries T>
-class XCastTranslation final : public Renderer::Matrix<yint32>, public Renderer::ARendererArea
+template<enum Data::TimeSeriesType T>
+class XCastTranslation final : public Renderer::Matrix<int32_t>, public Renderer::ARendererArea
 {
 public:
     //! Ancestor
-    using MatrixAncestorType = Renderer::Matrix<Yuni::sint32>;
+    using MatrixAncestorType = Renderer::Matrix<int32_t>;
 
 public:
     //! \name Constructor & Destructor

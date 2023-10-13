@@ -27,8 +27,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
-#include <antares/study/memory-usage.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "intermediate.h"
 
 using namespace Yuni;

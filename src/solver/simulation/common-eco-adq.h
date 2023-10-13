@@ -62,10 +62,16 @@ void PrepareRandomNumbers(Data::Study& study,
                           PROBLEME_HEBDO& problem,
                           yearRandomNumbers& randomForYear);
 
+void BuildThermalPartOfWeeklyProblem(Data::Study& study,
+                                     PROBLEME_HEBDO& problem,
+                                     const int PasDeTempsDebut,
+                                     double** thermalNoises,
+                                     unsigned int year);
+
 /*!
 ** \brief Prepare data from clusters in mustrun mode (eco+adq)
 */
-void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace);
+void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uint year);
 
 /*!
 ** \brief Get if the quadratic optimization should be used according
@@ -155,7 +161,7 @@ void updatingAnnualFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& 
 */
 int retrieveAverageNTC(const Data::Study& study,
                        const Matrix<>& capacities,
-                       const Matrix<Yuni::uint32>& tsNumbers,
+                       const Matrix<uint32_t>& tsNumbers,
                        std::vector<double>& avg);
 
 void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,

@@ -27,7 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_LOAD_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_LOAD_TIMESERIES_H__
 
-#include "../../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include "../../fwd.h"
 
 namespace Antares
@@ -40,7 +40,7 @@ namespace Data
 class DataSeriesLoad
 {
 public:
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     bool forceReload(bool reload = false) const;
 
@@ -49,18 +49,22 @@ public:
     */
     void markAsModified() const;
 
+    double* getColumn(unsigned int year) const;
+    double getCoefficient(const unsigned int year, const unsigned int hour) const;
+    unsigned int getIndex(unsigned int year) const;
+
 public:
     /*!
     ** \brief Time series (MW)
     **
     ** Merely a matrix of TimeSeriesCount * 8760 values
     */
-    Matrix<double, Yuni::sint32> timeSeries;
+    Matrix<double, int32_t> timeSeries;
 
     /*!
     ** \brief Monte-Carlo
     */
-    Matrix<Yuni::uint32> timeseriesNumbers;
+    Matrix<uint32_t> timeseriesNumbers;
 
 }; /* class DataSeriesLoad */
 
@@ -92,7 +96,7 @@ int DataSeriesLoadSaveToFolder(DataSeriesLoad* d, const AreaName& areaID, const 
 /*!
 ** \brief Get the size (bytes) in memory occupied by a `DataSeriesLoad` structure
 */
-Yuni::uint64 DataSeriesLoadMemoryUsage(DataSeriesLoad* w);
+uint64_t DataSeriesLoadMemoryUsage(DataSeriesLoad* w);
 
 } // namespace Data
 } // namespace Antares

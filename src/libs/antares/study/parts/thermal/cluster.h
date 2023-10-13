@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
-#include "../../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include "defines.h"
 #include "prepro.h"
 #include "ecoInput.h"
@@ -197,7 +197,7 @@ public:
     /*!
     ** \brief Get the memory consummed by the thermal cluster (in bytes)
     */
-    Yuni::uint64 memoryUsage() const override;
+    uint64_t memoryUsage() const override;
     //@}
 
     //! \name validity of Min Stable Power
@@ -224,7 +224,7 @@ public:
 
     double getOperatingCost(uint tsIndex, uint hourInTheYear) const;
     double getMarginalCost(uint tsIndex, uint hourInTheYear) const;
-    double getMarketBidCost(uint tsIndex, uint hourInTheYear) const;
+    double getMarketBidCost(uint hourInTheYear, uint year) const;
 
     // Check & correct availability timeseries for thermal availability
     // Only applies if time-series are ready-made

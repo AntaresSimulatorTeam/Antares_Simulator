@@ -65,8 +65,6 @@ if (MSVC)
 	set(yuni_additional_os_specific
 		core/system/gettimeofday.cpp
 		core/system/username.cpp
-		core/system/windows/msinttypes/inttypes.h
-		core/system/windows/msinttypes/stdint.h
 		core/system/windows.hdr.h)
 else()
 	set(yuni_additional_os_specific "")

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <writer/i_writer.h>
+#include <antares/writer/i_writer.h>
 
 void signalCtrl_term(int);
 void signalCtrl_int(int);

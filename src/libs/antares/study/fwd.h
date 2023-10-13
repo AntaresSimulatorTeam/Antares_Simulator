@@ -40,7 +40,6 @@ namespace Data
 {
 // Forward declarations
 class Study;
-class StudyMemoryUsage;
 class StudyLoadOptions;
 class Area;
 class AreaLink;
@@ -206,7 +205,7 @@ std::string styleToString(const StyleType& style);
 **
 ** These values are mainly used for mask bits
 */
-enum TimeSeries : unsigned int
+enum TimeSeriesType : unsigned int
 {
     //! TimeSeries : Load
     timeSeriesLoad = 1,
@@ -465,8 +464,16 @@ SheddingPolicy StringToSheddingPolicy(const AnyString& text);
 
 enum UnitCommitmentMode
 {
-    ucHeuristic = 0,
-    ucMILP, // mixed integer linear problem
+    //! Heuristic in which 2 LP problems are solved
+    //! No explicit modelling for the number of ON/OFF units
+    ucHeuristicFast = 0,
+    //! Heuristic in which 2 LP problems are solved
+    //! Explicit modelling for the number of ON/OFF units
+    ucHeuristicAccurate,
+    //! A single MILP problem is solved, with explicit modelling
+    //! for the number of ON/OFF units
+    ucMILP,
+    //! Unknown mode, mainly used for error handling
     ucUnknown,
 };
 
@@ -520,15 +527,6 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
 */
 RenewableGenerationModelling StringToRenewableGenerationModelling(const AnyString& text);
 
-// Format of results
-enum ResultFormat
-{
-    // Store outputs as files inside directories
-    legacyFilesDirectories = 0,
-    // Store outputs inside a single zip archive
-    zipArchive
-};
-
 // ------------------------
 // MPS export status
 // ------------------------
@@ -547,19 +545,15 @@ mpsExportStatus stringToMPSexportStatus(const AnyString& value);
 } // namespace Data
 } // namespace Antares
 
-namespace Antares
-{
-namespace Data
-{
-namespace ScenarioBuilder
+namespace Antares::Data::ScenarioBuilder
 {
 class Rules;
 class TSNumberRules;
 class Sets;
 
-} // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder
+
+
 
 namespace Benchmarking
 {

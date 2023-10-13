@@ -1,4 +1,4 @@
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 #include "../simulation/simulation.h"
 
@@ -43,37 +43,30 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <string>
 #include <vector>
 #include <algorithm>
 #include "filename.h"
 #include "../optimisation/opt_constants.h"
+#include "name_translator.h"
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-static char** VectorOfStringToCharPP(std::vector<std::string>& in, std::vector<char*>& pointerVec)
-{
-    std::transform(in.begin(),
-                   in.end(),
-                   std::back_inserter(pointerVec),
-                   [](std::string& str) { return str.empty() ? nullptr : str.data(); });
-    return pointerVec.data();
-}
-
 class ProblemConverter
 {
 public:
-    void copyProbSimplexeToProbMps(PROBLEME_MPS* dest, PROBLEME_SIMPLEXE_NOMME* src)
+    void copyProbSimplexeToProbMps(PROBLEME_MPS* dest, PROBLEME_SIMPLEXE_NOMME* src, NameTranslator& nameTranslator)
     {
         // Variables
         dest->NbVar = src->NombreDeVariables;
 
         mVariableType.resize(src->NombreDeVariables);
-        // TODO[FOM] use actual variable types when MIP resolution is integrated
-        std::fill(mVariableType.begin(), mVariableType.end(), SRS_CONTINUOUS_VAR);
+        for (int var = 0; var < src->NombreDeVariables; var++)
+            mVariableType[var] = src->VariablesEntieres[var] ? SRS_INTEGER_VAR : SRS_CONTINUOUS_VAR;
+
         dest->TypeDeVariable = mVariableType.data();
         dest->TypeDeBorneDeLaVariable = src->TypeDeVariable; // VARIABLE_BORNEE_DES_DEUX_COTES,
                                                              // VARIABLE_BORNEE_INFERIEUREMENT, etc.
@@ -94,8 +87,8 @@ public:
         dest->SensDeLaContrainte = src->Sens;
 
         // Names
-        dest->LabelDeLaVariable = VectorOfStringToCharPP(src->NomDesVariables, mVariableNames);
-        dest->LabelDeLaContrainte = VectorOfStringToCharPP(src->NomDesContraintes, mConstraintNames);
+        dest->LabelDeLaVariable = nameTranslator.translate(src->VariableNames(), mVariableNames);
+        dest->LabelDeLaContrainte = nameTranslator.translate(src->ConstraintNames(), mConstraintNames);
     }
 
 private:
@@ -114,9 +107,10 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
 
     auto mps = std::make_shared<PROBLEME_MPS>();
     {
+        auto translator = NameTranslator::create(Prob->UseNamedProblems());
         ProblemConverter
           converter; // This object must not be destroyed until SRSwritempsprob has been run
-        converter.copyProbSimplexeToProbMps(mps.get(), Prob);
+        converter.copyProbSimplexeToProbMps(mps.get(), Prob, *translator);
         SRSwritempsprob(mps.get(), tmpPath.c_str());
     }
 

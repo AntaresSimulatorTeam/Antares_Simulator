@@ -173,7 +173,8 @@ struct PROPERTIES
     double injectionNominalCapacity;
     double withdrawalNominalCapacity;
     double efficiency;
-    std::optional<double> initialLevel;
+    double initialLevel;
+    bool initialLevelOptim;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
 
@@ -478,33 +479,36 @@ struct VARIABLES_DUALES_INTERCONNEXIONS
 
 struct PROBLEME_HEBDO
 {
-    unsigned int weekInTheYear = 0;
-    unsigned int year = 0;
+    uint32_t weekInTheYear = 0;
+    uint32_t year = 0;
 
     /* Business problem */
     bool OptimisationAuPasHebdomadaire = false;
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
     bool WaterValueAccurate = false;
     bool OptimisationAvecCoutsDeDemarrage = false;
-    int NombreDePays = 0;
+    bool OptimisationAvecVariablesEntieres = false;
+    uint32_t NombreDePays = 0;
     std::vector<const char*> NomsDesPays;
-    int NombreDePaliersThermiques = 0;
+    uint32_t NombreDePaliersThermiques = 0;
 
-    int NombreDInterconnexions = 0;
+    uint32_t NombreDInterconnexions = 0;
     std::vector<int> PaysOrigineDeLInterconnexion;
     std::vector<int> PaysExtremiteDeLInterconnexion;
     mutable std::vector<COUTS_DE_TRANSPORT> CoutDeTransport;
 
     mutable std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTC;
 
-    unsigned int NombreDePasDeTemps = 0;
-    std::vector<int> NumeroDeJourDuPasDeTemps;
+    uint32_t NombreDePasDeTemps = 0;
+    std::vector<int32_t> NumeroDeJourDuPasDeTemps;
 
-    int NombreDePasDeTempsPourUneOptimisation = 0;
-    std::vector<int> NumeroDIntervalleOptimiseDuPasDeTemps;
-    int NombreDeJours = 0;
+    //TODO use uint32_t and figure why tests fails
+    int32_t NombreDePasDeTempsPourUneOptimisation = 0;
+    std::vector<int32_t> NumeroDIntervalleOptimiseDuPasDeTemps;
+    uint32_t NombreDeJours = 0;
 
-    int NombreDePasDeTempsDUneJournee = 0;
+    //TODO same as NombreDePasDeTemps
+    int32_t NombreDePasDeTempsDUneJournee = 0;
 
     mutable std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattues;
 
@@ -515,12 +519,12 @@ struct PROBLEME_HEBDO
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     mutable std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
-    int NumberOfShortTermStorages = 0;
+    uint32_t NumberOfShortTermStorages = 0;
     // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;
     std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
 
     /* Optimization problem */
-    int NbTermesContraintesPourLesCoutsDeDemarrage = 0;
+    uint32_t NbTermesContraintesPourLesCoutsDeDemarrage = 0;
     std::vector<bool> DefaillanceNegativeUtiliserPMinThermique;
     std::vector<bool> DefaillanceNegativeUtiliserHydro;
     std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue;
@@ -528,7 +532,7 @@ struct PROBLEME_HEBDO
     char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
     std::vector<std::vector<double>> BruitSurCoutHydraulique;
 
-    int NombreDeContraintesCouplantes = 0;
+    uint32_t NombreDeContraintesCouplantes = 0;
     mutable std::vector<CONTRAINTES_COUPLANTES> MatriceDesContraintesCouplantes;
     std::vector<RESULTATS_CONTRAINTES_COUPLANTES> ResultatsContraintesCouplantes;
 
@@ -541,11 +545,10 @@ struct PROBLEME_HEBDO
     bool ExportStructure = false;
     bool NamedProblems = false;
 
-    unsigned int HeureDansLAnnee = 0;
+    uint32_t HeureDansLAnnee = 0;
     bool LeProblemeADejaEteInstancie = false;
     bool firstWeekOfSimulation = false;
 
-    // TODO VP: Not working if we're not using a pointer, need more investigation
     std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES> CorrespondanceCntNativesCntOptimJournalieres;

@@ -28,7 +28,7 @@
 #define __SOLVER_END_OF_LIST_END_OF_LIST_H__
 
 #include <yuni/yuni.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "state.h"
 #include "surveyresults.h"
 
@@ -65,12 +65,6 @@ public:
     };
 
 public:
-    /*!
-    ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
-    */
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage&)
-    {
-    }
 
     /*!
     ** \brief Retrieve the list of all individual variables
@@ -231,7 +225,7 @@ public:
     {
     }
 
-    static Yuni::uint64 memoryUsage()
+    static uint64_t memoryUsage()
     {
         return 0;
     }

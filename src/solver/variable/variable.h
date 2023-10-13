@@ -92,11 +92,6 @@ public:
 
 public:
     /*!
-    ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
-    */
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u);
-
-    /*!
     ** \brief Initialize the results of the variable
     **
     ** \param results The results
@@ -294,7 +289,7 @@ public:
     /*!
     ** \brief Get the memory used by this variable and all other in the static list
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief "Print" informations about the variable tree

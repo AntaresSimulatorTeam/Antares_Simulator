@@ -36,7 +36,7 @@
 #include "../../../application/menus.h"
 #include "../../../windows/message.h"
 #include <ui/common/component/panel.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
@@ -338,7 +338,7 @@ void AdvancedParameters::onResetToDefault(void*)
         parameters.hydroPricing.hpMode = Data::hpHeuristic;
         parameters.power.fluctuations = Data::lssFreeModulations;
         parameters.shedding.policy = Data::shpShavePeaks;
-        parameters.unitCommitment.ucMode = Data::ucHeuristic;
+        parameters.unitCommitment.ucMode = Data::ucHeuristicFast;
         parameters.nbCores.ncMode = Data::ncAvg;
 
         parameters.renewableGeneration.rgModelling = Data::rgAggregated;
@@ -462,7 +462,7 @@ void AdvancedParameters::onEditSeedTSDraws(wxCommandEvent& evt)
 void AdvancedParameters::onNumericQuality(Component::Button&,
                                           wxMenu& menu,
                                           void*,
-                                          Data::TimeSeries ts)
+                                          Data::TimeSeriesType ts)
 {
     pCurrentTS = ts;
     wxMenuItem* it;
@@ -806,52 +806,63 @@ void AdvancedParameters::onUnitCommitmentMode(Component::Button&, wxMenu& menu, 
     wxMenuItem* it;
     wxString text;
 
-    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucHeuristic)); // Fast
+    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucHeuristicFast)); // Fast
     text << wxT("   [default]");
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectUCHeuristic),
+                 wxCommandEventHandler(AdvancedParameters::onSelectUCHeuristicFast),
+                 nullptr,
+                 this);
+
+    text.clear();
+    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucHeuristicAccurate)); // Accurate
+    text << wxT("   (slow)");
+    it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(AdvancedParameters::onSelectUCHeuristicAccurate),
                  nullptr,
                  this);
 
     text.clear();
     text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucMILP)); // Accurate
-    text << wxT("   (slow)");
+    text << wxT("   ");
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectUCMixedIntegerLinearProblem),
+                 wxCommandEventHandler(AdvancedParameters::onSelectUCMILP),
                  nullptr,
                  this);
 }
 
-void AdvancedParameters::onSelectUCHeuristic(wxCommandEvent& /* evt */)
+void AdvancedParameters::onSelectUCMode(Antares::Data::UnitCommitmentMode mode)
 {
-    auto& study = *GetCurrentStudy();
     if (not CurrentStudyIsValid())
         return;
+    auto study = GetCurrentStudy();
 
-    if (study.parameters.unitCommitment.ucMode != Data::ucHeuristic)
+    if (study->parameters.unitCommitment.ucMode != mode)
     {
-        study.parameters.unitCommitment.ucMode = Data::ucHeuristic;
+        study->parameters.unitCommitment.ucMode = mode;
         MarkTheStudyAsModified();
         refresh();
     }
 }
 
-void AdvancedParameters::onSelectUCMixedIntegerLinearProblem(wxCommandEvent& /* evt */)
+void AdvancedParameters::onSelectUCHeuristicFast(wxCommandEvent& /* evt */)
 {
-    if (not CurrentStudyIsValid())
-        return;
-    auto& study = *GetCurrentStudy();
+    onSelectUCMode(Data::ucHeuristicFast);
+}
 
-    if (study.parameters.unitCommitment.ucMode != Data::ucMILP)
-    {
-        study.parameters.unitCommitment.ucMode = Data::ucMILP;
-        MarkTheStudyAsModified();
-        refresh();
-    }
+void AdvancedParameters::onSelectUCHeuristicAccurate(wxCommandEvent& /* evt */)
+{
+    onSelectUCMode(Data::ucHeuristicAccurate);
+}
+
+void AdvancedParameters::onSelectUCMILP(wxCommandEvent& /* evt */)
+{
+    onSelectUCMode(Data::ucMILP);
 }
 
 void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*)

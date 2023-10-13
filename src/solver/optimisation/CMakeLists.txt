@@ -70,6 +70,56 @@ set(RTESOLVER_OPT
 		opt_period_string_generator_base.h
 		opt_rename_problem.h
 		opt_rename_problem.cpp
+
+		constraints/ConstraintBuilder.cpp
+		constraints/ConstraintBuilder.h
+		constraints/AreaBalance.h
+		constraints/AreaBalance.cpp
+		constraints/FictitiousLoad.h
+		constraints/FictitiousLoad.cpp
+		constraints/ShortTermStorageLevel.h
+		constraints/ShortTermStorageLevel.cpp
+		constraints/FlowDissociation.h
+		constraints/FlowDissociation.cpp
+		constraints/BindingConstraintHour.h
+		constraints/BindingConstraintHour.cpp
+		constraints/BindingConstraintDay.h
+		constraints/BindingConstraintDay.cpp
+		constraints/BindingConstraintWeek.h
+		constraints/BindingConstraintWeek.cpp
+		constraints/HydroPower.h
+		constraints/HydroPower.cpp
+		constraints/HydroPowerSmoothingUsingVariationSum.h
+		constraints/HydroPowerSmoothingUsingVariationSum.cpp
+		constraints/HydroPowerSmoothingUsingVariationMaxDown.h
+		constraints/HydroPowerSmoothingUsingVariationMaxDown.cpp
+		constraints/HydroPowerSmoothingUsingVariationMaxUp.h
+		constraints/HydroPowerSmoothingUsingVariationMaxUp.cpp
+		constraints/MinHydroPower.h
+		constraints/MinHydroPower.cpp
+		constraints/MaxHydroPower.h
+		constraints/MaxHydroPower.cpp
+		constraints/MaxPumping.h
+		constraints/MaxPumping.cpp
+		constraints/AreaHydroLevel.h
+		constraints/AreaHydroLevel.cpp
+		constraints/FinalStockEquivalent.h
+		constraints/FinalStockEquivalent.cpp
+		constraints/FinalStockExpression.h
+		constraints/FinalStockExpression.cpp
+		constraints/PMaxDispatchableGeneration.h
+		constraints/PMaxDispatchableGeneration.cpp
+		constraints/PMinDispatchableGeneration.h
+		constraints/PMinDispatchableGeneration.cpp
+		constraints/ConsistenceNumberOfDispatchableUnits.h
+		constraints/ConsistenceNumberOfDispatchableUnits.cpp
+		constraints/NbUnitsOutageLessThanNbUnitsStop.h
+		constraints/NbUnitsOutageLessThanNbUnitsStop.cpp
+		constraints/NbDispUnitsMinBoundSinceMinUpTime.h
+		constraints/NbDispUnitsMinBoundSinceMinUpTime.cpp
+		constraints/MinDownTime.h
+		constraints/MinDownTime.cpp
+
 	)
 
 
@@ -78,20 +128,20 @@ set(SRC_MODEL
 	${RTESOLVER_OPT}
 )
 
-add_library(libmodel_antares ${SRC_MODEL})
+add_library(model_antares ${SRC_MODEL})
 if(NOT MSVC)
-	target_compile_options(libmodel_antares
+	target_compile_options(model_antares
 			PUBLIC
 			"-Wno-unused-variable")
 else()
 	#set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 	#set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 endif()
-target_link_libraries(libmodel_antares
+target_link_libraries(model_antares
 		PUBLIC
-		libantares-core
 		utils
 		sirius_solver
 		infeasible_problem_analysis
-		libantares-solver-simulation
-		)
+		antares-solver-simulation
+		Antares::benchmarking
+)

@@ -200,7 +200,7 @@ public:
         // The current time-series
         auto& ror = pArea->hydro.series->ror;
         const unsigned int nbchro
-          = NumeroChroniquesTireesParPays[numSpace][pArea->index].Hydraulique;
+          = pArea->hydro.series->getIndex(year);
         pFatalValues[numSpace] = &(ror.entry[(nbchro < ror.width ? nbchro : 0)]);
 
         // Next variable

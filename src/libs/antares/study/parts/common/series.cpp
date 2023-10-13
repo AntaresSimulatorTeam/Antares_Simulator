@@ -29,16 +29,14 @@
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "series.h"
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 bool DataSeriesCommon::forceReload(bool reload) const
 {
@@ -50,25 +48,28 @@ void DataSeriesCommon::markAsModified() const
     timeSeries.markAsModified();
 }
 
-void DataSeriesCommon::estimateMemoryUsage(StudyMemoryUsage& u, enum TimeSeries ts) const
+uint64_t DataSeriesCommon::memoryUsage() const
 {
-    u.requiredMemoryForInput += sizeof(DataSeriesCommon);
-    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-    uint nbTimeSeries;
-    switch (ts)
-    {
-    case timeSeriesThermal:
-        nbTimeSeries = u.study.parameters.nbTimeSeriesThermal;
-        break;
-    case timeSeriesRenewable:
-        nbTimeSeries = 1;
-        break;
-    default:
-        nbTimeSeries = 0;
-    }
-    timeSeries.estimateMemoryUsage(
-      u, 0 != (ts & u.study.parameters.timeSeriesToGenerate), nbTimeSeries, HOURS_PER_YEAR);
+    return timeSeries.memoryUsage();
 }
 
-} // namespace Data
-} // namespace Antares
+double DataSeriesCommon::getAvailablePower(unsigned int hour, unsigned int year) const
+{
+    return timeSeries[getSeriesIndex(year)][hour];
+}
+
+const DataSeriesCommon::SingleYear& DataSeriesCommon::getAvailablePowerYearly(unsigned int year) const
+{
+    return timeSeries[getSeriesIndex(year)];
+}
+
+uint DataSeriesCommon::getSeriesIndex(unsigned int year) const
+{
+    if (timeSeries.width == 1)
+        return 0;
+    else
+        return timeseriesNumbers[0][year];
+}
+
+} // namespace Antares::Data
+

@@ -16,6 +16,6 @@ namespace Yuni
 /*!
 ** \brief Get the current process ID
 */
-YUNI_DECL uint64 ProcessID();
+YUNI_DECL uint64_t ProcessID();
 
 } // namespace Yuni

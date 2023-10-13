@@ -1,21 +1,23 @@
 set(SRC_MATRIX
-        array1d.h
-        array1d.cpp
-        matrix.h
+        antares/array/matrix.h
+        antares/array/matrix.hxx
         matrix.cpp
-        matrix.hxx
         )
 source_group("array" FILES ${SRC_MATRIX})
 
 add_library(array ${SRC_MATRIX})
+add_library(Antares::array ALIAS array)
 
 target_link_libraries(array
         PRIVATE
         yuni-static-core
-        jit
+        PUBLIC
+        io #matrix.hxx
+        jit #jit.hxx require logs
+        Antares::memory
         )
 
 target_include_directories(array
-        PRIVATE
-        ${CMAKE_SOURCE_DIR}/libs
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
         )
