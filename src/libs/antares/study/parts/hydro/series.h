@@ -215,15 +215,15 @@ private:
     class NbTsComparer
     {
     public:
-        NbTsComparer(uint32_t nbOfGenPowerTs_, uint32_t nbOfPumpPowerTs_);
+        NbTsComparer(uint32_t nbOfGenPowerTs, uint32_t nbOfPumpPowerTs);
 
         bool bothZeros() const;
         bool same() const;
         bool differentAndGreaterThanOne(uint nbTimeSeriesSup) const;
 
     private:
-        uint32_t nbOfGenPowerTs{0};
-        uint32_t nbOfPumpPowerTs{0};
+        uint32_t nbOfGenPowerTs_{0};
+        uint32_t nbOfPumpPowerTs_{0};
     };
 
     /**
@@ -233,23 +233,23 @@ private:
     class TsActions
     {
     public:
-        TsActions(Matrix<double, int32_t>& maxHourlyGenPower_,
-                  Matrix<double, int32_t>& maxHourlyPumpPower_);
+        TsActions(Matrix<double, int32_t>& maxHourlyGenPower,
+                  Matrix<double, int32_t>& maxHourlyPumpPower);
 
         void handleBothZeros(const AreaName& areaID);
         [[noreturn]] void handleBothGreaterThanOne(const AreaName& areaID) const;
         void resizeWhenOneTS(Area& area, uint nbTimeSeriesSup);
 
     private:
-        Matrix<double, int32_t>& maxHourlyGenPower;
-        Matrix<double, int32_t>& maxHourlyPumpPower;
+        Matrix<double, int32_t>& maxHourlyGenPower_;
+        Matrix<double, int32_t>& maxHourlyPumpPower_;
 
         void areaToInvalidate(Area* area, const AreaName& areaID, uint nbTimeSeriesSup) const;
     };
 
 }; // class DataSeriesHydro
 
-void resizeMatrixNoDataLoss(Matrix<double, int32_t>& maxHourlyGenPower, uint width);
+void resizeMatrixNoDataLoss(Matrix<double, int32_t>& matrixToResize, uint width);
 
 } // namespace Data
 } // namespace Antares

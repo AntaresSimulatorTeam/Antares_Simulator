@@ -289,7 +289,7 @@ void DataSeriesHydro::setHydroModulability(Study& study, const AreaName& areaID)
 
 void DataSeriesHydro::setNbTimeSeriesSup(uint nbTimeSeriesSup)
 {
-    nbTimeSeriesSup = nbTimeSeriesSup;
+    nbTimeSeriesSup_ = nbTimeSeriesSup;
 }
 
 uint DataSeriesHydro::getNbTimeSeriesSup() const
@@ -316,30 +316,30 @@ void DataSeriesHydro::setMaxPowerTSWhenDeratedMode(const Study& study)
     }
 }
 
-DataSeriesHydro::NbTsComparer::NbTsComparer(uint32_t nbOfGenPowerTs_, uint32_t nbOfPumpPowerTs_) :
- nbOfGenPowerTs(nbOfGenPowerTs_), nbOfPumpPowerTs(nbOfPumpPowerTs_)
+DataSeriesHydro::NbTsComparer::NbTsComparer(uint32_t nbOfGenPowerTs, uint32_t nbOfPumpPowerTs) :
+ nbOfGenPowerTs_(nbOfGenPowerTs), nbOfPumpPowerTs_(nbOfPumpPowerTs)
 {
 }
 
 bool DataSeriesHydro::NbTsComparer::bothZeros() const
 {
-    return (nbOfGenPowerTs || nbOfPumpPowerTs) ? false : true;
+    return (nbOfGenPowerTs_ || nbOfPumpPowerTs_) ? false : true;
 }
 
 bool DataSeriesHydro::NbTsComparer::same() const
 {
-    return (nbOfGenPowerTs == nbOfPumpPowerTs) ? true : false;
+    return (nbOfGenPowerTs_ == nbOfPumpPowerTs_) ? true : false;
 }
 
 bool DataSeriesHydro::NbTsComparer::differentAndGreaterThanOne(uint nbTimeSeriesSup) const
 {
-    return (nbTimeSeriesSup > 1 && (nbOfGenPowerTs != 1) && (nbOfPumpPowerTs != 1)) ? true
+    return (nbTimeSeriesSup > 1 && (nbOfGenPowerTs_ != 1) && (nbOfPumpPowerTs_ != 1)) ? true
                                                                                        : false;
 }
 
-DataSeriesHydro::TsActions::TsActions(Matrix<double, int32_t>& maxHourlyGenPower_,
-                                      Matrix<double, int32_t>& maxHourlyPumpPower_) :
- maxHourlyGenPower(maxHourlyGenPower_), maxHourlyPumpPower(maxHourlyPumpPower_)
+DataSeriesHydro::TsActions::TsActions(Matrix<double, int32_t>& maxHourlyGenPower,
+                                      Matrix<double, int32_t>& maxHourlyPumpPower) :
+ maxHourlyGenPower_(maxHourlyGenPower), maxHourlyPumpPower_(maxHourlyPumpPower)
 {
 }
 
@@ -348,8 +348,8 @@ void DataSeriesHydro::TsActions::handleBothZeros(const AreaName& areaID)
     logs.error() << "Hydro Max Power: `" << areaID
                  << "`: empty matrix detected. Fixing it with default values";
 
-    maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
-    maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
+    maxHourlyGenPower_.reset(1, HOURS_PER_YEAR);
+    maxHourlyPumpPower_.reset(1, HOURS_PER_YEAR);
 }
 
 [[noreturn]] void DataSeriesHydro::TsActions::handleBothGreaterThanOne(const AreaName& areaID) const
@@ -362,16 +362,16 @@ void DataSeriesHydro::TsActions::handleBothZeros(const AreaName& areaID)
 
 void DataSeriesHydro::TsActions::resizeWhenOneTS(Area& area, uint nbTimeSeriesSup)
 {
-    if (maxHourlyGenPower.width == 1)
+    if (maxHourlyGenPower_.width == 1)
     {
-        resizeMatrixNoDataLoss(maxHourlyGenPower, nbTimeSeriesSup);
+        resizeMatrixNoDataLoss(maxHourlyGenPower_, nbTimeSeriesSup);
         areaToInvalidate(&area, area.id, nbTimeSeriesSup);
         return;
     }
 
-    if (maxHourlyPumpPower.width == 1)
+    if (maxHourlyPumpPower_.width == 1)
     {
-        resizeMatrixNoDataLoss(maxHourlyPumpPower, nbTimeSeriesSup);
+        resizeMatrixNoDataLoss(maxHourlyPumpPower_, nbTimeSeriesSup);
         areaToInvalidate(&area, area.id, nbTimeSeriesSup);
         return;
     }
