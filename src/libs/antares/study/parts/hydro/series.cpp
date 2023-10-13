@@ -227,7 +227,7 @@ void DataSeriesHydro::reset()
     maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
     count = 1;
-    nbTimeSeriesSup = 1;
+    nbTimeSeriesSup_ = 1;
 }
 
 uint64_t DataSeriesHydro::memoryUsage() const
@@ -269,10 +269,10 @@ bool DataSeriesHydro::postProcessMaxPowerTS(Area& area)
     if (nbTSCompare.same())
         return true;
 
-    if (nbTSCompare.differentAndGreaterThanOne(nbTimeSeriesSup))
+    if (nbTSCompare.differentAndGreaterThanOne(nbTimeSeriesSup_))
         tsActions.handleBothGreaterThanOne(area.id);
 
-    tsActions.resizeWhenOneTS(area, nbTimeSeriesSup);
+    tsActions.resizeWhenOneTS(area, nbTimeSeriesSup_);
 
     return true;
 }
@@ -287,14 +287,14 @@ void DataSeriesHydro::setHydroModulability(Study& study, const AreaName& areaID)
     }
 }
 
-void DataSeriesHydro::setNbTimeSeriesSup(uint nbTimeSeriesSup_)
+void DataSeriesHydro::setNbTimeSeriesSup(uint nbTimeSeriesSup)
 {
-    nbTimeSeriesSup = nbTimeSeriesSup_;
+    nbTimeSeriesSup = nbTimeSeriesSup;
 }
 
 uint DataSeriesHydro::getNbTimeSeriesSup() const
 {
-    return nbTimeSeriesSup;
+    return nbTimeSeriesSup_;
 }
 
 void DataSeriesHydro::setNbTimeSeriesSup()
@@ -302,7 +302,7 @@ void DataSeriesHydro::setNbTimeSeriesSup()
     const auto& maxHourlyGenPower_ = maxHourlyGenPower.width;
     const auto& maxHourlyPumpPower_ = maxHourlyPumpPower.width;
 
-    nbTimeSeriesSup
+    nbTimeSeriesSup_
       = (maxHourlyGenPower_ >= maxHourlyPumpPower_) ? maxHourlyGenPower_ : maxHourlyPumpPower_;
 }
 
@@ -312,7 +312,7 @@ void DataSeriesHydro::setMaxPowerTSWhenDeratedMode(const Study& study)
     {
         maxHourlyGenPower.averageTimeseries();
         maxHourlyPumpPower.averageTimeseries();
-        nbTimeSeriesSup = 1;
+        nbTimeSeriesSup_ = 1;
     }
 }
 
@@ -331,9 +331,9 @@ bool DataSeriesHydro::NbTsComparer::same() const
     return (nbOfGenPowerTs == nbOfPumpPowerTs) ? true : false;
 }
 
-bool DataSeriesHydro::NbTsComparer::differentAndGreaterThanOne(uint nbTimeSeriesSup_) const
+bool DataSeriesHydro::NbTsComparer::differentAndGreaterThanOne(uint nbTimeSeriesSup) const
 {
-    return (nbTimeSeriesSup_ > 1 && (nbOfGenPowerTs != 1) && (nbOfPumpPowerTs != 1)) ? true
+    return (nbTimeSeriesSup > 1 && (nbOfGenPowerTs != 1) && (nbOfPumpPowerTs != 1)) ? true
                                                                                        : false;
 }
 
@@ -360,32 +360,32 @@ void DataSeriesHydro::TsActions::handleBothZeros(const AreaName& areaID)
     throw Error::ReadingStudy();
 }
 
-void DataSeriesHydro::TsActions::resizeWhenOneTS(Area& area, uint nbTimeSeriesSup_)
+void DataSeriesHydro::TsActions::resizeWhenOneTS(Area& area, uint nbTimeSeriesSup)
 {
     if (maxHourlyGenPower.width == 1)
     {
-        resizeMatrixNoDataLoss(maxHourlyGenPower, nbTimeSeriesSup_);
-        areaToInvalidate(&area, area.id, nbTimeSeriesSup_);
+        resizeMatrixNoDataLoss(maxHourlyGenPower, nbTimeSeriesSup);
+        areaToInvalidate(&area, area.id, nbTimeSeriesSup);
         return;
     }
 
     if (maxHourlyPumpPower.width == 1)
     {
-        resizeMatrixNoDataLoss(maxHourlyPumpPower, nbTimeSeriesSup_);
-        areaToInvalidate(&area, area.id, nbTimeSeriesSup_);
+        resizeMatrixNoDataLoss(maxHourlyPumpPower, nbTimeSeriesSup);
+        areaToInvalidate(&area, area.id, nbTimeSeriesSup);
         return;
     }
 }
 
 void DataSeriesHydro::TsActions::areaToInvalidate(Area* area,
                                                   const AreaName& areaID,
-                                                  uint nbTimeSeriesSup_) const
+                                                  uint nbTimeSeriesSup) const
 {
     if (area)
     {
         area->invalidateJIT = true;
         logs.info() << "  '" << area->id << "': The hydro max power data have been normalized to "
-                    << nbTimeSeriesSup_ << " timeseries";
+                    << nbTimeSeriesSup << " timeseries";
     }
     else
         logs.error() << "Impossible to find the area `" << areaID << "` to invalidate it";

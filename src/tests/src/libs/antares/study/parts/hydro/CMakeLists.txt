@@ -1,7 +1,7 @@
 # Useful variables definitions
 set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
 set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
-set(src_test_utilis "${CMAKE_SOURCE_DIR}/tests/src/utlis")
+set(src_test_utils "${CMAKE_SOURCE_DIR}/tests/src/utils")
 
 
 # Hydro data reader
@@ -14,7 +14,7 @@ target_include_directories(test-hydro-reader
 	PRIVATE
 	"${src_libs_antares_study}"
 	"${src_libs_antares}/array/antares/array"
-	"${src_test_utilis}"
+	"${src_test_utils}"
 )
 
 target_link_libraries(test-hydro-reader
@@ -45,7 +45,7 @@ target_include_directories(test-hydro-series
 	"${src_libs_antares_study}"
 	"${src_libs_antares}/array/antares/array"
 	"${src_libs_antares}/exception/antares/exception"
-	"${src_test_utilis}"
+	"${src_test_utils}"
 )
 
 target_link_libraries(test-hydro-series

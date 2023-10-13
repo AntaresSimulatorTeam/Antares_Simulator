@@ -178,7 +178,7 @@ public:
     /**
      * \brief Setting TS's number of maximum generation and pumping matrices
      */
-    void setNbTimeSeriesSup(uint nbTimeSeriesSup_);
+    void setNbTimeSeriesSup(uint nbTimeSeriesSup);
 
     /**
      * \brief Setting TS's number of maximum generation and pumping matrices
@@ -206,7 +206,7 @@ private:
     *routine, it might
     ** indicate that the two values are not strictly equal)
     */
-    uint nbTimeSeriesSup = 0;
+    uint nbTimeSeriesSup_ = 0;
 
     /**
      * This class provides comparing two integers
@@ -219,7 +219,7 @@ private:
 
         bool bothZeros() const;
         bool same() const;
-        bool differentAndGreaterThanOne(uint nbTimeSeriesSup_) const;
+        bool differentAndGreaterThanOne(uint nbTimeSeriesSup) const;
 
     private:
         uint32_t nbOfGenPowerTs{0};
@@ -238,13 +238,13 @@ private:
 
         void handleBothZeros(const AreaName& areaID);
         [[noreturn]] void handleBothGreaterThanOne(const AreaName& areaID) const;
-        void resizeWhenOneTS(Area& area, uint nbTimeSeriesSup_);
+        void resizeWhenOneTS(Area& area, uint nbTimeSeriesSup);
 
     private:
         Matrix<double, int32_t>& maxHourlyGenPower;
         Matrix<double, int32_t>& maxHourlyPumpPower;
 
-        void areaToInvalidate(Area* area, const AreaName& areaID, uint nbTimeSeriesSup_) const;
+        void areaToInvalidate(Area* area, const AreaName& areaID, uint nbTimeSeriesSup) const;
     };
 
 }; // class DataSeriesHydro
