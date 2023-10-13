@@ -10,7 +10,7 @@ void createFolder(const stringT& path, const stringT& folder_name)
     }
     catch (const fs::filesystem_error& e)
     {
-        std::cerr << "Exception deleting folder '" + folder_name + "': " + e.what() + "\n";
+        std::cerr << "Exception creating folder '" + folder_name + "': " + e.what() + "\n";
     }
 }
 
@@ -34,12 +34,13 @@ void createFile(const stringT& folder_path, const stringT& file_name)
         else
         {
             // Failed to create or open the file
-            throw std::runtime_error("Failed to create file\n");
+            std::error_code ec = std::make_error_code(std::errc::io_error);
+            throw fs::filesystem_error("Failed to create the file.", ec);
         }
     }
-    catch(const std::exception& e)
+    catch (const fs::filesystem_error& e)
     {
-        std::cerr << "Error: " << e.what() << "\n";
+        std::cerr << "Error creating file: " << file_name << "/" << e.what() << "\n";
     }
 }
 
