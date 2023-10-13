@@ -18,6 +18,13 @@ T beautify(const T& in) {
 constexpr auto beautifyStd = beautify<std::string>;
 constexpr auto beautifyYuni = beautify<Yuni::String>;
 
+std::string transformNameToId(const AnyString& name)
+{
+    std::string res;
+    Antares::TransformNameIntoID(name, res);
+    return res;
+}
+
 }
 
 BOOST_AUTO_TEST_CASE(test_beautify_name_std)
@@ -46,4 +53,11 @@ BOOST_AUTO_TEST_CASE(test_string_conversion)
 
     Yuni::String yuniConvertedBack = stdStr;
     BOOST_TEST(yuniConvertedBack == "hello");
+}
+
+BOOST_AUTO_TEST_CASE(test_transform_name_into_id)
+{
+    BOOST_CHECK(transformNameToId("NA!ME") == "na me");
+    BOOST_CHECK(transformNameToId("name!") == "name");
+    BOOST_CHECK(transformNameToId("!name") == "name");
 }

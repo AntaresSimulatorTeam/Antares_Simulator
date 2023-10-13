@@ -15,6 +15,7 @@ EnsureQueueStartedIfNeeded::EnsureQueueStartedIfNeeded(
         qs->start();
     }
 }
+
 EnsureQueueStartedIfNeeded::~EnsureQueueStartedIfNeeded()
 {
     if (startQueue)
