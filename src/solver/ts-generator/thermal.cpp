@@ -354,7 +354,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
     auto& modulation = cluster.modulation[Data::thermalModulationCapacity];
 
-    Antares::Data::DataSeriesCommon::SingleYear dstSeries = nullptr;
+    double* dstSeries = nullptr;
 
     const uint tsCount = nbThermalTimeseries + 2;
     for (uint tsIndex = 0; tsIndex != tsCount; ++tsIndex)

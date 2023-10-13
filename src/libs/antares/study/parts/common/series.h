@@ -80,39 +80,5 @@ public:
     static const double emptyColumn[HOURS_PER_YEAR];
 };
 
-/*!
-** \brief Data series (Common)
-*/
-class DataSeriesCommon
-{
-public:
-    using AllYears = Matrix<double>;
-    using SingleYear = AllYears::ColumnType;
-
-    bool forceReload(bool reload = false) const;
-
-    void markAsModified() const;
-
-    uint64_t memoryUsage() const;
-
-    double getAvailablePower(unsigned int hour, unsigned int year) const;
-
-    /*!
-    ** \brief Series (MW)
-    **
-    ** Merely a matrix of TimeSeriesCount * 8760 values
-    */
-    AllYears timeSeries;
-
-    /*!
-    ** \brief Monte-Carlo
-    */
-    Matrix<uint32_t> timeseriesNumbers;
-
-private:
-    uint getSeriesIndex(unsigned int year) const;
-
-}; // class DataSeriesCommon
-
 } // namespace Antares::Data
 #endif /* __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__ */
