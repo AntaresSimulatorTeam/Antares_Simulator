@@ -112,29 +112,29 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
-    # - name: Run named mps tests
-    #   if: ${{ env.IS_PUSH == 'true' }}
-    #   uses: ./.github/workflows/run-tests
-    #   with:
-    #     simtest-tag: ${{steps.simtest-version.outputs.prop}}
-    #     batch-name: valid-named-mps
-    #     os: ${{ matrix.test-platform }}
-    #     variant: "named-mps"
+    - name: Run named mps tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-named-mps
+        os: ${{ matrix.test-platform }}
+        variant: "named-mps"
 
     - name: Run unfeasibility-related tests
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: always() && ${{ env.IS_PUSH == 'true' }}
       run: |
            cd _build
            ctest -C Release --output-on-failure -R unfeasible
 
     - name: Run unit and end-to-end tests
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ env.IS_PUSH == 'true' }} && always()
       run: |
            cd _build
-           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end"
+           ctest -C Release --output-on-failure -L "unit|end-to-end"
 
     - name: Run kirchhoff constraints tests
-      if: ${{ false }}
+      if: always()
       shell: bash
       run: |
            tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
@@ -149,7 +149,7 @@ jobs:
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
     - name: Run tests about infinity on BCs RHS
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ env.IS_PUSH == 'true' }} && always()
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -157,7 +157,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run tests introduced in v860
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ env.IS_PUSH == 'true' }} && always()
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -165,23 +165,23 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ env.IS_PUSH == 'true' }} && always()
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
         os: ${{ matrix.test-platform }}
 
-    # - name: Run mps tests
-    #   if: ${{ env.IS_PUSH == 'true' }}
-    #   uses: ./.github/workflows/run-tests
-    #   with:
-    #     simtest-tag: ${{steps.simtest-version.outputs.prop}}
-    #     batch-name: valid-mps
-    #     os: ${{ matrix.test-platform }}
+    - name: Run mps tests
+      if: ${{ env.IS_PUSH == 'true' }} && always()
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-mps
+        os: ${{ matrix.test-platform }}
 
     - name: Run tests for adequacy patch (CSR)
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ env.IS_PUSH == 'true' }} && always()
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -189,7 +189,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run medium-tests
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      if: always()
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -197,7 +197,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-1
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      if: always()
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -205,7 +205,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-2
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      if: always()
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -213,7 +213,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-3
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      if: always()
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
