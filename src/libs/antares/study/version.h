@@ -61,7 +61,10 @@ enum Version
     version850 = 850,
     //! Study version 8.6
     version860 = 860,
+    //! Study version 8.7
     version870 = 870,
+    //! Study version 8.8
+    version880 = 880,
 
     // Constants
     //! A more recent version that we can't handle
@@ -69,7 +72,7 @@ enum Version
 
 };
 
-constexpr Version versionLatest = version870;
+constexpr Version versionLatest = version880;
 
 /*!
 ** \brief Try to determine the version of a study
