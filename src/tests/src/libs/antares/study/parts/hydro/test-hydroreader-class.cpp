@@ -74,8 +74,7 @@ struct Fixture
         buffer.clear();
         buffer = base_folder + SEP + hydro_folder + SEP + common_folder + SEP + capacity_folder
                  + SEP + maxpower + area_1->id.c_str() + ".txt";
-        Yuni::CString<256, false> temp(buffer);
-        reader->dailyMaxPumpAndGen.saveToCSVFile(temp, 2);
+        reader->dailyMaxPumpAndGen.saveToCSVFile(buffer, 2);
     }
 
     void createFoldersAndFiles()
@@ -91,12 +90,12 @@ struct Fixture
         createFolder(buffer, series_folder);
 
         // area1 folder
-        stringT area1_folder = area_1->id.c_str();
+        stringT area1_ID = area_1->id.c_str();
         buffer.clear();
         buffer = base_folder + SEP + hydro_folder + SEP + series_folder;
-        createFolder(buffer, area1_folder);
+        createFolder(buffer, area1_ID);
         buffer.clear();
-        buffer = base_folder + SEP + hydro_folder + SEP + series_folder + SEP + area1_folder;
+        buffer = base_folder + SEP + hydro_folder + SEP + series_folder + SEP + area1_ID;
         // maxHourlyGenPower and maxHourlyPumpPower files
         createFile(buffer, maxHourlyGenPower);
         createFile(buffer, maxHourlyPumpPower);
@@ -109,14 +108,20 @@ struct Fixture
         buffer = base_folder + SEP + hydro_folder + SEP + common_folder;
         createFolder(buffer, capacity_folder);
 
-        // maxhours files
-        stringT maxpowerArea1 = maxpower + area1_folder + ".txt";
         buffer.clear();
         buffer = base_folder + SEP + hydro_folder + SEP + common_folder + SEP + capacity_folder;
 
-        createFile(buffer, maxDailyGenEnergy_);
-        createFile(buffer, maxDailyPumpEnergy_);
+        //  max daily energy and power file
+        stringT maxpowerArea1 = maxpower + area1_ID + ".txt";
+
         createFile(buffer, maxpowerArea1);
+
+        //  max daily energy files
+        stringT maxDailyGenEnergy_Area1 = maxDailyGenEnergy_ + area1_ID + ".txt";
+        stringT maxDailyPumpEnergy_Area1 = maxDailyPumpEnergy_ + area1_ID + ".txt";
+
+        createFile(buffer, maxDailyGenEnergy_Area1);
+        createFile(buffer, maxDailyPumpEnergy_Area1);
     }
 
     std::shared_ptr<Study> study;
@@ -128,8 +133,8 @@ struct Fixture
     stringT series_folder = "series";
     stringT common_folder = "common";
     stringT capacity_folder = "capacity";
-    stringT maxDailyGenEnergy_ = "maxDailyGenEnergy_area1.txt";
-    stringT maxDailyPumpEnergy_ = "maxDailyPumpEnergy_area1.txt";
+    stringT maxDailyGenEnergy_ = "maxDailyGenEnergy_";
+    stringT maxDailyPumpEnergy_ = "maxDailyPumpEnergy_";
     stringT maxpower = "maxpower_";
     stringT maxHourlyGenPower = "maxHourlyGenPower.txt";
     stringT maxHourlyPumpPower = "maxHourlyPumpPower.txt";
