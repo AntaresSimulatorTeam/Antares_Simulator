@@ -86,8 +86,8 @@ public:
 
     //! All {FO,PO}{Duration,Rate} annual values
     // max x DAYS_PER_YEAR
-    Matrix<double, int32_t> fuelcost;
-    Matrix<double, int32_t> co2cost;
+    Matrix<double> fuelcost;
+    Matrix<double> co2cost;
 
 }; // class EconomicInputData
 

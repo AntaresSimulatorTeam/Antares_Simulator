@@ -74,7 +74,7 @@ public:
     void markAsModified() const;
     uint64_t memoryUsage() const;
 
-    Matrix<double, int32_t> timeSeries;
+    Matrix<double> timeSeries;
     TSNumbers timeseriesNumbers;
 
     static const double emptyColumn[HOURS_PER_YEAR];

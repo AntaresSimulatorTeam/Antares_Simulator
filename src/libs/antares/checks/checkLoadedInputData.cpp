@@ -142,7 +142,7 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
 // TS
 template<class ExceptionT>
 static void checkThermalColumnNumber(const Antares::Data::AreaList& areas,
-                                     Matrix<double, int32_t> Antares::Data::EconomicInputData::*matrix)
+                                     Matrix<double> Antares::Data::EconomicInputData::*matrix)
 {
     ExceptionT exception;
     bool error = false;

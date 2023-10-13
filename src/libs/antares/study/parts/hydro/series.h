@@ -114,7 +114,7 @@ public:
 
     ** (it was DAYS_PER_YEAR before 3.9)
     */
-    Matrix<double, int32_t> ror;
+    Matrix<double> ror;
 
     /*!
     ** \brief Mod (MW)
@@ -122,14 +122,14 @@ public:
     ** Merely a matrix of TimeSeriesCount * 365 values
     ** This matrix is not used in `adequation` mode.
     */
-    Matrix<double, int32_t> storage;
+    Matrix<double> storage;
 
     /*!
     ** \brief Minimum Generation (MW)
     **
     ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
-    Matrix<double, int32_t> mingen;
+    Matrix<double> mingen;
 
     /*!
     ** \brief The number of time-series
