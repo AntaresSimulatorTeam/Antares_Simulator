@@ -3,9 +3,14 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/included/unit_test.hpp>
-#include "help-functions.h"
 #include <study.h>
+#include <matrix.h>
+#include <utils.h>
+
 #define SEP "/"
+
+using namespace Antares::Data;
+namespace fs = std::filesystem;
 
 bool DailyMaxPowerAsHourlyTransferCheck(Matrix<double, int32_t>::ColumnType& hourlyColumn,
                                         const Matrix<double>::ColumnType& dailyColumn)
@@ -34,12 +39,18 @@ bool DailyMaxPowerAsHourlyTransferCheck(Matrix<double, int32_t>::ColumnType& hou
     return check;
 }
 
+void fillColumnWithSpecialEnds(Matrix<double>::ColumnType& col, double value, uint heigth)
+{
+    col[0] = value + 1;
+    col[heigth - 1] = value + 2;
+}
+
 struct Fixture
 {
     Fixture()
     {
-        study = make_shared<Study>(true);
-        reader = make_shared<HydroMaxTimeSeriesReader>();
+        study = std::make_shared<Study>(true);
+        reader = std::make_shared<HydroMaxTimeSeriesReader>();
         // Add areas
         area_1 = study->areaAdd("Area1");
         study->areas.rebuildIndexes();
@@ -48,21 +59,21 @@ struct Fixture
         createFoldersAndFiles();
 
         auto& gen = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxP];
-        InstantiateColumn(gen, 300., DAYS_PER_YEAR);
+        fillColumnWithSpecialEnds(gen, 300., DAYS_PER_YEAR);
 
         auto& pump = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxP];
-        InstantiateColumn(pump, 200., DAYS_PER_YEAR);
+        fillColumnWithSpecialEnds(pump, 200., DAYS_PER_YEAR);
 
         auto& hoursGen = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxE];
-        InstantiateColumn(hoursGen, 20., DAYS_PER_YEAR);
+        fillColumnWithSpecialEnds(hoursGen, 20., DAYS_PER_YEAR);
 
         auto& hoursPump = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxE];
-        InstantiateColumn(hoursPump, 14., DAYS_PER_YEAR);
+        fillColumnWithSpecialEnds(hoursPump, 14., DAYS_PER_YEAR);
 
         stringT buffer;
         buffer.clear();
-        buffer = base_folder + SEP + hydro_folder + SEP + common_folder + SEP
-                       + capacity_folder + SEP + maxpower + area_1->id.c_str() + ".txt";
+        buffer = base_folder + SEP + hydro_folder + SEP + common_folder + SEP + capacity_folder
+                 + SEP + maxpower + area_1->id.c_str() + ".txt";
         Yuni::CString<256, false> temp(buffer);
         reader->dailyMaxPumpAndGen.saveToCSVFile(temp, 2);
     }
@@ -85,8 +96,7 @@ struct Fixture
         buffer = base_folder + SEP + hydro_folder + SEP + series_folder;
         createFolder(buffer, area1_folder);
         buffer.clear();
-        buffer = base_folder + SEP + hydro_folder + SEP + series_folder + SEP
-                       + area1_folder;
+        buffer = base_folder + SEP + hydro_folder + SEP + series_folder + SEP + area1_folder;
         // maxHourlyGenPower and maxHourlyPumpPower files
         createFile(buffer, maxHourlyGenPower);
         createFile(buffer, maxHourlyPumpPower);
@@ -109,8 +119,8 @@ struct Fixture
         createFile(buffer, maxpowerArea1);
     }
 
-    shared_ptr<Study> study;
-    shared_ptr<HydroMaxTimeSeriesReader> reader;
+    std::shared_ptr<Study> study;
+    std::shared_ptr<HydroMaxTimeSeriesReader> reader;
     Area* area_1;
     Area* area_2;
     stringT base_folder = fs::current_path().string();

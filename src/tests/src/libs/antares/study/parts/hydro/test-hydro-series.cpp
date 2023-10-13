@@ -3,18 +3,31 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/included/unit_test.hpp>
-#include "help-functions.h"
 #include <study.h>
 #include <LoadingError.hpp>
+#include <matrix.h>
+#include <utils.h>
 
 #define SEP "/"
+
+using namespace Antares::Data;
+namespace fs = std::filesystem;
+
+void fillTimeSeriesWithSpecialEnds(Matrix<double, int32_t>& timeSeries, double value)
+{
+    for (uint ts = 0; ts < timeSeries.width; ts++)
+    {
+        timeSeries[ts][0] = value + 1;
+        timeSeries[ts][timeSeries.height - 1] = value + 2;
+    }
+}
 
 struct Fixture
 {
     Fixture()
     {
         // Create studies
-        study = make_shared<Study>(true);
+        study = std::make_shared<Study>(true);
 
         // Add areas to studies
         area_1 = study->areaAdd("Area1");
@@ -29,14 +42,15 @@ struct Fixture
 
         //  Setting necessary paths
         pathToMaxHourlyGenPower_file.clear();
-        pathToMaxHourlyGenPower_file = base_folder + SEP + series_folder + SEP + area_1->id.c_str() + SEP + maxHourlyGenPower_file;
+        pathToMaxHourlyGenPower_file = base_folder + SEP + series_folder + SEP + area_1->id.c_str()
+                                       + SEP + maxHourlyGenPower_file;
 
         pathToMaxHourlyPumpPower_file.clear();
-        pathToMaxHourlyPumpPower_file = base_folder + SEP + series_folder + SEP + area_1->id.c_str() + SEP + maxHourlyPumpPower_file;
+        pathToMaxHourlyPumpPower_file = base_folder + SEP + series_folder + SEP + area_1->id.c_str()
+                                        + SEP + maxHourlyPumpPower_file;
 
         pathToSeriesFolder.clear();
         pathToSeriesFolder = base_folder + SEP + series_folder;
-
     }
 
     void createFoldersAndFiles()
@@ -58,7 +72,7 @@ struct Fixture
         createFile(buffer, maxHourlyPumpPower_file);
     }
 
-    shared_ptr<Study> study;
+    std::shared_ptr<Study> study;
     Area* area_1;
     stringT base_folder = fs::temp_directory_path().string();
     stringT series_folder = "series";
@@ -85,8 +99,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_equal_width, Fixture
     maxHourlyGenPower.reset(3, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(3, HOURS_PER_YEAR);
 
-    InstantiateMatrix(maxHourlyGenPower, 400., HOURS_PER_YEAR);
-    InstantiateMatrix(maxHourlyPumpPower, 200., HOURS_PER_YEAR);
+    fillTimeSeriesWithSpecialEnds(maxHourlyGenPower, 400.);
+    fillTimeSeriesWithSpecialEnds(maxHourlyPumpPower, 200.);
 
     ret = maxHourlyGenPower.saveToCSVFile(pathToMaxHourlyGenPower_file, 0) && ret;
     ret = maxHourlyPumpPower.saveToCSVFile(pathToMaxHourlyPumpPower_file, 0) && ret;
@@ -112,8 +126,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width_and_d
     maxHourlyGenPower.reset(3, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(3, HOURS_PER_YEAR);
 
-    InstantiateMatrix(maxHourlyGenPower, 400., HOURS_PER_YEAR);
-    InstantiateMatrix(maxHourlyPumpPower, 200., HOURS_PER_YEAR);
+    fillTimeSeriesWithSpecialEnds(maxHourlyGenPower, 400.);
+    fillTimeSeriesWithSpecialEnds(maxHourlyPumpPower, 200.);
 
     ret = maxHourlyGenPower.saveToCSVFile(pathToMaxHourlyGenPower_file, 0) && ret;
     ret = maxHourlyPumpPower.saveToCSVFile(pathToMaxHourlyPumpPower_file, 0) && ret;
@@ -139,8 +153,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_different_width_case
     maxHourlyGenPower.reset(3, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(2, HOURS_PER_YEAR);
 
-    InstantiateMatrix(maxHourlyGenPower, 400., HOURS_PER_YEAR);
-    InstantiateMatrix(maxHourlyPumpPower, 200., HOURS_PER_YEAR);
+    fillTimeSeriesWithSpecialEnds(maxHourlyGenPower, 400.);
+    fillTimeSeriesWithSpecialEnds(maxHourlyPumpPower, 200.);
 
     ret = maxHourlyGenPower.saveToCSVFile(pathToMaxHourlyGenPower_file, 0) && ret;
     ret = maxHourlyPumpPower.saveToCSVFile(pathToMaxHourlyPumpPower_file, 0) && ret;
@@ -164,8 +178,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_different_width_case_1, Fixtu
     maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(3, HOURS_PER_YEAR);
 
-    InstantiateMatrix(maxHourlyGenPower, 400., HOURS_PER_YEAR);
-    InstantiateMatrix(maxHourlyPumpPower, 200., HOURS_PER_YEAR);
+    fillTimeSeriesWithSpecialEnds(maxHourlyGenPower, 400.);
+    fillTimeSeriesWithSpecialEnds(maxHourlyPumpPower, 200.);
 
     ret = maxHourlyGenPower.saveToCSVFile(pathToMaxHourlyGenPower_file, 0) && ret;
     ret = maxHourlyPumpPower.saveToCSVFile(pathToMaxHourlyPumpPower_file, 0) && ret;
@@ -176,7 +190,6 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_different_width_case_1, Fixtu
     ret = area_1->hydro.series->LoadMaxPower(area_1->id, pathToSeriesFolder) && ret;
     area_1->hydro.series->setNbTimeSeriesSup();
     ret = area_1->hydro.series->postProcessMaxPowerTS(*area_1) && ret;
-
 
     BOOST_CHECK(ret);
     BOOST_CHECK_EQUAL(maxHourlyGenPower.width, maxHourlyPumpPower.width);
@@ -191,8 +204,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_different_width_case_2, Fixtu
     maxHourlyGenPower.reset(4, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
 
-    InstantiateMatrix(maxHourlyGenPower, 400., HOURS_PER_YEAR);
-    InstantiateMatrix(maxHourlyPumpPower, 200., HOURS_PER_YEAR);
+    fillTimeSeriesWithSpecialEnds(maxHourlyGenPower, 400.);
+    fillTimeSeriesWithSpecialEnds(maxHourlyPumpPower, 200.);
 
     ret = maxHourlyGenPower.saveToCSVFile(pathToMaxHourlyGenPower_file, 0) && ret;
     ret = maxHourlyPumpPower.saveToCSVFile(pathToMaxHourlyPumpPower_file, 0) && ret;
@@ -217,8 +230,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_zeros, Fixture)
     maxHourlyGenPower.reset(4, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
 
-    InstantiateMatrix(maxHourlyGenPower, 400., HOURS_PER_YEAR);
-    InstantiateMatrix(maxHourlyPumpPower, 200., HOURS_PER_YEAR);
+    fillTimeSeriesWithSpecialEnds(maxHourlyGenPower, 400.);
+    fillTimeSeriesWithSpecialEnds(maxHourlyPumpPower, 200.);
 
     ret = maxHourlyGenPower.saveToCSVFile(pathToMaxHourlyGenPower_file, 0) && ret;
     ret = maxHourlyPumpPower.saveToCSVFile(pathToMaxHourlyPumpPower_file, 0) && ret;
@@ -235,6 +248,5 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_zeros, Fixture)
     BOOST_CHECK(!ret);
     BOOST_CHECK_EQUAL(maxHourlyGenPower.width, maxHourlyPumpPower.width);
 }
-
 
 BOOST_AUTO_TEST_SUITE_END()
