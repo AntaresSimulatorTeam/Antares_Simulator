@@ -140,6 +140,9 @@ void Application::prepare(int argc, char* argv[])
 
     // Some more checks require the existence of pParameters, hence of a study.
     // Their execution is delayed up to this point.
+    checkOrtoolsUsage(
+      pParameters->unitCommitment.ucMode, pParameters->ortoolsUsed, pParameters->ortoolsSolver);
+
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
                                   pParameters->hydroPricing.hpMode);
 

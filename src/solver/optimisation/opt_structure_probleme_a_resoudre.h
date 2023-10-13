@@ -115,6 +115,8 @@ struct PROBLEME_ANTARES_A_RESOUDRE
     std::vector<std::string> NomDesVariables;
     std::vector<std::string> NomDesContraintes;
 
+    std::vector<bool> VariablesEntieres; // true = int, false = continuous
+
     std::vector<int> StatutDesVariables;
     std::vector<int> StatutDesContraintes;
 
