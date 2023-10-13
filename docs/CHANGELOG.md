@@ -1,5 +1,11 @@
 Antares Changelog
 =================
+
+8.8.0-rc2 (10/2023)
+--------------------
+## Build
+- Fix version numbers (8b9b2b389)
+
 8.8.0-rc1 (10/2023)
 --------------------
 ## New features
