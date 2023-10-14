@@ -12,31 +12,35 @@
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-bool DailyMaxPowerAsHourlyTransferCheck(Matrix<double, int32_t>::ColumnType& hourlyColumn,
+bool equalDailyMaxPowerAsHourlyTs(const Matrix<double, int32_t>::ColumnType& hourlyColumn,
                                         const Matrix<double>::ColumnType& dailyColumn)
 {
-    uint hours = 0;
-    uint days = 0;
-    bool check = true;
+    uint hour = 0;
+    uint day = 0;
 
-    while (hours < HOURS_PER_YEAR && days < DAYS_PER_YEAR)
+    while (hour < HOURS_PER_YEAR && day < DAYS_PER_YEAR)
     {
-        for (uint i = 0; i < 24; ++i)
+        for (uint i = 0; i < HOURS_PER_DAY; ++i)
         {
-            if (hourlyColumn[hours] != dailyColumn[days])
-            {
-                check = false;
-                break;
-            }
-            ++hours;
+            if (hourlyColumn[hour] != dailyColumn[day])
+                return false;
+            ++hour;
         }
-
-        if (!check)
-            break;
-
-        ++days;
+        ++day;
     }
-    return check;
+
+    return true;
+}
+
+bool equalDailyMaxEnergyTs(const Matrix<double>::ColumnType& col1, const Matrix<double>::ColumnType& col2)
+{
+    for (uint h = 0; h < DAYS_PER_YEAR; ++h)
+    {
+        if (col1[h] != col2[h])
+            return false;
+    }
+
+    return true;
 }
 
 void fillColumnWithSpecialEnds(Matrix<double>::ColumnType& col, double value, uint heigth)
@@ -75,6 +79,12 @@ struct Fixture
         buffer = base_folder + SEP + hydro_folder + SEP + common_folder + SEP + capacity_folder
                  + SEP + maxpower + area_1->id.c_str() + ".txt";
         reader->dailyMaxPumpAndGen.saveToCSVFile(buffer, 2);
+
+        // Reset columns
+        reader->dailyMaxPumpAndGen.fillColumn(HydroMaxTimeSeriesReader::genMaxP, 0.);
+        reader->dailyMaxPumpAndGen.fillColumn(HydroMaxTimeSeriesReader::pumpMaxP, 0.);
+        reader->dailyMaxPumpAndGen.fillColumn(HydroMaxTimeSeriesReader::genMaxE, 24.);
+        reader->dailyMaxPumpAndGen.fillColumn(HydroMaxTimeSeriesReader::pumpMaxE, 24.);
     }
 
     void createFoldersAndFiles()
@@ -127,8 +137,7 @@ struct Fixture
     std::shared_ptr<Study> study;
     std::shared_ptr<HydroMaxTimeSeriesReader> reader;
     Area* area_1;
-    Area* area_2;
-    stringT base_folder = fs::current_path().string();
+    stringT base_folder = fs::temp_directory_path().string();
     stringT hydro_folder = "hydro";
     stringT series_folder = "series";
     stringT common_folder = "common";
@@ -151,17 +160,26 @@ BOOST_FIXTURE_TEST_CASE(Testing_support_for_old_studies, Fixture)
 {
     stringT buffer;
     bool ret = true;
-    auto& colMaxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower[0];
-    auto& colMaxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower[0];
-    auto& gen = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxP];
-    auto& pump = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxP];
+
+    auto& genP = area_1->hydro.series->maxHourlyGenPower[0];
+    auto& pumpP = area_1->hydro.series->maxHourlyPumpPower[0];
+    auto& genE = area_1->hydro.maxDailyGenEnergy[0];
+    auto& pumpE = area_1->hydro.maxDailyPumpEnergy[0];
+
+    auto& genPReader = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxP];
+    auto& pumpPReader = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxP];
+    auto& genEReader = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxE];
+    auto& pumpEReader = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxE];
 
     buffer.clear();
     buffer = base_folder + SEP + hydro_folder;
     ret = (*reader)(buffer, *area_1) && ret;
+
     BOOST_CHECK(ret);
-    BOOST_CHECK(DailyMaxPowerAsHourlyTransferCheck(colMaxHourlyGenPower, gen));
-    BOOST_CHECK(DailyMaxPowerAsHourlyTransferCheck(colMaxHourlyPumpPower, pump));
+    BOOST_CHECK(equalDailyMaxPowerAsHourlyTs(genP, genPReader));
+    BOOST_CHECK(equalDailyMaxPowerAsHourlyTs(pumpP, pumpPReader));
+    BOOST_CHECK(equalDailyMaxEnergyTs(genE, genEReader));
+    BOOST_CHECK(equalDailyMaxEnergyTs(pumpE, pumpEReader));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
