@@ -38,7 +38,7 @@ namespace Data
 {
 namespace Solar
 {
-Container::Container() : prepro(nullptr)
+Container::Container() : prepro(nullptr), series(tsNumbers)
 {}
 
 Container::~Container()

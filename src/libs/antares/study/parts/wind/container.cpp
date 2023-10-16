@@ -37,7 +37,7 @@ namespace Data
 {
 namespace Wind
 {
-Container::Container() : prepro(nullptr)
+Container::Container() : prepro(nullptr), series(tsNumbers)
 {
 }
 

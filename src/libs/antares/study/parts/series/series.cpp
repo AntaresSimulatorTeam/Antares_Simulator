@@ -40,6 +40,9 @@ namespace Antares::Data
 
 const double TimeSeries::emptyColumn[] = {0};
 
+TimeSeries::TimeSeries(TSNumbers& tsNumbers) : timeseriesNumbers(tsNumbers)
+{}
+
 bool TimeSeries::timeSeriesLoadFromFolder(const std::string& path,
                                           Matrix<>::BufferType dataBuffer,
                                           const bool average)
