@@ -34,7 +34,6 @@ std::shared_ptr<ClusterType> addClusterToArea(Area* area, const std::string& clu
 {
 	auto cluster = std::make_shared<ClusterType>(area);
 	cluster->setName(clusterName);
-	cluster->series = new DataSeriesCommon();
 
 	addClusterToAreaList(area, cluster);
 
@@ -103,9 +102,9 @@ struct Fixture
 		thCluster_31 = addClusterToArea<ThermalCluster>(area_3, "th-cluster-31");
 
 		// Thermal clusters : set the nb of ready made TS
-		thCluster_11->series->timeSeries.resize(14, 1);
-		thCluster_12->series->timeSeries.resize(14, 1);
-		thCluster_31->series->timeSeries.resize(14, 1);
+		thCluster_11->series.timeSeries.resize(14, 1);
+		thCluster_12->series.timeSeries.resize(14, 1);
+		thCluster_31->series.timeSeries.resize(14, 1);
 
 		// Thermal clusters : update areas local numbering for clusters
 		area_1->thermal.prepareAreaWideIndexes();
@@ -118,9 +117,9 @@ struct Fixture
 		rnCluster_32 = addClusterToArea<RenewableCluster>(area_3, "rn-cluster-32");
 
 		// Renewable clusters : set the nb of ready made TS
-		rnCluster_21->series->timeSeries.resize(9, 1);
-		rnCluster_31->series->timeSeries.resize(9, 1);
-		rnCluster_32->series->timeSeries.resize(9, 1);
+		rnCluster_21->series.timeSeries.resize(9, 1);
+		rnCluster_31->series.timeSeries.resize(9, 1);
+		rnCluster_32->series.timeSeries.resize(9, 1);
 
 		// Renewable clusters : update areas local numbering for clusters
 		area_1->renewable.prepareAreaWideIndexes();
@@ -246,7 +245,7 @@ BOOST_FIXTURE_TEST_CASE(on_th_cluster11_of_area1_and_on_year_6__solar_TS_number_
 	BOOST_CHECK_EQUAL(my_rule.thermal[area_1->index].get(thCluster_11.get(), yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(thCluster_11->series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(thCluster_11->series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(on_th_cluster12_of_area1_and_on_year_13__solar_TS_number_5_is_chosen__reading_OK, Fixture)
@@ -259,7 +258,7 @@ BOOST_FIXTURE_TEST_CASE(on_th_cluster12_of_area1_and_on_year_13__solar_TS_number
 	BOOST_CHECK_EQUAL(my_rule.thermal[area_1->index].get(thCluster_12.get(), yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(thCluster_12->series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(on_th_cluster31_of_area3_and_on_year_10__solar_TS_number_7_is_chosen__reading_OK, Fixture)
@@ -272,7 +271,7 @@ BOOST_FIXTURE_TEST_CASE(on_th_cluster31_of_area3_and_on_year_10__solar_TS_number
 	BOOST_CHECK_EQUAL(my_rule.thermal[area_3->index].get(thCluster_31.get(), yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(thCluster_31->series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(thCluster_31->series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 
@@ -291,7 +290,7 @@ BOOST_FIXTURE_TEST_CASE(on_rn_cluster21_of_area2_and_on_year_16__solar_TS_number
 	BOOST_CHECK_EQUAL(my_rule.renewable[area_2->index].get(rnCluster_21.get(), yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(rnCluster_21->series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(rnCluster_21->series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(on_rn_cluster32_of_area3_and_on_year_2__solar_TS_number_4_is_chosen__reading_OK, Fixture)
@@ -306,7 +305,7 @@ BOOST_FIXTURE_TEST_CASE(on_rn_cluster32_of_area3_and_on_year_2__solar_TS_number_
 	BOOST_CHECK_EQUAL(my_rule.renewable[area_3->index].get(rnCluster_32.get(), yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(rnCluster_32->series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(rnCluster_32->series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 

@@ -1,3 +1,21 @@
+add_library(series)
+add_library(Antares::series ALIAS series)
+
+set(SRC_STUDY_PART_SERIES
+        parts/series/include/antares/series/series.h
+        parts/series/series.cpp
+)
+source_group("study\\part\\series" FILES ${SRC_STUDY_PART_SERIES})
+
+target_sources(series PUBLIC ${SRC_STUDY_PART_SERIES})
+
+target_link_libraries(series PUBLIC Antares::array)
+
+target_include_directories(series
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/parts/series
+)
+
 set(SRC_STUDY_SCENARIO_BUILDER
         scenario-builder/scBuilderDataInterface.h
         scenario-builder/TSnumberData.h
@@ -58,8 +76,6 @@ source_group("study\\area\\ui" FILES ${SRC_STUDY_AREA_UI})
 
 
 set(SRC_STUDY_PART_COMMON
-        parts/common/series.h
-        parts/common/series.cpp
         parts/common/cluster.cpp
         parts/common/cluster.h
         parts/common/cluster_list.h
@@ -303,6 +319,7 @@ target_link_libraries(study
         Antares::mersenne
         Antares::result_writer #study.h
         Antares::object
+        Antares::series
     PRIVATE
         Antares::exception
         Antares::benchmarking

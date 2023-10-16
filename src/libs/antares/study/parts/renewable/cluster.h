@@ -98,8 +98,6 @@ public:
     ** \brief Default constructor, with a parent area
     */
     explicit RenewableCluster(Data::Area* parent);
-    //! Destructor
-    ~RenewableCluster();
     //@}
 
     /*!

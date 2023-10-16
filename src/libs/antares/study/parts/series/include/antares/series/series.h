@@ -28,8 +28,6 @@
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 
 #include <antares/array/matrix.h>
-#include <vector>
-#include "../../fwd.h"
 
 namespace Antares::Data
 {
@@ -38,7 +36,7 @@ class TimeSeries
 {
 public:
     using TSNumbers = Matrix<uint32_t>;
-    using TScoefficients = Matrix<double, int32_t>;
+    using TS = Matrix<double>;
 
     /*!
      ** \brief Load series from a file
@@ -49,10 +47,9 @@ public:
      ** \param filename The filename of the series
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
-    int timeSeriesLoadFromFolder(Study& s,
-                                 const AreaName& areaID,
-                                 const std::string& folder,
-                                 const std::string& prefix);
+    bool timeSeriesLoadFromFolder(const std::string& path,
+                                  Matrix<>::BufferType dataBuffer,
+                                  const bool average);
     /*!
      ** \brief Save time series to a file
      ** \ingroup windseries
@@ -75,46 +72,11 @@ public:
     void markAsModified() const;
     uint64_t memoryUsage() const;
 
-    TScoefficients timeSeries;
+    TS timeSeries;
     TSNumbers timeseriesNumbers;
 
     static const double emptyColumn[HOURS_PER_YEAR];
 };
-
-/*!
-** \brief Data series (Common)
-*/
-class DataSeriesCommon
-{
-public:
-    using AllYears = Matrix<double>;
-    using SingleYear = AllYears::ColumnType;
-
-    bool forceReload(bool reload = false) const;
-
-    void markAsModified() const;
-
-    uint64_t memoryUsage() const;
-
-    double getAvailablePower(unsigned int hour, unsigned int year) const;
-    const SingleYear& getAvailablePowerYearly(unsigned int year) const;
-
-    /*!
-    ** \brief Series (MW)
-    **
-    ** Merely a matrix of TimeSeriesCount * 8760 values
-    */
-    AllYears timeSeries;
-
-    /*!
-    ** \brief Monte-Carlo
-    */
-    Matrix<uint32_t> timeseriesNumbers;
-
-private:
-    uint getSeriesIndex(unsigned int year) const;
-
-}; // class DataSeriesCommon
 
 } // namespace Antares::Data
 #endif /* __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__ */

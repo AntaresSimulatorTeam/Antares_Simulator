@@ -3,8 +3,8 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
-#include "series.h"
 #include <antares/array/matrix.h>
+#include <include/antares/series/series.h>
 #include "../../fwd.h"
 
 #include <set>
@@ -118,7 +118,7 @@ public:
     uint areaWideIndex;
 
     //! Series
-    DataSeriesCommon* series;
+    TimeSeries series;
 
     /*!
     ** \brief Modulation matrix

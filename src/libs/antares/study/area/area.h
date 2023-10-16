@@ -820,15 +820,6 @@ void AreaListEnsureDataHydroTimeSeries(AreaList* l);
 */
 void AreaListEnsureDataHydroPrepro(AreaList* l);
 
-/*!
-** \brief Ensure data for thermal time-series are initialized
-*/
-void AreaListEnsureDataThermalTimeSeries(AreaList* l);
-
-/*!
-** \brief Ensure data for renewable time-series are initialized
-*/
-void AreaListEnsureDataRenewableTimeSeries(AreaList* l);
 
 /*!
 ** \brief Ensure data for thermal prepro are initialized

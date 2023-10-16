@@ -15,31 +15,16 @@ void initializeStudy(Study::Ptr study);
 void configureLinkCapacities(AreaLink* link);
 
 
-template<class MatrixType>
 class TimeSeriesConfigurer
 {
 public:
     TimeSeriesConfigurer() = default;
-    TimeSeriesConfigurer(MatrixType& matrix) : ts_(&matrix) {}
+    TimeSeriesConfigurer(Matrix<>& matrix) : ts_(&matrix) {}
     TimeSeriesConfigurer& setColumnCount(unsigned int columnCount);
     TimeSeriesConfigurer& fillColumnWith(unsigned int column, double value);
 private:
-    MatrixType* ts_ = nullptr;
+    Matrix<>* ts_ = nullptr;
 };
-
-template<class MatrixType>
-TimeSeriesConfigurer<MatrixType>& TimeSeriesConfigurer<MatrixType>::setColumnCount(unsigned int columnCount)
-{
-    ts_->resize(columnCount, HOURS_PER_YEAR);
-    return *this;
-}
-
-template<class MatrixType>
-TimeSeriesConfigurer<MatrixType>& TimeSeriesConfigurer<MatrixType>::fillColumnWith(unsigned int column, double value)
-{
-    ts_->fillColumn(column, value);
-    return *this;
-}
 
 
 class ThermalClusterConfig
@@ -55,7 +40,7 @@ public:
 
 private:
     ThermalCluster* cluster_ = nullptr;
-    TimeSeriesConfigurer<Matrix<double>> tsAvailablePowerConfig_;
+    TimeSeriesConfigurer tsAvailablePowerConfig_;
 };
 
 std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName);

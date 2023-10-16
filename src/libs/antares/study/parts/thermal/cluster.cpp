@@ -146,7 +146,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
 Data::ThermalCluster::~ThermalCluster()
 {
     delete prepro;
-    delete series;
 }
 
 uint ThermalCluster::groupId() const
@@ -217,16 +216,14 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     // prepro
     if (not prepro)
         prepro = new PreproThermal(this->weak_from_this());
-    if (not series)
-        series = new DataSeriesCommon();
 
     prepro->copyFrom(*cluster.prepro);
     ecoInput.copyFrom(cluster.ecoInput);
     // timseries
 
-    series->timeSeries = cluster.series->timeSeries;
-    cluster.series->timeSeries.unloadFromMemory();
-    series->timeseriesNumbers.clear();
+    series.timeSeries = cluster.series.timeSeries;
+    cluster.series.timeSeries.unloadFromMemory();
+    series.timeseriesNumbers.clear();
 
     // The parent must be invalidated to make sure that the clusters are really
     // re-written at the next 'Save' from the user interface.
@@ -275,8 +272,7 @@ bool Data::ThermalCluster::forceReload(bool reload) const
 {
     bool ret = true;
     ret = modulation.forceReload(reload) and ret;
-    if (series)
-        ret = series->forceReload(reload) and ret;
+    ret = series.forceReload(reload) and ret;
     if (prepro)
         ret = prepro->forceReload(reload) and ret;
     ret = ecoInput.forceReload(reload) && ret;
@@ -286,8 +282,7 @@ bool Data::ThermalCluster::forceReload(bool reload) const
 void Data::ThermalCluster::markAsModified() const
 {
     modulation.markAsModified();
-    if (series)
-        series->markAsModified();
+    series.markAsModified();
     if (prepro)
         prepro->markAsModified();
     ecoInput.markAsModified();
@@ -295,8 +290,6 @@ void Data::ThermalCluster::markAsModified() const
 
 void Data::ThermalCluster::calculationOfSpinning()
 {
-    assert(this->series);
-
     // nominal capacity (for solver)
     nominalCapacityWithSpinning = nominalCapacity;
 
@@ -306,7 +299,7 @@ void Data::ThermalCluster::calculationOfSpinning()
     {
         logs.debug() << "  Calculation of spinning... " << parentArea->name << "::" << pName;
 
-        auto& ts = series->timeSeries;
+        auto& ts = series.timeSeries;
         // The formula
         // const double s = 1. - cluster.spinning / 100.; */
 
@@ -420,8 +413,6 @@ double Data::ThermalCluster::computeMarketBidCost(double fuelCost,
 
 void Data::ThermalCluster::reverseCalculationOfSpinning()
 {
-    assert(this->series);
-
     // Nothing to do if the spinning is equal to zero
     // because it will the same multiply all entries of the matrix by 1.
     if (not Math::Zero(spinning))
@@ -429,7 +420,7 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
         logs.debug() << "  Calculation of spinning (reverse)... " << parentArea->name
                      << "::" << pName;
 
-        auto& ts = series->timeSeries;
+        auto& ts = series.timeSeries;
         // The formula
         // const double s = 1. - cluster.spinning / 100.;
 
@@ -647,8 +638,7 @@ uint64_t ThermalCluster::memoryUsage() const
     uint64_t amount = sizeof(ThermalCluster) + modulation.memoryUsage();
     if (prepro)
         amount += prepro->memoryUsage();
-    if (series)
-        amount += series->memoryUsage();
+    amount += series.memoryUsage();
     amount += ecoInput.memoryUsage();
     return amount;
 }
@@ -772,7 +762,7 @@ double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) cons
 
 double ThermalCluster::getMarketBidCost(uint hourInTheYear, uint year) const
 {
-    uint serieIndex = (series->timeSeries.width == 1) ? 0 : series->timeseriesNumbers[0][year];
+    uint serieIndex = series.getSeriesIndex(year);
 
     double mod = modulation[thermalModulationMarketBid][serieIndex];
 
@@ -797,17 +787,17 @@ void ThermalCluster::checkAndCorrectAvailability()
     bool condition = false;
     bool report = false;
 
-    for (uint y = 0; y != series->timeSeries.height; ++y)
+    for (uint y = 0; y != series.timeSeries.height; ++y)
     {
-        for (uint x = 0; x != series->timeSeries.width; ++x)
+        for (uint x = 0; x != series.timeSeries.width; ++x)
         {
             auto rightpart
               = PminDUnGroupeDuPalierThermique
-                * ceil(series->timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
-            condition = rightpart > series->timeSeries.entry[x][y];
+                * ceil(series.timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
+            condition = rightpart > series.timeSeries.entry[x][y];
             if (condition)
             {
-                series->timeSeries.entry[x][y] = rightpart;
+                series.timeSeries.entry[x][y] = rightpart;
                 report = true;
             }
         }

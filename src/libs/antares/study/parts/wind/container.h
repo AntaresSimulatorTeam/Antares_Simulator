@@ -28,7 +28,7 @@
 #define __ANTARES_LIBS_STUDY_PARTS_WIND_CONTAINER_H__
 
 #include "prepro.h"
-#include <antares/study/parts/common/series.h>
+#include <include/antares/series/series.h>
 
 namespace Antares
 {

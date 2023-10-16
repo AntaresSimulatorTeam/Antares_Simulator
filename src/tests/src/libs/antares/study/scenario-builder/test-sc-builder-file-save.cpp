@@ -75,7 +75,6 @@ std::shared_ptr<ClusterType> addClusterToArea(Area* area, const std::string& clu
 {
     auto cluster = std::make_shared<ClusterType>(area);
     cluster->setName(clusterName);
-    cluster->series = new DataSeriesCommon();
 
     addClusterToAreaList(area, cluster);
 
@@ -145,9 +144,9 @@ struct commonFixture
         thCluster_31 = addClusterToArea<ThermalCluster>(area_3, "th-cluster-31");
 
         // Thermal clusters : set the nb of ready made TS
-        thCluster_11->series->timeSeries.resize(14, 1);
-        thCluster_12->series->timeSeries.resize(14, 1);
-        thCluster_31->series->timeSeries.resize(14, 1);
+        thCluster_11->series.timeSeries.resize(14, 1);
+        thCluster_12->series.timeSeries.resize(14, 1);
+        thCluster_31->series.timeSeries.resize(14, 1);
 
         // Thermal clusters : update areas local numbering for clusters
         area_1->thermal.prepareAreaWideIndexes();
@@ -160,9 +159,9 @@ struct commonFixture
         rnCluster_32 = addClusterToArea<RenewableCluster>(area_3, "rn-cluster-32");
 
         // Renewable clusters : set the nb of ready made TS
-        rnCluster_21->series->timeSeries.resize(9, 1);
-        rnCluster_31->series->timeSeries.resize(9, 1);
-        rnCluster_32->series->timeSeries.resize(9, 1);
+        rnCluster_21->series.timeSeries.resize(9, 1);
+        rnCluster_31->series.timeSeries.resize(9, 1);
+        rnCluster_32->series.timeSeries.resize(9, 1);
 
         // Renewable clusters : update areas local numbering for clusters
         area_1->renewable.prepareAreaWideIndexes();

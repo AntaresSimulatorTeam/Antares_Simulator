@@ -840,6 +840,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = area.ui->loadFromFile(buffer) && ret;
     }
 
+    bool averageTs = (study.usedByTheSolver && study.parameters.derated);
     // Load
     {
         if (area.load.prepro) // Prepro
@@ -851,8 +852,9 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         }
         if (!options.loadOnlyNeeded || !area.load.prepro) // Series
         {
-            buffer.clear() << study.folderInput << SEP << "load" << SEP << "series";
-            ret = area.load.series.timeSeriesLoadFromFolder(study, area.id, buffer.c_str(), "load_")
+            buffer.clear() << study.folderInput << SEP << "load" << SEP << "series" << SEP
+                           << "load_" << area.id << ".txt";
+            ret = area.load.series.timeSeriesLoadFromFolder(buffer.c_str(), study.dataBuffer, averageTs)
                   && ret;
         }
 
@@ -871,9 +873,11 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         }
         if (!options.loadOnlyNeeded || !area.solar.prepro) // Series
         {
-            buffer.clear() << study.folderInput << SEP << "solar" << SEP << "series";
-            ret = area.solar.series.timeSeriesLoadFromFolder(study, area.id, buffer.c_str(), "solar_")
-                && ret;
+            buffer.clear() << study.folderInput << SEP << "solar" << SEP << "series" << SEP
+                           << "solar_" << area.id << ".txt";
+            ret = area.solar.series.timeSeriesLoadFromFolder(buffer.c_str(), study.dataBuffer, averageTs)
+                  && ret;
+
         }
 
         ++options.progressTicks;
@@ -914,8 +918,9 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         }
         if (!options.loadOnlyNeeded || !area.wind.prepro) // Series
         {
-            buffer.clear() << study.folderInput << SEP << "wind" << SEP << "series";
-            ret = area.wind.series.timeSeriesLoadFromFolder(study, area.id, buffer.c_str(), "wind_")
+            buffer.clear() << study.folderInput << SEP << "wind" << SEP << "series" << SEP
+                           << "wind_" << area.id << ".txt";
+            ret = area.wind.series.timeSeriesLoadFromFolder(buffer.c_str(), study.dataBuffer, averageTs)
                   && ret;
         }
 
@@ -1029,8 +1034,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 void AreaList::ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded)
 {
     AreaListEnsureDataHydroTimeSeries(this);
-    AreaListEnsureDataThermalTimeSeries(this);
-    AreaListEnsureDataRenewableTimeSeries(this);
 
     if (loadOnlyNeeded)
     {
@@ -1288,18 +1291,6 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
         if (!area.hydro.prepro)
             area.hydro.prepro = new PreproHydro();
     });
-}
-
-void AreaListEnsureDataThermalTimeSeries(AreaList* l)
-{
-    assert(l);
-    l->each([&](Data::Area& area) { area.thermal.list.ensureDataTimeSeries(); });
-}
-
-void AreaListEnsureDataRenewableTimeSeries(AreaList* l)
-{
-    assert(l);
-    l->each([&](Data::Area& area) { area.renewable.list.ensureDataTimeSeries(); });
 }
 
 void AreaListEnsureDataThermalPrepro(AreaList* l)
@@ -1587,7 +1578,7 @@ void AreaList::removeThermalTimeseries()
 {
     each([&](Data::Area& area) {
         area.thermal.list.each(
-          [&](Data::ThermalCluster& cluster) { cluster.series->timeSeries.reset(1, HOURS_PER_YEAR); });
+          [&](Data::ThermalCluster& cluster) { cluster.series.timeSeries.reset(1, HOURS_PER_YEAR); });
     });
 }
 
