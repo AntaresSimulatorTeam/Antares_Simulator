@@ -28,8 +28,6 @@
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 
 #include <antares/array/matrix.h>
-#include <vector>
-#include "../../fwd.h"
 
 namespace Antares::Data
 {
@@ -49,10 +47,9 @@ public:
      ** \param filename The filename of the series
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
-    int timeSeriesLoadFromFolder(Study& s,
-                                 const AreaName& areaID,
-                                 const std::string& folder,
-                                 const std::string& prefix);
+    bool timeSeriesLoadFromFolder(const std::string& path,
+                                  Matrix<>::BufferType dataBuffer,
+                                  const bool average);
     /*!
      ** \brief Save time series to a file
      ** \ingroup windseries

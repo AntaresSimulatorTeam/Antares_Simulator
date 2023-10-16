@@ -28,8 +28,7 @@
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
-#include <antares/study.h>
-#include "series.h"
+#include "include/antares/series/series.h"
 
 using namespace Yuni;
 
@@ -41,18 +40,14 @@ namespace Antares::Data
 
 const double TimeSeries::emptyColumn[] = {0};
 
-int TimeSeries::timeSeriesLoadFromFolder(Study& s,
-                                         const AreaName& areaID,
-                                         const std::string& folder,
-                                         const std::string& prefix)
+bool TimeSeries::timeSeriesLoadFromFolder(const std::string& path,
+                                          Matrix<>::BufferType dataBuffer,
+                                          const bool average)
 {
-    String& buffer = s.bufferLoadingTS;
+    bool ret = 1;
+    ret = timeSeries.loadFromCSVFile(path, 1, HOURS_PER_YEAR, &dataBuffer) && ret;
 
-    int ret = 1;
-    buffer.clear() << folder << SEP << prefix << areaID << '.' << s.inputExtension;
-    ret = timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
-
-    if (s.usedByTheSolver && s.parameters.derated)
+    if (average)
         timeSeries.averageTimeseries();
 
     timeseriesNumbers.clear();

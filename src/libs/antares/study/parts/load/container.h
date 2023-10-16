@@ -27,7 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_LOAD_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_LOAD_CONTAINER_H__
 
-#include <antares/study/parts/common/series.h>
+#include <include/antares/series/series.h>
 #include <yuni/core/noncopyable.h>
 
 namespace Antares
