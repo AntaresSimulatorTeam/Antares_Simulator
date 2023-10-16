@@ -28,7 +28,7 @@
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
-#include "../../study.h"
+#include <antares/study.h>
 #include "series.h"
 
 using namespace Yuni;

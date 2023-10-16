@@ -58,8 +58,6 @@ source_group("study\\area\\ui" FILES ${SRC_STUDY_AREA_UI})
 
 
 set(SRC_STUDY_PART_COMMON
-        parts/common/series.h
-        parts/common/series.cpp
         parts/common/cluster.cpp
         parts/common/cluster.h
         parts/common/cluster_list.h
@@ -286,6 +284,22 @@ set(SRC_ALL
         ${SRC_STUDY}
 )
 
+add_library(series)
+add_library(Antares::series ALIAS series)
+
+set(SRC_STUDY_PART_SERIES
+        parts/series/series.h
+        parts/series/series.cpp
+)
+source_group("study\\part\\series" FILES ${SRC_STUDY_PART_SERIES})
+
+target_sources(series PUBLIC ${SRC_STUDY_PART_SERIES})
+
+target_link_libraries(series
+    PUBLIC
+    Antares::array
+)
+
 add_library(study ${SRC_ALL})
 add_library(Antares::study ALIAS study)
 
@@ -303,6 +317,7 @@ target_link_libraries(study
         Antares::mersenne
         Antares::result_writer #study.h
         Antares::object
+        Antares::series
     PRIVATE
         Antares::exception
         Antares::benchmarking
