@@ -254,7 +254,7 @@ bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& fold
     return ret;
 }
 
-bool DataSeriesHydro::postProcessMaxPowerTS(Area& area)
+bool DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
 {
     NbTsComparer nbTSCompare(maxHourlyGenPower.width, maxHourlyPumpPower.width);
     TsActions tsActions(maxHourlyGenPower, maxHourlyPumpPower);
@@ -262,15 +262,23 @@ bool DataSeriesHydro::postProcessMaxPowerTS(Area& area)
     //  This case is not cover even in previous version
     if (nbTSCompare.bothZeros())
     {
-        tsActions.handleBothZeros(area.id);
+        logs.warning() << "Hydro Max Power: `" << area.id
+                     << "`: empty matrix detected. Fixing number of time series to one";
+
+        tsActions.resetBothToOneColumn(area.id);
         return false;
     }
 
     if (nbTSCompare.same())
         return true;
 
-    if (nbTSCompare.differentAndGreaterThanOne(nbTimeSeriesSup_))
-        tsActions.handleBothGreaterThanOne(area.id);
+    if (nbTSCompare.different() && nbTSCompare.bothGreaterThanOne())
+    {
+        logs.fatal() << "Hydro Max Power: `" << area.id
+                     << "`: The matrices Maximum Generation and Maximum Pumping must "
+                        "have the same number of time-series.";
+        fatalError = true;
+    }
 
     tsActions.resizeWhenOneTS(area, nbTimeSeriesSup_);
 
@@ -316,51 +324,46 @@ void DataSeriesHydro::setMaxPowerTSWhenDeratedMode(const Study& study)
     }
 }
 
-DataSeriesHydro::NbTsComparer::NbTsComparer(uint32_t nbOfGenPowerTs, uint32_t nbOfPumpPowerTs) :
- nbOfGenPowerTs_(nbOfGenPowerTs), nbOfPumpPowerTs_(nbOfPumpPowerTs)
+NbTsComparer::NbTsComparer(unsigned int numberOfTS_1, unsigned int numberOfTS_2) 
+    : numberOfTS_1_(numberOfTS_1), numberOfTS_2_(numberOfTS_2)
 {
+    numberOfTSsup_ = std::max(numberOfTS_1_, numberOfTS_2_);
+    numberOfTSinf_ = std::min(numberOfTS_1_, numberOfTS_2_);
 }
 
-bool DataSeriesHydro::NbTsComparer::bothZeros() const
+bool NbTsComparer::bothZeros() const
 {
-    return (nbOfGenPowerTs_ || nbOfPumpPowerTs_) ? false : true;
+    return numberOfTSinf_ == 0;
 }
 
-bool DataSeriesHydro::NbTsComparer::same() const
+bool NbTsComparer::same() const
 {
-    return (nbOfGenPowerTs_ == nbOfPumpPowerTs_) ? true : false;
+    return (numberOfTS_1_ == numberOfTS_2_) ? true : false;
 }
 
-bool DataSeriesHydro::NbTsComparer::differentAndGreaterThanOne(uint nbTimeSeriesSup) const
+bool NbTsComparer::different() const
 {
-    return (nbTimeSeriesSup > 1 && (nbOfGenPowerTs_ != 1) && (nbOfPumpPowerTs_ != 1)) ? true
-                                                                                       : false;
+    return !same();
 }
 
-DataSeriesHydro::TsActions::TsActions(Matrix<double, int32_t>& maxHourlyGenPower,
+bool NbTsComparer::bothGreaterThanOne() const
+{
+    return (numberOfTSinf_ > 1);
+}
+
+TsActions::TsActions(Matrix<double, int32_t>& maxHourlyGenPower,
                                       Matrix<double, int32_t>& maxHourlyPumpPower) :
  maxHourlyGenPower_(maxHourlyGenPower), maxHourlyPumpPower_(maxHourlyPumpPower)
 {
 }
 
-void DataSeriesHydro::TsActions::handleBothZeros(const AreaName& areaID)
+void TsActions::resetBothToOneColumn(const AreaName& areaID)
 {
-    logs.error() << "Hydro Max Power: `" << areaID
-                 << "`: empty matrix detected. Fixing it with default values";
-
     maxHourlyGenPower_.reset(1, HOURS_PER_YEAR);
     maxHourlyPumpPower_.reset(1, HOURS_PER_YEAR);
 }
 
-[[noreturn]] void DataSeriesHydro::TsActions::handleBothGreaterThanOne(const AreaName& areaID) const
-{
-    logs.fatal() << "Hydro Max Power: `" << areaID
-                 << "`: The matrices Maximum Generation and Maximum Pumping must "
-                    "have the same number of time-series.";
-    throw Error::ReadingStudy();
-}
-
-void DataSeriesHydro::TsActions::resizeWhenOneTS(Area& area, uint nbTimeSeriesSup)
+void TsActions::resizeWhenOneTS(Area& area, uint nbTimeSeriesSup)
 {
     if (maxHourlyGenPower_.width == 1)
     {
@@ -377,7 +380,7 @@ void DataSeriesHydro::TsActions::resizeWhenOneTS(Area& area, uint nbTimeSeriesSu
     }
 }
 
-void DataSeriesHydro::TsActions::areaToInvalidate(Area* area,
+void TsActions::areaToInvalidate(Area* area,
                                                   const AreaName& areaID,
                                                   uint nbTimeSeriesSup) const
 {

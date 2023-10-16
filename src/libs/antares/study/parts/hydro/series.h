@@ -31,10 +31,59 @@
 #include "../../fwd.h"
 #include <antares/exception/antares/exception/LoadingError.hpp>
 
+
+
+
+
 namespace Antares
 {
 namespace Data
 {
+
+/**
+* This class provides comparing two integers
+* that represents width of two corresponding matrices.
+*/
+class NbTsComparer
+{
+public:
+    NbTsComparer(unsigned int numberOfTS_1, uint numberOfTS_2);
+
+    bool bothZeros() const;
+    bool same() const;
+    bool different() const;
+    bool bothGreaterThanOne() const;
+
+private:
+    unsigned int numberOfTS_1_;
+    unsigned int numberOfTS_2_;
+    unsigned int numberOfTSsup_{0};
+    unsigned int numberOfTSinf_{0};
+};
+
+
+/**
+* This class provides actions based on the return
+* values of the NbTsComparer class member functions
+*/
+class TsActions
+{
+public:
+    TsActions(Matrix<double, int32_t>& maxHourlyGenPower,
+        Matrix<double, int32_t>& maxHourlyPumpPower);
+
+    void resetBothToOneColumn(const AreaName& areaID);
+    void resizeWhenOneTS(Area& area, uint nbTimeSeriesSup);
+
+private:
+    Matrix<double, int32_t>& maxHourlyGenPower_;
+    Matrix<double, int32_t>& maxHourlyPumpPower_;
+
+    void areaToInvalidate(Area* area, const AreaName& areaID, uint nbTimeSeriesSup) const;
+};
+
+
+
 /*!
 ** \brief Data series (Hydro)
 */
@@ -171,7 +220,7 @@ public:
      *  Checking whether or not TS's numbers are different
      *  and taking proper action based on corresponding check
      */
-    bool postProcessMaxPowerTS(Area& area);
+    bool postProcessMaxPowerTS(Area& area, bool& fatalError);
 
     void setHydroModulability(Study& study, const AreaName& areaID) const;
 
@@ -207,45 +256,6 @@ private:
     ** indicate that the two values are not strictly equal)
     */
     uint nbTimeSeriesSup_ = 0;
-
-    /**
-     * This class provides comparing two integers
-     * that represents width of two corresponding matrices.
-     */
-    class NbTsComparer
-    {
-    public:
-        NbTsComparer(uint32_t nbOfGenPowerTs, uint32_t nbOfPumpPowerTs);
-
-        bool bothZeros() const;
-        bool same() const;
-        bool differentAndGreaterThanOne(uint nbTimeSeriesSup) const;
-
-    private:
-        uint32_t nbOfGenPowerTs_{0};
-        uint32_t nbOfPumpPowerTs_{0};
-    };
-
-    /**
-     * This class provides actions based on the return
-     * values of the NbTsComparer class member functions
-     */
-    class TsActions
-    {
-    public:
-        TsActions(Matrix<double, int32_t>& maxHourlyGenPower,
-                  Matrix<double, int32_t>& maxHourlyPumpPower);
-
-        void handleBothZeros(const AreaName& areaID);
-        [[noreturn]] void handleBothGreaterThanOne(const AreaName& areaID) const;
-        void resizeWhenOneTS(Area& area, uint nbTimeSeriesSup);
-
-    private:
-        Matrix<double, int32_t>& maxHourlyGenPower_;
-        Matrix<double, int32_t>& maxHourlyPumpPower_;
-
-        void areaToInvalidate(Area* area, const AreaName& areaID, uint nbTimeSeriesSup) const;
-    };
 
 }; // class DataSeriesHydro
 
