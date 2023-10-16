@@ -688,7 +688,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
 
         if (!isTSintramodal[indexTS])
         {
-            uint nbTimeSeries = area.hydro.series->maxHourlyGenPower.width;
+            uint nbTimeSeries = area.hydro.series->getNbTimeSeriesSup();
             if (nbTimeSeries != 1)
             {
                 area.hydro.series->timeseriesNumbersHydroMaxPower[0][year] = static_cast<uint32_t>(
