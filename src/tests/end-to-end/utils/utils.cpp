@@ -40,6 +40,17 @@ void addScratchpadToEachArea(Study& study)
     }
 }
 
+TimeSeriesConfigurer& TimeSeriesConfigurer::setColumnCount(unsigned int columnCount)
+{
+    ts_->resize(columnCount, HOURS_PER_YEAR);
+    return *this;
+}
+
+TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned int column, double value)
+{
+    ts_->fillColumn(column, value);
+    return *this;
+}
 
 ThermalClusterConfig::ThermalClusterConfig(ThermalCluster* cluster) : cluster_(cluster)
 {

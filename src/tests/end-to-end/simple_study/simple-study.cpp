@@ -24,7 +24,7 @@ struct StudyFixture : public StudyBuilder
 	double loadInArea = 0.;
 	double clusterCost = 0.;
 	ThermalClusterConfig clusterConfig;
-	TimeSeriesConfigurer<Matrix<double>> loadTSconfig;
+	TimeSeriesConfigurer loadTSconfig;
 };
 
 StudyFixture::StudyFixture()
