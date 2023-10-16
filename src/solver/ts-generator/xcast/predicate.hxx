@@ -27,6 +27,7 @@
 #ifndef __SOLVER_TS_GENERATOR_XCAST_PREDICATE_HXX__
 #define __SOLVER_TS_GENERATOR_XCAST_PREDICATE_HXX__
 
+#include <include/antares/series/series.h>
 #include <yuni/yuni.h>
 #include <antares/study/area/area.h>
 #include <yuni/core/math.h>
@@ -59,7 +60,7 @@ public:
         return !Yuni::Math::Zero(area.wind.prepro->xcast.capacity);
     }
 
-    Matrix<double>& matrix(Data::Area& area) const
+    Data::TimeSeries::TS& matrix(Data::Area& area) const
     {
         return area.wind.series.timeSeries;
     }
@@ -101,7 +102,7 @@ public:
         return !Yuni::Math::Zero(area.load.prepro->xcast.capacity);
     }
 
-    Matrix<double>& matrix(Data::Area& area) const
+    Data::TimeSeries::TS& matrix(Data::Area& area) const
     {
         return area.load.series.timeSeries;
     }
@@ -143,7 +144,7 @@ public:
         return !Yuni::Math::Zero(area.solar.prepro->xcast.capacity);
     }
 
-    Matrix<double>& matrix(Data::Area& area) const
+    Data::TimeSeries::TS& matrix(Data::Area& area) const
     {
         return area.solar.series.timeSeries;
     }
