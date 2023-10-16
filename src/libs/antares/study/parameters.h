@@ -459,6 +459,19 @@ public:
 
     RenewableGeneration renewableGeneration;
 
+    struct MaintenancePlanning
+    {
+        //! Maintenance Planning mode
+        MaintenancePlanningModelling mpModelling;
+        MaintenancePlanningModelling operator()() const;
+        void toRandomized();
+        void toOptimized();
+        bool isRandomized() const;
+        bool isOptimized() const;
+    };
+
+    MaintenancePlanning maintenancePlanning;
+
     struct
     {
         //! Initial reservoir levels

@@ -341,6 +341,20 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
     return "";
 }
 
+const char* MaintenancePlanningModellingToCString(MaintenancePlanningModelling mtcPlanning)
+{
+    switch (mtcPlanning)
+    {
+    case mpRandomized:
+        return "randomized";
+    case mpOptimized:
+        return "optimized";
+    case mpUnknown:
+        return "";
+    }
+    return "";
+}
+
 std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status)
 {
     switch (mps_export_status)

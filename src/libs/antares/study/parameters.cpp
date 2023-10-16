@@ -102,6 +102,28 @@ static bool ConvertStringToRenewableGenerationModelling(const AnyString& text,
     return false;
 }
 
+static bool ConvertStringToMaintenancePlanningModelling(const AnyString& text, MaintenancePlanningModelling& out)
+{
+    CString<24, false> s = text;
+    s.trim();
+    s.toLower();
+    if (s == "randomized")
+    {
+        out = mpRandomized;
+        return true;
+    }
+    if (s == "optimized")
+    {
+        out = mpOptimized;
+        return true;
+    }
+
+    logs.warning() << "parameters: invalid maintenance planning. Got '" << text << "'";
+    out = mpUnknown;
+
+    return false;
+}
+
 static bool ConvertCStrToResultFormat(const AnyString& text, ResultFormat& out)
 {
     CString<24, false> s = text;
@@ -305,6 +327,7 @@ void Parameters::reset()
     unitCommitment.ucMode = ucHeuristic;
     nbCores.ncMode = ncAvg;
     renewableGeneration.rgModelling = rgAggregated;
+    maintenancePlanning.mpModelling = mpRandomized;
 
     // Misc
     improveUnitsStartup = false;
@@ -737,6 +760,11 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
     if (key == "renewable-generation-modelling")
         return ConvertStringToRenewableGenerationModelling(value,
                                                            d.renewableGeneration.rgModelling);
+
+    // Maintenance planning modelling
+    if (key == "maintenance-planning-modelling")
+        return ConvertStringToMaintenancePlanningModelling(value,
+                                                           d.maintenancePlanning.mpModelling);
 
     return false;
 }
@@ -1612,6 +1640,8 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));
         section->add("renewable-generation-modelling",
                      RenewableGenerationModellingToCString(renewableGeneration()));
+        section->add("maintenance-planning-modelling",
+                     MaintenancePlanningModellingToCString(maintenancePlanning()));
     }
 
     // Advanced parameters
@@ -1791,5 +1821,30 @@ bool Parameters::RenewableGeneration::isAggregated() const
 bool Parameters::RenewableGeneration::isClusters() const
 {
     return rgModelling == Antares::Data::rgClusters;
+}
+
+MaintenancePlanningModelling Parameters::MaintenancePlanning::operator()() const
+{
+    return mpModelling;
+}
+
+void Parameters::MaintenancePlanning::toRandomized()
+{
+    mpModelling = Antares::Data::mpRandomized;
+}
+
+void Parameters::MaintenancePlanning::toOptimized()
+{
+    mpModelling = Antares::Data::mpOptimized;
+}
+
+bool Parameters::MaintenancePlanning::isRandomized() const
+{
+    return mpModelling == Antares::Data::mpRandomized;
+}
+
+bool Parameters::MaintenancePlanning::isOptimized() const
+{
+    return mpModelling == Antares::Data::mpOptimized;
 }
 } // namespace Antares::Data

@@ -519,6 +519,26 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
 */
 RenewableGenerationModelling StringToRenewableGenerationModelling(const AnyString& text);
 
+/*
+ * Maintenance Planning
+ */
+enum MaintenancePlanningModelling
+{
+    mpRandomized = 0,   // Default
+    mpOptimized,       // Using Maintenance Planning algorithm
+    mpUnknown,
+};
+
+/*!
+** \brief Convert a Maintenance-Planning into a text
+*/
+const char* MaintenancePlanningModellingToCString(MaintenancePlanningModelling mtcPlanning);
+
+/*!
+** \brief Convert a text into a MaintenancePlanningModelling
+*/
+MaintenancePlanningModelling StringToMaintenancePlanningModelling(const AnyString& text);
+
 // ------------------------
 // MPS export status
 // ------------------------

@@ -150,6 +150,8 @@ void Study::createAsNew()
     // ... At study creation, renewable cluster is the default mode for RES (Renewable Energy
     // Source)
     parameters.renewableGeneration.rgModelling = Antares::Data::rgClusters;
+    // default mode for maintenancePlanning is Randomized 
+    parameters.maintenancePlanning.mpModelling = Antares::Data::mpRandomized;
 
     parameters.yearsFilter = std::vector<bool>(1, true);
 
