@@ -1551,12 +1551,12 @@ void AreaList::updateNameIDSet() const
 
 void AreaList::removeLoadTimeseries()
 {
-    each([&](Data::Area& area) { area.load.series.timeSeries.reset(1, HOURS_PER_YEAR); });
+    each([](Data::Area& area) { area.load.series.reset(); });
 }
 
 void AreaList::removeHydroTimeseries()
 {
-    each([&](Data::Area& area) {
+    each([](Data::Area& area) {
         area.hydro.series->ror.reset(1, HOURS_PER_YEAR);
         area.hydro.series->storage.reset(1, DAYS_PER_YEAR);
         area.hydro.series->mingen.reset(1, HOURS_PER_YEAR);
@@ -1566,19 +1566,19 @@ void AreaList::removeHydroTimeseries()
 
 void AreaList::removeSolarTimeseries()
 {
-    each([&](Data::Area& area) { area.solar.series.timeSeries.reset(1, HOURS_PER_YEAR); });
+    each([](Data::Area& area) { area.solar.series.reset(); });
 }
 
 void AreaList::removeWindTimeseries()
 {
-    each([&](Data::Area& area) { area.wind.series.timeSeries.reset(1, HOURS_PER_YEAR); });
+    each([](Data::Area& area) { area.wind.series.reset(); });
 }
 
 void AreaList::removeThermalTimeseries()
 {
-    each([&](Data::Area& area) {
+    each([](Data::Area& area) {
         area.thermal.list.each(
-          [&](Data::ThermalCluster& cluster) { cluster.series.timeSeries.reset(1, HOURS_PER_YEAR); });
+          [&](Data::ThermalCluster& cluster) { cluster.series.reset(); });
     });
 }
 
