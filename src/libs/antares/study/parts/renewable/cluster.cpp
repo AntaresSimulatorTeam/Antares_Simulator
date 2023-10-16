@@ -191,11 +191,8 @@ double RenewableCluster::valueAtTimeStep(uint hourInYear, uint year) const
 {
     if (!enabled)
         return 0.;
-    uint timeSeriesIndex = series.getSeriesIndex(year);
 
-    assert(hourInYear < series.timeSeries.height);
-    assert(timeSeriesIndex < series.timeSeries.width);
-    const double tsValue = series.timeSeries[timeSeriesIndex][hourInYear];
+    const double tsValue = series.getCoefficient(year, hourInYear);
     switch (tsMode)
     {
     case powerGeneration:
