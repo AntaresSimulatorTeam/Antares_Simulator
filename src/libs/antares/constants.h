@@ -42,7 +42,7 @@
 /*! Hours per year */
 #define HOURS_PER_YEAR 8760
 
-#define HOURS_PER_DAY 24
+#define HOURS_PER_DAY 24U
 
 namespace Antares::Constants
 {

@@ -912,7 +912,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             buffer.clear() << study.folderInput << SEP << "hydro";
 
             HydroMaxTimeSeriesReader reader;
-            ret = reader(buffer, area) && ret;
+            ret = reader(buffer, area, study.usedByTheSolver) && ret;
         }
 
         if (area.hydro.series && study.header.version >= 870)

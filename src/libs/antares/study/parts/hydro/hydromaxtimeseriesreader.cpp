@@ -38,10 +38,12 @@ namespace Antares::Data
 
 HydroMaxTimeSeriesReader::HydroMaxTimeSeriesReader()
 {
-    dailyMaxPumpAndGen.reset(4, DAYS_PER_YEAR, true);
+    dailyMaxPumpAndGen.reset(4U, DAYS_PER_YEAR, true);
 }
 
-bool HydroMaxTimeSeriesReader::LoadDailyMaxPowersAndEnergies(const AnyString& folder, const Area& area)
+bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& folder,
+                                                             const Area& area,
+                                                             bool usedBySolver)
 {
     YString filePath;
     Matrix<>::BufferType fileContent;
@@ -53,159 +55,125 @@ bool HydroMaxTimeSeriesReader::LoadDailyMaxPowersAndEnergies(const AnyString& fo
     //  It is necessary to load maxpower_ txt file, whether loading is called from old GUI
     //  or from solver.
 
-    bool enabledModeIsChanged = false;
-
-    if (JIT::enabled)
+    if (!usedBySolver)
     {
-        JIT::enabled = false; // Allowing to read the area's daily max power and energy
-        enabledModeIsChanged = true;
-    }
+        bool enabledModeIsChanged = false;
 
-    ret = dailyMaxPumpAndGen.loadFromCSVFile(
-            filePath, 4, DAYS_PER_YEAR, Matrix<>::optFixedSize, &fileContent)
-          && ret;
-
-    if (enabledModeIsChanged)
-        JIT::enabled = true; // Back to the previous loading mode.
-
-    bool errorPowers = false;
-    for (uint i = 0; i < 4; ++i)
-    {
-        auto& col = dailyMaxPumpAndGen[i];
-        for (uint day = 0; day < DAYS_PER_YEAR; ++day)
+        if (JIT::enabled)
         {
-            if (!errorPowers && (col[day] < 0 || (i % 2 /*column hours*/ && col[day] > 24)))
+            JIT::enabled = false; // Allowing to read the area's daily max power and energy
+            enabledModeIsChanged = true;
+        }
+
+        ret = dailyMaxPumpAndGen.loadFromCSVFile(
+                filePath, 4U, DAYS_PER_YEAR, Matrix<>::optFixedSize, &fileContent)
+              && ret;
+
+        if (enabledModeIsChanged)
+            JIT::enabled = true; // Back to the previous loading mode.
+    }
+    else
+    {
+        ret = dailyMaxPumpAndGen.loadFromCSVFile(
+                filePath, 4U, DAYS_PER_YEAR, Matrix<>::optFixedSize, &fileContent)
+              && ret;
+
+        bool errorPowers = false;
+        for (uint i = 0; i < 4U; ++i)
+        {
+            auto& col = dailyMaxPumpAndGen[i];
+            for (uint day = 0; day < DAYS_PER_YEAR; ++day)
             {
-                logs.error() << area.name << ": invalid power or energy value";
-                errorPowers = true;
-                ret = false;
+                if (!errorPowers && (col[day] < 0. || (i % 2U /*column hours*/ && col[day] > 24.)))
+                {
+                    logs.error() << area.name << ": invalid power or energy value";
+                    errorPowers = true;
+                    ret = false;
+                }
             }
         }
     }
     return ret;
 }
 
-bool HydroMaxTimeSeriesReader::SaveDailyMaxEnergy(const AnyString& folder, Area& area)
+void HydroMaxTimeSeriesReader::copyDailyMaxEnergy(Area& area) const
 {
-    bool ret = true;
-
-    ret = SaveMaxGenerationEnergy(folder, area) && ret;
-    ret = SaveMaxPumpingEnergy(folder, area) && ret;
-
-    return ret;
+    copyDailyMaxGenerationEnergy(area);
+    copyDailyMaxPumpingEnergy(area);
 }
 
-bool HydroMaxTimeSeriesReader::SaveMaxGenerationEnergy(const AnyString& folder, Area& area)
+void HydroMaxTimeSeriesReader::copyDailyMaxGenerationEnergy(Area& area) const
 {
-    YString filePath;
     auto& maxDailyGenEnergy = area.hydro.maxDailyGenEnergy;
-    bool ret = true;
+    const auto& dailyMaxGenE = dailyMaxPumpAndGen[genMaxE];
 
-    maxDailyGenEnergy.reset(1, DAYS_PER_YEAR, true);
-    maxDailyGenEnergy.fillColumn(0, 24.);
+    maxDailyGenEnergy.reset(1U, DAYS_PER_YEAR, true);
 
-    maxDailyGenEnergy.pasteToColumn(0, dailyMaxPumpAndGen[genMaxE]);
-
-    filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                     << "maxDailyGenEnergy_" << area.id << ".txt";
-
-    ret = maxDailyGenEnergy.saveToCSVFile(filePath, 2) && ret;
-
-    return ret;
+    maxDailyGenEnergy.pasteToColumn(0, dailyMaxGenE);
 }
 
-bool HydroMaxTimeSeriesReader::SaveMaxPumpingEnergy(const AnyString& folder, Area& area)
+void HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy(Area& area) const
 {
-    YString filePath;
     auto& maxDailyPumpEnergy = area.hydro.maxDailyPumpEnergy;
-    bool ret = true;
+    const auto& dailyMaxPumpE = dailyMaxPumpAndGen[pumpMaxE];
 
-    maxDailyPumpEnergy.reset(1, DAYS_PER_YEAR, true);
-    maxDailyPumpEnergy.fillColumn(0, 24.);
+    maxDailyPumpEnergy.reset(1U, DAYS_PER_YEAR, true);
 
-    maxDailyPumpEnergy.pasteToColumn(0, dailyMaxPumpAndGen[pumpMaxE]);
-
-    filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                     << "maxDailyPumpEnergy_" << area.id << ".txt";
-    ret = maxDailyPumpEnergy.saveToCSVFile(filePath, 2) && ret;
-
-    return ret;
+    maxDailyPumpEnergy.pasteToColumn(0, dailyMaxPumpE);
 }
 
-bool HydroMaxTimeSeriesReader::SaveDailyMaxPowerAsHourly(const AnyString& folder, Area& area)
+void HydroMaxTimeSeriesReader::copyDailyMaxPowerAsHourly(Area& area) const
 {
-    bool ret = true;
-
-    ret = SaveDailyMaxGenPowerAsHourly(folder, area) && ret;
-    ret = SaveDailyMaxPumpPowerAsHourly(folder, area) && ret;
+    copyDailyMaxGenPowerAsHourly(area);
+    copyDailyMaxPumpPowerAsHourly(area);
     area.hydro.series->setNbTimeSeriesSup();
-
-    return ret;
 }
 
-bool HydroMaxTimeSeriesReader::SaveDailyMaxGenPowerAsHourly(const AnyString& folder, Area& area)
+void HydroMaxTimeSeriesReader::copyDailyMaxGenPowerAsHourly(Area& area) const
 {
-    bool ret = true;
-    YString filePath;
-
     auto& maxHourlyGenPower = area.hydro.series->maxHourlyGenPower;
-    auto& dailyMaxGen = dailyMaxPumpAndGen[genMaxP];
+    const auto& dailyMaxGenP = dailyMaxPumpAndGen[genMaxP];
 
-    maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
+    maxHourlyGenPower.reset(1U, HOURS_PER_YEAR);
 
-    TransferDailyMaxPowerAsHourly(maxHourlyGenPower[0], dailyMaxGen);
-
-    filePath.clear() << folder << SEP << "series" << SEP << area.id << SEP << "maxHourlyGenPower."
-                     << "txt";
-    ret = maxHourlyGenPower.saveToCSVFile(filePath, 2) && ret;
-
-    return ret;
+    copyDailyTsAsHourly(maxHourlyGenPower[0], dailyMaxGenP);
 }
 
-bool HydroMaxTimeSeriesReader::SaveDailyMaxPumpPowerAsHourly(const AnyString& folder, Area& area)
+void HydroMaxTimeSeriesReader::copyDailyMaxPumpPowerAsHourly(Area& area) const
 {
-    bool ret = true;
-    YString filePath;
-
     auto& maxHourlyPumpPower = area.hydro.series->maxHourlyPumpPower;
-    auto& dailyMaxPump = dailyMaxPumpAndGen[pumpMaxP];
+    const auto& dailyMaxPumpP = dailyMaxPumpAndGen[pumpMaxP];
 
-    maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(1U, HOURS_PER_YEAR);
 
-    TransferDailyMaxPowerAsHourly(maxHourlyPumpPower[0], dailyMaxPump);
-
-    filePath.clear() << folder << SEP << "series" << SEP << area.id << SEP << "maxHourlyPumpPower."
-                     << "txt";
-    ret = maxHourlyPumpPower.saveToCSVFile(filePath, 2) && ret;
-
-    return ret;
+    copyDailyTsAsHourly(maxHourlyPumpPower[0], dailyMaxPumpP);
 }
 
-bool HydroMaxTimeSeriesReader::operator()(const AnyString& folder, Area& area)
+bool HydroMaxTimeSeriesReader::operator()(const AnyString& folder, Area& area, bool usedBySolver)
 {
     bool ret = true;
 
-    ret = LoadDailyMaxPowersAndEnergies(folder, area) && ret;
-    ret = SaveDailyMaxEnergy(folder, area) && ret;
-    ret = SaveDailyMaxPowerAsHourly(folder, area) && ret;
+    ret = loadDailyMaxPowersAndEnergies(folder, area, usedBySolver) && ret;
+    copyDailyMaxEnergy(area);
+    copyDailyMaxPowerAsHourly(area);
 
     return ret;
 }
 
-void TransferDailyMaxPowerAsHourly(Matrix<double, int32_t>::ColumnType& hourlyColumn,
-                                    const Matrix<double>::ColumnType& dailyColumn)
+void copyDailyTsAsHourly(Matrix<double, int32_t>::ColumnType& hourlyColumn,
+                         const Matrix<double>::ColumnType& dailyColumn)
 {
-    uint hours = 0;
-    uint days = 0;
+    uint hour = 0;
+    uint day = 0;
 
-    while (hours < HOURS_PER_YEAR && days < DAYS_PER_YEAR)
+    while (hour < HOURS_PER_YEAR && day < DAYS_PER_YEAR)
     {
         for (uint i = 0; i < HOURS_PER_DAY; ++i)
         {
-            hourlyColumn[hours] = dailyColumn[days];
-            ++hours;
+            hourlyColumn[hour] = dailyColumn[day];
+            ++hour;
         }
-        ++days;
+        ++day;
     }
 }
 

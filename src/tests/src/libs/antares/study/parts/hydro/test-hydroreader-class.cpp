@@ -90,6 +90,11 @@ struct Fixture
     void createFoldersAndFiles()
     {
         stringT buffer;
+        stringT area1_ID = area_1->id.c_str();
+        stringT maxpowerArea1 = maxpower + area1_ID + ".txt";
+        stringT maxDailyGenEnergy_Area1 = maxDailyGenEnergy_ + area1_ID + ".txt";
+        stringT maxDailyPumpEnergy_Area1 = maxDailyPumpEnergy_ + area1_ID + ".txt";
+
         buffer.clear();
 
         // hydro folder
@@ -100,17 +105,17 @@ struct Fixture
         createFolder(buffer, series_folder);
 
         // area1 folder
-        stringT area1_ID = area_1->id.c_str();
         buffer.clear();
         buffer = base_folder + SEP + hydro_folder + SEP + series_folder;
         createFolder(buffer, area1_ID);
         buffer.clear();
         buffer = base_folder + SEP + hydro_folder + SEP + series_folder + SEP + area1_ID;
-        // maxHourlyGenPower and maxHourlyPumpPower files
+
+        //  maxHourlyGenPower and maxHourlyPumpPower files
         createFile(buffer, maxHourlyGenPower);
         createFile(buffer, maxHourlyPumpPower);
 
-        // common and capacity folders
+        //  common and capacity folders
         buffer.clear();
         buffer = base_folder + SEP + hydro_folder;
         createFolder(buffer, common_folder);
@@ -118,18 +123,12 @@ struct Fixture
         buffer = base_folder + SEP + hydro_folder + SEP + common_folder;
         createFolder(buffer, capacity_folder);
 
+        //  max daily energy and power file
         buffer.clear();
         buffer = base_folder + SEP + hydro_folder + SEP + common_folder + SEP + capacity_folder;
-
-        //  max daily energy and power file
-        stringT maxpowerArea1 = maxpower + area1_ID + ".txt";
-
         createFile(buffer, maxpowerArea1);
 
         //  max daily energy files
-        stringT maxDailyGenEnergy_Area1 = maxDailyGenEnergy_ + area1_ID + ".txt";
-        stringT maxDailyPumpEnergy_Area1 = maxDailyPumpEnergy_ + area1_ID + ".txt";
-
         createFile(buffer, maxDailyGenEnergy_Area1);
         createFile(buffer, maxDailyPumpEnergy_Area1);
     }
@@ -173,7 +172,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_support_for_old_studies, Fixture)
 
     buffer.clear();
     buffer = base_folder + SEP + hydro_folder;
-    ret = (*reader)(buffer, *area_1) && ret;
+    ret = (*reader)(buffer, *area_1, study->usedByTheSolver) && ret;
 
     BOOST_CHECK(ret);
     BOOST_CHECK(equalDailyMaxPowerAsHourlyTs(genP, genPReader));
