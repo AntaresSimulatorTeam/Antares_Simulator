@@ -140,7 +140,6 @@ set(SRC_STUDY_PART_HYDRO
         parts/hydro/container.h
         parts/hydro/container.cpp
         parts/hydro/series.h
-        parts/hydro/series.hxx
         parts/hydro/series.cpp
         parts/hydro/prepro.h
         parts/hydro/prepro.cpp

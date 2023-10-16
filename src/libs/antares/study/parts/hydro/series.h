@@ -27,6 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 
+#include <include/antares/series/series.h>
 #include <antares/array/matrix.h>
 #include "../../fwd.h"
 
@@ -37,7 +38,7 @@ namespace Data
 /*!
 ** \brief Data series (Hydro)
 */
-class DataSeriesHydro
+class DataSeriesHydro : public TimeSeries
 {
 public:
     //! \name Constructor
@@ -114,7 +115,7 @@ public:
 
     ** (it was DAYS_PER_YEAR before 3.9)
     */
-    Matrix<double> ror;
+    TimeSeries::TS ror;
 
     /*!
     ** \brief Mod (MW)
@@ -122,14 +123,14 @@ public:
     ** Merely a matrix of TimeSeriesCount * 365 values
     ** This matrix is not used in `adequation` mode.
     */
-    Matrix<double> storage;
+    TimeSeries::TS storage;
 
     /*!
     ** \brief Minimum Generation (MW)
     **
     ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
-    Matrix<double> mingen;
+    TimeSeries::TS mingen;
 
     /*!
     ** \brief The number of time-series
@@ -150,7 +151,5 @@ public:
 
 } // namespace Data
 } // namespace Antares
-
-#include "series.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__ */
