@@ -255,7 +255,7 @@ bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& fold
 }
 
 
-void invalidateArea(Area* area, const AreaName& areaID, uint nbTimeSeriesSup)
+void invalidateArea(Area* area, uint nbTimeSeriesSup)
 {
     if (area)
     {
@@ -264,7 +264,7 @@ void invalidateArea(Area* area, const AreaName& areaID, uint nbTimeSeriesSup)
             << nbTimeSeriesSup << " timeseries";
     }
     else
-        logs.error() << "Impossible to find the area `" << areaID << "` to invalidate it";
+        logs.error() << "Impossible to find the area `" << area->id << "` to invalidate it";
 }
 
 bool DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
@@ -298,7 +298,7 @@ bool DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
 
     if (nbTSCompare.inf() == 1)
     {
-        invalidateArea(&area, area.id, nbTSCompare.sup());
+        invalidateArea(&area, nbTSCompare.sup());
     }
 
     return true;
