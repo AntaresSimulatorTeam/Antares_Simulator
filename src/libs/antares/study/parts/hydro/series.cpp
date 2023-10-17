@@ -32,6 +32,7 @@
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include "../../study.h"
+#include "numberComparison.h"
 
 using namespace Yuni;
 
@@ -262,41 +263,45 @@ static void invalidateArea(Area& area, uint nbTimeSeriesSup)
                 << nbTimeSeriesSup << " timeseries";
 }
 
-bool DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
+void DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
 {
+    // This function returns void because it is not about loading, but about 
+    // checking already loaded data consistency (and possibly correct it).
+
+    //  What happens if one width is 0 and second one is 1 ?
+    //  This case is not covered yet and has never been.
+
     NumberComparison nbTSCompare(maxHourlyGenPower.width, maxHourlyPumpPower.width);
-    TsActions tsActions(maxHourlyGenPower, maxHourlyPumpPower);
-    //  What will happen if one width is 0 and second one is 1
+    //  What happens if one width is 0 and second one is 1
     //  This case is not cover even in previous version
     if (nbTSCompare.bothZeros())
     {
         logs.warning() << "Hydro Max Power: `" << area.id
                      << "`: empty matrix detected. Fixing number of time series to one";
-
-        tsActions.resetBothToOneColumn(area.id);
-        return false;
+        maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
+        maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
+        return;
     }
 
     if (nbTSCompare.same())
-        return true;
+        return;
 
-    if (nbTSCompare.different() && nbTSCompare.bothGreaterThanOne())
+    if (nbTSCompare.bothGreaterThanOne())
     {
         logs.fatal() << "Hydro Max Power: `" << area.id
                      << "`: The matrices Maximum Generation and Maximum Pumping must "
                         "have the same number of time-series.";
         fatalError = true;
-        return false;
+        return; 
     }
 
-    tsActions.resizeWhenOneTS(nbTSCompare.sup());
+    // At this stage, exactly one of the two time series collections has a size of 1.
+    if (maxHourlyGenPower.width == 1)
+        resizeMatrixNoDataLoss(maxHourlyGenPower, nbTSCompare.sup());
+    if (maxHourlyPumpPower.width == 1)
+        resizeMatrixNoDataLoss(maxHourlyPumpPower, nbTSCompare.sup());
 
-    if (nbTSCompare.inf() == 1)
-    {
-        invalidateArea(area, nbTSCompare.sup());
-    }
-
-    return true;
+    invalidateArea(area, nbTSCompare.sup());
 }
 
 void DataSeriesHydro::setHydroModulability(Study& study, const AreaName& areaID) const
@@ -335,60 +340,6 @@ void DataSeriesHydro::setMaxPowerTSWhenDeratedMode(const Study& study)
         maxHourlyGenPower.averageTimeseries();
         maxHourlyPumpPower.averageTimeseries();
         nbTimeSeriesSup_ = 1;
-    }
-}
-
-NumberComparison::NumberComparison(unsigned int numberOfTS_1, unsigned int numberOfTS_2) 
-    : numberOfTS_1_(numberOfTS_1), numberOfTS_2_(numberOfTS_2)
-{
-    numberOfTSsup_ = std::max(numberOfTS_1_, numberOfTS_2_);
-    numberOfTSinf_ = std::min(numberOfTS_1_, numberOfTS_2_);
-}
-
-bool NumberComparison::bothZeros() const
-{
-    return numberOfTSinf_ == 0;
-}
-
-bool NumberComparison::same() const
-{
-    return (numberOfTS_1_ == numberOfTS_2_) ? true : false;
-}
-
-bool NumberComparison::different() const
-{
-    return !same();
-}
-
-bool NumberComparison::bothGreaterThanOne() const
-{
-    return (numberOfTSinf_ > 1);
-}
-
-TsActions::TsActions(Matrix<double, int32_t>& maxHourlyGenPower,
-                                      Matrix<double, int32_t>& maxHourlyPumpPower) :
- maxHourlyGenPower_(maxHourlyGenPower), maxHourlyPumpPower_(maxHourlyPumpPower)
-{
-}
-
-void TsActions::resetBothToOneColumn(const AreaName& areaID)
-{
-    maxHourlyGenPower_.reset(1, HOURS_PER_YEAR);
-    maxHourlyPumpPower_.reset(1, HOURS_PER_YEAR);
-}
-
-void TsActions::resizeWhenOneTS(unsigned int  nbTimeSeriesSup)
-{
-    if (maxHourlyGenPower_.width == 1)
-    {
-        resizeMatrixNoDataLoss(maxHourlyGenPower_, nbTimeSeriesSup);
-        return;
-    }
-
-    if (maxHourlyPumpPower_.width == 1)
-    {
-        resizeMatrixNoDataLoss(maxHourlyPumpPower_, nbTimeSeriesSup);
-        return;
     }
 }
 

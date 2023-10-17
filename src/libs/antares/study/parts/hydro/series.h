@@ -32,57 +32,10 @@
 #include <antares/exception/antares/exception/LoadingError.hpp>
 
 
-
-
-
 namespace Antares
 {
 namespace Data
 {
-
-/**
-* This class provides comparing two integers
-* that represents width of two corresponding matrices.
-*/
-class NumberComparison
-{
-public:
-    NumberComparison(unsigned int numberOfTS_1, uint numberOfTS_2);
-
-    bool bothZeros() const;
-    bool same() const;
-    bool different() const;
-    bool bothGreaterThanOne() const;
-    unsigned int inf() { return numberOfTSinf_; }
-    unsigned int sup() { return numberOfTSsup_; }
-
-private:
-    unsigned int numberOfTS_1_;
-    unsigned int numberOfTS_2_;
-    unsigned int numberOfTSsup_{0};
-    unsigned int numberOfTSinf_{0};
-};
-
-
-/**
-* This class provides actions based on the return
-* values of the NumberComparison class member functions
-*/
-class TsActions
-{
-public:
-    TsActions(Matrix<double, int32_t>& maxHourlyGenPower,
-              Matrix<double, int32_t>& maxHourlyPumpPower);
-
-    void resetBothToOneColumn(const AreaName& areaID);
-    void resizeWhenOneTS(unsigned int nbTimeSeriesSup);
-
-private:
-    Matrix<double, int32_t>& maxHourlyGenPower_;
-    Matrix<double, int32_t>& maxHourlyPumpPower_;
-};
-
-
 
 /*!
 ** \brief Data series (Hydro)
@@ -216,11 +169,11 @@ public:
     bool LoadMaxPower(const AreaName& areaID, const AnyString& folder);
 
     /**
-     * \brief Post processing numbers of TS's
-     *  Checking whether or not TS's numbers are different
-     *  and taking proper action based on corresponding check
+     * Post processing numbers of TS's
+     * Checking whether or not TS's numbers are different
+     * and taking proper action based on corresponding check.
      */
-    bool postProcessMaxPowerTS(Area& area, bool& fatalError);
+    void postProcessMaxPowerTS(Area& area, bool& fatalError);
 
     void setHydroModulability(Study& study, const AreaName& areaID) const;
 
