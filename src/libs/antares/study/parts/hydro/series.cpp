@@ -255,16 +255,11 @@ bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& fold
 }
 
 
-void invalidateArea(Area* area, uint nbTimeSeriesSup)
+static void invalidateArea(Area& area, uint nbTimeSeriesSup)
 {
-    if (area)
-    {
-        area->invalidateJIT = true;
-        logs.info() << "  '" << area->id << "': The hydro max power data have been normalized to "
-            << nbTimeSeriesSup << " timeseries";
-    }
-    else
-        logs.error() << "Impossible to find the area `" << area->id << "` to invalidate it";
+    area.invalidateJIT = true;
+    logs.info() << "  '" << area.id << "': The hydro max power data have been normalized to "
+                << nbTimeSeriesSup << " timeseries";
 }
 
 bool DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
@@ -298,7 +293,7 @@ bool DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
 
     if (nbTSCompare.inf() == 1)
     {
-        invalidateArea(&area, nbTSCompare.sup());
+        invalidateArea(area, nbTSCompare.sup());
     }
 
     return true;
