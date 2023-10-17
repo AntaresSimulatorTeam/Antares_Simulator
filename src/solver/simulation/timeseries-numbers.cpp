@@ -635,7 +635,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         if (!isTSintramodal[indexTS])
         {
             uint nbTimeSeries
-              = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.hydro.series->ror.width;
+              = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.hydro.series->ror.timeSeries.width;
             area.hydro.series->timeseriesNumbers[0][year]
               = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }

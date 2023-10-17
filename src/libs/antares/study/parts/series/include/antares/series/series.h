@@ -63,11 +63,18 @@ public:
     int timeSeriesSaveToFolder(const AreaName& areaID, const std::string& folder,
                                const std::string& prefix) const;
 
+    bool setCoefficient(double value, uint32_t year, uint32_t hourInYear);
     double getCoefficient(uint32_t year, uint32_t hourInYear) const;
     const double* getColumn(uint32_t year) const;
     uint32_t getSeriesIndex(uint32_t year) const;
 
+    double* operator[](uint32_t year);
+
     void reset();
+    void unloadFromMemory() const;
+    void roundAllEntries();
+    void resize(uint32_t year, uint32_t hour);
+    void averageTimeseries();
 
     bool forceReload(bool reload = false) const;
     void markAsModified() const;

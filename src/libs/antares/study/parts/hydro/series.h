@@ -115,7 +115,7 @@ public:
 
     ** (it was DAYS_PER_YEAR before 3.9)
     */
-    TimeSeries::TS ror;
+    TimeSeries ror;
 
     /*!
     ** \brief Mod (MW)

@@ -155,7 +155,7 @@ bool DataTimeseries::performWL(Context& ctx)
                 }
                 case Data::timeSeriesHydro:
                 {
-                    ctx.area->hydro.series->ror = source->hydro.series->ror;
+                    ctx.area->hydro.series->ror.timeSeries = source->hydro.series->ror.timeSeries;
                     ctx.area->hydro.series->storage = source->hydro.series->storage;
                     ctx.area->hydro.series->mingen = source->hydro.series->mingen;
 

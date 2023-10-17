@@ -577,7 +577,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
             assert(&scratchpad);
 
-            uint tsFatalIndex = hydroSeriesIndex < ror.width ? hydroSeriesIndex : 0;
+            uint tsFatalIndex = hydroSeriesIndex < ror.timeSeries.width ? hydroSeriesIndex : 0;
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
