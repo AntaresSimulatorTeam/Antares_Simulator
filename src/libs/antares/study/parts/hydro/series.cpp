@@ -291,9 +291,10 @@ bool DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
                      << "`: The matrices Maximum Generation and Maximum Pumping must "
                         "have the same number of time-series.";
         fatalError = true;
+        return false;
     }
 
-    tsActions.resizeWhenOneTS(area, nbTimeSeriesSup_);
+    tsActions.resizeWhenOneTS(nbTSCompare.sup());
 
     if (nbTSCompare.inf() == 1)
     {
@@ -381,7 +382,7 @@ void TsActions::resetBothToOneColumn(const AreaName& areaID)
     maxHourlyPumpPower_.reset(1, HOURS_PER_YEAR);
 }
 
-void TsActions::resizeWhenOneTS(Area& area, uint nbTimeSeriesSup)
+void TsActions::resizeWhenOneTS(unsigned int  nbTimeSeriesSup)
 {
     if (maxHourlyGenPower_.width == 1)
     {

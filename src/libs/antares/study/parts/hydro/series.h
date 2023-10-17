@@ -72,10 +72,10 @@ class TsActions
 {
 public:
     TsActions(Matrix<double, int32_t>& maxHourlyGenPower,
-        Matrix<double, int32_t>& maxHourlyPumpPower);
+              Matrix<double, int32_t>& maxHourlyPumpPower);
 
     void resetBothToOneColumn(const AreaName& areaID);
-    void resizeWhenOneTS(Area& area, uint nbTimeSeriesSup);
+    void resizeWhenOneTS(unsigned int nbTimeSeriesSup);
 
 private:
     Matrix<double, int32_t>& maxHourlyGenPower_;
