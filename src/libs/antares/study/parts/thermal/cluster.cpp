@@ -213,6 +213,11 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     modulation = cluster.modulation;
     cluster.modulation.unloadFromMemory();
 
+    // Maintenance Planning additional parameters
+    optimizeMaintenance = cluster.optimizeMaintenance;
+    interPoPeriod = cluster.interPoPeriod;
+    poWindows = cluster.poWindows;
+
     // Making sure that the data related to the prepro and timeseries are present
     // prepro
     if (not prepro)
@@ -485,6 +490,11 @@ void Data::ThermalCluster::reset()
     modulation.fill(1.);
     modulation.fillColumn(thermalMinGenModulation, 0.);
 
+    // Maintenance Planning additional parameters
+    optimizeMaintenance = true;
+    interPoPeriod = 365;
+    poWindows = 0;
+
     // prepro
     // warning: the variables `prepro` and `series` __must__ not be destroyed
     //   since the interface may still have a pointer to them.
@@ -595,6 +605,24 @@ bool Data::ThermalCluster::integrityCheck()
         CString<ant_k_cluster_name_max_length + ant_k_area_name_max_length + 50, false> buffer;
         buffer << "Thermal cluster: " << parentArea->name << '/' << pName << ": Modulation";
         ret = MatrixTestForPositiveValues(buffer.c_str(), &modulation) and ret;
+    }
+
+    // Maintenance Planning additional parameters
+    if (interPoPeriod < 0 || interPoPeriod > 365)
+    {
+        interPoPeriod = 365;
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
+                     << ": The Inter PO period (days) must be within the range [0,365] (set to "
+                     << interPoPeriod << ')';
+        ret = false;
+    }
+    if (poWindows < 0 || poWindows > 365)
+    {
+        poWindows = 0;
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
+                     << ": The PO windows (+/- days) must be within the range [0,365] (set to "
+                     << poWindows << ')';
+        ret = false;
     }
 
     // la valeur minStablePower should not be modified

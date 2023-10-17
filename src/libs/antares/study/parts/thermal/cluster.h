@@ -294,6 +294,15 @@ public:
     //! Law (ts-generator)
     ThermalLaw plannedLaw;
 
+    // Maintenance Planning additional parameters
+
+    //! Optimize maintenance yes/no
+    bool optimizeMaintenance = true;
+    //! Inter PO period (days)
+    int interPoPeriod = 365;
+    //! PO windows (+/- days)
+    int poWindows = 0;
+
     //! \name Costs
     //  Marginal (€/MWh)     MA
     //  Spread (€/MWh)       SP
