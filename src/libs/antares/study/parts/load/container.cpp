@@ -34,7 +34,7 @@ using namespace Yuni;
 
 namespace Antares::Data::Load
 {
-Container::Container() : prepro(nullptr)
+Container::Container() : prepro(nullptr), series(tsNumbers)
 {
 }
 

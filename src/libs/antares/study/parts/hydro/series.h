@@ -38,7 +38,7 @@ namespace Data
 /*!
 ** \brief Data series (Hydro)
 */
-class DataSeriesHydro : public TimeSeries
+class DataSeriesHydro
 {
 public:
     //! \name Constructor

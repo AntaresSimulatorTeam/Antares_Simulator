@@ -14,7 +14,8 @@ Cluster::Cluster(Area* parent) :
  parentArea(parent),
  index(0),
  nominalCapacity(0.),
- areaWideIndex((uint)-1)
+ areaWideIndex((uint)-1),
+ series(tsNumbers)
 {
 }
 
