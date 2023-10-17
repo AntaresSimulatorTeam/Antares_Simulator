@@ -254,9 +254,22 @@ bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& fold
     return ret;
 }
 
+
+void invalidateArea(Area* area, const AreaName& areaID, uint nbTimeSeriesSup)
+{
+    if (area)
+    {
+        area->invalidateJIT = true;
+        logs.info() << "  '" << area->id << "': The hydro max power data have been normalized to "
+            << nbTimeSeriesSup << " timeseries";
+    }
+    else
+        logs.error() << "Impossible to find the area `" << areaID << "` to invalidate it";
+}
+
 bool DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
 {
-    NbTsComparer nbTSCompare(maxHourlyGenPower.width, maxHourlyPumpPower.width);
+    NumberComparison nbTSCompare(maxHourlyGenPower.width, maxHourlyPumpPower.width);
     TsActions tsActions(maxHourlyGenPower, maxHourlyPumpPower);
     //  What will happen if one width is 0 and second one is 1
     //  This case is not cover even in previous version
@@ -281,6 +294,11 @@ bool DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
     }
 
     tsActions.resizeWhenOneTS(area, nbTimeSeriesSup_);
+
+    if (nbTSCompare.inf() == 1)
+    {
+        invalidateArea(&area, area.id, nbTSCompare.sup());
+    }
 
     return true;
 }
@@ -324,29 +342,29 @@ void DataSeriesHydro::setMaxPowerTSWhenDeratedMode(const Study& study)
     }
 }
 
-NbTsComparer::NbTsComparer(unsigned int numberOfTS_1, unsigned int numberOfTS_2) 
+NumberComparison::NumberComparison(unsigned int numberOfTS_1, unsigned int numberOfTS_2) 
     : numberOfTS_1_(numberOfTS_1), numberOfTS_2_(numberOfTS_2)
 {
     numberOfTSsup_ = std::max(numberOfTS_1_, numberOfTS_2_);
     numberOfTSinf_ = std::min(numberOfTS_1_, numberOfTS_2_);
 }
 
-bool NbTsComparer::bothZeros() const
+bool NumberComparison::bothZeros() const
 {
     return numberOfTSinf_ == 0;
 }
 
-bool NbTsComparer::same() const
+bool NumberComparison::same() const
 {
     return (numberOfTS_1_ == numberOfTS_2_) ? true : false;
 }
 
-bool NbTsComparer::different() const
+bool NumberComparison::different() const
 {
     return !same();
 }
 
-bool NbTsComparer::bothGreaterThanOne() const
+bool NumberComparison::bothGreaterThanOne() const
 {
     return (numberOfTSinf_ > 1);
 }
@@ -368,30 +386,14 @@ void TsActions::resizeWhenOneTS(Area& area, uint nbTimeSeriesSup)
     if (maxHourlyGenPower_.width == 1)
     {
         resizeMatrixNoDataLoss(maxHourlyGenPower_, nbTimeSeriesSup);
-        areaToInvalidate(&area, area.id, nbTimeSeriesSup);
         return;
     }
 
     if (maxHourlyPumpPower_.width == 1)
     {
         resizeMatrixNoDataLoss(maxHourlyPumpPower_, nbTimeSeriesSup);
-        areaToInvalidate(&area, area.id, nbTimeSeriesSup);
         return;
     }
-}
-
-void TsActions::areaToInvalidate(Area* area,
-                                                  const AreaName& areaID,
-                                                  uint nbTimeSeriesSup) const
-{
-    if (area)
-    {
-        area->invalidateJIT = true;
-        logs.info() << "  '" << area->id << "': The hydro max power data have been normalized to "
-                    << nbTimeSeriesSup << " timeseries";
-    }
-    else
-        logs.error() << "Impossible to find the area `" << areaID << "` to invalidate it";
 }
 
 void resizeMatrixNoDataLoss(Matrix<double, int32_t>& matrixToResize, uint width)

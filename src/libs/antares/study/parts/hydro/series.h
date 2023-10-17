@@ -44,15 +44,17 @@ namespace Data
 * This class provides comparing two integers
 * that represents width of two corresponding matrices.
 */
-class NbTsComparer
+class NumberComparison
 {
 public:
-    NbTsComparer(unsigned int numberOfTS_1, uint numberOfTS_2);
+    NumberComparison(unsigned int numberOfTS_1, uint numberOfTS_2);
 
     bool bothZeros() const;
     bool same() const;
     bool different() const;
     bool bothGreaterThanOne() const;
+    unsigned int inf() { return numberOfTSinf_; }
+    unsigned int sup() { return numberOfTSsup_; }
 
 private:
     unsigned int numberOfTS_1_;
@@ -64,7 +66,7 @@ private:
 
 /**
 * This class provides actions based on the return
-* values of the NbTsComparer class member functions
+* values of the NumberComparison class member functions
 */
 class TsActions
 {
@@ -78,8 +80,6 @@ public:
 private:
     Matrix<double, int32_t>& maxHourlyGenPower_;
     Matrix<double, int32_t>& maxHourlyPumpPower_;
-
-    void areaToInvalidate(Area* area, const AreaName& areaID, uint nbTimeSeriesSup) const;
 };
 
 
