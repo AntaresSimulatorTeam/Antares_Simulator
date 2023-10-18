@@ -127,7 +127,7 @@ void VariablesBoundsAnalysis::storeIncorrectVariable(std::string name, double lo
 
 bool VariablesBoundsAnalysis::foundIncorrectVariables()
 {
-    return (incorrectVars_.size() != 0);
+    return !incorrectVars_.empty();
 }
 
 void VariablesBoundsAnalysis::printReport()
