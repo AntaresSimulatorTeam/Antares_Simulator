@@ -5,28 +5,11 @@
 #include <memory>
 
 #include "../utils/ortools_utils.h"
+#include "unfeability-diagnostic.h"
 #include "report.h"
 
-namespace Antares
+namespace Antares::Optimization
 {
-namespace Optimization
-{
-
-
-class InfeasibilityDiagnostic
-{
-public:
-    InfeasibilityDiagnostic(std::shared_ptr<operations_research::MPSolver> problem_);
-    virtual void run() = 0;
-    virtual void printReport() = 0;
-    virtual std::string title() = 0;
-    bool hasDetectedInfeasibilityCause() { return hasDetectedInfeasibilityCause_; }
-
-protected:
-    std::shared_ptr<operations_research::MPSolver> problem_;
-    bool hasDetectedInfeasibilityCause_ = false;
-};
-
 
 class ConstraintSlackDiagnostic : public InfeasibilityDiagnostic
 {
@@ -83,5 +66,4 @@ private:
     std::shared_ptr<operations_research::MPSolver> problem_;
     std::vector<std::unique_ptr<InfeasibilityDiagnostic>> analysisList_;
 };
-} // namespace Optimization
-} // namespace Antares
+} // namespace Antares::Optimization

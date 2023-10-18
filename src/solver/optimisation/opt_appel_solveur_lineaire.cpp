@@ -46,7 +46,7 @@ extern "C"
 #include "../utils/mps_utils.h"
 #include "../utils/filename.h"
 
-#include "../infeasible-problem-analysis/problem.h"
+#include "../infeasible-problem-analysis/unfeasible-pb-analysis.h"
 
 #include <chrono>
 

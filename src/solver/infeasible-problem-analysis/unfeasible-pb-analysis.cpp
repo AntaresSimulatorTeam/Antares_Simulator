@@ -1,4 +1,4 @@
-#include "problem.h"
+#include "unfeasible-pb-analysis.h"
 #include <antares/logs/logs.h>
 
 #include <fstream>
@@ -7,9 +7,7 @@
 
 using namespace operations_research;
 
-namespace Antares
-{
-namespace Optimization
+namespace Antares::Optimization
 {
 
 InfeasibilityDiagnostic::InfeasibilityDiagnostic(std::shared_ptr<operations_research::MPSolver> problem)
@@ -187,5 +185,4 @@ void UnfeasiblePbAnalysis::printReport()
     }
     logs.notice() << "Solver: unfeasibility analysis : could not find the cause of unfeasibility.";
 }
-} // namespace Optimization
-} // namespace Antares
+} // namespace Antares::Optimization

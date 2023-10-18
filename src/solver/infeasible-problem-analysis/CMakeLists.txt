@@ -1,8 +1,9 @@
 project(infeasible-problem-analysis)
 
 set(SRC_INFEASIBLE_PROBLEM_ANALYSIS
-  problem.cpp
-  problem.h
+  unfeability-diagnostic.h 
+  unfeasible-pb-analysis.cpp
+  unfeasible-pb-analysis.h
   report.h
   report.cpp
   constraint.h
