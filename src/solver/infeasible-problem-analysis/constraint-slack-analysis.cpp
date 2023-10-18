@@ -1,5 +1,5 @@
 #include <regex>
-#include "constraint-slack-diagnostic.h"
+#include "constraint-slack-analysis.h"
 #include <antares/logs/logs.h>
 #include "report.h"
 
@@ -8,7 +8,7 @@ using namespace operations_research;
 namespace Antares::Optimization
 {
 
-void ConstraintSlackDiagnostic::run()
+void ConstraintSlackAnalysis::run()
 {
     addSlackVariables();
     if (slackVariables_.empty())
@@ -29,7 +29,7 @@ void ConstraintSlackDiagnostic::run()
     hasDetectedInfeasibilityCause_ = true;
 }
 
-void ConstraintSlackDiagnostic::addSlackVariables()
+void ConstraintSlackAnalysis::addSlackVariables()
 {
     /* Optimization:
         We assess that less than 1 every 3 constraint will match
@@ -63,7 +63,7 @@ void ConstraintSlackDiagnostic::addSlackVariables()
     }
 }
 
-void ConstraintSlackDiagnostic::buildObjective() const
+void ConstraintSlackAnalysis::buildObjective() const
 {
     MPObjective* objective = problem_->MutableObjective();
     // Reset objective function
@@ -76,12 +76,12 @@ void ConstraintSlackDiagnostic::buildObjective() const
     objective->SetMinimization();
 }
 
-MPSolver::ResultStatus ConstraintSlackDiagnostic::Solve() const
+MPSolver::ResultStatus ConstraintSlackAnalysis::Solve() const
 {
     return problem_->Solve();
 }
 
-void ConstraintSlackDiagnostic::printReport()
+void ConstraintSlackAnalysis::printReport()
 {
     InfeasibleProblemReport report(slackVariables_);
     report.prettyPrint();

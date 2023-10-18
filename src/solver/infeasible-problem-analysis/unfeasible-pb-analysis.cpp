@@ -2,7 +2,7 @@
 #include <algorithm>
 
 #include "unfeasible-pb-analysis.h"
-#include "constraint-slack-diagnostic.h"
+#include "constraint-slack-analysis.h"
 #include <antares/logs/logs.h>
 
 
@@ -66,7 +66,7 @@ UnfeasiblePbAnalysis::UnfeasiblePbAnalysis(const std::string& solverName, const 
     problem_ = std::shared_ptr<MPSolver>(ProblemSimplexeNommeConverter(solverName, ProbSpx).Convert());
 
     analysisList_.push_back(std::make_unique<VariablesBoundsConsistency>(problem_));
-    analysisList_.push_back(std::make_unique<ConstraintSlackDiagnostic>(problem_));
+    analysisList_.push_back(std::make_unique<ConstraintSlackAnalysis>(problem_));
 }
 
 void UnfeasiblePbAnalysis::run()

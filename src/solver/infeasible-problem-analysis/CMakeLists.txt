@@ -3,8 +3,8 @@ project(infeasible-problem-analysis)
 set(SRC_INFEASIBLE_PROBLEM_ANALYSIS
   unfeasibility-analysis.h
   unfeasibility-analysis.cpp
-  constraint-slack-diagnostic.h
-  constraint-slack-diagnostic.cpp
+  constraint-slack-analysis.h
+  constraint-slack-analysis.cpp
   unfeasible-pb-analysis.cpp
   unfeasible-pb-analysis.h
   report.h

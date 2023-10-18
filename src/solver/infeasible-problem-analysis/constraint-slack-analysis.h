@@ -5,7 +5,7 @@
 namespace Antares::Optimization
 {
 
-class ConstraintSlackDiagnostic : public UnfeasibilityAnalysis
+class ConstraintSlackAnalysis : public UnfeasibilityAnalysis
 {
     using UnfeasibilityAnalysis::UnfeasibilityAnalysis;
 public:
