@@ -32,7 +32,7 @@
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include "../../study.h"
-#include "numberComparison.h"
+#include "pair-of-integers.h"
 
 using namespace Yuni;
 
@@ -268,13 +268,8 @@ void DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
     // This function returns void because it is not about loading, but about 
     // checking already loaded data consistency (and possibly correct it).
 
-    //  What happens if one width is 0 and second one is 1 ?
-    //  This case is not covered yet and has never been.
-
-    NumberComparison nbTSCompare(maxHourlyGenPower.width, maxHourlyPumpPower.width);
-    //  What happens if one width is 0 and second one is 1
-    //  This case is not cover even in previous version
-    if (nbTSCompare.bothZeros())
+    PairOfIntegers pairOfTSsizes(maxHourlyGenPower.width, maxHourlyPumpPower.width);
+    if (pairOfTSsizes.bothZeros())
     {
         logs.warning() << "Hydro Max Power: `" << area.id
                      << "`: empty matrix detected. Fixing number of time series to one";
@@ -283,10 +278,10 @@ void DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
         return;
     }
 
-    if (nbTSCompare.same())
+    if (pairOfTSsizes.same())
         return;
 
-    if (nbTSCompare.bothGreaterThanOne())
+    if (pairOfTSsizes.bothGreaterThanOne())
     {
         logs.fatal() << "Hydro Max Power: `" << area.id
                      << "`: The matrices Maximum Generation and Maximum Pumping must "
@@ -296,12 +291,13 @@ void DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
     }
 
     // At this stage, exactly one of the two time series collections has a size of 1.
+    // The other's size is 0 or > 1. 
     if (maxHourlyGenPower.width == 1)
-        resizeMatrixNoDataLoss(maxHourlyGenPower, nbTSCompare.sup());
+        resizeMatrixNoDataLoss(maxHourlyGenPower, pairOfTSsizes.sup());
     if (maxHourlyPumpPower.width == 1)
-        resizeMatrixNoDataLoss(maxHourlyPumpPower, nbTSCompare.sup());
+        resizeMatrixNoDataLoss(maxHourlyPumpPower, pairOfTSsizes.sup());
 
-    invalidateArea(area, nbTSCompare.sup());
+    invalidateArea(area, pairOfTSsizes.sup());
 }
 
 void DataSeriesHydro::setHydroModulability(Study& study, const AreaName& areaID) const
