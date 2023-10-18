@@ -42,7 +42,7 @@ namespace Antares
 {
 namespace Data
 {
-DataSeriesHydro::DataSeriesHydro() : count(0)
+DataSeriesHydro::DataSeriesHydro()
 {
     // Pmin was introduced in v8.6
     // The previous behavior was Pmin=0
@@ -51,6 +51,29 @@ DataSeriesHydro::DataSeriesHydro() : count(0)
     mingen.reset(1, HOURS_PER_YEAR);
     maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
+}
+
+void DataSeriesHydro::copyGenerationTS(DataSeriesHydro& source)
+{
+    ror = source.ror;
+    storage = source.storage;
+    mingen = source.mingen;
+
+    count = source.count;
+
+    source.ror.unloadFromMemory();
+    source.storage.unloadFromMemory();
+    source.mingen.unloadFromMemory();
+}
+void DataSeriesHydro::copyMaxPowerTS(DataSeriesHydro& source)
+{
+    maxHourlyGenPower = source.maxHourlyGenPower;
+    maxHourlyPumpPower = source.maxHourlyPumpPower;
+
+    nbTimeSeriesSup_ = source.nbTimeSeriesSup_;
+
+    source.maxHourlyGenPower.unloadFromMemory();
+    source.maxHourlyPumpPower.unloadFromMemory();
 }
 
 bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& folder) const
@@ -231,6 +254,28 @@ void DataSeriesHydro::reset()
     nbTimeSeriesSup_ = 1;
 }
 
+void DataSeriesHydro::resizeRORandSTORAGE(unsigned int width)
+{
+    ror.resize(width, HOURS_PER_YEAR);
+    storage.resize(width, DAYS_PER_YEAR);
+    count = width;
+}
+
+void DataSeriesHydro::resizeGenerationTS(unsigned int w, unsigned int h)
+{
+    ror.resize(w, h);
+    storage.resize(w, h);
+    mingen.resize(w, h);
+    count = w;
+}
+
+void DataSeriesHydro::resizeMaxPowerTS(unsigned int w, unsigned int h)
+{
+    maxHourlyGenPower.reset(w, h);
+    maxHourlyPumpPower.reset(w, h);
+    nbTimeSeriesSup_ = w;
+}
+
 uint64_t DataSeriesHydro::memoryUsage() const
 {
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage()
@@ -325,6 +370,8 @@ void DataSeriesHydro::setMaxPowerTSWhenDeratedMode(const Study& study)
     }
 }
 
+// TODO : this function should not be here, as it applies to 
+//        any time series, not just hydro TS.
 void resizeMatrixNoDataLoss(Matrix<double, int32_t>& matrixToResize, uint width)
 {
     matrixToResize.resizeWithoutDataLost(width, matrixToResize.height);

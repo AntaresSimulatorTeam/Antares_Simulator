@@ -65,7 +65,7 @@ void ApplyRandomTSnumbers(const Study& study,
             assert(year < data.timeseriesNumbers.height);
 
             ptchro.Hydraulique
-              = (data.count != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+              = (data.TScount() != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
         // Hydro Max Power
         {

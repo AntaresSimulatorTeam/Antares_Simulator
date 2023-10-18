@@ -151,7 +151,7 @@ public:
     }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
     {
-        std::vector<uint> to_return = {area.hydro.series->count};
+        std::vector<uint> to_return = {area.hydro.series->TScount()};
         return to_return;
     }
     uint getGeneratedTimeSeriesNumber()
@@ -444,7 +444,7 @@ bool checkInterModalConsistencyForArea(Area& area,
     if (isTSintermodal[indexTS])
     {
         uint nbTimeSeries
-          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesHydro : area.hydro.series->count;
+          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesHydro : area.hydro.series->TScount();
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -894,7 +894,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
                 area.wind.series->timeseriesNumbers, area.wind.series->timeSeries.width, years);
         // Hydro
         fixTSNumbersSingleAreaSingleMode(
-          area.hydro.series->timeseriesNumbers, area.hydro.series->count, years);
+          area.hydro.series->timeseriesNumbers, area.hydro.series->TScount(), years);
         // Hydro Max Power
         fixTSNumbersSingleAreaSingleMode(
           area.hydro.series->timeseriesNumbersHydroMaxPower, area.hydro.series->getNbTimeSeriesSup(), years);
