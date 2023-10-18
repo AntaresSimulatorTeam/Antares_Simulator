@@ -269,14 +269,6 @@ void DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
     // checking already loaded data consistency (and possibly correct it).
 
     PairOfIntegers pairOfTSsizes(maxHourlyGenPower.width, maxHourlyPumpPower.width);
-    if (pairOfTSsizes.bothZeros())
-    {
-        logs.warning() << "Hydro Max Power: `" << area.id
-                     << "`: empty matrix detected. Fixing number of time series to one";
-        maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
-        maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
-        return;
-    }
 
     if (pairOfTSsizes.same())
         return;
