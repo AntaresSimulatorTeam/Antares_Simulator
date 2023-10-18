@@ -13,10 +13,10 @@ namespace Optimization
 {
 
 
-class SingleAnalysis
+class InfeasibilityDiagnostic
 {
 public:
-    SingleAnalysis(std::shared_ptr<operations_research::MPSolver> problem_);
+    InfeasibilityDiagnostic(std::shared_ptr<operations_research::MPSolver> problem_);
     virtual void run() = 0;
     virtual void printReport() = 0;
     virtual std::string title() = 0;
@@ -28,9 +28,9 @@ protected:
 };
 
 
-class SlackVariablesAnalysis : public SingleAnalysis
+class ConstraintSlackDiagnostic : public InfeasibilityDiagnostic
 {
-    using SingleAnalysis::SingleAnalysis;
+    using InfeasibilityDiagnostic::InfeasibilityDiagnostic;
 public:
     void run() override;
     void printReport() override;
@@ -56,13 +56,13 @@ struct VariableBounds
     double upBound;
 };
 
-class VariablesBoundsAnalysis : public SingleAnalysis
+class VariablesBoundsCheck : public InfeasibilityDiagnostic
 {
-    using SingleAnalysis::SingleAnalysis;
+    using InfeasibilityDiagnostic::InfeasibilityDiagnostic;
 public:
     void run() override;
     void printReport() override;
-    std::string title() override { return "Variables bounds analysis"; }
+    std::string title() override { return "Variables bounds check"; }
 
 private:
     void storeIncorrectVariable(std::string name, double lowBound, double upBound);
@@ -71,17 +71,17 @@ private:
     std::vector<VariableBounds> incorrectVars_;
 };
 
-class InfeasibleProblemAnalysis
+class UnfeasiblePbAnalysis
 {
 public:
-    InfeasibleProblemAnalysis() = delete;
-    explicit InfeasibleProblemAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx);
+    UnfeasiblePbAnalysis() = delete;
+    explicit UnfeasiblePbAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx);
     void run();
     void printReport();
 
 private:
     std::shared_ptr<operations_research::MPSolver> problem_;
-    std::vector<std::unique_ptr<SingleAnalysis>> analysisList_;
+    std::vector<std::unique_ptr<InfeasibilityDiagnostic>> analysisList_;
 };
 } // namespace Optimization
 } // namespace Antares

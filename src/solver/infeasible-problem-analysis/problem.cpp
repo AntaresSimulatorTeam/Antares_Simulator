@@ -12,7 +12,7 @@ namespace Antares
 namespace Optimization
 {
 
-SingleAnalysis::SingleAnalysis(std::shared_ptr<operations_research::MPSolver> problem)
+InfeasibilityDiagnostic::InfeasibilityDiagnostic(std::shared_ptr<operations_research::MPSolver> problem)
     : problem_(problem)
 {}
 
@@ -20,7 +20,7 @@ SingleAnalysis::SingleAnalysis(std::shared_ptr<operations_research::MPSolver> pr
 // Slack variables analysis
 // ============================
 
-void SlackVariablesAnalysis::run()
+void ConstraintSlackDiagnostic::run()
 {
     addSlackVariables();
     if (slackVariables_.empty())
@@ -41,7 +41,7 @@ void SlackVariablesAnalysis::run()
     hasDetectedInfeasibilityCause_ = true;
 }
 
-void SlackVariablesAnalysis::addSlackVariables()
+void ConstraintSlackDiagnostic::addSlackVariables()
 {
     /* Optimization:
        We assess that less than 1 every 3 constraint will match
@@ -75,7 +75,7 @@ void SlackVariablesAnalysis::addSlackVariables()
     }
 }
 
-void SlackVariablesAnalysis::buildObjective() const
+void ConstraintSlackDiagnostic::buildObjective() const
 {
     MPObjective* objective = problem_->MutableObjective();
     // Reset objective function
@@ -88,12 +88,12 @@ void SlackVariablesAnalysis::buildObjective() const
     objective->SetMinimization();
 }
 
-MPSolver::ResultStatus SlackVariablesAnalysis::Solve() const
+MPSolver::ResultStatus ConstraintSlackDiagnostic::Solve() const
 {
     return problem_->Solve();
 }
 
-void SlackVariablesAnalysis::printReport()
+void ConstraintSlackDiagnostic::printReport()
 {
     InfeasibleProblemReport report(slackVariables_);
     report.prettyPrint();
@@ -103,7 +103,7 @@ void SlackVariablesAnalysis::printReport()
 // Variables bounds analysis
 // ============================
 
-void VariablesBoundsAnalysis::run()
+void VariablesBoundsCheck::run()
 {
     for (auto& var : problem_->variables())
     {
@@ -120,17 +120,17 @@ void VariablesBoundsAnalysis::run()
         hasDetectedInfeasibilityCause_ = true;
 }
 
-void VariablesBoundsAnalysis::storeIncorrectVariable(std::string name, double lowBound, double upBound)
+void VariablesBoundsCheck::storeIncorrectVariable(std::string name, double lowBound, double upBound)
 {
     incorrectVars_.push_back(VariableBounds(name, lowBound, upBound));
 }
 
-bool VariablesBoundsAnalysis::foundIncorrectVariables()
+bool VariablesBoundsCheck::foundIncorrectVariables()
 {
     return !incorrectVars_.empty();
 }
 
-void VariablesBoundsAnalysis::printReport()
+void VariablesBoundsCheck::printReport()
 {
     for (auto& var : incorrectVars_)
     {
@@ -145,7 +145,7 @@ void VariablesBoundsAnalysis::printReport()
 
 // gp : this class should be renamed into UnfeasibilityAnalyzer
 
-InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
+UnfeasiblePbAnalysis::UnfeasiblePbAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
 {
     // gp : Here we have a dependency on PROBLEME_SIMPLEXE_NOMME and MPSolver.
     // gp : We should Convert() the PROBLEME_SIMPLEXE_NOMME into a MPSolver outside (and before) this constructor.
@@ -153,11 +153,11 @@ InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(const std::string& solverNa
     // gp : It would be easier to test this class in isolation.
     problem_ = std::shared_ptr<MPSolver>(ProblemSimplexeNommeConverter(solverName, ProbSpx).Convert());
 
-    analysisList_.push_back(std::make_unique<VariablesBoundsAnalysis>(problem_));
-    analysisList_.push_back(std::make_unique<SlackVariablesAnalysis>(problem_));
+    analysisList_.push_back(std::make_unique<VariablesBoundsCheck>(problem_));
+    analysisList_.push_back(std::make_unique<ConstraintSlackDiagnostic>(problem_));
 }
 
-void InfeasibleProblemAnalysis::run()
+void UnfeasiblePbAnalysis::run()
 {
     logs.info();
     logs.info() << "Solver: Starting unfeasibility analysis...";
@@ -176,7 +176,7 @@ void InfeasibleProblemAnalysis::run()
     }
 }
 
-void InfeasibleProblemAnalysis::printReport()
+void UnfeasiblePbAnalysis::printReport()
 {
     for (auto& analysis : analysisList_)
     {

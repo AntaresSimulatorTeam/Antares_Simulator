@@ -374,7 +374,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         }
 
         Probleme.SetUseNamedProblems(true);
-        Optimization::InfeasibleProblemAnalysis analysis(options.solverName, &Probleme);
+        Optimization::UnfeasiblePbAnalysis analysis(options.solverName, &Probleme);
         analysis.run();
         analysis.printReport();
 
