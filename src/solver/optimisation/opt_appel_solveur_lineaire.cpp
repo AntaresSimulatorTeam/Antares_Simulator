@@ -46,7 +46,7 @@ extern "C"
 #include "../utils/mps_utils.h"
 #include "../utils/filename.h"
 
-#include "../infeasible-problem-analysis/unfeasible-pb-analysis.h"
+#include "../infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 
 #include <chrono>
 
@@ -374,9 +374,9 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         }
 
         Probleme.SetUseNamedProblems(true);
-        Optimization::UnfeasiblePbAnalysis analysis(options.solverName, &Probleme);
-        analysis.run();
-        analysis.printReport();
+        Optimization::UnfeasiblePbAnalyzer analyzer(options.solverName, &Probleme);
+        analyzer.run();
+        analyzer.printReport();
 
         auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();
         const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);

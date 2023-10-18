@@ -2,7 +2,7 @@
 #include <algorithm>
 
 #include "unfeasible-pb-analysis.h"
-#include "constraint-slack-analysis.h"
+#include "constraint-slack-analyzer.h"
 #include <antares/logs/logs.h>
 
 
@@ -57,7 +57,7 @@ void VariablesBoundsConsistency::printReport()
 
 // gp : this class should be renamed into UnfeasibilityAnalyzer
 
-UnfeasiblePbAnalysis::UnfeasiblePbAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
+UnfeasiblePbAnalyzer::UnfeasiblePbAnalyzer(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
 {
     // gp : Here we have a dependency on PROBLEME_SIMPLEXE_NOMME and MPSolver.
     // gp : We should Convert() the PROBLEME_SIMPLEXE_NOMME into a MPSolver outside (and before) this constructor.
@@ -69,7 +69,7 @@ UnfeasiblePbAnalysis::UnfeasiblePbAnalysis(const std::string& solverName, const 
     analysisList_.push_back(std::make_unique<ConstraintSlackAnalysis>(problem_));
 }
 
-void UnfeasiblePbAnalysis::run()
+void UnfeasiblePbAnalyzer::run()
 {
     logs.info();
     logs.info() << "Solver: Starting unfeasibility analysis...";
@@ -86,7 +86,7 @@ void UnfeasiblePbAnalysis::run()
     }
 }
 
-void UnfeasiblePbAnalysis::printReport()
+void UnfeasiblePbAnalyzer::printReport()
 {
     for (auto& analysis : analysisList_)
     {

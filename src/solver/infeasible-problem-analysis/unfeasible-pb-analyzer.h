@@ -36,11 +36,11 @@ private:
     std::vector<VariableBounds> incorrectVars_;
 };
 
-class UnfeasiblePbAnalysis
+class UnfeasiblePbAnalyzer
 {
 public:
-    UnfeasiblePbAnalysis() = delete;
-    explicit UnfeasiblePbAnalysis(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx);
+    UnfeasiblePbAnalyzer() = delete;
+    explicit UnfeasiblePbAnalyzer(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx);
     void run();
     void printReport();
 
