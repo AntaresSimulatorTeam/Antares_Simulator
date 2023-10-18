@@ -265,9 +265,6 @@ static void invalidateArea(Area& area, uint nbTimeSeriesSup)
 
 void DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
 {
-    // This function returns void because it is not about loading, but about 
-    // checking already loaded data consistency (and possibly correct it).
-
     PairOfIntegers pairOfTSsizes(maxHourlyGenPower.width, maxHourlyPumpPower.width);
 
     if (pairOfTSsizes.same())
@@ -282,8 +279,6 @@ void DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
         return; 
     }
 
-    // At this stage, exactly one of the two time series collections has a size of 1.
-    // The other's size is 0 or > 1. 
     if (maxHourlyGenPower.width == 1)
         resizeMatrixNoDataLoss(maxHourlyGenPower, pairOfTSsizes.sup());
     if (maxHourlyPumpPower.width == 1)
