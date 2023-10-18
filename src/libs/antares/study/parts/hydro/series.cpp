@@ -44,14 +44,36 @@ namespace Data
 DataSeriesHydro::DataSeriesHydro() :
     ror(timeseriesNumbers),
     storage(timeseriesNumbers),
-    mingen(timeseriesNumbers),
-    count(0)
+    mingen(timeseriesNumbers)
 {
     // Pmin was introduced in v8.6
     // The previous behavior was Pmin=0
     // For compatibility reasons with existing studies, mingen is set to one column of zeros
     // by default
     mingen.reset();
+}
+
+void DataSeriesHydro::copyGenerationTS(DataSeriesHydro& source)
+{
+    ror = source.ror;
+    storage = source.storage;
+    mingen = source.mingen;
+
+    count = source.count;
+
+    source.ror.unloadFromMemory();
+    source.storage.unloadFromMemory();
+    source.mingen.unloadFromMemory();
+}
+void DataSeriesHydro::copyMaxPowerTS(DataSeriesHydro& source)
+{
+    maxHourlyGenPower = source.maxHourlyGenPower;
+    maxHourlyPumpPower = source.maxHourlyPumpPower;
+
+    nbTimeSeriesSup_ = source.nbTimeSeriesSup_;
+
+    source.maxHourlyGenPower.unloadFromMemory();
+    source.maxHourlyPumpPower.unloadFromMemory();
 }
 
 bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& folder) const
@@ -219,6 +241,28 @@ void DataSeriesHydro::reset()
     storage.reset();
     mingen.reset();
     count = 1;
+}
+
+void DataSeriesHydro::resizeRORandSTORAGE(unsigned int width)
+{
+    ror.resize(width, HOURS_PER_YEAR);
+    storage.resize(width, DAYS_PER_YEAR);
+    count = width;
+}
+
+void DataSeriesHydro::resizeGenerationTS(unsigned int w, unsigned int h)
+{
+    ror.resize(w, h);
+    storage.resize(w, h);
+    mingen.resize(w, h);
+    count = w;
+}
+
+void DataSeriesHydro::resizeMaxPowerTS(unsigned int w, unsigned int h)
+{
+    maxHourlyGenPower.reset(w, h);
+    maxHourlyPumpPower.reset(w, h);
+    nbTimeSeriesSup_ = w;
 }
 
 uint64_t DataSeriesHydro::memoryUsage() const

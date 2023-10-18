@@ -49,12 +49,19 @@ public:
     DataSeriesHydro();
     //@}
 
+    void copyGenerationTS(DataSeriesHydro& source);
+    void copyMaxPowerTS(DataSeriesHydro& source);
+
     //! \name Data
     //@{
     /*!
     ** \brief Reset all data, as if it were a new area
     */
     void reset();
+
+    void resizeRORandSTORAGE(unsigned int width);
+    void resizeGenerationTS(unsigned int w, unsigned int h);
+    void resizeMaxPowerTS(unsigned int w, unsigned int h);
 
     /*!
     ** \brief Load all data not already loaded
@@ -130,6 +137,8 @@ public:
     */
     TimeSeries mingen;
 
+    unsigned int TScount() const { return count; };
+
     /*!
     ** \brief The number of time-series
     **
@@ -138,7 +147,8 @@ public:
     ** (for example using `fatal.width` and `mod.width` in the same routine, it might
     ** indicate that the two values are not strictly equal)
     */
-    uint count;
+private:
+    uint count = 0;
 
     /*!
     ** \brief Monte-Carlo

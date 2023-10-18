@@ -1556,11 +1556,8 @@ void AreaList::removeLoadTimeseries()
 
 void AreaList::removeHydroTimeseries()
 {
-    each([](Data::Area& area) {
-        area.hydro.series->ror.reset();
-        area.hydro.series->storage.reset();
-        area.hydro.series->mingen.reset();
-        area.hydro.series->count = 1;
+    each([&](Data::Area& area) {
+        area.hydro.series->reset();
     });
 }
 
