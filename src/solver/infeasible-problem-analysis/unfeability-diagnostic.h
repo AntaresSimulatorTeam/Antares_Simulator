@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+#include "ortools/linear_solver/linear_solver.h"
+
 namespace Antares::Optimization
 {
 class InfeasibilityDiagnostic
