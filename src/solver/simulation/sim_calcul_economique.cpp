@@ -635,8 +635,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 auto& hydroSeries = area.hydro.series;
                 uint tsIndex = hydroSeries->getIndex(year);
 
-                auto& inflowsmatrix = hydroSeries->storage;
-                auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
+                auto const& srcinflows = hydroSeries->storage.getColumn(year);
                 auto& mingenmatrix = hydroSeries->mingen;
                 auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
                 for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)

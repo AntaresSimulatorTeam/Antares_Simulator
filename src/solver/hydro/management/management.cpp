@@ -130,10 +130,7 @@ void HydroManagement::prepareInflowsScaling(uint numSpace, uint year)
       {
           uint z = area.index;
 
-          auto& inflowsmatrix = area.hydro.series->storage;
-          assert(inflowsmatrix.width && inflowsmatrix.height);
-          auto tsIndex = area.hydro.series->getIndex(year);
-          auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
+          auto const& srcinflows = area.hydro.series->storage.getColumn(year);
 
           auto& data = tmpDataByArea_[numSpace][z];
           double totalYearInflows = 0.0;
@@ -271,7 +268,7 @@ bool HydroManagement::checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) c
 {
     auto& inflowsmatrix = area.hydro.series->storage;
     auto& mingenmatrix = area.hydro.series->mingen;
-    auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
+    auto const& srcinflows = inflowsmatrix.getColumn(tsIndex);
     auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
     // Weekly minimum generation <= Weekly inflows for each week
     for (uint week = 0; week < calendar_.maxWeeksInYear - 1; ++week)

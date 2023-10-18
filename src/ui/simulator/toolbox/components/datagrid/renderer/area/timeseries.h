@@ -294,7 +294,7 @@ public:
 protected:
     virtual void internalAreaChanged(Antares::Data::Area* area)
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->storage) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->storage.timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };

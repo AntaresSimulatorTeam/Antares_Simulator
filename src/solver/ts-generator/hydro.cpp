@@ -307,7 +307,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
 
                 {
                     std::string buffer;
-                    area.hydro.series->storage.saveToBuffer(buffer, precision);
+                    area.hydro.series->storage.timeSeries.saveToBuffer(buffer, precision);
                     output.clear() << study.buffer << SEP << "storage.txt";
                     writer.addEntryFromBuffer(output.c_str(), buffer);
                 }

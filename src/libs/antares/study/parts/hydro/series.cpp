@@ -41,7 +41,7 @@ namespace Antares
 {
 namespace Data
 {
-DataSeriesHydro::DataSeriesHydro() : ror(timeseriesNumbers), count(0)
+DataSeriesHydro::DataSeriesHydro() : ror(timeseriesNumbers), storage(timeseriesNumbers), count(0)
 {
     // Pmin was introduced in v8.6
     // The previous behavior was Pmin=0
@@ -63,7 +63,7 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& fold
         buffer.clear() << folder << SEP << areaID << SEP << "ror.txt";
         ret = ror.timeSeries.saveToCSVFile(buffer, 0) && ret;
         buffer.clear() << folder << SEP << areaID << SEP << "mod.txt";
-        ret = storage.saveToCSVFile(buffer, 0) && ret;
+        ret = storage.timeSeries.saveToCSVFile(buffer, 0) && ret;
         buffer.clear() << folder << SEP << areaID << SEP << "mingen.txt";
         ret = mingen.saveToCSVFile(buffer, 0) && ret;
         return ret;
@@ -81,10 +81,10 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
     ret = ror.timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
 
     buffer.clear() << folder << SEP << areaID << SEP << "mod." << study.inputExtension;
-    ret = storage.loadFromCSVFile(buffer, 1, DAYS_PER_YEAR, &study.dataBuffer) && ret;
+    ret = storage.timeSeries.loadFromCSVFile(buffer, 1, DAYS_PER_YEAR, &study.dataBuffer) && ret;
 
     // The number of time-series
-    count = storage.width;
+    count = storage.timeSeries.width;
 
     if (ror.timeSeries.width > count)
         count = ror.timeSeries.width;
@@ -102,14 +102,14 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
             logs.error() << "Hydro: `" << areaID
                          << "`: empty matrix detected. Fixing it with default values";
             ror.reset();
-            storage.reset(1, DAYS_PER_YEAR);
+            storage.reset();
             mingen.reset(1, HOURS_PER_YEAR);
         }
         else
         {
-            if (count > 1 && storage.width != ror.timeSeries.width)
+            if (count > 1 && storage.timeSeries.width != ror.timeSeries.width)
             {
-                if (ror.timeSeries.width != 1 && storage.width != 1)
+                if (ror.timeSeries.width != 1 && storage.timeSeries.width != 1)
                 {
                     logs.fatal() << "Hydro: `" << areaID
                                  << "`: The matrices ROR (run-of-the-river) and hydro-storage must "
@@ -126,11 +126,11 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
                     }
                     else
                     {
-                        if (storage.width == 1)
+                        if (storage.timeSeries.width == 1)
                         {
-                            storage.resizeWithoutDataLost(count, storage.height);
+                            storage.timeSeries.resizeWithoutDataLost(count, storage.timeSeries.height);
                             for (uint x = 1; x < count; ++x)
-                                storage.pasteToColumn(x, storage[0]);
+                                storage.timeSeries.pasteToColumn(x, storage[0]);
                         }
                     }
                     Area* areaToInvalidate = study.areas.find(areaID);
@@ -165,7 +165,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
 
 void DataSeriesHydro::checkMinGenTsNumber(Study& study, const AreaName& areaID)
 {
-    if (mingen.width != storage.width)
+    if (mingen.width != storage.timeSeries.width)
     {
         if (mingen.width > 1)
         {
@@ -212,7 +212,7 @@ void DataSeriesHydro::markAsModified() const
 void DataSeriesHydro::reset()
 {
     ror.reset();
-    storage.reset(1, DAYS_PER_YEAR);
+    storage.reset();
     mingen.reset(1, HOURS_PER_YEAR);
     count = 1;
 }

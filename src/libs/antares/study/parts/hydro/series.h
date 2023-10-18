@@ -123,7 +123,7 @@ public:
     ** Merely a matrix of TimeSeriesCount * 365 values
     ** This matrix is not used in `adequation` mode.
     */
-    TimeSeries::TS storage;
+    TimeSeries storage;
 
     /*!
     ** \brief Minimum Generation (MW)
