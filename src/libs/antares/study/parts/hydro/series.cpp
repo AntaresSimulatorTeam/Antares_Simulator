@@ -83,11 +83,11 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
     bool ret = true;
     auto& buffer = study.bufferLoadingTS;
 
-    buffer.clear() << folder << SEP << areaID << SEP << "ror." << study.inputExtension;
+    buffer.clear() << folder << SEP << areaID << SEP << "ror.txt";
 
     ret = ror.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
 
-    buffer.clear() << folder << SEP << areaID << SEP << "mod." << study.inputExtension;
+    buffer.clear() << folder << SEP << areaID << SEP << "mod.txt";
     ret = storage.loadFromCSVFile(buffer, 1, DAYS_PER_YEAR, &study.dataBuffer) && ret;
 
     // The number of time-series
@@ -98,7 +98,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
 
     if (study.header.version >= 860)
     {
-        buffer.clear() << folder << SEP << areaID << SEP << "mingen." << study.inputExtension;
+        buffer.clear() << folder << SEP << areaID << SEP << "mingen.txt";
         ret = mingen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
     }
 
@@ -243,11 +243,10 @@ bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& fold
     YString filepath;
     Matrix<>::BufferType fileContent;
 
-    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower"
-                     << ".txt";
+    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower.txt";
     ret = maxHourlyGenPower.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
-    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower"
-                     << ".txt";
+
+    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower.txt";
     ret = maxHourlyPumpPower.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
 
     timeseriesNumbersHydroMaxPower.clear();
