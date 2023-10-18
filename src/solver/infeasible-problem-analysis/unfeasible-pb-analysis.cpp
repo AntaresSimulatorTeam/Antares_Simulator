@@ -11,10 +11,6 @@ using namespace operations_research;
 namespace Antares::Optimization
 {
 
-InfeasibilityDiagnostic::InfeasibilityDiagnostic(std::shared_ptr<MPSolver> problem)
-    : problem_(problem)
-{}
-
 // ============================
 // Variables bounds analysis
 // ============================

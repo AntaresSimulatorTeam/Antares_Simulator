@@ -5,7 +5,7 @@
 #include <memory>
 
 #include "../utils/ortools_utils.h"
-#include "unfeability-diagnostic.h"
+#include "unfeasibility-analysis.h"
 
 namespace Antares::Optimization
 {
@@ -21,9 +21,9 @@ struct VariableBounds
     double upBound;
 };
 
-class VariablesBoundsConsistency : public InfeasibilityDiagnostic
+class VariablesBoundsConsistency : public UnfeasibilityAnalysis
 {
-    using InfeasibilityDiagnostic::InfeasibilityDiagnostic;
+    using UnfeasibilityAnalysis::UnfeasibilityAnalysis;
 public:
     void run() override;
     void printReport() override;
@@ -46,6 +46,6 @@ public:
 
 private:
     std::shared_ptr<operations_research::MPSolver> problem_;
-    std::vector<std::unique_ptr<InfeasibilityDiagnostic>> analysisList_;
+    std::vector<std::unique_ptr<UnfeasibilityAnalysis>> analysisList_;
 };
 } // namespace Antares::Optimization

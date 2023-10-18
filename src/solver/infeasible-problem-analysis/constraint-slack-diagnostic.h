@@ -1,13 +1,13 @@
 #pragma once
 
-#include "unfeability-diagnostic.h"
+#include "unfeasibility-analysis.h"
 
 namespace Antares::Optimization
 {
 
-class ConstraintSlackDiagnostic : public InfeasibilityDiagnostic
+class ConstraintSlackDiagnostic : public UnfeasibilityAnalysis
 {
-    using InfeasibilityDiagnostic::InfeasibilityDiagnostic;
+    using UnfeasibilityAnalysis::UnfeasibilityAnalysis;
 public:
     void run() override;
     void printReport() override;
