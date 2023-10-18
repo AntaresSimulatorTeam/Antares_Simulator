@@ -103,7 +103,7 @@ void ConstraintSlackDiagnostic::printReport()
 // Variables bounds analysis
 // ============================
 
-void VariablesBoundsCheck::run()
+void VariablesBoundsConsistency::run()
 {
     for (auto& var : problem_->variables())
     {
@@ -120,17 +120,17 @@ void VariablesBoundsCheck::run()
         hasDetectedInfeasibilityCause_ = true;
 }
 
-void VariablesBoundsCheck::storeIncorrectVariable(std::string name, double lowBound, double upBound)
+void VariablesBoundsConsistency::storeIncorrectVariable(std::string name, double lowBound, double upBound)
 {
     incorrectVars_.push_back(VariableBounds(name, lowBound, upBound));
 }
 
-bool VariablesBoundsCheck::foundIncorrectVariables()
+bool VariablesBoundsConsistency::foundIncorrectVariables()
 {
     return !incorrectVars_.empty();
 }
 
-void VariablesBoundsCheck::printReport()
+void VariablesBoundsConsistency::printReport()
 {
     for (auto& var : incorrectVars_)
     {
@@ -153,7 +153,7 @@ UnfeasiblePbAnalysis::UnfeasiblePbAnalysis(const std::string& solverName, const 
     // gp : It would be easier to test this class in isolation.
     problem_ = std::shared_ptr<MPSolver>(ProblemSimplexeNommeConverter(solverName, ProbSpx).Convert());
 
-    analysisList_.push_back(std::make_unique<VariablesBoundsCheck>(problem_));
+    analysisList_.push_back(std::make_unique<VariablesBoundsConsistency>(problem_));
     analysisList_.push_back(std::make_unique<ConstraintSlackDiagnostic>(problem_));
 }
 
@@ -169,10 +169,8 @@ void UnfeasiblePbAnalysis::run()
         analysis->run();
         if (analysis->hasDetectedInfeasibilityCause())
             return;
-        else
-        {
-            logs.notice() << analysis->title() << " : nothing detected.";
-        }
+
+        logs.notice() << analysis->title() << " : nothing detected.";
     }
 }
 

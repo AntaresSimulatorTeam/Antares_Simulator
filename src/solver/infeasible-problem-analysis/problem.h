@@ -34,7 +34,7 @@ class ConstraintSlackDiagnostic : public InfeasibilityDiagnostic
 public:
     void run() override;
     void printReport() override;
-    std::string title() override { return "Slack variables analysis"; }
+    std::string title() override { return "Slack variables diagnostic"; }
 
 private:
     void buildObjective() const;
@@ -56,7 +56,7 @@ struct VariableBounds
     double upBound;
 };
 
-class VariablesBoundsCheck : public InfeasibilityDiagnostic
+class VariablesBoundsConsistency : public InfeasibilityDiagnostic
 {
     using InfeasibilityDiagnostic::InfeasibilityDiagnostic;
 public:
