@@ -184,7 +184,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
             auto& area = *(study.areas.byIndex[i / 12]);
             auto& prepro = *area.hydro.prepro;
             auto& series = *area.hydro.series;
-            auto* ror = series.ror[l];
+            auto ror = series.ror[l];
 
             auto& colExpectation = prepro.data[Data::PreproHydro::expectation];
             auto& colStdDeviation = prepro.data[Data::PreproHydro::stdDeviation];

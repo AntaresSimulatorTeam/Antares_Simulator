@@ -92,9 +92,7 @@ uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
 
 double* TimeSeries::operator[](uint32_t year)
 {
-    if (timeSeries.width == 0)
-        return nullptr;
-    return timeSeries[getSeriesIndex(year)];
+    return timeSeries[year];
 }
 
 void TimeSeries::reset()

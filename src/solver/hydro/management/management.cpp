@@ -379,8 +379,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year)
         auto& scratchpad = area.scratchpad[numSpace];
 
         auto& rormatrix = area.hydro.series->ror;
-        auto tsIndex = area.hydro.series->getIndex(year);
-        const auto* ror = rormatrix.getColumn(tsIndex < rormatrix.timeSeries.width ? tsIndex : 0);
+        const auto* ror = rormatrix.getColumn(year);
 
         auto& data = tmpDataByArea_[numSpace][z];
         const double* loadSeries = area.load.series.getColumn(year);
