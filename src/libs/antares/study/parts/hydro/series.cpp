@@ -44,14 +44,26 @@ namespace Data
 DataSeriesHydro::DataSeriesHydro() :
     ror(timeseriesNumbers),
     storage(timeseriesNumbers),
-    mingen(timeseriesNumbers),
-    count(0)
+    mingen(timeseriesNumbers)
 {
     // Pmin was introduced in v8.6
     // The previous behavior was Pmin=0
     // For compatibility reasons with existing studies, mingen is set to one column of zeros
     // by default
     mingen.reset();
+}
+
+void DataSeriesHydro::copyGenerationTS(DataSeriesHydro& source)
+{
+    ror.timeSeries = source.ror.timeSeries;
+    storage.timeSeries = source.storage.timeSeries;
+    mingen.timeSeries = source.mingen.timeSeries;
+
+    count = source.count;
+
+    source.ror.unloadFromMemory();
+    source.storage.unloadFromMemory();
+    source.mingen.unloadFromMemory();
 }
 
 bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& folder) const
@@ -219,6 +231,21 @@ void DataSeriesHydro::reset()
     storage.reset();
     mingen.reset();
     count = 1;
+}
+
+void DataSeriesHydro::resizeRORandSTORAGE(unsigned int width)
+{
+    ror.resize(width, HOURS_PER_YEAR);
+    storage.resize(width, DAYS_PER_YEAR);
+    count = width;
+}
+
+void DataSeriesHydro::resizeGenerationTS(unsigned int w, unsigned int h)
+{
+    ror.resize(w, h);
+    storage.resize(w, h);
+    mingen.resize(w, h);
+    count = w;
 }
 
 uint64_t DataSeriesHydro::memoryUsage() const

@@ -50,11 +50,7 @@ namespace TSGenerator
 static void PreproHydroInitMatrices(Data::Study& study, uint tsCount)
 {
     study.areas.each([&](Data::Area& area) {
-        auto& hydroseries = *(area.hydro.series);
-
-        hydroseries.ror.resize(tsCount, HOURS_PER_YEAR);
-        hydroseries.storage.resize(tsCount, DAYS_PER_YEAR);
-        hydroseries.count = tsCount;
+        area.hydro.series->resizeRORandSTORAGE(tsCount);
     });
 }
 

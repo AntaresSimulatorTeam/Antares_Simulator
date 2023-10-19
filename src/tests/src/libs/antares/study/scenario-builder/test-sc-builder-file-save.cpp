@@ -95,8 +95,7 @@ struct commonFixture
         study = std::make_shared<Study>();
         // Set study parameters
         study->parameters.nbYears = 20;
-        study->parameters.timeSeriesToGenerate
-          = 0; // No generated time-series, only ready made time-series
+        study->parameters.timeSeriesToGenerate = 0; // No generated time-series, only ready made time-series
 
         // Add areas
         area_1 = study->areaAdd("Area 1");
@@ -124,9 +123,9 @@ struct commonFixture
 
         // Hydro : set the nb of ready made TS
         nbReadyMadeTS = 12;
-        area_1->hydro.series->count = nbReadyMadeTS;
-        area_2->hydro.series->count = nbReadyMadeTS;
-        area_3->hydro.series->count = nbReadyMadeTS;
+        area_1->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
+        area_2->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
+        area_3->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
 
         // Links
         link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
