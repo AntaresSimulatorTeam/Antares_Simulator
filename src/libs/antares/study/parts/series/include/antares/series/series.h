@@ -38,7 +38,7 @@ public:
     using TSNumbers = Matrix<uint32_t>;
     using TS = Matrix<double>;
 
-    TimeSeries(TSNumbers& tsNumbers);
+    explicit TimeSeries(TSNumbers& tsNumbers);
     /*!
      ** \brief Load series from a file
      **

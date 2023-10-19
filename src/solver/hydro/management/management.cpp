@@ -261,7 +261,7 @@ bool HydroManagement::checkYearlyMinGeneration(uint numSpace, uint year, const D
     return true;
 }
 
-bool HydroManagement::checkWeeklyMinGeneration(uint year, Data::Area& area) const
+bool HydroManagement::checkWeeklyMinGeneration(uint year, const Data::Area& area) const
 {
     auto const& srcinflows =  area.hydro.series->storage.getColumn(year);
     auto const& srcmingen = area.hydro.series->mingen.getColumn(year);
@@ -295,7 +295,7 @@ bool HydroManagement::checkWeeklyMinGeneration(uint year, Data::Area& area) cons
     return true;
 }
 
-bool HydroManagement::checkHourlyMinGeneration(uint year, Data::Area& area) const
+bool HydroManagement::checkHourlyMinGeneration(uint year, const Data::Area& area) const
 {
     // Hourly minimum generation <= hourly inflows for each hour
     auto const& srcmingen = area.hydro.series->mingen.getColumn(year);
