@@ -198,10 +198,9 @@ public:
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // The current time-series
-        auto& ror = pArea->hydro.series->ror.timeSeries;
-        const unsigned int nbchro
-          = pArea->hydro.series->getIndex(year);
-        pFatalValues[numSpace] = &(ror.entry[(nbchro < ror.width ? nbchro : 0)]);
+        auto& ror = pArea->hydro.series->ror;
+        const unsigned int nbchro = ror.getSeriesIndex(year);
+        pFatalValues[numSpace] = &(ror.timeSeries.entry[nbchro]);
 
         // Next variable
         NextType::yearBegin(year, numSpace);
