@@ -157,7 +157,7 @@ bool DataTimeseries::performWL(Context& ctx)
                 {
                     ctx.area->hydro.series->ror.timeSeries = source->hydro.series->ror.timeSeries;
                     ctx.area->hydro.series->storage.timeSeries = source->hydro.series->storage.timeSeries;
-                    ctx.area->hydro.series->mingen = source->hydro.series->mingen;
+                    ctx.area->hydro.series->mingen.timeSeries = source->hydro.series->mingen.timeSeries;
 
                     ctx.area->hydro.series->count = source->hydro.series->count;
 

@@ -327,7 +327,7 @@ public:
 private:
     void internalAreaChanged(Antares::Data::Area* area) override
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->mingen) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->mingen.timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };

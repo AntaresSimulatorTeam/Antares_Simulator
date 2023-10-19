@@ -176,12 +176,9 @@ void HydroManagement::minGenerationScaling(uint numSpace, uint year) const
 {
     areas_.each([this, &numSpace, &year](Data::Area& area)
       {
+          auto const& srcmingen =  area.hydro.series->mingen.getColumn(year);
+
           uint z = area.index;
-
-          auto& mingenmatrix = area.hydro.series->mingen;
-          auto tsIndex = area.hydro.series->getIndex(year);
-          auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
-
           auto& data = tmpDataByArea_[numSpace][z];
           double totalYearMingen = 0.0;
 
@@ -266,10 +263,8 @@ bool HydroManagement::checkYearlyMinGeneration(uint numSpace, uint tsIndex, cons
 
 bool HydroManagement::checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) const
 {
-    auto& inflowsmatrix = area.hydro.series->storage;
-    auto& mingenmatrix = area.hydro.series->mingen;
-    auto const& srcinflows = inflowsmatrix.getColumn(tsIndex);
-    auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
+    auto const& srcinflows =  area.hydro.series->storage.getColumn(tsIndex);
+    auto const& srcmingen = area.hydro.series->mingen.getColumn(tsIndex);
     // Weekly minimum generation <= Weekly inflows for each week
     for (uint week = 0; week < calendar_.maxWeeksInYear - 1; ++week)
     {
@@ -303,8 +298,7 @@ bool HydroManagement::checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) c
 bool HydroManagement::checkHourlyMinGeneration(uint tsIndex, Data::Area& area) const
 {
     // Hourly minimum generation <= hourly inflows for each hour
-    auto& mingenmatrix = area.hydro.series->mingen;
-    auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
+    auto const& srcmingen = area.hydro.series->mingen.getColumn(tsIndex);
     auto const& maxPower = area.hydro.maxPower;
     auto const& maxP = maxPower[Data::PartHydro::genMaxP];
 

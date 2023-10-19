@@ -130,7 +130,7 @@ public:
     **
     ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
-    TimeSeries::TS mingen;
+    TimeSeries mingen;
 
     /*!
     ** \brief The number of time-series

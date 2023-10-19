@@ -1559,7 +1559,7 @@ void AreaList::removeHydroTimeseries()
     each([](Data::Area& area) {
         area.hydro.series->ror.reset();
         area.hydro.series->storage.reset();
-        area.hydro.series->mingen.reset(1, HOURS_PER_YEAR);
+        area.hydro.series->mingen.reset();
         area.hydro.series->count = 1;
     });
 }

@@ -633,11 +633,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             {
                 auto& area = *study.areas.byIndex[k];
                 auto& hydroSeries = area.hydro.series;
-                uint tsIndex = hydroSeries->getIndex(year);
 
                 auto const& srcinflows = hydroSeries->storage.getColumn(year);
-                auto& mingenmatrix = hydroSeries->mingen;
-                auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
+                auto const& srcmingen = hydroSeries->mingen.getColumn(year);
                 for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)
                 {
                     problem.CaracteristiquesHydrauliques[k].MingenHoraire[j]

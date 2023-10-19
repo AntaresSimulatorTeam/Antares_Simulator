@@ -41,13 +41,17 @@ namespace Antares
 {
 namespace Data
 {
-DataSeriesHydro::DataSeriesHydro() : ror(timeseriesNumbers), storage(timeseriesNumbers), count(0)
+DataSeriesHydro::DataSeriesHydro() :
+    ror(timeseriesNumbers),
+    storage(timeseriesNumbers),
+    mingen(timeseriesNumbers),
+    count(0)
 {
     // Pmin was introduced in v8.6
     // The previous behavior was Pmin=0
     // For compatibility reasons with existing studies, mingen is set to one column of zeros
     // by default
-    mingen.reset(1, HOURS_PER_YEAR);
+    mingen.reset();
 }
 
 bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& folder) const
@@ -65,7 +69,7 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& fold
         buffer.clear() << folder << SEP << areaID << SEP << "mod.txt";
         ret = storage.timeSeries.saveToCSVFile(buffer, 0) && ret;
         buffer.clear() << folder << SEP << areaID << SEP << "mingen.txt";
-        ret = mingen.saveToCSVFile(buffer, 0) && ret;
+        ret = mingen.timeSeries.saveToCSVFile(buffer, 0) && ret;
         return ret;
     }
     return false;
@@ -92,7 +96,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
     if (study.header.version >= 860)
     {
         buffer.clear() << folder << SEP << areaID << SEP << "mingen." << study.inputExtension;
-        ret = mingen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+        ret = mingen.timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
     }
 
     if (study.usedByTheSolver)
@@ -103,7 +107,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
                          << "`: empty matrix detected. Fixing it with default values";
             ror.reset();
             storage.reset();
-            mingen.reset(1, HOURS_PER_YEAR);
+            mingen.reset();
         }
         else
         {
@@ -165,9 +169,9 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
 
 void DataSeriesHydro::checkMinGenTsNumber(Study& study, const AreaName& areaID)
 {
-    if (mingen.width != storage.timeSeries.width)
+    if (mingen.timeSeries.width != storage.timeSeries.width)
     {
-        if (mingen.width > 1)
+        if (mingen.timeSeries.width > 1)
         {
             logs.fatal() << "Hydro: `" << areaID
                          << "`: The matrices Minimum Generation must "
@@ -176,9 +180,9 @@ void DataSeriesHydro::checkMinGenTsNumber(Study& study, const AreaName& areaID)
         }
         else
         {
-            mingen.resizeWithoutDataLost(count, mingen.height);
+            mingen.timeSeries.resizeWithoutDataLost(count, mingen.timeSeries.height);
             for (uint x = 1; x < count; ++x)
-                mingen.pasteToColumn(x, mingen[0]);
+                mingen.timeSeries.pasteToColumn(x, mingen[0]);
             Area* areaToInvalidate = study.areas.find(areaID);
             if (areaToInvalidate)
             {
@@ -213,7 +217,7 @@ void DataSeriesHydro::reset()
 {
     ror.reset();
     storage.reset();
-    mingen.reset(1, HOURS_PER_YEAR);
+    mingen.reset();
     count = 1;
 }
 
