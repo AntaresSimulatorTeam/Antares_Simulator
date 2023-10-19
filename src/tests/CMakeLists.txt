@@ -38,9 +38,6 @@ else()
     message(STATUS "Boost >= 1.60.0 is required for end-to-end tests, found ${Boost_VERSION}. Skipping")
 endif()
 
-# hint to favor the use of env vars to find python version
-# importat for consistency with CI
-set(Python3_FIND_REGISTRY LAST)
 find_package(Python3 COMPONENTS Interpreter)
 if(Python3_Interpreter_FOUND)
 
