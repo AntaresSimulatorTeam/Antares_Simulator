@@ -1,8 +1,8 @@
 #include <fstream>
 #include <algorithm>
 
-#include "unfeasible-pb-analysis.h"
-#include "constraint-slack-analyzer.h"
+#include "unfeasible-pb-analyzer.h"
+#include "constraint-slack-analysis.h"
 #include <antares/logs/logs.h>
 
 
