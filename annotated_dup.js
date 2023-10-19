@@ -350,6 +350,8 @@ var annotated_dup =
         [ "IncompatibleDailyOptHeuristicForArea", "classAntares_1_1Error_1_1IncompatibleDailyOptHeuristicForArea.html", null ],
         [ "IncompatibleFuelCostColumns", "classAntares_1_1Error_1_1IncompatibleFuelCostColumns.html", null ],
         [ "IncompatibleHurdleCostCSR", "classAntares_1_1Error_1_1IncompatibleHurdleCostCSR.html", null ],
+        [ "IncompatibleMILPOrtoolsSolver", "classAntares_1_1Error_1_1IncompatibleMILPOrtoolsSolver.html", null ],
+        [ "IncompatibleMILPWithoutOrtools", "classAntares_1_1Error_1_1IncompatibleMILPWithoutOrtools.html", null ],
         [ "IncompatibleOptRangeHydroPricing", "classAntares_1_1Error_1_1IncompatibleOptRangeHydroPricing.html", null ],
         [ "IncompatibleOptRangeUCMode", "classAntares_1_1Error_1_1IncompatibleOptRangeUCMode.html", null ],
         [ "IncompatibleOutputOptions", "classAntares_1_1Error_1_1IncompatibleOutputOptions.html", null ],

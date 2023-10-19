@@ -819,6 +819,9 @@ var hierarchy =
       [ "kirchhoff_pytest.StudyReference", "classkirchhoff__pytest_1_1StudyReference.html", null ]
     ] ],
     [ "Yuni::Policy::ObjectLevelLockable", null, [
+      [ "Antares::IIntrusiveReference< ChildT, TP >", "classAntares_1_1IIntrusiveReference.html", null ]
+    ] ],
+    [ "Yuni::Policy::ObjectLevelLockable", null, [
       [ "Antares::Data::StudyFinder", "classAntares_1_1Data_1_1StudyFinder.html", [
         [ "MyStudyFinder", "classMyStudyFinder.html", null ],
         [ "MyStudyFinder", "classMyStudyFinder.html", null ],
@@ -826,9 +829,6 @@ var hierarchy =
         [ "StudyFinderCleaner", "classStudyFinderCleaner.html", null ]
       ] ],
       [ "Antares::Memory", "classAntares_1_1Memory.html", null ]
-    ] ],
-    [ "Yuni::Policy::ObjectLevelLockable", null, [
-      [ "Antares::IIntrusiveReference< ChildT, TP >", "classAntares_1_1IIntrusiveReference.html", null ]
     ] ],
     [ "Yuni::Policy::ObjectLevelLockableNotRecursive", null, [
       [ "Antares::Toolbox::Jobs::PartList", "classAntares_1_1Toolbox_1_1Jobs_1_1PartList.html", null ]
@@ -997,6 +997,8 @@ var hierarchy =
         [ "Antares::Error::IncompatibleDailyOptHeuristicForArea", "classAntares_1_1Error_1_1IncompatibleDailyOptHeuristicForArea.html", null ],
         [ "Antares::Error::IncompatibleFuelCostColumns", "classAntares_1_1Error_1_1IncompatibleFuelCostColumns.html", null ],
         [ "Antares::Error::IncompatibleHurdleCostCSR", "classAntares_1_1Error_1_1IncompatibleHurdleCostCSR.html", null ],
+        [ "Antares::Error::IncompatibleMILPOrtoolsSolver", "classAntares_1_1Error_1_1IncompatibleMILPOrtoolsSolver.html", null ],
+        [ "Antares::Error::IncompatibleMILPWithoutOrtools", "classAntares_1_1Error_1_1IncompatibleMILPWithoutOrtools.html", null ],
         [ "Antares::Error::IncompatibleOptRangeHydroPricing", "classAntares_1_1Error_1_1IncompatibleOptRangeHydroPricing.html", null ],
         [ "Antares::Error::IncompatibleOptRangeUCMode", "classAntares_1_1Error_1_1IncompatibleOptRangeUCMode.html", null ],
         [ "Antares::Error::IncompatibleOutputOptions", "classAntares_1_1Error_1_1IncompatibleOutputOptions.html", null ],
@@ -1312,6 +1314,7 @@ var hierarchy =
       ] ]
     ] ],
     [ "TSNumbersPredicate", "structTSNumbersPredicate.html", null ],
+    [ "Antares::Data::Parameters::UCMode", "structAntares_1_1Data_1_1Parameters_1_1UCMode.html", null ],
     [ "Antares::Data::UIRuntimeInfo", "classAntares_1_1Data_1_1UIRuntimeInfo.html", null ],
     [ "Antares::Window::Inspector::Unique", "structAntares_1_1Window_1_1Inspector_1_1Unique.html", null ],
     [ "Antares::Statistics::Updater", "classAntares_1_1Statistics_1_1Updater.html", null ],

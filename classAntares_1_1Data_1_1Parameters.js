@@ -2,6 +2,7 @@ var classAntares_1_1Data_1_1Parameters =
 [
     [ "IncludeOptions", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions" ],
     [ "RenewableGeneration", "structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html", "structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration" ],
+    [ "UCMode", "structAntares_1_1Data_1_1Parameters_1_1UCMode.html", "structAntares_1_1Data_1_1Parameters_1_1UCMode" ],
     [ "Parameters", "classAntares_1_1Data_1_1Parameters.html#af8f6b1e6035fe12cf5861f36503b2ae3", null ],
     [ "~Parameters", "classAntares_1_1Data_1_1Parameters.html#a4238f2804ca5c8feaa63661c8382f5f9", null ],
     [ "adequacy", "classAntares_1_1Data_1_1Parameters.html#aefe09481bdf826b2829344d0289efd0f", null ],
@@ -72,7 +73,6 @@ var classAntares_1_1Data_1_1Parameters =
     [ "timeSeriesToGenerate", "classAntares_1_1Data_1_1Parameters.html#a7f9aa8bc81c74fed545ae3cbd657d7e5", null ],
     [ "timeSeriesToRefresh", "classAntares_1_1Data_1_1Parameters.html#ac7200d752c0a628dd8bc79ce05c8ec6c", null ],
     [ "transmissionCapacities", "classAntares_1_1Data_1_1Parameters.html#a18bae6dbe88f0d45d7c1a38e69284719", null ],
-    [ "ucMode", "classAntares_1_1Data_1_1Parameters.html#a836017cbc81bb7b6c8fff3eec6ba4434", null ],
     [ "useCustomScenario", "classAntares_1_1Data_1_1Parameters.html#ac1601b399055210ec40c34f52579482e", null ],
     [ "userPlaylist", "classAntares_1_1Data_1_1Parameters.html#abde784ada60bc55b55c55203034788eb", null ],
     [ "variablesPrintInfo", "classAntares_1_1Data_1_1Parameters.html#a32214934584e8346eb57078edbd579e6", null ],

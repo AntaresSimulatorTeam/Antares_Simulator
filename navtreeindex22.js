@@ -1,5 +1,6 @@
 var NAVTREEINDEX22 =
 {
+"results_8h_source.html":[5,0,0,2,10,3,12],
 "results_8hxx_source.html":[5,0,0,2,10,3,13],
 "root-node_8h_source.html":[5,0,0,5,0,0,0,3,3],
 "root-node_8hxx_source.html":[5,0,0,5,0,0,0,3,4],
@@ -139,6 +140,9 @@ var NAVTREEINDEX22 =
 "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Thermal.html#a72063860998e74981f5e2aced6ad025d":[4,0,0,3,37,0,1,0],
 "structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html":[4,0,0,3,37,1],
 "structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html#a008c16b94a2babc00a511480a03f437b":[4,0,0,3,37,1,0],
+"structAntares_1_1Data_1_1Parameters_1_1UCMode.html":[4,0,0,3,37,2],
+"structAntares_1_1Data_1_1Parameters_1_1UCMode.html#a54ca3186d2fc07dcf60311e8bd250c3d":[4,0,0,3,37,2,0],
+"structAntares_1_1Data_1_1Parameters_1_1UCMode.html#aa0b613cb0812e2bb6231b6f65b54aa01":[4,0,0,3,37,2,1],
 "structAntares_1_1Data_1_1StudyRangeLimits.html":[4,0,0,3,54],
 "structAntares_1_1Data_1_1StudyRangeLimits.html#a317a01bb25e5660216e1de2dc9858067":[4,0,0,3,54,4],
 "structAntares_1_1Data_1_1StudyRangeLimits.html#a34a9a61a1eb3785b8def5f91e8c7bbb9":[4,0,0,3,54,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX22 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost_1_1Statistics.html":[4,0,0,12,5,4,26,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost_1_1Statistics.html":[4,0,0,12,5,4,28,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost_1_1Statistics.html":[4,0,0,12,5,4,29,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows_1_1Statistics.html":[4,0,0,12,5,4,30,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP_1_1Statistics.html":[4,0,0,12,5,4,35,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price_1_1Statistics.html":[4,0,0,12,5,4,31,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant_1_1Statistics.html":[4,0,0,12,5,4,32,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant_1_1Statistics.html":[4,0,0,12,5,4,33,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows_1_1Statistics.html":[4,0,0,12,5,4,30,0]
 };

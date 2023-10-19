@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['ucmode_0',['ucMode',['../classAntares_1_1Data_1_1Parameters.html#a836017cbc81bb7b6c8fff3eec6ba4434',1,'Antares::Data::Parameters']]],
+  ['ucmode_0',['ucMode',['../structAntares_1_1Data_1_1Parameters_1_1UCMode.html#aa0b613cb0812e2bb6231b6f65b54aa01',1,'Antares::Data::Parameters::UCMode']]],
   ['ui_1',['ui',['../classAntares_1_1Data_1_1Area.html#a8bb23430ecef5d090a966e34ba6980a4',1,'Antares::Data::Area']]],
   ['uiinfo_2',['uiinfo',['../classAntares_1_1Data_1_1Study.html#a635d6801eb4d4113abdcb2ccf0f0bb79',1,'Antares::Data::Study']]],
   ['unfeasibleproblembehavior_3',['unfeasibleProblemBehavior',['../structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#a8ab817b5425154ce88b258042b37522f',1,'Antares::Data::Parameters::IncludeOptions']]],

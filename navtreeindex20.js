@@ -1,5 +1,6 @@
 var NAVTREEINDEX20 =
 {
+"dir_eb76c93b7c78495c09679cd710e9cf0a.html":[5,0,0,1,0,21,0,0,0],
 "dir_edb24e23034f10142b741b1385314a1c.html":[5,0,0,5,2,2,9,2],
 "dir_eed9a6b9f2584eb7c4f681cbb2f2f423.html":[5,0,0,5,0,1,0,0,0,2],
 "dir_ef61d3621e25f22442f23d850502aac1.html":[5,0,0,2,10,2,0],
@@ -145,8 +146,8 @@ var NAVTREEINDEX20 =
 "functions_type_v.html":[4,3,3,16],
 "functions_u.html":[4,3,0,20],
 "functions_v.html":[4,3,0,21],
-"functions_vars.html":[4,3,2,0],
 "functions_vars.html":[4,3,2],
+"functions_vars.html":[4,3,2,0],
 "functions_vars_b.html":[4,3,2,1],
 "functions_vars_c.html":[4,3,2,2],
 "functions_vars_d.html":[4,3,2,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX20 =
 "jobs_8h_source.html":[5,0,0,5,2,1,12],
 "join_8h_source.html":[5,0,0,2,10,1,2],
 "kirchhoff-cbuilder_8h_source.html":[5,0,0,4,0,0],
-"layer_8h_source.html":[5,0,0,5,2,2,10,6],
-"layer_8hxx_source.html":[5,0,0,5,2,2,10,7]
+"layer_8h_source.html":[5,0,0,5,2,2,10,6]
 };
