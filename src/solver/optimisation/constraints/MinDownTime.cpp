@@ -43,7 +43,7 @@ void MinDownTime::add(int pays, int cluster, int clusterIndex, int pdt, bool Sim
     }
     else
     {
-        nbTermesContraintesPourLesCoutsDeDemarrage
+        problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
           += 1 + DureeMinimaleDArretDUnGroupeDuPalierThermique;
         problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
     }

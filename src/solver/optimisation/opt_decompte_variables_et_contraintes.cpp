@@ -39,7 +39,7 @@ using namespace Antares;
 
 int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
+    const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
@@ -214,7 +214,8 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
         }
         if (!Pump && !TurbEntreBornes && MonitorHourlyLev)
         {
-            throw FatalError("Level explicit modeling requires flexible generation");
+            const std::string areaName(problemeHebdo->NomsDesPays[pays]);
+            throw FatalError("Level explicit modeling requires flexible generation in area " + areaName);
         }
     }
 

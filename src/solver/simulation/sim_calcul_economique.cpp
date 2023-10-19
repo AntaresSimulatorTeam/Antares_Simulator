@@ -120,6 +120,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
     problem.OptimisationAvecCoutsDeDemarrage
+      = (study.parameters.unitCommitment.ucMode
+         != Antares::Data::UnitCommitmentMode::ucHeuristicFast);
+
+    problem.OptimisationAvecVariablesEntieres
       = (study.parameters.unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucMILP);
 
     problem.OptimisationAuPasHebdomadaire

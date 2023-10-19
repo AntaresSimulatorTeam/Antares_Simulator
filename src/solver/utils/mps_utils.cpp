@@ -64,8 +64,9 @@ public:
         dest->NbVar = src->NombreDeVariables;
 
         mVariableType.resize(src->NombreDeVariables);
-        // TODO[FOM] use actual variable types when MIP resolution is integrated
-        std::fill(mVariableType.begin(), mVariableType.end(), SRS_CONTINUOUS_VAR);
+        for (int var = 0; var < src->NombreDeVariables; var++)
+            mVariableType[var] = src->VariablesEntieres[var] ? SRS_INTEGER_VAR : SRS_CONTINUOUS_VAR;
+
         dest->TypeDeVariable = mVariableType.data();
         dest->TypeDeBorneDeLaVariable = src->TypeDeVariable; // VARIABLE_BORNEE_DES_DEUX_COTES,
                                                              // VARIABLE_BORNEE_INFERIEUREMENT, etc.

@@ -72,6 +72,7 @@ public:
     averageResults load(Area* area);
     averageResults flow(AreaLink* link);
     averageResults thermalGeneration(ThermalCluster* cluster);
+    averageResults thermalNbUnitsON(ThermalCluster* cluster);
 
 private:
     template<class VCard>

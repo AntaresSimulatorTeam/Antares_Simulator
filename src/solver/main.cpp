@@ -28,7 +28,7 @@
 
 #include <antares/logs/logs.h>
 #include "application.h"
-#include "../ui/common/winmain.hxx"  //TODO: remove that reverse dependency to UI
+#include <antares/args/args_to_utf8.h>
 
 #include <antares/fatal-error.h>
 #include <antares/memory/memory.h>
@@ -127,14 +127,12 @@ int main(int argc, char** argv)
         InitializeDefaultLocale();
 
         // Getting real UTF8 arguments
-        argv = AntaresGetUTF8Arguments(argc, argv);
-
+        IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
+        std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
         Antares::Solver::Application application;
         application.prepare(argc, argv);
         application.execute();
         application.writeExectutionInfo();
-
-        FreeUTF8Arguments(argc, argv);
 
         // to avoid a bug from wxExecute, we should wait a little before returning
         SuspendMilliSeconds(200 /*ms*/);
