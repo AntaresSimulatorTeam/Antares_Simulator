@@ -11,7 +11,7 @@ class ConstraintSlackAnalysis : public UnfeasibilityAnalysis
 public:
     void run() override;
     void printReport() override;
-    std::string title() override { return "Slack variables diagnostic"; }
+    std::string title() override { return "Slack variables analysis"; }
 
 private:
     void buildObjective() const;

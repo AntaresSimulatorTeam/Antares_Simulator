@@ -5,6 +5,8 @@ set(SRC_INFEASIBLE_PROBLEM_ANALYSIS
   unfeasibility-analysis.cpp
   constraint-slack-analysis.h
   constraint-slack-analysis.cpp
+  variables-bounds-consistency.h
+  variables-bounds-consistency.cpp
   unfeasible-pb-analyzer.cpp
   unfeasible-pb-analyzer.h
   report.h

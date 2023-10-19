@@ -2,6 +2,7 @@
 #include <algorithm>
 
 #include "unfeasible-pb-analyzer.h"
+#include "variables-bounds-consistency.h"
 #include "constraint-slack-analysis.h"
 #include <antares/logs/logs.h>
 
@@ -10,52 +11,6 @@ using namespace operations_research;
 
 namespace Antares::Optimization
 {
-
-// ============================
-// Variables bounds analysis
-// ============================
-
-void VariablesBoundsConsistency::run()
-{
-    for (auto& var : problem_->variables())
-    {
-        double lowBound = var->lb();
-        double upBound = var->ub();
-        std::string name = var->name();
-        if (lowBound > upBound)
-        {
-            storeIncorrectVariable(name, lowBound, upBound);
-        }
-    }
-
-    if (foundIncorrectVariables())
-        hasDetectedInfeasibilityCause_ = true;
-}
-
-void VariablesBoundsConsistency::storeIncorrectVariable(std::string name, double lowBound, double upBound)
-{
-    incorrectVars_.push_back(VariableBounds(name, lowBound, upBound));
-}
-
-bool VariablesBoundsConsistency::foundIncorrectVariables()
-{
-    return !incorrectVars_.empty();
-}
-
-void VariablesBoundsConsistency::printReport()
-{
-    for (auto& var : incorrectVars_)
-    {
-        logs.notice() << var.name << " : low bound = " << var.lowBound << ", up bound = " << var.upBound;
-    }
-}
-
-
-// ===============================
-// Unfeasibility analyzer 
-// ===============================
-
-// gp : this class should be renamed into UnfeasibilityAnalyzer
 
 UnfeasiblePbAnalyzer::UnfeasiblePbAnalyzer(const std::string& solverName, const PROBLEME_SIMPLEXE_NOMME* ProbSpx)
 {
