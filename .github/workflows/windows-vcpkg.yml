@@ -87,9 +87,17 @@ jobs:
 
     - name: Setup Python 3.11
       uses: actions/setup-python@v4
+      id: setup-python
       with:
         architecture: 'x64'
         python-version: '3.11'
+
+    - name: Python path
+      shell: bash
+      run: echo '${{ steps.setup-python.outputs.python-path }}'
+
+    - name: Install pip dependencies if necessary
+      run: pip install -r src/tests/examples/requirements.txt
 
     - name: Install pip dependencies if necessary
       run: pip install -r src/tests/examples/requirements.txt
@@ -114,7 +122,7 @@ jobs:
            -DBUILD_TESTING=ON  \
            -DBUILD_TOOLS=ON \
            -DBUILD_not_system=OFF \
-           -DPython3_ROOT_DIR=${Python3_ROOT_DIR}
+           -DPython3_EXECUTABLE=${{ steps.setup-python.outputs.python-path }}
 
     - name: Build
       shell: bash
