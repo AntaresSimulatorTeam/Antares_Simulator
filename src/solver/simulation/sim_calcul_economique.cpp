@@ -573,24 +573,23 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             auto loadSeries = area.load.series.getCoefficient(year, hourInYear);
             auto windSeries = area.wind.series.getCoefficient(year, hourInYear);
             auto solarSeries = area.solar.series.getCoefficient(year, hourInYear);
-            auto hydroSeriesIndex = area.hydro.series->getIndex(year);
+            auto rorSeriesIndex = area.hydro.series->ror.getSeriesIndex(year);
 
             assert(&scratchpad);
 
-            uint tsFatalIndex = hydroSeriesIndex < ror.width ? hydroSeriesIndex : 0;
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
                 mustRunGen = windSeries
                              + solarSeries
-                             + scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
+                             + scratchpad.miscGenSum[hourInYear] + ror[rorSeriesIndex][hourInYear]
                              + scratchpad.mustrunSum[hourInYear];
             }
 
             // Renewable
             if (parameters.renewableGeneration.isClusters())
             {
-                mustRunGen = scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
+                mustRunGen = scratchpad.miscGenSum[hourInYear] + ror[rorSeriesIndex][hourInYear]
                              + scratchpad.mustrunSum[hourInYear];
 
                 area.renewable.list.each([&](const RenewableCluster& cluster) {
@@ -633,12 +632,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             {
                 auto& area = *study.areas.byIndex[k];
                 auto& hydroSeries = area.hydro.series;
-                uint tsIndex = hydroSeries->getIndex(year);
 
-                auto& inflowsmatrix = hydroSeries->storage;
-                auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
-                auto& mingenmatrix = hydroSeries->mingen;
-                auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
+                auto const& srcinflows = hydroSeries->storage.getColumn(year);
+                auto const& srcmingen = hydroSeries->mingen.getColumn(year);
                 for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)
                 {
                     problem.CaracteristiquesHydrauliques[k].MingenHoraire[j]

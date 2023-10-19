@@ -129,9 +129,9 @@ private:
     //! check Yearly minimum generation is lower than available inflows
     bool checkYearlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const;
     //! check Weekly minimum generation is lower than available inflows
-    bool checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) const;
+    bool checkWeeklyMinGeneration(uint tsIndex, const Data::Area& area) const;
     //! check Hourly minimum generation is lower than available inflows
-    bool checkHourlyMinGeneration(uint tsIndex, Data::Area& area) const;
+    bool checkHourlyMinGeneration(uint tsIndex, const Data::Area& area) const;
     //! check minimum generation is lower than available inflows
     bool checkMinGeneration(uint numSpace, uint year) const;
     //! Prepare the net demand for each area

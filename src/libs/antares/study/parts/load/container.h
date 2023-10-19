@@ -77,6 +77,8 @@ public:
     /*! Data for time-series */
     TimeSeries series;
 
+    TimeSeries::TSNumbers tsNumbers;
+
 }; // class Container
 
 } // namespace Load

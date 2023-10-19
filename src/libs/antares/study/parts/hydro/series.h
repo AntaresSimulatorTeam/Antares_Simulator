@@ -27,6 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 
+#include <include/antares/series/series.h>
 #include <antares/array/matrix.h>
 #include "../../fwd.h"
 
@@ -48,12 +49,17 @@ public:
     DataSeriesHydro();
     //@}
 
+    void copyGenerationTS(DataSeriesHydro& source);
+
     //! \name Data
     //@{
     /*!
     ** \brief Reset all data, as if it were a new area
     */
     void reset();
+
+    void resizeRORandSTORAGE(unsigned int width);
+    void resizeGenerationTS(unsigned int w, unsigned int h);
 
     /*!
     ** \brief Load all data not already loaded
@@ -105,8 +111,6 @@ public:
     */
     void checkMinGenTsNumber(Study& s, const AreaName& areaID);
 
-    unsigned int getIndex(unsigned int year) const;
-
 public:
     /*!
     ** \brief Run-of-the-river - ROR (MW)
@@ -114,7 +118,7 @@ public:
 
     ** (it was DAYS_PER_YEAR before 3.9)
     */
-    Matrix<double> ror;
+    TimeSeries ror;
 
     /*!
     ** \brief Mod (MW)
@@ -122,14 +126,21 @@ public:
     ** Merely a matrix of TimeSeriesCount * 365 values
     ** This matrix is not used in `adequation` mode.
     */
-    Matrix<double> storage;
+    TimeSeries storage;
 
     /*!
     ** \brief Minimum Generation (MW)
     **
     ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
-    Matrix<double> mingen;
+    TimeSeries mingen;
+
+    unsigned int TScount() const { return count; };
+
+    /*!
+    ** \brief Monte-Carlo
+    */
+    Matrix<uint32_t> timeseriesNumbers;
 
     /*!
     ** \brief The number of time-series
@@ -139,18 +150,12 @@ public:
     ** (for example using `fatal.width` and `mod.width` in the same routine, it might
     ** indicate that the two values are not strictly equal)
     */
-    uint count;
-
-    /*!
-    ** \brief Monte-Carlo
-    */
-    Matrix<uint32_t> timeseriesNumbers;
+private:
+    uint count = 0;
 
 }; // class DataSeriesHydro
 
 } // namespace Data
 } // namespace Antares
-
-#include "series.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__ */

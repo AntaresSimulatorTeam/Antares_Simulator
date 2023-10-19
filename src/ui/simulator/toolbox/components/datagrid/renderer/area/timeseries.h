@@ -256,7 +256,7 @@ public:
 protected:
     virtual void internalAreaChanged(Antares::Data::Area* area)
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->ror) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->ror.timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -294,7 +294,7 @@ public:
 protected:
     virtual void internalAreaChanged(Antares::Data::Area* area)
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->storage) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->storage.timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -327,7 +327,7 @@ public:
 private:
     void internalAreaChanged(Antares::Data::Area* area) override
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->mingen) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->mingen.timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };

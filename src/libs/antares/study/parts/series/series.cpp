@@ -40,6 +40,9 @@ namespace Antares::Data
 
 const double TimeSeries::emptyColumn[] = {0};
 
+TimeSeries::TimeSeries(TSNumbers& tsNumbers) : timeseriesNumbers(tsNumbers)
+{}
+
 bool TimeSeries::timeSeriesLoadFromFolder(const std::string& path,
                                           Matrix<>::BufferType dataBuffer,
                                           const bool average)
@@ -63,10 +66,7 @@ int TimeSeries::timeSeriesSaveToFolder(const AreaName& areaID, const std::string
     return timeSeries.saveToCSVFile(buffer, 0);
 }
 
-void TimeSeries::reset()
-{
-    timeSeries.reset(1, HOURS_PER_YEAR);
-}
+
 
 double TimeSeries::getCoefficient(uint32_t year, uint32_t hourInYear) const
 {
@@ -88,6 +88,36 @@ uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
         return 0;
     else
         return timeseriesNumbers[0][year];
+}
+
+double* TimeSeries::operator[](uint32_t year)
+{
+    return timeSeries[year];
+}
+
+void TimeSeries::reset()
+{
+    timeSeries.reset(1, HOURS_PER_YEAR);
+}
+
+void TimeSeries::resize(uint32_t year, uint32_t hour)
+{
+    timeSeries.resize(year, hour);
+}
+
+void TimeSeries::roundAllEntries()
+{
+    timeSeries.roundAllEntries();
+}
+
+void TimeSeries::averageTimeseries()
+{
+    timeSeries.averageTimeseries();
+}
+
+void TimeSeries::unloadFromMemory() const
+{
+    timeSeries.unloadFromMemory();
 }
 
 bool TimeSeries::forceReload(bool reload) const
