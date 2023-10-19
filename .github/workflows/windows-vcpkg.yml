@@ -90,14 +90,7 @@ jobs:
       id: setup-python
       with:
         architecture: 'x64'
-        python-version: '3.11'
-
-    - name: Python path
-      shell: bash
-      run: echo '${{ steps.setup-python.outputs.python-path }}'
-
-    - name: Install pip dependencies if necessary
-      run: pip install -r src/tests/examples/requirements.txt
+        python-version: '3.12'
 
     - name: Install pip dependencies if necessary
       run: pip install -r src/tests/examples/requirements.txt
