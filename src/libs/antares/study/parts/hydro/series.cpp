@@ -55,25 +55,15 @@ DataSeriesHydro::DataSeriesHydro() :
 
 void DataSeriesHydro::copyGenerationTS(DataSeriesHydro& source)
 {
-    ror = source.ror;
-    storage = source.storage;
-    mingen = source.mingen;
+    ror.timeSeries = source.ror.timeSeries;
+    storage.timeSeries = source.storage.timeSeries;
+    mingen.timeSeries = source.mingen.timeSeries;
 
     count = source.count;
 
     source.ror.unloadFromMemory();
     source.storage.unloadFromMemory();
     source.mingen.unloadFromMemory();
-}
-void DataSeriesHydro::copyMaxPowerTS(DataSeriesHydro& source)
-{
-    maxHourlyGenPower = source.maxHourlyGenPower;
-    maxHourlyPumpPower = source.maxHourlyPumpPower;
-
-    nbTimeSeriesSup_ = source.nbTimeSeriesSup_;
-
-    source.maxHourlyGenPower.unloadFromMemory();
-    source.maxHourlyPumpPower.unloadFromMemory();
 }
 
 bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& folder) const
@@ -256,13 +246,6 @@ void DataSeriesHydro::resizeGenerationTS(unsigned int w, unsigned int h)
     storage.resize(w, h);
     mingen.resize(w, h);
     count = w;
-}
-
-void DataSeriesHydro::resizeMaxPowerTS(unsigned int w, unsigned int h)
-{
-    maxHourlyGenPower.reset(w, h);
-    maxHourlyPumpPower.reset(w, h);
-    nbTimeSeriesSup_ = w;
 }
 
 uint64_t DataSeriesHydro::memoryUsage() const

@@ -50,7 +50,6 @@ public:
     //@}
 
     void copyGenerationTS(DataSeriesHydro& source);
-    void copyMaxPowerTS(DataSeriesHydro& source);
 
     //! \name Data
     //@{
@@ -61,7 +60,6 @@ public:
 
     void resizeRORandSTORAGE(unsigned int width);
     void resizeGenerationTS(unsigned int w, unsigned int h);
-    void resizeMaxPowerTS(unsigned int w, unsigned int h);
 
     /*!
     ** \brief Load all data not already loaded
@@ -140,6 +138,11 @@ public:
     unsigned int TScount() const { return count; };
 
     /*!
+    ** \brief Monte-Carlo
+    */
+    Matrix<uint32_t> timeseriesNumbers;
+
+    /*!
     ** \brief The number of time-series
     **
     ** This value must be the same as the width of the matrices `mod` and `fatal`.
@@ -149,11 +152,6 @@ public:
     */
 private:
     uint count = 0;
-
-    /*!
-    ** \brief Monte-Carlo
-    */
-    Matrix<uint32_t> timeseriesNumbers;
 
 }; // class DataSeriesHydro
 
