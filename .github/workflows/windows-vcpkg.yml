@@ -122,7 +122,7 @@ jobs:
            -DBUILD_TESTING=ON  \
            -DBUILD_TOOLS=ON \
            -DBUILD_not_system=OFF \
-           -DPython3_EXECUTABLE=${{ steps.setup-python.outputs.python-path }}
+           -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
 
     - name: Build
       shell: bash
