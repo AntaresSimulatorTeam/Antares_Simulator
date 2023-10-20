@@ -125,70 +125,71 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
         ret = mingen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
     }
 
-    if (study.usedByTheSolver)
+    timeseriesNumbers.clear();
+
+    if (!study.usedByTheSolver)
+        return ret;
+
+
+    if (0 == generationTScount_)
     {
-        if (0 == generationTScount_)
+        logs.error() << "Hydro: `" << areaID
+                        << "`: empty matrix detected. Fixing it with default values";
+        ror.reset(1, HOURS_PER_YEAR);
+        storage.reset(1, DAYS_PER_YEAR);
+        mingen.reset(1, HOURS_PER_YEAR);
+    }
+    else
+    {
+        if (generationTScount_ > 1 && storage.width != ror.width)
         {
-            logs.error() << "Hydro: `" << areaID
-                         << "`: empty matrix detected. Fixing it with default values";
-            ror.reset(1, HOURS_PER_YEAR);
-            storage.reset(1, DAYS_PER_YEAR);
-            mingen.reset(1, HOURS_PER_YEAR);
-        }
-        else
-        {
-            if (generationTScount_ > 1 && storage.width != ror.width)
+            if (ror.width != 1 && storage.width != 1)
             {
-                if (ror.width != 1 && storage.width != 1)
+                logs.fatal() << "Hydro: `" << areaID
+                                << "`: The matrices ROR (run-of-the-river) and hydro-storage must "
+                                "have the same number of time-series.";
+                study.gotFatalError = true;
+            }
+            else
+            {
+                if (ror.width == 1)
                 {
-                    logs.fatal() << "Hydro: `" << areaID
-                                 << "`: The matrices ROR (run-of-the-river) and hydro-storage must "
-                                    "have the same number of time-series.";
-                    study.gotFatalError = true;
+                    ror.resizeWithoutDataLost(generationTScount_, ror.height);
+                    for (uint x = 1; x < generationTScount_; ++x)
+                        ror.pasteToColumn(x, ror[0]);
                 }
                 else
                 {
-                    if (ror.width == 1)
+                    if (storage.width == 1)
                     {
-                        ror.resizeWithoutDataLost(generationTScount_, ror.height);
+                        storage.resizeWithoutDataLost(generationTScount_, storage.height);
                         for (uint x = 1; x < generationTScount_; ++x)
-                            ror.pasteToColumn(x, ror[0]);
+                            storage.pasteToColumn(x, storage[0]);
                     }
-                    else
-                    {
-                        if (storage.width == 1)
-                        {
-                            storage.resizeWithoutDataLost(generationTScount_, storage.height);
-                            for (uint x = 1; x < generationTScount_; ++x)
-                                storage.pasteToColumn(x, storage[0]);
-                        }
-                    }
-                    Area* areaToInvalidate = study.areas.find(areaID);
-                    if (areaToInvalidate)
-                    {
-                        areaToInvalidate->invalidateJIT = true;
-                        logs.info()
-                          << "  '" << areaID << "': The hydro data have been normalized to "
-                          << generationTScount_ << " timeseries";
-                    }
-                    else
-                        logs.error()
-                          << "Impossible to find the area `" << areaID << "` to invalidate it";
                 }
+                Area* areaToInvalidate = study.areas.find(areaID);
+                if (areaToInvalidate)
+                {
+                    areaToInvalidate->invalidateJIT = true;
+                    logs.info()
+                        << "  '" << areaID << "': The hydro data have been normalized to "
+                        << generationTScount_ << " timeseries";
+                }
+                else
+                    logs.error()
+                        << "Impossible to find the area `" << areaID << "` to invalidate it";
             }
-            checkMinGenTsNumber(study, areaID);
         }
-
-        if (study.parameters.derated)
-        {
-            ror.averageTimeseries();
-            storage.averageTimeseries();
-            mingen.averageTimeseries();
-            generationTScount_ = 1;
-        }
+        checkMinGenTsNumber(study, areaID);
     }
 
-    timeseriesNumbers.clear();
+    if (study.parameters.derated)
+    {
+        ror.averageTimeseries();
+        storage.averageTimeseries();
+        mingen.averageTimeseries();
+        generationTScount_ = 1;
+    }
 
     return ret;
 }
