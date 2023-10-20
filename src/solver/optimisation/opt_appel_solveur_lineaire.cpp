@@ -47,6 +47,8 @@ extern "C"
 #include "../utils/filename.h"
 
 #include "../infeasible-problem-analysis/unfeasible-pb-analyzer.h"
+#include "../infeasible-problem-analysis/variables-bounds-consistency.h"
+#include "../infeasible-problem-analysis/constraint-slack-analysis.h"
 
 #include <chrono>
 
@@ -374,7 +376,14 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         }
 
         Probleme.SetUseNamedProblems(true);
-        Optimization::UnfeasiblePbAnalyzer analyzer(options.solverName, &Probleme);
+
+        auto MPproblem = std::shared_ptr<MPSolver>(ProblemSimplexeNommeConverter(options.solverName, &Probleme).Convert());
+
+        std::vector<std::shared_ptr<UnfeasibilityAnalysis>> analysisList;
+        analysisList.push_back(std::make_shared<VariablesBoundsConsistency>(MPproblem));
+        analysisList.push_back(std::make_shared<ConstraintSlackAnalysis>(MPproblem));
+
+        Optimization::UnfeasiblePbAnalyzer analyzer(analysisList);
         analyzer.run();
         analyzer.printReport();
 
