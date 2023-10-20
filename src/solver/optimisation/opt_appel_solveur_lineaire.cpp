@@ -380,8 +380,8 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         auto MPproblem = std::shared_ptr<MPSolver>(ProblemSimplexeNommeConverter(options.solverName, &Probleme).Convert());
 
         std::vector<std::shared_ptr<UnfeasibilityAnalysis>> analysisList;
-        analysisList.push_back(std::make_shared<VariablesBoundsConsistency>(MPproblem));
-        analysisList.push_back(std::make_shared<ConstraintSlackAnalysis>(MPproblem));
+        analysisList.push_back(std::make_shared<VariablesBoundsConsistency>(MPproblem.get()));
+        analysisList.push_back(std::make_shared<ConstraintSlackAnalysis>(MPproblem.get()));
 
         Optimization::UnfeasiblePbAnalyzer analyzer(analysisList);
         analyzer.run();

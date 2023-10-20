@@ -2,7 +2,7 @@
 
 namespace Antares::Optimization
 {
-UnfeasibilityAnalysis::UnfeasibilityAnalysis(std::shared_ptr<operations_research::MPSolver> problem)
+UnfeasibilityAnalysis::UnfeasibilityAnalysis(operations_research::MPSolver* problem)
     : problem_(problem)
 {}
 }
