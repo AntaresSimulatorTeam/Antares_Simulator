@@ -299,36 +299,44 @@ bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& fold
     return ret;
 }
 
-
-static void invalidateArea(Area& area, uint nbTS)
+unsigned int EqualizeTSsize(Matrix<double, int32_t>& TScollection1, 
+                        Matrix<double, int32_t>& TScollection2, 
+                        bool& fatalError,
+                        std::string fatalErrorMsg,
+                        Area& area)
 {
-    area.invalidateJIT = true;
-    logs.info() << "  '" << area.id << "': The hydro max power data have been normalized to "
-                << nbTS << " timeseries";
-}
-
-void DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
-{
-    PairOfIntegers pairOfTSsizes(maxHourlyGenPower.width, maxHourlyPumpPower.width);
+    PairOfIntegers pairOfTSsizes(TScollection1.width, TScollection1.width);
 
     if (pairOfTSsizes.same())
-        return;
+        return pairOfTSsizes.sup();
 
     if (pairOfTSsizes.bothGreaterThanOne())
     {
-        logs.fatal() << "Hydro Max Power: `" << area.id
-                     << "`: The matrices Maximum Generation and Maximum Pumping must "
-                        "have the same number of time-series.";
+        logs.fatal() << fatalErrorMsg;
         fatalError = true;
-        return; 
+        return 0;
     }
 
-    if (maxHourlyGenPower.width == 1)
-        resizeMatrixNoDataLoss(maxHourlyGenPower, pairOfTSsizes.sup());
-    if (maxHourlyPumpPower.width == 1)
-        resizeMatrixNoDataLoss(maxHourlyPumpPower, pairOfTSsizes.sup());
+    // At this point, one TS collection size is > 1 and the other is of size 1.
+    area.invalidateJIT = true;
 
-    invalidateArea(area, pairOfTSsizes.sup());
+    if (TScollection1.width == 1)
+        resizeMatrixNoDataLoss(TScollection1, pairOfTSsizes.sup());
+    if (TScollection1.width == 1)
+        resizeMatrixNoDataLoss(TScollection1, pairOfTSsizes.sup());
+
+    return pairOfTSsizes.sup();
+}
+
+void DataSeriesHydro::EqualizeMaxPowerTSsizes(Area& area, bool& fatalError)
+{
+    std::string fatalErrorMsg = "Hydro Max Power: " + area.id.to<std::string>() + " : ";
+    fatalErrorMsg += "generation and pumping must have the same number of TS.";
+
+    maxPowerTScount_ = EqualizeTSsize(maxHourlyGenPower, maxHourlyPumpPower, fatalError, fatalErrorMsg, area);
+
+    logs.info() << "  '" << area.id << "': The hydro max power TS number were equalize "
+                << maxPowerTScount_;
 }
 
 void DataSeriesHydro::setHydroModulability(Study& study, const AreaName& areaID) const

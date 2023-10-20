@@ -172,7 +172,7 @@ public:
      * Checking whether or not TS's numbers are different
      * and taking proper action based on corresponding check.
      */
-    void postProcessMaxPowerTS(Area& area, bool& fatalError);
+    void EqualizeMaxPowerTSsizes(Area& area, bool& fatalError);
 
     void setHydroModulability(Study& study, const AreaName& areaID) const;
 
