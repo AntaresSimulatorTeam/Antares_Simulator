@@ -153,18 +153,7 @@ public:
     */
     Matrix<double, int32_t> maxHourlyPumpPower;
 
-    unsigned int TScount() const { return count; };
-
-    /*!
-    ** \brief The number of time-series
-    **
-    ** This value must be the same as the width of the matrices `mod` and `fatal`.
-    ** It is only provided for convenience to avoid same strange and ambiguous code
-    ** (for example using `fatal.width` and `mod.width` in the same routine, it might
-    ** indicate that the two values are not strictly equal)
-    */
-private:
-    uint count = 0;
+    unsigned int TScount() const { return generationTScount_; };
 
 public:
     /*!
@@ -208,16 +197,15 @@ public:
     void setMaxPowerTSWhenDeratedMode(const Study& study);
 
 private:
-    /*!
-    ** \brief The number of time-series for maxHourlyGenPower and maxHourlyPumpPower matrices
-    **
-    ** This value must be the same as the width of the matrices `maxHourlyGenPower` and
-    *`maxHourlyPumpPower`.
-    ** It is only provided for convenience to avoid same strange and ambiguous code
-    ** (for example using `maxHourlyGenPower.width` and `maxHourlyPumpPower.width` in the same
-    *routine, it might
-    ** indicate that the two values are not strictly equal)
-    */
+    
+    // The number of time-series about generation (ror, inflows (=storage), mingen)
+    // They all should have the same number of columns (width), as they each year receives a common
+    // TS number for all three.
+    uint generationTScount_ = 0;
+
+    // The number of time-series about max power (maxHourlyGenPower and maxHourlyPumpPower)
+    // They both should have the same number of columns (width), as they each year receives a common
+    // TS number for all three.
     uint maxPowerTScount_ = 0;
 
 }; // class DataSeriesHydro

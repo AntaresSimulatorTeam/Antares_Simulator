@@ -59,7 +59,7 @@ void DataSeriesHydro::copyGenerationTS(DataSeriesHydro& source)
     storage = source.storage;
     mingen = source.mingen;
 
-    count = source.count;
+    generationTScount_ = source.generationTScount_;
 
     source.ror.unloadFromMemory();
     source.storage.unloadFromMemory();
@@ -114,10 +114,10 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
     ret = storage.loadFromCSVFile(buffer, 1, DAYS_PER_YEAR, &study.dataBuffer) && ret;
 
     // The number of time-series
-    count = storage.width;
+    generationTScount_ = storage.width;
 
-    if (ror.width > count)
-        count = ror.width;
+    if (ror.width > generationTScount_)
+        generationTScount_ = ror.width;
 
     if (study.header.version >= 860)
     {
@@ -127,7 +127,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
 
     if (study.usedByTheSolver)
     {
-        if (0 == count)
+        if (0 == generationTScount_)
         {
             logs.error() << "Hydro: `" << areaID
                          << "`: empty matrix detected. Fixing it with default values";
@@ -137,7 +137,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
         }
         else
         {
-            if (count > 1 && storage.width != ror.width)
+            if (generationTScount_ > 1 && storage.width != ror.width)
             {
                 if (ror.width != 1 && storage.width != 1)
                 {
@@ -150,16 +150,16 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
                 {
                     if (ror.width == 1)
                     {
-                        ror.resizeWithoutDataLost(count, ror.height);
-                        for (uint x = 1; x < count; ++x)
+                        ror.resizeWithoutDataLost(generationTScount_, ror.height);
+                        for (uint x = 1; x < generationTScount_; ++x)
                             ror.pasteToColumn(x, ror[0]);
                     }
                     else
                     {
                         if (storage.width == 1)
                         {
-                            storage.resizeWithoutDataLost(count, storage.height);
-                            for (uint x = 1; x < count; ++x)
+                            storage.resizeWithoutDataLost(generationTScount_, storage.height);
+                            for (uint x = 1; x < generationTScount_; ++x)
                                 storage.pasteToColumn(x, storage[0]);
                         }
                     }
@@ -169,7 +169,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
                         areaToInvalidate->invalidateJIT = true;
                         logs.info()
                           << "  '" << areaID << "': The hydro data have been normalized to "
-                          << count << " timeseries";
+                          << generationTScount_ << " timeseries";
                     }
                     else
                         logs.error()
@@ -184,7 +184,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
             ror.averageTimeseries();
             storage.averageTimeseries();
             mingen.averageTimeseries();
-            count = 1;
+            generationTScount_ = 1;
         }
     }
 
@@ -206,8 +206,8 @@ void DataSeriesHydro::checkMinGenTsNumber(Study& study, const AreaName& areaID)
         }
         else
         {
-            mingen.resizeWithoutDataLost(count, mingen.height);
-            for (uint x = 1; x < count; ++x)
+            mingen.resizeWithoutDataLost(generationTScount_, mingen.height);
+            for (uint x = 1; x < generationTScount_; ++x)
                 mingen.pasteToColumn(x, mingen[0]);
             Area* areaToInvalidate = study.areas.find(areaID);
             if (areaToInvalidate)
@@ -215,7 +215,7 @@ void DataSeriesHydro::checkMinGenTsNumber(Study& study, const AreaName& areaID)
                 areaToInvalidate->invalidateJIT = true;
                 logs.info() << "  '" << areaID
                             << "': The hydro minimum generation data have been normalized to "
-                            << count << " timeseries";
+                            << generationTScount_ << " timeseries";
             }
             else
                 logs.error() << "Impossible to find the area `" << areaID << "` to invalidate it";
@@ -250,7 +250,7 @@ void DataSeriesHydro::reset()
     mingen.reset(1, HOURS_PER_YEAR);
     maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
-    count = 1;
+    generationTScount_ = 1;
     maxPowerTScount_ = 1;
 }
 
@@ -258,7 +258,7 @@ void DataSeriesHydro::resizeRORandSTORAGE(unsigned int width)
 {
     ror.resize(width, HOURS_PER_YEAR);
     storage.resize(width, DAYS_PER_YEAR);
-    count = width;
+    generationTScount_ = width;
 }
 
 void DataSeriesHydro::resizeGenerationTS(unsigned int w, unsigned int h)
@@ -266,7 +266,7 @@ void DataSeriesHydro::resizeGenerationTS(unsigned int w, unsigned int h)
     ror.resize(w, h);
     storage.resize(w, h);
     mingen.resize(w, h);
-    count = w;
+    generationTScount_ = w;
 }
 
 void DataSeriesHydro::resizeMaxPowerTS(unsigned int w, unsigned int h)
