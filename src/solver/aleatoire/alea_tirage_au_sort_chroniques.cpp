@@ -71,7 +71,7 @@ void ApplyRandomTSnumbers(const Study& study,
         {
             const Data::DataSeriesHydro& data = *area.hydro.series;
             assert(year < data.timeseriesNumbersHydroMaxPower.height);
-            ptchro.HydroMaxPower = (data.getNbTimeSeriesSup() != 1)
+            ptchro.HydroMaxPower = (data.maxPowerTScount() != 1)
                                            ? (data.timeseriesNumbersHydroMaxPower[0][year])
                                            : 0; // zero-based
         }

@@ -190,7 +190,7 @@ public:
     /**
      * \brief Setting TS's number of maximum generation and pumping matrices
      */
-    void setNbTimeSeriesSup(uint nbTimeSeriesSup);
+    void setNbTimeSeriesSup(uint nbTimeSeries);
 
     /**
      * \brief Setting TS's number of maximum generation and pumping matrices
@@ -200,7 +200,7 @@ public:
     /**
      * \brief Get function for TS's number of maximum generation and pumping matrices
      */
-    uint getNbTimeSeriesSup() const;
+    uint maxPowerTScount() const;
 
     /**
      * \brief Setting TS's when derated mode is on
@@ -218,7 +218,7 @@ private:
     *routine, it might
     ** indicate that the two values are not strictly equal)
     */
-    uint nbTimeSeriesSup_ = 0;
+    uint maxPowerTScount_ = 0;
 
 }; // class DataSeriesHydro
 

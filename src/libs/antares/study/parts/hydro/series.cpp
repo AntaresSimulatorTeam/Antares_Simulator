@@ -70,7 +70,7 @@ void DataSeriesHydro::copyMaxPowerTS(DataSeriesHydro& source)
     maxHourlyGenPower = source.maxHourlyGenPower;
     maxHourlyPumpPower = source.maxHourlyPumpPower;
 
-    nbTimeSeriesSup_ = source.nbTimeSeriesSup_;
+    maxPowerTScount_ = source.maxPowerTScount_;
 
     source.maxHourlyGenPower.unloadFromMemory();
     source.maxHourlyPumpPower.unloadFromMemory();
@@ -251,7 +251,7 @@ void DataSeriesHydro::reset()
     maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
     count = 1;
-    nbTimeSeriesSup_ = 1;
+    maxPowerTScount_ = 1;
 }
 
 void DataSeriesHydro::resizeRORandSTORAGE(unsigned int width)
@@ -273,7 +273,7 @@ void DataSeriesHydro::resizeMaxPowerTS(unsigned int w, unsigned int h)
 {
     maxHourlyGenPower.reset(w, h);
     maxHourlyPumpPower.reset(w, h);
-    nbTimeSeriesSup_ = w;
+    maxPowerTScount_ = w;
 }
 
 uint64_t DataSeriesHydro::memoryUsage() const
@@ -300,11 +300,11 @@ bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& fold
 }
 
 
-static void invalidateArea(Area& area, uint nbTimeSeriesSup)
+static void invalidateArea(Area& area, uint nbTS)
 {
     area.invalidateJIT = true;
     logs.info() << "  '" << area.id << "': The hydro max power data have been normalized to "
-                << nbTimeSeriesSup << " timeseries";
+                << nbTS << " timeseries";
 }
 
 void DataSeriesHydro::postProcessMaxPowerTS(Area& area, bool& fatalError)
@@ -341,14 +341,14 @@ void DataSeriesHydro::setHydroModulability(Study& study, const AreaName& areaID)
     }
 }
 
-void DataSeriesHydro::setNbTimeSeriesSup(uint nbTimeSeriesSup)
+void DataSeriesHydro::setNbTimeSeriesSup(uint nbTimeSeries)
 {
-    nbTimeSeriesSup_ = nbTimeSeriesSup;
+    maxPowerTScount_ = nbTimeSeries;
 }
 
-uint DataSeriesHydro::getNbTimeSeriesSup() const
+uint DataSeriesHydro::maxPowerTScount() const
 {
-    return nbTimeSeriesSup_;
+    return maxPowerTScount_;
 }
 
 void DataSeriesHydro::setNbTimeSeriesSup()
@@ -356,7 +356,7 @@ void DataSeriesHydro::setNbTimeSeriesSup()
     const auto& maxHourlyGenPower_ = maxHourlyGenPower.width;
     const auto& maxHourlyPumpPower_ = maxHourlyPumpPower.width;
 
-    nbTimeSeriesSup_
+    maxPowerTScount_
       = (maxHourlyGenPower_ >= maxHourlyPumpPower_) ? maxHourlyGenPower_ : maxHourlyPumpPower_;
 }
 
@@ -366,7 +366,7 @@ void DataSeriesHydro::setMaxPowerTSWhenDeratedMode(const Study& study)
     {
         maxHourlyGenPower.averageTimeseries();
         maxHourlyPumpPower.averageTimeseries();
-        nbTimeSeriesSup_ = 1;
+        maxPowerTScount_ = 1;
     }
 }
 
