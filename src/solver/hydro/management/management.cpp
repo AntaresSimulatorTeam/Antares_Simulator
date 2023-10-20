@@ -126,7 +126,7 @@ HydroManagement::~HydroManagement()
 
 void HydroManagement::prepareInflowsScaling(uint numSpace, uint year)
 {
-    areas_.each([&](Data::Area& area)
+    areas_.each([&](const Data::Area& area)
       {
           uint z = area.index;
 
@@ -174,7 +174,7 @@ void HydroManagement::prepareInflowsScaling(uint numSpace, uint year)
 
 void HydroManagement::minGenerationScaling(uint numSpace, uint year) const
 {
-    areas_.each([this, &numSpace, &year](Data::Area& area)
+    areas_.each([this, &numSpace, &year](const Data::Area& area)
       {
           auto const& srcmingen =  area.hydro.series->mingen.getColumn(year);
 
@@ -334,7 +334,7 @@ bool HydroManagement::checkHourlyMinGeneration(uint year, const Data::Area& area
 bool HydroManagement::checkMinGeneration(uint numSpace, uint year) const
 {
     bool ret = true;
-    areas_.each([this, &numSpace, &ret, &year](Data::Area& area)
+    areas_.each([this, &numSpace, &ret, &year](const Data::Area& area)
     {
         bool useHeuristicTarget = area.hydro.useHeuristicTarget;
         bool followLoadModulations = area.hydro.followLoadModulations;
@@ -361,7 +361,7 @@ bool HydroManagement::checkMinGeneration(uint numSpace, uint year) const
 
 void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::StudyMode mode)
 {
-    areas_.each([&](Data::Area& area) {
+    areas_.each([&](const Data::Area& area) {
         uint z = area.index;
 
         auto& scratchpad = area.scratchpad[numSpace];

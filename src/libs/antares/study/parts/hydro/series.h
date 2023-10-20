@@ -49,7 +49,7 @@ public:
     DataSeriesHydro();
     //@}
 
-    void copyGenerationTS(DataSeriesHydro& source);
+    void copyGenerationTS(const DataSeriesHydro& source);
 
     //! \name Data
     //@{

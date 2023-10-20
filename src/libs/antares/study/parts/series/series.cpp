@@ -47,7 +47,7 @@ bool TimeSeries::timeSeriesLoadFromFolder(const std::string& path,
                                           Matrix<>::BufferType dataBuffer,
                                           const bool average)
 {
-    bool ret = 1;
+    bool ret = true;
     ret = timeSeries.loadFromCSVFile(path, 1, HOURS_PER_YEAR, &dataBuffer) && ret;
 
     if (average)

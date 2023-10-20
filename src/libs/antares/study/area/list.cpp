@@ -1556,7 +1556,7 @@ void AreaList::removeLoadTimeseries()
 
 void AreaList::removeHydroTimeseries()
 {
-    each([&](Data::Area& area) {
+    each([](Data::Area& area) {
         area.hydro.series->reset();
     });
 }
@@ -1575,7 +1575,7 @@ void AreaList::removeThermalTimeseries()
 {
     each([](Data::Area& area) {
         area.thermal.list.each(
-          [&](Data::ThermalCluster& cluster) { cluster.series.reset(); });
+          [](Data::ThermalCluster& cluster) { cluster.series.reset(); });
     });
 }
 

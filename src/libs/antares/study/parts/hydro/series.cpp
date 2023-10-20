@@ -53,7 +53,7 @@ DataSeriesHydro::DataSeriesHydro() :
     mingen.reset();
 }
 
-void DataSeriesHydro::copyGenerationTS(DataSeriesHydro& source)
+void DataSeriesHydro::copyGenerationTS(const DataSeriesHydro& source)
 {
     ror.timeSeries = source.ror.timeSeries;
     storage.timeSeries = source.storage.timeSeries;
@@ -111,67 +111,70 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
         ret = mingen.timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
     }
 
-    if (study.usedByTheSolver)
+    if (!study.usedByTheSolver)
     {
-        if (0 == count)
+        timeseriesNumbers.clear();
+        return ret;
+    }
+
+    if (count == 0)
+    {
+        logs.error() << "Hydro: `" << areaID
+                     << "`: empty matrix detected. Fixing it with default values";
+        ror.reset();
+        storage.reset();
+        mingen.reset();
+    }
+    else
+    {
+        if (count > 1 && storage.timeSeries.width != ror.timeSeries.width)
         {
-            logs.error() << "Hydro: `" << areaID
-                         << "`: empty matrix detected. Fixing it with default values";
-            ror.reset();
-            storage.reset();
-            mingen.reset();
-        }
-        else
-        {
-            if (count > 1 && storage.timeSeries.width != ror.timeSeries.width)
+            if (ror.timeSeries.width != 1 && storage.timeSeries.width != 1)
             {
-                if (ror.timeSeries.width != 1 && storage.timeSeries.width != 1)
+                logs.fatal() << "Hydro: `" << areaID
+                             << "`: The matrices ROR (run-of-the-river) and hydro-storage must "
+                                "have the same number of time-series.";
+                study.gotFatalError = true;
+            }
+            else
+            {
+                if (ror.timeSeries.width == 1)
                 {
-                    logs.fatal() << "Hydro: `" << areaID
-                                 << "`: The matrices ROR (run-of-the-river) and hydro-storage must "
-                                    "have the same number of time-series.";
-                    study.gotFatalError = true;
+                    ror.timeSeries.resizeWithoutDataLost(count, ror.timeSeries.height);
+                    for (uint x = 1; x < count; ++x)
+                        ror.timeSeries.pasteToColumn(x, ror[0]);
                 }
                 else
                 {
-                    if (ror.timeSeries.width == 1)
+                    if (storage.timeSeries.width == 1)
                     {
-                        ror.timeSeries.resizeWithoutDataLost(count, ror.timeSeries.height);
+                        storage.timeSeries.resizeWithoutDataLost(count, storage.timeSeries.height);
                         for (uint x = 1; x < count; ++x)
-                            ror.timeSeries.pasteToColumn(x, ror[0]);
+                            storage.timeSeries.pasteToColumn(x, storage[0]);
                     }
-                    else
-                    {
-                        if (storage.timeSeries.width == 1)
-                        {
-                            storage.timeSeries.resizeWithoutDataLost(count, storage.timeSeries.height);
-                            for (uint x = 1; x < count; ++x)
-                                storage.timeSeries.pasteToColumn(x, storage[0]);
-                        }
-                    }
-                    Area* areaToInvalidate = study.areas.find(areaID);
-                    if (areaToInvalidate)
-                    {
-                        areaToInvalidate->invalidateJIT = true;
-                        logs.info()
-                          << "  '" << areaID << "': The hydro data have been normalized to "
-                          << count << " timeseries";
-                    }
-                    else
-                        logs.error()
-                          << "Impossible to find the area `" << areaID << "` to invalidate it";
                 }
+                Area* areaToInvalidate = study.areas.find(areaID);
+                if (areaToInvalidate)
+                {
+                    areaToInvalidate->invalidateJIT = true;
+                    logs.info()
+                      << "  '" << areaID << "': The hydro data have been normalized to "
+                      << count << " timeseries";
+                }
+                else
+                    logs.error()
+                      << "Impossible to find the area `" << areaID << "` to invalidate it";
             }
-            checkMinGenTsNumber(study, areaID);
         }
+        checkMinGenTsNumber(study, areaID);
+    }
 
-        if (study.parameters.derated)
-        {
-            ror.averageTimeseries();
-            storage.averageTimeseries();
-            mingen.averageTimeseries();
-            count = 1;
-        }
+    if (study.parameters.derated)
+    {
+        ror.averageTimeseries();
+        storage.averageTimeseries();
+        mingen.averageTimeseries();
+        count = 1;
     }
 
     timeseriesNumbers.clear();
