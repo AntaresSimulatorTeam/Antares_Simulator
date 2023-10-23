@@ -319,7 +319,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 }
 
 void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int PasDeTempsDebut,
-                               const BindingConstraintsRepository &bindingConstraints, const uint weekFirstDay, int pasDeTemps) 
+                               const BindingConstraintsRepository &bindingConstraints,
+                               const BindingConstraintGroupRepository &bcgroup,
+                               const uint weekFirstDay, int pasDeTemps)
 {
     auto activeContraints = bindingConstraints.activeContraints();
     const auto constraintCount = activeContraints.size();
@@ -328,7 +330,15 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
         auto bc = activeContraints[constraintIndex];
         assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
         //If there is only one TS, always select it.
-        const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc->group()];
+        /* const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc->group()]; */
+        uint tmpts = 0;
+        for (const auto& group : bcgroup)
+        {
+            if (group->name() == bc->name())
+                tmpts = group->timeseriesNumbers[0][problem.year];
+        }
+        const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : tmpts;
+
         auto& timeSeries = bc->RHSTimeSeries();
         double const* column = timeSeries[ts_number];
         switch (bc->type())
@@ -565,7 +575,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 ntc.ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][hourInYear];
             }
         }
-        preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, study.bindingConstraints, weekFirstDay, hourInWeek);
+        preparerBindingConstraint(problem, numSpace, PasDeTempsDebut,
+                study.bindingConstraints, study.bindingConstraintsGroups,
+                weekFirstDay, hourInWeek);
 
         const uint dayInTheYear = study.calendar.hours[hourInYear].dayYear;
 
