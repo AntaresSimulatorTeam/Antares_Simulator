@@ -11,11 +11,6 @@ target_link_libraries(timeseries-tests
                       Boost::unit_test_framework
                       Antares::series
 )
-# Linux
-if(UNIX AND NOT APPLE)
-target_link_libraries(timeseries-tests PRIVATE stdc++fs)
-endif()
-
 
 # Storing timeseries-tests under the folder Unit-tests in the IDE
 set_target_properties(timeseries-tests PROPERTIES FOLDER Unit-tests/timeseries-tests)
