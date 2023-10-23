@@ -400,7 +400,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::StudyMode
 
                 area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
                     assert(cluster.series.timeSeries.jit == nullptr && "No JIT data from the solver");
-                    netdemand -= cluster.valueAtTimeStep(hour, year);
+                    netdemand -= cluster.valueAtTimeStep(year, hour);
                 });
             }
 
