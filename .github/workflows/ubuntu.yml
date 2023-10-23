@@ -124,7 +124,7 @@ jobs:
         variant: "named-mps"
 
     - name: Run unfeasibility-related tests
-      if: always() && ${{ env.IS_PUSH == 'true' }}
+      if: always() 
       run: |
            cd _build
            ctest -C Release --output-on-failure -R unfeasible
@@ -151,7 +151,7 @@ jobs:
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
     - name: Run tests about infinity on BCs RHS
-      if: ${{ env.IS_PUSH == 'true' }} && always()
+      if:  always()
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -159,7 +159,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run tests introduced in v860
-      if: ${{ env.IS_PUSH == 'true' }} && always()
+      if: always()
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -167,7 +167,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
-      if: ${{ env.IS_PUSH == 'true' }} && always()
+      if: always()
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -175,7 +175,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run mps tests
-      if: ${{ env.IS_PUSH == 'true' }} && always()
+      if: always()
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -183,7 +183,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run tests for adequacy patch (CSR)
-      if: ${{ env.IS_PUSH == 'true' }} && always()
+      if: always()
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
