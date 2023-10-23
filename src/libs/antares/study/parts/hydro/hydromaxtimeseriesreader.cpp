@@ -126,7 +126,6 @@ void HydroMaxTimeSeriesReader::copyDailyMaxPowerAsHourly(Area& area) const
 {
     copyDailyMaxGenPowerAsHourly(area);
     copyDailyMaxPumpPowerAsHourly(area);
-    area.hydro.series->setNbTimeSeriesSup();
 }
 
 void HydroMaxTimeSeriesReader::copyDailyMaxGenPowerAsHourly(Area& area) const

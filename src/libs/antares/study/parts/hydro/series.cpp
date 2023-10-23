@@ -341,23 +341,9 @@ void DataSeriesHydro::setHydroModulability(Study& study, const AreaName& areaID)
     }
 }
 
-void DataSeriesHydro::setNbTimeSeriesSup(uint nbTimeSeries)
-{
-    maxPowerTScount_ = nbTimeSeries;
-}
-
 uint DataSeriesHydro::maxPowerTScount() const
 {
     return maxPowerTScount_;
-}
-
-void DataSeriesHydro::setNbTimeSeriesSup()
-{
-    const auto& maxHourlyGenPower_ = maxHourlyGenPower.width;
-    const auto& maxHourlyPumpPower_ = maxHourlyPumpPower.width;
-
-    maxPowerTScount_
-      = (maxHourlyGenPower_ >= maxHourlyPumpPower_) ? maxHourlyGenPower_ : maxHourlyPumpPower_;
 }
 
 void DataSeriesHydro::setMaxPowerTSWhenDeratedMode(const Study& study)

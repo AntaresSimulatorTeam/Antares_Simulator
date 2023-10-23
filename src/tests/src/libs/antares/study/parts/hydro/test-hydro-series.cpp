@@ -112,7 +112,6 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_equal_width, Fixture
     ret = area_1->hydro.series->LoadMaxPower(area_1->id, pathToSeriesFolder) && ret;
     BOOST_CHECK(ret);
 
-    area_1->hydro.series->setNbTimeSeriesSup();
     area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1, fatalError);
 
     BOOST_CHECK(!fatalError);
@@ -172,7 +171,6 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_different_width_case
     ret = area_1->hydro.series->LoadMaxPower(area_1->id, pathToSeriesFolder) && ret;
     BOOST_CHECK(ret);
 
-    area_1->hydro.series->setNbTimeSeriesSup();
     area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1, fatalError);
     BOOST_CHECK(fatalError);
 }
@@ -199,7 +197,6 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_different_width_case_1, Fixtu
     ret = area_1->hydro.series->LoadMaxPower(area_1->id, pathToSeriesFolder) && ret;
     BOOST_CHECK(ret);
 
-    area_1->hydro.series->setNbTimeSeriesSup();
     area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1, fatalError);
 
     BOOST_CHECK(!fatalError);
@@ -228,7 +225,6 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_different_width_case_2, Fixtu
     ret = area_1->hydro.series->LoadMaxPower(area_1->id, pathToSeriesFolder) && ret;
     BOOST_CHECK(ret);
 
-    area_1->hydro.series->setNbTimeSeriesSup();
     area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1, fatalError);
 
     BOOST_CHECK(!fatalError);
@@ -257,7 +253,6 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_zeros, Fixture)
     ret = area_1->hydro.series->LoadMaxPower(area_1->id, pathToSeriesFolder) && ret;
     BOOST_CHECK(ret);
 
-    area_1->hydro.series->setNbTimeSeriesSup();
     maxHourlyGenPower.width = 0;
     maxHourlyPumpPower.width = 0;
     area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1, fatalError);

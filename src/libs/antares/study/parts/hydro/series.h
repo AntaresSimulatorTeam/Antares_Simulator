@@ -156,44 +156,21 @@ public:
     unsigned int TScount() const { return generationTScount_; };
 
 public:
-    /*!
-    ** \brief Monte-Carlo
-    */
     Matrix<uint32_t> timeseriesNumbers;
     Matrix<uint32_t> timeseriesNumbersHydroMaxPower;
 
-    /**
-     * \brief Loading hydro maximum generation and pumping TS's
-     */
+    // Loading hydro max generation and mqx pumping TS's
     bool LoadMaxPower(const AreaName& areaID, const AnyString& folder);
 
-    /**
-     * Post processing numbers of TS's
-     * Checking whether or not TS's numbers are different
-     * and taking proper action based on corresponding check.
-     */
+    // Equalizing max generation and max pumping numbers of TS's    
     void EqualizeMaxPowerTSsizes(Area& area, bool& fatalError);
 
     void setHydroModulability(Study& study, const AreaName& areaID) const;
 
-    /**
-     * \brief Setting TS's number of maximum generation and pumping matrices
-     */
-    void setNbTimeSeriesSup(uint nbTimeSeries);
-
-    /**
-     * \brief Setting TS's number of maximum generation and pumping matrices
-     */
-    void setNbTimeSeriesSup();
-
-    /**
-     * \brief Get function for TS's number of maximum generation and pumping matrices
-     */
+    // Get max power (generatoin and pumping) number of TS
     uint maxPowerTScount() const;
 
-    /**
-     * \brief Setting TS's when derated mode is on
-     */
+    // Setting TS's when derated mode is on
     void setMaxPowerTSWhenDeratedMode(const Study& study);
 
 private:
