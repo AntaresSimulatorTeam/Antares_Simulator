@@ -140,7 +140,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
     costsTimeSeries(1, CostsTimeSeries())
 {
     // assert
-    assert(parent and "A parent for a thermal dispatchable cluster can not be null");
+    assert(parent && "A parent for a thermal dispatchable cluster can not be null");
 }
 
 Data::ThermalCluster::~ThermalCluster()
@@ -271,10 +271,10 @@ void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
 bool Data::ThermalCluster::forceReload(bool reload) const
 {
     bool ret = true;
-    ret = modulation.forceReload(reload) and ret;
-    ret = series.forceReload(reload) and ret;
+    ret = modulation.forceReload(reload) && ret;
+    ret = series.forceReload(reload) && ret;
     if (prepro)
-        ret = prepro->forceReload(reload) and ret;
+        ret = prepro->forceReload(reload) && ret;
     ret = ecoInput.forceReload(reload) && ret;
     return ret;
 }
@@ -585,7 +585,7 @@ bool Data::ThermalCluster::integrityCheck()
     {
         CString<ant_k_cluster_name_max_length + ant_k_area_name_max_length + 50, false> buffer;
         buffer << "Thermal cluster: " << parentArea->name << '/' << pName << ": Modulation";
-        ret = MatrixTestForPositiveValues(buffer.c_str(), &modulation) and ret;
+        ret = MatrixTestForPositiveValues(buffer.c_str(), &modulation) && ret;
     }
 
     // la valeur minStablePower should not be modified

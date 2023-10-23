@@ -361,12 +361,12 @@ bool HydroManagement::checkMinGeneration(uint numSpace, uint year) const
 
 void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::StudyMode mode)
 {
-    areas_.each([&](const Data::Area& area) {
+    areas_.each([this, &year, &numSpace, &mode](const Data::Area& area) {
         uint z = area.index;
 
         auto& scratchpad = area.scratchpad[numSpace];
 
-        auto& rormatrix = area.hydro.series->ror;
+        const auto& rormatrix = area.hydro.series->ror;
         const auto* ror = rormatrix.getColumn(year);
 
         auto& data = tmpDataByArea_[numSpace][z];
@@ -399,7 +399,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::StudyMode
                                                              : scratchpad.originalMustrunSum[hour]);
 
                 area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
-                    assert(cluster.series.timeSeries.jit == NULL && "No JIT data from the solver");
+                    assert(cluster.series.timeSeries.jit == nullptr && "No JIT data from the solver");
                     netdemand -= cluster.valueAtTimeStep(hour, year);
                 });
             }

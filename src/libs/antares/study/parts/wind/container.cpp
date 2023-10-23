@@ -49,9 +49,9 @@ Container::~Container()
 bool Container::forceReload(bool reload) const
 {
     bool ret = true;
-    ret = series.forceReload(reload) and ret;
+    ret = series.forceReload(reload) && ret;
     if (prepro)
-        ret = prepro->forceReload(reload) and ret;
+        ret = prepro->forceReload(reload) && ret;
     return ret;
 }
 
