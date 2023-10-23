@@ -169,6 +169,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
                     << "Impossible to find the area `" << areaID << "` to invalidate it";
         }
     }
+
     checkMinGenTsNumber(study, areaID);
 
     if (study.parameters.derated)
@@ -294,7 +295,7 @@ unsigned int EqualizeTSsize(Matrix<double, int32_t>& TScollection1,
                         std::string fatalErrorMsg,
                         Area& area)
 {
-    PairOfIntegers pairOfTSsizes(TScollection1.width, TScollection1.width);
+    PairOfIntegers pairOfTSsizes(TScollection1.width, TScollection2.width);
 
     if (pairOfTSsizes.same())
         return pairOfTSsizes.sup();
@@ -307,12 +308,14 @@ unsigned int EqualizeTSsize(Matrix<double, int32_t>& TScollection1,
     }
 
     // At this point, one TS collection size is > 1 and the other is of size 1.
+    
+    // This following instruction to force reloading all area's TS when saving the study (GUI)
     area.invalidateJIT = true;
 
     if (TScollection1.width == 1)
         resizeMatrixNoDataLoss(TScollection1, pairOfTSsizes.sup());
-    if (TScollection1.width == 1)
-        resizeMatrixNoDataLoss(TScollection1, pairOfTSsizes.sup());
+    if (TScollection2.width == 1)
+        resizeMatrixNoDataLoss(TScollection2, pairOfTSsizes.sup());
 
     return pairOfTSsizes.sup();
 }
