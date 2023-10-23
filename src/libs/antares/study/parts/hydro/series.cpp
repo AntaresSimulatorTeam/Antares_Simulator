@@ -183,6 +183,54 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
     return ret;
 }
 
+bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& folder)
+{
+    bool ret = true;
+    YString filepath;
+    Matrix<>::BufferType fileContent;
+
+    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower.txt";
+    ret = maxHourlyGenPower.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
+
+    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower.txt";
+    ret = maxHourlyPumpPower.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
+
+    timeseriesNumbersHydroMaxPower.clear();
+
+    return ret;
+}
+
+
+void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
+                                Matrix<double, int32_t>::ColumnType& hourlyColumn)
+{
+    uint hour = 0;
+    uint day = 0;
+
+    while (hour < HOURS_PER_YEAR && day < DAYS_PER_YEAR)
+    {
+        for (uint i = 0; i < HOURS_PER_DAY; ++i)
+        {
+            hourlyColumn[hour] = dailyColumn[day];
+            ++hour;
+        }
+        ++day;
+    }
+}
+
+
+void DataSeriesHydro::buildMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
+                                               const Matrix<double>::ColumnType& DailyMaxPumpPower)
+{
+    maxPowerTScount_ = 1;
+
+    maxHourlyGenPower.reset(maxPowerTScount_, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(maxPowerTScount_, HOURS_PER_YEAR);
+
+    ConvertDailyTSintoHourlyTS(DailyMaxGenPower, maxHourlyGenPower[0]);
+    ConvertDailyTSintoHourlyTS(DailyMaxPumpPower, maxHourlyPumpPower[0]);
+}
+
 void DataSeriesHydro::checkMinGenTsNumber(Study& study, const AreaName& areaID)
 {
     if (mingen.width != storage.width)
@@ -270,23 +318,6 @@ uint64_t DataSeriesHydro::memoryUsage() const
 {
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage()
            + maxHourlyGenPower.memoryUsage() + maxHourlyPumpPower.memoryUsage();
-}
-
-bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& folder)
-{
-    bool ret = true;
-    YString filepath;
-    Matrix<>::BufferType fileContent;
-
-    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower.txt";
-    ret = maxHourlyGenPower.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
-
-    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower.txt";
-    ret = maxHourlyPumpPower.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
-
-    timeseriesNumbersHydroMaxPower.clear();
-
-    return ret;
 }
 
 unsigned int EqualizeTSsize(Matrix<double, int32_t>& TScollection1, 

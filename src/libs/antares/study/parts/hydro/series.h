@@ -86,6 +86,12 @@ public:
     */
     bool loadFromFolder(Study& s, const AreaName& areaID, const AnyString& folder);
 
+    // Loading hydro max generation and mqx pumping TS's
+    bool LoadMaxPower(const AreaName& areaID, const AnyString& folder);
+
+    void buildMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
+                                  const Matrix<double>::ColumnType& DailyMaxPumpPower);
+
     /*!
     ** \brief Save data series for hydro into a folder (`input/hydro/series`)
     **
@@ -158,9 +164,6 @@ public:
 public:
     Matrix<uint32_t> timeseriesNumbers;
     Matrix<uint32_t> timeseriesNumbersHydroMaxPower;
-
-    // Loading hydro max generation and mqx pumping TS's
-    bool LoadMaxPower(const AreaName& areaID, const AnyString& folder);
 
     // Equalizing max generation and max pumping numbers of TS's    
     void EqualizeMaxPowerTSsizes(Area& area, bool& fatalError);
