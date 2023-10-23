@@ -100,8 +100,8 @@ BOOST_FIXTURE_TEST_CASE(getCoefficientWidthMoreThan1, Fixture)
 {
     ts.resize(5, HOURS_PER_YEAR);
     fillTsnum();
-    fillColumn(3);
 
+    fillColumn(3);
     BOOST_CHECK_EQUAL(ts.getCoefficient(3, 12), 12);
     BOOST_CHECK_EQUAL(ts.getCoefficient(3, 4858), 4858);
 
@@ -133,6 +133,22 @@ BOOST_FIXTURE_TEST_CASE(operatorArray, Fixture)
     auto* col = ts[2];
     col[27] = 12;
     BOOST_CHECK_EQUAL(ts.getCoefficient(2, 27), 12);
+}
+
+BOOST_FIXTURE_TEST_CASE(getCoefficientSpecificData, Fixture)
+{
+    ts.resize(2, 2);
+    fillTsnum();
+    tsnum[0][0] = 1;
+    tsnum[0][1] = 0;
+    ts.timeSeries[0][0] = 12.5;
+    ts.timeSeries[0][1] = 74.74;
+    ts.timeSeries[1][0] = -57;
+    ts.timeSeries[1][1] = 29;
+
+    BOOST_CHECK_EQUAL(ts.getCoefficient(1, 1), 74.74);
+    BOOST_CHECK_EQUAL(ts.getCoefficient(0, 0), -57);
+
 }
 
 BOOST_AUTO_TEST_SUITE_END()

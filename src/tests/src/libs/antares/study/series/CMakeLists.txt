@@ -1,5 +1,5 @@
 # ====================================
-# Tests on thermal price definition
+# Tests on TimeSeries class
 # ====================================
 set(SRC_TIMESERIES_TESTS
 	timeseries-tests.cpp
