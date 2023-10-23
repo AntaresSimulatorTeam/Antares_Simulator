@@ -50,6 +50,5 @@ void SIM_AllocationTableaux(const Data::Study& study)
     for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
         NumeroChroniquesTireesParInterconnexion[numSpace].resize(intercoCount);
 
-    NumeroChroniquesTireesParGroup.resize(study.maxNbYearsInParallel);
     AllocateResultsForEconomicMode(study);
 }

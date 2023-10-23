@@ -329,14 +329,13 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
     {
         auto bc = activeContraints[constraintIndex];
         assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
-        //If there is only one TS, always select it.
-        /* const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc->group()]; */
         uint tmpts = 0;
         for (const auto& group : bcgroup)
         {
             if (group->name() == bc->name())
                 tmpts = group->timeseriesNumbers[0][problem.year];
         }
+        //If there is only one TS, always select it.
         const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : tmpts;
 
         auto& timeSeries = bc->RHSTimeSeries();
