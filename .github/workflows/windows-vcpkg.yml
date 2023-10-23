@@ -85,11 +85,12 @@ jobs:
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
-    - name: Setup Python 3.11
+    - name: Setup Python 3.12
       uses: actions/setup-python@v4
+      id: setup-python
       with:
         architecture: 'x64'
-        python-version: '3.11'
+        python-version: '3.12'
 
     - name: Install pip dependencies if necessary
       run: pip install -r src/tests/examples/requirements.txt
@@ -113,7 +114,8 @@ jobs:
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON  \
            -DBUILD_TOOLS=ON \
-           -DBUILD_not_system=OFF
+           -DBUILD_not_system=OFF \
+           -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
 
     - name: Build
       shell: bash
