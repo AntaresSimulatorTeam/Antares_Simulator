@@ -57,7 +57,6 @@ void Fixture::fillTsnum()
 // Tests section
 // ==================
 
-// Here, we need the "lightweight fixture"
 BOOST_AUTO_TEST_SUITE(timeseries_tests)
 
 BOOST_FIXTURE_TEST_CASE(getSeriesIndex, Fixture)
@@ -148,7 +147,7 @@ BOOST_FIXTURE_TEST_CASE(getCoefficientSpecificData, Fixture)
 
     BOOST_CHECK_EQUAL(ts.getCoefficient(1, 1), 74.74);
     BOOST_CHECK_EQUAL(ts.getCoefficient(0, 0), -57);
-
+    BOOST_CHECK_EQUAL(ts.getCoefficient(1, 0), 12.5);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
