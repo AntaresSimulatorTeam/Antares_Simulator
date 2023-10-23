@@ -1,12 +1,14 @@
 #include "variables-bounds-consistency.h"
 #include <antares/logs/logs.h>
 
+using namespace operations_research;
+
 namespace Antares::Optimization
 {
     
-void VariablesBoundsConsistency::run()
+void VariablesBoundsConsistency::run(MPSolver* problem)
 {
-    for (auto& var : problem_->variables())
+    for (auto& var : problem->variables())
     {
         double lowBound = var->lb();
         double upBound = var->ub();

@@ -2,7 +2,6 @@ project(infeasible-problem-analysis)
 
 set(SRC_INFEASIBLE_PROBLEM_ANALYSIS
   unfeasibility-analysis.h
-  unfeasibility-analysis.cpp
   constraint-slack-analysis.h
   constraint-slack-analysis.cpp
   variables-bounds-consistency.h

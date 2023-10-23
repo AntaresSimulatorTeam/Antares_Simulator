@@ -12,8 +12,9 @@ using namespace operations_research;
 namespace Antares::Optimization
 {
 
-UnfeasiblePbAnalyzer::UnfeasiblePbAnalyzer(std::vector<std::shared_ptr<UnfeasibilityAnalysis>> analysisList)
-    : analysisList_(analysisList)
+UnfeasiblePbAnalyzer::UnfeasiblePbAnalyzer(MPSolver* problem,
+                                           std::vector<std::shared_ptr<UnfeasibilityAnalysis>> analysisList)
+        : problem_(problem), analysisList_(analysisList)
 {}
 
 void UnfeasiblePbAnalyzer::run()
@@ -25,7 +26,7 @@ void UnfeasiblePbAnalyzer::run()
     {
         logs.info();
         logs.info() << analysis->title() << " : running...";
-        analysis->run();
+        analysis->run(problem_);
         if (analysis->hasDetectedInfeasibilityCause())
             return;
 

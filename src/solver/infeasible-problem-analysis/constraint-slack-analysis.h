@@ -7,16 +7,15 @@ namespace Antares::Optimization
 
 class ConstraintSlackAnalysis : public UnfeasibilityAnalysis
 {
-    using UnfeasibilityAnalysis::UnfeasibilityAnalysis;
 public:
-    void run() override;
+    ConstraintSlackAnalysis() = default;
+    void run(operations_research::MPSolver* problem) override;
     void printReport() override;
     std::string title() override { return "Slack variables analysis"; }
 
 private:
-    void buildObjective() const;
-    void addSlackVariables();
-    operations_research::MPSolver::ResultStatus Solve() const;
+    void buildObjective(operations_research::MPSolver* problem) const;
+    void addSlackVariables(operations_research::MPSolver* problem);
 
     std::vector<const operations_research::MPVariable*> slackVariables_;
     const std::string constraint_name_pattern = "^AreaHydroLevel::|::hourly::|::daily::|::weekly::|^FictiveLoads::";

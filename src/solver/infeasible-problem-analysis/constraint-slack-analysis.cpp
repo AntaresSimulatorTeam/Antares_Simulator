@@ -8,18 +8,18 @@ using namespace operations_research;
 namespace Antares::Optimization
 {
 
-void ConstraintSlackAnalysis::run()
+void ConstraintSlackAnalysis::run(MPSolver* problem)
 {
-    addSlackVariables();
+    addSlackVariables(problem);
     if (slackVariables_.empty())
     {
         logs.error() << title() << " : no constraints have been selected";
         return;
     }
 
-    buildObjective();
+    buildObjective(problem);
 
-    const MPSolver::ResultStatus status = Solve();
+    const MPSolver::ResultStatus status = problem->Solve();
     if ((status != MPSolver::OPTIMAL) && (status != MPSolver::FEASIBLE))
     {
         logs.error() << title() << " : modified linear problem could not be solved";
@@ -29,7 +29,7 @@ void ConstraintSlackAnalysis::run()
     hasDetectedInfeasibilityCause_ = true;
 }
 
-void ConstraintSlackAnalysis::addSlackVariables()
+void ConstraintSlackAnalysis::addSlackVariables(MPSolver* problem)
 {
     /* Optimization:
         We assess that less than 1 every 3 constraint will match
@@ -37,17 +37,17 @@ void ConstraintSlackAnalysis::addSlackVariables()
         This should not happen in most cases.
     */
     const unsigned int selectedConstraintsInverseRatio = 3;
-    slackVariables_.reserve(problem_->NumConstraints() / selectedConstraintsInverseRatio);
+    slackVariables_.reserve(problem->NumConstraints() / selectedConstraintsInverseRatio);
     std::regex rgx(constraint_name_pattern);
     const double infinity = MPSolver::infinity();
-    for (MPConstraint* constraint : problem_->constraints())
+    for (MPConstraint* constraint : problem->constraints())
     {
         if (std::regex_search(constraint->name(), rgx))
         {
             if (constraint->lb() != -infinity)
             {
                 const MPVariable* slack
-                    = problem_->MakeNumVar(0, infinity, constraint->name() + "::low");
+                    = problem->MakeNumVar(0, infinity, constraint->name() + "::low");
                 constraint->SetCoefficient(slack, 1.);
                 slackVariables_.push_back(slack);
             }
@@ -55,7 +55,7 @@ void ConstraintSlackAnalysis::addSlackVariables()
             if (constraint->ub() != infinity)
             {
                 const MPVariable* slack
-                    = problem_->MakeNumVar(0, infinity, constraint->name() + "::up");
+                    = problem->MakeNumVar(0, infinity, constraint->name() + "::up");
                 constraint->SetCoefficient(slack, -1.);
                 slackVariables_.push_back(slack);
             }
@@ -63,9 +63,9 @@ void ConstraintSlackAnalysis::addSlackVariables()
     }
 }
 
-void ConstraintSlackAnalysis::buildObjective() const
+void ConstraintSlackAnalysis::buildObjective(MPSolver* problem) const
 {
-    MPObjective* objective = problem_->MutableObjective();
+    MPObjective* objective = problem->MutableObjective();
     // Reset objective function
     objective->Clear();
     // Only slack variables have a non-zero cost
@@ -74,11 +74,6 @@ void ConstraintSlackAnalysis::buildObjective() const
         objective->SetCoefficient(slack, 1.);
     }
     objective->SetMinimization();
-}
-
-MPSolver::ResultStatus ConstraintSlackAnalysis::Solve() const
-{
-    return problem_->Solve();
 }
 
 void ConstraintSlackAnalysis::printReport()

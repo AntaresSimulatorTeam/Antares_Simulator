@@ -18,9 +18,9 @@ struct VariableBounds
 
 class VariablesBoundsConsistency : public UnfeasibilityAnalysis
 {
-    using UnfeasibilityAnalysis::UnfeasibilityAnalysis;
 public:
-    void run() override;
+    VariablesBoundsConsistency() = default;
+    void run(operations_research::MPSolver* problem) override;
     void printReport() override;
     std::string title() override { return "Variables bounds consistency check"; }
 

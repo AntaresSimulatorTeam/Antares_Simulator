@@ -7,8 +7,6 @@
 #include "constraint.h"
 #include "ortools/linear_solver/linear_solver.h"
 
-using namespace operations_research;
-
 namespace Antares
 {
 namespace Optimization
@@ -17,11 +15,11 @@ class InfeasibleProblemReport
 {
 public:
     InfeasibleProblemReport() = delete;
-    explicit InfeasibleProblemReport(const std::vector<const MPVariable*>& slackVariables);
+    explicit InfeasibleProblemReport(const std::vector<const operations_research::MPVariable*>& slackVariables);
     void prettyPrint();
 
 private:
-    void turnSlackVarsIntoConstraints(const std::vector<const MPVariable*>& slackVariables);
+    void turnSlackVarsIntoConstraints(const std::vector<const operations_research::MPVariable*>& slackVariables);
     void sortConstraints();
     void trimConstraints();
     void extractItems();

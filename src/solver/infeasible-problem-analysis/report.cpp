@@ -3,15 +3,15 @@
 #include <antares/logs/logs.h>
 #include <algorithm>
 
+using namespace operations_research;
+
 static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,
                                   const Antares::Optimization::Constraint& b)
 {
     return a.getSlackValue() > b.getSlackValue();
 }
 
-namespace Antares
-{
-namespace Optimization
+namespace Antares::Optimization
 {
 InfeasibleProblemReport::InfeasibleProblemReport(const std::vector<const MPVariable*>& slackVariables)
 {
@@ -87,5 +87,4 @@ void InfeasibleProblemReport::prettyPrint()
     logSuspiciousConstraints();
 }
 
-} // namespace Optimization
-} // namespace Antares
+} // namespace Antares::Optimization

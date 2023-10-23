@@ -8,14 +8,13 @@ namespace Antares::Optimization
 class UnfeasibilityAnalysis
 {
 public:
-    UnfeasibilityAnalysis(operations_research::MPSolver* problem_);
-    virtual void run() = 0;
+    UnfeasibilityAnalysis() = default;
+    virtual void run(operations_research::MPSolver* problem) = 0;
     virtual void printReport() = 0;
     virtual std::string title() = 0;
     bool hasDetectedInfeasibilityCause() { return hasDetectedInfeasibilityCause_; }
 
 protected:
-    operations_research::MPSolver* problem_;
     bool hasDetectedInfeasibilityCause_ = false;
 };
 
