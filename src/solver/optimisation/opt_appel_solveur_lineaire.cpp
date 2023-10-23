@@ -383,8 +383,8 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         analysisList.push_back(std::make_shared<VariablesBoundsConsistency>());
         analysisList.push_back(std::make_shared<ConstraintSlackAnalysis>());
 
-        Optimization::UnfeasiblePbAnalyzer analyzer(MPproblem.get(), analysisList);
-        analyzer.run();
+        Optimization::UnfeasiblePbAnalyzer analyzer(analysisList);
+        analyzer.run(MPproblem.get());
         analyzer.printReport();
 
         auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();
