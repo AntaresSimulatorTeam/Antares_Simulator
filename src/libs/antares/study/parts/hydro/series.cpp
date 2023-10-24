@@ -119,12 +119,6 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
     if (ror.width > generationTScount_)
         generationTScount_ = ror.width;
 
-    if (study.header.version >= 860)
-    {
-        buffer.clear() << folder << SEP << areaID << SEP << "mingen.txt";
-        ret = mingen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
-    }
-
     timeseriesNumbers.clear();
 
     if (!study.usedByTheSolver)
@@ -168,6 +162,12 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
                 logs.error()
                     << "Impossible to find the area `" << areaID << "` to invalidate it";
         }
+    }
+
+    if (study.header.version >= 860)
+    {
+        buffer.clear() << folder << SEP << areaID << SEP << "mingen.txt";
+        ret = mingen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
     }
 
     checkMinGenTsNumber(study, areaID);
