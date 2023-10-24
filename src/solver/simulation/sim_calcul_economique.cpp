@@ -553,7 +553,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             for (uint k = 0; k != linkCount; ++k)
             {
                 auto& lnk = *(studyruntime.areaLink[k]);
-                const int tsIndex
+                const int tsIndex = (link.directCapacities.width != 1) ? lnk.timeseriesNumbers[0][year] : 0;
+
                   = NumeroChroniquesTireesParInterconnexion[numSpace][k].TransmissionCapacities;
 
                 assert((uint)hourInYear < lnk.directCapacities.height);
