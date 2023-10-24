@@ -320,7 +320,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
 void preparerBindingConstraint(const PROBLEME_HEBDO &problem, int PasDeTempsDebut,
                                const BindingConstraintsRepository &bindingConstraints,
-                               const BindingConstraintGroupRepository &bcgroup,
+                               const BindingConstraintGroupRepository &bcgroups,
                                const uint weekFirstDay, int pasDeTemps)
 {
     auto activeContraints = bindingConstraints.activeContraints();
@@ -329,17 +329,14 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, int PasDeTempsDebu
     {
         auto bc = activeContraints[constraintIndex];
         assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
-        uint tmpts = 0;
-        for (const auto& group : bcgroup)
-        {
-            if (group->name() == bc->group())
-            {
-                tmpts = group->timeseriesNumbers[0][problem.year];
-                break;
-            }
-        }
+
+        uint tsIndexForBc = 0;
+        auto* group = bcgroups[bc->group()];
+        if (group)
+            tsIndexForBc = group->timeseriesNumbers[0][problem.year];
+
         //If there is only one TS, always select it.
-        const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : tmpts;
+        const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : tsIndexForBc;
 
         auto& timeSeries = bc->RHSTimeSeries();
         double const* column = timeSeries[ts_number];
