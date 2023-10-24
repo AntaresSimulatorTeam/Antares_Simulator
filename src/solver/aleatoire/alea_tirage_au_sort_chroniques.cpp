@@ -37,22 +37,7 @@ void ApplyRandomTSnumbers(const Study& study,
                           unsigned int year,
                           uint numSpace)
 {
-    // ------------------------------
-    // Transmission capacities
-    // ------------------------------
-    // each link
-    for (unsigned int linkIndex = 0; linkIndex < study.runtime->interconnectionsCount(); ++linkIndex)
-    {
-        AreaLink* link = study.runtime->areaLink[linkIndex];
-        assert(year < link->timeseriesNumbers.height);
-        NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION& ptchro
-          = NumeroChroniquesTireesParInterconnexion[numSpace][linkIndex];
-        const uint directWidth = link->directCapacities.width;
-        [[maybe_unused]] const uint indirectWidth = link->indirectCapacities.width;
-        assert(directWidth == indirectWidth);
-        ptchro.TransmissionCapacities
-          = (directWidth != 1) ? link->timeseriesNumbers[0][year] : 0; // zero-based
-    }
+
 
     // ------------------------------
     //Binding constraints
