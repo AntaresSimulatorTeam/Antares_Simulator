@@ -12,6 +12,15 @@ using namespace operations_research;
 namespace Antares::Optimization
 {
 
+std::unique_ptr<UnfeasiblePbAnalyzer> makeUnfeasiblePbAnalyzer()
+{
+    std::vector<std::shared_ptr<UnfeasibilityAnalysis>> analysisList;
+    analysisList.push_back(std::make_shared<VariablesBoundsConsistency>());
+    analysisList.push_back(std::make_shared<ConstraintSlackAnalysis>());
+
+    return std::make_unique<UnfeasiblePbAnalyzer>(analysisList);
+}
+
 UnfeasiblePbAnalyzer::UnfeasiblePbAnalyzer(std::vector<std::shared_ptr<UnfeasibilityAnalysis>> analysisList)
         : analysisList_(analysisList)
 {}

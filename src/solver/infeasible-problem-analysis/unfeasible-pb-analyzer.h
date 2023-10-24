@@ -21,4 +21,7 @@ public:
 private:
     std::vector<std::shared_ptr<UnfeasibilityAnalysis>> analysisList_;
 };
+
+std::unique_ptr<UnfeasiblePbAnalyzer> makeUnfeasiblePbAnalyzer();
+
 } // namespace Antares::Optimization
