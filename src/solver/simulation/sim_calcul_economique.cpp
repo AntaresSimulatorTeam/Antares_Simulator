@@ -318,7 +318,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.LeProblemeADejaEteInstancie = false;
 }
 
-void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int PasDeTempsDebut,
+void preparerBindingConstraint(const PROBLEME_HEBDO &problem, int PasDeTempsDebut,
                                const BindingConstraintsRepository &bindingConstraints,
                                const BindingConstraintGroupRepository &bcgroup,
                                const uint weekFirstDay, int pasDeTemps)
@@ -574,7 +574,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 ntc.ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][hourInYear];
             }
         }
-        preparerBindingConstraint(problem, numSpace, PasDeTempsDebut,
+        preparerBindingConstraint(problem, PasDeTempsDebut,
                 study.bindingConstraints, study.bindingConstraintsGroups,
                 weekFirstDay, hourInWeek);
 
