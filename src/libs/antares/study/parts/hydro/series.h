@@ -160,7 +160,7 @@ public:
     // Equalizing max generation and max pumping numbers of TS's    
     void EqualizeMaxPowerTSsizes(Area& area, bool& fatalError);
 
-    void setHydroModulability(Study& study, const AreaName& areaID) const;
+    void setHydroModulability(Area& area) const;
 
     // Get max power (generatoin and pumping) number of TS
     uint maxPowerTScount() const;

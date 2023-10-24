@@ -303,13 +303,11 @@ void DataSeriesHydro::EqualizeMaxPowerTSsizes(Area& area, bool& fatalError)
                 << "TS were both set to : " << maxPowerTScount_;
 }
 
-void DataSeriesHydro::setHydroModulability(Study& study, const AreaName& areaID) const
+void DataSeriesHydro::setHydroModulability(Area& area) const
 {
-    Area* area = study.areas.find(areaID);
-
     if (MatrixTestForAtLeastOnePositiveValue(maxHourlyGenPower))
     {
-        area->hydro.hydroModulable = true;
+        area.hydro.hydroModulable = true;
     }
 }
 

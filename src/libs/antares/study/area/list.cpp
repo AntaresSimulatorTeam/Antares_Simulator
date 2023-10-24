@@ -929,7 +929,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                 area.hydro.series->EqualizeMaxPowerTSsizes(area, study.gotFatalError);
             }
             else
-                area.hydro.series->setHydroModulability(study, area.id);
+                area.hydro.series->setHydroModulability(area);
         }
 
         area.hydro.series->resizeTSinDeratedMode(study.parameters.derated, study.header.version);
