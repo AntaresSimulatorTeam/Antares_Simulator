@@ -33,6 +33,7 @@
 #include <antares/logs/logs.h>
 #include "../../study.h"
 #include "pair-of-integers.h"
+#include <algorithm>
 
 using namespace Yuni;
 
@@ -51,6 +52,37 @@ DataSeriesHydro::DataSeriesHydro()
     mingen.reset(1, HOURS_PER_YEAR);
     maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
+}
+
+unsigned int EqualizeTSsize(Matrix<double, int32_t>& TScollection1,
+    Matrix<double, int32_t>& TScollection2,
+    bool& fatalError,
+    std::string fatalErrorMsg,
+    Area& area)
+{
+    PairOfIntegers pairOfTSsizes(TScollection1.width, TScollection2.width);
+
+    if (pairOfTSsizes.same())
+        return pairOfTSsizes.sup();
+
+    if (pairOfTSsizes.bothGreaterThanOne())
+    {
+        logs.fatal() << fatalErrorMsg;
+        fatalError = true;
+        return 0;
+    }
+
+    // At this point, one TS collection size is > 1 and the other is of size 1.
+
+    // This following instruction to force reloading all area's TS when saving the study (GUI)
+    area.invalidateJIT = true;
+
+    if (TScollection1.width == 1)
+        resizeMatrixNoDataLoss(TScollection1, pairOfTSsizes.sup());
+    if (TScollection2.width == 1)
+        resizeMatrixNoDataLoss(TScollection2, pairOfTSsizes.sup());
+
+    return pairOfTSsizes.sup();
 }
 
 void DataSeriesHydro::copyGenerationTS(DataSeriesHydro& source)
@@ -111,7 +143,7 @@ bool loadTSfromFile(Matrix<double, int32_t>& ts,
     YString filePath;
     Matrix<>::BufferType fileContent;
     filePath.clear() << folder << SEP << areaID << SEP << filename;
-    return ts.loadFromCSVFile(filePath, 1, HOURS_PER_YEAR, &fileContent);
+    return ts.loadFromCSVFile(filePath, 1, height, &fileContent);
 }
 
 bool DataSeriesHydro::loadROR(AreaName& areaID, const AnyString& folder)
@@ -131,78 +163,25 @@ bool DataSeriesHydro::loadMINGEN(AreaName& areaID, const AnyString& folder, unsi
     return loadTSfromFile(mingen, areaID, folder, "mingen.txt", HOURS_PER_YEAR);
 }
 
-bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const AnyString& folder)
+void DataSeriesHydro::EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver, bool& fatalError)
 {
-    // The number of time-series
-    generationTScount_ = storage.width;
+    // Equalize ROR and INFLOWS time series sizes
+    // ------------------------------------------
+    std::string fatalErrorMsg = "Hydro : area `" + area.id.to<std::string>() + "` : ";
+    fatalErrorMsg += "ROR and INFLOWS must have the same number of time series.";
 
-    if (ror.width > generationTScount_)
-        generationTScount_ = ror.width;
+    generationTScount_ = EqualizeTSsize(ror, storage, fatalError, fatalErrorMsg, area);
 
-    timeseriesNumbers.clear();
+    logs.info() << "  '" << area.id << "': ROR and INFLOWS time series were both set to : " << generationTScount_;
 
-    if (!study.usedByTheSolver)
-        return true;
+    // Equalize ROR and MINGEN time series sizes
+    // -----------------------------------------
+    fatalErrorMsg = "Hydro : area `" + area.id.to<std::string>() + "` : ";
+    fatalErrorMsg += "ROR and MINGEN must have the same number of time series.";
 
-    if (generationTScount_ > 1 && storage.width != ror.width)
-    {
-        if (ror.width != 1 && storage.width != 1)
-        {
-            logs.fatal() << "Hydro: `" << areaID
-                            << "`: The matrices ROR (run-of-the-river) and hydro-storage must "
-                            "have the same number of time-series.";
-            study.gotFatalError = true;
-        }
-        else
-        {
-            if (ror.width == 1)
-            {
-                ror.resizeWithoutDataLost(generationTScount_, ror.height);
-                for (uint x = 1; x < generationTScount_; ++x)
-                    ror.pasteToColumn(x, ror[0]);
-            }
-            else
-            {
-                if (storage.width == 1)
-                {
-                    storage.resizeWithoutDataLost(generationTScount_, storage.height);
-                    for (uint x = 1; x < generationTScount_; ++x)
-                        storage.pasteToColumn(x, storage[0]);
-                }
-            }
-            Area* areaToInvalidate = study.areas.find(areaID);
-            if (areaToInvalidate)
-            {
-                areaToInvalidate->invalidateJIT = true;
-                logs.info()
-                    << "  '" << areaID << "': The hydro data have been normalized to "
-                    << generationTScount_ << " timeseries";
-            }
-            else
-                logs.error()
-                    << "Impossible to find the area `" << areaID << "` to invalidate it";
-        }
-    }
+    generationTScount_ = EqualizeTSsize(ror, mingen, fatalError, fatalErrorMsg, area);
 
-    //std::string fatalErrorMsg = "Hydro : area `" + areaID.to<std::string>() + "` : ";
-    //fatalErrorMsg += "ROR and INFLOWS must have the same number of time series.";
-
-    //maxPowerTScount_ = EqualizeTSsize(maxHourlyGenPower, maxHourlyPumpPower, fatalError, fatalErrorMsg, area);
-
-    //logs.info() << "  '" << area.id << "': The number of hydro max power (generation and pumping) "
-    //    << "TS were both set to : " << maxPowerTScount_;
-    
-    checkMinGenTsNumber(study, areaID);
-
-    if (study.parameters.derated)
-    {
-        ror.averageTimeseries();
-        storage.averageTimeseries();
-        mingen.averageTimeseries();
-        generationTScount_ = 1;
-    }
-
-    return true;
+    logs.info() << "  '" << area.id << "': ROR and MINGEN time series were both set to : " << generationTScount_;
 }
 
 bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& folder)
@@ -308,9 +287,10 @@ void DataSeriesHydro::reset()
     ror.reset(1, HOURS_PER_YEAR);
     storage.reset(1, DAYS_PER_YEAR);
     mingen.reset(1, HOURS_PER_YEAR);
+    generationTScount_ = 1;
+
     maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
-    generationTScount_ = 1;
     maxPowerTScount_ = 1;
 }
 
@@ -324,7 +304,7 @@ void DataSeriesHydro::resizeRORandSTORAGE(unsigned int width)
 void DataSeriesHydro::resizeGenerationTS(unsigned int w, unsigned int h)
 {
     ror.resize(w, h);
-    storage.resize(w, h);
+    storage.resize(w, std::min((unsigned int)DAYS_PER_YEAR, h));
     mingen.resize(w, h);
     generationTScount_ = w;
 }
@@ -340,37 +320,6 @@ uint64_t DataSeriesHydro::memoryUsage() const
 {
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage()
            + maxHourlyGenPower.memoryUsage() + maxHourlyPumpPower.memoryUsage();
-}
-
-unsigned int EqualizeTSsize(Matrix<double, int32_t>& TScollection1, 
-                        Matrix<double, int32_t>& TScollection2, 
-                        bool& fatalError,
-                        std::string fatalErrorMsg,
-                        Area& area)
-{
-    PairOfIntegers pairOfTSsizes(TScollection1.width, TScollection2.width);
-
-    if (pairOfTSsizes.same())
-        return pairOfTSsizes.sup();
-
-    if (pairOfTSsizes.bothGreaterThanOne())
-    {
-        logs.fatal() << fatalErrorMsg;
-        fatalError = true;
-        return 0;
-    }
-
-    // At this point, one TS collection size is > 1 and the other is of size 1.
-    
-    // This following instruction to force reloading all area's TS when saving the study (GUI)
-    area.invalidateJIT = true;
-
-    if (TScollection1.width == 1)
-        resizeMatrixNoDataLoss(TScollection1, pairOfTSsizes.sup());
-    if (TScollection2.width == 1)
-        resizeMatrixNoDataLoss(TScollection2, pairOfTSsizes.sup());
-
-    return pairOfTSsizes.sup();
 }
 
 void DataSeriesHydro::EqualizeMaxPowerTSsizes(Area& area, bool& fatalError)
@@ -399,14 +348,15 @@ uint DataSeriesHydro::maxPowerTScount() const
     return maxPowerTScount_;
 }
 
-void DataSeriesHydro::setMaxPowerTSWhenDeratedMode(const Study& study)
+void DataSeriesHydro::resizeTSinDeratedMode(bool derated, unsigned int studyVersion)
 {
-    if (study.parameters.derated)
-    {
-        maxHourlyGenPower.averageTimeseries();
-        maxHourlyPumpPower.averageTimeseries();
-        maxPowerTScount_ = 1;
-    }
+    if (!derated)
+        return;
+
+    resizeGenerationTS(1, HOURS_PER_YEAR);
+
+    if (studyVersion >= 870)
+        resizeMaxPowerTS(1, HOURS_PER_YEAR);
 }
 
 // TODO : this function should not be here, as it applies to 

@@ -75,7 +75,7 @@ public:
     void markAsModified() const;
     //@}
 
-    bool loadFromFolder(Study& s, const AreaName& areaID, const AnyString& folder);
+    void EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver, bool& fatalError);
 
     // Loading hydro time series collection
     // Returned boolean : reading from file failed
@@ -171,7 +171,7 @@ public:
     uint maxPowerTScount() const;
 
     // Setting TS's when derated mode is on
-    void setMaxPowerTSWhenDeratedMode(const Study& study);
+    void resizeTSinDeratedMode(bool derated, unsigned int studyVersion);
 
 private:
     

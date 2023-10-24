@@ -908,7 +908,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = area.hydro.series->loadINFLOWS(area.id, buffer) && ret;
             ret = area.hydro.series->loadMINGEN(area.id, buffer, study.header.version) && ret;
 
-            ret = area.hydro.series->loadFromFolder(study, area.id, buffer) && ret;
+            area.hydro.series->EqualizeGenerationTSsizes(area, study.usedByTheSolver, study.gotFatalError);
         }
 
         if (area.hydro.series && study.header.version < 870)
@@ -927,11 +927,12 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             if (study.usedByTheSolver)
             {
                 area.hydro.series->EqualizeMaxPowerTSsizes(area, study.gotFatalError);
-                area.hydro.series->setMaxPowerTSWhenDeratedMode(study);
             }
             else
                 area.hydro.series->setHydroModulability(study, area.id);
         }
+
+        area.hydro.series->resizeTSinDeratedMode(study.parameters.derated, study.header.version);
 
         buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "common" << SEP
                        << "capacity" << SEP << "maxpower_" << area.id << ".txt";
