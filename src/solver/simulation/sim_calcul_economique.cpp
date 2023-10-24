@@ -333,7 +333,10 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, int PasDeTempsDebu
         for (const auto& group : bcgroup)
         {
             if (group->name() == bc->group())
+            {
                 tmpts = group->timeseriesNumbers[0][problem.year];
+                break;
+            }
         }
         //If there is only one TS, always select it.
         const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : tmpts;
