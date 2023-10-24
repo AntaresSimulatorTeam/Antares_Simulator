@@ -38,15 +38,4 @@ void ApplyRandomTSnumbers(const Study& study,
                           uint numSpace)
 {
 
-
-    // ------------------------------
-    //Binding constraints
-    // ------------------------------
-    //Setting 0 for time_series of width 0 is done when using the value.
-    //To do this here we would have to check every BC for its width
-    for (const auto& group: study.bindingConstraintsGroups) {
-        [[maybe_unused]] auto number_of_ts_numbers = group->timeseriesNumbers.height;
-        assert(year < number_of_ts_numbers); //If only 1 ts_number we suppose only one TS. Any "year" will be converted to "0" later
-        NumeroChroniquesTireesParGroup[numSpace][group->name()] = group->timeseriesNumbers[0][year];
-    }
 }

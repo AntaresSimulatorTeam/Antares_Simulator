@@ -44,6 +44,5 @@ static void AllocateResultsForEconomicMode(const Data::Study& study)
 
 void SIM_AllocationTableaux(const Data::Study& study)
 {
-    NumeroChroniquesTireesParGroup.resize(study.maxNbYearsInParallel);
     AllocateResultsForEconomicMode(study);
 }
