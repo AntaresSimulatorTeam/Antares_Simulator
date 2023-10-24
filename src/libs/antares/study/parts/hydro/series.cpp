@@ -102,29 +102,34 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& fold
 }
 
 
-bool loadTSfromFile(Matrix<double, int32_t>& ts, const AreaName& areaID, const AnyString& folder, std::string filename)
+bool loadTSfromFile(Matrix<double, int32_t>& ts, 
+                    AreaName& areaID, 
+                    const AnyString& folder, 
+                    std::string filename,
+                    unsigned int height)
 {
     YString filePath;
     Matrix<>::BufferType fileContent;
     filePath.clear() << folder << SEP << areaID << SEP << filename;
     return ts.loadFromCSVFile(filePath, 1, HOURS_PER_YEAR, &fileContent);
+    return ts.loadFromCSVFile(filePath, 1, height, &fileContent);
 }
 
 bool DataSeriesHydro::loadROR(AreaName& areaID, const AnyString& folder)
 {
-    return loadTSfromFile(ror, areaID, folder, "ror.txt");
+    return loadTSfromFile(ror, areaID, folder, "ror.txt", HOURS_PER_YEAR);
 }
 
 bool DataSeriesHydro::loadINFLOWS(AreaName& areaID, const AnyString& folder)
 {
-    return loadTSfromFile(storage, areaID, folder, "mod.txt");
+    return loadTSfromFile(storage, areaID, folder, "mod.txt", DAYS_PER_YEAR);
 }
 
 bool DataSeriesHydro::loadMINGEN(AreaName& areaID, const AnyString& folder, unsigned int studyVersion)
 {
     if (studyVersion < 860)
         return true;
-    return loadTSfromFile(mingen, areaID, folder, "mingen.txt");
+    return loadTSfromFile(mingen, areaID, folder, "mingen.txt", HOURS_PER_YEAR);
 }
 
 bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const AnyString& folder)
@@ -203,10 +208,21 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
 
 bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& folder)
 {
-    bool ret = loadTSfromFile(maxHourlyGenPower, areaID, folder, "maxHourlyGenPower.txt");
-    ret = loadTSfromFile(maxHourlyPumpPower, areaID, folder, "maxHourlyPumpPower.txt") && ret;
+    bool ret = true;
+    YString filepath;
+    Matrix<>::BufferType fileContent;
+
+    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower.txt";
+    ret = maxHourlyGenPower.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
+
+    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower.txt";
+    ret = maxHourlyPumpPower.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
+
+    timeseriesNumbersHydroMaxPower.clear();
+
     return ret;
 }
+
 
 void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
                                 Matrix<double, int32_t>::ColumnType& hourlyColumn)
