@@ -32,7 +32,6 @@
 
 /* Valeurs generees de maniere aleatoire */
 extern std::vector<std::vector<NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION>> NumeroChroniquesTireesParInterconnexion;
-extern std::vector<std::map<std::string, unsigned>> NumeroChroniquesTireesParGroup;
 
 /* Resultats */
 /*-Economique-*/
