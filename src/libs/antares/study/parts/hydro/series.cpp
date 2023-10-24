@@ -112,7 +112,6 @@ bool loadTSfromFile(Matrix<double, int32_t>& ts,
     Matrix<>::BufferType fileContent;
     filePath.clear() << folder << SEP << areaID << SEP << filename;
     return ts.loadFromCSVFile(filePath, 1, HOURS_PER_YEAR, &fileContent);
-    return ts.loadFromCSVFile(filePath, 1, height, &fileContent);
 }
 
 bool DataSeriesHydro::loadROR(AreaName& areaID, const AnyString& folder)
