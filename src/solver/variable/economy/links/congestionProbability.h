@@ -278,8 +278,7 @@ public:
         assert(state.link != NULL);
         const auto& linkDirectCapa = state.link->directCapacities;
         const auto& linkIndirectCapa = state.link->indirectCapacities;
-        const int tsIndex = NumeroChroniquesTireesParInterconnexion[numSpace][state.link->index]
-                              .TransmissionCapacities;
+        const int tsIndex = (linkDirectCapa.width == 1) ? state.link->timeseriesNumbers[0][state.year] : 0;
         // CONG. PROB +
         if (state.ntc.ValeurDuFlux[state.link->index]
             > +linkDirectCapa.entry[tsIndex][state.hourInTheYear] - 10e-6)
