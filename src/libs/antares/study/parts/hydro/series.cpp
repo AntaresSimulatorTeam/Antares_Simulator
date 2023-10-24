@@ -232,36 +232,6 @@ void DataSeriesHydro::buildMaxPowerFromDailyTS(const Matrix<double>::ColumnType&
     ConvertDailyTSintoHourlyTS(DailyMaxPumpPower, maxHourlyPumpPower[0]);
 }
 
-void DataSeriesHydro::checkMinGenTsNumber(Study& study, const AreaName& areaID)
-{
-    if (mingen.width != storage.width)
-    {
-        if (mingen.width > 1)
-        {
-            logs.fatal() << "Hydro: `" << areaID
-                         << "`: The matrices Minimum Generation must "
-                            "has the same number of time-series as ROR and hydro-storage.";
-            study.gotFatalError = true;
-        }
-        else
-        {
-            mingen.resizeWithoutDataLost(generationTScount_, mingen.height);
-            for (uint x = 1; x < generationTScount_; ++x)
-                mingen.pasteToColumn(x, mingen[0]);
-            Area* areaToInvalidate = study.areas.find(areaID);
-            if (areaToInvalidate)
-            {
-                areaToInvalidate->invalidateJIT = true;
-                logs.info() << "  '" << areaID
-                            << "': The hydro minimum generation data have been normalized to "
-                            << generationTScount_ << " timeseries";
-            }
-            else
-                logs.error() << "Impossible to find the area `" << areaID << "` to invalidate it";
-        }
-    }
-}
-
 bool DataSeriesHydro::forceReload(bool reload) const
 {
     bool ret = true;
