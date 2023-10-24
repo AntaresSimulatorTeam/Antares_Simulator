@@ -39,11 +39,6 @@ typedef struct
     double* Horaire;
 } PRODUCTION_THERMIQUE;
 
-typedef struct
-{
-    double* ParLigne;
-} MATRICE_2D;
-
 /* Old define */
 #define DEFINITION_STRUCTURES_DONNEES
 
