@@ -55,6 +55,7 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     CopyRows(solver);
 
     CopyMatrix(solver);
+    solver->EnableOutput();
 
     return solver;
 }
