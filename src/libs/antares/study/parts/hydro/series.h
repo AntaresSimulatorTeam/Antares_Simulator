@@ -75,16 +75,13 @@ public:
     void markAsModified() const;
     //@}
 
-    //! \name Save / Load
-    //@{
-    /*!
-    ** \brief Load data series for hydro from a folder
-    **
-    ** \param d The data series for hydro
-    ** \param folder The source folder
-    ** \return A non-zero value if the operation succeeded, 0 otherwise
-    */
     bool loadFromFolder(Study& s, const AreaName& areaID, const AnyString& folder);
+
+    // Loading hydro time series collection
+    // Returned boolean : reading from file failed
+    bool loadROR(AreaName& areaID, const AnyString& folder);
+    bool loadINFLOWS(AreaName& areaID, const AnyString& folder);
+    bool loadMINGEN(AreaName& areaID, const AnyString& folder, unsigned int studyVersion);
 
     // Loading hydro max generation and mqx pumping TS's
     bool LoadMaxPower(const AreaName& areaID, const AnyString& folder);

@@ -101,18 +101,34 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& fold
     return false;
 }
 
+
+bool loadTSfromFile(Matrix<double, int32_t>& ts, AreaName& areaID, const AnyString& folder, std::string filename)
+{
+    YString filePath;
+    Matrix<>::BufferType loadBuffer;
+    filePath.clear() << folder << SEP << areaID << SEP << filename;
+    return ts.loadFromCSVFile(filePath, 1, HOURS_PER_YEAR, &loadBuffer);
+}
+
+bool DataSeriesHydro::loadROR(AreaName& areaID, const AnyString& folder)
+{
+    return loadTSfromFile(ror, areaID, folder, "ror.txt");
+}
+
+bool DataSeriesHydro::loadINFLOWS(AreaName& areaID, const AnyString& folder)
+{
+    return loadTSfromFile(storage, areaID, folder, "mod.txt");
+}
+
+bool DataSeriesHydro::loadMINGEN(AreaName& areaID, const AnyString& folder, unsigned int studyVersion)
+{
+    if (studyVersion < 860)
+        return true;
+    return loadTSfromFile(mingen, areaID, folder, "mingen.txt");
+}
+
 bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const AnyString& folder)
 {
-    bool ret = true;
-    auto& buffer = study.bufferLoadingTS;
-
-    buffer.clear() << folder << SEP << areaID << SEP << "ror.txt";
-
-    ret = ror.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
-
-    buffer.clear() << folder << SEP << areaID << SEP << "mod.txt";
-    ret = storage.loadFromCSVFile(buffer, 1, DAYS_PER_YEAR, &study.dataBuffer) && ret;
-
     // The number of time-series
     generationTScount_ = storage.width;
 
@@ -122,7 +138,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
     timeseriesNumbers.clear();
 
     if (!study.usedByTheSolver)
-        return ret;
+        return true;
 
     if (generationTScount_ > 1 && storage.width != ror.width)
     {
@@ -164,12 +180,14 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
         }
     }
 
-    if (study.header.version >= 860)
-    {
-        buffer.clear() << folder << SEP << areaID << SEP << "mingen.txt";
-        ret = mingen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
-    }
+    //std::string fatalErrorMsg = "Hydro : area `" + areaID.to<std::string>() + "` : ";
+    //fatalErrorMsg += "ROR and INFLOWS must have the same number of time series.";
 
+    //maxPowerTScount_ = EqualizeTSsize(maxHourlyGenPower, maxHourlyPumpPower, fatalError, fatalErrorMsg, area);
+
+    //logs.info() << "  '" << area.id << "': The number of hydro max power (generation and pumping) "
+    //    << "TS were both set to : " << maxPowerTScount_;
+    
     checkMinGenTsNumber(study, areaID);
 
     if (study.parameters.derated)
@@ -180,7 +198,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
         generationTScount_ = 1;
     }
 
-    return ret;
+    return true;
 }
 
 bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& folder)
@@ -358,8 +376,8 @@ void DataSeriesHydro::EqualizeMaxPowerTSsizes(Area& area, bool& fatalError)
 
     maxPowerTScount_ = EqualizeTSsize(maxHourlyGenPower, maxHourlyPumpPower, fatalError, fatalErrorMsg, area);
 
-    logs.info() << "  '" << area.id << "': The hydro max power TS number were equalize "
-                << maxPowerTScount_;
+    logs.info() << "  '" << area.id << "': The number of hydro max power (generation and pumping) " 
+                << "TS were both set to : " << maxPowerTScount_;
 }
 
 void DataSeriesHydro::setHydroModulability(Study& study, const AreaName& areaID) const

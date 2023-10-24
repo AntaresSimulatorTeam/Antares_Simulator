@@ -904,6 +904,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (area.hydro.series && (!options.loadOnlyNeeded || !area.hydro.prepro)) // Series
         {
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
+            ret = area.hydro.series->loadROR(area.id, buffer) && ret;
+            ret = area.hydro.series->loadINFLOWS(area.id, buffer) && ret;
+            ret = area.hydro.series->loadMINGEN(area.id, buffer, study.header.version) && ret;
+
             ret = area.hydro.series->loadFromFolder(study, area.id, buffer) && ret;
         }
 
