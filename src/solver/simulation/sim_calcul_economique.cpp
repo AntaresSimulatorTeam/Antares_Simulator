@@ -332,7 +332,7 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
         uint tmpts = 0;
         for (const auto& group : bcgroup)
         {
-            if (group->name() == bc->name())
+            if (group->name() == bc->group())
                 tmpts = group->timeseriesNumbers[0][problem.year];
         }
         //If there is only one TS, always select it.
