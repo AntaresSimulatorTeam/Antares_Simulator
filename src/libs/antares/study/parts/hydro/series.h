@@ -166,7 +166,7 @@ public:
     uint maxPowerTScount() const;
 
     // Setting TS's when derated mode is on
-    void resizeTSinDeratedMode(bool derated, unsigned int studyVersion);
+    void resizeTSinDeratedMode(bool derated, unsigned int studyVersion, bool useBySolver);
 
 private:
     

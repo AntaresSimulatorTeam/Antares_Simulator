@@ -932,7 +932,9 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                 area.hydro.series->setHydroModulability(area);
         }
 
-        area.hydro.series->resizeTSinDeratedMode(study.parameters.derated, study.header.version);
+        area.hydro.series->resizeTSinDeratedMode(study.parameters.derated, 
+                                                 study.header.version,
+                                                 study.usedByTheSolver);
 
         buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "common" << SEP
                        << "capacity" << SEP << "maxpower_" << area.id << ".txt";

@@ -316,15 +316,24 @@ uint DataSeriesHydro::maxPowerTScount() const
     return maxPowerTScount_;
 }
 
-void DataSeriesHydro::resizeTSinDeratedMode(bool derated, unsigned int studyVersion)
+void DataSeriesHydro::resizeTSinDeratedMode(bool derated, 
+                                            unsigned int studyVersion,
+                                            bool usedBySolver)
 {
     if (!derated)
         return;
 
-    resizeGenerationTS(1, HOURS_PER_YEAR);
+    ror.averageTimeseries();
+    storage.averageTimeseries();
+    mingen.averageTimeseries();
+    generationTScount_ = 1;
 
-    if (studyVersion >= 870)
-        resizeMaxPowerTS(1, HOURS_PER_YEAR);
+    if (studyVersion >= 870 && usedBySolver)
+    {
+        maxHourlyGenPower.averageTimeseries();
+        maxHourlyPumpPower.averageTimeseries();
+        maxPowerTScount_ = 1;
+    }
 }
 
 // TODO : this function should not be here, as it applies to 
