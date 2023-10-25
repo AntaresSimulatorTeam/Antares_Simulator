@@ -68,7 +68,7 @@ public:
     const double* getColumn(uint32_t year) const;
     uint32_t getSeriesIndex(uint32_t year) const;
 
-    double* operator[](uint32_t year);
+    double* operator[](uint32_t index);
 
     void reset();
     void unloadFromMemory() const;
