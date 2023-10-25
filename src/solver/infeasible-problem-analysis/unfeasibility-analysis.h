@@ -5,6 +5,10 @@
 
 namespace Antares::Optimization
 {
+
+/*!
+ * Interface for all elementary analysis.
+ */
 class UnfeasibilityAnalysis
 {
 public:

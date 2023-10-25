@@ -10,6 +10,11 @@
 namespace Antares::Optimization
 {
 
+/*!
+ * In charge of anayzing the possible reasons for the unfeasibility of an optimization problem.
+ *
+ * The analyzer relies on the execution of possibly multiple UnfeasibilityAnalysis.
+ */
 class UnfeasiblePbAnalyzer
 {
 public:

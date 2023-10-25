@@ -5,6 +5,10 @@
 namespace Antares::Optimization
 {
 
+/*!
+ * That particular analysis relaxes all constraints by
+ * adding slack variables for each one.
+ */
 class ConstraintSlackAnalysis : public UnfeasibilityAnalysis
 {
 public:

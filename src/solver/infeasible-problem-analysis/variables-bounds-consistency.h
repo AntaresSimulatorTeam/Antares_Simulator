@@ -16,6 +16,10 @@ struct VariableBounds
     double upBound;
 };
 
+/*!
+ * That particular analysis simply checks that all variables
+ * are within their minimum and maximum bounds.
+ */
 class VariablesBoundsConsistency : public UnfeasibilityAnalysis
 {
 public:
@@ -23,6 +27,8 @@ public:
     void run(operations_research::MPSolver* problem) override;
     void printReport() override;
     std::string title() override { return "Variables bounds consistency check"; }
+
+    const std::vector<VariableBounds>& incorrectVars() const { return incorrectVars_; }
 
 private:
     void storeIncorrectVariable(std::string name, double lowBound, double upBound);
