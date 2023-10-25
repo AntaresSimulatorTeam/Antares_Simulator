@@ -13,7 +13,7 @@ target_link_libraries(series PUBLIC Antares::array)
 
 target_include_directories(series
         PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/parts/series
+        ${CMAKE_CURRENT_SOURCE_DIR}/parts/series/include
 )
 
 set(SRC_STUDY_SCENARIO_BUILDER

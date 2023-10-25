@@ -27,7 +27,7 @@
 #ifndef __SOLVER_TS_GENERATOR_XCAST_PREDICATE_HXX__
 #define __SOLVER_TS_GENERATOR_XCAST_PREDICATE_HXX__
 
-#include <include/antares/series/series.h>
+#include <antares/series/series.h>
 #include <yuni/yuni.h>
 #include <antares/study/area/area.h>
 #include <yuni/core/math.h>

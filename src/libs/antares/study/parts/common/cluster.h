@@ -4,7 +4,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 #include <antares/array/matrix.h>
-#include <include/antares/series/series.h>
+#include <antares/series/series.h>
 #include "../../fwd.h"
 
 #include <set>

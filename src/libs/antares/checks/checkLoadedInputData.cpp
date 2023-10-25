@@ -29,7 +29,7 @@
 #include <antares/exception/LoadingError.hpp>
 #include <antares/study/version.h>
 
-#include <include/antares/series/series.h>
+#include <antares/series/series.h>
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/study/area/area.h>
 
