@@ -64,6 +64,8 @@ public:
             shouldDetectCause_(shouldDetectCause)
     {}
 
+    ~AnalysisMock() override = default;
+
     void run(operations_research::MPSolver *problem) override
     {
         hasRun_ = true;
@@ -125,12 +127,12 @@ BOOST_AUTO_TEST_CASE(test_problem_analyzer)
 
 BOOST_AUTO_TEST_CASE(test_variable_bounds_consistency)
 {
-    VariablesBoundsConsistency analysis;
     std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
     problem->MakeNumVar(-1, 1, "ok-var");
     problem->MakeNumVar(1, -1, "not-ok-var");
-    analysis.run(problem.get());
 
+    VariablesBoundsConsistency analysis;
+    analysis.run(problem.get());
     auto incorrectVars = analysis.incorrectVars();
     BOOST_CHECK_EQUAL(incorrectVars.size(), 1);
 
@@ -174,26 +176,32 @@ std::string validConstraintNames[] =
 
 BOOST_DATA_TEST_CASE(test_slack_variables_with_unfeasible_constraint, bdata::make(validConstraintNames), constraintName)
 {
-    ConstraintSlackAnalysis analysis;
     std::unique_ptr<MPSolver> unfeasibleProblem = createProblem(constraintName, false);
-
     BOOST_CHECK(unfeasibleProblem->Solve() == MPSolver::INFEASIBLE);
 
+    ConstraintSlackAnalysis analysis;
     analysis.run(unfeasibleProblem.get());
     BOOST_CHECK(analysis.hasDetectedInfeasibilityCause());
-    analysis.printReport();
+}
+
+BOOST_AUTO_TEST_CASE(test_slack_variables_with_unfeasible_constraint_name_ignored)
+{
+    std::unique_ptr<MPSolver> unfeasibleProblem = createProblem("ignored-name", false);
+    BOOST_CHECK(unfeasibleProblem->Solve() == MPSolver::INFEASIBLE);
+
+    ConstraintSlackAnalysis analysis;
+    analysis.run(unfeasibleProblem.get());
+    BOOST_CHECK(!analysis.hasDetectedInfeasibilityCause());
 }
 
 BOOST_DATA_TEST_CASE(test_slack_variables_no_problematic_constraint, bdata::make(validConstraintNames), constraintName)
 {
-    ConstraintSlackAnalysis analysis;
     std::unique_ptr<MPSolver> feasibleProblem = createProblem(constraintName, true);
     BOOST_CHECK(feasibleProblem->Solve() == MPSolver::OPTIMAL);
 
+    ConstraintSlackAnalysis analysis;
     analysis.run(feasibleProblem.get());
     BOOST_CHECK(analysis.hasDetectedInfeasibilityCause());  // Would expect false here instead?
-
-    analysis.printReport();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

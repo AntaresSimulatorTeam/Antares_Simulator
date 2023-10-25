@@ -13,6 +13,8 @@ class ConstraintSlackAnalysis : public UnfeasibilityAnalysis
 {
 public:
     ConstraintSlackAnalysis() = default;
+    ~ConstraintSlackAnalysis() override = default;
+
     void run(operations_research::MPSolver* problem) override;
     void printReport() override;
     std::string title() override { return "Slack variables analysis"; }

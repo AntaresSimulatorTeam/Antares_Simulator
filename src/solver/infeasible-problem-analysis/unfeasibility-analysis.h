@@ -13,6 +13,8 @@ class UnfeasibilityAnalysis
 {
 public:
     UnfeasibilityAnalysis() = default;
+    virtual ~UnfeasibilityAnalysis() = default;
+
     virtual void run(operations_research::MPSolver* problem) = 0;
     virtual void printReport() = 0;
     virtual std::string title() = 0;
