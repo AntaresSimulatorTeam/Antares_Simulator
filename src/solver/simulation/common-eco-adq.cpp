@@ -36,7 +36,6 @@
 #include <cassert>
 #include <map>
 #include "simulation.h"
-#include "../aleatoire/alea_fonctions.h"
 
 using namespace Yuni;
 

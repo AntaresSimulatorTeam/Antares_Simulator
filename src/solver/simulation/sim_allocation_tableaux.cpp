@@ -44,11 +44,5 @@ static void AllocateResultsForEconomicMode(const Data::Study& study)
 
 void SIM_AllocationTableaux(const Data::Study& study)
 {
-    NumeroChroniquesTireesParInterconnexion.resize(study.maxNbYearsInParallel);
-
-    const uint intercoCount = study.areas.areaLinkCount();
-    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
-        NumeroChroniquesTireesParInterconnexion[numSpace].resize(intercoCount);
-
     AllocateResultsForEconomicMode(study);
 }
