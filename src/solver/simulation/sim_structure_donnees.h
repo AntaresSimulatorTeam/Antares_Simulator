@@ -27,13 +27,6 @@
 #ifndef __SOLVER_SIMULATION_DATA_STRUCTS_H__
 #define __SOLVER_SIMULATION_DATA_STRUCTS_H__
 
-#include <vector>
-
-typedef struct
-{
-    int TransmissionCapacities;
-} NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION;
-
 typedef struct
 {
     double* Horaire;
