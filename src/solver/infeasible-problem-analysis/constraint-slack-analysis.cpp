@@ -76,7 +76,7 @@ void ConstraintSlackAnalysis::buildObjective(MPSolver* problem) const
     objective->SetMinimization();
 }
 
-void ConstraintSlackAnalysis::printReport()
+void ConstraintSlackAnalysis::printReport() const
 {
     InfeasibleProblemReport report(slackVariables_);
     report.prettyPrint();

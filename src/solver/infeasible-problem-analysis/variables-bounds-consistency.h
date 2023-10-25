@@ -21,8 +21,8 @@ class VariablesBoundsConsistency : public UnfeasibilityAnalysis
 public:
     VariablesBoundsConsistency() = default;
     void run(operations_research::MPSolver* problem) override;
-    void printReport() override;
-    std::string title() override { return "Variables bounds consistency check"; }
+    void printReport() const override;
+    std::string title() const override { return "Variables bounds consistency check"; }
 
 private:
     void storeIncorrectVariable(std::string name, double lowBound, double upBound);

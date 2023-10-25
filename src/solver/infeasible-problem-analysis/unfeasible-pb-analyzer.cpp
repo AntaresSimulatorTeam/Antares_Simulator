@@ -42,7 +42,7 @@ void UnfeasiblePbAnalyzer::run(MPSolver* problem)
     }
 }
 
-void UnfeasiblePbAnalyzer::printReport()
+void UnfeasiblePbAnalyzer::printReport() const
 {
     for (auto& analysis : analysisList_)
     {

@@ -8,7 +8,7 @@ namespace Antares::Optimization
     
 void VariablesBoundsConsistency::run(MPSolver* problem)
 {
-    for (auto& var : problem->variables())
+    for (const auto& var : problem->variables())
     {
         double lowBound = var->lb();
         double upBound = var->ub();
@@ -33,9 +33,9 @@ bool VariablesBoundsConsistency::foundIncorrectVariables()
     return !incorrectVars_.empty();
 }
 
-void VariablesBoundsConsistency::printReport()
+void VariablesBoundsConsistency::printReport() const
 {
-    for (auto& var : incorrectVars_)
+    for (const auto& var : incorrectVars_)
     {
         logs.notice() << var.name << " : low bound = " << var.lowBound << ", up bound = " << var.upBound;
     }

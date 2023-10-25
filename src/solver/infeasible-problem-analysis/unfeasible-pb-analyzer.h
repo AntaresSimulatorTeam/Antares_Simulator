@@ -16,7 +16,7 @@ public:
     UnfeasiblePbAnalyzer() = delete;
     explicit UnfeasiblePbAnalyzer(std::vector<std::unique_ptr<UnfeasibilityAnalysis>> analysisList);
     void run(MPSolver* problem);
-    void printReport();
+    void printReport() const;
 
 private:
     std::vector<std::unique_ptr<UnfeasibilityAnalysis>> analysisList_;
