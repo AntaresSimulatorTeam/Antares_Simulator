@@ -153,21 +153,15 @@ bool loadTSfromFile(Matrix<double, int32_t>& ts,
     return ts.loadFromCSVFile(filePath, 1, height, &fileContent);
 }
 
-bool DataSeriesHydro::loadROR(AreaName& areaID, const AnyString& folder)
+bool DataSeriesHydro::loadGenerationTS(AreaName& areaID, const AnyString& folder, unsigned int studyVersion)
 {
-    return loadTSfromFile(ror, areaID, folder, "ror.txt", HOURS_PER_YEAR);
-}
+    timeseriesNumbers.clear();
 
-bool DataSeriesHydro::loadINFLOWS(AreaName& areaID, const AnyString& folder)
-{
-    return loadTSfromFile(storage, areaID, folder, "mod.txt", DAYS_PER_YEAR);
-}
-
-bool DataSeriesHydro::loadMINGEN(AreaName& areaID, const AnyString& folder, unsigned int studyVersion)
-{
+    bool ret = loadTSfromFile(ror, areaID, folder, "ror.txt", HOURS_PER_YEAR);
+    ret = loadTSfromFile(storage, areaID, folder, "mod.txt", DAYS_PER_YEAR) && ret;
     if (studyVersion < 860)
-        return true;
-    return loadTSfromFile(mingen, areaID, folder, "mingen.txt", HOURS_PER_YEAR);
+        ret = loadTSfromFile(mingen, areaID, folder, "mingen.txt", HOURS_PER_YEAR) && ret;
+    return ret;
 }
 
 void DataSeriesHydro::EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver, bool& fatalError)
