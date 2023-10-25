@@ -5,6 +5,7 @@ class PairOfIntegers
 public:
     PairOfIntegers(unsigned int numberOfTS_1, unsigned int numberOfTS_2);
 
+    bool bothZero() const;
     bool same() const;
     bool bothGreaterThanOne() const;
     unsigned int sup() const { return numberOfTSsup_; }

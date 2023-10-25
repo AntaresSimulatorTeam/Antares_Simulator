@@ -9,6 +9,11 @@ PairOfIntegers::PairOfIntegers(unsigned int numberOfTS_1, unsigned int numberOfT
     numberOfTSinf_ = std::min(numberOfTS_1_, numberOfTS_2_);
 }
 
+bool PairOfIntegers::bothZero() const
+{
+    return numberOfTSsup_ == 0;
+}
+
 bool PairOfIntegers::same() const
 {
     return (numberOfTS_1_ == numberOfTS_2_) ? true : false;

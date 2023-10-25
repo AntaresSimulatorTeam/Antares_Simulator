@@ -62,6 +62,13 @@ unsigned int EqualizeTSsize(Matrix<double, int32_t>& TScollection1,
 {
     PairOfIntegers pairOfTSsizes(TScollection1.width, TScollection2.width);
 
+    if (pairOfTSsizes.bothZero())
+    {
+        TScollection1.reset(1, HOURS_PER_YEAR);
+        TScollection2.reset(1, HOURS_PER_YEAR);
+        return 1;
+    }
+
     if (pairOfTSsizes.same())
         return pairOfTSsizes.sup();
 

@@ -124,6 +124,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width_and_d
     bool fatalError = false;
     study->parameters.derated = true;
     unsigned int studyVersion = 870;
+    bool usedBySolver = true;
 
     auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower;
     auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower;
@@ -143,7 +144,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width_and_d
     BOOST_CHECK(ret);
 
     area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1, fatalError);
-    area_1->hydro.series->resizeTSinDeratedMode(study->parameters.derated, studyVersion);
+    area_1->hydro.series->resizeTSinDeratedMode(study->parameters.derated, studyVersion, usedBySolver);
 
     BOOST_CHECK_EQUAL(maxHourlyGenPower.width, 1);
     BOOST_CHECK_EQUAL(maxHourlyPumpPower.width, 1);
