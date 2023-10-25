@@ -165,7 +165,7 @@ std::unique_ptr<MPSolver> createProblem(const std::string& constraintName, bool 
     return problem;
 }
 
-std::string validConstraintNames[] =
+static const std::string validConstraintNames[] =
 {
     "BC::hourly::hour<36>",
     "BC::daily::day<67>",
