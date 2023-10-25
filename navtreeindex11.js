@@ -1,7 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"classAntares_1_1Graph_1_1Edge.html":[4,0,0,8,0],
-"classAntares_1_1Graph_1_1Grid.html":[4,0,0,8,1],
 "classAntares_1_1Graph_1_1Grid.html#a048943416e662a22770d96033afe5b95":[4,0,0,8,1,2],
 "classAntares_1_1Graph_1_1Grid.html#a0f396c947841654d8ce748aa73e478f0":[4,0,0,8,1,8],
 "classAntares_1_1Graph_1_1Grid.html#a186d8796bbf5dc1ab8f3ec6e35a6a0d8":[4,0,0,8,1,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX11 =
 "classAntares_1_1Map_1_1PanelInfos.html#abdfdd7cb588f450b5e7133c557301da4":[4,0,0,9,11,0],
 "classAntares_1_1Map_1_1PanelInfos.html#ac708c2c9632313db98b3bbe31aaedeae":[4,0,0,9,11,3],
 "classAntares_1_1Map_1_1Private_1_1AddingToolsHelper.html":[4,0,0,9,0,0],
-"classAntares_1_1Map_1_1RemovalToolPredicate.html":[4,0,0,9,12]
+"classAntares_1_1Map_1_1RemovalToolPredicate.html":[4,0,0,9,12],
+"classAntares_1_1Map_1_1Settings.html":[4,0,0,9,13],
+"classAntares_1_1Map_1_1Tool_1_1ConnectionCreator.html":[4,0,0,9,1,0]
 };

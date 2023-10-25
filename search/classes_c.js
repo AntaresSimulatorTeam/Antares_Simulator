@@ -32,6 +32,5 @@ var searchData=
   ['nullprovider_29',['NullProvider',['../classNullProvider.html',1,'']]],
   ['nullresultwriter_30',['NullResultWriter',['../classAntares_1_1Solver_1_1NullResultWriter.html',1,'Antares::Solver']]],
   ['numbertscell_31',['NumberTsCell',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1NumberTsCell.html',1,'Antares::Component::Datagrid::Renderer']]],
-  ['numbertscellthermal_32',['NumberTsCellThermal',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1NumberTsCellThermal.html',1,'Antares::Component::Datagrid::Renderer']]],
-  ['numero_5fchroniques_5ftirees_5fpar_5finterconnexion_33',['NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION',['../structNUMERO__CHRONIQUES__TIREES__PAR__INTERCONNEXION.html',1,'']]]
+  ['numbertscellthermal_32',['NumberTsCellThermal',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1NumberTsCellThermal.html',1,'Antares::Component::Datagrid::Renderer']]]
 ];

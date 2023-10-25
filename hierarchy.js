@@ -675,7 +675,6 @@ var hierarchy =
     [ "Antares::Forms::MainFormData", "classAntares_1_1Forms_1_1MainFormData.html", null ],
     [ "Antares::Map::Manager", "classAntares_1_1Map_1_1Manager.html", null ],
     [ "Antares::Map::MapRenderOptions", "structAntares_1_1Map_1_1MapRenderOptions.html", null ],
-    [ "MATRICE_2D", "structMATRICE__2D.html", null ],
     [ "Antares::Matrix< T, ReadWriteT >", "classAntares_1_1Matrix.html", [
       [ "Matrix_easy_to_fill< T, ReadWriteT >", "classMatrix__easy__to__fill.html", [
         [ "Matrix_load_bypass< T, ReadWriteT >", "classMatrix__load__bypass.html", null ]
@@ -813,13 +812,9 @@ var hierarchy =
       [ "FSWalker::Walker", "classFSWalker_1_1Walker.html", null ],
       [ "UserData", "classUserData.html", null ]
     ] ],
-    [ "NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION", "structNUMERO__CHRONIQUES__TIREES__PAR__INTERCONNEXION.html", null ],
     [ "object", null, [
       [ "benchmark.StudyList", "classbenchmark_1_1StudyList.html", null ],
       [ "kirchhoff_pytest.StudyReference", "classkirchhoff__pytest_1_1StudyReference.html", null ]
-    ] ],
-    [ "Yuni::Policy::ObjectLevelLockable", null, [
-      [ "Antares::IIntrusiveReference< ChildT, TP >", "classAntares_1_1IIntrusiveReference.html", null ]
     ] ],
     [ "Yuni::Policy::ObjectLevelLockable", null, [
       [ "Antares::Data::StudyFinder", "classAntares_1_1Data_1_1StudyFinder.html", [
@@ -829,6 +824,9 @@ var hierarchy =
         [ "StudyFinderCleaner", "classStudyFinderCleaner.html", null ]
       ] ],
       [ "Antares::Memory", "classAntares_1_1Memory.html", null ]
+    ] ],
+    [ "Yuni::Policy::ObjectLevelLockable", null, [
+      [ "Antares::IIntrusiveReference< ChildT, TP >", "classAntares_1_1IIntrusiveReference.html", null ]
     ] ],
     [ "Yuni::Policy::ObjectLevelLockableNotRecursive", null, [
       [ "Antares::Toolbox::Jobs::PartList", "classAntares_1_1Toolbox_1_1Jobs_1_1PartList.html", null ]

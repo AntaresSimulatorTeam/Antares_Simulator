@@ -1,7 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Misc.html#ac0fe2133204f39c8106408bfefd00695":[4,0,0,1,0,0,46,8],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Misc.html#ac1f73f29c2481db5d76dae0c82540523":[4,0,0,1,0,0,46,5],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Misc.html#ad1b4cc4c4c233025438cab0cb1a58d69":[4,0,0,1,0,0,46,12],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Misc.html#ad8b8b917c0599b9cddb839da03b4f492":[4,0,0,1,0,0,46,9],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Misc.html#ae409817009654539391e60e77a1e3c7b":[4,0,0,1,0,0,46,13],
@@ -249,5 +247,7 @@ var NAVTREEINDEX4 =
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1blankCell.html":[4,0,0,1,0,0,8],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1classicColumn.html":[4,0,0,1,0,0,12],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1connectionNTC.html":[4,0,0,1,0,0,18],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1connectionNTC.html#a20df627d74651426d83a61fbc198d5ad":[4,0,0,1,0,0,18,0]
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1connectionNTC.html#a20df627d74651426d83a61fbc198d5ad":[4,0,0,1,0,0,18,0],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1connectionNTCdirect.html":[4,0,0,1,0,0,19],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1connectionNTCindirect.html":[4,0,0,1,0,0,20]
 };
