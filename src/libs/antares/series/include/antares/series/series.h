@@ -34,34 +34,41 @@ namespace Antares::Data
 
 class TimeSeries
 {
+    /*!
+     ** \brief This class is used to represent the generic time series
+     **
+     **  The goal is to handle indexing with the time series numbers: getCoefficient()
+     **  and also providing a wrapper for all the Matrix<> functions such as resize()
+     */
+
 public:
-    using TSNumbers = Matrix<uint32_t>;
+    using numbers = Matrix<uint32_t>;
     using TS = Matrix<double>;
 
-    explicit TimeSeries(TSNumbers& tsNumbers);
+    explicit TimeSeries(numbers& tsNumbers);
     /*!
      ** \brief Load series from a file
      **
-     ** \param d Data series
-     ** \param areaID The ID of the area associated to the data series
-     ** \param folder The source folder
-     ** \param filename The filename of the series
+     ** \param path path of the file
+     ** \param dataBuffer yuni dependency to use loadFromCSV
+     ** \param average used to average timeseries
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
-    bool timeSeriesLoadFromFolder(const std::string& path,
-                                  Matrix<>::BufferType dataBuffer,
-                                  const bool average);
+    bool loadFromFile(const std::string& path,
+                      Matrix<>::BufferType dataBuffer,
+                      const bool average);
     /*!
      ** \brief Save time series to a file
      ** \ingroup windseries
      **
      ** \param areaID The ID of the area associated to the data series
      ** \param folder The target folder
-     ** \param filename The filename of the series
+     ** \param prefix the prefix for the filename
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
-    int timeSeriesSaveToFolder(const AreaName& areaID, const std::string& folder,
-                               const std::string& prefix) const;
+    int saveToFolder(const AreaName& areaID,
+                     const std::string& folder,
+                     const std::string& prefix) const;
 
     double getCoefficient(uint32_t year, uint32_t timestep) const;
     const double* getColumn(uint32_t year) const;
@@ -72,7 +79,7 @@ public:
     void reset();
     void unloadFromMemory() const;
     void roundAllEntries();
-    void resize(uint32_t year, uint32_t timestep);
+    void resize(uint32_t timeSeriesCount, uint32_t timestepCount);
     void averageTimeseries();
 
     bool forceReload(bool reload = false) const;
@@ -80,7 +87,7 @@ public:
     uint64_t memoryUsage() const;
 
     TS timeSeries;
-    TSNumbers& timeseriesNumbers;
+    numbers& timeseriesNumbers;
 
     static const double emptyColumn[HOURS_PER_YEAR];
 };

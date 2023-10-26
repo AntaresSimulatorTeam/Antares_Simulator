@@ -216,7 +216,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
             ret = area.load.prepro->saveToFolder(buffer) && ret;
         }
         buffer.clear() << folder << SEP << "input" << SEP << "load" << SEP << "series";
-        area.load.series.timeSeriesSaveToFolder(area.id, buffer.c_str(), "load_") && ret;
+        area.load.series.saveToFolder(area.id, buffer.c_str(), "load_") && ret;
     }
 
     // Solar
@@ -228,7 +228,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
             ret = area.solar.prepro->saveToFolder(buffer) && ret;
         }
         buffer.clear() << folder << SEP << "input" << SEP << "solar" << SEP << "series";
-        ret = area.solar.series.timeSeriesSaveToFolder(area.id, buffer.c_str(), "solar_") && ret;
+        ret = area.solar.series.saveToFolder(area.id, buffer.c_str(), "solar_") && ret;
     }
 
     // Hydro
@@ -259,7 +259,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
         }
 
         buffer.clear() << folder << SEP << "input" << SEP << "wind" << SEP << "series";
-        ret = area.wind.series.timeSeriesSaveToFolder(area.id, buffer.c_str(), "wind_") && ret;
+        ret = area.wind.series.saveToFolder(area.id, buffer.c_str(), "wind_") && ret;
     }
 
     // Thermal cluster list
@@ -854,7 +854,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             buffer.clear() << study.folderInput << SEP << "load" << SEP << "series" << SEP
                            << "load_" << area.id << ".txt";
-            ret = area.load.series.timeSeriesLoadFromFolder(buffer.c_str(), study.dataBuffer, averageTs)
+            ret = area.load.series.loadFromFile(buffer.c_str(), study.dataBuffer, averageTs)
                   && ret;
         }
 
@@ -875,7 +875,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             buffer.clear() << study.folderInput << SEP << "solar" << SEP << "series" << SEP
                            << "solar_" << area.id << ".txt";
-            ret = area.solar.series.timeSeriesLoadFromFolder(buffer.c_str(), study.dataBuffer, averageTs)
+            ret = area.solar.series.loadFromFile(buffer.c_str(), study.dataBuffer, averageTs)
                   && ret;
 
         }
@@ -920,7 +920,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             buffer.clear() << study.folderInput << SEP << "wind" << SEP << "series" << SEP
                            << "wind_" << area.id << ".txt";
-            ret = area.wind.series.timeSeriesLoadFromFolder(buffer.c_str(), study.dataBuffer, averageTs)
+            ret = area.wind.series.loadFromFile(buffer.c_str(), study.dataBuffer, averageTs)
                   && ret;
         }
 

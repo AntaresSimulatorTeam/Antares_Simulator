@@ -60,7 +60,7 @@ bool Study::importTimeseriesIntoInput()
             areas.each([&](const Data::Area& area) {
                 logs.info() << "Importing load timeseries : " << area.name;
                 buffer.clear() << folderInput << SEP << "load" << SEP << "series";
-                ret = area.load.series.timeSeriesSaveToFolder(area.id, buffer.c_str(), "load_") && ret;
+                ret = area.load.series.saveToFolder(area.id, buffer.c_str(), "load_") && ret;
                 ++progression;
             });
         }
@@ -72,7 +72,7 @@ bool Study::importTimeseriesIntoInput()
             areas.each([&](const Data::Area& area) {
                 logs.info() << "Importing solar timeseries : " << area.name;
                 buffer.clear() << folderInput << SEP << "solar" << SEP << "series";
-                ret = area.solar.series.timeSeriesSaveToFolder(area.id, buffer.c_str(), "solar_") && ret;
+                ret = area.solar.series.saveToFolder(area.id, buffer.c_str(), "solar_") && ret;
                 ++progression;
             });
         }
@@ -96,7 +96,7 @@ bool Study::importTimeseriesIntoInput()
             areas.each([&](const Data::Area& area) {
                 logs.info() << "Importing wind timeseries : " << area.name;
                 buffer.clear() << folderInput << SEP << "wind" << SEP << "series";
-                area.wind.series.timeSeriesSaveToFolder(area.id, buffer.c_str(), "wind_") && ret;
+                area.wind.series.saveToFolder(area.id, buffer.c_str(), "wind_") && ret;
                 ++progression;
             });
         }

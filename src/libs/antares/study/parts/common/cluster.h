@@ -120,7 +120,7 @@ public:
     //! Series
     TimeSeries series;
 
-    TimeSeries::TSNumbers tsNumbers;
+    TimeSeries::numbers tsNumbers;
 
     /*!
     ** \brief Modulation matrix

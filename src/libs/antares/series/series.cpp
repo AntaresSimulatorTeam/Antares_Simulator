@@ -40,12 +40,12 @@ namespace Antares::Data
 
 const double TimeSeries::emptyColumn[] = {0};
 
-TimeSeries::TimeSeries(TSNumbers& tsNumbers) : timeseriesNumbers(tsNumbers)
+TimeSeries::TimeSeries(numbers& tsNumbers) : timeseriesNumbers(tsNumbers)
 {}
 
-bool TimeSeries::timeSeriesLoadFromFolder(const std::string& path,
-                                          Matrix<>::BufferType dataBuffer,
-                                          const bool average)
+bool TimeSeries::loadFromFile(const std::string& path,
+                              Matrix<>::BufferType dataBuffer,
+                              const bool average)
 {
     bool ret = true;
     ret = timeSeries.loadFromCSVFile(path, 1, HOURS_PER_YEAR, &dataBuffer) && ret;
@@ -58,8 +58,9 @@ bool TimeSeries::timeSeriesLoadFromFolder(const std::string& path,
     return ret;
 }
 
-int TimeSeries::timeSeriesSaveToFolder(const AreaName& areaID, const std::string& folder,
-                                       const std::string& prefix) const
+int TimeSeries::saveToFolder(const AreaName& areaID,
+                             const std::string& folder,
+                             const std::string& prefix) const
 {
     Clob buffer;
     buffer.clear() << folder << SEP << prefix << areaID << ".txt";
@@ -101,9 +102,9 @@ void TimeSeries::reset()
     timeSeries.reset(1, HOURS_PER_YEAR);
 }
 
-void TimeSeries::resize(uint32_t year, uint32_t timestep)
+void TimeSeries::resize(uint32_t timeSeriesCount, uint32_t timestepCount)
 {
-    timeSeries.resize(year, timestep);
+    timeSeries.resize(timeSeriesCount, timestepCount);
 }
 
 void TimeSeries::roundAllEntries()
