@@ -151,7 +151,7 @@ public:
     }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
     {
-        std::vector<uint> to_return = {area.hydro.series->count};
+        std::vector<uint> to_return = {area.hydro.series->TScount()};
         return to_return;
     }
     uint getGeneratedTimeSeriesNumber()
@@ -168,7 +168,7 @@ public:
     }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
-        std::vector<uint> to_return = {area.hydro.series->getNbTimeSeriesSup()};
+        std::vector<uint> to_return = {area.hydro.series->maxPowerTScount()};
         return to_return;
     }
     uint getGeneratedTimeSeriesNumber() override
@@ -444,7 +444,7 @@ bool checkInterModalConsistencyForArea(Area& area,
     if (isTSintermodal[indexTS])
     {
         uint nbTimeSeries
-          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesHydro : area.hydro.series->count;
+          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesHydro : area.hydro.series->TScount();
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -452,7 +452,7 @@ bool checkInterModalConsistencyForArea(Area& area,
     indexTS = ts_to_tsIndex.at(timeSeriesHydroMaxPower);
     if (isTSintermodal[indexTS])
     {
-        uint nbTimeSeries = area.hydro.series->getNbTimeSeriesSup();
+        uint nbTimeSeries = area.hydro.series->maxPowerTScount();
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -688,7 +688,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
 
         if (!isTSintramodal[indexTS])
         {
-            uint nbTimeSeries = area.hydro.series->getNbTimeSeriesSup();
+            uint nbTimeSeries = area.hydro.series->maxPowerTScount();
             if (nbTimeSeries != 1)
             {
                 area.hydro.series->timeseriesNumbersHydroMaxPower[0][year] = static_cast<uint32_t>(
@@ -894,10 +894,10 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
                 area.wind.series->timeseriesNumbers, area.wind.series->timeSeries.width, years);
         // Hydro
         fixTSNumbersSingleAreaSingleMode(
-          area.hydro.series->timeseriesNumbers, area.hydro.series->count, years);
+          area.hydro.series->timeseriesNumbers, area.hydro.series->TScount(), years);
         // Hydro Max Power
         fixTSNumbersSingleAreaSingleMode(
-          area.hydro.series->timeseriesNumbersHydroMaxPower, area.hydro.series->getNbTimeSeriesSup(), years);
+          area.hydro.series->timeseriesNumbersHydroMaxPower, area.hydro.series->maxPowerTScount(), years);
 
         // Thermal
         std::for_each(area.thermal.clusters.cbegin(),

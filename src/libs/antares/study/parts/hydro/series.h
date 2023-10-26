@@ -31,10 +31,12 @@
 #include "../../fwd.h"
 #include <antares/exception/antares/exception/LoadingError.hpp>
 
+
 namespace Antares
 {
 namespace Data
 {
+
 /*!
 ** \brief Data series (Hydro)
 */
@@ -49,12 +51,19 @@ public:
     DataSeriesHydro();
     //@}
 
+    void copyGenerationTS(const DataSeriesHydro& source);
+    void copyMaxPowerTS(const DataSeriesHydro& source);
+
     //! \name Data
     //@{
     /*!
     ** \brief Reset all data, as if it were a new area
     */
     void reset();
+
+    void resizeRORandSTORAGE(unsigned int width);
+    void resizeGenerationTS(unsigned int w, unsigned int h);
+    void resizeMaxPowerTS(unsigned int w, unsigned int h);
 
     /*!
     ** \brief Load all data not already loaded
@@ -66,16 +75,17 @@ public:
     void markAsModified() const;
     //@}
 
-    //! \name Save / Load
-    //@{
-    /*!
-    ** \brief Load data series for hydro from a folder
-    **
-    ** \param d The data series for hydro
-    ** \param folder The source folder
-    ** \return A non-zero value if the operation succeeded, 0 otherwise
-    */
-    bool loadFromFolder(Study& s, const AreaName& areaID, const AnyString& folder);
+    void EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver, bool& fatalError);
+
+    // Loading hydro time series collection
+    // Returned boolean : reading from file failed
+    bool loadGenerationTS(const AreaName& areaID, const AnyString& folder, unsigned int studyVersion);
+
+    // Loading hydro max generation and mqx pumping TS's
+    bool LoadMaxPower(const AreaName& areaID, const AnyString& folder);
+
+    void buildMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
+                                  const Matrix<double>::ColumnType& DailyMaxPumpPower);
 
     /*!
     ** \brief Save data series for hydro into a folder (`input/hydro/series`)
@@ -100,11 +110,6 @@ public:
     */
 
     //@}
-
-    /*!
-    ** \brief Check TS number for Minimum Generation and logs error if necessary
-    */
-    void checkMinGenTsNumber(Study& s, const AreaName& areaID);
 
 public:
     /*!
@@ -144,108 +149,34 @@ public:
     */
     Matrix<double, int32_t> maxHourlyPumpPower;
 
-    /*!
-    ** \brief The number of time-series
-    **
-    ** This value must be the same as the width of the matrices `mod` and `fatal`.
-    ** It is only provided for convenience to avoid same strange and ambiguous code
-    ** (for example using `fatal.width` and `mod.width` in the same routine, it might
-    ** indicate that the two values are not strictly equal)
-    */
-    uint count;
+    unsigned int TScount() const { return generationTScount_; };
 
 public:
-    /*!
-    ** \brief Monte-Carlo
-    */
     Matrix<uint32_t> timeseriesNumbers;
     Matrix<uint32_t> timeseriesNumbersHydroMaxPower;
 
-    /**
-     * \brief Loading hydro maximum generation and pumping TS's
-     */
-    bool LoadMaxPower(const AreaName& areaID, const AnyString& folder);
+    // Equalizing max generation and max pumping numbers of TS's    
+    void EqualizeMaxPowerTSsizes(Area& area, bool& fatalError);
 
-    /**
-     * \brief Post processing numbers of TS's
-     *  Checking whether or not TS's numbers are different
-     *  and taking proper action based on corresponding check
-     */
-    bool postProcessMaxPowerTS(Area& area);
+    void setHydroModulability(Area& area) const;
 
-    void setHydroModulability(Study& study, const AreaName& areaID) const;
+    // Get max power (generatoin and pumping) number of TS
+    uint maxPowerTScount() const;
 
-    /**
-     * \brief Setting TS's number of maximum generation and pumping matrices
-     */
-    void setNbTimeSeriesSup(uint nbTimeSeriesSup);
-
-    /**
-     * \brief Setting TS's number of maximum generation and pumping matrices
-     */
-    void setNbTimeSeriesSup();
-
-    /**
-     * \brief Get function for TS's number of maximum generation and pumping matrices
-     */
-    uint getNbTimeSeriesSup() const;
-
-    /**
-     * \brief Setting TS's when derated mode is on
-     */
-    void setMaxPowerTSWhenDeratedMode(const Study& study);
+    // Setting TS's when derated mode is on
+    void resizeTSinDeratedMode(bool derated, unsigned int studyVersion, bool useBySolver);
 
 private:
-    /*!
-    ** \brief The number of time-series for maxHourlyGenPower and maxHourlyPumpPower matrices
-    **
-    ** This value must be the same as the width of the matrices `maxHourlyGenPower` and
-    *`maxHourlyPumpPower`.
-    ** It is only provided for convenience to avoid same strange and ambiguous code
-    ** (for example using `maxHourlyGenPower.width` and `maxHourlyPumpPower.width` in the same
-    *routine, it might
-    ** indicate that the two values are not strictly equal)
-    */
-    uint nbTimeSeriesSup_ = 0;
+    
+    // The number of time-series about generation (ror, inflows (=storage), mingen)
+    // They all should have the same number of columns (width), as they each year receives a common
+    // TS number for all three.
+    uint generationTScount_ = 0;
 
-    /**
-     * This class provides comparing two integers
-     * that represents width of two corresponding matrices.
-     */
-    class NbTsComparer
-    {
-    public:
-        NbTsComparer(uint32_t nbOfGenPowerTs, uint32_t nbOfPumpPowerTs);
-
-        bool bothZeros() const;
-        bool same() const;
-        bool differentAndGreaterThanOne(uint nbTimeSeriesSup) const;
-
-    private:
-        uint32_t nbOfGenPowerTs_{0};
-        uint32_t nbOfPumpPowerTs_{0};
-    };
-
-    /**
-     * This class provides actions based on the return
-     * values of the NbTsComparer class member functions
-     */
-    class TsActions
-    {
-    public:
-        TsActions(Matrix<double, int32_t>& maxHourlyGenPower,
-                  Matrix<double, int32_t>& maxHourlyPumpPower);
-
-        void handleBothZeros(const AreaName& areaID);
-        [[noreturn]] void handleBothGreaterThanOne(const AreaName& areaID) const;
-        void resizeWhenOneTS(Area& area, uint nbTimeSeriesSup);
-
-    private:
-        Matrix<double, int32_t>& maxHourlyGenPower_;
-        Matrix<double, int32_t>& maxHourlyPumpPower_;
-
-        void areaToInvalidate(Area* area, const AreaName& areaID, uint nbTimeSeriesSup) const;
-    };
+    // The number of time-series about max power (maxHourlyGenPower and maxHourlyPumpPower)
+    // They both should have the same number of columns (width), as they each year receives a common
+    // TS number for all three.
+    uint maxPowerTScount_ = 0;
 
 }; // class DataSeriesHydro
 

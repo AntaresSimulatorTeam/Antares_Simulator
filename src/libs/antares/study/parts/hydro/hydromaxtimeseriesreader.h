@@ -77,25 +77,7 @@ private:
     void copyDailyMaxEnergy(Area& area) const;
     void copyDailyMaxGenerationEnergy(Area& area) const;
     void copyDailyMaxPumpingEnergy(Area& area) const;
-
-    /**
-     * \brief Copy power functions
-     *  These functions provides coping of power data loaded
-     *  from deprecated file.
-     */
-    void copyDailyMaxPowerAsHourly(Area& area) const;
-    void copyDailyMaxGenPowerAsHourly(Area& area) const;
-    void copyDailyMaxPumpPowerAsHourly(Area& area) const;
 };
-
-/**
- * \brief Copy raw data
- *  This function provides coping raw data from daily resolution
- *  column and pasting data into hourly resolution column.
- */
-void copyDailyTsAsHourly(Matrix<double, int32_t>::ColumnType& hourlyColumn,
-                         const Matrix<double>::ColumnType& dailyColumn);
-
 } // namespace Antares::Data
 
 #endif /*__ANTARES_LIBS_STUDY_PARTS_HYDRO_MAX_TIME_SERIES_READER_H__*/

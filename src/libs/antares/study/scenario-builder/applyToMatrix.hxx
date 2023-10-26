@@ -25,7 +25,7 @@ inline bool CheckValidity<Data::DataSeriesHydro>(uint value,
                                                  uint tsGenMax)
 {
     // When the TS-Generators are not used
-    return (!tsGenMax) ? (value < data.count) : (value < tsGenMax);
+    return (!tsGenMax) ? (value < data.TScount()) : (value < tsGenMax);
 }
 
 template<>
@@ -49,7 +49,7 @@ template<class D>
 static inline bool CheckValidityHydroMaxPower(uint value, const D& data, uint tsGenMax)
 {
     // TS Generator never used
-    return (!tsGenMax) ? (value < data.getNbTimeSeriesSup()) : (value < tsGenMax);
+    return (!tsGenMax) ? (value < data.maxPowerTScount()) : (value < tsGenMax);
 }
 
 template<class StringT, class D>

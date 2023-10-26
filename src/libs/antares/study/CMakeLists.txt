@@ -139,6 +139,8 @@ set(SRC_STUDY_PART_HYDRO
         parts/hydro/allocation.cpp
         parts/hydro/hydromaxtimeseriesreader.h
         parts/hydro/hydromaxtimeseriesreader.cpp
+        parts/hydro/pair-of-integers.h
+        parts/hydro/pair-of-integers.cpp
 )
 source_group("study\\part\\hydro" FILES ${SRC_STUDY_PART_HYDRO})
 

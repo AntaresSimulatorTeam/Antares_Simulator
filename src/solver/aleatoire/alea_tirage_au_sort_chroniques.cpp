@@ -65,13 +65,13 @@ void ApplyRandomTSnumbers(const Study& study,
             assert(year < data.timeseriesNumbers.height);
 
             ptchro.Hydraulique
-              = (data.count != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+              = (data.TScount() != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
         // Hydro Max Power
         {
             const Data::DataSeriesHydro& data = *area.hydro.series;
             assert(year < data.timeseriesNumbersHydroMaxPower.height);
-            ptchro.HydroMaxPower = (data.getNbTimeSeriesSup() != 1)
+            ptchro.HydroMaxPower = (data.maxPowerTScount() != 1)
                                            ? (data.timeseriesNumbersHydroMaxPower[0][year])
                                            : 0; // zero-based
         }

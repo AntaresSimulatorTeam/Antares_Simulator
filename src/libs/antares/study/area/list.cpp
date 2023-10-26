@@ -901,33 +901,41 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "prepro";
             ret = area.hydro.prepro->loadFromFolder(study, area.id, buffer.c_str()) && ret;
         }
-        if (area.hydro.series && (!options.loadOnlyNeeded || !area.hydro.prepro)) // Series
+
+        if (auto* hydroSeries = area.hydro.series; hydroSeries)
         {
-            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->loadFromFolder(study, area.id, buffer) && ret;
-        }
-
-        if (area.hydro.series && study.header.version < 870)
-        {
-            buffer.clear() << study.folderInput << SEP << "hydro";
-
-            HydroMaxTimeSeriesReader reader;
-            ret = reader(buffer, area, study.usedByTheSolver) && ret;
-        }
-
-        if (area.hydro.series && study.header.version >= 870)
-        {
-            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->LoadMaxPower(area.id, buffer) && ret;
-
-            if (study.usedByTheSolver)
+            if (!options.loadOnlyNeeded || !area.hydro.prepro) // Series
             {
-                area.hydro.series->setNbTimeSeriesSup();
-                ret = area.hydro.series->postProcessMaxPowerTS(area) && ret;
-                area.hydro.series->setMaxPowerTSWhenDeratedMode(study);
+                buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
+                ret = hydroSeries->loadGenerationTS(area.id, buffer, study.header.version) && ret;
+
+                hydroSeries->EqualizeGenerationTSsizes(
+                  area, study.usedByTheSolver, study.gotFatalError);
             }
-            else
-                area.hydro.series->setHydroModulability(study, area.id);
+
+            if (study.header.version < 870)
+            {
+                buffer.clear() << study.folderInput << SEP << "hydro";
+
+                HydroMaxTimeSeriesReader reader;
+                ret = reader(buffer, area, study.usedByTheSolver) && ret;
+            }
+
+            if (study.header.version >= 870)
+            {
+                buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
+                ret = hydroSeries->LoadMaxPower(area.id, buffer) && ret;
+
+                if (study.usedByTheSolver)
+                {
+                    hydroSeries->EqualizeMaxPowerTSsizes(area, study.gotFatalError);
+                }
+                else
+                    hydroSeries->setHydroModulability(area);
+            }
+
+            hydroSeries->resizeTSinDeratedMode(
+              study.parameters.derated, study.header.version, study.usedByTheSolver);
         }
 
         buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "common" << SEP
@@ -1641,10 +1649,7 @@ void AreaList::removeLoadTimeseries()
 void AreaList::removeHydroTimeseries()
 {
     each([&](Data::Area& area) {
-        area.hydro.series->ror.reset(1, HOURS_PER_YEAR);
-        area.hydro.series->storage.reset(1, DAYS_PER_YEAR);
-        area.hydro.series->mingen.reset(1, HOURS_PER_YEAR);
-        area.hydro.series->count = 1;
+        area.hydro.series->reset();
     });
 }
 

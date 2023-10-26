@@ -122,59 +122,15 @@ void HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy(Area& area) const
     maxDailyPumpEnergy.pasteToColumn(0, dailyMaxPumpE);
 }
 
-void HydroMaxTimeSeriesReader::copyDailyMaxPowerAsHourly(Area& area) const
-{
-    copyDailyMaxGenPowerAsHourly(area);
-    copyDailyMaxPumpPowerAsHourly(area);
-    area.hydro.series->setNbTimeSeriesSup();
-}
-
-void HydroMaxTimeSeriesReader::copyDailyMaxGenPowerAsHourly(Area& area) const
-{
-    auto& maxHourlyGenPower = area.hydro.series->maxHourlyGenPower;
-    const auto& dailyMaxGenP = dailyMaxPumpAndGen[genMaxP];
-
-    maxHourlyGenPower.reset(1U, HOURS_PER_YEAR);
-
-    copyDailyTsAsHourly(maxHourlyGenPower[0], dailyMaxGenP);
-}
-
-void HydroMaxTimeSeriesReader::copyDailyMaxPumpPowerAsHourly(Area& area) const
-{
-    auto& maxHourlyPumpPower = area.hydro.series->maxHourlyPumpPower;
-    const auto& dailyMaxPumpP = dailyMaxPumpAndGen[pumpMaxP];
-
-    maxHourlyPumpPower.reset(1U, HOURS_PER_YEAR);
-
-    copyDailyTsAsHourly(maxHourlyPumpPower[0], dailyMaxPumpP);
-}
-
 bool HydroMaxTimeSeriesReader::operator()(const AnyString& folder, Area& area, bool usedBySolver)
 {
     bool ret = true;
 
     ret = loadDailyMaxPowersAndEnergies(folder, area, usedBySolver) && ret;
     copyDailyMaxEnergy(area);
-    copyDailyMaxPowerAsHourly(area);
+    area.hydro.series->buildMaxPowerFromDailyTS(dailyMaxPumpAndGen[genMaxP], dailyMaxPumpAndGen[pumpMaxP]);
 
     return ret;
-}
-
-void copyDailyTsAsHourly(Matrix<double, int32_t>::ColumnType& hourlyColumn,
-                         const Matrix<double>::ColumnType& dailyColumn)
-{
-    uint hour = 0;
-    uint day = 0;
-
-    while (hour < HOURS_PER_YEAR && day < DAYS_PER_YEAR)
-    {
-        for (uint i = 0; i < HOURS_PER_DAY; ++i)
-        {
-            hourlyColumn[hour] = dailyColumn[day];
-            ++hour;
-        }
-        ++day;
-    }
 }
 
 } // namespace Antares::Data
