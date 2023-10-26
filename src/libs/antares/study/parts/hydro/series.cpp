@@ -57,7 +57,7 @@ DataSeriesHydro::DataSeriesHydro()
 unsigned int EqualizeTSsize(Matrix<double, int32_t>& TScollection1,
     Matrix<double, int32_t>& TScollection2,
     bool& fatalError,
-    std::string& fatalErrorMsg,
+    const std::string& fatalErrorMsg,
     Area& area,
     unsigned int height1 = HOURS_PER_YEAR,
     unsigned int height2 = HOURS_PER_YEAR)
@@ -155,7 +155,7 @@ bool loadTSfromFile(Matrix<double, int32_t>& ts,
     return ts.loadFromCSVFile(filePath, 1, height, &fileContent);
 }
 
-bool DataSeriesHydro::loadGenerationTS(AreaName& areaID, const AnyString& folder, unsigned int studyVersion)
+bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID, const AnyString& folder, unsigned int studyVersion)
 {
     timeseriesNumbers.clear();
 

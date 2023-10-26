@@ -79,7 +79,7 @@ public:
 
     // Loading hydro time series collection
     // Returned boolean : reading from file failed
-    bool loadGenerationTS(AreaName& areaID, const AnyString& folder, unsigned int studyVersion);
+    bool loadGenerationTS(const AreaName& areaID, const AnyString& folder, unsigned int studyVersion);
 
     // Loading hydro max generation and mqx pumping TS's
     bool LoadMaxPower(const AreaName& areaID, const AnyString& folder);
