@@ -96,11 +96,7 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
             double bottom = std::numeric_limits<double>::max();
             double top = 0;
 
-            uint loadTS = area.load.series.getSeriesIndex(problem.year);
-            auto& load = area.load.series.timeSeries;
-            assert(load.width > 0);
-
-            auto& L = (loadTS < load.width) ? load[loadTS] : load[0];
+            auto* L = area.load.series.getColumn(problem.year);
 
             const double* M = area.scratchpad[numSpace].dispatchableGenerationMargin;
 
@@ -109,7 +105,6 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
                 double h_d = H[i] + D[i];
                 if (h_d > 0. && Math::Zero(S[i] + M[i]))
                 {
-                    assert(i + hourInYear < load.height);
                     double Li = L[i + hourInYear];
 
                     remix[i] = true;

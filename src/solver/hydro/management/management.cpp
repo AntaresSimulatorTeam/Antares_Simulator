@@ -239,7 +239,8 @@ bool HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint year, const 
         {
             logs.error() << "In Area " << area.name << " the minimum generation of "
                          << data.totalMonthMingen[realmonth] << " MW in month " << month + 1
-                         << " of TS-" << year + 1 << " is incompatible with the inflows of "
+                         << " of TS-" << area.hydro.series->mingen.getSeriesIndex(year) + 1
+                         << " is incompatible with the inflows of "
                          << data.totalMonthInflows[realmonth] << " MW.";
             return false;
         }
@@ -254,7 +255,8 @@ bool HydroManagement::checkYearlyMinGeneration(uint numSpace, uint year, const D
     {
         // Yearly minimum generation <= Yearly inflows
         logs.error() << "In Area " << area.name << " the minimum generation of "
-                     << data.totalYearMingen << " MW of TS-" << year + 1
+                     << data.totalYearMingen << " MW of TS-"
+                     << area.hydro.series->mingen.getSeriesIndex(year) + 1
                      << " is incompatible with the inflows of " << data.totalYearInflows << " MW.";
         return false;
     }
@@ -287,7 +289,8 @@ bool HydroManagement::checkWeeklyMinGeneration(uint year, const Data::Area& area
         {
             logs.error() << "In Area " << area.name << " the minimum generation of "
                          << totalWeekMingen << " MW in week " << week + 1 << " of TS-"
-                         << year + 1 << " is incompatible with the inflows of "
+                         << area.hydro.series->mingen.getSeriesIndex(year) + 1
+                         << " is incompatible with the inflows of "
                          << totalWeekInflows << " MW.";
             return false;
         }
@@ -320,7 +323,7 @@ bool HydroManagement::checkHourlyMinGeneration(uint year, const Data::Area& area
                     logs.error()
                         << "In area: " << area.name << " [hourly] minimum generation of "
                         << srcmingen[day * 24 + h] << " MW in timestep " << day * 24 + h + 1
-                        << " of TS-" << year + 1
+                        << " of TS-" << area.hydro.series->mingen.getSeriesIndex(year) + 1
                         << " is incompatible with the maximum generation of " << maxP[day]
                         << " MW.";
                     return false;

@@ -573,27 +573,25 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         {
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
-            auto& ror = area.hydro.series->ror;
-            auto loadSeries = area.load.series.getCoefficient(year, hourInYear);
-            auto windSeries = area.wind.series.getCoefficient(year, hourInYear);
-            auto solarSeries = area.solar.series.getCoefficient(year, hourInYear);
-            auto rorSeriesIndex = area.hydro.series->ror.getSeriesIndex(year);
+            double loadSeries = area.load.series.getCoefficient(year, hourInYear);
+            double windSeries = area.wind.series.getCoefficient(year, hourInYear);
+            double solarSeries = area.solar.series.getCoefficient(year, hourInYear);
+            double rorSeries = area.hydro.series->ror.getCoefficient(year, hourInYear);
 
             assert(&scratchpad);
 
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                mustRunGen = windSeries
-                             + solarSeries
-                             + scratchpad.miscGenSum[hourInYear] + ror[rorSeriesIndex][hourInYear]
+                mustRunGen = windSeries + solarSeries + rorSeries
+                             + scratchpad.miscGenSum[hourInYear]
                              + scratchpad.mustrunSum[hourInYear];
             }
 
             // Renewable
             if (parameters.renewableGeneration.isClusters())
             {
-                mustRunGen = scratchpad.miscGenSum[hourInYear] + ror[rorSeriesIndex][hourInYear]
+                mustRunGen = scratchpad.miscGenSum[hourInYear] + rorSeries
                              + scratchpad.mustrunSum[hourInYear];
 
                 area.renewable.list.each([&](const RenewableCluster& cluster) {
