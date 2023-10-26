@@ -583,33 +583,31 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         {
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
-            auto& ror = area.hydro.series->ror;
-            auto loadSeries = area.load.series->getCoefficient(year, hourInYear);
-            auto windSeries = area.wind.series->getCoefficient(year, hourInYear);
-            auto solarSeries = area.solar.series->getCoefficient(year, hourInYear);
-            auto hydroSeriesIndex = area.hydro.series->getIndex(year);
+            double loadSeries = area.load.series.getCoefficient(year, hourInYear);
+            double windSeries = area.wind.series.getCoefficient(year, hourInYear);
+            double solarSeries = area.solar.series.getCoefficient(year, hourInYear);
+            double rorSeries = area.hydro.series->ror.getCoefficient(year, hourInYear);
 
             assert(&scratchpad);
 
-            uint tsFatalIndex = hydroSeriesIndex < ror.width ? hydroSeriesIndex : 0;
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                mustRunGen = windSeries
-                             + solarSeries
-                             + scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
+                mustRunGen = windSeries + solarSeries
+                             + scratchpad.miscGenSum[hourInYear]
+                             + rorSeries
                              + scratchpad.mustrunSum[hourInYear];
             }
 
             // Renewable
             if (parameters.renewableGeneration.isClusters())
             {
-                mustRunGen = scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
+                mustRunGen = scratchpad.miscGenSum[hourInYear] + rorSeries
                              + scratchpad.mustrunSum[hourInYear];
 
                 area.renewable.list.each([&](const RenewableCluster& cluster) {
-                    assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
-                    mustRunGen += cluster.valueAtTimeStep((uint)hourInYear, year);
+                    assert(cluster.series.timeSeries.jit == nullptr && "No JIT data from the solver");
+                    mustRunGen += cluster.valueAtTimeStep(year, hourInYear);
                 });
             }
 
@@ -647,12 +645,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             {
                 auto& area = *study.areas.byIndex[k];
                 auto& hydroSeries = area.hydro.series;
-                uint tsIndex = hydroSeries->getIndex(year);
 
-                auto& inflowsmatrix = hydroSeries->storage;
-                auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
-                auto& mingenmatrix = hydroSeries->mingen;
-                auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
+                auto const& srcinflows = hydroSeries->storage.getColumn(year);
+                auto const& srcmingen = hydroSeries->mingen.getColumn(year);
                 for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)
                 {
                     problem.CaracteristiquesHydrauliques[k].MingenHoraire[j]

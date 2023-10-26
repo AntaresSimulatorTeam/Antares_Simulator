@@ -145,14 +145,13 @@ void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
         pTempFilename.clear() << "ts-generator" << SEP << "thermal" << SEP << "mc-" << currentYear
                               << SEP << area.id << SEP << cluster.id() << ".txt";
 
-        assert(cluster.series);
         enum
         {
             precision = 0
         };
 
         std::string buffer;
-        cluster.series->timeSeries.saveToBuffer(buffer, precision);
+        cluster.series.timeSeries.saveToBuffer(buffer, precision);
 
         pWriter.addEntryFromBuffer(pTempFilename.c_str(), buffer);
     }
@@ -248,19 +247,18 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
         return;
     }
 
-    assert(cluster.series);
     assert(cluster.prepro);
 
     if (0 == cluster.unitCount or 0 == cluster.nominalCapacity)
     {
-        cluster.series->timeSeries.reset(1, nbHoursPerYear);
+        cluster.series.timeSeries.reset(1, nbHoursPerYear);
 
         if (archive)
             writeResultsToDisk(area, cluster);
         return;
     }
 
-    cluster.series->timeSeries.resize(nbThermalTimeseries, nbHoursPerYear);
+    cluster.series.timeSeries.resize(nbThermalTimeseries, nbHoursPerYear);
 
     const auto& preproData = *(cluster.prepro);
 
@@ -355,7 +353,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
     auto& modulation = cluster.modulation[Data::thermalModulationCapacity];
 
-    Antares::Data::DataSeriesCommon::SingleYear dstSeries = nullptr;
+    double* dstSeries = nullptr;
 
     const uint tsCount = nbThermalTimeseries + 2;
     for (uint tsIndex = 0; tsIndex != tsCount; ++tsIndex)
@@ -363,7 +361,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
         uint hour = 0;
 
         if (tsIndex > 1)
-            dstSeries = cluster.series->timeSeries[tsIndex - 2];
+            dstSeries = cluster.series.timeSeries[tsIndex - 2];
 
         for (uint dayInTheYear = 0; dayInTheYear < daysPerYear; ++dayInTheYear)
         {
@@ -603,7 +601,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
     }
 
     if (derated)
-        cluster.series->timeSeries.averageTimeseries();
+        cluster.series.timeSeries.averageTimeseries();
 
     if (archive)
         writeResultsToDisk(area, cluster);

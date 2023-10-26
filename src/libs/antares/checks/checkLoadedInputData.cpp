@@ -29,6 +29,7 @@
 #include <antares/exception/LoadingError.hpp>
 #include <antares/study/version.h>
 
+#include <antares/series/series.h>
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/study/area/area.h>
 
@@ -161,7 +162,7 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
 // TS
 template<class ExceptionT>
 static void checkThermalColumnNumber(const Antares::Data::AreaList& areas,
-                                     Matrix<double> Antares::Data::EconomicInputData::*matrix)
+        Antares::Data::TimeSeries::TS Antares::Data::EconomicInputData::*matrix)
 {
     ExceptionT exception;
     bool error = false;
@@ -174,7 +175,7 @@ static void checkThermalColumnNumber(const Antares::Data::AreaList& areas,
             if (cluster.costgeneration == Antares::Data::setManually)
                 continue;
             const uint otherMatrixWidth = (cluster.ecoInput.*matrix).width;
-            uint tsWidth = cluster.series->timeSeries.width;
+            uint tsWidth = cluster.series.timeSeries.width;
             if (otherMatrixWidth != 1 && otherMatrixWidth != tsWidth)
             {
                 logs.warning() << "Area: " << area.name << ". Cluster name: " << cluster.name()

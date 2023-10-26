@@ -24,7 +24,7 @@ struct StudyFixture : public StudyBuilder
 	double loadInArea = 0.;
 	double clusterCost = 0.;
 	ThermalClusterConfig clusterConfig;
-	TimeSeriesConfigurer<Matrix<double, int32_t>> loadTSconfig;
+	TimeSeriesConfigurer loadTSconfig;
 };
 
 StudyFixture::StudyFixture()
@@ -34,7 +34,7 @@ StudyFixture::StudyFixture()
 	cluster = addClusterToArea(area, "some cluster");
 
 	loadInArea = 7.0;
-	loadTSconfig = std::move(TimeSeriesConfigurer(area->load.series->timeSeries));
+	loadTSconfig = std::move(TimeSeriesConfigurer(area->load.series.timeSeries));
 	loadTSconfig.setColumnCount(1)
 				.fillColumnWith(0, loadInArea);
 
@@ -203,7 +203,7 @@ BOOST_AUTO_TEST_CASE(error_on_wrong_hydro_data)
     builder.setNumberMCyears(1);
     Area& area = *builder.addAreaToStudy("A");
     PartHydro& hydro = area.hydro;
-    TimeSeriesConfigurer(hydro.series->storage)
+    TimeSeriesConfigurer(hydro.series->storage.timeSeries)
             .setColumnCount(1)
             .fillColumnWith(0, -1.0); //Negative inflow will cause a consistency error with mingen
 
