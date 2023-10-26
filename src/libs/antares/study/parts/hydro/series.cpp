@@ -321,7 +321,7 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
                                             unsigned int studyVersion,
                                             bool usedBySolver)
 {
-    if (!derated)
+    if (!(derated && usedBySolver))
         return;
 
     ror.averageTimeseries();
@@ -329,7 +329,7 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
     mingen.averageTimeseries();
     generationTScount_ = 1;
 
-    if (studyVersion >= 870 && usedBySolver)
+    if (studyVersion >= 870)
     {
         maxHourlyGenPower.averageTimeseries();
         maxHourlyPumpPower.averageTimeseries();
