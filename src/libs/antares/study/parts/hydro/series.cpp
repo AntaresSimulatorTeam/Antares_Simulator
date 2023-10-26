@@ -57,7 +57,7 @@ DataSeriesHydro::DataSeriesHydro()
 unsigned int EqualizeTSsize(Matrix<double, int32_t>& TScollection1,
     Matrix<double, int32_t>& TScollection2,
     bool& fatalError,
-    std::string fatalErrorMsg,
+    std::string& fatalErrorMsg,
     Area& area,
     unsigned int height1 = HOURS_PER_YEAR,
     unsigned int height2 = HOURS_PER_YEAR)
@@ -94,7 +94,7 @@ unsigned int EqualizeTSsize(Matrix<double, int32_t>& TScollection1,
     return pairOfTSsizes.sup();
 }
 
-void DataSeriesHydro::copyGenerationTS(DataSeriesHydro& source)
+void DataSeriesHydro::copyGenerationTS(const DataSeriesHydro& source)
 {
     ror = source.ror;
     storage = source.storage;
@@ -106,7 +106,7 @@ void DataSeriesHydro::copyGenerationTS(DataSeriesHydro& source)
     source.storage.unloadFromMemory();
     source.mingen.unloadFromMemory();
 }
-void DataSeriesHydro::copyMaxPowerTS(DataSeriesHydro& source)
+void DataSeriesHydro::copyMaxPowerTS(const DataSeriesHydro& source)
 {
     maxHourlyGenPower = source.maxHourlyGenPower;
     maxHourlyPumpPower = source.maxHourlyPumpPower;
@@ -144,9 +144,9 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& fold
 
 
 bool loadTSfromFile(Matrix<double, int32_t>& ts, 
-                    AreaName& areaID, 
-                    const AnyString& folder, 
-                    std::string filename,
+                    const AreaName& areaID,
+                    const AnyString& folder,
+                    const std::string& filename,
                     unsigned int height)
 {
     YString filePath;
