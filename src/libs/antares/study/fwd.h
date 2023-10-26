@@ -221,8 +221,8 @@ enum TimeSeries : unsigned int
     timeSeriesRenewable = 32,
     //! TimeSeries : Renewable
     timeSeriesTransmissionCapacities = 64,
-    //! TimeSeries : Hydro Power Credits
-    timeSeriesHydroPowerCredits = 256,
+    //! TimeSeries : Hydro Max Power
+    timeSeriesHydroMaxPower = 256,
 
     //! The maximum number of time-series that we can encounter
     timeSeriesCount = 8,

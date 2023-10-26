@@ -559,26 +559,26 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 ntc.ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][hourInYear];
             }
         }
-        preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, study.bindingConstraints, weekFirstDay, hourInWeek);
+        preparerBindingConstraint(
+          problem, numSpace, PasDeTempsDebut, study.bindingConstraints, weekFirstDay, hourInWeek);
 
         for (uint k = 0; k < nbPays; ++k)
         {
             auto& tsIndex = NumeroChroniquesTireesParPays[numSpace][k];
-            uint tsIndexPowerCredits = tsIndex.HydrauliquePowerCredits;
+            uint tsIndexMaxPower = tsIndex.HydroMaxPower;
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
 
-            auto& maxgenmatrix = area.hydro.series->maxgen;
-            auto const& srcmaxgen
-              = maxgenmatrix[tsIndexPowerCredits < maxgenmatrix.width ? tsIndexPowerCredits : 0];
-            auto const& ContrainteDePmaxHydrauliqueHoraire = srcmaxgen[PasDeTempsDebut + hourInWeek];
+            auto& maxHourlyGenPowerMatrix = area.hydro.series->maxHourlyGenPower;
+            auto const& maxHourlyGenPowerTS
+              = maxHourlyGenPowerMatrix[tsIndexMaxPower];
+            auto const& ContrainteDePmaxHydrauliqueHoraire = maxHourlyGenPowerTS[PasDeTempsDebut + hourInWeek];
 
-            auto& maxpumpmatrix = area.hydro.series->maxpump;
-            auto const& srcmaxpump
-              = maxpumpmatrix[tsIndexPowerCredits < maxpumpmatrix.width ? tsIndexPowerCredits
-                                                                         : 0];
-            auto const& ContrainteDePmaxPompageHoraire = srcmaxpump[PasDeTempsDebut + hourInWeek];
+            auto& maxHourlyPumpPowerMatrix = area.hydro.series->maxHourlyPumpPower;
+            auto const& maxHourlyPumpPowerTS
+              = maxHourlyPumpPowerMatrix[tsIndexMaxPower];
+            auto const& ContrainteDePmaxPompageHoraire = maxHourlyPumpPowerTS[PasDeTempsDebut + hourInWeek];
 
             assert(&scratchpad);
             assert((uint)hourInYear < scratchpad.ts.load.height);
@@ -624,10 +624,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
-                problem.CaracteristiquesHydrauliques[k]
-                  .ContrainteDePmaxHydrauliqueHoraire[hourInWeek]
+                problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire[hourInWeek]
                   = ContrainteDePmaxHydrauliqueHoraire
-
                     * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation;
             }
 
@@ -652,11 +650,10 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 uint tsIndex = (NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
                 auto& inflowsmatrix = area.hydro.series->storage;
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
-                uint tsIndexPowerCredits = (NumeroChroniquesTireesParPays[numSpace][k]).HydrauliquePowerCredits;
-                auto& maxgenmatrix = area.hydro.series->maxgen;
-                auto const& srcmaxgen = maxgenmatrix[tsIndexPowerCredits < maxgenmatrix.width ? tsIndexPowerCredits : 0];
-                auto& maxpumpmatrix = area.hydro.series->maxpump;
-                auto const& srcmaxpump = maxpumpmatrix[tsIndexPowerCredits < maxpumpmatrix.width ? tsIndexPowerCredits : 0];
+                uint tsIndexMaxPower = (NumeroChroniquesTireesParPays[numSpace][k]).HydroMaxPower;
+                auto& scratchpad = area.scratchpad[numSpace];
+                auto& dailyMeanMaxGenPower = scratchpad.meanMaxDailyGenPower[tsIndexMaxPower];
+                auto& dailyMeanMaxPumpPower = scratchpad.meanMaxDailyPumpPower[tsIndexMaxPower];
                 auto& mingenmatrix = area.hydro.series->mingen;
                 auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
                 for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)
@@ -674,14 +671,13 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                         for (uint j = 0; j < 7; ++j)
                         {
                             uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
-                            auto meanPower = CalculateDailyMeanPower(day, srcmaxgen);
 
                             problem.CaracteristiquesHydrauliques[k]
                               .MinEnergieHydrauParIntervalleOptimise[j]
                               = 0.;
                             problem.CaracteristiquesHydrauliques[k]
                               .MaxEnergieHydrauParIntervalleOptimise[j]
-                              = meanPower * area.hydro.maxHoursGen[0][day]
+                              = dailyMeanMaxGenPower[day] * area.hydro.maxDailyGenEnergy[0][day]
                                 * problem.CaracteristiquesHydrauliques[k]
                                     .WeeklyGeneratingModulation;
                         }
@@ -730,9 +726,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                         for (uint j = 0; j < 7; ++j)
                         {
                             uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
-                            auto meanPower = CalculateDailyMeanPower(day, srcmaxgen);
 
-                            double DGC = meanPower * area.hydro.maxHoursGen[0][day];
+                            double DGC
+                              = dailyMeanMaxGenPower[day] * area.hydro.maxDailyGenEnergy[0][day];
 
                             DGU_tmp[j] = DNT[day] * LUB;
                             DGL_tmp[j] = DNT[day] * LLB;
@@ -837,11 +833,11 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                             for (uint j = 0; j < 7; ++j)
                             {
                                 uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
-                                auto meanPump = CalculateDailyMeanPower(day, srcmaxpump);
 
                                 problem.CaracteristiquesHydrauliques[k]
                                   .MaxEnergiePompageParIntervalleOptimise[j]
-                                  = meanPump * area.hydro.maxHoursPump[0][day]
+                                  = dailyMeanMaxPumpPower[day]
+                                    * area.hydro.maxDailyPumpEnergy[0][day]
                                     * problem.CaracteristiquesHydrauliques[k]
                                         .WeeklyPumpingModulation;
                             }
@@ -872,10 +868,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                             for (uint j = 0; j < 7; ++j)
                             {
                                 uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
-                                auto meanPump = CalculateDailyMeanPower(day, srcmaxpump);
 
-                                double DPC
-                                  = meanPump * area.hydro.maxHoursPump[0][day];
+                                double DPC = dailyMeanMaxPumpPower[day]
+                                             * area.hydro.maxDailyPumpEnergy[0][day];
 
                                 WPU += DPC;
                             }
@@ -885,9 +880,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                             for (uint j = 0; j < 7; ++j)
                             {
                                 uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
-                                auto meanPump = CalculateDailyMeanPower(day, srcmaxpump);
-                                double DPC
-                                  = meanPump * area.hydro.maxHoursPump[0][day];
+
+                                double DPC = dailyMeanMaxPumpPower[day]
+                                             * area.hydro.maxDailyPumpEnergy[0][day];
                                 double rc = area.hydro.reservoirCapacity;
 
                                 if (not area.hydro.hardBoundsOnRuleCurves)

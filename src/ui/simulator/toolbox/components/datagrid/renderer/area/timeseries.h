@@ -332,16 +332,16 @@ private:
     }
 };
 
-class TimeSeriesHydroMaxGen final : public ATimeSeries
+class TimeSeriesHydroMaxHourlyGenPower final : public ATimeSeries
 {
 public:
     using AncestorType = Renderer::Matrix<double, int32_t>;
 
-    TimeSeriesHydroMaxGen(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
+    TimeSeriesHydroMaxHourlyGenPower(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
      ATimeSeries(control, notifier)
     {
     }
-    ~TimeSeriesHydroMaxGen() override
+    ~TimeSeriesHydroMaxHourlyGenPower() override
     {
         destroyBoundEvents();
     }
@@ -359,21 +359,21 @@ public:
 private:
     void internalAreaChanged(Antares::Data::Area* area) override
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->maxgen) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->maxHourlyGenPower) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
 
-class TimeSeriesHydroMaxPump final : public ATimeSeries
+class TimeSeriesHydroMaxHourlyPumpPower final : public ATimeSeries
 {
 public:
     using AncestorType = Renderer::Matrix<double, int32_t>;
 
-    TimeSeriesHydroMaxPump(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
+    TimeSeriesHydroMaxHourlyPumpPower(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
      ATimeSeries(control, notifier)
     {
     }
-    ~TimeSeriesHydroMaxPump() override
+    ~TimeSeriesHydroMaxHourlyPumpPower() override
     {
         destroyBoundEvents();
     }
@@ -391,7 +391,7 @@ public:
 private:
     void internalAreaChanged(Antares::Data::Area* area) override
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->maxpump) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->maxHourlyPumpPower) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };

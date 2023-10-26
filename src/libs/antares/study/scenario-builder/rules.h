@@ -40,7 +40,7 @@
 #include "HydroTSNumberData.h"
 #include "WindTSNumberData.h"
 #include "LoadTSNumberData.h"
-#include "HydroPowerCreditsTSNumberData.h"
+#include "HydroMaxPowerTSNumberData.h"
 #include <map>
 #include <memory>
 
@@ -116,8 +116,8 @@ public:
     solarTSNumberData solar;
     //! Hydro
     hydroTSNumberData hydro;
-    //! Hydro Power Credits
-    hydroPowerCreditsTSNumberData hydroPowerCredits;
+    //! Hydro Max Power
+    hydroMaxPowerTSNumberData hydroMaxPower;
     //! Wind
     windTSNumberData wind;
 
@@ -141,7 +141,7 @@ private:
     bool readLoad(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readWind(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readHydro(const AreaName::Vector& instrs, String value, bool updaterMode);
-    bool readHydroPowerCredits(const AreaName::Vector& splitKey, String value, bool updaterMode);
+    bool readHydroMaxPower(const AreaName::Vector& splitKey, String value, bool updaterMode);
     bool readSolar(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readLink(const AreaName::Vector& instrs, String value, bool updaterMode);

@@ -161,9 +161,9 @@ public:
 
     /*!
     ** \brief Try to detect then fix TS generation/refresh parameters
-    *         for Hydro Power Credits
+    *         for Hydro Max Power
     */
-    void fixGenRefreshForHydroPowerCredits();
+    void fixGenRefreshForHydroMaxPower();
 
     /*!
     ** \brief Get the amount of memory used by the general data

@@ -306,34 +306,38 @@ bool HydroManagement::checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) c
     return true;
 }
 
-bool HydroManagement::checkHourlyMinMaxGeneration(uint tsIndex,
-                                                  uint tsIndexPowerCredits,
-                                                  Data::Area& area) const
+bool HydroManagement::checkGenerationPowerConsistency(uint numSpace) const
 {
-    // Hourly minimum generation <= hourly inflows for each hour
-    auto& mingenmatrix = area.hydro.series->mingen;
-    auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
-    auto& maxgenmatrix = area.hydro.series->maxgen;
-    auto const& srcmaxgen
-      = maxgenmatrix[tsIndexPowerCredits < maxgenmatrix.width ? tsIndexPowerCredits : 0];
+    bool ret = true;
 
-    for (uint h = 0; h < HOURS_PER_YEAR; ++h)
-    {
-        const auto& max = srcmaxgen[h];
-        const auto& min = srcmingen[h];
+    areas_.each(
+      [&numSpace, &ret](const Data::Area& area)
+      {
+          uint z = area.index;
+          auto tsIndex = (uint)NumeroChroniquesTireesParPays[numSpace][z].Hydraulique;
+          auto tsIndexMaxPower = NumeroChroniquesTireesParPays[numSpace][z].HydroMaxPower;
 
-        if (max < min)
-        {
-            logs.error() << "In area: " << area.name << " [hourly] minimum generation of " << min
-                         << " MW in timestep " << h + 1 << " of TS-" << tsIndex + 1
-                         << " is incompatible with the maximum generation of " << max
-                         << " MW in timestep " << h + 1 << " of TS-" << tsIndexPowerCredits + 1
-                         << " MW.";
-            return false;
-        }
-    }
+          auto const& srcmingen = area.hydro.series->mingen;
+          auto const& srcmaxgen = area.hydro.series->maxHourlyGenPower;
 
-    return true;
+          for (uint h = 0; h < HOURS_PER_YEAR; ++h)
+          {
+              const auto& min = srcmingen[tsIndex < srcmingen.width ? tsIndex : 0][h];
+              const auto& max = srcmaxgen[tsIndexMaxPower < srcmaxgen.width ? tsIndexMaxPower : 0][h];
+
+              if (max < min)
+              {
+                  logs.error() << "In area: " << area.name << " [hourly] minimum generation of "
+                               << min << " MW in timestep " << h + 1 << " of TS-" << tsIndex + 1
+                               << " is incompatible with the maximum generation of " << max
+                               << " MW in timestep " << h + 1 << " of TS-" << tsIndexMaxPower + 1 << " MW.";
+                  ret = false;
+                  return;
+              }
+          }
+      });
+
+    return ret;
 }
 
 bool HydroManagement::checkMinGeneration(uint numSpace)
@@ -344,14 +348,10 @@ bool HydroManagement::checkMinGeneration(uint numSpace)
         uint z = area.index;
         const auto& ptchro = NumeroChroniquesTireesParPays[numSpace][z];
         auto tsIndex = (uint)ptchro.Hydraulique;
-        auto tsIndexPowerCredits = ptchro.HydrauliquePowerCredits;
 
         bool useHeuristicTarget = area.hydro.useHeuristicTarget;
         bool followLoadModulations = area.hydro.followLoadModulations;
         bool reservoirManagement = area.hydro.reservoirManagement;
-
-        if (!reservoirManagement)
-            ret = checkHourlyMinMaxGeneration(tsIndex, tsIndexPowerCredits, area) && ret;
 
         if (!useHeuristicTarget)
             return;
@@ -513,6 +513,12 @@ double HydroManagement::randomReservoirLevel(double min, double avg, double max)
     return x * max + (1. - x) * min;
 }
 
+bool HydroManagement::checksOnGenerationPowerBounds(uint numSpace)
+{
+    return (checkMinGeneration(numSpace) && checkGenerationPowerConsistency(numSpace)) ? true
+                                                                                       : false;
+}
+
 void HydroManagement::makeVentilation(double* randomReservoirLevel,
                                       Solver::Variable::State& state,
                                       uint y,
@@ -522,7 +528,7 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
 
     prepareInflowsScaling(numSpace);
     minGenerationScaling(numSpace);
-    if (!checkMinGeneration(numSpace))
+    if (!checksOnGenerationPowerBounds(numSpace))
     {
         throw FatalError("hydro management: invalid minimum generation");
     }

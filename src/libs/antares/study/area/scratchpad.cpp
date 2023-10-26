@@ -32,9 +32,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 AreaScratchpad::TimeseriesData::TimeseriesData(Area& area) :
         load(area.load.series->timeSeries), solar(area.solar.series->timeSeries), wind(area.wind.series->timeSeries)
@@ -56,7 +54,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
         originalMustrunSum[h] = std::numeric_limits<double>::quiet_NaN();
     }
 
-     // Fatal hors hydro
+    // Fatal hors hydro
     {
         double sum;
         uint w;
@@ -77,6 +75,18 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
         }
     }
 
+    //  Hourly maximum generation/pumping power matrices and their number of TS's (width of matrices)
+    auto const& maxHourlyGenPower = area.hydro.series->maxHourlyGenPower;
+    auto const& maxHourlyPumpPower = area.hydro.series->maxHourlyPumpPower;
+    uint nbOfMaxPowerTimeSeries = area.hydro.series->maxPowerTScount();
+
+    //  Setting width and height of daily mean maximum generation/pumping power matrices
+    meanMaxDailyGenPower.reset(nbOfMaxPowerTimeSeries, DAYS_PER_YEAR);
+    meanMaxDailyPumpPower.reset(nbOfMaxPowerTimeSeries, DAYS_PER_YEAR);
+
+    // Instantiate daily mean maximum generation/pumping power matrices
+    CalculateMeanDailyMaxPowerMatrices(maxHourlyGenPower, maxHourlyPumpPower, nbOfMaxPowerTimeSeries);
+
     // ===============
     // hydroHasMod
     // ===============
@@ -85,13 +95,12 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
     // Hydro generation permission
     // ------------------------------
     // Useful whether we use a heuristic target or not
-     bool hydroGenerationPermission = false;
+    bool hydroGenerationPermission = false;
 
-    // ... Getting hydro max power
-    auto const& maxPower = area.hydro.series->maxgen;
-    auto const& maxGenHours = area.hydro.maxHoursGen[0];
+    // ... Getting hydro max energy
+    auto const& maxDailyGenEnergy = area.hydro.maxDailyGenEnergy[0];
 
-    hydroGenerationPermission = CheckForPositiveEnergy(maxPower, maxGenHours);
+    hydroGenerationPermission = CheckForPositiveEnergy(maxHourlyGenPower, maxDailyGenEnergy);
 
     // ---------------------
     // Hydro has inflows
@@ -120,47 +129,64 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
     // --------------------------
     hydroHasMod = hydroHasInflows || hydroGenerationPermission;
 
-
     // ===============
     // Pumping
     // ===============
-    // ... Hydro max power
 
-    // ... Hydro max pumping power and energy
-     auto const& maxPumpingP = area.hydro.series->maxpump;
-     auto const& maxPumpHours = area.hydro.maxHoursPump[0];
+    //  Hydro max pumping energy
+    auto const& maxDailyPumpEnergy = area.hydro.maxDailyPumpEnergy[0];
 
-    // If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
-    pumpHasMod = CheckForPositiveEnergy(maxPumpingP, maxPumpHours);
+    //  If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
+    pumpHasMod = CheckForPositiveEnergy(maxHourlyPumpPower, maxDailyPumpEnergy);
 }
 
 AreaScratchpad::~AreaScratchpad() = default;
 
-bool AreaScratchpad::CheckForPositiveEnergy(const Matrix<double, int32_t>& matrix,
-                                            const Matrix<double>::ColumnType& hours)
+void AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& hourlyMaxGenMatrix,
+                                                        const Matrix<double>& hourlyMaxPumpMatrix,
+                                                        uint nbOfMaxPowerTimeSeries)
 {
-    double value = 0.;
-
-    for (uint width = 0; width < matrix.width; ++width)
+    for (uint nbOfTimeSeries = 0; nbOfTimeSeries < nbOfMaxPowerTimeSeries; ++nbOfTimeSeries)
     {
-        for (uint d = 0; d < DAYS_PER_YEAR; ++d)
-        {
-            value += CalculateDailyMeanPower(d, matrix[width]) * hours[d];
+        auto& hourlyMaxGenColumn = hourlyMaxGenMatrix[nbOfTimeSeries];
+        auto& hourlyMaxPumpColumn = hourlyMaxPumpMatrix[nbOfTimeSeries];
+        auto& MeanMaxDailyGenPowerColumn = meanMaxDailyGenPower[nbOfTimeSeries];
+        auto& MeanMaxDailyPumpPowerColumn = meanMaxDailyPumpPower[nbOfTimeSeries];
 
-            if (value > 0.)
+        CalculateDailyMeanPower(hourlyMaxGenColumn, MeanMaxDailyGenPowerColumn);
+        CalculateDailyMeanPower(hourlyMaxPumpColumn, MeanMaxDailyPumpPowerColumn);
+    }
+}
+
+bool CheckForPositiveEnergy(const Matrix<double, int32_t>& power,
+                            const Matrix<double>::ColumnType& energy)
+{
+    for (uint tsNumber = 0; tsNumber < power.width; ++tsNumber)
+    {
+        double yearlyMaxGenEnergy = 0;
+
+        for (uint day = 0; day < DAYS_PER_YEAR; ++day)
+        {
+            yearlyMaxGenEnergy += power[tsNumber][day] * energy[day];
+
+            if (yearlyMaxGenEnergy > 0.)
                 return true;
         }
-
-        value = 0.;
     }
 
     return false;
 }
 
-double CalculateDailyMeanPower(uint dYear, const Matrix<double>::ColumnType& maxPower)
+void CalculateDailyMeanPower(const Matrix<double>::ColumnType& hourlyColumn,
+                             Matrix<double>::ColumnType& dailyColumn)
 {
-    return std::accumulate(maxPower + dYear * 24, maxPower + dYear * 24 + 24, 0) / 24.;
+    for (uint day = 0; day < DAYS_PER_YEAR; ++day)
+    {
+        dailyColumn[day] = std::accumulate(hourlyColumn + day * HOURS_PER_DAY,
+                                           hourlyColumn + day * HOURS_PER_DAY + HOURS_PER_DAY,
+                                           0)
+                           / 24.;
+    }
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

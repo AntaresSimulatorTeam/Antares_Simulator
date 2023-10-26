@@ -83,15 +83,15 @@ struct Fixture
 
 		// Hydro : set the nb of ready made TS
 		nbReadyMadeTS = 12;
-		area_1->hydro.series->count = nbReadyMadeTS;
-		area_2->hydro.series->count = nbReadyMadeTS;
-		area_3->hydro.series->count = nbReadyMadeTS;
+		area_1->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
+		area_2->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
+		area_3->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
 		
-		// Hydro Power Credits: set the nb of ready made TS
+		// Hydro Max Power: set the nb of ready made TS
 		nbReadyMadeTS = 15;
-		area_1->hydro.series->countpowercredits = nbReadyMadeTS;
-		area_2->hydro.series->countpowercredits = nbReadyMadeTS;
-		area_3->hydro.series->countpowercredits = nbReadyMadeTS;
+		area_1->hydro.series->resizeMaxPowerTS(nbReadyMadeTS, 1);
+		area_2->hydro.series->resizeMaxPowerTS(nbReadyMadeTS, 1);
+		area_3->hydro.series->resizeMaxPowerTS(nbReadyMadeTS, 1);
 
 		// Links
 		link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
@@ -239,7 +239,7 @@ BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_15__solar_TS_number_3_is_chosen__re
 }
 
 // =================
-// Tests on Hydro Power Credits
+// Tests on Hydro Max Power
 // =================
 BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_10__hydro_power_credits_TS_number_6_is_chosen__reading_OK, Fixture)
 {
@@ -248,10 +248,10 @@ BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_10__hydro_power_credits_TS_number_6
 	AreaName::Vector splitKey = { "hgp", "area 3", yearNumber };
 	BOOST_CHECK(my_rule.readLine(splitKey, tsNumber, false));
 
-	BOOST_CHECK_EQUAL(my_rule.hydroPowerCredits.get_value(yearNumber.to<uint>(), area_3->index), tsNumber.to<uint>());
+	BOOST_CHECK_EQUAL(my_rule.hydroMaxPower.get_value(yearNumber.to<uint>(), area_3->index), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(area_3->hydro.series->timeseriesNumbersPowerCredits[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(area_3->hydro.series->timeseriesNumbersHydroMaxPower[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 

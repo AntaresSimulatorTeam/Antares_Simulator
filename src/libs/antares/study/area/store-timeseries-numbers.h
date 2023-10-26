@@ -46,7 +46,7 @@ namespace Antares::Data
     void storeTimeseriesNumbersForThermal(Solver::IResultWriter::Ptr writer, const Area& area);
     void storeTimeseriesNumbersForRenewable(Solver::IResultWriter::Ptr writer, const Area& area);
     void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter::Ptr writer, const Area& area);
-    void storeTimeseriesNumbersForHydroPowerCredits(Solver::IResultWriter::Ptr writer, const Area& area);
+    void storeTimeseriesNumbersForHydroMaxPower(Solver::IResultWriter::Ptr writer, const Area& area);
 
 } //Antares::Data
 

@@ -88,7 +88,7 @@ struct TmpDataByArea
 typedef struct
 {
     std::vector<double> HydrauliqueModulableQuotidien; /* indice par jour */
-    std::vector<double> NiveauxReservoirsDebutJours;   //Niveaux (quotidiens) du reservoir de début
+    std::vector<double> NiveauxReservoirsDebutJours;   //Niveaux (quotidiens) du reservoir de dÃ©but
     //de jour (en cas de gestion des reservoirs).
     std::vector<double> NiveauxReservoirsFinJours; //Niveaux (quotidiens) du reservoir de fin
     //de jour (en cas de gestion des reservoirs).
@@ -131,9 +131,11 @@ private:
     //! check Weekly minimum generation is lower than available inflows
     bool checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) const;
     //! check Hourly minimum generation is lower than available inflows
-    bool checkHourlyMinMaxGeneration(uint tsIndex, uint tsIndexPowerCredits, Data::Area& area) const;
+    bool checkGenerationPowerConsistency(uint numSpace) const;
     //! check minimum generation is lower than available inflows
     bool checkMinGeneration(uint numSpace);
+    //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false
+    bool checksOnGenerationPowerBounds(uint numSpace);
     //! Prepare the net demand for each area
     template<enum Data::StudyMode ModeT>
     void prepareNetDemand(uint numSpace);

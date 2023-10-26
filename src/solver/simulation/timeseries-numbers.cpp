@@ -50,7 +50,7 @@ const map<TimeSeries, int> ts_to_tsIndex = {{timeSeriesLoad, 0},
                                             {timeSeriesSolar, 4},
                                             {timeSeriesRenewable, 5},
                                             {timeSeriesTransmissionCapacities, 6},
-                                            {timeSeriesHydroPowerCredits, 7}};
+                                            {timeSeriesHydroMaxPower, 7}};
 
 const map<TimeSeries, string> ts_to_tsTitle
   = {{timeSeriesLoad, "load"},
@@ -60,7 +60,7 @@ const map<TimeSeries, string> ts_to_tsTitle
      {timeSeriesSolar, "solar"},
      {timeSeriesRenewable, "renewable clusters"},
      {timeSeriesTransmissionCapacities, "transmission capacities"},
-     {timeSeriesHydroPowerCredits, "power-credits"}};
+     {timeSeriesHydroMaxPower, "max-power"}};
 
 void addInterModalTimeSeriesToMessage(const array<bool, timeSeriesCount>& isTSintermodal,
                                       std::string& interModalTsMsg)
@@ -95,7 +95,7 @@ static bool GenerateDeratedMode(Study& study)
         area.solar.series->timeseriesNumbers.zero();
         area.wind.series->timeseriesNumbers.zero();
         area.hydro.series->timeseriesNumbers.zero();
-        area.hydro.series->timeseriesNumbersPowerCredits.zero();
+        area.hydro.series->timeseriesNumbersHydroMaxPower.zero();
 
         for (uint i = 0; i != area.thermal.clusterCount(); ++i)
         {
@@ -151,7 +151,7 @@ public:
     }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
     {
-        std::vector<uint> to_return = {area.hydro.series->count};
+        std::vector<uint> to_return = {area.hydro.series->TScount()};
         return to_return;
     }
     uint getGeneratedTimeSeriesNumber()
@@ -160,15 +160,15 @@ public:
     }
 };
 
-class hydroPowerCreditsAreaNumberOfTSretriever : public areaNumberOfTSretriever
+class hydroMaxPowerAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    explicit hydroPowerCreditsAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
+    explicit hydroMaxPowerAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
     {
     }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
-        std::vector<uint> to_return = {area.hydro.series->countpowercredits};
+        std::vector<uint> to_return = {area.hydro.series->maxPowerTScount()};
         return to_return;
     }
     uint getGeneratedTimeSeriesNumber() override
@@ -176,7 +176,7 @@ public:
         return 1;
     }
 
-    virtual ~hydroPowerCreditsAreaNumberOfTSretriever() = default;
+    virtual ~hydroMaxPowerAreaNumberOfTSretriever() = default;
 };
 
 class windAreaNumberOfTSretriever : public areaNumberOfTSretriever
@@ -378,8 +378,8 @@ bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode
       = make_shared<renewClustersAreaNumberOfTSretriever>(study);
     ts_to_numberOfTSretrievers[timeSeriesTransmissionCapacities]
       = make_shared<areaLinksTransCapaNumberOfTSretriever>(study);
-    ts_to_numberOfTSretrievers[timeSeriesHydroPowerCredits]
-      = make_shared<hydroPowerCreditsAreaNumberOfTSretriever>(study);
+    ts_to_numberOfTSretrievers[timeSeriesHydroMaxPower]
+      = make_shared<hydroMaxPowerAreaNumberOfTSretriever>(study);
 
     // Loop over TS kind and check intra-modal consistency
     mapTStoRetriever::iterator it = ts_to_numberOfTSretrievers.begin();
@@ -444,15 +444,15 @@ bool checkInterModalConsistencyForArea(Area& area,
     if (isTSintermodal[indexTS])
     {
         uint nbTimeSeries
-          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesHydro : area.hydro.series->count;
+          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesHydro : area.hydro.series->TScount();
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
-    // Hydro Power Credits : Add hydro's power credits number of TS in area ...
-    indexTS = ts_to_tsIndex.at(timeSeriesHydroPowerCredits);
+    // Hydro Max Power : Add hydro's max power number of TS in area ...
+    indexTS = ts_to_tsIndex.at(timeSeriesHydroMaxPower);
     if (isTSintermodal[indexTS])
     {
-        uint nbTimeSeries = area.hydro.series->countpowercredits;
+        uint nbTimeSeries = area.hydro.series->maxPowerTScount();
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -566,13 +566,13 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
             area.hydro.series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
 
         // -------------
-        // Hydro Power Credits ...
+        // Hydro Max Power ...
         // -------------
-        assert(year < area.hydro.series->timeseriesNumbersPowerCredits.height);
-        indexTS = ts_to_tsIndex.at(timeSeriesHydroPowerCredits);
+        assert(year < area.hydro.series->timeseriesNumbersHydroMaxPower.height);
+        indexTS = ts_to_tsIndex.at(timeSeriesHydroMaxPower);
 
         if (isTSintramodal[indexTS])
-            area.hydro.series->timeseriesNumbersPowerCredits[0][year] = intramodal_draws[indexTS];
+            area.hydro.series->timeseriesNumbersHydroMaxPower[0][year] = intramodal_draws[indexTS];
 
         // -------------
         // Thermal ...
@@ -682,16 +682,16 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         }
 
         // -------------
-        // Hydro Power Credits...
+        // Hydro Max Power...
         // -------------
-        indexTS = ts_to_tsIndex.at(timeSeriesHydroPowerCredits);
+        indexTS = ts_to_tsIndex.at(timeSeriesHydroMaxPower);
 
         if (!isTSintramodal[indexTS])
         {
-            uint nbTimeSeries = area.hydro.series->maxgen.width;
+            uint nbTimeSeries = area.hydro.series->maxPowerTScount();
             if (nbTimeSeries != 1)
             {
-                area.hydro.series->timeseriesNumbersPowerCredits[0][year] = static_cast<uint32_t>(
+                area.hydro.series->timeseriesNumbersHydroMaxPower[0][year] = static_cast<uint32_t>(
                   (floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries)));
             }
         }
@@ -805,8 +805,8 @@ Matrix<uint32_t>* getFirstTSnumberInterModalMatrixFoundInArea(
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesRenewable)]
                  && area.renewable.clusterCount() > 0)
             tsNumbersMtx = &(area.renewable.clusters[0]->series->timeseriesNumbers);
-        else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesHydroPowerCredits)])
-            tsNumbersMtx = &(area.hydro.series->timeseriesNumbersPowerCredits);
+        else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesHydroMaxPower)])
+            tsNumbersMtx = &(area.hydro.series->timeseriesNumbersHydroMaxPower);
     }
     assert(tsNumbersMtx);
 
@@ -839,9 +839,9 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32_t>* tsNumbersMtx,
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesHydro)])
             area.hydro.series->timeseriesNumbers[0][year] = draw;
 
-        assert(year < area.hydro.series->timeseriesNumbersPowerCredits.height);
-        if (isTSintermodal[ts_to_tsIndex.at(timeSeriesHydroPowerCredits)])
-            area.hydro.series->timeseriesNumbersPowerCredits[0][year] = draw;
+        assert(year < area.hydro.series->timeseriesNumbersHydroMaxPower.height);
+        if (isTSintermodal[ts_to_tsIndex.at(timeSeriesHydroMaxPower)])
+            area.hydro.series->timeseriesNumbersHydroMaxPower[0][year] = draw;
 
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesThermal)])
         {
@@ -894,10 +894,10 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
                 area.wind.series->timeseriesNumbers, area.wind.series->timeSeries.width, years);
         // Hydro
         fixTSNumbersSingleAreaSingleMode(
-          area.hydro.series->timeseriesNumbers, area.hydro.series->count, years);
-        // Hydro Power Credits
+          area.hydro.series->timeseriesNumbers, area.hydro.series->TScount(), years);
+        // Hydro Max Power
         fixTSNumbersSingleAreaSingleMode(
-          area.hydro.series->timeseriesNumbersPowerCredits, area.hydro.series->countpowercredits, years);
+          area.hydro.series->timeseriesNumbersHydroMaxPower, area.hydro.series->maxPowerTScount(), years);
 
         // Thermal
         std::for_each(area.thermal.clusters.cbegin(),
@@ -965,7 +965,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
          (bool)(timeSeriesRenewable & parameters.intraModal)
            && parameters.renewableGeneration.isClusters(),
          (bool)(timeSeriesTransmissionCapacities & parameters.intraModal),
-         static_cast<bool>(timeSeriesHydroPowerCredits & parameters.intraModal)};
+         static_cast<bool>(timeSeriesHydroMaxPower & parameters.intraModal)};
 
     array<uint, timeSeriesCount> nbTimeseriesByMode;
 
@@ -980,7 +980,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
          (bool)(timeSeriesSolar & parameters.timeSeriesToRefresh),
          false,  // TS generation is always disabled for renewables
          false,  // TS generation is always disabled for links transmission capacities
-         false}; // TS generation is always disabled for hydro power credits
+         false}; // TS generation is always disabled for hydro max power
 
     if (not checkIntraModalConsistency(nbTimeseriesByMode, isTSintramodal, isTSgenerated, study))
         return false;
@@ -1012,7 +1012,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
          (bool)(timeSeriesRenewable & parameters.interModal)
            && parameters.renewableGeneration.isClusters(),
          false, // links transmission capacities time series cannot be inter-modal
-         static_cast<bool>(timeSeriesHydroPowerCredits & parameters.interModal)};
+         static_cast<bool>(timeSeriesHydroMaxPower & parameters.interModal)};
 
     if (std::any_of(std::begin(isTSintermodal), std::end(isTSintermodal), [](bool x) { return x; }))
     {
@@ -1051,7 +1051,7 @@ void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study)
         study.storeTimeSeriesNumbers<TimeSeries::timeSeriesThermal>();
         study.storeTimeSeriesNumbers<TimeSeries::timeSeriesRenewable>();
         study.storeTimeSeriesNumbers<TimeSeries::timeSeriesTransmissionCapacities>();
-        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesHydroPowerCredits>();
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesHydroMaxPower>();
         Simulation::BindingConstraintsTimeSeriesNumbersWriter ts_writer(study.resultWriter);
         ts_writer.write(study.bindingConstraintsGroups);
 

@@ -74,8 +74,8 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
             v |= timeSeriesRenewable;
         else if (word == "ntc")
             v |= timeSeriesTransmissionCapacities;
-        else if (word == "power-credits")
-            v |= timeSeriesHydroPowerCredits;
+        else if (word == "max-power")
+            v |= timeSeriesHydroMaxPower;
         return true;
     });
     return true;
@@ -394,11 +394,11 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
             v += ", ";
         v += "ntc";
     }
-    if (value & timeSeriesHydroPowerCredits)
+    if (value & timeSeriesHydroMaxPower)
     {
         if (!v.empty())
             v += ", ";
-        v += "power-credits";
+        v += "max-power";
     }
     s->add(name, v);
 }
@@ -1081,7 +1081,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
 
     fixGenRefreshForNTC();
 
-    fixGenRefreshForHydroPowerCredits();
+    fixGenRefreshForHydroMaxPower();
 
     // Specific action before launching a simulation
     if (options.usedByTheSolver)
@@ -1141,18 +1141,18 @@ void Parameters::fixGenRefreshForNTC()
     }
 }
 
-void Parameters::fixGenRefreshForHydroPowerCredits()
+void Parameters::fixGenRefreshForHydroMaxPower()
 {
-    if ((timeSeriesHydroPowerCredits & timeSeriesToGenerate) != 0)
+    if ((timeSeriesHydroMaxPower & timeSeriesToGenerate) != 0)
     {
-        timeSeriesToGenerate &= ~timeSeriesHydroPowerCredits;
-        logs.error() << "Time-series generation is not available for hydro power credits. It "
+        timeSeriesToGenerate &= ~timeSeriesHydroMaxPower;
+        logs.error() << "Time-series generation is not available for hydro max power. It "
                         "will be automatically disabled.";
     }
-    if ((timeSeriesHydroPowerCredits & timeSeriesToRefresh) != 0)
+    if ((timeSeriesHydroMaxPower & timeSeriesToRefresh) != 0)
     {
-        timeSeriesToRefresh &= ~timeSeriesHydroPowerCredits;
-        logs.error() << "Time-series refresh is not available for hydro power credits. It will "
+        timeSeriesToRefresh &= ~timeSeriesHydroMaxPower;
+        logs.error() << "Time-series refresh is not available for hydro max power. It will "
                         "be automatically disabled.";
     }
 }
@@ -1401,7 +1401,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
     if (interModal == timeSeriesLoad || interModal == timeSeriesSolar
         || interModal == timeSeriesWind || interModal == timeSeriesHydro
-        || interModal == timeSeriesThermal || interModal == timeSeriesRenewable || interModal == timeSeriesHydroPowerCredits)
+        || interModal == timeSeriesThermal || interModal == timeSeriesRenewable || interModal == timeSeriesHydroMaxPower)
     {
         // Only one timeseries in interModal correlation, which is the same than nothing
         interModal = 0;

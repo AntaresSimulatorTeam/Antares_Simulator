@@ -23,8 +23,8 @@ set(SRC_STUDY_SCENARIO_BUILDER
         scenario-builder/ThermalTSNumberData.h
         scenario-builder/HydroTSNumberData.h
         scenario-builder/HydroTSNumberData.cpp
-        scenario-builder/HydroPowerCreditsTSNumberData.h
-        scenario-builder/HydroPowerCreditsTSNumberData.cpp
+        scenario-builder/HydroMaxPowerTSNumberData.h
+        scenario-builder/HydroMaxPowerTSNumberData.cpp
         scenario-builder/SolarTSNumberData.cpp
         scenario-builder/solarTSNumberData.h
         scenario-builder/WindTSNumberData.h
@@ -137,8 +137,10 @@ set(SRC_STUDY_PART_HYDRO
         parts/hydro/allocation.h
         parts/hydro/allocation.hxx
         parts/hydro/allocation.cpp
-        parts/hydro/datatransfer.h
-        parts/hydro/datatransfer.cpp
+        parts/hydro/hydromaxtimeseriesreader.h
+        parts/hydro/hydromaxtimeseriesreader.cpp
+        parts/hydro/pair-of-integers.h
+        parts/hydro/pair-of-integers.cpp
 )
 source_group("study\\part\\hydro" FILES ${SRC_STUDY_PART_HYDRO})
 

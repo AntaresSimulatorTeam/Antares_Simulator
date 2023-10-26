@@ -901,34 +901,47 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "prepro";
             ret = area.hydro.prepro->loadFromFolder(study, area.id, buffer.c_str()) && ret;
         }
-        if (area.hydro.series && (!options.loadOnlyNeeded || !area.hydro.prepro)) // Series
-        {
-            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->loadFromFolder(study, area.id, buffer) && ret;
-        }
 
-        if (area.hydro.series && study.header.version < 870)
+        if (auto* hydroSeries = area.hydro.series; hydroSeries)
         {
-            std::shared_ptr<DataTransfer> datatransfer = std::make_shared<DataTransfer>();
-            buffer.clear() << study.folderInput << SEP << "hydro";
+            if (!options.loadOnlyNeeded || !area.hydro.prepro) // Series
+            {
+                buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
+                ret = hydroSeries->loadGenerationTS(area.id, buffer, study.header.version) && ret;
 
-            datatransfer->LoadFromFolder(study, buffer, area);
-            datatransfer->SupportForOldStudies(study, buffer, area);
-        }
+                hydroSeries->EqualizeGenerationTSsizes(
+                  area, study.usedByTheSolver, study.gotFatalError);
+            }
 
-        if (area.hydro.series)
-        {
-            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->LoadHydroPowerCredits(study, area.id, buffer) && ret;
+            if (study.header.version < 870)
+            {
+                buffer.clear() << study.folderInput << SEP << "hydro";
+
+                HydroMaxTimeSeriesReader reader;
+                ret = reader(buffer, area, study.usedByTheSolver) && ret;
+            }
+
+            if (study.header.version >= 870)
+            {
+                buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
+                ret = hydroSeries->LoadMaxPower(area.id, buffer) && ret;
+
+                if (study.usedByTheSolver)
+                {
+                    hydroSeries->EqualizeMaxPowerTSsizes(area, study.gotFatalError);
+                }
+                else
+                    hydroSeries->setHydroModulability(area);
+            }
+
+            hydroSeries->resizeTSinDeratedMode(
+              study.parameters.derated, study.header.version, study.usedByTheSolver);
         }
 
         buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "common" << SEP
-                       << "capacity" << SEP << "maxpower_" << area.id << '.'
-                       << study.inputExtension;
+                       << "capacity" << SEP << "maxpower_" << area.id << ".txt";
 
-        bool exists = IO::File::Exists(buffer);
-
-        if (study.header.version >= 870 && exists)
+        if (bool exists = IO::File::Exists(buffer); study.header.version >= 870 && exists)
         {
             IO::File::Delete(buffer);
         }
@@ -1636,13 +1649,7 @@ void AreaList::removeLoadTimeseries()
 void AreaList::removeHydroTimeseries()
 {
     each([&](Data::Area& area) {
-        area.hydro.series->ror.reset(1, HOURS_PER_YEAR);
-        area.hydro.series->storage.reset(1, DAYS_PER_YEAR);
-        area.hydro.series->mingen.reset(1, HOURS_PER_YEAR);
-        area.hydro.series->maxgen.reset(1, HOURS_PER_YEAR);
-        area.hydro.series->maxpump.reset(1, HOURS_PER_YEAR);
-        area.hydro.series->count = 1;
-        area.hydro.series->countpowercredits = 1;
+        area.hydro.series->reset();
     });
 }
 

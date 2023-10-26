@@ -87,11 +87,9 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
     e.add(buffer);
     buffer.clear() << "input/hydro/common/capacity/inflowPattern_" << id << ".txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/common/capacity/maxpower_" << id << ".txt";
+    buffer.clear() << "input/hydro/common/capacity/maxDailyGenEnergy_" << id << ".txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/common/capacity/maxhoursGen_" << id << ".txt";
-    e.add(buffer);
-    buffer.clear() << "input/hydro/common/capacity/maxhoursPump_" << id << ".txt";
+    buffer.clear() << "input/hydro/common/capacity/maxDailyPumpEnergy_" << id << ".txt";
     e.add(buffer);
     buffer.clear() << "input/hydro/common/capacity/reservoir_" << id << ".txt";
     e.add(buffer);
@@ -103,9 +101,9 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
     e.add(buffer);
     buffer.clear() << "input/hydro/series/" << id << "/mingen.txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/series/" << id << "/maxgen.txt";
+    buffer.clear() << "input/hydro/series/" << id << "/maxHourlyGenPower.txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/series/" << id << "/maxpump.txt";
+    buffer.clear() << "input/hydro/series/" << id << "/maxHourlyPumpPower.txt";
     e.add(buffer);
     buffer.clear() << "input/hydro/allocation/" << id << ".ini";
     p.add(buffer);

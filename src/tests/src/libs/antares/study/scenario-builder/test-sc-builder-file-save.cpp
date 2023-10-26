@@ -96,8 +96,7 @@ struct commonFixture
         study = std::make_shared<Study>();
         // Set study parameters
         study->parameters.nbYears = 20;
-        study->parameters.timeSeriesToGenerate
-          = 0; // No generated time-series, only ready made time-series
+        study->parameters.timeSeriesToGenerate = 0; // No generated time-series, only ready made time-series
 
         // Add areas
         area_1 = study->areaAdd("Area 1");
@@ -125,15 +124,15 @@ struct commonFixture
 
         // Hydro : set the nb of ready made TS
         nbReadyMadeTS = 12;
-        area_1->hydro.series->count = nbReadyMadeTS;
-        area_2->hydro.series->count = nbReadyMadeTS;
-        area_3->hydro.series->count = nbReadyMadeTS;
+        area_1->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
+        area_2->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
+        area_3->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
 
-        // Hydro Power Credits : set the nb of ready made TS
+        // Hydro Max Power : set the nb of ready made TS
         nbReadyMadeTS = 15;
-        area_1->hydro.series->countpowercredits = nbReadyMadeTS;
-        area_2->hydro.series->countpowercredits = nbReadyMadeTS;
-        area_3->hydro.series->countpowercredits = nbReadyMadeTS;
+        area_1->hydro.series->resizeMaxPowerTS(nbReadyMadeTS, 1);
+        area_2->hydro.series->resizeMaxPowerTS(nbReadyMadeTS, 1);
+        area_3->hydro.series->resizeMaxPowerTS(nbReadyMadeTS, 1);
 
         // Links
         link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
@@ -357,14 +356,14 @@ BOOST_FIXTURE_TEST_CASE(
 }
 
 // =================
-// Tests on Hydro Power Credits
+// Tests on Hydro Max Power
 // =================
 BOOST_FIXTURE_TEST_CASE(
   HYDRO_POWER_CREDITS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
 {
-    my_rule->hydroPowerCredits.setTSnumber(area_2->index, 10, 7);
-    my_rule->hydroPowerCredits.setTSnumber(area_3->index, 4, 11);
-    my_rule->hydroPowerCredits.setTSnumber(area_1->index, 11, 3);
+    my_rule->hydroMaxPower.setTSnumber(area_2->index, 10, 7);
+    my_rule->hydroMaxPower.setTSnumber(area_3->index, 4, 11);
+    my_rule->hydroMaxPower.setTSnumber(area_1->index, 11, 3);
 
     saveScenarioBuilder();
 
