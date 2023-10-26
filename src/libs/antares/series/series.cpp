@@ -67,12 +67,11 @@ int TimeSeries::timeSeriesSaveToFolder(const AreaName& areaID, const std::string
 }
 
 
-
-double TimeSeries::getCoefficient(uint32_t year, uint32_t hourInYear) const
+double TimeSeries::getCoefficient(uint32_t year, uint32_t timestep) const
 {
     if (timeSeries.width == 0)
         return 0;
-    return timeSeries[getSeriesIndex(year)][hourInYear];
+    return timeSeries[getSeriesIndex(year)][timestep];
 }
 
 const double* TimeSeries::getColumn(uint32_t year) const
@@ -102,9 +101,9 @@ void TimeSeries::reset()
     timeSeries.reset(1, HOURS_PER_YEAR);
 }
 
-void TimeSeries::resize(uint32_t year, uint32_t hour)
+void TimeSeries::resize(uint32_t year, uint32_t timestep)
 {
-    timeSeries.resize(year, hour);
+    timeSeries.resize(year, timestep);
 }
 
 void TimeSeries::roundAllEntries()
