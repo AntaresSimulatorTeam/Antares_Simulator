@@ -902,9 +902,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = area.hydro.prepro->loadFromFolder(study, area.id, buffer.c_str()) && ret;
         }
 
-        auto* hydroSeries = area.hydro.series;
-
-        if (hydroSeries)
+        if (auto* hydroSeries = area.hydro.series; hydroSeries)
         {
             if (!options.loadOnlyNeeded || !area.hydro.prepro) // Series
             {
