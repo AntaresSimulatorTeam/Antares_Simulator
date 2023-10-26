@@ -58,14 +58,16 @@ unsigned int EqualizeTSsize(Matrix<double, int32_t>& TScollection1,
     Matrix<double, int32_t>& TScollection2,
     bool& fatalError,
     std::string fatalErrorMsg,
-    Area& area)
+    Area& area,
+    unsigned int height1 = HOURS_PER_YEAR,
+    unsigned int height2 = HOURS_PER_YEAR)
 {
     PairOfIntegers pairOfTSsizes(TScollection1.width, TScollection2.width);
 
     if (pairOfTSsizes.bothZero())
     {
-        TScollection1.reset(1, HOURS_PER_YEAR);
-        TScollection2.reset(1, HOURS_PER_YEAR);
+        TScollection1.reset(1, height1);
+        TScollection2.reset(1, height2);
         return 1;
     }
 
@@ -159,7 +161,7 @@ bool DataSeriesHydro::loadGenerationTS(AreaName& areaID, const AnyString& folder
 
     bool ret = loadTSfromFile(ror, areaID, folder, "ror.txt", HOURS_PER_YEAR);
     ret = loadTSfromFile(storage, areaID, folder, "mod.txt", DAYS_PER_YEAR) && ret;
-    if (studyVersion < 860)
+    if (studyVersion >= 860)
         ret = loadTSfromFile(mingen, areaID, folder, "mingen.txt", HOURS_PER_YEAR) && ret;
     return ret;
 }
@@ -171,7 +173,7 @@ void DataSeriesHydro::EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver
     std::string fatalErrorMsg = "Hydro : area `" + area.id.to<std::string>() + "` : ";
     fatalErrorMsg += "ROR and INFLOWS must have the same number of time series.";
 
-    generationTScount_ = EqualizeTSsize(ror, storage, fatalError, fatalErrorMsg, area);
+    generationTScount_ = EqualizeTSsize(ror, storage, fatalError, fatalErrorMsg, area, HOURS_PER_YEAR, DAYS_PER_YEAR);
 
     logs.info() << "  '" << area.id << "': ROR and INFLOWS time series were both set to : " << generationTScount_;
 
@@ -202,7 +204,6 @@ bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& fold
     return ret;
 }
 
-
 void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
                                 Matrix<double, int32_t>::ColumnType& hourlyColumn)
 {
@@ -219,7 +220,6 @@ void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
         ++day;
     }
 }
-
 
 void DataSeriesHydro::buildMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
                                                const Matrix<double>::ColumnType& DailyMaxPumpPower)
