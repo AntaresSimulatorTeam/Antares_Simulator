@@ -311,7 +311,7 @@ bool HydroManagement::checkGenerationPowerConsistency(uint numSpace) const
     bool ret = true;
 
     areas_.each(
-      [&numSpace, &ret](Data::Area& area)
+      [&numSpace, &ret](const Data::Area& area)
       {
           uint z = area.index;
           auto tsIndex = (uint)NumeroChroniquesTireesParPays[numSpace][z].Hydraulique;

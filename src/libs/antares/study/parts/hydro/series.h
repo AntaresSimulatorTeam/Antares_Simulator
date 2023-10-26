@@ -111,7 +111,6 @@ public:
 
     //@}
 
-public:
     /*!
     ** \brief Run-of-the-river - ROR (MW)
     **
@@ -149,9 +148,7 @@ public:
     */
     Matrix<double, int32_t> maxHourlyPumpPower;
 
-    unsigned int TScount() const { return generationTScount_; };
-
-public:
+    // TS's number matrices for Generation and Maximum Power
     Matrix<uint32_t> timeseriesNumbers;
     Matrix<uint32_t> timeseriesNumbersHydroMaxPower;
 
@@ -160,7 +157,9 @@ public:
 
     void setHydroModulability(Area& area) const;
 
-    // Get max power (generatoin and pumping) number of TS
+    // Getters for generation (ror, storage and mingen) and 
+    // max power (generation and pumping) number of TS
+    uint TScount() const;
     uint maxPowerTScount() const;
 
     // Setting TS's when derated mode is on

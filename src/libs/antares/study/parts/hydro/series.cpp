@@ -315,6 +315,11 @@ void DataSeriesHydro::setHydroModulability(Area& area) const
     }
 }
 
+uint DataSeriesHydro::TScount() const
+{
+    return generationTScount_;
+}
+
 uint DataSeriesHydro::maxPowerTScount() const
 {
     return maxPowerTScount_;
