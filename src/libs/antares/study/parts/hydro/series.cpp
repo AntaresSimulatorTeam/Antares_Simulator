@@ -168,6 +168,9 @@ bool DataSeriesHydro::loadGenerationTS(AreaName& areaID, const AnyString& folder
 
 void DataSeriesHydro::EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver, bool& fatalError)
 {
+    if (!usedByTheSolver) // From GUI, no need to equalize TS collections sizes
+        return;
+
     // Equalize ROR and INFLOWS time series sizes
     // ------------------------------------------
     std::string fatalErrorMsg = "Hydro : area `" + area.id.to<std::string>() + "` : ";
@@ -326,7 +329,8 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
 
     ror.averageTimeseries();
     storage.averageTimeseries();
-    mingen.averageTimeseries();
+    if (studyVersion >= 860)
+        mingen.averageTimeseries();
     generationTScount_ = 1;
 
     if (studyVersion >= 870)
