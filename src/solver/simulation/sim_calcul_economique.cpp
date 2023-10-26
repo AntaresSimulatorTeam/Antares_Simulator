@@ -583,8 +583,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                mustRunGen = windSeries + solarSeries + rorSeries
+                mustRunGen = windSeries + solarSeries
                              + scratchpad.miscGenSum[hourInYear]
+                             + rorSeries
                              + scratchpad.mustrunSum[hourInYear];
             }
 
