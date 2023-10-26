@@ -8,7 +8,8 @@ target_link_libraries(test-unfeasible-problem-analyzer
 		infeasible_problem_analysis
 )
 
-# TODO: this is awful, we should not need this, but rely only on target_link_libaries instead
+# TODO: this is necessary so that windows can find the DLL without running "cmake --install"
+#       Is there a better way to achieve this ?
 copy_dependency(sirius_solver test-unfeasible-problem-analyzer)
 
 add_test(NAME test-unfeasible-problem-analyzer COMMAND test-unfeasible-problem-analyzer)
