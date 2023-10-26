@@ -5,7 +5,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <include/antares/series/series.h>
+#include <antares/series/series.h>
 
 using namespace Antares::Data;
 

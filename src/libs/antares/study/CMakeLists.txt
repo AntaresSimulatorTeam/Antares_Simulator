@@ -1,21 +1,3 @@
-add_library(series)
-add_library(Antares::series ALIAS series)
-
-set(SRC_STUDY_PART_SERIES
-        parts/series/include/antares/series/series.h
-        parts/series/series.cpp
-)
-source_group("study\\part\\series" FILES ${SRC_STUDY_PART_SERIES})
-
-target_sources(series PUBLIC ${SRC_STUDY_PART_SERIES})
-
-target_link_libraries(series PUBLIC Antares::array)
-
-target_include_directories(series
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/parts/series/include
-)
-
 set(SRC_STUDY_SCENARIO_BUILDER
         scenario-builder/scBuilderDataInterface.h
         scenario-builder/TSnumberData.h
