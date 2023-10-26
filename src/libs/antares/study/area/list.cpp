@@ -901,38 +901,44 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "prepro";
             ret = area.hydro.prepro->loadFromFolder(study, area.id, buffer.c_str()) && ret;
         }
-        if (area.hydro.series && (!options.loadOnlyNeeded || !area.hydro.prepro)) // Series
+
+        auto* hydroSeries = area.hydro.series;
+
+        if (hydroSeries)
         {
-            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->loadGenerationTS(area.id, buffer, study.header.version) && ret;
-
-            area.hydro.series->EqualizeGenerationTSsizes(area, study.usedByTheSolver, study.gotFatalError);
-        }
-
-        if (area.hydro.series && study.header.version < 870)
-        {
-            buffer.clear() << study.folderInput << SEP << "hydro";
-
-            HydroMaxTimeSeriesReader reader;
-            ret = reader(buffer, area, study.usedByTheSolver) && ret;
-        }
-
-        if (area.hydro.series && study.header.version >= 870)
-        {
-            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->LoadMaxPower(area.id, buffer) && ret;
-
-            if (study.usedByTheSolver)
+            if (!options.loadOnlyNeeded || !area.hydro.prepro) // Series
             {
-                area.hydro.series->EqualizeMaxPowerTSsizes(area, study.gotFatalError);
-            }
-            else
-                area.hydro.series->setHydroModulability(area);
-        }
+                buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
+                ret = hydroSeries->loadGenerationTS(area.id, buffer, study.header.version) && ret;
 
-        area.hydro.series->resizeTSinDeratedMode(study.parameters.derated, 
-                                                 study.header.version,
-                                                 study.usedByTheSolver);
+                hydroSeries->EqualizeGenerationTSsizes(
+                  area, study.usedByTheSolver, study.gotFatalError);
+            }
+
+            if (study.header.version < 870)
+            {
+                buffer.clear() << study.folderInput << SEP << "hydro";
+
+                HydroMaxTimeSeriesReader reader;
+                ret = reader(buffer, area, study.usedByTheSolver) && ret;
+            }
+
+            if (study.header.version >= 870)
+            {
+                buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
+                ret = hydroSeries->LoadMaxPower(area.id, buffer) && ret;
+
+                if (study.usedByTheSolver)
+                {
+                    hydroSeries->EqualizeMaxPowerTSsizes(area, study.gotFatalError);
+                }
+                else
+                    hydroSeries->setHydroModulability(area);
+            }
+
+            hydroSeries->resizeTSinDeratedMode(
+              study.parameters.derated, study.header.version, study.usedByTheSolver);
+        }
 
         buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "common" << SEP
                        << "capacity" << SEP << "maxpower_" << area.id << ".txt";
