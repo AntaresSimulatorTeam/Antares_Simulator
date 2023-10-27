@@ -75,7 +75,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
               study, link->directCapacities.timeSeries, link->timeseriesNumbers, avgDirect);
 
             ret = retrieveAverageNTC(
-                    study, link->indirectCapacities, link->timeseriesNumbers, avgIndirect)
+                    study, link->indirectCapacities.timeSeries, link->timeseriesNumbers, avgIndirect)
                   && ret;
             if (!ret)
             {

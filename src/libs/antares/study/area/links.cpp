@@ -65,7 +65,7 @@ AreaLink::AreaLink() :
  with(nullptr),
  parameters(fhlMax, HOURS_PER_YEAR),
  directCapacities(timeseriesNumbers),
- indirectCapacities(1, HOURS_PER_YEAR),
+ indirectCapacities(timeseriesNumbers),
  useLoopFlow(false),
  usePST(false),
  useHurdlesCost(false),
@@ -81,6 +81,7 @@ AreaLink::AreaLink() :
  linkWidth(1)
 {
     directCapacities.reset();
+    indirectCapacities.reset();
 }
 
 AreaLink::~AreaLink()
@@ -136,7 +137,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
 
     // Read link's indirect capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_indirect.txt";
-    success = indirectCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR) && success;
+    success = indirectCapacities.timeSeries.loadFromCSVFile(filename, 1, HOURS_PER_YEAR) && success;
 
     return success;
 }
@@ -212,7 +213,7 @@ void AreaLink::resetToDefaultValues()
 {
     parameters.reset(fhlMax, HOURS_PER_YEAR, true);
     directCapacities.timeSeries.reset(1, HOURS_PER_YEAR, true);
-    indirectCapacities.reset(1, HOURS_PER_YEAR, true);
+    indirectCapacities.timeSeries.reset(1, HOURS_PER_YEAR, true);
 
     for (uint i = 0; i != HOURS_PER_YEAR; ++i)
     {
@@ -263,7 +264,7 @@ void AreaLink::reverse()
     indirectCapacities.forceReload(true);
 
     // invert NTC values
-    directCapacities.timeSeries.swap(indirectCapacities);
+    directCapacities.timeSeries.swap(indirectCapacities.timeSeries);
 
     directCapacities.markAsModified();
     indirectCapacities.markAsModified();
@@ -484,7 +485,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         {
             // Short names for link's properties
             const uint nbDirectTS = link.directCapacities.timeSeries.width;
-            const uint nbIndirectTS = link.indirectCapacities.width;
+            const uint nbIndirectTS = link.indirectCapacities.timeSeries.width;
             if (nbDirectTS != nbIndirectTS)
             {
                 logLinkDataCheckErrorDirectIndirect(
@@ -501,7 +502,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             for (uint indexTS = 0; indexTS < nbDirectTS; ++indexTS)
             {
                 auto* directCapacities = link.directCapacities[indexTS];
-                auto& indirectCapacities = link.indirectCapacities[indexTS];
+                auto* indirectCapacities = link.indirectCapacities[indexTS];
 
                 // Checks on direct capacities
                 for (int h = 0; h < HOURS_PER_YEAR; h++)
@@ -592,7 +593,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             {
                 // Ignore transmission capacities
                 link.directCapacities.timeSeries.zero();
-                link.indirectCapacities.zero();
+                link.indirectCapacities.timeSeries.zero();
                 break;
             }
             case Data::LocalTransmissionCapacities::infinite:
@@ -642,7 +643,7 @@ bool saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
         // Save indirect capacities time series
 
         filename.clear() << capacitiesFolder << SEP << link.with->id << "_indirect.txt";
-        success = link.indirectCapacities.saveToCSVFile(filename, 6, false, true) && success;
+        success = link.indirectCapacities.timeSeries.saveToCSVFile(filename, 6, false, true) && success;
     }
 
     return success;
@@ -728,7 +729,7 @@ uint64_t AreaLink::memoryUsage() const
     uint64_t to_return = sizeof(AreaLink);
     to_return += parameters.valuesMemoryUsage();
     to_return += directCapacities.memoryUsage();
-    to_return += indirectCapacities.valuesMemoryUsage();
+    to_return += indirectCapacities.memoryUsage();
 
     return to_return;
 }

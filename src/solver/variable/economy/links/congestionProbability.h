@@ -278,14 +278,13 @@ public:
         assert(state.link != NULL);
         const auto& linkDirectCapa = state.link->directCapacities;
         const auto& linkIndirectCapa = state.link->indirectCapacities;
-        const int tsIndex = state.link->directCapacities.getSeriesIndex(state.year);
         // CONG. PROB +
         if (state.ntc.ValeurDuFlux[state.link->index]
             > +linkDirectCapa.getCoefficient(state.year, state.hourInTheYear) - 10e-6)
             pValuesForTheCurrentYear[numSpace][0].hour[state.hourInTheYear] += 100.0 * ratio;
         // CONG. PROB -
         if (state.ntc.ValeurDuFlux[state.link->index]
-            < -linkIndirectCapa.entry[tsIndex][state.hourInTheYear] + 10e-6)
+            < -linkIndirectCapa.getSeriesIndex(state.year) + 10e-6)
             pValuesForTheCurrentYear[numSpace][1].hour[state.hourInTheYear] += 100.0 * ratio;
 
         // Next item in the list

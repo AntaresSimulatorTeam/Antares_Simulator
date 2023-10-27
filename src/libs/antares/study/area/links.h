@@ -146,7 +146,7 @@ public:
     */
     Matrix<> parameters;
     TimeSeries directCapacities;
-    Matrix<> indirectCapacities;
+    TimeSeries indirectCapacities;
 
     //! Monte-Carlo
     Matrix<uint32_t> timeseriesNumbers;

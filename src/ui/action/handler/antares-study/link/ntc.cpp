@@ -88,7 +88,7 @@ bool NTC::performWL(Context& ctx)
             // Indirect capacities
             source->indirectCapacities.forceReload(true);
             ctx.link->indirectCapacities.forceReload(true);
-            ctx.link->indirectCapacities.pasteToColumn(0, source->indirectCapacities.entry[0]);
+            ctx.link->indirectCapacities.timeSeries.pasteToColumn(0, source->indirectCapacities.timeSeries.entry[0]);
             return true;
         }
         else

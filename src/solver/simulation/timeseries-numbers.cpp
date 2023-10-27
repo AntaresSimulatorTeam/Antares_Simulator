@@ -250,7 +250,7 @@ public:
         {
             const auto& link = *(it->second);
             to_return.push_back(link.directCapacities.timeSeries.width);
-            to_return.push_back(link.indirectCapacities.width);
+            to_return.push_back(link.indirectCapacities.timeSeries.width);
         }
         return to_return;
     }
