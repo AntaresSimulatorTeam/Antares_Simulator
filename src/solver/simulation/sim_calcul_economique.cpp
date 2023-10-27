@@ -562,13 +562,13 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             for (uint k = 0; k != linkCount; ++k)
             {
                 auto& lnk = *(studyruntime.areaLink[k]);
-                const int tsIndex = (lnk.directCapacities.width != 1) ? lnk.timeseriesNumbers[0][year] : 0;
+                const int tsIndex = (lnk.directCapacities.timeSeries.width != 1) ? lnk.timeseriesNumbers[0][year] : 0;
 
-                assert((uint)hourInYear < lnk.directCapacities.height);
-                assert((uint)tsIndex < lnk.directCapacities.width);
+                assert((uint)hourInYear < lnk.directCapacities.timeSeries.height);
+                assert((uint)tsIndex < lnk.directCapacities.timeSeries.width);
                 assert((uint)tsIndex < lnk.indirectCapacities.width);
 
-                ntc.ValeurDeNTCOrigineVersExtremite[k] = lnk.directCapacities[tsIndex][hourInYear];
+                ntc.ValeurDeNTCOrigineVersExtremite[k] = lnk.directCapacities.getCoefficient(year, hourInYear);
                 ntc.ValeurDeNTCExtremiteVersOrigine[k] = lnk.indirectCapacities[tsIndex][hourInYear];
                 ntc.ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][hourInYear];
             }

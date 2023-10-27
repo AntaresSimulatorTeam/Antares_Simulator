@@ -80,6 +80,7 @@ public:
     void unloadFromMemory() const;
     void roundAllEntries();
     void resize(uint32_t timeSeriesCount, uint32_t timestepCount);
+    void fill(double value);
     void averageTimeseries();
 
     bool forceReload(bool reload = false) const;

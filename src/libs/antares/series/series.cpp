@@ -107,6 +107,11 @@ void TimeSeries::resize(uint32_t timeSeriesCount, uint32_t timestepCount)
     timeSeries.resize(timeSeriesCount, timestepCount);
 }
 
+void TimeSeries::fill(double value)
+{
+    timeSeries.fill(value);
+}
+
 void TimeSeries::roundAllEntries()
 {
     timeSeries.roundAllEntries();

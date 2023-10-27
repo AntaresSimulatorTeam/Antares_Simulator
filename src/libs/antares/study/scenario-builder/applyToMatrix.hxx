@@ -35,8 +35,8 @@ inline bool CheckValidity<Data::AreaLink>(uint value,
 {
     //Value = index of time series
     //Direct Capacities = all time series
-    //directCapacities.width = Number of time series
-    return value < data.directCapacities.width;
+    //directCapacities.timeSeries.width = Number of time series
+    return value < data.directCapacities.timeSeries.width;
 }
 
 template<>

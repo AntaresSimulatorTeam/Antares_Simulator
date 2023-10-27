@@ -72,7 +72,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
         {
             auto* link = study.runtime->areaLink[j];
             int ret = retrieveAverageNTC(
-              study, link->directCapacities, link->timeseriesNumbers, avgDirect);
+              study, link->directCapacities.timeSeries, link->timeseriesNumbers, avgDirect);
 
             ret = retrieveAverageNTC(
                     study, link->indirectCapacities, link->timeseriesNumbers, avgIndirect)
