@@ -92,6 +92,18 @@ public:
     IncompatibleParallelOptions();
 };
 
+class IncompatibleMILPWithoutOrtools : public LoadingError
+{
+public:
+    IncompatibleMILPWithoutOrtools();
+};
+
+class IncompatibleMILPOrtoolsSolver : public LoadingError
+{
+public:
+    IncompatibleMILPOrtoolsSolver();
+};
+
 class IncompatibleOptRangeHydroPricing : public LoadingError
 {
 public:

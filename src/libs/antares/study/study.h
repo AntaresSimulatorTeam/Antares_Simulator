@@ -610,9 +610,9 @@ public:
     ScenarioBuilder::Sets* scenarioRules = nullptr;
     //@}
 
-    Matrix<double> scenarioInitialHydroLevels;
+    TimeSeries::TS scenarioInitialHydroLevels;
     // Hydro Final Levels
-    Matrix<double> scenarioFinalHydroLevels;
+    TimeSeries::TS scenarioFinalHydroLevels;
     /*!
     ** \brief Runtime informations
     **

@@ -31,11 +31,11 @@ StudyForBCTest::StudyForBCTest()
     Area* area1 = addAreaToStudy("Area 1");
     Area* area2 = addAreaToStudy("Area 2");
 
-    TimeSeriesConfigurer(area1->load.series->timeSeries)
+    TimeSeriesConfigurer(area1->load.series.timeSeries)
         .setColumnCount(1)
         .fillColumnWith(0, 0);
 
-    TimeSeriesConfigurer(area2->load.series->timeSeries)
+    TimeSeriesConfigurer(area2->load.series.timeSeries)
         .setColumnCount(1)
         .fillColumnWith(0, 100);
 

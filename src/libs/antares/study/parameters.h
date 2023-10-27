@@ -43,7 +43,6 @@
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 
-
 namespace Antares::Data
 {
 /*!
@@ -433,11 +432,15 @@ public:
         PowerFluctuations fluctuations;
     } power;
 
-    struct
+    struct UCMode
     {
         //! Unit Commitment Mode
         UnitCommitmentMode ucMode;
-    } unitCommitment;
+
+        //! Some variables rely on dual values & marginal costs
+        void addExcludedVariables(std::vector<std::string>&) const;
+    };
+    UCMode unitCommitment;
 
     struct
     {
@@ -487,7 +490,6 @@ public:
     //! Simplex optimization range (day/week)
     SimplexOptimization simplexOptimizationRange;
     //@}
-
 
     AdequacyPatch::AdqPatchParams adqPatchParams;
 

@@ -34,7 +34,6 @@
 #include <antares/exception/InitializationError.hpp>
 #include "../variable/print.h"
 #include <yuni/io/io.h>
-#include "../aleatoire/alea_fonctions.h"
 #include "timeseries-numbers.h"
 #include "apply-scenario.h"
 #include <antares/fatal-error.h>
@@ -157,8 +156,7 @@ public:
                 randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
             // 2 - Preparing the Time-series numbers
-            // We want to draw lots of numbers for time-series
-            ApplyRandomTSnumbers(study, y, numSpace);
+            // removed
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
             simulation_->prepareClustersInMustRunMode(numSpace, y);
