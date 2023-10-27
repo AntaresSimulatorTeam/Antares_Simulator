@@ -324,7 +324,7 @@ void Parameters::reset()
     power.fluctuations = lssFreeModulations;
     shedding.policy = shpShavePeaks;
 
-    unitCommitment.ucMode = ucHeuristic;
+    unitCommitment.ucMode = ucHeuristicFast;
     nbCores.ncMode = ncAvg;
     renewableGeneration.rgModelling = rgAggregated;
     maintenancePlanning.mpModelling = mpRandomized;
@@ -753,7 +753,7 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
         }
         logs.warning() << "parameters: invalid unit commitment mode. Got '" << value
                        << "'. reset to fast mode";
-        d.unitCommitment.ucMode = ucHeuristic;
+        d.unitCommitment.ucMode = ucHeuristicFast;
         return false;
     }
     // Renewable generation modelling
@@ -1372,6 +1372,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     std::vector<std::string> excluded_vars;
     renewableGeneration.addExcludedVariables(excluded_vars);
     adqPatchParams.addExcludedVariables(excluded_vars);
+    unitCommitment.addExcludedVariables(excluded_vars);
 
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 
@@ -1846,5 +1847,26 @@ bool Parameters::MaintenancePlanning::isRandomized() const
 bool Parameters::MaintenancePlanning::isOptimized() const
 {
     return mpModelling == Antares::Data::mpOptimized;
+}
+
+// Some variables rely on dual values & marginal costs
+void Parameters::UCMode::addExcludedVariables(std::vector<std::string>& out) const
+{
+    // These variables rely on dual values & marginal costs
+    // these don't really make sense for MILP problems
+    // TODO : solve a LP problem with fixed values for integer variables
+    //        extract values for dual variables & marginal costs from LP problem
+    const static std::vector<std::string> milpExclude = {{"MARG. COST"},
+                                                         {"BC. MARG. COST"},
+                                                         {"CONG. FEE (ALG.)"},
+                                                         {"CONG. FEE (ABS.)"},
+                                                         {"MRG. PRICE"},
+                                                         {"STS Cashflow By Cluster"},
+                                                         {"Profit by plant"}};
+
+    if (ucMode == ucMILP)
+    {
+        out.insert(out.end(), milpExclude.begin(), milpExclude.end());
+    }
 }
 } // namespace Antares::Data

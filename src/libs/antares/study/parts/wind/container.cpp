@@ -37,44 +37,39 @@ namespace Data
 {
 namespace Wind
 {
-Container::Container() : prepro(nullptr), series(nullptr)
+Container::Container() : prepro(nullptr), series(tsNumbers)
 {
 }
 
 Container::~Container()
 {
     delete prepro;
-    delete series;
 }
 
 bool Container::forceReload(bool reload) const
 {
     bool ret = true;
-    if (series)
-        ret = series->forceReload(reload) and ret;
+    ret = series.forceReload(reload) && ret;
     if (prepro)
-        ret = prepro->forceReload(reload) and ret;
+        ret = prepro->forceReload(reload) && ret;
     return ret;
 }
 
 void Container::markAsModified() const
 {
-    if (series)
-        series->markAsModified();
+    series.markAsModified();
     if (prepro)
         prepro->markAsModified();
 }
 
 uint64_t Container::memoryUsage() const
 {
-    return sizeof(Container) + ((!series) ? 0 : DataSeriesWindMemoryUsage(series))
-           + ((!prepro) ? 0 : prepro->memoryUsage());
+    return sizeof(Container) + series.memoryUsage() + ((!prepro) ? 0 : prepro->memoryUsage());
 }
 
 void Container::resetToDefault()
 {
-    if (series)
-        series->timeSeries.reset(1, HOURS_PER_YEAR);
+    series.reset();
     if (prepro)
         prepro->resetToDefault();
 }

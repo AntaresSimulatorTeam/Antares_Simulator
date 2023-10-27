@@ -94,6 +94,7 @@ private:
     Benchmarking::DurationCollector pDurationCollector;
     Benchmarking::OptimizationInfo pOptimizationInfo;
 
+    std::shared_ptr<Yuni::Job::QueueService> ioQueueService;
     IResultWriter::Ptr resultWriter = nullptr;
 
     void prepareWriter(Antares::Data::Study& study,

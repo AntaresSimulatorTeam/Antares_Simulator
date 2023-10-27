@@ -69,12 +69,12 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
 
 void storeTimeseriesNumbersForLoad(Solver::IResultWriter& writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.load.series->timeseriesNumbers, area.id, "load");
+    genericStoreTimeseriesNumbers(writer, area.load.series.timeseriesNumbers, area.id, "load");
 }
 
 void storeTimeseriesNumbersForSolar(Solver::IResultWriter& writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.solar.series->timeseriesNumbers, area.id, "solar");
+    genericStoreTimeseriesNumbers(writer, area.solar.series.timeseriesNumbers, area.id, "solar");
 }
 
 void storeTimeseriesNumbersForHydro(Solver::IResultWriter& writer, const Area& area)
@@ -84,7 +84,7 @@ void storeTimeseriesNumbersForHydro(Solver::IResultWriter& writer, const Area& a
 
 void storeTimeseriesNumbersForWind(Solver::IResultWriter& writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.wind.series->timeseriesNumbers, area.id, "wind");
+    genericStoreTimeseriesNumbers(writer, area.wind.series.timeseriesNumbers, area.id, "wind");
 }
 
 void storeTimeseriesNumbersForThermal(Solver::IResultWriter& writer, const Area& area)

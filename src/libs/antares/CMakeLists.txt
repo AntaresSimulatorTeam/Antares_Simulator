@@ -9,7 +9,7 @@ add_subdirectory(object)
 
 add_subdirectory(array)
 add_subdirectory(correlation)
-
+add_subdirectory(concurrency)
 
 add_subdirectory(logs)
 add_subdirectory(jit)
@@ -59,6 +59,7 @@ add_subdirectory(stdcxx)
 add_subdirectory(utils)
 add_subdirectory(paths)
 add_subdirectory(mersenne-twister)
+add_subdirectory(series)
 
 add_library(antares-core
 	antares.h

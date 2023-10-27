@@ -37,7 +37,7 @@ bool loadTSNumberData::apply(Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Load: Area '" << area.name << "': ";
-        ret = ApplyToMatrix(errors, logprefix, *area.load.series, col, tsGenCountLoad) && ret;
+        ret = ApplyToMatrix(errors, logprefix, area.load.series, col, tsGenCountLoad) && ret;
     }
     return ret;
 }
