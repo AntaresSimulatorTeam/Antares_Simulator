@@ -74,10 +74,7 @@ void FinalLevelInflowsModifier::storeDeltaLevels(unsigned int year)
 double FinalLevelInflowsModifier::calculateTotalInflows(unsigned int year) const
 {
     // calculate yearly inflows
-    const Data::DataSeriesHydro& data = *hydro_.series;
-    unsigned int tsHydroIndex = data.timeseriesNumbers[0][year];
-    auto& inflowsmatrix = hydro_.series->storage;
-    auto& srcinflows = inflowsmatrix[tsHydroIndex < inflowsmatrix.width ? tsHydroIndex : 0];
+    auto const& srcinflows = hydro_.series->storage.getColumn(year);
 
     double totalYearInflows = 0.0;
     for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
