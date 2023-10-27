@@ -42,7 +42,7 @@ bool renewableTSNumberData::apply(Study& study)
 
         logprefix.clear() << "Renewable: area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
-        ret = ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountRenewable) && ret;
+        ret = ApplyToMatrix(errors, logprefix, cluster.series, col, tsGenCountRenewable) && ret;
     }
     return ret;
 }

@@ -610,7 +610,7 @@ public:
     ScenarioBuilder::Sets* scenarioRules = nullptr;
     //@}
 
-    Matrix<double> scenarioHydroLevels;
+    TimeSeries::TS scenarioHydroLevels;
 
     /*!
     ** \brief Runtime informations

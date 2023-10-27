@@ -246,8 +246,6 @@ public:
 
     virtual bool saveToFolder(const AnyString& folder) const = 0;
 
-    void ensureDataTimeSeries();
-
     //! \name Informations
     //@{
     /*!
