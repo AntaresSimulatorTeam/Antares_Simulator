@@ -160,8 +160,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_support_for_old_studies, Fixture)
     stringT buffer;
     bool ret = true;
 
-    auto& genP = area_1->hydro.series->maxHourlyGenPower[0];
-    auto& pumpP = area_1->hydro.series->maxHourlyPumpPower[0];
+    auto& genP = area_1->hydro.series->maxHourlyGenPower.timeSeries[0];
+    auto& pumpP = area_1->hydro.series->maxHourlyPumpPower.timeSeries[0];
     auto& genE = area_1->hydro.maxDailyGenEnergy[0];
     auto& pumpE = area_1->hydro.maxDailyPumpEnergy[0];
 

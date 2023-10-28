@@ -238,6 +238,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     auto& meanMaxDailyGenPower = scratchpad.meanMaxDailyGenPower;
 
+    const uint tsIndex =  meanMaxDailyGenPower.getSeriesIndex(y);
+
     int initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate;
 
     double reservoirCapacity = area.hydro.reservoirCapacity;
@@ -250,9 +252,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     auto const& maxDailyGenEnergy = area.hydro.maxDailyGenEnergy;
 
-    uint tsIndexMaxPower = (NumeroChroniquesTireesParPays[numSpace][z]).HydroMaxPower;
-
-    auto const& maxP = meanMaxDailyGenPower[tsIndexMaxPower];
+    
+    auto const& maxP = meanMaxDailyGenPower[tsIndex];
     auto const& maxE = maxDailyGenEnergy[0];
 
     auto& ventilationResults = ventilationResults_[numSpace][z];
@@ -277,7 +278,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
         auto daysPerMonth = calendar_.months[month].days;
         assert(daysPerMonth <= maxOPP);
         assert(daysPerMonth <= maxDailyTargetGen);
-        assert(daysPerMonth + dayYear - 1 < meanMaxDailyGenPower.height);
+        assert(daysPerMonth + dayYear - 1 < meanMaxDailyGenPower.timeSeries.height);
 
         for (uint day = 0; day != daysPerMonth; ++day)
         {

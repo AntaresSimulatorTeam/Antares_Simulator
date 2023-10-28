@@ -13,7 +13,7 @@
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-void fillTimeSeriesWithSpecialEnds(Matrix<double, int32_t>& timeSeries, double value)
+void fillTimeSeriesWithSpecialEnds(Matrix<double>& timeSeries, double value)
 {
     for (uint ts = 0; ts < timeSeries.width; ts++)
     {
@@ -95,8 +95,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_equal_width, Fixture
     bool ret = true;
     bool fatalError = false;
 
-    auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower;
-    auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower;
+    auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower.timeSeries;
+    auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower.timeSeries;
     maxHourlyGenPower.reset(3, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(3, HOURS_PER_YEAR);
 
@@ -126,8 +126,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width_and_d
     unsigned int studyVersion = 870;
     bool usedBySolver = true;
 
-    auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower;
-    auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower;
+    auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower.timeSeries;
+    auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower.timeSeries;
     maxHourlyGenPower.reset(3, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(3, HOURS_PER_YEAR);
 
@@ -156,8 +156,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_different_width_case
     bool ret = true;
     bool fatalError = false;
 
-    auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower;
-    auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower;
+    auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower.timeSeries;
+    auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower.timeSeries;
     maxHourlyGenPower.reset(3, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(2, HOURS_PER_YEAR);
 
@@ -182,8 +182,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_different_width_case_1, Fixtu
     bool ret = true;
     bool fatalError = false;
 
-    auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower;
-    auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower;
+    auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower.timeSeries;
+    auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower.timeSeries;
     maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(3, HOURS_PER_YEAR);
 
@@ -210,8 +210,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_different_width_case_2, Fixtu
     bool ret = true;
     bool fatalError = false;
 
-    auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower;
-    auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower;
+    auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower.timeSeries;
+    auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower.timeSeries;
     maxHourlyGenPower.reset(4, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
 
@@ -238,8 +238,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_zeros, Fixture)
     bool ret = true;
     bool fatalError = false;
 
-    auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower;
-    auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower;
+    auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower.timeSeries;
+    auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower.timeSeries;
     maxHourlyGenPower.reset(4, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
 

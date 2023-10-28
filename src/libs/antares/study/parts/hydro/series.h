@@ -182,13 +182,6 @@ private:
 
 
 }; // class DataSeriesHydro
-
-void resizeMatrixNoDataLoss(Matrix<double, int32_t>& matrixToResize, uint width);
-bool loadTSfromFile(Matrix<double, int32_t>& ts,
-                    const AreaName& areaID,
-                    const AnyString& folder,
-                    const std::string& filename,
-                    unsigned int height);
 } // namespace Data
 } // namespace Antares
 

@@ -35,7 +35,9 @@ using namespace Yuni;
 namespace Antares::Data
 {
 
-AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area)
+AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
+meanMaxDailyGenPower(area.hydro.series->timeseriesNumbersHydroMaxPower),
+meanMaxDailyPumpPower(area.hydro.series->timeseriesNumbersHydroMaxPower)
 {
     // alias to the simulation mode
     auto mode = rinfos.mode;
@@ -72,13 +74,13 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area)
     }
 
     //  Hourly maximum generation/pumping power matrices and their number of TS's (width of matrices)
-    auto const& maxHourlyGenPower = area.hydro.series->maxHourlyGenPower;
-    auto const& maxHourlyPumpPower = area.hydro.series->maxHourlyPumpPower;
+    auto const& maxHourlyGenPower = area.hydro.series->maxHourlyGenPower.timeSeries;
+    auto const& maxHourlyPumpPower = area.hydro.series->maxHourlyPumpPower.timeSeries;
     uint nbOfMaxPowerTimeSeries = area.hydro.series->maxPowerTScount();
 
     //  Setting width and height of daily mean maximum generation/pumping power matrices
-    meanMaxDailyGenPower.reset(nbOfMaxPowerTimeSeries, DAYS_PER_YEAR);
-    meanMaxDailyPumpPower.reset(nbOfMaxPowerTimeSeries, DAYS_PER_YEAR);
+    meanMaxDailyGenPower.timeSeries.reset(nbOfMaxPowerTimeSeries, DAYS_PER_YEAR);
+    meanMaxDailyPumpPower.timeSeries.reset(nbOfMaxPowerTimeSeries, DAYS_PER_YEAR);
 
     // Instantiate daily mean maximum generation/pumping power matrices
     CalculateMeanDailyMaxPowerMatrices(maxHourlyGenPower, maxHourlyPumpPower, nbOfMaxPowerTimeSeries);
@@ -146,8 +148,8 @@ void AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& ho
     {
         auto& hourlyMaxGenColumn = hourlyMaxGenMatrix[nbOfTimeSeries];
         auto& hourlyMaxPumpColumn = hourlyMaxPumpMatrix[nbOfTimeSeries];
-        auto& MeanMaxDailyGenPowerColumn = meanMaxDailyGenPower[nbOfTimeSeries];
-        auto& MeanMaxDailyPumpPowerColumn = meanMaxDailyPumpPower[nbOfTimeSeries];
+        auto& MeanMaxDailyGenPowerColumn = meanMaxDailyGenPower.timeSeries[nbOfTimeSeries];
+        auto& MeanMaxDailyPumpPowerColumn = meanMaxDailyPumpPower.timeSeries[nbOfTimeSeries];
 
         CalculateDailyMeanPower(hourlyMaxGenColumn, MeanMaxDailyGenPowerColumn);
         CalculateDailyMeanPower(hourlyMaxPumpColumn, MeanMaxDailyPumpPowerColumn);

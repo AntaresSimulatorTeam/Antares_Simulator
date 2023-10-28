@@ -17,4 +17,4 @@ target_link_libraries(test-study
         Boost::unit_test_framework
 )
 
-add_test(NAME test-study COMMAND test-study)lop
+add_test(NAME test-study COMMAND test-study)

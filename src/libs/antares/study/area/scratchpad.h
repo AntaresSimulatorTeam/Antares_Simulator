@@ -35,6 +35,7 @@
 #include <vector>
 #include <set>
 #include <numeric>
+#include <antares/series/include/antares/series/series.h>
 
 namespace Antares::Data
 {
@@ -88,8 +89,8 @@ public:
     ** These matrices will be calculated based on maximum
     ** hourly generation/pumping matrices
     */
-    Matrix<double, int32_t> meanMaxDailyGenPower;
-    Matrix<double, int32_t> meanMaxDailyPumpPower;
+    TimeSeries meanMaxDailyGenPower;
+    TimeSeries meanMaxDailyPumpPower;
 
 private:
     /*!

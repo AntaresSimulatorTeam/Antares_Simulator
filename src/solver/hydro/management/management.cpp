@@ -303,10 +303,14 @@ bool HydroManagement::checkGenerationPowerConsistency(uint numSpace, uint year) 
     bool ret = true;
 
     areas_.each(
-      [&numSpace, &ret](const Data::Area& area)
+      [&numSpace, &ret, &year](const Data::Area& area)
       {
+        
           auto const& srcmingen = area.hydro.series->mingen.getColumn(year);
           auto const& srcmaxgen = area.hydro.series->maxHourlyGenPower.getColumn(year);
+
+          uint const tsIndexMin = area.hydro.series->mingen.getSeriesIndex(year);
+          uint const tsIndexMax = area.hydro.series->maxHourlyGenPower.getSeriesIndex(year);
 
           for (uint h = 0; h < HOURS_PER_YEAR; ++h)
           {
@@ -316,9 +320,9 @@ bool HydroManagement::checkGenerationPowerConsistency(uint numSpace, uint year) 
               if (max < min)
               {
                   logs.error() << "In area: " << area.name << " [hourly] minimum generation of "
-                               << min << " MW in timestep " << h + 1 << " of TS-" << tsIndex + 1
+                               << min << " MW in timestep " << h + 1 << " of TS-" << tsIndexMin + 1
                                << " is incompatible with the maximum generation of " << max
-                               << " MW in timestep " << h + 1 << " of TS-" << tsIndexMaxPower + 1 << " MW.";
+                               << " MW in timestep " << h + 1 << " of TS-" << tsIndexMax + 1 << " MW.";
                   ret = false;
                   return;
               }

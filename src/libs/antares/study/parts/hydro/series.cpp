@@ -278,8 +278,8 @@ void DataSeriesHydro::buildMaxPowerFromDailyTS(const Matrix<double>::ColumnType&
     maxHourlyGenPower.timeSeries.reset(maxPowerTScount_, HOURS_PER_YEAR);
     maxHourlyPumpPower.timeSeries.reset(maxPowerTScount_, HOURS_PER_YEAR);
 
-    ConvertDailyTSintoHourlyTS(DailyMaxGenPower, maxHourlyGenPower[0]);
-    ConvertDailyTSintoHourlyTS(DailyMaxPumpPower, maxHourlyPumpPower[0]);
+    ConvertDailyTSintoHourlyTS(DailyMaxGenPower, maxHourlyGenPower.timeSeries[0]);
+    ConvertDailyTSintoHourlyTS(DailyMaxPumpPower, maxHourlyPumpPower.timeSeries[0]);
 }
 
 bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& folder) const

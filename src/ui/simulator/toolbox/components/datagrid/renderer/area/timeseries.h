@@ -359,7 +359,7 @@ public:
 private:
     void internalAreaChanged(Antares::Data::Area* area) override
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->maxHourlyGenPower) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->maxHourlyGenPower.timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -391,7 +391,7 @@ public:
 private:
     void internalAreaChanged(Antares::Data::Area* area) override
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->maxHourlyPumpPower) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->maxHourlyPumpPower.timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };

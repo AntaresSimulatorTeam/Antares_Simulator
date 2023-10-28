@@ -83,7 +83,7 @@ void storeTimeseriesNumbersForHydro(Solver::IResultWriter& writer, const Area& a
 }
 
 
-void storeTimeseriesNumbersForHydroMaxPower(Solver::IResultWriter::Ptr writer, const Area& area)
+void storeTimeseriesNumbersForHydroMaxPower(Solver::IResultWriter& writer, const Area& area)
 {
     storeTSnumbers(writer, area.hydro.series->timeseriesNumbersHydroMaxPower, area.id, "max-power");
 }

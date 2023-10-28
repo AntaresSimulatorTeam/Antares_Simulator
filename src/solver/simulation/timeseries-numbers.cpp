@@ -1051,7 +1051,7 @@ void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study, IRes
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesThermal>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesRenewable>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesTransmissionCapacities>(resultWriter);
-        study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesHydroMaxPower>();
+        study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesHydroMaxPower>(resultWriter);
 
         Simulation::BindingConstraintsTimeSeriesNumbersWriter ts_writer(resultWriter);
         ts_writer.write(study.bindingConstraintsGroups);
