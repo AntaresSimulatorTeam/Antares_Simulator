@@ -27,33 +27,10 @@
 #ifndef __SOLVER_SIMULATION_DATA_STRUCTS_H__
 #define __SOLVER_SIMULATION_DATA_STRUCTS_H__
 
-#include <vector>
-
-typedef struct
-{
-    std::vector<int> ThermiqueParPalier;
-    std::vector<int> RenouvelableParPalier;
-    int Hydraulique;
-    unsigned int HydroMaxPower;
-    int Eolien;
-    int Consommation;
-    int Solar;
-} NUMERO_CHRONIQUES_TIREES_PAR_PAYS;
-
-typedef struct
-{
-    int TransmissionCapacities;
-} NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION;
-
 typedef struct
 {
     double* Horaire;
 } PRODUCTION_THERMIQUE;
-
-typedef struct
-{
-    double* ParLigne;
-} MATRICE_2D;
 
 /* Old define */
 #define DEFINITION_STRUCTURES_DONNEES

@@ -12,7 +12,6 @@ add_subdirectory(variable)
 add_subdirectory(hydro)
 add_subdirectory(simulation)
 add_subdirectory(ts-generator)
-add_subdirectory(aleatoire)
 add_subdirectory(utils)
 add_subdirectory(optimisation)
 add_subdirectory(main)
@@ -74,6 +73,7 @@ add_executable(antares-solver
 set_target_properties(antares-solver PROPERTIES OUTPUT_NAME ${exec_name})
 
 set(ANTARES_SOLVER_LIBS
+	Antares::args_helper
 	Antares::date
 	Antares::benchmarking
 	Antares::result_writer
@@ -89,7 +89,6 @@ set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
 	antares-solver-main-economy
 	antares-solver-main-adequacy
 	antares-solver-hydro
-	antares-solver-aleatoire
 	antares-solver-variable
 	antares-solver-simulation
 	antares-solver-ts-generator

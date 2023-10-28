@@ -42,7 +42,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
                                                                      int PremierPdtDeLIntervalle,
                                                                      int DernierPdtDeLIntervalle)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
+    const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     std::vector<double>& SecondMembre = ProblemeAResoudre->SecondMembre;
 
     std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux

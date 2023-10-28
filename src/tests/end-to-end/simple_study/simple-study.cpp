@@ -24,7 +24,7 @@ struct StudyFixture : public StudyBuilder
 	double loadInArea = 0.;
 	double clusterCost = 0.;
 	ThermalClusterConfig clusterConfig;
-	TimeSeriesConfigurer<Matrix<double, int32_t>> loadTSconfig;
+	TimeSeriesConfigurer loadTSconfig;
 };
 
 StudyFixture::StudyFixture()
@@ -34,7 +34,7 @@ StudyFixture::StudyFixture()
 	cluster = addClusterToArea(area, "some cluster");
 
 	loadInArea = 7.0;
-	loadTSconfig = std::move(TimeSeriesConfigurer(area->load.series->timeSeries));
+	loadTSconfig = std::move(TimeSeriesConfigurer(area->load.series.timeSeries));
 	loadTSconfig.setColumnCount(1)
 				.fillColumnWith(0, loadInArea);
 
@@ -140,4 +140,75 @@ BOOST_AUTO_TEST_CASE(two_mc_years_with_different_weight__two_ts)
 	BOOST_TEST(output.overallCost(area).hour(0) == averageLoad * clusterCost, tt::tolerance(0.001));
 }
 
+BOOST_AUTO_TEST_CASE(milp_two_mc_single_unit_single_scenario)
+{
+    setNumberMCyears(1);
+
+    // Arbitrary large number, only characteristic is : larger than all
+    // other marginal costs
+    area->thermal.unsuppliedEnergyCost = 1000;
+
+    // Use OR-Tools / COIN for MILP
+    auto& p = study->parameters;
+    p.unitCommitment.ucMode = ucMILP;
+    p.ortoolsUsed = true;
+    p.ortoolsSolver = "coin";
+
+    simulation->create();
+    simulation->run();
+
+    OutputRetriever output(simulation->rawSimu());
+
+    BOOST_TEST(output.thermalGeneration(cluster.get()).hour(10) == loadInArea,
+               tt::tolerance(0.001));
+    BOOST_TEST(output.thermalNbUnitsON(cluster.get()).hour(10) == 1, tt::tolerance(0.001));
+    BOOST_TEST(output.overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
+}
+
+BOOST_AUTO_TEST_CASE(milp_two_mc_two_unit_single_scenario)
+{
+    setNumberMCyears(1);
+
+    clusterConfig.setAvailablePower(0, 150.).setUnitCount(2);
+
+    loadInArea = 150;
+    loadTSconfig.setColumnCount(1).fillColumnWith(0, loadInArea);
+    // Arbitrary large number, only characteristic is : larger than all
+    // other marginal costs
+    area->thermal.unsuppliedEnergyCost = 1000;
+
+    // Use OR-Tools / COIN for MILP
+    auto& p = study->parameters;
+    p.unitCommitment.ucMode = ucMILP;
+    p.ortoolsUsed = true;
+    p.ortoolsSolver = "coin";
+
+    simulation->create();
+    simulation->run();
+
+    OutputRetriever output(simulation->rawSimu());
+
+    BOOST_TEST(output.thermalGeneration(cluster.get()).hour(10) == loadInArea,
+               tt::tolerance(0.001));
+    BOOST_TEST(output.thermalNbUnitsON(cluster.get()).hour(10) == 2, tt::tolerance(0.001));
+}
+BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_AUTO_TEST_SUITE(error_cases)
+BOOST_AUTO_TEST_CASE(error_on_wrong_hydro_data)
+{
+    StudyBuilder builder;
+    builder.simulationBetweenDays(0, 7);
+    builder.setNumberMCyears(1);
+    Area& area = *builder.addAreaToStudy("A");
+    PartHydro& hydro = area.hydro;
+    TimeSeriesConfigurer(hydro.series->storage.timeSeries)
+            .setColumnCount(1)
+            .fillColumnWith(0, -1.0); //Negative inflow will cause a consistency error with mingen
+
+    auto simulation = builder.simulation;
+    simulation->create();
+    BOOST_CHECK_THROW(simulation->run(), Antares::FatalError);
+}
 BOOST_AUTO_TEST_SUITE_END()

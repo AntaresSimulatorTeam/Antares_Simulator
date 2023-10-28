@@ -28,14 +28,16 @@
 #include "adequacy.h"
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/exception/AssertionError.hpp>
-#include "opt_time_writer.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-Adequacy::Adequacy(Data::Study& study) : study(study), preproOnly(false)
+Adequacy::Adequacy(Data::Study& study, IResultWriter& resultWriter) :
+    study(study),
+    preproOnly(false),
+    resultWriter(resultWriter)
 {
 }
 
@@ -124,7 +126,8 @@ bool Adequacy::year(Progression::Task& progression,
                     yearRandomNumbers& randomForYear,
                     std::list<uint>& failedWeekList,
                     bool isFirstPerformedYearOfSimulation,
-                    const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
+                    const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                    OptimizationStatisticsWriter& optWriter)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -139,8 +142,6 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace].firstWeekOfSimulation = true;
     bool reinitOptim = true;
 
-    OptimizationStatisticsWriter optWriter(study.resultWriter, state.year);
-
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
@@ -151,7 +152,7 @@ bool Adequacy::year(Progression::Task& progression,
                                          numSpace, hourInTheYear, hydroVentilationResults);
 
         BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace],
-                                        numSpace, hourInTheYear, randomForYear.pThermalNoisesByArea);
+                                        hourInTheYear, randomForYear.pThermalNoisesByArea, state.year);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;
@@ -198,7 +199,7 @@ bool Adequacy::year(Progression::Task& progression,
                 OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
                                              &pProblemesHebdo[numSpace],
                                              study.parameters.adqPatchParams,
-                                             *study.resultWriter);
+                                             resultWriter);
 
                 computingHydroLevels(study.areas, pProblemesHebdo[numSpace], false);
 
@@ -385,9 +386,9 @@ void Adequacy::simulationEnd()
     }
 }
 
-void Adequacy::prepareClustersInMustRunMode(uint numSpace)
+void Adequacy::prepareClustersInMustRunMode(uint numSpace, uint year)
 {
-    PrepareDataFromClustersInMustrunMode(study, numSpace);
+    PrepareDataFromClustersInMustrunMode(study, numSpace, year);
 }
 
 } // namespace Antares::Solver::Simulation

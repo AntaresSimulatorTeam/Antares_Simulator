@@ -104,10 +104,9 @@ static SimplexResult OPT_TryToCallSimplex(
         const int optimizationNumber,
         const OptPeriodStringGenerator& optPeriodStringGenerator,
         bool PremierPassage,
-        IResultWriter& writer
-        )
+        IResultWriter& writer)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
+    const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     auto ProbSpx
       = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
     auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
@@ -304,9 +303,10 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                          const OptPeriodStringGenerator& optPeriodStringGenerator,
                          IResultWriter& writer)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre.get();
+    const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
                                                    ProblemeAResoudre->NomDesContraintes,
+                                                   ProblemeAResoudre->VariablesEntieres,
                                                    ProblemeAResoudre->StatutDesVariables,
                                                    ProblemeAResoudre->StatutDesContraintes,
                                                    problemeHebdo->NamedProblems);

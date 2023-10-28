@@ -60,21 +60,6 @@ public:
     //! Sum of all fatal hors hydro
     double miscGenSum[HOURS_PER_YEAR];
 
-    //! Timeseries
-    struct TimeseriesData
-    {
-        TimeseriesData(Area& area);
-        //! Alias to the load time-series
-        const TSMatrix& load;
-        //! Alias to the solar time-series
-        const TSMatrix& solar;
-        //! Alias to the wind time-series
-        const TSMatrix& wind;
-    };
-
-    //! Timeseries
-    TimeseriesData ts;
-
     bool hydroHasMod;
 
     //! if sum(365)[pumpMaxP * pumpMaxE] > 0. then pumpHasMod = true

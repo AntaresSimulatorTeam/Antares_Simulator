@@ -63,7 +63,7 @@ public:
     */
     SurveyResults(const Data::Study& s,
                   const Yuni::String& o,
-                  IResultWriter::Ptr writer);
+                  IResultWriter& writer);
     /*!
     ** \brief Destructor
     */
@@ -138,7 +138,7 @@ public:
     //! Same thing for print status (do we print the current output variable ?)
     bool* isPrinted;
     // File writer
-    IResultWriter::Ptr pResultWriter;
+    IResultWriter& pResultWriter;
 
 private:
     template<class StringT, class ConvertT, class PrecisionT>

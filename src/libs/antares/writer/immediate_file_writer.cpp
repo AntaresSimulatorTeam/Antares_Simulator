@@ -112,6 +112,9 @@ void ImmediateFileResultWriter::addEntryFromFile(const std::string& entryPath,
     }
 }
 
+void ImmediateFileResultWriter::flush()
+{}
+
 bool ImmediateFileResultWriter::needsTheJobQueue() const
 {
     return false;
@@ -121,5 +124,21 @@ void ImmediateFileResultWriter::finalize(bool /*verbose*/)
 {
     // Do nothing
 }
+
+void NullResultWriter::addEntryFromBuffer(const std::string&, Yuni::Clob&)
+{}
+void NullResultWriter::addEntryFromBuffer(const std::string&, std::string&)
+{}
+void NullResultWriter::addEntryFromFile(const std::string&, const std::string&)
+{}
+void NullResultWriter::flush()
+{}
+
+bool NullResultWriter::needsTheJobQueue() const
+{
+    return false;
+}
+void NullResultWriter::finalize(bool)
+{}
 } // namespace Solver
 } // namespace Antares

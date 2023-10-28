@@ -15,31 +15,16 @@ void initializeStudy(Study::Ptr study);
 void configureLinkCapacities(AreaLink* link);
 
 
-template<class MatrixType>
 class TimeSeriesConfigurer
 {
 public:
     TimeSeriesConfigurer() = default;
-    TimeSeriesConfigurer(MatrixType& matrix) : ts_(&matrix) {}
+    TimeSeriesConfigurer(Matrix<>& matrix) : ts_(&matrix) {}
     TimeSeriesConfigurer& setColumnCount(unsigned int columnCount);
     TimeSeriesConfigurer& fillColumnWith(unsigned int column, double value);
 private:
-    MatrixType* ts_ = nullptr;
+    Matrix<>* ts_ = nullptr;
 };
-
-template<class MatrixType>
-TimeSeriesConfigurer<MatrixType>& TimeSeriesConfigurer<MatrixType>::setColumnCount(unsigned int columnCount)
-{
-    ts_->resize(columnCount, HOURS_PER_YEAR);
-    return *this;
-}
-
-template<class MatrixType>
-TimeSeriesConfigurer<MatrixType>& TimeSeriesConfigurer<MatrixType>::fillColumnWith(unsigned int column, double value)
-{
-    ts_->fillColumn(column, value);
-    return *this;
-}
 
 
 class ThermalClusterConfig
@@ -55,7 +40,7 @@ public:
 
 private:
     ThermalCluster* cluster_ = nullptr;
-    TimeSeriesConfigurer<Matrix<double>> tsAvailablePowerConfig_;
+    TimeSeriesConfigurer tsAvailablePowerConfig_;
 };
 
 std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName);
@@ -87,6 +72,7 @@ public:
     averageResults load(Area* area);
     averageResults flow(AreaLink* link);
     averageResults thermalGeneration(ThermalCluster* cluster);
+    averageResults thermalNbUnitsON(ThermalCluster* cluster);
 
 private:
     template<class VCard>
@@ -139,7 +125,6 @@ private:
     Rules::Ptr rules_;
 };
 
-
 // =====================
 // Simulation handler
 // =====================
@@ -161,6 +146,7 @@ private:
     NullDurationCollector nullDurationCollector_;
     Settings settings_;
     Study& study_;
+    NullResultWriter resultWriter_;
 };
 
 
@@ -184,15 +170,3 @@ struct StudyBuilder
 };
 
 std::shared_ptr<Antares::Data::BindingConstraint> addBindingConstraints(Antares::Data::Study& study, std::string name, std::string group);
-
-class NullResultWriter: public Solver::IResultWriter {
-    void addEntryFromBuffer(const std::string &, Clob &) override;
-
-    void addEntryFromBuffer(const std::string &, std::string &) override;
-
-    void addEntryFromFile(const std::string &, const std::string &) override;
-
-    bool needsTheJobQueue() const override;
-
-    void finalize(bool ) override;
-};

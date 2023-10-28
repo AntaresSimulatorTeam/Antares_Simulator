@@ -42,10 +42,10 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class ATimeSeries : public Renderer::Matrix<double, int32_t>, public Renderer::ARendererArea
+class ATimeSeries : public Renderer::Matrix<double>, public Renderer::ARendererArea
 {
 public:
-    using AncestorType = Renderer::Matrix<double, int32_t>;
+    using AncestorType = Renderer::Matrix<double>;
 
 public:
     ATimeSeries(wxWindow* control, Toolbox::InputSelector::Area* notifier);
@@ -117,7 +117,7 @@ protected:
 class TimeSeriesLoad final : public ATimeSeries
 {
 public:
-    using AncestorType = Renderer::Matrix<double, int32_t>;
+    using AncestorType = Renderer::Matrix<double>;
 
 public:
     TimeSeriesLoad(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -147,7 +147,7 @@ public:
 protected:
     virtual void internalAreaChanged(Antares::Data::Area* area)
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->load.series->timeSeries) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->load.series.timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -155,7 +155,7 @@ protected:
 class TimeSeriesSolar final : public ATimeSeries
 {
 public:
-    using AncestorType = Renderer::Matrix<double, int32_t>;
+    using AncestorType = Renderer::Matrix<double>;
 
 public:
     TimeSeriesSolar(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -185,7 +185,7 @@ public:
 protected:
     virtual void internalAreaChanged(Antares::Data::Area* area)
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->solar.series->timeSeries) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->solar.series.timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -193,7 +193,7 @@ protected:
 class TimeSeriesWind final : public ATimeSeries
 {
 public:
-    using AncestorType = Renderer::Matrix<double, int32_t>;
+    using AncestorType = Renderer::Matrix<double>;
 
 public:
     TimeSeriesWind(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -223,7 +223,7 @@ public:
 protected:
     virtual void internalAreaChanged(Antares::Data::Area* area)
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->wind.series->timeSeries) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->wind.series.timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -231,7 +231,7 @@ protected:
 class TimeSeriesHydroFatal final : public ATimeSeries
 {
 public:
-    using AncestorType = Renderer::Matrix<double, int32_t>;
+    using AncestorType = Renderer::Matrix<double>;
 
 public:
     TimeSeriesHydroFatal(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -256,7 +256,7 @@ public:
 protected:
     virtual void internalAreaChanged(Antares::Data::Area* area)
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->ror) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->ror.timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -264,7 +264,7 @@ protected:
 class TimeSeriesHydroMod final : public ATimeSeries
 {
 public:
-    using AncestorType = Renderer::Matrix<double, int32_t>;
+    using AncestorType = Renderer::Matrix<double>;
 
 public:
     TimeSeriesHydroMod(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -294,7 +294,7 @@ public:
 protected:
     virtual void internalAreaChanged(Antares::Data::Area* area)
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->storage) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->storage.timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -303,7 +303,7 @@ protected:
 class TimeSeriesHydroMinGen final : public ATimeSeries
 {
 public:
-    using AncestorType = Renderer::Matrix<double, int32_t>;
+    using AncestorType = Renderer::Matrix<double>;
 
     TimeSeriesHydroMinGen(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
      ATimeSeries(control, notifier)
@@ -327,7 +327,7 @@ public:
 private:
     void internalAreaChanged(Antares::Data::Area* area) override
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->mingen) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->mingen.timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -483,7 +483,7 @@ public:
 protected:
     void internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster)
     {
-        matrix((CurrentStudyIsValid() && cluster) ? &(cluster->series->timeSeries) : NULL);
+        matrix((CurrentStudyIsValid() && cluster) ? &(cluster->series.timeSeries) : NULL);
     }
 
     void onStudyClosed() override;
@@ -532,7 +532,7 @@ public:
 private:
     void internalRenewableClusterChanged(Antares::Data::RenewableCluster* cluster)
     {
-        matrix((CurrentStudyIsValid() && cluster) ? &(cluster->series->timeSeries) : NULL);
+        matrix((CurrentStudyIsValid() && cluster) ? &(cluster->series.timeSeries) : NULL);
     }
 
     void onStudyClosed() override;

@@ -186,7 +186,7 @@ public:
     */
     void resizeAllTimeseriesNumbers(uint n);
 
-    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
+    void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 
     //@}
 
@@ -245,8 +245,6 @@ public:
     int saveDataSeriesToFolder(const AnyString& folder, const YString& msg) const;
 
     virtual bool saveToFolder(const AnyString& folder) const = 0;
-
-    void ensureDataTimeSeries();
 
     //! \name Informations
     //@{

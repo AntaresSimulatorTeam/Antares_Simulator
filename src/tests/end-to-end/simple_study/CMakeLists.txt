@@ -16,7 +16,6 @@ target_link_libraries(tests-simple-study
 						antares-solver-main-economy
 						antares-solver-main-adequacy
 						antares-solver-hydro
-						antares-solver-aleatoire
 						antares-solver-variable
 						antares-solver-simulation
 						antares-solver-ts-generator

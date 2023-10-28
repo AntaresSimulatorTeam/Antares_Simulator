@@ -74,7 +74,7 @@ public:
 
     bool loadTimeSeries(const Study& study, const AnyString& folder);
 
-    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
+    void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 
     //! \name Area
     //@{

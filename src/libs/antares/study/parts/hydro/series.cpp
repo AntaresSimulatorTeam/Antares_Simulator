@@ -43,121 +43,18 @@ namespace Antares
 {
 namespace Data
 {
-DataSeriesHydro::DataSeriesHydro()
+
+// TODO : this function should not be here, as it applies to 
+//        any time series, not just hydro TS.
+static void resizeMatrixNoDataLoss(Matrix<double>& matrixToResize, uint width)
 {
-    // Pmin was introduced in v8.6
-    // The previous behavior was Pmin=0
-    // For compatibility reasons with existing studies, mingen, maxHourlyGenPower and maxHourlyPumpPower are set to one
-    // column of zeros by default
-    mingen.reset(1, HOURS_PER_YEAR);
-    maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
-    maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
+    matrixToResize.resizeWithoutDataLost(width, matrixToResize.height);
+    for (uint x = 1; x < width; ++x)
+        matrixToResize.pasteToColumn(x, matrixToResize[0]);
 }
 
-void DataSeriesHydro::copyGenerationTS(const DataSeriesHydro& source)
-{
-    ror = source.ror;
-    storage = source.storage;
-    mingen = source.mingen;
-
-    generationTScount_ = source.generationTScount_;
-
-    source.ror.unloadFromMemory();
-    source.storage.unloadFromMemory();
-    source.mingen.unloadFromMemory();
-}
-
-bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& folder) const
-{
-    String buffer;
-    buffer.clear() << folder << SEP << areaID;
-    /* Make sure the folder is created */
-    if (IO::Directory::Create(buffer))
-    {
-        bool ret = true;
-
-        // Saving data
-        buffer.clear() << folder << SEP << areaID << SEP << "ror.txt";
-        ret = ror.saveToCSVFile(buffer, 0) && ret;
-        buffer.clear() << folder << SEP << areaID << SEP << "mod.txt";
-        ret = storage.saveToCSVFile(buffer, 0) && ret;
-        buffer.clear() << folder << SEP << areaID << SEP << "mingen.txt";
-        ret = mingen.saveToCSVFile(buffer, 0) && ret;
-        buffer.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower.txt";
-        ret = maxHourlyGenPower.saveToCSVFile(buffer, 0) && ret;
-        buffer.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower.txt";
-        ret = maxHourlyPumpPower.saveToCSVFile(buffer, 0) && ret;
-        return ret;
-    }
-    return false;
-}
-
-bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID, const AnyString& folder, unsigned int studyVersion)
-{
-    timeseriesNumbers.clear();
-
-    bool ret = loadTSfromFile(ror, areaID, folder, "ror.txt", HOURS_PER_YEAR);
-    ret = loadTSfromFile(storage, areaID, folder, "mod.txt", DAYS_PER_YEAR) && ret;
-    if (studyVersion >= 860)
-        ret = loadTSfromFile(mingen, areaID, folder, "mingen.txt", HOURS_PER_YEAR) && ret;
-    return ret;
-}
-
-bool DataSeriesHydro::forceReload(bool reload) const
-{
-    bool ret = true;
-    ret = ror.forceReload(reload) && ret;
-    ret = storage.forceReload(reload) && ret;
-    ret = mingen.forceReload(reload) && ret;
-    ret = maxHourlyGenPower.forceReload(reload) && ret;
-    ret = maxHourlyPumpPower.forceReload(reload) && ret;
-    return ret;
-}
-
-void DataSeriesHydro::markAsModified() const
-{
-    ror.markAsModified();
-    storage.markAsModified();
-    mingen.markAsModified();
-    maxHourlyGenPower.markAsModified();
-    maxHourlyPumpPower.markAsModified();
-}
-
-void DataSeriesHydro::reset()
-{
-    ror.reset(1, HOURS_PER_YEAR);
-    storage.reset(1, DAYS_PER_YEAR);
-    mingen.reset(1, HOURS_PER_YEAR);
-    generationTScount_ = 1;
-
-    maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
-    maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
-    maxPowerTScount_ = 1;
-}
-
-void DataSeriesHydro::resizeRORandSTORAGE(unsigned int width)
-{
-    ror.resize(width, HOURS_PER_YEAR);
-    storage.resize(width, DAYS_PER_YEAR);
-    generationTScount_ = width;
-}
-
-void DataSeriesHydro::resizeGenerationTS(unsigned int w, unsigned int h)
-{
-    ror.resize(w, h);
-    storage.resize(w, std::min((unsigned int)DAYS_PER_YEAR, h));
-    mingen.resize(w, h);
-    generationTScount_ = w;
-}
-
-uint64_t DataSeriesHydro::memoryUsage() const
-{
-    return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage()
-           + maxHourlyGenPower.memoryUsage() + maxHourlyPumpPower.memoryUsage();
-}
-
-unsigned int EqualizeTSsize(Matrix<double, int32_t>& TScollection1,
-    Matrix<double, int32_t>& TScollection2,
+static uint EqualizeTSsize(Matrix<double>& TScollection1,
+    Matrix<double>& TScollection2,
     bool& fatalError,
     const std::string& fatalErrorMsg,
     Area& area,
@@ -196,20 +93,7 @@ unsigned int EqualizeTSsize(Matrix<double, int32_t>& TScollection1,
     return pairOfTSsizes.sup();
 }
 
-void DataSeriesHydro::copyMaxPowerTS(const DataSeriesHydro& source)
-{
-    maxHourlyGenPower = source.maxHourlyGenPower;
-    maxHourlyPumpPower = source.maxHourlyPumpPower;
-
-    maxPowerTScount_ = source.maxPowerTScount_;
-
-    source.maxHourlyGenPower.unloadFromMemory();
-    source.maxHourlyPumpPower.unloadFromMemory();
-}
-
-
-
-bool loadTSfromFile(Matrix<double, int32_t>& ts, 
+static bool loadTSfromFile(Matrix<double>& ts,
                     const AreaName& areaID,
                     const AnyString& folder,
                     const std::string& filename,
@@ -221,49 +105,8 @@ bool loadTSfromFile(Matrix<double, int32_t>& ts,
     return ts.loadFromCSVFile(filePath, 1, height, &fileContent);
 }
 
-void DataSeriesHydro::EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver, bool& fatalError)
-{
-    if (!usedByTheSolver) // From GUI, no need to equalize TS collections sizes
-        return;
-
-    // Equalize ROR and INFLOWS time series sizes
-    // ------------------------------------------
-    std::string fatalErrorMsg = "Hydro : area `" + area.id.to<std::string>() + "` : ";
-    fatalErrorMsg += "ROR and INFLOWS must have the same number of time series.";
-
-    generationTScount_ = EqualizeTSsize(ror, storage, fatalError, fatalErrorMsg, area, HOURS_PER_YEAR, DAYS_PER_YEAR);
-
-    logs.info() << "  '" << area.id << "': ROR and INFLOWS time series were both set to : " << generationTScount_;
-
-    // Equalize ROR and MINGEN time series sizes
-    // -----------------------------------------
-    fatalErrorMsg = "Hydro : area `" + area.id.to<std::string>() + "` : ";
-    fatalErrorMsg += "ROR and MINGEN must have the same number of time series.";
-
-    generationTScount_ = EqualizeTSsize(ror, mingen, fatalError, fatalErrorMsg, area);
-
-    logs.info() << "  '" << area.id << "': ROR and MINGEN time series were both set to : " << generationTScount_;
-}
-
-bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& folder)
-{
-    bool ret = true;
-    YString filepath;
-    Matrix<>::BufferType fileContent;
-
-    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower.txt";
-    ret = maxHourlyGenPower.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
-
-    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower.txt";
-    ret = maxHourlyPumpPower.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
-
-    timeseriesNumbersHydroMaxPower.clear();
-
-    return ret;
-}
-
-void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
-                                Matrix<double, int32_t>::ColumnType& hourlyColumn)
+static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
+                                Matrix<double>::ColumnType& hourlyColumn)
 {
     uint hour = 0;
     uint day = 0;
@@ -279,23 +122,196 @@ void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
     }
 }
 
+
+
+DataSeriesHydro::DataSeriesHydro() :
+    ror(timeseriesNumbers),
+    storage(timeseriesNumbers),
+    mingen(timeseriesNumbers),
+    maxHourlyGenPower(timeseriesNumbersHydroMaxPower),
+    maxHourlyPumpPower(timeseriesNumbersHydroMaxPower)
+{
+    // Pmin was introduced in v8.6
+    // The previous behavior was Pmin=0
+    // For compatibility reasons with existing studies, mingen, maxHourlyGenPower and maxHourlyPumpPower are set to one
+    // column of zeros by default
+    mingen.reset();
+    maxHourlyGenPower.reset();
+    maxHourlyPumpPower.reset();
+}
+
+void DataSeriesHydro::copyGenerationTS(const DataSeriesHydro& source)
+{
+    ror.timeSeries = source.ror.timeSeries;
+    storage.timeSeries = source.storage.timeSeries;
+    mingen.timeSeries = source.mingen.timeSeries;
+
+    generationTScount_ = source.generationTScount_;
+
+    source.ror.unloadFromMemory();
+    source.storage.unloadFromMemory();
+    source.mingen.unloadFromMemory();
+}
+
+void DataSeriesHydro::copyMaxPowerTS(const DataSeriesHydro& source)
+{
+    maxHourlyGenPower.timeSeries = source.maxHourlyGenPower.timeSeries;
+    maxHourlyPumpPower.timeSeries = source.maxHourlyPumpPower.timeSeries;
+
+    maxPowerTScount_ = source.maxPowerTScount_;
+
+    source.maxHourlyGenPower.unloadFromMemory();
+    source.maxHourlyPumpPower.unloadFromMemory();
+}
+
+void DataSeriesHydro::reset()
+{
+    ror.timeSeries.reset(1, HOURS_PER_YEAR);
+    storage.timeSeries.reset(1, DAYS_PER_YEAR);
+    mingen.timeSeries.reset(1, HOURS_PER_YEAR);
+    generationTScount_ = 1;
+
+    maxHourlyGenPower.timeSeries.reset(1, HOURS_PER_YEAR);
+    maxHourlyPumpPower.timeSeries.reset(1, HOURS_PER_YEAR);
+    maxPowerTScount_ = 1;
+}
+
+void DataSeriesHydro::resizeRORandSTORAGE(uint width)
+{
+    ror.timeSeries.resize(width, HOURS_PER_YEAR);
+    storage.timeSeries.resize(width, DAYS_PER_YEAR);
+    generationTScount_ = width;
+}
+
+void DataSeriesHydro::resizeGenerationTS(uint w, uint h)
+{
+    ror.timeSeries.resize(w, h);
+    storage.timeSeries.resize(w, std::min((uint)DAYS_PER_YEAR, h));
+    mingen.timeSeries.resize(w, h);
+    generationTScount_ = w;
+}
+
+void DataSeriesHydro::resizeMaxPowerTS(uint w, uint h)
+{
+    maxHourlyGenPower.timeSeries.reset(w, h);
+    maxHourlyPumpPower.timeSeries.reset(w, h);
+    maxPowerTScount_ = w;
+}
+
+bool DataSeriesHydro::forceReload(bool reload) const
+{
+    bool ret = true;
+    ret = ror.timeSeries.forceReload(reload) && ret;
+    ret = storage.timeSeries.forceReload(reload) && ret;
+    ret = mingen.timeSeries.forceReload(reload) && ret;
+    ret = maxHourlyGenPower.timeSeries.forceReload(reload) && ret;
+    ret = maxHourlyPumpPower.timeSeries.forceReload(reload) && ret;
+    return ret;
+}
+
+void DataSeriesHydro::markAsModified() const
+{
+    ror.timeSeries.markAsModified();
+    storage.timeSeries.markAsModified();
+    mingen.timeSeries.markAsModified();
+    maxHourlyGenPower.timeSeries.markAsModified();
+    maxHourlyPumpPower.timeSeries.markAsModified();
+}
+
+void DataSeriesHydro::EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver, bool& fatalError)
+{
+    if (!usedByTheSolver) // From GUI, no need to equalize TS collections sizes
+        return;
+
+    // Equalize ROR and INFLOWS time series sizes
+    // ------------------------------------------
+    std::string fatalErrorMsg = "Hydro : area `" + area.id.to<std::string>() + "` : ";
+    fatalErrorMsg += "ROR and INFLOWS must have the same number of time series.";
+
+    generationTScount_ = EqualizeTSsize(ror.timeSeries, storage.timeSeries, fatalError, fatalErrorMsg, area, HOURS_PER_YEAR, DAYS_PER_YEAR);
+
+    logs.info() << "  '" << area.id << "': ROR and INFLOWS time series were both set to : " << generationTScount_;
+
+    // Equalize ROR and MINGEN time series sizes
+    // -----------------------------------------
+    fatalErrorMsg = "Hydro : area `" + area.id.to<std::string>() + "` : ";
+    fatalErrorMsg += "ROR and MINGEN must have the same number of time series.";
+
+    generationTScount_ = EqualizeTSsize(ror.timeSeries, mingen.timeSeries, fatalError, fatalErrorMsg, area);
+
+    logs.info() << "  '" << area.id << "': ROR and MINGEN time series were both set to : " << generationTScount_;
+}
+
+bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID, const AnyString& folder, unsigned int studyVersion)
+{
+    timeseriesNumbers.clear();
+
+    bool ret = loadTSfromFile(ror.timeSeries, areaID, folder, "ror.txt", HOURS_PER_YEAR);
+    ret = loadTSfromFile(storage.timeSeries, areaID, folder, "mod.txt", DAYS_PER_YEAR) && ret;
+    if (studyVersion >= 860)
+        ret = loadTSfromFile(mingen.timeSeries, areaID, folder, "mingen.txt", HOURS_PER_YEAR) && ret;
+    return ret;
+}
+
+bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& folder)
+{
+    bool ret = true;
+    YString filepath;
+    Matrix<>::BufferType fileContent;
+
+    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower.txt";
+    ret = maxHourlyGenPower.timeSeries.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
+
+    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower.txt";
+    ret = maxHourlyPumpPower.timeSeries.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
+
+    timeseriesNumbersHydroMaxPower.clear();
+
+    return ret;
+}
+
 void DataSeriesHydro::buildMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
                                                const Matrix<double>::ColumnType& DailyMaxPumpPower)
 {
     maxPowerTScount_ = 1;
 
-    maxHourlyGenPower.reset(maxPowerTScount_, HOURS_PER_YEAR);
-    maxHourlyPumpPower.reset(maxPowerTScount_, HOURS_PER_YEAR);
+    maxHourlyGenPower.timeSeries.reset(maxPowerTScount_, HOURS_PER_YEAR);
+    maxHourlyPumpPower.timeSeries.reset(maxPowerTScount_, HOURS_PER_YEAR);
 
     ConvertDailyTSintoHourlyTS(DailyMaxGenPower, maxHourlyGenPower[0]);
     ConvertDailyTSintoHourlyTS(DailyMaxPumpPower, maxHourlyPumpPower[0]);
 }
 
-void DataSeriesHydro::resizeMaxPowerTS(unsigned int w, unsigned int h)
+bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& folder) const
 {
-    maxHourlyGenPower.reset(w, h);
-    maxHourlyPumpPower.reset(w, h);
-    maxPowerTScount_ = w;
+    String buffer;
+    buffer.clear() << folder << SEP << areaID;
+    /* Make sure the folder is created */
+    if (IO::Directory::Create(buffer))
+    {
+        bool ret = true;
+
+        // Saving data
+        buffer.clear() << folder << SEP << areaID << SEP << "ror.txt";
+        ret = ror.timeSeries.saveToCSVFile(buffer, 0) && ret;
+        buffer.clear() << folder << SEP << areaID << SEP << "mod.txt";
+        ret = storage.timeSeries.saveToCSVFile(buffer, 0) && ret;
+        buffer.clear() << folder << SEP << areaID << SEP << "mingen.txt";
+        ret = mingen.timeSeries.saveToCSVFile(buffer, 0) && ret;
+        buffer.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower.txt";
+        ret = maxHourlyGenPower.timeSeries.saveToCSVFile(buffer, 0) && ret;
+        buffer.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower.txt";
+        ret = maxHourlyPumpPower.timeSeries.saveToCSVFile(buffer, 0) && ret;
+
+        return ret;
+    }
+    return false;
+}
+
+uint64_t DataSeriesHydro::memoryUsage() const
+{
+    return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage()
+           + maxHourlyGenPower.memoryUsage() + maxHourlyPumpPower.memoryUsage();
 }
 
 void DataSeriesHydro::EqualizeMaxPowerTSsizes(Area& area, bool& fatalError)
@@ -303,15 +319,16 @@ void DataSeriesHydro::EqualizeMaxPowerTSsizes(Area& area, bool& fatalError)
     std::string fatalErrorMsg = "Hydro Max Power: " + area.id.to<std::string>() + " : ";
     fatalErrorMsg += "generation and pumping must have the same number of TS.";
 
-    maxPowerTScount_ = EqualizeTSsize(maxHourlyGenPower, maxHourlyPumpPower, fatalError, fatalErrorMsg, area);
+    maxPowerTScount_
+      = EqualizeTSsize(maxHourlyGenPower.timeSeries, maxHourlyPumpPower.timeSeries, fatalError, fatalErrorMsg, area);
 
-    logs.info() << "  '" << area.id << "': The number of hydro max power (generation and pumping) " 
+    logs.info() << "  '" << area.id << "': The number of hydro max power (generation and pumping) "
                 << "TS were both set to : " << maxPowerTScount_;
 }
 
 void DataSeriesHydro::setHydroModulability(Area& area) const
 {
-    if (MatrixTestForAtLeastOnePositiveValue(maxHourlyGenPower))
+    if (MatrixTestForAtLeastOnePositiveValue(maxHourlyGenPower.timeSeries))
     {
         area.hydro.hydroModulable = true;
     }
@@ -327,7 +344,7 @@ uint DataSeriesHydro::maxPowerTScount() const
     return maxPowerTScount_;
 }
 
-void DataSeriesHydro::resizeTSinDeratedMode(bool derated, 
+void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
                                             unsigned int studyVersion,
                                             bool usedBySolver)
 {
@@ -346,15 +363,6 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
         maxHourlyPumpPower.averageTimeseries();
         maxPowerTScount_ = 1;
     }
-}
-
-// TODO : this function should not be here, as it applies to 
-//        any time series, not just hydro TS.
-void resizeMatrixNoDataLoss(Matrix<double, int32_t>& matrixToResize, uint width)
-{
-    matrixToResize.resizeWithoutDataLost(width, matrixToResize.height);
-    for (uint x = 1; x < width; ++x)
-        matrixToResize.pasteToColumn(x, matrixToResize[0]);
 }
 
 } // namespace Data

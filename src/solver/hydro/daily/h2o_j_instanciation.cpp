@@ -28,11 +28,11 @@
 #include "h2o_j_donnees_mensuelles.h"
 #include "h2o_j_fonctions.h"
 
-DONNEES_MENSUELLES H2O_J_Instanciation(void)
+DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 {
-    DONNEES_MENSUELLES DonneesMensuelles;
+    DONNEES_MENSUELLES* DonneesMensuelles = new DONNEES_MENSUELLES;
 
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles.ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
     ProblemeHydraulique.NombreDeProblemes = 4;
 
@@ -44,10 +44,10 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
     NbJoursDUnProbleme[2] = 30;
     NbJoursDUnProbleme[3] = 31;
 
-    DonneesMensuelles.TurbineMax.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuelles.TurbineMin.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuelles.TurbineCible.assign(NbJoursDUnProbleme[3], 0.);
-    DonneesMensuelles.Turbine.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles->TurbineMax.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles->TurbineMin.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles->TurbineCible.assign(NbJoursDUnProbleme[3], 0.);
+    DonneesMensuelles->Turbine.assign(NbJoursDUnProbleme[3], 0.);
 
     int NombreDeProblemes = ProblemeHydraulique.NombreDeProblemes;
 
@@ -60,8 +60,6 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
     ProblemeHydraulique.ProblemeLineairePartieVariable.resize(NombreDeProblemes);
 
     ProblemeHydraulique.ProblemeSpx.assign(NombreDeProblemes, nullptr);
-
-    ProblemeHydraulique.Probleme = NULL;
 
     std::vector<CORRESPONDANCE_DES_VARIABLES>& CorrespondanceDesVariables
         = ProblemeHydraulique.CorrespondanceDesVariables;
@@ -77,7 +75,7 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void)
 
     for (int i = 0; i < NombreDeProblemes; i++)
     {
-        int NbPdt = NbJoursDUnProbleme[i];
+        const int NbPdt = NbJoursDUnProbleme[i];
 
         CorrespondanceDesVariables[i].NumeroDeVariableTurbine.assign(NbPdt, 0);
         CorrespondanceDesContraintes[i].NumeroDeContrainteSurXi.assign(NbPdt, 0);

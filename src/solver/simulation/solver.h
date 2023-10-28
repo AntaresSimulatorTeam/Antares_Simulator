@@ -65,7 +65,8 @@ public:
     */
     ISimulation(Data::Study& study,
                 const ::Settings& settings,
-                Benchmarking::IDurationCollector& duration_collector);
+                Benchmarking::IDurationCollector& duration_collector,
+                IResultWriter& resultWriter);
     //! Destructor
     ~ISimulation();
     //@}
@@ -173,7 +174,7 @@ public:
     //! The queue service that runs every set of parallel years
     std::shared_ptr<Yuni::Job::QueueService> pQueueService = nullptr;
     //! Result writer
-    Antares::Solver::IResultWriter::Ptr pResultWriter = nullptr;
+    Antares::Solver::IResultWriter& pResultWriter;
 
 }; // class ISimulation
 } // namespace Antares::Solver::Simulation

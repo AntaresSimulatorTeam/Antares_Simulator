@@ -105,7 +105,7 @@ public:
                     const Data::Parameters& params,
                     const Date::Calendar& calendar,
                     unsigned int maxNbYearsInParallel,
-                    Solver::IResultWriter::Ptr resultWriter);
+                    Solver::IResultWriter& resultWriter);
 
     ~HydroManagement();
 
@@ -121,24 +121,25 @@ public:
 
 private:
     //! Prepare inflows scaling for each area
-    void prepareInflowsScaling(uint numSpace);
+    void prepareInflowsScaling(uint numSpace, uint year);
     //! Prepare minimum generation scaling for each area
-    void minGenerationScaling(uint numSpace);
+    void minGenerationScaling(uint numSpace, uint year) const;
     //! check Monthly minimum generation is lower than available inflows
-    bool checkMonthlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const;
+    bool checkMonthlyMinGeneration(uint numSpace, uint year, const Data::Area& area) const;
     //! check Yearly minimum generation is lower than available inflows
-    bool checkYearlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const;
+    bool checkYearlyMinGeneration(uint numSpace, uint year, const Data::Area& area) const;
     //! check Weekly minimum generation is lower than available inflows
-    bool checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) const;
+    bool checkWeeklyMinGeneration(uint year, const Data::Area& area) const;
     //! check Hourly minimum generation is lower than available inflows
     bool checkGenerationPowerConsistency(uint numSpace) const;
     //! check minimum generation is lower than available inflows
-    bool checkMinGeneration(uint numSpace);
+    bool checkHourlyMinGeneration(uint year, const Data::Area& area) const;
     //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false
     bool checksOnGenerationPowerBounds(uint numSpace);
+    //! check minimum generation is lower than available inflows
+    bool checkMinGeneration(uint numSpace, uint year) const;
     //! Prepare the net demand for each area
-    template<enum Data::StudyMode ModeT>
-    void prepareNetDemand(uint numSpace);
+    void prepareNetDemand(uint numSpace, uint year, Data::StudyMode mode);
     //! Prepare the effective demand for each area
     void prepareEffectiveDemand(uint numSpace);
     //! Monthly Optimal generations
@@ -174,7 +175,7 @@ private:
     const Data::Parameters& parameters_;
     MersenneTwister random_;
     unsigned int maxNbYearsInParallel_ = 0;
-    Solver::IResultWriter::Ptr resultWriter_;
+    Solver::IResultWriter& resultWriter_;
 
     ALL_HYDRO_VENTILATION_RESULTS ventilationResults_;
 }; // class HydroManagement

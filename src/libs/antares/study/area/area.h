@@ -209,9 +209,9 @@ public:
     /*!
     ** \brief Get the XCast data according a given time-series type
     */
-    template<enum TimeSeries T>
+    template<enum TimeSeriesType T>
     XCast* xcastData();
-    template<enum TimeSeries T>
+    template<enum TimeSeriesType T>
     const XCast* xcastData() const;
 
 public:
@@ -795,29 +795,14 @@ AreaLink* AreaListAddLink(AreaList* l, const char area[], const char with[], boo
 void AreaListClearAllLinks(AreaList* l);
 
 /*!
-** \brief Ensure data for load time-series are initialized
-*/
-void AreaListEnsureDataLoadTimeSeries(AreaList* l);
-
-/*!
 ** \brief Ensure data for load prepro are initialized
 */
 void AreaListEnsureDataLoadPrepro(AreaList* l);
 
 /*!
-** \brief Ensure data for load time-series are initialized
-*/
-void AreaListEnsureDataSolarTimeSeries(AreaList* l);
-
-/*!
 ** \brief Ensure data for solar prepro are initialized
 */
 void AreaListEnsureDataSolarPrepro(AreaList* l);
-
-/*!
-** \brief Ensure data for wind time-series are initialized
-*/
-void AreaListEnsureDataWindTimeSeries(AreaList* l);
 
 /*!
 ** \brief Ensure data for wind prepro are initialized
@@ -834,15 +819,6 @@ void AreaListEnsureDataHydroTimeSeries(AreaList* l);
 */
 void AreaListEnsureDataHydroPrepro(AreaList* l);
 
-/*!
-** \brief Ensure data for thermal time-series are initialized
-*/
-void AreaListEnsureDataThermalTimeSeries(AreaList* l);
-
-/*!
-** \brief Ensure data for renewable time-series are initialized
-*/
-void AreaListEnsureDataRenewableTimeSeries(AreaList* l);
 
 /*!
 ** \brief Ensure data for thermal prepro are initialized

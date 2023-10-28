@@ -321,7 +321,7 @@ public:
     ** \return True if the operation succeeded (the file have been written), false otherwise
     */
     template<unsigned int TimeSeriesT>
-    void storeTimeSeriesNumbers() const;
+    void storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) const;
     //@}
 
     //! \name Simulation
@@ -344,7 +344,7 @@ public:
     */
     void prepareOutput();
 
-    void saveAboutTheStudy();
+    void saveAboutTheStudy(Solver::IResultWriter& resultWriter);
 
     /*!
     ** \brief Initialize the progress meter
@@ -357,7 +357,7 @@ public:
     /*!
     ** \brief Destroy all data of the TS generator '@TS'
     */
-    template<enum TimeSeries TS>
+    template<enum TimeSeriesType TS>
     void destroyTSGeneratorData();
 
     //! Destroy all data of the load TS generator
@@ -482,7 +482,7 @@ public:
     /*!
     ** \brief Copy the log file from the 'logs' folder to the current output folder
     */
-    void importLogsToOutputFolder() const;
+    void importLogsToOutputFolder(Solver::IResultWriter& resultWriter) const;
     //@}
     //! \name Check validity of Min Stable Power of Thermal Clusters
     //@{
@@ -492,8 +492,6 @@ public:
     ** Should be call then all inforation is suplied in to the thermal clusters.
     */
     void computePThetaInfForThermalClusters() const;
-
-    void prepareWriter(Benchmarking::IDurationCollector& duration_collector);
 
     //! Header (general information about the study)
     StudyHeader header;
@@ -612,7 +610,7 @@ public:
     ScenarioBuilder::Sets* scenarioRules = nullptr;
     //@}
 
-    Matrix<double> scenarioHydroLevels;
+    TimeSeries::TS scenarioHydroLevels;
 
     /*!
     ** \brief Runtime informations
@@ -655,9 +653,6 @@ public:
 
     //! The queue service that runs every set of parallel years
     std::shared_ptr<Yuni::Job::QueueService> pQueueService;
-
-    //! Result writer, required to write residual files (comments, about-the-study, etc.)
-    Solver::IResultWriter::Ptr resultWriter = nullptr;
 
 public:
     //! \name TS Generators

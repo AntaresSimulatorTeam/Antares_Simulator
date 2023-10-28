@@ -123,7 +123,7 @@ public:
     /*!
     ** \brief Constructor
     */
-    XCast(TimeSeries ts);
+    XCast(TimeSeriesType ts);
     /*!
     ** \brief Destructor
     */
@@ -208,7 +208,7 @@ public:
     Matrix<float> conversion;
 
     //! The related time-series
-    const TimeSeries timeSeries;
+    const TimeSeriesType timeSeries;
 
 protected:
     void resetTransferFunction();

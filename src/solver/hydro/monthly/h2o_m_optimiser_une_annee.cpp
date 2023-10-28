@@ -28,26 +28,21 @@
 #include "h2o_m_donnees_annuelles.h"
 #include "h2o_m_fonctions.h"
 
-void H2O_M_OptimiserUneAnnee(DONNEES_ANNUELLES* DonneesAnnuelles, int NumeroDeReservoir)
+void H2O_M_OptimiserUneAnnee(DONNEES_ANNUELLES& DonneesAnnuelles, int NumeroDeReservoir)
 {
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
 
-    ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
-
-    if (NumeroDeReservoir < 0 || NumeroDeReservoir > ProblemeHydraulique->NombreDeReservoirs)
+    if (NumeroDeReservoir < 0 || NumeroDeReservoir > ProblemeHydraulique.NombreDeReservoirs)
     {
-        DonneesAnnuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
+        DonneesAnnuelles.ResultatsValides = EMERGENCY_SHUT_DOWN;
         return;
     }
 
-    DonneesAnnuelles->ResultatsValides = NON;
+    DonneesAnnuelles.ResultatsValides = NON;
 
     H2O_M_InitialiserBornesEtCoutsDesVariables(DonneesAnnuelles);
-
     H2O_M_AjouterBruitAuCout(DonneesAnnuelles);
-
     H2O_M_InitialiserLeSecondMembre(DonneesAnnuelles);
-
     H2O_M_ResoudreLeProblemeLineaire(DonneesAnnuelles, NumeroDeReservoir);
 
     return;

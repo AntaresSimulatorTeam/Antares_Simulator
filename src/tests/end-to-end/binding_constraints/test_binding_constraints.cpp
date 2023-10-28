@@ -31,11 +31,11 @@ StudyForBCTest::StudyForBCTest()
     Area* area1 = addAreaToStudy("Area 1");
     Area* area2 = addAreaToStudy("Area 2");
 
-    TimeSeriesConfigurer(area1->load.series->timeSeries)
+    TimeSeriesConfigurer(area1->load.series.timeSeries)
         .setColumnCount(1)
         .fillColumnWith(0, 0);
 
-    TimeSeriesConfigurer(area2->load.series->timeSeries)
+    TimeSeriesConfigurer(area2->load.series.timeSeries)
         .setColumnCount(1)
         .fillColumnWith(0, 100);
 
@@ -86,7 +86,6 @@ StudyWithBConCluster::StudyWithBConCluster()
     BC->weight(cluster.get(), 1);
     BC->enabled(true);
 }
-
 
 BOOST_FIXTURE_TEST_SUITE(TESTS_BINDING_CONSTRAINTS_ON_A_LINK, StudyWithBConLink)
 

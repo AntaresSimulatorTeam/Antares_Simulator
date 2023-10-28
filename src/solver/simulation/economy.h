@@ -36,6 +36,7 @@
 
 #include "solver.h" // for definition of type yearRandomNumbers
 #include "antares/infoCollection/StudyInfoCollector.h"
+#include "opt_time_writer.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -56,7 +57,7 @@ public:
     **
     ** \param study The current study
     */
-    Economy(Data::Study& study);
+    Economy(Data::Study& study, IResultWriter& resultWriter);
     //! Destructor
     ~Economy() = default;
     //@}
@@ -82,7 +83,8 @@ protected:
               yearRandomNumbers& randomForYear,
               std::list<uint>& failedWeekList,
               bool isFirstPerformedYearOfSimulation,
-              const ALL_HYDRO_VENTILATION_RESULTS&);
+              const ALL_HYDRO_VENTILATION_RESULTS&,
+              OptimizationStatisticsWriter& optWriter);
 
     void incrementProgression(Progression::Task& progression);
 
@@ -91,7 +93,7 @@ protected:
     /*!
     ** \brief Prepare clusters in 'must-run' mode
     */
-    void prepareClustersInMustRunMode(uint numSpace);
+    void prepareClustersInMustRunMode(uint numSpace, uint year);
 
     void initializeState(Variable::State& state, uint numSpace);
 
@@ -103,6 +105,7 @@ private:
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     std::vector<std::unique_ptr<Antares::Solver::Optimization::WeeklyOptimization>> weeklyOptProblems_;
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
+    IResultWriter& resultWriter;
 }; // class Economy
 
 } // namespace Antares::Solver::Simulation

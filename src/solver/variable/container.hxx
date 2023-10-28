@@ -317,7 +317,7 @@ template<class NextT>
 void List<NextT>::exportSurveyResults(bool global,
                                       const Yuni::String& output,
                                       unsigned int numSpace,
-                                      IResultWriter::Ptr writer)
+                                      IResultWriter& writer)
 {
     using namespace Antares;
 

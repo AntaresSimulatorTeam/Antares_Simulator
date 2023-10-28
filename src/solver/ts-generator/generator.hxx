@@ -27,7 +27,6 @@
 #ifndef __ANTARES_SOLVER_timeSeries_GENERATOR_HXX__
 #define __ANTARES_SOLVER_timeSeries_GENERATOR_HXX__
 
-#include "../aleatoire/alea_fonctions.h"
 #include <antares/logs/logs.h>
 
 namespace Antares
@@ -38,19 +37,19 @@ namespace TSGenerator
 {
 // forward declaration
 // Hydro - see hydro.cpp
-bool GenerateHydroTimeSeries(Data::Study& study, uint year, IResultWriter::Ptr writer);
+bool GenerateHydroTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
 
 template<>
 inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study,
                                                       uint year,
-                                                      IResultWriter::Ptr writer)
+                                                      IResultWriter& writer)
 {
     return GenerateHydroTimeSeries(study, year, writer);
 }
 
 // --- TS Generators using XCast ---
-template<enum Data::TimeSeries T>
-bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter::Ptr writer)
+template<enum Data::TimeSeriesType T>
+bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
 {
     auto* xcast = reinterpret_cast<XCast::XCast*>(
       study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
@@ -91,7 +90,7 @@ bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter::Ptr writer
     return r;
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 void Destroy(Data::Study& study, uint year)
 {
     auto* xcast = reinterpret_cast<XCast::XCast*>(

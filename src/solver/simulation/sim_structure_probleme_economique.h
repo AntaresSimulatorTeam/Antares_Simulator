@@ -173,7 +173,8 @@ struct PROPERTIES
     double injectionNominalCapacity;
     double withdrawalNominalCapacity;
     double efficiency;
-    std::optional<double> initialLevel;
+    double initialLevel;
+    bool initialLevelOptim;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
 
@@ -486,6 +487,7 @@ struct PROBLEME_HEBDO
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
     bool WaterValueAccurate = false;
     bool OptimisationAvecCoutsDeDemarrage = false;
+    bool OptimisationAvecVariablesEntieres = false;
     uint32_t NombreDePays = 0;
     std::vector<const char*> NomsDesPays;
     uint32_t NombreDePaliersThermiques = 0;

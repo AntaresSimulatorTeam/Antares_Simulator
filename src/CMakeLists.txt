@@ -285,7 +285,7 @@ find_package(minizip)
 if(NOT minizip_FOUND OR BUILD_MINIZIP)
     # Repository + tag
     set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
-    set(MZ_TAG "3.0.7")
+    set(MZ_TAG "4.0.1")
     # CMake flags
     set(MZ_LZMA "OFF" CACHE INTERNAL "")
     set(MZ_ZSTD "OFF" CACHE INTERNAL "")

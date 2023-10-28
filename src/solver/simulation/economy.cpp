@@ -32,14 +32,16 @@
 #include "../optimisation/opt_fonctions.h"
 #include "../optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "common-eco-adq.h"
-#include "opt_time_writer.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-Economy::Economy(Data::Study& study) : study(study), preproOnly(false)
+Economy::Economy(Data::Study& study, IResultWriter& resultWriter) :
+    study(study),
+    preproOnly(false),
+    resultWriter(resultWriter)
 {
 }
 
@@ -92,7 +94,7 @@ bool Economy::simulationBegin()
                                                     study.parameters.adqPatchParams,
                                                     &pProblemesHebdo[numSpace],
                                                     numSpace,
-                                                    *study.resultWriter);
+                                                    resultWriter);
             postProcessesList_[numSpace] =
                 interfacePostProcessList::create(study.parameters.adqPatchParams,
                                                  &pProblemesHebdo[numSpace],
@@ -119,7 +121,8 @@ bool Economy::year(Progression::Task& progression,
                    yearRandomNumbers& randomForYear,
                    std::list<uint>& failedWeekList,
                    bool isFirstPerformedYearOfSimulation,
-                   const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
+                   const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                   OptimizationStatisticsWriter& optWriter)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -134,8 +137,6 @@ bool Economy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace].firstWeekOfSimulation = true;
     bool reinitOptim = true;
 
-    OptimizationStatisticsWriter optWriter(study.resultWriter, state.year);
-
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
@@ -146,7 +147,7 @@ bool Economy::year(Progression::Task& progression,
                                          numSpace, hourInTheYear, hydroVentilationResults);
 
         BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace], 
-                                        numSpace, hourInTheYear, randomForYear.pThermalNoisesByArea);
+                                        hourInTheYear, randomForYear.pThermalNoisesByArea, state.year);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;
@@ -263,9 +264,9 @@ void Economy::simulationEnd()
     }
 }
 
-void Economy::prepareClustersInMustRunMode(uint numSpace)
+void Economy::prepareClustersInMustRunMode(uint numSpace, uint year)
 {
-    PrepareDataFromClustersInMustrunMode(study, numSpace);
+    PrepareDataFromClustersInMustrunMode(study, numSpace, year);
 }
 
 } // namespace Antares::Solver::Simulation

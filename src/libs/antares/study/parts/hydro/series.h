@@ -27,6 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 
+#include <antares/series/series.h>
 #include <antares/array/matrix.h>
 #include "../../fwd.h"
 #include <antares/exception/antares/exception/LoadingError.hpp>
@@ -64,6 +65,7 @@ public:
     void resizeRORandSTORAGE(unsigned int width);
     void resizeGenerationTS(unsigned int w, unsigned int h);
     void resizeMaxPowerTS(unsigned int w, unsigned int h);
+
 
     /*!
     ** \brief Load all data not already loaded
@@ -117,7 +119,7 @@ public:
 
     ** (it was DAYS_PER_YEAR before 3.9)
     */
-    Matrix<double, int32_t> ror;
+    TimeSeries ror;
 
     /*!
     ** \brief Mod (MW)
@@ -125,28 +127,29 @@ public:
     ** Merely a matrix of TimeSeriesCount * 365 values
     ** This matrix is not used in `adequation` mode.
     */
-    Matrix<double, int32_t> storage;
+    TimeSeries storage;
 
     /*!
     ** \brief Minimum Generation (MW)
     **
     ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
-    Matrix<double, int32_t> mingen;
+    TimeSeries mingen;
 
     /*!
     ** \brief Maximum Generation (MW)
     **
     ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
-    Matrix<double, int32_t> maxHourlyGenPower;
+
+    TimeSeries maxHourlyGenPower;
 
     /*!
     ** \brief Maximum Pumping (MW)
     **
     ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
-    Matrix<double, int32_t> maxHourlyPumpPower;
+    TimeSeries maxHourlyPumpPower;
 
     // TS's number matrices for Generation and Maximum Power
     Matrix<uint32_t> timeseriesNumbers;
@@ -177,6 +180,7 @@ private:
     // TS number for all three.
     uint maxPowerTScount_ = 0;
 
+
 }; // class DataSeriesHydro
 
 void resizeMatrixNoDataLoss(Matrix<double, int32_t>& matrixToResize, uint width);
@@ -187,7 +191,5 @@ bool loadTSfromFile(Matrix<double, int32_t>& ts,
                     unsigned int height);
 } // namespace Data
 } // namespace Antares
-
-#include "series.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__ */

@@ -17,6 +17,7 @@ struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
 public:
     PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                             const std::vector<std::string>& NomDesContraintes,
+                            const std::vector<bool>& VariablesEntieres,
                             std::vector<int>& StatutDesVariables,
                             std::vector<int>& StatutDesContraintes,
                             bool UseNamedProblems);
@@ -29,6 +30,7 @@ private:
 public:
     std::vector<int>& StatutDesVariables;
     std::vector<int>& StatutDesContraintes;
+    const std::vector<bool>& VariablesEntieres;
 
     bool isMIP() const;
     bool basisExists() const;

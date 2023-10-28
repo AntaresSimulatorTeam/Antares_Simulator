@@ -34,12 +34,8 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-AreaScratchpad::TimeseriesData::TimeseriesData(Area& area) :
-        load(area.load.series->timeSeries), solar(area.solar.series->timeSeries), wind(area.wind.series->timeSeries)
-{
-}
 
-AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts(area)
+AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area)
 {
     // alias to the simulation mode
     auto mode = rinfos.mode;
@@ -109,7 +105,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
     if (!area.hydro.prepro) // not in prepro mode
     {
         assert(area.hydro.series);
-        hydroHasInflows = MatrixTestForAtLeastOnePositiveValue(area.hydro.series->storage);
+        hydroHasInflows = MatrixTestForAtLeastOnePositiveValue(area.hydro.series->storage.timeSeries);
     }
     else
     {

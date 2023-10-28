@@ -49,7 +49,7 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     TuneSolverSpecificOptions(solver);
 
     // Create the variables and set objective cost.
-    CopyVariables(solver);
+    CopyObjective(solver);
 
     // Create constraints and set coefs
     CopyRows(solver);
@@ -100,7 +100,7 @@ void ProblemSimplexeNommeConverter::UpdateCoefficient(unsigned idxVar,
                                                       MPObjective* const objective)
 {
     double min_l = 0.0;
-    if (problemeSimplexe_->Xmin != NULL)
+    if (problemeSimplexe_->Xmin != NULL) // TODO[FOM] Remove enclosing if ?
     {
         min_l = problemeSimplexe_->Xmin[idxVar];
     }
@@ -109,11 +109,10 @@ void ProblemSimplexeNommeConverter::UpdateCoefficient(unsigned idxVar,
     objective->SetCoefficient(var, problemeSimplexe_->CoutLineaire[idxVar]);
 }
 
-void ProblemSimplexeNommeConverter::CopyVariables(MPSolver* solver)
+void ProblemSimplexeNommeConverter::CopyObjective(MPSolver* solver)
 
 {
     MPObjective* const objective = solver->MutableObjective();
-
     for (int idxVar = 0; idxVar < problemeSimplexe_->NombreDeVariables; ++idxVar)
     {
         UpdateCoefficient(idxVar, solver, objective);
@@ -150,26 +149,65 @@ void ProblemSimplexeNommeConverter::CopyRows(MPSolver* solver)
 } // namespace Optimization
 } // namespace Antares
 
-static void extract_from_MPSolver(const MPSolver* solver,
+static void extractSolutionValues(const std::vector<MPVariable*>& variables,
                                   Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
-    auto& variables = solver->variables();
     int nbVar = problemeSimplexe->NombreDeVariables;
-
-    // Extracting variable values and reduced costs
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
         auto& var = variables[idxVar];
         problemeSimplexe->X[idxVar] = var->solution_value();
+    }
+}
+
+static void extractReducedCosts(const std::vector<MPVariable*>& variables,
+                                Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+{
+    int nbVar = problemeSimplexe->NombreDeVariables;
+    for (int idxVar = 0; idxVar < nbVar; ++idxVar)
+    {
+        auto& var = variables[idxVar];
         problemeSimplexe->CoutsReduits[idxVar] = var->reduced_cost();
     }
+}
 
-    auto& constraints = solver->constraints();
-    int nbRow = problemeSimplexe->NombreDeContraintes;
-    for (int idxRow = 0; idxRow < nbRow; ++idxRow)
+static void extractDualValues(const std::vector<MPConstraint*>& constraints,
+                              Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+{
+  int nbRows = problemeSimplexe->NombreDeContraintes;
+  for (int idxRow = 0; idxRow < nbRows; ++idxRow)
+  {
+      auto& row = constraints[idxRow];
+      problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
+  }
+}
+
+static void extract_from_MPSolver(MPSolver* solver,
+                                  Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+{
+    assert(solver);
+    assert(problemeSimplexe);
+
+    const bool isMIP = problemeSimplexe->isMIP();
+
+    extractSolutionValues(solver->variables(),
+                          problemeSimplexe);
+
+    if (isMIP)
     {
-        auto& row = constraints[idxRow];
-        problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
+        const int nbVar = problemeSimplexe->NombreDeVariables;
+        std::fill(problemeSimplexe->CoutsReduits, problemeSimplexe->CoutsReduits + nbVar, 0.);
+
+        const int nbRows = problemeSimplexe->NombreDeContraintes;
+        std::fill(problemeSimplexe->CoutsMarginauxDesContraintes,
+                  problemeSimplexe->CoutsMarginauxDesContraintes + nbRows,
+                  0.);
+    }
+    else
+    {
+        extractReducedCosts(solver->variables(), problemeSimplexe);
+
+        extractDualValues(solver->constraints(), problemeSimplexe);
     }
 }
 
@@ -241,7 +279,8 @@ MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
 {
     if (solver == nullptr)
     {
-        return Antares::Optimization::ProblemSimplexeNommeConverter(solverName, Probleme).Convert();
+        Antares::Optimization::ProblemSimplexeNommeConverter converter(solverName, Probleme);
+        return converter.Convert();
     }
     else
     {
@@ -364,11 +403,16 @@ MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* 
             solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).LPSolverName);
 
         if (!solver)
-            throw Antares::Data::AssertionError("Solver not found: " + solverName);
+        {
+            std::string msg_to_throw = "Solver " + solverName + " not found. \n";
+            msg_to_throw += "Please make sure that your OR-Tools install supports solver " + solverName + ".";
+
+            throw Antares::Data::AssertionError(msg_to_throw);
+        }
     }
     catch (...)
     {
-        Antares::logs.error() << "Solver creation failed";
+        Antares::logs.error() << "Solver creation failed.";
         throw;
     }
 

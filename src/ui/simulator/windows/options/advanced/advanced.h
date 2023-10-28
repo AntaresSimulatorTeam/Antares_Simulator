@@ -72,7 +72,7 @@ private:
 
     void onEditSeedTSDraws(wxCommandEvent&);
 
-    void onNumericQuality(Component::Button&, wxMenu&, void*, Data::TimeSeries ts);
+    void onNumericQuality(Component::Button&, wxMenu&, void*, Data::TimeSeriesType ts);
     void onSelectNumericQualityStandard(wxCommandEvent& evt);
     void onSelectNumericQualityHigh(wxCommandEvent& evt);
 
@@ -98,8 +98,11 @@ private:
     void onSelectSHPMinimizeDuration(wxCommandEvent& evt);
 
     void onUnitCommitmentMode(Component::Button&, wxMenu& menu, void*);
-    void onSelectUCHeuristic(wxCommandEvent& evt);
-    void onSelectUCMixedIntegerLinearProblem(wxCommandEvent& evt);
+
+    void onSelectUCMode(Antares::Data::UnitCommitmentMode mode);
+    void onSelectUCHeuristicFast(wxCommandEvent& evt);
+    void onSelectUCHeuristicAccurate(wxCommandEvent& evt);
+    void onSelectUCMILP(wxCommandEvent& evt);
 
     void onNumberOfCores(Component::Button&, wxMenu& menu, void*);
     template<Antares::Data::NumberOfCoresMode>
@@ -127,7 +130,7 @@ private:
     Component::Button* pBtnNumberOfCores;
     wxTextCtrl* pEditSeeds[Data::seedMax];
     // Only used for menus
-    Data::TimeSeries pCurrentTS;
+    Data::TimeSeriesType pCurrentTS;
 
 }; // class AdvancedParameters
 

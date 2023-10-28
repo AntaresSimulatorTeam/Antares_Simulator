@@ -98,8 +98,6 @@ public:
     ** \brief Default constructor, with a parent area
     */
     explicit RenewableCluster(Data::Area* parent);
-    //! Destructor
-    ~RenewableCluster();
     //@}
 
     /*!
@@ -155,7 +153,7 @@ public:
     /* !
     ** Get production value at time-step ts
     */
-    double valueAtTimeStep(uint timeSeriesIndex, uint timeStepIndex) const;
+    double valueAtTimeStep(uint year, uint hourInYear) const;
 
 public:
     /*!

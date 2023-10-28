@@ -1,6 +1,18 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 ## v8.8.0
+### Input
+### Short-term storage
+If no value is specified for `initiallevel`, then a default value of 50% is used. Note that this value is used only if `initialleveloptim=false`, and that `false` is the default value for `initialleveloptim`.
+
+### Experimental "MILP" mode
+New value `milp` for existing property `other preferences/unit-commitment-mode` in file **settings/generaldata.ini**.
+
+Using this property requires OR-Tools and a MILP solver (XPRESS, COIN)
+
+```
+antares-8.8-solver --use-ortools --ortools-solver coin|xpress ...
+```
 For each area, new files are added **input/hydro/series/&lt;area&gt;/maxHourlyGenPower.txt** and **input/hydro/series/&lt;area&gt;/maxHourlyPumpPower.txt**. These files have one or more columns, and 8760 rows. The number of columns in these two files must be the same, if there is more than one column in each file, but if there is just one column for example in maxHourlyGenPower.txt file, maxHourlyPumpPower.txt file can have more than one column and vice versa. For old studies, file **input/hydro/common/capacity/maxpower_&lt;area&gt;** will be deleted after upgrading the study and corresponding data from that file will be copied to already mentioned new files, even if study is upgraded or not. In that case maxHourlyGenPower.txt and maxHourlyPumpPower.txt files will have just one column and 8760 rows.
 
 Also for each area, new files are added **input/hydro/common/capacity/maxDailyGenEnergy_&lt;area&gt;** and **input/hydro/common/capacity/maxDailyPumpEnergy_&lt;area&gt;**. These files have just one column and 365 rows. For old studies, file **input/hydro/common/capacity/maxpower_&lt;area&gt;** will be deleted after upgrading the study and corresponding data from that file will be copied to already mentioned new files, even if study is upgraded or not.
@@ -8,6 +20,7 @@ Also for each area, new files are added **input/hydro/common/capacity/maxDailyGe
 Under `Configure/MC Scenario Builder` new section added `Hydro Max Power`
 In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added:
 * **hgp,&lt;area&gt;,&lt;year&gt; = &lt;hgp-value&gt;**
+
 ## v8.7.0
 ### Input
 #### Scenarized RHS for binding constraints

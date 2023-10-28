@@ -38,7 +38,7 @@ namespace AntaresStudy
 {
 namespace Area
 {
-NodeTimeseries::NodeTimeseries(Data::TimeSeries ts) : pType(ts)
+NodeTimeseries::NodeTimeseries(Data::TimeSeriesType ts) : pType(ts)
 {
     // behavior
     pInfos.behavior = bhOverwrite;
@@ -110,7 +110,7 @@ bool NodeTimeseries::performWL(Context& ctx)
     case Data::timeSeriesThermal:
         if (ctx.cluster)
         {
-            ctx.cluster->series->timeSeries.reset(1, HOURS_PER_YEAR);
+            ctx.cluster->series.timeSeries.reset(1, HOURS_PER_YEAR);
             ctx.cluster->prepro->reset();
             ctx.cluster->ecoInput.reset();
         }
