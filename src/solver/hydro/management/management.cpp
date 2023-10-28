@@ -303,7 +303,7 @@ bool HydroManagement::checkGenerationPowerConsistency(uint year) const
     bool ret = true;
 
     areas_.each(
-      [&numSpace, &ret, &year](const Data::Area& area)
+      [&ret, &year](const Data::Area& area)
       {
         
           auto const& srcmingen = area.hydro.series->mingen.getColumn(year);
@@ -500,8 +500,7 @@ double HydroManagement::randomReservoirLevel(double min, double avg, double max)
 
 bool HydroManagement::checksOnGenerationPowerBounds(uint numSpace, uint year)
 {
-    return (checkMinGeneration(numSpace, year) && checkGenerationPowerConsistency(numSpace, year)) ? true
-                                                                                       : false;
+    return (checkMinGeneration(numSpace, year) && checkGenerationPowerConsistency(year)) ? true : false;
 }
 
 void HydroManagement::makeVentilation(double* randomReservoirLevel,
