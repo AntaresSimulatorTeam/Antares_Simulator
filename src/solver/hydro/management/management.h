@@ -131,7 +131,7 @@ private:
     //! check Weekly minimum generation is lower than available inflows
     bool checkWeeklyMinGeneration(uint year, const Data::Area& area) const;
     //! check Hourly minimum generation is lower than available inflows
-    bool checkGenerationPowerConsistency(uint numSpace, uint year) const;
+    bool checkGenerationPowerConsistency(uint year) const;
     //! check minimum generation is lower than available inflows
     bool checkHourlyMinGeneration(uint year, const Data::Area& area) const;
     //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false

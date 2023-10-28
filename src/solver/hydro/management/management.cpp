@@ -298,7 +298,7 @@ bool HydroManagement::checkWeeklyMinGeneration(uint year, const Data::Area& area
     return true;
 }
 
-bool HydroManagement::checkGenerationPowerConsistency(uint numSpace, uint year) const
+bool HydroManagement::checkGenerationPowerConsistency(uint year) const
 {
     bool ret = true;
 
