@@ -40,10 +40,6 @@ jobs:
       run: |
           choco install wget unzip zip --no-progress
 
-    - name : Init VCPKG submodule
-      run: |
-          git submodule update --init vcpkg
-
     - name: Configure vckpg
       run: |
         echo "VCPKG_ROOT_PARENT=${{github.workspace}}" >> $GITHUB_ENV
