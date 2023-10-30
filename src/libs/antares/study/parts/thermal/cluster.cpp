@@ -216,6 +216,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     optimizeMaintenance = cluster.optimizeMaintenance;
     interPoPeriod = cluster.interPoPeriod;
     poWindows = cluster.poWindows;
+    daysSinceLastMaintenance = cluster.daysSinceLastMaintenance;
 
     // Making sure that the data related to the prepro and timeseries are present
     // prepro
@@ -485,6 +486,7 @@ void Data::ThermalCluster::reset()
     optimizeMaintenance = true;
     interPoPeriod = 365;
     poWindows = 0;
+    daysSinceLastMaintenance.clear();
 
     // prepro
     // warning: the variables `prepro` and `series` __must__ not be destroyed

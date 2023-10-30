@@ -935,6 +935,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
         ret = area.thermal.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
         ret = area.thermal.list.loadEconomicCosts(study, buffer) && ret;
+        ret = area.thermal.list.generateRandomDaysSinceLastMaintenance(study) && ret;
 
         // In adequacy mode, all thermal clusters must be in 'mustrun' mode
         if (study.usedByTheSolver && study.parameters.mode == stdmAdequacy)

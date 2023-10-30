@@ -302,6 +302,11 @@ public:
     int interPoPeriod = 365;
     //! PO windows (+/- days)
     int poWindows = 0;
+    // TODO: keep this here for now
+    // TODO: maybe create something like PreproThermal for Maintenance - and move everything there!!! 
+    // days since last maintenance - random int number between 0-interPoPeriod
+    // defined per each unit of the cluster
+    std::vector<int> daysSinceLastMaintenance;
 
     //! \name Costs
     //  Marginal (€/MWh)     MA
