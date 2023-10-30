@@ -245,7 +245,7 @@ void BindingConstraint::copyWeights(const Study &study,
         assert(sourceLink->from and "Invalid area pointer 'from' within link");
         assert(sourceLink->with and "Invalid area pointer 'with' within link");
 
-        // Translatiob
+        // Translation
         translate(fromID, sourceLink->from->id);
         translate(withID, sourceLink->with->id);
 

@@ -160,6 +160,15 @@ public:
     const ConstraintName& id() const;
     //@}
 
+    /*!
+    ** \brief Get the binding constraint series filename
+    */
+    const std::string& file() const
+    {
+        return file_;
+    }
+    //@}
+
     //! \name Comments
     //@{
     /*!
@@ -411,6 +420,8 @@ private:
     YString pComments;
     //! Group
     std::string group_;
+    //! series file
+    std::string file_;
 
     void clear();
 
