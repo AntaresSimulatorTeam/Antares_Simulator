@@ -23,6 +23,11 @@ jobs:
       VCPKG_INSTALL_OPTIONS: --x-abi-tools-use-exact-versions
       VCPKG_BUILD_TYPE: release
       VCPKG_DISABLE_COMPILER_TRACKING: ON
+      VCPKG_ROOT_PARENT: ${{github.workspace}}
+      VCPKG_TOOLCHAIN_FILE: ${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake" 
+      VCPKG_OVERLAY_TRIPLETS: ${{github.workspace}}/vcpkg/custom-triplets" 
+      VCPKG_DEFAULT_TRIPLET: custom-x64-windows
+      VCPKG_DEFAULT_BINARY_CACHE: ${{github.workspace}}/vcpkg/archives" 
 
     steps:
     - uses: actions/checkout@v3
