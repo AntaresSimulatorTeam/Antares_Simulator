@@ -2,6 +2,7 @@
   "name": "antares-simulator",
   "version-string": "8.5.0",
   "dependencies": [
+    "zlib",
     "wxwidgets",
     "boost-test"
   ]
