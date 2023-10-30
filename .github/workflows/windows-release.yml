@@ -20,6 +20,9 @@ jobs:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_windows-latest_static_sirius.zip"
+      VCPKG_INSTALL_OPTIONS: --x-abi-tools-use-exact-versions
+      VCPKG_BUILD_TYPE: release
+      VCPKG_DISABLE_COMPILER_TRACKING: ON
 
     steps:
     - uses: actions/checkout@v3
