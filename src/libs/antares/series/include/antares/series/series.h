@@ -90,7 +90,7 @@ public:
     TS timeSeries;
     numbers& timeseriesNumbers;
 
-    static const double emptyColumn[HOURS_PER_YEAR];
+    static const std::vector<double> emptyColumn;
 };
 
 } // namespace Antares::Data

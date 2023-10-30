@@ -501,8 +501,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
 
             for (uint indexTS = 0; indexTS < nbDirectTS; ++indexTS)
             {
-                auto* directCapacities = link.directCapacities[indexTS];
-                auto* indirectCapacities = link.indirectCapacities[indexTS];
+                const double* directCapacities = link.directCapacities[indexTS];
+                const double* indirectCapacities = link.indirectCapacities[indexTS];
 
                 // Checks on direct capacities
                 for (int h = 0; h < HOURS_PER_YEAR; h++)
