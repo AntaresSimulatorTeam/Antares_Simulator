@@ -78,6 +78,28 @@ bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1,
 {
     if (s1->name() != s2->name())
     {
+        if (s1->name().endsWith("_lt") && s2->name().endsWith("_gt"))
+        {
+            std::string tmp_str1 = s1->name().c_str();
+            std::string tmp_str2 = s2->name().c_str();
+            auto left = tmp_str1.begin() + tmp_str1.find_last_of("_lt");
+            auto right = tmp_str2.begin() + tmp_str2.find_last_of("_gt");
+            auto new_s1 = std::string(tmp_str1.begin(), left - 2);
+            auto new_s2 = std::string(tmp_str2.begin(), right - 2);
+            auto ret = new_s1 == new_s2 ? true : s1->name() < s2->name();
+            return ret;
+        }
+        if (s1->name().endsWith("_gt") && s2->name().endsWith("_lt"))
+        {
+            std::string tmp_str1 = s1->name().c_str();
+            std::string tmp_str2 = s2->name().c_str();
+            auto left = tmp_str1.begin() + tmp_str1.find_last_of("_gt");
+            auto right = tmp_str2.begin() + tmp_str2.find_last_of("_lt");
+            auto new_s1 = std::string(tmp_str1.begin(), left - 2);
+            auto new_s2 = std::string(tmp_str2.begin(), right - 2);
+            auto ret = new_s1 == new_s2 ? false : s1->name() < s2->name();
+            return ret;
+        }
         return s1->name() < s2->name();
     }
     else
