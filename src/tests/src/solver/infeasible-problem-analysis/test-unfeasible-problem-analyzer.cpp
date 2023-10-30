@@ -55,13 +55,15 @@ bool variableEquals(const VariableBounds& lhs, const VariableBounds& rhs)
 }
 
 /*!
- * Analysis mock
+ * Analysis mock, used to assess which step has been run by the analyzer
  */
 class AnalysisMock : public UnfeasibilityAnalysis
 {
 public:
-    explicit AnalysisMock(bool shouldDetectCause):
-            shouldDetectCause_(shouldDetectCause)
+    AnalysisMock(bool shouldDetectCause, bool& hasRun, bool& hasPrinted):
+            shouldDetectCause_(shouldDetectCause),
+            hasRun_(hasRun),
+            hasPrinted_(hasPrinted)
     {}
 
     ~AnalysisMock() override = default;
@@ -82,13 +84,10 @@ public:
         return "mock";
     }
 
-    bool hasRun() const { return hasRun_; }
-    bool hasPrinted() const { return hasPrinted_; }
-
 private:
-    bool hasRun_ = false;
-    bool hasPrinted_ = false;
     bool shouldDetectCause_;
+    bool& hasRun_;
+    bool& hasPrinted_;
 };
 
 
@@ -96,33 +95,33 @@ BOOST_AUTO_TEST_SUITE(unfeasible_problem_analyzer)
 
 BOOST_AUTO_TEST_CASE(test_problem_analyzer)
 {
-    auto analysis1 = std::make_shared<AnalysisMock>(false);
-    auto analysis2 = std::make_shared<AnalysisMock>(true);
-    std::vector<std::shared_ptr<UnfeasibilityAnalysis>> analysis = {
-            analysis1,
-            analysis2
-    };
-
+    bool hasRun1 = false;
+    bool hasPrinted1 = false;
+    bool hasRun2 = false;
+    bool hasPrinted2 = false;
+    std::vector<std::unique_ptr<UnfeasibilityAnalysis>> analysis;
+    analysis.push_back(std::make_unique<AnalysisMock>(false, hasRun1, hasPrinted1));
+    analysis.push_back(std::make_unique<AnalysisMock>(true, hasRun2, hasPrinted2));
     std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
 
-    UnfeasiblePbAnalyzer analyzer(analysis);
-    BOOST_CHECK(!analysis1->hasRun());
-    BOOST_CHECK(!analysis1->hasPrinted());
-    BOOST_CHECK(!analysis2->hasRun());
-    BOOST_CHECK(!analysis2->hasPrinted());
+    UnfeasiblePbAnalyzer analyzer(std::move(analysis));
+    BOOST_CHECK(!hasRun1);
+    BOOST_CHECK(!hasPrinted1);
+    BOOST_CHECK(!hasRun2);
+    BOOST_CHECK(!hasPrinted2);
 
     analyzer.run(problem.get());
-    BOOST_CHECK(analysis1->hasRun());
-    BOOST_CHECK(!analysis1->hasPrinted());
-    BOOST_CHECK(analysis2->hasRun());
-    BOOST_CHECK(!analysis2->hasPrinted());
+    BOOST_CHECK(hasRun1);
+    BOOST_CHECK(!hasPrinted1);
+    BOOST_CHECK(hasRun2);
+    BOOST_CHECK(!hasPrinted2);
 
     // only failing analysis will print
     analyzer.printReport();
-    BOOST_CHECK(analysis1->hasRun());
-    BOOST_CHECK(!analysis1->hasPrinted());
-    BOOST_CHECK(analysis2->hasRun());
-    BOOST_CHECK(analysis2->hasPrinted());
+    BOOST_CHECK(hasRun1);
+    BOOST_CHECK(!hasPrinted1);
+    BOOST_CHECK(hasRun2);
+    BOOST_CHECK(hasPrinted2);
 }
 
 BOOST_AUTO_TEST_CASE(test_variable_bounds_consistency)
@@ -136,7 +135,7 @@ BOOST_AUTO_TEST_CASE(test_variable_bounds_consistency)
     auto incorrectVars = analysis.incorrectVars();
     BOOST_CHECK_EQUAL(incorrectVars.size(), 1);
 
-    auto expected = VariableBounds{"not-ok-var", 1, -1};
+    auto expected = VariableBounds("not-ok-var", 1, -1);
     BOOST_CHECK(variableEquals(incorrectVars[0], expected));
 }
 
