@@ -125,7 +125,9 @@ jobs:
            -DDEPS_INSTALL_DIR=rte-antares-deps-Release \
            -DCMAKE_PREFIX_PATH="${{env.ORTOOLS_DIR}}/install" \
            -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
-           -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
+           -DVCPKG_OVERLAY_TRIPLETS="$VCPKG_OVERLAY_TRIPLETS" \
+           -DVCPKG_TARGET_TRIPLET="$VCPKG_DEFAULT_TRIPLET" \
+           -DVCPKG_INSTALL_OPTIONS="$VCPKG_INSTALL_OPTIONS"
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON  \
            -DBUILD_TOOLS=ON \
