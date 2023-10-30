@@ -102,6 +102,11 @@ void TimeSeries::reset()
     timeSeries.reset(1, HOURS_PER_YEAR);
 }
 
+void TimeSeries::reset(uint32_t width, uint32_t height)
+{
+    timeSeries.reset(width, height);
+}
+
 void TimeSeries::resize(uint32_t timeSeriesCount, uint32_t timestepCount)
 {
     timeSeries.resize(timeSeriesCount, timestepCount);
