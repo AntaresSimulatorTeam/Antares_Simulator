@@ -29,8 +29,20 @@ jobs:
       run: |
           choco install wget unzip zip --no-progress
 
+          
+
+    - name: Configure vckpg
+      run: |
+        echo "VCPKG_ROOT_PARENT=${{github.workspace}}" >> $GITHUB_ENV
+        echo "VCPKG_ROOT=${{github.workspace}}/vcpkg" >> $GITHUB_ENV
+        echo "VCPKG_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake" >> $GITHUB_ENV
+        echo "VCPKG_OVERLAY_TRIPLETS=${{github.workspace}}/vcpkg/custom-triplets" >> $GITHUB_ENV
+        echo "VCPKG_DEFAULT_TRIPLET=custom-x64-windows" >> $GITHUB_ENV
+        echo "VCPKG_DEFAULT_BINARY_CACHE=${{github.workspace}}/vcpkg/archives" >> $GITHUB_ENV
+
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
+      id: cache-vcpkg
       uses: actions/cache@v3
       with:
         # The first path is the location of vcpkg (it contains the vcpkg executable and data files).
@@ -43,23 +55,35 @@ jobs:
         # The key is composed in a way that it gets properly invalidated: this must happen whenever vcpkg's Git commit id changes, or the list of packages changes. In this case a cache miss must happen and a new entry with a new key with be pushed to GitHub the cache service.
         # The key includes: hash of the vcpkg.json file, the hash of the vcpkg Git commit id, and the used vcpkg's triplet. The vcpkg's commit id would suffice, but computing an hash out it does not harm.
         # Note: given a key, the cache content is immutable. If a cache entry has been created improperly, in order the recreate the right content the key must be changed as well, and it must be brand new (i.e. not existing already).
-        key: |
-          ${{ hashFiles( 'vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}
+        key: vcpkg=${{ hashFiles( 'vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}
+          
 
     - name: Setup Python 3.11
       uses: actions/setup-python@v4
       with:
         architecture: 'x64'
         python-version: '3.12'
-
-    - name : Install deps with VCPKG
+      
+    - if: ${{ steps.cache-vcpkg.outputs.cache-hit != 'true' }} 
+      name : Install deps with VCPKG
       run: |
           git submodule update --init vcpkg
           cd vcpkg
-          ./bootstrap-vcpkg.sh
-          vcpkg install --triplet ${{matrix.triplet}}
-          rm -rf buildtrees packages downloads
-      shell: bash
+          mkdir archives
+          mkdir "$VCPKG_OVERLAY_TRIPLETS"
+          TRIPLET_FILE="$VCPKG_OVERLAY_TRIPLETS/$VCPKG_DEFAULT_TRIPLET.cmake"
+          cp triplets/x64-windows.cmake "$TRIPLET_FILE"
+          echo "set(VCPKG_BUILD_TYPE $VCPKG_BUILD_TYPE)" >> "$TRIPLET_FILE"
+          echo "set(VCPKG_DISABLE_COMPILER_TRACKING $VCPKG_DISABLE_COMPILER_TRACKING)" >> "$TRIPLET_FILE"
+          cmd.exe /c bootstrap-vcpkg.bat
+          vcpkg.exe \
+            --vcpkg-root="$VCPKG_ROOT" \
+            --overlay-triplets="$VCPKG_OVERLAY_TRIPLETS" \
+            --triplet="$VCPKG_DEFAULT_TRIPLET" \
+            $VCPKG_INSTALL_OPTIONS \
+            install
+         # rm -rf buildtrees packages downloads
+      # shell: bash
 
     - name: Read antares-deps version
       id: antares-deps-version
