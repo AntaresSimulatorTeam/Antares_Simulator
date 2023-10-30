@@ -123,53 +123,54 @@ $(document).ready(function(){initNavTree('ecoInput_8h_source.html',''); initResi
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;cluster.h&quot;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;antares/array/matrix.h&gt;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;defines.h&quot;</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;../../fwd.h&quot;</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">namespace </span>Antares::Data</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>{</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1EconomicInputData.html">   41</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Data_1_1EconomicInputData.html">EconomicInputData</a></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>{</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;antares/series/series.h&gt;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;cluster.h&quot;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &lt;antares/array/matrix.h&gt;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;defines.h&quot;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &quot;../../fwd.h&quot;</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">namespace </span>Antares::Data</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>{</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1EconomicInputData.html">   42</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Data_1_1EconomicInputData.html">EconomicInputData</a></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>{</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1EconomicInputData.html#aa1b7353ae2fdf5cc04dcf38e535a0ee4">   49</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classAntares_1_1Data_1_1EconomicInputData.html#aa1b7353ae2fdf5cc04dcf38e535a0ee4">EconomicInputData</a>();</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">bool</span> forceReload(<span class="keywordtype">bool</span> reload) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordtype">void</span> markAsModified() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1EconomicInputData.html#aa1b7353ae2fdf5cc04dcf38e535a0ee4">   50</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classAntares_1_1Data_1_1EconomicInputData.html#aa1b7353ae2fdf5cc04dcf38e535a0ee4">EconomicInputData</a>();</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordtype">bool</span> forceReload(<span class="keywordtype">bool</span> reload) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">void</span> markAsModified() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Data_1_1EconomicInputData.html#a299a683be38db51dd10316aa09476e31">reset</a>();</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Data_1_1EconomicInputData.html#aa5594880f800c44ee1d51bad675c851b">copyFrom</a>(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1EconomicInputData.html">EconomicInputData</a>&amp; rhs);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classAntares_1_1Data_1_1EconomicInputData.html#ad2a51aba630db8edab1135cb596b2605">loadFromFolder</a>(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study, <span class="keyword">const</span> AnyString&amp; folder);</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classAntares_1_1Data_1_1EconomicInputData.html#a69059b4cf21f9ff08fa67a3c64309232">saveToFolder</a>(<span class="keyword">const</span> AnyString&amp; folder) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    uint64_t <a class="code hl_function" href="classAntares_1_1Data_1_1EconomicInputData.html#a832fea61f55af33aa586c29755b58774">memoryUsage</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="comment">// max x DAYS_PER_YEAR</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1EconomicInputData.html#a240d3622778a6fba30beb393b68ad555">   89</a></span>    <a class="code hl_class" href="classAntares_1_1Matrix.html">Matrix&lt;double&gt;</a> <a class="code hl_variable" href="classAntares_1_1Data_1_1EconomicInputData.html#a240d3622778a6fba30beb393b68ad555">fuelcost</a>;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <a class="code hl_class" href="classAntares_1_1Matrix.html">Matrix&lt;double&gt;</a> co2cost;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>}; <span class="comment">// class EconomicInputData</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>} <span class="comment">// namespace Antares::Data</span></div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__</span></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1EconomicInputData_html"><div class="ttname"><a href="classAntares_1_1Data_1_1EconomicInputData.html">Antares::Data::EconomicInputData</a></div><div class="ttdoc">Thermal.</div><div class="ttdef"><b>Definition:</b> ecoInput.h:42</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1EconomicInputData_html_a240d3622778a6fba30beb393b68ad555"><div class="ttname"><a href="classAntares_1_1Data_1_1EconomicInputData.html#a240d3622778a6fba30beb393b68ad555">Antares::Data::EconomicInputData::fuelcost</a></div><div class="ttdeci">Matrix&lt; double &gt; fuelcost</div><div class="ttdoc">All {FO,PO}{Duration,Rate} annual values.</div><div class="ttdef"><b>Definition:</b> ecoInput.h:89</div></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Data_1_1EconomicInputData.html#a299a683be38db51dd10316aa09476e31">reset</a>();</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Data_1_1EconomicInputData.html#aa5594880f800c44ee1d51bad675c851b">copyFrom</a>(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1EconomicInputData.html">EconomicInputData</a>&amp; rhs);</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classAntares_1_1Data_1_1EconomicInputData.html#ad2a51aba630db8edab1135cb596b2605">loadFromFolder</a>(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study, <span class="keyword">const</span> AnyString&amp; folder);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classAntares_1_1Data_1_1EconomicInputData.html#a69059b4cf21f9ff08fa67a3c64309232">saveToFolder</a>(<span class="keyword">const</span> AnyString&amp; folder) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    uint64_t <a class="code hl_function" href="classAntares_1_1Data_1_1EconomicInputData.html#a832fea61f55af33aa586c29755b58774">memoryUsage</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="comment">// max x DAYS_PER_YEAR</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1EconomicInputData.html#ad75f3fdd36eab15f00c22c63252591cc">   90</a></span>    <a class="code hl_class" href="classAntares_1_1Matrix.html">TimeSeries::TS</a> <a class="code hl_variable" href="classAntares_1_1Data_1_1EconomicInputData.html#ad75f3fdd36eab15f00c22c63252591cc">fuelcost</a>;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <a class="code hl_class" href="classAntares_1_1Matrix.html">TimeSeries::TS</a> co2cost;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>}; <span class="comment">// class EconomicInputData</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>} <span class="comment">// namespace Antares::Data</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1EconomicInputData_html"><div class="ttname"><a href="classAntares_1_1Data_1_1EconomicInputData.html">Antares::Data::EconomicInputData</a></div><div class="ttdoc">Thermal.</div><div class="ttdef"><b>Definition:</b> ecoInput.h:43</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1EconomicInputData_html_a299a683be38db51dd10316aa09476e31"><div class="ttname"><a href="classAntares_1_1Data_1_1EconomicInputData.html#a299a683be38db51dd10316aa09476e31">Antares::Data::EconomicInputData::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdoc">Reset all values to their default ones.</div><div class="ttdef"><b>Definition:</b> ecoInput.cpp:108</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1EconomicInputData_html_a69059b4cf21f9ff08fa67a3c64309232"><div class="ttname"><a href="classAntares_1_1Data_1_1EconomicInputData.html#a69059b4cf21f9ff08fa67a3c64309232">Antares::Data::EconomicInputData::saveToFolder</a></div><div class="ttdeci">bool saveToFolder(const AnyString &amp;folder) const</div><div class="ttdoc">Save settings used by the thermal prepro to a folder.</div><div class="ttdef"><b>Definition:</b> ecoInput.cpp:52</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1EconomicInputData_html_a832fea61f55af33aa586c29755b58774"><div class="ttname"><a href="classAntares_1_1Data_1_1EconomicInputData.html#a832fea61f55af33aa586c29755b58774">Antares::Data::EconomicInputData::memoryUsage</a></div><div class="ttdeci">uint64_t memoryUsage() const</div><div class="ttdoc">Get the amount of memory used by the class.</div><div class="ttdef"><b>Definition:</b> ecoInput.cpp:114</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1EconomicInputData_html_aa1b7353ae2fdf5cc04dcf38e535a0ee4"><div class="ttname"><a href="classAntares_1_1Data_1_1EconomicInputData.html#aa1b7353ae2fdf5cc04dcf38e535a0ee4">Antares::Data::EconomicInputData::EconomicInputData</a></div><div class="ttdeci">EconomicInputData()</div><div class="ttdoc">Default constructor.</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1EconomicInputData_html_aa5594880f800c44ee1d51bad675c851b"><div class="ttname"><a href="classAntares_1_1Data_1_1EconomicInputData.html#aa5594880f800c44ee1d51bad675c851b">Antares::Data::EconomicInputData::copyFrom</a></div><div class="ttdeci">void copyFrom(const EconomicInputData &amp;rhs)</div><div class="ttdoc">Copy data from another struct.</div><div class="ttdef"><b>Definition:</b> ecoInput.cpp:44</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1EconomicInputData_html_ad2a51aba630db8edab1135cb596b2605"><div class="ttname"><a href="classAntares_1_1Data_1_1EconomicInputData.html#ad2a51aba630db8edab1135cb596b2605">Antares::Data::EconomicInputData::loadFromFolder</a></div><div class="ttdeci">bool loadFromFolder(Study &amp;study, const AnyString &amp;folder)</div><div class="ttdoc">Load settings for the thermal prepro from a folder.</div><div class="ttdef"><b>Definition:</b> ecoInput.cpp:67</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1EconomicInputData_html_ad75f3fdd36eab15f00c22c63252591cc"><div class="ttname"><a href="classAntares_1_1Data_1_1EconomicInputData.html#ad75f3fdd36eab15f00c22c63252591cc">Antares::Data::EconomicInputData::fuelcost</a></div><div class="ttdeci">TimeSeries::TS fuelcost</div><div class="ttdoc">All {FO,PO}{Duration,Rate} annual values.</div><div class="ttdef"><b>Definition:</b> ecoInput.h:90</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition:</b> study.h:67</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html"><div class="ttname"><a href="classAntares_1_1Matrix.html">Antares::Matrix</a></div><div class="ttdoc">A n-by-n matrix.</div><div class="ttdef"><b>Definition:</b> matrix.h:50</div></div>
 </div><!-- fragment --></div><!-- contents -->

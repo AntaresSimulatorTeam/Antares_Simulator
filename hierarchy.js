@@ -196,11 +196,7 @@ var hierarchy =
       ] ],
       [ "Antares::Data::ScenarioBuilder::hydroLevelsData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html", null ]
     ] ],
-    [ "Antares::Data::DataSeriesCommon", "classAntares_1_1Data_1_1DataSeriesCommon.html", null ],
     [ "Antares::Data::DataSeriesHydro", "classAntares_1_1Data_1_1DataSeriesHydro.html", null ],
-    [ "Antares::Data::DataSeriesLoad", "classAntares_1_1Data_1_1DataSeriesLoad.html", null ],
-    [ "Antares::Data::DataSeriesSolar", "classAntares_1_1Data_1_1DataSeriesSolar.html", null ],
-    [ "Antares::Data::DataSeriesWind", "classAntares_1_1Data_1_1DataSeriesWind.html", null ],
     [ "Antares::Toolbox::Filter::Operator::DataType", "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1DataType.html", null ],
     [ "Antares::Date::DayInterval", "structAntares_1_1Date_1_1DayInterval.html", null ],
     [ "Antares::DebugData", "structAntares_1_1DebugData.html", null ],
@@ -371,7 +367,7 @@ var hierarchy =
         [ "Antares::Component::Datagrid::Renderer::storeToOutputCell", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1storeToOutputCell.html", null ]
       ] ],
       [ "Antares::Component::Datagrid::Renderer::IRenderer", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html", [
-        [ "Antares::Component::Datagrid::Renderer::Matrix< double, int32_t >", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Matrix.html", [
+        [ "Antares::Component::Datagrid::Renderer::Matrix< double >", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Matrix.html", [
           [ "Antares::Component::Datagrid::Renderer::ATimeSeries", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html", [
             [ "Antares::Component::Datagrid::Renderer::TimeSeriesHydroFatal", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesHydroFatal.html", null ],
             [ "Antares::Component::Datagrid::Renderer::TimeSeriesHydroMinGen", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesHydroMinGen.html", null ],
@@ -379,6 +375,12 @@ var hierarchy =
             [ "Antares::Component::Datagrid::Renderer::TimeSeriesLoad", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesLoad.html", null ],
             [ "Antares::Component::Datagrid::Renderer::TimeSeriesSolar", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesSolar.html", null ],
             [ "Antares::Component::Datagrid::Renderer::TimeSeriesWind", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesWind.html", null ]
+          ] ],
+          [ "Antares::Component::Datagrid::Renderer::TimeSeriesCluster", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesCluster.html", [
+            [ "Antares::Component::Datagrid::Renderer::TimeSeriesRenewableCluster", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesRenewableCluster.html", null ],
+            [ "Antares::Component::Datagrid::Renderer::TimeSeriesThermalCluster", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesThermalCluster.html", null ],
+            [ "Antares::Component::Datagrid::Renderer::TimeSeriesThermalClusterCO2Cost", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesThermalClusterCO2Cost.html", null ],
+            [ "Antares::Component::Datagrid::Renderer::TimeSeriesThermalClusterFuelCost", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesThermalClusterFuelCost.html", null ]
           ] ]
         ] ],
         [ "Antares::Component::Datagrid::Renderer::Matrix< double, double, 2 >", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Matrix.html", [
@@ -390,14 +392,6 @@ var hierarchy =
         [ "Antares::Component::Datagrid::Renderer::Matrix< double, double, 3 >", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Matrix.html", [
           [ "Antares::Component::Datagrid::Renderer::HydroPrepro", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1HydroPrepro.html", null ],
           [ "Antares::Component::Datagrid::Renderer::InflowPattern", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1InflowPattern.html", null ]
-        ] ],
-        [ "Antares::Component::Datagrid::Renderer::Matrix< double >", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Matrix.html", [
-          [ "Antares::Component::Datagrid::Renderer::TimeSeriesCluster", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesCluster.html", [
-            [ "Antares::Component::Datagrid::Renderer::TimeSeriesRenewableCluster", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesRenewableCluster.html", null ],
-            [ "Antares::Component::Datagrid::Renderer::TimeSeriesThermalCluster", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesThermalCluster.html", null ],
-            [ "Antares::Component::Datagrid::Renderer::TimeSeriesThermalClusterCO2Cost", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesThermalClusterCO2Cost.html", null ],
-            [ "Antares::Component::Datagrid::Renderer::TimeSeriesThermalClusterFuelCost", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesThermalClusterFuelCost.html", null ]
-          ] ]
         ] ],
         [ "Antares::Component::Datagrid::Renderer::Matrix< float >", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Matrix.html", [
           [ "Antares::Component::Datagrid::Renderer::XCastCoefficients< T >", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastCoefficients.html", null ],
@@ -817,6 +811,9 @@ var hierarchy =
       [ "kirchhoff_pytest.StudyReference", "classkirchhoff__pytest_1_1StudyReference.html", null ]
     ] ],
     [ "Yuni::Policy::ObjectLevelLockable", null, [
+      [ "Antares::IIntrusiveReference< ChildT, TP >", "classAntares_1_1IIntrusiveReference.html", null ]
+    ] ],
+    [ "Yuni::Policy::ObjectLevelLockable", null, [
       [ "Antares::Data::StudyFinder", "classAntares_1_1Data_1_1StudyFinder.html", [
         [ "MyStudyFinder", "classMyStudyFinder.html", null ],
         [ "MyStudyFinder", "classMyStudyFinder.html", null ],
@@ -824,9 +821,6 @@ var hierarchy =
         [ "StudyFinderCleaner", "classStudyFinderCleaner.html", null ]
       ] ],
       [ "Antares::Memory", "classAntares_1_1Memory.html", null ]
-    ] ],
-    [ "Yuni::Policy::ObjectLevelLockable", null, [
-      [ "Antares::IIntrusiveReference< ChildT, TP >", "classAntares_1_1IIntrusiveReference.html", null ]
     ] ],
     [ "Yuni::Policy::ObjectLevelLockableNotRecursive", null, [
       [ "Antares::Toolbox::Jobs::PartList", "classAntares_1_1Toolbox_1_1Jobs_1_1PartList.html", null ]
@@ -1241,6 +1235,7 @@ var hierarchy =
       [ "Progress", "classProgress.html", null ],
       [ "SystemMemoryLogger", "classSystemMemoryLogger.html", null ]
     ] ],
+    [ "Antares::Data::TimeSeries", "classAntares_1_1Data_1_1TimeSeries.html", null ],
     [ "Antares::Data::TimeSeriesBitPatternIntoIndex< T >", "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex.html", null ],
     [ "Antares::Data::TimeSeriesBitPatternIntoIndex< 1 >", "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex_3_011_01_4.html", null ],
     [ "Antares::Data::TimeSeriesBitPatternIntoIndex< 16 >", "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex_3_0116_01_4.html", null ],
@@ -1248,9 +1243,7 @@ var hierarchy =
     [ "Antares::Data::TimeSeriesBitPatternIntoIndex< 32 >", "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex_3_0132_01_4.html", null ],
     [ "Antares::Data::TimeSeriesBitPatternIntoIndex< 4 >", "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex_3_014_01_4.html", null ],
     [ "Antares::Data::TimeSeriesBitPatternIntoIndex< 8 >", "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex_3_018_01_4.html", null ],
-    [ "TimeSeriesConfigurer< MatrixType >", "classTimeSeriesConfigurer.html", null ],
-    [ "TimeSeriesConfigurer< Matrix< double > >", "classTimeSeriesConfigurer.html", null ],
-    [ "TimeSeriesConfigurer< Matrix< double, int32_t > >", "classTimeSeriesConfigurer.html", null ],
+    [ "TimeSeriesConfigurer", "classTimeSeriesConfigurer.html", null ],
     [ "TimeSeriesFile", "structTimeSeriesFile.html", null ],
     [ "Antares::Data::TimeSeriesToCStr< T >", "structAntares_1_1Data_1_1TimeSeriesToCStr.html", null ],
     [ "Antares::Data::TimeSeriesToCStr< 1 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_011_01_4.html", null ],

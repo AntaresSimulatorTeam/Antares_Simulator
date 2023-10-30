@@ -7,5 +7,5 @@ var classAntares_1_1Data_1_1Wind_1_1Container =
     [ "memoryUsage", "classAntares_1_1Data_1_1Wind_1_1Container.html#a9b6460f447e736247f0102c32ed29f17", null ],
     [ "resetToDefault", "classAntares_1_1Data_1_1Wind_1_1Container.html#aec1431a0fe4c0817a664d4c28324f230", null ],
     [ "prepro", "classAntares_1_1Data_1_1Wind_1_1Container.html#a65dbf68e3fdd123c3bfcfe2d05df07dc", null ],
-    [ "series", "classAntares_1_1Data_1_1Wind_1_1Container.html#ac38400bdaa6349f078f797371d68ac9f", null ]
+    [ "series", "classAntares_1_1Data_1_1Wind_1_1Container.html#ac1376c164f49776c865252cf7ebde715", null ]
 ];

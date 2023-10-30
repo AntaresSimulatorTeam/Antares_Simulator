@@ -7,5 +7,5 @@ var classAntares_1_1Data_1_1Solar_1_1Container =
     [ "memoryUsage", "classAntares_1_1Data_1_1Solar_1_1Container.html#aa8cbb68da9f20f436d4f94a52b9c5881", null ],
     [ "resetToDefault", "classAntares_1_1Data_1_1Solar_1_1Container.html#a73876ac089a6b2ca002790776a39fdc3", null ],
     [ "prepro", "classAntares_1_1Data_1_1Solar_1_1Container.html#a7b7b90794b6a4bdc62ccc38792c332b9", null ],
-    [ "series", "classAntares_1_1Data_1_1Solar_1_1Container.html#ab2515789e5c58776193c22d2bae8723b", null ]
+    [ "series", "classAntares_1_1Data_1_1Solar_1_1Container.html#ab95533b189ce722c578baedace18939d", null ]
 ];

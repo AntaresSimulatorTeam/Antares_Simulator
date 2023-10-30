@@ -19,6 +19,7 @@ var dir_f35d736e29d8243b24d0b8688c8560d6 =
     [ "object", "dir_feb7e25ca68853dd80a63fe3a78fa178.html", "dir_feb7e25ca68853dd80a63fe3a78fa178" ],
     [ "paths", "dir_3ebd0c6b198e2534b75d9212614d1ade.html", "dir_3ebd0c6b198e2534b75d9212614d1ade" ],
     [ "resources", "dir_7f31de3c797197958df18663790f447e.html", "dir_7f31de3c797197958df18663790f447e" ],
+    [ "series", "dir_ebc8c9594cd51ddaece1628dd1b84321.html", "dir_ebc8c9594cd51ddaece1628dd1b84321" ],
     [ "stdcxx", "dir_9ac70c255f4d84cbc977a7586db8d783.html", "dir_9ac70c255f4d84cbc977a7586db8d783" ],
     [ "study", "dir_ce980317fbc69b3f740ff45def79f52e.html", "dir_ce980317fbc69b3f740ff45def79f52e" ],
     [ "sys", "dir_8060b849091d032e6bd1ec519f08a094.html", "dir_8060b849091d032e6bd1ec519f08a094" ],

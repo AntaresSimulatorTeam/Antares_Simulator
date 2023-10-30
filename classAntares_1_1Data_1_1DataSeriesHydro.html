@@ -109,11 +109,20 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>DataSeriesHydro</b> ()</td></tr>
 <tr class="memdesc:a3abe93b1e9efea9d7b499e5c72c3f790"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. <br /></td></tr>
 <tr class="separator:a3abe93b1e9efea9d7b499e5c72c3f790"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13623a3a63da5fa15a050c052fa95839"><td class="memItemLeft" align="right" valign="top"><a id="a13623a3a63da5fa15a050c052fa95839" name="a13623a3a63da5fa15a050c052fa95839"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>copyGenerationTS</b> (const <a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html">DataSeriesHydro</a> &amp;source)</td></tr>
+<tr class="separator:a13623a3a63da5fa15a050c052fa95839"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Data</div></td></tr>
 <tr class="memitem:aea8f189d6acbbb0466c7486ae273d5cd"><td class="memItemLeft" align="right" valign="top"><a id="aea8f189d6acbbb0466c7486ae273d5cd" name="aea8f189d6acbbb0466c7486ae273d5cd"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr>
 <tr class="memdesc:aea8f189d6acbbb0466c7486ae273d5cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset all data, as if it were a new area. <br /></td></tr>
 <tr class="separator:aea8f189d6acbbb0466c7486ae273d5cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d4e3d9c1fb3d1a0e4579f785af1ffb4"><td class="memItemLeft" align="right" valign="top"><a id="a4d4e3d9c1fb3d1a0e4579f785af1ffb4" name="a4d4e3d9c1fb3d1a0e4579f785af1ffb4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>resizeRORandSTORAGE</b> (unsigned int width)</td></tr>
+<tr class="separator:a4d4e3d9c1fb3d1a0e4579f785af1ffb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbac9f566d864977cf29c383ae1e0e83"><td class="memItemLeft" align="right" valign="top"><a id="adbac9f566d864977cf29c383ae1e0e83" name="adbac9f566d864977cf29c383ae1e0e83"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>resizeGenerationTS</b> (unsigned int w, unsigned int h)</td></tr>
+<tr class="separator:adbac9f566d864977cf29c383ae1e0e83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d199bab434a74b243a750ab35d3b452"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html#a6d199bab434a74b243a750ab35d3b452">forceReload</a> (bool reload=false) const</td></tr>
 <tr class="memdesc:a6d199bab434a74b243a750ab35d3b452"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load all data not already loaded.  <a href="classAntares_1_1Data_1_1DataSeriesHydro.html#a6d199bab434a74b243a750ab35d3b452">More...</a><br /></td></tr>
 <tr class="separator:a6d199bab434a74b243a750ab35d3b452"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -129,18 +138,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>markAsModified</b> ()
 <tr class="separator:aacfee212cf8a11c60021f5e60fe903f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Memory</h2></td></tr>
-<tr class="memitem:a50c98b0aa2bcc93dce6ed1fb14e41d20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double, int32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html#a50c98b0aa2bcc93dce6ed1fb14e41d20">ror</a></td></tr>
-<tr class="memdesc:a50c98b0aa2bcc93dce6ed1fb14e41d20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run-of-the-river - ROR (MW)  <a href="classAntares_1_1Data_1_1DataSeriesHydro.html#a50c98b0aa2bcc93dce6ed1fb14e41d20">More...</a><br /></td></tr>
-<tr class="separator:a50c98b0aa2bcc93dce6ed1fb14e41d20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a979875cf976def01757b754a9baf7da0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double, int32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html#a979875cf976def01757b754a9baf7da0">storage</a></td></tr>
-<tr class="memdesc:a979875cf976def01757b754a9baf7da0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mod (MW)  <a href="classAntares_1_1Data_1_1DataSeriesHydro.html#a979875cf976def01757b754a9baf7da0">More...</a><br /></td></tr>
-<tr class="separator:a979875cf976def01757b754a9baf7da0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab838b4c996f6483ae2d0ad212cdba02a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double, int32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html#ab838b4c996f6483ae2d0ad212cdba02a">mingen</a></td></tr>
-<tr class="memdesc:ab838b4c996f6483ae2d0ad212cdba02a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum Generation (MW)  <a href="classAntares_1_1Data_1_1DataSeriesHydro.html#ab838b4c996f6483ae2d0ad212cdba02a">More...</a><br /></td></tr>
-<tr class="separator:ab838b4c996f6483ae2d0ad212cdba02a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c3b64bfd9ff4031334423156eef8737"><td class="memItemLeft" align="right" valign="top">uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html#a3c3b64bfd9ff4031334423156eef8737">count</a></td></tr>
-<tr class="memdesc:a3c3b64bfd9ff4031334423156eef8737"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of time-series.  <a href="classAntares_1_1Data_1_1DataSeriesHydro.html#a3c3b64bfd9ff4031334423156eef8737">More...</a><br /></td></tr>
-<tr class="separator:a3c3b64bfd9ff4031334423156eef8737"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4bf8ff859c00e267dc3a871701dd5325"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Data_1_1TimeSeries.html">TimeSeries</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html#a4bf8ff859c00e267dc3a871701dd5325">ror</a></td></tr>
+<tr class="memdesc:a4bf8ff859c00e267dc3a871701dd5325"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run-of-the-river - ROR (MW)  <a href="classAntares_1_1Data_1_1DataSeriesHydro.html#a4bf8ff859c00e267dc3a871701dd5325">More...</a><br /></td></tr>
+<tr class="separator:a4bf8ff859c00e267dc3a871701dd5325"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b0f2bb769e0e067377916614b0f65ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Data_1_1TimeSeries.html">TimeSeries</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html#a8b0f2bb769e0e067377916614b0f65ed">storage</a></td></tr>
+<tr class="memdesc:a8b0f2bb769e0e067377916614b0f65ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mod (MW)  <a href="classAntares_1_1Data_1_1DataSeriesHydro.html#a8b0f2bb769e0e067377916614b0f65ed">More...</a><br /></td></tr>
+<tr class="separator:a8b0f2bb769e0e067377916614b0f65ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20242c15ed354fc694cee9d0f393be20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Data_1_1TimeSeries.html">TimeSeries</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html#a20242c15ed354fc694cee9d0f393be20">mingen</a></td></tr>
+<tr class="memdesc:a20242c15ed354fc694cee9d0f393be20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum Generation (MW)  <a href="classAntares_1_1Data_1_1DataSeriesHydro.html#a20242c15ed354fc694cee9d0f393be20">More...</a><br /></td></tr>
+<tr class="separator:a20242c15ed354fc694cee9d0f393be20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14ac7c7f49e02e8062482235b521e920"><td class="memItemLeft" align="right" valign="top"><a id="a14ac7c7f49e02e8062482235b521e920" name="a14ac7c7f49e02e8062482235b521e920"></a>
 <a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; uint32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>timeseriesNumbers</b></td></tr>
 <tr class="memdesc:a14ac7c7f49e02e8062482235b521e920"><td class="mdescLeft">&#160;</td><td class="mdescRight">Monte-Carlo. <br /></td></tr>
@@ -152,9 +158,9 @@ uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>memoryUsage</b> (
 <tr class="memitem:ad2230dfef0a2be17d91b5d601a4ff50c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html#ad2230dfef0a2be17d91b5d601a4ff50c">checkMinGenTsNumber</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;s, const AreaName &amp;areaID)</td></tr>
 <tr class="memdesc:ad2230dfef0a2be17d91b5d601a4ff50c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to estimate the amount of memory required for launching a simulation.  <a href="classAntares_1_1Data_1_1DataSeriesHydro.html#ad2230dfef0a2be17d91b5d601a4ff50c">More...</a><br /></td></tr>
 <tr class="separator:ad2230dfef0a2be17d91b5d601a4ff50c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8967fe8e6ad22bec69b026ad3406cdf8"><td class="memItemLeft" align="right" valign="top"><a id="a8967fe8e6ad22bec69b026ad3406cdf8" name="a8967fe8e6ad22bec69b026ad3406cdf8"></a>
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getIndex</b> (unsigned int year) const</td></tr>
-<tr class="separator:a8967fe8e6ad22bec69b026ad3406cdf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa47d80b46322acd2e2bc0deda3784a5c"><td class="memItemLeft" align="right" valign="top"><a id="aa47d80b46322acd2e2bc0deda3784a5c" name="aa47d80b46322acd2e2bc0deda3784a5c"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>TScount</b> () const</td></tr>
+<tr class="separator:aa47d80b46322acd2e2bc0deda3784a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Data series (Hydro) </p>
@@ -295,31 +301,14 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getIndex</b> 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a3c3b64bfd9ff4031334423156eef8737" name="a3c3b64bfd9ff4031334423156eef8737"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3c3b64bfd9ff4031334423156eef8737">&#9670;&#160;</a></span>count</h2>
+<a id="a20242c15ed354fc694cee9d0f393be20" name="a20242c15ed354fc694cee9d0f393be20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20242c15ed354fc694cee9d0f393be20">&#9670;&#160;</a></span>mingen</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint Antares::Data::DataSeriesHydro::count</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The number of time-series. </p>
-<p >This value must be the same as the width of the matrices <code>mod</code> and <code>fatal</code>. It is only provided for convenience to avoid same strange and ambiguous code (for example using <code>fatal.width</code> and <code>mod.width</code> in the same routine, it might indicate that the two values are not strictly equal) </p>
-
-</div>
-</div>
-<a id="ab838b4c996f6483ae2d0ad212cdba02a" name="ab838b4c996f6483ae2d0ad212cdba02a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab838b4c996f6483ae2d0ad212cdba02a">&#9670;&#160;</a></span>mingen</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt;double, int32_t&gt; Antares::Data::DataSeriesHydro::mingen</td>
+          <td class="memname"><a class="el" href="classAntares_1_1Data_1_1TimeSeries.html">TimeSeries</a> Antares::Data::DataSeriesHydro::mingen</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -329,14 +318,14 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getIndex</b> 
 
 </div>
 </div>
-<a id="a50c98b0aa2bcc93dce6ed1fb14e41d20" name="a50c98b0aa2bcc93dce6ed1fb14e41d20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a50c98b0aa2bcc93dce6ed1fb14e41d20">&#9670;&#160;</a></span>ror</h2>
+<a id="a4bf8ff859c00e267dc3a871701dd5325" name="a4bf8ff859c00e267dc3a871701dd5325"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4bf8ff859c00e267dc3a871701dd5325">&#9670;&#160;</a></span>ror</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt;double, int32_t&gt; Antares::Data::DataSeriesHydro::ror</td>
+          <td class="memname"><a class="el" href="classAntares_1_1Data_1_1TimeSeries.html">TimeSeries</a> Antares::Data::DataSeriesHydro::ror</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -346,14 +335,14 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getIndex</b> 
 
 </div>
 </div>
-<a id="a979875cf976def01757b754a9baf7da0" name="a979875cf976def01757b754a9baf7da0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a979875cf976def01757b754a9baf7da0">&#9670;&#160;</a></span>storage</h2>
+<a id="a8b0f2bb769e0e067377916614b0f65ed" name="a8b0f2bb769e0e067377916614b0f65ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b0f2bb769e0e067377916614b0f65ed">&#9670;&#160;</a></span>storage</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt;double, int32_t&gt; Antares::Data::DataSeriesHydro::storage</td>
+          <td class="memname"><a class="el" href="classAntares_1_1Data_1_1TimeSeries.html">TimeSeries</a> Antares::Data::DataSeriesHydro::storage</td>
         </tr>
       </table>
 </div><div class="memdoc">

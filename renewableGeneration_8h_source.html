@@ -346,7 +346,7 @@ $(document).ready(function(){initNavTree('renewableGeneration_8h_source.html',''
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>        {</div>
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>            <span class="keyword">const</span> <span class="keyword">auto</span>* renewableCluster = state.area-&gt;renewable.clusters[clusterIndex];</div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>            <span class="keywordtype">double</span> renewableClusterProduction</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>              = renewableCluster-&gt;valueAtTimeStep(state.hourInTheYear, state.year);</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>              = renewableCluster-&gt;valueAtTimeStep(state.year, state.hourInTheYear);</div>
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span> </div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>            pValuesForTheCurrentYear[numSpace][renewableCluster-&gt;groupID][state.hourInTheYear]</div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>              += renewableClusterProduction;</div>

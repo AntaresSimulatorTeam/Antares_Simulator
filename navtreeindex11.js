@@ -1,16 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"classAntares_1_1Graph_1_1Grid.html#a048943416e662a22770d96033afe5b95":[4,0,0,8,1,2],
-"classAntares_1_1Graph_1_1Grid.html#a0f396c947841654d8ce748aa73e478f0":[4,0,0,8,1,8],
-"classAntares_1_1Graph_1_1Grid.html#a186d8796bbf5dc1ab8f3ec6e35a6a0d8":[4,0,0,8,1,3],
-"classAntares_1_1Graph_1_1Grid.html#a1bf993f71a23a743dfddbd7bb9aa4962":[4,0,0,8,1,10],
-"classAntares_1_1Graph_1_1Grid.html#a7004065219923b83a5e2ee13978c4f3f":[4,0,0,8,1,5],
-"classAntares_1_1Graph_1_1Grid.html#a81b4bd6ed76dfa7c52cc997bac5c9632":[4,0,0,8,1,1],
-"classAntares_1_1Graph_1_1Grid.html#a8c78613a5185e59c1abca88c6707a810":[4,0,0,8,1,7],
-"classAntares_1_1Graph_1_1Grid.html#aa4238e0a26f7805f5ca49368ace7af3f":[4,0,0,8,1,11],
-"classAntares_1_1Graph_1_1Grid.html#ab24958f2e08e120a2e6f869be8f3b242":[4,0,0,8,1,9],
-"classAntares_1_1Graph_1_1Grid.html#abecfec3a6f0b89df92037cea592ca231":[4,0,0,8,1,6],
-"classAntares_1_1Graph_1_1Grid.html#ad92e0af9b29b8793c588d0bcb872385e":[4,0,0,8,1,0],
 "classAntares_1_1Graph_1_1Grid.html#af0bcd0a47cf60f481817641a786ca19f":[4,0,0,8,1,4],
 "classAntares_1_1Graph_1_1Node.html":[4,0,0,8,2],
 "classAntares_1_1HydroManagement.html":[4,0,0,26],
@@ -249,5 +238,16 @@ var NAVTREEINDEX11 =
 "classAntares_1_1Map_1_1Private_1_1AddingToolsHelper.html":[4,0,0,9,0,0],
 "classAntares_1_1Map_1_1RemovalToolPredicate.html":[4,0,0,9,12],
 "classAntares_1_1Map_1_1Settings.html":[4,0,0,9,13],
-"classAntares_1_1Map_1_1Tool_1_1ConnectionCreator.html":[4,0,0,9,1,0]
+"classAntares_1_1Map_1_1Tool_1_1ConnectionCreator.html":[4,0,0,9,1,0],
+"classAntares_1_1Map_1_1Tool_1_1ConnectionCreator.html#a2324eb0c10ce5d14e35d84a641f7ef33":[4,0,0,9,1,0,0],
+"classAntares_1_1Map_1_1Tool_1_1ConnectionCreator.html#a7fc281507f4fff9a9b13ee77358ebb04":[4,0,0,9,1,0,1],
+"classAntares_1_1Map_1_1Tool_1_1ConnectionCreator.html#aa85cf9410b351136ee4b27e34364e604":[4,0,0,9,1,0,2],
+"classAntares_1_1Map_1_1Tool_1_1Remover.html":[4,0,0,9,1,1],
+"classAntares_1_1Map_1_1Tool_1_1Remover.html#a0d47ecb6135173f511e632f7dd8c32c5":[4,0,0,9,1,1,0],
+"classAntares_1_1Map_1_1Tool_1_1Remover.html#a41842b51b3801e4b59ba9b047bfb9d5a":[4,0,0,9,1,1,1],
+"classAntares_1_1Map_1_1Tool_1_1Tool.html":[4,0,0,9,1,2],
+"classAntares_1_1Map_1_1Tool_1_1Tool.html#a0098121f2630f936fb25cfb316be1448":[4,0,0,9,1,2,2],
+"classAntares_1_1Map_1_1Tool_1_1Tool.html#a05b0b333bdc2dd0079a0913edf461d50":[4,0,0,9,1,2,3],
+"classAntares_1_1Map_1_1Tool_1_1Tool.html#a063207dbcd0f7a4492c45eacd0cd2276":[4,0,0,9,1,2,6],
+"classAntares_1_1Map_1_1Tool_1_1Tool.html#a160fad9f21de12ff1d45e4520f95e16e":[4,0,0,9,1,2,17]
 };

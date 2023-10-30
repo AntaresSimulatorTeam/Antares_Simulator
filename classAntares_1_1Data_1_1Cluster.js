@@ -24,6 +24,6 @@ var classAntares_1_1Data_1_1Cluster =
     [ "pGroup", "classAntares_1_1Data_1_1Cluster.html#a57cf2b366a110f4593ff3f209bddc363", null ],
     [ "pID", "classAntares_1_1Data_1_1Cluster.html#a3168f470e9fb86767133129ed26e195c", null ],
     [ "pName", "classAntares_1_1Data_1_1Cluster.html#a40dfbccdb4a6499f9a506bbe96dd0ef9", null ],
-    [ "series", "classAntares_1_1Data_1_1Cluster.html#adad66a8b7b7bf1fd8c608fd88962eee2", null ],
+    [ "series", "classAntares_1_1Data_1_1Cluster.html#ad00ce25790a04c8ee7c473fd6d1b1a8b", null ],
     [ "unitCount", "classAntares_1_1Data_1_1Cluster.html#acfb0e684f9e67dc0836a4056eda7bfda", null ]
 ];

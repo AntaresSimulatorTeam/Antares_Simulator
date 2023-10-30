@@ -18,7 +18,6 @@ var classAntares_1_1Data_1_1RenewableCluster =
       [ "productionFactor", "classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76a743e0e2f86fd56e598bd49dc43e2b7c4", null ]
     ] ],
     [ "RenewableCluster", "classAntares_1_1Data_1_1RenewableCluster.html#a3c9a530ab8e9ec5406d23136f31c06c6", null ],
-    [ "~RenewableCluster", "classAntares_1_1Data_1_1RenewableCluster.html#a84020c99fec9cbfeb5af877283ad1cf4", null ],
     [ "copyFrom", "classAntares_1_1Data_1_1RenewableCluster.html#a42c158eb0bd0eff4fc7868102a8fe924", null ],
     [ "forceReload", "classAntares_1_1Data_1_1RenewableCluster.html#ac2aa017881ae145e2c422298f272311c", null ],
     [ "groupId", "classAntares_1_1Data_1_1RenewableCluster.html#a242c33df7d31195d2fcadd40c93cff62", null ],

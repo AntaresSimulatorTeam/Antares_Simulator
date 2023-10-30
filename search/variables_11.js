@@ -21,7 +21,7 @@ var searchData=
   ['resultsize_18',['resultSize',['../classAntares_1_1Data_1_1Sets_1_1Options.html#acff576c434d7a2ec3d0954c1c9e67f88',1,'Antares::Data::Sets::Options']]],
   ['rgmodelling_19',['rgModelling',['../structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html#a008c16b94a2babc00a511480a03f437b',1,'Antares::Data::Parameters::RenewableGeneration']]],
   ['rnclusters_20',['RnClusters',['../classAntares_1_1Window_1_1Inspector_1_1InspectorData.html#a993e19682856505c1387958bcbb6a910',1,'Antares::Window::Inspector::InspectorData']]],
-  ['ror_21',['ror',['../classAntares_1_1Data_1_1DataSeriesHydro.html#a50c98b0aa2bcc93dce6ed1fb14e41d20',1,'Antares::Data::DataSeriesHydro']]],
+  ['ror_21',['ror',['../classAntares_1_1Data_1_1DataSeriesHydro.html#a4bf8ff859c00e267dc3a871701dd5325',1,'Antares::Data::DataSeriesHydro']]],
   ['rowcaptions_22',['rowCaptions',['../classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#abfc8f9d45cae21569cf684578574d8e8',1,'Antares::Solver::Variable::Private::SurveyResultsData']]],
   ['rows_23',['rows',['../classCellColumnData.html#acf382fdbf28ef94507b5a787a122e3d5',1,'CellColumnData']]],
   ['rules_24',['rules',['../classAntares_1_1Data_1_1Sets_1_1Options.html#aed7b022b30a437ee3e001d0b4c7ab6c1',1,'Antares::Data::Sets::Options']]],

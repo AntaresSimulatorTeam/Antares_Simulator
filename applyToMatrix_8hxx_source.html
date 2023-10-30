@@ -121,7 +121,7 @@ $(document).ready(function(){initNavTree('applyToMatrix_8hxx_source.html',''); i
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>                                                 uint tsGenMax)</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>{</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="comment">// When the TS-Generators are not used</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordflow">return</span> (!tsGenMax) ? (value &lt; data.count) : (value &lt; tsGenMax);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordflow">return</span> (!tsGenMax) ? (value &lt; data.TScount()) : (value &lt; tsGenMax);</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>}</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">template</span>&lt;&gt;</div>

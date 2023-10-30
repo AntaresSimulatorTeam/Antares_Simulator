@@ -6,5 +6,5 @@ var classAntares_1_1Data_1_1EconomicInputData =
     [ "memoryUsage", "classAntares_1_1Data_1_1EconomicInputData.html#a832fea61f55af33aa586c29755b58774", null ],
     [ "reset", "classAntares_1_1Data_1_1EconomicInputData.html#a299a683be38db51dd10316aa09476e31", null ],
     [ "saveToFolder", "classAntares_1_1Data_1_1EconomicInputData.html#a69059b4cf21f9ff08fa67a3c64309232", null ],
-    [ "fuelcost", "classAntares_1_1Data_1_1EconomicInputData.html#a240d3622778a6fba30beb393b68ad555", null ]
+    [ "fuelcost", "classAntares_1_1Data_1_1EconomicInputData.html#ad75f3fdd36eab15f00c22c63252591cc", null ]
 ];

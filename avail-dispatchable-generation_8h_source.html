@@ -270,8 +270,8 @@ $(document).ready(function(){initNavTree('avail-dispatchable-generation_8h_sourc
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    {</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; [name, cluster] : list)</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        {</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; availableProduction = cluster-&gt;series-&gt;getAvailablePowerYearly(year);</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> hour = 0; hour != cluster-&gt;series-&gt;timeSeries.height; ++hour)</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; availableProduction = cluster-&gt;series.getColumn(year);</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> hour = 0; hour != cluster-&gt;series.timeSeries.height; ++hour)</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>                pValuesForTheCurrentYear[numSpace].hour[hour] += availableProduction[hour];</div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        }</div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    }</div>

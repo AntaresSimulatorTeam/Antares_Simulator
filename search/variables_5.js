@@ -31,6 +31,6 @@ var searchData=
   ['forceparallel_28',['forceParallel',['../classAntares_1_1Data_1_1StudyLoadOptions.html#a55b89e7b19a8e8c0db2cdc78442b61a7',1,'Antares::Data::StudyLoadOptions']]],
   ['forceyearbyyear_29',['forceYearByYear',['../classAntares_1_1Data_1_1StudyLoadOptions.html#a4875ece3163e52e25ac0efdd7faf12e9',1,'Antares::Data::StudyLoadOptions']]],
   ['from_30',['from',['../classAntares_1_1Data_1_1AreaLink.html#ad05052a16d6dcb98345291ef99ccda23',1,'Antares::Data::AreaLink']]],
-  ['fuelcost_31',['fuelcost',['../classAntares_1_1Data_1_1EconomicInputData.html#a240d3622778a6fba30beb393b68ad555',1,'Antares::Data::EconomicInputData']]],
+  ['fuelcost_31',['fuelcost',['../classAntares_1_1Data_1_1EconomicInputData.html#ad75f3fdd36eab15f00c22c63252591cc',1,'Antares::Data::EconomicInputData']]],
   ['fuelefficiency_32',['fuelEfficiency',['../classAntares_1_1Data_1_1ThermalCluster.html#aa0fb5f7cdfe334fba4cd15cb14a05c81',1,'Antares::Data::ThermalCluster']]]
 ];
