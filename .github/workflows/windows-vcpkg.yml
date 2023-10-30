@@ -78,15 +78,14 @@ jobs:
           cp triplets/x64-windows.cmake "$TRIPLET_FILE"
           echo "set(VCPKG_BUILD_TYPE $VCPKG_BUILD_TYPE)" >> "$TRIPLET_FILE"
           echo "set(VCPKG_DISABLE_COMPILER_TRACKING $VCPKG_DISABLE_COMPILER_TRACKING)" >> "$TRIPLET_FILE"
-          cmd.exe /c bootstrap-vcpkg.bat
-          vcpkg.exe \
-            --vcpkg-root="$VCPKG_ROOT" \
+          ./bootstrap-vcpkg.sh
+          vcpkg.exe --vcpkg-root="$VCPKG_ROOT" \
             --overlay-triplets="$VCPKG_OVERLAY_TRIPLETS" \
             --triplet="$VCPKG_DEFAULT_TRIPLET" \
             $VCPKG_INSTALL_OPTIONS \
             install
           # rm -rf buildtrees packages downloads
-      # shell: bash
+      shell: bash
 
     - name: Read antares-deps version
       id: antares-deps-version
