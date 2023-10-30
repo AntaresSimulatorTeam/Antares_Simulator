@@ -379,13 +379,9 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
         auto MPproblem = std::shared_ptr<MPSolver>(ProblemSimplexeNommeConverter(options.solverName, &Probleme).Convert());
 
-        std::vector<std::shared_ptr<UnfeasibilityAnalysis>> analysisList;
-        analysisList.push_back(std::make_shared<VariablesBoundsConsistency>());
-        analysisList.push_back(std::make_shared<ConstraintSlackAnalysis>());
-
-        Optimization::UnfeasiblePbAnalyzer analyzer(analysisList);
-        analyzer.run(MPproblem.get());
-        analyzer.printReport();
+        auto analyzer = makeUnfeasiblePbAnalyzer();
+        analyzer->run(MPproblem.get());
+        analyzer->printReport();
 
         auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();
         const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);

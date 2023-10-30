@@ -16,8 +16,8 @@ public:
     ~ConstraintSlackAnalysis() override = default;
 
     void run(operations_research::MPSolver* problem) override;
-    void printReport() override;
-    std::string title() override { return "Slack variables analysis"; }
+    void printReport() const override;
+    std::string title() const override { return "Slack variables analysis"; }
 
 private:
     void buildObjective(operations_research::MPSolver* problem) const;

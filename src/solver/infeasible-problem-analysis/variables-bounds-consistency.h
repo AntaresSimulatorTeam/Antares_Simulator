@@ -7,13 +7,13 @@ namespace Antares::Optimization
 
 struct VariableBounds
 {
-    VariableBounds(std::string var_name, double low_bound, double up_bound)
+    VariableBounds(std::string& var_name, double& low_bound, double& up_bound)
         : name(var_name), lowBound(low_bound), upBound(up_bound)
     {}
 
-    std::string name;
-    double lowBound;
-    double upBound;
+    const std::string& name;
+    const double& lowBound;
+    const double& upBound;
 };
 
 /*!
@@ -27,8 +27,8 @@ public:
     ~VariablesBoundsConsistency() override = default;
 
     void run(operations_research::MPSolver* problem) override;
-    void printReport() override;
-    std::string title() override { return "Variables bounds consistency check"; }
+    void printReport() const override;
+    std::string title() const override { return "Variables bounds consistency check"; }
 
     const std::vector<VariableBounds>& incorrectVars() const { return incorrectVars_; }
 

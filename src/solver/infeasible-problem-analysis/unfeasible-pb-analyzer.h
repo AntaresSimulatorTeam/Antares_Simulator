@@ -19,11 +19,14 @@ class UnfeasiblePbAnalyzer
 {
 public:
     UnfeasiblePbAnalyzer() = delete;
-    explicit UnfeasiblePbAnalyzer(std::vector<std::shared_ptr<UnfeasibilityAnalysis>> analysisList);
+    explicit UnfeasiblePbAnalyzer(std::vector<std::unique_ptr<UnfeasibilityAnalysis>> analysisList);
     void run(MPSolver* problem);
-    void printReport();
+    void printReport() const;
 
 private:
-    std::vector<std::shared_ptr<UnfeasibilityAnalysis>> analysisList_;
+    std::vector<std::unique_ptr<UnfeasibilityAnalysis>> analysisList_;
 };
+
+std::unique_ptr<UnfeasiblePbAnalyzer> makeUnfeasiblePbAnalyzer();
+
 } // namespace Antares::Optimization
