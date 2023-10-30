@@ -44,7 +44,7 @@ The install procedure can be done
     - Install dependencies
     ```
     cd vcpkg
-    vcpkg install wxwidgets boost-test --triplet [vcpg-triplet] 
+    vcpkg install --triplet [vcpg-triplet] 
     ```
 === "Centos (yum)"
 
