@@ -72,12 +72,12 @@ public:
         hasDetectedInfeasibilityCause_ = shouldDetectCause_;
     }
 
-    void printReport() override
+    void printReport() const override
     {
         hasPrinted_ = true;
     }
 
-    std::string title() override
+    std::string title() const override
     {
         return "mock";
     }
