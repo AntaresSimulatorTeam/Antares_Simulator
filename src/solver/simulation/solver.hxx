@@ -672,6 +672,9 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
 
     uint indexYear = 0;
     std::vector<unsigned int>::iterator ity;
+    MersenneTwister random;
+    random.reset(study.parameters.seed[Data::seedHydroManagement]);
+
     for (ity = years.begin(); ity != years.end(); ++ity)
     {
         uint y = *ity;
@@ -719,7 +722,8 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
 
             double randomLevel = hydroManagement.randomReservoirLevel(min[firstDayOfMonth],
                                                                        avg[firstDayOfMonth],
-                                                                       max[firstDayOfMonth]);
+                                                                       max[firstDayOfMonth],
+                                                                       random);
 
             // Possibly update the intial level from scenario builder
             if (study.parameters.useCustomScenario)

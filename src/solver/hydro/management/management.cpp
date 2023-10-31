@@ -40,14 +40,14 @@ using namespace Yuni;
 
 namespace Antares
 {
-double HydroManagement::GammaVariable(double r)
+double HydroManagement::GammaVariable(double r, MersenneTwister &random)
 {
     double x = 0.;
     do
     {
         double s = r - 1.;
-        double u = random_();
-        double v = random_();
+        double u = random();
+        double v = random();
         double w = u * (1. - u);
         assert(Math::Abs(w) > 1e-12);
         assert(3. * (r - 0.25) / w > 0.);
@@ -70,10 +70,10 @@ double HydroManagement::GammaVariable(double r)
     return x;
 }
 
-inline double HydroManagement::BetaVariable(double a, double b)
+inline double HydroManagement::BetaVariable(double a, double b, MersenneTwister &random)
 {
-    double y = GammaVariable(a);
-    double z = GammaVariable(b);
+    double y = GammaVariable(a, random);
+    double z = GammaVariable(b, random);
     assert(Math::Abs(y + z) > 1e-12);
     return y / (y + z);
 }
@@ -89,8 +89,6 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
     maxNbYearsInParallel_(maxNbYearsInParallel),
     resultWriter_(resultWriter)
 {
-    random_.reset(parameters_.seed[Data::seedHydroManagement]);
-
     // Ventilation results memory allocation
     uint nbDaysPerYear = 365;
     ventilationResults_.resize(maxNbYearsInParallel_);
@@ -465,7 +463,7 @@ void HydroManagement::prepareEffectiveDemand()
     });
 }
 
-double HydroManagement::randomReservoirLevel(double min, double avg, double max)
+double HydroManagement::randomReservoirLevel(double min, double avg, double max, MersenneTwister& random)
 {
     if (Math::Equals(min, max))
         return avg;
@@ -487,7 +485,7 @@ double HydroManagement::randomReservoirLevel(double min, double avg, double max)
     double a = e * (e * re / v - 1.);
     double b = re * (e * re / v - 1.);
 
-    double x = BetaVariable(a, b);
+    double x = BetaVariable(a, b, random);
     return x * max + (1. - x) * min;
 }
 

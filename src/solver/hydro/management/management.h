@@ -107,7 +107,7 @@ public:
                     unsigned int maxNbYearsInParallel,
                     Solver::IResultWriter& resultWriter);
 
-    double randomReservoirLevel(double min, double avg, double max);
+    double randomReservoirLevel(double min, double avg, double max, MersenneTwister& random);
 
     //! Perform the hydro ventilation
     void makeVentilation(double* randomReservoirLevel,
@@ -157,9 +157,9 @@ private:
     //! \name Utilities
     //@{
     //! Beta variable
-    double BetaVariable(double a, double b);
+    double BetaVariable(double a, double b, MersenneTwister &random);
     //! Gamma variable
-    double GammaVariable(double a);
+    double GammaVariable(double a, MersenneTwister &random);
     //@}
 
 private:
@@ -167,7 +167,6 @@ private:
     const Data::AreaList& areas_;
     const Date::Calendar& calendar_;
     const Data::Parameters& parameters_;
-    MersenneTwister random_;
     unsigned int maxNbYearsInParallel_ = 0;
     Solver::IResultWriter& resultWriter_;
 
