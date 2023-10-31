@@ -77,6 +77,7 @@ public:
     double* operator[](uint32_t index);
 
     void reset();
+    void reset(uint32_t width, uint32_t height);
     void unloadFromMemory() const;
     void roundAllEntries();
     void resize(uint32_t timeSeriesCount, uint32_t timestepCount);

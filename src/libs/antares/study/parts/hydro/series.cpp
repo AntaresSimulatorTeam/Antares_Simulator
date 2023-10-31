@@ -166,56 +166,56 @@ void DataSeriesHydro::copyMaxPowerTS(const DataSeriesHydro& source)
 
 void DataSeriesHydro::reset()
 {
-    ror.timeSeries.reset(1, HOURS_PER_YEAR);
-    storage.timeSeries.reset(1, DAYS_PER_YEAR);
-    mingen.timeSeries.reset(1, HOURS_PER_YEAR);
+    ror.reset(1, HOURS_PER_YEAR);
+    storage.reset(1, DAYS_PER_YEAR);
+    mingen.reset(1, HOURS_PER_YEAR);
     generationTScount_ = 1;
 
-    maxHourlyGenPower.timeSeries.reset(1, HOURS_PER_YEAR);
-    maxHourlyPumpPower.timeSeries.reset(1, HOURS_PER_YEAR);
+    maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
     maxPowerTScount_ = 1;
 }
 
 void DataSeriesHydro::resizeRORandSTORAGE(uint width)
 {
-    ror.timeSeries.resize(width, HOURS_PER_YEAR);
-    storage.timeSeries.resize(width, DAYS_PER_YEAR);
+    ror.resize(width, HOURS_PER_YEAR);
+    storage.resize(width, DAYS_PER_YEAR);
     generationTScount_ = width;
 }
 
 void DataSeriesHydro::resizeGenerationTS(uint w, uint h)
 {
-    ror.timeSeries.resize(w, h);
-    storage.timeSeries.resize(w, std::min((uint)DAYS_PER_YEAR, h));
-    mingen.timeSeries.resize(w, h);
+    ror.resize(w, h);
+    storage.resize(w, std::min((uint)DAYS_PER_YEAR, h));
+    mingen.resize(w, h);
     generationTScount_ = w;
 }
 
 void DataSeriesHydro::resizeMaxPowerTS(uint w, uint h)
 {
-    maxHourlyGenPower.timeSeries.reset(w, h);
-    maxHourlyPumpPower.timeSeries.reset(w, h);
+    maxHourlyGenPower.reset(w, h);
+    maxHourlyPumpPower.reset(w, h);
     maxPowerTScount_ = w;
 }
 
 bool DataSeriesHydro::forceReload(bool reload) const
 {
     bool ret = true;
-    ret = ror.timeSeries.forceReload(reload) && ret;
-    ret = storage.timeSeries.forceReload(reload) && ret;
-    ret = mingen.timeSeries.forceReload(reload) && ret;
-    ret = maxHourlyGenPower.timeSeries.forceReload(reload) && ret;
-    ret = maxHourlyPumpPower.timeSeries.forceReload(reload) && ret;
+    ret = ror.forceReload(reload) && ret;
+    ret = storage.forceReload(reload) && ret;
+    ret = mingen.forceReload(reload) && ret;
+    ret = maxHourlyGenPower.forceReload(reload) && ret;
+    ret = maxHourlyPumpPower.forceReload(reload) && ret;
     return ret;
 }
 
 void DataSeriesHydro::markAsModified() const
 {
-    ror.timeSeries.markAsModified();
-    storage.timeSeries.markAsModified();
-    mingen.timeSeries.markAsModified();
-    maxHourlyGenPower.timeSeries.markAsModified();
-    maxHourlyPumpPower.timeSeries.markAsModified();
+    ror.markAsModified();
+    storage.markAsModified();
+    mingen.markAsModified();
+    maxHourlyGenPower.markAsModified();
+    maxHourlyPumpPower.markAsModified();
 }
 
 void DataSeriesHydro::EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver, bool& fatalError)
@@ -275,8 +275,8 @@ void DataSeriesHydro::buildMaxPowerFromDailyTS(const Matrix<double>::ColumnType&
 {
     maxPowerTScount_ = 1;
 
-    maxHourlyGenPower.timeSeries.reset(maxPowerTScount_, HOURS_PER_YEAR);
-    maxHourlyPumpPower.timeSeries.reset(maxPowerTScount_, HOURS_PER_YEAR);
+    maxHourlyGenPower.reset(maxPowerTScount_, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(maxPowerTScount_, HOURS_PER_YEAR);
 
     ConvertDailyTSintoHourlyTS(DailyMaxGenPower, maxHourlyGenPower.timeSeries[0]);
     ConvertDailyTSintoHourlyTS(DailyMaxPumpPower, maxHourlyPumpPower.timeSeries[0]);
@@ -319,8 +319,11 @@ void DataSeriesHydro::EqualizeMaxPowerTSsizes(Area& area, bool& fatalError)
     std::string fatalErrorMsg = "Hydro Max Power: " + area.id.to<std::string>() + " : ";
     fatalErrorMsg += "generation and pumping must have the same number of TS.";
 
-    maxPowerTScount_
-      = EqualizeTSsize(maxHourlyGenPower.timeSeries, maxHourlyPumpPower.timeSeries, fatalError, fatalErrorMsg, area);
+    maxPowerTScount_ = EqualizeTSsize(maxHourlyGenPower.timeSeries,
+                                      maxHourlyPumpPower.timeSeries,
+                                      fatalError,
+                                      fatalErrorMsg,
+                                      area);
 
     logs.info() << "  '" << area.id << "': The number of hydro max power (generation and pumping) "
                 << "TS were both set to : " << maxPowerTScount_;
