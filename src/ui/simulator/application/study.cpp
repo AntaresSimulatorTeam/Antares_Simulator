@@ -393,14 +393,11 @@ protected:
         }     // save as
 
         // Save the study (only changes in the most cases)
-        uint tempVersionVar = (uint)study->header.version;
+        uint tempVersionVar = study->header.version;
+        bool isSaved = study->saveToFolder(pFolder);
 
-        if (bool isSaved = study->saveToFolder(pFolder),
-            versionUpgrade = tempVersionVar != (uint)Antares::Data::versionLatest;
-            isSaved && versionUpgrade)
-        {
+        if (isSaved && (tempVersionVar != Antares::Data::versionLatest))
             study->deleteDeprecatedFiles(tempVersionVar);
-        }
 
         // Scenario Builder
         if (pCanReleaseScenarioBuilder && study->scenarioRules)
