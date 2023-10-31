@@ -44,6 +44,14 @@ namespace Antares
 namespace Data
 {
 
+static void resizeTSNoDataLoss(TimeSeries& TSToResize, uint width)
+{
+    auto& ts = TSToResize.timeSeries;
+    ts.resizeWithoutDataLost(width, ts.height);
+    for (uint x = 1; x < width; ++x)
+        ts.pasteToColumn(x, ts[0]);
+}
+
 static uint EqualizeTSsize(TimeSeries& TScollection1,
                            TimeSeries& TScollection2,
                            bool& fatalError,
@@ -80,9 +88,9 @@ static uint EqualizeTSsize(TimeSeries& TScollection1,
     area.invalidateJIT = true;
 
     if (ts1Width == 1)
-        TScollection1.resizeTSNoDataLoss(pairOfTSsizes.sup());
+        resizeTSNoDataLoss(TScollection1, pairOfTSsizes.sup());
     if (ts2Width == 1)
-        TScollection2.resizeTSNoDataLoss(pairOfTSsizes.sup());
+        resizeTSNoDataLoss(TScollection2, pairOfTSsizes.sup());
 
     return pairOfTSsizes.sup();
 }
