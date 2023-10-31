@@ -98,7 +98,7 @@ public:
                 bool isSaved = study->saveToFolder(folder);
 
                 if (isSaved && (tempVersionVar != Antares::Data::versionLatest))
-                    study->deleteAllDeprecatedFiles(tempVersionVar);
+                    study->deleteDeprecatedFiles(tempVersionVar);
             }
             else
             {
