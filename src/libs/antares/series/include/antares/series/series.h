@@ -86,6 +86,7 @@ public:
     bool forceReload(bool reload = false) const;
     void markAsModified() const;
     uint64_t memoryUsage() const;
+    void resizeTSNoDataLoss(uint width);
 
     TS timeSeries;
     numbers& timeseriesNumbers;

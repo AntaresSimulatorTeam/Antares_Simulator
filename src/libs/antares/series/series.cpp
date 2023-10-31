@@ -142,4 +142,11 @@ uint64_t TimeSeries::memoryUsage() const
     return timeSeries.memoryUsage();
 }
 
+void TimeSeries::resizeTSNoDataLoss(uint width)
+{
+    timeSeries.resizeWithoutDataLost(width, timeSeries.height);
+    for (uint x = 1; x < width; ++x)
+        timeSeries.pasteToColumn(x, timeSeries[0]);
+}
+
 } // namespace Antares::Data
