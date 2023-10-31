@@ -70,7 +70,7 @@ double HydroManagement::GammaVariable(double r, MersenneTwister &random)
     return x;
 }
 
-inline double HydroManagement::BetaVariable(double a, double b, MersenneTwister &random)
+double HydroManagement::BetaVariable(double a, double b, MersenneTwister &random)
 {
     double y = GammaVariable(a, random);
     double z = GammaVariable(b, random);

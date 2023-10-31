@@ -107,7 +107,7 @@ public:
                     unsigned int maxNbYearsInParallel,
                     Solver::IResultWriter& resultWriter);
 
-    double randomReservoirLevel(double min, double avg, double max, MersenneTwister& random);
+    static double randomReservoirLevel(double min, double avg, double max, MersenneTwister& random);
 
     //! Perform the hydro ventilation
     void makeVentilation(double* randomReservoirLevel,
@@ -157,9 +157,9 @@ private:
     //! \name Utilities
     //@{
     //! Beta variable
-    double BetaVariable(double a, double b, MersenneTwister &random);
+    static double BetaVariable(double a, double b, MersenneTwister &random);
     //! Gamma variable
-    double GammaVariable(double a, MersenneTwister &random);
+    static double GammaVariable(double a, MersenneTwister &random);
     //@}
 
 private:

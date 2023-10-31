@@ -720,7 +720,7 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
             // Previous month's first day in the year
             int firstDayOfMonth = study.calendar.months[initResLevelOnSimMonth].daysYear.first;
 
-            double randomLevel = hydroManagement.randomReservoirLevel(min[firstDayOfMonth],
+            double randomLevel = HydroManagement::randomReservoirLevel(min[firstDayOfMonth],
                                                                        avg[firstDayOfMonth],
                                                                        max[firstDayOfMonth],
                                                                        random);
