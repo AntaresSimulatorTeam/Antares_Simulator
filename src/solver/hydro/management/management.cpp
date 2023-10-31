@@ -497,7 +497,7 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
                                       uint numSpace)
 {
     tmpDataByArea_.resize(areas_.size());
-    memset(tmpDataByArea_, 0, sizeof(TmpDataByArea) * areas_.size());
+    memset(tmpDataByArea_.data(), 0, sizeof(TmpDataByArea) * areas_.size());
 
     prepareInflowsScaling(numSpace, y);
     minGenerationScaling(numSpace, y);
