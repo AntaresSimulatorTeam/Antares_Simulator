@@ -89,9 +89,7 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
     maxNbYearsInParallel_(maxNbYearsInParallel),
     resultWriter_(resultWriter)
 {
-    tmpDataByArea_ = new TmpDataByArea* [maxNbYearsInParallel_];
-    for (uint numSpace = 0; numSpace < maxNbYearsInParallel_; numSpace++)
-        tmpDataByArea_[numSpace] = new TmpDataByArea[areas_.size()];
+    tmpDataByArea_.resize(maxNbYearsInParallel);
 
     random_.reset(parameters_.seed[Data::seedHydroManagement]);
 
@@ -115,13 +113,6 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
             }
         }
     }
-}
-
-HydroManagement::~HydroManagement()
-{
-    for (uint numSpace = 0; numSpace < maxNbYearsInParallel_; numSpace++)
-        delete[] tmpDataByArea_[numSpace];
-    delete[] tmpDataByArea_;
 }
 
 void HydroManagement::prepareInflowsScaling(uint numSpace, uint year)
@@ -172,7 +163,7 @@ void HydroManagement::prepareInflowsScaling(uint numSpace, uint year)
       });
 }
 
-void HydroManagement::minGenerationScaling(uint numSpace, uint year) const
+void HydroManagement::minGenerationScaling(uint numSpace, uint year)
 {
     areas_.each([this, &numSpace, &year](const Data::Area& area)
       {
@@ -507,7 +498,7 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
                                       uint y,
                                       uint numSpace)
 {
-    memset(tmpDataByArea_[numSpace], 0, sizeof(TmpDataByArea) * areas_.size());
+    tmpDataByArea_[numSpace].resize(areas_.size());
 
     prepareInflowsScaling(numSpace, y);
     minGenerationScaling(numSpace, y);

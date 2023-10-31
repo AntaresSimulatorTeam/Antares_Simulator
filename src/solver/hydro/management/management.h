@@ -107,8 +107,6 @@ public:
                     unsigned int maxNbYearsInParallel,
                     Solver::IResultWriter& resultWriter);
 
-    ~HydroManagement();
-
     double randomReservoirLevel(double min, double avg, double max);
 
     //! Perform the hydro ventilation
@@ -123,7 +121,7 @@ private:
     //! Prepare inflows scaling for each area
     void prepareInflowsScaling(uint numSpace, uint year);
     //! Prepare minimum generation scaling for each area
-    void minGenerationScaling(uint numSpace, uint year) const;
+    void minGenerationScaling(uint numSpace, uint year);
     //! check Monthly minimum generation is lower than available inflows
     bool checkMonthlyMinGeneration(uint numSpace, uint year, const Data::Area& area) const;
     //! check Yearly minimum generation is lower than available inflows
@@ -165,7 +163,7 @@ private:
     //@}
 
 private:
-    TmpDataByArea** tmpDataByArea_;
+    std::vector<std::vector<TmpDataByArea>> tmpDataByArea_;
     const Data::AreaList& areas_;
     const Date::Calendar& calendar_;
     const Data::Parameters& parameters_;
