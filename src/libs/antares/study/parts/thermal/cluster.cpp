@@ -140,13 +140,12 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
     costsTimeSeries(1, CostsTimeSeries())
 {
     // assert
-    assert(parent and "A parent for a thermal dispatchable cluster can not be null");
+    assert(parent && "A parent for a thermal dispatchable cluster can not be null");
 }
 
 Data::ThermalCluster::~ThermalCluster()
 {
     delete prepro;
-    delete series;
 }
 
 uint ThermalCluster::groupId() const
@@ -217,21 +216,20 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     optimizeMaintenance = cluster.optimizeMaintenance;
     interPoPeriod = cluster.interPoPeriod;
     poWindows = cluster.poWindows;
+    daysSinceLastMaintenance = cluster.daysSinceLastMaintenance;
 
     // Making sure that the data related to the prepro and timeseries are present
     // prepro
     if (not prepro)
         prepro = new PreproThermal(this->weak_from_this());
-    if (not series)
-        series = new DataSeriesCommon();
 
     prepro->copyFrom(*cluster.prepro);
     ecoInput.copyFrom(cluster.ecoInput);
     // timseries
 
-    series->timeSeries = cluster.series->timeSeries;
-    cluster.series->timeSeries.unloadFromMemory();
-    series->timeseriesNumbers.clear();
+    series.timeSeries = cluster.series.timeSeries;
+    cluster.series.timeSeries.unloadFromMemory();
+    series.timeseriesNumbers.clear();
 
     // The parent must be invalidated to make sure that the clusters are really
     // re-written at the next 'Save' from the user interface.
@@ -279,11 +277,10 @@ void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
 bool Data::ThermalCluster::forceReload(bool reload) const
 {
     bool ret = true;
-    ret = modulation.forceReload(reload) and ret;
-    if (series)
-        ret = series->forceReload(reload) and ret;
+    ret = modulation.forceReload(reload) && ret;
+    ret = series.forceReload(reload) && ret;
     if (prepro)
-        ret = prepro->forceReload(reload) and ret;
+        ret = prepro->forceReload(reload) && ret;
     ret = ecoInput.forceReload(reload) && ret;
     return ret;
 }
@@ -291,8 +288,7 @@ bool Data::ThermalCluster::forceReload(bool reload) const
 void Data::ThermalCluster::markAsModified() const
 {
     modulation.markAsModified();
-    if (series)
-        series->markAsModified();
+    series.markAsModified();
     if (prepro)
         prepro->markAsModified();
     ecoInput.markAsModified();
@@ -300,8 +296,6 @@ void Data::ThermalCluster::markAsModified() const
 
 void Data::ThermalCluster::calculationOfSpinning()
 {
-    assert(this->series);
-
     // nominal capacity (for solver)
     nominalCapacityWithSpinning = nominalCapacity;
 
@@ -311,7 +305,7 @@ void Data::ThermalCluster::calculationOfSpinning()
     {
         logs.debug() << "  Calculation of spinning... " << parentArea->name << "::" << pName;
 
-        auto& ts = series->timeSeries;
+        auto& ts = series.timeSeries;
         // The formula
         // const double s = 1. - cluster.spinning / 100.; */
 
@@ -425,8 +419,6 @@ double Data::ThermalCluster::computeMarketBidCost(double fuelCost,
 
 void Data::ThermalCluster::reverseCalculationOfSpinning()
 {
-    assert(this->series);
-
     // Nothing to do if the spinning is equal to zero
     // because it will the same multiply all entries of the matrix by 1.
     if (not Math::Zero(spinning))
@@ -434,7 +426,7 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
         logs.debug() << "  Calculation of spinning (reverse)... " << parentArea->name
                      << "::" << pName;
 
-        auto& ts = series->timeSeries;
+        auto& ts = series.timeSeries;
         // The formula
         // const double s = 1. - cluster.spinning / 100.;
 
@@ -494,6 +486,7 @@ void Data::ThermalCluster::reset()
     optimizeMaintenance = true;
     interPoPeriod = 365;
     poWindows = 0;
+    daysSinceLastMaintenance.clear();
 
     // prepro
     // warning: the variables `prepro` and `series` __must__ not be destroyed
@@ -604,7 +597,7 @@ bool Data::ThermalCluster::integrityCheck()
     {
         CString<ant_k_cluster_name_max_length + ant_k_area_name_max_length + 50, false> buffer;
         buffer << "Thermal cluster: " << parentArea->name << '/' << pName << ": Modulation";
-        ret = MatrixTestForPositiveValues(buffer.c_str(), &modulation) and ret;
+        ret = MatrixTestForPositiveValues(buffer.c_str(), &modulation) && ret;
     }
 
     // Maintenance Planning additional parameters
@@ -675,8 +668,7 @@ uint64_t ThermalCluster::memoryUsage() const
     uint64_t amount = sizeof(ThermalCluster) + modulation.memoryUsage();
     if (prepro)
         amount += prepro->memoryUsage();
-    if (series)
-        amount += series->memoryUsage();
+    amount += series.memoryUsage();
     amount += ecoInput.memoryUsage();
     return amount;
 }
@@ -800,7 +792,7 @@ double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) cons
 
 double ThermalCluster::getMarketBidCost(uint hourInTheYear, uint year) const
 {
-    uint serieIndex = (series->timeSeries.width == 1) ? 0 : series->timeseriesNumbers[0][year];
+    uint serieIndex = series.getSeriesIndex(year);
 
     double mod = modulation[thermalModulationMarketBid][serieIndex];
 
@@ -825,17 +817,17 @@ void ThermalCluster::checkAndCorrectAvailability()
     bool condition = false;
     bool report = false;
 
-    for (uint y = 0; y != series->timeSeries.height; ++y)
+    for (uint y = 0; y != series.timeSeries.height; ++y)
     {
-        for (uint x = 0; x != series->timeSeries.width; ++x)
+        for (uint x = 0; x != series.timeSeries.width; ++x)
         {
             auto rightpart
               = PminDUnGroupeDuPalierThermique
-                * ceil(series->timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
-            condition = rightpart > series->timeSeries.entry[x][y];
+                * ceil(series.timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
+            condition = rightpart > series.timeSeries.entry[x][y];
             if (condition)
             {
-                series->timeSeries.entry[x][y] = rightpart;
+                series.timeSeries.entry[x][y] = rightpart;
                 report = true;
             }
         }

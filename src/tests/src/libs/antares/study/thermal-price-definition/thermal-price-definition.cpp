@@ -164,8 +164,7 @@ BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_OK, FixtureFull)
     area->thermal.list.loadFromFolder(*study, folder, area);
     auto cluster = area->thermal.list.mapping["some cluster"];
 
-    cluster->series = new DataSeriesCommon;
-    cluster->series->timeSeries.reset(3, 8760);
+    cluster->series.timeSeries.reset(3, 8760);
 
     area->thermal.prepareAreaWideIndexes();
 
@@ -180,8 +179,7 @@ BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_KO, FixtureFull)
     area->thermal.list.loadFromFolder(*study, folder, area);
     auto cluster = area->thermal.list.mapping["some cluster"];
 
-    cluster->series = new DataSeriesCommon;
-    cluster->series->timeSeries.reset(3, 8760);
+    cluster->series.timeSeries.reset(3, 8760);
 
     area->thermal.prepareAreaWideIndexes();
 
@@ -197,8 +195,7 @@ BOOST_FIXTURE_TEST_CASE(checkFuelAndCo2_checkColumnNumber_OK, FixtureFull)
     area->thermal.list.loadFromFolder(*study, folder, area);
     auto cluster = area->thermal.list.mapping["some cluster"];
 
-    cluster->series = new DataSeriesCommon;
-    cluster->series->timeSeries.reset(3, 8760);
+    cluster->series.timeSeries.reset(3, 8760);
 
     area->thermal.prepareAreaWideIndexes();
 

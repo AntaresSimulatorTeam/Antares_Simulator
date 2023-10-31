@@ -120,6 +120,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
     problem.OptimisationAvecCoutsDeDemarrage
+      = (study.parameters.unitCommitment.ucMode
+         != Antares::Data::UnitCommitmentMode::ucHeuristicFast);
+
+    problem.OptimisationAvecVariablesEntieres
       = (study.parameters.unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucMILP);
 
     problem.OptimisationAuPasHebdomadaire
@@ -314,8 +318,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.LeProblemeADejaEteInstancie = false;
 }
 
-void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int PasDeTempsDebut,
-                               const BindingConstraintsRepository &bindingConstraints, const uint weekFirstDay, int pasDeTemps) 
+void preparerBindingConstraint(const PROBLEME_HEBDO &problem, int PasDeTempsDebut,
+                               const BindingConstraintsRepository &bindingConstraints,
+                               const BindingConstraintGroupRepository &bcgroups,
+                               const uint weekFirstDay, int pasDeTemps)
 {
     auto activeContraints = bindingConstraints.activeContraints();
     const auto constraintCount = activeContraints.size();
@@ -323,8 +329,15 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
     {
         auto bc = activeContraints[constraintIndex];
         assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
+
+        uint tsIndexForBc = 0;
+        auto* group = bcgroups[bc->group()];
+        if (group)
+            tsIndexForBc = group->timeseriesNumbers[0][problem.year];
+
         //If there is only one TS, always select it.
-        const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc->group()];
+        const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : tsIndexForBc;
+
         auto& timeSeries = bc->RHSTimeSeries();
         double const* column = timeSeries[ts_number];
         switch (bc->type())
@@ -549,8 +562,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             for (uint k = 0; k != linkCount; ++k)
             {
                 auto& lnk = *(studyruntime.areaLink[k]);
-                const int tsIndex
-                  = NumeroChroniquesTireesParInterconnexion[numSpace][k].TransmissionCapacities;
+                const int tsIndex = (lnk.directCapacities.width != 1) ? lnk.timeseriesNumbers[0][year] : 0;
 
                 assert((uint)hourInYear < lnk.directCapacities.height);
                 assert((uint)tsIndex < lnk.directCapacities.width);
@@ -561,7 +573,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 ntc.ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][hourInYear];
             }
         }
-        preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, study.bindingConstraints, weekFirstDay, hourInWeek);
+        preparerBindingConstraint(problem, PasDeTempsDebut,
+                study.bindingConstraints, study.bindingConstraintsGroups,
+                weekFirstDay, hourInWeek);
 
         const uint dayInTheYear = study.calendar.hours[hourInYear].dayYear;
 
@@ -569,33 +583,31 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         {
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
-            auto& ror = area.hydro.series->ror;
-            auto loadSeries = area.load.series->getCoefficient(year, hourInYear);
-            auto windSeries = area.wind.series->getCoefficient(year, hourInYear);
-            auto solarSeries = area.solar.series->getCoefficient(year, hourInYear);
-            auto hydroSeriesIndex = area.hydro.series->getIndex(year);
+            double loadSeries = area.load.series.getCoefficient(year, hourInYear);
+            double windSeries = area.wind.series.getCoefficient(year, hourInYear);
+            double solarSeries = area.solar.series.getCoefficient(year, hourInYear);
+            double rorSeries = area.hydro.series->ror.getCoefficient(year, hourInYear);
 
             assert(&scratchpad);
 
-            uint tsFatalIndex = hydroSeriesIndex < ror.width ? hydroSeriesIndex : 0;
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                mustRunGen = windSeries
-                             + solarSeries
-                             + scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
+                mustRunGen = windSeries + solarSeries
+                             + scratchpad.miscGenSum[hourInYear]
+                             + rorSeries
                              + scratchpad.mustrunSum[hourInYear];
             }
 
             // Renewable
             if (parameters.renewableGeneration.isClusters())
             {
-                mustRunGen = scratchpad.miscGenSum[hourInYear] + ror[tsFatalIndex][hourInYear]
+                mustRunGen = scratchpad.miscGenSum[hourInYear] + rorSeries
                              + scratchpad.mustrunSum[hourInYear];
 
                 area.renewable.list.each([&](const RenewableCluster& cluster) {
-                    assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
-                    mustRunGen += cluster.valueAtTimeStep((uint)hourInYear, year);
+                    assert(cluster.series.timeSeries.jit == nullptr && "No JIT data from the solver");
+                    mustRunGen += cluster.valueAtTimeStep(year, hourInYear);
                 });
             }
 
@@ -633,12 +645,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             {
                 auto& area = *study.areas.byIndex[k];
                 auto& hydroSeries = area.hydro.series;
-                uint tsIndex = hydroSeries->getIndex(year);
 
-                auto& inflowsmatrix = hydroSeries->storage;
-                auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
-                auto& mingenmatrix = hydroSeries->mingen;
-                auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
+                auto const& srcinflows = hydroSeries->storage.getColumn(year);
+                auto const& srcmingen = hydroSeries->mingen.getColumn(year);
                 for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)
                 {
                     problem.CaracteristiquesHydrauliques[k].MingenHoraire[j]

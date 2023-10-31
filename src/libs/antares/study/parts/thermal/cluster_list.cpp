@@ -546,5 +546,29 @@ bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder
     return ret;
 }
 
+bool ThermalClusterList::generateRandomDaysSinceLastMaintenance(Study& study)
+{
+    if (empty() || study.parameters.maintenancePlanning.mpModelling != mpOptimized)
+        return true;
+
+    bool ret = true;
+    MersenneTwister random[seedMax];
+
+    for (auto& [name, c] : cluster)
+    {
+        assert(c->parentArea and "cluster: invalid parent area");
+
+        if (!c->optimizeMaintenance)
+            continue;
+
+        for (uint unitIndex = 0; unitIndex < c->unitCount; ++unitIndex)
+        {
+            c->daysSinceLastMaintenance.push_back(
+              (uint32_t)(floor(random[seedTsGenThermal].next() * c->interPoPeriod)));
+        }
+    }
+    return ret;
+}
+
 } // namespace Data
 } // namespace Antares

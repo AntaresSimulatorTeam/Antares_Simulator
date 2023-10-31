@@ -84,6 +84,8 @@ public:
 
     bool loadEconomicCosts(Study& s, const AnyString& folder);
 
+    bool generateRandomDaysSinceLastMaintenance(Study& s);
+
     bool savePreproToFolder(const AnyString& folder) const;
     bool saveEconomicCosts(const AnyString& folder) const;
 
