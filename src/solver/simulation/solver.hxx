@@ -666,14 +666,13 @@ void ISimulation<Impl>::allocateMemoryForRandomNumbers(randomNumbers& randomForP
 template<class Impl>
 void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
                                              std::vector<uint>& years,
-                                             std::map<unsigned int, bool>& isYearPerformed)
+                                             std::map<unsigned int, bool>& isYearPerformed,
+                                             MersenneTwister& randomHydro)
 {
     auto& runtime = *study.runtime;
 
     uint indexYear = 0;
     std::vector<unsigned int>::iterator ity;
-    MersenneTwister random;
-    random.reset(study.parameters.seed[Data::seedHydroManagement]);
 
     for (ity = years.begin(); ity != years.end(); ++ity)
     {
@@ -723,7 +722,7 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
             double randomLevel = HydroManagement::randomReservoirLevel(min[firstDayOfMonth],
                                                                        avg[firstDayOfMonth],
                                                                        max[firstDayOfMonth],
-                                                                       random);
+                                                                       randomHydro);
 
             // Possibly update the intial level from scenario builder
             if (study.parameters.useCustomScenario)
@@ -929,6 +928,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     // List of parallel years sets
     std::vector<setOfParallelYears> setsOfParallelYears;
 
+    MersenneTwister randomHydro;
+    randomHydro.reset(study.parameters.seed[Data::seedHydroManagement]);
     // Gets information on each set of parallel years and returns the max number of years performed
     // in a set The variable "maxNbYearsPerformedInAset" is the maximum numbers of years to be
     // actually executed in a set. A set contains some years to be actually executed (at most
@@ -958,7 +959,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
         if (set_it->regenerateTS)
             regenerateTimeSeries(set_it->yearForTSgeneration);
 
-        computeRandomNumbers(randomForParallelYears, set_it->yearsIndices, set_it->isYearPerformed);
+        computeRandomNumbers(randomForParallelYears, set_it->yearsIndices, set_it->isYearPerformed,
+                randomHydro);
 
         std::vector<unsigned int>::iterator year_it;
 

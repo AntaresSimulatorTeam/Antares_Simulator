@@ -124,7 +124,8 @@ private:
     */
     void computeRandomNumbers(randomNumbers& randomForYears,
                               std::vector<uint>& years,
-                              std::map<unsigned int, bool>& isYearPerformed);
+                              std::map<unsigned int, bool>& isYearPerformed,
+                              MersenneTwister& randomHydro);
 
     /*!
     ** \brief Computes statistics on annual (system and solution) costs, to be printed in output
