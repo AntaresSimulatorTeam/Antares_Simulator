@@ -89,8 +89,6 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
     maxNbYearsInParallel_(maxNbYearsInParallel),
     resultWriter_(resultWriter)
 {
-    tmpDataByArea_.resize(maxNbYearsInParallel);
-
     random_.reset(parameters_.seed[Data::seedHydroManagement]);
 
     // Ventilation results memory allocation
@@ -123,7 +121,7 @@ void HydroManagement::prepareInflowsScaling(uint numSpace, uint year)
 
           auto const& srcinflows = area.hydro.series->storage.getColumn(year);
 
-          auto& data = tmpDataByArea_[numSpace][z];
+          auto& data = tmpDataByArea_[z];
           double totalYearInflows = 0.0;
 
           for (uint month = 0; month != 12; ++month)
@@ -170,7 +168,7 @@ void HydroManagement::minGenerationScaling(uint numSpace, uint year)
           auto const& srcmingen =  area.hydro.series->mingen.getColumn(year);
 
           uint z = area.index;
-          auto& data = tmpDataByArea_[numSpace][z];
+          auto& data = tmpDataByArea_[z];
           double totalYearMingen = 0.0;
 
           for (uint month = 0; month != 12; ++month)
@@ -221,7 +219,7 @@ void HydroManagement::minGenerationScaling(uint numSpace, uint year)
 
 bool HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint year, const Data::Area& area) const
 {
-    const auto& data = tmpDataByArea_[numSpace][area.index];
+    const auto& data = tmpDataByArea_[area.index];
     for (uint month = 0; month != 12; ++month)
     {
         uint realmonth = calendar_.months[month].realmonth;
@@ -241,7 +239,7 @@ bool HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint year, const 
 
 bool HydroManagement::checkYearlyMinGeneration(uint numSpace, uint year, const Data::Area& area) const
 {
-    const auto& data = tmpDataByArea_[numSpace][area.index];
+    const auto& data = tmpDataByArea_[area.index];
     if (data.totalYearMingen > data.totalYearInflows)
     {
         // Yearly minimum generation <= Yearly inflows
@@ -363,7 +361,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::StudyMode
         const auto& rormatrix = area.hydro.series->ror;
         const auto* ror = rormatrix.getColumn(year);
 
-        auto& data = tmpDataByArea_[numSpace][z];
+        auto& data = tmpDataByArea_[z];
         const double* loadSeries = area.load.series.getColumn(year);
         const double* windSeries = area.wind.series.getColumn(year);
         const double* solarSeries = area.solar.series.getColumn(year);
@@ -410,7 +408,7 @@ void HydroManagement::prepareEffectiveDemand(uint numSpace)
     areas_.each([&](Data::Area& area) {
         auto z = area.index;
 
-        auto& data = tmpDataByArea_[numSpace][z];
+        auto& data = tmpDataByArea_[z];
 
         for (uint day = 0; day != 365; ++day)
         {
@@ -420,7 +418,7 @@ void HydroManagement::prepareEffectiveDemand(uint numSpace)
 
             double effectiveDemand = 0;
             area.hydro.allocation.eachNonNull([&](unsigned areaindex, double value) {
-                effectiveDemand += (tmpDataByArea_[numSpace][areaindex]).DLN[day] * value;
+                effectiveDemand += (tmpDataByArea_[areaindex]).DLN[day] * value;
             });
 
             assert(!Math::NaN(effectiveDemand) && "nan value detected for effectiveDemand");
@@ -498,7 +496,7 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
                                       uint y,
                                       uint numSpace)
 {
-    tmpDataByArea_[numSpace].resize(areas_.size());
+    tmpDataByArea_.resize(areas_.size());
 
     prepareInflowsScaling(numSpace, y);
     minGenerationScaling(numSpace, y);

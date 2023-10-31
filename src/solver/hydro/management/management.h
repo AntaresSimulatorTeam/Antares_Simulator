@@ -163,7 +163,7 @@ private:
     //@}
 
 private:
-    std::vector<std::vector<TmpDataByArea>> tmpDataByArea_;
+    std::vector<TmpDataByArea> tmpDataByArea_;
     const Data::AreaList& areas_;
     const Date::Calendar& calendar_;
     const Data::Parameters& parameters_;
