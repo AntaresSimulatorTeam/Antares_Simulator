@@ -182,10 +182,11 @@ source_group("study\\constraint" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
 
 set(SRC_STUDY_MAINTENANCE_PLANNING
         maintenance_planning/MaintenanceGroup.h
+        maintenance_planning/MaintenanceGroup.hxx
         maintenance_planning/MaintenanceGroup.cpp
 )
 
-source_group("study\\maintenance" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
+source_group("study\\maintenance" FILES ${SRC_STUDY_MAINTENANCE_PLANNING})
 
 set(SRC_XCAST
         xcast.h

@@ -48,30 +48,194 @@
 
 namespace Antares::Data
 {
-
+// Forward declaration
+struct CompareMaintenanceGroupName;
 class MaintenanceGroup : public Yuni::NonCopyable<MaintenanceGroup>
 {
-    using areaName = std::string;
-    using mapAreas = std::map<areaName, Area*>;
-    using mapThermalClusters = std::map<ThermalCluster*, bool>;
+    // friend class MaintenanceGroupLoader;
+    // friend class MaintenanceGroupSaver;
+
 public:
-    void name(const std::string& newname);
-    uint getNbOfAssociatedAreas() const;
-    bool isEnabled() const;
-    bool saveAreaListToFile(const std::string& filename) const;
+    enum ResidualLoadDefinitionType
+    {
+        //! Unknown status
+        typeUnknown = 0,
+        //! residual Load timeserie is defined using weights
+        typeWeights,
+        //! residual Load timeserie is given directly as an input
+        typeTimeserie,
+        //! The maximum number of types
+        typeMax
+    };
 
+    using MaintenanceGroupName = std::string;
+    //! Map of load, renewable or ror weight-s
+    using weightMap = std::map<const Area*, double, CompareAreaName>;
 
-    mapAreas associatedAreas;
-    mapThermalClusters associatedThermalClusters;
+    /*!
+     ** \brief Convert a Residual Load Definition Type into a mere C-String
+     */
+    static const char* ResidualLoadDefinitionTypeToCString(ResidualLoadDefinitionType t);
+
+    /*!
+    ** \brief Convert a string into its corresponding Residual Load Definition Type
+    */
+    static ResidualLoadDefinitionType StringToResidualLoadDefinitionType(const AnyString& text);
+
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Destructor
+    */
+    ~MaintenanceGroup();
+    //@}
+
+    //! \name / ID
+    //@{
+    /*!
+    ** \brief Get the name of the Maintenance Group
+    */
+    const MaintenanceGroupName& name() const; // using here different string definition
+    /*!
+    ** \brief Set the name of the Maintenance Group
+    **
+    ** The ID will be changed in the same time
+    */
+    void name(const std::string& newname); // using here different string definition
+
+    /*!
+    ** \brief Get the ID of the binding constraint
+    */
+    const MaintenanceGroupName& id() const;
+    //@}
+
+    /*!
+    ** \brief resets all to default data
+    */
+    void resetToDefaultValues();
+
+    /*!
+    ** \brief returns if Maintenance Group is skipped for generating ts and if it is active
+    */
+    bool skipped() const;
+    bool isActive() const;
+
+    // used only for UI - maybe to added later
+    bool hasAllWeightedClustersOnLayer(size_t layerID);
+
+    //! \name per Area
+    //@{
+    /*!
+    ** \brief Get the load, renewable or ror weight of a given area
+    **
+    ** \return The load, renewable or ror weight of the thermal area. 0. if not found
+    */
+    double loadWeight(const Area* area) const;
+    double renewableWeight(const Area* area) const;
+    double rorWeight(const Area* area) const;
+
+    /*!
+    ** \brief Set the load, renewable or ror weight of a given area
+    */
+    void loadWeight(const Area* area, double w);
+    void renewableWeight(const Area* area, double w);
+    void rorWeight(const Area* area, double w);
+
+    /*!
+    ** \brief Remove all weights for load, renewable and ror
+    */
+    void removeAllWeights();
+
+    // used only in UI
+    /*!
+    ** \brief Copy all weights from another Maintenance Group
+    */
+    void copyWeights();
+
+    /*!
+    ** \brief Get how many areas the Maintenance Group contains
+    */
+    uint areaCount() const;
+    //@}
+
+    //! \name Type of the Maintenance Group
+    //@{
+    /*!
+    ** \brief Get the ResidualLoadDefinitionType of the Maintenance Group
+    */
+    ResidualLoadDefinitionType type() const;
+
+    /*!
+    ** \brief Set the ResidualLoadDefinitionType of the Maintenance Group
+    */
+    void setResidualLoadDefinitionType(ResidualLoadDefinitionType t);
+    //@}
+
+    //! \name Enabled / Disabled
+    //@{
+    //! Get if the Maintenance Group is enabled
+    bool enabled() const;
+    //! Enabled / Disabled the Maintenance Group
+    void enabled(bool v);
+    //@}
+
+    //! \name Reset // this is only used in UI and for BC in Kirchhoff generator, so we do not
+    //! really need it here
+    //@{
+    /*!
+    ** \brief Clear all values and reset the Maintenance Group to its new type
+    **
+    ** \param name Name of the Maintenance Group
+    ** \param newType Its new ResidualLoadDefinitionType
+    */
+    void clearAndReset(const MaintenanceGroupName& name, ResidualLoadDefinitionType newType);
+    //@}
+
+    //! \name Memory Usage
+    //@{
+    /*!
+    ** \brief Get the memory usage
+    */
+    uint64_t memoryUsage() const;
+    //@}
+
+    /*!
+    ** \brief Get if the Maintenance Group contains a given area
+    */
+    bool contains(const Area* area) const;
 
 private:
-    std::string name_;
-    std::string ID_;
 
+    //! Raw name
+    MaintenanceGroupName name_;
+    //! Raw ID
+    MaintenanceGroupName ID_;
 
+    //! Weights for load, renewable and ror
+    weightMap loadWeights_;
+    weightMap renewableWeights_;
+    weightMap rorWeights_;
+    //! Type of the binding constraint
+    ResidualLoadDefinitionType type_ = typeWeights;
+    //! Enabled / Disabled
+    bool enabled_ = true;
 
-    bool enabled_;
+    void clear();
 
+    void copyFrom(MaintenanceGroup const* original);
+
+}; // class MaintenanceGroup
+
+// class MntGrpList
+struct CompareMaintenanceGroupName final
+{
+    bool operator()(const std::shared_ptr<MaintenanceGroup>& s1,
+                    const std::shared_ptr<MaintenanceGroup>& s2) const
+    {
+        return s1->name() < s2->name();
+    }
 };
 
 } // namespace Antares::Data
+
+#include "MaintenanceGroup.hxx"
