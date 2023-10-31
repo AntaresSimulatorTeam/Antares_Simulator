@@ -324,6 +324,7 @@ void Parameters::reset()
     include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.exportStructure = false;
     namedProblems = false;
+    solverLogs = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
 
@@ -1065,6 +1066,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     ortoolsSolver = options.ortoolsSolver;
 
     namedProblems = options.namedProblems;
+    solverLogs = options.solverLogs;
 
     // Attempt to fix bad values if any
     fixBadValues();
