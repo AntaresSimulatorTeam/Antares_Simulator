@@ -934,14 +934,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
               study.parameters.derated, study.header.version, study.usedByTheSolver);
         }
 
-        buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "common" << SEP
-                       << "capacity" << SEP << "maxpower_" << area.id << ".txt";
-
-        if (bool exists = IO::File::Exists(buffer); study.header.version >= 870 && exists)
-        {
-            IO::File::Delete(buffer);
-        }
-
         ++options.progressTicks;
         options.pushProgressLogs();
     }

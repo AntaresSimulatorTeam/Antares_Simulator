@@ -1542,5 +1542,20 @@ void Study::computePThetaInfForThermalClusters() const
     }
 }
 
+void Study::deleteDeprecatedFiles(uint previousVersion)
+{
+    if (previousVersion < 870)
+    {
+        const std::string filePath(folderInput + "/hydro/common/capacity/");
+        areas.each(
+          [&filePath](const Area& area)
+          {
+              const std::string fileName(filePath + "maxpower_" + area.id + ".txt");
+              if (bool exist = IO::File::Exists(fileName); exist)
+                  IO::File::Delete(fileName);
+          });
+    }
+}
+
 } // namespace Antares::Data
 
