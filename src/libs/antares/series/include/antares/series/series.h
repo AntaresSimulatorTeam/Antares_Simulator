@@ -31,16 +31,15 @@
 
 namespace Antares::Data
 {
+/*!
+ ** \brief This class is used to represent the generic time series
+ **
+ **  The goal is to handle indexing with the time series numbers: getCoefficient()
+ **  and also providing a wrapper for all the Matrix<> functions such as resize()
+ */
 
 class TimeSeries
 {
-    /*!
-     ** \brief This class is used to represent the generic time series
-     **
-     **  The goal is to handle indexing with the time series numbers: getCoefficient()
-     **  and also providing a wrapper for all the Matrix<> functions such as resize()
-     */
-
 public:
     using numbers = Matrix<uint32_t>;
     using TS = Matrix<double>;
@@ -59,7 +58,6 @@ public:
                       const bool average);
     /*!
      ** \brief Save time series to a file
-     ** \ingroup windseries
      **
      ** \param areaID The ID of the area associated to the data series
      ** \param folder The target folder
@@ -74,6 +72,8 @@ public:
     const double* getColumn(uint32_t year) const;
     uint32_t getSeriesIndex(uint32_t year) const;
 
+    /// \brief overload operator to return a column
+    /// Unlike getColumn() it doesn't use timeseriesNumbers
     double* operator[](uint32_t index);
 
     void reset();
@@ -90,7 +90,7 @@ public:
     TS timeSeries;
     numbers& timeseriesNumbers;
 
-    static const std::vector<double> emptyColumn;
+    static const std::vector<double> emptyColumn; ///< used in getColumn if timeSeries empty
 };
 
 } // namespace Antares::Data
