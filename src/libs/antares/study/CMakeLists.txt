@@ -186,6 +186,12 @@ set(SRC_STUDY_BINDING_CONSTRAINT
 
 source_group("study\\constraint" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
 
+set(SRC_STUDY_MAINTENANCE_PLANNING
+        maintenance_planning/MaintenanceGroup.h
+        maintenance_planning/MaintenanceGroup.cpp
+)
+
+source_group("study\\maintenance" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
 
 set(SRC_XCAST
         xcast.h
@@ -285,6 +291,7 @@ set(SRC_ALL
         ${SRC_STUDY_PARAMETERS}
         ${SRC_STUDY_FINDER}
         ${SRC_STUDY_BINDING_CONSTRAINT}
+        ${SRC_STUDY_MAINTENANCE_PLANNING}
         ${SRC_STUDY_PART_WIND}
         ${SRC_STUDY_PART_HYDRO}
         ${SRC_STUDY_PART_COMMON}

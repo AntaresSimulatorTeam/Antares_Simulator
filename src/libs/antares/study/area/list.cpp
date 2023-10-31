@@ -682,6 +682,9 @@ bool AreaList::saveToFolder(const AnyString& folder) const
     buffer.clear() << folder << SEP << "input" << SEP << "bindingconstraints";
     ret = IO::Directory::Create(buffer) && ret;
 
+    buffer.clear() << folder << SEP << "input" << SEP << "maintenanceplanning";
+    ret = IO::Directory::Create(buffer) && ret;
+
     buffer.clear() << folder << SEP << "input" << SEP << "links";
     ret = IO::Directory::Create(buffer) && ret;
 
