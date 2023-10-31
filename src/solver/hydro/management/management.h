@@ -119,25 +119,25 @@ public:
 
 private:
     //! Prepare inflows scaling for each area
-    void prepareInflowsScaling(uint numSpace, uint year);
+    void prepareInflowsScaling(uint year);
     //! Prepare minimum generation scaling for each area
-    void minGenerationScaling(uint numSpace, uint year);
+    void minGenerationScaling(uint year);
     //! check Monthly minimum generation is lower than available inflows
-    bool checkMonthlyMinGeneration(uint numSpace, uint year, const Data::Area& area) const;
+    bool checkMonthlyMinGeneration(uint year, const Data::Area& area) const;
     //! check Yearly minimum generation is lower than available inflows
-    bool checkYearlyMinGeneration(uint numSpace, uint year, const Data::Area& area) const;
+    bool checkYearlyMinGeneration(uint year, const Data::Area& area) const;
     //! check Weekly minimum generation is lower than available inflows
     bool checkWeeklyMinGeneration(uint year, const Data::Area& area) const;
     //! check Hourly minimum generation is lower than available inflows
     bool checkHourlyMinGeneration(uint year, const Data::Area& area) const;
     //! check minimum generation is lower than available inflows
-    bool checkMinGeneration(uint numSpace, uint year) const;
+    bool checkMinGeneration(uint year) const;
     //! Prepare the net demand for each area
     void prepareNetDemand(uint numSpace, uint year, Data::StudyMode mode);
     //! Prepare the effective demand for each area
-    void prepareEffectiveDemand(uint numSpace);
+    void prepareEffectiveDemand();
     //! Monthly Optimal generations
-    void prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y, uint numSpace);
+    void prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y);
 
     //! Monthly target generations
     // note: inflows may have two different types, if in swap mode or not

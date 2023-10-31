@@ -142,9 +142,7 @@ double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDat
     return total;
 }
 
-void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_level,
-                                                       uint y,
-                                                       uint numSpace)
+void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y)
 {
     uint indexArea = 0;
     areas_.each([&](Data::Area& area) {
