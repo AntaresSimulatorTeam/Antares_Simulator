@@ -211,6 +211,11 @@ public:
     */
     bool contains(const Area* area) const;
 
+    /*!
+    ** \brief Get if the given Maintenance Group is identical
+    */
+    bool contains(const MaintenanceGroup* mnt) const;
+
 private:
 
     //! Raw name

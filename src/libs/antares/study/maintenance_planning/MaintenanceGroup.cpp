@@ -87,6 +87,11 @@ void MaintenanceGroup::clear()
     this->enabled_ = true;
 }
 
+bool MaintenanceGroup::contains(const MaintenanceGroup* mnt) const
+{
+    return (this == mnt);
+}
+
 bool MaintenanceGroup::contains(const Area* area) const
 {
     const auto i = weights_.find(area);
