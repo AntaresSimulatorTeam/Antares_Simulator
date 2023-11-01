@@ -52,7 +52,7 @@ namespace Antares::Data
 struct CompareMaintenanceGroupName;
 class MaintenanceGroup : public Yuni::NonCopyable<MaintenanceGroup>
 {
-    // friend class MaintenanceGroupLoader;
+    friend class MaintenanceGroupLoader;
     friend class MaintenanceGroupSaver;
 
 public:

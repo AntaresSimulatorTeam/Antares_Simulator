@@ -186,6 +186,8 @@ set(SRC_STUDY_MAINTENANCE_PLANNING
         maintenance_planning/MaintenanceGroup.cpp
         maintenance_planning/MaintenanceGroupSaver.h
         maintenance_planning/MaintenanceGroupSaver.cpp
+        maintenance_planning/MaintenanceGroupLoader.h
+        maintenance_planning/MaintenanceGroupLoader.cpp
 )
 
 source_group("study\\maintenance" FILES ${SRC_STUDY_MAINTENANCE_PLANNING})

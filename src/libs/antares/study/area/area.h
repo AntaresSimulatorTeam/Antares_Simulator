@@ -628,6 +628,11 @@ public:
     ThermalCluster* findClusterFromINIKey(const AnyString& key);
 
     /*!
+    ** \brief Try to find the area from a given INI key (<area>.'weights')
+    */
+    Area* findAreaFromINIKey(const AnyString& key);
+
+    /*!
     ** \brief Get the total number of interconnections between all areas
     */
     uint areaLinkCount() const;

@@ -1542,6 +1542,18 @@ ThermalCluster* AreaList::findClusterFromINIKey(const AnyString& key)
     return (i != nullptr) ? i : nullptr;
 }
 
+Area* AreaList::findAreaFromINIKey(const AnyString& key)
+{
+    if (key.empty())
+        return nullptr;
+    auto offset = key.find('.');
+    if (offset == AreaName::npos || (0 == offset) || (offset == key.size() - 1))
+        return nullptr;
+    AreaName parentName(key.c_str(), offset);
+    Area* parentArea = findFromName(parentName);
+    return (parentArea != nullptr) ? parentArea : nullptr;
+}
+
 void AreaList::updateNameIDSet() const
 {
     nameidSet.clear();
