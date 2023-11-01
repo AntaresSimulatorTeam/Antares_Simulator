@@ -53,7 +53,7 @@ struct CompareMaintenanceGroupName;
 class MaintenanceGroup : public Yuni::NonCopyable<MaintenanceGroup>
 {
     // friend class MaintenanceGroupLoader;
-    // friend class MaintenanceGroupSaver;
+    friend class MaintenanceGroupSaver;
 
 public:
     enum ResidualLoadDefinitionType
