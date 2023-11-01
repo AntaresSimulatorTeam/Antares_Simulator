@@ -27,3 +27,19 @@ private:
 };
 
 } // namespace Antares::Data
+
+
+/*
+TODO CR27:
+    for I phase:
+        * load Maintenance Group only if version > 870 - client wont be able to open old models
+    for II phase:
+        * check if same area is inside more than 1 Maintenance Group - and throw error
+        * what happens when area name is changed - UI code
+            * we need to change the name in INI file in Maintenance Group
+        * what happens if the area is deleted - UI code
+            * we need to remove that area from all Maintenance Group-s      
+
+
+*/ 
+
