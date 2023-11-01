@@ -21,6 +21,8 @@ public:
     Yuni::Clob iniFilename;
     //! Current section
     IniFile::Section* section;
+    // folder
+    Yuni::Clob folder;
 
     //! List of areas
     AreaList& areaList;
