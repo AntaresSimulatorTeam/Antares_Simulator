@@ -110,12 +110,12 @@ void MaintenanceGroup::setResidualLoadDefinitionType(MaintenanceGroup::ResidualL
     type_ = t;
 }
 
-// TODO: not implemented for now - used only for UI - maybe to added later
+// TODO CR27: not implemented for now - used only for UI - maybe to added later
 bool MaintenanceGroup::hasAllWeightedClustersOnLayer(size_t layerID)
 {
     return true;
 }
-// TODO: not implemented for now - used only for UI - maybe to added later
+// TODO CR27: not implemented for now - used only for UI - maybe to added later
 void MaintenanceGroup::copyWeights()
 {
 }
