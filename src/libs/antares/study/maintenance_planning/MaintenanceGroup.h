@@ -215,13 +215,12 @@ private:
     weightMap loadWeights_;
     weightMap renewableWeights_;
     weightMap rorWeights_;
-    //! Type of the binding constraint
+    //! Type of the Maintenance Group
     ResidualLoadDefinitionType type_ = typeWeights;
     //! Enabled / Disabled
     bool enabled_ = true;
 
     void clear();
-
     void copyFrom(MaintenanceGroup const* original);
 
 }; // class MaintenanceGroup
