@@ -274,6 +274,7 @@ bool Study::internalLoadMaintenanceGroup(const StudyLoadOptions& options)
 {
     // All checks should be performed in load functions
     // 
+    return true;
 }
 
 class SetHandlerAreas
