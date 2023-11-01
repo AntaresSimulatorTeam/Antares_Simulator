@@ -688,6 +688,8 @@ protected:
     bool internalLoadCorrelationMatrices(const StudyLoadOptions& options);
     //! Load all binding constraints
     virtual bool internalLoadBindingConstraints(const StudyLoadOptions& options);
+    //! Load all maintenance groups
+    virtual bool internalLoadMaintenanceGroup(const StudyLoadOptions& options);
     //! Load all set of areas and links
     bool internalLoadSets();
     //@}

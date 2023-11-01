@@ -205,6 +205,8 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     ret = internalLoadCorrelationMatrices(options) && ret;
     // Binding constraints
     ret = internalLoadBindingConstraints(options) && ret;
+    if(parameters.maintenancePlanning.isOptimized())
+        ret = internalLoadMaintenanceGroup(options) && ret;
     // Sets of areas & links
     ret = internalLoadSets() && ret;
 
@@ -266,6 +268,12 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
         r &= bindingConstraintsGroups.buildFrom(bindingConstraints);
     }
     return (!r && options.loadOnlyNeeded) ? false : r;
+}
+
+bool Study::internalLoadMaintenanceGroup(const StudyLoadOptions& options)
+{
+    // All checks should be performed in load functions
+    // 
 }
 
 class SetHandlerAreas
