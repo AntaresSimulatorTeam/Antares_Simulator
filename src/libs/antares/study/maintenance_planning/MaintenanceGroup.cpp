@@ -52,26 +52,24 @@ void MaintenanceGroup::name(const std::string& newName)
 void MaintenanceGroup::loadWeight(const Area* area, double w)
 {
     if (area)
-        loadWeights_[area] = w;
+        weights_[area].load = w;
 }
 
 void MaintenanceGroup::renewableWeight(const Area* area, double w)
 {
     if (area)
-        renewableWeights_[area] = w;
+        weights_[area].renewable = w;
 }
 
 void MaintenanceGroup::rorWeight(const Area* area, double w)
 {
     if (area)
-        rorWeights_[area] = w;
+        weights_[area].ror = w;
 }
 
 void MaintenanceGroup::removeAllWeights()
 {
-    loadWeights_.clear();
-    renewableWeights_.clear();
-    rorWeights_.clear();
+    weights_.clear();
 }
 
 void MaintenanceGroup::resetToDefaultValues()
@@ -91,19 +89,15 @@ void MaintenanceGroup::clear()
 
 bool MaintenanceGroup::contains(const Area* area) const
 {
-    const auto i = loadWeights_.find(area);
-    return (i != loadWeights_.end());
+    const auto i = weights_.find(area);
+    return (i != weights_.end());
 }
 
 uint64_t MaintenanceGroup::memoryUsage() const
 {
     return sizeof(MaintenanceGroup)
            // Estimation
-           + loadWeights_.size() * (sizeof(double) + 3 * sizeof(void*))
-           // Estimation
-           + renewableWeights_.size() * (sizeof(int) + 3 * sizeof(void*))
-           // Estimation
-           + rorWeights_.size() * (sizeof(double) + 3 * sizeof(void*));
+           + weights_.size() * (sizeof(double) * 3 + 3 * sizeof(void*) * 3);
 }
 
 void MaintenanceGroup::enabled(bool v)
@@ -128,20 +122,20 @@ void MaintenanceGroup::copyWeights()
 
 double MaintenanceGroup::loadWeight(const Area* area) const
 {
-    auto i = loadWeights_.find(area);
-    return (i != loadWeights_.end()) ? i->second : 0.;
+    auto i = weights_.find(area);
+    return (i != weights_.end()) ? i->second.load : 0.;
 }
 
 double MaintenanceGroup::renewableWeight(const Area* area) const
 {
-    auto i = renewableWeights_.find(area);
-    return (i != renewableWeights_.end()) ? i->second : 0.;
+    auto i = weights_.find(area);
+    return (i != weights_.end()) ? i->second.renewable : 0.;
 }
 
 double MaintenanceGroup::rorWeight(const Area* area) const
 {
-    auto i = rorWeights_.find(area);
-    return (i != rorWeights_.end()) ? i->second : 0.;
+    auto i = weights_.find(area);
+    return (i != weights_.end()) ? i->second.ror : 0.;
 }
 
 void MaintenanceGroup::clearAndReset(const MaintenanceGroupName& name,
@@ -160,9 +154,7 @@ void MaintenanceGroup::clearAndReset(const MaintenanceGroupName& name,
 void MaintenanceGroup::copyFrom(MaintenanceGroup const* original)
 {
     clearAndReset(original->name(), original->type());
-    loadWeights_ = original->loadWeights_;
-    renewableWeights_ = original->renewableWeights_;
-    rorWeights_ = original->rorWeights_;
+    weights_ = original->weights_;
     enabled_ = original->enabled_;
 }
 

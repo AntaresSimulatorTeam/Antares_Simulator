@@ -43,7 +43,7 @@ inline const MaintenanceGroup::MaintenanceGroupName& MaintenanceGroup::id() cons
 
 inline uint MaintenanceGroup::areaCount() const
 {
-    return (uint)loadWeights_.size();
+    return (uint)weights_.size();
 }
 
 inline bool MaintenanceGroup::enabled() const

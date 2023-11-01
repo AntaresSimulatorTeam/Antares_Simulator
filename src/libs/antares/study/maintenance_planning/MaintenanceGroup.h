@@ -68,9 +68,16 @@ public:
         typeMax
     };
 
+    struct Weights final
+    {
+        double load;
+        double renewable;
+        double ror;
+    };
+
     using MaintenanceGroupName = std::string;
     //! Map of load, renewable or ror weight-s
-    using weightMap = std::map<const Area*, double, CompareAreaName>;
+    using weightMap = std::map<const Area*, Weights, CompareAreaName>;
 
     /*!
      ** \brief Convert a Residual Load Definition Type into a mere C-String
@@ -212,9 +219,7 @@ private:
     MaintenanceGroupName ID_;
 
     //! Weights for load, renewable and ror
-    weightMap loadWeights_;
-    weightMap renewableWeights_;
-    weightMap rorWeights_;
+    weightMap weights_;
     //! Type of the Maintenance Group
     ResidualLoadDefinitionType type_ = typeWeights;
     //! Enabled / Disabled
