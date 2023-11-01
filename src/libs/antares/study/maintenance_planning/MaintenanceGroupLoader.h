@@ -6,7 +6,7 @@
 
 #include <memory>
 #include "antares/study/area/area.h"
-#include "EnvForLoading.h"
+#include "../binding_constraint/EnvForLoading.h"
 #include "MaintenanceGroup.h"
 
 namespace Antares::Data

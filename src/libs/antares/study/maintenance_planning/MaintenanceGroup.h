@@ -30,9 +30,9 @@
 #include <yuni/core/string.h>
 #include <yuni/core/noncopyable.h>
 #include "../fwd.h"
-#include "../../constants.h"
-
-#include "../parts/thermal/cluster.h"
+//#include "../../constants.h"
+#include "../binding_constraint/EnvForLoading.h"
+//#include "../parts/thermal/cluster.h"
 #include <antares/array/matrix.h>
 #include <antares/inifile/inifile.h>
 
