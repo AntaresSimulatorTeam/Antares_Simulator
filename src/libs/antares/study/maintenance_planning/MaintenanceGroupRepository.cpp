@@ -63,7 +63,7 @@ const MaintenanceGroup* MaintenanceGroupRepository::findByName(const AnyString& 
 
 void MaintenanceGroupRepository::removeMaintenanceGroupsWhoseNameConstains(const AnyString& filter)
 {
-    NameContainsMnt pred(filter); // vidi zasto ne hvat dobru strukturu
+    NameContainsMnt pred(filter);
     maintenanceGroups_.erase(
       std::remove_if(maintenanceGroups_.begin(), maintenanceGroups_.end(), pred),
       maintenanceGroups_.end());
