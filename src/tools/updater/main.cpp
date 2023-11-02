@@ -93,12 +93,7 @@ public:
                     study->parameters.readonly = true;
 
                 logs.info() << "Saving...";
-
-                uint tempVersionVar = (uint)study->header.version;
-                bool isSaved = study->saveToFolder(folder);
-
-                if (isSaved && (tempVersionVar != Antares::Data::versionLatest))
-                    study->deleteDeprecatedFiles(tempVersionVar);
+                study->saveToFolder(folder);
             }
             else
             {

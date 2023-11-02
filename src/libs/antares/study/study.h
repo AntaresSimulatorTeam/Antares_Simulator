@@ -449,12 +449,6 @@ public:
     void removeTimeseriesIfTSGeneratorEnabled();
     //@}
 
-    /*!
-    ** \brief Delete deprecated files when upgrading a study
-    */
-    void deleteDeprecatedFiles(uint previousVersion);
-    //@}
-
     //! \name
     //@{
     /*!
