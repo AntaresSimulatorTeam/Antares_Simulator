@@ -61,6 +61,7 @@ jobs:
           # This one is not needed, as it is the default value anyway.
           # vcpkgDirectory: '${{ github.workspace }}/vcpkg'
           vcpkgJsonGlob: '${{ github.workspace }}/vcpkg.json'
+     
       - name: Read antares-deps version
         id: antares-deps-version
         uses: notiz-dev/github-action-json-property@release
