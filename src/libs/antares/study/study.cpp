@@ -1520,7 +1520,29 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
             }
         }
 
-        // TODO CR27: we probably do need to check Maximum path length limitation for mnt groups
+        if (not maintenanceGroups.empty())
+        {
+            auto end = maintenanceGroups.end();
+            for (auto i = maintenanceGroups.begin(); i != end; ++i)
+            {
+                // The current constraint
+                auto& mntGroup = *(*i);
+
+                filename.clear();
+                filename << studyfolder << "input" << SEP << "maintenanceplanning" << SEP;
+                filename << mntGroup.id() << ".ini";
+
+                if (filename.size() >= limit)
+                {
+                    logs.error()
+                      << "OS Maximum path length limitation obtained with the maintenance group '"
+                      << mntGroup.name() << "' (got " << filename.size() << " characters)";
+                    logs.error() << "You may experience problems while accessing to this file: "
+                                 << filename;
+                    return false;
+                }
+            }
+        }
     }
     return true;
 }
