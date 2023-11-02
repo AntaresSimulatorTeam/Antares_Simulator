@@ -59,7 +59,7 @@ jobs:
         id: runvcpkg
         with:
           # This one is not needed, as it is the default value anyway.
-          # vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
           vcpkgJsonGlob: '**/vcpkg.json'
           doNotCache: false
      
