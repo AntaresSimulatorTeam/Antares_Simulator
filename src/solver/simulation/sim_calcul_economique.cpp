@@ -562,7 +562,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             for (uint k = 0; k != linkCount; ++k)
             {
                 auto& lnk = *(studyruntime.areaLink[k]);
-                assert((uint)hourInYear < lnk.directCapacities.timeSeries.height);
 
                 ntc.ValeurDeNTCOrigineVersExtremite[k] = lnk.directCapacities.getCoefficient(year, hourInYear);
                 ntc.ValeurDeNTCExtremiteVersOrigine[k] = lnk.indirectCapacities.getCoefficient(year, hourInYear);
