@@ -24,6 +24,7 @@ private:
     void performedYearsCountToFileContent(FileContent& file_content);
     void enabledThermalClustersCountToFileContent(FileContent& file_content);
     void enabledBindingConstraintsCountToFileContent(FileContent& file_content);
+    void enabledMaintenanceGroupCountToFileContent(FileContent& file_content);
     void unitCommitmentModeToFileContent(FileContent& file_content);
     void maxNbYearsInParallelToFileContent(FileContent& file_content);
     void solverVersionToFileContent(FileContent& file_content);
