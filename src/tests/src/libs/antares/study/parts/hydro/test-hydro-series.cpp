@@ -1,11 +1,11 @@
 #define BOOST_TEST_MODULE test hydro series
+#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/included/unit_test.hpp>
-#include <study.h>
-#include <LoadingError.hpp>
-#include <matrix.h>
+#include <antares/study/study.h>
+#include <antares/array/matrix.h>
 #include <files-system.h>
 
 #define SEP "/"

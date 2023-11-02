@@ -1,10 +1,11 @@
-#define BOOST_TEST_MODULE test data transfer
+#define BOOST_TEST_MODULE test hydro reader
+#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/included/unit_test.hpp>
-#include <study.h>
-#include <matrix.h>
+#include <antares/study/study.h>
+#include <antares/array/matrix.h>
 #include <files-system.h>
 
 #define SEP "/"
@@ -12,8 +13,8 @@
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-bool equalDailyMaxPowerAsHourlyTs(const Matrix<double, int32_t>::ColumnType& hourlyColumn,
-                                        const Matrix<double>::ColumnType& dailyColumn)
+bool equalDailyMaxPowerAsHourlyTs(const Matrix<double>::ColumnType& hourlyColumn,
+                                  const Matrix<double>::ColumnType& dailyColumn)
 {
     uint hour = 0;
     uint day = 0;
