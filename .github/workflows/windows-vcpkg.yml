@@ -55,7 +55,6 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1.2
       with:
         key: windows
-        verbose: 2
 
     - name : Init VCPKG submodule
       run: |
