@@ -167,15 +167,10 @@ public:
             simulation_->prepareClustersInMustRunMode(numSpace, y);
 
             // 4 - Hydraulic ventilation
-            {
-                Benchmarking::Timer timer;
-                hydroManagement.makeVentilation(randomReservoirLevel,
-                                                             state[numSpace],
-                                                             y,
-                                                             numSpace);
-                timer.stop();
-                pDurationCollector.addDuration("hydro_ventilation", timer.get_duration());
-            }
+            Benchmarking::Timer timer;
+            hydroManagement.makeVentilation(randomReservoirLevel, state[numSpace], y, numSpace);
+            timer.stop();
+            pDurationCollector.addDuration("hydro_ventilation", timer.get_duration());
 
             // Updating the state
             state[numSpace].year = y;

@@ -94,7 +94,6 @@ typedef struct
     //de jour (en cas de gestion des reservoirs).
 } VENTILATION_HYDRO_RESULTS_BY_AREA;
 
-// vector of [numSpace][area]
 using HYDRO_VENTILATION_RESULTS = std::vector<VENTILATION_HYDRO_RESULTS_BY_AREA>;
 
 
@@ -111,9 +110,9 @@ public:
 
     //! Perform the hydro ventilation
     void makeVentilation(double* randomReservoirLevel,
-                        Solver::Variable::State& state,
-                        uint y,
-                        uint numSpace);
+                         Solver::Variable::State& state,
+                         uint y,
+                         uint numSpace);
 
     HYDRO_VENTILATION_RESULTS& ventilationResults() { return ventilationResults_; }
 
