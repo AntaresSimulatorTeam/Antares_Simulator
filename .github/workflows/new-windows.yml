@@ -50,9 +50,9 @@ jobs:
             choco install wget unzip zip --no-progress
 
       - uses: lukka/get-cmake@latest
-      # - name: dir
-      #   run: find $RUNNER_WORKSPACE
-      #   shell: bash
+      - name: dir
+        run: find $RUNNER_WORKSPACE
+        shell: bash
 
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@main
