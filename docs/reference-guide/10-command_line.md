@@ -40,7 +40,7 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |--no-ts-import | Do not import timeseries into the input folder. <br/> (This option may be useful for running old studies without upgrade)|
 |-m, --mps-export | Export anonymous mps weekly or daily optimal UC+dispatch linear |
 |-s, --named-mps-problems | Export named mps weekly or daily optimal UC+dispatch linear |
-|-o, --solvers-logs | Print solver logs |
+|--solver-logs | Print solver logs |
 
 - Misc.
 

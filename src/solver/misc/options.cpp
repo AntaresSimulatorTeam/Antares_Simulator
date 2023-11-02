@@ -175,7 +175,7 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
                     "Export named constraints and variables in mps (both optim).");
 
     // --solver-logs
-    parser->addFlag(options.solverLogs, 'o', "solvers-logs", "Print solver logs.");
+    parser->addFlag(options.solverLogs, ' ', "solver-logs", "Print solver logs.");
 
     parser->addParagraph("\nMisc.");
     // --progress
