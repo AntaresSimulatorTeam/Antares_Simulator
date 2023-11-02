@@ -49,7 +49,7 @@ jobs:
         run: |
             choco install wget unzip zip --no-progress
 
-      # - uses: lukka/get-cmake@latest
+      - uses: lukka/get-cmake@latest
       # - name: dir
       #   run: find $RUNNER_WORKSPACE
       #   shell: bash
@@ -61,6 +61,7 @@ jobs:
           # This one is not needed, as it is the default value anyway.
           # vcpkgDirectory: '${{ github.workspace }}/vcpkg'
           vcpkgJsonGlob: '**/vcpkg.json'
+          doNotCache: false
      
       - name: Read antares-deps version
         id: antares-deps-version
