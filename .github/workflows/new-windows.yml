@@ -1,0 +1,114 @@
+
+name: Windows CI (runvcpkg + runcmake)
+
+on:
+  push:
+    branches:
+      - develop
+      - feature/*
+      - features/*
+      - fix/*
+      - issue-*
+      - release/*
+      - doc/*
+      - runvcpkg-runcmake-presets
+  schedule:
+    - cron: '21 2 * * *'
+
+jobs:
+  job:
+    name: ${{ matrix.os }}-${{ github.workflow }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [windows-latest]
+        include:
+          - os: windows-latest
+            triplet: x64-windows
+          # - os: ubuntu-latest
+          #   triplet: x64-linux
+
+    env:
+      # Indicates the location of the vcpkg as a Git submodule of the project repository.
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_windows-latest_static_sirius.zip"
+      RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
+
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Pre-requisites
+        shell: cmd
+        run: |
+            choco install wget unzip zip --no-progress
+
+      - uses: lukka/get-cmake@latest
+      - name: dir
+        run: find $RUNNER_WORKSPACE
+        shell: bash
+
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@main
+        id: runvcpkg
+        with:
+          # This one is not needed, as it is the default value anyway.
+          # vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+          vcpkgJsonGlob: '${{ github.workspace }}/vcpkg.json'
+      - name: Read antares-deps version
+        id: antares-deps-version
+        uses: notiz-dev/github-action-json-property@release
+        with:
+          path: 'antares-deps-version.json'
+          prop_path: 'antares_deps_version'
+
+      - name: Download pre-compiled librairies
+        uses: ./.github/workflows/download-extract-precompiled-libraries-zip
+        with:
+          antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
+          os: ${{matrix.os}}
+          ortools-url: ${{env.ORTOOLS_URL}}
+          ortools-dir: ${{env.ORTOOLS_DIR}}
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v4
+        id: setup-python
+        with:
+          architecture: 'x64'
+          python-version: '3.12'
+
+      - name: Install pip dependencies if necessary
+        run: pip install -r src/tests/examples/requirements.txt
+
+      - name: Init submodule
+        run: |
+          git submodule update --init src/antares-deps
+          git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
+
+      - name: Enable git longpaths
+        run:  git config --system core.longpaths true
+
+        
+      - name: List $RUNNER_WORKSPACE before build
+        run: find $RUNNER_WORKSPACE
+        shell: bash
+      - name: Prints output of run-vcpkg's action.
+        run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_DEFAULT_TRIPLET_OUT }}' "
+      - name: Run CMake+vcpkg+NinjaMulti-Config (Release configuration)
+        uses: lukka/run-cmake@v10
+        id: runcmake
+        with:
+          cmakeListsTxtPath: '${{ github.workspace }}/src/CMakeLists.txt'
+          configurePreset: 'msbuild-vcpkg'
+          configurePresetAdditionalArgs: "['DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'']"
+          buildPreset: 'msbuild-vcpkg'
+          buildPresetAdditionalArgs: '[`--config Release`]'
+      - name: List $RUNNER_WORKSPACE after build
+        run: find $RUNNER_WORKSPACE
+        shell: bash
