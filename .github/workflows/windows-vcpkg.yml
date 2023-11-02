@@ -41,6 +41,21 @@ jobs:
       run: |
           choco install wget unzip zip --no-progress
 
+    - name: Install ccache
+      shell: bash
+      run: |
+        wget https://github.com/ccache/ccache/releases/download/v4.8.3/ccache-4.8.3-windows-x86_64.zip -O ccache.zip
+        unzip ccache.zip
+        rm ccache.zip
+        mv ccache-4.8.3-windows-x86_64 ccache
+        cp ccache/ccache.exe ccache/cl.exe
+        echo "${GITHUB_WORKSPACE}/ccache" >> $GITHUB_PATH
+
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: windows
+
     - name : Init VCPKG submodule
       run: |
           git submodule update --init vcpkg
@@ -115,7 +130,8 @@ jobs:
            -DBUILD_TESTING=ON  \
            -DBUILD_TOOLS=ON \
            -DBUILD_not_system=OFF \
-           -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
+           -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}' \
+           -DCMAKE_VS_GLOBALS="CLToolExe=cl.exe;CLToolPath=${GITHUB_WORKSPACE}/ccache;TrackFileAccess=false;UseMultiToolTask=true;DebugInformationFormat=OldStyle"
 
     - name: Build
       shell: bash
