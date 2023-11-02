@@ -106,7 +106,7 @@ jobs:
         with:
           cmakeListsTxtPath: '${{ github.workspace }}/src/CMakeLists.txt'
           configurePreset: 'msbuild-vcpkg'
-          configurePresetAdditionalArgs: "['DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'']"
+          configurePresetAdditionalArgs: "['-DPython3_EXECUTABLE=${{ steps.setup-python.outputs.python-path }}']"
           buildPreset: 'msbuild-vcpkg'
           buildPresetAdditionalArgs: '[`--config Release`]'
       - name: List $RUNNER_WORKSPACE after build
