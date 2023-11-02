@@ -141,7 +141,7 @@ bool MaintenanceGroupRepository::loadFromFolder(Study& study,
 
     if (study.usedByTheSolver)
     {
-        if (!study.parameters.maintenancePlanning.mpModelling != mpOptimized)
+        if (!study.parameters.maintenancePlanning.isOptimized())
         {
             logs.info()
               << "  The maintenance groups shall be ignored due to the advanced parameters";
