@@ -57,7 +57,7 @@
         "CMAKE_BUILD_TYPE":"Release",
         "BUILD_TESTING":"ON",
         "BUILD_TOOLS":"ON", 
-        "DBUILD_not_system":"OFF"
+        "BUILD_not_system":"OFF"
       }
     }
   ],
