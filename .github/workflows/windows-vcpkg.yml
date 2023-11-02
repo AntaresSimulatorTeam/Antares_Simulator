@@ -121,7 +121,7 @@ jobs:
     - name: Configure
       shell: bash
       run: |
-           VERBOSE=1 cmake -B _build -S src \
+           cmake -B _build -S src \
            -DDEPS_INSTALL_DIR=rte-antares-deps-Release \
            -DCMAKE_PREFIX_PATH="${{ env.ORTOOLS_DIR }}/install" \
            -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
@@ -136,7 +136,7 @@ jobs:
     - name: Build
       shell: bash
       run: |
-        VERBOSE=1 cmake --build _build --config release -j2
+           cmake --build _build --config release -j2
 
     - name: Solver archive creation
       shell: bash
