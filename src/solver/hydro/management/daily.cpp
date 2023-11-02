@@ -250,7 +250,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     auto const& maxP = maxPower[Data::PartHydro::genMaxP];
     auto const& maxE = maxPower[Data::PartHydro::genMaxE];
 
-    auto& ventilationResults = ventilationResults_[numSpace][z];
+    auto& ventilationResults = ventilationResults_[z];
 
     std::shared_ptr<DebugData> debugData(nullptr);
 

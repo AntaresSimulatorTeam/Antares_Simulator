@@ -91,22 +91,18 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
 {
     // Ventilation results memory allocation
     uint nbDaysPerYear = 365;
-    ventilationResults_.resize(maxNbYearsInParallel_);
-    for (uint threadNumber = 0; threadNumber < maxNbYearsInParallel_; threadNumber++)
+    ventilationResults_.resize(areas_.size());
+    for (uint areaIndex = 0; areaIndex < areas_.size(); ++areaIndex)
     {
-        ventilationResults_[threadNumber].resize(areas_.size());
-        for (uint areaIndex = 0; areaIndex < areas_.size(); ++areaIndex)
+        auto& area = *areas_.byIndex[areaIndex];
+        size_t clusterCount = area.thermal.clusterCount();
+
+        ventilationResults_[areaIndex].HydrauliqueModulableQuotidien.assign(nbDaysPerYear, 0);
+
+        if (area.hydro.reservoirManagement)
         {
-            auto& area = *areas_.byIndex[areaIndex];
-            size_t clusterCount = area.thermal.clusterCount();
-
-            ventilationResults_[threadNumber][areaIndex].HydrauliqueModulableQuotidien.assign(nbDaysPerYear, 0);
-
-            if (area.hydro.reservoirManagement)
-            {
-                ventilationResults_[threadNumber][areaIndex].NiveauxReservoirsDebutJours.assign(nbDaysPerYear, 0.);
-                ventilationResults_[threadNumber][areaIndex].NiveauxReservoirsFinJours.assign(nbDaysPerYear, 0.);
-            }
+            ventilationResults_[areaIndex].NiveauxReservoirsDebutJours.assign(nbDaysPerYear, 0.);
+            ventilationResults_[areaIndex].NiveauxReservoirsFinJours.assign(nbDaysPerYear, 0.);
         }
     }
 }

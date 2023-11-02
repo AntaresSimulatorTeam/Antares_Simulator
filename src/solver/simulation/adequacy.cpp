@@ -95,7 +95,7 @@ bool Adequacy::simulationBegin()
 
 bool Adequacy::simplexIsRequired(uint hourInTheYear, 
                                  uint numSpace,
-                                 const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults) const
+                                 const HYDRO_VENTILATION_RESULTS& hydroVentilationResults) const
 {
     uint areaCount = study.areas.size();
     uint indx = hourInTheYear;
@@ -106,7 +106,7 @@ bool Adequacy::simplexIsRequired(uint hourInTheYear,
 
         for (uint areaIdx = 0; areaIdx != areaCount; ++areaIdx)
         {
-            auto& hydroVentilation = hydroVentilationResults[numSpace][areaIdx];
+            auto& hydroVentilation = hydroVentilationResults[areaIdx];
 
             double quantity
               = pProblemesHebdo[numSpace].ConsommationsAbattues[j].ConsommationAbattueDuPays[areaIdx]
@@ -126,7 +126,7 @@ bool Adequacy::year(Progression::Task& progression,
                     yearRandomNumbers& randomForYear,
                     std::list<uint>& failedWeekList,
                     bool isFirstPerformedYearOfSimulation,
-                    const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                     OptimizationStatisticsWriter& optWriter)
 {
     // No failed week at year start
@@ -293,7 +293,7 @@ bool Adequacy::year(Progression::Task& progression,
                 {
                     assert(k < state.resSpilled.width);
                     assert(j < state.resSpilled.height);
-                    auto& hydroVentilation = hydroVentilationResults[numSpace][k];
+                    auto& hydroVentilation = hydroVentilationResults[k];
                     auto& hourlyResults = pProblemesHebdo[numSpace].ResultatsHoraires[k];
 
                     hourlyResults.TurbinageHoraire[j]

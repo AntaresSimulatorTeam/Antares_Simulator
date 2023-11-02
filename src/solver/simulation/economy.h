@@ -83,7 +83,7 @@ protected:
               yearRandomNumbers& randomForYear,
               std::list<uint>& failedWeekList,
               bool isFirstPerformedYearOfSimulation,
-              const ALL_HYDRO_VENTILATION_RESULTS&,
+              const HYDRO_VENTILATION_RESULTS&,
               OptimizationStatisticsWriter& optWriter);
 
     void incrementProgression(Progression::Task& progression);

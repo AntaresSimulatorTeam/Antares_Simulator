@@ -95,7 +95,7 @@ typedef struct
 } VENTILATION_HYDRO_RESULTS_BY_AREA;
 
 // vector of [numSpace][area]
-using ALL_HYDRO_VENTILATION_RESULTS = std::vector<std::vector<VENTILATION_HYDRO_RESULTS_BY_AREA>>;
+using HYDRO_VENTILATION_RESULTS = std::vector<VENTILATION_HYDRO_RESULTS_BY_AREA>;
 
 
 class HydroManagement final
@@ -115,7 +115,7 @@ public:
                         uint y,
                         uint numSpace);
 
-    ALL_HYDRO_VENTILATION_RESULTS& ventilationResults() { return ventilationResults_; }
+    HYDRO_VENTILATION_RESULTS& ventilationResults() { return ventilationResults_; }
 
 private:
     //! Prepare inflows scaling for each area
@@ -170,7 +170,7 @@ private:
     unsigned int maxNbYearsInParallel_ = 0;
     Solver::IResultWriter& resultWriter_;
 
-    ALL_HYDRO_VENTILATION_RESULTS ventilationResults_;
+    HYDRO_VENTILATION_RESULTS ventilationResults_;
 }; // class HydroManagement
 } // namespace Antares
 
