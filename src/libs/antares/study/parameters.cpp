@@ -627,6 +627,11 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     {
         return stringToGlobalTransmissionCapacities(value, d.transmissionCapacities);
     }
+
+    if (key == "solver-logs")
+    {
+        return value.to<bool>(d.solverLogs);
+    }
     return false;
 }
 static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
@@ -1066,7 +1071,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     ortoolsSolver = options.ortoolsSolver;
 
     namedProblems = options.namedProblems;
-    solverLogs = options.solverLogs;
+    solverLogs = options.solverLogs || solverLogs;
 
     // Attempt to fix bad values if any
     fixBadValues();
@@ -1481,6 +1486,11 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     {
         logs.info() << "  :: The problems will contain named variables and constraints";
     }
+    // indicated that solver logs will be printed
+    if (namedProblems)
+    {
+        logs.info() << "  :: Printing solver logs : " << (solverLogs ? "True" : "False");
+    }
 }
 
 void Parameters::resetPlaylist(uint nbOfYears)
@@ -1596,6 +1606,7 @@ void Parameters::saveToINI(IniFile& ini) const
         // Unfeasible problem behavior
         section->add("include-unfeasible-problem-behavior",
                      Enum::toString(include.unfeasibleProblemBehavior));
+        section->add("solver-logs", solverLogs);
     }
 
     // Adequacy patch
