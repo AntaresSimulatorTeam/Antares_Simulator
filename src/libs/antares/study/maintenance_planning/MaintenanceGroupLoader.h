@@ -31,8 +31,6 @@ private:
 
 /*
 TODO CR27:
-    for I phase:
-        * load Maintenance Group only if version > 870 - client wont be able to open old models
     for II phase:
         * check if same area is inside more than 1 Maintenance Group - and throw error
         * what happens when area name is changed - UI code
