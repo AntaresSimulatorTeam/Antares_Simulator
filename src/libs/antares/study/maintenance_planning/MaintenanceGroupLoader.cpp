@@ -76,13 +76,13 @@ std::vector<std::shared_ptr<MaintenanceGroup>> MaintenanceGroupLoader::load(EnvF
     }
 
     // Checking for validity
-    if (!mnt->name_.empty())
+    if (mnt->name_.empty())
     {
         logs.error() << env.iniFilename << ": in [" << env.section->name
                      << "]: Invalid maintenance group name";
         return {};
     }
-    if (!mnt->ID_.empty())
+    if (mnt->ID_.empty())
     {
         logs.error() << env.iniFilename << ": in [" << env.section->name
                      << "]: Invalid maintenance group id";
