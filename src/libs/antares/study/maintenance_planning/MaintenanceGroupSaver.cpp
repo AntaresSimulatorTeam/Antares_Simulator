@@ -32,7 +32,7 @@ bool MaintenanceGroupSaver::saveToEnv(EnvForSaving& env, const MaintenanceGroup*
             const Area& area = *(i->first);
 
             // add weight-load+renewable+ror
-            env.key.clear() << area.name << '.weights';
+            env.key.clear() << area.name << ".weights";
             value << i->second.load << '%' << i->second.renewable << '%' << i->second.ror;
             env.section->add(env.key, value);
         }

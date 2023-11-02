@@ -21,7 +21,7 @@ public:
         //! Current section
         IniFile::Section* section = nullptr;
         Yuni::Clob folder;
-        Yuni::CString<(ant_k_area_name_max_length + 15), false> key;
+        Yuni::CString<(ant_k_area_name_max_length + 8), false> key;
     };
 
     /*!
