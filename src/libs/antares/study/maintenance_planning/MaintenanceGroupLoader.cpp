@@ -133,6 +133,14 @@ bool MaintenanceGroupLoader::SeparateValue(const EnvForLoading& env,
         return false;
     }
 
+    // check if parsed numbers are between 0 and 1.0
+    if (!(load >= 0.0 && load <= 1.0 && rnw >= 0.0 && rnw <= 1.0 && ror >= 0.0 && ror <= 1.0))
+    {
+        logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
+                     << "`: one or more weights are not in the [0, 1] range";
+        return false;
+    }
+
     // Output the parsed numbers
     w.load = load;
     w.renewable = rnw;
