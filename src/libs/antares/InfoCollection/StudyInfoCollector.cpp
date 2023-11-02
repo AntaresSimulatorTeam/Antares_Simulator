@@ -72,6 +72,8 @@ void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& f
     file_content.addItemToSection("study", "enabled thermal clusters", nbEnabledThermalClusters);
 }
 
+// TODO CR27: what id this, writing to some file, do we need this
+
 void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent& file_content)
 {
     auto activeContraints = study_.bindingConstraints.activeContraints();

@@ -124,6 +124,9 @@ void Study::clear()
     bindingConstraintsGroups.clear();
     areas.clear();
 
+    // maintenance Group-s
+    maintenanceGroups.clear();
+
     // no folder
     ClearAndShrink(header.caption);
     ClearAndShrink(header.author);
@@ -163,6 +166,9 @@ void Study::createAsNew()
 
     // Binding constraints
     bindingConstraints.clear();
+
+    // maintenance Group-s
+    maintenanceGroups.clear();
 
     // Areas
     areas.clear();
@@ -209,6 +215,8 @@ uint64_t Study::memoryUsage() const
            + areas.memoryUsage()
            // Binding constraints
            + bindingConstraints.memoryUsage()
+           // maintenance Group-s
+           + maintenanceGroups.memoryUsage()
            // Correlations matrices
            + preproLoadCorrelation.memoryUsage() + preproSolarCorrelation.memoryUsage()
            + preproHydroCorrelation.memoryUsage() + preproWindCorrelation.memoryUsage()
@@ -847,6 +855,8 @@ bool Study::areaDelete(Area* area)
         // Remove a single area
         // Remove all binding constraints attached to the area
         bindingConstraints.remove(area);
+        // Remove all Maintenance Group-s attached to the area
+        maintenanceGroups.remove(area);
         // Delete the area from the list
         areas.remove(area->id);
 
@@ -898,6 +908,8 @@ void Study::areaDelete(Area::Vector& arealist)
 
                 // Remove all binding constraints attached to the area
                 bindingConstraints.remove(*i);
+                // Remove all Maintenance Group-s attached to the area
+                maintenanceGroups.remove(*i);
                 // Delete the area from the list
                 areas.remove(area.id);
             }
@@ -1138,6 +1150,8 @@ void Study::destroyAllThermalTSGeneratorData()
         }
     });
 }
+
+// TODO CR27: see if we need this one for mant groups - only used in UI - so II phase
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
 {
@@ -1505,6 +1519,8 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
                 }
             }
         }
+
+        // TODO CR27: we probably do need to check Maximum path length limitation for mnt groups
     }
     return true;
 }

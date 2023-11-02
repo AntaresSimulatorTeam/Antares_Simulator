@@ -108,6 +108,9 @@ void UIRuntimeInfo::reload()
     }
 }
 
+//TODO CR27: make reload maintenanceGroups? it is used mostly in UI, but also have couple of uses in solver
+
+
 void UIRuntimeInfo::reloadBindingConstraints()
 {
     orderedConstraint.clear();
