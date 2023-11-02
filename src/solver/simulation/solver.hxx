@@ -668,7 +668,7 @@ template<class Impl>
 void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
                                              std::vector<uint>& years,
                                              std::map<unsigned int, bool>& isYearPerformed,
-                                             MersenneTwister& randomHydro)
+                                             MersenneTwister& randomHydroGenerator)
 {
     auto& runtime = *study.runtime;
 
@@ -723,7 +723,7 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
             double randomLevel = HydroManagement::randomReservoirLevel(min[firstDayOfMonth],
                                                                        avg[firstDayOfMonth],
                                                                        max[firstDayOfMonth],
-                                                                       randomHydro);
+                                                                       randomHydroGenerator);
 
             // Possibly update the intial level from scenario builder
             if (study.parameters.useCustomScenario)
@@ -927,8 +927,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     assert(endYear <= study.parameters.nbYears);
 
     // Init random hydro
-    MersenneTwister randomHydro;
-    randomHydro.reset(study.parameters.seed[Data::seedHydroManagement]);
+    MersenneTwister randomHydroGenerator;
+    randomHydroGenerator.reset(study.parameters.seed[Data::seedHydroManagement]);
 
     // List of parallel years sets
     std::vector<setOfParallelYears> setsOfParallelYears;
@@ -963,7 +963,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             regenerateTimeSeries(set_it->yearForTSgeneration);
 
         computeRandomNumbers(randomForParallelYears, set_it->yearsIndices, set_it->isYearPerformed,
-                             randomHydro);
+                             randomHydroGenerator);
 
         std::vector<unsigned int>::iterator year_it;
 
