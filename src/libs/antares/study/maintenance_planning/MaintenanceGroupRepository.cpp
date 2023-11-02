@@ -128,6 +128,10 @@ bool MaintenanceGroupRepository::loadFromFolder(Study& study,
                                                 const StudyLoadOptions& options,
                                                 const AnyString& folder)
 {
+    // do not load if below 870
+    if (study.header.version < 870)
+        return true;
+
     // Log entries
     logs.info(); // space for beauty
     logs.info() << "Loading maintenance groups...";
