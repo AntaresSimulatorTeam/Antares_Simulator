@@ -74,12 +74,11 @@ static int valueForSort(BindingConstraint::Operator op)
 }
 
 /**
- * @brief Compare ranged constraint e.g name ends with '_lt' or '_gt'
- * if suffixes are equal then the '*_lt' constraint is "superior"
+ * @brief Compare ranged constraint i.e their names end with _lt or _gt
+ * if suffixes are equal then the "*_lt" constraint is less than the "*_gt"
  * @param constraint_1
  * @param constraint_2
- * @return true
- * @return false
+ * @return true if constraint_1 < constraint_2
  */
 bool compareRangedConstraint(const ConstraintName& constraint_1, const ConstraintName& constraint_2)
 {
