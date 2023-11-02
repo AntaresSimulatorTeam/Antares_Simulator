@@ -10,7 +10,7 @@ if (NOT WIN32)
 	set(COMMON_GCC_FLAGS "${COMMON_GCC_FLAGS} -pipe -msse -msse2 -Wunused-but-set-variable -Wunused-but-set-parameter")
 	set(COMMON_GCC_FLAGS "${COMMON_GCC_FLAGS} -Werror=return-type")
 endif()
-set(COMMON_MSVC_FLAGS "/W3 /MP4 /Zi ")
+set(COMMON_MSVC_FLAGS "/W3 /MP4")
 set(COMMON_MSVC_FLAGS "${COMMON_MSVC_FLAGS} /we4715 /we4716") #adding no return or no return for all code paths as errors
 set(ADDITIONAL_C_FLAGS " -Wconversion -Wmissing-prototypes -Wstrict-prototypes")
 set(ADDITIONAL_C_FLAGS "${ADDITIONAL_C_FLAGS} -Wmissing-noreturn -Wpacked -Wredundant-decls -Wbad-function-cast -W -Wcast-align -Wcast-qual -Wsign-compare -fno-exceptions -Wdeclaration-after-statement")
