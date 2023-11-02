@@ -78,7 +78,12 @@ public:
      state(pState),
      yearByYear(pYearByYear),
      pDurationCollector(durationCollector),
-     pResultWriter(resultWriter)
+     pResultWriter(resultWriter),
+    hydroManagement(study.areas,
+                    study.parameters,
+                    study.calendar,
+                    study.maxNbYearsInParallel,
+                    resultWriter)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
     }
@@ -98,6 +103,7 @@ private:
     bool hydroHotStart;
     Benchmarking::IDurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
+    HydroManagement hydroManagement;
 private:
     /*
     ** \brief Log failed week
@@ -163,7 +169,7 @@ public:
             // 4 - Hydraulic ventilation
             {
                 Benchmarking::Timer timer;
-                simulation_->hydroManagement.makeVentilation(randomReservoirLevel,
+                hydroManagement.makeVentilation(randomReservoirLevel,
                                                              state[numSpace],
                                                              y,
                                                              numSpace);
@@ -189,7 +195,7 @@ public:
                                                randomForCurrentYear,
                                                failedWeekList,
                                                isFirstPerformedYearOfSimulation,
-                                               simulation_->hydroManagement.ventilationResults(),
+                                               hydroManagement.ventilationResults(),
                                                optWriter);
 
             // Log failing weeks
@@ -243,11 +249,6 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
     pNbYearsReallyPerformed(0),
     pNbMaxPerformedYearsInParallel(0),
     pYearByYear(study.parameters.yearByYear),
-    hydroManagement(study.areas, 
-                    study.parameters, 
-                    study.calendar, 
-                    study.maxNbYearsInParallel,
-                    resultWriter),
     pFirstSetParallelWithAPerformedYearWasRun(false),
     pDurationCollector(duration_collector),
     pQueueService(study.pQueueService),
