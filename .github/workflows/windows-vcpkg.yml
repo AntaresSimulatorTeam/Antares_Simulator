@@ -41,6 +41,9 @@ jobs:
       run: |
           choco install wget unzip zip --no-progress
 
+    # Downloads ccache, and copies it to "cl.exe" in order to trick cmake into using it,
+    # see ccache wiki for background on using it with MSVC:
+    # https://github.com/ccache/ccache/wiki/MS-Visual-Studio
     - name: Install ccache
       shell: bash
       run: |
@@ -50,6 +53,7 @@ jobs:
         mv ccache-4.8.3-windows-x86_64 ccache
         cp ccache/ccache.exe ccache/cl.exe
         echo "${GITHUB_WORKSPACE}/ccache" >> $GITHUB_PATH
+        echo "CCACHE_DIR=${GITHUB_WORKSPACE}/ccache" >> $GITHUB_ENV
 
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -131,7 +135,7 @@ jobs:
            -DBUILD_TOOLS=ON \
            -DBUILD_not_system=OFF \
            -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}' \
-           -DCMAKE_VS_GLOBALS="CLToolExe=cl.exe;CLToolPath=${GITHUB_WORKSPACE}/ccache;TrackFileAccess=false;UseMultiToolTask=true;DebugInformationFormat=OldStyle"
+           -DCMAKE_VS_GLOBALS="CLToolExe=cl.exe;CLToolPath=${CCACHE_DIR};TrackFileAccess=false;UseMultiToolTask=true;DebugInformationFormat=OldStyle"
 
     - name: Build
       shell: bash
