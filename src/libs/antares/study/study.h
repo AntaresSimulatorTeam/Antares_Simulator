@@ -54,6 +54,9 @@
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 
+#include "maintenance_planning/MaintenanceGroup.h"
+#include "antares/study/maintenance_planning/MaintenanceGroupRepository.h"
+
 #include <memory>
 
 namespace Antares::Data
@@ -582,6 +585,12 @@ public:
     //! Binding constraints
     BindingConstraintsRepository bindingConstraints;
     BindingConstraintGroupRepository bindingConstraintsGroups;
+    //@}
+
+    //! \name Maintenance Group-s
+    //@{
+    //! Maintenance Group-s
+    MaintenanceGroupRepository maintenanceGroups;
     //@}
 
     //! \name Correlation matrices used by the prepro

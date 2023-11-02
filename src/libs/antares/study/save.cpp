@@ -225,6 +225,10 @@ bool Study::saveToFolder(const AnyString& newfolder)
     buffer.clear() << folder << SEP << "input" << SEP << "bindingconstraints";
     ret = bindingConstraints.saveToFolder(buffer) and ret;
 
+    // Maintenance Group-s
+    buffer.clear() << folder << SEP << "input" << SEP << "maintenanceplanning";
+    ret = maintenanceGroups.saveToFolder(buffer) and ret;
+
     // Correlation matrices
     logs.info() << "Exporting the correlation matrices";
 
