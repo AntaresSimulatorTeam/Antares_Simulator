@@ -39,7 +39,7 @@ DefaultWeeklyOptimization::DefaultWeeklyOptimization(const OptimizationOptions& 
 {
 }
 
-void DefaultWeeklyOptimization::solve(uint, int)
+void DefaultWeeklyOptimization::solve()
 {
     OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
 }

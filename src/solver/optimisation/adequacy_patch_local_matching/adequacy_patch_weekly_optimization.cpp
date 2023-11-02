@@ -46,7 +46,7 @@ AdequacyPatchOptimization::AdequacyPatchOptimization(const Antares::Data::Study&
 {
 }
 
-void AdequacyPatchOptimization::solve([[maybe_unused]]uint weekInTheYear, [[maybe_unused]] int hourInTheYear)
+void AdequacyPatchOptimization::solve()
 {
     problemeHebdo_->adequacyPatchRuntimeData->AdequacyFirstStep = true;
     OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
