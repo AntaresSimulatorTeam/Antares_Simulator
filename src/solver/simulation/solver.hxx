@@ -925,11 +925,13 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
 {
     assert(endYear <= study.parameters.nbYears);
 
+    // Init random hydro
+    MersenneTwister randomHydro;
+    randomHydro.reset(study.parameters.seed[Data::seedHydroManagement]);
+
     // List of parallel years sets
     std::vector<setOfParallelYears> setsOfParallelYears;
 
-    MersenneTwister randomHydro;
-    randomHydro.reset(study.parameters.seed[Data::seedHydroManagement]);
     // Gets information on each set of parallel years and returns the max number of years performed
     // in a set The variable "maxNbYearsPerformedInAset" is the maximum numbers of years to be
     // actually executed in a set. A set contains some years to be actually executed (at most
@@ -960,7 +962,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             regenerateTimeSeries(set_it->yearForTSgeneration);
 
         computeRandomNumbers(randomForParallelYears, set_it->yearsIndices, set_it->isYearPerformed,
-                randomHydro);
+                             randomHydro);
 
         std::vector<unsigned int>::iterator year_it;
 
