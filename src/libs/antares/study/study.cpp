@@ -1541,6 +1541,5 @@ void Study::computePThetaInfForThermalClusters() const
         }
     }
 }
-
 } // namespace Antares::Data
 
