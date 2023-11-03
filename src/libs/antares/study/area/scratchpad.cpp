@@ -73,6 +73,20 @@ meanMaxDailyPumpPower(area.hydro.series->timeseriesNumbersHydroMaxPower)
         }
     }
 
+    //*******************************************************************************
+    // TODO : about computing hydro max power daily mean from hourly max power TS.  
+    //    This computation is done here, but we don't want it here.
+    //    We want Scratchpad to shrink and even disappear.
+    //    So a possible solution to move this computation to some place else is to host 
+    //    these means TS in the hydro part of areas, and compute them right after 
+    //    their the hourly TS (max power).
+    //    Note that scratchpad instances are duplicated for multi-threading purpose,
+    //    and that moving these TS elsewhere could create concurrency issues.
+    //    But these daily TS, once computed, are then only read (in daily.cpp 
+    //    and when building the weekly optimization problem).
+    //    Thus we don't have to fear such issues.
+    //*******************************************************************************
+    
     //  Hourly maximum generation/pumping power matrices and their number of TS's (width of matrices)
     auto const& maxHourlyGenPower = area.hydro.series->maxHourlyGenPower.timeSeries;
     auto const& maxHourlyPumpPower = area.hydro.series->maxHourlyPumpPower.timeSeries;
