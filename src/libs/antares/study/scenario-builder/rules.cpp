@@ -246,7 +246,7 @@ bool Rules::readHydro(const AreaName::Vector& splitKey, String value, bool updat
     return true;
 }
 
-bool Rules::readHydroMaxPower(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readHydroMaxPower(const AreaName::Vector& splitKey, String tsNumberAsString, bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
@@ -255,8 +255,8 @@ bool Rules::readHydroMaxPower(const AreaName::Vector& splitKey, String value, bo
     if (!area)
         return false;
 
-    uint val = fromStringToTSnumber(value);
-    hydroMaxPower.setTSnumber(area->index, year, val);
+    uint tsNumber = fromStringToTSnumber(tsNumberAsString);
+    hydroMaxPower.setTSnumber(area->index, year, tsNumber);
     return true;
 }
 
