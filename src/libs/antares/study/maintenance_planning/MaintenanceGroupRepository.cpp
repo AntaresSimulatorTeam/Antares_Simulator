@@ -104,7 +104,10 @@ bool MaintenanceGroupRepository::saveToFolder(const AnyString& folder) const
 {
     MaintenanceGroupSaver::EnvForSaving env;
     env.folder = folder;
-    return internalSaveToFolder(env);
+    bool ret = internalSaveToFolder(env);
+    env.folder = folder;
+    ret = internalSaveScenariosToFolder(env) && ret;
+    return ret;
 }
 
 bool MaintenanceGroupRepository::rename(MaintenanceGroup* mnt, const AnyString& newname)
@@ -226,6 +229,23 @@ bool MaintenanceGroupRepository::internalSaveToFolder(
 
     env.folder << Yuni::IO::Separator << "maintenancegroups.ini";
     return ini.save(env.folder) && ret;
+}
+
+bool MaintenanceGroupRepository::internalSaveScenariosToFolder(
+  MaintenanceGroupSaver::EnvForSaving& env) const
+{
+    if (!Yuni::IO::Directory::Create(env.folder))
+        return false;
+
+    IniFile ini;
+    std::string text = "ScenariosSettings";
+
+    env.section = ini.addSection(text);
+    env.section->add("Number", scenariosNumber_);
+    env.section->add("Length", scenariosLength_);
+
+    env.folder << Yuni::IO::Separator << "scenariossettings.ini";
+    return ini.save(env.folder);
 }
 
 void MaintenanceGroupRepository::reverseWeightSign(const AreaLink* lnk)

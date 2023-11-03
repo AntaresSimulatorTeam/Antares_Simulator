@@ -159,6 +159,7 @@ private:
     
     // private methods
     bool internalSaveToFolder(Data::MaintenanceGroupSaver::EnvForSaving& env) const;
+    bool internalSaveScenariosToFolder(Data::MaintenanceGroupSaver::EnvForSaving& env) const;
 
     //! All Maintenance Group-s
     Data::MaintenanceGroupRepository::Vector maintenanceGroups_;
