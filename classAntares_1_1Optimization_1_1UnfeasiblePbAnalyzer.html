@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Antares Simulator: Antares::Optimization::SlackVariablesEmpty Class Reference</title>
+<title>Antares Simulator: Antares::Optimization::UnfeasiblePbAnalyzer Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -65,7 +65,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('classAntares_1_1Optimization_1_1SlackVariablesEmpty.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classAntares_1_1Optimization_1_1UnfeasiblePbAnalyzer.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -93,33 +93,38 @@ $(document).ready(function(){initNavTree('classAntares_1_1Optimization_1_1SlackV
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classAntares_1_1Optimization_1_1SlackVariablesEmpty-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">Antares::Optimization::SlackVariablesEmpty Class Reference</div></div>
+<a href="classAntares_1_1Optimization_1_1UnfeasiblePbAnalyzer-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">Antares::Optimization::UnfeasiblePbAnalyzer Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Inheritance diagram for Antares::Optimization::SlackVariablesEmpty:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="classAntares_1_1Optimization_1_1SlackVariablesEmpty.png" alt=""/>
- </div></div>
+
+<p><code>#include &lt;<a class="el" href="unfeasible-pb-analyzer_8h_source.html">unfeasible-pb-analyzer.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aec97fe7733999f027402552e74c16d3f"><td class="memItemLeft" align="right" valign="top"><a id="aec97fe7733999f027402552e74c16d3f" name="aec97fe7733999f027402552e74c16d3f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>SlackVariablesEmpty</b> (const std::string &amp;message)</td></tr>
-<tr class="separator:aec97fe7733999f027402552e74c16d3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5ab1059fd3502f050fe35586fd3699f"><td class="memItemLeft" align="right" valign="top"><a id="ad5ab1059fd3502f050fe35586fd3699f" name="ad5ab1059fd3502f050fe35586fd3699f"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>UnfeasiblePbAnalyzer</b> (std::vector&lt; std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimization_1_1UnfeasibilityAnalysis.html">UnfeasibilityAnalysis</a> &gt; &gt; analysisList)</td></tr>
+<tr class="separator:ad5ab1059fd3502f050fe35586fd3699f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f768c37ceef326a5917524a6b47f0a3"><td class="memItemLeft" align="right" valign="top"><a id="a6f768c37ceef326a5917524a6b47f0a3" name="a6f768c37ceef326a5917524a6b47f0a3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>run</b> (MPSolver *problem)</td></tr>
+<tr class="separator:a6f768c37ceef326a5917524a6b47f0a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90a56f70e09604b73daf6664bc103781"><td class="memItemLeft" align="right" valign="top"><a id="a90a56f70e09604b73daf6664bc103781" name="a90a56f70e09604b73daf6664bc103781"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>printReport</b> () const</td></tr>
+<tr class="separator:a90a56f70e09604b73daf6664bc103781"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/solver/infeasible-problem-analysis/<a class="el" href="exceptions_8h_source.html">exceptions.h</a></li>
-<li>src/solver/infeasible-problem-analysis/exceptions.cpp</li>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >In charge of anayzing the possible reasons for the unfeasibility of an optimization problem.</p>
+<p >The analyzer relies on the execution of possibly multiple <a class="el" href="classAntares_1_1Optimization_1_1UnfeasibilityAnalysis.html">UnfeasibilityAnalysis</a>. </p>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/solver/infeasible-problem-analysis/<a class="el" href="unfeasible-pb-analyzer_8h_source.html">unfeasible-pb-analyzer.h</a></li>
+<li>src/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Optimization</b></li><li class="navelem"><a class="el" href="classAntares_1_1Optimization_1_1SlackVariablesEmpty.html">SlackVariablesEmpty</a></li>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Optimization</b></li><li class="navelem"><a class="el" href="classAntares_1_1Optimization_1_1UnfeasiblePbAnalyzer.html">UnfeasiblePbAnalyzer</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>

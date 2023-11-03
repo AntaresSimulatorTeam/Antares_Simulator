@@ -1,5 +1,7 @@
 var NAVTREEINDEX23 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpillageSelector.html":[4,0,0,12,5,4,41],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpillageSelector_3_01false_01_4.html":[4,0,0,12,5,4,42],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergyAfterCSR_1_1Statistics.html":[4,0,0,12,5,4,44,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergy_1_1Statistics.html":[4,0,0,12,5,4,43,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions_1_1Statistics.html":[4,0,0,12,5,4,49,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Window_1_1Inspector_1_1AccumulatorCheck.html":[4,0,0,16,1,1],
 "structAntares_1_1Window_1_1Inspector_1_1Add.html":[4,0,0,16,1,2],
 "structAntares_1_1Window_1_1Inspector_1_1PAdequacyPatchMode.html":[4,0,0,16,1,9],
-"structAntares_1_1Window_1_1Inspector_1_1PAreaColor.html":[4,0,0,16,1,10],
-"structAntares_1_1Window_1_1Inspector_1_1PAreaColor_1_1Color.html":[4,0,0,16,1,10,0],
-"structAntares_1_1Window_1_1Inspector_1_1PAreaFiltering.html":[4,0,0,16,1,11]
+"structAntares_1_1Window_1_1Inspector_1_1PAreaColor.html":[4,0,0,16,1,10]
 };

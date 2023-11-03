@@ -417,14 +417,16 @@ var annotated_dup =
       ] ],
       [ "Optimization", null, [
         [ "Constraint", "classAntares_1_1Optimization_1_1Constraint.html", null ],
-        [ "InfeasibleProblemAnalysis", "classAntares_1_1Optimization_1_1InfeasibleProblemAnalysis.html", null ],
+        [ "ConstraintSlackAnalysis", "classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html", null ],
         [ "InfeasibleProblemReport", "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html", null ],
         [ "Nomenclature", "classAntares_1_1Optimization_1_1Nomenclature.html", null ],
         [ "PROBLEME_SIMPLEXE_NOMME", "structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html", null ],
-        [ "ProblemResolutionFailed", "classAntares_1_1Optimization_1_1ProblemResolutionFailed.html", null ],
         [ "ProblemSimplexeNommeConverter", "classAntares_1_1Optimization_1_1ProblemSimplexeNommeConverter.html", null ],
-        [ "SlackVariablesEmpty", "classAntares_1_1Optimization_1_1SlackVariablesEmpty.html", null ],
-        [ "StringIsNotWellFormated", "classAntares_1_1Optimization_1_1StringIsNotWellFormated.html", null ]
+        [ "StringIsNotWellFormated", "classAntares_1_1Optimization_1_1StringIsNotWellFormated.html", null ],
+        [ "UnfeasibilityAnalysis", "classAntares_1_1Optimization_1_1UnfeasibilityAnalysis.html", null ],
+        [ "UnfeasiblePbAnalyzer", "classAntares_1_1Optimization_1_1UnfeasiblePbAnalyzer.html", null ],
+        [ "VariableBounds", "structAntares_1_1Optimization_1_1VariableBounds.html", null ],
+        [ "VariablesBoundsConsistency", "classAntares_1_1Optimization_1_1VariablesBoundsConsistency.html", null ]
       ] ],
       [ "Private", null, [
         [ "Component", null, [
@@ -1136,6 +1138,7 @@ var annotated_dup =
     ] ],
     [ "AdequacyPatchRuntimeData", "classAdequacyPatchRuntimeData.html", null ],
     [ "ALL_MUST_RUN_GENERATION", "structALL__MUST__RUN__GENERATION.html", null ],
+    [ "AnalysisMock", "classAnalysisMock.html", null ],
     [ "AntaresStudy", "classAntaresStudy.html", "classAntaresStudy" ],
     [ "AntaresStudyAnalyzerJob", "classAntaresStudyAnalyzerJob.html", null ],
     [ "AreaBalance", "classAreaBalance.html", "classAreaBalance" ],

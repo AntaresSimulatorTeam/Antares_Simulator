@@ -588,7 +588,6 @@ var hierarchy =
       [ "Antares::Solver::Simulation::ISimulation< Impl >", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html", null ]
     ] ],
     [ "Antares::Data::Parameters::IncludeOptions", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html", null ],
-    [ "Antares::Optimization::InfeasibleProblemAnalysis", "classAntares_1_1Optimization_1_1InfeasibleProblemAnalysis.html", null ],
     [ "Antares::Optimization::InfeasibleProblemReport", "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html", null ],
     [ "JIT::Informations", "classJIT_1_1Informations.html", null ],
     [ "Antares::IniFile", "classAntares_1_1IniFile.html", null ],
@@ -811,9 +810,6 @@ var hierarchy =
       [ "kirchhoff_pytest.StudyReference", "classkirchhoff__pytest_1_1StudyReference.html", null ]
     ] ],
     [ "Yuni::Policy::ObjectLevelLockable", null, [
-      [ "Antares::IIntrusiveReference< ChildT, TP >", "classAntares_1_1IIntrusiveReference.html", null ]
-    ] ],
-    [ "Yuni::Policy::ObjectLevelLockable", null, [
       [ "Antares::Data::StudyFinder", "classAntares_1_1Data_1_1StudyFinder.html", [
         [ "MyStudyFinder", "classMyStudyFinder.html", null ],
         [ "MyStudyFinder", "classMyStudyFinder.html", null ],
@@ -821,6 +817,9 @@ var hierarchy =
         [ "StudyFinderCleaner", "classStudyFinderCleaner.html", null ]
       ] ],
       [ "Antares::Memory", "classAntares_1_1Memory.html", null ]
+    ] ],
+    [ "Yuni::Policy::ObjectLevelLockable", null, [
+      [ "Antares::IIntrusiveReference< ChildT, TP >", "classAntares_1_1IIntrusiveReference.html", null ]
     ] ],
     [ "Yuni::Policy::ObjectLevelLockableNotRecursive", null, [
       [ "Antares::Toolbox::Jobs::PartList", "classAntares_1_1Toolbox_1_1Jobs_1_1PartList.html", null ]
@@ -1014,8 +1013,6 @@ var hierarchy =
         [ "Antares::Error::WritingProgressFile", "classAntares_1_1Error_1_1WritingProgressFile.html", null ]
       ] ],
       [ "Antares::FatalError", "classAntares_1_1FatalError.html", null ],
-      [ "Antares::Optimization::ProblemResolutionFailed", "classAntares_1_1Optimization_1_1ProblemResolutionFailed.html", null ],
-      [ "Antares::Optimization::SlackVariablesEmpty", "classAntares_1_1Optimization_1_1SlackVariablesEmpty.html", null ],
       [ "Antares::Optimization::StringIsNotWellFormated", "classAntares_1_1Optimization_1_1StringIsNotWellFormated.html", null ],
       [ "Antares::Solver::IOError", "classAntares_1_1Solver_1_1IOError.html", null ],
       [ "Antares::Solver::Initialization::Error::NoQueueService", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html", null ],
@@ -1307,6 +1304,12 @@ var hierarchy =
     [ "TSNumbersPredicate", "structTSNumbersPredicate.html", null ],
     [ "Antares::Data::Parameters::UCMode", "structAntares_1_1Data_1_1Parameters_1_1UCMode.html", null ],
     [ "Antares::Data::UIRuntimeInfo", "classAntares_1_1Data_1_1UIRuntimeInfo.html", null ],
+    [ "Antares::Optimization::UnfeasibilityAnalysis", "classAntares_1_1Optimization_1_1UnfeasibilityAnalysis.html", [
+      [ "AnalysisMock", "classAnalysisMock.html", null ],
+      [ "Antares::Optimization::ConstraintSlackAnalysis", "classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html", null ],
+      [ "Antares::Optimization::VariablesBoundsConsistency", "classAntares_1_1Optimization_1_1VariablesBoundsConsistency.html", null ]
+    ] ],
+    [ "Antares::Optimization::UnfeasiblePbAnalyzer", "classAntares_1_1Optimization_1_1UnfeasiblePbAnalyzer.html", null ],
     [ "Antares::Window::Inspector::Unique", "structAntares_1_1Window_1_1Inspector_1_1Unique.html", null ],
     [ "Antares::Statistics::Updater", "classAntares_1_1Statistics_1_1Updater.html", null ],
     [ "VALEURS_DE_NTC_ET_RESISTANCES", "structVALEURS__DE__NTC__ET__RESISTANCES.html", null ],
@@ -1316,6 +1319,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::VariableAccessor< ResultsT, Category::dynamicColumns >", "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1dynamicColumns_01_4.html", null ],
     [ "Antares::Solver::Variable::VariableAccessor< ResultsT, Category::noColumn >", "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1noColumn_01_4.html", null ],
     [ "Antares::Solver::Variable::VariableAccessor< ResultsT, Category::singleColumn >", "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1singleColumn_01_4.html", null ],
+    [ "Antares::Optimization::VariableBounds", "structAntares_1_1Optimization_1_1VariableBounds.html", null ],
     [ "Antares::Window::OutputViewer::Provider::VariableCollector", "classAntares_1_1Window_1_1OutputViewer_1_1Provider_1_1VariableCollector.html", null ],
     [ "Variable::VariableManager", "classVariable_1_1VariableManager.html", null ],
     [ "Antares::Data::VariablePrintInfo", "classAntares_1_1Data_1_1VariablePrintInfo.html", null ],

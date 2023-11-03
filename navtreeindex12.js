@@ -1,5 +1,6 @@
 var NAVTREEINDEX12 =
 {
+"classAntares_1_1Map_1_1Tool_1_1Tool.html#a160fad9f21de12ff1d45e4520f95e16e":[4,0,0,9,1,2,17],
 "classAntares_1_1Map_1_1Tool_1_1Tool.html#a1a2b8df29c70484fdd1cdc580da02a78":[4,0,0,9,1,2,0],
 "classAntares_1_1Map_1_1Tool_1_1Tool.html#a24051d2c82f5afb6858ca15bf6c9f8d4":[4,0,0,9,1,2,18],
 "classAntares_1_1Map_1_1Tool_1_1Tool.html#a3b76ddc81739ad86ca21f4da0ba367e5":[4,0,0,9,1,2,8],
@@ -112,13 +113,14 @@ var NAVTREEINDEX12 =
 "classAntares_1_1MersenneTwister.html#ad68dffff38113b2e5f5af0b91943aa35":[4,0,0,41,2],
 "classAntares_1_1MersenneTwister.html#ae96581af74dd662b35c61c65ba87fcd4":[4,0,0,41,1],
 "classAntares_1_1Optimization_1_1Constraint.html":[4,0,0,10,0],
-"classAntares_1_1Optimization_1_1InfeasibleProblemAnalysis.html":[4,0,0,10,1],
+"classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html":[4,0,0,10,1],
 "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html":[4,0,0,10,2],
 "classAntares_1_1Optimization_1_1Nomenclature.html":[4,0,0,10,3],
-"classAntares_1_1Optimization_1_1ProblemResolutionFailed.html":[4,0,0,10,5],
-"classAntares_1_1Optimization_1_1ProblemSimplexeNommeConverter.html":[4,0,0,10,6],
-"classAntares_1_1Optimization_1_1SlackVariablesEmpty.html":[4,0,0,10,7],
-"classAntares_1_1Optimization_1_1StringIsNotWellFormated.html":[4,0,0,10,8],
+"classAntares_1_1Optimization_1_1ProblemSimplexeNommeConverter.html":[4,0,0,10,5],
+"classAntares_1_1Optimization_1_1StringIsNotWellFormated.html":[4,0,0,10,6],
+"classAntares_1_1Optimization_1_1UnfeasibilityAnalysis.html":[4,0,0,10,7],
+"classAntares_1_1Optimization_1_1UnfeasiblePbAnalyzer.html":[4,0,0,10,8],
+"classAntares_1_1Optimization_1_1VariablesBoundsConsistency.html":[4,0,0,10,10],
 "classAntares_1_1Private_1_1Component_1_1CustomWxButton.html":[4,0,0,11,0,0],
 "classAntares_1_1Private_1_1Component_1_1CustomWxButton.html#a6104435ce815091591b0d6a260ca06a3":[4,0,0,11,0,0,1],
 "classAntares_1_1Private_1_1Component_1_1CustomWxButton.html#a639ab9ecaf68a998a93d9aa76eb4a9b0":[4,0,0,11,0,0,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#aa2610ad198fe8b749e943d2ad1762513":[4,0,0,12,3,0,3],
 "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList.html":[4,0,0,12,3,1],
 "classAntares_1_1Solver_1_1Simulation_1_1BindingConstraintsTimeSeriesNumbersWriter.html":[4,0,0,12,3,4],
-"classAntares_1_1Solver_1_1Simulation_1_1CurtailmentSharingPostProcessCmd.html":[4,0,0,12,3,7],
-"classAntares_1_1Solver_1_1Simulation_1_1DTGmarginForAdqPatchPostProcessCmd.html":[4,0,0,12,3,9],
-"classAntares_1_1Solver_1_1Simulation_1_1DTGmarginForAdqPatchPostProcessCmd.html#a514838708ebf0122085df4122b8ccb91":[4,0,0,12,3,9,0]
+"classAntares_1_1Solver_1_1Simulation_1_1CurtailmentSharingPostProcessCmd.html":[4,0,0,12,3,7]
 };
