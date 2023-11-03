@@ -127,7 +127,7 @@ jobs:
       if: ${{ env.IS_PUSH == 'true' }}
       run: |
            cd _build
-           ctest -C Release --output-on-failure -R unfeasible
+           ctest -C Release --output-on-failure -R "^unfeasible$"
 
     - name: Run unit and end-to-end tests
       if: ${{ env.IS_PUSH == 'true' }}
