@@ -20,12 +20,14 @@ public:
                             const std::vector<bool>& VariablesEntieres,
                             std::vector<int>& StatutDesVariables,
                             std::vector<int>& StatutDesContraintes,
-                            bool UseNamedProblems);
+                            bool UseNamedProblems,
+                            bool SolverLogs);
 
 private:
     const std::vector<std::string>& NomDesVariables;
     const std::vector<std::string>& NomDesContraintes;
     bool useNamedProblems_;
+    bool solverLogs_;
 
 public:
     std::vector<int>& StatutDesVariables;
@@ -53,6 +55,11 @@ public:
     const std::vector<std::string>& ConstraintNames() const
     {
         return NomDesContraintes;
+    }
+
+    bool SolverLogs() const
+    {
+        return solverLogs_;
     }
 };
 } // namespace Optimization

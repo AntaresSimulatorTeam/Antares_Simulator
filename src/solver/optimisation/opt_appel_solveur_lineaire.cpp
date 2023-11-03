@@ -219,12 +219,6 @@ static SimplexResult OPT_TryToCallSimplex(
     Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes.data();
     Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits.data();
 
-#ifndef NDEBUG
-    Probleme.AffichageDesTraces = ( PremierPassage ? OUI_SPX : NON_SPX );
-#else
-    Probleme.AffichageDesTraces = NON_SPX;
-#endif
-
     Probleme.NombreDeContraintesCoupes = 0;
 
     if (options.useOrtools)
@@ -310,7 +304,8 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                                                    ProblemeAResoudre->VariablesEntieres,
                                                    ProblemeAResoudre->StatutDesVariables,
                                                    ProblemeAResoudre->StatutDesContraintes,
-                                                   problemeHebdo->NamedProblems);
+                                                   problemeHebdo->NamedProblems,
+                                                   problemeHebdo->solverLogs);
 
     bool PremierPassage = true;
 

@@ -71,6 +71,8 @@ public:
     bool mpsToExport;
     //! named problems
     bool namedProblems = false;
+    //! enable solver logs
+    bool solverLogs = false;
     //! Ignore all constraints
     bool ignoreConstraints;
     //! Simulation mode

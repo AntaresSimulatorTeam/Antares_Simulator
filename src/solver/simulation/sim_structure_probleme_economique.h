@@ -544,6 +544,7 @@ struct PROBLEME_HEBDO
     bool exportMPSOnError = false;
     bool ExportStructure = false;
     bool NamedProblems = false;
+    bool solverLogs = false;
 
     uint32_t HeureDansLAnnee = 0;
     bool LeProblemeADejaEteInstancie = false;

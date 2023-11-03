@@ -527,6 +527,9 @@ public:
     // Naming constraints and variables in problems
     bool namedProblems;
 
+    // solver logs
+    bool solverLogs;
+
 private:
     //! Load data from an INI file
     bool loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options);
