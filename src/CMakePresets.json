@@ -91,7 +91,7 @@
   "testPresets": [
     {
       "name": "ninja",
-      "configurePreset": "ninja"
+      "configurePreset": "ninja" 
     },
     {
       "name": "ninja-multi-vcpkg",
