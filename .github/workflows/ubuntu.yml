@@ -73,9 +73,10 @@ jobs:
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
     - name: Set up Python
+      id: setup-python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.x
+        python-version: '3.12'
 
     - name: Install dependencies
       run: |
@@ -87,7 +88,7 @@ jobs:
           git submodule update --init src/antares-deps
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
 
-    - name: Configure push
+    - name: Configure
       run: |
            cmake -B _build -S src \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
@@ -98,6 +99,7 @@ jobs:
            -DBUILD_not_system=OFF \
            -DBUILD_TOOLS=ON \
            -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
+           -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
 
     - name: Build
       run: |
@@ -125,7 +127,7 @@ jobs:
       if: ${{ env.IS_PUSH == 'true' }}
       run: |
            cd _build
-           ctest -C Release --output-on-failure -R unfeasible
+           ctest -C Release --output-on-failure -R "^unfeasible$"
 
     - name: Run unit and end-to-end tests
       if: ${{ env.IS_PUSH == 'true' }}

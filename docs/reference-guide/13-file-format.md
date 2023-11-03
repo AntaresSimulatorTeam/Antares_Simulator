@@ -1,9 +1,23 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
-## v8.7.1
+## v8.9.0
+### Input
+### Solver logs
+* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini file by setting solver-logs = true under the optimization section.
+
+## v8.8.0
 ### Input
 ### Short-term storage
 If no value is specified for `initiallevel`, then a default value of 50% is used. Note that this value is used only if `initialleveloptim=false`, and that `false` is the default value for `initialleveloptim`.
+
+### Experimental "MILP" mode
+New value `milp` for existing property `other preferences/unit-commitment-mode` in file **settings/generaldata.ini**.
+
+Using this property requires OR-Tools and a MILP solver (XPRESS, COIN)
+
+```
+antares-8.8-solver --use-ortools --ortools-solver coin|xpress ...
+```
 
 ## v8.7.0
 ### Input

@@ -487,6 +487,7 @@ struct PROBLEME_HEBDO
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
     bool WaterValueAccurate = false;
     bool OptimisationAvecCoutsDeDemarrage = false;
+    bool OptimisationAvecVariablesEntieres = false;
     uint32_t NombreDePays = 0;
     std::vector<const char*> NomsDesPays;
     uint32_t NombreDePaliersThermiques = 0;
@@ -543,6 +544,7 @@ struct PROBLEME_HEBDO
     bool exportMPSOnError = false;
     bool ExportStructure = false;
     bool NamedProblems = false;
+    bool solverLogs = false;
 
     uint32_t HeureDansLAnnee = 0;
     bool LeProblemeADejaEteInstancie = false;

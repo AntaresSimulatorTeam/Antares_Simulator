@@ -587,7 +587,7 @@ void Study::performTransformationsBeforeLaunchingSimulation()
         }
 
         // Informations about time-series for the load
-        auto& matrix = area.load.series->timeSeries;
+        auto& matrix = area.load.series.timeSeries;
         auto& dsmvalues = area.reserves[fhrDSM];
 
         // Adding DSM values
@@ -1010,7 +1010,7 @@ bool Study::areaRename(Area* area, AreaName newName)
 bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 {
     // A name must not be empty
-    if (!cluster or !newName.empty())
+    if (!cluster or newName.empty())
         return false;
 
     String beautifyname;

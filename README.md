@@ -22,6 +22,8 @@ Until 2018 it was distributed under the terms of a proprietary license.
 
 In May 2018 RTE decided to release the project under the GPLv3 license.
 
+The GUI is deprecated in favor of [Antares Web](https://github.com/AntaresSimulatorTeam/AntaREST).
+
 [linux_system_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Linux%20CI%20(system%20libs)/badge.svg
 
 [linux_system_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Linux%20CI%20(system%20libs)"
@@ -40,6 +42,7 @@ In May 2018 RTE decided to release the project under the GPLv3 license.
 - Antares web site :  https://antares-simulator.org
 - RTE web site  : http://www.rte-france.com/
 - Doxygen code documentation  : https://antaressimulatorteam.github.io/Antares_Simulator/
+- Antares Web : https://github.com/AntaresSimulatorTeam/AntaREST
 
 
 # Installation

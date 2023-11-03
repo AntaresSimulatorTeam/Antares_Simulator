@@ -143,10 +143,10 @@ bool Economy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace].weekInTheYear = state.weekInTheYear = w;
         pProblemesHebdo[numSpace].HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(study, pProblemesHebdo[numSpace], state.weekInTheYear, 
+        ::SIM_RenseignementProblemeHebdo(study, pProblemesHebdo[numSpace], state.weekInTheYear,
                                          numSpace, hourInTheYear, hydroVentilationResults);
 
-        BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace], 
+        BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace],
                                         hourInTheYear, randomForYear.pThermalNoisesByArea, state.year);
 
         // Reinit optimisation if needed
@@ -155,7 +155,7 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            weeklyOptProblems_[numSpace]->solve(w, hourInTheYear);
+            weeklyOptProblems_[numSpace]->solve();
 
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);

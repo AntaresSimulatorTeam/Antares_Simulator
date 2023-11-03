@@ -63,10 +63,10 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
 }
 
 bool runWeeklyOptimization(const OptimizationOptions& options,
-                                  PROBLEME_HEBDO* problemeHebdo,
-                                  const AdqPatchParams& adqPatchParams,
-                                  Solver::IResultWriter& writer,
-                                  int optimizationNumber)
+                           PROBLEME_HEBDO* problemeHebdo,
+                           const AdqPatchParams& adqPatchParams,
+                           Solver::IResultWriter& writer,
+                           int optimizationNumber)
 {
     const int NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
@@ -166,7 +166,10 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     bool ret = runWeeklyOptimization(
       options, problemeHebdo, adqPatchParams, writer, PREMIERE_OPTIMISATION);
 
-    if (ret && !problemeHebdo->Expansion)
+    // We only need the 2nd optimization when NOT solving with integer variables
+    // We also skip the 2nd optimization in the hidden 'Expansion' mode
+    // and if the 1st one failed.
+    if (ret && !problemeHebdo->Expansion && !problemeHebdo->OptimisationAvecVariablesEntieres)
     {
         // We need to adjust some stuff before running the 2nd optimisation
         runThermalHeuristic(problemeHebdo);

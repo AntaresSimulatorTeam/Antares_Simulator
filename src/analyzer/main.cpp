@@ -28,7 +28,7 @@
 #include <yuni/yuni.h>
 #include <antares/logs/logs.h>
 #include <yuni/core/getopt.h>
-#include "../ui/common/winmain.hxx"
+#include <antares/args/args_to_utf8.h>
 #include <antares/version.h>
 #include "atsp/atsp.h"
 #include <antares/logs/hostinfo.h>
@@ -115,7 +115,8 @@ int main(int argc, char* argv[])
     InitializeDefaultLocale();
 
     logs.applicationName("analyzer");
-    argv = AntaresGetUTF8Arguments(argc, argv);
+    IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
+    std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
 
     String optSettings;
 

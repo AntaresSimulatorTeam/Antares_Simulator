@@ -36,6 +36,7 @@ set(VACUUM_LIBS
 	antares-fswalker
 	yuni-static-core
 	${CMAKE_THREADS_LIBS_INIT}
+	Antares::args_helper
 	Antares::study
 )
 

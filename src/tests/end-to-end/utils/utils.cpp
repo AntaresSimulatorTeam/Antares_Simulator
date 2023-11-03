@@ -40,32 +40,47 @@ void addScratchpadToEachArea(Study& study)
     }
 }
 
-
-ThermalClusterConfig::ThermalClusterConfig(ThermalCluster* cluster) : cluster_(cluster)
+TimeSeriesConfigurer& TimeSeriesConfigurer::setColumnCount(unsigned int columnCount)
 {
-    tsAvailablePowerConfig_ = std::move(TimeSeriesConfigurer(cluster_->series->timeSeries));
+    ts_->resize(columnCount, HOURS_PER_YEAR);
+    return *this;
 }
+
+TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned int column, double value)
+{
+    ts_->fillColumn(column, value);
+    return *this;
+}
+
+ThermalClusterConfig::ThermalClusterConfig(ThermalCluster* cluster) : cluster_(cluster), tsAvailablePowerConfig_(cluster_->series.timeSeries)
+{
+}
+
 ThermalClusterConfig& ThermalClusterConfig::setNominalCapacity(double nominalCapacity)
 { 
     cluster_->nominalCapacity = nominalCapacity;
     return *this;
 }
+
 ThermalClusterConfig& ThermalClusterConfig::setUnitCount(unsigned int unitCount)
 { 
     cluster_->unitCount = unitCount;
     return *this;
 }
+
 ThermalClusterConfig& ThermalClusterConfig::setCosts(double cost)
 {
     cluster_->marginalCost = cost;
     cluster_->marketBidCost = cost; // Must define market bid cost otherwise all production is used
     return *this;
 }
+
 ThermalClusterConfig& ThermalClusterConfig::setAvailablePowerNumberOfTS(unsigned int columnCount)
 { 
     tsAvailablePowerConfig_.setColumnCount(columnCount);
     return *this;
-};
+}
+
 ThermalClusterConfig& ThermalClusterConfig::setAvailablePower(unsigned int column, double value)
 { 
     tsAvailablePowerConfig_.fillColumnWith(column, value);
@@ -105,6 +120,12 @@ averageResults OutputRetriever::flow(AreaLink* link)
 averageResults OutputRetriever::thermalGeneration(ThermalCluster* cluster)
 {
     auto result = retrieveResultsForThermalCluster<Variable::Economy::VCardProductionByDispatchablePlant>(cluster);
+    return averageResults((*result)[cluster->areaWideIndex].avgdata);
+}
+
+averageResults OutputRetriever::thermalNbUnitsON(ThermalCluster* cluster)
+{
+    auto result = retrieveResultsForThermalCluster<Variable::Economy::VCardNbOfDispatchedUnitsByPlant>(cluster);
     return averageResults((*result)[cluster->areaWideIndex].avgdata);
 }
 
