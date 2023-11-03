@@ -1,5 +1,10 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
+## v8.9.0
+### Input
+### Solver logs
+* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini by setting solver-logs = true under the optimization section.
+
 ## v8.8.0
 ### Input
 ### Short-term storage
