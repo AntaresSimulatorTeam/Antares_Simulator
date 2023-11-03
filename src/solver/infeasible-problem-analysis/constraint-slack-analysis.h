@@ -5,10 +5,16 @@
 namespace Antares::Optimization
 {
 
+/*!
+ * That particular analysis relaxes all constraints by
+ * adding slack variables for each one.
+ */
 class ConstraintSlackAnalysis : public UnfeasibilityAnalysis
 {
 public:
     ConstraintSlackAnalysis() = default;
+    ~ConstraintSlackAnalysis() override = default;
+
     void run(operations_research::MPSolver* problem) override;
     void printReport() const override;
     std::string title() const override { return "Slack variables analysis"; }

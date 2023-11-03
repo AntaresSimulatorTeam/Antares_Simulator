@@ -19,3 +19,7 @@ target_link_libraries(infeasible_problem_analysis
   PUBLIC ortools::ortools sirius_solver
         utils #ortools-utils, not Antares::utils
   )
+target_include_directories(infeasible_problem_analysis
+  PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/..
+)
