@@ -100,6 +100,54 @@ std::vector<std::shared_ptr<MaintenanceGroup>> MaintenanceGroupRepository::LoadM
     return loader.load(std::move(env));
 }
 
+bool MaintenanceGroupRepository::internalLoadScenarioSettings(EnvForLoading env)
+{
+    // set path
+    env.iniFilename = env.folder << Yuni::IO::Separator << "scenariossettings.ini";
+    // try to open ini file
+    IniFile ini;
+    if (!ini.open(env.iniFilename))
+    {
+        logs.info() << "  File: " << env.iniFilename << " Does not exists. Unsuccessful loading!";
+        return false;
+    }
+    // see if there is any section
+    if (!ini.firstSection)
+    {
+        return true;
+    }
+    // see if the fist and only section is called "ScenariosSettings"
+    if (ini.firstSection->name != "ScenariosSettings")
+    {
+        return true;
+    }
+    // read the first section
+    env.section = ini.firstSection;
+    // check if section has properties
+    if (!env.section->firstProperty)
+    {
+        return true;
+    }
+    // loop through all properties
+    for (const IniFile::Property* p = env.section->firstProperty; p; p = p->next)
+    {
+        if (p->key.empty())
+            continue;
+
+        if (p->key == "number")
+        {
+            scenariosNumber(p->value.to<uint>());
+            continue;
+        }
+        if (p->key == "length")
+        {
+            scenariosLength(p->value.to<uint>());
+            continue;
+        }
+    }
+    return true;
+}
+
 bool MaintenanceGroupRepository::saveToFolder(const AnyString& folder) const
 {
     MaintenanceGroupSaver::EnvForSaving env;
@@ -190,7 +238,8 @@ bool MaintenanceGroupRepository::loadFromFolder(Study& study,
             logs.info() << maintenanceGroups_.size() << " maintenance groups found";
     }
 
-    return true;
+    env.folder = folder;
+    return internalLoadScenarioSettings(env);
 }
 
 bool MaintenanceGroupRepository::internalSaveToFolder(
