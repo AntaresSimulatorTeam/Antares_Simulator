@@ -49,12 +49,10 @@ public:
      ** \brief Load series from a file
      **
      ** \param path path of the file
-     ** \param dataBuffer yuni dependency to use loadFromCSV
      ** \param average used to average timeseries
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
     bool loadFromFile(const std::string& path,
-                      Matrix<>::BufferType dataBuffer,
                       const bool average);
     /*!
      ** \brief Save time series to a file

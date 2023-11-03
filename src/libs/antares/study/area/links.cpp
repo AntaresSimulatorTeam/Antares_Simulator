@@ -133,11 +133,11 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
 
     // Read link's direct capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_direct.txt";
-    success = directCapacities.timeSeries.loadFromCSVFile(filename, 1, HOURS_PER_YEAR) && success;
+    success = directCapacities.loadFromFile(filename, false) && success;
 
     // Read link's indirect capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_indirect.txt";
-    success = indirectCapacities.timeSeries.loadFromCSVFile(filename, 1, HOURS_PER_YEAR) && success;
+    success = directCapacities.loadFromFile(filename, false) && success;
 
     return success;
 }

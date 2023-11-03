@@ -44,10 +44,10 @@ TimeSeries::TimeSeries(numbers& tsNumbers) : timeseriesNumbers(tsNumbers)
 {}
 
 bool TimeSeries::loadFromFile(const std::string& path,
-                              Matrix<>::BufferType dataBuffer,
                               const bool average)
 {
     bool ret = true;
+    Matrix<>::BufferType dataBuffer;
     ret = timeSeries.loadFromCSVFile(path, 1, HOURS_PER_YEAR, &dataBuffer) && ret;
 
     if (average)
