@@ -3,7 +3,7 @@ This is a list of all recent changes that came with new Antares Simulator featur
 ## v8.9.0
 ### Input
 ### Solver logs
-* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini by setting solver-logs = true under the optimization section.
+* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini file by setting solver-logs = true under the optimization section.
 
 ## v8.8.0
 ### Input
