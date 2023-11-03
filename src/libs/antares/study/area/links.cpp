@@ -137,7 +137,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
 
     // Read link's indirect capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_indirect.txt";
-    success = directCapacities.loadFromFile(filename, false) && success;
+    success = indirectCapacities.loadFromFile(filename, false) && success;
 
     return success;
 }
