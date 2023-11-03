@@ -395,7 +395,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                     uint weekInTheYear,
                                     uint numSpace,
                                     const int PasDeTempsDebut,
-                                    const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
+                                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
 {
     const auto& parameters = study.parameters;
     auto& studyruntime = *study.runtime;
@@ -689,7 +689,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                         .MinEnergieHydrauParIntervalleOptimise;
 
                         const std::vector<double>& DNT
-                          = hydroVentilationResults[numSpace][k].HydrauliqueModulableQuotidien;
+                          = hydroVentilationResults[k].HydrauliqueModulableQuotidien;
 
                         double WSL
                           = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
@@ -778,7 +778,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                     for (uint j = 0; j < 7; ++j)
                     {
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
-                        weekTarget_tmp += hydroVentilationResults[numSpace][k]
+                        weekTarget_tmp += hydroVentilationResults[k]
                                             .HydrauliqueModulableQuotidien[day];
                     }
 
@@ -799,7 +799,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
                         problem.CaracteristiquesHydrauliques[k]
                           .CntEnergieH2OParIntervalleOptimise[j]
-                          = hydroVentilationResults[numSpace][k].HydrauliqueModulableQuotidien[day]
+                          = hydroVentilationResults[k].HydrauliqueModulableQuotidien[day]
                             * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation
                             * marginGen / weekGenerationTarget;
                     }

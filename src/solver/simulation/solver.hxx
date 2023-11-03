@@ -78,7 +78,12 @@ public:
      state(pState),
      yearByYear(pYearByYear),
      pDurationCollector(durationCollector),
-     pResultWriter(resultWriter)
+     pResultWriter(resultWriter),
+    hydroManagement(study.areas,
+                    study.parameters,
+                    study.calendar,
+                    study.maxNbYearsInParallel,
+                    resultWriter)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
     }
@@ -98,6 +103,7 @@ private:
     bool hydroHotStart;
     Benchmarking::IDurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
+    HydroManagement hydroManagement;
 private:
     /*
     ** \brief Log failed week
@@ -161,15 +167,10 @@ public:
             simulation_->prepareClustersInMustRunMode(numSpace, y);
 
             // 4 - Hydraulic ventilation
-            {
-                Benchmarking::Timer timer;
-                simulation_->hydroManagement.makeVentilation(randomReservoirLevel,
-                                                             state[numSpace],
-                                                             y,
-                                                             numSpace);
-                timer.stop();
-                pDurationCollector.addDuration("hydro_ventilation", timer.get_duration());
-            }
+            Benchmarking::Timer timer;
+            hydroManagement.makeVentilation(randomReservoirLevel, state[numSpace], y, numSpace);
+            timer.stop();
+            pDurationCollector.addDuration("hydro_ventilation", timer.get_duration());
 
             // Updating the state
             state[numSpace].year = y;
@@ -189,7 +190,7 @@ public:
                                                randomForCurrentYear,
                                                failedWeekList,
                                                isFirstPerformedYearOfSimulation,
-                                               simulation_->hydroManagement.ventilationResults(),
+                                               hydroManagement.ventilationResults(),
                                                optWriter);
 
             // Log failing weeks
@@ -243,11 +244,6 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
     pNbYearsReallyPerformed(0),
     pNbMaxPerformedYearsInParallel(0),
     pYearByYear(study.parameters.yearByYear),
-    hydroManagement(study.areas, 
-                    study.parameters, 
-                    study.calendar, 
-                    study.maxNbYearsInParallel,
-                    resultWriter),
     pFirstSetParallelWithAPerformedYearWasRun(false),
     pDurationCollector(duration_collector),
     pQueueService(study.pQueueService),
@@ -666,12 +662,14 @@ void ISimulation<Impl>::allocateMemoryForRandomNumbers(randomNumbers& randomForP
 template<class Impl>
 void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
                                              std::vector<uint>& years,
-                                             std::map<unsigned int, bool>& isYearPerformed)
+                                             std::map<unsigned int, bool>& isYearPerformed,
+                                             MersenneTwister& randomHydroGenerator)
 {
     auto& runtime = *study.runtime;
 
     uint indexYear = 0;
     std::vector<unsigned int>::iterator ity;
+
     for (ity = years.begin(); ity != years.end(); ++ity)
     {
         uint y = *ity;
@@ -717,9 +715,10 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
             // Previous month's first day in the year
             int firstDayOfMonth = study.calendar.months[initResLevelOnSimMonth].daysYear.first;
 
-            double randomLevel = hydroManagement.randomReservoirLevel(min[firstDayOfMonth],
+            double randomLevel = randomReservoirLevel(min[firstDayOfMonth],
                                                                        avg[firstDayOfMonth],
-                                                                       max[firstDayOfMonth]);
+                                                                       max[firstDayOfMonth],
+                                                                       randomHydroGenerator);
 
             // Possibly update the intial level from scenario builder
             if (study.parameters.useCustomScenario)
@@ -922,6 +921,10 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
 {
     assert(endYear <= study.parameters.nbYears);
 
+    // Init random hydro
+    MersenneTwister randomHydroGenerator;
+    randomHydroGenerator.reset(study.parameters.seed[Data::seedHydroManagement]);
+
     // List of parallel years sets
     std::vector<setOfParallelYears> setsOfParallelYears;
 
@@ -954,7 +957,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
         if (set_it->regenerateTS)
             regenerateTimeSeries(set_it->yearForTSgeneration);
 
-        computeRandomNumbers(randomForParallelYears, set_it->yearsIndices, set_it->isYearPerformed);
+        computeRandomNumbers(randomForParallelYears, set_it->yearsIndices, set_it->isYearPerformed,
+                             randomHydroGenerator);
 
         std::vector<unsigned int>::iterator year_it;
 

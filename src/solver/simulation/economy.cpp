@@ -121,7 +121,7 @@ bool Economy::year(Progression::Task& progression,
                    yearRandomNumbers& randomForYear,
                    std::list<uint>& failedWeekList,
                    bool isFirstPerformedYearOfSimulation,
-                   const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                   const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                    OptimizationStatisticsWriter& optWriter)
 {
     // No failed week at year start
