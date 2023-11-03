@@ -34,9 +34,7 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
 void addScratchpadToEachArea(Study& study)
 {
     for (auto [_, area] : study.areas) {
-        for (unsigned int i = 0; i < study.maxNbYearsInParallel; ++i) {
-            area->scratchpad.emplace_back(*study.runtime, *area);
-        }
+        area->scratchpad.init(*study.runtime, *area);
     }
 }
 

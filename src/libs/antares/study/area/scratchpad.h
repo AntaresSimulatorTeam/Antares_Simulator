@@ -45,18 +45,7 @@ namespace Data
 class AreaScratchpad final
 {
 public:
-    //! Matrix used for time-series
-    using TSMatrix = Matrix<double, int32_t>;
-
-    //! \name Constructor
-    //@{
-    /*!
-    ** \brief Constructor
-    */
-    AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area);
-    //! Destructor
-    ~AreaScratchpad();
-    //@}
+    void init(const StudyRuntimeInfos& rinfos, Area& area);
 
     //! Sum of all fatal hors hydro
     double miscGenSum[HOURS_PER_YEAR];

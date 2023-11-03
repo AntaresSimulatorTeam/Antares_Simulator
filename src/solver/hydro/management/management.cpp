@@ -381,7 +381,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::StudyMode
     areas_.each([this, &year, &numSpace, &mode](const Data::Area& area) {
         uint z = area.index;
 
-        auto& scratchpad = area.scratchpad[numSpace];
+        auto& scratchpad = area.scratchpad;
 
         const auto& rormatrix = area.hydro.series->ror;
         const auto* ror = rormatrix.getColumn(year);

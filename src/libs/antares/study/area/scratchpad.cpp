@@ -37,7 +37,7 @@ namespace Antares
 namespace Data
 {
 
-AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area)
+void AreaScratchpad::init(const StudyRuntimeInfos& rinfos, Area& area)
 {
     // alias to the simulation mode
     auto mode = rinfos.mode;
@@ -153,8 +153,6 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area)
     // If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
     pumpHasMod = (valuePumping > 0.);
 }
-
-AreaScratchpad::~AreaScratchpad() = default;
 
 } // namespace Data
 } // namespace Antares

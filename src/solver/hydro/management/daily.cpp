@@ -233,7 +233,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     auto& data = tmpDataByArea_[z];
 
-    auto& scratchpad = area.scratchpad[numSpace];
+    auto& scratchpad = area.scratchpad;
 
     int initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate;
 

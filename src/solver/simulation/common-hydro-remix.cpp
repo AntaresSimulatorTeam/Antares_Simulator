@@ -98,7 +98,7 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
 
             auto* L = area.load.series.getColumn(problem.year);
 
-            const double* M = area.scratchpad[numSpace].dispatchableGenerationMargin;
+            const double* M = area.scratchpad.dispatchableGenerationMargin;
 
             for (uint i = offset; i < endHour; ++i)
             {

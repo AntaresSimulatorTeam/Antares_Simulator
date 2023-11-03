@@ -37,6 +37,7 @@
 #include <vector>
 #include <set>
 #include "links.h"
+#include "scratchpad.h"
 #include "ui.h"
 #include "constants.h"
 #include "antares/study/filter.h"
@@ -311,13 +312,13 @@ public:
     //! Information for the UI
     AreaUI* ui = nullptr;
     //@}
-    
+
     //! \name Dynamic
     //@{
     /*!
     ** \brief Scratchpad used temporary calculations (solver only)
     */
-    mutable std::vector<AreaScratchpad> scratchpad;
+    mutable AreaScratchpad scratchpad;
     //@}
 
     //! \name Data

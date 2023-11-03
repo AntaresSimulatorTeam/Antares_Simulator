@@ -90,9 +90,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
             area.thermal.mustrunList.calculationOfSpinning();
         }
 
-        area.scratchpad.reserve(nbYearsInParallel);
-        for (uint numSpace = 0; numSpace < nbYearsInParallel; numSpace++)
-            area.scratchpad.emplace_back(r, area);
+        area.scratchpad.init(r, area);
 
         // statistics
         r.thermalPlantTotalCount += area.thermal.list.size();
