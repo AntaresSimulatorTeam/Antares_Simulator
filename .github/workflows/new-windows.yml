@@ -62,6 +62,7 @@ jobs:
           vcpkgDirectory: '${{ github.workspace }}/vcpkg'
           vcpkgJsonGlob: '**/vcpkg.json'
           runVcpkgInstall: true
+          binaryCachePath: '${{ github.workspace }}/vcpkg_installed'
           doNotCache: false
      
       - name: Read antares-deps version
