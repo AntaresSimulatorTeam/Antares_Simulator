@@ -80,7 +80,8 @@ static int valueForSort(BindingConstraint::Operator op)
  * @param constraint_2
  * @return true if constraint_1 < constraint_2
  */
-bool compareRangedConstraint(const ConstraintName& constraint_1, const ConstraintName& constraint_2)
+bool compareRangedConstraints(const ConstraintName& constraint_1,
+                              const ConstraintName& constraint_2)
 {
     std::string tmp_str1 = constraint_1.c_str();
     std::string tmp_str2 = constraint_2.c_str();
@@ -109,11 +110,11 @@ bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1,
     {
         if (s1->name().endsWith("_lt") && s2->name().endsWith("_gt"))
         {
-            return compareRangedConstraint(s1->name(), s2->name());
+            return compareRangedConstraints(s1->name(), s2->name());
         }
         else if (s1->name().endsWith("_gt") && s2->name().endsWith("_lt"))
         {
-            return !compareRangedConstraint(s2->name(), s1->name());
+            return !compareRangedConstraints(s2->name(), s1->name());
         }
         return s1->name() < s2->name();
     }
