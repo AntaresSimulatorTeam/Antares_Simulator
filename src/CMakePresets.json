@@ -51,13 +51,14 @@
         },
         "DEPS_INSTALL_DIR": {
           "type": "FILEPATH",
-          "value": "${sourceDir}/rte-antares-deps-Release"
+          "value": "${sourceDir}/../rte-antares-deps-Release"
         },
         "CMAKE_PREFIX_PATH": "$env{ORTOOLS_DIR}/install",
         "CMAKE_BUILD_TYPE":"Release",
         "BUILD_TESTING":"ON",
         "BUILD_TOOLS":"ON", 
-        "BUILD_not_system":"OFF"
+        "BUILD_not_system":"OFF",
+        "VCPKG_INSTALLED_DIR": "${sourceDir}/../b/vcpkg_installed/"
       }
     }
   ],
