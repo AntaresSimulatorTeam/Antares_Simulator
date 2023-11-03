@@ -38,6 +38,8 @@ jobs:
       RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
 
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
+      VCPKG_INSTALLED_DIR: ${{ github.workspace }}/vcpkg
+      VCPKG_CACHE_DIR: ${{ github.workspace }}/vcpkg_cache
 
     steps:
       - uses: actions/checkout@v3
@@ -54,6 +56,12 @@ jobs:
         run: find $RUNNER_WORKSPACE
         shell: bash
 
+      - name: vcpkg initialization
+        shell: bash  
+        run: |
+             mkdir -p vcpkg_installed
+             mkdir -p vcpkg_cache
+
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@main
         id: runvcpkg
@@ -62,8 +70,8 @@ jobs:
           vcpkgDirectory: '${{ github.workspace }}/vcpkg'
           vcpkgJsonGlob: '**/vcpkg.json'
           runVcpkgInstall: true
-          binaryCachePath: '${{ github.workspace }}/vcpkg_installed'
           doNotCache: false
+          binaryCachePath: '${{ github.workspace }}/vcpkg_cache'
      
       - name: Read antares-deps version
         id: antares-deps-version
