@@ -175,6 +175,7 @@ var NAVTREEINDEX9 =
 "classAntares_1_1Data_1_1StudyHeader.html#aecdc147f7f8d4bca09c0a24feed1a96f":[4,0,0,3,48,10],
 "classAntares_1_1Data_1_1StudyHeader.html#af648ffbc4cc1477071c6591c6054b35b":[4,0,0,3,48,1],
 "classAntares_1_1Data_1_1StudyLoadOptions.html":[4,0,0,3,49],
+"classAntares_1_1Data_1_1StudyLoadOptions.html#a0013ff5cc0adf4f805b828e053a30710":[4,0,0,3,49,23],
 "classAntares_1_1Data_1_1StudyLoadOptions.html#a05295e6e14025681487d0be75bc8f41f":[4,0,0,3,49,18],
 "classAntares_1_1Data_1_1StudyLoadOptions.html#a2ea074504f09a865f976383e17b536c8":[4,0,0,3,49,17],
 "classAntares_1_1Data_1_1StudyLoadOptions.html#a2ef386b36efcd3f12fd76d8756207510":[4,0,0,3,49,22],
@@ -191,7 +192,7 @@ var NAVTREEINDEX9 =
 "classAntares_1_1Data_1_1StudyLoadOptions.html#a9751b6e06083f06e331a2731170c3a6e":[4,0,0,3,49,19],
 "classAntares_1_1Data_1_1StudyLoadOptions.html#a997e3591f935d1e56d3a375045f292bb":[4,0,0,3,49,4],
 "classAntares_1_1Data_1_1StudyLoadOptions.html#ab050b0cc2f04f643ac71bd7e57dfd4bd":[4,0,0,3,49,14],
-"classAntares_1_1Data_1_1StudyLoadOptions.html#ab44e57f6b6a32ece0b7c96f16f36f3e8":[4,0,0,3,49,23],
+"classAntares_1_1Data_1_1StudyLoadOptions.html#ab44e57f6b6a32ece0b7c96f16f36f3e8":[4,0,0,3,49,24],
 "classAntares_1_1Data_1_1StudyLoadOptions.html#ac6a4b3ef6417c0c875fedb892e8d89fe":[4,0,0,3,49,2],
 "classAntares_1_1Data_1_1StudyLoadOptions.html#ad4ac05f7bbfb4a51f549fd6e6ea281d9":[4,0,0,3,49,15],
 "classAntares_1_1Data_1_1StudyLoadOptions.html#adee40bd2786d7156ff1d6ea5fc3e03c0":[4,0,0,3,49,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "classAntares_1_1Data_1_1ThermalCluster.html#a8136262d4ef1f69ce5f83fff7edf7089":[4,0,0,3,53,41],
 "classAntares_1_1Data_1_1ThermalCluster.html#a842f8fb38406dfbb3004db65f4fea356":[4,0,0,3,53,20],
 "classAntares_1_1Data_1_1ThermalCluster.html#a890b650af21ca96834ffa5fbf9cf3de4":[4,0,0,3,53,42],
-"classAntares_1_1Data_1_1ThermalCluster.html#a8af7d95b5e9805d840d4c9b091073910":[4,0,0,3,53,12],
-"classAntares_1_1Data_1_1ThermalCluster.html#a8f7dac9bfc16e1ec8d1563774db81dd8":[4,0,0,3,53,33]
+"classAntares_1_1Data_1_1ThermalCluster.html#a8af7d95b5e9805d840d4c9b091073910":[4,0,0,3,53,12]
 };

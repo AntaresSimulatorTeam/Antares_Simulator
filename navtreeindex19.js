@@ -1,5 +1,6 @@
 var NAVTREEINDEX19 =
 {
+"control_8h_source.html":[5,0,0,5,2,1,1,3,4],
 "copper-plate_8h_source.html":[5,0,0,5,0,0,0,2,2],
 "correlation-post_8h_source.html":[5,0,0,5,0,0,0,0,4],
 "correlation-post_8hxx_source.html":[5,0,0,5,0,0,0,0,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX19 =
 "dir_eed9a6b9f2584eb7c4f681cbb2f2f423.html":[5,0,0,5,0,1,0,0,0,2],
 "dir_ef61d3621e25f22442f23d850502aac1.html":[5,0,0,2,9,2,0],
 "dir_ef685d8b7fd6cac78c9f14322de7752d.html":[5,0,0,5,2,1,2],
-"dir_efd047713bcd1ccefe55d92ae4bcf67b.html":[5,0,0,3,1,0,0,3],
-"dir_f0800fc495482c581e54bbff12fc1fa1.html":[5,0,0,3,1,0]
+"dir_efd047713bcd1ccefe55d92ae4bcf67b.html":[5,0,0,3,1,0,0,3]
 };

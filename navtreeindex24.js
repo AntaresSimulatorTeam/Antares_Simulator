@@ -1,5 +1,6 @@
 var NAVTREEINDEX24 =
 {
+"structAntares_1_1Window_1_1Inspector_1_1PAreaColor.html":[4,0,0,16,1,10],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaColor_1_1Color.html":[4,0,0,16,1,10,0],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaFiltering.html":[4,0,0,16,1,11],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaResortStatus.html":[4,0,0,16,1,12],
@@ -248,6 +249,5 @@ var NAVTREEINDEX24 =
 "unload-data_8hxx_source.html":[5,0,0,5,0,0,0,2,8],
 "unsupliedEnergy_8h_source.html":[5,0,0,2,9,2,39],
 "updater_8hxx_source.html":[5,0,0,1,0,21,8,16],
-"utils_8hxx_source.html":[5,0,0,1,0,23,0,0,0,1],
-"validator_8h_source.html":[5,0,0,5,2,1,15]
+"utils_8hxx_source.html":[5,0,0,1,0,23,0,0,0,1]
 };

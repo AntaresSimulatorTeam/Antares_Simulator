@@ -1,5 +1,6 @@
 var NAVTREEINDEX17 =
 {
+"classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProvider.html#a7b502e9b2b16aa33369617029dc49757":[4,0,0,16,3,3,1],
 "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProvider.html#aa1c2e83e5107e32104e4a25b97e6e813":[4,0,0,16,3,3,0],
 "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProvider.html#ad15c0c9ea162585b84b33c6c1b3f8e8d":[4,0,0,16,3,3,2],
 "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderGlobalSelection.html":[4,0,0,16,3,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX17 =
 "classIProvider.html":[4,0,88],
 "classIProvider.html#a404a296cd37f1762278d58a2119d88da":[4,0,88,8],
 "classIProvider.html#a42b6c30a492e859f0d8d3bdd1dbe93e4":[4,0,88,0],
-"classIProvider.html#a5b16afcad86e27bb0f50457654a16ac7":[4,0,88,3],
-"classIProvider.html#a5b343392ab876cdf80bd72eb02ab6d2e":[4,0,88,5]
+"classIProvider.html#a5b16afcad86e27bb0f50457654a16ac7":[4,0,88,3]
 };

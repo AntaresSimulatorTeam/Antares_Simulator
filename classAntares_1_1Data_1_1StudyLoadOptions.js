@@ -23,5 +23,6 @@ var classAntares_1_1Data_1_1StudyLoadOptions =
     [ "progressTickCount", "classAntares_1_1Data_1_1StudyLoadOptions.html#a4366f7e045b651fb8c8b8c2373997155", null ],
     [ "progressTicks", "classAntares_1_1Data_1_1StudyLoadOptions.html#a53350cc42c20ea7feeaa34db4784e1c7", null ],
     [ "simplexOptimizationRange", "classAntares_1_1Data_1_1StudyLoadOptions.html#a2ef386b36efcd3f12fd76d8756207510", null ],
+    [ "solverLogs", "classAntares_1_1Data_1_1StudyLoadOptions.html#a0013ff5cc0adf4f805b828e053a30710", null ],
     [ "usedByTheSolver", "classAntares_1_1Data_1_1StudyLoadOptions.html#ab44e57f6b6a32ece0b7c96f16f36f3e8", null ]
 ];

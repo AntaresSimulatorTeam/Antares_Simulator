@@ -1,5 +1,6 @@
 var NAVTREEINDEX22 =
 {
+"scBuilderDataInterface_8h_source.html":[5,0,0,1,0,21,8,9],
 "scBuilderUtils_8h_source.html":[5,0,0,1,0,21,8,10],
 "scenario-builder-hydro-levels-renderer_8h_source.html":[5,0,0,5,2,1,1,1,1,17],
 "scenario-builder-hydro-renderer_8h_source.html":[5,0,0,5,2,1,1,1,1,18],
@@ -248,6 +249,5 @@ var NAVTREEINDEX22 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster_1_1Statistics.html":[4,0,0,12,5,4,45,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster_1_1Statistics.html":[4,0,0,12,5,4,46,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageLevelsByCluster_1_1Statistics.html":[4,0,0,12,5,4,47,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster_1_1Statistics.html":[4,0,0,12,5,4,48,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ShortTermStorageByGroup_1_1Statistics.html":[4,0,0,12,5,4,40,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster_1_1Statistics.html":[4,0,0,12,5,4,48,0]
 };

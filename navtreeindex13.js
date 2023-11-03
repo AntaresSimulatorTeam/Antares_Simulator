@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"classAntares_1_1Solver_1_1Simulation_1_1CurtailmentSharingPostProcessCmd.html":[4,0,0,12,3,7],
 "classAntares_1_1Solver_1_1Simulation_1_1DTGmarginForAdqPatchPostProcessCmd.html":[4,0,0,12,3,9],
 "classAntares_1_1Solver_1_1Simulation_1_1DTGmarginForAdqPatchPostProcessCmd.html#a514838708ebf0122085df4122b8ccb91":[4,0,0,12,3,9,0],
 "classAntares_1_1Solver_1_1Simulation_1_1DispatchableMarginPostProcessCmd.html":[4,0,0,12,3,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html":[4,0,0,12,5,4,29],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#a1b6beddf1f3e6cce29576ca020bf814e":[4,0,0,12,5,4,29,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#a3e015800864ddf416a07776080e61ff0":[4,0,0,12,5,4,29,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#ab6693b6e18ec12db223458bb0328953a":[4,0,0,12,5,4,29,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#ae8100341abd51f9764eed1f6c34a3d3a":[4,0,0,12,5,4,29,2]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#ab6693b6e18ec12db223458bb0328953a":[4,0,0,12,5,4,29,1]
 };
