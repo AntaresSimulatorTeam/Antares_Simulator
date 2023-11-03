@@ -75,7 +75,7 @@ struct Fixture
         auto& hoursPump = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxE];
         fillColumnWithSpecialEnds(hoursPump, 14., DAYS_PER_YEAR);
 
-        stringT buffer;
+        std::string buffer;
         buffer.clear();
         buffer = base_folder + SEP + hydro_folder + SEP + common_folder + SEP + capacity_folder
                  + SEP + maxpower + area_1->id.c_str() + ".txt";
@@ -90,11 +90,11 @@ struct Fixture
 
     void createFoldersAndFiles()
     {
-        stringT buffer;
-        stringT area1_ID = area_1->id.c_str();
-        stringT maxpowerArea1 = maxpower + area1_ID + ".txt";
-        stringT maxDailyGenEnergy_Area1 = maxDailyGenEnergy_ + area1_ID + ".txt";
-        stringT maxDailyPumpEnergy_Area1 = maxDailyPumpEnergy_ + area1_ID + ".txt";
+        std::string buffer;
+        std::string area1_ID = area_1->id.c_str();
+        std::string maxpowerArea1 = maxpower + area1_ID + ".txt";
+        std::string maxDailyGenEnergy_Area1 = maxDailyGenEnergy_ + area1_ID + ".txt";
+        std::string maxDailyPumpEnergy_Area1 = maxDailyPumpEnergy_ + area1_ID + ".txt";
 
         buffer.clear();
 
@@ -137,16 +137,16 @@ struct Fixture
     std::shared_ptr<Study> study;
     std::shared_ptr<HydroMaxTimeSeriesReader> reader;
     Area* area_1;
-    stringT base_folder = fs::temp_directory_path().string();
-    stringT hydro_folder = "hydro";
-    stringT series_folder = "series";
-    stringT common_folder = "common";
-    stringT capacity_folder = "capacity";
-    stringT maxDailyGenEnergy_ = "maxDailyGenEnergy_";
-    stringT maxDailyPumpEnergy_ = "maxDailyPumpEnergy_";
-    stringT maxpower = "maxpower_";
-    stringT maxHourlyGenPower = "maxHourlyGenPower.txt";
-    stringT maxHourlyPumpPower = "maxHourlyPumpPower.txt";
+    std::string base_folder = fs::temp_directory_path().string();
+    std::string hydro_folder = "hydro";
+    std::string series_folder = "series";
+    std::string common_folder = "common";
+    std::string capacity_folder = "capacity";
+    std::string maxDailyGenEnergy_ = "maxDailyGenEnergy_";
+    std::string maxDailyPumpEnergy_ = "maxDailyPumpEnergy_";
+    std::string maxpower = "maxpower_";
+    std::string maxHourlyGenPower = "maxHourlyGenPower.txt";
+    std::string maxHourlyPumpPower = "maxHourlyPumpPower.txt";
 
     ~Fixture()
     {
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_SUITE(s)
 
 BOOST_FIXTURE_TEST_CASE(Testing_support_for_old_studies, Fixture)
 {
-    stringT buffer;
+    std::string buffer;
     bool ret = true;
 
     auto& genP = area_1->hydro.series->maxHourlyGenPower.timeSeries[0];

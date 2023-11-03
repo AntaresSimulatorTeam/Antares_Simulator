@@ -56,11 +56,11 @@ struct Fixture
     void createFoldersAndFiles()
     {
         // series folder
-        stringT buffer;
+        std::string buffer;
         createFolder(base_folder, series_folder);
 
         // area folder
-        stringT area1_folder = area_1->id.c_str();
+        std::string area1_folder = area_1->id.c_str();
         buffer.clear();
         buffer = base_folder + SEP + series_folder;
         createFolder(buffer, area1_folder);
@@ -74,13 +74,13 @@ struct Fixture
 
     std::shared_ptr<Study> study;
     Area* area_1;
-    stringT base_folder = fs::temp_directory_path().string();
-    stringT series_folder = "series";
-    stringT maxHourlyGenPower_file = "maxHourlyGenPower.txt";
-    stringT maxHourlyPumpPower_file = "maxHourlyPumpPower.txt";
-    stringT pathToMaxHourlyGenPower_file;
-    stringT pathToMaxHourlyPumpPower_file;
-    stringT pathToSeriesFolder;
+    std::string base_folder = fs::temp_directory_path().string();
+    std::string series_folder = "series";
+    std::string maxHourlyGenPower_file = "maxHourlyGenPower.txt";
+    std::string maxHourlyPumpPower_file = "maxHourlyPumpPower.txt";
+    std::string pathToMaxHourlyGenPower_file;
+    std::string pathToMaxHourlyPumpPower_file;
+    std::string pathToSeriesFolder;
 
     ~Fixture()
     {

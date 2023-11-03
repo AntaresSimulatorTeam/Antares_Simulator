@@ -10,7 +10,7 @@ fs::path generateAndCreateDirName(const std::string& dirName)
     return working_dir;
 }
 
-void createFolder(const stringT& path, const stringT& folder_name)
+void createFolder(const std::string& path, const std::string& folder_name)
 {
     fs::path folder_path = fs::path(path.c_str()) / folder_name.c_str();
 
@@ -24,7 +24,7 @@ void createFolder(const stringT& path, const stringT& folder_name)
     }
 }
 
-void createFile(const stringT& folder_path, const stringT& file_name)
+void createFile(const std::string& folder_path, const std::string& file_name)
 {
     // Construct the full path to the file
     fs::path path = fs::path(folder_path.c_str()) / file_name.c_str();
@@ -54,7 +54,7 @@ void createFile(const stringT& folder_path, const stringT& file_name)
     }
 }
 
-void removeFolder(stringT& path, stringT& folder_name)
+void removeFolder(std::string& path, std::string& folder_name)
 {
     fs::path folder_path = fs::path(path.c_str()) / folder_name.c_str();
     if (fs::exists(folder_path))
