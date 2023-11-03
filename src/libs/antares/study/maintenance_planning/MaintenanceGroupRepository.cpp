@@ -16,6 +16,8 @@ void Data::MaintenanceGroupRepository::clear()
 {
     maintenanceGroups_.clear();
     activeMaintenanceGroups_.reset();
+    scenariosLength_ = 0;
+    scenariosNumber_ =0;
 }
 
 namespace Antares::Data

@@ -137,12 +137,31 @@ public:
 
     [[nodiscard]] std::vector<std::shared_ptr<MaintenanceGroup>> activeMaintenanceGroups() const;
 
+    /*!
+    ** \brief The scenarios number and length
+    **
+    ** \return Get the scenarios number and length
+    */
+    uint scenariosNumber() const;
+    uint scenariosLength() const;
+
+    /*!
+    ** \brief Set the scenarios number and length
+    */
+    void scenariosNumber(uint num);
+    void scenariosLength(uint l);
+
 private:
+    
+    // number and length of the Maintenance Group-s scenarios
+    uint scenariosNumber_ = 0;
+    uint scenariosLength_ = 0;
+    
+    // private methods
     bool internalSaveToFolder(Data::MaintenanceGroupSaver::EnvForSaving& env) const;
 
     //! All Maintenance Group-s
     Data::MaintenanceGroupRepository::Vector maintenanceGroups_;
-
     mutable std::optional<std::vector<std::shared_ptr<MaintenanceGroup>>> activeMaintenanceGroups_;
 };
 
