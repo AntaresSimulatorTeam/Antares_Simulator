@@ -40,6 +40,11 @@ namespace Variable
 {
 class State;
 }
+
+double randomReservoirLevel(double min, double avg, double max, MersenneTwister& random);
+double BetaVariable(double a, double b, MersenneTwister &random);
+double GammaVariable(double a, MersenneTwister &random);
+
 } // namespace Solver
 
 enum
@@ -106,15 +111,13 @@ public:
                     unsigned int maxNbYearsInParallel,
                     Solver::IResultWriter& resultWriter);
 
-    static double randomReservoirLevel(double min, double avg, double max, MersenneTwister& random);
-
     //! Perform the hydro ventilation
     void makeVentilation(double* randomReservoirLevel,
                          Solver::Variable::State& state,
                          uint y,
                          uint numSpace);
 
-    HYDRO_VENTILATION_RESULTS& ventilationResults() { return ventilationResults_; }
+    const HYDRO_VENTILATION_RESULTS& ventilationResults() { return ventilationResults_; }
 
 private:
     //! Prepare inflows scaling for each area
@@ -151,15 +154,7 @@ private:
                                         Data::Area& area,
                                         uint y,
                                         uint numSpace);
-    //@}
 
-    //! \name Utilities
-    //@{
-    //! Beta variable
-    static double BetaVariable(double a, double b, MersenneTwister &random);
-    //! Gamma variable
-    static double GammaVariable(double a, MersenneTwister &random);
-    //@}
 
 private:
     std::vector<TmpDataByArea> tmpDataByArea_;

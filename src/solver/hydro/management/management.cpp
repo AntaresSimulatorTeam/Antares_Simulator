@@ -40,7 +40,36 @@ using namespace Yuni;
 
 namespace Antares
 {
-double HydroManagement::GammaVariable(double r, MersenneTwister &random)
+namespace Solver
+{
+
+double randomReservoirLevel(double min, double avg, double max, MersenneTwister& random)
+{
+    if (Math::Equals(min, max))
+        return avg;
+    if (Math::Equals(avg, min) || Math::Equals(avg, max))
+        return avg;
+
+    double e = (avg - min) / (max - min);
+    double re = 1. - e;
+
+    assert(Math::Abs(1. + e) > 1e-12);
+    assert(Math::Abs(2. - e) > 1e-12);
+
+    double v1 = (e * e) * re / (1. + e);
+    double v2 = e * re * re / (2. - e);
+    double v = Math::Min(v1, v2) * .5;
+
+    assert(Math::Abs(v) > 1e-12);
+
+    double a = e * (e * re / v - 1.);
+    double b = re * (e * re / v - 1.);
+
+    double x = BetaVariable(a, b, random);
+    return x * max + (1. - x) * min;
+}
+
+double GammaVariable(double r, MersenneTwister &random)
 {
     double x = 0.;
     do
@@ -70,13 +99,15 @@ double HydroManagement::GammaVariable(double r, MersenneTwister &random)
     return x;
 }
 
-double HydroManagement::BetaVariable(double a, double b, MersenneTwister &random)
+double BetaVariable(double a, double b, MersenneTwister &random)
 {
     double y = GammaVariable(a, random);
     double z = GammaVariable(b, random);
     assert(Math::Abs(y + z) > 1e-12);
     return y / (y + z);
 }
+
+} // namespace Solver
 
 HydroManagement::HydroManagement(const Data::AreaList& areas,
                                  const Data::Parameters& params,
@@ -457,32 +488,6 @@ void HydroManagement::prepareEffectiveDemand()
                 data.MLE[realmonth] -= minimumYear - 1e-4;
         }
     });
-}
-
-double HydroManagement::randomReservoirLevel(double min, double avg, double max, MersenneTwister& random)
-{
-    if (Math::Equals(min, max))
-        return avg;
-    if (Math::Equals(avg, min) || Math::Equals(avg, max))
-        return avg;
-
-    double e = (avg - min) / (max - min);
-    double re = 1. - e;
-
-    assert(Math::Abs(1. + e) > 1e-12);
-    assert(Math::Abs(2. - e) > 1e-12);
-
-    double v1 = (e * e) * re / (1. + e);
-    double v2 = e * re * re / (2. - e);
-    double v = Math::Min(v1, v2) * .5;
-
-    assert(Math::Abs(v) > 1e-12);
-
-    double a = e * (e * re / v - 1.);
-    double b = re * (e * re / v - 1.);
-
-    double x = BetaVariable(a, b, random);
-    return x * max + (1. - x) * min;
 }
 
 void HydroManagement::makeVentilation(double* randomReservoirLevel,
