@@ -87,17 +87,15 @@ bool compareRangedConstraints(const ConstraintName& constraint_1,
     std::string tmp_str2 = constraint_2.c_str();
     if (auto left_pos = tmp_str1.find_last_of("_lt"); left_pos != std::string::npos)
     {
-        std::string::iterator left = tmp_str1.begin() + left_pos;
         size_t right_pos = 0;
         if (right_pos = tmp_str2.find_last_of("_gt"); right_pos == std::string::npos)
         {
             logs.error() << "Ranged constraints comparison : " << tmp_str1 << " and " << tmp_str2
                          << " has failed!";
         }
-        std::string::iterator right = tmp_str2.begin() + right_pos;
 
-        auto new_s1 = std::string(tmp_str1.begin(), left - 2);
-        auto new_s2 = std::string(tmp_str2.begin(), right - 2);
+        auto new_s1 = tmp_str1.substr(0, left_pos - 2);
+        auto new_s2 = tmp_str2.substr(0, right_pos - 2);
         bool ret = new_s1 == new_s2 ? true : constraint_1 < constraint_2;
         return ret;
     }
