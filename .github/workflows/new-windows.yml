@@ -38,7 +38,7 @@ jobs:
       RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
 
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
-      VCPKG_INSTALLED_DIR: ${{ github.workspace }}/vcpkg
+      VCPKG_INSTALLED_DIR: ${{ github.workspace }}/vcpkg_installed
       VCPKG_CACHE_DIR: ${{ github.workspace }}/vcpkg_cache
 
     steps:
