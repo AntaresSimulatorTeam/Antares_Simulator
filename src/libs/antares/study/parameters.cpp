@@ -1487,7 +1487,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: The problems will contain named variables and constraints";
     }
     // indicated that solver logs will be printed
-    if (namedProblems)
+    if (solverLogs)
     {
         logs.info() << "  :: Printing solver logs : " << (solverLogs ? "True" : "False");
     }
