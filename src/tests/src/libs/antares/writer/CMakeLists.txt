@@ -11,3 +11,5 @@ target_link_libraries(test-writer
 )
 
 add_test(NAME writer COMMAND test-writer)
+
+set_property(TEST short-term-storage-input PROPERTY LABELS unit)
