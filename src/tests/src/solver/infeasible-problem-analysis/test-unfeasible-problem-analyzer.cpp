@@ -93,7 +93,7 @@ private:
 
 BOOST_AUTO_TEST_SUITE(unfeasible_problem_analyzer)
 
-BOOST_AUTO_TEST_CASE(test_problem_analyzer)
+BOOST_AUTO_TEST_CASE(analyzer_should_call_analysis_and_print_detected_issues)
 {
     bool hasRun1 = false;
     bool hasPrinted1 = false;
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(test_problem_analyzer)
     BOOST_CHECK(hasPrinted2);
 }
 
-BOOST_AUTO_TEST_CASE(test_variable_bounds_consistency)
+BOOST_AUTO_TEST_CASE(analysis_should_detect_inconsistent_variable_bounds)
 {
     std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
     problem->MakeNumVar(-1, 1, "ok-var");
@@ -147,13 +147,12 @@ BOOST_AUTO_TEST_CASE(test_variable_bounds_consistency)
  */
 std::unique_ptr<MPSolver> createProblem(const std::string& constraintName, bool feasible)
 {
-    ConstraintSlackAnalysis analysis;
     std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
-    const double inf = problem->infinity();
-    auto var1 = problem->MakeNumVar(1, inf, "var1");
-    auto var2 = problem->MakeNumVar(-inf, -1, "var2");
+    const double infinity = problem->infinity();
+    auto var1 = problem->MakeNumVar(1, infinity, "var1");
+    auto var2 = problem->MakeNumVar(-infinity, -1, "var2");
     auto constraint = problem->MakeRowConstraint(constraintName);
-    constraint->SetBounds(0, inf);
+    constraint->SetBounds(0, infinity);
     if (feasible) {
         constraint->SetCoefficient(var1, 1);
         constraint->SetCoefficient(var2, -1);
@@ -162,6 +161,16 @@ std::unique_ptr<MPSolver> createProblem(const std::string& constraintName, bool 
         constraint->SetCoefficient(var2, 1);
     }
     return problem;
+}
+
+std::unique_ptr<MPSolver> createFeasibleProblem(const std::string& constraintName)
+{
+    return createProblem(constraintName, true);
+}
+
+std::unique_ptr<MPSolver> createUnfeasibleProblem(const std::string& constraintName)
+{
+    return createProblem(constraintName, false);
 }
 
 static const std::string validConstraintNames[] =
@@ -173,9 +182,10 @@ static const std::string validConstraintNames[] =
     "AreaHydroLevel::hour<8>",
 };
 
-BOOST_DATA_TEST_CASE(test_slack_variables_with_unfeasible_constraint, bdata::make(validConstraintNames), constraintName)
+BOOST_DATA_TEST_CASE(analysis_should_detect_unfeasible_constraint,
+                     bdata::make(validConstraintNames), constraintName)
 {
-    std::unique_ptr<MPSolver> unfeasibleProblem = createProblem(constraintName, false);
+    std::unique_ptr<MPSolver> unfeasibleProblem = createUnfeasibleProblem(constraintName);
     BOOST_CHECK(unfeasibleProblem->Solve() == MPSolver::INFEASIBLE);
 
     ConstraintSlackAnalysis analysis;
@@ -183,9 +193,9 @@ BOOST_DATA_TEST_CASE(test_slack_variables_with_unfeasible_constraint, bdata::mak
     BOOST_CHECK(analysis.hasDetectedInfeasibilityCause());
 }
 
-BOOST_AUTO_TEST_CASE(test_slack_variables_with_unfeasible_constraint_name_ignored)
+BOOST_AUTO_TEST_CASE(analysis_should_ignore_ill_named_constraint)
 {
-    std::unique_ptr<MPSolver> unfeasibleProblem = createProblem("ignored-name", false);
+    std::unique_ptr<MPSolver> unfeasibleProblem = createUnfeasibleProblem("ignored-name");
     BOOST_CHECK(unfeasibleProblem->Solve() == MPSolver::INFEASIBLE);
 
     ConstraintSlackAnalysis analysis;
@@ -193,9 +203,12 @@ BOOST_AUTO_TEST_CASE(test_slack_variables_with_unfeasible_constraint_name_ignore
     BOOST_CHECK(!analysis.hasDetectedInfeasibilityCause());
 }
 
-BOOST_DATA_TEST_CASE(test_slack_variables_no_problematic_constraint, bdata::make(validConstraintNames), constraintName)
+
+// TODO: this test should be improved by changing the API, the current interface does not allow
+//       to check that no constraint was identified...
+BOOST_AUTO_TEST_CASE(analysis_should_ignore_feasible_constraints)
 {
-    std::unique_ptr<MPSolver> feasibleProblem = createProblem(constraintName, true);
+    std::unique_ptr<MPSolver> feasibleProblem = createFeasibleProblem("BC::hourly::hour<36>");
     BOOST_CHECK(feasibleProblem->Solve() == MPSolver::OPTIMAL);
 
     ConstraintSlackAnalysis analysis;
