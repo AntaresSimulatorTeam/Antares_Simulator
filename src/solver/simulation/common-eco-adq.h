@@ -71,7 +71,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
 /*!
 ** \brief Prepare data from clusters in mustrun mode (eco+adq)
 */
-void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uint year);
+void PrepareDataFromClustersInMustrunMode(Data::Study& study, Data::Area::ScratchMap& scratchmap, uint year);
 
 /*!
 ** \brief Get if the quadratic optimization should be used according

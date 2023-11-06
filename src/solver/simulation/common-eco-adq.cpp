@@ -116,21 +116,21 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     }
 }
 
-void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uint year)
+void PrepareDataFromClustersInMustrunMode(Data::Study& study, Data::Area::ScratchMap& scratchmap, uint year)
 {
     bool inAdequacy = (study.parameters.mode == Data::stdmAdequacy);
 
     for (uint i = 0; i < study.areas.size(); ++i)
     {
         auto& area = *study.areas[i];
-        auto& scratchpad = area.scratchpad[numSpace];
+        auto& scratchpad = scratchmap.at(&area);
 
-        memset(scratchpad.mustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
+        memset(scratchpad->mustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
         if (inAdequacy)
-            memset(scratchpad.originalMustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
+            memset(scratchpad->originalMustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
 
-        double* mrs = scratchpad.mustrunSum;
-        double* adq = scratchpad.originalMustrunSum;
+        double* mrs = scratchpad->mustrunSum;
+        double* adq = scratchpad->originalMustrunSum;
 
         if (!area.thermal.mustrunList.empty())
         {

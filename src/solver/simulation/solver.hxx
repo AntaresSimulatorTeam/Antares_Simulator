@@ -167,7 +167,7 @@ public:
             // removed
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
-            simulation_->prepareClustersInMustRunMode(numSpace, y);
+            simulation_->prepareClustersInMustRunMode(scratchmap, y);
 
             // 4 - Hydraulic ventilation
             Benchmarking::Timer timer;

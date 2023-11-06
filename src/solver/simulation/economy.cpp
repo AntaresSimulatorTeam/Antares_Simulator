@@ -265,9 +265,9 @@ void Economy::simulationEnd()
     }
 }
 
-void Economy::prepareClustersInMustRunMode(uint numSpace, uint year)
+void Economy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year)
 {
-    PrepareDataFromClustersInMustrunMode(study, numSpace, year);
+    PrepareDataFromClustersInMustrunMode(study, scratchmap, year);
 }
 
 } // namespace Antares::Solver::Simulation
