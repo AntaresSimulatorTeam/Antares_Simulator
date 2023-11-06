@@ -149,7 +149,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     for (uint i = 0; i != study.areas.size(); i++)
     {
-        auto& area = *(study.areas[i]);
+        const auto& area = *(study.areas[i]);
         const auto* scratchpad = scratchmap.at(&area);
 
         problem.NomsDesPays[i] = area.id.c_str();
@@ -584,7 +584,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
         for (uint k = 0; k < nbPays; ++k)
         {
-            auto& area = *(study.areas.byIndex[k]);
+            const auto& area = *(study.areas.byIndex[k]);
             const auto* scratchpad = scratchmap.at(&area);
             double loadSeries = area.load.series.getCoefficient(year, hourInYear);
             double windSeries = area.wind.series.getCoefficient(year, hourInYear);
