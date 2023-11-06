@@ -32,12 +32,12 @@
 namespace Antares::Data
 {
 /*!
+ ** \class TimeSeries
  ** \brief This class is used to represent the generic time series
  **
  **  The goal is to handle indexing with the time series numbers: getCoefficient()
  **  and also providing a wrapper for all the Matrix<> functions such as resize()
  */
-
 class TimeSeries
 {
 public:
