@@ -86,6 +86,8 @@ public:
                     resultWriter)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
+        study.areas.each([this](Antares::Data::Area& a) {
+            scratchmap.try_emplace(&a, &a.scratchpad[numSpace]); });
     }
 
 private:
@@ -104,6 +106,7 @@ private:
     Benchmarking::IDurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
     HydroManagement hydroManagement;
+    Antares::Data::Area::ScratchMap scratchmap;
 private:
     /*
     ** \brief Log failed week
