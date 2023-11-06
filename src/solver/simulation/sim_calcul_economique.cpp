@@ -393,9 +393,10 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, int PasDeTempsDebu
 void SIM_RenseignementProblemeHebdo(const Study& study,
                                     PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
-                                    uint numSpace,
                                     const int PasDeTempsDebut,
-                                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
+                                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                                    const Antares::Data::Area::ScratchMap& scratchmap)
+
 {
     const auto& parameters = study.parameters;
     auto& studyruntime = *study.runtime;
@@ -583,28 +584,28 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         for (uint k = 0; k < nbPays; ++k)
         {
             auto& area = *(study.areas.byIndex[k]);
-            auto& scratchpad = area.scratchpad[numSpace];
+            auto* scratchpad = scratchmap.at(&area);
             double loadSeries = area.load.series.getCoefficient(year, hourInYear);
             double windSeries = area.wind.series.getCoefficient(year, hourInYear);
             double solarSeries = area.solar.series.getCoefficient(year, hourInYear);
             double rorSeries = area.hydro.series->ror.getCoefficient(year, hourInYear);
 
-            assert(&scratchpad);
+            assert(scratchpad);
 
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
                 mustRunGen = windSeries + solarSeries
-                             + scratchpad.miscGenSum[hourInYear]
+                             + scratchpad->miscGenSum[hourInYear]
                              + rorSeries
-                             + scratchpad.mustrunSum[hourInYear];
+                             + scratchpad->mustrunSum[hourInYear];
             }
 
             // Renewable
             if (parameters.renewableGeneration.isClusters())
             {
-                mustRunGen = scratchpad.miscGenSum[hourInYear] + rorSeries
-                             + scratchpad.mustrunSum[hourInYear];
+                mustRunGen = scratchpad->miscGenSum[hourInYear] + rorSeries
+                             + scratchpad->mustrunSum[hourInYear];
 
                 area.renewable.list.each([&](const RenewableCluster& cluster) {
                     assert(cluster.series.timeSeries.jit == nullptr && "No JIT data from the solver");
@@ -623,14 +624,14 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
                 problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire[hourInWeek]
-                  = scratchpad.optimalMaxPower[dayInTheYear]
+                  = scratchpad->optimalMaxPower[dayInTheYear]
                     * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation;
             }
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDePompageModulable)
             {
                 problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxPompageHoraire[hourInWeek]
-                  = scratchpad.pumpingMaxPower[dayInTheYear]
+                  = scratchpad->pumpingMaxPower[dayInTheYear]
                     * problem.CaracteristiquesHydrauliques[k].WeeklyPumpingModulation;
             }
 

@@ -127,7 +127,8 @@ bool Adequacy::year(Progression::Task& progression,
                     std::list<uint>& failedWeekList,
                     bool isFirstPerformedYearOfSimulation,
                     const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
-                    OptimizationStatisticsWriter& optWriter)
+                    OptimizationStatisticsWriter& optWriter,
+                    const Antares::Data::Area::ScratchMap& scratchmap)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -148,8 +149,8 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace].weekInTheYear = state.weekInTheYear = w;
         pProblemesHebdo[numSpace].HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(study, pProblemesHebdo[numSpace], state.weekInTheYear, 
-                                         numSpace, hourInTheYear, hydroVentilationResults);
+        ::SIM_RenseignementProblemeHebdo(study, pProblemesHebdo[numSpace], state.weekInTheYear,
+                                         hourInTheYear, hydroVentilationResults, scratchmap);
 
         BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace],
                                         hourInTheYear, randomForYear.pThermalNoisesByArea, state.year);

@@ -83,7 +83,8 @@ protected:
               std::list<uint>& failedWeekList,
               bool isFirstPerformedYearOfSimulation,
               const HYDRO_VENTILATION_RESULTS&,
-              OptimizationStatisticsWriter& optWriter);
+              OptimizationStatisticsWriter& optWriter,
+              const Antares::Data::Area::ScratchMap& scratchmap);
 
     void incrementProgression(Progression::Task& progression);
 

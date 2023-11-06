@@ -194,7 +194,8 @@ public:
                                                failedWeekList,
                                                isFirstPerformedYearOfSimulation,
                                                hydroManagement.ventilationResults(),
-                                               optWriter);
+                                               optWriter,
+                                               scratchmap);
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
