@@ -77,7 +77,7 @@ static void importShortTermStorages(
 void SIM_InitialisationProblemeHebdo(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      int NombreDePasDeTemps,
-                                     uint numSpace)
+                                     const Antares::Data::Area::ScratchMap& scratchmap)
 {
     int NombrePaliers;
 
@@ -150,6 +150,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     for (uint i = 0; i != study.areas.size(); i++)
     {
         auto& area = *(study.areas[i]);
+        auto* scratchpad = scratchmap.at(&area);
 
         problem.NomsDesPays[i] = area.id.c_str();
 
@@ -167,10 +168,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
           = (anoNonDispatchPower & area.nodalOptimization) != 0;
 
         problem.CaracteristiquesHydrauliques[i].PresenceDHydrauliqueModulable
-          = area.scratchpad[numSpace].hydroHasMod;
+          = scratchpad->hydroHasMod;
 
         problem.CaracteristiquesHydrauliques[i].PresenceDePompageModulable
-          = area.hydro.reservoirManagement && area.scratchpad[numSpace].pumpHasMod
+          = area.hydro.reservoirManagement && scratchpad->pumpHasMod
               && area.hydro.pumpingEfficiency > 0.
               && problem.CaracteristiquesHydrauliques[i].PresenceDHydrauliqueModulable;
 

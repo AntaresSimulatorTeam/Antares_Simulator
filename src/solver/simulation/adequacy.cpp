@@ -73,7 +73,11 @@ bool Adequacy::simulationBegin()
         pProblemesHebdo.resize(pNbMaxPerformedYearsInParallel);
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
-            SIM_InitialisationProblemeHebdo(study, pProblemesHebdo[numSpace], 168, numSpace);
+            Antares::Data::Area::ScratchMap scratchmap;
+            study.areas.each([&scratchmap, &numSpace](Antares::Data::Area& a) {
+                    scratchmap.try_emplace(&a, &a.scratchpad[numSpace]); });
+
+            SIM_InitialisationProblemeHebdo(study, pProblemesHebdo[numSpace], 168, scratchmap);
 
             assert((uint)nbHoursInAWeek == (uint)pProblemesHebdo[numSpace].NombreDePasDeTemps
                    && "inconsistency");
