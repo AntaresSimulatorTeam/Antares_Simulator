@@ -583,28 +583,28 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
-            double loadSeries = area.load.series.getCoefficient(year, hourInYear);
-            double windSeries = area.wind.series.getCoefficient(year, hourInYear);
-            double solarSeries = area.solar.series.getCoefficient(year, hourInYear);
-            double rorSeries = area.hydro.series->ror.getCoefficient(year, hourInYear);
-            double maxGenPowerSeries = area.hydro.series->maxHourlyGenPower.getCoefficient(year, hourInYear);
-            double maxPumpPowerSeries = area.hydro.series->maxHourlyPumpPower.getCoefficient(year, hourInYear);
+            const double hourlyLoad = area.load.series.getCoefficient(year, hourInYear);
+            const double hourlyWind = area.wind.series.getCoefficient(year, hourInYear);
+            const double hourlySolar = area.solar.series.getCoefficient(year, hourInYear);
+            const double hourlyROR = area.hydro.series->ror.getCoefficient(year, hourInYear);
+            const double hourlyHydroGenPower = area.hydro.series->maxHourlyGenPower.getCoefficient(year, hourInYear);
+            const double hourlyHydroPumpPower = area.hydro.series->maxHourlyPumpPower.getCoefficient(year, hourInYear);
 
             assert(&scratchpad);
 
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                mustRunGen = windSeries + solarSeries
+                mustRunGen = hourlyWind + hourlySolar
                              + scratchpad.miscGenSum[hourInYear]
-                             + rorSeries
+                             + hourlyROR
                              + scratchpad.mustrunSum[hourInYear];
             }
 
             // Renewable
             if (parameters.renewableGeneration.isClusters())
             {
-                mustRunGen = scratchpad.miscGenSum[hourInYear] + rorSeries
+                mustRunGen = scratchpad.miscGenSum[hourInYear] + hourlyROR
                              + scratchpad.mustrunSum[hourInYear];
 
                 area.renewable.list.each([&](const RenewableCluster& cluster) {
@@ -618,21 +618,21 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
               && "NaN detected for 'AllMustRunGeneration', probably from miscGenSum/mustrunSum");
 
             problem.ConsommationsAbattues[hourInWeek].ConsommationAbattueDuPays[k]
-              = +loadSeries
+              = +hourlyLoad
                 - problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
                 problem.CaracteristiquesHydrauliques[k]
                   .ContrainteDePmaxHydrauliqueHoraire[hourInWeek]
-                  = maxGenPowerSeries
+                  = hourlyHydroGenPower
                     * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation;
             }
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDePompageModulable)
             {
                 problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxPompageHoraire[hourInWeek]
-                  = maxPumpPowerSeries
+                  = hourlyHydroPumpPower
                     * problem.CaracteristiquesHydrauliques[k].WeeklyPumpingModulation;
             }
 
