@@ -24,7 +24,8 @@ std::shared_ptr<NewConstraintBuilder> NewGetConstraintBuilderFromProblemHebdoAnd
       problemeHebdo->NamedProblems,
       problemeHebdo->NomsDesPays,
       problemeHebdo->weekInTheYear,
-      problemeHebdo->NombreDePasDeTemps};
+      problemeHebdo->NombreDePasDeTemps,
+      nullptr};
 
     auto builder = NewConstraintBuilder(std::make_shared<NewConstraintBuilderData>(data));
     return std::make_shared<NewConstraintBuilder>(builder);

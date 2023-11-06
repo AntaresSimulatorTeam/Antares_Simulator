@@ -32,8 +32,7 @@
 
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"
-#include "constraints/PMaxDispatchableGeneration.h"
-#include "constraints/PMinDispatchableGeneration.h"
+#include "constraints/PMinMaxDispatchableGenerationGroup.h"
 #include "constraints/ConsistenceNumberOfDispatchableUnits.h"
 #include "constraints/NbUnitsOutageLessThanNbUnitsStop.h"
 #include "constraints/NbDispUnitsMinBoundSinceMinUpTime.h"
@@ -51,26 +50,28 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
     ConstraintNamer constraintNamer(ProblemeAResoudre->NomDesContraintes);
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
-        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
-        {
-            PMaxDispatchableGeneration pMaxDispatchableGeneration(problemeHebdo);
-            PMinDispatchableGeneration pMinDispatchableGeneration(problemeHebdo);
-            const int palier
-              = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+    // for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    // {
+    //     const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+    //       = problemeHebdo->PaliersThermiquesDuPays[pays];
+    //     constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+    //     for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
+    //     {
+    //         PMaxDispatchableGeneration pMaxDispatchableGeneration(problemeHebdo);
+    //         PMinDispatchableGeneration pMinDispatchableGeneration(problemeHebdo);
+    //         const int palier
+    //           = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-            {
-                pMaxDispatchableGeneration.add(pays, palier, index, pdt, Simulation);
-                pMinDispatchableGeneration.add(pays, palier, index, pdt, Simulation);
-            }
-        }
-    }
-
+    //         for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+    //         {
+    //             pMaxDispatchableGeneration.add(pays, palier, index, pdt, Simulation);
+    //             pMinDispatchableGeneration.add(pays, palier, index, pdt, Simulation);
+    //         }
+    //     }
+    // }
+    PMinMaxDispatchableGenerationGroup pMinMaxDispatchableGenerationGroup(problemeHebdo,
+                                                                          Simulation);
+    pMinMaxDispatchableGenerationGroup.Build();
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays

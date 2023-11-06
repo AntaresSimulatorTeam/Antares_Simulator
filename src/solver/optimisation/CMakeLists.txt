@@ -145,6 +145,8 @@ set(RTESOLVER_OPT
 		constraints/AreaHydroLevelGroup.cpp
 		constraints/FinalStockGroup.h
 		constraints/FinalStockGroup.cpp
+		constraints/PMinMaxDispatchableGenerationGroup.h
+		constraints/PMinMaxDispatchableGenerationGroup.cpp
 
 	)
 

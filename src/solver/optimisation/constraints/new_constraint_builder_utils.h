@@ -10,6 +10,9 @@ inline std::shared_ptr<NewConstraintBuilder> NewGetConstraintBuilderFromProblemH
   PROBLEME_HEBDO* problemeHebdo)
 {
     auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    return NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(problemeHebdo,
-                                                                      ProblemeAResoudre);
+    auto ret = NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(problemeHebdo,
+                                                                          ProblemeAResoudre);
+    ret->data->NbTermesContraintesPourLesCoutsDeDemarrage
+      = &problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage;
+    return ret;
 }

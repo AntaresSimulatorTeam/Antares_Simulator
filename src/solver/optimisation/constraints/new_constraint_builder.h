@@ -163,6 +163,7 @@ public:
     const std::vector<const char*>& NomsDesPays;
     const uint32_t& weekInTheYear;
     const uint32_t& NombreDePasDeTemps;
+    uint32_t* NbTermesContraintesPourLesCoutsDeDemarrage = nullptr;
 };
 
 /*! \verbatim
