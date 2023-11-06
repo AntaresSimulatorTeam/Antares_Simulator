@@ -69,7 +69,8 @@ jobs:
           # This one is not needed, as it is the default value anyway.
           vcpkgDirectory: '${{ github.workspace }}/vcpkg'
           vcpkgJsonGlob: '**/vcpkg.json'
-          runVcpkgInstall: true
+          # let run-cmake do it
+          # runVcpkgInstall: true
           doNotCache: false
           binaryCachePath: '${{ github.workspace }}/vcpkg_cache'
      
