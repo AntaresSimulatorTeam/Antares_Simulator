@@ -105,14 +105,6 @@ private:
 
 }; // class AreaScratchpad
 
-//  Calculates daily mean maximum generation/pumping power for one column/time-serie
-void CalculateDailyMeanPower(const Matrix<double>::ColumnType& hourlyColumn,
-                                    Matrix<double>::ColumnType& dailyColumn);
-
-//  Return true if maximum generated energy just in one day and for every TS is grated than 0
-bool CheckForPositiveEnergy(const Matrix<double, int32_t>& power,
-                            const Matrix<double>::ColumnType& energy);
-
 } // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_AREA_SCRATCHPAD_H__
