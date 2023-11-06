@@ -1,15 +1,6 @@
 #pragma once
 #include "new_constraint_builder.h"
 
-struct PMaxDispatchableGenerationData
-{
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays;
-    int cluster;
-    int clusterIndex;
-    int pdt;
-    bool Simulation;
-};
-
 /*!
  * represent 'PMaxDispatchableGeneration' Constraint type
  */
@@ -25,5 +16,5 @@ public:
      * @param pdt : timestep
      * @param Simulation : ---
      */
-    void add(int pays, std::shared_ptr<PMaxDispatchableGenerationData> data);
+    void add(int pays, std::shared_ptr<StartUpCostsData> data);
 };

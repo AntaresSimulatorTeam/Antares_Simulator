@@ -1,6 +1,6 @@
 #include "PMinDispatchableGeneration.h"
 
-void PMinDispatchableGeneration::add(int pays, std::shared_ptr<PMinDispatchableGenerationData> data)
+void PMinDispatchableGeneration::add(int pays, std::shared_ptr<StartUpCostsData> data)
 {
     if (!data->Simulation)
     {

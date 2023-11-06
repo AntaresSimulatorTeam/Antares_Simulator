@@ -1,6 +1,6 @@
 #include "PMaxDispatchableGeneration.h"
 
-void PMaxDispatchableGeneration::add(int pays, std::shared_ptr<PMaxDispatchableGenerationData> data)
+void PMaxDispatchableGeneration::add(int pays, std::shared_ptr<StartUpCostsData> data)
 {
     if (!data->Simulation)
     {

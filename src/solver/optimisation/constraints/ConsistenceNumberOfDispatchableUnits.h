@@ -1,13 +1,13 @@
 #pragma once
-#include "ConstraintBuilder.h"
+#include "new_constraint_builder.h"
 
 /*!
  * represent 'Consistence Number Of Dispatchable Units Constraint' type
  */
-class ConsistenceNumberOfDispatchableUnits : private ConstraintFactory
+class ConsistenceNumberOfDispatchableUnits : private NewConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
+    using NewConstraintFactory::NewConstraintFactory;
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area
@@ -15,5 +15,5 @@ public:
      * @param pdt : timestep
      * @param Simulation : ---
      */
-    void add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation);
+    void add(int pays, std::shared_ptr<StartUpCostsData> data);
 };

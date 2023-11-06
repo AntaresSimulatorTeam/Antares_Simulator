@@ -1,10 +1,8 @@
 #pragma once
 #include "AbstractStartUpCostsGroup.h"
 #include "ConstraintGroup.h"
-#include "PMinDispatchableGeneration.h"
-#include "PMaxDispatchableGeneration.h"
 
-class PMinMaxDispatchableGenerationGroup : public AbstractStartUpCostsGroup
+class ConsistenceNumberOfDispatchableUnitsGroup : public AbstractStartUpCostsGroup
 {
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;
