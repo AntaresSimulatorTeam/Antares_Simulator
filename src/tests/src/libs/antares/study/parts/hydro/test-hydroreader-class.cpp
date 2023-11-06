@@ -163,8 +163,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_support_for_old_studies, Fixture)
 
     auto& genP = area_1->hydro.series->maxHourlyGenPower.timeSeries[0];
     auto& pumpP = area_1->hydro.series->maxHourlyPumpPower.timeSeries[0];
-    auto& genE = area_1->hydro.maxDailyGenEnergy[0];
-    auto& pumpE = area_1->hydro.maxDailyPumpEnergy[0];
+    auto& genE = area_1->hydro.dailyNbHoursAtGenPmax[0];
+    auto& pumpE = area_1->hydro.dailyNbHoursAtPumpPmax[0];
 
     auto& genPReader = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxP];
     auto& pumpPReader = reader->dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxP];

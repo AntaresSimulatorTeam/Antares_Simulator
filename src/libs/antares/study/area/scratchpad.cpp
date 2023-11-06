@@ -115,9 +115,9 @@ meanMaxDailyPumpPower(area.hydro.series->timeseriesNumbersHydroMaxPower)
     bool hydroGenerationPermission = false;
 
     // ... Getting hydro max energy
-    auto const& maxDailyGenEnergy = area.hydro.maxDailyGenEnergy[0];
+    auto const& dailyNbHoursAtGenPmax = area.hydro.dailyNbHoursAtGenPmax[0];
 
-    hydroGenerationPermission = CheckForPositiveEnergy(maxHourlyGenPower, maxDailyGenEnergy);
+    hydroGenerationPermission = CheckForPositiveEnergy(maxHourlyGenPower, dailyNbHoursAtGenPmax);
 
     // ---------------------
     // Hydro has inflows
@@ -151,10 +151,10 @@ meanMaxDailyPumpPower(area.hydro.series->timeseriesNumbersHydroMaxPower)
     // ===============
 
     //  Hydro max pumping energy
-    auto const& maxDailyPumpEnergy = area.hydro.maxDailyPumpEnergy[0];
+    auto const& dailyNbHoursAtPumpPmax = area.hydro.dailyNbHoursAtPumpPmax[0];
 
     //  If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
-    pumpHasMod = CheckForPositiveEnergy(maxHourlyPumpPower, maxDailyPumpEnergy);
+    pumpHasMod = CheckForPositiveEnergy(maxHourlyPumpPower, dailyNbHoursAtPumpPmax);
 }
 
 AreaScratchpad::~AreaScratchpad() = default;

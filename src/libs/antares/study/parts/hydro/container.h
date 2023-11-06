@@ -164,8 +164,8 @@ public:
     //! Data for time-series
     DataSeriesHydro* series;
 
-    Matrix<double, double> maxDailyGenEnergy;
-    Matrix<double, double> maxDailyPumpEnergy;
+    Matrix<double, double> dailyNbHoursAtGenPmax;
+    Matrix<double, double> dailyNbHoursAtPumpPmax;
 
 }; // class PartHydro
 

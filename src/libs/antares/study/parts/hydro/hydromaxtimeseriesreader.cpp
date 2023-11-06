@@ -104,22 +104,22 @@ void HydroMaxTimeSeriesReader::copyDailyMaxEnergy(Area& area) const
 
 void HydroMaxTimeSeriesReader::copyDailyMaxGenerationEnergy(Area& area) const
 {
-    auto& maxDailyGenEnergy = area.hydro.maxDailyGenEnergy;
+    auto& dailyNbHoursAtGenPmax = area.hydro.dailyNbHoursAtGenPmax;
     const auto& dailyMaxGenE = dailyMaxPumpAndGen[genMaxE];
 
-    maxDailyGenEnergy.reset(1U, DAYS_PER_YEAR, true);
+    dailyNbHoursAtGenPmax.reset(1U, DAYS_PER_YEAR, true);
 
-    maxDailyGenEnergy.pasteToColumn(0, dailyMaxGenE);
+    dailyNbHoursAtGenPmax.pasteToColumn(0, dailyMaxGenE);
 }
 
 void HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy(Area& area) const
 {
-    auto& maxDailyPumpEnergy = area.hydro.maxDailyPumpEnergy;
+    auto& dailyNbHoursAtPumpPmax = area.hydro.dailyNbHoursAtPumpPmax;
     const auto& dailyMaxPumpE = dailyMaxPumpAndGen[pumpMaxE];
 
-    maxDailyPumpEnergy.reset(1U, DAYS_PER_YEAR, true);
+    dailyNbHoursAtPumpPmax.reset(1U, DAYS_PER_YEAR, true);
 
-    maxDailyPumpEnergy.pasteToColumn(0, dailyMaxPumpE);
+    dailyNbHoursAtPumpPmax.pasteToColumn(0, dailyMaxPumpE);
 }
 
 bool HydroMaxTimeSeriesReader::operator()(const AnyString& folder, Area& area, bool usedBySolver)

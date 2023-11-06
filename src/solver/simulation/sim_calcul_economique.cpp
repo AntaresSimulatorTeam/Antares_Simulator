@@ -678,7 +678,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                               = 0.;
                             problem.CaracteristiquesHydrauliques[k]
                               .MaxEnergieHydrauParIntervalleOptimise[j]
-                              = dailyMeanMaxGenPower[day] * area.hydro.maxDailyGenEnergy[0][day]
+                              = dailyMeanMaxGenPower[day] * area.hydro.dailyNbHoursAtGenPmax[0][day]
                                 * problem.CaracteristiquesHydrauliques[k]
                                     .WeeklyGeneratingModulation;
                         }
@@ -729,7 +729,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                             uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
 
                             double DGC
-                              = dailyMeanMaxGenPower[day] * area.hydro.maxDailyGenEnergy[0][day];
+                              = dailyMeanMaxGenPower[day] * area.hydro.dailyNbHoursAtGenPmax[0][day];
 
                             DGU_tmp[j] = DNT[day] * LUB;
                             DGL_tmp[j] = DNT[day] * LLB;
@@ -838,7 +838,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                 problem.CaracteristiquesHydrauliques[k]
                                   .MaxEnergiePompageParIntervalleOptimise[j]
                                   = dailyMeanMaxPumpPower[day]
-                                    * area.hydro.maxDailyPumpEnergy[0][day]
+                                    * area.hydro.dailyNbHoursAtPumpPmax[0][day]
                                     * problem.CaracteristiquesHydrauliques[k]
                                         .WeeklyPumpingModulation;
                             }
@@ -871,7 +871,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                 uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
 
                                 double DPC = dailyMeanMaxPumpPower[day]
-                                             * area.hydro.maxDailyPumpEnergy[0][day];
+                                             * area.hydro.dailyNbHoursAtPumpPmax[0][day];
 
                                 WPU += DPC;
                             }
@@ -883,7 +883,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                 uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
 
                                 double DPC = dailyMeanMaxPumpPower[day]
-                                             * area.hydro.maxDailyPumpEnergy[0][day];
+                                             * area.hydro.dailyNbHoursAtPumpPmax[0][day];
                                 double rc = area.hydro.reservoirCapacity;
 
                                 if (not area.hydro.hardBoundsOnRuleCurves)
