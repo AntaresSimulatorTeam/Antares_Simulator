@@ -376,12 +376,13 @@ bool HydroManagement::checkMinGeneration(uint year) const
     return ret;
 }
 
-void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::StudyMode mode)
+void HydroManagement::prepareNetDemand(uint year, Data::StudyMode mode,
+                                       Antares::Data::Area::ScratchMap& scratchmap)
 {
-    areas_.each([this, &year, &numSpace, &mode](const Data::Area& area) {
+    areas_.each([this, &year, &scratchmap, &mode](const Data::Area& area) {
         uint z = area.index;
 
-        auto& scratchpad = area.scratchpad[numSpace];
+        auto* scratchpad = scratchmap.at(&area);
 
         const auto& rormatrix = area.hydro.series->ror;
         const auto* ror = rormatrix.getColumn(year);
@@ -401,19 +402,19 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::StudyMode
             if (parameters_.renewableGeneration.isAggregated())
             {
                 netdemand = + loadSeries[hour]
-                            - windSeries[hour] - scratchpad.miscGenSum[hour]
+                            - windSeries[hour] - scratchpad->miscGenSum[hour]
                             - solarSeries[hour] - ror[hour]
-                            - ((mode != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
-                                                             : scratchpad.originalMustrunSum[hour]);
+                            - ((mode != Data::stdmAdequacy) ? scratchpad->mustrunSum[hour]
+                                                             : scratchpad->originalMustrunSum[hour]);
             }
 
             // Renewable clusters, if enabled
             else if (parameters_.renewableGeneration.isClusters())
             {
                 netdemand = loadSeries[hour]
-                            - scratchpad.miscGenSum[hour] - ror[hour]
-                            - ((mode != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
-                                                             : scratchpad.originalMustrunSum[hour]);
+                            - scratchpad->miscGenSum[hour] - ror[hour]
+                            - ((mode != Data::stdmAdequacy) ? scratchpad->mustrunSum[hour]
+                                                             : scratchpad->originalMustrunSum[hour]);
 
                 area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
                     assert(cluster.series.timeSeries.jit == nullptr && "No JIT data from the solver");
@@ -493,7 +494,7 @@ void HydroManagement::prepareEffectiveDemand()
 void HydroManagement::makeVentilation(double* randomReservoirLevel,
                                       Solver::Variable::State& state,
                                       uint y,
-                                      uint numSpace)
+                                      Antares::Data::Area::ScratchMap& scratchmap)
 {
     tmpDataByArea_.resize(areas_.size());
     memset(tmpDataByArea_.data(), 0, sizeof(TmpDataByArea) * areas_.size());
@@ -505,11 +506,11 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
         throw FatalError("hydro management: invalid minimum generation");
     }
 
-    prepareNetDemand(numSpace, y, parameters_.mode);
+    prepareNetDemand(y, parameters_.mode, scratchmap);
     prepareEffectiveDemand();
 
     prepareMonthlyOptimalGenerations(randomReservoirLevel, y);
-    prepareDailyOptimalGenerations(state, y, numSpace);
+    prepareDailyOptimalGenerations(state, y, scratchmap);
 }
 
 } // namespace Antares

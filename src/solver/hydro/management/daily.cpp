@@ -224,7 +224,7 @@ struct DebugData
 inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                                             Data::Area& area,
                                                             uint y,
-                                                            uint numSpace)
+                                                            Antares::Data::Area::ScratchMap& scratchmap)
 {
     uint z = area.index;
     assert(z < areas_.size());
@@ -233,7 +233,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     auto& data = tmpDataByArea_[z];
 
-    auto& scratchpad = area.scratchpad[numSpace];
+    auto* scratchpad = scratchmap.at(&area);
 
     int initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate;
 
@@ -279,7 +279,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             auto dYear = day + dayYear;
             assert(day < 32);
             assert(dYear < 366);
-            scratchpad.optimalMaxPower[dYear] = maxP[dYear];
+            scratchpad->optimalMaxPower[dYear] = maxP[dYear];
 
             if (debugData)
                 debugData->OPP[dYear] = maxP[dYear] * maxE[dYear];
@@ -547,11 +547,11 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
 void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                                      uint y,
-                                                     uint numSpace)
+                                                     Antares::Data::Area::ScratchMap& scratchmap)
 {
     areas_.each(
       [&](Data::Area& area) {
-          prepareDailyOptimalGenerations(state, area, y, numSpace);
+          prepareDailyOptimalGenerations(state, area, y, scratchmap);
           });
 }
 

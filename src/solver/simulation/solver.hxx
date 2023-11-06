@@ -171,7 +171,7 @@ public:
 
             // 4 - Hydraulic ventilation
             Benchmarking::Timer timer;
-            hydroManagement.makeVentilation(randomReservoirLevel, state[numSpace], y, numSpace);
+            hydroManagement.makeVentilation(randomReservoirLevel, state[numSpace], y, scratchmap);
             timer.stop();
             pDurationCollector.addDuration("hydro_ventilation", timer.get_duration());
 
