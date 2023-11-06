@@ -1486,11 +1486,9 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     {
         logs.info() << "  :: The problems will contain named variables and constraints";
     }
-    // indicated that solver logs will be printed
-    if (namedProblems)
-    {
-        logs.info() << "  :: Printing solver logs : " << (solverLogs ? "True" : "False");
-    }
+    // indicated whether solver logs will be printed
+    logs.info() << "  :: Printing solver logs : " << (solverLogs ? "True" : "False");
+    
 }
 
 void Parameters::resetPlaylist(uint nbOfYears)
