@@ -133,7 +133,7 @@ private:
     //! check Hourly minimum generation is lower than available inflows
     bool checkGenerationPowerConsistency(uint year) const;
     //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false
-    bool checksOnGenerationPowerBounds(uint year);
+    bool checksOnGenerationPowerBounds(uint year) const;
     //! check minimum generation is lower than available inflows
     bool checkMinGeneration(uint year) const;
     //! Prepare the net demand for each area

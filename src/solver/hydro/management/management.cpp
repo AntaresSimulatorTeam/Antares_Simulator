@@ -486,7 +486,7 @@ void HydroManagement::prepareEffectiveDemand()
     });
 }
 
-bool HydroManagement::checksOnGenerationPowerBounds(uint year)
+bool HydroManagement::checksOnGenerationPowerBounds(uint year) const
 {
     return (checkMinGeneration(year) && checkGenerationPowerConsistency(year)) ? true : false;
 }
