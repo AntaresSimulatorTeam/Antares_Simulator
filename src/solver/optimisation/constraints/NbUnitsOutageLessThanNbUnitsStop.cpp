@@ -1,41 +1,33 @@
 #include "NbUnitsOutageLessThanNbUnitsStop.h"
 
-void NbUnitsOutageLessThanNbUnitsStop::add(int pays,
-                                           int cluster,
-                                           int clusterIndex,
-                                           int pdt,
-                                           bool Simulation)
+void NbUnitsOutageLessThanNbUnitsStop::add(
+  int pays,
+  std::shared_ptr<NbUnitsOutageLessThanNbUnitsStopData> data)
 {
-    if (!Simulation)
+    if (!data->Simulation)
     {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
+        data->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[data->cluster] = -1;
 
-        CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-          = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-        CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesContraintesDeDureeMinDeMarche[cluster]
-          = -1;
-
-        builder.updateHourWithinWeek(pdt)
-          .NumberBreakingDownDispatchableUnits(cluster, 1.0)
-          .NumberStoppingDispatchableUnits(cluster, -1.0)
+        builder->updateHourWithinWeek(data->pdt)
+          .NumberBreakingDownDispatchableUnits(data->cluster, 1.0)
+          .NumberStoppingDispatchableUnits(data->cluster, -1.0)
           .lessThan();
 
-        if (builder.NumberOfVariables() > 0)
+        if (builder->NumberOfVariables() > 0)
         {
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+            ConstraintNamer namer(builder->data->NomDesContraintes);
+            namer.UpdateArea(builder->data->NomsDesPays[pays]);
+            namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + data->pdt);
             namer.NbUnitsOutageLessThanNbUnitsStop(
-              problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-              PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
+              builder->data->nombreDeContraintes,
+              data->PaliersThermiquesDuPays.NomsDesPaliersThermiques[data->clusterIndex]);
 
-            builder.build();
+            builder->build();
         }
     }
     else
     {
-        problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage += 2;
-        problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
+        *builder->data->NbTermesContraintesPourLesCoutsDeDemarrage += 2;
+        builder->data->nombreDeContraintes++;
     }
 }

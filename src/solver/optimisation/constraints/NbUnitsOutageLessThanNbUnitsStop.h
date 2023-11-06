@@ -1,13 +1,16 @@
 #pragma once
-#include "ConstraintBuilder.h"
-
+#include "new_constraint_builder.h"
+struct NbUnitsOutageLessThanNbUnitsStopData : public StartUpCostsData
+{
+    std::vector<int> NumeroDeContrainteDesContraintesDeDureeMinDeMarche;
+};
 /*!
  * represent 'NbUnitsOutageLessThanNbUnitsStop' type
  */
-class NbUnitsOutageLessThanNbUnitsStop : private ConstraintFactory
+class NbUnitsOutageLessThanNbUnitsStop : private NewConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
+    using NewConstraintFactory::NewConstraintFactory;
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
@@ -16,5 +19,5 @@ public:
      * @param pdt : timestep
      * @param Simulation : ---
      */
-    void add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation);
+    void add(int pays, std::shared_ptr<NbUnitsOutageLessThanNbUnitsStopData> data);
 };

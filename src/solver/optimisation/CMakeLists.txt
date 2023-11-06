@@ -151,6 +151,8 @@ set(RTESOLVER_OPT
 		constraints/PMinMaxDispatchableGenerationGroup.cpp
 		constraints/ConsistenceNumberOfDispatchableUnitsGroup.h
 		constraints/ConsistenceNumberOfDispatchableUnitsGroup.cpp
+		constraints/NbUnitsOutageLessThanNbUnitsStopGroup.h
+		constraints/NbUnitsOutageLessThanNbUnitsStopGroup.cpp
 
 	)
 
