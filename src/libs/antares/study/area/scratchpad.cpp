@@ -44,7 +44,7 @@ bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix<double, int32_t>& power,
         for (uint day = 0; day < DAYS_PER_YEAR; ++day)
         {
             if (power[tsNumber][day] * energy[day] > 0.);
-            return true;
+                return true;
         }
     }
 
