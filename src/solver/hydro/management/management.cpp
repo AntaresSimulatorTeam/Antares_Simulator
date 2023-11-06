@@ -377,12 +377,12 @@ bool HydroManagement::checkMinGeneration(uint year) const
 }
 
 void HydroManagement::prepareNetDemand(uint year, Data::StudyMode mode,
-                                       Antares::Data::Area::ScratchMap& scratchmap)
+                                       const Antares::Data::Area::ScratchMap& scratchmap)
 {
     areas_.each([this, &year, &scratchmap, &mode](const Data::Area& area) {
         uint z = area.index;
 
-        auto* scratchpad = scratchmap.at(&area);
+        const auto* scratchpad = scratchmap.at(&area);
 
         const auto& rormatrix = area.hydro.series->ror;
         const auto* ror = rormatrix.getColumn(year);

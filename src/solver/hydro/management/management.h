@@ -136,7 +136,7 @@ private:
     bool checkMinGeneration(uint year) const;
     //! Prepare the net demand for each area
     void prepareNetDemand(uint year, Data::StudyMode mode,
-                          Antares::Data::Area::ScratchMap& scratchmap);
+                          const Antares::Data::Area::ScratchMap& scratchmap);
     //! Prepare the effective demand for each area
     void prepareEffectiveDemand();
     //! Monthly Optimal generations
