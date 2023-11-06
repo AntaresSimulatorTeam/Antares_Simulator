@@ -232,7 +232,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     auto const srcinflows = area.hydro.series->storage.getColumn(y);
 
-    auto& data = tmpDataByArea_[numSpace][z];
+    auto& data = tmpDataByArea_[z];
 
     auto& scratchpad = area.scratchpad[numSpace];
 
@@ -256,7 +256,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     auto const& maxP = meanMaxDailyGenPower[tsIndex];
     auto const& maxE = maxDailyGenEnergy[0];
 
-    auto& ventilationResults = ventilationResults_[numSpace][z];
+    auto& ventilationResults = ventilationResults_[z];
 
     std::shared_ptr<DebugData> debugData(nullptr);
 
