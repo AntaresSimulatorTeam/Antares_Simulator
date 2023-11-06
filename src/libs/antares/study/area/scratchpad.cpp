@@ -35,15 +35,14 @@ using namespace Yuni;
 namespace Antares::Data
 {
 
-
-bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix<double, int32_t>& power,
-    const Matrix<double>::ColumnType& energy)
+bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix<double>& power,
+                                       const Matrix<double>::ColumnType& energy)
 {
     for (uint tsNumber = 0; tsNumber < power.width; ++tsNumber)
     {
         for (uint day = 0; day < DAYS_PER_YEAR; ++day)
         {
-            if (power[tsNumber][day] * energy[day] > 0.);
+            if (power[tsNumber][day] * energy[day] > 0.)
                 return true;
         }
     }
@@ -52,14 +51,14 @@ bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix<double, int32_t>& power,
 }
 
 void CalculateDailyMeanPower(const Matrix<double>::ColumnType& hourlyColumn,
-    Matrix<double>::ColumnType& dailyColumn)
+                             Matrix<double>::ColumnType& dailyColumn)
 {
     for (uint day = 0; day < DAYS_PER_YEAR; ++day)
     {
         dailyColumn[day] = std::accumulate(hourlyColumn + day * HOURS_PER_DAY,
-            hourlyColumn + day * HOURS_PER_DAY + HOURS_PER_DAY,
-            0)
-            / 24.;
+                                           hourlyColumn + day * HOURS_PER_DAY + HOURS_PER_DAY,
+                                           0)
+                           / 24.;
     }
 }
 
@@ -145,7 +144,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) :
     // ... Getting hydro max energy
     auto const& dailyNbHoursAtGenPmax = area.hydro.dailyNbHoursAtGenPmax[0];
 
-    hydroGenerationPermission = doWeHaveOnePositiveMaxDailyEnergy(maxHourlyGenPower, dailyNbHoursAtGenPmax);
+    hydroGenerationPermission = doWeHaveOnePositiveMaxDailyEnergy(meanMaxDailyGenPower.timeSeries, dailyNbHoursAtGenPmax);
 
     // ---------------------
     // Hydro has inflows
@@ -182,7 +181,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) :
     auto const& dailyNbHoursAtPumpPmax = area.hydro.dailyNbHoursAtPumpPmax[0];
 
     //  If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
-    pumpHasMod = doWeHaveOnePositiveMaxDailyEnergy(maxHourlyPumpPower, dailyNbHoursAtPumpPmax);
+    pumpHasMod = doWeHaveOnePositiveMaxDailyEnergy(meanMaxDailyPumpPower.timeSeries, dailyNbHoursAtPumpPmax);
 }
 
 AreaScratchpad::~AreaScratchpad() = default;
