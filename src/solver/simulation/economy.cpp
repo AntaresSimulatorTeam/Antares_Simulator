@@ -131,31 +131,32 @@ bool Economy::year(Progression::Task& progression,
 {
     // No failed week at year start
     failedWeekList.clear();
-    pProblemesHebdo[numSpace].year = state.year;
+    auto& currentProblem = pProblemesHebdo[numSpace];
+    currentProblem.year = state.year;
 
-    PrepareRandomNumbers(study, pProblemesHebdo[numSpace], randomForYear);
+    PrepareRandomNumbers(study, currentProblem, randomForYear);
 
     state.startANewYear();
 
     int hourInTheYear = pStartTime;
     if (isFirstPerformedYearOfSimulation)
-        pProblemesHebdo[numSpace].firstWeekOfSimulation = true;
+        currentProblem.firstWeekOfSimulation = true;
     bool reinitOptim = true;
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
-        pProblemesHebdo[numSpace].weekInTheYear = state.weekInTheYear = w;
-        pProblemesHebdo[numSpace].HeureDansLAnnee = hourInTheYear;
+        currentProblem.weekInTheYear = state.weekInTheYear = w;
+        currentProblem.HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(study, pProblemesHebdo[numSpace], state.weekInTheYear,
+        ::SIM_RenseignementProblemeHebdo(study, currentProblem, state.weekInTheYear,
                                          hourInTheYear, hydroVentilationResults, scratchmap);
 
-        BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace],
-                                        hourInTheYear, randomForYear.pThermalNoisesByArea, state.year);
+        BuildThermalPartOfWeeklyProblem(study, currentProblem, hourInTheYear,
+                                        randomForYear.pThermalNoisesByArea, state.year);
 
         // Reinit optimisation if needed
-        pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;
+        currentProblem.ReinitOptimisation = reinitOptim;
         reinitOptim = false;
 
         try
@@ -174,7 +175,7 @@ bool Economy::year(Progression::Task& progression,
             {
                 state.hourInTheWeek = hw;
 
-                state.ntc = pProblemesHebdo[numSpace].ValeursDeNTC[hw];
+                state.ntc = currentProblem.ValeursDeNTC[hw];
 
                 variables.hourBegin(state.hourInTheYear);
 
@@ -189,12 +190,12 @@ bool Economy::year(Progression::Task& progression,
 
             for (int opt = 0; opt < 7; opt++)
             {
-                state.optimalSolutionCost1 += pProblemesHebdo[numSpace].coutOptimalSolution1[opt];
-                state.optimalSolutionCost2 += pProblemesHebdo[numSpace].coutOptimalSolution2[opt];
+                state.optimalSolutionCost1 += currentProblem.coutOptimalSolution1[opt];
+                state.optimalSolutionCost2 += currentProblem.coutOptimalSolution2[opt];
             }
             optWriter.addTime(w,
-                              pProblemesHebdo[numSpace].tempsResolution1[0],
-                              pProblemesHebdo[numSpace].tempsResolution2[0]);
+                              currentProblem.tempsResolution1[0],
+                              currentProblem.tempsResolution2[0]);
         }
         catch (Data::AssertionError& ex)
         {
@@ -225,15 +226,15 @@ bool Economy::year(Progression::Task& progression,
 
         hourInTheYear += nbHoursInAWeek;
 
-        pProblemesHebdo[numSpace].firstWeekOfSimulation = false;
+        currentProblem.firstWeekOfSimulation = false;
 
         ++progression;
     }
 
-    updatingAnnualFinalHydroLevel(study.areas, pProblemesHebdo[numSpace]);
+    updatingAnnualFinalHydroLevel(study.areas, currentProblem);
 
     optWriter.finalize();
-    finalizeOptimizationStatistics(pProblemesHebdo[numSpace], state);
+    finalizeOptimizationStatistics(currentProblem, state);
 
     return true;
 }
