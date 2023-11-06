@@ -212,8 +212,8 @@ void AreaLink::detach()
 void AreaLink::resetToDefaultValues()
 {
     parameters.reset(fhlMax, HOURS_PER_YEAR, true);
-    directCapacities.timeSeries.reset(1, HOURS_PER_YEAR, true);
-    indirectCapacities.timeSeries.reset(1, HOURS_PER_YEAR, true);
+    directCapacities.reset();
+    indirectCapacities.reset();
 
     for (uint i = 0; i != HOURS_PER_YEAR; ++i)
     {
@@ -638,12 +638,12 @@ bool saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
 
         // Save direct capacities time series
         filename.clear() << capacitiesFolder << SEP << link.with->id << "_direct.txt";
-        success = link.directCapacities.timeSeries.saveToCSVFile(filename, 6, false, true) && success;
+        success = link.directCapacities.saveToFile(filename, true) && success;
 
         // Save indirect capacities time series
 
         filename.clear() << capacitiesFolder << SEP << link.with->id << "_indirect.txt";
-        success = link.indirectCapacities.timeSeries.saveToCSVFile(filename, 6, false, true) && success;
+        success = link.indirectCapacities.saveToFile(filename, true) && success;
     }
 
     return success;

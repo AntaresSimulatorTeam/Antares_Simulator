@@ -67,6 +67,10 @@ int TimeSeries::saveToFolder(const AreaName& areaID,
     return timeSeries.saveToCSVFile(buffer, 0);
 }
 
+int TimeSeries::saveToFile(const std::string& filename, bool saveEvenIfAllZero) const
+{
+    return timeSeries.saveToCSVFile(filename, 6, false, saveEvenIfAllZero);
+}
 
 double TimeSeries::getCoefficient(uint32_t year, uint32_t timestep) const
 {
