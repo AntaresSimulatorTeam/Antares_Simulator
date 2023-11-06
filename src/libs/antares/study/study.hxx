@@ -62,7 +62,7 @@ inline void Study::destroyTSGeneratorData()
     case TimeSeriesType::timeSeriesThermal:
         destroyAllThermalTSGeneratorData();
         break;
-    case TimeSeriesType::timeSeriesCount:
+    default:
         break;
     }
 }

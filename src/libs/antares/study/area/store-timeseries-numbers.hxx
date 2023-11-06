@@ -65,7 +65,6 @@ void singleAreaStoreTimeseriesNumbers(Solver::IResultWriter& writer, const Area&
     case timeSeriesHydroMaxPower:
         storeTimeseriesNumbersForHydroMaxPower(writer, area);
         break;
-    case timeSeriesCount:
     default:
         break;
     }
