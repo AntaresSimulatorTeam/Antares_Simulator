@@ -188,6 +188,19 @@ public:
     void setResidualLoadDefinitionType(ResidualLoadDefinitionType t);
     //@}
 
+    //! \name UsedResidualLoadTS
+    //@{
+    /*!
+    ** \brief Get the UsedResidualLoadTS_ of the Maintenance Group
+    */
+    void setUsedResidualLoadTS(std::array<double, 8760> ts);
+
+    /*!
+    ** \brief Set the UsedResidualLoadTS_ of the Maintenance Group
+    */
+    std::array<double, 8760> getUsedResidualLoadTS() const;
+    //@}
+
     //! \name Enabled / Disabled
     //@{
     //! Get if the Maintenance Group is enabled
@@ -239,6 +252,13 @@ private:
     ResidualLoadDefinitionType type_ = typeWeights;
     //! Enabled / Disabled
     bool enabled_ = true;
+    //! 8760 x 1 - Matrix of residual loads per h provided by the user
+    // TODO CR27: for phase-II -> setters, getters, reset, markAsModified, resetToDefaultValues, forceReload, memoryUsage
+    Matrix<> userProvidedResidualLoadTS_;
+    //! array of residual loads per h
+    //! if typeTimeserie -> equal to userProvidedResidualLoadTS_,
+    //! if typeWeights -> calculated using per area weights
+    std::array<double, 8760> usedResidualLoadTS_;
 
     void clear();
     void copyFrom(MaintenanceGroup const* original);

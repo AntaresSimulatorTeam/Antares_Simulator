@@ -143,6 +143,16 @@ double MaintenanceGroup::rorWeight(const Area* area) const
     return (i != weights_.end()) ? i->second.ror : 0.;
 }
 
+void MaintenanceGroup::setUsedResidualLoadTS(std::array<double, 8760> ts)
+{
+    usedResidualLoadTS_ = ts;
+}
+
+std::array<double, 8760> MaintenanceGroup::getUsedResidualLoadTS() const
+{
+    return usedResidualLoadTS_;
+}
+
 void MaintenanceGroup::clearAndReset(const MaintenanceGroupName& name,
                                      MaintenanceGroup::ResidualLoadDefinitionType newType)
 {
