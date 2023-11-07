@@ -645,15 +645,49 @@ bool GenerateRandomizedThermalTimeSeries(Data::Study& study,
 }
 
 bool GenerateOptimizedThermalTimeSeries(Data::Study& study,
-                               uint year,
-                               bool globalThermalTSgeneration,
-                               Antares::Solver::IResultWriter& writer)
+                                        uint year,
+                                        bool globalThermalTSgeneration,
+                                        Antares::Solver::IResultWriter& writer)
 {
+    // optimized planning should only be called once.
+    // Due to possible thermal refresh span we can end up here more than once - but just ignore it
+    if (year != 0)
+        return true;
+
     logs.info();
     logs.info() << "Generating optimized thermal time-series";
     Solver::Progression::Task progression(study, year, Solver::Progression::sectTSGThermal);
 
+    auto generator = GeneratorTempData(study, progression, writer);
 
+    auto& repo = study.maintenanceGroups;
+    const auto& groups = repo.activeMaintenanceGroups();
+
+    generator.currentYear = year;
+    generator.nbThermalTimeseries = repo.scenariosNumber() * repo.scenariosLength();
+
+    // TODO CR27: This part needs a lot of refactoring- to many nested loops!!
+    for (const auto& entryGroups : groups)
+    {
+        const auto& group = *(entryGroups.get());
+        for (const auto& entryGroup : group)
+        {
+            const auto& area = *(entryGroup.first);
+            // extract weights
+            for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end();
+                 ++it)
+            {
+                auto& cluster = *(it->second);
+                if (cluster.doWeGenerateTS(globalThermalTSgeneration)
+                    && cluster.optimizeMaintenance)
+                {
+
+                }
+
+                ++progression;
+            }
+        }
+    }
 
     return true;
 }
