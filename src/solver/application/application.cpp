@@ -1,4 +1,4 @@
-#include "application.h"
+#include "antares/application/application.h"
 
 #include <antares/sys/policy.h>
 #include <antares/resources/resources.h>
@@ -14,10 +14,11 @@
 
 #include "signal-handling/public.h"
 
-#include "misc/system-memory.h"
-#include "misc/write-command-line.h"
+#include "antares/solver/misc/system-memory.h"
+#include "antares/solver/misc/write-command-line.h"
 
-#include "utils/ortools_utils.h"
+#include "antares/solver/utils/ortools_utils.h"
+#include "../../config.h"
 
 #include <antares/infoCollection/StudyInfoCollector.h>
 
@@ -26,6 +27,8 @@
 #include <yuni/core/process/rename.h>
 
 #include <algorithm>
+
+#include "../simulation/simulation.h"
 
 using namespace Antares::Check;
 

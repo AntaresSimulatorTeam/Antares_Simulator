@@ -63,4 +63,7 @@ target_link_libraries(antares-solver-simulation PRIVATE
 		Antares::study
 		Antares::result_writer
 		Antares::concurrency
+		Antares::solverUtils
+		Antares::misc
+		model_antares
 )

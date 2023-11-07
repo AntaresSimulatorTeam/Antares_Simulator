@@ -29,6 +29,7 @@
 #include <yuni/io/file.h>
 #include "../study.h"
 #include <cassert>
+#include "antares/utils/utils.h"
 #include "area.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>

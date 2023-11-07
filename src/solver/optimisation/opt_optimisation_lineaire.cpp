@@ -29,7 +29,7 @@
 #include "opt_fonctions.h"
 
 #include <antares/logs/logs.h>
-#include "../utils/filename.h"
+#include "antares/solver/utils/filename.h"
 
 using namespace Antares;
 using namespace Yuni;

@@ -28,6 +28,7 @@
 #include <yuni/yuni.h>
 #include <cassert>
 #include "../study.h"
+#include "antares/utils/utils.h"
 #include "area.h"
 #include "ui.h"
 #include "scratchpad.h"

@@ -37,6 +37,7 @@
 #include <climits>
 #include <optional>
 
+#include "antares/utils/utils.h"
 #include "study.h"
 #include "runtime.h"
 #include "scenario-builder/sets.h"
