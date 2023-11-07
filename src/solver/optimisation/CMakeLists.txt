@@ -126,7 +126,6 @@ set(RTESOLVER_OPT
 
 		LinearProblemMatrixEssential.h
 		LinearProblemMatrixStartUpCosts.h
-		LinearProblemMatrixStartUpCosts.cpp
 		LinearProblemMatrix.h
 		LinearProblemMatrix.cpp
 		constraints/ConstraintGroup.h
