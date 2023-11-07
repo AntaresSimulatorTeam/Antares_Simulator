@@ -124,6 +124,9 @@ set(RTESOLVER_OPT
 		constraints/MinDownTime.h
 		constraints/MinDownTime.cpp
 
+		LinearProblemMatrixEssential.h
+		LinearProblemMatrixStartUpCosts.h
+		LinearProblemMatrixStartUpCosts.cpp
 		LinearProblemMatrix.h
 		LinearProblemMatrix.cpp
 		constraints/ConstraintGroup.h
@@ -153,6 +156,8 @@ set(RTESOLVER_OPT
 		constraints/ConsistenceNumberOfDispatchableUnitsGroup.cpp
 		constraints/NbUnitsOutageLessThanNbUnitsStopGroup.h
 		constraints/NbUnitsOutageLessThanNbUnitsStopGroup.cpp
+		constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.h
+		constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.cpp
 
 	)
 

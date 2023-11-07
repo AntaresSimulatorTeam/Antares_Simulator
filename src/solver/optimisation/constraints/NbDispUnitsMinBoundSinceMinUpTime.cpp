@@ -1,59 +1,58 @@
 #include "NbDispUnitsMinBoundSinceMinUpTime.h"
 
-void NbDispUnitsMinBoundSinceMinUpTime::add(int pays,
-                                            int cluster,
-                                            int clusterIndex,
-                                            int pdt,
-                                            bool Simulation)
+void NbDispUnitsMinBoundSinceMinUpTime::add(
+  int pays,
+  std::shared_ptr<NbDispUnitsMinBoundSinceMinUpTimeData> data)
 {
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-      = problemeHebdo->PaliersThermiquesDuPays[pays];
+    // const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+    //   = problemeHebdo->PaliersThermiquesDuPays[pays];
     const int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
-      = PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[clusterIndex];
+      = data->PaliersThermiquesDuPays
+          .DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[data->clusterIndex];
 
-    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-      = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-    CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesContraintesDeDureeMinDeMarche[cluster]
-      = -1;
-    if (!Simulation)
+    // CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
+    //   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
+    data->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[data->cluster] = -1;
+    if (!data->Simulation)
     {
         int NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+          = builder->data->NombreDePasDeTempsPourUneOptimisation;
 
-        builder.updateHourWithinWeek(pdt).NumberOfDispatchableUnits(cluster, 1.0);
+        builder->updateHourWithinWeek(data->pdt).NumberOfDispatchableUnits(data->cluster, 1.0);
 
-        for (int k = pdt - DureeMinimaleDeMarcheDUnGroupeDuPalierThermique + 1; k <= pdt; k++)
+        for (int k = data->pdt - DureeMinimaleDeMarcheDUnGroupeDuPalierThermique + 1;
+             k <= data->pdt;
+             k++)
         {
             int t1 = k;
             if (t1 < 0)
                 t1 = NombreDePasDeTempsPourUneOptimisation + t1;
 
-            builder.updateHourWithinWeek(t1)
-              .NumberStartingDispatchableUnits(cluster, -1.0)
-              .NumberBreakingDownDispatchableUnits(cluster, 1.0);
+            builder->updateHourWithinWeek(t1)
+              .NumberStartingDispatchableUnits(data->cluster, -1.0)
+              .NumberBreakingDownDispatchableUnits(data->cluster, 1.0);
         }
 
-        builder.greaterThan();
-        if (builder.NumberOfVariables() > 1)
+        builder->greaterThan();
+        if (builder->NumberOfVariables() > 1)
         {
-            CorrespondanceCntNativesCntOptim
-              .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[cluster]
-              = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+            data->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[data->cluster]
+              = builder->data->nombreDeContraintes;
 
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            ConstraintNamer namer(builder->data->NomDesContraintes);
+            namer.UpdateArea(builder->data->NomsDesPays[pays]);
 
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
+            namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + data->pdt);
             namer.NbDispUnitsMinBoundSinceMinUpTime(
-              problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-              PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
-            builder.build();
+              builder->data->nombreDeContraintes,
+              data->PaliersThermiquesDuPays.NomsDesPaliersThermiques[data->clusterIndex]);
+            builder->build();
         }
     }
     else
     {
-        problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
+        *builder->data->NbTermesContraintesPourLesCoutsDeDemarrage
           += 1 + 2 * DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
-        problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
+        builder->data->nombreDeContraintes++;
     }
 }

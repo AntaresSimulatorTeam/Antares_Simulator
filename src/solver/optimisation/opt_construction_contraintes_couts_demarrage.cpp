@@ -35,7 +35,7 @@
 #include "constraints/PMinMaxDispatchableGenerationGroup.h"
 #include "constraints/ConsistenceNumberOfDispatchableUnitsGroup.h"
 #include "constraints/NbUnitsOutageLessThanNbUnitsStopGroup.h"
-#include "constraints/NbDispUnitsMinBoundSinceMinUpTime.h"
+#include "constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.h"
 #include "constraints/MinDownTime.h"
 
 using namespace Antares::Data;
@@ -59,46 +59,32 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
       problemeHebdo, Simulation);
     consistenceNumberOfDispatchableUnitsGroup.Build();
 
-    // for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    //   {
-    //       const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-    //         = problemeHebdo->PaliersThermiquesDuPays[pays];
-    //       NbUnitsOutageLessThanNbUnitsStop nbUnitsOutageLessThanNbUnitsStop(problemeHebdo);
-
-    //       for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
-    //       {
-    //           const int palier
-    //             = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-
-    //           for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-    //           {
-    //               nbUnitsOutageLessThanNbUnitsStop.add(pays, palier, index, pdt, Simulation);
-    //           }
-    //       }
-    // }
     NbUnitsOutageLessThanNbUnitsStopGroup nbUnitsOutageLessThanNbUnitsStopGroup(problemeHebdo,
                                                                                 Simulation);
     nbUnitsOutageLessThanNbUnitsStopGroup.Build();
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
-        NbDispUnitsMinBoundSinceMinUpTime nbDispUnitsMinBoundSinceMinUpTime(problemeHebdo);
-        constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
-        {
-            if (PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index] <= 0)
-                continue;
-            const int palier
-              = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+    // for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    // {
+    //     const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+    //       = problemeHebdo->PaliersThermiquesDuPays[pays];
+    //     NbDispUnitsMinBoundSinceMinUpTime nbDispUnitsMinBoundSinceMinUpTime(problemeHebdo);
+    //     constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+    //     for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
+    //     {
+    //         if (PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index] <=
+    //         0)
+    //             continue;
+    //         const int palier
+    //           = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-            {
-                nbDispUnitsMinBoundSinceMinUpTime.add(pays, palier, index, pdt, Simulation);
-            }
-        }
-    }
-
+    //         for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+    //         {
+    //             nbDispUnitsMinBoundSinceMinUpTime.add(pays, palier, index, pdt, Simulation);
+    //         }
+    //     }
+    // }
+    NbDispUnitsMinBoundSinceMinUpTimeGroup nbDispUnitsMinBoundSinceMinUpTimeGroup(problemeHebdo,
+                                                                                  Simulation);
+    nbDispUnitsMinBoundSinceMinUpTimeGroup.Build();
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays

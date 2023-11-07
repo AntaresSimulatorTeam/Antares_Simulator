@@ -51,10 +51,7 @@ void LinearProblemMatrix::Run()
 {
     InitiliazeProblemAResoudreCounters();
 
-    for (auto& group : constraintgroups_)
-    {
-        group->Build();
-    }
+    LinearProblemMatrixEssential::Run();
 
     if (problemeHebdo_->OptimisationAvecCoutsDeDemarrage)
     {

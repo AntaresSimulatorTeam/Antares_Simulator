@@ -26,7 +26,6 @@
 */
 #include "opt_structure_probleme_a_resoudre.h"
 #include "sim_structure_probleme_economique.h"
-#include "LinearProblemMatrixEssential.h"
 #include "constraints/ConstraintGroup.h"
 #include "constraints/Group1.h"
 #include "constraints/BindingConstraintDayGroup.h"
@@ -41,47 +40,22 @@
 #include <antares/study/study.h>
 
 using namespace Antares::Data;
-class LinearProblemMatrix : private LinearProblemMatrixEssential
+class LinearProblemMatrixEssential
 {
 public:
-    explicit LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo, Solver::IResultWriter& writer) :
-     LinearProblemMatrixEssential(problemeHebdo),
-     writer_(writer),
-     group1_(problemeHebdo),
-     bindingConstraintDayGroup_(problemeHebdo),
-     bindingConstraintWeekGroup_(problemeHebdo),
-     hydroPowerGroup_(problemeHebdo),
-     hydraulicSmoothingGroup_(problemeHebdo),
-     minMaxHydroPowerGroup_(problemeHebdo),
-     maxPumpingGroup_(problemeHebdo),
-     areaHydroLevelGroup_(problemeHebdo),
-     finalStockGroup_(problemeHebdo)
+    explicit LinearProblemMatrixEssential(PROBLEME_HEBDO* problemeHebdo) :
+     problemeHebdo_(problemeHebdo)
     {
-        constraintgroups_ = {&group1_,
-                             &bindingConstraintDayGroup_,
-                             &bindingConstraintWeekGroup_,
-                             &hydroPowerGroup_,
-                             &hydraulicSmoothingGroup_,
-                             &minMaxHydroPowerGroup_,
-                             &maxPumpingGroup_,
-                             &areaHydroLevelGroup_,
-                             &finalStockGroup_};
     }
 
-    void Run() override;
-    void ExportStructures();
+    virtual void Run()
+    {
+        for (auto& group : constraintgroups_)
+        {
+            group->Build();
+        }
+    };
 
-private:
-    Solver::IResultWriter& writer_;
-    Group1 group1_;
-    BindingConstraintDayGroup bindingConstraintDayGroup_;
-    BindingConstraintWeekGroup bindingConstraintWeekGroup_;
-    HydroPowerGroup hydroPowerGroup_;
-    HydraulicSmoothingGroup hydraulicSmoothingGroup_;
-    MinMaxHydroPowerGroup minMaxHydroPowerGroup_;
-    MaxPumpingGroup maxPumpingGroup_;
-    AreaHydroLevelGroup areaHydroLevelGroup_;
-    FinalStockGroup finalStockGroup_;
-
-    void InitiliazeProblemAResoudreCounters();
+    PROBLEME_HEBDO* problemeHebdo_;
+    std::vector<ConstraintGroup*> constraintgroups_;
 };
