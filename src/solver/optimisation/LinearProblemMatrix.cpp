@@ -29,6 +29,7 @@
 #include "opt_export_structure.h"
 #include "../utils/filename.h"
 #include "opt_fonctions.h"
+#include "LinearProblemMatrixStartUpCosts.h"
 
 using namespace Antares::Data;
 
@@ -55,8 +56,7 @@ void LinearProblemMatrix::Run()
 
     if (problemeHebdo_->OptimisationAvecCoutsDeDemarrage)
     {
-        OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo_,
-                                                                                false);
+        LinearProblemMatrixStartUpCosts(problemeHebdo_, false).Run();
     }
 
     return;

@@ -34,7 +34,7 @@
 #include "constraints/ConsistenceNumberOfDispatchableUnitsGroup.h"
 #include "constraints/NbUnitsOutageLessThanNbUnitsStopGroup.h"
 #include "constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.h"
-#include "constraints/MinDownTime.h"
+#include "constraints/MinDownTimeGroup.h"
 
 #include <antares/study/study.h>
 
@@ -49,12 +49,14 @@ public:
      pMinMaxDispatchableGenerationGroup_(problemeHebdo, simulation_),
      consistenceNumberOfDispatchableUnitsGroup_(problemeHebdo, simulation_),
      nbUnitsOutageLessThanNbUnitsStopGroup_(problemeHebdo, Simulation),
-     nbDispUnitsMinBoundSinceMinUpTimeGroup_(problemeHebdo, Simulation)
+     nbDispUnitsMinBoundSinceMinUpTimeGroup_(problemeHebdo, Simulation),
+     minDownTimeGroup_(problemeHebdo, Simulation)
     {
         constraintgroups_ = {&pMinMaxDispatchableGenerationGroup_,
                              &consistenceNumberOfDispatchableUnitsGroup_,
                              &nbUnitsOutageLessThanNbUnitsStopGroup_,
-                             &nbDispUnitsMinBoundSinceMinUpTimeGroup_};
+                             &nbDispUnitsMinBoundSinceMinUpTimeGroup_,
+                             &minDownTimeGroup_};
     }
 
 private:
@@ -63,4 +65,5 @@ private:
     ConsistenceNumberOfDispatchableUnitsGroup consistenceNumberOfDispatchableUnitsGroup_;
     NbUnitsOutageLessThanNbUnitsStopGroup nbUnitsOutageLessThanNbUnitsStopGroup_;
     NbDispUnitsMinBoundSinceMinUpTimeGroup nbDispUnitsMinBoundSinceMinUpTimeGroup_;
+    MinDownTimeGroup minDownTimeGroup_;
 };

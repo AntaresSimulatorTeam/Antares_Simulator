@@ -1,13 +1,18 @@
 #pragma once
-#include "ConstraintBuilder.h"
+#include "new_constraint_builder.h"
+
+struct MinDownTimeData : public StartUpCostsData
+{
+    std::vector<int> NumeroDeContrainteDesContraintesDeDureeMinDArret;
+};
 
 /*!
  * represent 'MinDownTime' Constraint type
  */
-class MinDownTime : private ConstraintFactory
+class MinDownTime : private NewConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
+    using NewConstraintFactory::NewConstraintFactory;
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area
@@ -15,5 +20,7 @@ public:
      * @param pdt : timestep
      * @param Simulation : ---
      */
-    void add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation);
+    struct MinDownTimeData : public StartUpCostsData void add(
+                               int pays,
+                               std::shared_ptr<MinDownTimeData> data);
 };

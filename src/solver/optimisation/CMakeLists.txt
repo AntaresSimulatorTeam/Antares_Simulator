@@ -157,6 +157,8 @@ set(RTESOLVER_OPT
 		constraints/NbUnitsOutageLessThanNbUnitsStopGroup.cpp
 		constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.h
 		constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.cpp
+		constraints/MinDownTimeGroup.h
+		constraints/MinDownTimeGroup.cpp
 
 	)
 
