@@ -41,15 +41,18 @@ AdequacyPatchOptimization::AdequacyPatchOptimization(const Antares::Data::Study&
                                                      PROBLEME_HEBDO* problemeHebdo,
                                                      AdqPatchParams& adqPatchParams,
                                                      uint thread_number,
-                                                     IResultWriter& writer) :
-    WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer), study_(study)
+                                                     IResultWriter& writer,
+                                                     OutputWriter& outputWriter
+                                                     ) :
+    WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer, outputWriter),
+    study_(study)
 {
 }
 
 void AdequacyPatchOptimization::solve()
 {
     problemeHebdo_->adequacyPatchRuntimeData->AdequacyFirstStep = true;
-    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
+    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_, outputWriter_);
     problemeHebdo_->adequacyPatchRuntimeData->AdequacyFirstStep = false;
 
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; ++pays)
@@ -63,7 +66,7 @@ void AdequacyPatchOptimization::solve()
                     problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS.end(), 0);
     }
 
-    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
+    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_, outputWriter_);
 }
 
 } // namespace Antares::Solver::Optimization

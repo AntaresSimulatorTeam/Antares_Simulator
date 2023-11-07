@@ -34,6 +34,7 @@
 #include <antares/exception/InitializationError.hpp>
 #include "antares/solver/variable/print.h"
 #include <yuni/io/io.h>
+#include "OutputWriter.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/simulation/apply-scenario.h"
 #include <antares/antares/fatal-error.h>
@@ -43,7 +44,7 @@
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
-#include "../optimisation/LpsFromAntares.h"
+#include "LpsFromAntares.h"
 #include <fstream>
 #include <boost/archive/text_oarchive.hpp>
 
@@ -68,7 +69,9 @@ public:
             std::vector<Variable::State>& pState,
             bool pYearByYear,
             Benchmarking::IDurationCollector& durationCollector,
-            IResultWriter& resultWriter) :
+            IResultWriter& resultWriter,
+            OutputWriter& writer
+            ) :
      simulation_(simulation),
      y(pY),
      yearFailed(pYearFailed),
@@ -86,7 +89,8 @@ public:
                     study.parameters,
                     study.calendar,
                     study.maxNbYearsInParallel,
-                    resultWriter)
+                    resultWriter),
+    writer_(writer)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
     }
@@ -111,6 +115,7 @@ private:
     Benchmarking::IDurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
     HydroManagement hydroManagement;
+    OutputWriter& writer_;
 private:
     /*
     ** \brief Log failed week
@@ -198,7 +203,8 @@ public:
                                                failedWeekList,
                                                isFirstPerformedYearOfSimulation,
                                                hydroManagement.ventilationResults(),
-                                               optWriter);
+                                               optWriter,
+                                               writer_);
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
@@ -243,10 +249,11 @@ public:
 
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
-    const ::Settings& settings,
-    Benchmarking::IDurationCollector& duration_collector,
-    IResultWriter& resultWriter) :
-    ImplementationType(study, resultWriter),
+                                      const ::Settings& settings,
+                                      Benchmarking::IDurationCollector& duration_collector,
+                                      IResultWriter& resultWriter,
+                                      OutputWriter& outputWriter) :
+    ImplementationType(study, resultWriter, outputWriter),
     study(study),
     settings(settings),
     pNbYearsReallyPerformed(0),
@@ -255,7 +262,8 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
     pFirstSetParallelWithAPerformedYearWasRun(false),
     pDurationCollector(duration_collector),
     pQueueService(study.pQueueService),
-    pResultWriter(resultWriter)
+    pResultWriter(resultWriter),
+    writer_(outputWriter)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -1004,7 +1012,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                                                  state,
                                                                  pYearByYear,
                                                                  pDurationCollector,
-                                                                 pResultWriter);
+                                                                 pResultWriter,
+                                                                 writer_);
             results.add(Concurrency::AddTask(*pQueueService, task));
         } // End loop over years of the current set of parallel years
 

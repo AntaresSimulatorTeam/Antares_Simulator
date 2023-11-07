@@ -38,10 +38,10 @@ using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-Economy::Economy(Data::Study& study, IResultWriter& resultWriter) :
+Economy::Economy(Data::Study& study, IResultWriter& resultWriter, OutputWriter& outputWriter) :
     study(study),
     preproOnly(false),
-    resultWriter(resultWriter)
+    resultWriter(resultWriter), outputWriter_(outputWriter)
 {
 }
 
@@ -94,7 +94,9 @@ bool Economy::simulationBegin()
                                                     study.parameters.adqPatchParams,
                                                     &pProblemesHebdo[numSpace],
                                                     numSpace,
-                                                    resultWriter);
+                                                    resultWriter,
+                                                    outputWriter_
+                );
             postProcessesList_[numSpace] =
                 interfacePostProcessList::create(study.parameters.adqPatchParams,
                                                  &pProblemesHebdo[numSpace],
@@ -122,7 +124,9 @@ bool Economy::year(Progression::Task& progression,
                    std::list<uint>& failedWeekList,
                    bool isFirstPerformedYearOfSimulation,
                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
-                   OptimizationStatisticsWriter& optWriter)
+                   OptimizationStatisticsWriter& optWriter,
+                   OutputWriter& outputWriter
+                   )
 {
     // No failed week at year start
     failedWeekList.clear();

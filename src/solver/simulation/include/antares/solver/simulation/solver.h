@@ -39,6 +39,7 @@
 #include "solver.data.h"
 #include "solver.utils.h"
 #include "antares/solver/hydro/management/management.h"
+#include "OutputWriter.h"
 
 #include <antares/writer/writer_factory.h>
 
@@ -66,7 +67,8 @@ public:
     ISimulation(Data::Study& study,
                 const ::Settings& settings,
                 Benchmarking::IDurationCollector& duration_collector,
-                IResultWriter& resultWriter);
+                IResultWriter& resultWriter,
+                OutputWriter& outputWriter);
     //! Destructor
     ~ISimulation();
     //@}
@@ -168,6 +170,7 @@ private:
 
     // Collecting durations inside the simulation
     Benchmarking::IDurationCollector& pDurationCollector;
+    OutputWriter& writer_;
 
 public:
     //! The queue service that runs every set of parallel years

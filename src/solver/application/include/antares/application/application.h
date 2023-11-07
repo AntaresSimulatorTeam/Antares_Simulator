@@ -6,6 +6,7 @@
 #include <antares/benchmarking/timer.h>
 #include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/solver/misc/options.h"
+#include "OutputWriter.h"
 
 #include <antares/writer/i_writer.h>
 #include <yuni/core/string.h>
@@ -98,6 +99,9 @@ private:
 
     void prepareWriter(Antares::Data::Study& study,
                        Benchmarking::IDurationCollector& duration_collector);
+
+public:
+    OutputWriter outputWriter_;
 
 }; // class Application
 } // namespace Antares::Solver

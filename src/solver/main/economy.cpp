@@ -38,7 +38,7 @@ void Application::runSimulationInEconomicMode()
 {
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Economy> SimulationType;
-    SimulationType simulation(*pStudy, pSettings, pDurationCollector, *resultWriter);
+    SimulationType simulation(*pStudy, pSettings, pDurationCollector, *resultWriter, outputWriter_);
     simulation.checkWriter();
     simulation.run();
 

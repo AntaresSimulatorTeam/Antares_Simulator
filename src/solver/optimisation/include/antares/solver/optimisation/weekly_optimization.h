@@ -39,7 +39,8 @@ public:
                                      PROBLEME_HEBDO* problemeHebdo,
                                      Antares::Data::AdequacyPatch::AdqPatchParams&,
                                      uint numSpace,
-                                     IResultWriter& writer);
+                                     IResultWriter& writer,
+                                     OutputWriter& outputWriter);
     ~DefaultWeeklyOptimization() override = default;
     void solve() override;
 };

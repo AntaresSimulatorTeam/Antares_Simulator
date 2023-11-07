@@ -31,6 +31,7 @@
 
 #include <antares/logs/logs.h>
 #include "antares/solver/utils/filename.h"
+#include "OutputWriter.h"
 
 using namespace Antares;
 using namespace Yuni;
@@ -38,12 +39,6 @@ using Antares::Solver::Optimization::OptimizationOptions;
 
 namespace
 {
-
-template<class T, class U>
-void copy(int n, T * in, U & out) {
-    out.resize(n);
-    std::copy(in, in + n, out.begin());
-}
 
 double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
                                    const int NumeroDeLIntervalle,
@@ -70,11 +65,19 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
     writer.addEntryFromBuffer(filename, buffer);
 }
 
+template<class T, class U>
+void copy(const T& in, U& out) {
+    std::copy(in.begin(),
+              in.end(),
+              std::back_inserter(out));
+}
+
 bool runWeeklyOptimization(const OptimizationOptions& options,
                            PROBLEME_HEBDO* problemeHebdo,
                            const AdqPatchParams& adqPatchParams,
                            Solver::IResultWriter& writer,
-                           int optimizationNumber)
+                           int optimizationNumber,
+                           Solver::OutputWriter& output)
 {
     const int NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
@@ -111,44 +114,42 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                                     problemeHebdo->year);
 
         /* rend accessible les problems à haut niveau */
-        auto& study = *Antares::Data::Study::Current::Get();
-        if (study._lps != nullptr) {
-            LpsFromAntares * lps = (LpsFromAntares*)study._lps;
-            int const year = study.runtime->currentYear[numSpace] + 1;
-            int const week = study.runtime->weekInTheYear[numSpace] + 1;
-            int const n = ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle];
-            int nvars = ProblemeHebdo->ProblemeAResoudre->NombreDeVariables;
-            int ncons = ProblemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-            int neles = ProblemeHebdo->ProblemeAResoudre->IndicesDebutDeLigne[ncons - 1] + ProblemeHebdo->ProblemeAResoudre->NombreDeTermesDesLignes[ncons - 1];
+        LpsFromAntares * lps = &output.lps;
+        int const year = problemeHebdo->year + 1;
+        int const week = problemeHebdo->weekInTheYear + 1;
+        int const n = optimizationNumber;
+        int nvars = problemeHebdo->ProblemeAResoudre->NombreDeVariables;
+        int ncons = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        int neles = problemeHebdo->ProblemeAResoudre->IndicesDebutDeLigne[ncons - 1] + problemeHebdo->ProblemeAResoudre->NombreDeTermesDesLignes[ncons - 1];
 
-            //LpFromAntaresPtr lp(new LpFromAntares);
-            if (week == 1 && n == 1) {
-                ConstantDataFromAntaresPtr year_ptr(new ConstantDataFromAntares);
-                year_ptr->NombreDeVariables = nvars;
-                year_ptr->NombreDeCoefficients = neles;
-                year_ptr->NombreDeContraintes = ncons;
+        //LpFromAntaresPtr lp(new LpFromAntares);
+        if (week == 1 && n == 1) {
+            ConstantDataFromAntaresPtr year_ptr(new ConstantDataFromAntares);
+            year_ptr->NombreDeVariables = nvars;
+            year_ptr->NombreDeCoefficients = neles;
+            year_ptr->NombreDeContraintes = ncons;
 
-                copy(nvars, ProblemeHebdo->ProblemeAResoudre->TypeDeVariable, year_ptr->TypeDeVariable);
+            copy(problemeHebdo->ProblemeAResoudre->TypeDeVariable, year_ptr->TypeDeVariable);
 
-                copy(neles, ProblemeHebdo->ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes, year_ptr->CoefficientsDeLaMatriceDesContraintes);
-                copy(neles, ProblemeHebdo->ProblemeAResoudre->IndicesColonnes, year_ptr->IndicesColonnes);
+            copy(problemeHebdo->ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes, year_ptr->CoefficientsDeLaMatriceDesContraintes);
+            copy(problemeHebdo->ProblemeAResoudre->IndicesColonnes, year_ptr->IndicesColonnes);
 
-                copy(ncons, ProblemeHebdo->ProblemeAResoudre->IndicesDebutDeLigne, year_ptr->Mdeb);
-                lps->_constant = year_ptr;
-            }
-            {
-                HebdoDataFromAntaresPtr week_ptr(new HebdoDataFromAntares);
-
-                copy(nvars, ProblemeHebdo->ProblemeAResoudre->CoutLineaire, week_ptr->CoutLineaire);
-                copy(nvars, ProblemeHebdo->ProblemeAResoudre->Xmax, week_ptr->Xmax);
-                copy(nvars, ProblemeHebdo->ProblemeAResoudre->Xmin, week_ptr->Xmin);
-
-                copy(ncons, ProblemeHebdo->ProblemeAResoudre->SecondMembre, week_ptr->SecondMembre);
-                copy(ncons, ProblemeHebdo->ProblemeAResoudre->Sens, week_ptr->Sens);
-
-                lps->_hebdo[{static_cast<unsigned int>(year), static_cast<unsigned int>(week)}] = week_ptr;
-            }
+            copy(problemeHebdo->ProblemeAResoudre->IndicesDebutDeLigne, year_ptr->Mdeb);
+            lps->_constant = year_ptr;
         }
+        {
+            HebdoDataFromAntaresPtr week_ptr(new HebdoDataFromAntares);
+
+            copy(problemeHebdo->ProblemeAResoudre->CoutLineaire, week_ptr->CoutLineaire);
+            copy(problemeHebdo->ProblemeAResoudre->Xmax, week_ptr->Xmax);
+            copy(problemeHebdo->ProblemeAResoudre->Xmin, week_ptr->Xmin);
+
+            copy(problemeHebdo->ProblemeAResoudre->SecondMembre, week_ptr->SecondMembre);
+            copy(problemeHebdo->ProblemeAResoudre->Sens, week_ptr->Sens);
+
+            lps->_hebdo[{static_cast<unsigned int>(year), static_cast<unsigned int>(week)}] = week_ptr;
+        }
+
         /* Fin */
         if (!OPT_AppelDuSimplexe(options,
                                  problemeHebdo,
@@ -187,7 +188,9 @@ void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               const AdqPatchParams& adqPatchParams,
-                              Solver::IResultWriter& writer)
+                              Solver::IResultWriter& writer,
+                              Solver::OutputWriter& outputWriter
+                              )
 {
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
     {
@@ -210,7 +213,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(problemeHebdo, writer);
 
     bool ret = runWeeklyOptimization(
-      options, problemeHebdo, adqPatchParams, writer, PREMIERE_OPTIMISATION);
+      options, problemeHebdo, adqPatchParams, writer, PREMIERE_OPTIMISATION, outputWriter);
 
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
@@ -220,7 +223,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
         // We need to adjust some stuff before running the 2nd optimisation
         runThermalHeuristic(problemeHebdo);
         return runWeeklyOptimization(
-          options, problemeHebdo, adqPatchParams, writer, DEUXIEME_OPTIMISATION);
+          options, problemeHebdo, adqPatchParams, writer, DEUXIEME_OPTIMISATION, outputWriter);
     }
     return ret;
 }

@@ -30,6 +30,7 @@
 #include <yuni/yuni.h> // for "uint" definition
 #include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "OutputWriter.h"
 #include <antares/study/parameters/adq-patch-params.h>
 
 namespace Antares::Solver::Optimization
@@ -44,18 +45,21 @@ public:
                                                       Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams,
                                                       PROBLEME_HEBDO* problemesHebdo,
                                                       uint numSpace,
-                                                      IResultWriter& writer);
+                                                      IResultWriter& writer,
+                                                      OutputWriter& outputWriter);
 
 protected:
     explicit WeeklyOptimization(const OptimizationOptions& options,
                                 PROBLEME_HEBDO* problemesHebdo,
                                 Antares::Data::AdequacyPatch::AdqPatchParams&,
                                 uint numSpace,
-                                IResultWriter& writer);
+                                IResultWriter& writer,
+                                OutputWriter& outputWriter);
     Antares::Solver::Optimization::OptimizationOptions options_;
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
     Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams_;
     const uint thread_number_ = 0;
     IResultWriter& writer_;
+    OutputWriter& outputWriter_;
 };
 } // namespace Antares::Solver::Optimization
