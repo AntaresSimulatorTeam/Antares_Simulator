@@ -20,7 +20,5 @@ public:
      * @param pdt : timestep
      * @param Simulation : ---
      */
-    struct MinDownTimeData : public StartUpCostsData void add(
-                               int pays,
-                               std::shared_ptr<MinDownTimeData> data);
+    void add(int pays, std::shared_ptr<MinDownTimeData> data);
 };
