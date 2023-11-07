@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../optimisation/opt_period_string_generator_base.h"
-
 /*
     MPS and criterion generated files wear the same time interval sequence in their names.
     This time interval sequence is either <year>-<week> (for a weekly optimization),
@@ -17,6 +15,7 @@
    called.
 */
 
+#include "../../../../../optimisation/opt_period_string_generator_base.h"
 // ------------------------------------
 // Daily optimization
 // ------------------------------------

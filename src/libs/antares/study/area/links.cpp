@@ -28,12 +28,10 @@
 #include <limits>
 #include <yuni/yuni.h>
 #include "../study.h"
+#include "antares/utils/utils.h"
 #include "links.h"
 #include "area.h"
 #include <antares/logs/logs.h>
-#include "../filter.h"
-#include "constants.h"
-#include "../fwd.h"
 
 using namespace Yuni;
 using namespace Antares;

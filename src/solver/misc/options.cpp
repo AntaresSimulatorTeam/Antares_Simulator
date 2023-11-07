@@ -37,7 +37,7 @@
 #include <limits>
 #include <algorithm>
 
-#include "options.h"
+#include "antares/solver/misc/options.h"
 #include "../config.h"
 
 #include "../../config.h"
@@ -47,7 +47,7 @@
 #include <antares/Enum.hpp>
 #include <antares/constants.h>
 
-#include "utils/ortools_utils.h"
+#include "antares/solver/utils/ortools_utils.h"
 
 using namespace Yuni;
 using namespace Antares;

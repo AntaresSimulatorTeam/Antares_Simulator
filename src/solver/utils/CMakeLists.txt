@@ -1,19 +1,20 @@
 set(SRC
-        ortools_utils.h
+        include/antares/solver/utils/ortools_utils.h
         ortools_utils.cpp
-        filename.h
+        include/antares/solver/utils/filename.h
         filename.cpp
-        named_problem.h
+        include/antares/solver/utils/named_problem.h
         named_problem.cpp
-        mps_utils.h
+        include/antares/solver/utils/mps_utils.h
         mps_utils.cpp
-        name_translator.h
+        include/antares/solver/utils/name_translator.h
         name_translator.cpp
-        opt_period_string_generator.h
+        include/antares/solver/utils/opt_period_string_generator.h
         opt_period_string_generator.cpp
         )
 
 add_library(utils ${SRC})
+add_library(Antares::solverUtils ALIAS utils)
 if(NOT MSVC)
     target_compile_options(utils
             PUBLIC
@@ -30,3 +31,8 @@ target_link_libraries(utils
         Antares::result_writer #ortools_utils.h
         antares-core #enum.h
         )
+
+target_include_directories(utils
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)

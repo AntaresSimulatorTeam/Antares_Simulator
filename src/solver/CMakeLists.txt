@@ -16,6 +16,8 @@ add_subdirectory(utils)
 add_subdirectory(optimisation)
 add_subdirectory(main)
 add_subdirectory(constraints-builder)
+add_subdirectory(application)
+add_subdirectory(misc)
 
 #
 # Resource file for Windows
@@ -45,23 +47,7 @@ OMESSAGE("  :: application solver")
 set(exec_name "antares-${ANTARES_PRG_VERSION}-solver")
 
 add_library(solver-lib
-	misc/options.h
-	misc/options.cpp
-	misc/process-priority.cpp
-	misc/cholesky.h
-	misc/cholesky.hxx
-	misc/matrix-dp-make.h
-	misc/matrix-dp-make.hxx
-
-	misc/system-memory.h
-	misc/system-memory.cpp
-
-    misc/write-command-line.h
-    misc/write-command-line.cpp
-
 	${SRCS}
-
-    application/application.h application/application.cpp
 
     signal-handling/common.h
     signal-handling/public.h
@@ -85,6 +71,7 @@ set(ANTARES_SOLVER_LIBS
 	Antares::sys
 	Antares::infoCollection
 	Antares::checks
+	Antares::misc
 	yuni-static-uuid
 	yuni-static-core		
 	${CMAKE_THREADS_LIBS_INIT}
@@ -108,6 +95,7 @@ target_link_libraries(solver-lib
 target_link_libraries(antares-solver
 		PRIVATE
 		solver-lib
+		Antares::application
 		)
 
 target_include_directories(antares-solver
