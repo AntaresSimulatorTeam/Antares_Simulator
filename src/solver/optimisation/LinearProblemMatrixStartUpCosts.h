@@ -49,9 +49,9 @@ public:
      simulation_(Simulation),
      pMinMaxDispatchableGenerationGroup_(problemeHebdo, simulation_),
      consistenceNumberOfDispatchableUnitsGroup_(problemeHebdo, simulation_),
-     nbUnitsOutageLessThanNbUnitsStopGroup_(problemeHebdo, Simulation),
-     nbDispUnitsMinBoundSinceMinUpTimeGroup_(problemeHebdo, Simulation),
-     minDownTimeGroup_(problemeHebdo, Simulation)
+     nbUnitsOutageLessThanNbUnitsStopGroup_(problemeHebdo, simulation_),
+     nbDispUnitsMinBoundSinceMinUpTimeGroup_(problemeHebdo, simulation_),
+     minDownTimeGroup_(problemeHebdo, simulation_)
     {
         constraintgroups_ = {&pMinMaxDispatchableGenerationGroup_,
                              &consistenceNumberOfDispatchableUnitsGroup_,

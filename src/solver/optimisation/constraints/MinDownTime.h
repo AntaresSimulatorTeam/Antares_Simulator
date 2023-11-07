@@ -3,7 +3,7 @@
 
 struct MinDownTimeData : public StartUpCostsData
 {
-    std::vector<int> NumeroDeContrainteDesContraintesDeDureeMinDArret;
+    std::vector<int>& NumeroDeContrainteDesContraintesDeDureeMinDArret;
 };
 
 /*!

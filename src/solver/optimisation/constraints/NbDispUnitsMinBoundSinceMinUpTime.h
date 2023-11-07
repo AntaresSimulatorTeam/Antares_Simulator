@@ -2,7 +2,7 @@
 #include "new_constraint_builder.h"
 struct NbDispUnitsMinBoundSinceMinUpTimeData : public StartUpCostsData
 {
-    std::vector<int> NumeroDeContrainteDesContraintesDeDureeMinDeMarche;
+    std::vector<int>& NumeroDeContrainteDesContraintesDeDureeMinDeMarche;
 };
 /*!
  * represent 'Number of Dispatchable Units Min Bound Since Min Up Time' type

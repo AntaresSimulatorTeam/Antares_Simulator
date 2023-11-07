@@ -26,9 +26,6 @@ void MinDownTimeGroup::Build()
         MinDownTime minDownTime(builder_);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            const int palier
-              = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-
             for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 minDownTime.add(pays, GetMinDownTimeDataFromProblemHebdo(pays, index, pdt));

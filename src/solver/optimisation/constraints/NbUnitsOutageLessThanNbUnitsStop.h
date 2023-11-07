@@ -2,7 +2,7 @@
 #include "new_constraint_builder.h"
 struct NbUnitsOutageLessThanNbUnitsStopData : public StartUpCostsData
 {
-    std::vector<int> NumeroDeContrainteDesContraintesDeDureeMinDeMarche;
+    std::vector<int>& NumeroDeContrainteDesContraintesDeDureeMinDeMarche;
 };
 /*!
  * represent 'NbUnitsOutageLessThanNbUnitsStop' type
