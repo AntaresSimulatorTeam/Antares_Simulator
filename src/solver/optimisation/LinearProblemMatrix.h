@@ -24,6 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#pragma once
 #include "opt_structure_probleme_a_resoudre.h"
 #include "sim_structure_probleme_economique.h"
 #include "LinearProblemMatrixEssential.h"
@@ -41,7 +42,7 @@
 #include <antares/study/study.h>
 
 using namespace Antares::Data;
-class LinearProblemMatrix : private LinearProblemMatrixEssential
+class LinearProblemMatrix : public LinearProblemMatrixEssential
 {
 public:
     explicit LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo, Solver::IResultWriter& writer) :

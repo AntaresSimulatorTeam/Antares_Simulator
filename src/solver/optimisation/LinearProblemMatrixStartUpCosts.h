@@ -24,10 +24,11 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#pragma once
 #include "opt_structure_probleme_a_resoudre.h"
 #include "sim_structure_probleme_economique.h"
 #include "constraints/ConstraintGroup.h"
-#include "constraints/LinearProblemMatrixEssential.h"
+#include "LinearProblemMatrixEssential.h"
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "constraints/PMinMaxDispatchableGenerationGroup.h"
@@ -40,7 +41,7 @@
 
 using namespace Antares::Data;
 
-class LinearProblemMatrixStartUpCosts : private LinearProblemMatrixEssential
+class LinearProblemMatrixStartUpCosts : public LinearProblemMatrixEssential
 {
 public:
     explicit LinearProblemMatrixStartUpCosts(PROBLEME_HEBDO* problemeHebdo, bool Simulation) :
