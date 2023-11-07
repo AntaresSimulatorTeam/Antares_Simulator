@@ -21,17 +21,17 @@ std::shared_ptr<NbDispUnitsMinBoundSinceMinUpTimeData>
 }
 void NbDispUnitsMinBoundSinceMinUpTimeGroup::Build()
 {
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
+          = problemeHebdo_->PaliersThermiquesDuPays[pays];
         NbDispUnitsMinBoundSinceMinUpTime nbDispUnitsMinBoundSinceMinUpTime(builder_);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             if (PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index] <= 0)
                 continue;
 
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 nbDispUnitsMinBoundSinceMinUpTime.add(
                   pays, GetNbDispUnitsMinBoundSinceMinUpTimeDataFromProblemHebdo(pays, index, pdt));
