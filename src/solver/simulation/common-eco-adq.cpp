@@ -95,7 +95,8 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     try
     {
         NullResultWriter resultWriter;
-        OPT_OptimisationHebdomadaire(createOptimizationOptions(study), &problem, study.parameters.adqPatchParams, resultWriter);
+        OutputWriter output;
+        OPT_OptimisationHebdomadaire(createOptimizationOptions(study), &problem, study.parameters.adqPatchParams, resultWriter, output);
     }
     catch (Data::UnfeasibleProblemError&)
     {

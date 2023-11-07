@@ -31,15 +31,13 @@
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/logs/logs.h>
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 void Application::runSimulationInAdequacyMode()
 {
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Adequacy> SimulationType;
-    SimulationType simulation(*pStudy, pSettings, pDurationCollector, *resultWriter);
+    SimulationType simulation(*pStudy, pSettings, pDurationCollector, *resultWriter, outputWriter_);
     simulation.checkWriter();
     simulation.run();
 
@@ -53,5 +51,4 @@ void Application::runSimulationInAdequacyMode()
         this->pOptimizationInfo = simulation.getOptimizationInfo();
     }
 }
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver

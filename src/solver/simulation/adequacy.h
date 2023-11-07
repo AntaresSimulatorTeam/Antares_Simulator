@@ -56,7 +56,7 @@ public:
     **
     ** \param study The current study
     */
-    Adequacy(Data::Study& study, IResultWriter& resultWriter);
+    Adequacy(Data::Study& study, IResultWriter& resultWriter, OutputWriter& outputWriter);
     //! Destructor
     ~Adequacy() = default;
     //@}
@@ -83,7 +83,8 @@ protected:
               std::list<uint>& failedWeekList,
               bool isFirstPerformedYearOfSimulation,
               const HYDRO_VENTILATION_RESULTS&,
-              OptimizationStatisticsWriter& optWriter);
+              OptimizationStatisticsWriter& optWriter,
+              OutputWriter& writer);
 
     void incrementProgression(Progression::Task& progression);
 
@@ -108,6 +109,7 @@ private:
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     Matrix<> pRES;
     IResultWriter& resultWriter;
+    OutputWriter& outputWriter;
 
 }; // class Adequacy
 

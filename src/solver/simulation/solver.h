@@ -36,6 +36,7 @@
 #include <yuni/job/queue/service.h>
 #include "../variable/state.h"
 #include "../misc/options.h"
+#include "OutputWriter.h"
 #include "solver.data.h"
 #include "solver.utils.h"
 #include "../hydro/management/management.h"
@@ -66,7 +67,8 @@ public:
     ISimulation(Data::Study& study,
                 const ::Settings& settings,
                 Benchmarking::IDurationCollector& duration_collector,
-                IResultWriter& resultWriter);
+                IResultWriter& resultWriter,
+                OutputWriter& outputWriter);
     //! Destructor
     ~ISimulation();
     //@}
@@ -168,6 +170,7 @@ private:
 
     // Collecting durations inside the simulation
     Benchmarking::IDurationCollector& pDurationCollector;
+    OutputWriter& writer_;
 
 public:
     //! The queue service that runs every set of parallel years

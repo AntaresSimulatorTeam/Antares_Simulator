@@ -34,10 +34,8 @@
 #include <antares/memory/memory.h>
 #include <antares/locale.h>
 
-#include "optimisation/LpsFromAntares.h"
 #include <fstream>
 #include <boost/archive/text_oarchive.hpp>
-#include "optimisation/LpsFromAntares.h"
 
 using namespace Antares;
 using namespace Yuni;
@@ -135,10 +133,12 @@ int main(int argc, char** argv)
         IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
         std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
         Antares::Solver::Application application;
+        application.outputWriter_.PrintMe();
         application.prepare(argc, argv);
         LpsFromAntares lps;
         application.pStudy->_lps = &lps;
         application.execute();
+        application.outputWriter_.PrintMe();
 
     auto path = std::string(application.pStudy->folder.c_str()) + "/fichierDeSerialisation";
     std::ofstream ofs(path);

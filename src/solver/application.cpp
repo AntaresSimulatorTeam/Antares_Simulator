@@ -18,16 +18,10 @@
 #include "misc/write-command-line.h"
 
 #include "utils/ortools_utils.h"
-#include "../config.h"
 #include <antares/infoCollection/StudyInfoCollector.h>
 
-#include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/core/process/rename.h>
-
-#include <algorithm>
-
-#include "optimisation/LpsFromAntares.h"
 
 
 using namespace Antares::Check;
@@ -491,4 +485,4 @@ Application::~Application()
     }
 }
 } // namespace Solver
-} // namespace Antares
+ // namespace Antares

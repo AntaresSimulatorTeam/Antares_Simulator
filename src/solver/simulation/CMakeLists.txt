@@ -44,7 +44,13 @@ set(SRC_SIMULATION
 		adequacy_patch_runtime_data.cpp
 		ITimeSeriesNumbersWriter.h
 		TimeSeriesNumbersWriter.cpp
-        BindingConstraintsTimeSeriesNumbersWriter.h)
+        BindingConstraintsTimeSeriesNumbersWriter.h
+
+		OutputWriter.cpp
+		OutputWriter.h
+		LpsFromAntares.h
+		LpsFromAntares.cpp
+)
 source_group("simulation" FILES ${SRC_SIMULATION})
 
 #

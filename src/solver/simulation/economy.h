@@ -57,7 +57,7 @@ public:
     **
     ** \param study The current study
     */
-    Economy(Data::Study& study, IResultWriter& resultWriter);
+    Economy(Data::Study& study, IResultWriter& resultWriter, OutputWriter& outputWriter);
     //! Destructor
     ~Economy() = default;
     //@}
@@ -84,7 +84,8 @@ protected:
               std::list<uint>& failedWeekList,
               bool isFirstPerformedYearOfSimulation,
               const HYDRO_VENTILATION_RESULTS&,
-              OptimizationStatisticsWriter& optWriter);
+              OptimizationStatisticsWriter& optWriter,
+              OutputWriter& writer);
 
     void incrementProgression(Progression::Task& progression);
 
@@ -106,6 +107,7 @@ private:
     std::vector<std::unique_ptr<Antares::Solver::Optimization::WeeklyOptimization>> weeklyOptProblems_;
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
     IResultWriter& resultWriter;
+    OutputWriter& outputWriter_;
 }; // class Economy
 
 } // namespace Antares::Solver::Simulation

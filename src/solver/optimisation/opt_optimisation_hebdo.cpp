@@ -31,6 +31,7 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
+#include "OutputWriter.h"
 #include <antares/fatal-error.h>
 #include <antares/logs/logs.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
@@ -48,11 +49,12 @@ using Antares::Solver::Optimization::OptimizationOptions;
 void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
                                   PROBLEME_HEBDO* pProblemeHebdo,
                                   const AdqPatchParams& adqPatchParams,
-                                  Solver::IResultWriter& writer)
+                                  Solver::IResultWriter& writer,
+                                  Solver::OutputWriter& outputWriter)
 {
     if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
     {
-        if (!OPT_PilotageOptimisationLineaire(options, pProblemeHebdo, adqPatchParams, writer))
+        if (!OPT_PilotageOptimisationLineaire(options, pProblemeHebdo, adqPatchParams, writer, outputWriter))
         {
             logs.error() << "Linear optimization failed";
             throw UnfeasibleProblemError("Linear optimization failed");

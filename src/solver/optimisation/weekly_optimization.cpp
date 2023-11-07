@@ -34,14 +34,15 @@ DefaultWeeklyOptimization::DefaultWeeklyOptimization(const OptimizationOptions& 
                                                      PROBLEME_HEBDO* problemeHebdo,
                                                      AdqPatchParams& adqPatchParams,
                                                      uint thread_number,
-                                                     IResultWriter& writer) :
- WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer)
+                                                     IResultWriter& writer,
+                                                     OutputWriter& outputWriter) :
+ WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer, outputWriter)
 {
 }
 
 void DefaultWeeklyOptimization::solve()
 {
-    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
+    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_, outputWriter_);
 }
 
 } // namespace Antares::Solver::Optimization
