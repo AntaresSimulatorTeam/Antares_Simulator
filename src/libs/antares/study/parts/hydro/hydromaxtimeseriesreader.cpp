@@ -122,7 +122,7 @@ void HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy(Area& area) const
     dailyNbHoursAtPumpPmax.pasteToColumn(0, dailyMaxPumpE);
 }
 
-bool HydroMaxTimeSeriesReader::operator()(const AnyString& folder, Area& area, bool usedBySolver)
+bool HydroMaxTimeSeriesReader::read(const AnyString& folder, Area& area, bool usedBySolver)
 {
     bool ret = true;
 

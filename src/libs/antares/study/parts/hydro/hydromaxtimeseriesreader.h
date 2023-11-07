@@ -43,8 +43,9 @@ class HydroMaxTimeSeriesReader
 public:
     HydroMaxTimeSeriesReader();
 
-    bool operator()(const AnyString& folder, Area& area, bool usedBySolver);
+    bool read(const AnyString& folder, Area& area, bool usedBySolver);
 
+private:
     Matrix<double, double> dailyMaxPumpAndGen;
 
     enum powerDailyE
@@ -59,7 +60,6 @@ public:
         pumpMaxE,
     };
 
-private:
     /**
      * \brief Loading deprecated files
      *  This function provides reading from deprecated files which
