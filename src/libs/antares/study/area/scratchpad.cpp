@@ -35,14 +35,14 @@ using namespace Yuni;
 namespace Antares::Data
 {
 
-bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix<double>& power,
-                                       const Matrix<double>::ColumnType& energy)
+bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix<double>& dailyPower,
+                                       const Matrix<double>::ColumnType& nbHoursAtPmaxPerDay)
 {
-    for (uint tsNumber = 0; tsNumber < power.width; ++tsNumber)
+    for (uint tsNumber = 0; tsNumber < dailyPower.width; ++tsNumber)
     {
         for (uint day = 0; day < DAYS_PER_YEAR; ++day)
         {
-            if (power[tsNumber][day] * energy[day] > 0.)
+            if (dailyPower[tsNumber][day] * nbHoursAtPmaxPerDay[day] > 0.)
                 return true;
         }
     }
@@ -183,8 +183,6 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) :
     //  If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
     pumpHasMod = doWeHaveOnePositiveMaxDailyEnergy(meanMaxDailyPumpPower.timeSeries, dailyNbHoursAtPumpPmax);
 }
-
-AreaScratchpad::~AreaScratchpad() = default;
 
 void AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& hourlyMaxGenMatrix,
                                                         const Matrix<double>& hourlyMaxPumpMatrix,

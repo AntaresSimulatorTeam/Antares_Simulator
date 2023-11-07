@@ -55,7 +55,7 @@ public:
     */
     AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area);
     //! Destructor
-    ~AreaScratchpad();
+    ~AreaScratchpad() = default;
     //@}
 
     //! Sum of all fatal hors hydro
