@@ -19,17 +19,17 @@ std::shared_ptr<MinDownTimeData> MinDownTimeGroup::GetMinDownTimeDataFromProblem
 }
 void MinDownTimeGroup::Build()
 {
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
+          = problemeHebdo_->PaliersThermiquesDuPays[pays];
         MinDownTime minDownTime(builder_);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 minDownTime.add(pays, GetMinDownTimeDataFromProblemHebdo(pays, index, pdt));
             }
