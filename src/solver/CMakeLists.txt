@@ -48,9 +48,6 @@ set(exec_name "antares-${ANTARES_PRG_VERSION}-solver")
 
 add_library(solver-lib
 	${SRCS}
-	main.cpp
-    application/application.h
-    application/application.cpp
 
     signal-handling/common.h
     signal-handling/public.h
