@@ -3,8 +3,9 @@
 #include "ConstraintGroup.h"
 #include "PMinDispatchableGeneration.h"
 #include "PMaxDispatchableGeneration.h"
+
 /**
- * @brief Group of Pmin/Pmax constraints
+ * @brief Group of Pmin/PmaxDispatchableGenerationGroup constraints
  *
  */
 class PMinMaxDispatchableGenerationGroup : public AbstractStartUpCostsGroup

@@ -19,6 +19,11 @@ std::shared_ptr<NbUnitsOutageLessThanNbUnitsStopData>
          CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesContraintesDeDureeMinDeMarche};
     return std::make_shared<NbUnitsOutageLessThanNbUnitsStopData>(data);
 }
+
+/**
+ * @brief build NbUnitsOutageLessThanNbUnitsStopGroup constraints with
+ * respect to default order
+ */
 void NbUnitsOutageLessThanNbUnitsStopGroup::Build()
 {
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)

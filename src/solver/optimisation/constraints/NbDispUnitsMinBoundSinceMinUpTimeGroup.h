@@ -3,6 +3,11 @@
 #include "ConstraintGroup.h"
 #include "NbDispUnitsMinBoundSinceMinUpTime.h"
 
+/**
+ * @brief Group of NbDispUnitsMinBoundSinceMinUpTime constraints
+ *
+ */
+
 class NbDispUnitsMinBoundSinceMinUpTimeGroup : public AbstractStartUpCostsGroup
 {
 public:

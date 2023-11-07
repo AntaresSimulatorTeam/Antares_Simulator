@@ -17,6 +17,11 @@ std::shared_ptr<MinDownTimeData> MinDownTimeGroup::GetMinDownTimeDataFromProblem
          CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesContraintesDeDureeMinDArret};
     return std::make_shared<MinDownTimeData>(data);
 }
+
+/**
+ * @brief build MinDownTime constraints with
+ * respect to default order
+ */
 void MinDownTimeGroup::Build()
 {
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)

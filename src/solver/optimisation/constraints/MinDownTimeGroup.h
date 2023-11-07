@@ -3,6 +3,11 @@
 #include "ConstraintGroup.h"
 #include "MinDownTime.h"
 
+/**
+ * @brief Group of MinDownTime constraints
+ *
+ */
+
 class MinDownTimeGroup : public AbstractStartUpCostsGroup
 {
 public:

@@ -1,6 +1,10 @@
 #include "ConsistenceNumberOfDispatchableUnitsGroup.h"
 #include "ConsistenceNumberOfDispatchableUnits.h"
 
+/**
+ * @brief build ConsistenceNumberOfDispatchableUnits constraints with
+ * respect to default order
+ */
 void ConsistenceNumberOfDispatchableUnitsGroup::Build()
 {
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)

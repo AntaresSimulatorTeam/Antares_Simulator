@@ -2,6 +2,11 @@
 #include "AbstractStartUpCostsGroup.h"
 #include "ConstraintGroup.h"
 
+/**
+ * @brief Group of ConsistenceNumberOfDispatchableUnits constraints
+ *
+ */
+
 class ConsistenceNumberOfDispatchableUnitsGroup : public AbstractStartUpCostsGroup
 {
 public:

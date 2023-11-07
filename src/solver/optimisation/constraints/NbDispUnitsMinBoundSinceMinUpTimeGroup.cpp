@@ -19,6 +19,11 @@ std::shared_ptr<NbDispUnitsMinBoundSinceMinUpTimeData>
          CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesContraintesDeDureeMinDeMarche};
     return std::make_shared<NbDispUnitsMinBoundSinceMinUpTimeData>(data);
 }
+
+/**
+ * @brief build NbUnitsOutageLessThanNbUnitsStopGroup constraints with
+ * respect to default order
+ */
 void NbDispUnitsMinBoundSinceMinUpTimeGroup::Build()
 {
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)

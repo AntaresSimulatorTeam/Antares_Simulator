@@ -3,6 +3,11 @@
 #include "ConstraintGroup.h"
 #include "NbUnitsOutageLessThanNbUnitsStop.h"
 
+/**
+ * @brief Group of NbUnitsOutageLessThanNbUnitsStop constraints
+ *
+ */
+
 class NbUnitsOutageLessThanNbUnitsStopGroup : public AbstractStartUpCostsGroup
 {
 public:
