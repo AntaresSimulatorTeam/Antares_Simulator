@@ -73,7 +73,7 @@ public:
     uint32_t getSeriesIndex(uint32_t year) const;
 
     /// \brief overload operator to return a column
-    /// Unlike getColumn() it doesn't use timeseriesNumbers
+    /// Unlike getColumn() it uses direct indexing and not timeseriesNumbers
     double* operator[](uint32_t index);
 
     void reset();
