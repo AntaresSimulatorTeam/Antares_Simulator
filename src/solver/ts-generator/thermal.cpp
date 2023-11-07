@@ -610,14 +610,14 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 }
 } // namespace
 
-bool GenerateThermalTimeSeries(Data::Study& study, // TMP.INFO CR27: thermal ts-gen method definition
+bool GenerateRandomizedThermalTimeSeries(Data::Study& study,
                                uint year,
                                bool globalThermalTSgeneration,
                                bool refreshTSonCurrentYear,
                                Antares::Solver::IResultWriter& writer)
 {
     logs.info();
-    logs.info() << "Generating the thermal time-series";
+    logs.info() << "Generating randomized thermal time-series";
     Solver::Progression::Task progression(study, year, Solver::Progression::sectTSGThermal); // TMP.INFO CR27: parallel work ??!! - NO
 
     auto* generator = new GeneratorTempData(study, progression, writer);
@@ -642,6 +642,37 @@ bool GenerateThermalTimeSeries(Data::Study& study, // TMP.INFO CR27: thermal ts-
     delete generator;
 
     return true;
+}
+
+bool GenerateOptimizedThermalTimeSeries(Data::Study& study,
+                               uint year,
+                               bool globalThermalTSgeneration,
+                               Antares::Solver::IResultWriter& writer)
+{
+    logs.info();
+    logs.info() << "Generating optimized thermal time-series";
+    Solver::Progression::Task progression(study, year, Solver::Progression::sectTSGThermal);
+
+
+
+    return true;
+}
+
+bool GenerateThermalTimeSeries(Data::Study& study,
+                               uint year,
+                               bool globalThermalTSgeneration,
+                               bool refreshTSonCurrentYear,
+                               Antares::Solver::IResultWriter& writer)
+{
+    if (study.parameters.maintenancePlanning.isOptimized())
+    {
+        return GenerateOptimizedThermalTimeSeries(study, year, globalThermalTSgeneration, writer);
+    }
+    else
+    {
+        return GenerateRandomizedThermalTimeSeries(
+          study, year, globalThermalTSgeneration, refreshTSonCurrentYear, writer);
+    }
 }
 
 } // namespace TSGenerator

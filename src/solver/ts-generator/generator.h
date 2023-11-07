@@ -52,6 +52,17 @@ bool GenerateThermalTimeSeries(Data::Study& study, // TMP.INFO CR27: One TS gen 
                                bool refresh,
                                IResultWriter& writer);
 
+bool GenerateRandomizedThermalTimeSeries(Data::Study& study,
+                                         uint year,
+                                         bool globalThermalTSgeneration,
+                                         bool refresh,
+                                         IResultWriter& writer);
+
+bool GenerateOptimizedThermalTimeSeries(Data::Study& study,
+                                        uint year,
+                                        bool globalThermalTSgeneration,
+                                        IResultWriter& writer);
+
 /*!
 ** \brief Destroy all TS Generators
 */
