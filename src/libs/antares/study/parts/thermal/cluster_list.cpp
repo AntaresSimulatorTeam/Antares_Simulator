@@ -548,7 +548,7 @@ bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder
 
 bool ThermalClusterList::generateRandomDaysSinceLastMaintenance(Study& study)
 {
-    if (empty() || study.parameters.maintenancePlanning.mpModelling != mpOptimized)
+    if (empty() || !study.parameters.maintenancePlanning.isOptimized())
         return true;
 
     bool ret = true;
