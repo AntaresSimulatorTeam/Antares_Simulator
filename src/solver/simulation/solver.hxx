@@ -87,7 +87,7 @@ public:
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
         study.areas.each([this](Antares::Data::Area& a) {
-            scratchmap.try_emplace(&a, &a.scratchpad[numSpace]); });
+            scratchmap.try_emplace(&a, a.scratchpad[numSpace]); });
     }
 
 private:

@@ -382,7 +382,7 @@ void HydroManagement::prepareNetDemand(uint year, Data::StudyMode mode,
     areas_.each([this, &year, &scratchmap, &mode](const Data::Area& area) {
         uint z = area.index;
 
-        const auto* scratchpad = scratchmap.at(&area);
+        const auto& scratchpad = scratchmap.at(&area);
 
         const auto& rormatrix = area.hydro.series->ror;
         const auto* ror = rormatrix.getColumn(year);
@@ -402,19 +402,19 @@ void HydroManagement::prepareNetDemand(uint year, Data::StudyMode mode,
             if (parameters_.renewableGeneration.isAggregated())
             {
                 netdemand = + loadSeries[hour]
-                            - windSeries[hour] - scratchpad->miscGenSum[hour]
+                            - windSeries[hour] - scratchpad.miscGenSum[hour]
                             - solarSeries[hour] - ror[hour]
-                            - ((mode != Data::stdmAdequacy) ? scratchpad->mustrunSum[hour]
-                                                             : scratchpad->originalMustrunSum[hour]);
+                            - ((mode != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
+                                                             : scratchpad.originalMustrunSum[hour]);
             }
 
             // Renewable clusters, if enabled
             else if (parameters_.renewableGeneration.isClusters())
             {
                 netdemand = loadSeries[hour]
-                            - scratchpad->miscGenSum[hour] - ror[hour]
-                            - ((mode != Data::stdmAdequacy) ? scratchpad->mustrunSum[hour]
-                                                             : scratchpad->originalMustrunSum[hour]);
+                            - scratchpad.miscGenSum[hour] - ror[hour]
+                            - ((mode != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
+                                                             : scratchpad.originalMustrunSum[hour]);
 
                 area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
                     assert(cluster.series.timeSeries.jit == nullptr && "No JIT data from the solver");

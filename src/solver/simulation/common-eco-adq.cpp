@@ -124,12 +124,12 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, Data::Area::Scratc
         auto& area = *study.areas[i];
         auto& scratchpad = scratchmap.at(&area);
 
-        memset(scratchpad->mustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
+        memset(scratchpad.mustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
         if (inAdequacy)
-            memset(scratchpad->originalMustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
+            memset(scratchpad.originalMustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
 
-        double* mrs = scratchpad->mustrunSum;
-        double* adq = scratchpad->originalMustrunSum;
+        double* mrs = scratchpad.mustrunSum;
+        double* adq = scratchpad.originalMustrunSum;
 
         if (!area.thermal.mustrunList.empty())
         {

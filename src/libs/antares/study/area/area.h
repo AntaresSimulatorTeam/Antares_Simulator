@@ -60,7 +60,7 @@ public:
     using Vector = std::vector<Area*>;
     using VectorConst = std::vector<const Area*>;
     using List = std::list<Area*>;
-    using ScratchMap = std::map<const Area*, AreaScratchpad*>;
+    using ScratchMap = std::map<const Area*, AreaScratchpad&>;
     //! Name mapping -> must be replaced by AreaNameMapping
     using NameMapping = std::map<AreaName, AreaName>;
 

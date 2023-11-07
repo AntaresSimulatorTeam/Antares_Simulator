@@ -233,7 +233,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     auto& data = tmpDataByArea_[z];
 
-    auto* scratchpad = scratchmap.at(&area);
+    auto& scratchpad = scratchmap.at(&area);
 
     int initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate;
 
@@ -279,7 +279,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             auto dYear = day + dayYear;
             assert(day < 32);
             assert(dYear < 366);
-            scratchpad->optimalMaxPower[dYear] = maxP[dYear];
+            scratchpad.optimalMaxPower[dYear] = maxP[dYear];
 
             if (debugData)
                 debugData->OPP[dYear] = maxP[dYear] * maxE[dYear];
