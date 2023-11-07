@@ -1,5 +1,9 @@
 #include "PMinMaxDispatchableGenerationGroup.h"
 
+/**
+ * @brief build P{min,max}DispatchableGeneration constraints with
+ * respect to default order
+ */
 void PMinMaxDispatchableGenerationGroup::Build()
 {
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
