@@ -13,8 +13,7 @@ class MinDownTimeGroup : public AbstractStartUpCostsGroup
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;
 
-    /*TODO Rename this*/
-    void Build() override;
+        void Build() override;
 
 private:
     std::shared_ptr<MinDownTimeData> GetMinDownTimeDataFromProblemHebdo(uint32_t pays,

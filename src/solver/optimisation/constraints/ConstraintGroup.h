@@ -13,7 +13,7 @@ public:
     {
     }
 
-    /*TODO Rename this*/
+    
     virtual void Build() = 0;
     PROBLEME_HEBDO* problemeHebdo_;
     std::shared_ptr<NewConstraintBuilder> builder_;

@@ -13,6 +13,5 @@ class PMinMaxDispatchableGenerationGroup : public AbstractStartUpCostsGroup
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;
 
-    /*TODO Rename this*/
-    void Build() override;
+        void Build() override;
 };

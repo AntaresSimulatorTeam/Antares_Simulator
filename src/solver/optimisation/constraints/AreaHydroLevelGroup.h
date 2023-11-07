@@ -7,7 +7,7 @@ class AreaHydroLevelGroup : public ConstraintGroup
 public:
     using ConstraintGroup::ConstraintGroup;
 
-    /*TODO Rename this*/
+    
     void Build() override;
 
 private:

@@ -72,7 +72,7 @@ std::shared_ptr<BindingConstraintHourData> Group1::GetBindingConstraintHourData(
     return std::make_shared<BindingConstraintHourData>(bindingConstraintHourData);
 }
 
-/*TODO Rename this*/
+
 void Group1::Build()
 {
     AreaBalance areaBalance(builder_);

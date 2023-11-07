@@ -12,6 +12,5 @@ class ConsistenceNumberOfDispatchableUnitsGroup : public AbstractStartUpCostsGro
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;
 
-    /*TODO Rename this*/
     void Build() override;
 };

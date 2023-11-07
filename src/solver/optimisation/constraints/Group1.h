@@ -11,8 +11,7 @@ class Group1 : public ConstraintGroup
 public:
     using ConstraintGroup::ConstraintGroup;
 
-    /*TODO Rename this*/
-    void Build() override;
+        void Build() override;
 
 private:
     std::shared_ptr<AreaBalanceData> GetAreaBalanceData(int pdt, uint32_t pays);

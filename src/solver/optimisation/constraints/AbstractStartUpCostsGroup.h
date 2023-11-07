@@ -11,8 +11,7 @@ public:
     {
     }
 
-    /*TODO Rename this*/
-    void Build() = 0;
+        void Build() = 0;
 
     bool simulation_ = false;
     std::shared_ptr<StartUpCostsData> GetStartUpCostsDataFromProblemHebdo(uint32_t pays,

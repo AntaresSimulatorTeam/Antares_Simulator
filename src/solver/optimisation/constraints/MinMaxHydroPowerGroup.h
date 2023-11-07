@@ -8,8 +8,7 @@ class MinMaxHydroPowerGroup : public ConstraintGroup
 public:
     using ConstraintGroup::ConstraintGroup;
 
-    /*TODO Rename this*/
-    void Build() override;
+        void Build() override;
 
 private:
     std::shared_ptr<MinHydroPowerData> GetMinHydroPowerData(uint32_t pays);
