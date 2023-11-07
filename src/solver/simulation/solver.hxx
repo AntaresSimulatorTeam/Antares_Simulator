@@ -318,11 +318,11 @@ void ISimulation<Impl>::run()
         // in general data of the study.
         logs.info() << " Only the preprocessors are enabled.";
 
-        regenerateTimeSeries(0);
+        regenerateTimeSeries(0);// TMP.INFO CR27: when running ts-gen ONLY. No refresh span needed. Year = 0. We only generate TS-s once. No refreshing TS-s is necessary
 
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
-        Solver::TSGenerator::DestroyAll(study);
+        Solver::TSGenerator::DestroyAll(study); // TMP.INFO CR27: be aware of this destroy - it is OK
     }
     else
     {
@@ -363,7 +363,7 @@ void ISimulation<Impl>::run()
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
         {
             Benchmarking::Timer timer;
-            loopThroughYears(0, finalYear, state);
+            loopThroughYears(0, finalYear, state); // TMP.INFO CR27: inside this method is TS-generator
             timer.stop();
             pDurationCollector.addDuration("mc_years", timer.get_duration());
         }
@@ -442,7 +442,7 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
 }
 
 template<class Impl>
-void ISimulation<Impl>::regenerateTimeSeries(uint year)
+void ISimulation<Impl>::regenerateTimeSeries(uint year) // TMP.INFO CR27: Generate TS-s. Input year - is MC year.  
 {
     // A preprocessor can be launched for several reasons:
     // * The option "Preprocessor" is checked in the interface _and_ year == 0
@@ -482,10 +482,10 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         pDurationCollector.addDuration("tsgen_hydro", timer.get_duration());
     }
     // Thermal
-    const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
+    const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0); // TMP.INFO CR27: we are going to generate new set of TS-s only if MC-year is dividable by "refresh span"
     {
         Benchmarking::Timer timer;
-        GenerateThermalTimeSeries(
+        GenerateThermalTimeSeries( // TMP.INFO CR27: call the thermal ts- gen here!
           study, year, pData.haveToRefreshTSThermal, refreshTSonCurrentYear, pResultWriter);
         timer.stop();
         pDurationCollector.addDuration("tsgen_thermal", timer.get_duration());
@@ -946,13 +946,13 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
 
     // Loop over sets of parallel years
     std::vector<setOfParallelYears>::iterator set_it;
-    for (set_it = setsOfParallelYears.begin(); set_it != setsOfParallelYears.end(); ++set_it)
+    for (set_it = setsOfParallelYears.begin(); set_it != setsOfParallelYears.end(); ++set_it) // TMP.INFO CR27: we are in parallel work here already
     {
         // 1 - We may want to regenerate the time-series this year.
         // This is the case when the preprocessors are enabled from the
         // interface and/or the refresh is enabled.
         if (set_it->regenerateTS)
-            regenerateTimeSeries(set_it->yearForTSgeneration);
+            regenerateTimeSeries(set_it->yearForTSgeneration); // TMP.INFO CR27: The TS-gen is going to be called ONLY for those years where at least one type [load,wind,hydro...] needs re-generation!!
 
         computeRandomNumbers(randomForParallelYears, set_it->yearsIndices, set_it->isYearPerformed);
 

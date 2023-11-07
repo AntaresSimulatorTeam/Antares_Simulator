@@ -44,9 +44,9 @@ namespace TSGenerator
 ** \brief Regenerate the time-series
 */
 template<enum Data::TimeSeriesType T>
-bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
+bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer); // TMP.INFO CR27: one TS gen for the rest
 
-bool GenerateThermalTimeSeries(Data::Study& study,
+bool GenerateThermalTimeSeries(Data::Study& study, // TMP.INFO CR27: One TS gen for thermal
                                uint year,
                                bool globalThermalTSgeneration,
                                bool refresh,

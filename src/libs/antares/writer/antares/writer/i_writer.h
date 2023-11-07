@@ -20,7 +20,7 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-class IResultWriter
+class IResultWriter // TMP.INFO CR27: this is your TS generator writer
 {
 public:
     using Ptr = std::shared_ptr<IResultWriter>;

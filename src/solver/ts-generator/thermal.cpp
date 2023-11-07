@@ -61,14 +61,14 @@ public:
                       Solver::Progression::Task& progr,
                       IResultWriter& writer);
 
-    void prepareOutputFoldersForAllAreas(uint year);
+    void prepareOutputFoldersForAllAreas(uint year); // TMP.INFO CR27: not used at all
 
-    void operator()(Data::Area& area, Data::ThermalCluster& cluster);
+    void operator()(Data::Area& area, Data::ThermalCluster& cluster); // TMP.INFO CR27: called as (*generator)(area, cluster);
 
 public:
     Data::Study& study;
 
-    bool archive;
+    bool archive; // TMP.INFO CR27: whether to write it in txt or not!
 
     uint currentYear;
 
@@ -128,9 +128,9 @@ GeneratorTempData::GeneratorTempData(Data::Study& study,
 {
     auto& parameters = study.parameters;
 
-    archive = (0 != (parameters.timeSeriesToArchive & Data::timeSeriesThermal));
+    archive = (0 != (parameters.timeSeriesToArchive & Data::timeSeriesThermal)); // TMP.INFO CR27: save to txt or not!
 
-    nbThermalTimeseries = parameters.nbTimeSeriesThermal;
+    nbThermalTimeseries = parameters.nbTimeSeriesThermal; // TMP.INFO CR27: this will be changed - and will be sc-num x sc-length - best to change it here - not to mess with importing the actual number in the simulator
 
     derated = parameters.derated;
 }
@@ -205,7 +205,7 @@ void GeneratorTempData::prepareIndispoFromLaw(Data::ThermalLaw law,
     }
 }
 
-int GeneratorTempData::durationGenerator(Data::ThermalLaw law,
+int GeneratorTempData::durationGenerator(Data::ThermalLaw law, // TMP.INFO CR27: use this for mnt duration ?!
                                          int expec,
                                          double volat,
                                          double a,
@@ -236,7 +236,7 @@ int GeneratorTempData::durationGenerator(Data::ThermalLaw law,
     return 0;
 }
 
-void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& cluster)
+void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& cluster) // TMP.INFO CR27: calling operator
 {
     if (not cluster.prepro)
     {
@@ -251,14 +251,14 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
     if (0 == cluster.unitCount or 0 == cluster.nominalCapacity)
     {
-        cluster.series.timeSeries.reset(1, nbHoursPerYear);
+        cluster.series.timeSeries.reset(1, nbHoursPerYear); // TMP.INFO CR27: still ok - keep it like this // actually add clusters not in any mnt-group to behave like this!!
 
         if (archive)
             writeResultsToDisk(area, cluster);
         return;
     }
 
-    cluster.series.timeSeries.resize(nbThermalTimeseries, nbHoursPerYear);
+    cluster.series.timeSeries.resize(nbThermalTimeseries, nbHoursPerYear); // TMP.INFO CR27: re-size here!
 
     const auto& preproData = *(cluster.prepro);
 
@@ -353,7 +353,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
     auto& modulation = cluster.modulation[Data::thermalModulationCapacity];
 
-    double* dstSeries = nullptr;
+    double* dstSeries = nullptr; // TMP.INFO CR27: pointer to cluster.series.timeSeries columns
 
     const uint tsCount = nbThermalTimeseries + 2;
     for (uint tsIndex = 0; tsIndex != tsCount; ++tsIndex)
@@ -593,14 +593,14 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
                 double AVPDayInTheYear = AVP[dayInTheYear];
                 for (uint h = 0; h != 24; ++h)
                 {
-                    dstSeries[hour] = Math::Round(AVPDayInTheYear * modulation[hour]);
+                    dstSeries[hour] = Math::Round(AVPDayInTheYear * modulation[hour]); // TMP.INFO CR27: here it is changed
                     ++hour;
                 }
             }
         }
     }
 
-    if (derated)
+    if (derated) // TMP.INFO CR27: derated mode - averaging - keep it like this! 
         cluster.series.timeSeries.averageTimeseries();
 
     if (archive)
@@ -610,7 +610,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 }
 } // namespace
 
-bool GenerateThermalTimeSeries(Data::Study& study,
+bool GenerateThermalTimeSeries(Data::Study& study, // TMP.INFO CR27: thermal ts-gen method definition
                                uint year,
                                bool globalThermalTSgeneration,
                                bool refreshTSonCurrentYear,
@@ -618,7 +618,7 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 {
     logs.info();
     logs.info() << "Generating the thermal time-series";
-    Solver::Progression::Task progression(study, year, Solver::Progression::sectTSGThermal);
+    Solver::Progression::Task progression(study, year, Solver::Progression::sectTSGThermal); // TMP.INFO CR27: parallel work ??!! - NO
 
     auto* generator = new GeneratorTempData(study, progression, writer);
 
@@ -630,7 +630,7 @@ bool GenerateThermalTimeSeries(Data::Study& study,
         {
             auto& cluster = *(it->second);
 
-            if (cluster.doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
+            if (cluster.doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear) // TMP.INFO CR27: we decide here for each cluster whether we generate TS or not - We need to get rid of refreshTSonCurrentYear - not important for mnt-planning - doWeGenerateTS is still ok to use!
             {
                 (*generator)(area, cluster);
             }

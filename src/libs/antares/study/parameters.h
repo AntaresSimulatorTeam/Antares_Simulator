@@ -304,7 +304,7 @@ public:
     ** This value is a mask bits for timeSeries.
     ** \see TimeSeries
     */
-    uint timeSeriesToArchive;
+    uint timeSeriesToArchive;  //TMP.INFO CR27: archives = load, thermal etc... - adds category only if store in ouput is yes and stochastic TS status is yes
     //@}
 
     //! \name Pre-Processor
