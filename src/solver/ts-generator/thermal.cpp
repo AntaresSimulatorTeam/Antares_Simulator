@@ -606,7 +606,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
     if (archive)
         writeResultsToDisk(area, cluster);
 
-    cluster.calculationOfSpinning();
+    cluster.calculationOfSpinning(); // TODO CR27 // do we still need to call this function?!
 }
 } // namespace
 
