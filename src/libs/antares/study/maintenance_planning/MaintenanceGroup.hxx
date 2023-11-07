@@ -66,4 +66,24 @@ inline bool MaintenanceGroup::isActive() const
     return enabled() && !skipped();
 }
 
+inline MaintenanceGroup::iterator MaintenanceGroup::begin()
+{
+    return weights_.begin();
+}
+
+inline MaintenanceGroup::iterator MaintenanceGroup::end()
+{
+    return weights_.end();
+}
+
+inline MaintenanceGroup::const_iterator MaintenanceGroup::begin() const
+{
+    return weights_.begin();
+}
+
+inline MaintenanceGroup::const_iterator MaintenanceGroup::end() const
+{
+    return weights_.end();
+}
+
 } // namespace Antares::Data

@@ -75,6 +75,10 @@ public:
     using MaintenanceGroupName = std::string;
     //! Map of load, renewable or ror weight-s
     using weightMap = std::map<const Area*, Weights, CompareAreaName>;
+    //! Iterator
+    using iterator = weightMap::iterator;
+    //! Const iterator
+    using const_iterator = weightMap::const_iterator;
 
     /*!
      ** \brief Convert a Residual Load Definition Type into a mere C-String
@@ -111,6 +115,15 @@ public:
     ** \brief Get the ID of the binding constraint
     */
     const MaintenanceGroupName& id() const;
+    //@}
+
+    //! \name iterator
+    //@{
+    iterator begin();
+    const_iterator begin() const;
+
+    iterator end();
+    const_iterator end() const;
     //@}
 
     /*!
