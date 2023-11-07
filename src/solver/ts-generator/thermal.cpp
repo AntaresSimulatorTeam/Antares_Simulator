@@ -76,9 +76,9 @@ public:
 
     bool derated;
 
-private:
-    void writeResultsToDisk(const Data::Area& area, const Data::ThermalCluster& cluster);
+    void writeResultsToDisk(const Data::Area& area, const Data::ThermalCluster& cluster); // TODO CR27: just temporary, while playing, revert later
 
+private:
     int durationGenerator(Data::ThermalLaw law, int expec, double volat, double a, double b);
 
     template<class T>
@@ -681,7 +681,34 @@ bool GenerateOptimizedThermalTimeSeries(Data::Study& study,
                 if (cluster.doWeGenerateTS(globalThermalTSgeneration)
                     && cluster.optimizeMaintenance)
                 {
+                    // just playing here - this needs to go into new method - class  - operator
+                    logs.info() << "CR27-INFO: This cluster is active for mnt planning: "
+                                << cluster.getFullName();
 
+                    if (!cluster.prepro)
+                    {
+                        logs.error() << "Cluster: " << area.name << '/' << cluster.name()
+                                     << ": The timeseries will not be regenerated. All data "
+                                        "related to the ts-generator for "
+                                     << "'thermal' have been released.";
+                    }
+
+                    assert(cluster.prepro);
+
+                    if (0 == cluster.unitCount or 0 == cluster.nominalCapacity)
+                    {
+                        cluster.series.timeSeries.reset(1, 8760);
+                    }
+                    else
+                    {
+                        cluster.series.timeSeries.reset(generator.nbThermalTimeseries, 8760);
+                        cluster.series.timeSeries.fill(777.);
+                    }
+
+                    if (generator.archive)
+                        generator.writeResultsToDisk(area, cluster);
+
+                    // end playing
                 }
 
                 ++progression;
