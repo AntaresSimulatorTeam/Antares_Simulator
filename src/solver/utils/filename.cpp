@@ -42,3 +42,16 @@ std::string createMPSfilename(const OptPeriodStringGenerator& optPeriodStringGen
 {
     return createOptimizationFilename("problem", optPeriodStringGenerator, optNumber, "mps");
 }
+
+std::string basisVariables(const OptPeriodStringGenerator& optPeriodStringGenerator,
+                           const unsigned int optNumber)
+{
+    return createOptimizationFilename("basis-variables", optPeriodStringGenerator, optNumber, "csv");
+}
+
+std::string basisConstraints(const OptPeriodStringGenerator& optPeriodStringGenerator,
+                             const unsigned int optNumber)
+{
+    return createOptimizationFilename("basis-constraints", optPeriodStringGenerator, optNumber, "csv");
+}
+

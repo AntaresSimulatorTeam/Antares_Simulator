@@ -13,3 +13,9 @@ std::string createCriterionFilename(const OptPeriodStringGenerator& optPeriodStr
                                     const unsigned int optNumber);
 std::string createMPSfilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
                               const unsigned int optNumber);
+
+std::string basisVariables(const OptPeriodStringGenerator& optPeriodStringGenerator,
+                           const unsigned int optNumber);
+
+std::string basisConstraints(const OptPeriodStringGenerator& optPeriodStringGenerator,
+                             const unsigned int optNumber);

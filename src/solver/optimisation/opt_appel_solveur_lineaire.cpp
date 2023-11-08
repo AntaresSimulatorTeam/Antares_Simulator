@@ -241,7 +241,7 @@ static SimplexResult OPT_TryToCallSimplex(
     if (options.useOrtools)
     {
         const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
-        solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
+        solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis, writer, optPeriodStringGenerator, optimizationNumber);
         if (solver != nullptr)
         {
             ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;

@@ -3,12 +3,16 @@
 
 #include <string>
 #include "named_problem.h"
+#include "opt_period_string_generator.h"
 
 using namespace operations_research;
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
-                           MPSolver* ProbSpx,
-                           bool keepBasis);
+                           MPSolver* solver,
+                           bool keepBasis,
+                           Antares::Solver::IResultWriter& writer,
+                           const OptPeriodStringGenerator& optPeriodStringGenerator,
+                           const unsigned int optNumber);
 
 MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
                                   const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
