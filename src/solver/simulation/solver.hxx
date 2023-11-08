@@ -340,6 +340,18 @@ void ISimulation<Impl>::run()
         // for a single simulation
         study.resizeAllTimeseriesNumbers(1 + study.runtime->rangeLimits.year[Data::rangeEnd]);
         // Now, we will prepare the time-series numbers
+        /*
+        TODO CR27: Just great! Time series numbers are available from here.
+        And we need them for average load, renewable and ror TS, Right? This is a big issue?!
+        So when we call regenerateTimeSeries(0) with settings.tsGeneratorsOnly = true.
+        We DO NOT have access to the random generated TS numbers for MC-years.
+        When we call loopThroughYears-> regenerateTimeSeries(set_it->yearForTSgeneration)
+        we DO HAVE access to the random generated TS numbers for MC-years.
+        (It still stands here that we call our new thermal ts-gen only once here - no refresh span)
+        Can we include TimeSeriesNumbers::Generate(study) when tsGeneratorsOnly = true &&  maintenancePlanning.isOptimized() 
+        Just to be able to be able to calculate parameters for optimization problem?! 
+        */
+
         if (not TimeSeriesNumbers::Generate(study))
         {
             throw FatalError("An unrecoverable error has occured. Can not continue.");
