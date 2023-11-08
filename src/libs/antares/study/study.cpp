@@ -154,7 +154,7 @@ void Study::createAsNew()
     // Source)
     parameters.renewableGeneration.rgModelling = Antares::Data::rgClusters;
     // default mode for maintenancePlanning is Randomized 
-    parameters.maintenancePlanning.mpModelling = Antares::Data::mpRandomized;
+    parameters.maintenancePlanning.clear();
 
     parameters.yearsFilter = std::vector<bool>(1, true);
 

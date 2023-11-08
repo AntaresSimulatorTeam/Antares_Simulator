@@ -327,7 +327,8 @@ void Parameters::reset()
     unitCommitment.ucMode = ucHeuristicFast;
     nbCores.ncMode = ncAvg;
     renewableGeneration.rgModelling = rgAggregated;
-    maintenancePlanning.mpModelling = mpRandomized;
+    // maintenance Planning 
+    maintenancePlanning.clear();
 
     // Misc
     improveUnitsStartup = false;
@@ -659,6 +660,18 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
     return d.adqPatchParams.updateFromKeyValue(key, value);
 }
 
+static bool SGDIntLoadFamily_MaintenancePlanning(Parameters& d,
+                                                  const String& key,
+                                                  const String& value,
+                                                  const String&)
+{
+    // Maintenance planning modelling
+    if (key == "maintenance-planning-modelling")
+        return ConvertStringToMaintenancePlanningModelling(value,
+                                                           d.maintenancePlanning.mpModelling);
+    return false;
+}
+
 static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
                                               const String& key,
                                               const String& value,
@@ -760,11 +773,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
     if (key == "renewable-generation-modelling")
         return ConvertStringToRenewableGenerationModelling(value,
                                                            d.renewableGeneration.rgModelling);
-
-    // Maintenance planning modelling
-    if (key == "maintenance-planning-modelling")
-        return ConvertStringToMaintenancePlanningModelling(value,
-                                                           d.maintenancePlanning.mpModelling);
 
     return false;
 }
@@ -995,6 +1003,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
          {"output", &SGDIntLoadFamily_Output},
          {"optimization", &SGDIntLoadFamily_Optimization},
          {"adequacy patch", &SGDIntLoadFamily_AdqPatch},
+         {"maintenance planning", &SGDIntLoadFamily_MaintenancePlanning},
          {"other preferences", &SGDIntLoadFamily_OtherPreferences},
          {"advanced parameters", &SGDIntLoadFamily_AdvancedParameters},
          {"playlist", &SGDIntLoadFamily_Playlist},
@@ -1627,6 +1636,13 @@ void Parameters::saveToINI(IniFile& ini) const
     // Adequacy patch
     adqPatchParams.saveToINI(ini);
 
+    // MaintenancePlanning
+    {
+        auto* section = ini.addSection("maintenance planning");
+        section->add("maintenance-planning-modelling",
+                     MaintenancePlanningModellingToCString(maintenancePlanning()));
+    }
+
     // Other preferences
     {
         auto* section = ini.addSection("other preferences");
@@ -1641,8 +1657,6 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));
         section->add("renewable-generation-modelling",
                      RenewableGenerationModellingToCString(renewableGeneration()));
-        section->add("maintenance-planning-modelling",
-                     MaintenancePlanningModellingToCString(maintenancePlanning()));
     }
 
     // Advanced parameters
@@ -1847,6 +1861,33 @@ bool Parameters::MaintenancePlanning::isRandomized() const
 bool Parameters::MaintenancePlanning::isOptimized() const
 {
     return mpModelling == Antares::Data::mpOptimized;
+}
+
+void Parameters::MaintenancePlanning::setScenarioNumber(uint v)
+{
+    scenarioNumber = v;
+}
+
+void Parameters::MaintenancePlanning::setScenarioLength(uint v)
+{
+    scenarioLength = v;
+}
+
+uint Parameters::MaintenancePlanning::getScenarioNumber() const
+{
+    return scenarioNumber;
+}
+
+uint Parameters::MaintenancePlanning::getScenarioLength() const
+{
+    return scenarioLength;
+}
+
+void Parameters::MaintenancePlanning::clear()
+{
+    toRandomized();
+    setScenarioNumber(0);
+    setScenarioLength(0);
 }
 
 // Some variables rely on dual values & marginal costs
