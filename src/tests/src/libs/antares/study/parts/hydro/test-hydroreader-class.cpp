@@ -55,11 +55,13 @@ struct Fixture
     Fixture()
     {
         study = std::make_shared<Study>(true);
-        reader = std::make_shared<HydroMaxTimeSeriesReader>();
+
         // Add areas
         area_1 = study->areaAdd("Area1");
         study->areas.rebuildIndexes();
         dailyMaxPumpAndGen.reset(4U, DAYS_PER_YEAR);
+        reader = std::make_shared<HydroMaxTimeSeriesReader>(
+          area_1->hydro, area_1->id.to<std::string>(), area_1->name.to<std::string>());
 
         // Create necessary folders and files for these two areas
         createFoldersAndFiles();
@@ -81,7 +83,6 @@ struct Fixture
         buffer = base_folder + SEP + hydro_folder + SEP + common_folder + SEP + capacity_folder
                  + SEP + maxpower + area_1->id.c_str() + ".txt";
         dailyMaxPumpAndGen.saveToCSVFile(buffer, 2);
-
     }
 
     void createFoldersAndFiles()
@@ -170,7 +171,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_support_for_old_studies, Fixture)
 
     buffer.clear();
     buffer = base_folder + SEP + hydro_folder;
-    ret = reader->read(buffer, *area_1, study->usedByTheSolver) && ret;
+    ret = reader->read(buffer, study->usedByTheSolver) && ret;
 
     BOOST_CHECK(ret);
     BOOST_CHECK(equalDailyMaxPowerAsHourlyTs(genP, genPReader));

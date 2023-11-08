@@ -36,13 +36,15 @@ using namespace Yuni;
 namespace Antares::Data
 {
 
-HydroMaxTimeSeriesReader::HydroMaxTimeSeriesReader()
+HydroMaxTimeSeriesReader::HydroMaxTimeSeriesReader(PartHydro& hydro,
+                                                   std::string areaID,
+                                                   std::string areaName) :
+ hydro_(hydro), areaID_(areaID), areaName_(areaName)
 {
     dailyMaxPumpAndGen.reset(4U, DAYS_PER_YEAR, true);
 }
 
 bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& folder,
-                                                             const Area& area,
                                                              bool usedBySolver)
 {
     YString filePath;
@@ -50,7 +52,7 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& fo
     bool ret = true;
 
     filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
-                     << area.id << ".txt";
+                     << areaID_ << ".txt";
 
     //  It is necessary to load maxpower_ txt file, whether loading is called from old GUI
     //  or from solver.
@@ -86,7 +88,7 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& fo
             {
                 if (!errorPowers && (col[day] < 0. || (i % 2U /*column hours*/ && col[day] > 24.)))
                 {
-                    logs.error() << area.name << ": invalid power or energy value";
+                    logs.error() << areaName_ << ": invalid power or energy value";
                     errorPowers = true;
                     ret = false;
                 }
@@ -96,15 +98,15 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& fo
     return ret;
 }
 
-void HydroMaxTimeSeriesReader::copyDailyMaxEnergy(Area& area) const
+void HydroMaxTimeSeriesReader::copyDailyMaxEnergy() const
 {
-    copyDailyMaxGenerationEnergy(area);
-    copyDailyMaxPumpingEnergy(area);
+    copyDailyMaxGenerationEnergy();
+    copyDailyMaxPumpingEnergy();
 }
 
-void HydroMaxTimeSeriesReader::copyDailyMaxGenerationEnergy(Area& area) const
+void HydroMaxTimeSeriesReader::copyDailyMaxGenerationEnergy() const
 {
-    auto& dailyNbHoursAtGenPmax = area.hydro.dailyNbHoursAtGenPmax;
+    auto& dailyNbHoursAtGenPmax = hydro_.dailyNbHoursAtGenPmax;
     const auto& dailyMaxGenE = dailyMaxPumpAndGen[genMaxE];
 
     dailyNbHoursAtGenPmax.reset(1U, DAYS_PER_YEAR, true);
@@ -112,9 +114,9 @@ void HydroMaxTimeSeriesReader::copyDailyMaxGenerationEnergy(Area& area) const
     dailyNbHoursAtGenPmax.pasteToColumn(0, dailyMaxGenE);
 }
 
-void HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy(Area& area) const
+void HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy() const
 {
-    auto& dailyNbHoursAtPumpPmax = area.hydro.dailyNbHoursAtPumpPmax;
+    auto& dailyNbHoursAtPumpPmax = hydro_.dailyNbHoursAtPumpPmax;
     const auto& dailyMaxPumpE = dailyMaxPumpAndGen[pumpMaxE];
 
     dailyNbHoursAtPumpPmax.reset(1U, DAYS_PER_YEAR, true);
@@ -122,13 +124,13 @@ void HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy(Area& area) const
     dailyNbHoursAtPumpPmax.pasteToColumn(0, dailyMaxPumpE);
 }
 
-bool HydroMaxTimeSeriesReader::read(const AnyString& folder, Area& area, bool usedBySolver)
+bool HydroMaxTimeSeriesReader::read(const AnyString& folder, bool usedBySolver)
 {
     bool ret = true;
 
-    ret = loadDailyMaxPowersAndEnergies(folder, area, usedBySolver) && ret;
-    copyDailyMaxEnergy(area);
-    area.hydro.series->buildMaxPowerFromDailyTS(dailyMaxPumpAndGen[genMaxP], dailyMaxPumpAndGen[pumpMaxP]);
+    ret = loadDailyMaxPowersAndEnergies(folder, usedBySolver) && ret;
+    copyDailyMaxEnergy();
+    hydro_.series->buildMaxPowerFromDailyTS(dailyMaxPumpAndGen[genMaxP], dailyMaxPumpAndGen[pumpMaxP]);
 
     return ret;
 }
