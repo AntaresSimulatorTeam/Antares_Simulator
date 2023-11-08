@@ -267,7 +267,7 @@ public:
         // Useful local variables
         auto area = state.area;
         auto& thermal = state.thermal;
-        std::vector<double> areaMarginalCosts = state.hourlyResults->CoutsMarginauxHoraires;
+        std::vector<double>& areaMarginalCosts = state.hourlyResults->CoutsMarginauxHoraires;
         uint hourInTheWeek = state.hourInTheWeek;
         uint hourInTheYear = state.hourInTheYear;
 
