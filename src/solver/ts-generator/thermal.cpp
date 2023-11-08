@@ -649,7 +649,8 @@ public:
      repo(study.maintenanceGroups)
     {
         currentYear = year;
-        nbThermalTimeseries = repo.scenariosNumber() * repo.scenariosLength();
+        nbThermalTimeseries = study.parameters.maintenancePlanning.getScenarioLength()
+                              * study.parameters.maintenancePlanning.getScenarioNumber();
         // allocateProblem();
     }
 
@@ -747,7 +748,7 @@ bool GenerateOptimizedThermalTimeSeries(Data::Study& study,
 
                     assert(cluster.prepro);
 
-                    if (0 == cluster.unitCount or 0 == cluster.nominalCapacity)
+                    if (0 == cluster.unitCount or 0 == cluster.nominalCapacity or generator.nbThermalTimeseries == 0)
                     {
                         cluster.series.timeSeries.reset(1, 8760);
                     }
