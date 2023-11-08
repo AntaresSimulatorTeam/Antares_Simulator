@@ -47,21 +47,18 @@ std::vector<std::shared_ptr<MaintenanceGroup>> MaintenanceGroupLoader::load(EnvF
             continue;
         }
 
-        // initialize the values
-        MaintenanceGroup::Weights w = {0.0, 0.0, 0.0};
-
-        // Separate the key
-        auto setKey = p->key.find('.');
-        if (0 == setKey || setKey == String::npos)
+        // Check if key is valid
+        std::string setKey = p->key.to<std::string>();
+        if (!((setKey.find(".weight-load") != std::string::npos)
+              || (setKey.find(".weight-renewable") != std::string::npos)
+              || (setKey.find(".weight-ror") != std::string::npos)))
         {
             logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
                          << "`: invalid key";
             continue;
         }
 
-        if (bool ret = SeparateValue(env, p, w); !ret)
-            continue;
-
+        // Separate the key
         const Area* area = env.areaList.findAreaFromINIKey(p->key);
         if (!area)
         {
@@ -70,9 +67,19 @@ std::vector<std::shared_ptr<MaintenanceGroup>> MaintenanceGroupLoader::load(EnvF
             continue;
         }
 
-        mnt->loadWeight(area, w.load);
-        mnt->renewableWeight(area, w.renewable);
-        mnt->rorWeight(area, w.ror);
+        // Initialize the value
+        double val = 1;
+        if (bool ret = CheckValue(env, p, val); !ret)
+            continue;
+
+        // check is it load, renewable or ror.
+        // It must be some of these because we already checked the validity of the key
+        if (setKey.find(".weight-load") != std::string::npos)
+            mnt->loadWeight(area, val);
+        else if (setKey.find(".weight-renewable") != std::string::npos)
+            mnt->renewableWeight(area, val);
+        else
+            mnt->rorWeight(area, val);
     }
 
     // Checking for validity
@@ -98,53 +105,22 @@ std::vector<std::shared_ptr<MaintenanceGroup>> MaintenanceGroupLoader::load(EnvF
     return {mnt};
 }
 
-bool MaintenanceGroupLoader::SeparateValue(const EnvForLoading& env,
-                                           const IniFile::Property* p,
-                                           MaintenanceGroup::Weights& w)
+bool MaintenanceGroupLoader::CheckValue(const EnvForLoading& env,
+                                        const IniFile::Property* p,
+                                        double& w)
 {
-    CString<64> string = p->value;
-    string.trim(); // trim
-    string.to<std::string>();
-
-    // Split the string into parts based on '%'
-    std::vector<std::string> parts;
-    std::istringstream ss(string);
-    std::string part;
-    while (std::getline(ss, part, '%'))
-    {
-        parts.push_back(part);
-    }
-
-    // Check if there are exactly two parts
-    if (parts.size() != 3)
-    {
-        logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
-                     << "`: invalid number of weights";
-        return false;
-    }
-
-    // Convert each part to a double and report an error if conversion fails
-    double load, rnw, ror;
-    if (!(std::istringstream(parts[0]) >> load) || !(std::istringstream(parts[1]) >> rnw)
-        || !(std::istringstream(parts[2]) >> ror))
-    {
-        logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
-                     << "`: one or more weights cannot be converted to numbers";
-        return false;
-    }
+    double val = p->value.to<double>();
 
     // check if parsed numbers are between 0 and 1.0
-    if (!(load >= 0.0 && load <= 1.0 && rnw >= 0.0 && rnw <= 1.0 && ror >= 0.0 && ror <= 1.0))
+    if (!(val >= 0.0 && val <= 1.0))
     {
         logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
-                     << "`: one or more weights are not in the [0, 1] range";
+                     << "`: weight is not in the [0, 1] range";
         return false;
     }
 
     // Output the parsed numbers
-    w.load = load;
-    w.renewable = rnw;
-    w.ror = ror;
+    w = val;
 
     return true;
 }

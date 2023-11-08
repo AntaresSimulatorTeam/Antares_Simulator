@@ -19,9 +19,7 @@ public:
     std::vector<std::shared_ptr<MaintenanceGroup>> load(EnvForLoading env);
 
 private:
-    static bool SeparateValue(const EnvForLoading& env,
-                              const IniFile::Property* p,
-                              MaintenanceGroup::Weights& w);
+    static bool CheckValue(const EnvForLoading& env, const IniFile::Property* p, double& w);
 
     std::string toLower(const std::string& str);
 };
