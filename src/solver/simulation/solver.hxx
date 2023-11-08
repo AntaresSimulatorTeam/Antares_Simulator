@@ -107,6 +107,7 @@ private:
     IResultWriter& pResultWriter;
     HydroManagement hydroManagement;
     Antares::Data::Area::ScratchMap scratchmap;
+    PROBLEME_HEBDO problem;
 private:
     /*
     ** \brief Log failed week
