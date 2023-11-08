@@ -100,62 +100,11 @@ std::vector<std::shared_ptr<MaintenanceGroup>> MaintenanceGroupRepository::LoadM
     return loader.load(std::move(env));
 }
 
-bool MaintenanceGroupRepository::internalLoadScenarioSettings(EnvForLoading env)
-{
-    // set path
-    env.iniFilename = env.folder << Yuni::IO::Separator << "scenariossettings.ini";
-    // try to open ini file
-    IniFile ini;
-    if (!ini.open(env.iniFilename))
-    {
-        logs.info() << "  File: " << env.iniFilename << " Does not exists. Unsuccessful loading!";
-        return false;
-    }
-    // see if there is any section
-    if (!ini.firstSection)
-    {
-        return true;
-    }
-    // see if the fist and only section is called "ScenariosSettings"
-    if (ini.firstSection->name != "ScenariosSettings")
-    {
-        return true;
-    }
-    // read the first section
-    env.section = ini.firstSection;
-    // check if section has properties
-    if (!env.section->firstProperty)
-    {
-        return true;
-    }
-    // loop through all properties
-    for (const IniFile::Property* p = env.section->firstProperty; p; p = p->next)
-    {
-        if (p->key.empty())
-            continue;
-
-        if (p->key == "number")
-        {
-            scenariosNumber(p->value.to<uint>());
-            continue;
-        }
-        if (p->key == "length")
-        {
-            scenariosLength(p->value.to<uint>());
-            continue;
-        }
-    }
-    return true;
-}
-
 bool MaintenanceGroupRepository::saveToFolder(const AnyString& folder) const
 {
     MaintenanceGroupSaver::EnvForSaving env;
     env.folder = folder;
-    bool ret = internalSaveToFolder(env);
-    env.folder = folder;
-    ret = internalSaveScenariosToFolder(env) && ret;
-    return ret;
+    return internalSaveToFolder(env);
 }
 
 bool MaintenanceGroupRepository::rename(MaintenanceGroup* mnt, const AnyString& newname)
@@ -238,8 +187,7 @@ bool MaintenanceGroupRepository::loadFromFolder(Study& study,
             logs.info() << maintenanceGroups_.size() << " maintenance groups found";
     }
 
-    env.folder = folder;
-    return internalLoadScenarioSettings(env);
+    return true;
 }
 
 bool MaintenanceGroupRepository::internalSaveToFolder(
@@ -278,23 +226,6 @@ bool MaintenanceGroupRepository::internalSaveToFolder(
 
     env.folder << Yuni::IO::Separator << "maintenancegroups.ini";
     return ini.save(env.folder) && ret;
-}
-
-bool MaintenanceGroupRepository::internalSaveScenariosToFolder(
-  MaintenanceGroupSaver::EnvForSaving& env) const
-{
-    if (!Yuni::IO::Directory::Create(env.folder))
-        return false;
-
-    IniFile ini;
-    std::string text = "ScenariosSettings";
-
-    env.section = ini.addSection(text);
-    env.section->add("Number", scenariosNumber_);
-    env.section->add("Length", scenariosLength_);
-
-    env.folder << Yuni::IO::Separator << "scenariossettings.ini";
-    return ini.save(env.folder);
 }
 
 void MaintenanceGroupRepository::reverseWeightSign(const AreaLink* lnk)
