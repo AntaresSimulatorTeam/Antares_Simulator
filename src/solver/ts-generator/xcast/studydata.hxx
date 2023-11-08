@@ -57,11 +57,6 @@ void StudyData::loadFromStudy(Data::Study& study,
             logs.info() << "  Added the area '" << area.name << "'";
             localareas.push_back(&area);
         }
-        else
-        {
-            // resize and set the values for the matrix
-            predicate.matrix(area).reset(1, HOURS_PER_YEAR);
-        }
     }
     reloadDataFromAreaList(correlation);
 }

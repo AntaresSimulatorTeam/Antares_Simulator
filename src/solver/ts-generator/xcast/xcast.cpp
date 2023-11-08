@@ -397,7 +397,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
         {
             auto& area = *(pData.localareas[s]);
 
-            predicate.matrix(area).resize(nbTimeseries_, nbHours);
             auto& xcast = predicate.xcastData(area);
 
             pUseConversion[s] = (xcast.useConversion && xcast.conversion.width >= 3);

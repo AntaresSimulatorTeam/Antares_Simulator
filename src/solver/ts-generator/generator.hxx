@@ -29,12 +29,36 @@
 
 #include <antares/logs/logs.h>
 
-namespace Antares
+namespace Antares::Solver::TSGenerator
 {
-namespace Solver
+ 
+inline void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params)
 {
-namespace TSGenerator
-{
+    for (auto i = areas.begin(); i != areas.end(); ++i)
+    {
+        auto& area = *(i->second);
+
+        // Load
+        if (params.timeSeriesToGenerate & Data::timeSeriesLoad)
+        {
+            area.load.series.timeSeries.reset(params.nbTimeSeriesLoad, HOURS_PER_YEAR);
+        }
+
+        // Wind
+        if (params.timeSeriesToGenerate & Data::timeSeriesWind)
+        {
+            area.wind.series.timeSeries.reset(params.nbTimeSeriesWind, HOURS_PER_YEAR);
+        }
+
+        // Solar
+        if (params.timeSeriesToGenerate & Data::timeSeriesSolar)
+        {
+            area.solar.series.timeSeries.reset(params.nbTimeSeriesSolar, HOURS_PER_YEAR);
+        }
+    }
+}
+
+
 // forward declaration
 // Hydro - see hydro.cpp
 bool GenerateHydroTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
@@ -157,8 +181,6 @@ inline void DestroyAll(Data::Study& study)
     Solver::TSGenerator::Destroy<Data::timeSeriesThermal>(study, (uint)-1);
 }
 
-} // namespace TSGenerator
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::TSGenerator
 
 #endif // __ANTARES_SOLVER_timeSeries_GENERATOR_HXX__
