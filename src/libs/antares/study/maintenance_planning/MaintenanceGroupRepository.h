@@ -154,8 +154,8 @@ public:
 private:
     
     // number and length of the Maintenance Group-s scenarios
-    uint scenariosNumber_ = 0;
-    uint scenariosLength_ = 0;
+    uint scenariosNumber_ = 1;
+    uint scenariosLength_ = 1;
     
     // private methods
     bool internalSaveToFolder(Data::MaintenanceGroupSaver::EnvForSaving& env) const;
