@@ -54,7 +54,7 @@ namespace TSGenerator
 {
 namespace
 {
-class GeneratorTempData final
+class GeneratorTempData
 {
 public:
     GeneratorTempData(Data::Study& study,
@@ -76,11 +76,11 @@ public:
 
     bool derated;
 
-    void writeResultsToDisk(const Data::Area& area, const Data::ThermalCluster& cluster); // TODO CR27: just temporary, while playing, revert later
-
-private:
+    // I need these two functions for inheritance
+    void writeResultsToDisk(const Data::Area& area, const Data::ThermalCluster& cluster);
     int durationGenerator(Data::ThermalLaw law, int expec, double volat, double a, double b);
 
+private:
     template<class T>
     void prepareIndispoFromLaw(Data::ThermalLaw law,
                                double volatility,
@@ -135,7 +135,7 @@ GeneratorTempData::GeneratorTempData(Data::Study& study,
     derated = parameters.derated;
 }
 
-void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
+void GeneratorTempData::writeResultsToDisk(const Data::Area& area, // I want to inherit this method
                                            const Data::ThermalCluster& cluster)
 {
     if (not study.parameters.noOutput)
@@ -205,7 +205,7 @@ void GeneratorTempData::prepareIndispoFromLaw(Data::ThermalLaw law,
     }
 }
 
-int GeneratorTempData::durationGenerator(Data::ThermalLaw law, // TMP.INFO CR27: use this for mnt duration ?!
+int GeneratorTempData::durationGenerator(Data::ThermalLaw law, // TMP.INFO CR27: use this for mnt duration ?! I want to inherit this method
                                          int expec,
                                          double volat,
                                          double a,
@@ -610,6 +610,54 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 }
 } // namespace
 
+namespace // TODO CR27: move this to separate *.h and *.cpp file
+{
+
+class OptimizedThermalGenerator : public GeneratorTempData
+{
+private:
+    /*
+    in adq-patch we re-used existing structure(s) for helping us define an optimization problem ->
+    like: struct CORRESPONDANCES_DES_VARIABLES.
+    unfortunately here we have to create our own help-structure if we need one
+    Question: can we still use struct PROBLEME_ANTARES_A_RESOUDRE ?!
+    if we define problem for sirius solver we use this structure.
+    for OR tools solver we also use this structure I think ?!
+    */
+
+    // define here variables/structures that will help us build optimization problem
+
+    // optimization problem construction methods
+    void calculateParameters();
+    void buildProblemVariables();
+    void setVariableBounds();
+    void buildProblemConstraintsLHS();
+    void buildProblemConstraintsRHS();
+    void setProblemCost();
+    void solveProblem();
+    void allocateProblem(); // this one should be called in constructor. It basically resets all the
+                            // vectors in PROBLEME_ANTARES_A_RESOUDRE for new opt problem.
+
+public:
+    void run(); // calls private optimization problem construction methods
+
+    explicit OptimizedThermalGenerator(Data::Study& study,
+                                       Solver::Progression::Task& progr,
+                                       IResultWriter& writer) :
+     GeneratorTempData(study, progr, writer)
+    {
+        // do something here
+
+        // allocateProblem();
+    }
+
+    ~OptimizedThermalGenerator() = default;
+};
+
+// start defining functions here! // Actually define them in *.cpp file
+}
+
+
 bool GenerateRandomizedThermalTimeSeries(Data::Study& study,
                                uint year,
                                bool globalThermalTSgeneration,
@@ -658,7 +706,7 @@ bool GenerateOptimizedThermalTimeSeries(Data::Study& study,
     logs.info() << "Generating optimized thermal time-series";
     Solver::Progression::Task progression(study, year, Solver::Progression::sectTSGThermal);
 
-    auto generator = GeneratorTempData(study, progression, writer);
+    auto generator = OptimizedThermalGenerator(study, progression, writer);
 
     auto& repo = study.maintenanceGroups;
     const auto& groups = repo.activeMaintenanceGroups();
@@ -673,7 +721,8 @@ bool GenerateOptimizedThermalTimeSeries(Data::Study& study,
         for (const auto& entryGroup : group)
         {
             const auto& area = *(entryGroup.first);
-            // extract weights
+            // extract per area data: mnt-group weights, load, renewable and ror.
+            // calculate residual load array 
             for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end();
                  ++it)
             {
