@@ -49,6 +49,9 @@ namespace TSGenerator
 {
 namespace XCast
 {
+
+const unsigned int nbHoursADay = 24;
+
 enum
 {
     alpha = Data::XCast::dataCoeffAlpha,
@@ -110,13 +113,8 @@ void XCast::applyTransferFunction(PredicateT& predicate)
 {
     enum
     {
-
-        nbHoursADay = 24,
-
         x = 0,
-
         y = 1,
-
         maxPoints = Data::XCast::conversionMaxPoints,
     };
 
@@ -370,12 +368,6 @@ void XCast::destroyTemporaryData()
 template<class PredicateT>
 bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progression)
 {
-    enum
-    {
-
-        nbHoursADay = 24,
-    };
-
     pTSName = predicate.timeSeriesName();
 
     {
