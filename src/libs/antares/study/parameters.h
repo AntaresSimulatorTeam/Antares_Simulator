@@ -467,10 +467,17 @@ public:
         //! Maintenance Planning mode
         MaintenancePlanningModelling mpModelling;
         MaintenancePlanningModelling operator()() const;
+        uint scenarioNumber = 0;
+        uint scenarioLength = 0;
         void toRandomized();
         void toOptimized();
         bool isRandomized() const;
         bool isOptimized() const;
+        void setScenarioNumber(uint v);
+        void setScenarioLength(uint v);
+        uint getScenarioNumber() const;
+        uint getScenarioLength() const;
+        void clear();
     };
 
     MaintenancePlanning maintenancePlanning;
