@@ -661,14 +661,18 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
 }
 
 static bool SGDIntLoadFamily_MaintenancePlanning(Parameters& d,
-                                                  const String& key,
-                                                  const String& value,
-                                                  const String&)
+                                                 const String& key,
+                                                 const String& value,
+                                                 const String&)
 {
     // Maintenance planning modelling
     if (key == "maintenance-planning-modelling")
         return ConvertStringToMaintenancePlanningModelling(value,
                                                            d.maintenancePlanning.mpModelling);
+    if (key == "scenario-number")
+        return value.to<uint>(d.maintenancePlanning.scenarioNumber);
+    if (key == "scenario-length")
+        return value.to<uint>(d.maintenancePlanning.scenarioLength);
     return false;
 }
 
@@ -1641,6 +1645,8 @@ void Parameters::saveToINI(IniFile& ini) const
         auto* section = ini.addSection("maintenance planning");
         section->add("maintenance-planning-modelling",
                      MaintenancePlanningModellingToCString(maintenancePlanning()));
+        section->add("scenario-number", maintenancePlanning.scenarioNumber);
+        section->add("scenario-length", maintenancePlanning.scenarioLength);
     }
 
     // Other preferences
