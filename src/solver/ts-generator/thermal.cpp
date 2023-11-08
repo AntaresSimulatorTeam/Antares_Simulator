@@ -250,14 +250,10 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
     if (0 == cluster.unitCount or 0 == cluster.nominalCapacity)
     {
-        cluster.series.timeSeries.reset(1, nbHoursPerYear);
-
         if (archive)
             writeResultsToDisk(area, cluster);
         return;
     }
-
-    cluster.series.timeSeries.resize(nbThermalTimeseries_, nbHoursPerYear);
 
     const auto& preproData = *(cluster.prepro);
 

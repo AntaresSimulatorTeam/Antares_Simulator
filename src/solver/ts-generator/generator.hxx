@@ -62,6 +62,15 @@ inline void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& p
             area.hydro.series->resizeRORandSTORAGE(params.nbTimeSeriesHydro);
         }
 
+        // Thermal
+        auto end = area.thermal.list.mapping.end();
+        for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
+        {
+            auto& cluster = *(it->second);
+            bool globalThermalTSgeneration = params.timeSeriesToGenerate & Data::timeSeriesThermal;
+            if (cluster.doWeGenerateTS(globalThermalTSgeneration))
+                cluster.series.timeSeries.resize(params.nbTimeSeriesThermal, HOURS_PER_YEAR);
+        }
     }
 }
 

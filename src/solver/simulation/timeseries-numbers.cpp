@@ -424,9 +424,7 @@ bool checkInterModalConsistencyForArea(Area& area,
         for (uint j = 0; j != clusterCount; ++j)
         {
             auto& cluster = *(area.thermal.clusters[j]);
-            uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesThermal
-                                                       : cluster.series.timeSeries.width;
-            listNumberTsOverArea.push_back(nbTimeSeries);
+            listNumberTsOverArea.push_back(cluster.series.timeSeries.width);
         }
     }
 
@@ -639,10 +637,8 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
             {
                 if (!isTSintramodal[indexTS])
                 {
-                    uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
-                                                               : cluster->series.timeSeries.width;
                     cluster->series.timeseriesNumbers[0][year] = (uint32_t)(
-                      floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+                      floor(study.runtime->random[seedTimeseriesNumbers].next() * cluster->series.timeSeries.width));
                 }
             }
         }
