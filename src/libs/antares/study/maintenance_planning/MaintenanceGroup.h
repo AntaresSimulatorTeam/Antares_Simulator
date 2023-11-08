@@ -67,9 +67,9 @@ public:
 
     struct Weights final
     {
-        double load;
-        double renewable;
-        double ror;
+        double load = 1.0;
+        double renewable = 1.0;
+        double ror = 1.0;
     };
 
     using MaintenanceGroupName = std::string;
