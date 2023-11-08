@@ -642,19 +642,27 @@ public:
     void run(); // calls private optimization problem construction methods
 
     explicit OptimizedThermalGenerator(Data::Study& study,
+                                       uint year,
                                        Solver::Progression::Task& progr,
                                        IResultWriter& writer) :
-     GeneratorTempData(study, progr, writer)
+     GeneratorTempData(study, progr, writer),
+     repo(study.maintenanceGroups)
     {
-        // do something here
-
+        currentYear = year;
+        nbThermalTimeseries = repo.scenariosNumber() * repo.scenariosLength();
         // allocateProblem();
     }
 
     ~OptimizedThermalGenerator() = default;
+
+    // variables
+    Antares::Data::MaintenanceGroupRepository& repo;
 };
 
 // start defining functions here! // Actually define them in *.cpp file
+
+#include "../../libs/antares/study/maintenance_planning/MaintenanceGroupRepository.h"
+#include "../../libs/antares/study/maintenance_planning/MaintenanceGroup.h"
 }
 
 
@@ -706,14 +714,9 @@ bool GenerateOptimizedThermalTimeSeries(Data::Study& study,
     logs.info() << "Generating optimized thermal time-series";
     Solver::Progression::Task progression(study, year, Solver::Progression::sectTSGThermal);
 
-    auto generator = OptimizedThermalGenerator(study, progression, writer);
+    auto generator = OptimizedThermalGenerator(study, year, progression, writer);
 
-    auto& repo = study.maintenanceGroups;
-    const auto& groups = repo.activeMaintenanceGroups();
-
-    generator.currentYear = year;
-    generator.nbThermalTimeseries = repo.scenariosNumber() * repo.scenariosLength();
-
+    const auto& groups = generator.repo.activeMaintenanceGroups();
     // TODO CR27: This part needs a lot of refactoring- to many nested loops!!
     for (const auto& entryGroups : groups)
     {
