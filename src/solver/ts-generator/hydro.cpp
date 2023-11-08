@@ -46,12 +46,6 @@ namespace Solver
 {
 namespace TSGenerator
 {
-static void PreproHydroInitMatrices(Data::Study& study, uint tsCount)
-{
-    study.areas.each([&](Data::Area& area) {
-        area.hydro.series->resizeRORandSTORAGE(tsCount);
-    });
-}
 
 static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
 {
@@ -154,8 +148,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
         NORM[i] = 0.;
 
     uint nbTimeseries = study.parameters.nbTimeSeriesHydro;
-
-    PreproHydroInitMatrices(study, nbTimeseries);
 
     long cumul = 0;
 

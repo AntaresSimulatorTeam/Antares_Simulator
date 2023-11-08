@@ -55,6 +55,13 @@ inline void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& p
         {
             area.solar.series.timeSeries.reset(params.nbTimeSeriesSolar, HOURS_PER_YEAR);
         }
+
+        // Hydro
+        if (params.timeSeriesToGenerate & Data::timeSeriesHydro)
+        {
+            area.hydro.series->resizeRORandSTORAGE(params.nbTimeSeriesHydro);
+        }
+
     }
 }
 
