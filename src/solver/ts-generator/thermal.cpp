@@ -72,8 +72,6 @@ public:
 
     uint currentYear;
 
-    uint nbThermalTimeseries;
-
     bool derated;
 
 private:
@@ -89,6 +87,7 @@ private:
                                const T& duration);
 
 private:
+    uint nbThermalTimeseries_;
     const uint nbHoursPerYear = HOURS_PER_YEAR;
     const uint daysPerYear = DAYS_PER_YEAR;
 
@@ -130,7 +129,7 @@ GeneratorTempData::GeneratorTempData(Data::Study& study,
 
     archive = (0 != (parameters.timeSeriesToArchive & Data::timeSeriesThermal));
 
-    nbThermalTimeseries = parameters.nbTimeSeriesThermal;
+    nbThermalTimeseries_ = parameters.nbTimeSeriesThermal;
 
     derated = parameters.derated;
 }
@@ -258,7 +257,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
         return;
     }
 
-    cluster.series.timeSeries.resize(nbThermalTimeseries, nbHoursPerYear);
+    cluster.series.timeSeries.resize(nbThermalTimeseries_, nbHoursPerYear);
 
     const auto& preproData = *(cluster.prepro);
 
@@ -355,7 +354,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
     double* dstSeries = nullptr;
 
-    const uint tsCount = nbThermalTimeseries + 2;
+    const uint tsCount = nbThermalTimeseries_ + 2;
     for (uint tsIndex = 0; tsIndex != tsCount; ++tsIndex)
     {
         uint hour = 0;

@@ -99,8 +99,6 @@ public:
     //! The current study
     Data::Study& study;
 
-    //! The number of time-series
-    uint nbTimeseries;
     //! The current year
     uint year;
     //! The time-series type
@@ -177,6 +175,9 @@ private:
     void normal(float& x, float& y);
 
 private:
+    //! The number of time-series
+    uint nbTimeseries_;
+
     //! Some data after transformation
     StudyData pData;
 

@@ -405,7 +405,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
         {
             auto& area = *(pData.localareas[s]);
 
-            predicate.matrix(area).resize(nbTimeseries, nbHours);
+            predicate.matrix(area).resize(nbTimeseries_, nbHours);
             auto& xcast = predicate.xcastData(area);
 
             pUseConversion[s] = (xcast.useConversion && xcast.conversion.width >= 3);
@@ -419,7 +419,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
     if (study.areas.size() > pData.localareas.size())
         progression
-          += (nbTimeseries * 365) * ((uint)study.areas.size() - (uint)pData.localareas.size());
+          += (nbTimeseries_ * 365) * ((uint)study.areas.size() - (uint)pData.localareas.size());
 
     if (processCount == 0)
     {
@@ -434,7 +434,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
     pNDPMatrixCount = 0;
     pLevellingCount = 0;
 
-    for (uint tsIndex = 0; tsIndex != nbTimeseries; ++tsIndex)
+    for (uint tsIndex = 0; tsIndex != nbTimeseries_; ++tsIndex)
     {
         uint hourInTheYear = 0;
 
@@ -588,7 +588,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
     }
 
     {
-        uint y = ((pAccuracyOnCorrelation) ? pComputedPointCount : (nbTimeseries * 365));
+        uint y = ((pAccuracyOnCorrelation) ? pComputedPointCount : (nbTimeseries_ * 365));
         uint z = pNDPMatrixCount;
 
         logs.info() << "  " << pComputedPointCount << " points calculated, using " << y
@@ -640,7 +640,7 @@ bool XCast::run()
     {
         Solver::Progression::Task p(study, year, Progression::sectTSGLoad);
 
-        nbTimeseries = study.parameters.nbTimeSeriesLoad;
+        nbTimeseries_ = study.parameters.nbTimeSeriesLoad;
 
         Predicate::Load predicate;
         return runWithPredicate(predicate, p);
@@ -649,7 +649,7 @@ bool XCast::run()
     {
         Solver::Progression::Task p(study, year, Progression::sectTSGSolar);
 
-        nbTimeseries = study.parameters.nbTimeSeriesSolar;
+        nbTimeseries_ = study.parameters.nbTimeSeriesSolar;
 
         Predicate::Solar predicate;
         return runWithPredicate(predicate, p);
@@ -658,7 +658,7 @@ bool XCast::run()
     {
         Solver::Progression::Task p(study, year, Progression::sectTSGWind);
 
-        nbTimeseries = study.parameters.nbTimeSeriesWind;
+        nbTimeseries_ = study.parameters.nbTimeSeriesWind;
 
         Predicate::Wind predicate;
         return runWithPredicate(predicate, p);
