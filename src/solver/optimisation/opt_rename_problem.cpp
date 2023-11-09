@@ -346,6 +346,11 @@ void ConstraintNamer::BindingConstraintHour(unsigned int constraint, const std::
     nameWithTimeGranularity(constraint, name, HOUR);
 }
 
+void ConstraintNamer::CsrBindingConstraintHour(unsigned int constraint, const std::string& name)
+{
+    nameWithTimeGranularity(constraint, name, HOUR);
+}
+
 void ConstraintNamer::BindingConstraintDay(unsigned int constraint, const std::string& name)
 {
     nameWithTimeGranularity(constraint, name, DAY);

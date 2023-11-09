@@ -35,6 +35,7 @@
 #include "sim_structure_probleme_economique.h"
 #include "constraints/CsrFlowDissociation.h"
 #include "constraints/CsrAreaBalance.h"
+#include "constraints/CsrBindingConstraintHour.h"
 #include "../constraints/new_constraint_builder_utils.h"
 
 using namespace Antares::Data;
@@ -257,67 +258,88 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(std::vector<double>& Pi,
     csrAreaBalance.add(csrAreaBalanceData);
 }
 
+// void CsrQuadraticProblem::setBindingConstraints(std::vector<double>& Pi, std::vector<int>&
+// Colonne)
+// {
+//     int hour = hourlyCsrProblem_.triggeredHour;
+
+//     // Special case of the binding constraints
+//     for (uint32_t CntCouplante = 0; CntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
+//          CntCouplante++)
+//     {
+//         const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+//           = problemeHebdo_->MatriceDesContraintesCouplantes[CntCouplante];
+
+//         if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
+//             continue;
+
+//         int NbInterco
+//           = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
+//         int NombreDeTermes = 0;
+//         for (int Index = 0; Index < NbInterco; Index++)
+//         {
+//             int Interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[Index];
+//             double Poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[Index];
+
+//             if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
+//                   == Data::AdequacyPatch::physicalAreaInsideAdqPatch
+//                 && problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco]
+//                      == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+//             {
+//                 int var = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour]
+//                             .NumeroDeVariableDeLInterconnexion[Interco];
+
+//                 if (var >= 0)
+//                 {
+//                     Pi[NombreDeTermes] = Poids;
+//                     Colonne[NombreDeTermes] = var;
+//                     NombreDeTermes++;
+//                 }
+//             }
+//         }
+
+//         if (NombreDeTermes > 0) // current binding constraint contains an interco type 2<->2
+//         {
+//             hourlyCsrProblem_.numberOfConstraintCsrHourlyBinding[CntCouplante]
+//               = problemeAResoudre_.NombreDeContraintes;
+
+//             std::string NomDeLaContrainte
+//               = "bc::hourly::" + std::to_string(hour)
+//                 + "::" + MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante;
+
+//             logs.debug() << "C (bc): " << problemeAResoudre_.NombreDeContraintes << ": "
+//                          << NomDeLaContrainte;
+
+//             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+//               &problemeAResoudre_,
+//               Pi,
+//               Colonne,
+//               NombreDeTermes,
+//               MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
+//         }
+//     }
+// }
 void CsrQuadraticProblem::setBindingConstraints(std::vector<double>& Pi, std::vector<int>& Colonne)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
-
+    auto builder = NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(problemeHebdo_,
+                                                                              problemeAResoudre_);
     // Special case of the binding constraints
     for (uint32_t CntCouplante = 0; CntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
          CntCouplante++)
     {
-        const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-          = problemeHebdo_->MatriceDesContraintesCouplantes[CntCouplante];
+        CsrBindingConstraintHourData data
+          = {problemeHebdo_->MatriceDesContraintesCouplantes[CntCouplante],
+             problemeHebdo_->adequacyPatchRuntimeData->originAreaMode,
+             problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode,
+             hour,
+             hourlyCsrProblem_.numberOfConstraintCsrHourlyBinding};
 
-        if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
-            continue;
-
-        int NbInterco
-          = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
-        int NombreDeTermes = 0;
-        for (int Index = 0; Index < NbInterco; Index++)
-        {
-            int Interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[Index];
-            double Poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[Index];
-
-            if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
-                  == Data::AdequacyPatch::physicalAreaInsideAdqPatch
-                && problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco]
-                     == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            {
-                int var = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour]
-                            .NumeroDeVariableDeLInterconnexion[Interco];
-
-                if (var >= 0)
-                {
-                    Pi[NombreDeTermes] = Poids;
-                    Colonne[NombreDeTermes] = var;
-                    NombreDeTermes++;
-                }
-            }
-        }
-
-        if (NombreDeTermes > 0) // current binding constraint contains an interco type 2<->2
-        {
-            hourlyCsrProblem_.numberOfConstraintCsrHourlyBinding[CntCouplante]
-              = problemeAResoudre_.NombreDeContraintes;
-
-            std::string NomDeLaContrainte
-              = "bc::hourly::" + std::to_string(hour)
-                + "::" + MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante;
-
-            logs.debug() << "C (bc): " << problemeAResoudre_.NombreDeContraintes << ": "
-                         << NomDeLaContrainte;
-
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              &problemeAResoudre_,
-              Pi,
-              Colonne,
-              NombreDeTermes,
-              MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
-        }
+        CsrBindingConstraintHour csrBindingConstraintHour(builder);
+        auto csrBindingConstraintHourData = std::make_shared<CsrBindingConstraintHourData>(data);
+        csrBindingConstraintHour.add(CntCouplante, csrBindingConstraintHourData);
     }
 }
-
 void CsrQuadraticProblem::buildConstraintMatrix()
 {
     logs.debug() << "[CSR] constraint list:";
