@@ -40,7 +40,6 @@
 #include "../ts-generator/generator.h"
 #include "opt_time_writer.h"
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
-#include "../utils/functions.h"
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
@@ -989,7 +988,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             // have to be rerun (meaning : they must be run once). if(!set_it->yearFailed[y])
             // continue;
 
-            Concurrency::Task task = Functions::MakeFunction<yearJob<ImplementationType>>(this,
+            auto task = std::make_shared<yearJob<ImplementationType>>(this,
                                                                  y,
                                                                  set_it->yearFailed,
                                                                  set_it->isFirstPerformedYearOfASet,

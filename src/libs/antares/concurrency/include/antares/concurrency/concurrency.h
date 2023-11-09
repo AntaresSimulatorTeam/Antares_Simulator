@@ -47,6 +47,19 @@ using TaskFuture = std::future<void>;
                    Yuni::Job::Priority priority = Yuni::Job::priorityDefault);
 
 /*!
+ * \brief Queues the provided function objects and returns the corresponding std::future.
+ *
+ * T must define operator ().
+ *
+ * This allows to handle exceptions occuring in the underlying task,
+ * as opposite to Yuni::Job::QueueService::add which swallows them.
+ */
+template <class T>
+[[nodiscard]] TaskFuture AddTask(Yuni::Job::QueueService& threadPool,
+                                 const std::shared_ptr<T>& task,
+                                 Yuni::Job::Priority priority = Yuni::Job::priorityDefault);
+
+/*!
  * \brief Utility class to gather futures to wait for.
  */
 class FutureSet
@@ -81,6 +94,44 @@ private:
     std::mutex mutex_;
     std::vector<TaskFuture> futures_;
 };
+
+
+namespace Detail { //implementation details
+
+/*!
+ * Utility class to wrap a callable object pointer
+ * into a copyable callable object.
+ *
+ * @tparam T the underlying callable type
+ */
+template<class T>
+class SharedCallable
+{
+public:
+    explicit SharedCallable(const std::shared_ptr<T>& functionObject) :
+            functionObject_(functionObject)
+    {
+    }
+
+    void operator()()
+    {
+        functionObject_.operator->();
+    }
+
+private:
+    std::shared_ptr<T> functionObject_;
+};
+
+}
+
+template <class T>
+TaskFuture AddTask(Yuni::Job::QueueService& threadPool,
+                                 const std::shared_ptr<T>& task,
+                                 Yuni::Job::Priority priority)
+{
+    Task wrappedTask = Detail::SharedCallable<T>(task);
+    return AddTask(threadPool, wrappedTask, priority);
+}
 
 }
 
