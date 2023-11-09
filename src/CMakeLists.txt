@@ -279,8 +279,10 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_MakeAvailable(ortools)
 endif()
 
+message("FIND PACKAGE MINIZIP")
 find_package(minizip)
-
+include(FetchContent)
+message("FIND END")
 if(NOT minizip_FOUND OR BUILD_MINIZIP)
     # Repository + tag
     set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
@@ -296,10 +298,13 @@ if(NOT minizip_FOUND OR BUILD_MINIZIP)
 
     FetchContent_Declare(minizip
     GIT_REPOSITORY ${MZ_REPOSITORY}
-    GIT_TAG ${MZ_TAG})
+    GIT_TAG ${MZ_TAG}
+	OVERRIDE_FIND_PACKAGE
+	)
 
     FetchContent_MakeAvailable(minizip)
 endif()
+message("FETCH CONTENT END")
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
@@ -447,3 +452,5 @@ endif()
 # Load packaging facilities.
 include(CPack)
 
+#Last. We need all target defined
+add_subdirectory(packaging)
