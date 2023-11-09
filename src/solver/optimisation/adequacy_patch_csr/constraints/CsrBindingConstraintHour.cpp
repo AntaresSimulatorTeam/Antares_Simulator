@@ -18,7 +18,7 @@ void CsrBindingConstraintHour::add(int CntCouplante,
         if (data->originAreaMode[Interco] == Data::AdequacyPatch::physicalAreaInsideAdqPatch
             && data->extremityAreaMode[Interco] == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            builder->include(Variable::NTCDirect(Interco), Poids);
+            builder->NTCDirect(Interco, Poids);
         }
     }
 
@@ -36,7 +36,6 @@ void CsrBindingConstraintHour::add(int CntCouplante,
 
         ConstraintNamer namer(builder->data->NomDesContraintes);
         namer.UpdateTimeStep(data->hour);
-        namer.UpdateArea(builder->data->NomsDesPays[Area]);
         namer.CsrBindingConstraintHour(
           builder->data->nombreDeContraintes,
           data->MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
