@@ -53,6 +53,10 @@ template<class Impl>
 class yearJob
 {
 public:
+    yearJob(const yearJob&) = delete;
+    yearJob& operator =(const yearJob&) = delete;
+    yearJob(yearJob&&) = default;
+    yearJob& operator =(yearJob&&) = default;
     yearJob(ISimulation<Impl>* simulation,
             unsigned int pY,
             std::map<uint, bool>& pYearFailed,
@@ -232,6 +236,32 @@ public:
 
     } // End of onExecute() method
 };
+
+template <class T>
+class SharedCallable
+{
+public:
+    explicit SharedCallable(std::shared_ptr<T> functionObject):
+            functionObject_(functionObject)
+    {
+    }
+
+    void operator()()
+    {
+        functionObject_.operator->();
+    }
+
+private:
+    std::shared_ptr<T> functionObject_;
+};
+
+template <class T, typename... Args>
+std::function<void()> make_copyable_callable(Args&&... args)
+{
+    std::shared_ptr<T> callable = std::make_shared<T>(std::forward<Args>(args)...);
+    return SharedCallable<T>(callable);
+}
+
 
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
@@ -983,7 +1013,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             // have to be rerun (meaning : they must be run once). if(!set_it->yearFailed[y])
             // continue;
 
-            Concurrency::Task task = yearJob<ImplementationType>(this,
+            Concurrency::Task task = make_copyable_callable<yearJob<ImplementationType>>(this,
                                                                  y,
                                                                  set_it->yearFailed,
                                                                  set_it->isFirstPerformedYearOfASet,
