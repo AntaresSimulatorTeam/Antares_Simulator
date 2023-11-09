@@ -5,7 +5,7 @@ void CsrAreaBalance::add(std::shared_ptr<CsrAreaBalanceData> data)
     for (uint32_t Area = 0; Area < data->NombreDePays; ++Area)
     {
         if (data->areaMode[Area] != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            return;
+            continue;
 
         // + ENS
         int NombreDeTermes = 0;
