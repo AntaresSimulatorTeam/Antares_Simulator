@@ -86,7 +86,7 @@ set(TARGET_LIBS #No alias
         utils
         concurrency
         mersenne
-        #application
+        application
         AntaresMemory
         jit
         io
@@ -99,6 +99,7 @@ set(TARGET_LIBS #No alias
         inifile
         #
         signal-handling
+        #minizip target does not exist
 )
 
 install(TARGETS ${TARGET_LIBS}
@@ -106,9 +107,9 @@ install(TARGETS ${TARGET_LIBS}
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/antares # include/SomeLibrary
         INCLUDES DESTINATION include
 )
-
 
 install(EXPORT AntaresTargets
         FILE "AntaresTargets.cmake"

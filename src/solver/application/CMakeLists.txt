@@ -32,16 +32,6 @@ target_include_directories(application
         $<INSTALL_INTERFACE:include/plap>
 )
 
-set_target_properties(application PROPERTIES PUBLIC_HEADER
-        $<INSTALL_INTERFACE:include/antares/application/application.h>)
-include(GNUInstallDirs)
-install(TARGETS application
-        EXPORT "AntaresTargets"
-        # these get default values from GNUInstallDirs, no need to set them
-        #RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # bin
-        #LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
-        #ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
-        # except for public headers, as we want them to be inside a library folder
-        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/antares # include/SomeLibrary
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ # include
+install(DIRECTORY   include/antares
+        DESTINATION "include"
 )
