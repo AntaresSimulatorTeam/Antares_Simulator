@@ -66,6 +66,8 @@ set(RTESOLVER_OPT
 		adequacy_patch_csr/count_constraints_variables.cpp
 		adequacy_patch_csr/constraints/CsrFlowDissociation.h
 		adequacy_patch_csr/constraints/CsrFlowDissociation.cpp
+		adequacy_patch_csr/constraints/CsrAreaBalance.h
+		adequacy_patch_csr/constraints/CsrAreaBalance.cpp
 
 		opt_period_string_generator_base.h
 		opt_rename_problem.h

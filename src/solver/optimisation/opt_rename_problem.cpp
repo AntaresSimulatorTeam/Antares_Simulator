@@ -224,6 +224,11 @@ void ConstraintNamer::CsrFlowDissociation(unsigned int constraint,
     SetLinkElementName(constraint, "CsrFlowDissociation");
 }
 
+void ConstraintNamer::CsrAreaBalance(unsigned int constraint)
+{
+    SetAreaElementNameHour(constraint, "CsrAreaBalance");
+}
+
 void ConstraintNamer::AreaBalance(unsigned int constraint)
 {
     SetAreaElementNameHour(constraint, "AreaBalance");

@@ -34,6 +34,7 @@
 #include "hourly_csr_problem.h"
 #include "sim_structure_probleme_economique.h"
 #include "constraints/CsrFlowDissociation.h"
+#include "constraints/CsrAreaBalance.h"
 #include "../constraints/new_constraint_builder_utils.h"
 
 using namespace Antares::Data;
@@ -112,7 +113,118 @@ void CsrQuadraticProblem::setConstraintsOnFlows(std::vector<double>& Pi, std::ve
     csrFlowDissociation.add(hour, csrFlowDissociationData);
 }
 
-void CsrQuadraticProblem::setNodeBalanceConstraints(std::vector<double>& Pi, std::vector<int>& Colonne)
+// void CsrQuadraticProblem::setNodeBalanceConstraints(std::vector<double>& Pi, std::vector<int>&
+// Colonne)
+// {
+//     int hour = hourlyCsrProblem_.triggeredHour;
+//     const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
+//       = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour];
+
+//     // constraint:
+//     // ENS(node A) +
+//     // - flow (A -> 2) or (+ flow (2 -> A)) there should be only one of them, otherwise
+//     double-count
+//     // - spillage(node A) =
+//     // ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
+//     // for all areas inside adequacy patch
+
+//     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; ++Area)
+//     {
+//         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
+//             != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+//             continue;
+
+//         // + ENS
+//         int NombreDeTermes = 0;
+//         int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[Area];
+//         if (var >= 0)
+//         {
+//             Pi[NombreDeTermes] = 1.0;
+//             Colonne[NombreDeTermes] = var;
+//             NombreDeTermes++;
+//         }
+
+//         // - export flows
+//         int Interco = problemeHebdo_->IndexDebutIntercoOrigine[Area];
+//         while (Interco >= 0)
+//         {
+//             if (problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco]
+//                 != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+//             {
+//                 Interco = problemeHebdo_->IndexSuivantIntercoOrigine[Interco];
+//                 continue;
+//             }
+
+//             var = CorrespondanceVarNativesVarOptim
+//                     .NumeroDeVariableDeLInterconnexion[Interco]; // flow (A->2)
+//             if (var >= 0)
+//             {
+//                 Pi[NombreDeTermes] = -1.0;
+//                 Colonne[NombreDeTermes] = var;
+//                 NombreDeTermes++;
+//                 logs.debug()
+//                   << "S-Interco number: [" << std::to_string(Interco) << "] between: ["
+//                   << problemeHebdo_->NomsDesPays[Area] << "]-["
+//                   << problemeHebdo_
+//                        ->NomsDesPays[problemeHebdo_->PaysExtremiteDeLInterconnexion[Interco]]
+//                   << "]";
+//             }
+//             Interco = problemeHebdo_->IndexSuivantIntercoOrigine[Interco];
+//         }
+
+//         // or + import flows
+//         Interco = problemeHebdo_->IndexDebutIntercoExtremite[Area];
+//         while (Interco >= 0)
+//         {
+//             if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
+//                 != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+//             {
+//                 Interco = problemeHebdo_->IndexSuivantIntercoExtremite[Interco];
+//                 continue;
+//             }
+//             var = CorrespondanceVarNativesVarOptim
+//                     .NumeroDeVariableDeLInterconnexion[Interco]; // flow (2 -> A)
+//             if (var >= 0)
+//             {
+//                 Pi[NombreDeTermes] = 1.0;
+//                 Colonne[NombreDeTermes] = var;
+//                 NombreDeTermes++;
+//                 logs.debug()
+//                   << "E-Interco number: [" << std::to_string(Interco) << "] between: ["
+//                   << problemeHebdo_->NomsDesPays[Area] << "]-["
+//                   << problemeHebdo_
+//                        ->NomsDesPays[problemeHebdo_->PaysOrigineDeLInterconnexion[Interco]]
+//                   << "]";
+//             }
+//             Interco = problemeHebdo_->IndexSuivantIntercoExtremite[Interco];
+//         }
+
+//         // - Spilled Energy
+//         var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillanceNegative[Area];
+//         if (var >= 0)
+//         {
+//             Pi[NombreDeTermes] = -1.0;
+//             Colonne[NombreDeTermes] = var;
+//             NombreDeTermes++;
+//         }
+
+//         hourlyCsrProblem_.numberOfConstraintCsrAreaBalance[Area]
+//           = problemeAResoudre_.NombreDeContraintes;
+
+//         std::string NomDeLaContrainte
+//           = "Area Balance, Area:" + std::to_string(Area) + "; " +
+//           problemeHebdo_->NomsDesPays[Area];
+
+//         logs.debug() << "C: " << problemeAResoudre_.NombreDeContraintes << ": "
+//                      << NomDeLaContrainte;
+
+//         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+//           &problemeAResoudre_, Pi, Colonne, NombreDeTermes, '=');
+//     }
+// }
+
+void CsrQuadraticProblem::setNodeBalanceConstraints(std::vector<double>& Pi,
+                                                    std::vector<int>& Colonne)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
     const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
@@ -125,97 +237,25 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(std::vector<double>& Pi, std
     // ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
     // for all areas inside adequacy patch
 
+    auto builder = NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(problemeHebdo_,
+                                                                              problemeAResoudre_);
+    CsrAreaBalance csrAreaBalance(builder);
+
     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; ++Area)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
-            != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            continue;
-
-        // + ENS
-        int NombreDeTermes = 0;
-        int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[Area];
-        if (var >= 0)
-        {
-            Pi[NombreDeTermes] = 1.0;
-            Colonne[NombreDeTermes] = var;
-            NombreDeTermes++;
-        }
-
-        // - export flows
-        int Interco = problemeHebdo_->IndexDebutIntercoOrigine[Area];
-        while (Interco >= 0)
-        {
-            if (problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco]
-                != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            {
-                Interco = problemeHebdo_->IndexSuivantIntercoOrigine[Interco];
-                continue;
-            }
-
-            var = CorrespondanceVarNativesVarOptim
-                    .NumeroDeVariableDeLInterconnexion[Interco]; // flow (A->2)
-            if (var >= 0)
-            {
-                Pi[NombreDeTermes] = -1.0;
-                Colonne[NombreDeTermes] = var;
-                NombreDeTermes++;
-                logs.debug()
-                  << "S-Interco number: [" << std::to_string(Interco) << "] between: ["
-                  << problemeHebdo_->NomsDesPays[Area] << "]-["
-                  << problemeHebdo_
-                       ->NomsDesPays[problemeHebdo_->PaysExtremiteDeLInterconnexion[Interco]]
-                  << "]";
-            }
-            Interco = problemeHebdo_->IndexSuivantIntercoOrigine[Interco];
-        }
-
-        // or + import flows
-        Interco = problemeHebdo_->IndexDebutIntercoExtremite[Area];
-        while (Interco >= 0)
-        {
-            if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
-                != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            {
-                Interco = problemeHebdo_->IndexSuivantIntercoExtremite[Interco];
-                continue;
-            }
-            var = CorrespondanceVarNativesVarOptim
-                    .NumeroDeVariableDeLInterconnexion[Interco]; // flow (2 -> A)
-            if (var >= 0)
-            {
-                Pi[NombreDeTermes] = 1.0;
-                Colonne[NombreDeTermes] = var;
-                NombreDeTermes++;
-                logs.debug()
-                  << "E-Interco number: [" << std::to_string(Interco) << "] between: ["
-                  << problemeHebdo_->NomsDesPays[Area] << "]-["
-                  << problemeHebdo_
-                       ->NomsDesPays[problemeHebdo_->PaysOrigineDeLInterconnexion[Interco]]
-                  << "]";
-            }
-            Interco = problemeHebdo_->IndexSuivantIntercoExtremite[Interco];
-        }
-
-        // - Spilled Energy
-        var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillanceNegative[Area];
-        if (var >= 0)
-        {
-            Pi[NombreDeTermes] = -1.0;
-            Colonne[NombreDeTermes] = var;
-            NombreDeTermes++;
-        }
-
-        hourlyCsrProblem_.numberOfConstraintCsrAreaBalance[Area]
-          = problemeAResoudre_.NombreDeContraintes;
-
-        std::string NomDeLaContrainte
-          = "Area Balance, Area:" + std::to_string(Area) + "; " + problemeHebdo_->NomsDesPays[Area];
-
-        logs.debug() << "C: " << problemeAResoudre_.NombreDeContraintes << ": "
-                     << NomDeLaContrainte;
-
-        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-          &problemeAResoudre_, Pi, Colonne, NombreDeTermes, '=');
+        CsrAreaBalanceData data{problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area],
+                                hour,
+                                problemeHebdo_->IndexDebutIntercoOrigine,
+                                problemeHebdo_->IndexSuivantIntercoOrigine,
+                                problemeHebdo_->IndexDebutIntercoExtremite,
+                                problemeHebdo_->IndexSuivantIntercoExtremite,
+                                problemeHebdo_->adequacyPatchRuntimeData->originAreaMode,
+                                problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode,
+                                problemeHebdo_->PaysOrigineDeLInterconnexion,
+                                problemeHebdo_->PaysExtremiteDeLInterconnexion,
+                                hourlyCsrProblem_.numberOfConstraintCsrAreaBalance};
+        auto csrAreaBalanceData = std::make_shared<CsrAreaBalanceData>(data);
+        csrAreaBalance.add(Area, csrAreaBalanceData);
     }
 }
 
