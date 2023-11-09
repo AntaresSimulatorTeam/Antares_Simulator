@@ -36,7 +36,7 @@ set_target_properties(application PROPERTIES PUBLIC_HEADER
         $<INSTALL_INTERFACE:include/antares/application/application.h>)
 include(GNUInstallDirs)
 install(TARGETS application
-        EXPORT "applicationTargets"
+        EXPORT "AntaresTargets"
         # these get default values from GNUInstallDirs, no need to set them
         #RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # bin
         #LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib

@@ -1,4 +1,6 @@
 project(result-writer)
+find_package(minizip)
+
 add_library(result_writer
         # Interface class (public API)
         include/antares/writer/i_writer.h
