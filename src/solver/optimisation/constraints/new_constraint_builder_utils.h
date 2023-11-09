@@ -4,7 +4,17 @@
 
 std::shared_ptr<NewConstraintBuilder> NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
   const PROBLEME_HEBDO* problemeHebdo,
-  std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>& ProblemeAResoudre);
+  PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre);
+
+std::shared_ptr<NewConstraintBuilder> NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
+  const PROBLEME_HEBDO* problemeHebdo,
+  std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>& ProblemeAResoudre)
+{
+    /* not good!!!!!!!!!!*/
+    auto& problemAResoudreRef = *ProblemeAResoudre.get();
+    return NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(problemeHebdo,
+                                                                      problemAResoudreRef);
+}
 
 inline std::shared_ptr<NewConstraintBuilder> NewGetConstraintBuilderFromProblemHebdo(
   PROBLEME_HEBDO* problemeHebdo)

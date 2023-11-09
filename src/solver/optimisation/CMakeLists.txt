@@ -64,6 +64,8 @@ set(RTESOLVER_OPT
 		adequacy_patch_csr/csr_quadratic_problem.cpp
 		adequacy_patch_csr/count_constraints_variables.h
 		adequacy_patch_csr/count_constraints_variables.cpp
+		adequacy_patch_csr/constraints/CsrFlowDissociation.h
+		adequacy_patch_csr/constraints/CsrFlowDissociation.cpp
 
 		opt_period_string_generator_base.h
 		opt_rename_problem.h
