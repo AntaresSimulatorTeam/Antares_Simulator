@@ -689,12 +689,6 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
 	study->parameters.timeSeriesToRefresh |= timeSeriesHydro;
 	study->parameters.timeSeriesToRefresh |= timeSeriesThermal;
 
-	study->parameters.timeSeriesToGenerate |= timeSeriesLoad;
-	study->parameters.timeSeriesToGenerate |= timeSeriesWind;
-	study->parameters.timeSeriesToGenerate |= timeSeriesSolar;
-	study->parameters.timeSeriesToGenerate |= timeSeriesHydro;
-	study->parameters.timeSeriesToGenerate |= timeSeriesThermal;
-
 	// Number of TS for each energy
 	uint loadNumberOfTs = 10;
 	uint windNumberOfTs = 3;
