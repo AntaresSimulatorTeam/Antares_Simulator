@@ -6,9 +6,10 @@ std::shared_ptr<NewConstraintBuilder> NewGetConstraintBuilderFromProblemHebdoAnd
   const PROBLEME_HEBDO* problemeHebdo,
   PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre);
 
-std::shared_ptr<NewConstraintBuilder> NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
-  const PROBLEME_HEBDO* problemeHebdo,
-  std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>& ProblemeAResoudre)
+inline std::shared_ptr<NewConstraintBuilder>
+  NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
+    const PROBLEME_HEBDO* problemeHebdo,
+    std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>& ProblemeAResoudre)
 {
     /* not good!!!!!!!!!!*/
     auto& problemAResoudreRef = *ProblemeAResoudre.get();
