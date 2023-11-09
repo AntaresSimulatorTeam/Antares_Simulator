@@ -109,9 +109,19 @@ bool MaintenanceGroupLoader::CheckValue(const EnvForLoading& env,
                                         const IniFile::Property* p,
                                         double& w)
 {
-    double val = p->value.to<double>();
+    // Convert to a double and report an error if conversion fails
+    auto stringValue = p->value.to<std::string>();
+    char* endptr;
+    strtod(stringValue.c_str(), &endptr);
+    if (!(*endptr == '\0'))
+    {
+        logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
+                     << "`: weight cannot be converted to number";
+        return false;
+    }
 
-    // check if parsed numbers are between 0 and 1.0
+    // check if number is between 0 and 1.0
+    double val = p->value.to<double>();
     if (!(val >= 0.0 && val <= 1.0))
     {
         logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
