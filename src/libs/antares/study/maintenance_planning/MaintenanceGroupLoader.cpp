@@ -73,13 +73,20 @@ std::vector<std::shared_ptr<MaintenanceGroup>> MaintenanceGroupLoader::load(EnvF
             continue;
 
         // check is it load, renewable or ror.
-        // It must be some of these because we already checked the validity of the key
-        if (setKey.find(".weight-load") != std::string::npos)
+        auto offset = setKey.find("."); // It must be found because we already checked the validity of the key
+        std::string weightName(setKey.c_str() + offset + 1, setKey.size() - (offset + 1));
+        if (weightName == "weight-load")
             mnt->loadWeight(area, val);
-        else if (setKey.find(".weight-renewable") != std::string::npos)
+        else if (weightName == "weight-renewable")
             mnt->renewableWeight(area, val);
-        else
+        else if (weightName == "weight-ror")
             mnt->rorWeight(area, val);
+        else
+        {
+            logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
+                         << "`: invalid key";
+            continue;
+        }
     }
 
     // Checking for validity
