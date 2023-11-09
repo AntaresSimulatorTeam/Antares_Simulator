@@ -115,7 +115,7 @@ public:
 
     void operator()()
     {
-        functionObject_.operator->();
+        (*functionObject_)();
     }
 
 private:
