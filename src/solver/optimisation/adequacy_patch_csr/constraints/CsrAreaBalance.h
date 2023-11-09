@@ -4,7 +4,7 @@
 #include "../../../simulation/adequacy_patch_runtime_data.h"
 struct CsrAreaBalanceData
 {
-    const adqPatchParamsMode& areaMode;
+    const std::vector<adqPatchParamsMode>& areaMode;
     const int hour;
     const std::vector<int>& IndexDebutIntercoOrigine;
     const std::vector<int>& IndexSuivantIntercoOrigine;
@@ -15,12 +15,13 @@ struct CsrAreaBalanceData
     const std::vector<adqPatchParamsMode>& extremityAreaMode;
     const std::vector<int>& PaysOrigineDeLInterconnexion;
     const std::vector<int>& PaysExtremiteDeLInterconnexion;
-    std::map<int, int> numberOfConstraintCsrAreaBalance;
+    std::map<int, int>& numberOfConstraintCsrAreaBalance;
+    const uint32_t NombreDePays;
 };
 
 class CsrAreaBalance : private NewConstraintFactory
 {
 public:
     using NewConstraintFactory::NewConstraintFactory;
-    void add(uint32_t Area, std::shared_ptr<CsrAreaBalanceData> data);
+    void add(std::shared_ptr<CsrAreaBalanceData> data);
 };

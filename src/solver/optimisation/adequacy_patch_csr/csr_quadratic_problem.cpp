@@ -241,22 +241,20 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(std::vector<double>& Pi,
                                                                               problemeAResoudre_);
     CsrAreaBalance csrAreaBalance(builder);
 
-    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; ++Area)
-    {
-        CsrAreaBalanceData data{problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area],
-                                hour,
-                                problemeHebdo_->IndexDebutIntercoOrigine,
-                                problemeHebdo_->IndexSuivantIntercoOrigine,
-                                problemeHebdo_->IndexDebutIntercoExtremite,
-                                problemeHebdo_->IndexSuivantIntercoExtremite,
-                                problemeHebdo_->adequacyPatchRuntimeData->originAreaMode,
-                                problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode,
-                                problemeHebdo_->PaysOrigineDeLInterconnexion,
-                                problemeHebdo_->PaysExtremiteDeLInterconnexion,
-                                hourlyCsrProblem_.numberOfConstraintCsrAreaBalance};
-        auto csrAreaBalanceData = std::make_shared<CsrAreaBalanceData>(data);
-        csrAreaBalance.add(Area, csrAreaBalanceData);
-    }
+    CsrAreaBalanceData data{problemeHebdo_->adequacyPatchRuntimeData->areaMode,
+                            hour,
+                            problemeHebdo_->IndexDebutIntercoOrigine,
+                            problemeHebdo_->IndexSuivantIntercoOrigine,
+                            problemeHebdo_->IndexDebutIntercoExtremite,
+                            problemeHebdo_->IndexSuivantIntercoExtremite,
+                            problemeHebdo_->adequacyPatchRuntimeData->originAreaMode,
+                            problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode,
+                            problemeHebdo_->PaysOrigineDeLInterconnexion,
+                            problemeHebdo_->PaysExtremiteDeLInterconnexion,
+                            hourlyCsrProblem_.numberOfConstraintCsrAreaBalance,
+                            problemeHebdo_->NombreDePays};
+    auto csrAreaBalanceData = std::make_shared<CsrAreaBalanceData>(data);
+    csrAreaBalance.add(csrAreaBalanceData);
 }
 
 void CsrQuadraticProblem::setBindingConstraints(std::vector<double>& Pi, std::vector<int>& Colonne)

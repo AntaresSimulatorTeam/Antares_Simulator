@@ -1,69 +1,72 @@
 #include "CsrAreaBalance.h"
 
-void CsrAreaBalance::add(uint32_t Area, std::shared_ptr<CsrAreaBalanceData> data)
+void CsrAreaBalance::add(std::shared_ptr<CsrAreaBalanceData> data)
 {
-    if (data->areaMode != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-        return;
-
-    // + ENS
-    int NombreDeTermes = 0;
-    builder->updateHourWithinWeek(data->hour).NegativeUnsuppliedEnergy(Area, 1.0);
-
-    // - export flows
-    int Interco = data->IndexDebutIntercoOrigine[Area];
-    while (Interco >= 0)
+    for (uint32_t Area = 0; Area < data->NombreDePays; ++Area)
     {
-        if (data->extremityAreaMode[Interco] != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        if (data->areaMode[Area] != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+            return;
+
+        // + ENS
+        int NombreDeTermes = 0;
+        builder->updateHourWithinWeek(data->hour).NegativeUnsuppliedEnergy(Area, 1.0);
+
+        // - export flows
+        int Interco = data->IndexDebutIntercoOrigine[Area];
+        while (Interco >= 0)
         {
+            if (data->extremityAreaMode[Interco] != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+            {
+                Interco = data->IndexSuivantIntercoOrigine[Interco];
+                continue;
+            }
+
+            // flow (A->2)
+            builder->NTCDirect(Interco, -1.0);
+
+            logs.debug()
+              << "S-Interco number: [" << std::to_string(Interco) << "] between: ["
+              << builder->data->NomsDesPays[Area] << "]-["
+              << builder->data->NomsDesPays[data->PaysExtremiteDeLInterconnexion[Interco]] << "]";
+
             Interco = data->IndexSuivantIntercoOrigine[Interco];
-            continue;
         }
 
-        // flow (A->2)
-        builder->NTCDirect(Interco, -1.0);
-
-        logs.debug() << "S-Interco number: [" << std::to_string(Interco) << "] between: ["
-                     << builder->data->NomsDesPays[Area] << "]-["
-                     << builder->data->NomsDesPays[data->PaysExtremiteDeLInterconnexion[Interco]]
-                     << "]";
-
-        Interco = data->IndexSuivantIntercoOrigine[Interco];
-    }
-
-    // or + import flows
-    Interco = data->IndexDebutIntercoExtremite[Area];
-    while (Interco >= 0)
-    {
-        if (data->originAreaMode[Interco] != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        // or + import flows
+        Interco = data->IndexDebutIntercoExtremite[Area];
+        while (Interco >= 0)
         {
+            if (data->originAreaMode[Interco] != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+            {
+                Interco = data->IndexSuivantIntercoExtremite[Interco];
+                continue;
+            }
+            // flow (2 -> A)
+            builder->NTCDirect(Interco, 1.0);
+
+            logs.debug() << "E-Interco number: [" << std::to_string(Interco) << "] between: ["
+                         << builder->data->NomsDesPays[Area] << "]-["
+                         << builder->data->NomsDesPays[data->PaysOrigineDeLInterconnexion[Interco]]
+                         << "]";
+
             Interco = data->IndexSuivantIntercoExtremite[Interco];
-            continue;
         }
-        // flow (2 -> A)
-        builder->NTCDirect(Interco, 1.0);
 
-        logs.debug() << "E-Interco number: [" << std::to_string(Interco) << "] between: ["
-                     << builder->data->NomsDesPays[Area] << "]-["
-                     << builder->data->NomsDesPays[data->PaysOrigineDeLInterconnexion[Interco]]
-                     << "]";
+        // - Spilled Energy
+        builder->NegativeUnsuppliedEnergy(Area, -1.0);
 
-        Interco = data->IndexSuivantIntercoExtremite[Interco];
+        data->numberOfConstraintCsrAreaBalance[Area] = builder->data->nombreDeContraintes;
+
+        std::string NomDeLaContrainte
+          = "Area Balance, Area:" + std::to_string(Area) + "; " + builder->data->NomsDesPays[Area];
+
+        logs.debug() << "C: " << builder->data->nombreDeContraintes << ": " << NomDeLaContrainte;
+
+        ConstraintNamer namer(builder->data->NomDesContraintes);
+        namer.UpdateTimeStep(data->hour);
+        namer.UpdateArea(builder->data->NomsDesPays[Area]);
+        namer.CsrAreaBalance(builder->data->nombreDeContraintes);
+        builder->equalTo();
+        builder->build();
     }
-
-    // - Spilled Energy
-    builder->NegativeUnsuppliedEnergy(Area, -1.0);
-
-    data->numberOfConstraintCsrAreaBalance[Area] = builder->data->nombreDeContraintes;
-
-    std::string NomDeLaContrainte
-      = "Area Balance, Area:" + std::to_string(Area) + "; " + builder->data->NomsDesPays[Area];
-
-    logs.debug() << "C: " << builder->data->nombreDeContraintes << ": " << NomDeLaContrainte;
-
-    ConstraintNamer namer(builder->data->NomDesContraintes);
-    namer.UpdateTimeStep(data->hour);
-    namer.UpdateArea(builder->data->NomsDesPays[Area]);
-    namer.CsrAreaBalance(builder->data->nombreDeContraintes);
-    builder->equalTo();
-    builder->build();
 }
