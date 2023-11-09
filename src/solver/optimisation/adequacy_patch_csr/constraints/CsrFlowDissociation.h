@@ -1,6 +1,7 @@
 #pragma once
 #include "../../constraints/new_constraint_builder.h"
 
+#include "../../simulation/adequacy_patch_runtime_data.h"
 struct CsrFlowDissociationData
 {
     std::map<int, int>& numberOfConstraintCsrFlowDissociation;
