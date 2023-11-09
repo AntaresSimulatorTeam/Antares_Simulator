@@ -8,8 +8,7 @@ void CsrAreaBalance::add(std::shared_ptr<CsrAreaBalanceData> data)
             continue;
 
         // + ENS
-        int NombreDeTermes = 0;
-        builder->updateHourWithinWeek(data->hour).NegativeUnsuppliedEnergy(Area, 1.0);
+        builder->updateHourWithinWeek(data->hour).PositiveUnsuppliedEnergy(Area, 1.0);
 
         // - export flows
         int Interco = data->IndexDebutIntercoOrigine[Area];
