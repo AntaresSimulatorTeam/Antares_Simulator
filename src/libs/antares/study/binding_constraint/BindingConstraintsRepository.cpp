@@ -73,47 +73,11 @@ static int valueForSort(BindingConstraint::Operator op)
     }
 }
 
-/**
- * @brief Compare ranged constraint i.e their names end with _lt or _gt
- * if suffixes are equal then the "*_lt" constraint is less than the "*_gt"
- * @param constraint_1
- * @param constraint_2
- * @return true if constraint_1 < constraint_2
- */
-bool compareRangedConstraints(const ConstraintName& constraint_1,
-                              const ConstraintName& constraint_2)
-{
-    std::string tmp_str1 = constraint_1.c_str();
-    std::string tmp_str2 = constraint_2.c_str();
-    if (auto left_pos = tmp_str1.find_last_of("_lt"); left_pos != std::string::npos)
-    {
-        size_t right_pos = 0;
-        if (right_pos = tmp_str2.find_last_of("_gt"); right_pos == std::string::npos)
-        {
-            logs.error() << "Ranged constraints comparison : " << tmp_str1 << " and " << tmp_str2
-                         << " has failed!";
-        }
-
-        auto new_s1 = tmp_str1.substr(0, left_pos - 2);
-        auto new_s2 = tmp_str2.substr(0, right_pos - 2);
-        bool ret = new_s1 == new_s2 ? true : constraint_1 < constraint_2;
-        return ret;
-    }
-    return constraint_1 < constraint_2;
-}
 bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1,
                         const std::shared_ptr<BindingConstraint>& s2)
 {
     if (s1->name() != s2->name())
     {
-        if (s1->name().endsWith("_lt") && s2->name().endsWith("_gt"))
-        {
-            return compareRangedConstraints(s1->name(), s2->name());
-        }
-        else if (s1->name().endsWith("_gt") && s2->name().endsWith("_lt"))
-        {
-            return !compareRangedConstraints(s2->name(), s1->name());
-        }
         return s1->name() < s2->name();
     }
     else
