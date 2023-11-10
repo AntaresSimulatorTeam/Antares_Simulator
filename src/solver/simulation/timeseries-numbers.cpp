@@ -265,14 +265,12 @@ class IntraModalConsistencyChecker
 public:
     IntraModalConsistencyChecker(const TimeSeriesType ts,
                                  const array<bool, timeSeriesCount>& isTSintramodal,
-                                 const array<bool, timeSeriesCount>& isTSgenerated,
                                  areaNumberOfTSretriever* tsCounter,
                                  Study& study) :
      tsCounter_(tsCounter), study_(study), nbTimeseries_(0)
     {
         int indexTS = ts_to_tsIndex.at(ts);
         isTSintramodal_ = isTSintramodal[indexTS];
-        isTSgenerated_ = isTSgenerated[indexTS];
         tsTitle_ = ts_to_tsTitle.at(ts);
     }
     ~IntraModalConsistencyChecker() = default;
@@ -287,7 +285,6 @@ private:
 
 private:
     bool isTSintramodal_;
-    bool isTSgenerated_;
     areaNumberOfTSretriever* tsCounter_;
     Study& study_;
     uint nbTimeseries_;
@@ -296,7 +293,7 @@ private:
 
 bool IntraModalConsistencyChecker::check()
 {
-    if (isTSintramodal_ && not isTSgenerated_)
+    if (isTSintramodal_)
     {
         if (not checkTSconsistency())
             return false;
@@ -364,8 +361,7 @@ bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode
         const TimeSeriesType tsKind = it->first;
         areaNumberOfTSretriever* tsRetriever = (it->second).get();
         int indexTS = ts_to_tsIndex.at(it->first);
-        IntraModalConsistencyChecker intraModalchecker(
-          tsKind, isTSintramodal, isTSgenerated, tsRetriever, study);
+        IntraModalConsistencyChecker intraModalchecker(tsKind, isTSintramodal, tsRetriever, study);
         if (!intraModalchecker.check())
             return false;
         nbTimeseriesByMode[indexTS] = intraModalchecker.getTimeSeriesNumber();
