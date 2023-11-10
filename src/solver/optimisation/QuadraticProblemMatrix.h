@@ -15,7 +15,7 @@ public:
     QuadraticProblemMatrix(PROBLEME_HEBDO* problem_hebdo) :
      ProblemMatrixEssential(problem_hebdo), exchangeBalanceGroup_(problem_hebdo)
     {
-        constraintgroups_ = { &exchangeBalanceGroup_ }
+        constraintgroups_ = {&exchangeBalanceGroup_};
     }
 
     void Run() override;
