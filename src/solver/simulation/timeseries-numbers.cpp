@@ -336,7 +336,6 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
 
 bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode,
                                 const array<bool, timeSeriesCount>& isTSintramodal,
-                                const array<bool, timeSeriesCount>& isTSgenerated,
                                 Study& study)
 {
     // Initialization of a map associating a time-series to an object that retrieves
@@ -372,7 +371,6 @@ bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode
 
 bool checkInterModalConsistencyForArea(Area& area,
                                        const array<bool, timeSeriesCount>& isTSintermodal,
-                                       const array<bool, timeSeriesCount>& isTSgenerated,
                                        Study& study)
 {
     // 1. Making a list of TS numbers :
@@ -568,7 +566,6 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
 }
 
 void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& isTSintramodal,
-                                           const array<bool, timeSeriesCount>& isTSgenerated,
                                            uint year,
                                            Study& study)
 {
@@ -881,16 +878,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
     array<uint32_t, timeSeriesCount> intramodal_draws;
     std::fill(intramodal_draws.begin(), intramodal_draws.end(), 0);
 
-    const array<bool, timeSeriesCount> isTSgenerated
-      = {(bool)(timeSeriesLoad & parameters.timeSeriesToRefresh),
-         (bool)(timeSeriesHydro & parameters.timeSeriesToRefresh),
-         (bool)(timeSeriesWind & parameters.timeSeriesToRefresh),
-         (bool)(timeSeriesThermal & parameters.timeSeriesToRefresh),
-         (bool)(timeSeriesSolar & parameters.timeSeriesToRefresh),
-         false,  // TS generation is always disabled for renewables
-         false}; // TS generation is always disabled for links transmission capacities
-
-    if (not checkIntraModalConsistency(nbTimeseriesByMode, isTSintramodal, isTSgenerated, study))
+    if (not checkIntraModalConsistency(nbTimeseriesByMode, isTSintramodal, study))
         return false;
 
     for (uint year = 0; year < years; ++year)
@@ -901,7 +889,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
         storeTSnumbersForIntraModal(intramodal_draws, isTSintramodal, year, study.areas);
 
         // NOT intra-modal TS : draw and store TS numbers
-        drawAndStoreTSnumbersForNOTintraModal(isTSintramodal, isTSgenerated, year, study);
+        drawAndStoreTSnumbersForNOTintraModal(isTSintramodal, year, study);
     }
 
     // ===============
@@ -931,7 +919,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
         for (auto i = study.areas.begin(); i != end; ++i)
         {
             auto& area = *(i->second);
-            if (not checkInterModalConsistencyForArea(area, isTSintermodal, isTSgenerated, study))
+            if (not checkInterModalConsistencyForArea(area, isTSintermodal, study))
                 return false;
 
             Matrix<uint32_t>* tsNumbersMtx
