@@ -166,5 +166,11 @@ IncompatibleFuelCostColumns::IncompatibleFuelCostColumns() :
 {
 }
 
+IncompatibleMaintenancePlanningUsage::IncompatibleMaintenancePlanningUsage() :
+ LoadingError("When generating thermal time series using Maintenance Planning, Stochastic "
+              "ts-generator for load, hydro and renewables must ne off")
+{
+}
+
 } // namespace Error
 } // namespace Antares
