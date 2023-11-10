@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Antares Simulator: Antares::Solver::Simulation::yearJob&lt; Impl &gt; Class Template Reference</title>
+<title>Antares Simulator: Antares::Concurrency::Detail::CopyableCallable&lt; T &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -65,7 +65,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1Simulation_1_1yearJob.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classAntares_1_1Concurrency_1_1Detail_1_1CopyableCallable.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -93,36 +93,40 @@ $(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1Simulation_1
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classAntares_1_1Solver_1_1Simulation_1_1yearJob-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">Antares::Solver::Simulation::yearJob&lt; Impl &gt; Class Template Reference</div></div>
+<a href="classAntares_1_1Concurrency_1_1Detail_1_1CopyableCallable-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">Antares::Concurrency::Detail::CopyableCallable&lt; T &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="concurrency_8h_source.html">concurrency.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a53e7097d0734963d829e3614c2b42e7f"><td class="memItemLeft" align="right" valign="top"><a id="a53e7097d0734963d829e3614c2b42e7f" name="a53e7097d0734963d829e3614c2b42e7f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>yearJob</b> (<a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html">ISimulation</a>&lt; Impl &gt; *simulation, unsigned int pY, std::map&lt; uint, bool &gt; &amp;pYearFailed, std::map&lt; uint, bool &gt; &amp;pIsFirstPerformedYearOfASet, bool pFirstSetParallelWithAPerformedYearWasRun, unsigned int pNumSpace, <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1randomNumbers.html">randomNumbers</a> &amp;pRandomForParallelYears, bool pPerformCalculations, <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &amp;pStudy, std::vector&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">Variable::State</a> &gt; &amp;pState, bool pYearByYear, <a class="el" href="classBenchmarking_1_1IDurationCollector.html">Benchmarking::IDurationCollector</a> &amp;durationCollector, <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a> &amp;resultWriter)</td></tr>
-<tr class="separator:a53e7097d0734963d829e3614c2b42e7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7690e3e431957b28603854d09107991"><td class="memItemLeft" align="right" valign="top"><a id="ae7690e3e431957b28603854d09107991" name="ae7690e3e431957b28603854d09107991"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>yearJob</b> (const <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1yearJob.html">yearJob</a> &amp;)=delete</td></tr>
-<tr class="separator:ae7690e3e431957b28603854d09107991"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8bd249f4b6e6c079eba81c4e0b223c76"><td class="memItemLeft" align="right" valign="top"><a id="a8bd249f4b6e6c079eba81c4e0b223c76" name="a8bd249f4b6e6c079eba81c4e0b223c76"></a>
-<a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1yearJob.html">yearJob</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1yearJob.html">yearJob</a> &amp;)=delete</td></tr>
-<tr class="separator:a8bd249f4b6e6c079eba81c4e0b223c76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8db5faaee8b2d81fc757372fe475cb9f"><td class="memItemLeft" align="right" valign="top"><a id="a8db5faaee8b2d81fc757372fe475cb9f" name="a8db5faaee8b2d81fc757372fe475cb9f"></a>
+<tr class="memitem:a322936c58cb81e4e18afa0573b4b5686"><td class="memItemLeft" align="right" valign="top"><a id="a322936c58cb81e4e18afa0573b4b5686" name="a322936c58cb81e4e18afa0573b4b5686"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>CopyableCallable</b> (const std::shared_ptr&lt; T &gt; &amp;functionObject)</td></tr>
+<tr class="separator:a322936c58cb81e4e18afa0573b4b5686"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3421b2e6f671eae87b645d78ea3c6691"><td class="memItemLeft" align="right" valign="top"><a id="a3421b2e6f671eae87b645d78ea3c6691" name="a3421b2e6f671eae87b645d78ea3c6691"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>operator()</b> ()</td></tr>
-<tr class="separator:a8db5faaee8b2d81fc757372fe475cb9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a3421b2e6f671eae87b645d78ea3c6691"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/solver/simulation/<a class="el" href="solver_2simulation_2solver_8h_source.html">solver.h</a></li>
-<li>src/solver/simulation/<a class="el" href="solver_8hxx_source.html">solver.hxx</a></li>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;class T&gt;<br />
+class Antares::Concurrency::Detail::CopyableCallable&lt; T &gt;</div><p >Utility class to wrap a callable object pointer into a copyable callable object.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>the underlying callable type </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
+<li>src/libs/antares/concurrency/include/antares/concurrency/<a class="el" href="concurrency_8h_source.html">concurrency.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Solver</b></li><li class="navelem"><b>Simulation</b></li><li class="navelem"><a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1yearJob.html">yearJob</a></li>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Concurrency</b></li><li class="navelem"><b>Detail</b></li><li class="navelem"><a class="el" href="classAntares_1_1Concurrency_1_1Detail_1_1CopyableCallable.html">CopyableCallable</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>

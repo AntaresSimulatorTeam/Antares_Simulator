@@ -223,6 +223,9 @@ var annotated_dup =
         [ "WIPPanel", "classAntares_1_1Component_1_1WIPPanel.html", "classAntares_1_1Component_1_1WIPPanel" ]
       ] ],
       [ "Concurrency", null, [
+        [ "Detail", null, [
+          [ "CopyableCallable", "classAntares_1_1Concurrency_1_1Detail_1_1CopyableCallable.html", null ]
+        ] ],
         [ "FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", "classAntares_1_1Concurrency_1_1FutureSet" ]
       ] ],
       [ "Data", null, [
@@ -1214,6 +1217,7 @@ var annotated_dup =
     [ "NameTranslator", "classNameTranslator.html", null ],
     [ "NbDispUnitsMinBoundSinceMinUpTime", "classNbDispUnitsMinBoundSinceMinUpTime.html", "classNbDispUnitsMinBoundSinceMinUpTime" ],
     [ "NbUnitsOutageLessThanNbUnitsStop", "classNbUnitsOutageLessThanNbUnitsStop.html", "classNbUnitsOutageLessThanNbUnitsStop" ],
+    [ "NonCopyableFunctionObject", "structNonCopyableFunctionObject.html", null ],
     [ "nullMPSwriter", "classnullMPSwriter.html", null ],
     [ "NullName", "classNullName.html", null ],
     [ "NullProvider", "classNullProvider.html", "classNullProvider" ],

@@ -163,6 +163,7 @@ var hierarchy =
     [ "Antares::Private::OutputViewerData::Content", "classAntares_1_1Private_1_1OutputViewerData_1_1Content.html", null ],
     [ "Antares::Action::Context", "classAntares_1_1Action_1_1Context.html", null ],
     [ "CONTRAINTES_COUPLANTES", "structCONTRAINTES__COUPLANTES.html", null ],
+    [ "Antares::Concurrency::Detail::CopyableCallable< T >", "classAntares_1_1Concurrency_1_1Detail_1_1CopyableCallable.html", null ],
     [ "Antares::Data::Correlation", "classAntares_1_1Data_1_1Correlation.html", null ],
     [ "Antares::Window::CorrelationPanelData", "classAntares_1_1Window_1_1CorrelationPanelData.html", null ],
     [ "CORRESPONDANCE_DES_CONTRAINTES", "structCORRESPONDANCE__DES__CONTRAINTES.html", null ],
@@ -805,6 +806,7 @@ var hierarchy =
       [ "FSWalker::Walker", "classFSWalker_1_1Walker.html", null ],
       [ "UserData", "classUserData.html", null ]
     ] ],
+    [ "NonCopyableFunctionObject", "structNonCopyableFunctionObject.html", null ],
     [ "object", null, [
       [ "benchmark.StudyList", "classbenchmark_1_1StudyList.html", null ],
       [ "kirchhoff_pytest.StudyReference", "classkirchhoff__pytest_1_1StudyReference.html", null ]

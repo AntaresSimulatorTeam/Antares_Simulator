@@ -73,9 +73,10 @@ var NAVTREEINDEX6 =
 "classAntares_1_1Component_1_1WIPPanel.html#a31eba8cbb5dfcf7b209b83183251067b":[4,0,0,1,15,3],
 "classAntares_1_1Component_1_1WIPPanel.html#ab3159cd96d2344c4aad011f5408c2db4":[4,0,0,1,15,1],
 "classAntares_1_1Component_1_1WIPPanel.html#ab981bf1e9e37ea03e71561fb7fc45b47":[4,0,0,1,15,0],
-"classAntares_1_1Concurrency_1_1FutureSet.html":[4,0,0,2,0],
-"classAntares_1_1Concurrency_1_1FutureSet.html#a1911ee50a617f632e1cdaccb6181083e":[4,0,0,2,0,0],
-"classAntares_1_1Concurrency_1_1FutureSet.html#a8cf68f6c1a66e76acaec9ce67cb20e5f":[4,0,0,2,0,1],
+"classAntares_1_1Concurrency_1_1Detail_1_1CopyableCallable.html":[4,0,0,2,0,0],
+"classAntares_1_1Concurrency_1_1FutureSet.html":[4,0,0,2,1],
+"classAntares_1_1Concurrency_1_1FutureSet.html#a1911ee50a617f632e1cdaccb6181083e":[4,0,0,2,1,0],
+"classAntares_1_1Concurrency_1_1FutureSet.html#a8cf68f6c1a66e76acaec9ce67cb20e5f":[4,0,0,2,1,1],
 "classAntares_1_1Cycle.html":[4,0,0,22],
 "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html":[4,0,0,3,0,1],
 "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html#a22af9ddf555d64580b310e8879fe30d7":[4,0,0,3,0,1,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX6 =
 "classAntares_1_1Data_1_1BindingConstraint.html#a5c561a75f0d335beca75079c94989199":[4,0,0,3,13,8],
 "classAntares_1_1Data_1_1BindingConstraint.html#a681901a3fa63105cdedf29d9fa7a5a09":[4,0,0,3,13,30],
 "classAntares_1_1Data_1_1BindingConstraint.html#a684a8d7529c2f34fcdd710b512f4bd48":[4,0,0,3,13,34],
-"classAntares_1_1Data_1_1BindingConstraint.html#a69709de82819bef29c61a238afcdc09e":[4,0,0,3,13,28],
-"classAntares_1_1Data_1_1BindingConstraint.html#a7a34d9a77804194550b53a75729fc1a5":[4,0,0,3,13,22]
+"classAntares_1_1Data_1_1BindingConstraint.html#a69709de82819bef29c61a238afcdc09e":[4,0,0,3,13,28]
 };
