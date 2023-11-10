@@ -55,7 +55,6 @@ add_library(antares-solver-simulation
 
 target_include_directories(antares-solver-simulation PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/solver/simulation>
-		$<INSTALL_INTERFACE:solver/simulation>
 )
 
 target_link_libraries(antares-solver-simulation PRIVATE

@@ -56,7 +56,6 @@ install(TARGETS ${TARGET_LIBS}
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
-        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/antares # include/SomeLibrary
         INCLUDES DESTINATION include
 )
 
@@ -72,7 +71,7 @@ include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
         "${CMAKE_CURRENT_BINARY_DIR}/AntaresConfigVersion.cmake"
         VERSION "${version}"
-        COMPATIBILITY AnyNewerVersion
+        COMPATIBILITY SameMajorVersion
 )
 # create config file
 configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
@@ -83,10 +82,11 @@ configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
 install(FILES
         "${CMAKE_CURRENT_BINARY_DIR}/AntaresConfig.cmake"
         "${CMAKE_CURRENT_BINARY_DIR}/AntaresConfigVersion.cmake"
-        DESTINATION cmake
+        DESTINATION lib/cmake/Antares
 )
+
 # generate the export targets for the build tree
 export(EXPORT AntaresTargets
-        FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/AntaresTargets.cmake"
+        FILE "${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/AntaresTargets.cmake"
         NAMESPACE Antares::
 )

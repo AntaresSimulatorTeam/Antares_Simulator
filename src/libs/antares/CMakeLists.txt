@@ -70,7 +70,7 @@ add_library(antares-core
 #TODO : needed for include
 target_include_directories(antares-core
 		PRIVATE
-        $<INSTALL_INTERFACE:/libs>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs>
 		)
 
 target_link_libraries(antares-core

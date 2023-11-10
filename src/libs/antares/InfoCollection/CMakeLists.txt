@@ -31,17 +31,6 @@ target_include_directories(${PROJ}
         $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/jit> # something,something -> jit
         $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/memory/include> #study -> BC -> link -> memory
         $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/inifile> #study -> inifile
-        $<INSTALL_INTERFACE:libs> #study
-        $<INSTALL_INTERFACE:libs/antares/date> #parameters -> date
-        $<INSTALL_INTERFACE:libs/antares/array> #links
-        $<INSTALL_INTERFACE:libs/antares/logs> #study -> binding constraint -> matrix -> jit
-        $<INSTALL_INTERFACE:libs/antares/io> #study -> binding constraint -> matrix
-        $<INSTALL_INTERFACE:libs/antares/writer> #study
-        $<INSTALL_INTERFACE:libs/antares/exception> #enum -> exception
-        $<INSTALL_INTERFACE:libs/antares/jit> # something,something -> jit
-        $<INSTALL_INTERFACE:libs/antares/memory/include> #study -> BC -> link -> memory
-        $<INSTALL_INTERFACE:libs/antares/inifile> #study -> inifile
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
 )

@@ -159,10 +159,9 @@ add_library(antares-solver-variable
 
 target_include_directories(antares-solver-variable
         PRIVATE
-        $<INSTALL_INTERFACE:libs>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs>
 		PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-		$<INSTALL_INTERFACE:include>
 )
 target_link_libraries(antares-solver-variable PRIVATE antares-core
 	Antares::study
@@ -183,7 +182,7 @@ add_library(antares-solver-variable-info
 )
 target_include_directories(antares-solver-variable-info
         PRIVATE
-        $<INSTALL_INTERFACE:libs>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs>
 )
 target_link_libraries(antares-solver-variable-info PRIVATE antares-core
 	Antares::study
