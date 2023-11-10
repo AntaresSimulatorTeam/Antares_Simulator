@@ -28,7 +28,7 @@
 #include "opt_structure_probleme_a_resoudre.h"
 #include "sim_structure_probleme_economique.h"
 #include "constraints/ConstraintGroup.h"
-#include "LinearProblemMatrixEssential.h"
+#include "ProblemMatrixEssential.h"
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "constraints/PMinMaxDispatchableGenerationGroup.h"
@@ -41,11 +41,11 @@
 
 using namespace Antares::Data;
 
-class LinearProblemMatrixStartUpCosts : public LinearProblemMatrixEssential
+class LinearProblemMatrixStartUpCosts : public ProblemMatrixEssential
 {
 public:
     explicit LinearProblemMatrixStartUpCosts(PROBLEME_HEBDO* problemeHebdo, bool Simulation) :
-     LinearProblemMatrixEssential(problemeHebdo),
+     ProblemMatrixEssential(problemeHebdo),
      simulation_(Simulation),
      pMinMaxDispatchableGenerationGroup_(problemeHebdo, simulation_),
      consistenceNumberOfDispatchableUnitsGroup_(problemeHebdo, simulation_),

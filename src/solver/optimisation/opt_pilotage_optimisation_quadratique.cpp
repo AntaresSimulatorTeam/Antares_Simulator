@@ -31,7 +31,7 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
-
+#include "QuadraticProblemMatrix.h"
 extern "C"
 {
 #include "spx_fonctions.h"
@@ -43,7 +43,7 @@ bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* problemeHebdo)
     {
         OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(problemeHebdo);
 
-        OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(problemeHebdo);
+        QuadraticProblemMatrix(problemeHebdo).Run();
 
         problemeHebdo->LeProblemeADejaEteInstancie = true;
     }

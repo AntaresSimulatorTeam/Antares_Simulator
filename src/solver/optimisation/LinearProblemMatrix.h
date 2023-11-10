@@ -27,7 +27,7 @@
 #pragma once
 #include "opt_structure_probleme_a_resoudre.h"
 #include "sim_structure_probleme_economique.h"
-#include "LinearProblemMatrixEssential.h"
+#include "ProblemMatrixEssential.h"
 #include "constraints/ConstraintGroup.h"
 #include "constraints/Group1.h"
 #include "constraints/BindingConstraintDayGroup.h"
@@ -42,11 +42,11 @@
 #include <antares/study/study.h>
 
 using namespace Antares::Data;
-class LinearProblemMatrix : public LinearProblemMatrixEssential
+class LinearProblemMatrix : public ProblemMatrixEssential
 {
 public:
     explicit LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo, Solver::IResultWriter& writer) :
-     LinearProblemMatrixEssential(problemeHebdo),
+     ProblemMatrixEssential(problemeHebdo),
      writer_(writer),
      group1_(problemeHebdo),
      bindingConstraintDayGroup_(problemeHebdo),

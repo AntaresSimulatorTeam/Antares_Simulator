@@ -32,11 +32,10 @@
 #include <antares/study/study.h>
 
 using namespace Antares::Data;
-class LinearProblemMatrixEssential
+class ProblemMatrixEssential
 {
 public:
-    explicit LinearProblemMatrixEssential(PROBLEME_HEBDO* problemeHebdo) :
-     problemeHebdo_(problemeHebdo)
+    explicit ProblemMatrixEssential(PROBLEME_HEBDO* problemeHebdo) : problemeHebdo_(problemeHebdo)
     {
     }
 
@@ -46,6 +45,13 @@ public:
         {
             group->Build();
         }
+    }
+
+    void InitiliazeProblemAResoudreCounters()
+    {
+        auto& ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
+        ProblemeAResoudre->NombreDeContraintes = 0;
+        ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
     }
 
     PROBLEME_HEBDO* problemeHebdo_;

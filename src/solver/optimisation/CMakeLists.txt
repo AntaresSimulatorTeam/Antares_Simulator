@@ -19,7 +19,6 @@ set(RTESOLVER_OPT
 		opt_numero_de_jour_du_pas_de_temps.cpp
 		opt_construction_variables_optimisees_quadratique.cpp
 		opt_decompte_variables_et_contraintes.cpp
-		opt_construction_matrice_des_contraintes_cas_quadratique.cpp
 		opt_construction_matrice_des_contraintes_outils.cpp
 		opt_gestion_des_bornes_cas_lineaire.cpp
 		opt_verification_presence_reserve_jmoins1.cpp
@@ -129,10 +128,12 @@ set(RTESOLVER_OPT
 		constraints/MinDownTime.h
 		constraints/MinDownTime.cpp
 
-		LinearProblemMatrixEssential.h
+		ProblemMatrixEssential.h
 		LinearProblemMatrixStartUpCosts.h
 		LinearProblemMatrix.h
 		LinearProblemMatrix.cpp
+		QuadraticProblemMatrix.h
+		QuadraticProblemMatrix.cpp
 		constraints/ConstraintGroup.h
 		constraints/Group1.h
 		constraints/Group1.cpp
@@ -164,6 +165,10 @@ set(RTESOLVER_OPT
 		constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.cpp
 		constraints/MinDownTimeGroup.h
 		constraints/MinDownTimeGroup.cpp
+		constraints/ExchangeBalance.h
+		constraints/ExchangeBalance.cpp
+		constraints/ExchangeBalanceGroup.h
+		constraints/ExchangeBalanceGroup.cpp
 
 	)
 

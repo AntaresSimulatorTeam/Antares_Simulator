@@ -41,18 +41,12 @@ void LinearProblemMatrix::ExportStructures()
         OPT_ExportAreaName(writer_, problemeHebdo_->NomsDesPays);
     }
 }
-void LinearProblemMatrix::InitiliazeProblemAResoudreCounters()
-{
-    auto& ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
-    ProblemeAResoudre->NombreDeContraintes = 0;
-    ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-}
 
 void LinearProblemMatrix::Run()
 {
     InitiliazeProblemAResoudreCounters();
 
-    LinearProblemMatrixEssential::Run();
+    ProblemMatrixEssential::Run();
 
     if (problemeHebdo_->OptimisationAvecCoutsDeDemarrage)
     {
