@@ -32,7 +32,6 @@
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include "../../study.h"
-#include "pair-of-integers.h"
 #include <algorithm>
 
 using namespace Yuni;
@@ -60,22 +59,21 @@ static uint EqualizeTSsize(TimeSeries& TScollection1,
                            unsigned int height1 = HOURS_PER_YEAR,
                            unsigned int height2 = HOURS_PER_YEAR)
 {
-    const auto& ts1Width = TScollection1.timeSeries.width;
-    const auto& ts2Width = TScollection2.timeSeries.width;
+    const auto ts1Width = TScollection1.timeSeries.width;
+    const auto ts2Width = TScollection2.timeSeries.width;
+    const auto maxWidth = std::max(ts1Width, ts2Width);
 
-    PairOfIntegers pairOfTSsizes(ts1Width, ts2Width);
-
-    if (pairOfTSsizes.bothZero())
+    if (ts1Width == 0 && ts2Width == 0)
     {
         TScollection1.reset(1, height1);
         TScollection2.reset(1, height2);
         return 1;
     }
 
-    if (pairOfTSsizes.same())
-        return pairOfTSsizes.sup();
+    if (ts1Width == ts2Width)
+        return maxWidth;
 
-    if (pairOfTSsizes.bothGreaterThanOne())
+    if (ts1Width > 1 && ts2Width > 1)
     {
         logs.fatal() << fatalErrorMsg;
         fatalError = true;
@@ -88,11 +86,11 @@ static uint EqualizeTSsize(TimeSeries& TScollection1,
     area.invalidateJIT = true;
 
     if (ts1Width == 1)
-        resizeTSNoDataLoss(TScollection1, pairOfTSsizes.sup());
+        resizeTSNoDataLoss(TScollection1, maxWidth);
     if (ts2Width == 1)
-        resizeTSNoDataLoss(TScollection2, pairOfTSsizes.sup());
+        resizeTSNoDataLoss(TScollection2, maxWidth);
 
-    return pairOfTSsizes.sup();
+    return maxWidth;
 }
 
 static bool loadTSfromFile(Matrix<double>& ts,
