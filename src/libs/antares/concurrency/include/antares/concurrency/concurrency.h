@@ -105,10 +105,10 @@ namespace Detail { //implementation details
  * @tparam T the underlying callable type
  */
 template<class T>
-class SharedCallable
+class CopyableCallable
 {
 public:
-    explicit SharedCallable(const std::shared_ptr<T>& functionObject) :
+    explicit CopyableCallable(const std::shared_ptr<T>& functionObject) :
             functionObject_(functionObject)
     {
     }
@@ -129,7 +129,7 @@ TaskFuture AddTask(Yuni::Job::QueueService& threadPool,
                                  const std::shared_ptr<T>& task,
                                  Yuni::Job::Priority priority)
 {
-    Task wrappedTask = Detail::SharedCallable<T>(task);
+    Task wrappedTask = Detail::CopyableCallable<T>(task);
     return AddTask(threadPool, wrappedTask, priority);
 }
 
