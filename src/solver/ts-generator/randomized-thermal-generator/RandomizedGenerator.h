@@ -17,9 +17,7 @@ namespace Antares::Solver::TSGenerator
 class GeneratorTempData
 {
 public:
-    GeneratorTempData(Data::Study& study,
-                      Solver::Progression::Task& progr,
-                      IResultWriter& writer);
+    GeneratorTempData(Data::Study& study, Solver::Progression::Task& progr, IResultWriter& writer);
 
     void prepareOutputFoldersForAllAreas(uint year);
 

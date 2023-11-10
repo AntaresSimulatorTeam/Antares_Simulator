@@ -20,12 +20,9 @@ GeneratorTempData::GeneratorTempData(Data::Study& study,
 {
     auto& parameters = study.parameters;
 
-    archive = (0
-               != (parameters.timeSeriesToArchive
-                   & Data::timeSeriesThermal));
+    archive = (0 != (parameters.timeSeriesToArchive & Data::timeSeriesThermal));
 
-    nbThermalTimeseries
-      = parameters.nbTimeSeriesThermal;
+    nbThermalTimeseries = parameters.nbTimeSeriesThermal;
 
     derated = parameters.derated;
 }
@@ -100,12 +97,11 @@ void GeneratorTempData::prepareIndispoFromLaw(Data::ThermalLaw law,
     }
 }
 
-int GeneratorTempData::durationGenerator(
-  Data::ThermalLaw law,
-  int expec,
-  double volat,
-  double a,
-  double b)
+int GeneratorTempData::durationGenerator(Data::ThermalLaw law,
+                                         int expec,
+                                         double volat,
+                                         double a,
+                                         double b)
 {
     if (volat == 0 or expec == 1)
         return expec;
@@ -132,8 +128,7 @@ int GeneratorTempData::durationGenerator(
     return 0;
 }
 
-void GeneratorTempData::operator()(Data::Area& area,
-                                   Data::ThermalCluster& cluster)
+void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& cluster)
 {
     if (not cluster.prepro)
     {
@@ -148,16 +143,14 @@ void GeneratorTempData::operator()(Data::Area& area,
 
     if (0 == cluster.unitCount or 0 == cluster.nominalCapacity)
     {
-        cluster.series.timeSeries.reset(
-          1, nbHoursPerYear);
+        cluster.series.timeSeries.reset(1, nbHoursPerYear);
 
         if (archive)
             writeResultsToDisk(area, cluster);
         return;
     }
 
-    cluster.series.timeSeries.resize(nbThermalTimeseries,
-                                     nbHoursPerYear);
+    cluster.series.timeSeries.resize(nbThermalTimeseries, nbHoursPerYear);
 
     const auto& preproData = *(cluster.prepro);
 
@@ -492,8 +485,7 @@ void GeneratorTempData::operator()(Data::Area& area,
                 double AVPDayInTheYear = AVP[dayInTheYear];
                 for (uint h = 0; h != 24; ++h)
                 {
-                    dstSeries[hour] = Math::Round(
-                      AVPDayInTheYear * modulation[hour]);
+                    dstSeries[hour] = Math::Round(AVPDayInTheYear * modulation[hour]);
                     ++hour;
                 }
             }
