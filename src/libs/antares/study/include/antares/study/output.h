@@ -26,7 +26,7 @@
 #include <map>
 #include <memory>
 #include <functional>
-#include "study.h"
+#include "antares/study/study.h"
 
 namespace Antares
 {

@@ -19,10 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "runtime.h"
+#include "antares/study/runtime/runtime.h"
 #include "antares/fatal-error.h"
 
-#include "../area/scratchpad.h"
+#include "antares/study/area/scratchpad.h"
 
 using namespace Yuni;
 

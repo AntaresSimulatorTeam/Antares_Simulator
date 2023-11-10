@@ -20,7 +20,7 @@
 */
 
 #include "../main.h"
-#include "../study.h"
+#include "antares/study/study.h"
 #include "../../windows/simulation/run.h"
 #include "../../windows/analyzer/analyzer.h"
 #include "../../windows/constraints-builder/constraintsbuilder.h"

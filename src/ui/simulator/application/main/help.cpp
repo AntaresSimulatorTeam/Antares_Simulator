@@ -23,7 +23,7 @@
 #include <yuni/core/string.h>
 #include "../main.h"
 #include "../menus.h"
-#include "../study.h"
+#include "antares/study/study.h"
 #include "../../../config.h"
 #include "../../toolbox/resources.h"
 #include "../../windows/aboutbox.h"

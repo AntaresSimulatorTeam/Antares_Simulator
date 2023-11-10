@@ -29,7 +29,8 @@
 
 #include <antares/writer/i_writer.h>
 
-#include "../antares.h"
+#include "../../antares.h"
+#include "../../object/object.h"
 #include "fwd.h"
 
 #include "simulation.h"
@@ -42,7 +43,7 @@
 #include "load-options.h"
 #include <antares/date/date.h>
 #include "layerdata.h"
-#include <antares/correlation/include/antares/correlation/correlation.h> //TODO Collision
+#include <antares/correlation/correlation.h>
 #include "area/store-timeseries-numbers.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"

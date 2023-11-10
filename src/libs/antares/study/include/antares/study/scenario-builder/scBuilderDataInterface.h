@@ -21,7 +21,7 @@
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_DATA_INTERFACE_H__
 #define __LIBS_STUDY_SCENARIO_BUILDER_DATA_INTERFACE_H__
 
-#include "../study.h"
+#include "antares/study/study.h"
 #include <yuni/core/noncopyable.h>
 
 using namespace Yuni;

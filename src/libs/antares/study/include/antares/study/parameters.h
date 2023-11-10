@@ -25,13 +25,13 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include "../constants.h"
+#include "../../constants.h"
 #include <cstdlib>
 #include <cassert>
 #include <antares/writer/result_format.h>
 #include <antares/date/date.h>
 #include <antares/inifile/inifile.h>
-#include "fwd.h"
+#include "antares/study/fwd.h"
 #include "variable-print-info.h"
 #include "parameters/adq-patch-params.h"
 #include "version.h"

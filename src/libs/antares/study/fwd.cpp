@@ -19,14 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "fwd.h"
+#include "antares/study/fwd.h"
 #include <algorithm>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 const char* SeedToCString(SeedIndex seed)
 {
@@ -487,5 +485,5 @@ std::string styleToString(const StyleType& style)
     }
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

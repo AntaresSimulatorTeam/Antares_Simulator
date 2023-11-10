@@ -22,7 +22,7 @@
 #define __ANTARES_LIBS_STUDY_SCENARIO_BUILDER_UPDATER_HXX__
 
 #include <yuni/yuni.h>
-#include "../study.h"
+#include "antares/study/study.h"
 #include "sets.h"
 
 #define SEP IO::Separator

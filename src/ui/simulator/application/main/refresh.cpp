@@ -20,7 +20,7 @@
 */
 
 #include "main.h"
-#include "../study.h"
+#include "antares/study/study.h"
 #include "../menus.h"
 #include <antares/date/date.h>
 #include <wx/menuitem.h>

@@ -75,6 +75,7 @@ target_link_libraries(antares-core
 		yuni-static-core
 		Antares::logs
         Antares::exception
+		Antares::study
 	)
 
 import_std_libs(antares-core)

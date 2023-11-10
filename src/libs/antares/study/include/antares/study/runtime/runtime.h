@@ -23,7 +23,7 @@
 
 #include <string>
 #include <vector>
-#include "../study.h"
+#include "antares/study/study.h"
 #include <antares/mersenne-twister/mersenne-twister.h>
 
 namespace Antares::Data

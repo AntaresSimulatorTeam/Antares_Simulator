@@ -12,6 +12,8 @@ add_library(${PROJ} ${SRC_DATE})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 target_link_libraries(${PROJ}
+        PUBLIC
+        study
         PRIVATE
         yuni-static-core
         logs

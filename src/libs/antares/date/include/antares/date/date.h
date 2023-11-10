@@ -24,8 +24,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <vector>
-#include "../../../../constants.h"
-#include "../../../../study/fwd.h"
+#include "antares/study/fwd.h"
 
 namespace Antares
 {
@@ -60,9 +59,7 @@ enum MonthName
 
 } // namespace Antares
 
-namespace Antares
-{
-namespace Date
+namespace Antares::Date
 {
 /*!
 ** \brief Convert a month from its index to its string representation (January..December)
@@ -362,7 +359,6 @@ private:
     Settings settings_;
 
 }; // class Calendar
-} // namespace Date
-} // namespace Antares
+} // namespace Antares::Date
 
 #endif // __ANTARES_TOOLBOX_DATE_H__
