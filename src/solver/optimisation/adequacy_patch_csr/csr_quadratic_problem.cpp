@@ -124,9 +124,9 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     problemeAResoudre_.NombreDeContraintes = 0;
     problemeAResoudre_.NombreDeTermesDansLaMatriceDesContraintes = 0;
 
-    setConstraintsOnFlows(Pi, Colonne);
-    setNodeBalanceConstraints(Pi, Colonne);
-    setBindingConstraints(Pi, Colonne);
+    setConstraintsOnFlows();
+    setNodeBalanceConstraints();
+    setBindingConstraints();
 }
 
 } // namespace Antares::Solver::Optimization

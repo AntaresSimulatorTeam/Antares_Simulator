@@ -83,6 +83,4 @@ private:
     MaxPumpingGroup maxPumpingGroup_;
     AreaHydroLevelGroup areaHydroLevelGroup_;
     FinalStockGroup finalStockGroup_;
-
-    void InitiliazeProblemAResoudreCounters();
 };
