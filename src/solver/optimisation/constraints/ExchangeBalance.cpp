@@ -19,5 +19,6 @@ void ExchangeBalance::add(uint32_t pays, std::shared_ptr<ExchangeBalanceData> da
     }
 
     data->NumeroDeContrainteDeSoldeDEchange[pays] = builder->data->nombreDeContraintes;
+    builder->equalTo();
     builder->build();
 }
