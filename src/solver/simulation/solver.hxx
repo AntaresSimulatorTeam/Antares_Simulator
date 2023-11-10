@@ -88,6 +88,10 @@ public:
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
     }
 
+    yearJob(const yearJob&) = delete;
+    yearJob& operator =(const yearJob&) = delete;
+    ~yearJob() = default;
+
 private:
     ISimulation<Impl>* simulation_;
     unsigned int y;
@@ -232,6 +236,7 @@ public:
 
     } // End of onExecute() method
 };
+
 
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
@@ -983,7 +988,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             // have to be rerun (meaning : they must be run once). if(!set_it->yearFailed[y])
             // continue;
 
-            Concurrency::Task task = yearJob<ImplementationType>(this,
+            auto task = std::make_shared<yearJob<ImplementationType>>(this,
                                                                  y,
                                                                  set_it->yearFailed,
                                                                  set_it->isFirstPerformedYearOfASet,
