@@ -1,6 +1,24 @@
 project(ts-generator)
 
 #
+# Randomized-thermal-ts-generator
+#
+set(SRC_RANDOMIZEDGENERATORS
+	randomized-thermal-generator/RandomizedGenerator.h
+	randomized-thermal-generator/RandomizedGenerator.cpp
+)
+source_group("ts-generator\\randomized-thermal-generator" FILES ${SRC_RANDOMIZEDGENERATORS})
+
+#
+# Optimized-thermal-ts-generator
+#
+set(SRC_OPTIMIZEDGENERATORS
+	optimized-thermal-generator/OptimizedGenerator.h
+	optimized-thermal-generator/OptimizedGenerator.cpp
+)
+source_group("ts-generator\\optimized-thermal-generator" FILES ${SRC_OPTIMIZEDGENERATORS})
+
+#
 # Time-Series Generators
 #
 set(SRC_GENERATORS
@@ -38,6 +56,8 @@ source_group("ts-generator\\XCast" FILES ${SRC_XCAST})
 # --- Library VARIABLES ---
 #
 add_library(antares-solver-ts-generator
+				${SRC_RANDOMIZEDGENERATORS}
+				${SRC_OPTIMIZEDGENERATORS}
 				${SRC_GENERATORS}
 				${SRC_XCAST})
 
