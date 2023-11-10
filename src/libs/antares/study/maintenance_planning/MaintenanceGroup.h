@@ -258,7 +258,7 @@ private:
     //! array of residual loads per h
     //! if typeTimeserie -> equal to userProvidedResidualLoadTS_,
     //! if typeWeights -> calculated using per area weights
-    std::array<double, 8760> usedResidualLoadTS_;
+    std::array<double, HOURS_PER_YEAR> usedResidualLoadTS_;
 
     void clear();
     void copyFrom(MaintenanceGroup const* original);

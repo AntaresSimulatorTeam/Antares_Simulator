@@ -143,12 +143,12 @@ double MaintenanceGroup::rorWeight(const Area* area) const
     return (i != weights_.end()) ? i->second.ror : 0.;
 }
 
-void MaintenanceGroup::setUsedResidualLoadTS(std::array<double, 8760> ts)
+void MaintenanceGroup::setUsedResidualLoadTS(std::array<double, HOURS_PER_YEAR> ts)
 {
     usedResidualLoadTS_ = ts;
 }
 
-std::array<double, 8760> MaintenanceGroup::getUsedResidualLoadTS() const
+std::array<double, HOURS_PER_YEAR> MaintenanceGroup::getUsedResidualLoadTS() const
 {
     return usedResidualLoadTS_;
 }
