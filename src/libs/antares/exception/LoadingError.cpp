@@ -168,7 +168,7 @@ IncompatibleFuelCostColumns::IncompatibleFuelCostColumns() :
 
 IncompatibleMaintenancePlanningUsage::IncompatibleMaintenancePlanningUsage() :
  LoadingError("When generating thermal time series using Maintenance Planning, Stochastic "
-              "ts-generator for load, hydro and renewables must ne off")
+              "ts-generator for load, hydro and renewables must be turned off")
 {
 }
 
