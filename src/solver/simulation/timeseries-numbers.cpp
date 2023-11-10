@@ -287,7 +287,7 @@ private:
     bool isTSintramodal_;
     areaNumberOfTSretriever* tsCounter_;
     Study& study_;
-    uint nbTimeseries_;
+    uint nbTimeseries_ = 0;
     string tsTitle_;
 };
 
@@ -298,8 +298,6 @@ bool IntraModalConsistencyChecker::check()
         if (not checkTSconsistency())
             return false;
     }
-    else
-        nbTimeseries_ = tsCounter_->getGeneratedTimeSeriesNumber();
 
     return true;
 }
