@@ -639,11 +639,11 @@ private:
     void allocateProblem(); // this one should be called in constructor. It basically resets all the
                             // vectors in PROBLEME_ANTARES_A_RESOUDRE for new opt problem.
     
-    // some methods 
+    // some methods
     void GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(
       Antares::Data::MaintenanceGroup& group);
     void calculateResidualLoad(Antares::Data::MaintenanceGroup& group);
-    void createOptimizationProblem(Antares::Data::MaintenanceGroup& group);
+    void createOptimizationProblemPerCluster(const Data::Area& area, Data::ThermalCluster& cluster);
 
     // variables
     Antares::Data::MaintenanceGroupRepository& maintenanceGroupRepo;
@@ -677,19 +677,13 @@ public:
 void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeriesPerAllMaintenanceGroups()
 {
     const auto& activeMaintenanceGroups = maintenanceGroupRepo.activeMaintenanceGroups();
-    for (const auto& entryGroup : activeMaintenanceGroups)
+    for (const auto& entryMaintenanceGroup : activeMaintenanceGroups)
     {
-        auto& group = *(entryGroup.get());
-        GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(group);
+        auto& maintenanceGroup = *(entryMaintenanceGroup.get());
+        calculateResidualLoad(maintenanceGroup);
+        GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(maintenanceGroup);
     }
-}
-
-void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(
-  Antares::Data::MaintenanceGroup& maintenanceGroup)
-{
-    calculateResidualLoad(maintenanceGroup);
-    createOptimizationProblem(maintenanceGroup);
-}   
+}  
 
 void OptimizedThermalGenerator::calculateResidualLoad(Antares::Data::MaintenanceGroup& maintenanceGroup)
 {
@@ -723,52 +717,57 @@ void OptimizedThermalGenerator::calculateResidualLoad(Antares::Data::Maintenance
     maintenanceGroup.setUsedResidualLoadTS(values);
 }
 
-void OptimizedThermalGenerator::createOptimizationProblem(Antares::Data::MaintenanceGroup& maintenanceGroup)
+void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(
+  Antares::Data::MaintenanceGroup& maintenanceGroup)
 {
     // loop through the elements of weightMap weights_
     for (const auto& entryWeightMap : maintenanceGroup)
     {
         const auto& area = *(entryWeightMap.first);
-        // loop through the thermal clusters inside the area 
+        // loop through the thermal clusters inside the area
         for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end();
              ++it)
         {
             auto& cluster = *(it->second);
-            if (cluster.doWeGenerateTS(globalThermalTSgeneration_) && cluster.optimizeMaintenance)
-            {
-                // just playing here - this needs to go into new method - class  - operator
-                logs.info() << "CR27-INFO: This cluster is active for mnt planning: "
-                            << cluster.getFullName();
-
-                if (!cluster.prepro)
-                {
-                    logs.error() << "Cluster: " << area.name << '/' << cluster.name()
-                                 << ": The timeseries will not be regenerated. All data "
-                                    "related to the ts-generator for "
-                                 << "'thermal' have been released.";
-                }
-
-                assert(cluster.prepro);
-
-                if (0 == cluster.unitCount || 0 == cluster.nominalCapacity
-                    || nbThermalTimeseries == 0)
-                {
-                    cluster.series.timeSeries.reset(1, 8760);
-                }
-                else
-                {
-                    cluster.series.timeSeries.reset(nbThermalTimeseries, 8760);
-                    cluster.series.timeSeries.fill(777.);
-                }
-
-                if (archive)
-                    writeResultsToDisk(area, cluster);
-
-                // end playing
-            }
-
+            createOptimizationProblemPerCluster(area, cluster);
             ++pProgression;
         }
+    }
+}
+
+void OptimizedThermalGenerator::createOptimizationProblemPerCluster(const Data::Area& area,
+                                                                    Data::ThermalCluster& cluster)
+{
+    if (cluster.doWeGenerateTS(globalThermalTSgeneration_) && cluster.optimizeMaintenance)
+    {
+        // just playing here - this needs to go into new method - class  - operator
+        logs.info() << "CR27-INFO: This cluster is active for mnt planning: "
+                    << cluster.getFullName();
+
+        if (!cluster.prepro)
+        {
+            logs.error() << "Cluster: " << area.name << '/' << cluster.name()
+                         << ": The timeseries will not be regenerated. All data "
+                            "related to the ts-generator for "
+                         << "'thermal' have been released.";
+        }
+
+        assert(cluster.prepro);
+
+        if (0 == cluster.unitCount || 0 == cluster.nominalCapacity || nbThermalTimeseries == 0)
+        {
+            cluster.series.timeSeries.reset(1, 8760);
+        }
+        else
+        {
+            cluster.series.timeSeries.reset(nbThermalTimeseries, 8760);
+            cluster.series.timeSeries.fill(777.);
+        }
+
+        if (archive)
+            writeResultsToDisk(area, cluster);
+
+        // end playing
     }
 }
 
@@ -818,6 +817,7 @@ bool GenerateOptimizedThermalTimeSeries(Data::Study& study,
 {
     // optimized planning should only be called once.
     // Due to possible thermal refresh span we can end up here more than once - but just ignore it
+    // even if we set in Scenario playlist that year-1 should be skipped, we will execute this properly
     if (year != 0)
         return true;
 
