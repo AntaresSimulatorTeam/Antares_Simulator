@@ -45,7 +45,7 @@
 #include "../windows/message.h"
 #include <antares/sys/appdata.h>
 #include <antares/sys/policy.h>
-#include "study.h"
+#include "antares/study/study.h"
 #include <yuni/datetime/timestamp.h>
 #include <antares/logs/cleaner.h>
 #include <antares/locale/locale.h>
