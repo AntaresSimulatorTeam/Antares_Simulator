@@ -117,7 +117,6 @@ public:
     {
     }
     virtual std::vector<uint> getAreaTimeSeriesNumber(const Area& area) = 0;
-    virtual uint getGeneratedTimeSeriesNumber() = 0;
 
 protected:
     Study& study_;
@@ -134,10 +133,6 @@ public:
         std::vector<uint> to_return = {area.load.series.timeSeries.width};
         return to_return;
     }
-    uint getGeneratedTimeSeriesNumber()
-    {
-        return study_.parameters.nbTimeSeriesLoad;
-    }
 };
 
 class hydroAreaNumberOfTSretriever : public areaNumberOfTSretriever
@@ -150,10 +145,6 @@ public:
     {
         std::vector<uint> to_return = {area.hydro.series->TScount()};
         return to_return;
-    }
-    uint getGeneratedTimeSeriesNumber()
-    {
-        return study_.parameters.nbTimeSeriesHydro;
     }
 };
 
@@ -168,10 +159,6 @@ public:
         std::vector<uint> to_return = {area.wind.series.timeSeries.width};
         return to_return;
     }
-    uint getGeneratedTimeSeriesNumber()
-    {
-        return study_.parameters.nbTimeSeriesWind;
-    }
 };
 
 class solarAreaNumberOfTSretriever : public areaNumberOfTSretriever
@@ -184,10 +171,6 @@ public:
     {
         std::vector<uint> to_return = {area.solar.series.timeSeries.width};
         return to_return;
-    }
-    uint getGeneratedTimeSeriesNumber()
-    {
-        return study_.parameters.nbTimeSeriesSolar;
     }
 };
 
@@ -208,10 +191,6 @@ public:
         }
         return to_return;
     }
-    uint getGeneratedTimeSeriesNumber()
-    {
-        return study_.parameters.nbTimeSeriesThermal;
-    }
 };
 
 class renewClustersAreaNumberOfTSretriever : public areaNumberOfTSretriever
@@ -231,10 +210,6 @@ public:
         }
         return to_return;
     }
-    uint getGeneratedTimeSeriesNumber()
-    {
-        return 1;
-    }
 };
 
 class areaLinksTransCapaNumberOfTSretriever : public areaNumberOfTSretriever
@@ -253,10 +228,6 @@ public:
             to_return.push_back(link.indirectCapacities.width);
         }
         return to_return;
-    }
-    uint getGeneratedTimeSeriesNumber() override
-    {
-        return 1;
     }
 };
 
