@@ -27,7 +27,7 @@
 
 #include "main.h"
 #include <wx/dnd.h>
-#include "../study.h"
+#include "antares/study/study.h"
 #include "../../toolbox/dispatcher/study.h"
 #include <ui/common/lock.h>
 

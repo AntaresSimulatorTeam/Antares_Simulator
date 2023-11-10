@@ -28,7 +28,7 @@
 #include <yuni/yuni.h>
 #include "main.h"
 #include "../../windows/version.h"
-#include "../study.h"
+#include "antares/study/study.h"
 // Datagrid
 #include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/components/datagrid/gridhelper.h"

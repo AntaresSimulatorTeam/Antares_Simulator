@@ -25,15 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "progression.h"
-#include "../study.h"
+#include "antares/study/progression/progression.h"
+#include "antares/study/study.h"
 #include <antares/logs/logs.h>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 Progression::Task::Task(const Antares::Data::Study& study, Section section) :
  pProgression(study.progression), pPart(study.progression.begin((uint)-1, section))
@@ -192,5 +190,5 @@ void Progression::stop()
     pStarted = false;
 }
 
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver
+

@@ -2,8 +2,8 @@
 // Created by marechaljas on 04/07/23.
 //
 
-#include "HydroTSNumberData.h"
-#include "applyToMatrix.hxx"
+#include "antares/study/scenario-builder/HydroTSNumberData.h"
+#include "antares/study/scenario-builder/applyToMatrix.hxx"
 
 namespace Antares::Data::ScenarioBuilder
 {

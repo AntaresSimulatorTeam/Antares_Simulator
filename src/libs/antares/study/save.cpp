@@ -25,9 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "study.h"
+#include "antares/study/study.h"
 #include <antares/benchmarking/DurationCollector.h>
-#include "scenario-builder/sets.h"
+#include "antares/study/scenario-builder/sets.h"
 #include <yuni/core/string/wstring.h>
 #include <fstream>
 
@@ -35,9 +35,7 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 bool Study::resetFolderIcon() const
 {
@@ -265,5 +263,5 @@ bool Study::saveToFolder(const AnyString& newfolder)
     return ret;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

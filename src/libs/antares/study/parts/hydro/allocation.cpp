@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "allocation.h"
-#include "../../study.h"
+#include "antares/study/parts/hydro/allocation.h"
+#include "antares/study/study.h"
 #include <yuni/core/math.h>
 #include <yuni/io/file.h>
 

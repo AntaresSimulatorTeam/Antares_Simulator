@@ -25,19 +25,17 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "xcast.h"
+#include "antares/study/xcast/xcast.h"
 #include <antares/logs/logs.h>
 #include <antares/inifile/inifile.h>
-#include "../study.h"
+#include "antares/study//study.h"
 #include <limits>
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 
 const char* XCast::TSTranslationUseToCString(TSTranslationUse use)
@@ -425,5 +423,5 @@ void XCast::copyFrom(const XCast& rhs)
     distribution = rhs.distribution;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

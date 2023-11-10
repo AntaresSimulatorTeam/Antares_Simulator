@@ -1,6 +1,6 @@
 
 #include <vector>
-#include "STStorageOutputCaptions.h"
+#include "antares/study/parts/short-term-storage/STStorageOutputCaptions.h"
 
 namespace Antares::Data::ShortTermStorage
 {

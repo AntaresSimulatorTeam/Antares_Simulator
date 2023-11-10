@@ -1,4 +1,4 @@
-#include "adq-patch-params.h"
+#include "antares/study/parameters/adq-patch-params.h"
 #include <antares/logs/logs.h>
 
 #include <antares/study/study.h>

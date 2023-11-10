@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "pollutant.h"
+#include "antares/study/parts/thermal/pollutant.h"
 
 namespace Antares::Data
 {

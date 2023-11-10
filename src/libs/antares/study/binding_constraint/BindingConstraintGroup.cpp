@@ -2,7 +2,7 @@
 // Created by marechaljas on 28/06/23.
 //
 
-#include "BindingConstraintGroup.h"
+#include "antares/study/binding_constraint/BindingConstraintGroup.h"
 
 #include <algorithm>
 #include <utility>

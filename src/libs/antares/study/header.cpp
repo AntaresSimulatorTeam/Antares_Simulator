@@ -25,12 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "header.h"
+#include "antares/study/header.h"
 #include <cstdlib>
 #include <ctime>
 #include <cassert>
 #include <antares/logs/logs.h>
-#include "version.h"
+#include "antares/study/version.h"
 
 using namespace Yuni;
 

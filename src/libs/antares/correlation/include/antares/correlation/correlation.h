@@ -30,12 +30,10 @@
 #include <yuni/yuni.h>
 #include <antares/array/matrix.h>
 #include <antares/inifile/inifile.h>
-#include "../../study/fwd.h"
-#include "../../study/version.h"
+#include "antares/study/fwd.h"
+#include "antares/study/version.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 
 class Correlation final
@@ -240,8 +238,8 @@ int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, 
 */
 IniFile* InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l);
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+
 
 #include <antares/study/area/area.h>
 #include "correlation.hxx"

@@ -27,13 +27,13 @@
 
 #include "../../antares.h"
 #include <yuni/io/file.h>
-#include "../study.h"
+#include "antares/study//study.h"
 #include <cassert>
 #include "antares/utils/utils.h"
-#include "area.h"
+#include "antares/study/area/area.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include "constants.h"
+#include "../../constants.h"
 #include "antares/study/parts/parts.h"
 #include "antares/study/parts/load/prepro.h"
 #include <antares/study/area/scratchpad.h>

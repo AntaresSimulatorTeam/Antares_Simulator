@@ -1,6 +1,6 @@
-#include "cluster_list.h"
-#include "cluster.h"
-#include "../../study.h"
+#include "antares/study/parts/thermal/cluster_list.h"
+#include "antares/study/parts/common/cluster.h"
+#include "antares/study/study.h"
 #include <ranges>
 
 namespace // anonymous
@@ -448,12 +448,12 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
 
     Clob buffer;
     auto hasPrepro = [&](auto c)
-    {   
+    {
         ++options.progressTicks;
         options.pushProgressLogs();
         return (bool) c->prepro;
     };
-    
+
     auto loadAndCheckPrepro = [&](auto c)
     {
         assert(c->parentArea && "cluster: invalid parent area");

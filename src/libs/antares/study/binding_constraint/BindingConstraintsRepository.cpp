@@ -2,15 +2,15 @@
 // Created by marechaljas on 11/05/23.
 //
 
-#include "BindingConstraintsRepository.h"
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 #include <algorithm>
 #include <memory>
 #include <utility>
 #include <vector>
-#include "BindingConstraint.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
 #include <antares/study/study.h>
-#include "BindingConstraintLoader.h"
-#include "BindingConstraintSaver.h"
+#include "antares/study/binding_constraint/BindingConstraintLoader.h"
+#include "antares/study/binding_constraint/BindingConstraintSaver.h"
 #include "antares/utils/utils.h"
 
 void Data::BindingConstraintsRepository::clear()

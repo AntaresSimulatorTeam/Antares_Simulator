@@ -27,20 +27,18 @@
 
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
-#include <stdio.h>
-#include "series.h"
+#include <cstdio>
+#include "antares/study/parts/hydro/series.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/exception/LoadingError.hpp>
-#include "../../study.h"
+#include "antares/study/study.h"
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 DataSeriesHydro::DataSeriesHydro() :
     ror(timeseriesNumbers),
@@ -241,10 +239,10 @@ void DataSeriesHydro::resize_ROR_STORAGE_MINGEN_whenGeneratedTS(unsigned int new
 {
     // This function is called in case hydro TS are generated.
     // ROR ans STORAGE are resized here, and will be overriden at some point.
-    // MINGEN TS are different : when generating hydro TS, mingen TS are not generated, 
+    // MINGEN TS are different : when generating hydro TS, mingen TS are not generated,
     // but only resized, so that their size is the same as ROR and STORAGE TS.
     // When resizing MINGEN :
-    //  - If we extend mingen TS, we keep already existing TS and fill the extra ones 
+    //  - If we extend mingen TS, we keep already existing TS and fill the extra ones
     //    with a copy of the first TS
     //  - if we reduce mingen TS, we remove some existing TS, but we must keep intact
     //    the remaining ones.
@@ -276,5 +274,5 @@ uint64_t DataSeriesHydro::memoryUsage() const
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage();
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

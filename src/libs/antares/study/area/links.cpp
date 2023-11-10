@@ -27,10 +27,10 @@
 
 #include <limits>
 #include <yuni/yuni.h>
-#include "../study.h"
+#include "antares/study//study.h"
 #include "antares/utils/utils.h"
-#include "links.h"
-#include "area.h"
+#include "antares/study/area/links.h"
+#include "antares/study/area/area.h"
 #include <antares/logs/logs.h>
 #include <antares/exception/LoadingError.hpp>
 

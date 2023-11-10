@@ -25,16 +25,14 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "study.h"
-#include <assert.h>
+#include "antares/study/study.h"
+#include <cassert>
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 bool Study::importTimeseriesIntoInput()
 {
@@ -125,5 +123,5 @@ bool Study::importTimeseriesIntoInput()
     return true;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

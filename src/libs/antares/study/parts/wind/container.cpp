@@ -26,16 +26,12 @@
 */
 
 #include <yuni/yuni.h>
-#include "../../study.h"
-#include "container.h"
+#include "antares/study/study.h"
+#include "antares/study/parts/wind/container.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
-{
-namespace Wind
+namespace Antares::Data::Wind
 {
 Container::Container() : prepro(nullptr), series(tsNumbers)
 {
@@ -74,6 +70,6 @@ void Container::resetToDefault()
         prepro->resetToDefault();
 }
 
-} // namespace Wind
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::Wind
+
+

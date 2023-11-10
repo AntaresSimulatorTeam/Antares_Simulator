@@ -29,13 +29,9 @@
 #include <iomanip>
 #include <string>
 #include <yuni/core/string/string.h>
-#include "scBuilderUtils.h"
+#include "antares/study/scenario-builder/scBuilderUtils.h"
 
-namespace Antares
-{
-namespace Data
-{
-namespace ScenarioBuilder
+namespace Antares::Data::ScenarioBuilder
 {
 std::string fromHydroLevelToString(double d)
 {
@@ -100,6 +96,6 @@ uint fromStringToTSnumber(const Yuni::String& value)
     return result;
 }
 
-} // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder
+
+

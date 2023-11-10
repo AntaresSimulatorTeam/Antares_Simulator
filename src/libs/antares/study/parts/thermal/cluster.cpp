@@ -33,8 +33,8 @@
 #include <yuni/core/math.h>
 #include <cassert>
 #include <boost/algorithm/string/case_conv.hpp>
-#include "../../study.h"
-#include "cluster.h"
+#include "antares/study/study.h"
+#include "antares/study/parts/thermal/cluster.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
@@ -46,11 +46,7 @@ using namespace Antares;
 
 #define SEP IO::Separator
 
-namespace Yuni
-{
-namespace Extension
-{
-namespace CString
+namespace Yuni::Extension::CString
 {
 bool Into<Antares::Data::ThermalLaw>::Perform(AnyString string, TargetType& out)
 {
@@ -114,9 +110,9 @@ bool Into<Antares::Data::LocalTSGenerationBehavior>::Perform(AnyString string, T
     return false;
 }
 
-} // namespace CString
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension::CString
+
+
 
 namespace Antares
 {

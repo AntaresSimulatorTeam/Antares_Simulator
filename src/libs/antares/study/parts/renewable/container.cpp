@@ -26,16 +26,15 @@
 */
 
 #include <yuni/yuni.h>
-#include "../../study.h"
-#include "container.h"
+#include "antares/study/study.h"
+#include "antares/study/parts/renewable/container.h"
 #include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;
 
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 PartRenewable::PartRenewable()
 {
@@ -79,5 +78,5 @@ void PartRenewable::reset()
     list.clear();
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

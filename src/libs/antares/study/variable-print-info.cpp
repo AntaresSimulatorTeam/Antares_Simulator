@@ -25,17 +25,15 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "variable-print-info.h"
+#include "antares/study/variable-print-info.h"
 #include <algorithm>
-#include <assert.h>
+#include <cassert>
 #include <antares/study/study.h>
 #include "../solver/variable/categories.h"
 
 using namespace Antares::Solver::Variable;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 // ============================================================
 // One variable print information
@@ -276,5 +274,5 @@ void AllVariablesPrintInfo::countSelectedLinkVars()
 }
 
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

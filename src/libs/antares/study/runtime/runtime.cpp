@@ -25,10 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "runtime.h"
+#include "antares/study/runtime/runtime.h"
 #include "antares/fatal-error.h"
 
-#include "../area/scratchpad.h"
+#include "antares/study/area/scratchpad.h"
 
 using namespace Yuni;
 

@@ -29,7 +29,7 @@
 #include <antares/study/study.h>
 #include <antares/logs/logs.h>
 
-#include "store-timeseries-numbers.h"
+#include "antares/study/area/store-timeseries-numbers.h"
 
 using namespace Yuni;
 
