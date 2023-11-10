@@ -38,6 +38,9 @@ private:
     void GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(Data::MaintenanceGroup& group);
     void calculateResidualLoad(Data::MaintenanceGroup& group);
     void createOptimizationProblemPerCluster(const Data::Area& area, Data::ThermalCluster& cluster);
+    std::array<double, HOURS_PER_YEAR> calculateAverageLoadTs(const Data::Area& area);
+    std::array<double, HOURS_PER_YEAR> calculateAverageRorTs(const Data::Area& area);
+    std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTs(const Data::Area& area);
 
     // variables
     Data::MaintenanceGroupRepository& maintenanceGroupRepo;

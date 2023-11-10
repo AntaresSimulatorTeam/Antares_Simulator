@@ -18,36 +18,62 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeriesPerAllMaintena
     }
 }
 
+std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageLoadTs(const Data::Area& area)
+{
+    std::array<double, HOURS_PER_YEAR> values;
+    values.fill(2.5);
+    return values;
+}
+std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRorTs(const Data::Area& area)
+{
+    std::array<double, HOURS_PER_YEAR> values;
+    values.fill(2.5);
+    return values;
+}
+std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRenewableTs(
+  const Data::Area& area)
+{
+    std::array<double, HOURS_PER_YEAR> values;
+    values.fill(2.5);
+    return values;
+}
+
 void OptimizedThermalGenerator::calculateResidualLoad(Data::MaintenanceGroup& maintenanceGroup)
 {
-    // dummy value for test
-    std::array<double, 8760> values;
-    values.fill(2.5);
-
-    // extract some info about the group
-    const std::string& groupName = maintenanceGroup.name();
-    const auto& groupType = maintenanceGroup.type();
-    const auto& groupResLoad = maintenanceGroup.getUsedResidualLoadTS();
+    // create reference value arrays
+    std::array<double, HOURS_PER_YEAR> refValueLoad = {};
+    std::array<double, HOURS_PER_YEAR> refValueRor = {};
+    std::array<double, HOURS_PER_YEAR> refValueRenewable = {};
+    std::array<double, HOURS_PER_YEAR> refValue = {};
 
     // for phase II
-    if (groupType == Data::MaintenanceGroup::typeTimeserie)
+    if (maintenanceGroup.type() == Data::MaintenanceGroup::typeTimeserie)
     {
         // read user defined ts - userProvidedResidualLoadTS_ with getter - phase-II
-        maintenanceGroup.setUsedResidualLoadTS(values);
     }
 
     // loop through the elements of weightMap weights_
     for (const auto& entryWeightMap : maintenanceGroup)
     {
         const auto& area = *(entryWeightMap.first);
-        auto weights = (entryWeightMap.second);
-        // we do not need to loop through clusters here
-        // per area data -> load, ror, renewable is all we need to calculate
-        // residual load TS
-    }
+        const auto weights = (entryWeightMap.second);
 
-    // set resLoadTS
-    maintenanceGroup.setUsedResidualLoadTS(values);
+        auto tmpLoad = calculateAverageLoadTs(area);
+        auto tmpRor = calculateAverageRorTs(area);
+        auto tmpRenewable = calculateAverageRenewableTs(area);
+
+        for (std::size_t i = 0; i < HOURS_PER_YEAR; ++i)
+        {
+            refValueLoad[i] += tmpLoad[i] * weights.load;
+            refValueRor[i] += tmpRor[i] * weights.ror;
+            refValueRenewable[i] += tmpRenewable[i] * weights.renewable;
+        }
+    }
+    // calculate reference value
+    for (std::size_t i = 0; i < HOURS_PER_YEAR; ++i)
+        refValue[i] = refValueLoad[i] - refValueRor[i] - refValueRenewable[i];
+    // set ResidualLoadTS
+    maintenanceGroup.setUsedResidualLoadTS(refValue);
 }
 
 void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(
