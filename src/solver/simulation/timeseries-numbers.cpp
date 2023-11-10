@@ -573,7 +573,6 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
 
 void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& isTSintramodal,
                                            const array<bool, timeSeriesCount>& isTSgenerated,
-                                           array<uint, timeSeriesCount>& nbTimeseriesByMode,
                                            uint year,
                                            Study& study)
 {
@@ -906,8 +905,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
         storeTSnumbersForIntraModal(intramodal_draws, isTSintramodal, year, study.areas);
 
         // NOT intra-modal TS : draw and store TS numbers
-        drawAndStoreTSnumbersForNOTintraModal(
-          isTSintramodal, isTSgenerated, nbTimeseriesByMode, year, study);
+        drawAndStoreTSnumbersForNOTintraModal(isTSintramodal, isTSgenerated, year, study);
     }
 
     // ===============
