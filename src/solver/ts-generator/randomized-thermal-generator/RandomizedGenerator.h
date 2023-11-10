@@ -80,5 +80,3 @@ private:
 };
 
 } // namespace Antares::Solver::TSGenerator
-
-// #endif // OPTIMIZED_GENERATOR_H
