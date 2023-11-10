@@ -20,5 +20,4 @@ target_link_libraries(array
 target_include_directories(array
                 PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
         )
