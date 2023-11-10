@@ -39,9 +39,7 @@ using namespace Yuni;
     Yuni:;  \
     IO::Separator
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 bool FindLocation(String& location)
 {
@@ -206,5 +204,5 @@ bool FindYearByYearAggregator(Yuni::String& location)
     return searchpaths.find(location, "ybyaggregator");
 }
 
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver
+

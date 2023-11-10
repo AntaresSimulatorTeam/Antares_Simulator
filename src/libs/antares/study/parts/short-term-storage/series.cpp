@@ -26,12 +26,12 @@
 */
 #include <yuni/io/file.h>
 #include <antares/logs/logs.h>
-#include <antares/constants.h>
+#include <../../constants.h>
 
 #include <iomanip>
 #include <fstream>
 
-#include "series.h"
+#include "antares/study/parts/short-term-storage/series.h"
 
 #define SEP Yuni::IO::Separator
 

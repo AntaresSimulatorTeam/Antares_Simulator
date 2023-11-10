@@ -31,8 +31,8 @@
 #include <cassert>
 #include <cmath>
 #include <boost/algorithm/string/case_conv.hpp>
-#include "../../study.h"
-#include "cluster.h"
+#include "antares/study/study.h"
+#include "antares/study/cluster.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
@@ -42,9 +42,7 @@ using namespace Antares;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 Data::RenewableCluster::RenewableCluster(Area* parent) :
  Cluster(parent), groupID(renewableOther1), tsMode(powerGeneration)
@@ -214,5 +212,5 @@ unsigned int RenewableCluster::precision() const
 {
     return 4;
 }
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

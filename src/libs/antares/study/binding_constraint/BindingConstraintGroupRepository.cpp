@@ -2,12 +2,12 @@
 // Created by marechaljas on 28/06/23.
 //
 
-#include "BindingConstraintGroupRepository.h"
+#include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 #include <algorithm>
 #include <numeric>
 #include <memory>
-#include "BindingConstraintsRepository.h"
-#include "BindingConstraintGroup.h"
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
+#include "antares/study/binding_constraint/BindingConstraintGroup.h"
 
 namespace Antares::Data {
 

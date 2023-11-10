@@ -25,13 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "filter.h"
+#include "antares/study/filter.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 std::string datePrecisionIntoString(uint datePrecisionFilter)
 {
@@ -132,5 +130,5 @@ uint addTimeIntervallToDatePrecisionFilter(const uint index)
     return flag;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

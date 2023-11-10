@@ -1,8 +1,8 @@
 //
 // Created by marechaljas on 16/05/23.
 //
-#include "BindingConstraintSaver.h"
-#include "BindingConstraint.h"
+#include "antares/study/binding_constraint/BindingConstraintSaver.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
 #include <yuni/yuni.h>
 #include <string>
 #include "antares/study/area/area.h"

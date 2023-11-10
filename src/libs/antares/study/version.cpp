@@ -27,8 +27,8 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include "study.h"
-#include "version.h"
+#include "antares/study/study.h"
+#include "antares/study/version.h"
 #include "../../../config.h"
 
 using namespace Yuni;

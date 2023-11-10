@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "study.h"
+#include "antares/study/study.h"
 #include "../../application/study.h"
 #include "../../application/main/main.h"
 #include "../../../common/lock.h"

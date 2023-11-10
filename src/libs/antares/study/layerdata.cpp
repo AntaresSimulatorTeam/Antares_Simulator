@@ -30,7 +30,7 @@
 #include <fstream>
 
 #include <antares/inifile/inifile.h>
-#include "layerdata.h"
+#include "antares/study/layerdata.h"
 #include <antares/logs/logs.h>
 
 using namespace Yuni;

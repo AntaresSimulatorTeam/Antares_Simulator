@@ -25,16 +25,14 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "output.h"
+#include "antares/study/output.h"
 #include <yuni/io/directory/iterator.h>
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 namespace // anonymous
 {
@@ -206,5 +204,5 @@ void Output::RetrieveListFromStudy(List& out, const Study& study)
     }
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

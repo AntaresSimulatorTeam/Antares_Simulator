@@ -24,7 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include "study.h"
+#include "antares/study/study.h"
 #include <yuni/core/system/environment.h>
 #include <antares/study/area/area.h>
 #include <antares/inifile/inifile.h>

@@ -25,14 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "fwd.h"
+#include "antares/study/fwd.h"
 #include <algorithm>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 const char* SeedToCString(SeedIndex seed)
 {
@@ -493,5 +491,5 @@ std::string styleToString(const StyleType& style)
     }
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

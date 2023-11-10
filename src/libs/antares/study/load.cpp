@@ -25,11 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include <fstream>
-#include "study.h"
-#include "version.h"
+#include "antares/study/study.h"
+#include "antares/study/version.h"
 #include <antares/benchmarking/DurationCollector.h>
-#include "scenario-builder/sets.h"
-#include "ui-runtimeinfos.h"
+#include "antares/study/scenario-builder/sets.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;

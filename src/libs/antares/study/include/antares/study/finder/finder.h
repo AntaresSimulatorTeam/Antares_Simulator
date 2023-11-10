@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include "../study.h"
+#include "antares/study/study.h"
 #include <yuni/io/directory/iterator.h>
 
 namespace Antares

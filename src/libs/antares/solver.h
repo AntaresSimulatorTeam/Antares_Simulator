@@ -28,7 +28,7 @@
 #define __ANTARES_LIBS_SOLVER_H__
 
 #include <yuni/yuni.h>
-#include "study/version.h"
+#include "antares/study/version.h"
 
 namespace Antares
 {

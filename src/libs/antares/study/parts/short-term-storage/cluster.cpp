@@ -29,7 +29,7 @@
 #include <yuni/core/string.h>
 #include <yuni/io/file.h>
 
-#include "cluster.h"
+#include "antares/study/parts/common/cluster.h"
 
 namespace Antares::Data::ShortTermStorage
 {

@@ -25,16 +25,14 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "scratchpad.h"
-#include "constants.h"
-#include "../study.h"
+#include "antares/study/area/scratchpad.h"
+#include "../../constants.h"
+#include "antares/study/study.h"
 #include <limits>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 
 AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area)
@@ -156,5 +154,5 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area)
 
 AreaScratchpad::~AreaScratchpad() = default;
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

@@ -27,19 +27,17 @@
 
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
-#include <stdio.h>
-#include "series.h"
+#include <cstdio>
+#include "antares/study/parts/hydro/series.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include "../../study.h"
+#include "antares/study/study.h"
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 DataSeriesHydro::DataSeriesHydro() :
     ror(timeseriesNumbers),
@@ -256,5 +254,5 @@ uint64_t DataSeriesHydro::memoryUsage() const
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage();
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

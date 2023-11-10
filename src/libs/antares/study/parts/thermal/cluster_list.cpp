@@ -1,6 +1,6 @@
-#include "cluster_list.h"
-#include "cluster.h"
-#include "../../study.h"
+#include "antares/study/parts/thermal/cluster_list.h"
+#include "antares/study/parts/common/cluster.h"
+#include "antares/study/study.h"
 
 namespace // anonymous
 {

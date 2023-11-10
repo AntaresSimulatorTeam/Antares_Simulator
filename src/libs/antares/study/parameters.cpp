@@ -27,19 +27,19 @@
 #include <algorithm>
 
 #include <yuni/yuni.h>
-#include <stdio.h>
-#include <ctype.h>
+#include <cstdio>
+#include <cctype>
 #include <tuple>   // std::tuple
 #include <list>    // std::list
 #include <sstream> // std::stringstream
 
-#include "parameters.h"
-#include <antares/constants.h>
+#include "antares/study/parameters.h"
+#include <../../constants.h>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include "load-options.h"
+#include "antares/study/load-options.h"
 #include <climits>
-#include "../solver/variable/economy/all.h"
+#include "../../../solver/variable/economy/all.h"
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hxx>

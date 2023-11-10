@@ -1,7 +1,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
-#include "cluster_list.h"
+#include "antares/study/parts/common/cluster_list.h"
 #include <antares/utils/utils.h>
-#include "../../study.h"
+#include "antares/study/study.h"
 
 using namespace Yuni;
 namespace // anonymous

@@ -26,14 +26,12 @@
 */
 
 #include <yuni/yuni.h>
-#include "study.h"
-#include "scenario-builder/sets.h"
+#include "antares/study/study.h"
+#include "antares/study/scenario-builder/sets.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 // The path to the Icon file to use when writing a study
 String StudyIconFile;
@@ -164,5 +162,5 @@ bool Study::IsInsideStudyFolder(const AnyString& path, String& location, String&
     return false;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

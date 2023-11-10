@@ -25,19 +25,15 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "sets.h"
-#include "../study.h"
+#include "antares/study/scenario-builder/sets.h"
+#include "antares/study/study.h"
 #include <antares/logs/logs.h>
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
-{
-namespace ScenarioBuilder
+namespace Antares::Data::ScenarioBuilder
 {
 Sets::Sets() : pStudy(nullptr)
 {
@@ -201,6 +197,6 @@ bool Sets::internalLoadFromINIFile(const AnyString& filename)
     return true;
 }
 
-} // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder
+
+
