@@ -43,7 +43,7 @@ using namespace Antares::Data;
 namespace Antares::Solver::Optimization
 {
 
-void CsrQuadraticProblem::setConstraintsOnFlows(std::vector<double>& Pi, std::vector<int>& Colonne)
+void CsrQuadraticProblem::setConstraintsOnFlows()
 {
     int hour = hourlyCsrProblem_.triggeredHour;
     //!\ TODO not associated problemHebdo && probleamAressoudre
@@ -60,8 +60,7 @@ void CsrQuadraticProblem::setConstraintsOnFlows(std::vector<double>& Pi, std::ve
     csrFlowDissociation.add(hour, csrFlowDissociationData);
 }
 
-void CsrQuadraticProblem::setNodeBalanceConstraints(std::vector<double>& Pi,
-                                                    std::vector<int>& Colonne)
+void CsrQuadraticProblem::setNodeBalanceConstraints()
 {
     int hour = hourlyCsrProblem_.triggeredHour;
     const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
@@ -94,7 +93,7 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(std::vector<double>& Pi,
     csrAreaBalance.add(csrAreaBalanceData);
 }
 
-void CsrQuadraticProblem::setBindingConstraints(std::vector<double>& Pi, std::vector<int>& Colonne)
+void CsrQuadraticProblem::setBindingConstraints()
 {
     int hour = hourlyCsrProblem_.triggeredHour;
     auto builder = NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(problemeHebdo_,
