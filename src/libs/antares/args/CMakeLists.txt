@@ -19,5 +19,4 @@ target_link_libraries(args_helper
 target_include_directories(args_helper
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
 )

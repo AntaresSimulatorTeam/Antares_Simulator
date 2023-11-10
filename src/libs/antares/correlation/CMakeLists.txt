@@ -23,10 +23,6 @@ target_include_directories(correlation
         $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/> #area -> antares/study/parameters/adq-patch-params.h
         $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/date> #area -> antares/study/parameters/adq-patch-params.h -> date
         $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/writer> #area -> antares/parts/thermal/cluster -> writer
-        $<INSTALL_INTERFACE:libs> #area -> antares/study/parameters/adq-patch-params.h
-        $<INSTALL_INTERFACE:libs/antares/date> #area -> antares/study/parameters/adq-patch-params.h -> date
-        $<INSTALL_INTERFACE:libs/antares/writer> #area -> antares/parts/thermal/cluster -> writer
                 PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
         )

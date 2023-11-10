@@ -94,7 +94,7 @@ add_library(antares-ui-component-panel  ${SRC_COMPONENT_PANEL})
 target_include_directories(
 		antares-ui-component-panel
         PRIVATE
-        $<INSTALL_INTERFACE:libs>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs>
 )
 target_link_libraries(antares-ui-component-panel
 		PUBLIC
