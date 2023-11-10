@@ -18,24 +18,102 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeriesPerAllMaintena
     }
 }
 
+std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageTs(
+  const Matrix<double>& tsValue,
+  const Matrix<uint32_t>& tsNumbers)
+{
+    // define array
+    std::array<double, HOURS_PER_YEAR> averageTs = {};
+    // calculate sum
+    for (std::size_t year = 0; year < tsNumbers.height; ++year)
+    {
+        for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
+        {
+            averageTs[row] += tsValue[tsNumbers[0][year]][row];
+        }
+    }
+    // calculate mean
+    for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
+    {
+        averageTs[row] = averageTs[row] / tsNumbers.height;
+    }
+    // return
+    return averageTs;
+}
+
 std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageLoadTs(const Data::Area& area)
 {
-    std::array<double, HOURS_PER_YEAR> values;
-    values.fill(2.5);
-    return values;
+    // we assume ready-make TS - (pre-check exist for this!)
+    const auto tsValues = area.load.series.timeSeries;
+    const auto tsNumbers = area.load.series.timeseriesNumbers;
+    return calculateAverageTs(tsValues, tsNumbers);
 }
-std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRorTs(const Data::Area& area)
+
+std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRorTs(
+  const Data::Area& area)
 {
-    std::array<double, HOURS_PER_YEAR> values;
-    values.fill(2.5);
-    return values;
+    const auto tsValues = area.hydro.series->ror.timeSeries;
+    auto tsNumbers = area.hydro.series->ror.timeseriesNumbers;
+    return calculateAverageTs(tsValues, tsNumbers);
 }
+
+std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRenewableTsAggregated(
+  const Data::Area& area)
+{
+    std::array<double, HOURS_PER_YEAR> averageTsSolar
+      = calculateAverageTs(area.solar.series.timeSeries, area.solar.series.timeseriesNumbers);
+    std::array<double, HOURS_PER_YEAR> averageTsWind
+      = calculateAverageTs(area.wind.series.timeSeries, area.wind.series.timeseriesNumbers);
+
+    std::array<double, HOURS_PER_YEAR> averageTsRenewable = {};
+    for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
+    {
+        averageTsRenewable[row] = (averageTsSolar[row] + averageTsWind[row]) / 2;
+    }
+    return averageTsRenewable;
+}
+
+std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRenewableTsClusters(
+  const Data::Area& area)
+{
+    std::array<double, HOURS_PER_YEAR> averageTsRenewable = {};
+    uint enabledClusterCount = 0;
+    for (const auto& entryCluster : area.renewable.clusters)
+    {
+        auto& cluster = *entryCluster;
+        if (!cluster.enabled) // do we consider if cluster is of or on
+            continue;
+        enabledClusterCount++;
+        auto tmpArrayPerCluster
+          = calculateAverageTs(cluster.series.timeSeries, cluster.series.timeseriesNumbers);
+        for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
+        {
+            if (cluster.productionFactor)
+                averageTsRenewable[row]
+                  += tmpArrayPerCluster[row] * cluster.unitCount * cluster.nominalCapacity;
+            else
+                averageTsRenewable[row] += tmpArrayPerCluster[row];
+        }
+    }
+    // calculate mean
+    for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
+    {
+        averageTsRenewable[row] = averageTsRenewable[row] / enabledClusterCount;
+    }
+    return averageTsRenewable;
+}
+
 std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRenewableTs(
   const Data::Area& area)
 {
-    std::array<double, HOURS_PER_YEAR> values;
-    values.fill(2.5);
-    return values;
+    if (study.parameters.renewableGeneration.isAggregated())
+    {
+        return calculateAverageRenewableTsAggregated(area);
+    }
+    else // clusters it is
+    {
+        return calculateAverageRenewableTsClusters(area);
+    }
 }
 
 void OptimizedThermalGenerator::calculateResidualLoad(Data::MaintenanceGroup& maintenanceGroup)
@@ -62,16 +140,16 @@ void OptimizedThermalGenerator::calculateResidualLoad(Data::MaintenanceGroup& ma
         auto tmpRor = calculateAverageRorTs(area);
         auto tmpRenewable = calculateAverageRenewableTs(area);
 
-        for (std::size_t i = 0; i < HOURS_PER_YEAR; ++i)
+        for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
         {
-            refValueLoad[i] += tmpLoad[i] * weights.load;
-            refValueRor[i] += tmpRor[i] * weights.ror;
-            refValueRenewable[i] += tmpRenewable[i] * weights.renewable;
+            refValueLoad[row] += tmpLoad[row] * weights.load;
+            refValueRor[row] += tmpRor[row] * weights.ror;
+            refValueRenewable[row] += tmpRenewable[row] * weights.renewable;
         }
     }
     // calculate reference value
-    for (std::size_t i = 0; i < HOURS_PER_YEAR; ++i)
-        refValue[i] = refValueLoad[i] - refValueRor[i] - refValueRenewable[i];
+    for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
+        refValue[row] = refValueLoad[row] - refValueRor[row] - refValueRenewable[row];
     // set ResidualLoadTS
     maintenanceGroup.setUsedResidualLoadTS(refValue);
 }
