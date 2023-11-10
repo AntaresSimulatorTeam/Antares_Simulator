@@ -318,6 +318,28 @@ void ISimulation<Impl>::run()
         // in general data of the study.
         logs.info() << " Only the preprocessors are enabled.";
 
+        // we want to know TS numbers if we want to use Maintenance planning - so we are cheating
+        // here
+        // TODO CR27: put this in a separate void function!
+        if (study.parameters.maintenancePlanning.isOptimized()
+            && (study.parameters.timeSeriesToGenerate & Antares::Data::timeSeriesThermal))
+        {
+            if (not ImplementationType::simulationBegin())
+                return;
+            // Allocating the memory
+            ImplementationType::variables.simulationBegin();
+
+            study.resizeAllTimeseriesNumbers(1 + study.runtime->rangeLimits.year[Data::rangeEnd]);
+
+            if (not TimeSeriesNumbers::Generate(study))
+            {
+                throw FatalError("An unrecoverable error has occurred. Can not continue.");
+            }
+
+            if (study.parameters.useCustomScenario)
+                ApplyCustomScenario(study);
+        }
+
         regenerateTimeSeries(0);// TMP.INFO CR27: when running ts-gen ONLY. No refresh span needed. Year = 0. We only generate TS-s once. No refreshing TS-s is necessary
 
         // Destroy the TS Generators if any
