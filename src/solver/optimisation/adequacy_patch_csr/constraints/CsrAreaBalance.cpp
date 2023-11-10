@@ -56,12 +56,6 @@ void CsrAreaBalance::add(std::shared_ptr<CsrAreaBalanceData> data)
 
         data->numberOfConstraintCsrAreaBalance[Area] = builder->data->nombreDeContraintes;
 
-        // std::string NomDeLaContrainte
-        //   = "Area Balance, Area:" + std::to_string(Area) + "; " +
-        //   builder->data->NomsDesPays[Area];
-
-        // logs.debug() << "C: " << builder->data->nombreDeContraintes << ": " << NomDeLaContrainte;
-
         ConstraintNamer namer(builder->data->NomDesContraintes);
         namer.UpdateTimeStep(data->hour);
         namer.UpdateArea(builder->data->NomsDesPays[Area]);

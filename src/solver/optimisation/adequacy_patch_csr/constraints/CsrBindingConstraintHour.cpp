@@ -27,13 +27,6 @@ void CsrBindingConstraintHour::add(int CntCouplante,
     {
         data->numberOfConstraintCsrHourlyBinding[CntCouplante] = builder->data->nombreDeContraintes;
 
-        // std::string NomDeLaContrainte
-        //   = "bc::hourly::" + std::to_string(data->hour)
-        //     + "::" + data->MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante;
-
-        // logs.debug() << "C (bc): " << builder->data->nombreDeContraintes << ": "
-        //              << NomDeLaContrainte;
-
         ConstraintNamer namer(builder->data->NomDesContraintes);
         namer.UpdateTimeStep(data->hour);
         namer.CsrBindingConstraintHour(
