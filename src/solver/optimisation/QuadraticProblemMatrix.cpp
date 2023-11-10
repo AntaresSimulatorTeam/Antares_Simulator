@@ -1,6 +1,6 @@
 #include "QuadraticProblemMatrix.h"
 
-QuadraticProblemMatrix::Run()
+void QuadraticProblemMatrix::Run()
 {
     InitiliazeProblemAResoudreCounters();
 
