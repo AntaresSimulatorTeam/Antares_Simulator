@@ -40,10 +40,10 @@ jobs:
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
       VCPKG_INSTALLED_DIR: ${{ github.workspace }}/vcpkg_installed
       VCPKG_CACHE_DIR: ${{ github.workspace }}/vcpkg_cache
-      - if: matrix.os == 'ubuntu-latest':
-            PRESET: 'ninja-multi-vcpkg'
-      - if: matrix.os == 'windows-latest':
-            PRESET: 'msbuild-vcpkg'
+      # - if: matrix.os == 'ubuntu-latest':
+      #       PRESET: 'ninja-multi-vcpkg'
+      # - if: matrix.os == 'windows-latest':
+      #       PRESET: 'msbuild-vcpkg'
 
     steps:
       - uses: actions/checkout@v3
@@ -124,9 +124,13 @@ jobs:
         id: runcmake
         with:
           cmakeListsTxtPath: '${{ github.workspace }}/src/CMakeLists.txt'
-          configurePreset: ${{env.PRESET}}
           # configurePresetAdditionalArgs: "['-DPython3_EXECUTABLE=${{ steps.setup-python.outputs.python-path }}']"
-          buildPreset: ${{env.PRESET}}
+          if: matrix.os == 'ubuntu-latest':
+              configurePreset: 'ninja-multi-vcpkg'
+              buildPreset: 'ninja-multi-vcpkg'
+          if: matrix.os == 'windows-latest':
+              configurePreset: 'msbuild-vcpkg'
+              buildPreset: 'msbuild-vcpkg'
           buildPresetAdditionalArgs: '[`--config Release`]'
       - name: List $RUNNER_WORKSPACE after build
         run: find $RUNNER_WORKSPACE
