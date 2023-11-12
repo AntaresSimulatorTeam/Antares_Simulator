@@ -3,6 +3,30 @@
   "version-string": "8.5.0",
   "dependencies": [
     "wxwidgets",
-    "boost-test"
+    "boost-test",
+
+    {
+      "name": "wxwidgets",
+      "platform": "windows"
+    },
+
+    {
+      "name": "boost-test",
+      "platform": "windows"
+    },
+
+    {
+      "name": "uuid-dev",
+      "platform": "ubuntu"
+    },
+
+    {
+      "name": "libwxgtk3.0-gtk3-dev",
+      "platform": "ubuntu"
+    },
+    {
+      "name": "libboost-test-dev",
+      "platform": "ubuntu"
+    },
   ]
 }
