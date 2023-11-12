@@ -120,7 +120,7 @@ jobs:
         run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_DEFAULT_TRIPLET_OUT }}' "
       
       - name: setpreset
-        bash: shell
+        shell: bash 
         run: |
           [[ ${{ matrix.os }} == 'ubuntu-latest' ]] 
           echo "configurePreset=ninja-multi-vcpkg" >> $GITHUB_ENV
