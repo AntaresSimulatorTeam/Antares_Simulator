@@ -58,6 +58,10 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     if (problemeSimplexe_->SolverLogs())
     {
         solver->EnableOutput();
+        // TODO won't work in ci, needs ortools update
+        // see https://github.com/rte-france/or-tools/pull/112
+        // std::filesystem::path log_file = logs.logfile().c_str();
+        // solver->set_solver_logs_directory(log_file.parent_path());
     }
 
     return solver;
