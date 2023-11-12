@@ -136,12 +136,8 @@ jobs:
         with:
           cmakeListsTxtPath: '${{ github.workspace }}/src/CMakeLists.txt'
           # configurePresetAdditionalArgs: "['-DPython3_EXECUTABLE=${{ steps.setup-python.outputs.python-path }}']"
-          if: matrix.os == 'ubuntu-latest':
-              configurePreset: 'ninja-multi-vcpkg'
-              buildPreset: 'ninja-multi-vcpkg'
-          if: matrix.os == 'windows-latest':
-              configurePreset: 'msbuild-vcpkg'
-              buildPreset: 'msbuild-vcpkg'
+          configurePreset: ${{ env.configurePreset }}
+          buildPreset: ${{ env.buildPreset }}
           buildPresetAdditionalArgs: '[`--config Release`]'
       - name: List $RUNNER_WORKSPACE after build
         run: find $RUNNER_WORKSPACE
