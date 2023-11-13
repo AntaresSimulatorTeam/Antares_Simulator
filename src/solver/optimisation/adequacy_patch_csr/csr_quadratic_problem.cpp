@@ -36,7 +36,7 @@
 #include "constraints/CsrFlowDissociation.h"
 #include "constraints/CsrAreaBalance.h"
 #include "constraints/CsrBindingConstraintHour.h"
-#include "../constraints/new_constraint_builder_utils.h"
+#include "../constraints/constraint_builder_utils.h"
 
 using namespace Antares::Data;
 
