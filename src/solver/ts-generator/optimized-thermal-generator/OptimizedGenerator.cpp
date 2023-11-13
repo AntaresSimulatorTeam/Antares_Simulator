@@ -68,7 +68,7 @@ std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRe
     std::array<double, HOURS_PER_YEAR> averageTsRenewable = {};
     for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
     {
-        averageTsRenewable[row] = (averageTsSolar[row] + averageTsWind[row]); // ask Hugo do we divide by 2 ?
+        averageTsRenewable[row] = (averageTsSolar[row] + averageTsWind[row]);
     }
     return averageTsRenewable;
 }
