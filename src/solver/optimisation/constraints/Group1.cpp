@@ -17,11 +17,10 @@ FictitiousLoadData Group1::GetFictitiousLoadData()
             .DefaillanceNegativeUtiliserHydro = problemeHebdo_->DefaillanceNegativeUtiliserHydro};
 }
 
-ShortTermStorageLevelData Group1::GetShortTermStorageLevelData(int pdt)
+ShortTermStorageLevelData Group1::GetShortTermStorageLevelData()
 {
     return {
-      .ShortTermStorageLevelConstraint
-      = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt].ShortTermStorageLevelConstraint,
+      .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
       .ShortTermStorage = problemeHebdo_->ShortTermStorage,
     };
 }
@@ -72,7 +71,8 @@ void Group1::Build()
     auto fictitiousLoadData = GetFictitiousLoadData();
     FictitiousLoad fictitiousLoad(builder_, fictitiousLoadData);
 
-    ShortTermStorageLevel shortTermStorageLevel(builder_);
+    auto shortTermStorageLevelData = GetShortTermStorageLevelData();
+    ShortTermStorageLevel shortTermStorageLevel(builder_, shortTermStorageLevelData);
     FlowDissociation flowDissociation(builder_);
     BindingConstraintHour bindingConstraintHour(builder_);
 
@@ -86,8 +86,7 @@ void Group1::Build()
             areaBalance.add(pdt, pays);
 
             fictitiousLoad.add(pdt, pays);
-            auto shortTermStorageLevelData = GetShortTermStorageLevelData(pdt);
-            shortTermStorageLevel.add(pdt, pays, shortTermStorageLevelData);
+            shortTermStorageLevel.add(pdt, pays);
         }
 
         for (uint32_t interco = 0; interco < problemeHebdo_->NombreDInterconnexions; interco++)

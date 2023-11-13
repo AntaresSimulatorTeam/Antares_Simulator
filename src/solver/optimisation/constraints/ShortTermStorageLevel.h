@@ -3,13 +3,21 @@
 
 struct ShortTermStorageLevelData
 {
-    std::vector<int>& ShortTermStorageLevelConstraint;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
+
     const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
 };
 
 class ShortTermStorageLevel : private ConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
-    void add(int pdt, int pays, ShortTermStorageLevelData& data);
+    ShortTermStorageLevel(std::shared_ptr<ConstraintBuilder> builder,
+                          ShortTermStorageLevelData& data) :
+     ConstraintFactory(builder), data(data)
+    {
+    }
+    void add(int pdt, int pays);
+
+private:
+    ShortTermStorageLevelData& data;
 };
