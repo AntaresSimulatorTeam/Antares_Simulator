@@ -27,6 +27,6 @@
 #ifndef __ANTARES_INTERFACE_CONFIG_H__
 #define __ANTARES_INTERFACE_CONFIG_H__
 
-#include "../../config.h"
+#include "antares/config/config.h"
 
 #endif // __ANTARES_INTERFACE_CONFIG_H__
