@@ -34,6 +34,7 @@
 #include "weights.h"
 #include "offsets.h"
 #include "enabled.h"
+#include "antares/utils/utils.h"
 
 using namespace Yuni;
 

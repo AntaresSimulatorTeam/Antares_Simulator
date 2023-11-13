@@ -55,6 +55,7 @@
 
 #include "main/internal-data.h"
 #include "antares/study/ui-runtimeinfos.h"
+#include "antares/utils/utils.h"
 
 #include <atomic>
 
