@@ -12,12 +12,20 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeriesPerAllMaintena
     const auto& activeMaintenanceGroups = maintenanceGroupRepo.activeMaintenanceGroups();
     for (const auto& entryMaintenanceGroup : activeMaintenanceGroups)
     {
+        // timeHorizon & timeStep are defined per one MaintenanceGroup
         int timeHorizon, timeStep;
         auto& maintenanceGroup = *(entryMaintenanceGroup.get());
+        // Residual Load (or reference value) array is defined per one MaintenanceGroup 
         calculateResidualLoad(maintenanceGroup);
         std::tie(timeStep, timeHorizon) = calculateTimeHorizonAndStep(maintenanceGroup);
         GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(maintenanceGroup);
     }
+}
+
+uint OptimizedThermalGenerator::calculateNumberOfMaintenances(Data::ThermalCluster& cluster,
+                                                              uint timeHorizon)
+{
+    return timeHorizon / cluster.interPoPeriod; // floor
 }
 
 std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageTs(
@@ -208,6 +216,10 @@ void OptimizedThermalGenerator::createOptimizationProblemPerCluster(const Data::
 {
     if (cluster.doWeGenerateTS(globalThermalTSgeneration_) && cluster.optimizeMaintenance)
     {
+        // number of maintenances are defined per cluster-unit
+        // but are the same for all units inside the same cluster
+        int numberOfMaintenancesPerUnit;
+        numberOfMaintenancesPerUnit = calculateNumberOfMaintenances(cluster, 365); // TODO CR27: get the T-timeHorizon here - parameter or class
         // just playing here - this needs to go into new method - class  - operator
         logs.info() << "CR27-INFO: This cluster is active for mnt planning: "
                     << cluster.getFullName();
