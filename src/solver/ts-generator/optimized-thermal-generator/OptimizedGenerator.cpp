@@ -12,11 +12,14 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeriesPerAllMaintena
     const auto& activeMaintenanceGroups = maintenanceGroupRepo.activeMaintenanceGroups();
     for (const auto& entryMaintenanceGroup : activeMaintenanceGroups)
     {
-        // timeHorizon & timeStep are defined per one MaintenanceGroup
+        // timeHorizon, timeStep ENS and Spillage are defined per one MaintenanceGroup
         int timeHorizon, timeStep;
+        double ensCost, spillCost;
         auto& maintenanceGroup = *(entryMaintenanceGroup.get());
-        // Residual Load (or reference value) array is defined per one MaintenanceGroup 
+        // Residual Load (or reference value) array is defined per one MaintenanceGroup
         calculateResidualLoad(maintenanceGroup);
+        std::tie(ensCost, spillCost)
+          = calculateMaintenanceGroupENSandSpillageCost(maintenanceGroup);
         std::tie(timeStep, timeHorizon) = calculateTimeHorizonAndStep(maintenanceGroup);
         GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(maintenanceGroup);
     }
@@ -188,6 +191,31 @@ std::pair<int, int> OptimizedThermalGenerator::calculateTimeHorizonAndStep(
         && maxIter != averageDurationBetweenMaintenances.end())
     {
         return std::make_pair(*minIter, 2*(*maxIter));
+    }
+
+    return std::make_pair(0, 0);
+}
+
+std::pair<double, double> OptimizedThermalGenerator::calculateMaintenanceGroupENSandSpillageCost(
+  Data::MaintenanceGroup& maintenanceGroup)
+{
+    std::vector<int> ensVector = {};
+    std::vector<int> spillageVector = {};
+    for (const auto& entryWeightMap : maintenanceGroup)
+    {
+        const auto& area = *(entryWeightMap.first);
+        ensVector.push_back(area.thermal.unsuppliedEnergyCost);
+        spillageVector.push_back(area.thermal.spilledEnergyCost);
+    }
+
+    // Using std::minmax_element to find min and max
+    auto ens = std::min_element(ensVector.begin(), ensVector.end());
+    auto spill = std::min_element(spillageVector.begin(), spillageVector.end());
+
+    // Check if the vector is not empty
+    if (ens != ensVector.end() && spill != spillageVector.end())
+    {
+        return std::make_pair(*ens, *spill);
     }
 
     return std::make_pair(0, 0);
