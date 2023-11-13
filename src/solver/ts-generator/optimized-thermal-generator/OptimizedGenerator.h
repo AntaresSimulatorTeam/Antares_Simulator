@@ -34,25 +34,35 @@ private:
     void allocateProblem(); // this one should be called in constructor. It basically resets all the
                             // vectors in PROBLEME_ANTARES_A_RESOUDRE for new opt problem.
 
-    // some methods
-    std::pair<int, int> calculateTimeHorizonAndStep(Data::MaintenanceGroup& group);
-    std::pair<double, double> calculateMaintenanceGroupENSandSpillageCost(Data::MaintenanceGroup& group);
-    uint calculateNumberOfMaintenances(Data::ThermalCluster& cluster, uint timeHorizon);
-    uint calculateAverageMaintenanceDuration(Data::ThermalCluster& cluster); 
+    // optimization problem - methods
     void GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(Data::MaintenanceGroup& group);
-    void calculateResidualLoad(Data::MaintenanceGroup& group);
     void createOptimizationProblemPerCluster(const Data::Area& area, Data::ThermalCluster& cluster);
+
+    // calculate parameters methods - per maintenance group
+    std::pair<int, int> calculateTimeHorizonAndStep(Data::MaintenanceGroup& group);
+    std::pair<double, double> calculateMaintenanceGroupENSandSpillageCost(
+      Data::MaintenanceGroup& group);
+    void calculateResidualLoad(Data::MaintenanceGroup& group);
+
+    // calculate parameters methods - per cluster
+    uint calculateNumberOfMaintenances(Data::ThermalCluster& cluster, uint timeHorizon);
+    uint calculateAverageMaintenanceDuration(Data::ThermalCluster& cluster);
+    std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(Data::ThermalCluster& cluster);
+
+    // auxillary functions
+    std::array<double, DAYS_PER_YEAR> calculateDailySums(
+      const std::array<double, HOURS_PER_YEAR>& hourlyValues);
     std::array<double, HOURS_PER_YEAR> calculateAverageTs(const Matrix<double>& tsValue,
                                                           const Matrix<uint32_t>& tsNumbers);
+
+    // calculate Average time-series functions
     std::array<double, HOURS_PER_YEAR> calculateAverageLoadTs(const Data::Area& area);
     std::array<double, HOURS_PER_YEAR> calculateAverageRorTs(const Data::Area& area);
+    std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTs(const Data::Area& area);
     std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsAggregated(
       const Data::Area& area);
     std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsClusters(const Data::Area& area);
-    std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTs(const Data::Area& area);
-    std::array<double, DAYS_PER_YEAR> calculateDailySums(
-      const std::array<double, HOURS_PER_YEAR>& hourlyValues);
-    std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(Data::ThermalCluster& cluster);
+
     // variables
     Data::MaintenanceGroupRepository& maintenanceGroupRepo;
     bool globalThermalTSgeneration_;
