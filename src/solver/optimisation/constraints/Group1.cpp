@@ -15,14 +15,13 @@ AreaBalanceData Group1::GetAreaBalanceData(int pdt, uint32_t pays)
             .ShortTermStorage = problemeHebdo_->ShortTermStorage};
 }
 
-std::shared_ptr<FictitiousLoadData> Group1::GetFictitiousLoadData(int pdt, uint32_t pays)
+FictitiousLoadData Group1::GetFictitiousLoadData(int pdt, uint32_t pays)
 {
-    FictitiousLoadData fictitiousLoadData = {problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
-                                               .NumeroDeContraintePourEviterLesChargesFictives,
-                                             problemeHebdo_->PaliersThermiquesDuPays[pays],
-                                             problemeHebdo_->DefaillanceNegativeUtiliserHydro};
-
-    return std::make_shared<FictitiousLoadData>(fictitiousLoadData);
+    return {.NumeroDeContraintePourEviterLesChargesFictives
+            = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
+                .NumeroDeContraintePourEviterLesChargesFictives,
+            .PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays[pays],
+            .DefaillanceNegativeUtiliserHydro = problemeHebdo_->DefaillanceNegativeUtiliserHydro};
 }
 
 std::shared_ptr<ShortTermStorageLevelData> Group1::GetShortTermStorageLevelData(int pdt)
@@ -92,7 +91,8 @@ void Group1::Build()
             auto areaBalanceData = GetAreaBalanceData(pdt, pays);
             areaBalance.add(pdt, pays, areaBalanceData);
 
-            fictitiousLoad.add(pdt, pays, GetFictitiousLoadData(pdt, pays));
+            auto fictitiousLoadData = GetFictitiousLoadData(pdt, pays);
+            fictitiousLoad.add(pdt, pays, fictitiousLoadData);
 
             shortTermStorageLevel.add(pdt, pays, GetShortTermStorageLevelData(pdt));
         }

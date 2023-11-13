@@ -23,5 +23,5 @@ public:
      * @param pdt : timestep
      * @param pays : area
      */
-    void add(int pdt, int pays, std::shared_ptr<FictitiousLoadData> data);
+    void add(int pdt, int pays, FictitiousLoadData& data);
 };

@@ -1,9 +1,9 @@
 
 #include "FictitiousLoad.h"
 
-void FictitiousLoad::add(int pdt, int pays, std::shared_ptr<FictitiousLoadData> data)
+void FictitiousLoad::add(int pdt, int pays, FictitiousLoadData& data)
 {
-    data->NumeroDeContraintePourEviterLesChargesFictives[pays] = builder->data->nombreDeContraintes;
+    data.NumeroDeContraintePourEviterLesChargesFictives[pays] = builder->data->nombreDeContraintes;
 
     ConstraintNamer namer(builder->data->NomDesContraintes);
 
@@ -12,8 +12,8 @@ void FictitiousLoad::add(int pdt, int pays, std::shared_ptr<FictitiousLoadData> 
     namer.FictiveLoads(builder->data->nombreDeContraintes);
 
     builder->updateHourWithinWeek(pdt);
-    ExportPaliers(data->PaliersThermiquesDuPays, builder);
-    auto coeff = data->DefaillanceNegativeUtiliserHydro[pays] ? -1 : 0;
+    ExportPaliers(data.PaliersThermiquesDuPays, builder);
+    auto coeff = data.DefaillanceNegativeUtiliserHydro[pays] ? -1 : 0;
     builder->HydProd(pays, coeff).NegativeUnsuppliedEnergy(pays, 1.0);
 
     builder->lessThan();
