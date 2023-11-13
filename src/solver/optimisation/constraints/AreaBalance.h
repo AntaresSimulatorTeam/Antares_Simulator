@@ -3,14 +3,13 @@
 
 struct AreaBalanceData
 {
-    std::vector<int>& NumeroDeContrainteDesBilansPays;
-    std::vector<int>& InjectionVariable;
-    std::vector<int>& WithdrawalVariable;
+    // std::vector<int>& NumeroDeContrainteDesBilansPays;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
     const std::vector<int>& IndexDebutIntercoOrigine;
     const std::vector<int>& IndexSuivantIntercoOrigine;
     const std::vector<int>& IndexDebutIntercoExtremite;
     const std::vector<int>& IndexSuivantIntercoExtremite;
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays;
+    const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
     const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
 };
 
@@ -23,7 +22,10 @@ struct AreaBalanceData
 class AreaBalance : public ConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
+    AreaBalance(std::shared_ptr<ConstraintBuilder> builder, AreaBalanceData& data) :
+     ConstraintFactory(builder), data(data)
+    {
+    }
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
@@ -31,5 +33,8 @@ public:
      * @param pays : area
      */
 
-    void add(int pdt, int pays, AreaBalanceData& data);
+    void add(int pdt, int pays);
+
+private:
+    AreaBalanceData& data;
 };

@@ -11,9 +11,10 @@ static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortT
     }
 }
 
-void AreaBalance::add(int pdt, int pays, AreaBalanceData& data)
+void AreaBalance::add(int pdt, int pays)
 {
-    data.NumeroDeContrainteDesBilansPays[pays] = builder->data->nombreDeContraintes;
+    data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays[pays]
+      = builder->data->nombreDeContraintes;
 
     ConstraintNamer namer(builder->data->NomDesContraintes);
     namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
@@ -36,7 +37,7 @@ void AreaBalance::add(int pdt, int pays, AreaBalanceData& data)
         interco = data.IndexSuivantIntercoExtremite[interco];
     }
 
-    ExportPaliers(data.PaliersThermiquesDuPays, builder);
+    ExportPaliers(data.PaliersThermiquesDuPays[pays], builder);
     builder->HydProd(pays, -1.0)
       .Pumping(pays, 1.0)
       .PositiveUnsuppliedEnergy(pays, -1.0)

@@ -14,7 +14,7 @@ public:
         void Build() override;
 
 private:
-    AreaBalanceData GetAreaBalanceData(int pdt, uint32_t pays);
+    AreaBalanceData GetAreaBalanceData();
     FictitiousLoadData GetFictitiousLoadData(int pdt, uint32_t pays);
     ShortTermStorageLevelData GetShortTermStorageLevelData(int pdt);
     FlowDissociationData GetFlowDissociationData(int pdt);

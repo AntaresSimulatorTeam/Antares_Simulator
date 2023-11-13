@@ -1,17 +1,12 @@
 #include "Group1.h"
-AreaBalanceData Group1::GetAreaBalanceData(int pdt, uint32_t pays)
+AreaBalanceData Group1::GetAreaBalanceData()
 {
-    return {.NumeroDeContrainteDesBilansPays
-            = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays,
-            .InjectionVariable = problemeHebdo_->CorrespondanceVarNativesVarOptim[pdt]
-                                   .SIM_ShortTermStorage.InjectionVariable,
-            .WithdrawalVariable = problemeHebdo_->CorrespondanceVarNativesVarOptim[pdt]
-                                    .SIM_ShortTermStorage.WithdrawalVariable,
+    return {.CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
             .IndexDebutIntercoOrigine = problemeHebdo_->IndexDebutIntercoOrigine,
             .IndexSuivantIntercoOrigine = problemeHebdo_->IndexSuivantIntercoOrigine,
             .IndexDebutIntercoExtremite = problemeHebdo_->IndexDebutIntercoExtremite,
             .IndexSuivantIntercoExtremite = problemeHebdo_->IndexSuivantIntercoExtremite,
-            .PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays[pays],
+            .PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays,
             .ShortTermStorage = problemeHebdo_->ShortTermStorage};
 }
 
@@ -73,7 +68,8 @@ BindingConstraintHourData Group1::GetBindingConstraintHourData(int pdt, int cntC
 
 void Group1::Build()
 {
-    AreaBalance areaBalance(builder_);
+    auto areaBalanceData = GetAreaBalanceData();
+    AreaBalance areaBalance(builder_, areaBalanceData);
     FictitiousLoad fictitiousLoad(builder_);
     ShortTermStorageLevel shortTermStorageLevel(builder_);
     FlowDissociation flowDissociation(builder_);
@@ -86,8 +82,7 @@ void Group1::Build()
     {
         for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
         {
-            auto areaBalanceData = GetAreaBalanceData(pdt, pays);
-            areaBalance.add(pdt, pays, areaBalanceData);
+            areaBalance.add(pdt, pays);
 
             auto fictitiousLoadData = GetFictitiousLoadData(pdt, pays);
             fictitiousLoad.add(pdt, pays, fictitiousLoadData);
