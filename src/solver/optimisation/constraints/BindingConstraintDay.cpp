@@ -1,12 +1,16 @@
 #include "BindingConstraintDay.h"
 
-void BindingConstraintDay::add(int cntCouplante, BindingConstraintDayData& data)
+void BindingConstraintDay::add(int cntCouplante)
 {
-    if (data.TypeDeContrainteCouplante != CONTRAINTE_JOURNALIERE)
+    const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+      = data.MatriceDesContraintesCouplantes[cntCouplante];
+    if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_JOURNALIERE)
         return;
 
-    const int nbInterco = data.NombreDInterconnexionsDansLaContrainteCouplante;
-    const int nbClusters = data.NombreDePaliersDispatchDansLaContrainteCouplante;
+    const int nbInterco
+      = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
+    const int nbClusters
+      = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
 
     const int NombreDePasDeTempsPourUneOptimisation
       = builder->data->NombreDePasDeTempsPourUneOptimisation;
@@ -18,9 +22,9 @@ void BindingConstraintDay::add(int cntCouplante, BindingConstraintDayData& data)
 
         for (int index = 0; index < nbInterco; index++)
         {
-            int interco = data.NumeroDeLInterconnexion[index];
-            double poids = data.PoidsDeLInterconnexion[index];
-            int offset = data.OffsetTemporelSurLInterco[index];
+            int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
+            double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
+            int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
 
             for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
             {
@@ -31,13 +35,13 @@ void BindingConstraintDay::add(int cntCouplante, BindingConstraintDayData& data)
 
         for (int index = 0; index < nbClusters; index++)
         {
-            int pays = data.PaysDuPalierDispatch[index];
+            int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
             const PALIERS_THERMIQUES& PaliersThermiquesDuPays = data.PaliersThermiquesDuPays[pays];
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
-                  [data.NumeroDuPalierDispatch[index]];
-            double poids = data.PoidsDuPalierDispatch[index];
-            int offset = data.OffsetTemporelSurLePalierDispatch[index];
+                  [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
+            double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
+            int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
 
             for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
             {
@@ -50,12 +54,12 @@ void BindingConstraintDay::add(int cntCouplante, BindingConstraintDayData& data)
           .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
           = builder->data->nombreDeContraintes;
 
-        builder->SetOperator(data.SensDeLaContrainteCouplante);
+        builder->SetOperator(MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
         {
             ConstraintNamer namer(builder->data->NomDesContraintes);
             namer.UpdateTimeStep(jour);
             namer.BindingConstraintDay(builder->data->nombreDeContraintes,
-                                       data.NomDeLaContrainteCouplante);
+                                       MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
         }
         builder->build();
         pdtDebut += data.NombreDePasDeTempsDUneJournee;

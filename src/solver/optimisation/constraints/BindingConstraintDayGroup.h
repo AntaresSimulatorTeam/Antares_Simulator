@@ -11,5 +11,5 @@ public:
     void Build() override;
 
 private:
-    BindingConstraintDayData GetBindingConstraintDayDataFromProblemHebdo(int cntCouplante);
+    BindingConstraintDayData GetBindingConstraintDayDataFromProblemHebdo();
 };
