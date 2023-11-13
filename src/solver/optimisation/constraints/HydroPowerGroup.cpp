@@ -1,26 +1,21 @@
 #include "HydroPowerGroup.h"
 
-HydroPowerData HydroPowerGroup::GetHydroPowerDataFromProblemHebdo(uint32_t pays)
+HydroPowerData HydroPowerGroup::GetHydroPowerDataFromProblemHebdo()
 {
     return {
-      .presenceHydro
-      = problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable,
-      .TurbEntreBornes = problemeHebdo_->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes,
-      .presencePompage
-      = problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable,
+      .CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,
       .NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation,
-      .NumeroDeContrainteEnergieHydraulique = problemeHebdo_->NumeroDeContrainteEnergieHydraulique,
-      .pumpingRatio = problemeHebdo_->CaracteristiquesHydrauliques[pays].PumpingRatio};
+      .NumeroDeContrainteEnergieHydraulique = problemeHebdo_->NumeroDeContrainteEnergieHydraulique};
 }
 
 void HydroPowerGroup::Build()
 {
-    HydroPower hydroPower(builder_);
+    auto hydroPowerData = GetHydroPowerDataFromProblemHebdo();
+    HydroPower hydroPower(builder_, hydroPowerData);
 
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
-        auto hydroPowerData = GetHydroPowerDataFromProblemHebdo(pays);
-        hydroPower.add(pays, hydroPowerData);
+        hydroPower.add(pays);
     }
 }

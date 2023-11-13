@@ -11,5 +11,5 @@ public:
     void Build() override;
 
 private:
-    HydroPowerData GetHydroPowerDataFromProblemHebdo(uint32_t pays);
+    HydroPowerData GetHydroPowerDataFromProblemHebdo();
 };

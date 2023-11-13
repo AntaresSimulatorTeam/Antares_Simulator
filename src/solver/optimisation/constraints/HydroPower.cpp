@@ -1,16 +1,18 @@
 #include "HydroPower.h"
 
-void HydroPower::add(int pays, HydroPowerData& data)
+void HydroPower::add(int pays)
 {
     const int NombreDePasDeTempsPourUneOptimisation
       = builder->data->NombreDePasDeTempsPourUneOptimisation;
-    if (data.presenceHydro && !data.TurbEntreBornes)
+    auto caracteristiquesHydrauliques = data.CaracteristiquesHydrauliques[pays];
+    if (caracteristiquesHydrauliques.PresenceDHydrauliqueModulable
+        && !caracteristiquesHydrauliques.TurbinageEntreBornes)
     {
-        if (data.presencePompage)
+        if (caracteristiquesHydrauliques.PresenceDePompageModulable)
         {
             data.NumeroDeContrainteEnergieHydraulique[pays] = builder->data->nombreDeContraintes;
 
-            const double pumpingRatio = data.pumpingRatio;
+            const double pumpingRatio = caracteristiquesHydrauliques.PumpingRatio;
             for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 builder->updateHourWithinWeek(pdt).HydProd(pays, 1.0).Pumping(pays, -pumpingRatio);
