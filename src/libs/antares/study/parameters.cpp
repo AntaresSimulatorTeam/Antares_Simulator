@@ -42,7 +42,7 @@
 #include "../../../solver/variable/economy/all.h"
 
 #include <antares/exception/AssertionError.hpp>
-#include <antares/Enum.hxx>
+#include <antares/Enum.hpp>
 
 using namespace Yuni;
 
