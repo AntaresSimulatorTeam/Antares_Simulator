@@ -20,7 +20,7 @@
 */
 
 #include "copper-plate.h"
-#include <antares/utils/utils.h>
+#include "antares/utils/utils.h"
 
 namespace Antares::Action::AntaresStudy::Link
 {
