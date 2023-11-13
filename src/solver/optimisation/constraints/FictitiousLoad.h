@@ -29,5 +29,5 @@ public:
     void add(int pdt, int pays);
 
 private:
-    FictitiousLoadData data;
+    FictitiousLoadData& data;
 };
