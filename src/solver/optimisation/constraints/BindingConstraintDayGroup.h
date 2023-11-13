@@ -11,6 +11,5 @@ public:
     void Build() override;
 
 private:
-    std::shared_ptr<BindingConstraintDayData> GetBindingConstraintDayDataFromProblemHebdo(
-      int cntCouplante);
+    BindingConstraintDayData GetBindingConstraintDayDataFromProblemHebdo(int cntCouplante);
 };
