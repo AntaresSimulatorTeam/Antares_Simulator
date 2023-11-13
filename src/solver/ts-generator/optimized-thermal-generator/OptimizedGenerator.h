@@ -38,6 +38,7 @@ private:
     std::pair<int, int> calculateTimeHorizonAndStep(Data::MaintenanceGroup& group);
     std::pair<double, double> calculateMaintenanceGroupENSandSpillageCost(Data::MaintenanceGroup& group);
     uint calculateNumberOfMaintenances(Data::ThermalCluster& cluster, uint timeHorizon);
+    uint calculateAverageMaintenanceDuration(Data::ThermalCluster& cluster); 
     void GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(Data::MaintenanceGroup& group);
     void calculateResidualLoad(Data::MaintenanceGroup& group);
     void createOptimizationProblemPerCluster(const Data::Area& area, Data::ThermalCluster& cluster);

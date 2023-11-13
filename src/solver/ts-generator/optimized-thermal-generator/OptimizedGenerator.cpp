@@ -35,6 +35,11 @@ uint OptimizedThermalGenerator::calculateNumberOfMaintenances(Data::ThermalClust
     return timeHorizon / cluster.interPoPeriod; // floor
 }
 
+uint OptimizedThermalGenerator::calculateAverageMaintenanceDuration(Data::ThermalCluster& cluster)
+{
+    return 0.0; // TODO CR27: Ask Hugo
+}
+
 std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageTs(
   const Matrix<double>& tsValue,
   const Matrix<uint32_t>& tsNumbers)
@@ -288,7 +293,9 @@ void OptimizedThermalGenerator::createOptimizationProblemPerCluster(const Data::
         // number of maintenances are defined per cluster-unit
         // but are the same for all units inside the same cluster
         int numberOfMaintenancesPerUnit;
+        int averageMaintenanceDuration;
         numberOfMaintenancesPerUnit = calculateNumberOfMaintenances(cluster, 365); // TODO CR27: get the T-timeHorizon here - parameter or class
+        averageMaintenanceDuration = calculateAverageMaintenanceDuration(cluster);
         std::array<double, DAYS_PER_YEAR> maxUnitOutput = calculateMaxUnitOutput(cluster);
         // just playing here - this needs to go into new method - class  - operator
         logs.info() << "CR27-INFO: This cluster is active for mnt planning: "
