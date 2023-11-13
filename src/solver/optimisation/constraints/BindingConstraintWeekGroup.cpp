@@ -1,30 +1,35 @@
 #include "BindingConstraintWeekGroup.h"
 #include "constraint_builder_utils.h"
 
-std::shared_ptr<BindingConstraintWeekData>
-  BindingConstraintWeekGroup::GetBindingConstraintWeekDataFromProblemHebdo(int cntCouplante)
+BindingConstraintWeekData BindingConstraintWeekGroup::GetBindingConstraintWeekDataFromProblemHebdo(
+  int cntCouplante)
 {
     const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
       = problemeHebdo_->MatriceDesContraintesCouplantes[cntCouplante];
 
-    BindingConstraintWeekData data
-      = {MatriceDesContraintesCouplantes.TypeDeContrainteCouplante,
-         MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante,
-         MatriceDesContraintesCouplantes.NumeroDeLInterconnexion,
-         MatriceDesContraintesCouplantes.PoidsDeLInterconnexion,
-         MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco,
-         MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante,
-         MatriceDesContraintesCouplantes.PaysDuPalierDispatch,
-         MatriceDesContraintesCouplantes.NumeroDuPalierDispatch,
-         MatriceDesContraintesCouplantes.PoidsDuPalierDispatch,
-         MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch,
-         MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante,
-         MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante,
-         problemeHebdo_->PaliersThermiquesDuPays,
-         problemeHebdo_->CorrespondanceCntNativesCntOptimHebdomadaires
-           .NumeroDeContrainteDesContraintesCouplantes};
-
-    return std::make_shared<BindingConstraintWeekData>(data);
+    return {
+      /* .TypeDeContrainteCouplante =*/MatriceDesContraintesCouplantes.TypeDeContrainteCouplante,
+      /* .NombreDInterconnexionsDansLaContrainteCouplante=*/
+      MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante,
+      /* .NumeroDeLInterconnexion =*/MatriceDesContraintesCouplantes.NumeroDeLInterconnexion,
+      /* .PoidsDeLInterconnexion =*/MatriceDesContraintesCouplantes.PoidsDeLInterconnexion,
+      /* .OffsetTemporelSurLInterco =*/
+      MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco,
+      /* .NombreDePaliersDispatchDansLaContrainteCouplante=*/
+      MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante,
+      /* .PaysDuPalierDispatch =*/MatriceDesContraintesCouplantes.PaysDuPalierDispatch,
+      /* .NumeroDuPalierDispatch =*/MatriceDesContraintesCouplantes.NumeroDuPalierDispatch,
+      /* .PoidsDuPalierDispatch =*/MatriceDesContraintesCouplantes.PoidsDuPalierDispatch,
+      /* .OffsetTemporelSurLePalierDispatch=*/
+      MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch,
+      /* .SensDeLaContrainteCouplante =*/
+      MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante,
+      /* .NomDeLaContrainteCouplante =*/
+      MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante,
+      /* .PaliersThermiquesDuPays =*/problemeHebdo_->PaliersThermiquesDuPays,
+      /* .NumeroDeContrainteDesContraintesCouplantes =*/
+      problemeHebdo_->CorrespondanceCntNativesCntOptimHebdomadaires
+        .NumeroDeContrainteDesContraintesCouplantes};
 }
 
 void BindingConstraintWeekGroup::Build()
@@ -40,8 +45,9 @@ void BindingConstraintWeekGroup::Build()
              cntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            bindingConstraintWeek.add(cntCouplante,
-                                      GetBindingConstraintWeekDataFromProblemHebdo(cntCouplante));
+            auto bindingConstraintWeekData
+              = GetBindingConstraintWeekDataFromProblemHebdo(cntCouplante);
+            bindingConstraintWeek.add(cntCouplante, bindingConstraintWeekData);
         }
     }
 }

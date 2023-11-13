@@ -18,5 +18,5 @@ public:
      * @brief Add variables to the constraint and update constraints Matrix
      * @param cntCouplante : the binding constraint number
      */
-    void add(int cntCouplante, std::shared_ptr<BindingConstraintWeekData> data);
+    void add(int cntCouplante, BindingConstraintWeekData& data);
 };

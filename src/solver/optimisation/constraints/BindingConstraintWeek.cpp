@@ -1,19 +1,19 @@
 #include "BindingConstraintWeek.h"
 
-void BindingConstraintWeek::add(int cntCouplante, std::shared_ptr<BindingConstraintWeekData> data)
+void BindingConstraintWeek::add(int cntCouplante, BindingConstraintWeekData& data)
 {
     int semaine = builder->data->weekInTheYear;
-    if (data->TypeDeContrainteCouplante != CONTRAINTE_HEBDOMADAIRE)
+    if (data.TypeDeContrainteCouplante != CONTRAINTE_HEBDOMADAIRE)
         return;
 
-    const int nbInterco = data->NombreDInterconnexionsDansLaContrainteCouplante;
-    const int nbClusters = data->NombreDePaliersDispatchDansLaContrainteCouplante;
+    const int nbInterco = data.NombreDInterconnexionsDansLaContrainteCouplante;
+    const int nbClusters = data.NombreDePaliersDispatchDansLaContrainteCouplante;
 
     for (int index = 0; index < nbInterco; index++)
     {
-        int interco = data->NumeroDeLInterconnexion[index];
-        double poids = data->PoidsDeLInterconnexion[index];
-        int offset = data->OffsetTemporelSurLInterco[index];
+        int interco = data.NumeroDeLInterconnexion[index];
+        double poids = data.PoidsDeLInterconnexion[index];
+        int offset = data.OffsetTemporelSurLInterco[index];
         for (int pdt = 0; pdt < builder->data->NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
             builder->updateHourWithinWeek(pdt).NTCDirect(
@@ -23,13 +23,13 @@ void BindingConstraintWeek::add(int cntCouplante, std::shared_ptr<BindingConstra
 
     for (int index = 0; index < nbClusters; index++)
     {
-        int pays = data->PaysDuPalierDispatch[index];
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays = data->PaliersThermiquesDuPays[pays];
+        int pays = data.PaysDuPalierDispatch[index];
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays = data.PaliersThermiquesDuPays[pays];
         const int palier
           = PaliersThermiquesDuPays
-              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[data->NumeroDuPalierDispatch[index]];
-        double poids = data->PoidsDuPalierDispatch[index];
-        int offset = data->OffsetTemporelSurLePalierDispatch[index];
+              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[data.NumeroDuPalierDispatch[index]];
+        double poids = data.PoidsDuPalierDispatch[index];
+        int offset = data.OffsetTemporelSurLePalierDispatch[index];
         for (int pdt = 0; pdt < builder->data->NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
             builder->updateHourWithinWeek(pdt).DispatchableProduction(
@@ -37,15 +37,14 @@ void BindingConstraintWeek::add(int cntCouplante, std::shared_ptr<BindingConstra
         }
     }
 
-    char op = data->SensDeLaContrainteCouplante;
-    builder->SetOperator(op);
+    builder->SetOperator(data.SensDeLaContrainteCouplante);
 
-    data->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
+    data.NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
       = builder->data->nombreDeContraintes;
 
     ConstraintNamer namer(builder->data->NomDesContraintes);
     namer.UpdateTimeStep(semaine);
     namer.BindingConstraintWeek(builder->data->nombreDeContraintes,
-                                data->NomDeLaContrainteCouplante);
-        builder->build();
+                                data.NomDeLaContrainteCouplante);
+    builder->build();
 }
