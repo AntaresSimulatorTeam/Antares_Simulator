@@ -18,6 +18,5 @@ private:
     FictitiousLoadData GetFictitiousLoadData(int pdt, uint32_t pays);
     ShortTermStorageLevelData GetShortTermStorageLevelData(int pdt);
     FlowDissociationData GetFlowDissociationData(int pdt);
-    std::shared_ptr<BindingConstraintHourData> GetBindingConstraintHourData(int pdt,
-                                                                            int cntCouplante);
+    BindingConstraintHourData GetBindingConstraintHourData(int pdt, int cntCouplante);
 };

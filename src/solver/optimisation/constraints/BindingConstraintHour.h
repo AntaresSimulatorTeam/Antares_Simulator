@@ -18,5 +18,5 @@ class BindingConstraintHour : private ConstraintFactory
      * @param pdt : timestep
      * @param cntCouplante : the binding constraint number
      */
-        void add(int pdt, int cntCouplante, std::shared_ptr<BindingConstraintHourData> data);
+        void add(int pdt, int cntCouplante, BindingConstraintHourData& data);
 };

@@ -43,33 +43,33 @@ FlowDissociationData Group1::GetFlowDissociationData(int pdt)
             .PaysExtremiteDeLInterconnexion = problemeHebdo_->PaysExtremiteDeLInterconnexion};
 }
 
-std::shared_ptr<BindingConstraintHourData> Group1::GetBindingConstraintHourData(int pdt,
-                                                                                int cntCouplante)
+BindingConstraintHourData Group1::GetBindingConstraintHourData(int pdt, int cntCouplante)
 {
     const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
       = problemeHebdo_->MatriceDesContraintesCouplantes[cntCouplante];
-    BindingConstraintData bindingConstraintData
-      = {MatriceDesContraintesCouplantes.TypeDeContrainteCouplante,
-         MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante,
-         MatriceDesContraintesCouplantes.NumeroDeLInterconnexion,
-         MatriceDesContraintesCouplantes.PoidsDeLInterconnexion,
-         MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco,
-         MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante,
-         MatriceDesContraintesCouplantes.PaysDuPalierDispatch,
-         MatriceDesContraintesCouplantes.NumeroDuPalierDispatch,
-         MatriceDesContraintesCouplantes.PoidsDuPalierDispatch,
-         MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch,
-         MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante,
-         MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante,
-         problemeHebdo_->PaliersThermiquesDuPays};
+    return
 
-    BindingConstraintHourData bindingConstraintHourData
-      = {bindingConstraintData,
-         problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
-           .NumeroDeContrainteDesContraintesCouplantes};
-    return std::make_shared<BindingConstraintHourData>(bindingConstraintHourData);
+      {/* .TypeDeContrainteCouplante =*/MatriceDesContraintesCouplantes.TypeDeContrainteCouplante,
+       /* .NombreDInterconnexionsDansLaContrainteCouplante=*/
+       MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante,
+       /* .NumeroDeLInterconnexion =*/MatriceDesContraintesCouplantes.NumeroDeLInterconnexion,
+       /* .PoidsDeLInterconnexion =*/MatriceDesContraintesCouplantes.PoidsDeLInterconnexion,
+       /* .OffsetTemporelSurLInterco =*/MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco,
+       /* .NombreDePaliersDispatchDansLaContrainteCouplante=*/
+       MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante,
+       /* .PaysDuPalierDispatch =*/MatriceDesContraintesCouplantes.PaysDuPalierDispatch,
+       /* .NumeroDuPalierDispatch =*/MatriceDesContraintesCouplantes.NumeroDuPalierDispatch,
+       /* .PoidsDuPalierDispatch =*/MatriceDesContraintesCouplantes.PoidsDuPalierDispatch,
+       /* .OffsetTemporelSurLePalierDispatch=*/
+       MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch,
+       /* .SensDeLaContrainteCouplante =*/
+       MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante,
+       /* .NomDeLaContrainteCouplante =*/MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante,
+       /* .PaliersThermiquesDuPays =*/problemeHebdo_->PaliersThermiquesDuPays,
+       /*.NumeroDeContrainteDesContraintesCouplantes=*/
+       problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
+         .NumeroDeContrainteDesContraintesCouplantes};
 }
-
 
 void Group1::Build()
 {
@@ -105,8 +105,8 @@ void Group1::Build()
              cntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            bindingConstraintHour.add(
-              pdt, cntCouplante, GetBindingConstraintHourData(pdt, cntCouplante));
+            auto bindingConstraintHourData = GetBindingConstraintHourData(pdt, cntCouplante);
+            bindingConstraintHour.add(pdt, cntCouplante, bindingConstraintHourData);
         }
     }
 }
