@@ -68,7 +68,7 @@ std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRe
     std::array<double, HOURS_PER_YEAR> averageTsRenewable = {};
     for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
     {
-        averageTsRenewable[row] = (averageTsSolar[row] + averageTsWind[row]) / 2;
+        averageTsRenewable[row] = (averageTsSolar[row] + averageTsWind[row]); // ask Hugo do we divide by 2 ?
     }
     return averageTsRenewable;
 }
@@ -77,13 +77,11 @@ std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRe
   const Data::Area& area)
 {
     std::array<double, HOURS_PER_YEAR> averageTsRenewable = {};
-    uint enabledClusterCount = 0;
     for (const auto& entryCluster : area.renewable.clusters)
     {
         auto& cluster = *entryCluster;
         if (!cluster.enabled) // do we consider if cluster is of or on
             continue;
-        enabledClusterCount++;
         auto tmpArrayPerCluster
           = calculateAverageTs(cluster.series.timeSeries, cluster.series.timeseriesNumbers);
         for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
@@ -94,11 +92,6 @@ std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRe
             else
                 averageTsRenewable[row] += tmpArrayPerCluster[row];
         }
-    }
-    // calculate mean
-    for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
-    {
-        averageTsRenewable[row] = averageTsRenewable[row] / enabledClusterCount;
     }
     return averageTsRenewable;
 }
