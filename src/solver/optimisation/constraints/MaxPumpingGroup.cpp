@@ -1,12 +1,10 @@
 #include "MaxPumpingGroup.h"
 
-std::shared_ptr<MaxPumpingData> MaxPumpingGroup::GetMaxPumpingData(uint32_t pays)
+MaxPumpingData MaxPumpingGroup::GetMaxPumpingData(uint32_t pays)
 {
-    MaxPumpingData data
-      = {problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable,
-         problemeHebdo_->NumeroDeContrainteMaxPompage};
-
-    return std::make_shared<MaxPumpingData>(data);
+    return {.PresenceDePompageModulable
+            = problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable,
+            .NumeroDeContrainteMaxPompage = problemeHebdo_->NumeroDeContrainteMaxPompage};
 }
 
 void MaxPumpingGroup::Build()
@@ -15,6 +13,7 @@ void MaxPumpingGroup::Build()
 
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
-        maxPumping.add(pays, GetMaxPumpingData(pays));
+        auto maxPumpingData = GetMaxPumpingData(pays);
+        maxPumping.add(pays, maxPumpingData);
     }
 }

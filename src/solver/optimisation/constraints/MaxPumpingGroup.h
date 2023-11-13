@@ -11,5 +11,5 @@ public:
     void Build() override;
 
 private:
-    std::shared_ptr<MaxPumpingData> GetMaxPumpingData(uint32_t pays);
+    MaxPumpingData GetMaxPumpingData(uint32_t pays);
 };
