@@ -33,15 +33,14 @@ ShortTermStorageLevelData Group1::GetShortTermStorageLevelData(int pdt)
     };
 }
 
-std::shared_ptr<FlowDissociationData> Group1::GetFlowDissociationData(int pdt)
+FlowDissociationData Group1::GetFlowDissociationData(int pdt)
 {
-    FlowDissociationData flowDissociationData = {
-      problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDeDissociationDeFlux,
-      problemeHebdo_->CoutDeTransport,
-      problemeHebdo_->PaysOrigineDeLInterconnexion,
-      problemeHebdo_->PaysExtremiteDeLInterconnexion};
-
-    return std::make_shared<FlowDissociationData>(flowDissociationData);
+    return {.NumeroDeContrainteDeDissociationDeFlux
+            = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
+                .NumeroDeContrainteDeDissociationDeFlux,
+            .CoutDeTransport = problemeHebdo_->CoutDeTransport,
+            .PaysOrigineDeLInterconnexion = problemeHebdo_->PaysOrigineDeLInterconnexion,
+            .PaysExtremiteDeLInterconnexion = problemeHebdo_->PaysExtremiteDeLInterconnexion};
 }
 
 std::shared_ptr<BindingConstraintHourData> Group1::GetBindingConstraintHourData(int pdt,
@@ -98,7 +97,8 @@ void Group1::Build()
 
         for (uint32_t interco = 0; interco < problemeHebdo_->NombreDInterconnexions; interco++)
         {
-            flowDissociation.add(pdt, interco, GetFlowDissociationData(pdt));
+            auto flowDissociationData = GetFlowDissociationData(pdt);
+            flowDissociation.add(pdt, interco, flowDissociationData);
         }
 
         for (uint32_t cntCouplante = 0;

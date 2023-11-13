@@ -24,5 +24,5 @@ public:
      * @param pdt : timestep
      * @param interco : interconnection number
      */
-    void add(int pdt, int interco, std::shared_ptr<FlowDissociationData> data);
+    void add(int pdt, int interco, FlowDissociationData& data);
 };

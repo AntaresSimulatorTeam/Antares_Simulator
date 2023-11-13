@@ -1,14 +1,14 @@
 #include "FlowDissociation.h"
 
-void FlowDissociation::add(int pdt, int interco, std::shared_ptr<FlowDissociationData> data)
+void FlowDissociation::add(int pdt, int interco, FlowDissociationData& data)
 {
-    if (const COUTS_DE_TRANSPORT& CoutDeTransport = data->CoutDeTransport[interco];
+    if (const COUTS_DE_TRANSPORT& CoutDeTransport = data.CoutDeTransport[interco];
         CoutDeTransport.IntercoGereeAvecDesCouts)
     {
-        data->NumeroDeContrainteDeDissociationDeFlux[interco] = builder->data->nombreDeContraintes;
-        const auto origin = builder->data->NomsDesPays[data->PaysOrigineDeLInterconnexion[interco]];
+        data.NumeroDeContrainteDeDissociationDeFlux[interco] = builder->data->nombreDeContraintes;
+        const auto origin = builder->data->NomsDesPays[data.PaysOrigineDeLInterconnexion[interco]];
         const auto destination
-          = builder->data->NomsDesPays[data->PaysExtremiteDeLInterconnexion[interco]];
+          = builder->data->NomsDesPays[data.PaysExtremiteDeLInterconnexion[interco]];
         ConstraintNamer namer(builder->data->NomDesContraintes);
         namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
         namer.FlowDissociation(builder->data->nombreDeContraintes, origin, destination);

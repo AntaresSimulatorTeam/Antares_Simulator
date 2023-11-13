@@ -17,7 +17,7 @@ private:
     AreaBalanceData GetAreaBalanceData(int pdt, uint32_t pays);
     FictitiousLoadData GetFictitiousLoadData(int pdt, uint32_t pays);
     ShortTermStorageLevelData GetShortTermStorageLevelData(int pdt);
-    std::shared_ptr<FlowDissociationData> GetFlowDissociationData(int pdt);
+    FlowDissociationData GetFlowDissociationData(int pdt);
     std::shared_ptr<BindingConstraintHourData> GetBindingConstraintHourData(int pdt,
                                                                             int cntCouplante);
 };
