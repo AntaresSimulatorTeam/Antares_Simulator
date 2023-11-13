@@ -35,6 +35,7 @@ private:
                             // vectors in PROBLEME_ANTARES_A_RESOUDRE for new opt problem.
 
     // some methods
+    std::pair<int, int> calculateTimeHorizonAndStep(Data::MaintenanceGroup& group);
     void GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(Data::MaintenanceGroup& group);
     void calculateResidualLoad(Data::MaintenanceGroup& group);
     void createOptimizationProblemPerCluster(const Data::Area& area, Data::ThermalCluster& cluster);

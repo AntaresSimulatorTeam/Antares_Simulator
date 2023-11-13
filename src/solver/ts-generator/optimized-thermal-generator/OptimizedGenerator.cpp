@@ -12,8 +12,10 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeriesPerAllMaintena
     const auto& activeMaintenanceGroups = maintenanceGroupRepo.activeMaintenanceGroups();
     for (const auto& entryMaintenanceGroup : activeMaintenanceGroups)
     {
+        int timeHorizon, timeStep;
         auto& maintenanceGroup = *(entryMaintenanceGroup.get());
         calculateResidualLoad(maintenanceGroup);
+        std::tie(timeStep, timeHorizon) = calculateTimeHorizonAndStep(maintenanceGroup);
         GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(maintenanceGroup);
     }
 }
@@ -149,6 +151,38 @@ void OptimizedThermalGenerator::calculateResidualLoad(Data::MaintenanceGroup& ma
         refValue[row] = refValueLoad[row] - refValueRor[row] - refValueRenewable[row];
     // set ResidualLoadTS
     maintenanceGroup.setUsedResidualLoadTS(refValue);
+}
+
+std::pair<int, int> OptimizedThermalGenerator::calculateTimeHorizonAndStep(
+  Data::MaintenanceGroup& maintenanceGroup)
+{
+    std::vector<int> averageDurationBetweenMaintenances = {};
+    for (const auto& entryWeightMap : maintenanceGroup)
+    {
+        const auto& area = *(entryWeightMap.first);
+        for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end();
+             ++it)
+        {
+            const auto& cluster = *(it->second);
+            if (cluster.doWeGenerateTS(globalThermalTSgeneration_) && cluster.optimizeMaintenance)
+            {
+                averageDurationBetweenMaintenances.push_back(cluster.interPoPeriod);
+            }
+        }
+    }
+
+    // Using std::minmax_element to find min and max
+    auto [minIter, maxIter] = std::minmax_element(averageDurationBetweenMaintenances.begin(),
+                                                  averageDurationBetweenMaintenances.end());
+
+    // Check if the vector is not empty
+    if (minIter != averageDurationBetweenMaintenances.end()
+        && maxIter != averageDurationBetweenMaintenances.end())
+    {
+        return std::make_pair(*minIter, 2*(*maxIter));
+    }
+
+    return std::make_pair(0, 0);
 }
 
 void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(

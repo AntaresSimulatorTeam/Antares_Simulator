@@ -298,9 +298,9 @@ public:
 
     //! Optimize maintenance yes/no
     bool optimizeMaintenance = true;
-    //! Inter PO period (days)
+    //! Inter PO period (days) // Average duration between maintenance events
     int interPoPeriod = 365;
-    //! PO windows (+/- days)
+    //! PO windows (+/- days) // Acceptable maintenance window (+/- N days, 0 as default value)
     int poWindows = 0;
     // TODO CR27: keep this here for now
     // maybe create something like PreproThermal for Maintenance - and move everything there!!! 
