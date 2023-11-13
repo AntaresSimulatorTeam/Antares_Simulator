@@ -37,9 +37,6 @@ set(SRC
 	resources/resources.h
 	resources/resources.cpp
 
-	solver.h
-	solver.cpp
-
 	# version
 	version.h
 	version.cpp
