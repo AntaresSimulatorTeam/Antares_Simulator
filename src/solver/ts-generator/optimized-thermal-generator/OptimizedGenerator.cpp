@@ -5,6 +5,7 @@
 #include "OptimizedGenerator.h"
 
 #include <numeric>
+#include <algorithm>
 
 namespace Antares::Solver::TSGenerator
 {
@@ -61,6 +62,8 @@ void OptimizedThermalGenerator::createOptimizationProblemPerCluster(const Data::
         averageMaintenanceDuration
           = calculateAverageMaintenanceDuration(cluster); // this will floor the double value !!
         std::array<double, DAYS_PER_YEAR> maxUnitOutput = calculateMaxUnitOutput(cluster);
+        uint earliestStartOfFirstMaintenance = calculateUnitEarliestStartOfFirstMaintenance(cluster, averageMaintenanceDuration, 8);
+        uint latestStartOfFirstMaintenance = calculateUnitLatestStartOfFirstMaintenance(cluster, averageMaintenanceDuration, 8);
         // just playing here - this needs to go into new method - class  - operator
         logs.info() << "CR27-INFO: This cluster is active for mnt planning: "
                     << cluster.getFullName();
@@ -229,116 +232,151 @@ std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateMaxUnitOut
     return maxOutputDailyValues;
 }
 
-// auxillary functions
-std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateDailySums(
-  const std::array<double, HOURS_PER_YEAR>& hourlyValues)
+// calculate parameters methods - per cluster-Unit
+uint OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
+  Data::ThermalCluster& cluster,
+  int avrMntDuration,
+  uint unitIndex)
 {
-    std::array<double, DAYS_PER_YEAR> dailyValues;
-    auto hours_iter = hourlyValues.begin();
-
-    for (double& day_sum : dailyValues)
+    if (unitIndex < cluster.daysSinceLastMaintenance.size())
     {
-        day_sum = std::accumulate(hours_iter, hours_iter + 24, 0.0);
-        hours_iter += 24;
+        return std::max(
+          avrMntDuration - cluster.daysSinceLastMaintenance[unitIndex] - cluster.poWindows, 0);
     }
-
-    return dailyValues;
+    else
+    {
+        logs.error() << "Cluster: " << cluster.getFullName()
+                     << " does not have unit: " << unitIndex;
+        return 0;
+    }
 }
 
-std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageTs(
-  const Matrix<double>& tsValue,
-  const Matrix<uint32_t>& tsNumbers)
+uint OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
+  Data::ThermalCluster& cluster,
+  int avrMntDuration,
+  uint unitIndex)
 {
-    // define array
-    std::array<double, HOURS_PER_YEAR> averageTs = {};
-    // calculate sum
-    for (std::size_t year = 0; year < tsNumbers.height; ++year)
+    if (unitIndex < cluster.daysSinceLastMaintenance.size())
     {
+        return std::max(
+          avrMntDuration - cluster.daysSinceLastMaintenance[unitIndex] + cluster.poWindows, 0);
+    }
+    else
+    {
+        logs.error() << "Cluster: " << cluster.getFullName()
+                     << " does not have unit: " << unitIndex;
+        return 0;
+    }
+}
+
+    // auxillary functions
+    std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateDailySums(
+      const std::array<double, HOURS_PER_YEAR>& hourlyValues)
+    {
+        std::array<double, DAYS_PER_YEAR> dailyValues;
+        auto hours_iter = hourlyValues.begin();
+
+        for (double& day_sum : dailyValues)
+        {
+            day_sum = std::accumulate(hours_iter, hours_iter + 24, 0.0);
+            hours_iter += 24;
+        }
+
+        return dailyValues;
+    }
+
+    std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageTs(
+      const Matrix<double>& tsValue, const Matrix<uint32_t>& tsNumbers)
+    {
+        // define array
+        std::array<double, HOURS_PER_YEAR> averageTs = {};
+        // calculate sum
+        for (std::size_t year = 0; year < tsNumbers.height; ++year)
+        {
+            for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
+            {
+                averageTs[row] += tsValue[tsNumbers[0][year]][row];
+            }
+        }
+        // calculate mean
         for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
         {
-            averageTs[row] += tsValue[tsNumbers[0][year]][row];
+            averageTs[row] = averageTs[row] / tsNumbers.height;
         }
+        // return
+        return averageTs;
     }
-    // calculate mean
-    for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
+
+    // calculate Average time-series functions
+    std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageLoadTs(
+      const Data::Area& area)
     {
-        averageTs[row] = averageTs[row] / tsNumbers.height;
+        // we assume ready-make TS - (pre-check exist for this!)
+        const auto tsValues = area.load.series.timeSeries;
+        const auto tsNumbers = area.load.series.timeseriesNumbers;
+        return calculateAverageTs(tsValues, tsNumbers);
     }
-    // return
-    return averageTs;
-}
 
-// calculate Average time-series functions
-std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageLoadTs(
-  const Data::Area& area)
-{
-    // we assume ready-make TS - (pre-check exist for this!)
-    const auto tsValues = area.load.series.timeSeries;
-    const auto tsNumbers = area.load.series.timeseriesNumbers;
-    return calculateAverageTs(tsValues, tsNumbers);
-}
-
-std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRorTs(
-  const Data::Area& area)
-{
-    const auto tsValues = area.hydro.series->ror.timeSeries;
-    auto tsNumbers = area.hydro.series->ror.timeseriesNumbers;
-    return calculateAverageTs(tsValues, tsNumbers);
-}
-
-std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRenewableTsAggregated(
-  const Data::Area& area)
-{
-    std::array<double, HOURS_PER_YEAR> averageTsSolar
-      = calculateAverageTs(area.solar.series.timeSeries, area.solar.series.timeseriesNumbers);
-    std::array<double, HOURS_PER_YEAR> averageTsWind
-      = calculateAverageTs(area.wind.series.timeSeries, area.wind.series.timeseriesNumbers);
-
-    std::array<double, HOURS_PER_YEAR> averageTsRenewable = {};
-    for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
+    std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRorTs(
+      const Data::Area& area)
     {
-        averageTsRenewable[row] = (averageTsSolar[row] + averageTsWind[row]);
+        const auto tsValues = area.hydro.series->ror.timeSeries;
+        auto tsNumbers = area.hydro.series->ror.timeseriesNumbers;
+        return calculateAverageTs(tsValues, tsNumbers);
     }
-    return averageTsRenewable;
-}
 
-std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRenewableTsClusters(
-  const Data::Area& area)
-{
-    std::array<double, HOURS_PER_YEAR> averageTsRenewable = {};
-    for (const auto& entryCluster : area.renewable.clusters)
+    std::array<double, HOURS_PER_YEAR>
+      OptimizedThermalGenerator::calculateAverageRenewableTsAggregated(const Data::Area& area)
     {
-        auto& cluster = *entryCluster;
-        // this is not even necessary - because area.renewable.clusters returns list of only ENABLED
-        // clusters
-        // but let's keep it for now
-        if (!cluster.enabled)
-            continue;
-        auto tmpArrayPerCluster
-          = calculateAverageTs(cluster.series.timeSeries, cluster.series.timeseriesNumbers);
+        std::array<double, HOURS_PER_YEAR> averageTsSolar
+          = calculateAverageTs(area.solar.series.timeSeries, area.solar.series.timeseriesNumbers);
+        std::array<double, HOURS_PER_YEAR> averageTsWind
+          = calculateAverageTs(area.wind.series.timeSeries, area.wind.series.timeseriesNumbers);
+
+        std::array<double, HOURS_PER_YEAR> averageTsRenewable = {};
         for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
         {
-            if (cluster.tsMode == Data::RenewableCluster::productionFactor)
-                averageTsRenewable[row]
-                  += tmpArrayPerCluster[row] * cluster.unitCount * cluster.nominalCapacity;
-            else
-                averageTsRenewable[row] += tmpArrayPerCluster[row];
+            averageTsRenewable[row] = (averageTsSolar[row] + averageTsWind[row]);
+        }
+        return averageTsRenewable;
+    }
+
+    std::array<double, HOURS_PER_YEAR>
+      OptimizedThermalGenerator::calculateAverageRenewableTsClusters(const Data::Area& area)
+    {
+        std::array<double, HOURS_PER_YEAR> averageTsRenewable = {};
+        for (const auto& entryCluster : area.renewable.clusters)
+        {
+            auto& cluster = *entryCluster;
+            // this is not even necessary - because area.renewable.clusters returns list of only
+            // ENABLED clusters but let's keep it for now
+            if (!cluster.enabled)
+                continue;
+            auto tmpArrayPerCluster
+              = calculateAverageTs(cluster.series.timeSeries, cluster.series.timeseriesNumbers);
+            for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
+            {
+                if (cluster.tsMode == Data::RenewableCluster::productionFactor)
+                    averageTsRenewable[row]
+                      += tmpArrayPerCluster[row] * cluster.unitCount * cluster.nominalCapacity;
+                else
+                    averageTsRenewable[row] += tmpArrayPerCluster[row];
+            }
+        }
+        return averageTsRenewable;
+    }
+
+    std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRenewableTs(
+      const Data::Area& area)
+    {
+        if (study.parameters.renewableGeneration.isAggregated())
+        {
+            return calculateAverageRenewableTsAggregated(area);
+        }
+        else // clusters it is
+        {
+            return calculateAverageRenewableTsClusters(area);
         }
     }
-    return averageTsRenewable;
-}
-
-std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRenewableTs(
-  const Data::Area& area)
-{
-    if (study.parameters.renewableGeneration.isAggregated())
-    {
-        return calculateAverageRenewableTsAggregated(area);
-    }
-    else // clusters it is
-    {
-        return calculateAverageRenewableTsClusters(area);
-    }
-}
 
 } // namespace Antares::Solver::TSGenerator

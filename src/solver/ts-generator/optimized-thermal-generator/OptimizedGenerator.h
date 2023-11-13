@@ -49,6 +49,14 @@ private:
     uint calculateAverageMaintenanceDuration(Data::ThermalCluster& cluster);
     std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(Data::ThermalCluster& cluster);
 
+    // calculate parameters methods - per cluster-Unit
+    uint calculateUnitEarliestStartOfFirstMaintenance(Data::ThermalCluster& cluster,
+                                                      int avrMntDuration,
+                                                      uint unitIndex);
+    uint calculateUnitLatestStartOfFirstMaintenance(Data::ThermalCluster& cluster,
+                                                    int avrMntDuration,
+                                                    uint unitIndex);
+
     // auxillary functions
     std::array<double, DAYS_PER_YEAR> calculateDailySums(
       const std::array<double, HOURS_PER_YEAR>& hourlyValues);
