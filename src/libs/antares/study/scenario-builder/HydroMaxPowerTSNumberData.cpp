@@ -9,7 +9,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-uint hydroMaxPowerTSNumberData::get_tsGenCount(const Study& study) const
+uint hydroMaxPowerTSNumberData::get_tsGenCount(const Study& /* study */) const
 {
     //This function must be overriden because it is inherited from abstract class
     return 0;
