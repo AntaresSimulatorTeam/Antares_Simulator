@@ -61,6 +61,8 @@ set(SRCS
 
 		windows/simulation/panel.h
 		windows/simulation/panel.cpp
+		windows/simulation/solver.h
+		windows/simulation/solver.cpp
 		windows/simulation/run.h
 		windows/simulation/run.cpp
 		windows/cleaner.h
