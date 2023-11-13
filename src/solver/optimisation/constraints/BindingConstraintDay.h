@@ -15,10 +15,10 @@ struct BindingConstraintDayData : public BindingConstraintData
  * represent 'Daily Binding Constraint' type
  */
 
-class BindingConstraintDay : private NewConstraintFactory
+class BindingConstraintDay : private ConstraintFactory
 {
 public:
-    using NewConstraintFactory::NewConstraintFactory;
+    using ConstraintFactory::ConstraintFactory;
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix

@@ -13,10 +13,10 @@ struct MinHydroPowerData
  * represent 'Min Hydraulic Power' constraint type
  */
 
-class MinHydroPower : private NewConstraintFactory
+class MinHydroPower : private ConstraintFactory
 {
 public:
-    using NewConstraintFactory::NewConstraintFactory;
+    using ConstraintFactory::ConstraintFactory;
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix

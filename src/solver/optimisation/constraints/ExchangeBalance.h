@@ -11,9 +11,9 @@ struct ExchangeBalanceData
     std::vector<int>& NumeroDeContrainteDeSoldeDEchange;
 };
 
-class ExchangeBalance : private NewConstraintFactory
+class ExchangeBalance : private ConstraintFactory
 {
 public:
-    using NewConstraintFactory::NewConstraintFactory;
+    using ConstraintFactory::ConstraintFactory;
     void add(uint32_t pays, std::shared_ptr<ExchangeBalanceData> data);
 };

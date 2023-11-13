@@ -9,10 +9,10 @@ struct BindingConstraintWeekData : public BindingConstraintData
  * represent 'Hourly Binding Constraint' type
  */
 
-class BindingConstraintWeek : private NewConstraintFactory
+class BindingConstraintWeek : private ConstraintFactory
 {
 public:
-    using NewConstraintFactory::NewConstraintFactory;
+    using ConstraintFactory::ConstraintFactory;
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix

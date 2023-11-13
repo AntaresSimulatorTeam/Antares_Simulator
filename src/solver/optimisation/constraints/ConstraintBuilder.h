@@ -14,12 +14,12 @@ namespace NewVariable
 /*!
 Factory class that hold variables indices
 */
-class NewVariableManager
+class VariableManager
 {
 public:
-    NewVariableManager(const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar,
-                       const std::vector<int>& NumeroDeVariableStockFinal,
-                       const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock) :
+    VariableManager(const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar,
+                    const std::vector<int>& NumeroDeVariableStockFinal,
+                    const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock) :
      nativeOptimVar(nativeOptimVar),
      NumeroDeVariableStockFinal(NumeroDeVariableStockFinal),
      NumeroDeVariableDeTrancheDeStock(NumeroDeVariableDeTrancheDeStock)
@@ -378,15 +378,15 @@ private:
      * @param delta: number of time steps for the variable
      * @return VariableManager object
      */
-    NewVariable::NewVariableManager GetVariableManager(int offset = 0, int delta = 0) const;
+    NewVariable::VariableManager GetVariableManager(int offset = 0, int delta = 0) const;
 };
 
 /*! factory class to build a Constraint */
-class NewConstraintFactory
+class ConstraintFactory
 {
 public:
-    NewConstraintFactory() = delete;
-    explicit NewConstraintFactory(std::shared_ptr<ConstraintBuilder> builder) : builder(builder)
+    ConstraintFactory() = delete;
+    explicit ConstraintFactory(std::shared_ptr<ConstraintBuilder> builder) : builder(builder)
     {
     }
     std::shared_ptr<ConstraintBuilder> builder;

@@ -14,9 +14,9 @@ struct CsrBindingConstraintHourData
     std::map<int, int>& numberOfConstraintCsrHourlyBinding;
 };
 
-class CsrBindingConstraintHour : private NewConstraintFactory
+class CsrBindingConstraintHour : private ConstraintFactory
 {
 public:
-    using NewConstraintFactory::NewConstraintFactory;
+    using ConstraintFactory::ConstraintFactory;
     void add(int CntCouplante, std::shared_ptr<CsrBindingConstraintHourData> data);
 };

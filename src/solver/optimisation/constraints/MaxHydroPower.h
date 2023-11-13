@@ -12,10 +12,10 @@ struct MaxHydroPowerData
 /*!
  * represent 'Max Hydraulic Power' constraint type
  */
-class MaxHydroPower : private NewConstraintFactory
+class MaxHydroPower : private ConstraintFactory
 {
 public:
-    using NewConstraintFactory::NewConstraintFactory;
+    using ConstraintFactory::ConstraintFactory;
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix

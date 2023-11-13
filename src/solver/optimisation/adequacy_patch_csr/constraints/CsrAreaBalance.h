@@ -19,9 +19,9 @@ struct CsrAreaBalanceData
     const uint32_t NombreDePays;
 };
 
-class CsrAreaBalance : private NewConstraintFactory
+class CsrAreaBalance : private ConstraintFactory
 {
 public:
-    using NewConstraintFactory::NewConstraintFactory;
+    using ConstraintFactory::ConstraintFactory;
     void add(std::shared_ptr<CsrAreaBalanceData> data);
 };

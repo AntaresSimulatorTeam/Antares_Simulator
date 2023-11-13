@@ -11,10 +11,10 @@ struct FinalStockEquivalentData
 /*!
  * represent 'Final Stock Equivalent' constraint type
  */
-class FinalStockEquivalent : private NewConstraintFactory
+class FinalStockEquivalent : private ConstraintFactory
 {
 public:
-    using NewConstraintFactory::NewConstraintFactory;
+    using ConstraintFactory::ConstraintFactory;
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix

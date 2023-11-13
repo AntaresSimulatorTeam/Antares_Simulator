@@ -37,11 +37,11 @@ void ConstraintBuilder::AddVariable(int varIndex, double coeff)
         nombreDeTermes_++;
     }
 }
-NewVariable::NewVariableManager ConstraintBuilder::GetVariableManager(int offset,
+NewVariable::VariableManager ConstraintBuilder::GetVariableManager(int offset,
                                                                          int delta) const
 {
     auto pdt = GetShiftedTimeStep(offset, delta);
-    return NewVariable::NewVariableManager(data->CorrespondanceVarNativesVarOptim[pdt],
+    return NewVariable::VariableManager(data->CorrespondanceVarNativesVarOptim[pdt],
                                            data->NumeroDeVariableStockFinal,
                                            data->NumeroDeVariableDeTrancheDeStock);
 }

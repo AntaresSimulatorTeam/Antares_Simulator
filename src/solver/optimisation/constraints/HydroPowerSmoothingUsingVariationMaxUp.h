@@ -4,10 +4,10 @@
 /*!
  * represent 'Hydraulic Power Smoothing Using Variation Max Up' constraint type
  */
-class HydroPowerSmoothingUsingVariationMaxUp : private NewConstraintFactory
+class HydroPowerSmoothingUsingVariationMaxUp : private ConstraintFactory
 {
 public:
-    using NewConstraintFactory::NewConstraintFactory;
+    using ConstraintFactory::ConstraintFactory;
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix

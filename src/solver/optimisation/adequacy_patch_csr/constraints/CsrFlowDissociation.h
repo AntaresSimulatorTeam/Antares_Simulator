@@ -13,9 +13,9 @@ struct CsrFlowDissociationData
     const std::vector<int>& PaysOrigineDeLInterconnexion;
     const std::vector<int>& PaysExtremiteDeLInterconnexion;
 };
-class CsrFlowDissociation : private NewConstraintFactory
+class CsrFlowDissociation : private ConstraintFactory
 {
 public:
-    using NewConstraintFactory::NewConstraintFactory;
+    using ConstraintFactory::ConstraintFactory;
     void add(int hour, std::shared_ptr<CsrFlowDissociationData> data);
 };

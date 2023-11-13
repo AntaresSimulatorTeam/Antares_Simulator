@@ -7,10 +7,10 @@ struct NbDispUnitsMinBoundSinceMinUpTimeData : public StartUpCostsData
 /*!
  * represent 'Number of Dispatchable Units Min Bound Since Min Up Time' type
  */
-class NbDispUnitsMinBoundSinceMinUpTime : private NewConstraintFactory
+class NbDispUnitsMinBoundSinceMinUpTime : private ConstraintFactory
 {
 public:
-    using NewConstraintFactory::NewConstraintFactory;
+    using ConstraintFactory::ConstraintFactory;
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix

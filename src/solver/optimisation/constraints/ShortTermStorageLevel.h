@@ -7,9 +7,9 @@ struct ShortTermStorageLevelData
     const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
 };
 
-class ShortTermStorageLevel : private NewConstraintFactory
+class ShortTermStorageLevel : private ConstraintFactory
 {
 public:
-    using NewConstraintFactory::NewConstraintFactory;
+    using ConstraintFactory::ConstraintFactory;
     void add(int pdt, int pays, std::shared_ptr<ShortTermStorageLevelData> data);
 };
