@@ -67,7 +67,6 @@ void Group1::Build()
         for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
         {
             areaBalance.add(pdt, pays);
-
             fictitiousLoad.add(pdt, pays);
             shortTermStorageLevel.add(pdt, pays);
         }
