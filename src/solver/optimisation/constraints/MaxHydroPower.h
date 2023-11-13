@@ -21,5 +21,5 @@ public:
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area
      */
-    void add(int pays, std::shared_ptr<MaxHydroPowerData> data);
+    void add(int pays, MaxHydroPowerData& data);
 };

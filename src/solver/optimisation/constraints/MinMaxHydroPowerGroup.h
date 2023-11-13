@@ -11,6 +11,6 @@ public:
         void Build() override;
 
 private:
-    std::shared_ptr<MinHydroPowerData> GetMinHydroPowerData(uint32_t pays);
-    std::shared_ptr<MaxHydroPowerData> GetMaxHydroPowerData(uint32_t pays);
+    MinHydroPowerData GetMinHydroPowerData(uint32_t pays);
+    MaxHydroPowerData GetMaxHydroPowerData(uint32_t pays);
 };
