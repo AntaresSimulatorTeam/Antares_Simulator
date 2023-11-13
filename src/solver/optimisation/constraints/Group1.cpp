@@ -24,14 +24,13 @@ FictitiousLoadData Group1::GetFictitiousLoadData(int pdt, uint32_t pays)
             .DefaillanceNegativeUtiliserHydro = problemeHebdo_->DefaillanceNegativeUtiliserHydro};
 }
 
-std::shared_ptr<ShortTermStorageLevelData> Group1::GetShortTermStorageLevelData(int pdt)
+ShortTermStorageLevelData Group1::GetShortTermStorageLevelData(int pdt)
 {
-    ShortTermStorageLevelData shortTermStorageLevelData = {
-      problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt].ShortTermStorageLevelConstraint,
-      problemeHebdo_->ShortTermStorage,
+    return {
+      .ShortTermStorageLevelConstraint
+      = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt].ShortTermStorageLevelConstraint,
+      .ShortTermStorage = problemeHebdo_->ShortTermStorage,
     };
-
-    return std::make_shared<ShortTermStorageLevelData>(shortTermStorageLevelData);
 }
 
 std::shared_ptr<FlowDissociationData> Group1::GetFlowDissociationData(int pdt)
@@ -93,8 +92,8 @@ void Group1::Build()
 
             auto fictitiousLoadData = GetFictitiousLoadData(pdt, pays);
             fictitiousLoad.add(pdt, pays, fictitiousLoadData);
-
-            shortTermStorageLevel.add(pdt, pays, GetShortTermStorageLevelData(pdt));
+            auto shortTermStorageLevelData = GetShortTermStorageLevelData(pdt);
+            shortTermStorageLevel.add(pdt, pays, shortTermStorageLevelData);
         }
 
         for (uint32_t interco = 0; interco < problemeHebdo_->NombreDInterconnexions; interco++)

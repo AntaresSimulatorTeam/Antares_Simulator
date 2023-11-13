@@ -11,5 +11,5 @@ class ShortTermStorageLevel : private ConstraintFactory
 {
 public:
     using ConstraintFactory::ConstraintFactory;
-    void add(int pdt, int pays, std::shared_ptr<ShortTermStorageLevelData> data);
+    void add(int pdt, int pays, ShortTermStorageLevelData& data);
 };
