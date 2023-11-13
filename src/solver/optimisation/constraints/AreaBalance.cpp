@@ -1,7 +1,7 @@
 #include "AreaBalance.h"
 
 static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-                                    std::shared_ptr<NewConstraintBuilder> constraintBuilder)
+                                    std::shared_ptr<ConstraintBuilder> constraintBuilder)
 {
     for (const auto& storage : shortTermStorageInput)
     {

@@ -140,7 +140,7 @@ private:
 } // namespace NewVariable
 
 // TODO God struct should be decomposed
-class NewConstraintBuilderData
+class ConstraintBuilderData
 {
 public:
     std::vector<double>& Pi;
@@ -178,20 +178,19 @@ ex: calling NTCDirect() implies adding Direct NTC Variable to the current Constr
 finally the build() method gather all variables and put them into the matrix
 \endverbatim
 */
-class NewConstraintBuilder
+class ConstraintBuilder
 {
 public:
-    NewConstraintBuilder() = delete;
-    NewConstraintBuilder(std::shared_ptr<NewConstraintBuilder>&& other) :
-     data(std::move(other->data))
+    ConstraintBuilder() = delete;
+    ConstraintBuilder(std::shared_ptr<ConstraintBuilder>&& other) : data(std::move(other->data))
     {
     }
-    explicit NewConstraintBuilder(std::shared_ptr<NewConstraintBuilderData> data) :
+    explicit ConstraintBuilder(std::shared_ptr<ConstraintBuilderData> data) :
      data(std::move(data))
     {
     }
 
-    NewConstraintBuilder& updateHourWithinWeek(unsigned hour)
+    ConstraintBuilder& updateHourWithinWeek(unsigned hour)
     {
         hourInWeek_ = hour;
         return *this;
@@ -205,102 +204,90 @@ public:
      *  @return reference of *this
      */
     //@{
-    NewConstraintBuilder& DispatchableProduction(unsigned int index,
-                                                 double coeff,
-                                                 int offset = 0,
-                                                 int delta = 0);
-
-    NewConstraintBuilder& NumberOfDispatchableUnits(unsigned int index,
-                                                    double coeff,
-                                                    int offset = 0,
-                                                    int delta = 0);
-
-    NewConstraintBuilder& NumberStoppingDispatchableUnits(unsigned int index,
-                                                          double coeff,
-                                                          int offset = 0,
-                                                          int delta = 0);
-
-    NewConstraintBuilder& NumberStartingDispatchableUnits(unsigned int index,
-                                                          double coeff,
-                                                          int offset = 0,
-                                                          int delta = 0);
-
-    NewConstraintBuilder& NumberBreakingDownDispatchableUnits(unsigned int index,
-                                                              double coeff,
-                                                              int offset = 0,
-
-                                                              int delta = 0);
-
-    NewConstraintBuilder& NTCDirect(unsigned int index,
-                                    double coeff,
-                                    int offset = 0,
-                                    int delta = 0);
-
-    NewConstraintBuilder& IntercoDirectCost(unsigned int index,
-                                            double coeff,
-                                            int offset = 0,
-                                            int delta = 0);
-
-    NewConstraintBuilder& IntercoIndirectCost(unsigned int index,
+    ConstraintBuilder& DispatchableProduction(unsigned int index,
                                               double coeff,
                                               int offset = 0,
                                               int delta = 0);
 
-    NewConstraintBuilder& ShortTermStorageInjection(unsigned int index,
-                                                    double coeff,
-                                                    int offset = 0,
-                                                    int delta = 0);
+    ConstraintBuilder& NumberOfDispatchableUnits(unsigned int index,
+                                                 double coeff,
+                                                 int offset = 0,
+                                                 int delta = 0);
 
-    NewConstraintBuilder& ShortTermStorageWithdrawal(unsigned int index,
-                                                     double coeff,
-                                                     int offset = 0,
-                                                     int delta = 0);
+    ConstraintBuilder& NumberStoppingDispatchableUnits(unsigned int index,
+                                                       double coeff,
+                                                       int offset = 0,
+                                                       int delta = 0);
 
-    NewConstraintBuilder& ShortTermStorageLevel(unsigned int index,
-                                                double coeff,
-                                                int offset = 0,
-                                                int delta = 0);
+    ConstraintBuilder& NumberStartingDispatchableUnits(unsigned int index,
+                                                       double coeff,
+                                                       int offset = 0,
+                                                       int delta = 0);
 
-    NewConstraintBuilder& HydProd(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& NumberBreakingDownDispatchableUnits(unsigned int index,
+                                                           double coeff,
+                                                           int offset = 0,
 
-    NewConstraintBuilder& HydProdDown(unsigned int index,
-                                      double coeff,
-                                      int offset = 0,
-                                      int delta = 0);
+                                                           int delta = 0);
 
-    NewConstraintBuilder& HydProdUp(unsigned int index,
+    ConstraintBuilder& NTCDirect(unsigned int index, double coeff, int offset = 0, int delta = 0);
+
+    ConstraintBuilder& IntercoDirectCost(unsigned int index,
+                                         double coeff,
+                                         int offset = 0,
+                                         int delta = 0);
+
+    ConstraintBuilder& IntercoIndirectCost(unsigned int index,
+                                           double coeff,
+                                           int offset = 0,
+                                           int delta = 0);
+
+    ConstraintBuilder& ShortTermStorageInjection(unsigned int index,
+                                                 double coeff,
+                                                 int offset = 0,
+                                                 int delta = 0);
+
+    ConstraintBuilder& ShortTermStorageWithdrawal(unsigned int index,
+                                                  double coeff,
+                                                  int offset = 0,
+                                                  int delta = 0);
+
+    ConstraintBuilder& ShortTermStorageLevel(unsigned int index,
+                                             double coeff,
+                                             int offset = 0,
+                                             int delta = 0);
+
+    ConstraintBuilder& HydProd(unsigned int index, double coeff, int offset = 0, int delta = 0);
+
+    ConstraintBuilder& HydProdDown(unsigned int index, double coeff, int offset = 0, int delta = 0);
+
+    ConstraintBuilder& HydProdUp(unsigned int index, double coeff, int offset = 0, int delta = 0);
+
+    ConstraintBuilder& Pumping(unsigned int index, double coeff, int offset = 0, int delta = 0);
+
+    ConstraintBuilder& HydroLevel(unsigned int index, double coeff, int offset = 0, int delta = 0);
+
+    ConstraintBuilder& Overflow(unsigned int index, double coeff, int offset = 0, int delta = 0);
+
+    ConstraintBuilder& FinalStorage(unsigned int index,
                                     double coeff,
                                     int offset = 0,
                                     int delta = 0);
 
-    NewConstraintBuilder& Pumping(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& PositiveUnsuppliedEnergy(unsigned int index,
+                                                double coeff,
+                                                int offset = 0,
+                                                int delta = 0);
+    ConstraintBuilder& NegativeUnsuppliedEnergy(unsigned int index,
+                                                double coeff,
+                                                int offset = 0,
+                                                int delta = 0);
 
-    NewConstraintBuilder& HydroLevel(unsigned int index,
-                                     double coeff,
-                                     int offset = 0,
-                                     int delta = 0);
-
-    NewConstraintBuilder& Overflow(unsigned int index, double coeff, int offset = 0, int delta = 0);
-
-    NewConstraintBuilder& FinalStorage(unsigned int index,
-                                       double coeff,
-                                       int offset = 0,
-                                       int delta = 0);
-
-    NewConstraintBuilder& PositiveUnsuppliedEnergy(unsigned int index,
-                                                   double coeff,
-                                                   int offset = 0,
-                                                   int delta = 0);
-    NewConstraintBuilder& NegativeUnsuppliedEnergy(unsigned int index,
-                                                   double coeff,
-                                                   int offset = 0,
-                                                   int delta = 0);
-
-    NewConstraintBuilder& LayerStorage(unsigned area,
-                                       unsigned layer,
-                                       double coeff,
-                                       int offset = 0,
-                                       int delta = 0);
+    ConstraintBuilder& LayerStorage(unsigned area,
+                                    unsigned layer,
+                                    double coeff,
+                                    int offset = 0,
+                                    int delta = 0);
     //@}
 
     class ConstraintBuilderInvalidOperator : public std::runtime_error
@@ -314,7 +301,7 @@ public:
        @param op: the operator of the constraint
        @return reference of *this
     */
-    NewConstraintBuilder& SetOperator(char op)
+    ConstraintBuilder& SetOperator(char op)
     {
         if (op == '<' || op == '=' || op == '>')
         {
@@ -331,7 +318,7 @@ public:
      building a constraint equal to rhs
      @return reference of *this
     */
-    NewConstraintBuilder& equalTo()
+    ConstraintBuilder& equalTo()
     {
         operator_ = '=';
         return *this;
@@ -342,7 +329,7 @@ public:
     building a constraint less than rhs
     @return reference of *this
     */
-    NewConstraintBuilder& lessThan()
+    ConstraintBuilder& lessThan()
     {
         operator_ = '<';
         return *this;
@@ -353,7 +340,7 @@ public:
       building a constraint greather than rhs
      @return reference of *this
     */
-    NewConstraintBuilder& greaterThan()
+    ConstraintBuilder& greaterThan()
     {
         operator_ = '>';
         return *this;
@@ -370,7 +357,7 @@ public:
         return nombreDeTermes_;
     }
 
-    std::shared_ptr<NewConstraintBuilderData> data;
+    std::shared_ptr<ConstraintBuilderData> data;
 
 private:
     void OPT_ChargerLaContrainteDansLaMatriceDesContraintes();
@@ -399,15 +386,15 @@ class NewConstraintFactory
 {
 public:
     NewConstraintFactory() = delete;
-    explicit NewConstraintFactory(std::shared_ptr<NewConstraintBuilder> builder) : builder(builder)
+    explicit NewConstraintFactory(std::shared_ptr<ConstraintBuilder> builder) : builder(builder)
     {
     }
-    std::shared_ptr<NewConstraintBuilder> builder;
+    std::shared_ptr<ConstraintBuilder> builder;
 };
 
 // Helper functions
 inline void new_exportPaliers(const PALIERS_THERMIQUES& PaliersThermiquesDuPays,
-                              std::shared_ptr<NewConstraintBuilder> newConstraintBuilder)
+                              std::shared_ptr<ConstraintBuilder> newConstraintBuilder)
 {
     for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
     {

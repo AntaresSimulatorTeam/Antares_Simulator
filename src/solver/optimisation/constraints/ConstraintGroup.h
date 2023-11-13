@@ -16,5 +16,5 @@ public:
     
     virtual void Build() = 0;
     PROBLEME_HEBDO* problemeHebdo_;
-    std::shared_ptr<NewConstraintBuilder> builder_;
+    std::shared_ptr<ConstraintBuilder> builder_;
 };

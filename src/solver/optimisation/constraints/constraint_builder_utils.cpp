@@ -1,10 +1,10 @@
 #include "constraint_builder_utils.h"
 
-std::shared_ptr<NewConstraintBuilder> NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
+std::shared_ptr<ConstraintBuilder> NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
   const PROBLEME_HEBDO* problemeHebdo,
   PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
 {
-    NewConstraintBuilderData data{
+    ConstraintBuilderData data{
       ProblemeAResoudre.Pi,
       ProblemeAResoudre.Colonne,
       ProblemeAResoudre.NombreDeContraintes,
@@ -27,6 +27,6 @@ std::shared_ptr<NewConstraintBuilder> NewGetConstraintBuilderFromProblemHebdoAnd
       problemeHebdo->NombreDePasDeTemps,
       nullptr};
 
-    auto builder = NewConstraintBuilder(std::make_shared<NewConstraintBuilderData>(data));
-    return std::make_shared<NewConstraintBuilder>(builder);
+    auto builder = ConstraintBuilder(std::make_shared<ConstraintBuilderData>(data));
+    return std::make_shared<ConstraintBuilder>(builder);
 }

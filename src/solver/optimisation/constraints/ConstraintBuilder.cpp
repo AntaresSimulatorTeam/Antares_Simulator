@@ -1,6 +1,6 @@
 #include "ConstraintBuilder.h"
 
-void NewConstraintBuilder::build()
+void ConstraintBuilder::build()
 {
     if (nombreDeTermes_ > 0)
     {
@@ -9,7 +9,7 @@ void NewConstraintBuilder::build()
     nombreDeTermes_ = 0;
 }
 
-int NewConstraintBuilder::GetShiftedTimeStep(int offset, int delta) const
+int ConstraintBuilder::GetShiftedTimeStep(int offset, int delta) const
 {
     int pdt = hourInWeek_ + offset;
     const int nbTimeSteps = data->NombreDePasDeTempsPourUneOptimisation;
@@ -28,7 +28,7 @@ int NewConstraintBuilder::GetShiftedTimeStep(int offset, int delta) const
     return pdt;
 }
 
-void NewConstraintBuilder::AddVariable(int varIndex, double coeff)
+void ConstraintBuilder::AddVariable(int varIndex, double coeff)
 {
     if (varIndex >= 0)
     {
@@ -37,7 +37,7 @@ void NewConstraintBuilder::AddVariable(int varIndex, double coeff)
         nombreDeTermes_++;
     }
 }
-NewVariable::NewVariableManager NewConstraintBuilder::GetVariableManager(int offset,
+NewVariable::NewVariableManager ConstraintBuilder::GetVariableManager(int offset,
                                                                          int delta) const
 {
     auto pdt = GetShiftedTimeStep(offset, delta);
@@ -45,7 +45,7 @@ NewVariable::NewVariableManager NewConstraintBuilder::GetVariableManager(int off
                                            data->NumeroDeVariableStockFinal,
                                            data->NumeroDeVariableDeTrancheDeStock);
 }
-NewConstraintBuilder& NewConstraintBuilder::DispatchableProduction(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::DispatchableProduction(unsigned int index,
                                                                    double coeff,
                                                                    int offset,
                                                                    int delta)
@@ -54,7 +54,7 @@ NewConstraintBuilder& NewConstraintBuilder::DispatchableProduction(unsigned int 
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::NumberOfDispatchableUnits(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::NumberOfDispatchableUnits(unsigned int index,
                                                                       double coeff,
                                                                       int offset,
                                                                       int delta)
@@ -63,7 +63,7 @@ NewConstraintBuilder& NewConstraintBuilder::NumberOfDispatchableUnits(unsigned i
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::NumberStoppingDispatchableUnits(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::NumberStoppingDispatchableUnits(unsigned int index,
                                                                             double coeff,
                                                                             int offset,
                                                                             int delta)
@@ -72,7 +72,7 @@ NewConstraintBuilder& NewConstraintBuilder::NumberStoppingDispatchableUnits(unsi
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::NumberStartingDispatchableUnits(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::NumberStartingDispatchableUnits(unsigned int index,
                                                                             double coeff,
                                                                             int offset,
                                                                             int delta)
@@ -81,7 +81,7 @@ NewConstraintBuilder& NewConstraintBuilder::NumberStartingDispatchableUnits(unsi
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::NumberBreakingDownDispatchableUnits(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::NumberBreakingDownDispatchableUnits(unsigned int index,
                                                                                 double coeff,
                                                                                 int offset,
                                                                                 int delta)
@@ -91,7 +91,7 @@ NewConstraintBuilder& NewConstraintBuilder::NumberBreakingDownDispatchableUnits(
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::NTCDirect(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::NTCDirect(unsigned int index,
                                                       double coeff,
                                                       int offset,
                                                       int delta)
@@ -100,7 +100,7 @@ NewConstraintBuilder& NewConstraintBuilder::NTCDirect(unsigned int index,
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::IntercoDirectCost(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::IntercoDirectCost(unsigned int index,
                                                               double coeff,
                                                               int offset,
                                                               int delta)
@@ -109,7 +109,7 @@ NewConstraintBuilder& NewConstraintBuilder::IntercoDirectCost(unsigned int index
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::IntercoIndirectCost(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::IntercoIndirectCost(unsigned int index,
                                                                 double coeff,
                                                                 int offset,
                                                                 int delta)
@@ -118,7 +118,7 @@ NewConstraintBuilder& NewConstraintBuilder::IntercoIndirectCost(unsigned int ind
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::ShortTermStorageInjection(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::ShortTermStorageInjection(unsigned int index,
                                                                       double coeff,
                                                                       int offset,
                                                                       int delta)
@@ -127,7 +127,7 @@ NewConstraintBuilder& NewConstraintBuilder::ShortTermStorageInjection(unsigned i
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::ShortTermStorageWithdrawal(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::ShortTermStorageWithdrawal(unsigned int index,
                                                                        double coeff,
                                                                        int offset,
                                                                        int delta)
@@ -136,7 +136,7 @@ NewConstraintBuilder& NewConstraintBuilder::ShortTermStorageWithdrawal(unsigned 
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::ShortTermStorageLevel(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::ShortTermStorageLevel(unsigned int index,
                                                                   double coeff,
                                                                   int offset,
                                                                   int delta)
@@ -145,7 +145,7 @@ NewConstraintBuilder& NewConstraintBuilder::ShortTermStorageLevel(unsigned int i
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::HydProd(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::HydProd(unsigned int index,
                                                     double coeff,
                                                     int offset,
                                                     int delta)
@@ -154,7 +154,7 @@ NewConstraintBuilder& NewConstraintBuilder::HydProd(unsigned int index,
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::HydProdDown(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::HydProdDown(unsigned int index,
                                                         double coeff,
                                                         int offset,
                                                         int delta)
@@ -163,7 +163,7 @@ NewConstraintBuilder& NewConstraintBuilder::HydProdDown(unsigned int index,
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::HydProdUp(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::HydProdUp(unsigned int index,
                                                       double coeff,
                                                       int offset,
                                                       int delta)
@@ -172,7 +172,7 @@ NewConstraintBuilder& NewConstraintBuilder::HydProdUp(unsigned int index,
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::Pumping(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::Pumping(unsigned int index,
                                                     double coeff,
                                                     int offset,
                                                     int delta)
@@ -181,7 +181,7 @@ NewConstraintBuilder& NewConstraintBuilder::Pumping(unsigned int index,
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::HydroLevel(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::HydroLevel(unsigned int index,
                                                        double coeff,
                                                        int offset,
                                                        int delta)
@@ -190,7 +190,7 @@ NewConstraintBuilder& NewConstraintBuilder::HydroLevel(unsigned int index,
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::Overflow(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::Overflow(unsigned int index,
                                                      double coeff,
                                                      int offset,
                                                      int delta)
@@ -199,7 +199,7 @@ NewConstraintBuilder& NewConstraintBuilder::Overflow(unsigned int index,
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::FinalStorage(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::FinalStorage(unsigned int index,
                                                          double coeff,
                                                          int offset,
                                                          int delta)
@@ -208,7 +208,7 @@ NewConstraintBuilder& NewConstraintBuilder::FinalStorage(unsigned int index,
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::PositiveUnsuppliedEnergy(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::PositiveUnsuppliedEnergy(unsigned int index,
                                                                      double coeff,
                                                                      int offset,
                                                                      int delta)
@@ -217,7 +217,7 @@ NewConstraintBuilder& NewConstraintBuilder::PositiveUnsuppliedEnergy(unsigned in
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::NegativeUnsuppliedEnergy(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::NegativeUnsuppliedEnergy(unsigned int index,
                                                                      double coeff,
                                                                      int offset,
                                                                      int delta)
@@ -226,7 +226,7 @@ NewConstraintBuilder& NewConstraintBuilder::NegativeUnsuppliedEnergy(unsigned in
     return *this;
 }
 
-NewConstraintBuilder& NewConstraintBuilder::LayerStorage(unsigned area,
+ConstraintBuilder& ConstraintBuilder::LayerStorage(unsigned area,
                                                          unsigned layer,
                                                          double coeff,
                                                          int offset,
@@ -236,7 +236,7 @@ NewConstraintBuilder& NewConstraintBuilder::LayerStorage(unsigned area,
     return *this;
 }
 
-void NewConstraintBuilder::OPT_ChargerLaContrainteDansLaMatriceDesContraintes()
+void ConstraintBuilder::OPT_ChargerLaContrainteDansLaMatriceDesContraintes()
 {
     data->IndicesDebutDeLigne[data->nombreDeContraintes]
       = data->nombreDeTermesDansLaMatriceDeContrainte;
@@ -260,7 +260,7 @@ void NewConstraintBuilder::OPT_ChargerLaContrainteDansLaMatriceDesContraintes()
     return;
 }
 
-void NewConstraintBuilder::OPT_AugmenterLaTailleDeLaMatriceDesContraintes()
+void ConstraintBuilder::OPT_AugmenterLaTailleDeLaMatriceDesContraintes()
 {
     int NbTermes = data->NombreDeTermesAllouesDansLaMatriceDesContraintes;
     NbTermes += data->IncrementDAllocationMatriceDesContraintes;

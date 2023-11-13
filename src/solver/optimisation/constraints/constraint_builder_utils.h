@@ -2,11 +2,11 @@
 #include "ConstraintBuilder.h"
 #include <memory>
 
-std::shared_ptr<NewConstraintBuilder> NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
+std::shared_ptr<ConstraintBuilder> NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
   const PROBLEME_HEBDO* problemeHebdo,
   PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre);
 
-inline std::shared_ptr<NewConstraintBuilder>
+inline std::shared_ptr<ConstraintBuilder>
   NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
     const PROBLEME_HEBDO* problemeHebdo,
     std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>& ProblemeAResoudre)
@@ -17,7 +17,7 @@ inline std::shared_ptr<NewConstraintBuilder>
                                                                       problemAResoudreRef);
 }
 
-inline std::shared_ptr<NewConstraintBuilder> NewGetConstraintBuilderFromProblemHebdo(
+inline std::shared_ptr<ConstraintBuilder> NewGetConstraintBuilderFromProblemHebdo(
   PROBLEME_HEBDO* problemeHebdo)
 {
     auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
