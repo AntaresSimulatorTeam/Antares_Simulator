@@ -80,13 +80,16 @@ std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRe
     for (const auto& entryCluster : area.renewable.clusters)
     {
         auto& cluster = *entryCluster;
-        if (!cluster.enabled) // do we consider if cluster is of or on
+        // this is not even necessary - because area.renewable.clusters returns list of only ENABLED
+        // clusters 
+        // but let's keep it for now
+        if (!cluster.enabled)
             continue;
         auto tmpArrayPerCluster
           = calculateAverageTs(cluster.series.timeSeries, cluster.series.timeseriesNumbers);
         for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
         {
-            if (cluster.productionFactor)
+            if (cluster.tsMode == Data::RenewableCluster::productionFactor)
                 averageTsRenewable[row]
                   += tmpArrayPerCluster[row] * cluster.unitCount * cluster.nominalCapacity;
             else
@@ -121,6 +124,7 @@ void OptimizedThermalGenerator::calculateResidualLoad(Data::MaintenanceGroup& ma
     if (maintenanceGroup.type() == Data::MaintenanceGroup::typeTimeserie)
     {
         // read user defined ts - userProvidedResidualLoadTS_ with getter - phase-II
+        return;
     }
 
     // loop through the elements of weightMap weights_
