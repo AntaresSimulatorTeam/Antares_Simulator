@@ -11,19 +11,21 @@ namespace Antares::Solver
 {
 void ApplyScenarioBuilderDueToMaintenancePlanning(Data::Study& study)
 {
-    if (study.parameters.maintenancePlanning.isOptimized()
-        && (study.parameters.timeSeriesToGenerate & Antares::Data::timeSeriesThermal))
+    if (!study.parameters.maintenancePlanning.isOptimized())
+        return;
+
+    if (!(study.parameters.timeSeriesToGenerate & Antares::Data::timeSeriesThermal))
+        return;
+
+    study.resizeAllTimeseriesNumbers(1 + study.runtime->rangeLimits.year[Data::rangeEnd]);
+
+    if (!TimeSeriesNumbers::Generate(study))
     {
-        study.resizeAllTimeseriesNumbers(1 + study.runtime->rangeLimits.year[Data::rangeEnd]);
-
-        if (!TimeSeriesNumbers::Generate(study))
-        {
-            throw FatalError("An unrecoverable error has occurred. Can not continue.");
-        }
-
-        if (study.parameters.useCustomScenario)
-            ApplyCustomScenario(study);
+        throw FatalError("An unrecoverable error has occurred. Can not continue.");
     }
+
+    if (study.parameters.useCustomScenario)
+        ApplyCustomScenario(study);
 }
 
 } // namespace Antares::Solver
