@@ -393,8 +393,8 @@ public:
 };
 
 // Helper functions
-inline void new_exportPaliers(const PALIERS_THERMIQUES& PaliersThermiquesDuPays,
-                              std::shared_ptr<ConstraintBuilder> newConstraintBuilder)
+inline void ExportPaliers(const PALIERS_THERMIQUES& PaliersThermiquesDuPays,
+                          std::shared_ptr<ConstraintBuilder> newConstraintBuilder)
 {
     for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
     {

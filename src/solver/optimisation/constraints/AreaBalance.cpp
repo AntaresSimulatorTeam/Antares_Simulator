@@ -36,7 +36,7 @@ void AreaBalance::add(int pdt, int pays, std::shared_ptr<AreaBalanceData> data)
         interco = data->IndexSuivantIntercoExtremite[interco];
     }
 
-    new_exportPaliers(data->PaliersThermiquesDuPays, builder);
+    ExportPaliers(data->PaliersThermiquesDuPays, builder);
     builder->HydProd(pays, -1.0)
       .Pumping(pays, 1.0)
       .PositiveUnsuppliedEnergy(pays, -1.0)

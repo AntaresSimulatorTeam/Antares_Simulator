@@ -12,7 +12,7 @@ void FictitiousLoad::add(int pdt, int pays, std::shared_ptr<FictitiousLoadData> 
     namer.FictiveLoads(builder->data->nombreDeContraintes);
 
     builder->updateHourWithinWeek(pdt);
-    new_exportPaliers(data->PaliersThermiquesDuPays, builder);
+    ExportPaliers(data->PaliersThermiquesDuPays, builder);
     auto coeff = data->DefaillanceNegativeUtiliserHydro[pays] ? -1 : 0;
     builder->HydProd(pays, coeff).NegativeUnsuppliedEnergy(pays, 1.0);
 
