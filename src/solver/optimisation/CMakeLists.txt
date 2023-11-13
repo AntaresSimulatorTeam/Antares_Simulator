@@ -79,8 +79,6 @@ set(RTESOLVER_OPT
 		constraints/new_constraint_builder.h
 		constraints/new_constraint_builder_utils.cpp
 		constraints/new_constraint_builder_utils.h
-		constraints/ConstraintBuilder.cpp
-		constraints/ConstraintBuilder.h
 		constraints/AreaBalance.h
 		constraints/AreaBalance.cpp
 		constraints/FictitiousLoad.h
