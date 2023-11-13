@@ -19,7 +19,7 @@ add_subdirectory(benchmarking)
 add_subdirectory(InfoCollection)
 add_subdirectory(io)
 add_subdirectory(exception)
-
+add_subdirectory(resources)
 add_subdirectory(sys)
 
 set(SRC
@@ -32,10 +32,6 @@ set(SRC
 	locale.cpp
 
 	fatal-error.h
-
-	# resource
-	resources/resources.h
-	resources/resources.cpp
 
 	# version
 	version.h
