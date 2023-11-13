@@ -26,7 +26,7 @@ public:
      * @param pdt : timestep
      * @param pays : area
      */
-    void add(int pdt, int pays, FictitiousLoadData& data);
+    void add(int pdt, int pays);
 
 private:
     FictitiousLoadData data;

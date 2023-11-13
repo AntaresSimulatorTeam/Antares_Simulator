@@ -1,7 +1,7 @@
 
 #include "FictitiousLoad.h"
 
-void FictitiousLoad::add(int pdt, int pays, FictitiousLoadData& data)
+void FictitiousLoad::add(int pdt, int pays)
 {
     data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContraintePourEviterLesChargesFictives[pays]
       = builder->data->nombreDeContraintes;
