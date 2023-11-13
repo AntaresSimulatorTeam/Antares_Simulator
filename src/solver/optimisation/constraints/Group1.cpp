@@ -33,32 +33,13 @@ FlowDissociationData Group1::GetFlowDissociationData()
             .PaysExtremiteDeLInterconnexion = problemeHebdo_->PaysExtremiteDeLInterconnexion};
 }
 
-BindingConstraintHourData Group1::GetBindingConstraintHourData(int pdt, int cntCouplante)
+BindingConstraintHourData Group1::GetBindingConstraintHourData()
 {
-    const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-      = problemeHebdo_->MatriceDesContraintesCouplantes[cntCouplante];
     return
 
-      {/* .TypeDeContrainteCouplante =*/MatriceDesContraintesCouplantes.TypeDeContrainteCouplante,
-       /* .NombreDInterconnexionsDansLaContrainteCouplante=*/
-       MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante,
-       /* .NumeroDeLInterconnexion =*/MatriceDesContraintesCouplantes.NumeroDeLInterconnexion,
-       /* .PoidsDeLInterconnexion =*/MatriceDesContraintesCouplantes.PoidsDeLInterconnexion,
-       /* .OffsetTemporelSurLInterco =*/MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco,
-       /* .NombreDePaliersDispatchDansLaContrainteCouplante=*/
-       MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante,
-       /* .PaysDuPalierDispatch =*/MatriceDesContraintesCouplantes.PaysDuPalierDispatch,
-       /* .NumeroDuPalierDispatch =*/MatriceDesContraintesCouplantes.NumeroDuPalierDispatch,
-       /* .PoidsDuPalierDispatch =*/MatriceDesContraintesCouplantes.PoidsDuPalierDispatch,
-       /* .OffsetTemporelSurLePalierDispatch=*/
-       MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch,
-       /* .SensDeLaContrainteCouplante =*/
-       MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante,
-       /* .NomDeLaContrainteCouplante =*/MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante,
-       /* .PaliersThermiquesDuPays =*/problemeHebdo_->PaliersThermiquesDuPays,
-       /*.NumeroDeContrainteDesContraintesCouplantes=*/
-       problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
-         .NumeroDeContrainteDesContraintesCouplantes};
+      {.MatriceDesContraintesCouplantes = problemeHebdo_->MatriceDesContraintesCouplantes,
+       .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
+       .PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays};
 }
 
 void Group1::Build()
@@ -75,7 +56,8 @@ void Group1::Build()
     auto flowDissociationData = GetFlowDissociationData();
     FlowDissociation flowDissociation(builder_, flowDissociationData);
 
-    BindingConstraintHour bindingConstraintHour(builder_);
+    auto bindingConstraintHourData = GetBindingConstraintHourData();
+    BindingConstraintHour bindingConstraintHour(builder_, bindingConstraintHourData);
 
     int nombreDePasDeTempsPourUneOptimisation
       = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
@@ -99,8 +81,7 @@ void Group1::Build()
              cntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
              cntCouplante++)
         {
-            auto bindingConstraintHourData = GetBindingConstraintHourData(pdt, cntCouplante);
-            bindingConstraintHour.add(pdt, cntCouplante, bindingConstraintHourData);
+            bindingConstraintHour.add(pdt, cntCouplante);
         }
     }
 }

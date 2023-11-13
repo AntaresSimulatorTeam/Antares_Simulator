@@ -18,5 +18,5 @@ private:
     FictitiousLoadData GetFictitiousLoadData();
     ShortTermStorageLevelData GetShortTermStorageLevelData();
     FlowDissociationData GetFlowDissociationData();
-    BindingConstraintHourData GetBindingConstraintHourData(int pdt, int cntCouplante);
+    BindingConstraintHourData GetBindingConstraintHourData();
 };

@@ -1,9 +1,11 @@
 #pragma once
 
 #include "ConstraintBuilder.h"
-struct BindingConstraintHourData : public BindingConstraintData
+struct BindingConstraintHourData
 {
-    std::vector<int>& NumeroDeContrainteDesContraintesCouplantes;
+    const std::vector<CONTRAINTES_COUPLANTES>& MatriceDesContraintesCouplantes;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
+    const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
 };
 /*!
  * represent 'Hourly Binding Constraint' type
@@ -11,12 +13,19 @@ struct BindingConstraintHourData : public BindingConstraintData
 class BindingConstraintHour : private ConstraintFactory
 {
     public:
-        using ConstraintFactory::ConstraintFactory;
+        BindingConstraintHour(std::shared_ptr<ConstraintBuilder> builder,
+                              BindingConstraintHourData& data) :
+         ConstraintFactory(builder), data(data)
+        {
+        }
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pdt : timestep
      * @param cntCouplante : the binding constraint number
      */
-        void add(int pdt, int cntCouplante, BindingConstraintHourData& data);
+        void add(int pdt, int cntCouplante);
+
+    private:
+        BindingConstraintHourData& data;
 };
