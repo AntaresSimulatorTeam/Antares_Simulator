@@ -40,6 +40,7 @@
 #include "../ts-generator/generator.h"
 #include "opt_time_writer.h"
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
+#include "../ts-generator/optimized-thermal-generator/pre-scenario-builder.h"
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
@@ -318,27 +319,8 @@ void ISimulation<Impl>::run()
         // in general data of the study.
         logs.info() << " Only the preprocessors are enabled.";
 
-        // we want to know TS numbers if we want to use Maintenance planning - so we are cheating
-        // here
-        // TODO CR27: put this in a separate void function!
-        if (study.parameters.maintenancePlanning.isOptimized()
-            && (study.parameters.timeSeriesToGenerate & Antares::Data::timeSeriesThermal))
-        {
-            if (not ImplementationType::simulationBegin())
-                return;
-            // Allocating the memory
-            ImplementationType::variables.simulationBegin();
-
-            study.resizeAllTimeseriesNumbers(1 + study.runtime->rangeLimits.year[Data::rangeEnd]);
-
-            if (not TimeSeriesNumbers::Generate(study))
-            {
-                throw FatalError("An unrecoverable error has occurred. Can not continue.");
-            }
-
-            if (study.parameters.useCustomScenario)
-                ApplyCustomScenario(study);
-        }
+        // we want to know TS numbers if we want to use Maintenance planning
+        ApplyScenarioBuilderDueToMaintenancePlanning(study);
 
         regenerateTimeSeries(0);
 
