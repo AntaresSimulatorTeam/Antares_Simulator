@@ -15,7 +15,7 @@ public:
 
 private:
     AreaBalanceData GetAreaBalanceData();
-    FictitiousLoadData GetFictitiousLoadData(int pdt, uint32_t pays);
+    FictitiousLoadData GetFictitiousLoadData();
     ShortTermStorageLevelData GetShortTermStorageLevelData(int pdt);
     FlowDissociationData GetFlowDissociationData(int pdt);
     BindingConstraintHourData GetBindingConstraintHourData(int pdt, int cntCouplante);

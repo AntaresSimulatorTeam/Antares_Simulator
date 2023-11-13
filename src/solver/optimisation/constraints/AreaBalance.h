@@ -3,7 +3,6 @@
 
 struct AreaBalanceData
 {
-    // std::vector<int>& NumeroDeContrainteDesBilansPays;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
     const std::vector<int>& IndexDebutIntercoOrigine;
     const std::vector<int>& IndexSuivantIntercoOrigine;
@@ -12,8 +11,6 @@ struct AreaBalanceData
     const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
     const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
 };
-
-
 
 /*!
  * represent 'Area Balance' constraint type

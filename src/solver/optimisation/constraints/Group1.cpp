@@ -10,12 +10,10 @@ AreaBalanceData Group1::GetAreaBalanceData()
             .ShortTermStorage = problemeHebdo_->ShortTermStorage};
 }
 
-FictitiousLoadData Group1::GetFictitiousLoadData(int pdt, uint32_t pays)
+FictitiousLoadData Group1::GetFictitiousLoadData()
 {
-    return {.NumeroDeContraintePourEviterLesChargesFictives
-            = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
-                .NumeroDeContraintePourEviterLesChargesFictives,
-            .PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays[pays],
+    return {.CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
+            .PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays,
             .DefaillanceNegativeUtiliserHydro = problemeHebdo_->DefaillanceNegativeUtiliserHydro};
 }
 
@@ -70,7 +68,10 @@ void Group1::Build()
 {
     auto areaBalanceData = GetAreaBalanceData();
     AreaBalance areaBalance(builder_, areaBalanceData);
-    FictitiousLoad fictitiousLoad(builder_);
+
+    auto fictitiousLoadData = GetFictitiousLoadData();
+    FictitiousLoad fictitiousLoad(builder_, fictitiousLoadData);
+
     ShortTermStorageLevel shortTermStorageLevel(builder_);
     FlowDissociation flowDissociation(builder_);
     BindingConstraintHour bindingConstraintHour(builder_);
@@ -84,8 +85,7 @@ void Group1::Build()
         {
             areaBalance.add(pdt, pays);
 
-            auto fictitiousLoadData = GetFictitiousLoadData(pdt, pays);
-            fictitiousLoad.add(pdt, pays, fictitiousLoadData);
+            fictitiousLoad.add(pdt, pays);
             auto shortTermStorageLevelData = GetShortTermStorageLevelData(pdt);
             shortTermStorageLevel.add(pdt, pays, shortTermStorageLevelData);
         }

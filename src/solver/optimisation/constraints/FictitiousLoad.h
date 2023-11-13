@@ -4,8 +4,8 @@
 
 struct FictitiousLoadData
 {
-    std::vector<int>& NumeroDeContraintePourEviterLesChargesFictives;
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
+    const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
     const std::vector<bool>& DefaillanceNegativeUtiliserHydro;
 };
 
@@ -16,7 +16,10 @@ struct FictitiousLoadData
 class FictitiousLoad : private ConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
+    FictitiousLoad(std::shared_ptr<ConstraintBuilder> builder, FictitiousLoadData& data) :
+     ConstraintFactory(builder), data(data)
+    {
+    }
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
@@ -24,4 +27,7 @@ public:
      * @param pays : area
      */
     void add(int pdt, int pays, FictitiousLoadData& data);
+
+private:
+    FictitiousLoadData data;
 };
