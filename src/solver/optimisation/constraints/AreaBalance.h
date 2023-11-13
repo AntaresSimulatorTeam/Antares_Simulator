@@ -31,5 +31,5 @@ public:
      * @param pays : area
      */
 
-    void add(int pdt, int pays, std::shared_ptr<AreaBalanceData> data);
+    void add(int pdt, int pays, AreaBalanceData& data);
 };

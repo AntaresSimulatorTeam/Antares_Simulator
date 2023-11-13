@@ -1,17 +1,18 @@
 #include "Group1.h"
-std::shared_ptr<AreaBalanceData> Group1::GetAreaBalanceData(int pdt, uint32_t pays)
+AreaBalanceData Group1::GetAreaBalanceData(int pdt, uint32_t pays)
 {
-    AreaBalanceData areaBalanceData{
-      problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays,
-      problemeHebdo_->CorrespondanceVarNativesVarOptim[pdt].SIM_ShortTermStorage.InjectionVariable,
-      problemeHebdo_->CorrespondanceVarNativesVarOptim[pdt].SIM_ShortTermStorage.WithdrawalVariable,
-      problemeHebdo_->IndexDebutIntercoOrigine,
-      problemeHebdo_->IndexSuivantIntercoOrigine,
-      problemeHebdo_->IndexDebutIntercoExtremite,
-      problemeHebdo_->IndexSuivantIntercoExtremite,
-      problemeHebdo_->PaliersThermiquesDuPays[pays],
-      problemeHebdo_->ShortTermStorage};
-    return std::make_shared<AreaBalanceData>(areaBalanceData);
+    return {.NumeroDeContrainteDesBilansPays
+            = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays,
+            .InjectionVariable = problemeHebdo_->CorrespondanceVarNativesVarOptim[pdt]
+                                   .SIM_ShortTermStorage.InjectionVariable,
+            .WithdrawalVariable = problemeHebdo_->CorrespondanceVarNativesVarOptim[pdt]
+                                    .SIM_ShortTermStorage.WithdrawalVariable,
+            .IndexDebutIntercoOrigine = problemeHebdo_->IndexDebutIntercoOrigine,
+            .IndexSuivantIntercoOrigine = problemeHebdo_->IndexSuivantIntercoOrigine,
+            .IndexDebutIntercoExtremite = problemeHebdo_->IndexDebutIntercoExtremite,
+            .IndexSuivantIntercoExtremite = problemeHebdo_->IndexSuivantIntercoExtremite,
+            .PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays[pays],
+            .ShortTermStorage = problemeHebdo_->ShortTermStorage};
 }
 
 std::shared_ptr<FictitiousLoadData> Group1::GetFictitiousLoadData(int pdt, uint32_t pays)
@@ -88,7 +89,8 @@ void Group1::Build()
     {
         for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
         {
-            areaBalance.add(pdt, pays, GetAreaBalanceData(pdt, pays));
+            auto areaBalanceData = GetAreaBalanceData(pdt, pays);
+            areaBalance.add(pdt, pays, areaBalanceData);
 
             fictitiousLoad.add(pdt, pays, GetFictitiousLoadData(pdt, pays));
 

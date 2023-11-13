@@ -11,9 +11,9 @@ static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortT
     }
 }
 
-void AreaBalance::add(int pdt, int pays, std::shared_ptr<AreaBalanceData> data)
+void AreaBalance::add(int pdt, int pays, AreaBalanceData& data)
 {
-    data->NumeroDeContrainteDesBilansPays[pays] = builder->data->nombreDeContraintes;
+    data.NumeroDeContrainteDesBilansPays[pays] = builder->data->nombreDeContraintes;
 
     ConstraintNamer namer(builder->data->NomDesContraintes);
     namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
@@ -22,27 +22,27 @@ void AreaBalance::add(int pdt, int pays, std::shared_ptr<AreaBalanceData> data)
 
     builder->updateHourWithinWeek(pdt);
 
-    int interco = data->IndexDebutIntercoOrigine[pays];
+    int interco = data.IndexDebutIntercoOrigine[pays];
     while (interco >= 0)
     {
         builder->NTCDirect(interco, 1.0);
-        interco = data->IndexSuivantIntercoOrigine[interco];
+        interco = data.IndexSuivantIntercoOrigine[interco];
     }
 
-    interco = data->IndexDebutIntercoExtremite[pays];
+    interco = data.IndexDebutIntercoExtremite[pays];
     while (interco >= 0)
     {
         builder->NTCDirect(interco, -1.0);
-        interco = data->IndexSuivantIntercoExtremite[interco];
+        interco = data.IndexSuivantIntercoExtremite[interco];
     }
 
-    ExportPaliers(data->PaliersThermiquesDuPays, builder);
+    ExportPaliers(data.PaliersThermiquesDuPays, builder);
     builder->HydProd(pays, -1.0)
       .Pumping(pays, 1.0)
       .PositiveUnsuppliedEnergy(pays, -1.0)
       .NegativeUnsuppliedEnergy(pays, 1.0);
 
-    shortTermStorageBalance(data->ShortTermStorage[pays], builder);
+    shortTermStorageBalance(data.ShortTermStorage[pays], builder);
 
     builder->equalTo();
     builder->build();

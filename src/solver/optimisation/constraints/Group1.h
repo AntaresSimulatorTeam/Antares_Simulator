@@ -14,7 +14,7 @@ public:
         void Build() override;
 
 private:
-    std::shared_ptr<AreaBalanceData> GetAreaBalanceData(int pdt, uint32_t pays);
+    AreaBalanceData GetAreaBalanceData(int pdt, uint32_t pays);
     std::shared_ptr<FictitiousLoadData> GetFictitiousLoadData(int pdt, uint32_t pays);
     std::shared_ptr<ShortTermStorageLevelData> GetShortTermStorageLevelData(int pdt);
     std::shared_ptr<FlowDissociationData> GetFlowDissociationData(int pdt);
