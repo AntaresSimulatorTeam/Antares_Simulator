@@ -18,12 +18,24 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#ifndef __ANTARES_LOCALE_H__
-#define __ANTARES_LOCALE_H__
 
-/*!
-** \brief Initialize the default locale for Antares
-*/
-void InitializeDefaultLocale();
+#include "antares/locale/locale.h"
+#include <yuni/yuni.h>
+#include <clocale>
+#include <iostream>
 
-#endif // __ANTARES_LOCALE_H__
+
+namespace Antares
+{
+void InitializeDefaultLocale()
+{
+#ifdef YUNI_OS_WINDOWS
+    if (NULL == std::setlocale(LC_ALL, "English"))
+        std::cerr << "impossible to set locale to English" << std::endl;
+
+#else
+    if (NULL == std::setlocale(LC_ALL, "en_US.utf8"))
+        std::cerr << "impossible to set locale to en_US.utf8" << std::endl;
+#endif
+}
+}

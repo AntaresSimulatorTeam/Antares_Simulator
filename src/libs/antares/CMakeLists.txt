@@ -4,6 +4,7 @@ OMESSAGE("Antares Core library")
 add_subdirectory(args)
 add_subdirectory(writer)
 add_subdirectory(memory)
+add_subdirectory(locale)
 
 add_subdirectory(array)
 add_subdirectory(correlation)
@@ -24,9 +25,6 @@ set(SRC
     constants.h
 	constants.cpp
 	# Misc
-
-    antares_locale.h
-	locale.cpp
 
 	fatal-error.h
 
