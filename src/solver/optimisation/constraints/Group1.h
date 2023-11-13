@@ -17,6 +17,6 @@ private:
     AreaBalanceData GetAreaBalanceData();
     FictitiousLoadData GetFictitiousLoadData();
     ShortTermStorageLevelData GetShortTermStorageLevelData();
-    FlowDissociationData GetFlowDissociationData(int pdt);
+    FlowDissociationData GetFlowDissociationData();
     BindingConstraintHourData GetBindingConstraintHourData(int pdt, int cntCouplante);
 };

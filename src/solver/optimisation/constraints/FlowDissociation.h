@@ -3,7 +3,7 @@
 
 struct FlowDissociationData
 {
-    std::vector<int>& NumeroDeContrainteDeDissociationDeFlux;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
     const std::vector<COUTS_DE_TRANSPORT>& CoutDeTransport;
     const std::vector<int>& PaysOrigineDeLInterconnexion;
     const std::vector<int>& PaysExtremiteDeLInterconnexion;
@@ -17,12 +17,18 @@ struct FlowDissociationData
 class FlowDissociation : private ConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
+    FlowDissociation(std::shared_ptr<ConstraintBuilder> builder, FlowDissociationData& data) :
+     ConstraintFactory(builder), data(data)
+    {
+    }
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pdt : timestep
      * @param interco : interconnection number
      */
-    void add(int pdt, int interco, FlowDissociationData& data);
+    void add(int pdt, int interco);
+
+private:
+    FlowDissociationData& data;
 };

@@ -1,11 +1,12 @@
 #include "FlowDissociation.h"
 
-void FlowDissociation::add(int pdt, int interco, FlowDissociationData& data)
+void FlowDissociation::add(int pdt, int interco)
 {
     if (const COUTS_DE_TRANSPORT& CoutDeTransport = data.CoutDeTransport[interco];
         CoutDeTransport.IntercoGereeAvecDesCouts)
     {
-        data.NumeroDeContrainteDeDissociationDeFlux[interco] = builder->data->nombreDeContraintes;
+        data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDeDissociationDeFlux[interco]
+          = builder->data->nombreDeContraintes;
         const auto origin = builder->data->NomsDesPays[data.PaysOrigineDeLInterconnexion[interco]];
         const auto destination
           = builder->data->NomsDesPays[data.PaysExtremiteDeLInterconnexion[interco]];

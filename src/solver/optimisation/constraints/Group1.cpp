@@ -25,11 +25,9 @@ ShortTermStorageLevelData Group1::GetShortTermStorageLevelData()
     };
 }
 
-FlowDissociationData Group1::GetFlowDissociationData(int pdt)
+FlowDissociationData Group1::GetFlowDissociationData()
 {
-    return {.NumeroDeContrainteDeDissociationDeFlux
-            = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
-                .NumeroDeContrainteDeDissociationDeFlux,
+    return {.CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
             .CoutDeTransport = problemeHebdo_->CoutDeTransport,
             .PaysOrigineDeLInterconnexion = problemeHebdo_->PaysOrigineDeLInterconnexion,
             .PaysExtremiteDeLInterconnexion = problemeHebdo_->PaysExtremiteDeLInterconnexion};
@@ -73,7 +71,10 @@ void Group1::Build()
 
     auto shortTermStorageLevelData = GetShortTermStorageLevelData();
     ShortTermStorageLevel shortTermStorageLevel(builder_, shortTermStorageLevelData);
-    FlowDissociation flowDissociation(builder_);
+
+    auto flowDissociationData = GetFlowDissociationData();
+    FlowDissociation flowDissociation(builder_, flowDissociationData);
+
     BindingConstraintHour bindingConstraintHour(builder_);
 
     int nombreDePasDeTempsPourUneOptimisation
@@ -91,8 +92,7 @@ void Group1::Build()
 
         for (uint32_t interco = 0; interco < problemeHebdo_->NombreDInterconnexions; interco++)
         {
-            auto flowDissociationData = GetFlowDissociationData(pdt);
-            flowDissociation.add(pdt, interco, flowDissociationData);
+            flowDissociation.add(pdt, interco);
         }
 
         for (uint32_t cntCouplante = 0;
