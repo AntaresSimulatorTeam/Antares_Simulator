@@ -19,6 +19,7 @@ target_link_libraries(${PROJ}
         PRIVATE
         Antares::logs
         Antares::inifile
+        Antares::config
 )
 
 target_include_directories(${PROJ}

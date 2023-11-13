@@ -20,7 +20,7 @@
 */
 #pragma once
 
-#include "../config.h"
+#include "antares/config/config.h"
 #include <antares/study/study.h>
 
 void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,

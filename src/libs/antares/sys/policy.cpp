@@ -26,7 +26,7 @@
 #include <antares/logs/logs.h>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/hostname.hxx>
-#include "../config.h"
+#include "antares/config/config.h"
 #include <antares/fatal-error.h>
 #include <yuni/core/system/environment.h>
 #include <yuni/core/system/process.h>

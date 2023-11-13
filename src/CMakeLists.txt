@@ -312,9 +312,13 @@ endif()
 # TODO : review Standard Settings
 include(cmake/common-settings.cmake)
 
+add_subdirectory(config)
+
 # Configure config.h with current ANTARES version
-configure_file("config.h.cmake" "${CMAKE_CURRENT_BINARY_DIR}/config.h")
-configure_file("config.h.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
+#configure_file("${CMAKE_CURRENT_BINARY_DIR}/config/config.h.in"
+#		"${CMAKE_CURRENT_BINARY_DIR}/include/antares/config/config.h")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config/config.h.in"
+		"${CMAKE_CURRENT_SOURCE_DIR}/include/antares/config/config.h")
 
 # Yuni Framework
 configure_file("cmake/ProfileBuild.template.cmake" "ext/yuni/src/ProfileBuild.cmake")

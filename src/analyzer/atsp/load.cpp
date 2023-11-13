@@ -20,7 +20,7 @@
 */
 #include "atsp.h"
 #include <antares/inifile/inifile.h>
-#include "../../config.h"
+#include "antares/config/config.h"
 
 using namespace Yuni;
 

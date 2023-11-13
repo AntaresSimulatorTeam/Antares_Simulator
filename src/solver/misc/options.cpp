@@ -33,7 +33,7 @@
 
 #include "antares/solver/misc/options.h"
 
-#include "../../config.h"
+#include "antares/config/config.h"
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
