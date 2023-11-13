@@ -4,6 +4,8 @@
 
 #include "OptimizedGenerator.h"
 
+#include <numeric>
+
 namespace Antares::Solver::TSGenerator
 {
 
@@ -15,9 +17,11 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeriesPerAllMaintena
         // timeHorizon, timeStep ENS and Spillage are defined per one MaintenanceGroup
         int timeHorizon, timeStep;
         double ensCost, spillCost;
+        std::array<double, DAYS_PER_YEAR> residualLoadDailyValues;
         auto& maintenanceGroup = *(entryMaintenanceGroup.get());
         // Residual Load (or reference value) array is defined per one MaintenanceGroup
         calculateResidualLoad(maintenanceGroup);
+        residualLoadDailyValues = calculateDailySums(maintenanceGroup.getUsedResidualLoadTS());
         std::tie(ensCost, spillCost)
           = calculateMaintenanceGroupENSandSpillageCost(maintenanceGroup);
         std::tie(timeStep, timeHorizon) = calculateTimeHorizonAndStep(maintenanceGroup);
@@ -123,6 +127,43 @@ std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRe
     {
         return calculateAverageRenewableTsClusters(area);
     }
+}
+
+std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateDailySums(
+  const std::array<double, HOURS_PER_YEAR>& hourlyValues)
+{
+    std::array<double, DAYS_PER_YEAR> dailyValues;
+    auto hours_iter = hourlyValues.begin();
+
+    for (double& day_sum : dailyValues)
+    {
+        day_sum = std::accumulate(hours_iter, hours_iter + 24, 0.0);
+        hours_iter += 24;
+    }
+
+    return dailyValues;
+}
+
+std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateMaxUnitOutput(
+  Data::ThermalCluster& cluster)
+{
+    std::array<double, DAYS_PER_YEAR> maxOutputDailyValues = {};
+    std::array<double, HOURS_PER_YEAR> maxOutputHourlyValues = {};
+
+    // transfer to array
+    for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
+    {
+        maxOutputHourlyValues[row]
+          = cluster.modulation[Data::ThermalModulation::thermalModulationCapacity][row];
+    }
+
+    maxOutputDailyValues = calculateDailySums(maxOutputHourlyValues);
+    // multiply by per unit power (nominal capacity)
+    for (double& num : maxOutputDailyValues)
+    {
+        num *= cluster.nominalCapacity;
+    }
+    return maxOutputDailyValues;
 }
 
 void OptimizedThermalGenerator::calculateResidualLoad(Data::MaintenanceGroup& maintenanceGroup)
@@ -248,6 +289,7 @@ void OptimizedThermalGenerator::createOptimizationProblemPerCluster(const Data::
         // but are the same for all units inside the same cluster
         int numberOfMaintenancesPerUnit;
         numberOfMaintenancesPerUnit = calculateNumberOfMaintenances(cluster, 365); // TODO CR27: get the T-timeHorizon here - parameter or class
+        std::array<double, DAYS_PER_YEAR> maxUnitOutput = calculateMaxUnitOutput(cluster);
         // just playing here - this needs to go into new method - class  - operator
         logs.info() << "CR27-INFO: This cluster is active for mnt planning: "
                     << cluster.getFullName();

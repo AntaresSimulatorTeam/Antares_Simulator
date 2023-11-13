@@ -49,7 +49,9 @@ private:
       const Data::Area& area);
     std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsClusters(const Data::Area& area);
     std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTs(const Data::Area& area);
-
+    std::array<double, DAYS_PER_YEAR> calculateDailySums(
+      const std::array<double, HOURS_PER_YEAR>& hourlyValues);
+    std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(Data::ThermalCluster& cluster);
     // variables
     Data::MaintenanceGroupRepository& maintenanceGroupRepo;
     bool globalThermalTSgeneration_;
