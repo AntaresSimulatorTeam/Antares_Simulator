@@ -11,5 +11,5 @@ public:
     void Build() override;
 
 private:
-    std::shared_ptr<HydroPowerData> GetHydroPowerDataFromProblemHebdo(uint32_t pays);
+    HydroPowerData GetHydroPowerDataFromProblemHebdo(uint32_t pays);
 };

@@ -1,15 +1,17 @@
 #include "HydroPowerGroup.h"
 
-std::shared_ptr<HydroPowerData> HydroPowerGroup::GetHydroPowerDataFromProblemHebdo(uint32_t pays)
+HydroPowerData HydroPowerGroup::GetHydroPowerDataFromProblemHebdo(uint32_t pays)
 {
-    HydroPowerData data
-      = {problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable,
-         problemeHebdo_->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes,
-         problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable,
-         problemeHebdo_->NombreDePasDeTempsPourUneOptimisation,
-         problemeHebdo_->NumeroDeContrainteEnergieHydraulique,
-         problemeHebdo_->CaracteristiquesHydrauliques[pays].PumpingRatio};
-    return std::make_shared<HydroPowerData>(data);
+    return {
+      .presenceHydro
+      = problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable,
+      .TurbEntreBornes = problemeHebdo_->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes,
+      .presencePompage
+      = problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable,
+      .NombreDePasDeTempsPourUneOptimisation
+      = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation,
+      .NumeroDeContrainteEnergieHydraulique = problemeHebdo_->NumeroDeContrainteEnergieHydraulique,
+      .pumpingRatio = problemeHebdo_->CaracteristiquesHydrauliques[pays].PumpingRatio};
 }
 
 void HydroPowerGroup::Build()
@@ -18,6 +20,7 @@ void HydroPowerGroup::Build()
 
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
-        hydroPower.add(pays, GetHydroPowerDataFromProblemHebdo(pays));
+        auto hydroPowerData = GetHydroPowerDataFromProblemHebdo(pays);
+        hydroPower.add(pays, hydroPowerData);
     }
 }
