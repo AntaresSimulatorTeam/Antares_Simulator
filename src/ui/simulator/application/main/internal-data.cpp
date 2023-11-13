@@ -26,7 +26,7 @@
 */
 
 #include "internal-data.h"
-#include <libs/antares/study/study.h>
+#include <antares/study/study.h>
 
 namespace Antares
 {
