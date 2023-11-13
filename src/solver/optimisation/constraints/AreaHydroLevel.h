@@ -22,5 +22,5 @@ class AreaHydroLevel : private ConstraintFactory
      * @param pdt : timestep
      * @param pays : area
      */
-        void add(int pays, int pdt, std::shared_ptr<AreaHydroLevelData> data);
+        void add(int pays, int pdt, AreaHydroLevelData& data);
 };

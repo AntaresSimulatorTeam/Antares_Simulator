@@ -1,13 +1,12 @@
 #include "AreaHydroLevelGroup.h"
 
-std::shared_ptr<AreaHydroLevelData> AreaHydroLevelGroup::GetAreaHydroLevelData(int pdt,
-                                                                               uint32_t pays)
+AreaHydroLevelData AreaHydroLevelGroup::GetAreaHydroLevelData(int pdt, uint32_t pays)
 {
-    AreaHydroLevelData data
-      = {problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesNiveauxPays,
-         problemeHebdo_->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire,
-         problemeHebdo_->CaracteristiquesHydrauliques[pays].PumpingRatio};
-    return std::make_shared<AreaHydroLevelData>(data);
+    return {
+      .NumeroDeContrainteDesNiveauxPays
+      = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesNiveauxPays,
+      .SuiviNiveauHoraire = problemeHebdo_->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire,
+      .PumpingRatio = problemeHebdo_->CaracteristiquesHydrauliques[pays].PumpingRatio};
 }
 
 void AreaHydroLevelGroup::Build()
@@ -18,7 +17,8 @@ void AreaHydroLevelGroup::Build()
     {
         for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
         {
-            areaHydroLevel.add(pays, pdt, GetAreaHydroLevelData(pdt, pays));
+            auto areaHydroLevelData = GetAreaHydroLevelData(pdt, pays);
+            areaHydroLevel.add(pays, pdt, areaHydroLevelData);
         }
     }
 }

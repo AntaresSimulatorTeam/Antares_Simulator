@@ -11,5 +11,5 @@ public:
     void Build() override;
 
 private:
-    std::shared_ptr<AreaHydroLevelData> GetAreaHydroLevelData(int pdt, uint32_t pays);
+    AreaHydroLevelData GetAreaHydroLevelData(int pdt, uint32_t pays);
 };
