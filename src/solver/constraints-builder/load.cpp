@@ -26,7 +26,7 @@
 */
 #include "cbuilder.h"
 #include <antares/inifile/inifile.h>
-#include "../../config.h"
+#include "antares/config/config.h"
 #include "../../libs/antares/study/area/constants.h"
 #include <yuni/io/file.h>
 //#include <wx/wx.h> // bourrin -> � modifier

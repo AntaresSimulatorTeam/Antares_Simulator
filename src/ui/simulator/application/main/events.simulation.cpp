@@ -31,7 +31,7 @@
 #include "../../windows/analyzer/analyzer.h"
 #include "../../windows/constraints-builder/constraintsbuilder.h"
 #include "internal-data.h"
-#include "../../config.h"
+#include "antares/config/config.h"
 #include <yuni/datetime/timestamp.h>
 #include "../../toolbox/dispatcher/study.h"
 #include <antares/study/version.h>

@@ -18,7 +18,7 @@
 #include "antares/solver/misc/write-command-line.h"
 
 #include "antares/solver/utils/ortools_utils.h"
-#include "../../config.h"
+#include "antares/config/config.h"
 
 #include <antares/infoCollection/StudyInfoCollector.h>
 

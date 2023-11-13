@@ -31,7 +31,7 @@
 #include <cassert>
 #include "application.h"
 #include "main.h"
-#include "../config.h"
+#include "antares/config/config.h"
 #include <wx/font.h>
 #include <wx/image.h>
 #include <wx/app.h>

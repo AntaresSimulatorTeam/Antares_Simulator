@@ -46,6 +46,7 @@ set(TARGET_LIBS #No alias
         StudyUtils
         stdcxx
         inifile
+        config
         #
         signal-handling
         #minizip target does not exist

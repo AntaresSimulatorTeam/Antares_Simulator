@@ -26,7 +26,7 @@
 */
 
 #include "version.h"
-#include "../../config.h"
+#include "antares/config/config.h"
 #include <iostream>
 
 namespace Antares

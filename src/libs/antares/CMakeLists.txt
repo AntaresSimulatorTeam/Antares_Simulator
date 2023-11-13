@@ -23,7 +23,6 @@ add_subdirectory(resources)
 add_subdirectory(sys)
 
 set(SRC
-    config.h
     constants.h
 	constants.cpp
 	# Misc
@@ -71,6 +70,7 @@ target_link_libraries(antares-core
 		Antares::logs
         Antares::exception
 		Antares::study
+		Antares::config
 	)
 
 import_std_libs(antares-core)
