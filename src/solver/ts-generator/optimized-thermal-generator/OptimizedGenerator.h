@@ -5,8 +5,9 @@
 #pragma once
 
 #include "../randomized-thermal-generator/RandomizedGenerator.h"
-#include "../../../libs/antares/study/maintenance_planning/MaintenanceGroupRepository.h"
+//#include "../../../libs/antares/study/maintenance_planning/MaintenanceGroupRepository.h"
 #include "../../../libs/antares/study/maintenance_planning/MaintenanceGroup.h"
+#include "AuxillaryStructures.h"
 
 namespace Antares::Solver::TSGenerator
 {
@@ -51,7 +52,7 @@ private:
 
 
     // optimization problem - methods - private
-    void createOptimizationProblemPerGroup(int start, int end);
+    void createOptimizationProblemPerGroup(OptProblemSettings& optSett);
     void createOptimizationProblemPerCluster(const Data::Area& area, Data::ThermalCluster& cluster);
 
     // calculate parameters methods - per maintenance group

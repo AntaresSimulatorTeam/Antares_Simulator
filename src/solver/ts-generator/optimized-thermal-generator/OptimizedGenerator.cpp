@@ -19,31 +19,28 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
     // loop through all scenarios
     for (std::size_t scenarioIndex = 0; scenarioIndex < scenarioNumber_; ++scenarioIndex)
     {
-        int optPrbTimeStart = 0;
-        int optPrbTimeEnd = timeHorizon_;
-
+        OptProblemSettings optSett;
+        optSett.optProblemStartTime = 0;
+        optSett.optProblemEndTime = timeHorizon_;
         // loop till the end of scenario length
-        while (optPrbTimeStart <= scenarioLength_ * DAYS_PER_YEAR)
+        while (optSett.optProblemStartTime <= scenarioLength_ * DAYS_PER_YEAR)
         {
-            createOptimizationProblemPerGroup(optPrbTimeStart, optPrbTimeEnd);
-            // do the preparation for the new optimization process here
-            // Do the optimization here
-            // ...
-            // do the optimization post-processing here &
-            // do the writing off the result here
+            createOptimizationProblemPerGroup(optSett);
 
             // Update the time values for the next iteration
-            optPrbTimeStart += timeStep_;
-            optPrbTimeEnd += timeStep_;
+            optSett.optProblemStartTime += timeStep_;
+            optSett.optProblemEndTime += timeStep_;
         }
     }
 }
 
-void OptimizedThermalGenerator::createOptimizationProblemPerGroup(int optProblemStart,
-                                                                  int optProblemEnd)
+void OptimizedThermalGenerator::createOptimizationProblemPerGroup(OptProblemSettings& optSett)
 {
     runOptimizationProblem();
-
+    // ...
+    // do the optimization post-processing here &
+    // do the writing off the result here
+    
     // just playing here - will ue this loops later for opt problem formulation
     // loop through the elements of weightMap weights_
     for (const auto& entryWeightMap : maintenanceGroup_)
