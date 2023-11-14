@@ -16,6 +16,8 @@ namespace Antares::Solver::TSGenerator
 
 class GeneratorTempData
 {
+    friend class OptimizedThermalGenerator;
+
 public:
     GeneratorTempData(Data::Study& study, Solver::Progression::Task& progr, IResultWriter& writer);
 
@@ -34,13 +36,11 @@ public:
 
     bool derated;
 
-    Solver::Progression::Task& pProgression;
-
-    // I need these two functions for inheritance
+private:
     void writeResultsToDisk(const Data::Area& area, const Data::ThermalCluster& cluster);
+
     int durationGenerator(Data::ThermalLaw law, int expec, double volat, double a, double b);
 
-private:
     template<class T>
     void prepareIndispoFromLaw(Data::ThermalLaw law,
                                double volatility,
@@ -74,6 +74,7 @@ private:
     double PPOW[366][102];
 
     String pTempFilename;
+    Solver::Progression::Task& pProgression;
     IResultWriter& pWriter;
 };
 
