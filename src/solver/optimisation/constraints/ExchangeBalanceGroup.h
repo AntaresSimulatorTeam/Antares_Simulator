@@ -10,5 +10,5 @@ public:
     void Build() override;
 
 private:
-    std::shared_ptr<ExchangeBalanceData> GetExchangeBalanceDataFromProblemHebdo();
+    ExchangeBalanceData GetExchangeBalanceDataFromProblemHebdo();
 };

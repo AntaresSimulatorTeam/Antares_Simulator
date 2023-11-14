@@ -14,8 +14,14 @@ struct ExchangeBalanceData
 class ExchangeBalance : private ConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
+    ExchangeBalance(ConstraintBuilder& builder, ExchangeBalanceData& data) :
+     ConstraintFactory(builder), data(data)
+    {
+    }
 
     // TODO transform data to ref
-    void add(uint32_t pays, std::shared_ptr<ExchangeBalanceData> data);
+    void add(uint32_t pays);
+
+private:
+    ExchangeBalanceData& data;
 };

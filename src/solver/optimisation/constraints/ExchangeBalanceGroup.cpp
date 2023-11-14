@@ -1,22 +1,20 @@
 #include "ExchangeBalanceGroup.h"
 
-std::shared_ptr<ExchangeBalanceData> ExchangeBalanceGroup::GetExchangeBalanceDataFromProblemHebdo()
+ExchangeBalanceData ExchangeBalanceGroup::GetExchangeBalanceDataFromProblemHebdo()
 {
-    ExchangeBalanceData data
-      = {.IndexDebutIntercoOrigine = problemeHebdo_->IndexDebutIntercoOrigine,
-         .IndexSuivantIntercoOrigine = problemeHebdo_->IndexSuivantIntercoOrigine,
-         .IndexDebutIntercoExtremite = problemeHebdo_->IndexDebutIntercoExtremite,
-         .IndexSuivantIntercoExtremite = problemeHebdo_->IndexSuivantIntercoExtremite,
-         .NumeroDeContrainteDeSoldeDEchange = problemeHebdo_->NumeroDeContrainteDeSoldeDEchange};
-
-    return std::make_shared<ExchangeBalanceData>(data);
+    return {.IndexDebutIntercoOrigine = problemeHebdo_->IndexDebutIntercoOrigine,
+            .IndexSuivantIntercoOrigine = problemeHebdo_->IndexSuivantIntercoOrigine,
+            .IndexDebutIntercoExtremite = problemeHebdo_->IndexDebutIntercoExtremite,
+            .IndexSuivantIntercoExtremite = problemeHebdo_->IndexSuivantIntercoExtremite,
+            .NumeroDeContrainteDeSoldeDEchange = problemeHebdo_->NumeroDeContrainteDeSoldeDEchange};
 }
 
 void ExchangeBalanceGroup::Build()
 {
-    ExchangeBalance exchangeBalance(builder_);
+    auto data = GetExchangeBalanceDataFromProblemHebdo();
+    ExchangeBalance exchangeBalance(builder_, data);
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays - 1; pays++)
     {
-        exchangeBalance.add(pays, GetExchangeBalanceDataFromProblemHebdo());
+        exchangeBalance.add(pays);
     }
 }
