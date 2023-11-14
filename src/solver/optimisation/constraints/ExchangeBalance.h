@@ -15,5 +15,7 @@ class ExchangeBalance : private ConstraintFactory
 {
 public:
     using ConstraintFactory::ConstraintFactory;
+
+    // TODO transform data to ref
     void add(uint32_t pays, std::shared_ptr<ExchangeBalanceData> data);
 };

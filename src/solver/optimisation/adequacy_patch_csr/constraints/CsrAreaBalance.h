@@ -22,7 +22,7 @@ struct CsrAreaBalanceData
 class CsrAreaBalance : private ConstraintFactory
 {
 public:
-    CsrAreaBalance(std::shared_ptr<ConstraintBuilder> builder, CsrAreaBalanceData& data) :
+    CsrAreaBalance(ConstraintBuilder& builder, CsrAreaBalanceData& data) :
      ConstraintFactory(builder), data(data)
     {
     }

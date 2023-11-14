@@ -31,6 +31,7 @@
 #include <antares/logs/logs.h>
 #include "../utils/filename.h"
 #include "LinearProblemMatrix.h"
+#include "constraints/constraint_builder_utils.h"
 using namespace Antares;
 using namespace Yuni;
 using Antares::Solver::Optimization::OptimizationOptions;
@@ -159,7 +160,9 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(problemeHebdo);
 
-    LinearProblemMatrix linearProblemMatrix(problemeHebdo, writer);
+    auto builder_data = NewGetConstraintBuilderFromProblemHebdo(problemeHebdo);
+    ConstraintBuilder builder(builder_data);
+    LinearProblemMatrix linearProblemMatrix(problemeHebdo, writer, builder);
     linearProblemMatrix.Run();
     linearProblemMatrix.ExportStructures();
 

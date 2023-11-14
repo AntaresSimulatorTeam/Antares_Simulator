@@ -12,7 +12,7 @@ struct NbDispUnitsMinBoundSinceMinUpTimeData
 class NbDispUnitsMinBoundSinceMinUpTime : private ConstraintFactory
 {
 public:
-    NbDispUnitsMinBoundSinceMinUpTime(std::shared_ptr<ConstraintBuilder> builder,
+    NbDispUnitsMinBoundSinceMinUpTime(ConstraintBuilder& builder,
                                       NbDispUnitsMinBoundSinceMinUpTimeData& data) :
      ConstraintFactory(builder), data(data)
     {

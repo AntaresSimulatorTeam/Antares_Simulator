@@ -10,26 +10,26 @@ void NbUnitsOutageLessThanNbUnitsStop::add(int pays, int index, int pdt)
           .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[cluster]
           = -1;
 
-        builder->updateHourWithinWeek(pdt)
+        builder.updateHourWithinWeek(pdt)
           .NumberBreakingDownDispatchableUnits(cluster, 1.0)
           .NumberStoppingDispatchableUnits(cluster, -1.0)
           .lessThan();
 
-        if (builder->NumberOfVariables() > 0)
+        if (builder.NumberOfVariables() > 0)
         {
-            ConstraintNamer namer(builder->data->NomDesContraintes);
-            namer.UpdateArea(builder->data->NomsDesPays[pays]);
-            namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
+            ConstraintNamer namer(builder.data.NomDesContraintes);
+            namer.UpdateArea(builder.data.NomsDesPays[pays]);
+            namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
             namer.NbUnitsOutageLessThanNbUnitsStop(
-              builder->data->nombreDeContraintes,
+              builder.data.nombreDeContraintes,
               data.PaliersThermiquesDuPays[pays].NomsDesPaliersThermiques[index]);
 
-            builder->build();
+            builder.build();
         }
     }
     else
     {
-        *builder->data->NbTermesContraintesPourLesCoutsDeDemarrage += 2;
-        builder->data->nombreDeContraintes++;
+        *builder.data.NbTermesContraintesPourLesCoutsDeDemarrage += 2;
+        builder.data.nombreDeContraintes++;
     }
 }

@@ -13,7 +13,7 @@ struct MaxHydroPowerData
 class MaxHydroPower : private ConstraintFactory
 {
 public:
-    MaxHydroPower(std::shared_ptr<ConstraintBuilder> builder, MaxHydroPowerData& data) :
+    MaxHydroPower(ConstraintBuilder& builder, MaxHydroPowerData& data) :
      ConstraintFactory(builder), data(data)
     {
     }

@@ -14,7 +14,7 @@ struct BindingConstraintWeekData
 class BindingConstraintWeek : private ConstraintFactory
 {
 public:
-    BindingConstraintWeek(std::shared_ptr<ConstraintBuilder> builder,
+    BindingConstraintWeek(ConstraintBuilder& builder,
                           BindingConstraintWeekData& data) :
      ConstraintFactory(builder), data(data)
     {

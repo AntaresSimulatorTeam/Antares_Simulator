@@ -9,26 +9,26 @@ void PMinDispatchableGeneration::add(int pays, int index, int pdt)
 
         auto cluster = data.PaliersThermiquesDuPays[pays]
                          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-        builder->updateHourWithinWeek(pdt)
+        builder.updateHourWithinWeek(pdt)
           .DispatchableProduction(cluster, 1.0)
           .NumberOfDispatchableUnits(cluster, -pminDUnGroupeDuPalierThermique)
           .greaterThan();
         /*consider Adding naming constraint inside the builder*/
-        if (builder->NumberOfVariables() > 0)
+        if (builder.NumberOfVariables() > 0)
         {
-            ConstraintNamer namer(builder->data->NomDesContraintes);
-            namer.UpdateArea(builder->data->NomsDesPays[pays]);
+            ConstraintNamer namer(builder.data.NomDesContraintes);
+            namer.UpdateArea(builder.data.NomsDesPays[pays]);
 
-            namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
+            namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
             namer.PMinDispatchableGeneration(
-              builder->data->nombreDeContraintes,
+              builder.data.nombreDeContraintes,
               data.PaliersThermiquesDuPays[pays].NomsDesPaliersThermiques[index]);
         }
-        builder->build();
+        builder.build();
     }
     else
     {
-        *builder->data->NbTermesContraintesPourLesCoutsDeDemarrage += 2;
-        builder->data->nombreDeContraintes++;
+        *builder.data.NbTermesContraintesPourLesCoutsDeDemarrage += 2;
+        builder.data.nombreDeContraintes++;
     }
 }

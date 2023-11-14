@@ -7,14 +7,12 @@
 class ConstraintGroup
 {
 public:
-    explicit ConstraintGroup(PROBLEME_HEBDO* problemeHebdo) :
-     problemeHebdo_(problemeHebdo),
-     builder_(NewGetConstraintBuilderFromProblemHebdo(problemeHebdo_))
+    explicit ConstraintGroup(PROBLEME_HEBDO* problemeHebdo, ConstraintBuilder& builder) :
+     problemeHebdo_(problemeHebdo), builder_(builder)
     {
     }
 
-    
     virtual void Build() = 0;
     PROBLEME_HEBDO* problemeHebdo_;
-    std::shared_ptr<ConstraintBuilder> builder_;
+    ConstraintBuilder& builder_;
 };

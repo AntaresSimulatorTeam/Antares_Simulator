@@ -34,18 +34,20 @@
 using namespace Antares::Data;
 
 LinearProblemMatrix::LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo,
-                                         Solver::IResultWriter& writer) :
+                                         Solver::IResultWriter& writer,
+                                         ConstraintBuilder& builder) :
  ProblemMatrixEssential(problemeHebdo),
+ builder_(builder),
  writer_(writer),
- group1_(problemeHebdo),
- bindingConstraintDayGroup_(problemeHebdo),
- bindingConstraintWeekGroup_(problemeHebdo),
- hydroPowerGroup_(problemeHebdo),
- hydraulicSmoothingGroup_(problemeHebdo),
- minMaxHydroPowerGroup_(problemeHebdo),
- maxPumpingGroup_(problemeHebdo),
- areaHydroLevelGroup_(problemeHebdo),
- finalStockGroup_(problemeHebdo)
+ group1_(problemeHebdo, builder),
+ bindingConstraintDayGroup_(problemeHebdo, builder),
+ bindingConstraintWeekGroup_(problemeHebdo, builder),
+ hydroPowerGroup_(problemeHebdo, builder),
+ hydraulicSmoothingGroup_(problemeHebdo, builder),
+ minMaxHydroPowerGroup_(problemeHebdo, builder),
+ maxPumpingGroup_(problemeHebdo, builder),
+ areaHydroLevelGroup_(problemeHebdo, builder),
+ finalStockGroup_(problemeHebdo, builder)
 {
     constraintgroups_ = {&group1_,
                          &bindingConstraintDayGroup_,
@@ -74,7 +76,7 @@ void LinearProblemMatrix::Run()
 
     if (problemeHebdo_->OptimisationAvecCoutsDeDemarrage)
     {
-        LinearProblemMatrixStartUpCosts(problemeHebdo_, false).Run();
+        LinearProblemMatrixStartUpCosts(problemeHebdo_, false, builder_).Run();
     }
 
     return;

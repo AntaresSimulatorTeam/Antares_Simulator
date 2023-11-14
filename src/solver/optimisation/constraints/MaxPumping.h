@@ -12,7 +12,7 @@ struct MaxPumpingData
 class MaxPumping : private ConstraintFactory
 {
 public:
-    MaxPumping(std::shared_ptr<ConstraintBuilder> builder, MaxPumpingData& data) :
+    MaxPumping(ConstraintBuilder& builder, MaxPumpingData& data) :
      ConstraintFactory(builder), data(data)
     {
     }

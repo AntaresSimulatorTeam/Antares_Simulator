@@ -14,7 +14,7 @@ struct FinalStockExpressionData
 class FinalStockExpression : private ConstraintFactory
 {
 public:
-    FinalStockExpression(std::shared_ptr<ConstraintBuilder> builder,
+    FinalStockExpression(ConstraintBuilder& builder,
                          FinalStockExpressionData& data) :
      ConstraintFactory(builder), data(data)
     {

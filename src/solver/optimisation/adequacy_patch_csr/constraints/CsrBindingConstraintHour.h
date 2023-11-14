@@ -15,7 +15,7 @@ struct CsrBindingConstraintHourData
 class CsrBindingConstraintHour : private ConstraintFactory
 {
 public:
-    CsrBindingConstraintHour(std::shared_ptr<ConstraintBuilder> builder,
+    CsrBindingConstraintHour(ConstraintBuilder& builder,
                              CsrBindingConstraintHourData& data) :
      ConstraintFactory(builder), data(data)
     {

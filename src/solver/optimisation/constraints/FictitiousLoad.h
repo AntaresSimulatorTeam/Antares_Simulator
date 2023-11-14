@@ -16,7 +16,7 @@ struct FictitiousLoadData
 class FictitiousLoad : private ConstraintFactory
 {
 public:
-    FictitiousLoad(std::shared_ptr<ConstraintBuilder> builder, FictitiousLoadData& data) :
+    FictitiousLoad(ConstraintBuilder& builder, FictitiousLoadData& data) :
      ConstraintFactory(builder), data(data)
     {
     }

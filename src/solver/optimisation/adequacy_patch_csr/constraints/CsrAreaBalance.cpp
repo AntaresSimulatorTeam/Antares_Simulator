@@ -8,7 +8,7 @@ void CsrAreaBalance::add()
             continue;
 
         // + ENS
-        builder->updateHourWithinWeek(data.hour).PositiveUnsuppliedEnergy(Area, 1.0);
+        builder.updateHourWithinWeek(data.hour).PositiveUnsuppliedEnergy(Area, 1.0);
 
         // - export flows
         int Interco = data.IndexDebutIntercoOrigine[Area];
@@ -21,11 +21,11 @@ void CsrAreaBalance::add()
             }
 
             // flow (A->2)
-            builder->NTCDirect(Interco, -1.0);
+            builder.NTCDirect(Interco, -1.0);
 
             logs.debug() << "S-Interco number: [" << std::to_string(Interco) << "] between: ["
-                         << builder->data->NomsDesPays[Area] << "]-["
-                         << builder->data->NomsDesPays[data.PaysExtremiteDeLInterconnexion[Interco]]
+                         << builder.data.NomsDesPays[Area] << "]-["
+                         << builder.data.NomsDesPays[data.PaysExtremiteDeLInterconnexion[Interco]]
                          << "]";
 
             Interco = data.IndexSuivantIntercoOrigine[Interco];
@@ -41,26 +41,26 @@ void CsrAreaBalance::add()
                 continue;
             }
             // flow (2 -> A)
-            builder->NTCDirect(Interco, 1.0);
+            builder.NTCDirect(Interco, 1.0);
 
             logs.debug() << "E-Interco number: [" << std::to_string(Interco) << "] between: ["
-                         << builder->data->NomsDesPays[Area] << "]-["
-                         << builder->data->NomsDesPays[data.PaysOrigineDeLInterconnexion[Interco]]
+                         << builder.data.NomsDesPays[Area] << "]-["
+                         << builder.data.NomsDesPays[data.PaysOrigineDeLInterconnexion[Interco]]
                          << "]";
 
             Interco = data.IndexSuivantIntercoExtremite[Interco];
         }
 
         // - Spilled Energy
-        builder->NegativeUnsuppliedEnergy(Area, -1.0);
+        builder.NegativeUnsuppliedEnergy(Area, -1.0);
 
-        data.numberOfConstraintCsrAreaBalance[Area] = builder->data->nombreDeContraintes;
+        data.numberOfConstraintCsrAreaBalance[Area] = builder.data.nombreDeContraintes;
 
-        ConstraintNamer namer(builder->data->NomDesContraintes);
+        ConstraintNamer namer(builder.data.NomDesContraintes);
         namer.UpdateTimeStep(data.hour);
-        namer.UpdateArea(builder->data->NomsDesPays[Area]);
-        namer.CsrAreaBalance(builder->data->nombreDeContraintes);
-        builder->equalTo();
-        builder->build();
+        namer.UpdateArea(builder.data.NomsDesPays[Area]);
+        namer.CsrAreaBalance(builder.data.nombreDeContraintes);
+        builder.equalTo();
+        builder.build();
     }
 }

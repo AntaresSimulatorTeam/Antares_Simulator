@@ -7,7 +7,7 @@
 class PMaxDispatchableGeneration : private ConstraintFactory
 {
 public:
-    PMaxDispatchableGeneration(std::shared_ptr<ConstraintBuilder> builder, StartUpCostsData& data) :
+    PMaxDispatchableGeneration(ConstraintBuilder& builder, StartUpCostsData& data) :
      ConstraintFactory(builder), data(data)
     {
     }

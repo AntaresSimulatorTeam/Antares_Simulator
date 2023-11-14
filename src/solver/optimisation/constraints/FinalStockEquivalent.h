@@ -13,7 +13,7 @@ struct FinalStockEquivalentData
 class FinalStockEquivalent : private ConstraintFactory
 {
 public:
-    FinalStockEquivalent(std::shared_ptr<ConstraintBuilder> builder,
+    FinalStockEquivalent(ConstraintBuilder& builder,
                          FinalStockEquivalentData& data) :
      ConstraintFactory(builder), data(data)
     {

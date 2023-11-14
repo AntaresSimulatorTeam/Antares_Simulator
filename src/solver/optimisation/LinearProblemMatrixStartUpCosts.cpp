@@ -29,14 +29,15 @@
 using namespace Antares::Data;
 
 LinearProblemMatrixStartUpCosts::LinearProblemMatrixStartUpCosts(PROBLEME_HEBDO* problemeHebdo,
-                                                                 bool Simulation) :
+                                                                 bool Simulation,
+                                                                 ConstraintBuilder& builder) :
  ProblemMatrixEssential(problemeHebdo),
  simulation_(Simulation),
- pMinMaxDispatchableGenerationGroup_(problemeHebdo, simulation_),
- consistenceNumberOfDispatchableUnitsGroup_(problemeHebdo, simulation_),
- nbUnitsOutageLessThanNbUnitsStopGroup_(problemeHebdo, simulation_),
- nbDispUnitsMinBoundSinceMinUpTimeGroup_(problemeHebdo, simulation_),
- minDownTimeGroup_(problemeHebdo, simulation_)
+ pMinMaxDispatchableGenerationGroup_(problemeHebdo, simulation_, builder),
+ consistenceNumberOfDispatchableUnitsGroup_(problemeHebdo, simulation_, builder),
+ nbUnitsOutageLessThanNbUnitsStopGroup_(problemeHebdo, simulation_, builder),
+ nbDispUnitsMinBoundSinceMinUpTimeGroup_(problemeHebdo, simulation_, builder),
+ minDownTimeGroup_(problemeHebdo, simulation_, builder)
 {
     constraintgroups_ = {&pMinMaxDispatchableGenerationGroup_,
                          &consistenceNumberOfDispatchableUnitsGroup_,

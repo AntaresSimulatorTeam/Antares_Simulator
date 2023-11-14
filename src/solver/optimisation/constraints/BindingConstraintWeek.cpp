@@ -2,7 +2,7 @@
 
 void BindingConstraintWeek::add(int cntCouplante)
 {
-    int semaine = builder->data->weekInTheYear;
+    int semaine = builder.data.weekInTheYear;
 
     const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
       = data.MatriceDesContraintesCouplantes[cntCouplante];
@@ -19,10 +19,10 @@ void BindingConstraintWeek::add(int cntCouplante)
         int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
         double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
         int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
-        for (int pdt = 0; pdt < builder->data->NombreDePasDeTempsPourUneOptimisation; pdt++)
+        for (int pdt = 0; pdt < builder.data.NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
-            builder->updateHourWithinWeek(pdt).NTCDirect(
-              interco, poids, offset, builder->data->NombreDePasDeTemps);
+            builder.updateHourWithinWeek(pdt).NTCDirect(
+              interco, poids, offset, builder.data.NombreDePasDeTemps);
         }
     }
 
@@ -34,21 +34,21 @@ void BindingConstraintWeek::add(int cntCouplante)
                              [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
         double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
         int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
-        for (int pdt = 0; pdt < builder->data->NombreDePasDeTempsPourUneOptimisation; pdt++)
+        for (int pdt = 0; pdt < builder.data.NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
-            builder->updateHourWithinWeek(pdt).DispatchableProduction(
-              palier, poids, offset, builder->data->NombreDePasDeTemps);
+            builder.updateHourWithinWeek(pdt).DispatchableProduction(
+              palier, poids, offset, builder.data.NombreDePasDeTemps);
         }
     }
 
-    builder->SetOperator(MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
+    builder.SetOperator(MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
 
     data.NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
-      = builder->data->nombreDeContraintes;
+      = builder.data.nombreDeContraintes;
 
-    ConstraintNamer namer(builder->data->NomDesContraintes);
+    ConstraintNamer namer(builder.data.NomDesContraintes);
     namer.UpdateTimeStep(semaine);
-    namer.BindingConstraintWeek(builder->data->nombreDeContraintes,
+    namer.BindingConstraintWeek(builder.data.nombreDeContraintes,
                                 MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
-    builder->build();
+    builder.build();
 }

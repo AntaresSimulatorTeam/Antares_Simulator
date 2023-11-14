@@ -7,7 +7,7 @@
 class PMinDispatchableGeneration : private ConstraintFactory
 {
 public:
-    PMinDispatchableGeneration(std::shared_ptr<ConstraintBuilder> builder, StartUpCostsData& data) :
+    PMinDispatchableGeneration(ConstraintBuilder& builder, StartUpCostsData& data) :
      ConstraintFactory(builder), data(data)
     {
     }
