@@ -1,12 +1,13 @@
 #include "FinalStockEquivalent.h"
 
-void FinalStockEquivalent::add(int pays, std::shared_ptr<FinalStockEquivalentData> data)
+void FinalStockEquivalent::add(int pays)
 {
     const auto pdt = builder->data->NombreDePasDeTempsPourUneOptimisation - 1;
-    if (data->AccurateWaterValue && data->DirectLevelAccess)
+    if (data.CaracteristiquesHydrauliques[pays].AccurateWaterValue
+        && data.CaracteristiquesHydrauliques[pays].DirectLevelAccess)
     { /*  equivalence constraint : StockFinal- Niveau[T]= 0*/
 
-        data->NumeroDeContrainteEquivalenceStockFinal[pays] = builder->data->nombreDeContraintes;
+        data.NumeroDeContrainteEquivalenceStockFinal[pays] = builder->data->nombreDeContraintes;
         ConstraintNamer namer(builder->data->NomDesContraintes);
 
         namer.UpdateArea(builder->data->NomsDesPays[pays]);

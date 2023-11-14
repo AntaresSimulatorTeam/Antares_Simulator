@@ -12,6 +12,6 @@ public:
     void Build() override;
 
 private:
-    std::shared_ptr<FinalStockEquivalentData> GetFinalStockEquivalentData(uint32_t pays);
-    std::shared_ptr<FinalStockExpressionData> GetFinalStockExpressionData(uint32_t pays);
+    FinalStockEquivalentData GetFinalStockEquivalentData();
+    FinalStockExpressionData GetFinalStockExpressionData();
 };

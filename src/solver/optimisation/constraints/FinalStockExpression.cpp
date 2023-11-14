@@ -1,10 +1,10 @@
 #include "FinalStockExpression.h"
 
-void FinalStockExpression::add(int pays, std::shared_ptr<FinalStockExpressionData> data)
+void FinalStockExpression::add(int pays)
 {
     const auto pdt = builder->data->NombreDePasDeTempsPourUneOptimisation - 1;
 
-    if (data->AccurateWaterValue)
+    if (data.CaracteristiquesHydrauliques[pays].AccurateWaterValue)
     /*  expression constraint : - StockFinal +sum (stocklayers) = 0*/
     {
         builder->updateHourWithinWeek(pdt).FinalStorage(pays, -1.0);
@@ -12,7 +12,7 @@ void FinalStockExpression::add(int pays, std::shared_ptr<FinalStockExpressionDat
         {
             builder->LayerStorage(pays, layerindex, 1.0);
         }
-        data->NumeroDeContrainteExpressionStockFinal[pays] = builder->data->nombreDeContraintes;
+        data.NumeroDeContrainteExpressionStockFinal[pays] = builder->data->nombreDeContraintes;
 
         ConstraintNamer namer(builder->data->NomDesContraintes);
 

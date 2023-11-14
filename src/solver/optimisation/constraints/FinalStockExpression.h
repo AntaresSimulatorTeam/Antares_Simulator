@@ -4,7 +4,7 @@
 
 struct FinalStockExpressionData
 {
-    const bool AccurateWaterValue;
+    const std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
     std::vector<int>& NumeroDeContrainteExpressionStockFinal;
 };
 
@@ -14,10 +14,17 @@ struct FinalStockExpressionData
 class FinalStockExpression : private ConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
+    FinalStockExpression(std::shared_ptr<ConstraintBuilder> builder,
+                         FinalStockExpressionData& data) :
+     ConstraintFactory(builder), data(data)
+    {
+    }
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area
      */
-    void add(int pays, std::shared_ptr<FinalStockExpressionData> data);
+    void add(int pays);
+
+private:
+    FinalStockExpressionData& data;
 };

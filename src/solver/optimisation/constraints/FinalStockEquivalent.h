@@ -3,8 +3,7 @@
 
 struct FinalStockEquivalentData
 {
-    const bool AccurateWaterValue;
-    const bool DirectLevelAccess;
+    const std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
     std::vector<int>& NumeroDeContrainteEquivalenceStockFinal;
 };
 
@@ -14,11 +13,17 @@ struct FinalStockEquivalentData
 class FinalStockEquivalent : private ConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
-
+    FinalStockEquivalent(std::shared_ptr<ConstraintBuilder> builder,
+                         FinalStockEquivalentData& data) :
+     ConstraintFactory(builder), data(data)
+    {
+    }
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area
      */
-    void add(int pays, std::shared_ptr<FinalStockEquivalentData> data);
+    void add(int pays);
+
+private:
+    FinalStockEquivalentData& data;
 };
