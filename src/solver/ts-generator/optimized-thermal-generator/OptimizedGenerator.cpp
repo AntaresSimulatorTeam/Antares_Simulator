@@ -134,7 +134,8 @@ bool OptimizedThermalGenerator::checkMaintenanceGroupParameters()
     {
         logs.info() << "Maintenance group: " << maintenanceGroup_.name()
                     << ": The timeseries generation will be skiped:  timeStep = 0. It is possible "
-                       "that the maintenance group has no clusters or the cluster data is wrong";
+                       "that the maintenance group has no clusters designated for maintenance "
+                       "planning or, at least one cluster has interPoPeriod = 0";
         return false;
     }
     if (timeHorizon_ == 0)
@@ -142,7 +143,8 @@ bool OptimizedThermalGenerator::checkMaintenanceGroupParameters()
         logs.info()
           << "Maintenance group: " << maintenanceGroup_.name()
           << ": The timeseries generation will be skiped:  timeHorizon = 0. It is possible "
-             "that the maintenance group has no clusters or the cluster data is wrong";
+             "that the maintenance group has no clusters designated for maintenance "
+             "planning or, at all cluster have interPoPeriod = 0";
         return false;
     }
     // add some more check here if necessary!
@@ -247,6 +249,17 @@ void OptimizedThermalGenerator::calculateResidualLoad()
 uint OptimizedThermalGenerator::calculateNumberOfMaintenances(Data::ThermalCluster& cluster,
                                                               uint timeHorizon)
 {
+    // timeHorizon cannot be 0. The whole maintenance group would be skipped if this happened
+    // on the other hand interPoPeriod can be 0. So we say at least 2 maintenance if this happens
+    uint minNumberOfMaintenances = 2;
+    if (cluster.interPoPeriod == 0)
+    {
+        logs.warning() << "Cluster: " << cluster.getFullName()
+                       << "has interPoPeriod = 0. Number of maintenances for all units inside this "
+                          "cluster will be set to 2";
+        return minNumberOfMaintenances;
+    }
+
     return timeHorizon / cluster.interPoPeriod; // floor
 }
 
@@ -359,12 +372,11 @@ std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageTs
     return averageTs;
 }
 
-bool OptimizedThermalGenerator::checkClusterData(const Data::Area& area,
-                                                 Data::ThermalCluster& cluster)
+bool OptimizedThermalGenerator::checkClusterData(Data::ThermalCluster& cluster)
 {
     if (!cluster.prepro)
     {
-        logs.error() << "Cluster: " << area.name << '/' << cluster.name()
+        logs.error() << "Cluster: " << cluster.getFullName()
                      << ": The timeseries will not be regenerated. All data "
                         "related to the ts-generator for "
                      << "'thermal' have been released.";

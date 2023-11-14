@@ -21,8 +21,6 @@ private:
     Question: can we still use struct PROBLEME_ANTARES_A_RESOUDRE ?! - no we use MPSolver class
     */
 
-    // define here variables/structures that will help us build optimization problem
-
     // optimization problem construction methods
     void buildProblemVariables();
     void countVariables();
@@ -79,7 +77,7 @@ private:
       const std::array<double, HOURS_PER_YEAR>& hourlyValues);
     std::array<double, HOURS_PER_YEAR> calculateAverageTs(const Matrix<double>& tsValue,
                                                           const Matrix<uint32_t>& tsNumbers);
-    bool checkClusterData(const Data::Area& area, Data::ThermalCluster& cluster);
+    bool checkClusterData(Data::ThermalCluster& cluster);
     int dayOfTheYear(int optimizationDay);
 
     // calculate Average time-series functions
