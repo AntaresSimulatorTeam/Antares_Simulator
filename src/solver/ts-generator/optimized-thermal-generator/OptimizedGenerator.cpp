@@ -13,6 +13,68 @@ namespace Antares::Solver::TSGenerator
 void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
 {
     setMaintenanceGroupParameters();
+    if (!checkMaintenanceGroupParameters())
+        return;
+
+    // loop through all scenarios
+    for (std::size_t scenarioIndex = 0; scenarioIndex < scenarioNumber_; ++scenarioIndex)
+    {
+        int optPrbTimeStart = 0;
+        int optPrbTimeEnd = timeHorizon_;
+
+        // loop till the end of scenario length
+        while (optPrbTimeStart <= scenarioLength_ * DAYS_PER_YEAR)
+        {
+            createOptimizationProblemPerGroup(optPrbTimeStart, optPrbTimeEnd);
+            // do the preparation for the new optimization process here
+            // Do the optimization here
+            // ...
+            // do the optimization post-processing here &
+            // do the writing off the result here
+
+            // Update the time values for the next iteration
+            optPrbTimeStart += timeStep_;
+            optPrbTimeEnd += timeStep_;
+        }
+    }
+}
+
+void OptimizedThermalGenerator::createOptimizationProblemPerGroup(int optProblemStart,
+                                                                  int optProblemEnd)
+{
+    // TODO CR27: create methods - each line separate method - maybe new/separate class ??@!!
+    // group methods by var/bounds/cost/constraint in separate *.h and *.cpp files
+
+    // create VARIABLES per day - ENS[t], Spill[t]
+    // - we just need optProblemStart and optProblemEnd for that
+
+    // create VARIABLES per day and per cluster-unit - P[t][u]
+
+    // create VARIABLES per day, per cluster-unit and per maintenance - s[t][u][m] & e[t][u][m]
+
+    // BOUNDS per each day - bounds-per-each-day[t] - ENS[t] >= 0, Spill[t] >= 0
+
+    // BOUNDS per day and per each unit - bounds-per-each-day+unit[t][u] - P[t][u] >= 0
+
+    // BOUNDS per day, per each unit and per each mnt - bounds-per-each-day+unit+mnt[t][u][m] 
+    // - s[t][u][m]-> [0, 1] and e[t][u][m]-> [0, 1] 
+
+    // create OBJECTIVE FUNCTION - sum through [t] and sum through [u]
+
+    // load balance CONSTRAINTS - constraint-per-each-day[t] - we have sum through [u] inside of it
+
+    // CONSTRAINTS per units - constraint-per-each-unit[t-fixed][u][m-fixed]
+
+    // CONSTRAINTS per units and per maintenance - constraint-per-each-unit+mnt[t-fixed=0/T][u][m]
+
+    // CONSTRAINTS per days, per units and per maintenance - constraint-per-each-day+unit+mnt[t][u][m]
+
+    // CONSTRAINTS per days and per units - constraint-per-each-day+unit[t][u][m-sum per m]
+
+    // solve problem
+
+    // reset problem structure
+
     // loop through the elements of weightMap weights_
     for (const auto& entryWeightMap : maintenanceGroup_)
     {
@@ -86,6 +148,26 @@ void OptimizedThermalGenerator::setMaintenanceGroupParameters()
     residualLoadDailyValues_ = calculateDailySums(maintenanceGroup_.getUsedResidualLoadTS());
     std::tie(ensCost_, spillCost_) = calculateMaintenanceGroupENSandSpillageCost();
     std::tie(timeStep_, timeHorizon_) = calculateTimeHorizonAndStep();
+}
+
+bool OptimizedThermalGenerator::checkMaintenanceGroupParameters()
+{
+    if (timeStep_ == 0)
+    {
+        logs.info() << "Maintenance group: " << maintenanceGroup_.name()
+                    << ": The timeseries generation will be skiped:  timeStep = 0. It is possible "
+                       "that the maintenance group has no clusters or the cluster data is wrong";
+        return false;
+    }
+    if (timeHorizon_ == 0)
+    {
+        logs.info()
+          << "Maintenance group: " << maintenanceGroup_.name()
+          << ": The timeseries generation will be skiped:  timeHorizon = 0. It is possible "
+             "that the maintenance group has no clusters or the cluster data is wrong";
+        return false;
+    }
+    return true;
 }
 
 std::pair<int, int> OptimizedThermalGenerator::calculateTimeHorizonAndStep()
@@ -296,6 +378,26 @@ std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageTs
     }
     // return
     return averageTs;
+}
+
+bool OptimizedThermalGenerator::checkClusterData(const Data::Area& area,
+                                                 Data::ThermalCluster& cluster)
+{
+    if (!cluster.prepro)
+    {
+        logs.error() << "Cluster: " << area.name << '/' << cluster.name()
+                     << ": The timeseries will not be regenerated. All data "
+                        "related to the ts-generator for "
+                     << "'thermal' have been released.";
+        return false;
+    }
+
+    if (0 == cluster.unitCount || 0 == cluster.nominalCapacity)
+    {
+        cluster.series.timeSeries.reset(1, 8760);
+        return false;
+    }
+    return true;
 }
 
 // calculate Average time-series functions

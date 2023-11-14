@@ -35,10 +35,12 @@ private:
                             // vectors in PROBLEME_ANTARES_A_RESOUDRE for new opt problem.
 
     // optimization problem - methods - private
+    void createOptimizationProblemPerGroup(int start, int end);
     void createOptimizationProblemPerCluster(const Data::Area& area, Data::ThermalCluster& cluster);
 
     // calculate parameters methods - per maintenance group
     void setMaintenanceGroupParameters();
+    bool checkMaintenanceGroupParameters();
     std::pair<int, int> calculateTimeHorizonAndStep();
     std::pair<double, double> calculateMaintenanceGroupENSandSpillageCost();
     void calculateResidualLoad();
@@ -61,6 +63,7 @@ private:
       const std::array<double, HOURS_PER_YEAR>& hourlyValues);
     std::array<double, HOURS_PER_YEAR> calculateAverageTs(const Matrix<double>& tsValue,
                                                           const Matrix<uint32_t>& tsNumbers);
+    bool checkClusterData(const Data::Area& area, Data::ThermalCluster& cluster);
 
     // calculate Average time-series functions
     std::array<double, HOURS_PER_YEAR> calculateAverageLoadTs(const Data::Area& area);
@@ -73,6 +76,8 @@ private:
     // variables
     Data::MaintenanceGroup& maintenanceGroup_;
     bool globalThermalTSgeneration_;
+    int scenarioLength_;
+    int scenarioNumber_;
     int timeHorizon_;
     int timeStep_;
     double ensCost_;
@@ -92,8 +97,9 @@ public:
     {
         currentYear = year;
         globalThermalTSgeneration_ = globalThermalTSgeneration;
-        nbThermalTimeseries = study.parameters.maintenancePlanning.getScenarioLength()
-                              * study.parameters.maintenancePlanning.getScenarioNumber();
+        scenarioLength_ = study.parameters.maintenancePlanning.getScenarioLength();
+        scenarioNumber_ = study.parameters.maintenancePlanning.getScenarioNumber();
+        nbThermalTimeseries = scenarioLength_ * scenarioNumber_;
         // allocateProblem();
     }
 
