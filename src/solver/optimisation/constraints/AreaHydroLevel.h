@@ -3,9 +3,8 @@
 
 struct AreaHydroLevelData
 {
-    std::vector<int>& NumeroDeContrainteDesNiveauxPays;
-    const bool& SuiviNiveauHoraire;
-    const double& PumpingRatio;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
+    const std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 };
 
 /*!
@@ -14,13 +13,19 @@ struct AreaHydroLevelData
 
 class AreaHydroLevel : private ConstraintFactory
 {
-    public:
-        using ConstraintFactory::ConstraintFactory;
+public:
+    AreaHydroLevel(std::shared_ptr<ConstraintBuilder> builder, AreaHydroLevelData& data) :
+     ConstraintFactory(builder), data(data)
+    {
+    }
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pdt : timestep
      * @param pays : area
      */
-        void add(int pays, int pdt, AreaHydroLevelData& data);
+    void add(int pays, int pdt);
+
+private:
+    AreaHydroLevelData& data;
 };
