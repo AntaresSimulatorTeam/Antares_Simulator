@@ -42,39 +42,9 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
 void OptimizedThermalGenerator::createOptimizationProblemPerGroup(int optProblemStart,
                                                                   int optProblemEnd)
 {
-    // TODO CR27: create methods - each line separate method - maybe new/separate class ??@!!
-    // group methods by var/bounds/cost/constraint in separate *.h and *.cpp files
+    runOptimizationProblem();
 
-    // create VARIABLES per day - ENS[t], Spill[t]
-    // - we just need optProblemStart and optProblemEnd for that
-
-    // create VARIABLES per day and per cluster-unit - P[t][u]
-
-    // create VARIABLES per day, per cluster-unit and per maintenance - s[t][u][m] & e[t][u][m]
-
-    // BOUNDS per each day - bounds-per-each-day[t] - ENS[t] >= 0, Spill[t] >= 0
-
-    // BOUNDS per day and per each unit - bounds-per-each-day+unit[t][u] - P[t][u] >= 0
-
-    // BOUNDS per day, per each unit and per each mnt - bounds-per-each-day+unit+mnt[t][u][m] 
-    // - s[t][u][m]-> [0, 1] and e[t][u][m]-> [0, 1] 
-
-    // create OBJECTIVE FUNCTION - sum through [t] and sum through [u]
-
-    // load balance CONSTRAINTS - constraint-per-each-day[t] - we have sum through [u] inside of it
-
-    // CONSTRAINTS per units - constraint-per-each-unit[t-fixed][u][m-fixed]
-
-    // CONSTRAINTS per units and per maintenance - constraint-per-each-unit+mnt[t-fixed=0/T][u][m]
-
-    // CONSTRAINTS per days, per units and per maintenance - constraint-per-each-day+unit+mnt[t][u][m]
-
-    // CONSTRAINTS per days and per units - constraint-per-each-day+unit[t][u][m-sum per m]
-
-    // solve problem
-
-    // reset problem structure
-
+    // just playing here - will ue this loops later for opt problem formulation
     // loop through the elements of weightMap weights_
     for (const auto& entryWeightMap : maintenanceGroup_)
     {
@@ -88,6 +58,7 @@ void OptimizedThermalGenerator::createOptimizationProblemPerGroup(int optProblem
             ++pProgression;
         }
     }
+    // end play
 }
 
 void OptimizedThermalGenerator::createOptimizationProblemPerCluster(const Data::Area& area,

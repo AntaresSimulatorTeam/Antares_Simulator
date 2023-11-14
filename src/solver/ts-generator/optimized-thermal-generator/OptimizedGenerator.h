@@ -24,15 +24,31 @@ private:
     // define here variables/structures that will help us build optimization problem
 
     // optimization problem construction methods
-    void calculateParameters();
     void buildProblemVariables();
+    void countVariables();
+    void buildEnsAndSpillageVariables();
+    void buildUnitPowerOutputVariables();
+    void buildStartEndMntVariables();
+
     void setVariableBounds();
-    void buildProblemConstraintsLHS();
-    void buildProblemConstraintsRHS();
+    void setEnsAndSpillageBounds();
+    void setUnitPowerOutputBounds();
+    void setStartEndMntBounds();
+    void setFirstMntStartBounds();
+    void setAllMntMustStartBounds();
+
+    void buildProblemConstraints();
+    void buildLoadBalanceConstraints();
+    void setStartEndMntLogicConstraints();
+    void setMaxUnitOutputConstraints();
+    // void buildProblemConstraintsRHS(); // let's do LHS & RHS in one go. Easier!?
+
     void setProblemCost();
     void solveProblem();
-    void allocateProblem(); // this one should be called in constructor. It basically resets all the
-                            // vectors in PROBLEME_ANTARES_A_RESOUDRE for new opt problem.
+    void resetProblem();
+
+    void runOptimizationProblem();
+
 
     // optimization problem - methods - private
     void createOptimizationProblemPerGroup(int start, int end);
@@ -85,8 +101,6 @@ private:
     std::array<double, DAYS_PER_YEAR> residualLoadDailyValues_;
 
 public:
-    void run(); // calls private optimization problem construction methods
-
     explicit OptimizedThermalGenerator(Data::Study& study,
                                        Data::MaintenanceGroup& maintenanceGroup,
                                        uint year,

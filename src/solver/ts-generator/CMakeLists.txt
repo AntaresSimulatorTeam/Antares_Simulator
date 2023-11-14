@@ -17,6 +17,13 @@ set(SRC_OPTIMIZEDGENERATORS
 	optimized-thermal-generator/pre-scenario-builder.cpp
 	optimized-thermal-generator/OptimizedGenerator.h
 	optimized-thermal-generator/OptimizedGenerator.cpp
+	optimized-thermal-generator/CreateVariables.cpp
+	optimized-thermal-generator/SetVariableBounds.cpp
+	optimized-thermal-generator/SetProblemConstraints.cpp
+	optimized-thermal-generator/SetProblemCost.cpp
+	optimized-thermal-generator/ResetProblem.cpp
+	optimized-thermal-generator/SolveProbem.cpp
+
 )
 source_group("ts-generator\\optimized-thermal-generator" FILES ${SRC_OPTIMIZEDGENERATORS})
 
