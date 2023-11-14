@@ -22,6 +22,12 @@ struct CsrAreaBalanceData
 class CsrAreaBalance : private ConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
-    void add(std::shared_ptr<CsrAreaBalanceData> data);
+    CsrAreaBalance(std::shared_ptr<ConstraintBuilder> builder, CsrAreaBalanceData& data) :
+     ConstraintFactory(builder), data(data)
+    {
+    }
+    void add();
+
+private:
+    CsrAreaBalanceData& data;
 };

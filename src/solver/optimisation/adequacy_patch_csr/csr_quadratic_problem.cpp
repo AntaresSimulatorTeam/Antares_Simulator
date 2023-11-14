@@ -75,22 +75,23 @@ void CsrQuadraticProblem::setNodeBalanceConstraints()
 
     auto builder = NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(problemeHebdo_,
                                                                               problemeAResoudre_);
-    CsrAreaBalance csrAreaBalance(builder);
 
-    CsrAreaBalanceData data{problemeHebdo_->adequacyPatchRuntimeData->areaMode,
-                            hour,
-                            problemeHebdo_->IndexDebutIntercoOrigine,
-                            problemeHebdo_->IndexSuivantIntercoOrigine,
-                            problemeHebdo_->IndexDebutIntercoExtremite,
-                            problemeHebdo_->IndexSuivantIntercoExtremite,
-                            problemeHebdo_->adequacyPatchRuntimeData->originAreaMode,
-                            problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode,
-                            problemeHebdo_->PaysOrigineDeLInterconnexion,
-                            problemeHebdo_->PaysExtremiteDeLInterconnexion,
-                            hourlyCsrProblem_.numberOfConstraintCsrAreaBalance,
-                            problemeHebdo_->NombreDePays};
-    auto csrAreaBalanceData = std::make_shared<CsrAreaBalanceData>(data);
-    csrAreaBalance.add(csrAreaBalanceData);
+    CsrAreaBalanceData csrAreaBalanceData{
+      .areaMode = problemeHebdo_->adequacyPatchRuntimeData->areaMode,
+      .hour = hour,
+      .IndexDebutIntercoOrigine = problemeHebdo_->IndexDebutIntercoOrigine,
+      .IndexSuivantIntercoOrigine = problemeHebdo_->IndexSuivantIntercoOrigine,
+      .IndexDebutIntercoExtremite = problemeHebdo_->IndexDebutIntercoExtremite,
+      .IndexSuivantIntercoExtremite = problemeHebdo_->IndexSuivantIntercoExtremite,
+      .originAreaMode = problemeHebdo_->adequacyPatchRuntimeData->originAreaMode,
+      .extremityAreaMode = problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode,
+      .PaysOrigineDeLInterconnexion = problemeHebdo_->PaysOrigineDeLInterconnexion,
+      .PaysExtremiteDeLInterconnexion = problemeHebdo_->PaysExtremiteDeLInterconnexion,
+      .numberOfConstraintCsrAreaBalance = hourlyCsrProblem_.numberOfConstraintCsrAreaBalance,
+      .NombreDePays = problemeHebdo_->NombreDePays};
+
+    CsrAreaBalance csrAreaBalance(builder, csrAreaBalanceData);
+    csrAreaBalance.add();
 }
 
 void CsrQuadraticProblem::setBindingConstraints()
