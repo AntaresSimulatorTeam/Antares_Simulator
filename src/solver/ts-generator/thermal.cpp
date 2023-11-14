@@ -40,7 +40,7 @@ bool GenerateRandomizedThermalTimeSeries(Data::Study& study,
 {
     logs.info();
     logs.info() << "Generating randomized thermal time-series";
-    Solver::Progression::Task progression(study, year, Solver::Progression::sectTSGThermal); // TMP.INFO CR27: parallel work ??!! - NO
+    Solver::Progression::Task progression(study, year, Solver::Progression::sectTSGThermal);
 
     auto* generator = new GeneratorTempData(study, progression, writer);
 
@@ -52,7 +52,7 @@ bool GenerateRandomizedThermalTimeSeries(Data::Study& study,
         {
             auto& cluster = *(it->second);
 
-            if (cluster.doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear) // TMP.INFO CR27: we decide here for each cluster whether we generate TS or not - We need to get rid of refreshTSonCurrentYear - not important for mnt-planning - doWeGenerateTS is still ok to use!
+            if (cluster.doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
             {
                 (*generator)(area, cluster);
             }

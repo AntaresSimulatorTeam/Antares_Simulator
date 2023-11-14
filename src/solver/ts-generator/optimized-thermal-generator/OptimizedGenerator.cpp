@@ -167,6 +167,7 @@ bool OptimizedThermalGenerator::checkMaintenanceGroupParameters()
              "that the maintenance group has no clusters or the cluster data is wrong";
         return false;
     }
+    // add some more check here if necessary!
     return true;
 }
 
