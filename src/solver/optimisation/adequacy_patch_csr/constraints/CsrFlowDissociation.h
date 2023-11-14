@@ -12,10 +12,17 @@ struct CsrFlowDissociationData
 
     const std::vector<int>& PaysOrigineDeLInterconnexion;
     const std::vector<int>& PaysExtremiteDeLInterconnexion;
+    const int hour;
 };
 class CsrFlowDissociation : private ConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
-    void add(int hour, std::shared_ptr<CsrFlowDissociationData> data);
+    CsrFlowDissociation(std::shared_ptr<ConstraintBuilder> builder, CsrFlowDissociationData& data) :
+     ConstraintFactory(builder), data(data)
+    {
+    }
+    void add();
+
+private:
+    CsrFlowDissociationData& data;
 };

@@ -49,15 +49,17 @@ void CsrQuadraticProblem::setConstraintsOnFlows()
     //!\ TODO not associated problemHebdo && probleamAressoudre
     auto builder = NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(problemeHebdo_,
                                                                               problemeAResoudre_);
-    CsrFlowDissociation csrFlowDissociation(builder);
-    CsrFlowDissociationData data = {hourlyCsrProblem_.numberOfConstraintCsrFlowDissociation,
-                                    problemeHebdo_->NombreDInterconnexions,
-                                    problemeHebdo_->adequacyPatchRuntimeData->originAreaMode,
-                                    problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode,
-                                    problemeHebdo_->PaysOrigineDeLInterconnexion,
-                                    problemeHebdo_->PaysExtremiteDeLInterconnexion};
-    auto csrFlowDissociationData = std::make_shared<CsrFlowDissociationData>(data);
-    csrFlowDissociation.add(hour, csrFlowDissociationData);
+    CsrFlowDissociationData csrFlowDissociationData
+      = {.numberOfConstraintCsrFlowDissociation
+         = hourlyCsrProblem_.numberOfConstraintCsrFlowDissociation,
+         .NombreDInterconnexions = problemeHebdo_->NombreDInterconnexions,
+         .originAreaMode = problemeHebdo_->adequacyPatchRuntimeData->originAreaMode,
+         .extremityAreaMode = problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode,
+         .PaysOrigineDeLInterconnexion = problemeHebdo_->PaysOrigineDeLInterconnexion,
+         .PaysExtremiteDeLInterconnexion = problemeHebdo_->PaysExtremiteDeLInterconnexion,
+         .hour = hour};
+    CsrFlowDissociation csrFlowDissociation(builder, csrFlowDissociationData);
+    csrFlowDissociation.add();
 }
 
 void CsrQuadraticProblem::setNodeBalanceConstraints()
