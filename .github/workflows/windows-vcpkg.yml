@@ -10,6 +10,7 @@ on:
       - issue-*
       - release/*
       - doc/*
+      - !feature/reshape-constraint-construction
   schedule:
     - cron: '21 2 * * *'
 

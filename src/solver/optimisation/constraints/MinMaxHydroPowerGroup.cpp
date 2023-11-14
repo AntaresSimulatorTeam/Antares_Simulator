@@ -1,46 +1,32 @@
 #include "MinMaxHydroPowerGroup.h"
-MinHydroPowerData MinMaxHydroPowerGroup::GetMinHydroPowerData(
-
-  uint32_t pays)
+MinHydroPowerData MinMaxHydroPowerGroup::GetMinHydroPowerData()
 {
-    return {
-      .presenceHydro
-      = problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable,
-      .TurbEntreBornes = problemeHebdo_->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes,
-      .PresenceDePompageModulable
-      = problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable,
-      .NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation,
-      .NumeroDeContrainteMinEnergieHydraulique
-      = problemeHebdo_->NumeroDeContrainteMinEnergieHydraulique};
+    return {.CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,
+            .NombreDePasDeTempsPourUneOptimisation
+            = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation,
+            .NumeroDeContrainteMinEnergieHydraulique
+            = problemeHebdo_->NumeroDeContrainteMinEnergieHydraulique};
 }
 
-MaxHydroPowerData MinMaxHydroPowerGroup::GetMaxHydroPowerData(
-
-  uint32_t pays)
+MaxHydroPowerData MinMaxHydroPowerGroup::GetMaxHydroPowerData()
 {
-    return {
-      .presenceHydro
-      = problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable,
-      .TurbEntreBornes = problemeHebdo_->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes,
-      .PresenceDePompageModulable
-      = problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable,
-      .NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation,
-      .NumeroDeContrainteMaxEnergieHydraulique
-      = problemeHebdo_->NumeroDeContrainteMaxEnergieHydraulique};
+    return {.CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,
+            .NombreDePasDeTempsPourUneOptimisation
+            = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation,
+            .NumeroDeContrainteMaxEnergieHydraulique
+            = problemeHebdo_->NumeroDeContrainteMaxEnergieHydraulique};
 }
 
 void MinMaxHydroPowerGroup::Build()
 {
-    MinHydroPower minHydroPower(builder_);
-    MaxHydroPower maxHydroPower(builder_);
+    auto minHydroPowerData = GetMinHydroPowerData();
+    MinHydroPower minHydroPower(builder_, minHydroPowerData);
+    auto maxHydroPowerData = GetMaxHydroPowerData();
+    MaxHydroPower maxHydroPower(builder_, maxHydroPowerData);
 
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
-        auto minHydroPowerData = GetMinHydroPowerData(pays);
-        minHydroPower.add(pays, minHydroPowerData);
-        auto maxHydroPowerData = GetMaxHydroPowerData(pays);
-        maxHydroPower.add(pays, maxHydroPowerData);
+        minHydroPower.add(pays);
+        maxHydroPower.add(pays);
     }
 }

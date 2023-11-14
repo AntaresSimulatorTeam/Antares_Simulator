@@ -1,8 +1,10 @@
 #include "MinHydroPower.h"
 
-void MinHydroPower::add(int pays, MinHydroPowerData& data)
+void MinHydroPower::add(int pays)
 {
-    if (data.presenceHydro && (data.TurbEntreBornes || data.PresenceDePompageModulable))
+    if (data.CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable
+        && (data.CaracteristiquesHydrauliques[pays].TurbinageEntreBornes
+            || data.CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
     {
         data.NumeroDeContrainteMinEnergieHydraulique[pays] = builder->data->nombreDeContraintes;
 

@@ -3,9 +3,7 @@
 
 struct MaxHydroPowerData
 {
-    const bool& presenceHydro;
-    const bool& TurbEntreBornes;
-    const bool& PresenceDePompageModulable;
+    const std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
     const int& NombreDePasDeTempsPourUneOptimisation;
     std::vector<int>& NumeroDeContrainteMaxEnergieHydraulique;
 };
@@ -15,11 +13,17 @@ struct MaxHydroPowerData
 class MaxHydroPower : private ConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
+    MaxHydroPower(std::shared_ptr<ConstraintBuilder> builder, MaxHydroPowerData& data) :
+     ConstraintFactory(builder), data(data)
+    {
+    }
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area
      */
-    void add(int pays, MaxHydroPowerData& data);
+    void add(int pays);
+
+private:
+    MaxHydroPowerData& data;
 };

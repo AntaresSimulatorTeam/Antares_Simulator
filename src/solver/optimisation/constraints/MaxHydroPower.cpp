@@ -1,8 +1,10 @@
 #include "MaxHydroPower.h"
 
-void MaxHydroPower::add(int pays, MaxHydroPowerData& data)
+void MaxHydroPower::add(int pays)
 {
-    if (data.presenceHydro && (data.TurbEntreBornes || data.PresenceDePompageModulable))
+    if (data.CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable
+        && (data.CaracteristiquesHydrauliques[pays].TurbinageEntreBornes
+            || data.CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
     {
         data.NumeroDeContrainteMaxEnergieHydraulique[pays] = builder->data->nombreDeContraintes;
 

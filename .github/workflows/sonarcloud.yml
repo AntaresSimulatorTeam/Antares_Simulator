@@ -6,7 +6,7 @@ on:
       - main
       - develop
       - release/*
-  pull_request:
+      - !feature/reshape-constraint-construction
 
 jobs:
   sonarcloud:

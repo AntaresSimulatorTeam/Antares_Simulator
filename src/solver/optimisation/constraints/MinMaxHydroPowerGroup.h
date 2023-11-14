@@ -11,6 +11,6 @@ public:
         void Build() override;
 
 private:
-    MinHydroPowerData GetMinHydroPowerData(uint32_t pays);
-    MaxHydroPowerData GetMaxHydroPowerData(uint32_t pays);
+    MinHydroPowerData GetMinHydroPowerData();
+    MaxHydroPowerData GetMaxHydroPowerData();
 };
