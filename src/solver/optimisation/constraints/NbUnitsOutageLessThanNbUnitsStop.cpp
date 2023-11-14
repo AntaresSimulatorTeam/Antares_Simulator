@@ -1,26 +1,28 @@
 #include "NbUnitsOutageLessThanNbUnitsStop.h"
 
-void NbUnitsOutageLessThanNbUnitsStop::add(
-  int pays,
-  std::shared_ptr<NbUnitsOutageLessThanNbUnitsStopData> data)
+void NbUnitsOutageLessThanNbUnitsStop::add(int pays, int index, int pdt)
 {
-    if (!data->Simulation)
+    if (!data.Simulation)
     {
-        data->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[data->cluster] = -1;
+        auto cluster = data.PaliersThermiquesDuPays[pays]
+                         .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+        data.CorrespondanceCntNativesCntOptim[pdt]
+          .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[cluster]
+          = -1;
 
-        builder->updateHourWithinWeek(data->pdt)
-          .NumberBreakingDownDispatchableUnits(data->cluster, 1.0)
-          .NumberStoppingDispatchableUnits(data->cluster, -1.0)
+        builder->updateHourWithinWeek(pdt)
+          .NumberBreakingDownDispatchableUnits(cluster, 1.0)
+          .NumberStoppingDispatchableUnits(cluster, -1.0)
           .lessThan();
 
         if (builder->NumberOfVariables() > 0)
         {
             ConstraintNamer namer(builder->data->NomDesContraintes);
             namer.UpdateArea(builder->data->NomsDesPays[pays]);
-            namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + data->pdt);
+            namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
             namer.NbUnitsOutageLessThanNbUnitsStop(
               builder->data->nombreDeContraintes,
-              data->PaliersThermiquesDuPays.NomsDesPaliersThermiques[data->clusterIndex]);
+              data.PaliersThermiquesDuPays[pays].NomsDesPaliersThermiques[index]);
 
             builder->build();
         }

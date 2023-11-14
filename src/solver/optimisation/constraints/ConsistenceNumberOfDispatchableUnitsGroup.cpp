@@ -7,6 +7,8 @@
  */
 void ConsistenceNumberOfDispatchableUnitsGroup::Build()
 {
+    auto data = GetStartUpCostsDataFromProblemHebdo();
+    ConsistenceNumberOfDispatchableUnits consistenceNumberOfDispatchableUnits(builder_, data);
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
@@ -15,9 +17,7 @@ void ConsistenceNumberOfDispatchableUnitsGroup::Build()
         {
             for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                ConsistenceNumberOfDispatchableUnits consistenceNumberOfDispatchableUnits(builder_);
-                consistenceNumberOfDispatchableUnits.add(
-                  pays, GetStartUpCostsDataFromProblemHebdo(pays, index, pdt));
+                consistenceNumberOfDispatchableUnits.add(pays, index, pdt);
             }
         }
     }

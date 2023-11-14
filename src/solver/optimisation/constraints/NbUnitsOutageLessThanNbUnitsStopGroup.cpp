@@ -1,23 +1,11 @@
 #include "NbUnitsOutageLessThanNbUnitsStopGroup.h"
 
-std::shared_ptr<NbUnitsOutageLessThanNbUnitsStopData>
-  NbUnitsOutageLessThanNbUnitsStopGroup::GetNbUnitsOutageLessThanNbUnitsStopDataFromProblemHebdo(
-    uint32_t pays,
-    int index,
-    int pdt)
+NbUnitsOutageLessThanNbUnitsStopData
+  NbUnitsOutageLessThanNbUnitsStopGroup::GetNbUnitsOutageLessThanNbUnitsStopDataFromProblemHebdo()
 {
-    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-      = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt];
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-      = problemeHebdo_->PaliersThermiquesDuPays[pays];
-    NbUnitsOutageLessThanNbUnitsStopData data
-      = {PaliersThermiquesDuPays,
-         PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index],
-         index,
-         pdt,
-         simulation_,
-         CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesContraintesDeDureeMinDeMarche};
-    return std::make_shared<NbUnitsOutageLessThanNbUnitsStopData>(data);
+    return {.PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays,
+            .Simulation = simulation_,
+            .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim};
 }
 
 /**
@@ -30,14 +18,14 @@ void NbUnitsOutageLessThanNbUnitsStopGroup::Build()
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo_->PaliersThermiquesDuPays[pays];
-        NbUnitsOutageLessThanNbUnitsStop nbUnitsOutageLessThanNbUnitsStop(builder_);
+        auto data = GetNbUnitsOutageLessThanNbUnitsStopDataFromProblemHebdo();
+        NbUnitsOutageLessThanNbUnitsStop nbUnitsOutageLessThanNbUnitsStop(builder_, data);
 
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                nbUnitsOutageLessThanNbUnitsStop.add(
-                  pays, GetNbUnitsOutageLessThanNbUnitsStopDataFromProblemHebdo(pays, index, pdt));
+                nbUnitsOutageLessThanNbUnitsStop.add(pays, index, pdt);
             }
         }
     }

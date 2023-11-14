@@ -16,7 +16,5 @@ public:
         void Build() override;
 
 private:
-    std::shared_ptr<MinDownTimeData> GetMinDownTimeDataFromProblemHebdo(uint32_t pays,
-                                                                        int index,
-                                                                        int pdt);
+    MinDownTimeData GetMinDownTimeDataFromProblemHebdo();
 };

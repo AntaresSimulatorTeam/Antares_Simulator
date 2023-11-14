@@ -16,6 +16,6 @@ public:
         void Build() override;
 
 private:
-    std::shared_ptr<NbDispUnitsMinBoundSinceMinUpTimeData>
-      GetNbDispUnitsMinBoundSinceMinUpTimeDataFromProblemHebdo(uint32_t pays, int index, int pdt);
+    NbDispUnitsMinBoundSinceMinUpTimeData
+      GetNbDispUnitsMinBoundSinceMinUpTimeDataFromProblemHebdo();
 };

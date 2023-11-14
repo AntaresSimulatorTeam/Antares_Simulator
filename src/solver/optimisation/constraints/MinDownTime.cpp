@@ -1,44 +1,42 @@
 #include "MinDownTime.h"
 
-void MinDownTime::add(int pays, std::shared_ptr<MinDownTimeData> data)
+void MinDownTime::add(int pays, int index, int pdt)
 {
-    // const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-    //   = problemeHebdo->PaliersThermiquesDuPays[pays];
     const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-      = data->PaliersThermiquesDuPays
-          .DureeMinimaleDArretDUnGroupeDuPalierThermique[data->clusterIndex];
+      = data.PaliersThermiquesDuPays[pays].DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
+    auto cluster
+      = data.PaliersThermiquesDuPays[pays].NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-    // CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-    //   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-    data->NumeroDeContrainteDesContraintesDeDureeMinDArret[data->cluster] = -1;
-    if (!data->Simulation)
+    data.CorrespondanceCntNativesCntOptim[pdt]
+      .NumeroDeContrainteDesContraintesDeDureeMinDArret[cluster]
+      = -1;
+    if (!data.Simulation)
     {
         int NombreDePasDeTempsPourUneOptimisation
           = builder->data->NombreDePasDeTempsPourUneOptimisation;
 
-        builder->updateHourWithinWeek(data->pdt).NumberOfDispatchableUnits(data->cluster, 1.0);
+        builder->updateHourWithinWeek(pdt).NumberOfDispatchableUnits(cluster, 1.0);
 
-        for (int k = data->pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique + 1; k <= data->pdt;
-             k++)
+        for (int k = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique + 1; k <= pdt; k++)
         {
             int t1 = k;
             if (t1 < 0)
                 t1 = NombreDePasDeTempsPourUneOptimisation + t1;
 
-            builder->updateHourWithinWeek(t1).NumberStoppingDispatchableUnits(data->cluster, 1.0);
+            builder->updateHourWithinWeek(t1).NumberStoppingDispatchableUnits(cluster, 1.0);
         }
         builder->lessThan();
         if (builder->NumberOfVariables() > 1)
         {
-            data->NumeroDeContrainteDesContraintesDeDureeMinDArret[data->cluster]
+            data.CorrespondanceCntNativesCntOptim[pays]
+              .NumeroDeContrainteDesContraintesDeDureeMinDArret[cluster]
               = builder->data->nombreDeContraintes;
             ConstraintNamer namer(builder->data->NomDesContraintes);
             namer.UpdateArea(builder->data->NomsDesPays[pays]);
 
-            namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + data->pdt);
-            namer.MinDownTime(
-              builder->data->nombreDeContraintes,
-              data->PaliersThermiquesDuPays.NomsDesPaliersThermiques[data->clusterIndex]);
+            namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
+            namer.MinDownTime(builder->data->nombreDeContraintes,
+                              data.PaliersThermiquesDuPays[pays].NomsDesPaliersThermiques[index]);
 
             builder->build();
         }

@@ -1,21 +1,10 @@
 #include "MinDownTimeGroup.h"
 
-std::shared_ptr<MinDownTimeData> MinDownTimeGroup::GetMinDownTimeDataFromProblemHebdo(uint32_t pays,
-                                                                                      int index,
-                                                                                      int pdt)
+MinDownTimeData MinDownTimeGroup::GetMinDownTimeDataFromProblemHebdo()
 {
-    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-      = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt];
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-      = problemeHebdo_->PaliersThermiquesDuPays[pays];
-    MinDownTimeData data
-      = {PaliersThermiquesDuPays,
-         PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index],
-         index,
-         pdt,
-         simulation_,
-         CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesContraintesDeDureeMinDArret};
-    return std::make_shared<MinDownTimeData>(data);
+    return {.PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays,
+            .Simulation = simulation_,
+            .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim};
 }
 
 /**
@@ -28,12 +17,13 @@ void MinDownTimeGroup::Build()
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo_->PaliersThermiquesDuPays[pays];
-        MinDownTime minDownTime(builder_);
+        auto data = GetMinDownTimeDataFromProblemHebdo();
+        MinDownTime minDownTime(builder_, data);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                minDownTime.add(pays, GetMinDownTimeDataFromProblemHebdo(pays, index, pdt));
+                minDownTime.add(pays, index, pdt);
             }
         }
     }

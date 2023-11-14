@@ -424,9 +424,6 @@ public:
 
 struct StartUpCostsData
 {
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays;
-    int cluster;
-    int clusterIndex;
-    int pdt;
+    const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
     bool Simulation;
 };

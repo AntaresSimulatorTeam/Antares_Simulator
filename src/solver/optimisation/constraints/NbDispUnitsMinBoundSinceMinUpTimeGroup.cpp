@@ -1,23 +1,11 @@
 #include "NbDispUnitsMinBoundSinceMinUpTimeGroup.h"
 
-std::shared_ptr<NbDispUnitsMinBoundSinceMinUpTimeData>
-  NbDispUnitsMinBoundSinceMinUpTimeGroup::GetNbDispUnitsMinBoundSinceMinUpTimeDataFromProblemHebdo(
-    uint32_t pays,
-    int index,
-    int pdt)
+NbDispUnitsMinBoundSinceMinUpTimeData
+  NbDispUnitsMinBoundSinceMinUpTimeGroup::GetNbDispUnitsMinBoundSinceMinUpTimeDataFromProblemHebdo()
 {
-    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-      = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt];
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-      = problemeHebdo_->PaliersThermiquesDuPays[pays];
-    NbDispUnitsMinBoundSinceMinUpTimeData data
-      = {PaliersThermiquesDuPays,
-         PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index],
-         index,
-         pdt,
-         simulation_,
-         CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesContraintesDeDureeMinDeMarche};
-    return std::make_shared<NbDispUnitsMinBoundSinceMinUpTimeData>(data);
+    return {.PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays,
+            .Simulation = simulation_,
+            .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim};
 }
 
 /**
@@ -30,7 +18,8 @@ void NbDispUnitsMinBoundSinceMinUpTimeGroup::Build()
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo_->PaliersThermiquesDuPays[pays];
-        NbDispUnitsMinBoundSinceMinUpTime nbDispUnitsMinBoundSinceMinUpTime(builder_);
+        auto data = GetNbDispUnitsMinBoundSinceMinUpTimeDataFromProblemHebdo();
+        NbDispUnitsMinBoundSinceMinUpTime nbDispUnitsMinBoundSinceMinUpTime(builder_, data);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             if (PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index] <= 0)
@@ -38,8 +27,7 @@ void NbDispUnitsMinBoundSinceMinUpTimeGroup::Build()
 
             for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                nbDispUnitsMinBoundSinceMinUpTime.add(
-                  pays, GetNbDispUnitsMinBoundSinceMinUpTimeDataFromProblemHebdo(pays, index, pdt));
+                nbDispUnitsMinBoundSinceMinUpTime.add(pays, index, pdt);
             }
         }
     }

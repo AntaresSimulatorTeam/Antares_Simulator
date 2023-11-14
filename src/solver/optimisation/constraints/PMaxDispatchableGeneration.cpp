@@ -1,26 +1,28 @@
 #include "PMaxDispatchableGeneration.h"
 
-void PMaxDispatchableGeneration::add(int pays, std::shared_ptr<StartUpCostsData> data)
+void PMaxDispatchableGeneration::add(int pays, int index, int pdt)
 {
-    if (!data->Simulation)
+    if (!data.Simulation)
     {
+        auto cluster = data.PaliersThermiquesDuPays[pays]
+                         .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
         double pmaxDUnGroupeDuPalierThermique
-          = data->PaliersThermiquesDuPays.PmaxDUnGroupeDuPalierThermique[data->clusterIndex];
+          = data.PaliersThermiquesDuPays[pays].PmaxDUnGroupeDuPalierThermique[cluster];
 
-        builder->updateHourWithinWeek(data->pdt)
-          .DispatchableProduction(data->cluster, 1.0)
-          .NumberOfDispatchableUnits(data->cluster, -pmaxDUnGroupeDuPalierThermique)
+        builder->updateHourWithinWeek(pdt)
+          .DispatchableProduction(cluster, 1.0)
+          .NumberOfDispatchableUnits(cluster, -pmaxDUnGroupeDuPalierThermique)
           .lessThan();
         if (builder->NumberOfVariables() > 0)
         {
             ConstraintNamer namer(builder->data->NomDesContraintes);
 
-            namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + data->pdt);
+            namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
             namer.UpdateArea(builder->data->NomsDesPays[pays]);
 
             namer.PMaxDispatchableGeneration(
               builder->data->nombreDeContraintes,
-              data->PaliersThermiquesDuPays.NomsDesPaliersThermiques[data->clusterIndex]);
+              data.PaliersThermiquesDuPays[pays].NomsDesPaliersThermiques[index]);
         }
         builder->build();
     }

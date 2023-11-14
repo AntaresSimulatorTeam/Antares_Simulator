@@ -1,8 +1,10 @@
 #pragma once
 #include "ConstraintBuilder.h"
-struct NbDispUnitsMinBoundSinceMinUpTimeData : public StartUpCostsData
+struct NbDispUnitsMinBoundSinceMinUpTimeData
 {
-    std::vector<int>& NumeroDeContrainteDesContraintesDeDureeMinDeMarche;
+    const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
+    bool Simulation;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 };
 /*!
  * represent 'Number of Dispatchable Units Min Bound Since Min Up Time' type
@@ -10,7 +12,11 @@ struct NbDispUnitsMinBoundSinceMinUpTimeData : public StartUpCostsData
 class NbDispUnitsMinBoundSinceMinUpTime : private ConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
+    NbDispUnitsMinBoundSinceMinUpTime(std::shared_ptr<ConstraintBuilder> builder,
+                                      NbDispUnitsMinBoundSinceMinUpTimeData& data) :
+     ConstraintFactory(builder), data(data)
+    {
+    }
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
@@ -19,5 +25,8 @@ public:
      * @param pdt : timestep
      * @param Simulation : ---
      */
-    void add(int pays, std::shared_ptr<NbDispUnitsMinBoundSinceMinUpTimeData> data);
+    void add(int pays, int index, int pdt);
+
+private:
+    NbDispUnitsMinBoundSinceMinUpTimeData& data;
 };

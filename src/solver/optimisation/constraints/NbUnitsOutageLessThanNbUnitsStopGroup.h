@@ -16,6 +16,5 @@ public:
         void Build() override;
 
 private:
-    std::shared_ptr<NbUnitsOutageLessThanNbUnitsStopData>
-      GetNbUnitsOutageLessThanNbUnitsStopDataFromProblemHebdo(uint32_t pays, int index, int pdt);
+    NbUnitsOutageLessThanNbUnitsStopData GetNbUnitsOutageLessThanNbUnitsStopDataFromProblemHebdo();
 };

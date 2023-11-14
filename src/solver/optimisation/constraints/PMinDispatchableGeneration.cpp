@@ -1,15 +1,17 @@
 #include "PMinDispatchableGeneration.h"
 
-void PMinDispatchableGeneration::add(int pays, std::shared_ptr<StartUpCostsData> data)
+void PMinDispatchableGeneration::add(int pays, int index, int pdt)
 {
-    if (!data->Simulation)
+    if (!data.Simulation)
     {
         double pminDUnGroupeDuPalierThermique
-          = data->PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[data->clusterIndex];
+          = data.PaliersThermiquesDuPays[pays].pminDUnGroupeDuPalierThermique[index];
 
-        builder->updateHourWithinWeek(data->pdt)
-          .DispatchableProduction(data->cluster, 1.0)
-          .NumberOfDispatchableUnits(data->cluster, -pminDUnGroupeDuPalierThermique)
+        auto cluster = data.PaliersThermiquesDuPays[pays]
+                         .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+        builder->updateHourWithinWeek(pdt)
+          .DispatchableProduction(cluster, 1.0)
+          .NumberOfDispatchableUnits(cluster, -pminDUnGroupeDuPalierThermique)
           .greaterThan();
         /*consider Adding naming constraint inside the builder*/
         if (builder->NumberOfVariables() > 0)
@@ -17,10 +19,10 @@ void PMinDispatchableGeneration::add(int pays, std::shared_ptr<StartUpCostsData>
             ConstraintNamer namer(builder->data->NomDesContraintes);
             namer.UpdateArea(builder->data->NomsDesPays[pays]);
 
-            namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + data->pdt);
+            namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
             namer.PMinDispatchableGeneration(
               builder->data->nombreDeContraintes,
-              data->PaliersThermiquesDuPays.NomsDesPaliersThermiques[data->clusterIndex]);
+              data.PaliersThermiquesDuPays[pays].NomsDesPaliersThermiques[index]);
         }
         builder->build();
     }

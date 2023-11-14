@@ -1,9 +1,11 @@
 #pragma once
 #include "ConstraintBuilder.h"
 
-struct MinDownTimeData : public StartUpCostsData
+struct MinDownTimeData
 {
-    std::vector<int>& NumeroDeContrainteDesContraintesDeDureeMinDArret;
+    const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
+    bool Simulation;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 };
 
 /*!
@@ -12,7 +14,10 @@ struct MinDownTimeData : public StartUpCostsData
 class MinDownTime : private ConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
+    MinDownTime(std::shared_ptr<ConstraintBuilder> builder, MinDownTimeData& data) :
+     ConstraintFactory(builder), data(data)
+    {
+    }
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area
@@ -20,5 +25,8 @@ public:
      * @param pdt : timestep
      * @param Simulation : ---
      */
-    void add(int pays, std::shared_ptr<MinDownTimeData> data);
+    void add(int pays, int index, int pdt);
+
+private:
+    MinDownTimeData& data;
 };
