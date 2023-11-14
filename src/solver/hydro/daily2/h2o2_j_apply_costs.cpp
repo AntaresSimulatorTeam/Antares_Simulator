@@ -25,9 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "h2o2_j_donnees_mensuelles.h"
-#include "h2o2_j_donnees_optimisation.h"
-#include "h2o2_j_fonctions.h"
+#include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
+#include "antares/solver/hydro/daily2/h2o2_j_donnees_optimisation.h"
+#include "antares/solver/hydro/daily2/h2o2_j_fonctions.h"
 
 void H2O2_J_apply_costs(const Hydro_problem_costs& h2o2_costs, DONNEES_MENSUELLES_ETENDUES& problem)
 {

@@ -27,7 +27,7 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_HydroCost_H__
 #define __SOLVER_VARIABLE_ECONOMY_HydroCost_H__
 
-#include "../variable.h"
+#include "antares/solver/variable/variable.h"
 
 namespace Antares
 {

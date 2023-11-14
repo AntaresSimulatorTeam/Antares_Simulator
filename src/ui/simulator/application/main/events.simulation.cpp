@@ -35,7 +35,7 @@
 #include <yuni/datetime/timestamp.h>
 #include "../../toolbox/dispatcher/study.h"
 #include <antares/study/version.h>
-
+#include "application/study.h"
 using namespace Yuni;
 
 namespace Antares

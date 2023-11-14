@@ -303,6 +303,7 @@ target_link_libraries(study
         Antares::result_writer #study.h
         Antares::series
         antares-core
+        antares-solver-simulation
     PRIVATE
         Antares::exception
         Antares::benchmarking

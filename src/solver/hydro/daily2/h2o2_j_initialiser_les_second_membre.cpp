@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "h2o2_j_donnees_mensuelles.h"
+#include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
 
 void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles,
                                       int NumeroDeProbleme)

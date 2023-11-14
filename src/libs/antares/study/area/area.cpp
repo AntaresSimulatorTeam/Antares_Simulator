@@ -27,7 +27,7 @@
 
 #include <yuni/yuni.h>
 #include <cassert>
-#include "antares/study//study.h"
+#include "antares/study/study.h"
 #include "antares/utils/utils.h"
 #include "antares/study/area/area.h"
 #include "antares/study/area/ui.h"

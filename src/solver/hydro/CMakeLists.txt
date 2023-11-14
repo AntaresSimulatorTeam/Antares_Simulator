@@ -3,9 +3,9 @@ project(hydro)
 set(SRC_EXT_SOLVER_H2O_DAILY
 	daily/h2o_j_construire_les_contraintes.cpp
 	daily/h2o_j_construire_les_variables.cpp
-	daily/h2o_j_donnees_mensuelles.h
-	daily/h2o_j_donnees_optimisation.h
-	daily/h2o_j_fonctions.h
+	include/antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h
+	include/antares/solver/hydro/daily/h2o_j_donnees_optimisation.h
+	include/antares/solver/hydro/daily/h2o_j_fonctions.h
 	daily/h2o_j_free.cpp
 	daily/h2o_j_initialiser_les_bornes_des_variables.cpp
 	daily/h2o_j_initialiser_les_second_membre.cpp
@@ -19,9 +19,9 @@ set(SRC_EXT_SOLVER_H2O_DAILY
 set(SRC_EXT_SOLVER_H2O_MONTHLY
 	monthly/h2o_m_construire_les_contraintes.cpp
 	monthly/h2o_m_construire_les_variables.cpp
-	monthly/h2o_m_donnees_annuelles.h
-	monthly/h2o_m_donnees_optimisation.h
-	monthly/h2o_m_fonctions.h
+	include/antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h
+	include/antares/solver/hydro/monthly/h2o_m_donnees_optimisation.h
+	include/antares/solver/hydro/monthly/h2o_m_fonctions.h
 	monthly/h2o_m_free.cpp
 	monthly/h2o_m_initialiser_les_bornes_des_variables.cpp
 	monthly/h2o_m_initialiser_les_second_membre.cpp
@@ -34,9 +34,9 @@ set(SRC_EXT_SOLVER_H2O_MONTHLY
 set(SRC_EXT_SOLVER_H2O2_DAILY
 	daily2/h2o2_j_construire_les_contraintes.cpp
 	daily2/h2o2_j_construire_les_variables.cpp
-	daily2/h2o2_j_donnees_mensuelles.h
-	daily2/h2o2_j_donnees_optimisation.h
-	daily2/h2o2_j_fonctions.h
+	include/antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h
+	include/antares/solver/hydro/daily2/h2o2_j_donnees_optimisation.h
+	include/antares/solver/hydro/daily2/h2o2_j_fonctions.h
 	daily2/h2o2_j_free.cpp
 	daily2/h2o2_j_initialiser_les_bornes_des_variables.cpp
 	daily2/h2o2_j_initialiser_les_second_membre.cpp
@@ -48,8 +48,7 @@ set(SRC_EXT_SOLVER_H2O2_DAILY
 )
 
 set(SRC_MANAGEMENT
-	management.h
-	management/management.h
+	include/antares/solver/hydro/management/management.h
 	management/management.cpp
 	management/monthly.cpp
 	management/daily.cpp
@@ -69,10 +68,15 @@ target_link_libraries(antares-solver-hydro
 		antares-solver-variable
 		Antares::study
 		Antares::mersenne
-		PUBLIC sirius_solver)
+		PUBLIC
+		sirius_solver
+		Antares::date
+		Antares::result_writer
+)
 
 target_include_directories(antares-solver-hydro
-		PRIVATE
-		${CMAKE_SOURCE_DIR}/solver)
+		PUBLIC
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
 
 

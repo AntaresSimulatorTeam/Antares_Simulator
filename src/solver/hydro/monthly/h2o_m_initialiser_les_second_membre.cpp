@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "h2o_m_donnees_annuelles.h"
-#include "h2o_m_fonctions.h"
+#include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
+#include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
 void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES& DonneesAnnuelles)
 {

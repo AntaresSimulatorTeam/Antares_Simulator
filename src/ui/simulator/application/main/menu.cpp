@@ -36,6 +36,7 @@
 #include <antares/config/config.h>
 #include "antares/antares/antares.h"
 #include <ui/common/component/frame/registry.h>
+#include "application/study.h"
 
 using namespace Yuni;
 

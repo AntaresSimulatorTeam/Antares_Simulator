@@ -29,6 +29,7 @@
 #include <antares/benchmarking/DurationCollector.h>
 
 #include <cassert>
+#include "study.h"
 #include "application.h"
 #include "main.h"
 #include "antares/config/config.h"

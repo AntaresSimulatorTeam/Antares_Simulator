@@ -27,7 +27,7 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_ALL_H__
 #define __SOLVER_VARIABLE_ECONOMY_ALL_H__
 
-#include "../variable.h"
+#include "antares/solver/variable/variable.h"
 #include "../area.h"
 #include "../setofareas.h"
 #include "../bindConstraints.h"

@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include "grid.h"
-#include "cbuilder.h"
+#include "antares/solver/constraints-builder/grid.h"
+#include "antares/solver/constraints-builder/cbuilder.h"
 #include <algorithm>
 #include <utility>
 #include <algorithm>

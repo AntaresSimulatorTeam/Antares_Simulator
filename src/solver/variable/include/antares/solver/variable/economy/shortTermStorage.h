@@ -26,7 +26,7 @@
 */
 #pragma once
 
-#include "../variable.h"
+#include "antares/solver/variable/variable.h"
 #include "antares/study/parts/short-term-storage/STStorageOutputCaptions.h"
 
 namespace Antares::Solver::Variable::Economy
