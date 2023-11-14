@@ -38,7 +38,7 @@ void OptimizedThermalGenerator::createOptimizationProblemPerCluster(const Data::
         int numberOfMaintenancesPerUnit;
         int averageMaintenanceDuration;
         numberOfMaintenancesPerUnit = calculateNumberOfMaintenances(
-          cluster, 365); // TODO CR27: get the T-timeHorizon here - parameter or class
+          cluster, timeHorizon_);
         averageMaintenanceDuration
           = calculateAverageMaintenanceDuration(cluster); // this will floor the double value !!
         std::array<double, DAYS_PER_YEAR> maxUnitOutput = calculateMaxUnitOutput(cluster);
