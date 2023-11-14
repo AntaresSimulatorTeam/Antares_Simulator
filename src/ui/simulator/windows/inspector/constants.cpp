@@ -1,4 +1,4 @@
-#include <antares/xpansion.h>
+#include "xpansion.h"
 #include "constants.h"
 
 namespace Antares

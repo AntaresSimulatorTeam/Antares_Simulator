@@ -22,21 +22,18 @@ add_subdirectory(exception)
 add_subdirectory(resources)
 add_subdirectory(sys)
 
+set(HEADERS
+	include/antares/antares/antares.h
+	include/antares/antares/constants.h
+	include/antares/antares/fatal-error.h
+	include/antares/antares/version.h
+	include/antares/antares/Enum.hpp
+	include/antares/antares/Enum.hxx
+)
 set(SRC
-    constants.h
+	${HEADERS}
 	constants.cpp
-	# Misc
-
-	fatal-error.h
-
-	# version
-	version.h
 	version.cpp
-
-    # Enum
-    # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
-    Enum.hpp
-    Enum.hxx
 )
 add_subdirectory(date)
 
@@ -50,13 +47,14 @@ add_subdirectory(mersenne-twister)
 add_subdirectory(series)
 
 add_library(antares-core
-	antares.h
 	${SRC}
 )
 
 #TODO : needed for include yuni : why yuni must be include first ??? cheat : made it public so everybody will have this include (should be done in yuni)
 #TODO : needed for include
 target_include_directories(antares-core
+		PUBLIC
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 		PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs>
 		)

@@ -1,10 +1,10 @@
 set(SRC_OBJECT
-        intrusive-reference.h
-        intrusive-reference.hxx
-        object.h
-        object.hxx
+        include/antares/object/intrusive-reference.h
+        include/antares/object/intrusive-reference.hxx
+        include/antares/object/object.h
+        include/antares/object/object.hxx
         object.cpp
-        ref.h
+        include/antares/object/ref.h
         )
 source_group("object" FILES ${SRC_OBJECT})
 
@@ -13,7 +13,15 @@ add_library(object
 add_library(Antares::object ALIAS object)
 
 target_link_libraries(object
+        PUBLIC
+        antares-core
         PRIVATE
         yuni-static-core
         yuni-static-uuid
         )
+
+target_include_directories(
+        object
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)

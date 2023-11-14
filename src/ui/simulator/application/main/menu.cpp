@@ -34,7 +34,7 @@
 #include "internal-data.h"
 #include "internal-ids.h"
 #include "../../../../config.h"
-#include <antares/antares.h>
+#include "antares/antares/antares.h"
 #include <ui/common/component/frame/registry.h>
 
 using namespace Yuni;

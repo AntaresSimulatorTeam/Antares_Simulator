@@ -303,9 +303,11 @@ target_link_libraries(study
         Antares::result_writer #study.h
         Antares::object
         Antares::series
+        antares-core
     PRIVATE
         Antares::exception
         Antares::benchmarking
+        antares-solver-variable
 )
 
 target_include_directories(study

@@ -44,7 +44,7 @@
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
-#include <antares/Enum.hpp>
+#include "antares/antares/Enum.hpp"
 #include <antares/constants.h>
 
 #include "antares/solver/utils/ortools_utils.h"

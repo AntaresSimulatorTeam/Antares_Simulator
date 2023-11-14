@@ -1,146 +1,146 @@
 project(variable)
 
 set(SRC_VARIABLE
-		variable.h
-		variable.hxx
-		info.h
-		container.h
-		container.hxx
-		endoflist.h
-		state.h
+		include/antares/solver/variable/variable.h
+		include/antares/solver/variable/variable.hxx
+		include/antares/solver/variable/info.h
+		include/antares/solver/variable/container.h
+		include/antares/solver/variable/container.hxx
+		include/antares/solver/variable/endoflist.h
+		include/antares/solver/variable/state.h
 		state.cpp
-		state.hxx
-		area.h
-		area.hxx
-		area.inc.hxx
-		setofareas.h
-		setofareas.hxx
-		bindConstraints.h
-		bindConstraints.hxx
-		constants.h
-		categories.h
-		surveyresults.h
-		surveyresults/reportbuilder.hxx
-		surveyresults/surveyresults.h
-		surveyresults/data.h
+		include/antares/solver/variable/state.hxx
+		include/antares/solver/variable/area.h
+		include/antares/solver/variable/area.hxx
+		include/antares/solver/variable/area.inc.hxx
+		include/antares/solver/variable/setofareas.h
+		include/antares/solver/variable/setofareas.hxx
+		include/antares/solver/variable/bindConstraints.h
+		include/antares/solver/variable/bindConstraints.hxx
+		include/antares/solver/variable/constants.h
+		include/antares/solver/variable/categories.h
+		include/antares/solver/variable/surveyresults.h
+		include/antares/solver/variable/surveyresults/reportbuilder.hxx
+		include/antares/solver/variable/surveyresults/surveyresults.h
+		include/antares/solver/variable/surveyresults/data.h
 		surveyresults/surveyresults.cpp
 		)
 source_group("variable" FILES ${SRC_VARIABLE})
 
 set(SRC_VARIABLE_STORAGE
 		# Storage
-		storage/intermediate.h
-		storage/intermediate.hxx
+		include/antares/solver/variable/storage/intermediate.h
+		include/antares/solver/variable/storage/intermediate.hxx
 		storage/intermediate.cpp
-		storage/results.h
-		storage/empty.h
-		storage/raw.h
-		storage/raw.hxx
-		storage/rawdata.h
+		include/antares/solver/variable/storage/results.h
+		include/antares/solver/variable/storage/empty.h
+		include/antares/solver/variable/storage/raw.h
+		include/antares/solver/variable/storage/raw.hxx
+		include/antares/solver/variable/storage/rawdata.h
 		storage/rawdata.cpp
-		storage/minmax.h
-		storage/minmax.hxx
-		storage/minmax-data.h
+		include/antares/solver/variable/storage/minmax.h
+		include/antares/solver/variable/storage/minmax.hxx
+		include/antares/solver/variable/storage/minmax-data.h
 		storage/minmax-data.cpp
-		storage/average.h
-		storage/averagedata.h
+		include/antares/solver/variable/storage/average.h
+		include/antares/solver/variable/storage/averagedata.h
 		storage/averagedata.cpp
-		storage/stdDeviation.h
-		storage/fwd.h
+		include/antares/solver/variable/storage/stdDeviation.h
+		include/antares/solver/variable/storage/fwd.h
 		)
 source_group("variable\\storage" FILES ${SRC_VARIABLE_STORAGE})
 
 set(SRC_VARIABLE_COMMON
 		# Commons
-		commons/join.h
-		commons/load.h
-		commons/wind.h
-		commons/hydro.h
-		commons/rowBalance.h
-		commons/psp.h
-		commons/miscGenMinusRowPSP.h
-		commons/solar.h
-		commons/spatial-aggregate.h
-		commons/links/links.cpp.inc.hxx
-		commons/links/links.h.inc.hxx
-		commons/links/links.hxx.inc.hxx
+		include/antares/solver/variable/commons/join.h
+		include/antares/solver/variable/commons/load.h
+		include/antares/solver/variable/commons/wind.h
+		include/antares/solver/variable/commons/hydro.h
+		include/antares/solver/variable/commons/rowBalance.h
+		include/antares/solver/variable/commons/psp.h
+		include/antares/solver/variable/commons/miscGenMinusRowPSP.h
+		include/antares/solver/variable/commons/solar.h
+		include/antares/solver/variable/commons/spatial-aggregate.h
+		include/antares/solver/variable/commons/links/links.cpp.inc.hxx
+		include/antares/solver/variable/commons/links/links.h.inc.hxx
+		include/antares/solver/variable/commons/links/links.hxx.inc.hxx
 		)
 source_group("variable\\common" FILES ${SRC_VARIABLE_COMMON})
 
 set(SRC_VARIABLE_ADEQUACY
-		adequacy/all.h
+		include/antares/solver/variable/adequacy/all.h
 		adequacy/area.cpp
 		adequacy/area.memory-estimation.cpp
 		adequacy/bc.memory-estimation.cpp
-		adequacy/links.h
+		include/antares/solver/variable/adequacy/links.h
 		adequacy/links.cpp
-		adequacy/spilledEnergy.h
-		adequacy/overallCost.h
+		include/antares/solver/variable/adequacy/spilledEnergy.h
+		include/antares/solver/variable/adequacy/overallCost.h
 		)
 source_group("variable\\adequacy" FILES ${SRC_VARIABLE_ADEQUACY})
 
 
 set(SRC_VARIABLE_ECONOMY
-		economy/all.h
-		economy/links.h
+		include/antares/solver/variable/economy/all.h
+		include/antares/solver/variable/economy/links.h
 		economy/links.cpp
 		economy/area.cpp
 		economy/area.memory-estimation.cpp
 		economy/bc.memory-estimation.cpp
 
 		# Variables for Economy
-		economy/max-mrg.h
+		include/antares/solver/variable/economy/max-mrg.h
 		economy/max-mrg.cpp
-		economy/price.h
-		economy/balance.h
-		economy/operatingCost.h
-		economy/overallCost.h
-		economy/nonProportionalCost.h
-		economy/hydrostorage.h
-		economy/pumping.h
-		economy/reservoirlevel.h
-		economy/inflow.h
-		economy/overflow.h
-		economy/waterValue.h
-		economy/hydroCost.h
-		economy/shortTermStorage.h
-		economy/STStorageInjectionByCluster.h
-		economy/STStorageWithdrawalByCluster.h
-		economy/STStorageLevelsByCluster.h
-		economy/STStorageCashFlowByCluster.h
-		economy/unsupliedEnergy.h
-		economy/domesticUnsuppliedEnergy.h
-		economy/localMatchingRuleViolations.h
-		economy/spilledEnergyAfterCSR.h
-		economy/dtgMarginAfterCsr.h
-		economy/spilledEnergy.h
-		economy/dispatchableGeneration.h
-		economy/renewableGeneration.h
-		economy/thermalAirPollutantEmissions.h
-		economy/productionByDispatchablePlant.h
-        economy/productionByRenewablePlant.h
-		economy/npCostByDispatchablePlant.h
-		economy/nbOfDispatchedUnitsByPlant.h
-		economy/nbOfDispatchedUnits.h
-		economy/profitByPlant.h
-		economy/lold.h
-		economy/lolp.h
-		economy/avail-dispatchable-generation.h
-		economy/dispatchable-generation-margin.h
+		include/antares/solver/variable/economy/price.h
+		include/antares/solver/variable/economy/balance.h
+		include/antares/solver/variable/economy/operatingCost.h
+		include/antares/solver/variable/economy/overallCost.h
+		include/antares/solver/variable/economy/nonProportionalCost.h
+		include/antares/solver/variable/economy/hydrostorage.h
+		include/antares/solver/variable/economy/pumping.h
+		include/antares/solver/variable/economy/reservoirlevel.h
+		include/antares/solver/variable/economy/inflow.h
+		include/antares/solver/variable/economy/overflow.h
+		include/antares/solver/variable/economy/waterValue.h
+		include/antares/solver/variable/economy/hydroCost.h
+		include/antares/solver/variable/economy/shortTermStorage.h
+		include/antares/solver/variable/economy/STStorageInjectionByCluster.h
+		include/antares/solver/variable/economy/STStorageWithdrawalByCluster.h
+		include/antares/solver/variable/economy/STStorageLevelsByCluster.h
+		include/antares/solver/variable/economy/STStorageCashFlowByCluster.h
+		include/antares/solver/variable/economy/unsupliedEnergy.h
+		include/antares/solver/variable/economy/domesticUnsuppliedEnergy.h
+		include/antares/solver/variable/economy/localMatchingRuleViolations.h
+		include/antares/solver/variable/economy/spilledEnergyAfterCSR.h
+		include/antares/solver/variable/economy/dtgMarginAfterCsr.h
+		include/antares/solver/variable/economy/spilledEnergy.h
+		include/antares/solver/variable/economy/dispatchableGeneration.h
+		include/antares/solver/variable/economy/renewableGeneration.h
+		include/antares/solver/variable/economy/thermalAirPollutantEmissions.h
+		include/antares/solver/variable/economy/productionByDispatchablePlant.h
+        include/antares/solver/variable/economy/productionByRenewablePlant.h
+		include/antares/solver/variable/economy/npCostByDispatchablePlant.h
+		include/antares/solver/variable/economy/nbOfDispatchedUnitsByPlant.h
+		include/antares/solver/variable/economy/nbOfDispatchedUnits.h
+		include/antares/solver/variable/economy/profitByPlant.h
+		include/antares/solver/variable/economy/lold.h
+		include/antares/solver/variable/economy/lolp.h
+		include/antares/solver/variable/economy/avail-dispatchable-generation.h
+		include/antares/solver/variable/economy/dispatchable-generation-margin.h
 
 		# Links
-		economy/links/flowLinear.h
-		economy/links/flowLinearAbs.h
-		economy/links/loopFlow.h
-		economy/links/flowQuad.h
-		economy/links/hurdleCosts.h
-		economy/links/congestionFee.h
-		economy/links/congestionFeeAbs.h
-		economy/links/marginalCost.h
-		economy/links/congestionProbability.h
+		include/antares/solver/variable/economy/links/flowLinear.h
+		include/antares/solver/variable/economy/links/flowLinearAbs.h
+		include/antares/solver/variable/economy/links/loopFlow.h
+		include/antares/solver/variable/economy/links/flowQuad.h
+		include/antares/solver/variable/economy/links/hurdleCosts.h
+		include/antares/solver/variable/economy/links/congestionFee.h
+		include/antares/solver/variable/economy/links/congestionFeeAbs.h
+		include/antares/solver/variable/economy/links/marginalCost.h
+		include/antares/solver/variable/economy/links/congestionProbability.h
 		
 		# Binding constraints
-		economy/bindingConstraints/bindingConstraintsMarginalCost.h
+		include/antares/solver/variable/economy/bindingConstraints/bindingConstraintsMarginalCost.h
 		)
 source_group("variable\\economy" FILES ${SRC_VARIABLE_ECONOMY})
 
@@ -161,30 +161,38 @@ target_include_directories(antares-solver-variable
         PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs>
 		PUBLIC
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
-target_link_libraries(antares-solver-variable PRIVATE antares-core
-	Antares::study
+target_link_libraries(antares-solver-variable
+		PUBLIC
+		antares-solver-simulation
+		PRIVATE
+		antares-core
+		Antares::study
 )
 
 
 add_library(antares-solver-variable-info
-		adequacy/all.h
-		economy/all.h
+		include/antares/solver/variable/adequacy/all.h
+		include/antares/solver/variable/economy/all.h
 		economy/area.memory-estimation.cpp
 		adequacy/area.memory-estimation.cpp
 		economy/bc.memory-estimation.cpp
 		adequacy/bc.memory-estimation.cpp
-		surveyresults.h
-		surveyresults/surveyresults.h
-		surveyresults/data.h
+		include/antares/solver/variable/surveyresults.h
+		include/antares/solver/variable/surveyresults/surveyresults.h
+		include/antares/solver/variable/surveyresults/data.h
 		surveyresults/surveyresults.cpp
 )
 target_include_directories(antares-solver-variable-info
+		PUBLIC
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs>
 )
-target_link_libraries(antares-solver-variable-info PRIVATE antares-core
-	Antares::study
+target_link_libraries(antares-solver-variable-info
+		PRIVATE
+		antares-core
+		Antares::study
 )
 

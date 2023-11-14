@@ -33,7 +33,7 @@
 #include <antares/inifile/inifile.h>
 #include <antares/logs/hostname.hxx>
 #include "antares/config/config.h"
-#include <antares/fatal-error.h>
+#include <antares/antares/fatal-error.h>
 #include <yuni/core/system/environment.h>
 #include <yuni/core/system/process.h>
 #include <yuni/core/system/username.h>

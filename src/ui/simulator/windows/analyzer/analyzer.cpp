@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/antares.h>
+#include "antares/antares/antares.h"
 #include "analyzer.h"
 #include <yuni/io/directory.h>
 #include <yuni/io/directory/info.h>
@@ -54,7 +54,7 @@
 #include <antares/logs/logs.h>
 #include <antares/inifile/inifile.h>
 #include "../../application/study.h"
-#include <antares/config.h>
+#include <antares/config/config.h>
 #include <antares/io/statistics.h>
 
 using namespace Yuni;

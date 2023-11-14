@@ -47,5 +47,5 @@ target_link_libraries(antares-ui-windows-studyparts
 		${wxWidgets_LIBRARIES}
 		Antares::study
 )
-target_link_libraries(antares-ui-windows-studyparts PRIVATE antares-ui-common)
+target_link_libraries(antares-ui-windows-studyparts PRIVATE antares-ui-common Antares::resources)
 

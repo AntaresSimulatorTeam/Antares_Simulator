@@ -49,7 +49,7 @@ set(TARGET_LIBS #No alias
         config
         #
         signal-handling
-        #minizip target does not exist
+        antares-solver-variable-info
 )
 
 install(TARGETS ${TARGET_LIBS}

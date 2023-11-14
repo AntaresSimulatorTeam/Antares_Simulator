@@ -37,7 +37,7 @@
 #include "../daily/h2o_j_fonctions.h"
 #include "../daily2/h2o2_j_donnees_mensuelles.h"
 #include "../daily2/h2o2_j_fonctions.h"
-#include "../../simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include <sstream>
 #include <cassert>
 #include <limits>

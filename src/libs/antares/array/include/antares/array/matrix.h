@@ -30,8 +30,8 @@
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
 #include <cassert>
-#include "../../jit.h"
-#include "../../constants.h"
+#include "antares/jit/jit.h"
+#include "antares/antares/antares.h"
 #include <set>
 #include <antares/memory/memory.h>
 #include "antares/study/fwd.h"

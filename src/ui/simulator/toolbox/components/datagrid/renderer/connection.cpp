@@ -26,7 +26,7 @@
 */
 
 #include "connection.h"
-#include "../../../libs/antares/constants.h"
+#include "antares/antares/constants.h"
 #include <antares/study/area/constants.h>
 #include <yuni/core/math.h>
 

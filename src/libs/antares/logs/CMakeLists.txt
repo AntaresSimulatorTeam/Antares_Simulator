@@ -25,6 +25,7 @@ endif()
 target_link_libraries(${PROJ}
         PUBLIC
         yuni-static-core
+        antares-core
         )
 
 target_include_directories(${PROJ}

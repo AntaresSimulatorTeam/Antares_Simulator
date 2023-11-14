@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../../antares.h"
+#include "antares/antares/antares.h"
 #include <yuni/io/file.h>
 #include "antares/study//study.h"
 #include <cassert>
@@ -33,7 +33,7 @@
 #include "antares/study/area/area.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include "../../constants.h"
+#include "antares/antares/antares.h"
 #include "antares/study/parts/parts.h"
 #include "antares/study/parts/load/prepro.h"
 
