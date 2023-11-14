@@ -36,6 +36,7 @@
 #include <ui/common/lock.h>
 #include "../wait.h"
 #include "antares/study/ui-runtimeinfos.h"
+#include "application/study.h"
 
 #define SEP IO::Separator
 

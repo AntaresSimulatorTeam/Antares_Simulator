@@ -30,7 +30,7 @@
 #include <iostream>
 #include <yuni/core/getopt.h>
 #include <antares/args/args_to_utf8.h>
-#include <antares/version.h>
+#include <antares/antares/version.h>
 #include <yuni/core/system/username.h>
 #include <antares/locale/locale.h>
 #include <antares/sys/policy.h>

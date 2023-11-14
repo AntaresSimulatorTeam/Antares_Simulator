@@ -1,6 +1,6 @@
 #pragma once
-#include "opt_structure_probleme_a_resoudre.h"
-#include "opt_export_structure.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_export_structure.h"
 
 const std::string SEPARATOR = "::";
 const std::string AREA_SEP = "$$";

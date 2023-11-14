@@ -26,7 +26,7 @@
 */
 
 #include <yuni/yuni.h>
-#include "rawdata.h"
+#include "antares/solver/variable/storage/rawdata.h"
 
 using namespace Yuni;
 

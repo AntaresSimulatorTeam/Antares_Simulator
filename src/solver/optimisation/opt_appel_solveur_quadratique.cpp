@@ -27,9 +27,9 @@
 
 #include <limits>
 
-#include "opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "opt_fonctions.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
 
 /*
  pi_define.h doesn't include this header, yet it uses struct jmp_buf.

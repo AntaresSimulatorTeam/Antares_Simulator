@@ -1,4 +1,4 @@
-#include "PMaxDispatchableGeneration.h"
+#include "antares/solver/optimisation/constraints/PMaxDispatchableGeneration.h"
 
 void PMaxDispatchableGeneration::add(int pays,
                                      int cluster,

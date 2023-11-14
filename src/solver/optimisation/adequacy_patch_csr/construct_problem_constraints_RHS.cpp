@@ -25,10 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "hourly_csr_problem.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
 #include <antares/logs/logs.h>
-#include <sim_structure_probleme_economique.h>
-#include "adequacy_patch_runtime_data.h"
+#include <antares/solver/simulation/sim_structure_probleme_economique.h>
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
 void HourlyCSRProblem::setRHSvalueOnFlows()
 {

@@ -28,8 +28,8 @@
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 #include <antares/study/area/scratchpad.h>
-#include <antares/fatal-error.h>
-#include "management.h"
+#include <antares/antares/fatal-error.h>
+#include "antares/solver/hydro/management/management.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include <yuni/core/math.h>
 #include <limits>

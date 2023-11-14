@@ -27,7 +27,7 @@
 
 #pragma once
 
-#include "../simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 namespace Antares::Data::AdequacyPatch
 {

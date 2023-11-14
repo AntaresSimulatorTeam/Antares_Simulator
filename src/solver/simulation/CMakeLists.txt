@@ -54,7 +54,7 @@ add_library(antares-solver-simulation
 		${SRC_SIMULATION}  )
 
 target_include_directories(antares-solver-simulation PUBLIC
-		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/solver/simulation/include>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
 target_link_libraries(antares-solver-simulation PRIVATE
@@ -67,4 +67,6 @@ target_link_libraries(antares-solver-simulation PRIVATE
 		Antares::solverUtils
 		Antares::misc
 		model_antares
+		antares-solver-hydro
+		antares-solver-variable
 )

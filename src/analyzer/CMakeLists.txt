@@ -58,6 +58,7 @@ target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
 		PUBLIC
 			Antares::study #atsp -> xcast
 			Antares::sys
+			Antares::locale
 		)
 
 import_std_libs(antares-${ANTARES_PRG_VERSION}-analyzer)

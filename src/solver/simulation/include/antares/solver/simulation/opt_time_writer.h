@@ -28,7 +28,7 @@
 #include <yuni/core/string.h>
 #include <antares/writer/i_writer.h>
 
-#include "simulation.h"
+#include "antares/solver/simulation/simulation.h"
 
 class OptimizationStatisticsWriter
 {

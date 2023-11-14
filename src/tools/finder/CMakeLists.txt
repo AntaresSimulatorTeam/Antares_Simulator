@@ -37,6 +37,7 @@ target_link_libraries(${execname}
 			${FINDER_LIBS}
 		PUBLIC
 			Antares::study
+			Antares::locale
 		)
 
 import_std_libs(${execname})

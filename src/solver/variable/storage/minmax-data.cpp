@@ -26,8 +26,8 @@
 */
 
 #include <yuni/yuni.h>
-#include "intermediate.h"
-#include "minmax-data.h"
+#include "antares/solver/variable/storage/intermediate.h"
+#include "antares/solver/variable/storage/minmax-data.h"
 #include <cfloat>
 
 using namespace Yuni;

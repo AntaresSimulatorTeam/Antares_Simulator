@@ -25,5 +25,5 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "links.h"
-#include "../commons/links/links.cpp.inc.hxx"
+#include "antares/solver/variable/economy/links.h"
+#include "antares/solver/variable/commons/links/links.cpp.inc.hxx"

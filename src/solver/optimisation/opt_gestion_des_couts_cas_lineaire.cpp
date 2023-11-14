@@ -27,14 +27,14 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/area/scratchpad.h>
-#include "opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/sim_spread_generator.h"
-#include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/sim_spread_generator.h"
+#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
-#include "opt_fonctions.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
 
 static void shortTermStorageCost(
   int PremierPdtDeLIntervalle,

@@ -1,4 +1,4 @@
-#include "FinalStockExpression.h"
+#include "antares/solver/optimisation/constraints/FinalStockExpression.h"
 
 void FinalStockExpression::add(int pays)
 {

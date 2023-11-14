@@ -27,17 +27,17 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_HXX__
 #define __SOLVER_SIMULATION_SOLVER_HXX__
 
-#include "../variable/constants.h"
+#include "antares/solver/variable/constants.h"
 #include <antares/logs/logs.h>
 #include <antares/date/date.h>
 #include <antares/benchmarking/timer.h>
 #include <antares/exception/InitializationError.hpp>
-#include "../variable/print.h"
+#include "antares/solver/variable/print.h"
 #include <yuni/io/io.h>
 #include "timeseries-numbers.h"
 #include "apply-scenario.h"
-#include <antares/fatal-error.h>
-#include "../ts-generator/generator.h"
+#include <antares/antares/fatal-error.h>
+#include "antares/solver/ts-generator/generator.h"
 #include "opt_time_writer.h"
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
 

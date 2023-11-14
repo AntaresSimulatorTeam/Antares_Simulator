@@ -27,11 +27,11 @@
 #ifndef __SOLVER_SIMULATION_ADEQUACY_H__
 #define __SOLVER_SIMULATION_ADEQUACY_H__
 
-#include "../variable/variable.h"
-#include "../variable/adequacy/all.h"
-#include "../variable/economy/all.h"
-#include "../variable/state.h"
-#include "common-eco-adq.h"
+#include "antares/solver/variable/variable.h"
+#include "antares/solver/variable/adequacy/all.h"
+#include "antares/solver/variable/economy/all.h"
+#include "antares/solver/variable/state.h"
+#include "antares/solver/Simulation/common-eco-adq.h"
 
 #include "solver.h" // for definition of type yearRandomNumbers
 #include "antares/infoCollection/StudyInfoCollector.h"

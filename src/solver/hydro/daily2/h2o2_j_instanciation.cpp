@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "h2o2_j_donnees_mensuelles.h"
-#include "h2o2_j_fonctions.h"
+#include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
+#include "antares/solver/hydro/daily2/h2o2_j_fonctions.h"
 
 DONNEES_MENSUELLES_ETENDUES H2O2_J_Instanciation()
 {

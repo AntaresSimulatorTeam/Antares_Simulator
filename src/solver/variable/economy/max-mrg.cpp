@@ -27,7 +27,7 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "max-mrg.h"
+#include "antares/solver/variable/economy/max-mrg.h"
 #include <antares/study/area/scratchpad.h>
 
 using namespace Yuni;

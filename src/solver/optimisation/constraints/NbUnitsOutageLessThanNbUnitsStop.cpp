@@ -1,4 +1,4 @@
-#include "NbUnitsOutageLessThanNbUnitsStop.h"
+#include "antares/solver/optimisation/constraints/NbUnitsOutageLessThanNbUnitsStop.h"
 
 void NbUnitsOutageLessThanNbUnitsStop::add(int pays,
                                            int cluster,

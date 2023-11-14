@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "all.h"
+#include "antares/solver/variable/economy/all.h"
 
 using NEXTTYPE = Solver::Variable::Economy::VariablesPerArea;
-#include "../area.memory-estimation.inc.hxx"
+#include "antares/solver/variable/area.memory-estimation.inc.hxx"

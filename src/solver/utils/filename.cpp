@@ -1,7 +1,7 @@
 #include <sstream>
 #include "antares/solver/utils/filename.h"
-#include "../optimisation/opt_period_string_generator_base.h"
-#include "include/antares/solver/utils/opt_period_string_generator.h"
+#include "antares/solver/optimisation/opt_period_string_generator_base.h"
+#include "antares/solver/utils/opt_period_string_generator.h"
 
 // ------------------------------------
 // Optimization period factory

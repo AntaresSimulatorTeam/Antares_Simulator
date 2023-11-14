@@ -14,6 +14,8 @@ add_library(antares-fswalker
 )
 
 target_include_directories(antares-fswalker
+		PUBLIC
+			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
 		PRIVATE
 			${CMAKE_SOURCE_DIR}/libs
 		)

@@ -37,9 +37,10 @@
 
 #include "antares/antares/antares.h"
 #include "antares/object/object.h"
+#include "antares/study/simulation.h"
 #include "fwd.h"
 
-#include "simulation.h"
+#include "antares/solver/simulation/simulation.h"
 #include "parameters.h"
 #include "binding_constraint/BindingConstraint.h"
 #include "header.h"

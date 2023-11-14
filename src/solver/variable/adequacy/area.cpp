@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "all.h"
+#include "antares/solver/variable/adequacy/all.h"
 
 #define NEXTTYPE Adequacy::VariablesPerArea
-#include "../area.inc.hxx"
+#include "antares/solver/variable/area.inc.hxx"

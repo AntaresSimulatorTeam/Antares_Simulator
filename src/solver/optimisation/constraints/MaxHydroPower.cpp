@@ -1,4 +1,4 @@
-#include "MaxHydroPower.h"
+#include "antares/solver/optimisation/constraints/MaxHydroPower.h"
 
 void MaxHydroPower::add(int pays)
 {

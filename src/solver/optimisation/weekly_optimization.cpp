@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "weekly_optimization.h"
-#include "opt_fonctions.h"
+#include "antares/solver/optimisation/weekly_optimization.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
 
 namespace Antares::Solver::Optimization
 {

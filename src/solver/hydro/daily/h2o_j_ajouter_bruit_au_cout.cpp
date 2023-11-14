@@ -1,6 +1,6 @@
 #include <antares/mersenne-twister/mersenne-twister.h>
-#include "h2o_j_donnees_mensuelles.h"
-#include "h2o_j_fonctions.h"
+#include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
+#include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
 namespace Constants
 {

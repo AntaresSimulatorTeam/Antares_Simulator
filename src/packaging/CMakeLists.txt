@@ -26,6 +26,7 @@ set(TARGET_LIBS #No alias
         antares-solver-ts-generator
         model_antares
         antares-core
+        locale
         #deps of deps
         exception
         logs

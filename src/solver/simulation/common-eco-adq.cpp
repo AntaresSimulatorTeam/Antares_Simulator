@@ -31,11 +31,11 @@
 #include <antares/study/area/scratchpad.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 
-#include "common-eco-adq.h"
+#include "antares/solver/simulation/common-eco-adq.h"
 #include <antares/logs/logs.h>
 #include <cassert>
 #include <map>
-#include "simulation.h"
+#include "antares/solver/simulation/simulation.h"
 
 using namespace Yuni;
 

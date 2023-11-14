@@ -26,8 +26,8 @@
 */
 
 #include <yuni/yuni.h>
-#include "intermediate.h"
-#include "averagedata.h"
+#include "antares/solver/variable/storage/intermediate.h"
+#include "antares/solver/variable/storage/averagedata.h"
 
 using namespace Yuni;
 

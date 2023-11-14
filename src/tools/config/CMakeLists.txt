@@ -45,6 +45,8 @@ target_link_libraries(${execname}
 			${CONFIG_LIBS}
 			Antares::array
 			Antares::sys
+		Antares::resources
+		Antares::locale
 		antares-core #ressource.h
 		)
 

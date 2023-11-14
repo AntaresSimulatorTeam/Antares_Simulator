@@ -38,6 +38,8 @@ set(VACUUM_LIBS
 	${CMAKE_THREADS_LIBS_INIT}
 	Antares::args_helper
 	Antares::study
+		antares-fswalker
+		Antares::locale
 )
 
 target_link_libraries(${execname}

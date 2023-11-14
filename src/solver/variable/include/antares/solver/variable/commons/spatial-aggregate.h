@@ -27,7 +27,7 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_SPATIAL_AGGREGATE_H__
 #define __SOLVER_VARIABLE_ECONOMY_SPATIAL_AGGREGATE_H__
 
-#include "../variable.h"
+#include "antares/solver/variable/variable.h"
 // #include <antares/logs/logs.h>	// In case it is needed
 
 namespace Antares

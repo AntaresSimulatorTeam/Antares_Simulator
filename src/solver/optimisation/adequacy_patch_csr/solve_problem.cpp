@@ -25,12 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "../solver/simulation/simulation.h"
-#include "../solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-#include "../solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
 
 /*
  pi_define.h doesn't include this header, yet it uses struct jmp_buf.

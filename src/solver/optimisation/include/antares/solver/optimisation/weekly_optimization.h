@@ -28,7 +28,7 @@
 #pragma once
 
 #include "base_weekly_optimization.h"
-#include "../simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 namespace Antares::Solver::Optimization
 {

@@ -24,7 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include "opt_time_writer.h"
+#include "antares/solver/simulation/opt_time_writer.h"
 
 OptimizationStatisticsWriter::OptimizationStatisticsWriter(
   Antares::Solver::IResultWriter& writer,

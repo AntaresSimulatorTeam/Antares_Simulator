@@ -28,9 +28,9 @@
 #define __SOLVER_SIMULATION_H__
 
 #include "antares/config/config.h"
-#include "sim_structure_donnees.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
 #include <antares/study/study.h>
-#include "../solver/hydro/management.h"
+#include "antares/solver/hydro/management/management.h"
 
 struct PROBLEME_HEBDO;
 
@@ -58,7 +58,7 @@ void SIM_RenseignementProblemeHebdo(const Antares::Data::Study& study,
                                     uint weekInTheYear,
                                     uint numSpace,
                                     const int,
-                                    const HYDRO_VENTILATION_RESULTS&);
+                                    const Antares::HYDRO_VENTILATION_RESULTS&);
 
 void SIM_RenseignementProblemeHoraireAdequation(uint);
 

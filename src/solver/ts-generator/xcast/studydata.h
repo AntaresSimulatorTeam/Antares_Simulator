@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/xcast/xcast.h>
-#include <antares/correlation/include/antares/correlation/correlation.h> //TODO collision
+#include <antares/correlation/correlation.h>
 
 namespace Antares::Solver::TSGenerator::XCast
 {

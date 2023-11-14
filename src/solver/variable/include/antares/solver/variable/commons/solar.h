@@ -27,7 +27,7 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesSolar_H__
 #define __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesSolar_H__
 
-#include "../variable.h"
+#include "antares/solver/variable/variable.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
 
 namespace Antares

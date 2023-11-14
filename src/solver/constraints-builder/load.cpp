@@ -24,10 +24,10 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include "cbuilder.h"
+#include "antares/solver/constraints-builder/cbuilder.h"
 #include <antares/inifile/inifile.h>
 #include "antares/config/config.h"
-#include "../../libs/antares/study/area/constants.h"
+#include "antares/study/area/constants.h"
 #include <yuni/io/file.h>
 //#include <wx/wx.h> // bourrin -> � modifier
 //#include "../../ui/simulator/application/study.h"

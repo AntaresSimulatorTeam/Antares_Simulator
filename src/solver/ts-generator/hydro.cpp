@@ -26,9 +26,9 @@
 */
 
 #include <yuni/yuni.h>
-#include "../simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include <antares/benchmarking/DurationCollector.h>
-#include <antares/fatal-error.h>
+#include <antares/antares/fatal-error.h>
 #include <antares/writer/i_writer.h>
 #include "antares/solver/misc/cholesky.h"
 #include "antares/solver/misc/matrix-dp-make.h"

@@ -304,6 +304,7 @@ target_link_libraries(study
         Antares::object
         Antares::series
         antares-core
+        antares-solver-simulation
     PRIVATE
         Antares::exception
         Antares::benchmarking

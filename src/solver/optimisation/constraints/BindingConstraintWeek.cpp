@@ -1,4 +1,4 @@
-#include "BindingConstraintWeek.h"
+#include "antares/solver/optimisation/constraints/BindingConstraintWeek.h"
 
 void BindingConstraintWeek::add(int cntCouplante)
 {

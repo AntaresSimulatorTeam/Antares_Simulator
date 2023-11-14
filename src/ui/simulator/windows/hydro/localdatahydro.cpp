@@ -37,11 +37,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
-{
-namespace Hydro
+namespace Antares::Window::Hydro
 {
 Localdatahydro::Localdatahydro(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
  Component::Panel(parent), pNotifier(notifier), pLastArea(nullptr)
@@ -97,6 +93,6 @@ void Localdatahydro::onStudyLoaded()
         pPageFatal->select();
 }
 
-} // namespace Hydro
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Hydro
+
+

@@ -1,4 +1,4 @@
-#include "AreaBalance.h"
+#include "antares/solver/optimisation/constraints/AreaBalance.h"
 
 static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
                                     ConstraintBuilder& constraintBuilder)

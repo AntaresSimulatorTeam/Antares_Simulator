@@ -25,10 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "adequacy_patch_weekly_optimization.h"
-#include "../opt_fonctions.h"
-#include "../simulation/simulation.h"
-#include "../simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/study/fwd.h"
 
 using namespace Antares::Data::AdequacyPatch;

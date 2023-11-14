@@ -1,5 +1,5 @@
 
-#include "FictitiousLoad.h"
+#include "antares/solver/optimisation/constraints/FictitiousLoad.h"
 
 void FictitiousLoad::add(int pdt, int pays)
 {

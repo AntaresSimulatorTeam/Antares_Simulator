@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../simulation/base_post_process.h"
+#include "antares/solver/simulation/base_post_process.h"
 #include "antares/study/parameters/adq-patch-params.h"
 
 namespace Antares::Solver::Simulation

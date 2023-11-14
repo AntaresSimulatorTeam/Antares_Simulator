@@ -67,6 +67,7 @@ target_link_libraries(${execname}
 		PUBLIC
 			Antares::memory
 			Antares::utils
+			Antares::locale
 		)
 
 import_std_libs(${execname})

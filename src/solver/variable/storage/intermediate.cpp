@@ -28,7 +28,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
 #include <antares/study/study.h>
-#include "intermediate.h"
+#include "antares/solver/variable/storage/intermediate.h"
 
 using namespace Yuni;
 

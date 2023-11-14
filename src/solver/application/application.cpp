@@ -3,13 +3,13 @@
 #include <antares/sys/policy.h>
 #include <antares/resources/resources.h>
 #include <antares/logs/hostinfo.h>
-#include <antares/fatal-error.h>
+#include <antares/antares/fatal-error.h>
 #include <antares/benchmarking/timer.h>
 
 #include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/checks/checkLoadedInputData.h>
-#include <antares/version.h>
+#include <antares/antares/version.h>
 #include <antares/writer/writer_factory.h>
 
 #include "antares/signal-handling/public.h"
@@ -28,7 +28,7 @@
 
 #include <algorithm>
 
-#include "../simulation/simulation.h"
+#include "antares/solver/simulation/simulation.h"
 
 using namespace Antares::Check;
 

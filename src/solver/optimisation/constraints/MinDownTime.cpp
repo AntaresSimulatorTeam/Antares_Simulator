@@ -1,4 +1,4 @@
-#include "MinDownTime.h"
+#include "antares/solver/optimisation/constraints/MinDownTime.h"
 
 void MinDownTime::add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)
 {

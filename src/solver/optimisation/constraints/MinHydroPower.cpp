@@ -1,4 +1,4 @@
-#include "MinHydroPower.h"
+#include "antares/solver/optimisation/constraints/MinHydroPower.h"
 
 void MinHydroPower::add(int pays)
 {

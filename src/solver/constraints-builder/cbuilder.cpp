@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include <cmath>
-#include "cbuilder.h"
-#include "grid.h"
+#include "antares/solver/constraints-builder/cbuilder.h"
+#include "antares/solver/constraints-builder/grid.h"
 
 using namespace Yuni;
 

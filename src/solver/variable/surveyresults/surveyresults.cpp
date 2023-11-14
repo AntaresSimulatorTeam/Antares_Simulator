@@ -28,7 +28,7 @@
 #include <algorithm>
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "surveyresults.h"
+#include "antares/solver/variable/surveyresults/surveyresults.h"
 #include <antares/logs/logs.h>
 #include <yuni/io/file.h>
 #include <antares/io/file.h>

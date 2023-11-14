@@ -25,19 +25,19 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-#include "opt_fonctions.h"
-#include "opt_rename_problem.h"
-#include "constraints/PMaxDispatchableGeneration.h"
-#include "constraints/PMinDispatchableGeneration.h"
-#include "constraints/ConsistenceNumberOfDispatchableUnits.h"
-#include "constraints/NbUnitsOutageLessThanNbUnitsStop.h"
-#include "constraints/NbDispUnitsMinBoundSinceMinUpTime.h"
-#include "constraints/MinDownTime.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_rename_problem.h"
+#include "antares/solver/optimisation/constraints/PMaxDispatchableGeneration.h"
+#include "antares/solver/optimisation/constraints/PMinDispatchableGeneration.h"
+#include "antares/solver/optimisation/constraints/ConsistenceNumberOfDispatchableUnits.h"
+#include "antares/solver/optimisation/constraints/NbUnitsOutageLessThanNbUnitsStop.h"
+#include "antares/solver/optimisation/constraints/NbDispUnitsMinBoundSinceMinUpTime.h"
+#include "antares/solver/optimisation/constraints/MinDownTime.h"
 
 using namespace Antares::Data;
 
