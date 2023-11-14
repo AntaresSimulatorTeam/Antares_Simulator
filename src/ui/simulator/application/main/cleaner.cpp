@@ -28,6 +28,7 @@
 #include "main.h"
 #include "../../windows/cleaner.h"
 #include "antares/study/study.h"
+#include "antares/study/study.h"
 
 namespace Antares
 {

@@ -24,9 +24,12 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIB_FINDER_H__
-#define __ANTARES_LIB_FINDER_H__
+#ifndef __ANTARES_H__
+#define __ANTARES_H__
 
-#include "finder/finder.h"
+#include <yuni/yuni.h>
+#include <yuni/core/foreach.h>
 
-#endif // __ANTARES_LIB_FINDER_H__
+#define foreach YUNI_FOREACH
+
+#endif // __ANTARES_H__
