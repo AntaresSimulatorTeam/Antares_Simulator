@@ -1,8 +1,8 @@
 #include "MaxPumping.h"
 
-void MaxPumping::add(int pays, MaxPumpingData& data)
+void MaxPumping::add(int pays)
 {
-    if (data.PresenceDePompageModulable)
+    if (data.CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
     {
         data.NumeroDeContrainteMaxPompage[pays] = builder->data->nombreDeContraintes;
 

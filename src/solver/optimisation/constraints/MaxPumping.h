@@ -2,7 +2,7 @@
 #include "ConstraintBuilder.h"
 struct MaxPumpingData
 {
-    const bool& PresenceDePompageModulable;
+    const std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
     std::vector<int>& NumeroDeContrainteMaxPompage;
 };
 /*!
@@ -12,11 +12,17 @@ struct MaxPumpingData
 class MaxPumping : private ConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
+    MaxPumping(std::shared_ptr<ConstraintBuilder> builder, MaxPumpingData& data) :
+     ConstraintFactory(builder), data(data)
+    {
+    }
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area
      */
-    void add(int pays, MaxPumpingData& data);
+    void add(int pays);
+
+private:
+    MaxPumpingData& data;
 };
