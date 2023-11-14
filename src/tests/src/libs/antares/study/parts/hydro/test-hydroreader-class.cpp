@@ -66,16 +66,16 @@ struct Fixture
         // Create necessary folders and files for these two areas
         createFoldersAndFiles();
 
-        auto& gen = dailyMaxPumpAndGen[0U];
+        auto& gen = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxP];
         fillColumnWithSpecialEnds(gen, 300., DAYS_PER_YEAR);
 
-        auto& pump = dailyMaxPumpAndGen[2U];
+        auto& pump = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxP];
         fillColumnWithSpecialEnds(pump, 200., DAYS_PER_YEAR);
 
-        auto& hoursGen = dailyMaxPumpAndGen[1U];
+        auto& hoursGen = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxE];
         fillColumnWithSpecialEnds(hoursGen, 20., DAYS_PER_YEAR);
 
-        auto& hoursPump = dailyMaxPumpAndGen[3U];
+        auto& hoursPump = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxE];
         fillColumnWithSpecialEnds(hoursPump, 14., DAYS_PER_YEAR);
 
         std::string buffer;
@@ -164,10 +164,10 @@ BOOST_FIXTURE_TEST_CASE(Testing_support_for_old_studies, Fixture)
     auto& genE = area_1->hydro.dailyNbHoursAtGenPmax[0];
     auto& pumpE = area_1->hydro.dailyNbHoursAtPumpPmax[0];
 
-    auto& genPReader = dailyMaxPumpAndGen[0U];
-    auto& pumpPReader = dailyMaxPumpAndGen[2U];
-    auto& genEReader = dailyMaxPumpAndGen[1U];
-    auto& pumpEReader = dailyMaxPumpAndGen[3U];
+    auto& genPReader = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxP];
+    auto& pumpPReader = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxP];
+    auto& genEReader = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxE];
+    auto& pumpEReader = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxE];
 
     buffer.clear();
     buffer = base_folder + SEP + hydro_folder;

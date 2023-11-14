@@ -45,9 +45,6 @@ public:
 
     bool read(const AnyString& folder, bool usedBySolver);
 
-private:
-    Matrix<double, double> dailyMaxPumpAndGen;
-
     enum powerDailyE
     {
         //! Generated max power
@@ -59,6 +56,9 @@ private:
         // Pumping max Energy
         pumpMaxE,
     };
+
+private:
+    Matrix<double, double> dailyMaxPumpAndGen;
 
     PartHydro& hydro_;
     std::string areaID_;
