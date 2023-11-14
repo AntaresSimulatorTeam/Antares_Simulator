@@ -34,13 +34,13 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
     }
 }
 
-void OptimizedThermalGenerator::createOptimizationProblemPerGroup(OptProblemSettings& optSett)
+void OptimizedThermalGenerator::createOptimizationProblemPerGroup(const OptProblemSettings& optSett)
 {
     runOptimizationProblem();
     // ...
     // do the optimization post-processing here &
     // do the writing off the result here
-    
+
     // just playing here - will ue this loops later for opt problem formulation
     // loop through the elements of weightMap weights_
     for (const auto& entryWeightMap : maintenanceGroup_)
@@ -367,6 +367,11 @@ bool OptimizedThermalGenerator::checkClusterData(const Data::Area& area,
         return false;
     }
     return true;
+}
+
+int OptimizedThermalGenerator::dayOfTheYear(int optimizationDay)
+{
+    return optimizationDay % DAYS_PER_YEAR;
 }
 
 // calculate Average time-series functions

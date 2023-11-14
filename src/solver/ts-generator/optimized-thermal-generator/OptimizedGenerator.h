@@ -52,7 +52,7 @@ private:
 
 
     // optimization problem - methods - private
-    void createOptimizationProblemPerGroup(OptProblemSettings& optSett);
+    void createOptimizationProblemPerGroup(const OptProblemSettings& optSett);
     void createOptimizationProblemPerCluster(const Data::Area& area, Data::ThermalCluster& cluster);
 
     // calculate parameters methods - per maintenance group
@@ -81,6 +81,7 @@ private:
     std::array<double, HOURS_PER_YEAR> calculateAverageTs(const Matrix<double>& tsValue,
                                                           const Matrix<uint32_t>& tsNumbers);
     bool checkClusterData(const Data::Area& area, Data::ThermalCluster& cluster);
+    int dayOfTheYear(int optimizationDay);
 
     // calculate Average time-series functions
     std::array<double, HOURS_PER_YEAR> calculateAverageLoadTs(const Data::Area& area);
