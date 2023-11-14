@@ -23,4 +23,6 @@ add_Library(antares-ui-copy-paste ${SRC_UI_COPYPASTE})
 
 target_link_libraries(antares-ui-copy-paste PRIVATE ${wxWidgets_LIBRARIES}
     antares-ui-common
-    Antares::action)
+    Antares::action
+	Antares::resources
+)

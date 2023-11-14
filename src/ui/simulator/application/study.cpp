@@ -29,7 +29,7 @@
 #include "../toolbox/components/map/component.h"
 #include "../toolbox/components/mainpanel.h"
 #include "../toolbox/jobs.h"
-#include <antares/solver.h>
+
 #include "../toolbox/execute/execute.h"
 #include "../windows/message.h"
 #include <antares/date/date.h>

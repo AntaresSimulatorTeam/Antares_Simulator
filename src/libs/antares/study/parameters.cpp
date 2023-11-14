@@ -28,15 +28,15 @@
 #include <sstream> // std::stringstream
 
 #include "antares/study/parameters.h"
-#include <../../constants.h>
+#include "antares/antares/constants.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include "antares/study/load-options.h"
 #include <climits>
-#include "../../../solver/variable/economy/all.h"
+#include "antares/solver/variable/economy/all.h"
 
 #include <antares/exception/AssertionError.hpp>
-#include <antares/Enum.hpp>
+#include "antares/antares/Enum.hpp"
 
 using namespace Yuni;
 

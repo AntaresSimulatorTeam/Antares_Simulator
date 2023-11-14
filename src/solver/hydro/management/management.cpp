@@ -24,7 +24,7 @@
 #include <antares/study/area/scratchpad.h>
 #include <antares/fatal-error.h>
 #include "management.h"
-#include "../../simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include <yuni/core/math.h>
 #include <limits>
 #include <antares/study/parts/hydro/container.h>

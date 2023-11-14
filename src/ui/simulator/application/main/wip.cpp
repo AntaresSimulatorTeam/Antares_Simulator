@@ -25,6 +25,7 @@
 #include <ui/common/lock.h>
 #include <ui/common/dispatcher.h>
 #include "internal-data.h"
+#include "application/study.h"
 
 using namespace Yuni;
 

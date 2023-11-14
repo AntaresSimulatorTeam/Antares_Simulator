@@ -22,7 +22,7 @@
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
 #include "antares/study/study.h"
-#include "../constants.h"
+#include "antares/antares/constants.h"
 #include <stdio.h>
 #include <string.h>
 #include "antares/study/simulation.h"

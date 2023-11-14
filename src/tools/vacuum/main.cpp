@@ -26,12 +26,12 @@
 #include <yuni/job/job.h>
 #include <yuni/job/queue/service.h>
 #include <yuni/job/queue/q-event.h>
-#include <antares/antares.h>
+#include "antares/antares/antares.h"
 #include <fswalker/fswalker.h>
 #include <antares/logs/logs.h>
 #include <antares/args/args_to_utf8.h>
 #include <antares/version.h>
-#include <antares/antares_locale.h>
+#include <antares/locale/locale.h>
 #include "modified-inode.h"
 #include "antares-study.h"
 #include "io.h"

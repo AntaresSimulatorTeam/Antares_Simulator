@@ -25,6 +25,7 @@
 #include "../../toolbox/clipboard/clipboard.h"
 #include "antares/study/study.h"
 #include "../../toolbox/ext-source/handler.h"
+#include "application/study.h"
 
 using namespace Yuni;
 

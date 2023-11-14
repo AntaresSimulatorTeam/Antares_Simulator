@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "../antares.h"
+#include "antares/antares/antares.h"
 #include <yuni/yuni.h>
 #include <yuni/core/system/windows.hdr.h>
 #include <yuni/core/string.h>

@@ -25,7 +25,7 @@
 #include <antares/args/args_to_utf8.h>
 #include <antares/utils/utils.h>
 #include <antares/version.h>
-#include <antares/antares_locale.h>
+#include <antares/locale/locale.h>
 
 using namespace Yuni;
 using namespace Antares;

@@ -20,7 +20,7 @@
 */
 
 #include "antares/study/area/scratchpad.h"
-#include "../../constants.h"
+#include "antares/antares/antares.h"
 #include "antares/study/study.h"
 #include <limits>
 

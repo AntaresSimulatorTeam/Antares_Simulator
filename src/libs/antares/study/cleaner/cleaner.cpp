@@ -24,6 +24,7 @@
 #include "antares/study/cleaner.h"
 #include "antares/study/version.h"
 #include <antares/study/header.h>
+#include "antares/study/cleaner/versions.h"
 #include <antares/logs/logs.h>
 
 using namespace Yuni;

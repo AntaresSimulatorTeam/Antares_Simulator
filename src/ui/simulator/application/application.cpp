@@ -32,7 +32,7 @@
 #include "../toolbox/resources.h"
 #include <antares/logs/hostinfo.h>
 #include <yuni/io/file.h>
-#include <antares/jit.h>
+#include <antares/jit/jit.h>
 #include <antares/logs/logs.h>
 #include <antares/memory/memory.h>
 #include <wx/config.h>
@@ -42,7 +42,7 @@
 #include "antares/study/study.h"
 #include <yuni/datetime/timestamp.h>
 #include <antares/logs/cleaner.h>
-#include <antares/antares_locale.h>
+#include <antares/locale/locale.h>
 #ifndef YUNI_OS_WINDOWS
 #include <signal.h>
 #endif

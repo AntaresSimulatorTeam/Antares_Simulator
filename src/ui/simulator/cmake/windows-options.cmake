@@ -32,4 +32,5 @@ target_link_libraries(antares-ui-windows-options
 						PRIVATE
 							antares-ui-common
 							Antares::sys
+							Antares::resources
 )

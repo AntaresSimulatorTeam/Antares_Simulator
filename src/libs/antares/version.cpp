@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "version.h"
+#include "antares/antares/version.h"
 #include "antares/config/config.h"
 #include <iostream>
 

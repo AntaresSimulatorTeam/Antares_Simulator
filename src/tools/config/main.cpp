@@ -26,7 +26,7 @@
 #include <antares/args/args_to_utf8.h>
 #include <antares/version.h>
 #include <yuni/core/system/username.h>
-#include <antares/antares_locale.h>
+#include <antares/locale/locale.h>
 #include <antares/sys/policy.h>
 
 using namespace Yuni;
