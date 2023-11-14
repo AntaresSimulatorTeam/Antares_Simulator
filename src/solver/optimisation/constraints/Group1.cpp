@@ -59,12 +59,11 @@ void Group1::Build()
     auto bindingConstraintHourData = GetBindingConstraintHourData();
     BindingConstraintHour bindingConstraintHour(builder_, bindingConstraintHourData);
 
-    int nombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
+    int nombreDePasDeTempsPourUneOptimisation = builder_.data.NombreDePasDeTempsPourUneOptimisation;
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
-        for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
+        for (uint32_t pays = 0; pays < builder_.data.NombreDePays; pays++)
         {
             areaBalance.add(pdt, pays);
             fictitiousLoad.add(pdt, pays);
@@ -76,8 +75,7 @@ void Group1::Build()
             flowDissociation.add(pdt, interco);
         }
 
-        for (uint32_t cntCouplante = 0;
-             cntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
+        for (uint32_t cntCouplante = 0; cntCouplante < builder_.data.NombreDeContraintesCouplantes;
              cntCouplante++)
         {
             bindingConstraintHour.add(pdt, cntCouplante);

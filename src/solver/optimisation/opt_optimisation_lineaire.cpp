@@ -31,6 +31,7 @@
 #include <antares/logs/logs.h>
 #include "../utils/filename.h"
 #include "LinearProblemMatrix.h"
+#include "constraints/constraint_builder_utils.h"
 using namespace Antares;
 using namespace Yuni;
 using Antares::Solver::Optimization::OptimizationOptions;
@@ -135,6 +136,14 @@ void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 }
 } // namespace
 
+void ExportStructures(PROBLEME_HEBDO* problemeHebdo, Solver::IResultWriter& writer)
+{
+    if (problemeHebdo->ExportStructure && problemeHebdo->firstWeekOfSimulation)
+    {
+        OPT_ExportInterco(writer, problemeHebdo);
+        OPT_ExportAreaName(writer, problemeHebdo->NomsDesPays);
+    }
+}
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
@@ -159,9 +168,16 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(problemeHebdo);
 
-    LinearProblemMatrix linearProblemMatrix(problemeHebdo, writer);
+    auto builder_data = GetConstraintBuilderDataFromProblemHebdo(problemeHebdo);
+    auto builder = ConstraintBuilder(builder_data);
+    builder.data.NbTermesContraintesPourLesCoutsDeDemarrage
+      = &problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage;
+    LinearProblemMatrix linearProblemMatrix(builder,
+                                            writer,
+                                            problemeHebdo->OptimisationAvecCoutsDeDemarrage,
+                                            problemeHebdo->TypeDeLissageHydraulique);
+    InitiliazeProblemAResoudreCounters(problemeHebdo);
     linearProblemMatrix.Run();
-    linearProblemMatrix.ExportStructures();
 
     bool ret = runWeeklyOptimization(
       options, problemeHebdo, adqPatchParams, writer, PREMIERE_OPTIMISATION);

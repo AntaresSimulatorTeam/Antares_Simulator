@@ -26,7 +26,7 @@
 */
 
 #pragma once
-
+#include "../constraints/ConstraintBuilder.h"
 class HourlyCSRProblem;
 
 namespace Antares::Solver::Optimization
@@ -46,10 +46,9 @@ private:
     const PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre_;
     HourlyCSRProblem& hourlyCsrProblem_;
-
-    void setConstraintsOnFlows();
-    void setNodeBalanceConstraints();
-    void setBindingConstraints();
+    void setConstraintsOnFlows(ConstraintBuilder& builder);
+    void setNodeBalanceConstraints(ConstraintBuilder& builder);
+    void setBindingConstraints(ConstraintBuilder& builder);
 };
 
 } //namespace Antares::Solver::Optimization

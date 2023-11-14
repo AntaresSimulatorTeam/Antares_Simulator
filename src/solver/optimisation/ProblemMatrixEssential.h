@@ -35,7 +35,7 @@ using namespace Antares::Data;
 class ProblemMatrixEssential
 {
 public:
-    explicit ProblemMatrixEssential(PROBLEME_HEBDO* problemeHebdo) : problemeHebdo_(problemeHebdo)
+    explicit ProblemMatrixEssential(ConstraintBuilder& builder) : builder_(builder)
     {
     }
 
@@ -47,13 +47,6 @@ public:
         }
     }
 
-    void InitiliazeProblemAResoudreCounters()
-    {
-        auto& ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
-        ProblemeAResoudre->NombreDeContraintes = 0;
-        ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-    }
-
-    PROBLEME_HEBDO* problemeHebdo_;
+       ConstraintBuilder& builder_;
     std::vector<ConstraintGroup*> constraintgroups_;
 };

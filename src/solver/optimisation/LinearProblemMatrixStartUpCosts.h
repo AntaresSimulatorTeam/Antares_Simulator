@@ -44,7 +44,7 @@ using namespace Antares::Data;
 class LinearProblemMatrixStartUpCosts : public ProblemMatrixEssential
 {
 public:
-    explicit LinearProblemMatrixStartUpCosts(PROBLEME_HEBDO* problemeHebdo, bool Simulation);
+    explicit LinearProblemMatrixStartUpCosts(ConstraintBuilder& builder, bool Simulation);
 
 private:
     bool simulation_ = false;

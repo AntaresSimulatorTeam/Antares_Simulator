@@ -15,13 +15,12 @@ void BindingConstraintWeekGroup::Build()
     auto bindingConstraintWeekData = GetBindingConstraintWeekDataFromProblemHebdo();
     BindingConstraintWeek bindingConstraintWeek(builder_, bindingConstraintWeekData);
 
-    if (problemeHebdo_->NombreDePasDeTempsPourUneOptimisation
+    if (builder_.data.NombreDePasDeTempsPourUneOptimisation
         > problemeHebdo_->NombreDePasDeTempsDUneJournee)
     {
         CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondanceCntNativesCntOptimHebdomadaires
           = problemeHebdo_->CorrespondanceCntNativesCntOptimHebdomadaires;
-        for (uint32_t cntCouplante = 0;
-             cntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
+        for (uint32_t cntCouplante = 0; cntCouplante < builder_.data.NombreDeContraintesCouplantes;
              cntCouplante++)
         {
             bindingConstraintWeek.add(cntCouplante);

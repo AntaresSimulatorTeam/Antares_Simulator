@@ -12,7 +12,7 @@ struct NbUnitsOutageLessThanNbUnitsStopData
 class NbUnitsOutageLessThanNbUnitsStop : private ConstraintFactory
 {
 public:
-    NbUnitsOutageLessThanNbUnitsStop(std::shared_ptr<ConstraintBuilder> builder,
+    NbUnitsOutageLessThanNbUnitsStop(ConstraintBuilder& builder,
                                      NbUnitsOutageLessThanNbUnitsStopData& data) :
      ConstraintFactory(builder), data(data)
     {

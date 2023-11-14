@@ -4,7 +4,7 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
 {
     data.CorrespondanceCntNativesCntOptim[pdt]
       .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
-      = builder->data->nombreDeContraintes;
+      = builder.data.nombreDeContraintes;
 
     const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
       = data.MatriceDesContraintesCouplantes[cntCouplante];
@@ -12,7 +12,7 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
     if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
         return;
 
-    builder->updateHourWithinWeek(pdt);
+    builder.updateHourWithinWeek(pdt);
     // Links
     const int nbInterco
       = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
@@ -21,8 +21,8 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
         const int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
         const double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
         const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
-        builder->updateHourWithinWeek(pdt).NTCDirect(
-          interco, poids, offset, builder->data->NombreDePasDeTemps);
+        builder.updateHourWithinWeek(pdt).NTCDirect(
+          interco, poids, offset, builder.data.NombreDePasDeTemps);
     }
 
     // Thermal clusters
@@ -37,16 +37,16 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
         const double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
         const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
 
-        builder->updateHourWithinWeek(pdt).DispatchableProduction(
-          palier, poids, offset, builder->data->NombreDePasDeTemps);
+        builder.updateHourWithinWeek(pdt).DispatchableProduction(
+          palier, poids, offset, builder.data.NombreDePasDeTemps);
     }
 
-    builder->SetOperator(MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
+    builder.SetOperator(MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
     {
-        ConstraintNamer namer(builder->data->NomDesContraintes);
-        namer.UpdateTimeStep(builder->data->weekInTheYear * 168 + pdt);
-        namer.BindingConstraintHour(builder->data->nombreDeContraintes,
+        ConstraintNamer namer(builder.data.NomDesContraintes);
+        namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
+        namer.BindingConstraintHour(builder.data.nombreDeContraintes,
                                     MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
     }
-    builder->build();
+    builder.build();
 }

@@ -7,8 +7,7 @@
 class ConsistenceNumberOfDispatchableUnits : private ConstraintFactory
 {
 public:
-    ConsistenceNumberOfDispatchableUnits(std::shared_ptr<ConstraintBuilder> builder,
-                                         StartUpCostsData& data) :
+    ConsistenceNumberOfDispatchableUnits(ConstraintBuilder& builder, StartUpCostsData& data) :
      ConstraintFactory(builder), data(data)
     {
     }

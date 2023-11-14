@@ -47,6 +47,7 @@ set(RTESOLVER_OPT
 		optim_post_process_list.cpp
 		post_process_commands.h
 		post_process_commands.cpp
+		InitiliazeProblemAResoudreCounters.cpp
 		adequacy_patch_csr/hourly_csr_problem.h
 		adequacy_patch_csr/adq_patch_post_process_list.h
 		adequacy_patch_csr/adq_patch_post_process_list.cpp

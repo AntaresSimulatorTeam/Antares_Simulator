@@ -19,7 +19,7 @@ struct AreaBalanceData
 class AreaBalance : public ConstraintFactory
 {
 public:
-    AreaBalance(std::shared_ptr<ConstraintBuilder> builder, AreaBalanceData& data) :
+    AreaBalance(ConstraintBuilder& builder, AreaBalanceData& data) :
      ConstraintFactory(builder), data(data)
     {
     }

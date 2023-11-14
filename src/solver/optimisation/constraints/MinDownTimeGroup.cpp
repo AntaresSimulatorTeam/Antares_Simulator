@@ -15,13 +15,12 @@ void MinDownTimeGroup::Build()
 {
     auto data = GetMinDownTimeDataFromProblemHebdo();
     MinDownTime minDownTime(builder_, data);
-    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < builder_.data.NombreDePays; pays++)
     {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo_->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays = data.PaliersThermiquesDuPays[pays];
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (int pdt = 0; pdt < builder_.data.NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 minDownTime.add(pays, index, pdt);
             }

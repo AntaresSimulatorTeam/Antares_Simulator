@@ -28,15 +28,15 @@
 #include "LinearProblemMatrixStartUpCosts.h"
 using namespace Antares::Data;
 
-LinearProblemMatrixStartUpCosts::LinearProblemMatrixStartUpCosts(PROBLEME_HEBDO* problemeHebdo,
+LinearProblemMatrixStartUpCosts::LinearProblemMatrixStartUpCosts(ConstraintBuilder& builder,
                                                                  bool Simulation) :
- ProblemMatrixEssential(problemeHebdo),
+ ProblemMatrixEssential(builder),
  simulation_(Simulation),
- pMinMaxDispatchableGenerationGroup_(problemeHebdo, simulation_),
- consistenceNumberOfDispatchableUnitsGroup_(problemeHebdo, simulation_),
- nbUnitsOutageLessThanNbUnitsStopGroup_(problemeHebdo, simulation_),
- nbDispUnitsMinBoundSinceMinUpTimeGroup_(problemeHebdo, simulation_),
- minDownTimeGroup_(problemeHebdo, simulation_)
+ pMinMaxDispatchableGenerationGroup_(builder, simulation_),
+ consistenceNumberOfDispatchableUnitsGroup_(builder, simulation_),
+ nbUnitsOutageLessThanNbUnitsStopGroup_(builder, simulation_),
+ nbDispUnitsMinBoundSinceMinUpTimeGroup_(builder, simulation_),
+ minDownTimeGroup_(builder, simulation_)
 {
     constraintgroups_ = {&pMinMaxDispatchableGenerationGroup_,
                          &consistenceNumberOfDispatchableUnitsGroup_,

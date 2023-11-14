@@ -9,26 +9,26 @@ void HydraulicSmoothingGroup::Build()
     HydroPowerSmoothingUsingVariationMaxDown hydroPowerSmoothingUsingVariationMaxDown(builder_);
     HydroPowerSmoothingUsingVariationMaxUp hydroPowerSmoothingUsingVariationMaxUp(builder_);
 
-    if (problemeHebdo_->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
+    if (typeDeLissageHydraulique_ == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
     {
-        for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
+        for (uint32_t pays = 0; pays < builder_.data.NombreDePays; pays++)
         {
-            if (!problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
+            if (!builder_.data.CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
                 continue;
 
             hydroPowerSmoothingUsingVariationSum.add(
-              pays, problemeHebdo_->NombreDePasDeTempsPourUneOptimisation);
+              pays, builder_.data.NombreDePasDeTempsPourUneOptimisation);
         }
     }
 
-    else if (problemeHebdo_->TypeDeLissageHydraulique == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
+    else if (typeDeLissageHydraulique_ == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
     {
-        for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
+        for (uint32_t pays = 0; pays < builder_.data.NombreDePays; pays++)
         {
-            if (!problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
+            if (!builder_.data.CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
                 continue;
 
-            for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (int pdt = 0; pdt < builder_.data.NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 hydroPowerSmoothingUsingVariationMaxDown.add(pays, pdt);
                 hydroPowerSmoothingUsingVariationMaxUp.add(pays, pdt);

@@ -43,12 +43,9 @@ using namespace Antares::Data;
 namespace Antares::Solver::Optimization
 {
 
-void CsrQuadraticProblem::setConstraintsOnFlows()
+void CsrQuadraticProblem::setConstraintsOnFlows(ConstraintBuilder& builder)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
-    //!\ TODO not associated problemHebdo && probleamAressoudre
-    auto builder = NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(problemeHebdo_,
-                                                                              problemeAResoudre_);
     CsrFlowDissociationData csrFlowDissociationData
       = {.numberOfConstraintCsrFlowDissociation
          = hourlyCsrProblem_.numberOfConstraintCsrFlowDissociation,
@@ -62,7 +59,7 @@ void CsrQuadraticProblem::setConstraintsOnFlows()
     csrFlowDissociation.add();
 }
 
-void CsrQuadraticProblem::setNodeBalanceConstraints()
+void CsrQuadraticProblem::setNodeBalanceConstraints(ConstraintBuilder& builder)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
     const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
@@ -74,9 +71,6 @@ void CsrQuadraticProblem::setNodeBalanceConstraints()
     // - spillage(node A) =
     // ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
     // for all areas inside adequacy patch
-
-    auto builder = NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(problemeHebdo_,
-                                                                              problemeAResoudre_);
 
     CsrAreaBalanceData csrAreaBalanceData{
       .areaMode = problemeHebdo_->adequacyPatchRuntimeData->areaMode,
@@ -96,11 +90,9 @@ void CsrQuadraticProblem::setNodeBalanceConstraints()
     csrAreaBalance.add();
 }
 
-void CsrQuadraticProblem::setBindingConstraints()
+void CsrQuadraticProblem::setBindingConstraints(ConstraintBuilder& builder)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
-    auto builder = NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(problemeHebdo_,
-                                                                              problemeAResoudre_);
 
     CsrBindingConstraintHourData csrBindingConstraintHourData = {
       .MatriceDesContraintesCouplantes = problemeHebdo_->MatriceDesContraintesCouplantes,
@@ -127,9 +119,12 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     problemeAResoudre_.NombreDeContraintes = 0;
     problemeAResoudre_.NombreDeTermesDansLaMatriceDesContraintes = 0;
 
-    setConstraintsOnFlows();
-    setNodeBalanceConstraints();
-    setBindingConstraints();
+    auto builder_data = GetConstraintBuilderDataFromProblemHebdoAndProblemAResoudre(
+      problemeHebdo_, problemeAResoudre_);
+    auto builder = ConstraintBuilder(builder_data);
+    setConstraintsOnFlows(builder);
+    setNodeBalanceConstraints(builder);
+    setBindingConstraints(builder);
 }
 
 } // namespace Antares::Solver::Optimization

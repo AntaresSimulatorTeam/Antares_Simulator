@@ -43,7 +43,12 @@ bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* problemeHebdo)
     {
         OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(problemeHebdo);
 
-        QuadraticProblemMatrix(problemeHebdo).Run();
+        auto builder_data = GetConstraintBuilderDataFromProblemHebdo(problemeHebdo);
+        auto builder = ConstraintBuilder(builder_data);
+        builder.data.NbTermesContraintesPourLesCoutsDeDemarrage
+          = &problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage;
+        InitiliazeProblemAResoudreCounters(problemeHebdo);
+        QuadraticProblemMatrix(builder).Run();
 
         problemeHebdo->LeProblemeADejaEteInstancie = true;
     }

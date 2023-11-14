@@ -1,20 +1,20 @@
 #include "MinMaxHydroPowerGroup.h"
 MinHydroPowerData MinMaxHydroPowerGroup::GetMinHydroPowerData()
 {
-    return {.CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,
-            .NombreDePasDeTempsPourUneOptimisation
-            = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation,
-            .NumeroDeContrainteMinEnergieHydraulique
-            = problemeHebdo_->NumeroDeContrainteMinEnergieHydraulique};
+    return {
+      .CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,
+      .NombreDePasDeTempsPourUneOptimisation = builder_.data.NombreDePasDeTempsPourUneOptimisation,
+      .NumeroDeContrainteMinEnergieHydraulique
+      = problemeHebdo_->NumeroDeContrainteMinEnergieHydraulique};
 }
 
 MaxHydroPowerData MinMaxHydroPowerGroup::GetMaxHydroPowerData()
 {
-    return {.CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,
-            .NombreDePasDeTempsPourUneOptimisation
-            = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation,
-            .NumeroDeContrainteMaxEnergieHydraulique
-            = problemeHebdo_->NumeroDeContrainteMaxEnergieHydraulique};
+    return {
+      .CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,
+      .NombreDePasDeTempsPourUneOptimisation = builder_.data.NombreDePasDeTempsPourUneOptimisation,
+      .NumeroDeContrainteMaxEnergieHydraulique
+      = problemeHebdo_->NumeroDeContrainteMaxEnergieHydraulique};
 }
 
 void MinMaxHydroPowerGroup::Build()
@@ -24,7 +24,7 @@ void MinMaxHydroPowerGroup::Build()
     auto maxHydroPowerData = GetMaxHydroPowerData();
     MaxHydroPower maxHydroPower(builder_, maxHydroPowerData);
 
-    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < builder_.data.NombreDePays; pays++)
     {
         minHydroPower.add(pays);
         maxHydroPower.add(pays);

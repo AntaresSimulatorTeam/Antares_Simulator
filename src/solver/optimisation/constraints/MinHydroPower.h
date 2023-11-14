@@ -14,7 +14,7 @@ struct MinHydroPowerData
 class MinHydroPower : private ConstraintFactory
 {
 public:
-    MinHydroPower(std::shared_ptr<ConstraintBuilder> builder, MinHydroPowerData& data) :
+    MinHydroPower(ConstraintBuilder& builder, MinHydroPowerData& data) :
      ConstraintFactory(builder), data(data)
     {
     }

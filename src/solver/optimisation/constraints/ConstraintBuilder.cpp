@@ -12,7 +12,7 @@ void ConstraintBuilder::build()
 int ConstraintBuilder::GetShiftedTimeStep(int offset, int delta) const
 {
     int pdt = hourInWeek_ + offset;
-    const int nbTimeSteps = data->NombreDePasDeTempsPourUneOptimisation;
+    const int nbTimeSteps = data.NombreDePasDeTempsPourUneOptimisation;
 
     if (const bool shifted_timestep = offset != 0; shifted_timestep)
     {
@@ -32,8 +32,8 @@ void ConstraintBuilder::AddVariable(int varIndex, double coeff)
 {
     if (varIndex >= 0)
     {
-        data->Pi[nombreDeTermes_] = coeff;
-        data->Colonne[nombreDeTermes_] = varIndex;
+        data.Pi[nombreDeTermes_] = coeff;
+        data.Colonne[nombreDeTermes_] = varIndex;
         nombreDeTermes_++;
     }
 }
@@ -41,9 +41,9 @@ NewVariable::VariableManager ConstraintBuilder::GetVariableManager(int offset,
                                                                          int delta) const
 {
     auto pdt = GetShiftedTimeStep(offset, delta);
-    return NewVariable::VariableManager(data->CorrespondanceVarNativesVarOptim[pdt],
-                                           data->NumeroDeVariableStockFinal,
-                                           data->NumeroDeVariableDeTrancheDeStock);
+    return NewVariable::VariableManager(data.CorrespondanceVarNativesVarOptim[pdt],
+                                        data.NumeroDeVariableStockFinal,
+                                        data.NumeroDeVariableDeTrancheDeStock);
 }
 ConstraintBuilder& ConstraintBuilder::DispatchableProduction(unsigned int index,
                                                                    double coeff,
@@ -238,41 +238,41 @@ ConstraintBuilder& ConstraintBuilder::LayerStorage(unsigned area,
 
 void ConstraintBuilder::OPT_ChargerLaContrainteDansLaMatriceDesContraintes()
 {
-    data->IndicesDebutDeLigne[data->nombreDeContraintes]
-      = data->nombreDeTermesDansLaMatriceDeContrainte;
+    data.IndicesDebutDeLigne[data.nombreDeContraintes]
+      = data.nombreDeTermesDansLaMatriceDeContrainte;
     for (int i = 0; i < nombreDeTermes_; i++)
     {
-        data->CoefficientsDeLaMatriceDesContraintes[data->nombreDeTermesDansLaMatriceDeContrainte]
-          = data->Pi[i];
-        data->IndicesColonnes[data->nombreDeTermesDansLaMatriceDeContrainte] = data->Colonne[i];
-        data->nombreDeTermesDansLaMatriceDeContrainte++;
-        if (data->nombreDeTermesDansLaMatriceDeContrainte
-            == data->NombreDeTermesAllouesDansLaMatriceDesContraintes)
+        data.CoefficientsDeLaMatriceDesContraintes[data.nombreDeTermesDansLaMatriceDeContrainte]
+          = data.Pi[i];
+        data.IndicesColonnes[data.nombreDeTermesDansLaMatriceDeContrainte] = data.Colonne[i];
+        data.nombreDeTermesDansLaMatriceDeContrainte++;
+        if (data.nombreDeTermesDansLaMatriceDeContrainte
+            == data.NombreDeTermesAllouesDansLaMatriceDesContraintes)
         {
             OPT_AugmenterLaTailleDeLaMatriceDesContraintes();
         }
     }
-    data->NombreDeTermesDesLignes[data->nombreDeContraintes] = nombreDeTermes_;
+    data.NombreDeTermesDesLignes[data.nombreDeContraintes] = nombreDeTermes_;
 
-    data->Sens[data->nombreDeContraintes] = operator_;
-    data->nombreDeContraintes++;
+    data.Sens[data.nombreDeContraintes] = operator_;
+    data.nombreDeContraintes++;
 
     return;
 }
 
 void ConstraintBuilder::OPT_AugmenterLaTailleDeLaMatriceDesContraintes()
 {
-    int NbTermes = data->NombreDeTermesAllouesDansLaMatriceDesContraintes;
-    NbTermes += data->IncrementDAllocationMatriceDesContraintes;
+    int NbTermes = data.NombreDeTermesAllouesDansLaMatriceDesContraintes;
+    NbTermes += data.IncrementDAllocationMatriceDesContraintes;
 
     logs.info();
     logs.info() << " Expected Number of Non-zero terms in Problem Matrix : increased to : "
                 << NbTermes;
     logs.info();
 
-    data->CoefficientsDeLaMatriceDesContraintes.resize(NbTermes);
+    data.CoefficientsDeLaMatriceDesContraintes.resize(NbTermes);
 
-    data->IndicesColonnes.resize(NbTermes);
+    data.IndicesColonnes.resize(NbTermes);
 
-    data->NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
+    data.NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
 }

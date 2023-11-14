@@ -4,10 +4,13 @@
 class HydraulicSmoothingGroup : public ConstraintGroup
 {
 public:
-    using ConstraintGroup::ConstraintGroup;
+    explicit HydraulicSmoothingGroup(ConstraintBuilder& builder, char typeDeLissageHydraulique) :
+     ConstraintGroup(builder), typeDeLissageHydraulique_(typeDeLissageHydraulique)
+    {
+    }
 
-    
     void Build() override;
 
 private:
+    char typeDeLissageHydraulique_;
 };

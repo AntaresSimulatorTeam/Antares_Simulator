@@ -22,7 +22,7 @@ void FinalStockGroup::Build()
     FinalStockExpression finalStockExpression(builder_, finalStockExpressionData);
 
     /* For each area with ad hoc properties, two possible sets of two additional constraints */
-    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < builder_.data.NombreDePays; pays++)
     {
         finalStockEquivalent.add(pays);
 

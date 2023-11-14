@@ -33,19 +33,22 @@
 
 using namespace Antares::Data;
 
-LinearProblemMatrix::LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo,
-                                         Solver::IResultWriter& writer) :
- ProblemMatrixEssential(problemeHebdo),
+LinearProblemMatrix::LinearProblemMatrix(ConstraintBuilder& builder,
+                                         Solver::IResultWriter& writer,
+                                         bool optimisationAvecCoutsDeDemarrage,
+                                         char typeDeLissageHydraulique) :
+ ProblemMatrixEssential(builder),
  writer_(writer),
- group1_(problemeHebdo),
- bindingConstraintDayGroup_(problemeHebdo),
- bindingConstraintWeekGroup_(problemeHebdo),
- hydroPowerGroup_(problemeHebdo),
- hydraulicSmoothingGroup_(problemeHebdo),
- minMaxHydroPowerGroup_(problemeHebdo),
- maxPumpingGroup_(problemeHebdo),
- areaHydroLevelGroup_(problemeHebdo),
- finalStockGroup_(problemeHebdo)
+ optimisationAvecCoutsDeDemarrage_(optimisationAvecCoutsDeDemarrage),
+ group1_(builder),
+ bindingConstraintDayGroup_(builder),
+ bindingConstraintWeekGroup_(builder),
+ hydroPowerGroup_(builder),
+ hydraulicSmoothingGroup_(builder, typeDeLissageHydraulique),
+ minMaxHydroPowerGroup_(builder),
+ maxPumpingGroup_(builder),
+ areaHydroLevelGroup_(builder),
+ finalStockGroup_(builder)
 {
     constraintgroups_ = {&group1_,
                          &bindingConstraintDayGroup_,
@@ -57,24 +60,13 @@ LinearProblemMatrix::LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo,
                          &areaHydroLevelGroup_,
                          &finalStockGroup_};
 }
-void LinearProblemMatrix::ExportStructures()
-{
-    if (problemeHebdo_->ExportStructure && problemeHebdo_->firstWeekOfSimulation)
-    {
-        OPT_ExportInterco(writer_, problemeHebdo_);
-        OPT_ExportAreaName(writer_, problemeHebdo_->NomsDesPays);
-    }
-}
-
 void LinearProblemMatrix::Run()
 {
-    InitiliazeProblemAResoudreCounters();
-
     ProblemMatrixEssential::Run();
 
-    if (problemeHebdo_->OptimisationAvecCoutsDeDemarrage)
+    if (optimisationAvecCoutsDeDemarrage_)
     {
-        LinearProblemMatrixStartUpCosts(problemeHebdo_, false).Run();
+        LinearProblemMatrixStartUpCosts(builder_, false).Run();
     }
 
     return;

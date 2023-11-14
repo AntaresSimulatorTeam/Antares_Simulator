@@ -13,7 +13,7 @@ struct BindingConstraintHourData
 class BindingConstraintHour : private ConstraintFactory
 {
     public:
-        BindingConstraintHour(std::shared_ptr<ConstraintBuilder> builder,
+        BindingConstraintHour(ConstraintBuilder& builder,
                               BindingConstraintHourData& data) :
          ConstraintFactory(builder), data(data)
         {

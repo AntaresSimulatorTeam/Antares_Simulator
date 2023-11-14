@@ -14,7 +14,7 @@ struct MinDownTimeData
 class MinDownTime : private ConstraintFactory
 {
 public:
-    MinDownTime(std::shared_ptr<ConstraintBuilder> builder, MinDownTimeData& data) :
+    MinDownTime(ConstraintBuilder& builder, MinDownTimeData& data) :
      ConstraintFactory(builder), data(data)
     {
     }

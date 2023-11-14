@@ -14,7 +14,7 @@ struct HydroPowerData
 class HydroPower : private ConstraintFactory
 {
 public:
-    HydroPower(std::shared_ptr<ConstraintBuilder> builder, HydroPowerData& data) :
+    HydroPower(ConstraintBuilder& builder, HydroPowerData& data) :
      ConstraintFactory(builder), data(data)
     {
     }

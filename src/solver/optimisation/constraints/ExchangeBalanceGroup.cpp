@@ -15,7 +15,7 @@ std::shared_ptr<ExchangeBalanceData> ExchangeBalanceGroup::GetExchangeBalanceDat
 void ExchangeBalanceGroup::Build()
 {
     ExchangeBalance exchangeBalance(builder_);
-    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays - 1; pays++)
+    for (uint32_t pays = 0; pays < builder_.data.NombreDePays - 1; pays++)
     {
         exchangeBalance.add(pays, GetExchangeBalanceDataFromProblemHebdo());
     }

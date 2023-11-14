@@ -12,8 +12,8 @@
 class QuadraticProblemMatrix : public ProblemMatrixEssential
 {
 public:
-    QuadraticProblemMatrix(PROBLEME_HEBDO* problem_hebdo) :
-     ProblemMatrixEssential(problem_hebdo), exchangeBalanceGroup_(problem_hebdo)
+    QuadraticProblemMatrix(ConstraintBuilder& builder) :
+     ProblemMatrixEssential(builder), exchangeBalanceGroup_(builder)
     {
         constraintgroups_ = {&exchangeBalanceGroup_};
     }

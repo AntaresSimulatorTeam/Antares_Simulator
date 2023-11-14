@@ -13,7 +13,7 @@ void BindingConstraintDay::add(int cntCouplante)
       = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
 
     const int NombreDePasDeTempsPourUneOptimisation
-      = builder->data->NombreDePasDeTempsPourUneOptimisation;
+      = builder.data.NombreDePasDeTempsPourUneOptimisation;
     const int NombreDePasDeTempsDUneJournee = data.NombreDePasDeTempsDUneJournee;
     int pdtDebut = 0;
     while (pdtDebut < NombreDePasDeTempsPourUneOptimisation)
@@ -28,8 +28,8 @@ void BindingConstraintDay::add(int cntCouplante)
 
             for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
             {
-                builder->updateHourWithinWeek(pdt).NTCDirect(
-                  interco, poids, offset, builder->data->NombreDePasDeTemps);
+                builder.updateHourWithinWeek(pdt).NTCDirect(
+                  interco, poids, offset, builder.data.NombreDePasDeTemps);
             }
         }
 
@@ -45,23 +45,23 @@ void BindingConstraintDay::add(int cntCouplante)
 
             for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
             {
-                builder->updateHourWithinWeek(pdt).DispatchableProduction(
-                  palier, poids, offset, builder->data->NombreDePasDeTemps);
+                builder.updateHourWithinWeek(pdt).DispatchableProduction(
+                  palier, poids, offset, builder.data.NombreDePasDeTemps);
             }
         }
 
         data.CorrespondanceCntNativesCntOptimJournalieres[jour]
           .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
-          = builder->data->nombreDeContraintes;
+          = builder.data.nombreDeContraintes;
 
-        builder->SetOperator(MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
+        builder.SetOperator(MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
         {
-            ConstraintNamer namer(builder->data->NomDesContraintes);
+            ConstraintNamer namer(builder.data.NomDesContraintes);
             namer.UpdateTimeStep(jour);
-            namer.BindingConstraintDay(builder->data->nombreDeContraintes,
+            namer.BindingConstraintDay(builder.data.nombreDeContraintes,
                                        MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
         }
-        builder->build();
+        builder.build();
         pdtDebut += data.NombreDePasDeTempsDUneJournee;
     }
 }

@@ -1,32 +1,36 @@
 #include "constraint_builder_utils.h"
 
-std::shared_ptr<ConstraintBuilder> NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
+ConstraintBuilderData GetConstraintBuilderDataFromProblemHebdoAndProblemAResoudre(
   const PROBLEME_HEBDO* problemeHebdo,
   PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
 {
-    ConstraintBuilderData data{
-      ProblemeAResoudre.Pi,
-      ProblemeAResoudre.Colonne,
-      ProblemeAResoudre.NombreDeContraintes,
-      ProblemeAResoudre.NombreDeTermesDansLaMatriceDesContraintes,
-      ProblemeAResoudre.IndicesDebutDeLigne,
-      ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes,
-      ProblemeAResoudre.IndicesColonnes,
-      ProblemeAResoudre.NombreDeTermesAllouesDansLaMatriceDesContraintes,
-      ProblemeAResoudre.NombreDeTermesDesLignes,
-      ProblemeAResoudre.Sens,
-      ProblemeAResoudre.IncrementDAllocationMatriceDesContraintes,
-      problemeHebdo->CorrespondanceVarNativesVarOptim,
-      problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
-      problemeHebdo->NumeroDeVariableStockFinal,
-      problemeHebdo->NumeroDeVariableDeTrancheDeStock,
-      ProblemeAResoudre.NomDesContraintes,
-      problemeHebdo->NamedProblems,
-      problemeHebdo->NomsDesPays,
-      problemeHebdo->weekInTheYear,
-      problemeHebdo->NombreDePasDeTemps,
-      nullptr};
-
-    auto builder = ConstraintBuilder(std::make_shared<ConstraintBuilderData>(data));
-    return std::make_shared<ConstraintBuilder>(builder);
+    return {
+      .Pi = ProblemeAResoudre.Pi,
+      .Colonne = ProblemeAResoudre.Colonne,
+      .nombreDeContraintes = ProblemeAResoudre.NombreDeContraintes,
+      .nombreDeTermesDansLaMatriceDeContrainte
+      = ProblemeAResoudre.NombreDeTermesDansLaMatriceDesContraintes,
+      .IndicesDebutDeLigne = ProblemeAResoudre.IndicesDebutDeLigne,
+      .CoefficientsDeLaMatriceDesContraintes
+      = ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes,
+      .IndicesColonnes = ProblemeAResoudre.IndicesColonnes,
+      .NombreDeTermesAllouesDansLaMatriceDesContraintes
+      = ProblemeAResoudre.NombreDeTermesAllouesDansLaMatriceDesContraintes,
+      .NombreDeTermesDesLignes = ProblemeAResoudre.NombreDeTermesDesLignes,
+      .Sens = ProblemeAResoudre.Sens,
+      .IncrementDAllocationMatriceDesContraintes
+      = ProblemeAResoudre.IncrementDAllocationMatriceDesContraintes,
+      .CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim,
+      .NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
+      .NumeroDeVariableStockFinal = problemeHebdo->NumeroDeVariableStockFinal,
+      .NumeroDeVariableDeTrancheDeStock = problemeHebdo->NumeroDeVariableDeTrancheDeStock,
+      .NomDesContraintes = ProblemeAResoudre.NomDesContraintes,
+      .NamedProblems = problemeHebdo->NamedProblems,
+      .NomsDesPays = problemeHebdo->NomsDesPays,
+      .weekInTheYear = problemeHebdo->weekInTheYear,
+      .NombreDePasDeTemps = problemeHebdo->NombreDePasDeTemps,
+      .NbTermesContraintesPourLesCoutsDeDemarrage = nullptr,
+      .NombreDePays = problemeHebdo->NombreDePays,
+      .NombreDeContraintesCouplantes = problemHebdo->NombreDeContraintesCouplantes,
+      .CaracteristiquesHydrauliques = problemHebdo->CaracteristiquesHydrauliques};
 }

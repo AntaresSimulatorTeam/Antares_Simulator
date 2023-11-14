@@ -14,7 +14,7 @@ struct AreaHydroLevelData
 class AreaHydroLevel : private ConstraintFactory
 {
 public:
-    AreaHydroLevel(std::shared_ptr<ConstraintBuilder> builder, AreaHydroLevelData& data) :
+    AreaHydroLevel(ConstraintBuilder& builder, AreaHydroLevelData& data) :
      ConstraintFactory(builder), data(data)
     {
     }

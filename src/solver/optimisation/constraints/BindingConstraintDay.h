@@ -18,7 +18,7 @@ struct BindingConstraintDayData
 class BindingConstraintDay : private ConstraintFactory
 {
 public:
-    BindingConstraintDay(std::shared_ptr<ConstraintBuilder> builder,
+    BindingConstraintDay(ConstraintBuilder& builder,
                          BindingConstraintDayData& data) :
      ConstraintFactory(builder), data(data)
     {

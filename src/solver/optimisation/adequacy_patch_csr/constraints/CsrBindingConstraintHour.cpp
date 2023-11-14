@@ -8,7 +8,7 @@ void CsrBindingConstraintHour::add(int CntCouplante)
 
     int NbInterco = data.MatriceDesContraintesCouplantes[CntCouplante]
                       .NombreDInterconnexionsDansLaContrainteCouplante;
-    builder->updateHourWithinWeek(data.hour);
+    builder.updateHourWithinWeek(data.hour);
 
     for (int Index = 0; Index < NbInterco; Index++)
     {
@@ -20,22 +20,22 @@ void CsrBindingConstraintHour::add(int CntCouplante)
         if (data.originAreaMode[Interco] == Data::AdequacyPatch::physicalAreaInsideAdqPatch
             && data.extremityAreaMode[Interco] == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            builder->NTCDirect(Interco, Poids);
+            builder.NTCDirect(Interco, Poids);
         }
     }
 
-    if (builder->NumberOfVariables()
+    if (builder.NumberOfVariables()
         > 0) // current binding constraint contains an interco type 2<->2
     {
-        data.numberOfConstraintCsrHourlyBinding[CntCouplante] = builder->data->nombreDeContraintes;
+        data.numberOfConstraintCsrHourlyBinding[CntCouplante] = builder.data.nombreDeContraintes;
 
-        ConstraintNamer namer(builder->data->NomDesContraintes);
+        ConstraintNamer namer(builder.data.NomDesContraintes);
         namer.UpdateTimeStep(data.hour);
         namer.CsrBindingConstraintHour(
-          builder->data->nombreDeContraintes,
+          builder.data.nombreDeContraintes,
           data.MatriceDesContraintesCouplantes[CntCouplante].NomDeLaContrainteCouplante);
-        builder->SetOperator(
+        builder.SetOperator(
           data.MatriceDesContraintesCouplantes[CntCouplante].SensDeLaContrainteCouplante);
-        builder->build();
+        builder.build();
     }
 }

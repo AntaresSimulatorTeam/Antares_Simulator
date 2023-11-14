@@ -6,8 +6,8 @@
 class AbstractStartUpCostsGroup : public ConstraintGroup
 {
 public:
-    AbstractStartUpCostsGroup(PROBLEME_HEBDO* problemeHebdo, bool simulation) :
-     simulation_(simulation), ConstraintGroup(problemeHebdo)
+    AbstractStartUpCostsGroup(ConstraintBuilder& builder, bool simulation) :
+     simulation_(simulation), ConstraintGroup(builder)
     {
     }
 

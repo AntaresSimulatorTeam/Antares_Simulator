@@ -17,7 +17,7 @@ struct FlowDissociationData
 class FlowDissociation : private ConstraintFactory
 {
 public:
-    FlowDissociation(std::shared_ptr<ConstraintBuilder> builder, FlowDissociationData& data) :
+    FlowDissociation(ConstraintBuilder& builder, FlowDissociationData& data) :
      ConstraintFactory(builder), data(data)
     {
     }

@@ -164,6 +164,9 @@ public:
     const uint32_t& weekInTheYear;
     const uint32_t& NombreDePasDeTemps;
     uint32_t* NbTermesContraintesPourLesCoutsDeDemarrage = nullptr;
+    const uint32_t NombreDePays;
+    const uint32_t NombreDeContraintesCouplantes;
+    const std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES>& CaracteristiquesHydrauliques;
 };
 
 /*! \verbatim
@@ -182,11 +185,8 @@ class ConstraintBuilder
 {
 public:
     ConstraintBuilder() = delete;
-    ConstraintBuilder(std::shared_ptr<ConstraintBuilder>&& other) : data(std::move(other->data))
-    {
-    }
-    explicit ConstraintBuilder(std::shared_ptr<ConstraintBuilderData> data) :
-     data(std::move(data))
+
+    explicit ConstraintBuilder(ConstraintBuilderData& data) : data(data)
     {
     }
 
@@ -357,7 +357,7 @@ public:
         return nombreDeTermes_;
     }
 
-    std::shared_ptr<ConstraintBuilderData> data;
+    ConstraintBuilderData& data;
 
 private:
     void OPT_ChargerLaContrainteDansLaMatriceDesContraintes();
@@ -386,21 +386,21 @@ class ConstraintFactory
 {
 public:
     ConstraintFactory() = delete;
-    explicit ConstraintFactory(std::shared_ptr<ConstraintBuilder> builder) : builder(builder)
+    explicit ConstraintFactory(ConstraintBuilder& builder) : builder(builder)
     {
     }
-    std::shared_ptr<ConstraintBuilder> builder;
+    ConstraintBuilder& builder;
 };
 
 // Helper functions
 inline void ExportPaliers(const PALIERS_THERMIQUES& PaliersThermiquesDuPays,
-                          std::shared_ptr<ConstraintBuilder> newConstraintBuilder)
+                          ConstraintBuilder& newConstraintBuilder)
 {
     for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
     {
         const int palier
           = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-        newConstraintBuilder->DispatchableProduction(palier, -1.0);
+        newConstraintBuilder.DispatchableProduction(palier, -1.0);
     }
 }
 

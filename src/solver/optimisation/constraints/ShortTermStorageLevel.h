@@ -11,7 +11,7 @@ struct ShortTermStorageLevelData
 class ShortTermStorageLevel : private ConstraintFactory
 {
 public:
-    ShortTermStorageLevel(std::shared_ptr<ConstraintBuilder> builder,
+    ShortTermStorageLevel(ConstraintBuilder& builder,
                           ShortTermStorageLevelData& data) :
      ConstraintFactory(builder), data(data)
     {

@@ -16,14 +16,14 @@ void NbUnitsOutageLessThanNbUnitsStopGroup::Build()
 {
     auto data = GetNbUnitsOutageLessThanNbUnitsStopDataFromProblemHebdo();
     NbUnitsOutageLessThanNbUnitsStop nbUnitsOutageLessThanNbUnitsStop(builder_, data);
-    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < builder_.data.NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo_->PaliersThermiquesDuPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
+            for (int pdt = 0; pdt < builder_.data.NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 nbUnitsOutageLessThanNbUnitsStop.add(pays, index, pdt);
             }

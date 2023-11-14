@@ -4,8 +4,7 @@ HydroPowerData HydroPowerGroup::GetHydroPowerDataFromProblemHebdo()
 {
     return {
       .CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,
-      .NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation,
+      .NombreDePasDeTempsPourUneOptimisation = builder_.data.NombreDePasDeTempsPourUneOptimisation,
       .NumeroDeContrainteEnergieHydraulique = problemeHebdo_->NumeroDeContrainteEnergieHydraulique};
 }
 
@@ -14,7 +13,7 @@ void HydroPowerGroup::Build()
     auto hydroPowerData = GetHydroPowerDataFromProblemHebdo();
     HydroPower hydroPower(builder_, hydroPowerData);
 
-    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < builder_.data.NombreDePays; pays++)
     {
         hydroPower.add(pays);
     }
