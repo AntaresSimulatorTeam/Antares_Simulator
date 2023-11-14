@@ -14,12 +14,12 @@ NbDispUnitsMinBoundSinceMinUpTimeData
  */
 void NbDispUnitsMinBoundSinceMinUpTimeGroup::Build()
 {
+    auto data = GetNbDispUnitsMinBoundSinceMinUpTimeDataFromProblemHebdo();
+    NbDispUnitsMinBoundSinceMinUpTime nbDispUnitsMinBoundSinceMinUpTime(builder_, data);
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo_->PaliersThermiquesDuPays[pays];
-        auto data = GetNbDispUnitsMinBoundSinceMinUpTimeDataFromProblemHebdo();
-        NbDispUnitsMinBoundSinceMinUpTime nbDispUnitsMinBoundSinceMinUpTime(builder_, data);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             if (PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index] <= 0)
