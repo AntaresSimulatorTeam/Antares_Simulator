@@ -28,7 +28,7 @@ void MinDownTime::add(int pays, int index, int pdt)
         builder->lessThan();
         if (builder->NumberOfVariables() > 1)
         {
-            data.CorrespondanceCntNativesCntOptim[pays]
+            data.CorrespondanceCntNativesCntOptim[pdt]
               .NumeroDeContrainteDesContraintesDeDureeMinDArret[cluster]
               = builder->data->nombreDeContraintes;
             ConstraintNamer namer(builder->data->NomDesContraintes);
