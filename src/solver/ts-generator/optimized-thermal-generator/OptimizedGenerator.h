@@ -5,7 +5,6 @@
 #pragma once
 
 #include "../randomized-thermal-generator/RandomizedGenerator.h"
-//#include "../../../libs/antares/study/maintenance_planning/MaintenanceGroupRepository.h"
 #include "../../../libs/antares/study/maintenance_planning/MaintenanceGroup.h"
 #include "AuxillaryStructures.h"
 
