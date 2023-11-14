@@ -38,6 +38,7 @@ private:
     void createOptimizationProblemPerCluster(const Data::Area& area, Data::ThermalCluster& cluster);
 
     // calculate parameters methods - per maintenance group
+    void setMaintenanceGroupParameters();
     std::pair<int, int> calculateTimeHorizonAndStep();
     std::pair<double, double> calculateMaintenanceGroupENSandSpillageCost();
     void calculateResidualLoad();
@@ -72,6 +73,11 @@ private:
     // variables
     Data::MaintenanceGroup& maintenanceGroup_;
     bool globalThermalTSgeneration_;
+    int timeHorizon_;
+    int timeStep_;
+    double ensCost_;
+    double spillCost_;
+    std::array<double, DAYS_PER_YEAR> residualLoadDailyValues_;
 
 public:
     void run(); // calls private optimization problem construction methods

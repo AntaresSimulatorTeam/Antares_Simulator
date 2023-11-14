@@ -12,16 +12,7 @@ namespace Antares::Solver::TSGenerator
 // optimization problem - methods
 void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
 {
-    // timeHorizon, timeStep ENS and Spillage are defined per one MaintenanceGroup
-    int timeHorizon, timeStep;
-    double ensCost, spillCost;
-    std::array<double, DAYS_PER_YEAR> residualLoadDailyValues;
-    // Residual Load (or reference value) array is defined per one MaintenanceGroup
-    calculateResidualLoad();
-    residualLoadDailyValues = calculateDailySums(maintenanceGroup_.getUsedResidualLoadTS());
-    std::tie(ensCost, spillCost) = calculateMaintenanceGroupENSandSpillageCost();
-    std::tie(timeStep, timeHorizon) = calculateTimeHorizonAndStep();
-
+    setMaintenanceGroupParameters();
     // loop through the elements of weightMap weights_
     for (const auto& entryWeightMap : maintenanceGroup_)
     {
@@ -87,6 +78,16 @@ void OptimizedThermalGenerator::createOptimizationProblemPerCluster(const Data::
 }
 
 // calculate parameters methods - per maintenance group
+void OptimizedThermalGenerator::setMaintenanceGroupParameters()
+{
+    // timeHorizon, timeStep ENS and Spillage are defined per one MaintenanceGroup
+    // Residual Load (or reference value) array is defined per one MaintenanceGroup
+    calculateResidualLoad();
+    residualLoadDailyValues_ = calculateDailySums(maintenanceGroup_.getUsedResidualLoadTS());
+    std::tie(ensCost_, spillCost_) = calculateMaintenanceGroupENSandSpillageCost();
+    std::tie(timeStep_, timeHorizon_) = calculateTimeHorizonAndStep();
+}
+
 std::pair<int, int> OptimizedThermalGenerator::calculateTimeHorizonAndStep()
 {
     std::vector<int> averageDurationBetweenMaintenances = {};
