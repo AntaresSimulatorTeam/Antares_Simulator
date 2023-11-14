@@ -10,31 +10,20 @@
 namespace Antares::Solver::TSGenerator
 {
 // optimization problem - methods
-void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeriesPerAllMaintenanceGroups()
+void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
 {
-    const auto& activeMaintenanceGroups = maintenanceGroupRepo.activeMaintenanceGroups();
-    for (const auto& entryMaintenanceGroup : activeMaintenanceGroups)
-    {
-        // timeHorizon, timeStep ENS and Spillage are defined per one MaintenanceGroup
-        int timeHorizon, timeStep;
-        double ensCost, spillCost;
-        std::array<double, DAYS_PER_YEAR> residualLoadDailyValues;
-        auto& maintenanceGroup = *(entryMaintenanceGroup.get());
-        // Residual Load (or reference value) array is defined per one MaintenanceGroup
-        calculateResidualLoad(maintenanceGroup);
-        residualLoadDailyValues = calculateDailySums(maintenanceGroup.getUsedResidualLoadTS());
-        std::tie(ensCost, spillCost)
-          = calculateMaintenanceGroupENSandSpillageCost(maintenanceGroup);
-        std::tie(timeStep, timeHorizon) = calculateTimeHorizonAndStep(maintenanceGroup);
-        GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(maintenanceGroup);
-    }
-}
+    // timeHorizon, timeStep ENS and Spillage are defined per one MaintenanceGroup
+    int timeHorizon, timeStep;
+    double ensCost, spillCost;
+    std::array<double, DAYS_PER_YEAR> residualLoadDailyValues;
+    // Residual Load (or reference value) array is defined per one MaintenanceGroup
+    calculateResidualLoad();
+    residualLoadDailyValues = calculateDailySums(maintenanceGroup_.getUsedResidualLoadTS());
+    std::tie(ensCost, spillCost) = calculateMaintenanceGroupENSandSpillageCost();
+    std::tie(timeStep, timeHorizon) = calculateTimeHorizonAndStep();
 
-void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(
-  Data::MaintenanceGroup& maintenanceGroup)
-{
     // loop through the elements of weightMap weights_
-    for (const auto& entryWeightMap : maintenanceGroup)
+    for (const auto& entryWeightMap : maintenanceGroup_)
     {
         const auto& area = *(entryWeightMap.first);
         // loop through the thermal clusters inside the area
@@ -62,10 +51,10 @@ void OptimizedThermalGenerator::createOptimizationProblemPerCluster(const Data::
         averageMaintenanceDuration
           = calculateAverageMaintenanceDuration(cluster); // this will floor the double value !!
         std::array<double, DAYS_PER_YEAR> maxUnitOutput = calculateMaxUnitOutput(cluster);
-        uint earliestStartOfFirstMaintenance
-          = calculateUnitEarliestStartOfFirstMaintenance(cluster, averageMaintenanceDuration, 8);
-        uint latestStartOfFirstMaintenance
-          = calculateUnitLatestStartOfFirstMaintenance(cluster, averageMaintenanceDuration, 8);
+        // uint earliestStartOfFirstMaintenance
+        //   = calculateUnitEarliestStartOfFirstMaintenance(cluster, averageMaintenanceDuration, 8);
+        // uint latestStartOfFirstMaintenance
+        //   = calculateUnitLatestStartOfFirstMaintenance(cluster, averageMaintenanceDuration, 8);
         // just playing here - this needs to go into new method - class  - operator
         logs.info() << "CR27-INFO: This cluster is active for mnt planning: "
                     << cluster.getFullName();
@@ -98,11 +87,10 @@ void OptimizedThermalGenerator::createOptimizationProblemPerCluster(const Data::
 }
 
 // calculate parameters methods - per maintenance group
-std::pair<int, int> OptimizedThermalGenerator::calculateTimeHorizonAndStep(
-  Data::MaintenanceGroup& maintenanceGroup)
+std::pair<int, int> OptimizedThermalGenerator::calculateTimeHorizonAndStep()
 {
     std::vector<int> averageDurationBetweenMaintenances = {};
-    for (const auto& entryWeightMap : maintenanceGroup)
+    for (const auto& entryWeightMap : maintenanceGroup_)
     {
         const auto& area = *(entryWeightMap.first);
         for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end();
@@ -130,12 +118,11 @@ std::pair<int, int> OptimizedThermalGenerator::calculateTimeHorizonAndStep(
     return std::make_pair(0, 0);
 }
 
-std::pair<double, double> OptimizedThermalGenerator::calculateMaintenanceGroupENSandSpillageCost(
-  Data::MaintenanceGroup& maintenanceGroup)
+std::pair<double, double> OptimizedThermalGenerator::calculateMaintenanceGroupENSandSpillageCost()
 {
     std::vector<int> ensVector = {};
     std::vector<int> spillageVector = {};
-    for (const auto& entryWeightMap : maintenanceGroup)
+    for (const auto& entryWeightMap : maintenanceGroup_)
     {
         const auto& area = *(entryWeightMap.first);
         ensVector.push_back(area.thermal.unsuppliedEnergyCost);
@@ -155,7 +142,7 @@ std::pair<double, double> OptimizedThermalGenerator::calculateMaintenanceGroupEN
     return std::make_pair(0, 0);
 }
 
-void OptimizedThermalGenerator::calculateResidualLoad(Data::MaintenanceGroup& maintenanceGroup)
+void OptimizedThermalGenerator::calculateResidualLoad()
 {
     // create reference value arrays
     std::array<double, HOURS_PER_YEAR> refValueLoad = {};
@@ -164,14 +151,14 @@ void OptimizedThermalGenerator::calculateResidualLoad(Data::MaintenanceGroup& ma
     std::array<double, HOURS_PER_YEAR> refValue = {};
 
     // for phase II
-    if (maintenanceGroup.type() == Data::MaintenanceGroup::typeTimeserie)
+    if (maintenanceGroup_.type() == Data::MaintenanceGroup::typeTimeserie)
     {
         // read user defined ts - userProvidedResidualLoadTS_ with getter - phase-II
         return;
     }
 
     // loop through the elements of weightMap weights_
-    for (const auto& entryWeightMap : maintenanceGroup)
+    for (const auto& entryWeightMap : maintenanceGroup_)
     {
         const auto& area = *(entryWeightMap.first);
         const auto weights = (entryWeightMap.second);
@@ -191,7 +178,7 @@ void OptimizedThermalGenerator::calculateResidualLoad(Data::MaintenanceGroup& ma
     for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
         refValue[row] = refValueLoad[row] - refValueRor[row] - refValueRenewable[row];
     // set ResidualLoadTS
-    maintenanceGroup.setUsedResidualLoadTS(refValue);
+    maintenanceGroup_.setUsedResidualLoadTS(refValue);
 }
 
 // calculate parameters methods - per cluster

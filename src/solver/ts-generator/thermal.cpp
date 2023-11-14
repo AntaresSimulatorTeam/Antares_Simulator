@@ -73,7 +73,8 @@ bool GenerateOptimizedThermalTimeSeries(Data::Study& study,
 {
     // optimized planning should only be called once.
     // Due to possible thermal refresh span we can end up here more than once - but just ignore it
-    // even if we set in Scenario playlist that year-1 should be skipped, we will execute this properly
+    // even if we set in Scenario playlist that year-1 should be skipped, we will execute this
+    // properly
     if (year != 0)
         return true;
 
@@ -81,9 +82,14 @@ bool GenerateOptimizedThermalTimeSeries(Data::Study& study,
     logs.info() << "Generating optimized thermal time-series";
     Solver::Progression::Task progression(study, year, Solver::Progression::sectTSGThermal);
 
-    auto generator
-      = OptimizedThermalGenerator(study, year, globalThermalTSgeneration, progression, writer);
-    generator.GenerateOptimizedThermalTimeSeriesPerAllMaintenanceGroups();
+    const auto& activeMaintenanceGroups = study.maintenanceGroups.activeMaintenanceGroups();
+    for (const auto& entryMaintenanceGroup : activeMaintenanceGroups)
+    {
+        auto& maintenanceGroup = *(entryMaintenanceGroup.get());
+        auto generator = OptimizedThermalGenerator(
+          study, maintenanceGroup, year, globalThermalTSgeneration, progression, writer);
+        generator.GenerateOptimizedThermalTimeSeries();
+    }
 
     return true;
 }

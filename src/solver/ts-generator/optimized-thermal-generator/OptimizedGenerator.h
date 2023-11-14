@@ -34,15 +34,13 @@ private:
     void allocateProblem(); // this one should be called in constructor. It basically resets all the
                             // vectors in PROBLEME_ANTARES_A_RESOUDRE for new opt problem.
 
-    // optimization problem - methods
-    void GenerateOptimizedThermalTimeSeriesPerOneMaintenanceGroup(Data::MaintenanceGroup& group);
+    // optimization problem - methods - private
     void createOptimizationProblemPerCluster(const Data::Area& area, Data::ThermalCluster& cluster);
 
     // calculate parameters methods - per maintenance group
-    std::pair<int, int> calculateTimeHorizonAndStep(Data::MaintenanceGroup& group);
-    std::pair<double, double> calculateMaintenanceGroupENSandSpillageCost(
-      Data::MaintenanceGroup& group);
-    void calculateResidualLoad(Data::MaintenanceGroup& group);
+    std::pair<int, int> calculateTimeHorizonAndStep();
+    std::pair<double, double> calculateMaintenanceGroupENSandSpillageCost();
+    void calculateResidualLoad();
 
     // calculate parameters methods - per cluster
     uint calculateNumberOfMaintenances(Data::ThermalCluster& cluster, uint timeHorizon);
@@ -72,18 +70,19 @@ private:
     std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsClusters(const Data::Area& area);
 
     // variables
-    Data::MaintenanceGroupRepository& maintenanceGroupRepo;
+    Data::MaintenanceGroup& maintenanceGroup_;
     bool globalThermalTSgeneration_;
 
 public:
     void run(); // calls private optimization problem construction methods
 
     explicit OptimizedThermalGenerator(Data::Study& study,
+                                       Data::MaintenanceGroup& maintenanceGroup,
                                        uint year,
                                        bool globalThermalTSgeneration,
                                        Solver::Progression::Task& progr,
                                        IResultWriter& writer) :
-     GeneratorTempData(study, progr, writer), maintenanceGroupRepo(study.maintenanceGroups)
+     GeneratorTempData(study, progr, writer), maintenanceGroup_(maintenanceGroup)
     {
         currentYear = year;
         globalThermalTSgeneration_ = globalThermalTSgeneration;
@@ -94,7 +93,8 @@ public:
 
     ~OptimizedThermalGenerator() = default;
 
-    void GenerateOptimizedThermalTimeSeriesPerAllMaintenanceGroups();
+    // optimization problem - methods - public
+    void GenerateOptimizedThermalTimeSeries();
 };
 
 } // namespace Antares::Solver::TSGenerator
