@@ -55,6 +55,16 @@ void OptimizedThermalGenerator::createOptimizationProblemPerGroup(const OptProbl
             ++pProgression;
         }
     }
+
+    indexes.day.push_back(OptimizationProblemVariableIndexesPerDay());
+    indexes.day[0].Ens = 1;
+    indexes.day[0].Spill = 2;
+    indexes.day[0].area.push_back(OptimizationProblemVariableIndexesPerArea());
+    indexes.day[0].area[0].cluster.push_back(OptimizationProblemVariableIndexesPerCluster());
+    indexes.day[0].area[0].cluster[0].unit.push_back(OptimizationProblemVariableIndexesPerUnit());
+    indexes.day[0].area[0].cluster[0].unit[0].P = 100;
+    indexes.day[0].area[0].cluster[0].unit[0].start.push_back(55);
+    indexes.day[0].area[0].cluster[0].unit[0].end.push_back(155);
     // end play
 }
 

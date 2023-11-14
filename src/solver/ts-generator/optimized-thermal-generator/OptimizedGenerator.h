@@ -100,6 +100,7 @@ private:
     double ensCost_;
     double spillCost_;
     std::array<double, DAYS_PER_YEAR> residualLoadDailyValues_;
+    OptimizationProblemVariableIndexes indexes;
 
 public:
     explicit OptimizedThermalGenerator(Data::Study& study,
