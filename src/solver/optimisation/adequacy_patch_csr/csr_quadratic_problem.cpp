@@ -98,20 +98,20 @@ void CsrQuadraticProblem::setBindingConstraints()
     int hour = hourlyCsrProblem_.triggeredHour;
     auto builder = NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(problemeHebdo_,
                                                                               problemeAResoudre_);
-    // Special case of the binding constraints
+
+    CsrBindingConstraintHourData csrBindingConstraintHourData = {
+      .MatriceDesContraintesCouplantes = problemeHebdo_->MatriceDesContraintesCouplantes,
+      .originAreaMode = problemeHebdo_->adequacyPatchRuntimeData->originAreaMode,
+      .extremityAreaMode = problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode,
+      .hour = hour,
+      .numberOfConstraintCsrHourlyBinding = hourlyCsrProblem_.numberOfConstraintCsrHourlyBinding};
+
+    CsrBindingConstraintHour csrBindingConstraintHour(
+      builder, csrBindingConstraintHourData); // Special case of the binding constraints
     for (uint32_t CntCouplante = 0; CntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
          CntCouplante++)
     {
-        CsrBindingConstraintHourData data
-          = {problemeHebdo_->MatriceDesContraintesCouplantes[CntCouplante],
-             problemeHebdo_->adequacyPatchRuntimeData->originAreaMode,
-             problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode,
-             hour,
-             hourlyCsrProblem_.numberOfConstraintCsrHourlyBinding};
-
-        CsrBindingConstraintHour csrBindingConstraintHour(builder);
-        auto csrBindingConstraintHourData = std::make_shared<CsrBindingConstraintHourData>(data);
-        csrBindingConstraintHour.add(CntCouplante, csrBindingConstraintHourData);
+        csrBindingConstraintHour.add(CntCouplante);
     }
 }
 void CsrQuadraticProblem::buildConstraintMatrix()

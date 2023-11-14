@@ -128,6 +128,7 @@ set(RTESOLVER_OPT
 
 		ProblemMatrixEssential.h
 		LinearProblemMatrixStartUpCosts.h
+		LinearProblemMatrixStartUpCosts.cpp
 		LinearProblemMatrix.h
 		LinearProblemMatrix.cpp
 		QuadraticProblemMatrix.h

@@ -44,21 +44,7 @@ using namespace Antares::Data;
 class LinearProblemMatrixStartUpCosts : public ProblemMatrixEssential
 {
 public:
-    explicit LinearProblemMatrixStartUpCosts(PROBLEME_HEBDO* problemeHebdo, bool Simulation) :
-     ProblemMatrixEssential(problemeHebdo),
-     simulation_(Simulation),
-     pMinMaxDispatchableGenerationGroup_(problemeHebdo, simulation_),
-     consistenceNumberOfDispatchableUnitsGroup_(problemeHebdo, simulation_),
-     nbUnitsOutageLessThanNbUnitsStopGroup_(problemeHebdo, simulation_),
-     nbDispUnitsMinBoundSinceMinUpTimeGroup_(problemeHebdo, simulation_),
-     minDownTimeGroup_(problemeHebdo, simulation_)
-    {
-        constraintgroups_ = {&pMinMaxDispatchableGenerationGroup_,
-                             &consistenceNumberOfDispatchableUnitsGroup_,
-                             &nbUnitsOutageLessThanNbUnitsStopGroup_,
-                             &nbDispUnitsMinBoundSinceMinUpTimeGroup_,
-                             &minDownTimeGroup_};
-    }
+    explicit LinearProblemMatrixStartUpCosts(PROBLEME_HEBDO* problemeHebdo, bool Simulation);
 
 private:
     bool simulation_ = false;

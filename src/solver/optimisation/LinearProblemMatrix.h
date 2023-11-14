@@ -45,29 +45,7 @@ using namespace Antares::Data;
 class LinearProblemMatrix : public ProblemMatrixEssential
 {
 public:
-    explicit LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo, Solver::IResultWriter& writer) :
-     ProblemMatrixEssential(problemeHebdo),
-     writer_(writer),
-     group1_(problemeHebdo),
-     bindingConstraintDayGroup_(problemeHebdo),
-     bindingConstraintWeekGroup_(problemeHebdo),
-     hydroPowerGroup_(problemeHebdo),
-     hydraulicSmoothingGroup_(problemeHebdo),
-     minMaxHydroPowerGroup_(problemeHebdo),
-     maxPumpingGroup_(problemeHebdo),
-     areaHydroLevelGroup_(problemeHebdo),
-     finalStockGroup_(problemeHebdo)
-    {
-        constraintgroups_ = {&group1_,
-                             &bindingConstraintDayGroup_,
-                             &bindingConstraintWeekGroup_,
-                             &hydroPowerGroup_,
-                             &hydraulicSmoothingGroup_,
-                             &minMaxHydroPowerGroup_,
-                             &maxPumpingGroup_,
-                             &areaHydroLevelGroup_,
-                             &finalStockGroup_};
-    }
+    explicit LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo, Solver::IResultWriter& writer);
 
     void Run() override;
     void ExportStructures();
