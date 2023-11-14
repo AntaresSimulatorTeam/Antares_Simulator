@@ -63,17 +63,16 @@ set(RTESOLVER_OPT
 		adequacy_patch_csr/csr_quadratic_problem.cpp
 		include/antares/solver/optimisation/adequacy_patch_csr/count_constraints_variables.h
 		adequacy_patch_csr/count_constraints_variables.cpp
-		adequacy_patch_csr/constraints/CsrFlowDissociation.h
+        include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFlowDissociation.h
 		adequacy_patch_csr/constraints/CsrFlowDissociation.cpp
-		adequacy_patch_csr/constraints/CsrAreaBalance.h
+        include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrAreaBalance.h
 		adequacy_patch_csr/constraints/CsrAreaBalance.cpp
-		adequacy_patch_csr/constraints/CsrBindingConstraintHour.h
+        include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrBindingConstraintHour.h
 		adequacy_patch_csr/constraints/CsrBindingConstraintHour.cpp
 
 		include/antares/solver/optimisation/opt_period_string_generator_base.h
 		include/antares/solver/optimisation/opt_rename_problem.h
 		opt_rename_problem.cpp
-
 
 		constraints/ConstraintBuilder.cpp
 		include/antares/solver/optimisation/constraints/ConstraintBuilder.h
