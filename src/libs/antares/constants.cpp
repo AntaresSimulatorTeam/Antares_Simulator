@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "constants.h"
+#include "antares/antares/constants.h"
 
 namespace Antares::Constants
 {

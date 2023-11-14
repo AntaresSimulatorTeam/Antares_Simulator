@@ -26,7 +26,7 @@
 */
 
 #include "fswalker.h"
-#include <antares/antares.h>
+#include <antares/antares/antares.h>
 #include <stack>
 #include <list>
 #include <yuni/io/directory/info.h>

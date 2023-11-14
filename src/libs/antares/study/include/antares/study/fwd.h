@@ -29,7 +29,8 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include "../../constants.h"
+#include "antares/antares/antares.h"
+#include "antares/antares/constants.h"
 #include <map>
 
 namespace Antares

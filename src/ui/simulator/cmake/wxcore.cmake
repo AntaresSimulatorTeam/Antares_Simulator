@@ -8,6 +8,6 @@ set(SRCTOOLBOX_CORE_WX
 )
 add_Library(antares-ui-wxcore ${SRCTOOLBOX_CORE_WX})
 target_link_libraries(antares-ui-wxcore PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(antares-ui-wxcore PRIVATE antares-ui-common)
+target_link_libraries(antares-ui-wxcore PRIVATE antares-ui-common Antares::resources)
 
 

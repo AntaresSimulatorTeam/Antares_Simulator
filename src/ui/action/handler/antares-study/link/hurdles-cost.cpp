@@ -28,6 +28,7 @@
 #include "hurdles-cost.h"
 #include "antares/utils/utils.h"
 #include <antares/study/area/constants.h>
+#include <antares/utils/utils.h>
 
 namespace Antares::Action::AntaresStudy::Link
 {

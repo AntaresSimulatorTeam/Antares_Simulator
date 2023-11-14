@@ -34,7 +34,7 @@
 #include <wx/timer.h>
 #include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/components/datagrid/renderer/constraintsbuilder/links.h"
-#include "../../../../solver/constraints-builder/cbuilder.h"
+#include "antares/solver/constraints-builder/cbuilder.h"
 #include <ui/common/component/spotlight.h>
 #include <yuni/thread/thread.h>
 #include <yuni/core/event.h>

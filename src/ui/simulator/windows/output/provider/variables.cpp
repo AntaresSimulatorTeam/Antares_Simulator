@@ -31,7 +31,7 @@
 #include "../content.h"
 #include "../../../toolbox/resources.h"
 #include <antares/study/study.h>
-#include "../../../../../solver/variable/economy/all.h"
+#include "antares/solver/variable/economy/all.h"
 #include "variable-collector.h"
 
 using namespace Yuni;

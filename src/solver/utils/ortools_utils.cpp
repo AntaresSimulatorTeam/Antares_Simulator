@@ -2,7 +2,7 @@
 
 #include <antares/logs/logs.h>
 #include <antares/exception/AssertionError.hpp>
-#include <antares/Enum.hpp>
+#include "antares/antares/Enum.hpp"
 #include <filesystem>
 
 using namespace operations_research;

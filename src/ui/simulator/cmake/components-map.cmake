@@ -54,4 +54,8 @@ add_library(antares-ui-component-map
 
 
 target_link_libraries(antares-ui-component-map PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(antares-ui-component-map PRIVATE antares-core antares-ui-common antares-ui-components)
+target_link_libraries(antares-ui-component-map PRIVATE
+		antares-core antares-ui-common
+		antares-ui-components
+		Antares::resources
+)

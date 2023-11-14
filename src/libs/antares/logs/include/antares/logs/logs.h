@@ -28,7 +28,7 @@
 #define __ANTARES_LIBS_LOGS_LOGS_H__
 
 #include <yuni/yuni.h>
-#include "../../../../constants.h"
+#include "antares/antares/constants.h"
 #include "yuni/core/logs/decorators/message.h"
 #include "yuni/core/logs/decorators/time.h"
 #include "yuni/core/logs/decorators/verbositylevel.h"

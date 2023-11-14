@@ -29,6 +29,7 @@
 #include "../../application/study.h"
 #include "../../application/main/main.h"
 #include "../../../common/lock.h"
+#include "study.h"
 
 using namespace Yuni;
 

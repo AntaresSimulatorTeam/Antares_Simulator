@@ -32,7 +32,7 @@
 #include "../../toolbox/jobs.h"
 #include <wx/wupdlock.h>
 #include "internal-ids.h"
-#include "../../../../solver/constraints-builder/cbuilder.h"
+#include "antares/solver/constraints-builder/cbuilder.h"
 #include <ui/common/lock.h>
 #include "../wait.h"
 #include "antares/study/ui-runtimeinfos.h"

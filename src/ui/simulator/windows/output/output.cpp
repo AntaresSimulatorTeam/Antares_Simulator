@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/antares.h>
+#include "antares/antares/antares.h"
 #include "output.h"
 #include <yuni/io/directory.h>
 #include "../../toolbox/components/captionpanel.h"

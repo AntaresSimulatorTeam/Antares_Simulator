@@ -34,6 +34,7 @@
 #include "../../../common/lock.h"
 #include <yuni/datetime/timestamp.h>
 #include "internal-ids.h"
+#include "application/study.h"
 
 using namespace Yuni;
 

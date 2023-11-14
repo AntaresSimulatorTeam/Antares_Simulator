@@ -43,4 +43,4 @@ add_library(antares-ui-component-htmllistbox
 
 
 target_link_libraries(antares-ui-component-htmllistbox  PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(antares-ui-component-htmllistbox PRIVATE antares-core antares-ui-common)
+target_link_libraries(antares-ui-component-htmllistbox PRIVATE antares-core antares-ui-common Antares::resources)

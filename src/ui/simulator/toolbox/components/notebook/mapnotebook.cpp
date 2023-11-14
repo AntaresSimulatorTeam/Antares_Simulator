@@ -24,7 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include <antares/antares.h>
+#include "antares/antares/antares.h"
 #include "mapnotebook.h"
 #include "../../resources.h"
 #include <wx/dcbuffer.h>
