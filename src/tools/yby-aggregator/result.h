@@ -26,7 +26,7 @@
 #include <map>
 #include <antares/memory/memory.h>
 #include "datafile.h"
-#include "studydata.h"
+#include "antares/solver/ts-generator/xcast/studydata.h"
 
 using namespace Yuni;
 

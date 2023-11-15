@@ -29,7 +29,7 @@
 #include <yuni/core/bind.h>
 #include "../variable/economy/dispatchable-generation-margin.h" // for OP.MRG
 
-#include "solver.h" // for definition of type yearRandomNumbers
+#include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
 
 #include <vector>
 

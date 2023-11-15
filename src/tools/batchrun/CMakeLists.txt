@@ -41,6 +41,8 @@ set(BATCHRUN_LIBS
 		${CMAKE_THREADS_LIBS_INIT}
 		Antares::args_helper
 		Antares::study
+		Antares::resources
+		Antares::locale
 )
 
 target_link_libraries(${execname}

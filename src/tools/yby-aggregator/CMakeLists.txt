@@ -64,7 +64,7 @@ target_include_directories(${execname}
 target_link_libraries(${execname}
 		PRIVATE
 			${YBY_AGGREGATOR_LIBS}
-		PUBLIC
+			antares-solver-ts-generator
 			Antares::memory
 			Antares::utils
 		)
