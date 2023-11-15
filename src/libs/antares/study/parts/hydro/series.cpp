@@ -122,7 +122,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
         logs.error() << "Hydro: `" << areaID
                      << "`: empty matrix detected. Fixing it with default values";
         ror.reset();
-        storage.reset();
+        storage.reset(1, DAYS_PER_YEAR);
         mingen.reset();
     }
     else
@@ -231,7 +231,7 @@ void DataSeriesHydro::markAsModified() const
 void DataSeriesHydro::reset()
 {
     ror.reset();
-    storage.reset();
+    storage.reset(1, DAYS_PER_YEAR);
     mingen.reset();
     count = 1;
 }

@@ -33,7 +33,7 @@ CPack can be used to create the installer after the build phase :
     sudo yum install wxGTK3
     ```
 
-=== "Ubuntu"
+=== "Ubuntu/Debian"
 
     ### Ubuntu .deb (Experimental)
     ```
@@ -49,5 +49,5 @@ CPack can be used to create the installer after the build phase :
     ### Required system libraries
     There are still some system libraries that must be installed if you want to use *ANTARES*:
     ```
-    sudo apt-get install libwxgtk3.0-gtk3-0v5
+    sudo apt install libwxgtk3.0-gtk3-0v5
     ```
