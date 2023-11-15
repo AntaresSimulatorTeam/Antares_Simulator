@@ -28,19 +28,15 @@
 #include <yuni/core/math.h>
 #include <antares/study/study.h>
 #include <antares/logs/logs.h>
-#include "xcast.h"
-#include "constants.h"
+#include "antares/solver/ts-generator/xcast/xcast.h"
+#include "antares/antares/constants.h"
 #include "antares/solver/misc/cholesky.h"
 #include "antares/solver/misc/matrix-dp-make.h"
-#include "math.hxx"
+#include "antares/solver/ts-generator/xcast/math.hxx"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace TSGenerator
-{
-namespace XCast
+namespace Antares::TSGenerator::XCast
 {
 bool XCast::generateValuesForTheCurrentDay()
 {
@@ -552,6 +548,7 @@ bool XCast::generateValuesForTheCurrentDay()
     return true;
 }
 
-} // namespace XCast
-} // namespace TSGenerator
-} // namespace Antares
+} // namespace Antares::TSGenerator::XCast
+
+
+

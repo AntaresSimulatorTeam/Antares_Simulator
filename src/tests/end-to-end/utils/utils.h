@@ -1,15 +1,12 @@
 #pragma once
 #define WIN32_LEAN_AND_MEAN
 #include "antares/study/study.h"
-#include "simulation/economy.h"
+#include "antares/solver/simulation/economy.h"
 #include "antares/study/scenario-builder/rules.h"
 #include "antares/study/scenario-builder/sets.h"
 #include "simulation.h"
 
-using namespace Antares::Solver;
 using namespace Antares::Solver::Simulation;
-using namespace Antares::Data::ScenarioBuilder;
-
 
 void initializeStudy(Study::Ptr study);
 void configureLinkCapacities(AreaLink* link);

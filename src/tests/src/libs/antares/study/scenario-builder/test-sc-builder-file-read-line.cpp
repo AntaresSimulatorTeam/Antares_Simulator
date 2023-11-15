@@ -5,8 +5,8 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <study.h>
-#include <rules.h>
+#include <antares/study/study.h>
+#include <antares/study/rules.h>
 
 using namespace std;
 using namespace Antares::Data;

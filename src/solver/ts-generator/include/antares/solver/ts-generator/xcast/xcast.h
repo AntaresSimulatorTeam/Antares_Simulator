@@ -32,7 +32,7 @@
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include <antares/study/progression/progression.h>
 #include <antares/writer/i_writer.h>
-#include "studydata.h"
+#include "antares/solver/ts-generator/xcast/studydata.h"
 #include <yuni/core/noncopyable.h>
 
 using namespace Antares::Solver;

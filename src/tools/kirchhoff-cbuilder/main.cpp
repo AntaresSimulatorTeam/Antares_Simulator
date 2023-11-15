@@ -32,7 +32,7 @@
 #include <antares/logs/logs.h>
 #include <string>
 
-#include "../../solver/constraints-builder/cbuilder.h"
+#include "antares/solver/constraints-builder/cbuilder.h"
 
 #include "kirchhoff-cbuilder.h"
 

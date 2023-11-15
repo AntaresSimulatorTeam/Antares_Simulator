@@ -34,9 +34,9 @@
 #include "../optimisation/base_weekly_optimization.h"
 #include "base_post_process.h"
 
-#include "solver.h" // for definition of type yearRandomNumbers
+#include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
 #include "antares/infoCollection/StudyInfoCollector.h"
-#include "opt_time_writer.h"
+#include "antares/solver/simulation/opt_time_writer.h"
 
 namespace Antares::Solver::Simulation
 {

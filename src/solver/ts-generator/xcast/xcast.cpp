@@ -29,8 +29,8 @@
 #include <sstream>
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "xcast.h"
-#include "predicate.hxx"
+#include "antares/solver/ts-generator/xcast/xcast.h"
+#include "antares/solver/ts-generator/xcast/predicate.hxx"
 #include <antares/logs/logs.h>
 #include <antares/fatal-error.h>
 #include <limits>
@@ -41,11 +41,7 @@ using namespace Yuni;
 
 #define SEP (IO::Separator)
 
-namespace Antares
-{
-namespace TSGenerator
-{
-namespace XCast
+namespace Antares::TSGenerator::XCast
 {
 
 enum
@@ -657,6 +653,7 @@ bool XCast::run()
     return false;
 }
 
-} // namespace XCast
-} // namespace TSGenerator
-} // namespace Antares
+} // namespace Antares::TSGenerator::XCast
+
+
+
