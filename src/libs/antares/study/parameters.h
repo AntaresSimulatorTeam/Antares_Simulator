@@ -204,11 +204,6 @@ public:
     StudyMode mode;
     //@}
 
-    //! \name Expansion
-    //@{
-    //! Expansion flag
-    mutable bool expansion;
-
     //! \name Horizon
     //@{
     //! Horizon year

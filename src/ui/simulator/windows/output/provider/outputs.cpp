@@ -179,8 +179,10 @@ void Outputs::search(Spotlight::IItem::Vector& out,
             case Data::stdmAdequacy:
                 item->addTag("ADQ", 220, 192, 245);
                 break;
-            case Data::stdmUnknown:
             case Data::stdmExpansion:
+                item->addTag("EXP", 220, 192, 245);
+                break;
+            case Data::stdmUnknown:
             case Data::stdmMax:
                 item->addTag("...", 213, 213, 213);
             }

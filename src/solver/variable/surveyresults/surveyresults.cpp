@@ -197,22 +197,17 @@ void SurveyResultsData::initialize(uint maxVariables)
 
     switch (study.parameters.mode)
     {
-    case Data::stdmEconomy:
-    {
-        matrix.resize(study.areas.size(), study.areas.size());
-        // The initialization will be done later
-        //::MatrixFill(&matrix, std::numeric_limits<double>::quiet_NaN());
-        break;
-    }
     case Data::stdmAdequacy:
+    case Data::stdmEconomy:
+    case Data::stdmExpansion:
     {
         matrix.resize(study.areas.size(), study.areas.size());
         // The initialization will be done later
         //::MatrixFill(&matrix, std::numeric_limits<double>::quiet_NaN());
         break;
     }
+
     case Data::stdmUnknown:
-    case Data::stdmExpansion:
     case Data::stdmMax:
         break;
     }

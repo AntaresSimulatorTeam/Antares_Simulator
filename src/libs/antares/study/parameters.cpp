@@ -177,8 +177,9 @@ const char* StudyModeToCString(StudyMode mode)
         return "Economy";
     case stdmAdequacy:
         return "Adequacy";
-    case stdmMax:
     case stdmExpansion:
+        return "Expansion";
+    case stdmMax:
     case stdmUnknown:
         return "Unknown";
     }
@@ -231,8 +232,6 @@ void Parameters::reset()
 {
     // Mode
     mode = stdmEconomy;
-    // Expansion
-    expansion = false;
     // Calendar
     horizon.clear();
 
@@ -1039,25 +1038,12 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     }
 
     // Simulation mode
-    // ... Expansion
-    if (mode == stdmExpansion)
-    {
-        mode = stdmEconomy;
-        expansion = true;
-    }
-
     // ... Enforcing simulation mode
     if (options.forceMode != stdmUnknown)
     {
-        if (options.forceMode == stdmExpansion)
-        {
-            mode = stdmEconomy;
-            expansion = true;
-        }
-        else
-            mode = options.forceMode;
-
+        mode = options.forceMode;
         logs.info() << "  forcing the simulation mode " << StudyModeToCString(mode);
+
         assert(mode != stdmMax && "Invalid simulation mode");
     }
     else
@@ -1359,6 +1345,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     {
     case stdmEconomy:
     case stdmAdequacy:
+    case stdmExpansion:
     {
         // The year-by-year mode might have been requested from the command line
         if (options.forceYearByYear)
@@ -1366,7 +1353,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         break;
     }
     case stdmUnknown:
-    case stdmExpansion:
     case stdmMax:
     {
         // The mode year-by-year can not be enabled in adequacy
@@ -1437,7 +1423,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         exportTimeSeriesInInput = 0;
     }
 
-    if (expansion)
+    if (mode == stdmExpansion)
         logs.info() << "  :: enabling expansion";
     if (yearByYear)
         logs.info() << "  :: enabling the 'year-by-year' mode";
@@ -1504,13 +1490,7 @@ void Parameters::saveToINI(IniFile& ini) const
         auto* section = ini.addSection("general");
 
         // Mode
-        if (expansion && mode == stdmEconomy)
-            section->add("mode", "Expansion");
-        else
-        {
-            section->add("mode", StudyModeToCString(mode));
-            expansion = false;
-        }
+        section->add("mode", StudyModeToCString(mode));
 
         // Calendar
         section->add("horizon", horizon);

@@ -76,20 +76,15 @@ inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace
 
     switch (studyMode)
     {
-    case Data::stdmEconomy:
-    {
-        hourlyResults = &problemeHebdo->ResultatsHoraires[areaIndex];
-        break;
-    }
     case Data::stdmAdequacy:
+    case Data::stdmEconomy:
+    case Data::stdmExpansion:
     {
         hourlyResults = &problemeHebdo->ResultatsHoraires[areaIndex];
         break;
     }
+
     case Data::stdmUnknown:
-        break;
-    case Data::stdmExpansion:
-        break;
     case Data::stdmMax:
         break;
     }

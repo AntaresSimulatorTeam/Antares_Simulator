@@ -644,8 +644,10 @@ YString StudyCreateOutputPath(StudyMode mode,
     case stdmAdequacy:
         folderOutput += "adq";
         break;
-    case stdmUnknown:
     case stdmExpansion:
+        folderOutput += "exp";
+        break;
+    case stdmUnknown:
     case stdmMax:
         break;
     }

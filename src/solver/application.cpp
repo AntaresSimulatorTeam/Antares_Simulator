@@ -232,6 +232,7 @@ void Application::execute()
     switch (pStudy->runtime->mode)
     {
     case Data::stdmEconomy:
+    case Data::stdmExpansion:
         runSimulationInEconomicMode();
         break;
     case Data::stdmAdequacy:
