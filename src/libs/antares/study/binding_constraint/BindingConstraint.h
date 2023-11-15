@@ -406,7 +406,7 @@ private:
     //! Comments
     YString pComments;
     //! Group
-    std::string group_;
+    std::string group_ = "default";
 
     void clear();
 
