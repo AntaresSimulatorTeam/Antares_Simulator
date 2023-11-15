@@ -399,6 +399,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                         = (Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] < cluster.PthetaInf[hourInYear])
                         ? Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
                         : cluster.PthetaInf[hourInYear];
+                    cluster.pMin[hourInYear] = Pt.PuissanceMinDuPalierThermique[hourInWeek];
             });
         }
     }

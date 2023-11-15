@@ -1536,8 +1536,11 @@ void Study::computePThetaInfForThermalClusters() const
             // Alias du cluster courant
             auto& cluster = area.thermal.list.byIndex[j];
             for (uint k = 0; k < HOURS_PER_YEAR; k++)
+            {
                 cluster->PthetaInf[k] = cluster->modulation[Data::thermalMinGenModulation][k]
                                         * cluster->unitCount * cluster->nominalCapacity;
+                cluster->pMin[k] = cluster->PthetaInf[k];
+            }
         }
     }
 }

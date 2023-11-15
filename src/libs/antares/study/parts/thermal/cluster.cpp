@@ -137,6 +137,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
     forcedLaw(thermalLawUniform),
     plannedLaw(thermalLawUniform),
     PthetaInf(HOURS_PER_YEAR, 0),
+    pMin(HOURS_PER_YEAR, 0),
     costsTimeSeries(1, CostsTimeSeries())
 {
     // assert

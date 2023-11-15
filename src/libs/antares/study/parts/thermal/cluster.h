@@ -348,6 +348,7 @@ public:
     ** PthetaInf[hour]
     */
     std::vector<double> PthetaInf;
+    mutable std::vector<double> pMin;
 
     //! Data for the preprocessor
     PreproThermal* prepro = nullptr;
