@@ -43,6 +43,7 @@ set(BATCHRUN_LIBS
 		Antares::study
 		Antares::resources
 		Antares::locale
+		Antares::locator
 )
 
 target_link_libraries(${execname}

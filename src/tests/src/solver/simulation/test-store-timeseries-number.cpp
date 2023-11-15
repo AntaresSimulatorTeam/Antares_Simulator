@@ -10,7 +10,7 @@
 #include <filesystem>
 #include <fstream>
 #include "antares/solver/simulation/timeseries-numbers.h"
-#include "BindingConstraintsTimeSeriesNumbersWriter.h"
+#include "antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h"
 #include "utils.h"
 #include <antares/writer/writer_factory.h>
 #include <antares/writer/result_format.h>

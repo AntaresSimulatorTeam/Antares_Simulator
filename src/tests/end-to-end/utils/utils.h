@@ -6,7 +6,9 @@
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/solver/simulation/simulation.h"
 
+using namespace Antares::Solver;
 using namespace Antares::Solver::Simulation;
+using namespace Antares::Data::ScenarioBuilder;
 
 void initializeStudy(Study::Ptr study);
 void configureLinkCapacities(AreaLink* link);

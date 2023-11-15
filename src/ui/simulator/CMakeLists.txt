@@ -61,8 +61,6 @@ set(SRCS
 
 		windows/simulation/panel.h
 		windows/simulation/panel.cpp
-		windows/simulation/solver.h
-		windows/simulation/solver.cpp
 		windows/simulation/run.h
 		windows/simulation/run.cpp
 		windows/cleaner.h
@@ -153,6 +151,7 @@ set(ANTARES_LIBS
         Antares::action
 		Antares::resources
 		Antares::locale
+		Antares::locator
 		yuni-static-core
 		yuni-static-uuid
 		model_antares

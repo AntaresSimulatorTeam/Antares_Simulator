@@ -16,4 +16,4 @@ add_library(antares-ui-component-button
 
 
 target_link_libraries(antares-ui-component-button PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(antares-ui-component-button PRIVATE antares-core antares-ui-common Antares::resources)
+target_link_libraries(antares-ui-component-button PRIVATE antares-core antares-ui-common Antares::resources Antares::locator)
