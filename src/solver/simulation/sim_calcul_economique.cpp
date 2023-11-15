@@ -554,20 +554,26 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
     int hourInYear = PasDeTempsDebut;
     unsigned int year = problem.year;
 
+    uint linkCount = studyruntime.interconnectionsCount();
+    for (uint k = 0; k != linkCount; ++k)
+    {
+        auto& lnk = *(studyruntime.areaLink[k]);
+        const double* directCapacities = lnk.directCapacities.getColumn(year);
+        const double* indirectCapacities = lnk.indirectCapacities.getColumn(year);
+        for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps; ++hourInWeek, ++hourInYear)
+        {
+            VALEURS_DE_NTC_ET_RESISTANCES& ntc = problem.ValeursDeNTC[hourInWeek];
+
+            ntc.ValeurDeNTCOrigineVersExtremite[k] = directCapacities[hourInYear];
+            ntc.ValeurDeNTCExtremiteVersOrigine[k] = indirectCapacities[hourInYear];
+            ntc.ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][hourInYear];
+        }
+    }
+
+    hourInYear = PasDeTempsDebut;
     for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps; ++hourInWeek, ++hourInYear)
     {
-        VALEURS_DE_NTC_ET_RESISTANCES& ntc = problem.ValeursDeNTC[hourInWeek];
-        {
-            uint linkCount = studyruntime.interconnectionsCount();
-            for (uint k = 0; k != linkCount; ++k)
-            {
-                auto& lnk = *(studyruntime.areaLink[k]);
 
-                ntc.ValeurDeNTCOrigineVersExtremite[k] = lnk.directCapacities.getCoefficient(year, hourInYear);
-                ntc.ValeurDeNTCExtremiteVersOrigine[k] = lnk.indirectCapacities.getCoefficient(year, hourInYear);
-                ntc.ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][hourInYear];
-            }
-        }
         preparerBindingConstraint(problem, PasDeTempsDebut,
                 study.bindingConstraints, study.bindingConstraintsGroups,
                 weekFirstDay, hourInWeek);
