@@ -20,7 +20,7 @@
 */
 
 #include "antares/antares/antares.h"
-#include "../../ui/simulator/windows/simulation/solver.h"
+#include "antares/locator/locator.h"
 #include <antares/logs/logs.h>
 #include <antares/solver/solver.h>
 #include <antares/resources/resources.h>

@@ -27,7 +27,7 @@
 #include <antares/study/output.h>
 #include <yuni/core/event.h>
 #include <list>
-#include <ui/simulator/windows/simulation/solver.h>
+#include <antares/locator/locator.h>
 
 #include "ui/simulator/toolbox/components/map/settings.h"
 

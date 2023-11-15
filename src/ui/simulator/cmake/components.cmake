@@ -237,6 +237,7 @@ target_link_libraries(antares-ui-components
 							antares-core
 							antares-ui-common
 							Antares::resources
+							Antares::locator
 		antares-solver-constraints-builder
 )
 

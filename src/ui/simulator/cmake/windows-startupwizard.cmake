@@ -7,4 +7,4 @@ set(SRC_UI_WINDOWS_STARTUP_WIZARD
 add_Library(antares-ui-windows-startupwizard ${SRC_UI_WINDOWS_STARTUP_WIZARD})
 
 target_link_libraries(antares-ui-windows-startupwizard PRIVATE ${wxWidgets_LIBRARIES})
-target_link_libraries(antares-ui-windows-startupwizard PRIVATE antares-ui-common Antares::resources)
+target_link_libraries(antares-ui-windows-startupwizard PRIVATE antares-ui-common Antares::resources Antares::locator)

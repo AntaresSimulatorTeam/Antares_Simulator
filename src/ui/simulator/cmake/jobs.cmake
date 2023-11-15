@@ -18,5 +18,5 @@ add_Library(antares-ui-jobs ${SRC_UI_JOBS})
 
 
 target_link_libraries(antares-ui-jobs  PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(antares-ui-jobs PRIVATE antares-ui-common Antares::resources)
+target_link_libraries(antares-ui-jobs PRIVATE antares-ui-common Antares::resources Antares::locator)
 

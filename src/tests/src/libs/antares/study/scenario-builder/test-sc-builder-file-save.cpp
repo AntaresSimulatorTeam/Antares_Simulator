@@ -27,7 +27,7 @@
 #include <fstream>
 
 #include <antares/study/study.h>
-#include <antares/study/rules.h>
+#include <antares/study/scenario-builder/rules.h>
 #include <antares/study/scenario-builder/sets.h>
 #include "area/files-helper.h"
 

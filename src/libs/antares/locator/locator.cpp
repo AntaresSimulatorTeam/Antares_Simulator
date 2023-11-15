@@ -21,11 +21,11 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include "antares/solver/simulation/solver.h"
+#include "antares/locator/locator.h"
 #include "antares/resources/resources.h"
-#include "config.h"
+#include "antares/config/config.h"
+#include "yuni/io/filename-manipulation.h"
 #include <yuni/io/searchpath.h>
-#include <yuni/io/file.h>
 
 using namespace Yuni;
 
