@@ -20,10 +20,10 @@ index 7f37e6f..35ab907 100644
 -<meta property="og:image" content="https://repository-images.githubusercontent.com/348492097/4f16df80-88fb-11eb-9d31-4015ff22c452" />
 -<meta property="og:description" content="Custom CSS theme for doxygen html-documentation with lots of customization parameters." />
 -<meta property="og:url" content="https://jothepro.github.io/doxygen-awesome-css/" />
-+<meta property="og:title" content="Antares Xpansion" />
-+<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/antares-xpansion/blob/develop/docs/assets/logo.png" />
-+<meta property="og:description" content="Investment simulations for Antares studies." />
-+<meta property="og:url" content="https://github.com/AntaresSimulatorTeam/antares-xpansion/" />
++<meta property="og:title" content="Antares Simulator" />
++<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/antares.png" />
++<meta property="og:description" content="Power System Simulator." />
++<meta property="og:url" content="https://antares-simulator.org/" />
  <!-- END opengraph metadata -->
  
  <!-- BEGIN twitter metadata -->
@@ -31,8 +31,8 @@ index 7f37e6f..35ab907 100644
 -<meta name="twitter:title" content="Doxygen Awesome" />
 -<meta name="twitter:description" content="Custom CSS theme for doxygen html-documentation with lots of customization parameters." />
 +<meta name="twitter:image:src" content="https://github.com/AntaresSimulatorTeam/antares-xpansion/blob/develop/docs/assets/logo.png" />
-+<meta name="twitter:title" content="Antares Xpansion" />
-+<meta name="twitter:description" content="Investment simulations for Antares studies." />
++<meta name="twitter:title" content="Antares Simulator" />
++<meta name="twitter:description" content="Power System Simulator." />
  <!-- END twitter metadata -->
  
  <!--BEGIN PROJECT_NAME--><title>$projectname: $title</title><!--END PROJECT_NAME-->
