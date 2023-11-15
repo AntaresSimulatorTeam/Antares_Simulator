@@ -21,5 +21,5 @@ target_link_libraries(infeasible_problem_analysis
   )
 target_include_directories(infeasible_problem_analysis
           PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
 )

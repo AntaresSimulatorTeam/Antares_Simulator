@@ -80,6 +80,7 @@ target_link_libraries(antares-ui-component-spotlight
 		PRIVATE
 			antares-core
 			antares-ui-common
+			Antares::locator
 		)
 
 # Component panel

@@ -75,6 +75,7 @@ target_link_libraries(antares-ui-application
 							Antares::sys
 							Antares::study
 		Antares::resources
+		Antares::locator
 		Antares::locale
 		Antares::application
 		antares-solver-constraints-builder

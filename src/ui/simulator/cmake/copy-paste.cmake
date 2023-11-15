@@ -25,4 +25,5 @@ target_link_libraries(antares-ui-copy-paste PRIVATE ${wxWidgets_LIBRARIES}
     antares-ui-common
     Antares::action
 	Antares::resources
+		Antares::locator
 )

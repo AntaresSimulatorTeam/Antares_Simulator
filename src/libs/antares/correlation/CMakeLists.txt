@@ -16,6 +16,7 @@ target_link_libraries(correlation
         Antares::inifile
         Antares::array
         Antares::study #correlation.h -> area.h
+        Antares::locator
         )
 
 target_include_directories(correlation
