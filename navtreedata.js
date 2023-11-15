@@ -25,24 +25,27 @@
 var NAVTREE =
 [
   [ "Antares Simulator", "index.html", [
+    [ "Links:", "index.html#autotoc_md1", null ],
+    [ "Installation", "index.html#autotoc_md2", null ],
+    [ "Source Code Content", "index.html#autotoc_md3", null ],
     [ "How does the automatic testing script system work ?", "md_src_tests_run_study_tests_readme.html", [
-      [ "Introduction", "md_src_tests_run_study_tests_readme.html#autotoc_md1", null ],
-      [ "Entry points to the automatic testing script system", "md_src_tests_run_study_tests_readme.html#autotoc_md2", null ],
-      [ "File test_from_json.py", "md_src_tests_run_study_tests_readme.html#autotoc_md3", null ],
-      [ "Fixtures", "md_src_tests_run_study_tests_readme.html#autotoc_md4", null ],
-      [ "Tests parametrization", "md_src_tests_run_study_tests_readme.html#autotoc_md5", null ],
-      [ "The test's body", "md_src_tests_run_study_tests_readme.html#autotoc_md6", [
-        [ "<ins>Run fixtures</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md7", null ],
-        [ "<ins>Checks creation factory</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md8", null ],
-        [ "<ins>Running the checks</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md9", null ],
-        [ "<ins>End of tests</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md10", null ]
+      [ "Introduction", "md_src_tests_run_study_tests_readme.html#autotoc_md5", null ],
+      [ "Entry points to the automatic testing script system", "md_src_tests_run_study_tests_readme.html#autotoc_md6", null ],
+      [ "File test_from_json.py", "md_src_tests_run_study_tests_readme.html#autotoc_md7", null ],
+      [ "Fixtures", "md_src_tests_run_study_tests_readme.html#autotoc_md8", null ],
+      [ "Tests parametrization", "md_src_tests_run_study_tests_readme.html#autotoc_md9", null ],
+      [ "The test's body", "md_src_tests_run_study_tests_readme.html#autotoc_md10", [
+        [ "<ins>Run fixtures</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md11", null ],
+        [ "<ins>Checks creation factory</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md12", null ],
+        [ "<ins>Running the checks</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md13", null ],
+        [ "<ins>End of tests</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md14", null ]
       ] ],
-      [ "How to add a check on a test ?", "md_src_tests_run_study_tests_readme.html#autotoc_md11", [
-        [ "What to do ?", "md_src_tests_run_study_tests_readme.html#autotoc_md12", null ],
-        [ "What NOT to do ?", "md_src_tests_run_study_tests_readme.html#autotoc_md13", null ]
+      [ "How to add a check on a test ?", "md_src_tests_run_study_tests_readme.html#autotoc_md15", [
+        [ "What to do ?", "md_src_tests_run_study_tests_readme.html#autotoc_md16", null ],
+        [ "What NOT to do ?", "md_src_tests_run_study_tests_readme.html#autotoc_md17", null ]
       ] ],
-      [ "Running the script", "md_src_tests_run_study_tests_readme.html#autotoc_md14", null ],
-      [ "TO DO", "md_src_tests_run_study_tests_readme.html#autotoc_md15", null ]
+      [ "Running the script", "md_src_tests_run_study_tests_readme.html#autotoc_md18", null ],
+      [ "TO DO", "md_src_tests_run_study_tests_readme.html#autotoc_md19", null ]
     ] ],
     [ "Todo List", "todo.html", null ],
     [ "Modules", "modules.html", "modules" ],
@@ -96,11 +99,11 @@ var NAVTREEINDEX =
 "classIProvider.html#a5b16afcad86e27bb0f50457654a16ac7",
 "context_8h_source.html",
 "dir_efd047713bcd1ccefe55d92ae4bcf67b.html",
-"libs_2antares_2array_2antares_2array_2matrix_8hxx_source.html",
-"saveas_8hxx_source.html",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster_1_1Statistics.html",
-"structAntares_1_1Window_1_1Inspector_1_1PAdequacyPatchMode.html",
-"updater_8hxx_source.html"
+"lessthanorequalsto_8h_source.html",
+"runtime_8h_source.html",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster_1_1Statistics.html",
+"structAntares_1_1Window_1_1Inspector_1_1Accumulator.html",
+"unload-data_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
