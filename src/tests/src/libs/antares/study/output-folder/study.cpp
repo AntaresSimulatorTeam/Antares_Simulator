@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <cstdlib> // setenv
 
-#include <study.h>
+#include <antares/study/study.h>
 
 // Test the generation of folder output names
 // We expect something like outputRoot/20221230-0914eco-test

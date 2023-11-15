@@ -24,6 +24,7 @@ target_link_libraries(application
         Antares::sys
         Antares::solverUtils
         Antares::signal-handling
+        Antares::resources
 )
 
 target_include_directories(application

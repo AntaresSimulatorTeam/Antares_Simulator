@@ -69,4 +69,5 @@ target_link_libraries(antares-solver-simulation PRIVATE
 		model_antares
 		antares-solver-hydro
 		antares-solver-variable
+		antares-solver-ts-generator
 )

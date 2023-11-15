@@ -27,6 +27,7 @@ set(TARGET_LIBS #No alias
         model_antares
         antares-core
         locale
+        resources
         #deps of deps
         exception
         logs

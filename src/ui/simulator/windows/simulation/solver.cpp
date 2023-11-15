@@ -27,7 +27,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include "solver.h"
+#include "antares/solver/simulation/solver.h"
 #include "antares/resources/resources.h"
 #include "config.h"
 #include <yuni/io/searchpath.h>

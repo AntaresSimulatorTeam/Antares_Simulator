@@ -26,7 +26,7 @@
 */
 
 #include <antares/study/study.h>
-#include "xcast.h"
+#include "antares/solver/ts-generator/xcast/xcast.h"
 
 namespace Antares
 {

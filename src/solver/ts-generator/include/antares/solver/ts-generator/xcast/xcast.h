@@ -31,7 +31,7 @@
 #include <antares/study/fwd.h>
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include <antares/writer/i_writer.h>
-#include "studydata.h"
+#include "antares/solver/ts-generator/xcast/studydata.h"
 #include <yuni/core/noncopyable.h>
 
 namespace Antares

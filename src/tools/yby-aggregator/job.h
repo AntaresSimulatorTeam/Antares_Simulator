@@ -32,7 +32,7 @@
 #include <yuni/job/job.h>
 #include "datafile.h"
 #include "output.h"
-#include "studydata.h"
+#include "antares/solver/ts-generator/xcast/studydata.h"
 #include <yuni/job/queue/service.h>
 #include <yuni/io/file.h>
 

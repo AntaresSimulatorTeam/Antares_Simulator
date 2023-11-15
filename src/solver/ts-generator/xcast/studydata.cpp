@@ -27,17 +27,12 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "studydata.h"
+#include "antares/solver/ts-generator/xcast/studydata.h"
+
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace TSGenerator
-{
-namespace XCast
+namespace Antares::Solver::TSGenerator::XCast
 {
 StudyData::StudyData() : mode(Data::Correlation::modeNone)
 {
@@ -125,7 +120,7 @@ void StudyData::reloadDataFromAreaList(const Data::Correlation& originalCorrelat
     }
 }
 
-} // namespace XCast
-} // namespace TSGenerator
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::TSGenerator::XCast
+
+
+

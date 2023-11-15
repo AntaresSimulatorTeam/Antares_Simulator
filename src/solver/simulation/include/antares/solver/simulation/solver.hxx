@@ -34,12 +34,12 @@
 #include <antares/exception/InitializationError.hpp>
 #include "antares/solver/variable/print.h"
 #include <yuni/io/io.h>
-#include "timeseries-numbers.h"
-#include "apply-scenario.h"
+#include "antares/solver/simulation/timeseries-numbers.h"
+#include "antares/solver/simulation/apply-scenario.h"
 #include <antares/antares/fatal-error.h>
 #include "antares/solver/ts-generator/generator.h"
-#include "opt_time_writer.h"
-#include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
+#include "antares/solver/simulation/opt_time_writer.h"
+#include "antares/solver/hydro/management/management.h" // Added for use of randomReservoirLevel(...)
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>

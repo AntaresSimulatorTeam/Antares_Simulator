@@ -44,7 +44,7 @@
 
 #include "output.h"
 #include "datafile.h"
-#include "studydata.h"
+#include "antares/solver/ts-generator/xcast/studydata.h"
 #include "job.h"
 #include "progress.h"
 
