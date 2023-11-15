@@ -551,12 +551,12 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         }
     }
 
-    int hourInYear = PasDeTempsDebut;
     unsigned int year = problem.year;
 
     uint linkCount = studyruntime.interconnectionsCount();
     for (uint k = 0; k != linkCount; ++k)
     {
+        int hourInYear = PasDeTempsDebut;
         auto& lnk = *(studyruntime.areaLink[k]);
         const double* directCapacities = lnk.directCapacities.getColumn(year);
         const double* indirectCapacities = lnk.indirectCapacities.getColumn(year);
@@ -570,7 +570,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         }
     }
 
-    hourInYear = PasDeTempsDebut;
+    int hourInYear = PasDeTempsDebut;
     for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps; ++hourInWeek, ++hourInYear)
     {
 
