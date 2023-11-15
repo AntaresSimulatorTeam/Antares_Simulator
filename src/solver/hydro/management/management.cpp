@@ -376,11 +376,11 @@ bool HydroManagement::checkMinGeneration(uint year) const
     return ret;
 }
 
-void HydroManagement::changeInflowsToAccommodateFinalLevels(uint numSpace, uint year)
+void HydroManagement::changeInflowsToAccommodateFinalLevels(uint year)
 {
-    areas_.each([this, &numSpace, &year](Data::Area& area) 
+    areas_.each([this, &year](Data::Area& area) 
     {
-        auto& data = tmpDataByArea_[numSpace][area.index];
+        auto& data = tmpDataByArea_[area.index];
 
         if (!area.hydro.finalLevelInflowsModifier.isApplicable(year))
             return;
@@ -523,7 +523,7 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
         throw FatalError("hydro management: invalid minimum generation");
     }
 
-    changeInflowsToAccommodateFinalLevels(numSpace, y);
+    changeInflowsToAccommodateFinalLevels(y);
 
     prepareNetDemand(numSpace, y, parameters_.mode);
     prepareEffectiveDemand();
