@@ -41,11 +41,9 @@ namespace Antares::Data
 class HydroMaxTimeSeriesReader
 {
 public:
-    HydroMaxTimeSeriesReader();
+    HydroMaxTimeSeriesReader(PartHydro& hydro, std::string areaID, std::string areaName);
 
-    bool operator()(const AnyString& folder, Area& area, bool usedBySolver);
-
-    Matrix<double, double> dailyMaxPumpAndGen;
+    bool read(const AnyString& folder, bool usedBySolver);
 
     enum powerDailyE
     {
@@ -60,13 +58,18 @@ public:
     };
 
 private:
+    Matrix<double, double> dailyMaxPumpAndGen;
+
+    PartHydro& hydro_;
+    std::string areaID_;
+    std::string areaName_;
+
     /**
      * \brief Loading deprecated files
      *  This function provides reading from deprecated files which
      *  contains daily maximum generation/pumping power and energy data.
      */
     bool loadDailyMaxPowersAndEnergies(const AnyString& folder,
-                                       const Area& area,
                                        bool usedBySolver);
 
     /**
@@ -74,9 +77,9 @@ private:
      *  These functions provides coping of energy data loaded
      *  from deprecated file.
      */
-    void copyDailyMaxEnergy(Area& area) const;
-    void copyDailyMaxGenerationEnergy(Area& area) const;
-    void copyDailyMaxPumpingEnergy(Area& area) const;
+    void copyDailyMaxEnergy() const;
+    void copyDailyMaxGenerationEnergy() const;
+    void copyDailyMaxPumpingEnergy() const;
 };
 } // namespace Antares::Data
 
