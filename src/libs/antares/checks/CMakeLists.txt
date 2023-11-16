@@ -10,7 +10,7 @@ add_library(checks
 add_library(Antares::checks ALIAS checks)
 
 target_include_directories(checks
-                PUBLIC
+        PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
