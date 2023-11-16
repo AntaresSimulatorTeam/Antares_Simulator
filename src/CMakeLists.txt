@@ -313,8 +313,6 @@ include(cmake/common-settings.cmake)
 add_subdirectory(config)
 
 # Configure config.h with current ANTARES version
-#configure_file("${CMAKE_CURRENT_BINARY_DIR}/config/config.h.in"
-#		"${CMAKE_CURRENT_BINARY_DIR}/include/antares/config/config.h")
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config/config.h.in"
 		"${CMAKE_CURRENT_SOURCE_DIR}/include/antares/config/config.h")
 
