@@ -196,7 +196,7 @@ IThread::IThread(uint stacksize) :
  ,
  pShouldStop(true),
 #ifdef YUNI_HAS_PTHREAD_ATTR_SETSTACKSIZE
- pStackSize((stacksize < PTHREAD_STACK_MIN ? PTHREAD_STACK_MIN : stacksize))
+ pStackSize((stacksize < PTHREAD_STACK_MIN ? static_cast<uint>(PTHREAD_STACK_MIN) : stacksize))
 #else
  pStackSize(stacksize)
 #endif

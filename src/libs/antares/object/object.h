@@ -105,7 +105,7 @@ public:
     //! \name Events
     //@{
     //! The object is about to be destroyed
-    virtual void onRelease();
+    virtual void onRelease() const;
     //@}
 
 protected:
