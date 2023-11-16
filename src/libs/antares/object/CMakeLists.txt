@@ -5,7 +5,7 @@ set(SRC_OBJECT
         include/antares/object/object.hxx
         object.cpp
         include/antares/object/ref.h
-        )
+)
 source_group("object" FILES ${SRC_OBJECT})
 
 add_library(object
@@ -18,7 +18,7 @@ target_link_libraries(object
         PRIVATE
         yuni-static-core
         yuni-static-uuid
-        )
+)
 
 target_include_directories(
         object

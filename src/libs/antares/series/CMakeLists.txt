@@ -13,10 +13,10 @@ target_sources(series PUBLIC
 target_link_libraries(series PUBLIC Antares::array)
 
 target_include_directories(series
-    PUBLIC
+        PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-install(DIRECTORY   include/antares
+install(DIRECTORY include/antares
         DESTINATION "include"
 )
