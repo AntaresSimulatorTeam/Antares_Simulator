@@ -34,20 +34,19 @@ namespace Optimization
 {
 void setOrtoolsSolverLogs(MPSolver* solver, OrtoolsLogHandler& ortools_logger)
 {
-    // TODO won't work in ci, needs ortools update
-    // see https://github.com/rte-france/or-tools/pull/112
-    // std::filesystem::path log_file = logs.logfile().c_str();
-    // auto log_directory = log_file.parent_path();
-    // auto myid = std::this_thread::get_id();
-    // std::stringstream ss;
-    // ss << myid;
-    // auto log_file_per_thread = log_directory / (std::string("thread_") + ss.str() + ".log");
-    // // TODO
-    // log_writer.open(log_file_per_thread, std::ofstream::out | std::ofstream::app);
-    // log_streams.push_back(&log_writer);
     solver->EnableOutput(&ortools_logger);
 }
 
+OrtoolsLogHandler::OrtoolsLogHandler()
+{
+    std::filesystem::path log_file = logs.logfile().c_str();
+    auto log_directory = log_file.parent_path();
+    auto myid = std::this_thread::get_id();
+    std::stringstream ss;
+    ss << myid;
+    auto log_file_per_thread = log_directory / (std::string("thread_") + ss.str() + ".log");
+    log_writer_.open(log_file_per_thread, std::ofstream::out | std::ofstream::app);
+}
 ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
   const std::string& solverName,
   const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe) :

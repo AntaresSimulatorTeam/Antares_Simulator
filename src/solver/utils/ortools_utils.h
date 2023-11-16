@@ -12,16 +12,6 @@
 
 using namespace operations_research;
 
-class OrtoolsLogHandler : public LogHandlerInterface
-{
-public:
-    // tmp test with std::cout
-    explicit OrtoolsLogHandler() = default;
-    void message(const char* msg) override
-    {
-        std::cout << msg << std::endl;
-    }
-};
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    Antares::Solver::IResultWriter& writer,
                                                    const std::string& filename);
@@ -58,6 +48,26 @@ namespace Antares
 {
 namespace Optimization
 {
+
+class OrtoolsLogHandler : public LogHandlerInterface
+{
+public:
+    // tmp test with std::cout
+    explicit OrtoolsLogHandler();
+    void message(const char* msg) override
+    {
+        log_writer_ << msg << std::endl;
+    }
+
+private:
+    // TODO won't work in ci, needs ortools update
+    // see https://github.com/rte-france/or-tools/pull/112
+
+    // // TODO
+    std::ofstream log_writer_;
+    // log_writer.open(log_file_per_thread, std::ofstream::out | std::ofstream::app);
+    // log_streams.push_back(&log_writer);
+};
 void setOrtoolsSolverLogs(MPSolver* solver, OrtoolsLogHandler &ortools_logger);
 class Nomenclature
 {
