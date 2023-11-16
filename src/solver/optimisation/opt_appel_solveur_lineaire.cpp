@@ -225,7 +225,8 @@ static SimplexResult OPT_TryToCallSimplex(
     {
         solver = ORTOOLS_ConvertIfNeeded(options.solverName, &Probleme, solver);
     }
-    const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
+
+        const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                         problemeHebdo->exportMPSOnError,
@@ -241,6 +242,13 @@ static SimplexResult OPT_TryToCallSimplex(
     if (options.useOrtools)
     {
         const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
+        std::ofstream log_writer; // one per thread
+
+        std::vector<std::ostream*> log_streams;
+        if (Probleme.SolverLogs())
+        {
+            setOrtoolsSolverLogs(solver, log_writer, log_streams);
+        }
         solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
         if (solver != nullptr)
         {
@@ -373,7 +381,13 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         Probleme.SetUseNamedProblems(true);
 
         auto MPproblem = std::shared_ptr<MPSolver>(ProblemSimplexeNommeConverter(options.solverName, &Probleme).Convert());
+        std::ofstream log_writer; // one per thread
 
+        std::vector<std::ostream*> log_streams;
+        if (Probleme.SolverLogs())
+        {
+            setOrtoolsSolverLogs(MPproblem.get(), log_writer, log_streams);
+        }
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
         analyzer->printReport();

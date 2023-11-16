@@ -32,17 +32,11 @@ namespace Antares
 {
 namespace Optimization
 {
-ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
-        const std::string& solverName,
-        const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
-    : solverName_(solverName), problemeSimplexe_(problemeSimplexe)
-{
-    if (problemeSimplexe_->UseNamedProblems())
-    {
-        variableNameManager_.SetTarget(problemeSimplexe_->VariableNames());
-        constraintNameManager_.SetTarget(problemeSimplexe_->ConstraintNames());
-    }
+void setOrtoolsSolverLogs(MPSolver* solver,
+                          std::ofstream& log_writer, // one per thread
 
+                          std::vector<std::ostream*>& log_streams)
+{
     // TODO won't work in ci, needs ortools update
     // see https://github.com/rte-france/or-tools/pull/112
     std::filesystem::path log_file = logs.logfile().c_str();
@@ -52,8 +46,21 @@ ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
     ss << myid;
     auto log_file_per_thread = log_directory / (std::string("thread_") + ss.str() + ".log");
     // TODO
-    log_writer_.open(log_file_per_thread, std::ofstream::out | std::ofstream::app);
-    log_streams.push_back(&log_writer_);
+    log_writer.open(log_file_per_thread, std::ofstream::out | std::ofstream::app);
+    log_streams.push_back(&log_writer);
+    solver->EnableOutput(&log_streams);
+}
+
+ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
+  const std::string& solverName,
+  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe) :
+ solverName_(solverName), problemeSimplexe_(problemeSimplexe)
+{
+    if (problemeSimplexe_->UseNamedProblems())
+    {
+        variableNameManager_.SetTarget(problemeSimplexe_->VariableNames());
+        constraintNameManager_.SetTarget(problemeSimplexe_->ConstraintNames());
+    }
 }
 
 MPSolver* ProblemSimplexeNommeConverter::Convert()
@@ -68,10 +75,6 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     CopyRows(solver);
 
     CopyMatrix(solver);
-    if (problemeSimplexe_->SolverLogs())
-    {
-        solver->EnableOutput(&log_streams);
-    }
 
     return solver;
 }
