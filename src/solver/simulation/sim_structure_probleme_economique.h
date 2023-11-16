@@ -424,8 +424,6 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
     std::vector<double> NombreDeGroupesQuiSArretentDuPalier;
 
     std::vector<double> NombreDeGroupesQuiTombentEnPanneDuPalier;
-
-    std::vector<double> pMinThermique;
 };
 
 struct RESULTATS_HORAIRES
