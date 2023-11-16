@@ -12,6 +12,16 @@
 
 using namespace operations_research;
 
+class OrtoolsLogHandler : public LogHandlerInterface
+{
+public:
+    // tmp test with std::cout
+    explicit OrtoolsLogHandler() = default;
+    void message(const char* msg) override
+    {
+        std::cout << msg << std::endl;
+    }
+};
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    Antares::Solver::IResultWriter& writer,
                                                    const std::string& filename);
@@ -48,12 +58,8 @@ namespace Antares
 {
 namespace Optimization
 {
-void setOrtoolsSolverLogs(MPSolver* solver,
-                          std::ofstream& log_writer, // one per thread
-
-                          std::vector<std::ostream*>& log_streams)
-;
-  class Nomenclature
+void setOrtoolsSolverLogs(MPSolver* solver, OrtoolsLogHandler &ortools_logger);
+class Nomenclature
 {
 public:
     Nomenclature() = delete;
