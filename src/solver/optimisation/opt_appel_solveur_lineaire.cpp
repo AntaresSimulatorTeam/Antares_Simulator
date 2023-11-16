@@ -399,7 +399,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
         if (Probleme.SolverLogs())
         {
-            setOrtoolsSolverLogs(MPproblem.get(), ortools_logger);
+            MPproblem->EnableOutput(&ortools_logger);
         }
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
