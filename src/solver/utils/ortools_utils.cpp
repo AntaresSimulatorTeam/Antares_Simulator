@@ -4,6 +4,7 @@
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hpp>
 #include <filesystem>
+#include <thread>
 
 using namespace operations_research;
 
@@ -41,6 +42,18 @@ ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
         variableNameManager_.SetTarget(problemeSimplexe_->VariableNames());
         constraintNameManager_.SetTarget(problemeSimplexe_->ConstraintNames());
     }
+
+    // TODO won't work in ci, needs ortools update
+    // see https://github.com/rte-france/or-tools/pull/112
+    std::filesystem::path log_file = logs.logfile().c_str();
+    auto log_directory = log_file.parent_path();
+    auto myid = std::this_thread::get_id();
+    std::stringstream ss;
+    ss << myid;
+    auto log_file = log_directory / (std::string("thread_") + ss.str() + ".log");
+    // TODO
+    log_writer_.open(log_file, std::ofstream::out | std::ofstream::app);
+    log_streams.push_back(&log_writer_);
 }
 
 MPSolver* ProblemSimplexeNommeConverter::Convert()
@@ -57,11 +70,7 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     CopyMatrix(solver);
     if (problemeSimplexe_->SolverLogs())
     {
-        solver->EnableOutput();
-        // TODO won't work in ci, needs ortools update
-        // see https://github.com/rte-france/or-tools/pull/112
-        // std::filesystem::path log_file = logs.logfile().c_str();
-        // solver->set_solver_logs_directory(log_file.parent_path());
+        solver->EnableOutput(&log_streams);
     }
 
     return solver;

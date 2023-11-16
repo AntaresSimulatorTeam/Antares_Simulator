@@ -97,6 +97,9 @@ private:
     void CopyRows(MPSolver* solver);
     void TuneSolverSpecificOptions(MPSolver* solver) const;
     void CopyMatrix(const MPSolver* solver);
+    std::ofstream log_writer_; // one per thread
+
+    std::vector<std::ostream*> log_streams;
 };
 } // namespace Optimization
 } // namespace Antares
