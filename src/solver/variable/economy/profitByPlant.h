@@ -278,13 +278,16 @@ public:
             double hourlyClusterProduction
               = thermal[area->index].thermalClustersProductions[clusterIndex];
             uint tsIndex = cluster->series.timeseriesNumbers[0][state.year];
-            auto& pMin = state.problemeHebdo->PaliersThermiquesDuPays[area->index]
+
+            double pMin = 0;
+            if (!state.problemeHebdo->PaliersThermiquesDuPays[area->index].PuissanceDisponibleEtCout.empty())
+                pMin = state.problemeHebdo->PaliersThermiquesDuPays[area->index]
                 .PuissanceDisponibleEtCout[cluster->index]
-                .PuissanceMinDuPalierThermique;
+                .PuissanceMinDuPalierThermique[hourInTheYear];
 
             // Thermal cluster profit
             pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
-              = (hourlyClusterProduction - pMin[hourInTheYear])
+              = (hourlyClusterProduction - pMin)
                 * (-areaMarginalCosts[hourInTheWeek]
                    - cluster->getMarginalCost(tsIndex, hourInTheYear));
         }
