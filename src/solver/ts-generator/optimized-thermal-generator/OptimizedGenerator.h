@@ -65,10 +65,10 @@ private:
     std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(Data::ThermalCluster& cluster);
 
     // calculate parameters methods - per cluster-Unit
-    uint calculateUnitEarliestStartOfFirstMaintenance(Data::ThermalCluster& cluster,
+    int calculateUnitEarliestStartOfFirstMaintenance(Data::ThermalCluster& cluster,
                                                       int avrMntDuration,
                                                       uint unitIndex);
-    uint calculateUnitLatestStartOfFirstMaintenance(Data::ThermalCluster& cluster,
+    int calculateUnitLatestStartOfFirstMaintenance(Data::ThermalCluster& cluster,
                                                     int avrMntDuration,
                                                     uint unitIndex);
 

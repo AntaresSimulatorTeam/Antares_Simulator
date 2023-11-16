@@ -7,6 +7,7 @@
 #include <numeric>
 #include <algorithm>
 
+const uint minNumberOfMaintenances = 2;
 namespace Antares::Solver::TSGenerator
 {
 // optimization problem - methods
@@ -251,7 +252,6 @@ uint OptimizedThermalGenerator::calculateNumberOfMaintenances(Data::ThermalClust
 {
     // timeHorizon cannot be 0. The whole maintenance group would be skipped if this happened
     // on the other hand interPoPeriod can be 0. So we say at least 2 maintenance if this happens
-    uint minNumberOfMaintenances = 2;
     if (cluster.interPoPeriod == 0)
     {
         logs.warning() << "Cluster: " << cluster.getFullName()
@@ -297,11 +297,12 @@ std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateMaxUnitOut
 }
 
 // calculate parameters methods - per cluster-Unit
-uint OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
+int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
   Data::ThermalCluster& cluster,
   int avrMntDuration,
   uint unitIndex)
 {
+    // earliest start of the first maintenance of unit u (beginning of the window, can be negative): // TODO CR27: Ask Hugo?!
     if (unitIndex < cluster.daysSinceLastMaintenance.size())
     {
         return std::max(
@@ -315,11 +316,12 @@ uint OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
     }
 }
 
-uint OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
+int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
   Data::ThermalCluster& cluster,
   int avrMntDuration,
   uint unitIndex)
 {
+    // latest start of the first maintenance of unit u (end of the window, must be positive):
     if (unitIndex < cluster.daysSinceLastMaintenance.size())
     {
         return std::max(
