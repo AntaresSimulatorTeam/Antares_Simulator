@@ -278,9 +278,10 @@ public:
             double hourlyClusterProduction
               = thermal[area->index].thermalClustersProductions[clusterIndex];
             uint tsIndex = cluster->series.timeseriesNumbers[0][state.year];
+            auto& pMin = state.problemeHebdo->ResultatsHoraires[area->index].pMinThermique;
             // Thermal cluster profit
             pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
-              = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
+              = (hourlyClusterProduction - pMin[hourInTheYear])
                 * (-areaMarginalCosts[hourInTheWeek]
                    - cluster->getMarginalCost(tsIndex, hourInTheYear));
         }
