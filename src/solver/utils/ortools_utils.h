@@ -2,6 +2,7 @@
 
 #include <map>
 #include <string>
+#include <fstream>
 
 #include <antares/writer/i_writer.h>
 
