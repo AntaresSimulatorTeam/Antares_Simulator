@@ -11,7 +11,7 @@ set(SRC_LOGS
         logs.cpp
         cleaner.cpp
         hostinfo.cpp
-        )
+)
 source_group("misc\\logs" FILES ${SRC_LOGS})
 
 add_library(${PROJ} ${SRC_LOGS})
