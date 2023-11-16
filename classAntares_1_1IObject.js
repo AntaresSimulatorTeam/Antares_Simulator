@@ -13,7 +13,7 @@ var classAntares_1_1IObject =
     [ "enabled", "classAntares_1_1IObject.html#a4523307038b454c00d4563ab8f8b009f", null ],
     [ "enabled", "classAntares_1_1IObject.html#a2f4b8b00e65b2a3d886bb432b6316686", null ],
     [ "oid", "classAntares_1_1IObject.html#a4bf105609265c86950227613fcfc43a8", null ],
-    [ "onRelease", "classAntares_1_1IObject.html#a7cc69e33fd42eb7c86e4a26c4d7ea221", null ],
+    [ "onRelease", "classAntares_1_1IObject.html#a29b1b3eeab2f0b4691bc20bfbfc2599e", null ],
     [ "pCaption", "classAntares_1_1IObject.html#a0a265bb243f52771db3e438c6405bf66", null ],
     [ "pEnabled", "classAntares_1_1IObject.html#ab9a95dc3a0604d4c30297c185eb7b3a3", null ],
     [ "pOID", "classAntares_1_1IObject.html#a20f5787c474611932f11afb5abbdbfaa", null ]
