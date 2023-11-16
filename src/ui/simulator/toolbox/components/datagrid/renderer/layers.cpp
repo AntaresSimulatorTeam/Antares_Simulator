@@ -227,7 +227,7 @@ wxString LayersUI::cellValue(int x, int y) const
 
             return layerPosition != layerListEnd
                      ? wxString::Format(wxT("%d"), pArea->ui->layerX[layerIterator->first])
-                     : wxT("-");
+                     : wxString(wxT("-"));
 
         case 2:
 
