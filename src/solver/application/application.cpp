@@ -474,9 +474,12 @@ Application::~Application()
     destroyBoundEvents();
 
     // Release all allocated data
-    if (!(!pStudy))
+    if (pStudy)
     {
-        logs.info() << LOG_UI_SOLVER_DONE;
+        try
+        {
+            logs.info() << LOG_UI_SOLVER_DONE;
+        } catch (...) {}; //Catching log exception
 
         // Copy the log file if a result writer is available
         if (!pStudy->parameters.noOutput && resultWriter)
