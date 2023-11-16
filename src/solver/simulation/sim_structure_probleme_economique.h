@@ -425,6 +425,7 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
 
     std::vector<double> NombreDeGroupesQuiTombentEnPanneDuPalier;
 
+    std::vector<double> pMinThermique;
 };
 
 struct RESULTATS_HORAIRES
@@ -458,8 +459,6 @@ struct RESULTATS_HORAIRES
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
 
     std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
-
-    std::vector<double> pMinThermique;
 };
 
 struct COUTS_DE_TRANSPORT

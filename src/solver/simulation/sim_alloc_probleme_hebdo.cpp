@@ -458,8 +458,6 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
           .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].debordementsHoraires
           .assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].pMinThermique
-          .assign(NombreDePasDeTemps, 0.);
 
         problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout.resize(nbPaliers);
         problem.ResultatsHoraires[k].ProductionThermique.resize(NombreDePasDeTemps);
@@ -497,6 +495,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         }
         for (unsigned j = 0; j < NombreDePasDeTemps; j++)
         {
+            problem.ResultatsHoraires[k].ProductionThermique[j].pMinThermique
+              .assign(NombreDePasDeTemps, 0.);
             problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalier
               .assign(nbPaliers, 0.);
             problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalierUp
