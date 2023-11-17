@@ -10,7 +10,7 @@
 #include "AuxillaryStructures.h"
 #include <antares/exception/AssertionError.hpp>
 
-static const std::string mntPlSolverName = "cbc";
+// static const std::string mntPlSolverName = "cbc";
 static const uint minNumberOfMaintenances = 2;
 
 using namespace operations_research;
@@ -112,13 +112,8 @@ private:
     std::array<double, DAYS_PER_YEAR> residualLoadDailyValues_;
     OptimizationProblemVariableIndexes indexes;
 
-    /*
-    Declare an MPSolver pointer
-    No need to manually delete it using delete.
-    When using MPSolver::CreateSolver, the solver should handle its own memory and cleanup upon
-    destruction.
-    */
-    MPSolver* solver = nullptr;
+    // MPSolver instance
+    MPSolver solver;
 
 public:
     explicit OptimizedThermalGenerator(Data::Study& study,
@@ -127,15 +122,15 @@ public:
                                        bool globalThermalTSgeneration,
                                        Solver::Progression::Task& progr,
                                        IResultWriter& writer) :
-     GeneratorTempData(study, progr, writer), maintenanceGroup_(maintenanceGroup)
+     GeneratorTempData(study, progr, writer),
+     maintenanceGroup_(maintenanceGroup),
+     solver(MPSolver("MaintenancePlanning", MPSolver::CBC_MIXED_INTEGER_PROGRAMMING))
     {
         currentYear = year;
         globalThermalTSgeneration_ = globalThermalTSgeneration;
         scenarioLength_ = study.parameters.maintenancePlanning.getScenarioLength();
         scenarioNumber_ = study.parameters.maintenancePlanning.getScenarioNumber();
         nbThermalTimeseries = scenarioLength_ * scenarioNumber_;
-        // initiate a solver
-        initSolver();
     }
 
     ~OptimizedThermalGenerator() = default;

@@ -9,29 +9,6 @@
 
 namespace Antares::Solver::TSGenerator
 {
-// initialize solver
-void OptimizedThermalGenerator::initSolver()
-{
-    try
-    {
-        solver = MPSolver::CreateSolver(mntPlSolverName);
-
-        if (!solver)
-        {
-            std::string msg_to_throw = "Solver " + mntPlSolverName + " not found. \n";
-            msg_to_throw += "Please make sure that your OR-Tools install supports solver "
-                            + mntPlSolverName + ".";
-
-            throw Antares::Data::AssertionError(msg_to_throw);
-        }
-    }
-    catch (...)
-    {
-        Antares::logs.error() << "Solver creation failed.";
-        throw;
-    }
-}
-
 // optimization problem - methods
 void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
 {
