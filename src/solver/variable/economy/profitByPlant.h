@@ -280,14 +280,6 @@ public:
             double pMin = thermal[area->index].PMinOfClusters[clusterIndex];
             uint tsIndex = cluster->series.timeseriesNumbers[0][state.year];
 
-            /* double pMin = 0; */
-            /* if (!state.problemeHebdo->PaliersThermiquesDuPays[area->index].PuissanceDisponibleEtCout.empty()) */
-            /* { */
-            /*     pMin = state.problemeHebdo->PaliersThermiquesDuPays[area->index] */
-            /*         .PuissanceDisponibleEtCout[cluster->index] */
-            /*         .PuissanceMinDuPalierThermique[hourInTheYear]; */
-            /* } */
-
             // Thermal cluster profit
             pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
               = (hourlyClusterProduction - pMin)
