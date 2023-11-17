@@ -36,7 +36,7 @@ extern "C"
 {
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
-
+#include "sirius_callback.h"
 #include "srs_api.h"
 }
 
@@ -96,7 +96,11 @@ struct SimplexResult
     long long solveTime = 0;
     mpsWriterFactory mps_writer_factory;
 };
-
+int SiriusCallback_function(void* caller, const char* sMsg, int nLen, SIRIUS_LOGLEVEL log_level)
+{
+    auto* stdcout = reinterpret_cast<std::ostream*>(caller);
+    (*stdcout) << sMsg;
+}
 static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
                                           PROBLEME_HEBDO* problemeHebdo,
                                           Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
@@ -220,6 +224,8 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits.data();
 
     Probleme.NombreDeContraintesCoupes = 0;
+    Probleme.callback = SiriusCallback_function;
+    Probleme.caller = &std::cout;
 
     if (options.useOrtools)
     {
