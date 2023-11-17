@@ -32,10 +32,6 @@ namespace Antares
 {
 namespace Optimization
 {
-void setOrtoolsSolverLogs(MPSolver* solver, OrtoolsLogHandler& ortools_logger)
-{
-    solver->EnableOutput(&ortools_logger);
-}
 
 OrtoolsLogHandler::OrtoolsLogHandler()
 {

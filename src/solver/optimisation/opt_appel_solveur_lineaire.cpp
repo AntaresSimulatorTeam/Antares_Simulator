@@ -248,12 +248,10 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     if (options.useOrtools)
     {
         const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
-        // std::ofstream log_writer; // one per thread
 
-        // std::vector<std::ostream*> log_streams;
         if (Probleme.SolverLogs())
         {
-            setOrtoolsSolverLogs(solver, ortools_logger);
+            solver->EnableOutput(&ortools_logger);
         }
         solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
         if (solver != nullptr)
@@ -405,7 +403,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
         if (Probleme.SolverLogs())
         {
-            setOrtoolsSolverLogs(MPproblem.get(), ortools_logger);
+            MPproblem->EnableOutput(&ortools_logger);
         }
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
