@@ -54,9 +54,9 @@ class OrtoolsLogHandler : public LogHandlerInterface
 public:
     // tmp test with std::cout
     explicit OrtoolsLogHandler();
-    void message(const char* msg) override
+    void message(const char* msg, int nLen = 0) override
     {
-        log_writer_ << msg << std::endl;
+        log_writer_ << std::setw(nLen) << msg << std::endl;
     }
 
 private:
