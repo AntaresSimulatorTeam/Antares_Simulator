@@ -225,8 +225,12 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits.data();
 
     Probleme.NombreDeContraintesCoupes = 0;
-    Probleme.callback = SiriusCallback_function;
-    Probleme.caller = &std::cout;
+    // this must be done in Sirius
+    // auto call_back = (callback_function)Probleme.callback;
+    // call_back = SiriusCallback_function;
+    // SPXsetcbmessage(ProbSpx, SiriusCallback_function, &std::cout, SIRIUS_INFO);
+    SPLXsetcbmessage(&Probleme, SiriusCallback_function, &std::cout, SIRIUS_INFO);
+    // Probleme.caller = &std::cout;
 
     if (options.useOrtools)
     {
