@@ -217,7 +217,7 @@ Run::Run(wxWindow* parent, bool preproOnly) :
                    "images/32x32/run.png",
                    wxString(wxT("For the study `"))
                      << wxStringFromUTF8(study.header.caption) << wxT("`, ")
-                     << wxStringFromUTF8(Data::StudyModeToCString(study.parameters.mode))),
+                     << wxStringFromUTF8(Data::SimulationModeToCString(study.parameters.mode))),
                  0,
                  wxALL | wxEXPAND | wxFIXED_MINSIZE);
 
@@ -242,7 +242,7 @@ Run::Run(wxWindow* parent, bool preproOnly) :
     }
     {
         auto* lblMode = Antares::Component::CreateLabel(
-          pBigDaddy, wxStringFromUTF8(Data::StudyModeToCString(study.parameters.mode)));
+          pBigDaddy, wxStringFromUTF8(Data::SimulationModeToCString(study.parameters.mode)));
         wxFont f = lblMode->GetFont();
         f.SetWeight(wxFONTWEIGHT_BOLD);
         lblMode->SetFont(f);

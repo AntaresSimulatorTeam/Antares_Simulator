@@ -206,8 +206,8 @@ public:
     //! Probleme Hebdo
     PROBLEME_HEBDO* problemeHebdo;
 
-    //! Study mode: economy / adequacy
-    Data::StudyMode studyMode;
+    //! Simulation mode: economy / adequacy / expansion
+    Data::SimulationMode simulationMode;
     //! Study unit commitment mode: fast(ucHeuristic) / accurate(ucMILP)
     Data::UnitCommitmentMode unitCommitmentMode;
     //! Reference to the original study

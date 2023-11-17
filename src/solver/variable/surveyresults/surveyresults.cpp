@@ -197,9 +197,9 @@ void SurveyResultsData::initialize(uint maxVariables)
 
     switch (study.parameters.mode)
     {
-    case Data::stdmAdequacy:
-    case Data::stdmEconomy:
-    case Data::stdmExpansion:
+    case Data::SimulationMode::Adequacy:
+    case Data::SimulationMode::Economy:
+    case Data::SimulationMode::Expansion:
     {
         matrix.resize(study.areas.size(), study.areas.size());
         // The initialization will be done later
@@ -207,8 +207,7 @@ void SurveyResultsData::initialize(uint maxVariables)
         break;
     }
 
-    case Data::stdmUnknown:
-    case Data::stdmMax:
+    case Data::SimulationMode::Unknown:
         break;
     }
 }

@@ -266,7 +266,7 @@ const wxChar* const calendarWeeks[] = {wxT("MON  -  SUN"),
                                        wxT("SUN  -  SAT"),
                                        nullptr};
 
-const wxChar* const studyMode[] = {wxT("Economy"),
+const wxChar* const simulationMode[] = {wxT("Economy"),
                                    wxT("Adequacy"),
                                    wxT("Expansion"),
                                    nullptr};
