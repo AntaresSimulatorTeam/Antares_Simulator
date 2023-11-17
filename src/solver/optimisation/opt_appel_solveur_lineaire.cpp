@@ -100,6 +100,7 @@ int SiriusCallback_function(void* caller, const char* sMsg, int nLen, SIRIUS_LOG
 {
     auto* stdcout = reinterpret_cast<std::ostream*>(caller);
     (*stdcout) << sMsg;
+    return 0;
 }
 static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
                                           PROBLEME_HEBDO* problemeHebdo,
