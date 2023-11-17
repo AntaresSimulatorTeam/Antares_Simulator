@@ -21,24 +21,7 @@ namespace Antares::Solver::TSGenerator
 class OptimizedThermalGenerator : public GeneratorTempData
 {
 private:
-    /*
-    in adq-patch we re-used existing structure(s) for helping us define an optimization problem ->
-    like: struct CORRESPONDANCES_DES_VARIABLES.
-    unfortunately here we have to create our own help-structure if we need one
-    Question: can we still use struct PROBLEME_ANTARES_A_RESOUDRE ?! -
-    no we use:
-    class MPSolver
-    class MPConstraint;
-    class MPObjective;
-    class MPSolverInterface;
-    class MPSolverParameters;
-    class MPVariable;
-    */
-
     // optimization problem construction methods
-
-    void initSolver();
-
     void buildProblemVariables();
     void countVariables();
     void buildEnsAndSpillageVariables();
@@ -56,7 +39,6 @@ private:
     void buildLoadBalanceConstraints();
     void setStartEndMntLogicConstraints();
     void setMaxUnitOutputConstraints();
-    // void buildProblemConstraintsRHS(); // let's do LHS & RHS in one go. Easier!?
 
     void setProblemCost();
     void solveProblem();
