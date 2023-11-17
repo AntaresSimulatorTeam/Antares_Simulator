@@ -8,6 +8,7 @@
 #include <algorithm>
 
 static const uint minNumberOfMaintenances = 2;
+
 namespace Antares::Solver::TSGenerator
 {
 // optimization problem - methods
@@ -299,14 +300,18 @@ std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateMaxUnitOut
 // calculate parameters methods - per cluster-Unit
 int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
   Data::ThermalCluster& cluster,
-  int avrMntDuration,
   uint unitIndex)
 {
-    // earliest start of the first maintenance of unit u (beginning of the window, can be negative): // TODO CR27: Ask Hugo?!
+    // earliest start of the first maintenance of unit u (beginning of the window, can be negative):
+    // let it return negative value - if it returns negative value we wont implement constraint:
+    // s[tauLower-1][u][1] = 0
+    // TODO CR27: if the approach above breaks the solver
+    // we force the start of the first maintenance to be after day=0
+    // s[fixed = 0][u][1] = 0
     if (unitIndex < cluster.daysSinceLastMaintenance.size())
     {
-        return std::max(
-          avrMntDuration - cluster.daysSinceLastMaintenance[unitIndex] - cluster.poWindows, 0);
+        return (cluster.interPoPeriod - cluster.daysSinceLastMaintenance[unitIndex]
+                - cluster.poWindows);
     }
     else
     {
@@ -318,14 +323,19 @@ int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
 
 int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
   Data::ThermalCluster& cluster,
-  int avrMntDuration,
   uint unitIndex)
 {
     // latest start of the first maintenance of unit u (end of the window, must be positive):
     if (unitIndex < cluster.daysSinceLastMaintenance.size())
     {
+        // this cannot be negative:
+        // cluster.interPoPeriod - cluster.daysSinceLastMaintenance[unitIndex] - is always positive
+        // or zero
+        // cluster.poWindows is positive or zero
+        // so std::max is not necessary but I will keep it for now
         return std::max(
-          avrMntDuration - cluster.daysSinceLastMaintenance[unitIndex] + cluster.poWindows, 0);
+          cluster.interPoPeriod - cluster.daysSinceLastMaintenance[unitIndex] + cluster.poWindows,
+          0);
     }
     else
     {

@@ -18,7 +18,7 @@ private:
     in adq-patch we re-used existing structure(s) for helping us define an optimization problem ->
     like: struct CORRESPONDANCES_DES_VARIABLES.
     unfortunately here we have to create our own help-structure if we need one
-    Question: can we still use struct PROBLEME_ANTARES_A_RESOUDRE ?! - no we use MPSolver class
+    Question: can we still use struct PROBLEME_ANTARES_A_RESOUDRE ?! - no we use MPSolver and MPVariable class 
     */
 
     // optimization problem construction methods
@@ -65,12 +65,8 @@ private:
     std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(Data::ThermalCluster& cluster);
 
     // calculate parameters methods - per cluster-Unit
-    int calculateUnitEarliestStartOfFirstMaintenance(Data::ThermalCluster& cluster,
-                                                      int avrMntDuration,
-                                                      uint unitIndex);
-    int calculateUnitLatestStartOfFirstMaintenance(Data::ThermalCluster& cluster,
-                                                    int avrMntDuration,
-                                                    uint unitIndex);
+    int calculateUnitEarliestStartOfFirstMaintenance(Data::ThermalCluster& cluster, uint unitIndex);
+    int calculateUnitLatestStartOfFirstMaintenance(Data::ThermalCluster& cluster, uint unitIndex);
 
     // auxillary functions
     std::array<double, DAYS_PER_YEAR> calculateDailySums(
