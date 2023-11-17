@@ -290,14 +290,14 @@ inline void Nullable<T, Alloc>::print(S& out, const U& nullValue) const
 }
 
 template<class T, class Alloc>
-inline typename Nullable<T, Alloc>::reference Nullable<T, Alloc>::operator[](size_type n)
+inline typename Nullable<T, Alloc>::reference Nullable<T, Alloc>::operator[](size_type)
 {
     return pHolder.reference();
 }
 
 template<class T, class Alloc>
 inline typename Nullable<T, Alloc>::const_reference Nullable<T, Alloc>::operator[](
-  size_type n) const
+  size_type) const
 {
     return pHolder.reference();
 }
@@ -327,7 +327,7 @@ inline typename Nullable<T, Alloc>::const_reference Nullable<T, Alloc>::back() c
 }
 
 template<class T, class Alloc>
-inline bool Nullable<T, Alloc>::operator<(const Nullable& rhs) const
+inline bool Nullable<T, Alloc>::operator<(const Nullable&) const
 {
     return false;
 }

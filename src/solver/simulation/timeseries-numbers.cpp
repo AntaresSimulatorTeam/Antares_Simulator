@@ -126,6 +126,7 @@ protected:
 class loadAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
+    virtual ~loadAreaNumberOfTSretriever() = default;
     loadAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
     {
     }
@@ -143,6 +144,7 @@ public:
 class hydroAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
+    virtual ~hydroAreaNumberOfTSretriever() = default;
     hydroAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
     {
     }
@@ -160,6 +162,7 @@ public:
 class windAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
+    virtual ~windAreaNumberOfTSretriever() = default;
     windAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
     {
     }
@@ -177,6 +180,7 @@ public:
 class solarAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
+    virtual ~solarAreaNumberOfTSretriever() = default;
     solarAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
     {
     }
@@ -194,6 +198,7 @@ public:
 class thermalAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
+    virtual ~thermalAreaNumberOfTSretriever() = default;
     thermalAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
     {
     }
@@ -217,6 +222,7 @@ public:
 class renewClustersAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
+    virtual ~renewClustersAreaNumberOfTSretriever() = default;
     renewClustersAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
     {
     }
