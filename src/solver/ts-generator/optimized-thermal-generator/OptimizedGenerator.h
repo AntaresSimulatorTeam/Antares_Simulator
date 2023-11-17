@@ -112,8 +112,13 @@ private:
     std::array<double, DAYS_PER_YEAR> residualLoadDailyValues_;
     OptimizationProblemVariableIndexes indexes;
 
-    // Declare an MPSolver pointer
-    MPSolver* solver;
+    /*
+    Declare an MPSolver pointer
+    No need to manually delete it using delete.
+    When using MPSolver::CreateSolver, the solver should handle its own memory and cleanup upon
+    destruction.
+    */
+    MPSolver* solver = nullptr;
 
 public:
     explicit OptimizedThermalGenerator(Data::Study& study,
@@ -133,10 +138,7 @@ public:
         initSolver();
     }
 
-    ~OptimizedThermalGenerator()
-    {
-        delete solver;
-    }
+    ~OptimizedThermalGenerator() = default;
 
     // optimization problem - methods - public
     void GenerateOptimizedThermalTimeSeries();
