@@ -114,6 +114,7 @@ private:
 
     // MPSolver instance
     MPSolver solver;
+    double infinity;
 
 public:
     explicit OptimizedThermalGenerator(Data::Study& study,
@@ -131,6 +132,7 @@ public:
         scenarioLength_ = study.parameters.maintenancePlanning.getScenarioLength();
         scenarioNumber_ = study.parameters.maintenancePlanning.getScenarioNumber();
         nbThermalTimeseries = scenarioLength_ * scenarioNumber_;
+        infinity = solver.infinity();
     }
 
     ~OptimizedThermalGenerator() = default;
