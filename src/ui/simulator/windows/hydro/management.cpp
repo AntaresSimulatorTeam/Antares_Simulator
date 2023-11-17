@@ -26,8 +26,7 @@
 */
 
 #include "management.h"
-#include <wx/defs.h>
-#include <wx/statline.h>
+#include <wx/stattext.h>
 
 #include "../../toolbox/components/datagrid/renderer/area/hydroprepro.h"
 #include "../../toolbox/components/datagrid/renderer/area/inflowpattern.h"
