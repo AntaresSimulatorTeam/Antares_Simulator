@@ -31,7 +31,7 @@ var classAntares_1_1Component_1_1Button =
     [ "onMouseClick", "classAntares_1_1Component_1_1Button.html#a5812731da5ec23bccb504761399ebe69", null ],
     [ "onMouseEnter", "classAntares_1_1Component_1_1Button.html#a3d70dcb8767957d718089a13bf9ad95e", null ],
     [ "onMouseLeave", "classAntares_1_1Component_1_1Button.html#aceda6791a5889933e8e714df1f392e18", null ],
-    [ "onMouseUp", "classAntares_1_1Component_1_1Button.html#a7ac6932b15ecebe8461422bfa9a9e3b3", null ],
+    [ "onMouseUp", "classAntares_1_1Component_1_1Button.html#adeb87312832fdcd85203a4981daa00c3", null ],
     [ "onPopupMenu", "classAntares_1_1Component_1_1Button.html#a76644e6009e18ab87e03f429a9505309", null ],
     [ "onPopupMenu", "classAntares_1_1Component_1_1Button.html#a9e9681e30e5f888a4669fbe0fa176ebc", null ],
     [ "precalculateCoordinates", "classAntares_1_1Component_1_1Button.html#a60a5950a36f405515795eb74781aad5d", null ],

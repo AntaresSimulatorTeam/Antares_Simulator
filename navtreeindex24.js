@@ -1,6 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structAntares_1_1Window_1_1Inspector_1_1PAdequacyPatchMode.html":[4,0,0,16,1,9],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaColor.html":[4,0,0,16,1,10],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaColor_1_1Color.html":[4,0,0,16,1,10,0],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaFiltering.html":[4,0,0,16,1,11],
@@ -249,5 +248,6 @@ var NAVTREEINDEX24 =
 "unfeasible-pb-analyzer_8h_source.html":[5,0,0,2,2,4],
 "unload-data_8h_source.html":[5,0,0,5,0,0,0,2,7],
 "unload-data_8hxx_source.html":[5,0,0,5,0,0,0,2,8],
-"unsupliedEnergy_8h_source.html":[5,0,0,2,9,2,39]
+"unsupliedEnergy_8h_source.html":[5,0,0,2,9,2,39],
+"updater_8hxx_source.html":[5,0,0,1,0,21,8,16]
 };
