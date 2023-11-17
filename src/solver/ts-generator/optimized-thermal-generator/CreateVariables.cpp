@@ -29,13 +29,11 @@ void OptimizedThermalGenerator::countVariables()
     */
 
     // Define variables and at the same time Boundaries
-    /*
-    The bounds of a variable once set cannot be directly modified in OR-Tools.
-    However, you can create a new variable with the desired bounds and
-    constraints and use it in your optimization problem.
-    */
-    MPVariable* const x = solver.MakeNumVar(0.0, 3.0, "x");
-    MPVariable* const y = solver.MakeIntVar(0.0, 5.0, "y");
+    MPVariable* x = solver.MakeNumVar(0.0, 3.0, "x");
+    MPVariable* y = solver.MakeIntVar(0.0, 5.0, "y");
+
+    // redefine lower bound - just do not make x - constant
+    x->SetLB(1.5);
 
     // Define constraints
     // TODO CR27: we need to make vector of shared pointers to MPVariable so we can access them in different files 
