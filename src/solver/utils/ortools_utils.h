@@ -68,7 +68,6 @@ private:
     // log_writer.open(log_file_per_thread, std::ofstream::out | std::ofstream::app);
     // log_streams.push_back(&log_writer);
 };
-void setOrtoolsSolverLogs(MPSolver* solver, OrtoolsLogHandler &ortools_logger);
 class Nomenclature
 {
 public:
