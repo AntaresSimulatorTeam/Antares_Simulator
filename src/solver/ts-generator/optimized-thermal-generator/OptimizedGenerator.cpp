@@ -85,9 +85,9 @@ void OptimizedThermalGenerator::createOptimizationProblemPerCluster(const Data::
           = calculateAverageMaintenanceDuration(cluster); // this will floor the double value !!
         std::array<double, DAYS_PER_YEAR> maxUnitOutput = calculateMaxUnitOutput(cluster);
         // uint earliestStartOfFirstMaintenance
-        //   = calculateUnitEarliestStartOfFirstMaintenance(cluster, averageMaintenanceDuration, 8);
+        //   = calculateUnitEarliestStartOfFirstMaintenance(cluster, 8);
         // uint latestStartOfFirstMaintenance
-        //   = calculateUnitLatestStartOfFirstMaintenance(cluster, averageMaintenanceDuration, 8);
+        //   = calculateUnitLatestStartOfFirstMaintenance(cluster, 8);
         // just playing here - this needs to go into new method - class  - operator
         logs.info() << "CR27-INFO: This cluster is active for mnt planning: "
                     << cluster.getFullName();
