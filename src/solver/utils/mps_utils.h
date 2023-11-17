@@ -27,6 +27,7 @@ public:
     {
     }
     I_MPS_writer() = default;
+    virtual ~I_MPS_writer() = default;
     virtual void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) = 0;
 
 protected:
@@ -46,6 +47,7 @@ private:
 class fullOrToolsMPSwriter : public I_MPS_writer
 {
 public:
+    virtual ~fullOrToolsMPSwriter() = default;
     fullOrToolsMPSwriter(MPSolver* solver, uint currentOptimNumber);
     void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) override;
 
@@ -56,6 +58,7 @@ private:
 class nullMPSwriter : public I_MPS_writer
 {
 public:
+    virtual ~nullMPSwriter() = default;
     using I_MPS_writer::I_MPS_writer;
     void runIfNeeded(Solver::IResultWriter& /*writer*/,
                      const std::string& /*filename*/) override
@@ -67,6 +70,7 @@ public:
 class mpsWriterFactory
 {
 public:
+    virtual ~mpsWriterFactory() = default;
     mpsWriterFactory(Data::mpsExportStatus exportMPS,
                      bool exportMPSOnError,
                      const int current_optim_number,

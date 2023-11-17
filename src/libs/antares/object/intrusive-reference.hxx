@@ -43,14 +43,14 @@ inline IIntrusiveReference<ChildT, TP>::~IIntrusiveReference()
 
 template<class ChildT, template<class> class TP>
 inline IIntrusiveReference<ChildT, TP>::IIntrusiveReference(
-  const IIntrusiveReference<ChildT, TP>& rhs) :
+  [[maybe_unused]] const IIntrusiveReference<ChildT, TP>& rhs) :
  pRefCount(0)
 {
 }
 
 template<class ChildT, template<class> class TP>
 inline IIntrusiveReference<ChildT, TP>& IIntrusiveReference<ChildT, TP>::operator=(
-  const IIntrusiveReference& rhs) const
+  [[maybe_unused]] const IIntrusiveReference& rhs) const
 {
     // Does nothing
     return *this;
