@@ -26,14 +26,13 @@
 */
 
 #include "management.h"
-#include <wx/stattext.h>
+
 #include "../../toolbox/components/datagrid/renderer/area/hydroprepro.h"
 #include "../../toolbox/components/datagrid/renderer/area/inflowpattern.h"
-#include "../../toolbox/components/datagrid/renderer/area/hydromonthlypower.h"
-#include "../../toolbox/components/button.h"
 #include "../../toolbox/validator.h"
 #include "../../toolbox/create.h"
 #include "../../application/menus.h"
+#include <wx/defs.h>
 #include <wx/statline.h>
 
 using namespace Yuni;
