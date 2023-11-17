@@ -4,9 +4,16 @@
 
 #pragma once
 
+#include "ortools/linear_solver/linear_solver.h"
 #include "../randomized-thermal-generator/RandomizedGenerator.h"
 #include "../../../libs/antares/study/maintenance_planning/MaintenanceGroup.h"
 #include "AuxillaryStructures.h"
+#include <antares/exception/AssertionError.hpp>
+
+static const std::string mntPlSolverName = "cbc";
+static const uint minNumberOfMaintenances = 2;
+
+using namespace operations_research;
 
 namespace Antares::Solver::TSGenerator
 {
@@ -18,10 +25,20 @@ private:
     in adq-patch we re-used existing structure(s) for helping us define an optimization problem ->
     like: struct CORRESPONDANCES_DES_VARIABLES.
     unfortunately here we have to create our own help-structure if we need one
-    Question: can we still use struct PROBLEME_ANTARES_A_RESOUDRE ?! - no we use MPSolver and MPVariable class 
+    Question: can we still use struct PROBLEME_ANTARES_A_RESOUDRE ?! -
+    no we use:
+    class MPSolver
+    class MPConstraint;
+    class MPObjective;
+    class MPSolverInterface;
+    class MPSolverParameters;
+    class MPVariable;
     */
 
     // optimization problem construction methods
+
+    void initSolver();
+
     void buildProblemVariables();
     void countVariables();
     void buildEnsAndSpillageVariables();
@@ -46,7 +63,6 @@ private:
     void resetProblem();
 
     void runOptimizationProblem();
-
 
     // optimization problem - methods - private
     void createOptimizationProblemPerGroup(const OptProblemSettings& optSett);
@@ -96,6 +112,9 @@ private:
     std::array<double, DAYS_PER_YEAR> residualLoadDailyValues_;
     OptimizationProblemVariableIndexes indexes;
 
+    // Declare an MPSolver pointer
+    MPSolver* solver;
+
 public:
     explicit OptimizedThermalGenerator(Data::Study& study,
                                        Data::MaintenanceGroup& maintenanceGroup,
@@ -110,10 +129,14 @@ public:
         scenarioLength_ = study.parameters.maintenancePlanning.getScenarioLength();
         scenarioNumber_ = study.parameters.maintenancePlanning.getScenarioNumber();
         nbThermalTimeseries = scenarioLength_ * scenarioNumber_;
-        // allocateProblem();
+        // initiate a solver
+        initSolver();
     }
 
-    ~OptimizedThermalGenerator() = default;
+    ~OptimizedThermalGenerator()
+    {
+        delete solver;
+    }
 
     // optimization problem - methods - public
     void GenerateOptimizedThermalTimeSeries();
