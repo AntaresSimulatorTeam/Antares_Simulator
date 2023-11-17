@@ -7,7 +7,7 @@
 #include <numeric>
 #include <algorithm>
 
-const uint minNumberOfMaintenances = 2;
+static const uint minNumberOfMaintenances = 2;
 namespace Antares::Solver::TSGenerator
 {
 // optimization problem - methods
