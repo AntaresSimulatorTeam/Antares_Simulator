@@ -1,6 +1,11 @@
 Antares Changelog
 =================
 
+8.8.0-rc3 (11/2023)
+--------------------
+## Bugfixes
+* Fix oracle-linux8 binaries missing compression feature (#1741)
+
 8.8.0-rc2 (10/2023)
 --------------------
 ## Build
