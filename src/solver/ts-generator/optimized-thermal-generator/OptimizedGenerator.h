@@ -114,6 +114,18 @@ public:
         scenarioLength_ = study.parameters.maintenancePlanning.getScenarioLength();
         scenarioNumber_ = study.parameters.maintenancePlanning.getScenarioNumber();
         nbThermalTimeseries = scenarioLength_ * scenarioNumber_;
+
+        // Solver Settings
+        // MP solver parameters / TODD CR27: do we change this -
+        // I would keep it on default values for the time being
+        
+        // Access solver parameters
+        MPSolverParameters params;
+        // Set parameter values
+        // params.SetIntegerParam(MPSolverParameters::SCALING, 0);
+        // params.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
+        
+        // set solver infinity
         infinity = solver.infinity();
     }
 
