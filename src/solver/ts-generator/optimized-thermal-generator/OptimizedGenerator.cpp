@@ -125,7 +125,7 @@ bool OptimizedThermalGenerator::checkMaintenanceGroupParameters()
         logs.info() << "Maintenance group: " << maintenanceGroup_.name()
                     << ": The timeseries generation will be skiped:  timeStep = 0. It is possible "
                        "that the maintenance group has no clusters designated for maintenance "
-                       "planning or, at least one cluster has interPoPeriod = 0";
+                       "planning, or at least one cluster has interPoPeriod = 0";
         return false;
     }
     if (timeHorizon_ == 0)
@@ -134,7 +134,7 @@ bool OptimizedThermalGenerator::checkMaintenanceGroupParameters()
           << "Maintenance group: " << maintenanceGroup_.name()
           << ": The timeseries generation will be skiped:  timeHorizon = 0. It is possible "
              "that the maintenance group has no clusters designated for maintenance "
-             "planning or, all cluster have interPoPeriod = 0";
+             "planning, or all clusters have interPoPeriod = 0";
         return false;
     }
     // add some more check here if necessary!
