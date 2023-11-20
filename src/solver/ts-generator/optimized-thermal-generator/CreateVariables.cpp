@@ -117,10 +117,10 @@ void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSe
             {
                 const auto& cluster = *(it->second);
 
-                if (!checkClusterExist(cluster))
-                    continue;
                 // we do not check if cluster.optimizeMaintenance = true here
                 // we add all the clusters Power inside maintenance group
+                if (!checkClusterExist(cluster))
+                    continue;
 
                 auto& clusterVariables = areaVariables[&area].clusterMap;
                 clusterVariables[&cluster] = OptimizationProblemVariablesPerCluster();
@@ -135,39 +135,38 @@ void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSe
         }
     }
 
-    // loop per day - structure already filled in
+    // loop per day
     for (int day = 0; day < timeHorizon_; ++day)
     {
-        // loop per area inside maintenance group - fill in the structure
+        // loop per area inside maintenance group
         for (const auto& entryWeightMap : maintenanceGroup_)
         {
             const auto& area = *(entryWeightMap.first);
             auto& areaVariables = var.day[day].areaMap;
 
-            // loop per thermal clusters inside the area - fill in the structure
+            // loop per thermal clusters inside the area
             for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end();
                  ++it)
             {
                 const auto& cluster = *(it->second);
 
-                if (!checkClusterExist(cluster))
-                    continue;
                 // we do not check if cluster.optimizeMaintenance = true here
                 // we add all the clusters Power inside maintenance group
+                if (!checkClusterExist(cluster))
+                    continue;
 
                 auto& clusterVariables = areaVariables[&area].clusterMap;
 
-                // loop per unit inside the cluster - fill in the structure
+                // loop per unit inside the cluster
                 for (int unit = 0; unit < cluster.unitCount; ++unit)
                 {
                     // add P[t][u] variables
-                    clusterVariables[&cluster].unitMap[unit].P = solver.MakeNumVar(
-                      0.0,
-                      infinity,
-                      "P_[" + std::to_string(day + optSett.firstDay) + "]["
-                        + cluster.getFullName().to<std::string>() + "." + std::to_string(unit) + "]"
-
-                    );
+                    clusterVariables[&cluster].unitMap[unit].P
+                      = solver.MakeNumVar(0.0,
+                                          infinity,
+                                          "P_[" + std::to_string(day + optSett.firstDay) + "]["
+                                            + cluster.getFullName().to<std::string>() + "."
+                                            + std::to_string(unit) + "]");
                 }
             }
         }
@@ -179,6 +178,59 @@ void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSe
 // create VARIABLES per day, per cluster-unit and per maintenance - s[t][u][m] & e[t][u][m]
 void OptimizedThermalGenerator::buildStartEndMntVariables(const OptProblemSettings& optSett)
 {
+    // loop per day
+    for (int day = 0; day < timeHorizon_; ++day)
+    {
+        // loop per area inside maintenance group
+        for (const auto& entryWeightMap : maintenanceGroup_)
+        {
+            const auto& area = *(entryWeightMap.first);
+            auto& areaVariables = var.day[day].areaMap;
+
+            // loop per thermal clusters inside the area
+            for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end();
+                 ++it)
+            {
+                const auto& cluster = *(it->second);
+
+                // check if cluster exist, do we generate + optimizeMaintenance
+                // create start end variables only for these clusters
+                bool createStartEndVar = checkClusterExist(cluster)
+                                         && cluster.doWeGenerateTS(globalThermalTSgeneration_)
+                                         && cluster.optimizeMaintenance;
+                if (!createStartEndVar)
+                    continue;
+
+                auto& clusterVariables = areaVariables[&area].clusterMap;
+                int totalMntNumber = calculateNumberOfMaintenances(cluster, timeHorizon_);
+
+                // loop per unit inside the cluster
+                for (int unit = 0; unit < cluster.unitCount; ++unit)
+                {
+                    auto& unitVariables = clusterVariables[&cluster].unitMap;
+                    // loop per maintenances per unit
+                    for (int mnt = 0; mnt < totalMntNumber; ++mnt)
+                    {
+                        // add start[t][u][m] variables
+                        unitVariables[unit].start.push_back(solver.MakeIntVar(
+                          0.0,
+                          1.0,
+                          "S_[" + std::to_string(day + optSett.firstDay) + "]["
+                            + cluster.getFullName().to<std::string>() + "." + std::to_string(unit)
+                            + "][" + std::to_string(mnt) + "]"));
+
+                        // add end[t][u][m] variables
+                        unitVariables[unit].end.push_back(solver.MakeIntVar(
+                          0.0,
+                          1.0,
+                          "E_[" + std::to_string(day + optSett.firstDay) + "]["
+                            + cluster.getFullName().to<std::string>() + "." + std::to_string(unit)
+                            + "][" + std::to_string(mnt) + "]"));
+                    }
+                }
+            }
+        }
+    }
     return;
 }
 
