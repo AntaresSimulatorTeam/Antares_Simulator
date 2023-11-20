@@ -22,11 +22,11 @@ class OptimizedThermalGenerator : public GeneratorTempData
 {
 private:
     // optimization problem construction methods
-    void buildProblemVariables();
+    void buildProblemVariables(const OptProblemSettings& optSett);
     void countVariables();
-    void buildEnsAndSpillageVariables();
-    void buildUnitPowerOutputVariables();
-    void buildStartEndMntVariables();
+    void buildEnsAndSpillageVariables(const OptProblemSettings& optSett);
+    void buildUnitPowerOutputVariables(const OptProblemSettings& optSett);
+    void buildStartEndMntVariables(const OptProblemSettings& optSett);
 
     void setVariableBounds();
     void setEnsAndSpillageBounds();
@@ -44,7 +44,7 @@ private:
     void solveProblem();
     void resetProblem();
 
-    void runOptimizationProblem();
+    void runOptimizationProblem(const OptProblemSettings& optSett);
 
     // optimization problem - methods - private
     void createOptimizationProblemPerGroup(const OptProblemSettings& optSett);
@@ -92,7 +92,7 @@ private:
     double ensCost_;
     double spillCost_;
     std::array<double, DAYS_PER_YEAR> residualLoadDailyValues_;
-    OptimizationProblemVariableIndexes indexes;
+    OptimizationProblemVariables var;
 
     // MPSolver instance
     MPSolver solver;

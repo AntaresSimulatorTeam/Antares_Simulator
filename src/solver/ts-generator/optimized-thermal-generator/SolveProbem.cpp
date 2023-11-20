@@ -7,9 +7,9 @@
 namespace Antares::Solver::TSGenerator
 {
 // call all methods    
-void OptimizedThermalGenerator::runOptimizationProblem()
+void OptimizedThermalGenerator::runOptimizationProblem(const OptProblemSettings& optSett)
 {
-    buildProblemVariables();
+    buildProblemVariables(optSett);
     setVariableBounds();
     buildProblemConstraints();
     setProblemCost();

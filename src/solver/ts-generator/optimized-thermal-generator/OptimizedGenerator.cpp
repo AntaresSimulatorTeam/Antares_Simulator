@@ -20,23 +20,23 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
     for (std::size_t scenarioIndex = 0; scenarioIndex < scenarioNumber_; ++scenarioIndex)
     {
         OptProblemSettings optSett;
-        optSett.optProblemStartTime = 0;
-        optSett.optProblemEndTime = timeHorizon_;
+        optSett.firstDay = 0;
+        optSett.lastDay = timeHorizon_;
         // loop till the end of scenario length
-        while (optSett.optProblemStartTime <= scenarioLength_ * DAYS_PER_YEAR)
+        while (optSett.firstDay <= scenarioLength_ * DAYS_PER_YEAR)
         {
             createOptimizationProblemPerGroup(optSett);
 
             // Update the time values for the next iteration
-            optSett.optProblemStartTime += timeStep_;
-            optSett.optProblemEndTime += timeStep_;
+            optSett.firstDay += timeStep_;
+            optSett.lastDay += timeStep_;
         }
     }
 }
 
 void OptimizedThermalGenerator::createOptimizationProblemPerGroup(const OptProblemSettings& optSett)
 {
-    runOptimizationProblem();
+    runOptimizationProblem(optSett);
     // ...
     // do the optimization post-processing here &
     // do the writing off the result here
@@ -55,16 +55,6 @@ void OptimizedThermalGenerator::createOptimizationProblemPerGroup(const OptProbl
             ++pProgression;
         }
     }
-
-    indexes.day.push_back(OptimizationProblemVariableIndexesPerDay());
-    indexes.day[0].Ens = 1;
-    indexes.day[0].Spill = 2;
-    indexes.day[0].area.push_back(OptimizationProblemVariableIndexesPerArea());
-    indexes.day[0].area[0].cluster.push_back(OptimizationProblemVariableIndexesPerCluster());
-    indexes.day[0].area[0].cluster[0].unit.push_back(OptimizationProblemVariableIndexesPerUnit());
-    indexes.day[0].area[0].cluster[0].unit[0].P = 100;
-    indexes.day[0].area[0].cluster[0].unit[0].start.push_back(55);
-    indexes.day[0].area[0].cluster[0].unit[0].end.push_back(155);
     // end play
 }
 
@@ -144,7 +134,7 @@ bool OptimizedThermalGenerator::checkMaintenanceGroupParameters()
           << "Maintenance group: " << maintenanceGroup_.name()
           << ": The timeseries generation will be skiped:  timeHorizon = 0. It is possible "
              "that the maintenance group has no clusters designated for maintenance "
-             "planning or, at all cluster have interPoPeriod = 0";
+             "planning or, all cluster have interPoPeriod = 0";
         return false;
     }
     // add some more check here if necessary!

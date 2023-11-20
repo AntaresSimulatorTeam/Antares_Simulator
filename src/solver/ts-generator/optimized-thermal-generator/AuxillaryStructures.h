@@ -2,6 +2,12 @@
 // Created by milos on 14/11/23.
 //
 
+#pragma once
+
+#include "OptimizedGenerator.h"
+
+using namespace operations_research;
+
 namespace Antares::Solver::TSGenerator
 {
 
@@ -10,42 +16,42 @@ class OptProblemSettings final
 public:
     OptProblemSettings() = default;
 
-    int optProblemStartTime;
-    int optProblemEndTime;
+    int firstDay;
+    int lastDay;
 };
 
-struct OptimizationProblemVariableIndexesPerUnit
+struct OptimizationProblemVariablesPerUnit
 {
-    int P; // index of P[t][u] variable
+    MPVariable* P = nullptr;; // index of P[t][u] variable
 
     // number of elements in the vector is total number of maintenances of unit
-    std::vector<int> start; // index of s[t][u][m] variable
-    std::vector<int> end;   // index of e[t][u][m] variable
+    std::vector<MPVariable*> start; // index of s[t][u][m] variable
+    std::vector<MPVariable*> end;   // index of e[t][u][m] variable
 };
 
-struct OptimizationProblemVariableIndexesPerCluster
+struct OptimizationProblemVariablesPerCluster
 {
     // number of elements in the vector is total number of units in cluster
-    std::vector<OptimizationProblemVariableIndexesPerUnit> unit;
+    std::vector<OptimizationProblemVariablesPerUnit> unit;
 };
 
-struct OptimizationProblemVariableIndexesPerArea
+struct OptimizationProblemVariablesPerArea
 {
     // number of elements in the vector is total number of clusters in area
-    std::vector<OptimizationProblemVariableIndexesPerCluster> cluster;
+    std::vector<OptimizationProblemVariablesPerCluster> cluster;
 };
 
-struct OptimizationProblemVariableIndexesPerDay
+struct OptimizationProblemVariablesPerDay
 {
-    int Ens;   // index of ENS[t] variable
-    int Spill; // index of Spillage[t] variable
+    MPVariable* Ens = nullptr;   // index of ENS[t] variable
+    MPVariable* Spill = nullptr;; // index of Spillage[t] variable
     // number of elements in the vector is total number of areas in optimization problem
-    std::vector<OptimizationProblemVariableIndexesPerArea> area;
+    std::vector<OptimizationProblemVariablesPerArea> area;
 };
-struct OptimizationProblemVariableIndexes
+struct OptimizationProblemVariables
 {
     // number of elements in the vector is total number of days in optimization problem
-    std::vector<OptimizationProblemVariableIndexesPerDay> day;
+    std::vector<OptimizationProblemVariablesPerDay> day;
 };
 
 } // namespace Antares::Solver::TSGenerator
