@@ -282,7 +282,13 @@ endif()
 
 find_package(minizip-ng)
 
-if(NOT minizip_FOUND OR BUILD_MINIZIP)
+if(NOT minizip-ng_FOUND OR BUILD_MINIZIP)
+	if (NOT minizip_FOUND)
+		message("minizip-ng not found. Downloading")
+	endif()
+	if (BUILD_MINIZIP)
+		message("BUILD_MINIZIP ON")
+	endif()
     # Repository + tag
     set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
     set(MZ_TAG "4.0.1")
@@ -301,6 +307,7 @@ if(NOT minizip_FOUND OR BUILD_MINIZIP)
 
     FetchContent_MakeAvailable(minizip-ng)
 endif()
+message("MINIZIP-NG available. Version: ${minizip-ng_VERSION}")
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
