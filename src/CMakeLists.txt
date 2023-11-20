@@ -284,7 +284,7 @@ find_package(minizip)
 
 if(NOT minizip_FOUND OR BUILD_MINIZIP)
 	if (NOT minizip_FOUND)
-		message("minizip-ng not found. Downloading")
+		message("minizip not found. Downloading")
 	endif()
 	if (BUILD_MINIZIP)
 		message("BUILD_MINIZIP ON")
