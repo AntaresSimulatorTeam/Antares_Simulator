@@ -49,7 +49,7 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     TuneSolverSpecificOptions(solver);
 
     // Create the variables and set objective cost.
-    CopyObjective(solver);
+    CopyVariables(solver);
 
     // Create constraints and set coefs
     CopyRows(solver);
@@ -95,27 +95,24 @@ void ProblemSimplexeNommeConverter::CopyMatrix(const MPSolver* solver)
     }
 }
 
-void ProblemSimplexeNommeConverter::UpdateCoefficient(unsigned idxVar,
-                                                      MPSolver* solver,
-                                                      MPObjective* const objective)
+void ProblemSimplexeNommeConverter::CreateVariable(unsigned idxVar,
+                                                   MPSolver* solver,
+                                                   MPObjective* const objective)
 {
-    double min_l = 0.0;
-    if (problemeSimplexe_->Xmin != NULL) // TODO[FOM] Remove enclosing if ?
-    {
-        min_l = problemeSimplexe_->Xmin[idxVar];
-    }
+    double min_l = problemeSimplexe_->Xmin[idxVar];
     double max_l = problemeSimplexe_->Xmax[idxVar];
-    const MPVariable* var = solver->MakeNumVar(min_l, max_l, variableNameManager_.GetName(idxVar));
+    bool intVar = problemeSimplexe_->IntegerVariable(idxVar);
+    const MPVariable* var = solver->MakeVar(min_l, max_l, intVar, variableNameManager_.GetName(idxVar));
     objective->SetCoefficient(var, problemeSimplexe_->CoutLineaire[idxVar]);
 }
 
-void ProblemSimplexeNommeConverter::CopyObjective(MPSolver* solver)
+void ProblemSimplexeNommeConverter::CopyVariables(MPSolver* solver)
 
 {
     MPObjective* const objective = solver->MutableObjective();
     for (int idxVar = 0; idxVar < problemeSimplexe_->NombreDeVariables; ++idxVar)
     {
-        UpdateCoefficient(idxVar, solver, objective);
+        CreateVariable(idxVar, solver, objective);
     }
 }
 

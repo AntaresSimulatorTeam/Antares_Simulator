@@ -54,6 +54,11 @@ public:
     {
         return NomDesContraintes;
     }
+
+    bool IntegerVariable(size_t idx) const
+    {
+        return VariablesEntieres[idx];
+    }
 };
 } // namespace Optimization
 } // namespace Antares
