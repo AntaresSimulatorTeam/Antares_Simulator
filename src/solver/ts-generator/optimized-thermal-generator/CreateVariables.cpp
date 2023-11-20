@@ -247,6 +247,9 @@ void OptimizedThermalGenerator::printAllVariables()
                   << "Lower bound: " << variable->lb() << ", "
                   << "Upper bound: " << variable->ub() << std::endl;
     }
+
+    std::cout << "total number of variables is: " << solver.NumVariables() << std::endl;
+
     return;
 }
 
