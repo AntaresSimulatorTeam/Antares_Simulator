@@ -304,7 +304,7 @@ if(NOT minizip_FOUND OR BUILD_MINIZIP)
     FetchContent_Declare(minizip
     GIT_REPOSITORY ${MZ_REPOSITORY}
     GIT_TAG ${MZ_TAG}
-			OVERRIDE_FIND_PACKAGE)
+			OVERRIDE_FIND_PACKAGE) #Overide so that find_package works
 
     FetchContent_MakeAvailable(minizip)
 endif()
