@@ -1,5 +1,5 @@
 project(result-writer)
-find_package(minizip-ng)
+find_package(minizip)
 
 add_library(result_writer
         # Interface class (public API)
@@ -36,7 +36,7 @@ target_link_libraries(result_writer
         Antares::benchmarking
         yuni-static-core
         PRIVATE
-        MINIZIP::minizip-ng
+        MINIZIP::minizip
         logs
         inifile
         io

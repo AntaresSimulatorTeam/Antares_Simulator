@@ -280,9 +280,9 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_MakeAvailable(ortools)
 endif()
 
-find_package(minizip-ng)
+find_package(minizip REQUIRED)
 
-if(NOT minizip-ng_FOUND OR BUILD_MINIZIP)
+if(NOT minizip_FOUND OR BUILD_MINIZIP)
 	if (NOT minizip_FOUND)
 		message("minizip-ng not found. Downloading")
 	endif()
@@ -301,13 +301,13 @@ if(NOT minizip-ng_FOUND OR BUILD_MINIZIP)
     set(MZ_OPENSSL "OFF" CACHE INTERNAL "")
     set(MZ_ICONV "OFF" CACHE INTERNAL "")
 
-    FetchContent_Declare(minizip-ng
+    FetchContent_Declare(minizip
     GIT_REPOSITORY ${MZ_REPOSITORY}
-    GIT_TAG ${MZ_TAG})
+    GIT_TAG ${MZ_TAG}
+			OVERRIDE_FIND_PACKAGE)
 
-    FetchContent_MakeAvailable(minizip-ng)
+    FetchContent_MakeAvailable(minizip)
 endif()
-message("MINIZIP-NG available. Version: ${minizip-ng_VERSION}")
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
