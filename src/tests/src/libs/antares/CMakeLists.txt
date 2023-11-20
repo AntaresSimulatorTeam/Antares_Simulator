@@ -90,3 +90,14 @@ set_target_properties(tests-matrix-load PROPERTIES FOLDER Unit-tests)
 add_test(NAME load-matrix COMMAND tests-matrix-load)
 
 set_property(TEST load-matrix PROPERTY LABELS unit)
+
+
+add_executable(test-utils test_utils.cpp)
+target_link_libraries(test-utils
+		PRIVATE
+		Boost::unit_test_framework
+		Antares::utils
+		yuni-static-core
+)
+add_test(NAME test-utils COMMAND test-utils)
+set_property(TEST test-utils PROPERTY LABELS unit)
