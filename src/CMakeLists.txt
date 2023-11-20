@@ -297,10 +297,13 @@ if(NOT minizip_FOUND OR BUILD_MINIZIP)
 
     FetchContent_Declare(minizip
     GIT_REPOSITORY ${MZ_REPOSITORY}
-    GIT_TAG ${MZ_TAG})
+    GIT_TAG ${MZ_TAG}
+	OVERRIDE_FIND_PACKAGE
+	)
 
     FetchContent_MakeAvailable(minizip)
 endif()
+find_package(minizip REQUIRED)
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
