@@ -5,6 +5,7 @@
 #pragma once
 
 #include "OptimizedGenerator.h"
+#include "../../../src/libs/antares/study/area/area.h"
 
 using namespace operations_research;
 
@@ -32,21 +33,21 @@ struct OptimizationProblemVariablesPerUnit
 struct OptimizationProblemVariablesPerCluster
 {
     // number of elements in the vector is total number of units in cluster
-    std::vector<OptimizationProblemVariablesPerUnit> unit;
+    std::vector<OptimizationProblemVariablesPerUnit> unitMap;
 };
 
 struct OptimizationProblemVariablesPerArea
 {
-    // number of elements in the vector is total number of clusters in area
-    std::vector<OptimizationProblemVariablesPerCluster> cluster;
+    // number of elements in the map is total number of clusters in area
+    std::map<const Data::ThermalCluster*, OptimizationProblemVariablesPerCluster> clusterMap;
 };
 
 struct OptimizationProblemVariablesPerDay
 {
     MPVariable* Ens = nullptr;   // index of ENS[t] variable
     MPVariable* Spill = nullptr;; // index of Spillage[t] variable
-    // number of elements in the vector is total number of areas in optimization problem
-    std::vector<OptimizationProblemVariablesPerArea> area;
+    // number of elements in the map is total number of areas in optimization problem
+    std::map<const Data::Area*, OptimizationProblemVariablesPerArea> areaMap;
 };
 struct OptimizationProblemVariables
 {
