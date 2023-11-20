@@ -24,6 +24,7 @@ private:
     // optimization problem construction methods
     void buildProblemVariables(const OptProblemSettings& optSett);
     void countVariables();
+    void allocateOptimizationProblemVariablesStruct(const OptProblemSettings& optSett);
     void buildEnsAndSpillageVariables(const OptProblemSettings& optSett);
     void buildUnitPowerOutputVariables(const OptProblemSettings& optSett);
     void buildStartEndMntVariables(const OptProblemSettings& optSett);

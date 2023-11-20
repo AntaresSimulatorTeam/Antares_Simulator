@@ -8,7 +8,10 @@ namespace Antares::Solver::TSGenerator
 {
 void OptimizedThermalGenerator::buildProblemVariables(const OptProblemSettings& optSett)
 {
+    // this is now just dummy optimization problem
     countVariables();
+    
+    allocateOptimizationProblemVariablesStruct(optSett);
     buildEnsAndSpillageVariables(optSett);
     buildUnitPowerOutputVariables(optSett);
     buildStartEndMntVariables(optSett);
@@ -72,38 +75,16 @@ void OptimizedThermalGenerator::countVariables()
     return;
 }
 
-// create VARIABLES per day - ENS[t], Spill[t]
-void OptimizedThermalGenerator::buildEnsAndSpillageVariables(const OptProblemSettings& optSett)
+// populate OptimizationProblemVariables struct
+void OptimizedThermalGenerator::allocateOptimizationProblemVariablesStruct(
+  const OptProblemSettings& optSett)
 {
+    // loop per day - fill in structure
     for (int day = 0; day < timeHorizon_; ++day)
     {
         // fill the variable structure
         var.day.push_back(OptimizationProblemVariablesPerDay());
-    }
 
-    for (int day = 0; day < timeHorizon_; ++day)
-    {
-        // add ENS variables
-        var.day[day].Ens = solver.MakeNumVar(
-          0.0, infinity, "ENS_[" + std::to_string(day + optSett.firstDay) + "]");
-    }
-
-    for (int day = 0; day < timeHorizon_; ++day)
-    {
-        // add Spillage variables
-        var.day[day].Spill = solver.MakeNumVar(
-          0.0, infinity, "Spill_[" + std::to_string(day + optSett.firstDay) + "]");
-    }
-
-    return;
-}
-
-// create VARIABLES per day and per cluster-unit - P[t][u]
-void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSettings& optSett)
-{
-    // loop per day - structure already filled in
-    for (int day = 0; day < timeHorizon_; ++day)
-    {
         // loop per area inside maintenance group - fill in the structure
         for (const auto& entryWeightMap : maintenanceGroup_)
         {
@@ -134,7 +115,31 @@ void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSe
             }
         }
     }
+}
 
+// create VARIABLES per day - ENS[t], Spill[t]
+void OptimizedThermalGenerator::buildEnsAndSpillageVariables(const OptProblemSettings& optSett)
+{
+    for (int day = 0; day < timeHorizon_; ++day)
+    {
+        // add ENS variables
+        var.day[day].Ens = solver.MakeNumVar(
+          0.0, infinity, "ENS_[" + std::to_string(day + optSett.firstDay) + "]");
+    }
+
+    for (int day = 0; day < timeHorizon_; ++day)
+    {
+        // add Spillage variables
+        var.day[day].Spill = solver.MakeNumVar(
+          0.0, infinity, "Spill_[" + std::to_string(day + optSett.firstDay) + "]");
+    }
+
+    return;
+}
+
+// create VARIABLES per day and per cluster-unit - P[t][u]
+void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSettings& optSett)
+{
     // loop per day
     for (int day = 0; day < timeHorizon_; ++day)
     {
