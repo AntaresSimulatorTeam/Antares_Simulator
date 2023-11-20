@@ -81,7 +81,6 @@ enum
 
 struct DebugData
 {
-    using InflowsType = Matrix<double, int32_t>::ColumnType;
     using MaxPowerType = Matrix<double, double>::ColumnType;
     using ReservoirLevelType = Matrix<double>::ColumnType;
 
@@ -100,7 +99,7 @@ struct DebugData
     Solver::IResultWriter& pWriter;
     const TmpDataByArea& data;
     const VENTILATION_HYDRO_RESULTS_BY_AREA& ventilationResults;
-    const InflowsType& srcinflows;
+    const double* srcinflows;
     const MaxPowerType& maxP;
     const MaxPowerType& maxE;
     const double* dailyTargetGen;
@@ -110,7 +109,7 @@ struct DebugData
     DebugData(Solver::IResultWriter& writer,
               const TmpDataByArea& data,
               const VENTILATION_HYDRO_RESULTS_BY_AREA& ventilationResults,
-              const InflowsType& srcinflows,
+              const double* srcinflows,
               const MaxPowerType& maxP,
               const MaxPowerType& maxE,
               const double* dailyTargetGen,
@@ -230,12 +229,9 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     uint z = area.index;
     assert(z < areas_.size());
 
-    auto& inflowsmatrix = area.hydro.series->storage;
+    auto const srcinflows = area.hydro.series->storage.getColumn(y);
 
-    auto tsIndex = area.hydro.series->getIndex(y);
-    auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
-
-    auto& data = tmpDataByArea_[numSpace][z];
+    auto& data = tmpDataByArea_[z];
 
     auto& scratchpad = area.scratchpad[numSpace];
 
@@ -254,7 +250,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     auto const& maxP = maxPower[Data::PartHydro::genMaxP];
     auto const& maxE = maxPower[Data::PartHydro::genMaxE];
 
-    auto& ventilationResults = ventilationResults_[numSpace][z];
+    auto& ventilationResults = ventilationResults_[z];
 
     std::shared_ptr<DebugData> debugData(nullptr);
 

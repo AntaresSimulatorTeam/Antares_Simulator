@@ -58,8 +58,6 @@ source_group("study\\area\\ui" FILES ${SRC_STUDY_AREA_UI})
 
 
 set(SRC_STUDY_PART_COMMON
-        parts/common/series.h
-        parts/common/series.cpp
         parts/common/cluster.cpp
         parts/common/cluster.h
         parts/common/cluster_list.h
@@ -114,9 +112,6 @@ source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM
 set(SRC_STUDY_PART_WIND
         parts/wind/container.h
         parts/wind/container.cpp
-        parts/wind/series.h
-        parts/wind/series.hxx
-        parts/wind/series.cpp
         parts/wind/prepro.h
         parts/wind/prepro.hxx
         parts/wind/prepro.cpp
@@ -127,7 +122,6 @@ set(SRC_STUDY_PART_HYDRO
         parts/hydro/container.h
         parts/hydro/container.cpp
         parts/hydro/series.h
-        parts/hydro/series.hxx
         parts/hydro/series.cpp
         parts/hydro/prepro.h
         parts/hydro/prepro.cpp
@@ -202,9 +196,6 @@ set(SRC_STUDY
         # Load
         parts/load/container.h
         parts/load/container.cpp
-        parts/load/series.h
-        parts/load/series.hxx
-        parts/load/series.cpp
         parts/load/prepro.cpp
         parts/load/prepro.h
         parts/load/prepro.hxx
@@ -212,9 +203,6 @@ set(SRC_STUDY
         # Solar
         parts/solar/container.h
         parts/solar/container.cpp
-        parts/solar/series.h
-        parts/solar/series.hxx
-        parts/solar/series.cpp
         parts/solar/prepro.cpp
         parts/solar/prepro.h
         parts/solar/prepro.hxx
@@ -312,6 +300,7 @@ target_link_libraries(study
         Antares::mersenne
         Antares::result_writer #study.h
         Antares::object
+        Antares::series
     PRIVATE
         Antares::exception
         Antares::benchmarking

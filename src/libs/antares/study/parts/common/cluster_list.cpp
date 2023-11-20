@@ -151,11 +151,11 @@ void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n)
     {
         if (0 == n)
         {
-            each([&](Cluster& cluster) { cluster.series->timeseriesNumbers.clear(); });
+            each([&](Cluster& cluster) { cluster.series.timeseriesNumbers.clear(); });
         }
         else
         {
-            each([&](Cluster& cluster) { cluster.series->timeseriesNumbers.resize(1, n); });
+            each([&](Cluster& cluster) { cluster.series.timeseriesNumbers.resize(1, n); });
         }
     }
 }
@@ -176,7 +176,7 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
         path.clear() << "ts-numbers" << SEP << typeID() << SEP << cluster.parentArea->id << SEP
                      << cluster.id() << ".txt";
         ts_content.clear(); // We must clear ts_content here, since saveToBuffer does not do it.
-        cluster.series->timeseriesNumbers.saveToBuffer(ts_content, 0, true, predicate, true);
+        cluster.series.timeseriesNumbers.saveToBuffer(ts_content, 0, true, predicate, true);
         writer.addEntryFromBuffer(path.c_str(), ts_content);
     });
 }
@@ -338,8 +338,7 @@ int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
     for (auto it = cluster.begin(); it != end; ++it)
     {
         auto& cluster = *(it->second);
-        if (cluster.series)
-            ret = cluster.saveDataSeriesToFolder(folder) and ret;
+        ret = cluster.saveDataSeriesToFolder(folder) and ret;
     }
     return ret;
 }
@@ -357,12 +356,9 @@ int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const
     for (auto it = cluster.begin(); it != end; ++it)
     {
         auto& cluster = *(it->second);
-        if (cluster.series)
-        {
-            logs.info() << msg << "  " << (ticks * 100 / (1 + this->cluster.size()))
-                        << "% complete";
-            ret = cluster.saveDataSeriesToFolder(folder) and ret;
-        }
+        logs.info() << msg << "  " << (ticks * 100 / (1 + this->cluster.size()))
+            << "% complete";
+        ret = cluster.saveDataSeriesToFolder(folder) and ret;
         ++ticks;
     }
     return ret;
@@ -379,25 +375,12 @@ int ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
     int ret = 1;
 
     each([&](ClusterT& c) {
-        if (c.series)
-            ret = c.loadDataSeriesFromFolder(s, folder) and ret;
+        ret = c.loadDataSeriesFromFolder(s, folder) and ret;
 
         ++options.progressTicks;
         options.pushProgressLogs();
     });
     return ret;
-}
-
-template<class ClusterT>
-void ClusterList<ClusterT>::ensureDataTimeSeries()
-{
-    auto end = cluster.end();
-    for (auto it = cluster.begin(); it != end; ++it)
-    {
-        SharedPtr cluster = it->second;
-        if (not cluster->series)
-            cluster->series = new DataSeriesCommon();
-    }
 }
 
 template<class ClusterT>

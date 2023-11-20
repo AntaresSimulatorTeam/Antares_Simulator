@@ -36,7 +36,6 @@
 #include <cassert>
 #include <map>
 #include "simulation.h"
-#include "../aleatoire/alea_fonctions.h"
 
 using namespace Yuni;
 
@@ -139,10 +138,10 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uin
             for (auto i = area.thermal.mustrunList.begin(); i != end; ++i)
             {
                 auto& cluster = *(i->second);
-                const auto& availableProduction = cluster.series->getAvailablePowerYearly(year);
+                const auto& availableProduction = cluster.series.getColumn(year);
                 if (inAdequacy && cluster.mustrunOrigin)
                 {
-                    for (uint h = 0; h != cluster.series->timeSeries.height; ++h)
+                    for (uint h = 0; h != cluster.series.timeSeries.height; ++h)
                     {
                         mrs[h] += availableProduction[h];
                         adq[h] += availableProduction[h];
@@ -150,7 +149,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uin
                 }
                 else
                 {
-                    for (uint h = 0; h != cluster.series->timeSeries.height; ++h)
+                    for (uint h = 0; h != cluster.series.timeSeries.height; ++h)
                         mrs[h] += availableProduction[h];
                 }
             }
@@ -165,8 +164,8 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uin
                 if (!cluster.mustrunOrigin)
                     continue;
 
-                const auto& availableProduction = cluster.series->getAvailablePowerYearly(year);
-                for (uint h = 0; h != cluster.series->timeSeries.height; ++h)
+                const auto& availableProduction = cluster.series.getColumn(year);
+                for (uint h = 0; h != cluster.series.timeSeries.height; ++h)
                     adq[h] += availableProduction[h];
             }
         }
@@ -394,7 +393,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                         + thermalNoises[areaIdx][cluster.areaWideIndex];
 
                     Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
-                        = cluster.series->getAvailablePower(hourInYear, year);
+                        = cluster.series.getCoefficient(year, hourInYear);
 
                     Pt.PuissanceMinDuPalierThermique[hourInWeek]
                         = (Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] < cluster.PthetaInf[hourInYear])

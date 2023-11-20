@@ -470,7 +470,7 @@ typename Grid<NodeT>::VectorEdgeP Grid<NodeT>::findShortestPath(NodeP node1, Nod
     Grid::VectorEdgeP path;
     Grid::NodeP currentNode = node2;
 
-    while (!prev[currentNode] == 0)
+    while (prev[currentNode] != nullptr)
     {
         path.push_back(adjency.at(currentNode).at(prev[currentNode]));
         currentNode = prev[currentNode];

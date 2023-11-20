@@ -191,7 +191,7 @@ public:
     virtual void onMouseLeave() override;
 
     //! Click up
-    virtual void onMouseUp(wxMouseEvent& evt);
+    virtual void onMouseUp(wxMouseEvent& evt) override;
 
 protected:
     //! Preload the Icon

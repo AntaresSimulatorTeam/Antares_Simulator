@@ -97,3 +97,27 @@ BOOST_AUTO_TEST_CASE(test_future_set_rethrows_first_submitted)
     futures.add(AddTask(*threadPool, failingTask<TestExceptionN<2>>()));
     BOOST_CHECK_THROW(futures.join(), TestExceptionN<1>);
 }
+
+struct NonCopyableFunctionObject
+{
+    NonCopyableFunctionObject() = default;
+    NonCopyableFunctionObject(const NonCopyableFunctionObject&) = delete;
+    NonCopyableFunctionObject& operator=(const NonCopyableFunctionObject&) = delete;
+
+    bool called = false;
+
+    void operator()()
+    {
+        called = true;
+    }
+};
+
+BOOST_AUTO_TEST_CASE(allow_to_use_function_object_pointer)
+{
+    auto threadPool = createThreadPool(1);
+    auto functionObjectPtr = std::make_shared<NonCopyableFunctionObject>();
+    BOOST_CHECK(!functionObjectPtr->called);
+    TaskFuture future = AddTask(*threadPool, functionObjectPtr);
+    future.get();
+    BOOST_CHECK(functionObjectPtr->called);
+}

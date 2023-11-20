@@ -59,6 +59,7 @@ add_subdirectory(stdcxx)
 add_subdirectory(utils)
 add_subdirectory(paths)
 add_subdirectory(mersenne-twister)
+add_subdirectory(series)
 
 add_library(antares-core
 	antares.h

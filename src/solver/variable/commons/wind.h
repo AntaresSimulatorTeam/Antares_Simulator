@@ -198,8 +198,8 @@ public:
         {
             // The current wind time-series
             (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour,
-                           pArea->wind.series->getColumn(year),
-                           sizeof(double) * pArea->wind.series->timeSeries.height);
+                           pArea->wind.series.getColumn(year),
+                           sizeof(double) * pArea->wind.series.timeSeries.height);
         }
 
         // Next variable

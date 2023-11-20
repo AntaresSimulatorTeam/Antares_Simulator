@@ -27,7 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_SOLAR_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_SOLAR_CONTAINER_H__
 
-#include "series.h"
+#include <antares/series/series.h>
 
 namespace Antares
 {
@@ -73,7 +73,9 @@ public:
     //! Data for the pre-processor
     Data::Solar::Prepro* prepro;
     /*! Data for time-series */
-    DataSeriesSolar* series;
+    TimeSeries series;
+
+    TimeSeries::numbers tsNumbers;
 
 }; // class Container
 

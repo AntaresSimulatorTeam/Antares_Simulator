@@ -60,7 +60,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: 3.12
 
       - name: Install gcovr
         run: sudo pip install gcovr==5.0 #5.1 generate issues with sonarcloud report parsing
@@ -86,7 +86,8 @@ jobs:
              -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
              -DBUILD_TESTING=ON \
              -DMZ_CODE_COVERAGE=ON \
-             -DBUILD_not_system=OFF
+             -DBUILD_not_system=OFF \
+             -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
 
       - name: Build
         run: |
