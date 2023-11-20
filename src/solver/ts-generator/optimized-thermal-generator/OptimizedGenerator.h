@@ -59,7 +59,7 @@ private:
     void calculateResidualLoad();
 
     // calculate parameters methods - per cluster
-    uint calculateNumberOfMaintenances(Data::ThermalCluster& cluster, uint timeHorizon);
+    uint calculateNumberOfMaintenances(const Data::ThermalCluster& cluster, uint timeHorizon);
     uint calculateAverageMaintenanceDuration(Data::ThermalCluster& cluster);
     std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(Data::ThermalCluster& cluster);
 

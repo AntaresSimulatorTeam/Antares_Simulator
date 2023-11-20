@@ -236,7 +236,7 @@ void OptimizedThermalGenerator::calculateResidualLoad()
 }
 
 // calculate parameters methods - per cluster
-uint OptimizedThermalGenerator::calculateNumberOfMaintenances(Data::ThermalCluster& cluster,
+uint OptimizedThermalGenerator::calculateNumberOfMaintenances(const Data::ThermalCluster& cluster,
                                                               uint timeHorizon)
 {
     // timeHorizon cannot be 0. The whole maintenance group would be skipped if this happened
