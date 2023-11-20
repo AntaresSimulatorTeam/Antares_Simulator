@@ -18,6 +18,7 @@ void OptimizedThermalGenerator::setVariableBounds()
 // BOUNDS per each day - bounds-per-each-day[t] - ENS[t] >= 0, Spill[t] >= 0
 void OptimizedThermalGenerator::setEnsAndSpillageBounds()
 {
+    // no need for this - defined when creating the Ens & Spill variables
     return;
 }
 
