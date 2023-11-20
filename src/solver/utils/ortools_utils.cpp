@@ -105,8 +105,8 @@ void ProblemSimplexeNommeConverter::CreateVariable(unsigned idxVar,
 {
     double min_l = problemeSimplexe_->Xmin[idxVar];
     double max_l = problemeSimplexe_->Xmax[idxVar];
-    bool intVar = problemeSimplexe_->IntegerVariable(idxVar);
-    const MPVariable* var = solver->MakeVar(min_l, max_l, intVar, variableNameManager_.GetName(idxVar));
+    bool isIntegerVariable = problemeSimplexe_->IntegerVariable(idxVar);
+    const MPVariable* var = solver->MakeVar(min_l, max_l, isIntegerVariable, variableNameManager_.GetName(idxVar));
     objective->SetCoefficient(var, problemeSimplexe_->CoutLineaire[idxVar]);
 }
 
