@@ -12,6 +12,7 @@ void OptimizedThermalGenerator::buildProblemVariables(const OptProblemSettings& 
     buildEnsAndSpillageVariables(optSett);
     buildUnitPowerOutputVariables(optSett);
     buildStartEndMntVariables(optSett);
+    printAllVariables();
 }
 
 void OptimizedThermalGenerator::countVariables()
@@ -36,7 +37,6 @@ void OptimizedThermalGenerator::countVariables()
     x->SetLB(1.5);
 
     // Define constraints
-    // TODO CR27: we need to make vector of shared pointers to MPVariable so we can access them in different files 
     MPConstraint* const ct = solver.MakeRowConstraint(12.0, infinity, "ct");
     ct->SetCoefficient(x, 1.5);
     ct->SetCoefficient(y, 2.0);
@@ -55,9 +55,10 @@ void OptimizedThermalGenerator::countVariables()
     // Solve the problem
     const MPSolver::ResultStatus result_status = solver.Solve();
 
-    if (result_status != MPSolver::OPTIMAL) {
+    if (result_status != MPSolver::OPTIMAL)
+    {
         // If not optimal, print that optimization failed
-        logs.info()<< "The problem does not have an optimal solution.\n";
+        logs.info() << "The problem does not have an optimal solution.\n";
         return;
     }
     // Access and print the results
@@ -74,22 +75,24 @@ void OptimizedThermalGenerator::countVariables()
 // create VARIABLES per day - ENS[t], Spill[t]
 void OptimizedThermalGenerator::buildEnsAndSpillageVariables(const OptProblemSettings& optSett)
 {
-    for (int day = optSett.firstDay; day < optSett.lastDay; ++day)
+    for (int day = 0; day < timeHorizon_; ++day)
     {
         // fill the variable structure
         var.day.push_back(OptimizationProblemVariablesPerDay());
     }
 
-    for (int day = optSett.firstDay; day < optSett.lastDay; ++day)
+    for (int day = 0; day < timeHorizon_; ++day)
     {
         // add ENS variables
-        var.day[day].Ens = solver.MakeNumVar(0.0, infinity, "ENS_day_" + std::to_string(day));
+        var.day[day].Ens = solver.MakeNumVar(
+          0.0, infinity, "ENS_[" + std::to_string(day + optSett.firstDay) + "]");
     }
 
-    for (int day = optSett.firstDay; day < optSett.lastDay; ++day)
+    for (int day = 0; day < timeHorizon_; ++day)
     {
         // add Spillage variables
-        var.day[day].Spill = solver.MakeNumVar(0.0, infinity, "Spill_day_" + std::to_string(day));
+        var.day[day].Spill = solver.MakeNumVar(
+          0.0, infinity, "Spill_[" + std::to_string(day + optSett.firstDay) + "]");
     }
 
     return;
@@ -98,12 +101,95 @@ void OptimizedThermalGenerator::buildEnsAndSpillageVariables(const OptProblemSet
 // create VARIABLES per day and per cluster-unit - P[t][u]
 void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSettings& optSett)
 {
+    // loop per day - structure already filled in
+    for (int day = 0; day < timeHorizon_; ++day)
+    {
+        // loop per area inside maintenance group - fill in the structure
+        for (const auto& entryWeightMap : maintenanceGroup_)
+        {
+            const auto& area = *(entryWeightMap.first);
+            auto& areaVariables = var.day[day].areaMap;
+            areaVariables[&area] = OptimizationProblemVariablesPerArea();
+
+            // loop per thermal clusters inside the area - fill in the structure
+            for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end();
+                 ++it)
+            {
+                const auto& cluster = *(it->second);
+
+                if (!checkClusterExist(cluster))
+                    continue;
+                // we do not check if cluster.optimizeMaintenance = true here
+                // we add all the clusters Power inside maintenance group
+
+                auto& clusterVariables = areaVariables[&area].clusterMap;
+                clusterVariables[&cluster] = OptimizationProblemVariablesPerCluster();
+
+                // loop per unit inside the cluster - fill in the structure
+                for (int unit = 0; unit < cluster.unitCount; ++unit)
+                {
+                    clusterVariables[&cluster].unitMap.push_back(
+                      OptimizationProblemVariablesPerUnit());
+                }
+            }
+        }
+    }
+
+    // loop per day - structure already filled in
+    for (int day = 0; day < timeHorizon_; ++day)
+    {
+        // loop per area inside maintenance group - fill in the structure
+        for (const auto& entryWeightMap : maintenanceGroup_)
+        {
+            const auto& area = *(entryWeightMap.first);
+            auto& areaVariables = var.day[day].areaMap;
+
+            // loop per thermal clusters inside the area - fill in the structure
+            for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end();
+                 ++it)
+            {
+                const auto& cluster = *(it->second);
+
+                if (!checkClusterExist(cluster))
+                    continue;
+                // we do not check if cluster.optimizeMaintenance = true here
+                // we add all the clusters Power inside maintenance group
+
+                auto& clusterVariables = areaVariables[&area].clusterMap;
+
+                // loop per unit inside the cluster - fill in the structure
+                for (int unit = 0; unit < cluster.unitCount; ++unit)
+                {
+                    // add P[t][u] variables
+                    clusterVariables[&cluster].unitMap[unit].P = solver.MakeNumVar(
+                      0.0,
+                      infinity,
+                      "P_[" + std::to_string(day + optSett.firstDay) + "]["
+                        + cluster.getFullName().to<std::string>() + "." + std::to_string(unit) + "]"
+
+                    );
+                }
+            }
+        }
+    }
+
     return;
 }
 
 // create VARIABLES per day, per cluster-unit and per maintenance - s[t][u][m] & e[t][u][m]
 void OptimizedThermalGenerator::buildStartEndMntVariables(const OptProblemSettings& optSett)
 {
+    return;
+}
+
+void OptimizedThermalGenerator::printAllVariables()
+{
+    for (MPVariable* const variable : solver.variables())
+    {
+        std::cout << "Variable: " << variable->name() << ", "
+                  << "Lower bound: " << variable->lb() << ", "
+                  << "Upper bound: " << variable->ub() << std::endl;
+    }
     return;
 }
 

@@ -27,6 +27,7 @@ private:
     void buildEnsAndSpillageVariables(const OptProblemSettings& optSett);
     void buildUnitPowerOutputVariables(const OptProblemSettings& optSett);
     void buildStartEndMntVariables(const OptProblemSettings& optSett);
+    void printAllVariables(); // for debug purpose only!
 
     void setVariableBounds();
     void setEnsAndSpillageBounds();
@@ -71,7 +72,7 @@ private:
       const std::array<double, HOURS_PER_YEAR>& hourlyValues);
     std::array<double, HOURS_PER_YEAR> calculateAverageTs(const Matrix<double>& tsValue,
                                                           const Matrix<uint32_t>& tsNumbers);
-    bool checkClusterData(Data::ThermalCluster& cluster);
+    bool checkClusterExist(const Data::ThermalCluster& cluster);
     int dayOfTheYear(int optimizationDay);
 
     // calculate Average time-series functions

@@ -23,7 +23,7 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
         optSett.firstDay = 0;
         optSett.lastDay = timeHorizon_;
         // loop till the end of scenario length
-        while (optSett.firstDay <= scenarioLength_ * DAYS_PER_YEAR)
+        while (optSett.firstDay < scenarioLength_ * DAYS_PER_YEAR)
         {
             createOptimizationProblemPerGroup(optSett);
 
@@ -372,7 +372,7 @@ std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageTs
     return averageTs;
 }
 
-bool OptimizedThermalGenerator::checkClusterData(Data::ThermalCluster& cluster)
+bool OptimizedThermalGenerator::checkClusterExist(const Data::ThermalCluster& cluster)
 {
     if (!cluster.prepro)
     {
@@ -385,7 +385,6 @@ bool OptimizedThermalGenerator::checkClusterData(Data::ThermalCluster& cluster)
 
     if (0 == cluster.unitCount || 0 == cluster.nominalCapacity)
     {
-        cluster.series.timeSeries.reset(1, 8760);
         return false;
     }
     return true;
