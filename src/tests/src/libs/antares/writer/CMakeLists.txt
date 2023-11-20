@@ -7,7 +7,7 @@ target_link_libraries(test-writer
 		Boost::unit_test_framework
 		Antares::result_writer
 		test_utils_unit
-		MINIZIP::minizip
+		MINIZIP::minizip-ng
 )
 
 add_test(NAME writer COMMAND test-writer)

@@ -280,7 +280,7 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_MakeAvailable(ortools)
 endif()
 
-find_package(minizip)
+find_package(minizip-ng)
 
 if(NOT minizip_FOUND OR BUILD_MINIZIP)
     # Repository + tag
@@ -295,11 +295,11 @@ if(NOT minizip_FOUND OR BUILD_MINIZIP)
     set(MZ_OPENSSL "OFF" CACHE INTERNAL "")
     set(MZ_ICONV "OFF" CACHE INTERNAL "")
 
-    FetchContent_Declare(minizip
+    FetchContent_Declare(minizip-ng
     GIT_REPOSITORY ${MZ_REPOSITORY}
     GIT_TAG ${MZ_TAG})
 
-    FetchContent_MakeAvailable(minizip)
+    FetchContent_MakeAvailable(minizip-ng)
 endif()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
