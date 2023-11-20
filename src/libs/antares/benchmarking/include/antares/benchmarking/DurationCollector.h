@@ -13,6 +13,7 @@ namespace Benchmarking
 class IDurationCollector
 {
 public:
+    virtual ~IDurationCollector() = default;
     virtual void addDuration(const std::string& name, int64_t duration) = 0;
 };
 
@@ -20,6 +21,7 @@ class NullDurationCollector : public IDurationCollector
 {
 public:
     NullDurationCollector() = default;
+    virtual ~NullDurationCollector() = default;
     void addDuration(const std::string& /* name */, int64_t /* duration */) override
     { /* Do nothing */
     }
@@ -29,6 +31,7 @@ class DurationCollector : public IDurationCollector
 {
 public:
     DurationCollector() = default;
+    virtual ~DurationCollector() = default;
 
     void toFileContent(FileContent& file_content);
     void addDuration(const std::string& name, int64_t duration) override;

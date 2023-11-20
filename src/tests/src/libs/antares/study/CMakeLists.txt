@@ -6,6 +6,7 @@ add_subdirectory(output-folder)
 add_subdirectory(short-term-storage-input)
 add_subdirectory(thermal-price-definition)
 add_subdirectory(constraint)
+add_subdirectory(series)
 
 add_executable(test-study)
 target_sources(test-study PRIVATE test_study.cpp)

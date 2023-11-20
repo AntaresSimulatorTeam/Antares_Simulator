@@ -27,6 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__
 
+#include <antares/series/series.h>
 #include "cluster.h"
 #include <antares/array/matrix.h>
 #include "defines.h"
@@ -86,8 +87,8 @@ public:
 
     //! All {FO,PO}{Duration,Rate} annual values
     // max x DAYS_PER_YEAR
-    Matrix<double> fuelcost;
-    Matrix<double> co2cost;
+    TimeSeries::TS fuelcost;
+    TimeSeries::TS co2cost;
 
 }; // class EconomicInputData
 

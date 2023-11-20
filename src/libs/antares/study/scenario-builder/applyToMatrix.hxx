@@ -25,7 +25,7 @@ inline bool CheckValidity<Data::DataSeriesHydro>(uint value,
                                                  uint tsGenMax)
 {
     // When the TS-Generators are not used
-    return (!tsGenMax) ? (value < data.count) : (value < tsGenMax);
+    return (!tsGenMax) ? (value < data.TScount()) : (value < tsGenMax);
 }
 
 template<>

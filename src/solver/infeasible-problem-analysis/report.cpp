@@ -3,29 +3,42 @@
 #include <antares/logs/logs.h>
 #include <algorithm>
 
+using namespace operations_research;
+
 static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,
                                   const Antares::Optimization::Constraint& b)
 {
     return a.getSlackValue() > b.getSlackValue();
 }
 
-namespace Antares
+namespace Antares::Optimization
 {
-namespace Optimization
+InfeasibleProblemReport::InfeasibleProblemReport(const std::vector<const MPVariable*>& slackVariables)
 {
-InfeasibleProblemReport::InfeasibleProblemReport(
-  const std::vector<const operations_research::MPVariable*>& slackVariables)
-{
-    for (const operations_research::MPVariable* slack : slackVariables)
-    {
-        append(slack->name(), slack->solution_value());
-    }
-    trim();
+    turnSlackVarsIntoConstraints(slackVariables);
+    sortConstraints();
+    trimConstraints();
 }
 
-void InfeasibleProblemReport::append(const std::string& constraintName, double value)
+void InfeasibleProblemReport::turnSlackVarsIntoConstraints(const std::vector<const MPVariable*>& slackVariables)
 {
-    mConstraints.emplace_back(constraintName, value);
+    for (const MPVariable* slack : slackVariables)
+    {
+        mConstraints.emplace_back(slack->name(), slack->solution_value());
+    }
+}
+
+void InfeasibleProblemReport::sortConstraints()
+{
+    std::sort(std::begin(mConstraints), std::end(mConstraints), ::compareSlackSolutions);
+}
+
+void InfeasibleProblemReport::trimConstraints()
+{
+    if (nbVariables <= mConstraints.size())
+    {
+        mConstraints.resize(nbVariables);
+    }
 }
 
 void InfeasibleProblemReport::extractItems()
@@ -74,14 +87,4 @@ void InfeasibleProblemReport::prettyPrint()
     logSuspiciousConstraints();
 }
 
-void InfeasibleProblemReport::trim()
-{
-    std::sort(std::begin(mConstraints), std::end(mConstraints), ::compareSlackSolutions);
-    if (nbVariables <= mConstraints.size())
-    {
-        mConstraints.resize(nbVariables);
-    }
-}
-
-} // namespace Optimization
-} // namespace Antares
+} // namespace Antares::Optimization

@@ -37,7 +37,7 @@ bool solarTSNumberData::apply(Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Solar: area '" << area.name << "': ";
-        ret = ApplyToMatrix(errors, logprefix, *area.solar.series, col, tsGenCountSolar) && ret;
+        ret = ApplyToMatrix(errors, logprefix, area.solar.series, col, tsGenCountSolar) && ret;
     }
     return ret;
 }

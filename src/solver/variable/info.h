@@ -321,7 +321,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     }
 
     template<class VCardT, class U>
-    static void ComputeStatistics(U& intermediateValues, Type& container, uint year)
+    static void ComputeStatistics(U& intermediateValues, Type& container, uint)
     {
         for (uint i = 0; i != container.size(); ++i)
         {
@@ -705,13 +705,13 @@ struct VariableAccessor<ResultsT, Category::noColumn>
     }
 
     template<class U, class VarT>
-    static void ComputeSum(U&, const VarT&, uint numSpace)
+    static void ComputeSum(U&, const VarT&, uint)
     {
         // Do nothing
     }
 
     template<class U, class VarT>
-    static void ComputeMax(U&, const VarT&, uint numSpace)
+    static void ComputeMax(U&, const VarT&, uint)
     {
         // Do nothing
     }

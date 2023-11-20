@@ -34,12 +34,10 @@ public:
         colorsAllowed = YUNI_LOGS_COLORS_ALLOWED,
     };
 
-public:
     template<class LoggerT, class VerbosityType>
     void internalDecoratorWriteWL(LoggerT& logger, const AnyString& s) const
     {
-        typedef typename LoggerT::DecoratorsType DecoratorsType;
-
+        using DecoratorsType = typename LoggerT::DecoratorsType;
         // Write the message to the std::cout/cerr
         if (VerbosityType::shouldUsesStdCerr)
         {

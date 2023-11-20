@@ -267,7 +267,7 @@ public:
         // Useful local variables
         auto area = state.area;
         auto& thermal = state.thermal;
-        std::vector<double> areaMarginalCosts = state.hourlyResults->CoutsMarginauxHoraires;
+        const std::vector<double>& areaMarginalCosts = state.hourlyResults->CoutsMarginauxHoraires;
         uint hourInTheWeek = state.hourInTheWeek;
         uint hourInTheYear = state.hourInTheYear;
 
@@ -277,10 +277,12 @@ public:
             auto* cluster = state.area->thermal.clusters[clusterIndex];
             double hourlyClusterProduction
               = thermal[area->index].thermalClustersProductions[clusterIndex];
-            uint tsIndex = cluster->series->timeseriesNumbers[0][state.year];
+            double pMin = thermal[area->index].PMinOfClusters[clusterIndex];
+            uint tsIndex = cluster->series.timeseriesNumbers[0][state.year];
+
             // Thermal cluster profit
             pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
-              = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
+              = (hourlyClusterProduction - pMin)
                 * (-areaMarginalCosts[hourInTheWeek]
                    - cluster->getMarginalCost(tsIndex, hourInTheYear));
         }

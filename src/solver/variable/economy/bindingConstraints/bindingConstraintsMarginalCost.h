@@ -305,7 +305,7 @@ public:
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int column,
+      unsigned int,
       unsigned int numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace].hour;
