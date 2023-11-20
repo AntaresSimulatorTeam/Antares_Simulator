@@ -1,4 +1,5 @@
 #include "ortools_utils.h"
+#include "filename.h"
 
 #include <antares/logs/logs.h>
 #include <antares/exception/AssertionError.hpp>
@@ -289,9 +290,23 @@ MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
     }
 }
 
+static void writeVector(Antares::Solver::IResultWriter& writer,
+                        const std::string& filename,
+                        const std::vector<int>& data)
+{
+    std::string buffer;
+    for (int x : data)
+       buffer += std::to_string(x) + "\n";
+
+    writer.addEntryFromBuffer(filename, buffer);
+}
+
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* solver,
-                           bool keepBasis)
+                           bool keepBasis,
+                           Antares::Solver::IResultWriter& writer,
+                           const OptPeriodStringGenerator& optPeriodStringGenerator,
+                           const unsigned int optNumber)
 {
     MPSolverParameters params;
     setGenericParameters(params);
@@ -300,6 +315,21 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     if (warmStart && Probleme->basisExists())
     {
         solver->SetStartingLpBasisInt(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
+        {
+        auto variableFile = basisVariables(optPeriodStringGenerator,
+                                            optNumber);
+        writeVector(writer,
+                    variableFile,
+                    Probleme->StatutDesVariables);
+        }
+
+        {
+        auto constraintFile = basisConstraints(optPeriodStringGenerator,
+                                               optNumber);
+        writeVector(writer,
+                    constraintFile,
+                    Probleme->StatutDesContraintes);
+        }
     }
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
