@@ -25,6 +25,7 @@ void OptimizedThermalGenerator::setEnsAndSpillageBounds()
 // BOUNDS per day and per each unit - bounds-per-each-day+unit[t][u] - P[t][u] >= 0
 void OptimizedThermalGenerator::setUnitPowerOutputBounds()
 {
+    // no need for this - defined when creating the P variables
     return;
 }
 
@@ -32,6 +33,7 @@ void OptimizedThermalGenerator::setUnitPowerOutputBounds()
 // - s[t][u][m]-> [0, 1] and e[t][u][m]-> [0, 1]
 void OptimizedThermalGenerator::setStartEndMntBounds()
 {
+    // no need for this - defined when creating the Start & End variables
     return;
 }
 
