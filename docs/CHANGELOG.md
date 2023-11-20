@@ -1,14 +1,17 @@
 Antares Changelog
 =================
 
---------------------
-# v8.6.3 (10/2023)
+# v8.6.4 (11/2023)
+## Bugfixes
+* Fix Oracle Linux minizip build + actually run zip unit tests (#1744)
+* Fix output variable PROFIT for thermal clusters (#1767)
 
+# v8.6.3 (10/2023)
+## Bugfixes
 * Increase file size limit from 80Mo to 80Go when reading file. Fix issue on Windows
 
---------------------
 # v8.6.2 (08/2023)
-
+## Bugfixes
 * Backport [v8.4.3](#v843-082023) changes
 
 8.6.1 (06/2023)
