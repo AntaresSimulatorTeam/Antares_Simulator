@@ -12,7 +12,7 @@ void OptimizedThermalGenerator::runOptimizationProblem(const OptProblemSettings&
     buildProblemVariables(optSett);
     setVariableBounds();
     buildProblemConstraints();
-    setProblemCost();
+    setProblemCost(optSett);
     solveProblem();
     resetProblem();
 }

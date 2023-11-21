@@ -42,22 +42,28 @@ private:
     void setStartEndMntLogicConstraints();
     void setMaxUnitOutputConstraints();
 
-    void setProblemCost();
+    void setProblemCost(const OptProblemSettings& optSett);
     void setProblemEnsCost(MPObjective* objective);
     void setProblemSpillCost(MPObjective* objective);
-    void setProblemPowerCost(MPObjective* objective);
-    void setProblemPowerCostPerGroup(MPObjective* objective, int day);
-    void setProblemPowerCostPerArea(const Data::Area& area, MPObjective* objective, int day);
-    void setProblemPowerCostPerCluster(const Data::Area& area,
-                                       const Data::ThermalCluster& cluster,
+    void setProblemPowerCost(const OptProblemSettings& optSett, MPObjective* objective);
+    void setProblemPowerCostPerGroup(const OptProblemSettings& optSett,
+                                     MPObjective* objective,
+                                     int day);
+    void setProblemPowerCostPerArea(const OptProblemSettings& optSett,
+                                    MPObjective* objective,
+                                    int day,
+                                    const Data::Area& area);
+    void setProblemPowerCostPerCluster(const OptProblemSettings& optSett,
                                        MPObjective* objective,
-                                       int day);
-    void setProblemPowerCostPerUnit(const Data::Area& area,
+                                       int day,
+                                       const Data::Area& area,
+                                       const Data::ThermalCluster& cluster);
+    void setProblemPowerCostPerUnit(MPObjective* objective,
+                                    int day,
+                                    const Data::Area& area,
                                     const Data::ThermalCluster& cluster,
                                     int unitIndex,
-                                    double powerCost,
-                                    MPObjective* objective,
-                                    int day);
+                                    double powerCost);
     void printObjectiveFunction(MPObjective* objective);
 
     void solveProblem();

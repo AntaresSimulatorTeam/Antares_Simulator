@@ -8,13 +8,13 @@ namespace Antares::Solver::TSGenerator
 {
 // create OBJECTIVE FUNCTION - sum through [t] and sum through [u]
 // sum[days]{ EnsCost*Ens[day] + SpillCost[day] + sum[units][ UnitCost*P[t][u] ] }
-void OptimizedThermalGenerator::setProblemCost()
+void OptimizedThermalGenerator::setProblemCost(const OptProblemSettings& optSett)
 {
     MPObjective* objective = solver.MutableObjective();
 
     setProblemEnsCost(objective);
     setProblemSpillCost(objective);
-    setProblemPowerCost(objective);
+    setProblemPowerCost(optSett, objective);
 
     objective->SetMinimization();
 
@@ -43,30 +43,34 @@ void OptimizedThermalGenerator::setProblemSpillCost(MPObjective* objective)
     return;
 }
 
-void OptimizedThermalGenerator::setProblemPowerCost(MPObjective* objective)
+void OptimizedThermalGenerator::setProblemPowerCost(const OptProblemSettings& optSett,
+                                                    MPObjective* objective)
 {
     // loop per day
     for (int day = 0; day < timeHorizon_; ++day)
     {
-        setProblemPowerCostPerGroup(objective, day);
+        setProblemPowerCostPerGroup(optSett, objective, day);
     }
     return;
 }
 
-void OptimizedThermalGenerator::setProblemPowerCostPerGroup(MPObjective* objective, int day)
+void OptimizedThermalGenerator::setProblemPowerCostPerGroup(const OptProblemSettings& optSett,
+                                                            MPObjective* objective,
+                                                            int day)
 {
     // loop per area inside maintenance group
     for (const auto& entryWeightMap : maintenanceGroup_)
     {
         const auto& area = *(entryWeightMap.first);
-        setProblemPowerCostPerArea(area, objective, day);
+        setProblemPowerCostPerArea(optSett, objective, day, area);
     }
     return;
 }
 
-void OptimizedThermalGenerator::setProblemPowerCostPerArea(const Data::Area& area,
+void OptimizedThermalGenerator::setProblemPowerCostPerArea(const OptProblemSettings& optSett,
                                                            MPObjective* objective,
-                                                           int day)
+                                                           int day,
+                                                           const Data::Area& area)
 {
     // loop per thermal clusters inside the area
     for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end(); ++it)
@@ -78,15 +82,16 @@ void OptimizedThermalGenerator::setProblemPowerCostPerArea(const Data::Area& are
         if (!checkClusterExist(cluster))
             continue;
 
-        setProblemPowerCostPerCluster(area, cluster, objective, day);
+        setProblemPowerCostPerCluster(optSett, objective, day, area, cluster);
     }
     return;
 }
 
-void OptimizedThermalGenerator::setProblemPowerCostPerCluster(const Data::Area& area,
-                                                              const Data::ThermalCluster& cluster,
+void OptimizedThermalGenerator::setProblemPowerCostPerCluster(const OptProblemSettings& optSett,
                                                               MPObjective* objective,
-                                                              int day)
+                                                              int day,
+                                                              const Data::Area& area,
+                                                              const Data::ThermalCluster& cluster)
 {
     /*
     ** Unit cost can be directly set,
@@ -109,17 +114,17 @@ void OptimizedThermalGenerator::setProblemPowerCostPerCluster(const Data::Area& 
     // loop per unit inside the cluster
     for (int unit = 0; unit < cluster.unitCount; ++unit)
     {
-        setProblemPowerCostPerUnit(area, cluster, unit, unitPowerCost, objective, day);
+        setProblemPowerCostPerUnit(objective, day, area, cluster, unit, unitPowerCost);
     }
     return;
 }
 
-void OptimizedThermalGenerator::setProblemPowerCostPerUnit(const Data::Area& area,
+void OptimizedThermalGenerator::setProblemPowerCostPerUnit(MPObjective* objective,
+                                                           int day,
+                                                           const Data::Area& area,
                                                            const Data::ThermalCluster& cluster,
                                                            int unitIndex,
-                                                           double cost,
-                                                           MPObjective* objective,
-                                                           int day)
+                                                           double cost)
 {
     objective->SetCoefficient(var.day[day].areaMap[&area].clusterMap[&cluster].unitMap[unitIndex].P,
                               cost);
