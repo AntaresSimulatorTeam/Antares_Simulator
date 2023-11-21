@@ -1,6 +1,11 @@
 Antares Changelog
 =================
 
+8.7.2 (11/2023)
+--------------------
+## Bugfix
+* Named MPS - fix duplicated "ranged" binding constraints (#1569)
+
 8.7.1 (11/2023)
 --------------------
 ## Bugfix
