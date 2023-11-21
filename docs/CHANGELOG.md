@@ -1,6 +1,11 @@
 Antares Changelog
 =================
 
+8.7.1 (11/2023)
+--------------------
+## Bugfix
+* Fix output variable PROFIT for thermal clusters (#1767)
+
 8.7.0 (08/2023)
 --------------------
 ## New Features
